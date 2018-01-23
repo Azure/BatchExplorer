@@ -29,7 +29,7 @@ bl-account-details {
 
     .monitor-charts {
         display: grid;
-        grid-template-columns: minmax(210px, 20%)  minmax(210px, 20%)  minmax(210px, 24%) minmax(210px, auto);
+        grid-template-columns: repeat(3, 1fr);
         text-align: justify;
     }
 
