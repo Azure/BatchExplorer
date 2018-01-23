@@ -83,7 +83,7 @@ describe("AADService", () => {
                 access_token: "refreshedToken", expires_on: moment().add(1, "hour").toDate(),
             } as any);
             newToken = new AccessToken({ access_token: "newToken", expires_on: moment().add(1, "hour") } as any);
-            let authorizeResult = {
+            const authorizeResult = {
                 id_token: "someidtoken",
                 code: "somecode",
             };

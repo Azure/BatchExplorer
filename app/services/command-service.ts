@@ -18,7 +18,7 @@ export class CommandService {
     }
 
     public init() {
-        // for (let key of Object.keys(CommandMap)) {
+        // for(const key of Object.keys(CommandMap)) {
         //     const command = CommandMap[key];
         //     if (command.id) {
         //         this._commandMap[command.id] = this.injector.get(command);
@@ -46,7 +46,7 @@ export class CommandService {
             MouseTrap.reset();
         }
         this._setOnce = true;
-        for (let shortcut of keybindings) {
+        for (const shortcut of keybindings) {
             MouseTrap.bind(shortcut.key, () => {
                 this.zone.run(() => {
                     this.perform(shortcut.command);

@@ -132,7 +132,7 @@ export class DataContainerListComponent extends ListOrTableBase implements OnIni
         if (filter.isEmpty()) {
             this.data.setOptions({ ...defaultListOptions });
         } else {
-            let filterText = (this._filter as any).value;
+            const filterText = (this._filter as any).value;
             this.data.setOptions({ ...defaultListOptions, filter: filterText && filterText.toLowerCase() });
         }
 

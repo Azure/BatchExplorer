@@ -12,7 +12,7 @@ import { FileTreeNode } from "./file-tree.model";
 export function mapFilesToTree(files: List<File>, baseFolder: string = ""): FileTreeNode[] {
     const directories = {};
 
-    for (let file of files.toArray()) {
+    for (const file of files.toArray()) {
         const node = fileToTreeNode(file);
         const folder = path.dirname(file.name);
         const relativePath = CloudPathUtils.normalize(path.relative(baseFolder, folder));
@@ -29,7 +29,7 @@ export function mapFilesToTree(files: List<File>, baseFolder: string = ""): File
         }
     }
 
-    for (let dir of Object.keys(directories)) {
+    for (const dir of Object.keys(directories)) {
         directories[dir].children = sortTreeNodes(directories[dir].children);
     }
     const root = directories[""];

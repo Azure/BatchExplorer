@@ -8,7 +8,7 @@ export function min(val: number): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
         if (exists(Validators.required(control))) { return null; }
 
-        let v: number = control.value;
+        const v: number = control.value;
         return v >= val ? null : { min: true };
     };
 }
@@ -20,7 +20,7 @@ export function max(val: number): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
         if (exists(Validators.required(control))) { return null; }
 
-        let v: number = control.value;
+        const v: number = control.value;
         return v <= val ? null : { max: true };
     };
 }
@@ -31,6 +31,6 @@ export function max(val: number): ValidatorFn {
 export function number(control: AbstractControl): ValidationErrors | null {
     if (exists(Validators.required(control))) { return null; }
 
-    let v: string = control.value;
+    const v: string = control.value;
     return /^(?:-?\d+|-?\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/.test(v) ? null : { number: true };
 }

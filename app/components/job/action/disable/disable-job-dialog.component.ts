@@ -30,7 +30,7 @@ export class DisableJobDialogComponent {
 
     @autobind()
     public ok() {
-        let options: any = {};
+        const options: any = {};
         return this.jobService.disable(this.jobId, this.taskAction, options);
     }
 

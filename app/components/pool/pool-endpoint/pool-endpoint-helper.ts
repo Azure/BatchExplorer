@@ -30,7 +30,7 @@ export function backendPortValidator(inboundNATPools: InboundNATPool[]) {
         if (inboundNATPools) {
             let hasDuplicate = false;
             if (inboundNATPools) {
-                for (let pool of inboundNATPools) {
+                for (const pool of inboundNATPools) {
                     if (control.value === pool.backendPort) {
                         hasDuplicate = true;
                         break;
@@ -125,7 +125,7 @@ export function frontendPortRangeValidator(frontendPortRangeStart: string,
         let overlapStart = null;
         let overlapEnd = null;
         if (inboundNATPools) {
-            for (let pool of inboundNATPools) {
+            for (const pool of inboundNATPools) {
                 // Overlap algorithm can be defined like:
                 // bool overlap = a.start <= b.end && b.start <= a.end; (inclusive)
                 if (start.value <= pool.frontendPortRangeEnd &&
@@ -174,7 +174,7 @@ export function nameValidator(inboundNATPools: InboundNATPool[]) {
         // Check whether name is duplicate
         let hasDuplicate = false;
         if (inboundNATPools) {
-            for (let pool of inboundNATPools) {
+            for (const pool of inboundNATPools) {
                 if (control.value === pool.name) {
                     hasDuplicate = true;
                     break;
@@ -203,7 +203,7 @@ export function networkSecurityGroupRuleValidator(networkSecurityGroupRules: str
         }
         let hasDuplicate = false;
         const currentPriorities = control.value.map(rule => rule.priority);
-        for (let pool of inboundNATPools) {
+        for (const pool of inboundNATPools) {
             const otherPriorities = pool.networkSecurityGroupRules.map(rule => rule.priority);
             const duplicate = otherPriorities.filter(priority => currentPriorities.includes(priority));
             if (duplicate && duplicate.length > 0) {

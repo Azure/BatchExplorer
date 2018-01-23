@@ -15,7 +15,7 @@ export class AdvancedFilter {
     constructor(public controls: { [key: string]: AdvancedFilterControlBase }) {
         this.filterChange = this._filterChange.asObservable();
 
-        for (let name of Object.keys(controls)) {
+        for (const name of Object.keys(controls)) {
             controls[name].name = name;
             controls[name].advancedFilter = this;
         }
@@ -38,7 +38,7 @@ export class AdvancedFilter {
     private _handleFormChange(data: any) {
         const controls = this.controls;
         const filters: FilterBuilder.Filter[] = [];
-        for (let key of Object.keys(data)) {
+        for (const key of Object.keys(data)) {
             const control = controls[key];
             if (!control) {
                 log.error(`Error advanced filter has unknown output key '${key}'`, [data, controls]);

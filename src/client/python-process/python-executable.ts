@@ -72,7 +72,7 @@ export function getPythonPath(): Promise<string> {
         return path;
     }).catch((errors) => {
         let msg = "Fail to find a valid python 3.6 installation:";
-        for (let path of Object.keys(errors)) {
+        for (const path of Object.keys(errors)) {
             msg += `\n  - ${path}: ${errors[path].message}`;
         }
         logger.error(msg);

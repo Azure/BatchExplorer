@@ -8,7 +8,7 @@ describe("AuthorizationHttpService", () => {
     let authService: AuthorizationHttpService;
     let mockAuthResponse;
     let requestUrl;
-    let mockNextLinkResponse = {
+    const mockNextLinkResponse = {
         body: JSON.stringify({
             value: [{
                 actions: [BatchAccountPermission.Read],
@@ -18,7 +18,7 @@ describe("AuthorizationHttpService", () => {
     };
     let accountServiceSpy;
     let armServiceSpy;
-    let subs: Subscription[] = [];
+    const subs: Subscription[] = [];
 
     beforeEach(() => {
         accountServiceSpy = {

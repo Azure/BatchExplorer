@@ -58,13 +58,13 @@ export class PoolUtils {
         }
 
         // First check if the node agent SKU matches any known skus
-        let sku = pool.virtualMachineConfiguration.nodeAgentSKUId;
+        const sku = pool.virtualMachineConfiguration.nodeAgentSKUId;
         if (agentOsMap && agentOsMap[sku] && agentOsMap[sku] === "windows") {
             return true;
         }
 
         // Fallback to mapping on the os name
-        let ref = pool.virtualMachineConfiguration.imageReference;
+        const ref = pool.virtualMachineConfiguration.imageReference;
         return this.isOfferWindows(ref.offer);
     }
 
@@ -72,7 +72,7 @@ export class PoolUtils {
         if (this.isPaas(pool)) {
             return false;
         }
-        let ref = pool.virtualMachineConfiguration.imageReference;
+        const ref = pool.virtualMachineConfiguration.imageReference;
         return this.isOfferLinux(ref.offer);
     }
 
@@ -112,7 +112,7 @@ export class PoolUtils {
 
     public static getOsName(pool: Pool): string {
         if (pool.cloudServiceConfiguration) {
-            let osFamily = pool.cloudServiceConfiguration.osFamily;
+            const osFamily = pool.cloudServiceConfiguration.osFamily;
             if (osFamily === CloudServiceOsFamily.windowsServer2008R2) {
                 return "Windows Server 2008 R2 SP1";
             } else if (osFamily === CloudServiceOsFamily.windowsServer2012) {

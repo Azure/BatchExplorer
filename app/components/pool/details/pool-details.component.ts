@@ -23,7 +23,7 @@ import "./pool-details.scss";
 })
 export class PoolDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
-        let label = tab ? `Pool - ${tab}` : "Pool";
+        const label = tab ? `Pool - ${tab}` : "Pool";
         return {
             name: id,
             label,
@@ -97,7 +97,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public deletePool() {
-        let config = new MatDialogConfig();
+        const config = new MatDialogConfig();
         const dialogRef = this.dialog.open(DeletePoolDialogComponent, config);
         dialogRef.componentInstance.poolId = this.poolId;
     }

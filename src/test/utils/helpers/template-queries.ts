@@ -24,7 +24,7 @@ export class CustomQuery {
         let de = this.root;
         const segments = path.split(".");
         const controlName = segments.pop();
-        for (let groupName of segments) {
+        for (const groupName of segments) {
             de = de.query(By.css(`[fromGroupName=${groupName}]`));
             expect(de).not.toBeNull(`Cannot find form group '${groupName}' in path '${path}'`);
             if (de === null) {

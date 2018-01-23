@@ -77,7 +77,7 @@ export class FileTreeStructure {
 
     public addFiles(files: List<File>) {
         const directories = this.directories;
-        for (let file of files.toArray()) {
+        for (const file of files.toArray()) {
             const node = fileToTreeNode(file, this.basePath);
 
             const folder = CloudPathUtils.dirname(node.path);
@@ -93,7 +93,7 @@ export class FileTreeStructure {
             }
         }
 
-        for (let dir of Object.keys(directories)) {
+        for (const dir of Object.keys(directories)) {
             directories[dir].children = sortTreeNodes(directories[dir].children);
         }
     }

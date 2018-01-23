@@ -10,9 +10,9 @@ export class UserDecoder {
             throw Error("Failed to decode value. Value has invalid format.");
         }
 
-        let decodedPayLoad = this.safeDecodeBase64(jwtDecoded.JWSPayload);
+        const decodedPayLoad = this.safeDecodeBase64(jwtDecoded.JWSPayload);
 
-        let user = JSON.parse(decodedPayLoad);
+        const user = JSON.parse(decodedPayLoad);
 
         // if (!user || !user.ha    sOwnProperty('aud')) throw new Error('');
 
@@ -21,7 +21,7 @@ export class UserDecoder {
 
     private safeDecodeBase64(value: string) {
 
-        let base64Decoded = this.base64DecodeStringUrlSafe(value);
+        const base64Decoded = this.base64DecodeStringUrlSafe(value);
         if (!base64Decoded) {
             throw Error("Failed to base64 decode value. Value has invalid format.");
         }
