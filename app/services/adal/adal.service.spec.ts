@@ -17,7 +17,7 @@ const token1 = new AccessToken({
     refresh_token: "foorefresh",
 });
 
-fdescribe("AdalService spec", () => {
+describe("AdalService spec", () => {
     let service: AdalService;
     let aadServiceSpy;
     let remoteSpy;
