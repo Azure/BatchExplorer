@@ -3,6 +3,7 @@ import { BatchServiceClient } from "azure-batch";
 import AccountProxy from "./accountProxy";
 import { FileProxy } from "./fileProxy";
 import { JobProxy } from "./jobProxy";
+import { JobScheduleProxy } from "./jobScheduleProxy";
 import { NodeProxy } from "./nodeProxy";
 import { PoolProxy } from "./poolProxy";
 import { TaskProxy } from "./taskProxy";
@@ -19,6 +20,7 @@ export class BatchClientProxy {
     private _account: AccountProxy;
     private _file: FileProxy;
     private _job: JobProxy;
+    private _jobSchedule: JobScheduleProxy;
     private _pool: PoolProxy;
     private _task: TaskProxy;
     private _node: NodeProxy;
@@ -29,6 +31,7 @@ export class BatchClientProxy {
         this._account = new AccountProxy(this.client);
         this._file = new FileProxy(this.client);
         this._job = new JobProxy(this.client);
+        this._jobSchedule = new JobScheduleProxy(this.client);
         this._pool = new PoolProxy(this.client);
         this._task = new TaskProxy(this.client);
         this._node = new NodeProxy(this.client);
@@ -44,6 +47,10 @@ export class BatchClientProxy {
 
     get job(): JobProxy {
         return this.checkProxy(this._job);
+    }
+
+    get jobSchedule(): JobScheduleProxy {
+        return this.checkProxy(this._jobSchedule);
     }
 
     get task(): TaskProxy {

@@ -16,6 +16,8 @@ import { ApplicationDefaultComponent, ApplicationDetailsComponent } from "./comp
 import { ApplicationHomeComponent } from "./components/application/home/application-home.component";
 import { DataDefaultComponent, DataDetailsComponent } from "./components/data/details";
 import { DataHomeComponent } from "./components/data/home/data-home.component";
+import { JobScheduleDefaultComponent, JobScheduleDetailsComponent } from "./components/job-schedule/details";
+import { JobScheduleHomeComponent } from "./components/job-schedule/home/job-schedule-home.component";
 import { JobDefaultComponent, JobDetailsComponent } from "./components/job/details";
 import { JobHomeComponent } from "./components/job/home/job-home.component";
 import { MarketComponent } from "./components/market/home";
@@ -49,6 +51,15 @@ export const routes: Routes = [
         children: [
             { path: "", component: JobDefaultComponent }, // jobs/
             { path: ":id", component: JobDetailsComponent }, // jobs/{job.id}
+        ],
+    },
+    {
+        path: "jobschedules",
+        canActivate: [NavigationGuard],
+        component: JobScheduleHomeComponent,
+        children: [
+            { path: "", component: JobScheduleDefaultComponent }, // jobschedules/
+            { path: ":id", component: JobScheduleDetailsComponent }, // jobschedules/{jobschedule.id}
         ],
     },
     {
