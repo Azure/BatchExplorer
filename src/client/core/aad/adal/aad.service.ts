@@ -71,8 +71,8 @@ export class AADService {
             this.app.splashScreen.updateMessage("Retrieving access tokens");
 
             this._tenantsIds.next(tenantIds);
-            for (let tenantId of tenantIds) {
-                for (let resource of resources) {
+            for (const tenantId of tenantIds) {
+                for (const resource of resources) {
                     await this._retrieveNewAccessToken(tenantId, resource);
                 }
             }

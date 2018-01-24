@@ -1,3 +1,9 @@
+
+# 0.12.2
+
+### Hot fix:
+* Update Electron for vunerability fix [\#1030](https://github.com/Azure/BatchLabs/issues/1030)
+
 # 0.12.1
 
 ### Hot fix:

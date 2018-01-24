@@ -115,7 +115,7 @@ export class FileExplorerWorkspace {
         source = this._getSource(source);
 
         const openedFiles = this._openedFiles.value;
-        for (let path of paths) {
+        for (const path of paths) {
             if (!this.isFileOpen(path, source)) {
                 openedFiles.push({
                     source: source,

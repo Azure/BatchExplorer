@@ -42,7 +42,7 @@ export class MonacoLoader {
             // Load AMD loader if necessary
             if (!anyWindow.amdRequire) {
                 const nodeRequire = anyWindow.require;
-                let loaderScript = document.createElement("script");
+                const loaderScript = document.createElement("script");
                 loaderScript.type = "text/javascript";
                 loaderScript.src = "vendor/vs/loader.js";
                 loaderScript.addEventListener("load", () => {

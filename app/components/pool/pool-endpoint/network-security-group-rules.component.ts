@@ -83,7 +83,7 @@ export class NetworkSecurityGroupRulesComponent implements ControlValueAccessor,
             }
 
             let outOfRange = false;
-            for (let rule of c.value) {
+            for (const rule of c.value) {
                 if (rule.priority > EndpointHelper.MAXIMUM_SECURITY_GROUP_RULE_PRIORITY ||
                     rule.priority < EndpointHelper.MINIMUM_SECURITY_GROUP_RULE_PRIORITY) {
                     outOfRange = true;

@@ -9,7 +9,7 @@ const rules = {
     json: {
         test: /\.json$/,
         loader: "raw-loader",
-        exclude: [],
+        exclude: [/node_modules/],
     },
     file: {
         test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,

@@ -98,7 +98,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
             if (this._propagateChange) {
                 const cloned = this.items.value.slice(0, -1).map(item => {
-                    let clone = JSON.parse(JSON.stringify(item));
+                    const clone = JSON.parse(JSON.stringify(item));
                     if (clone.version === this._defaultVersionValue) {
                         clone.version = null;
                     }
@@ -121,7 +121,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         this._writingValue = true;
         this.items.controls = [];
         if (references) {
-            for (let reference of references) {
+            for (const reference of references) {
                 this.addNewItem(reference.applicationId, reference.version || this._defaultVersionValue);
             }
         } else {
@@ -148,7 +148,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         }
 
         const tempMap: any = {};
-        for (let reference of control.value) {
+        for (const reference of control.value) {
             // TODO: remove lowerCase when API is fixed.
             const application = reference.applicationId.toLowerCase();
             const key = `${application}-${reference.version}`;

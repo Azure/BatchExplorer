@@ -15,7 +15,7 @@ export class ContextMenuService {
 
     private _buildElectronMenu(menu: ContextMenu): Electron.Menu {
         const electronMenu = new Menu();
-        for (let item of menu.items) {
+        for (const item of menu.items) {
             if (item instanceof ContextMenuItem) {
                 electronMenu.append(this._buildMenuItem(item));
             } else if (item instanceof ContextMenuSeparator) {

@@ -161,7 +161,7 @@ export class AuthenticationService {
     private _getRedirectUrlParams(url: string): AuthorizeResult | AuthorizeError {
         const segments = url.split("#");
         const params = {};
-        for (let str of segments[1].split("&")) {
+        for (const str of segments[1].split("&")) {
             const [key, value] = str.split("=");
             params[key] = value;
         }

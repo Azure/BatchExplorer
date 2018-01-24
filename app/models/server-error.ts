@@ -161,7 +161,7 @@ export class ServerError {
     public static fromAADGraph(response: HttpErrorResponse): ServerError {
         const error = response.error["odata.error"];
         let requestId = null;
-        let timestamp = null;
+        const timestamp = null;
         let code = null;
         let message = null;
         let details = null;

@@ -64,7 +64,7 @@ export class AuthorizationHttpService {
             return Permission.None;
         }
         let actions = [];
-        for (let permission of permissions) {
+        for (const permission of permissions) {
             if (permission.actions) {
                 actions = actions.concat(permission.actions);
             }

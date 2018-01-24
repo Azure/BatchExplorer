@@ -169,7 +169,7 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public collapseAll() {
-        for (let key of Object.keys(this.expandedDirs)) {
+        for (const key of Object.keys(this.expandedDirs)) {
             this.expandedDirs[key] = false;
         }
         this._buildTreeRows(this._tree);
@@ -252,8 +252,8 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private _getTreeRowsForNode(node: FileTreeNode, indent = 0): TreeRow[] {
-        let rows = [];
-        for (let [_, child] of node.children) {
+        const rows = [];
+        for (const [_, child] of node.children) {
             if (this.autoExpand && !(child.path in this.expandedDirs)) {
                 this.expandedDirs[child.path] = true;
             }
@@ -267,7 +267,7 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
             });
             if (expanded) {
                 if (child.children.size > 0) {
-                    for (let row of this._getTreeRowsForNode(child, indent + 1)) {
+                    for (const row of this._getTreeRowsForNode(child, indent + 1)) {
                         rows.push(row);
                     }
                 }

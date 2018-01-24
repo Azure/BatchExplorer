@@ -42,11 +42,11 @@ const colorFromLevel = {
     60: "inverse",  // FATAL
 };
 
-let nameFromLevel = {};
-let upperNameFromLevel = {};
-let upperPaddedNameFromLevel = {};
+const nameFromLevel = {};
+const upperNameFromLevel = {};
+const upperPaddedNameFromLevel = {};
 Object.keys(levelFromName).forEach((name) => {
-    let lvl = levelFromName[name];
+    const lvl = levelFromName[name];
     nameFromLevel[lvl] = name;
     upperNameFromLevel[lvl] = name.toUpperCase();
     upperPaddedNameFromLevel[lvl] = (name.length === 4 ? " " : "") + name.toUpperCase();
@@ -61,7 +61,7 @@ function stylize(str, color = "white") {
         return str;
     }
 
-    let codes = colors[color];
+    const codes = colors[color];
     if (codes) {
         return "\x1B[" + codes[0] + "m" + str +
             "\x1B[" + codes[1] + "m";
@@ -74,7 +74,7 @@ function indent(s) {
 }
 
 function extractTime(rec) {
-    let time = (typeof rec.time === "object") ? rec.time.toISOString() : rec.time;
+    const time = (typeof rec.time === "object") ? rec.time.toISOString() : rec.time;
 
     return stylize(time.substr(11));
 }
@@ -105,7 +105,7 @@ function extractCustomDetails(rec) {
     const details = [];
     const extras = {};
 
-    for (let key of Object.keys(rec)) {
+    for (const key of Object.keys(rec)) {
         if (skip.has(key)) { continue; }
         let value = rec[key];
         if (typeof value === "undefined") { value = ""; }
@@ -131,10 +131,10 @@ function extractCustomDetails(rec) {
 
 function applyDetails(results, details, extras) {
     if (!results) { return; }
-    for (let detail of results.details) {
+    for (const detail of results.details) {
         details.push(indent(detail));
     }
-    for (let key of Object.keys(results.extras)) {
+    for (const key of Object.keys(results.extras)) {
         extras.push(key + "=" + results.extras[key]);
     }
 }
@@ -142,7 +142,7 @@ function applyDetails(results, details, extras) {
 export class PrettyStream extends Stream {
     constructor(opts = {}) {
         super();
-        let options = {};
+        const options = {};
 
         if (opts) {
             Object.keys(opts).forEach((key) => {
@@ -183,12 +183,12 @@ export class PrettyStream extends Stream {
         const level = extractLevel(rec);
         const component = rec.name;
 
-        let msg = isSingleLineMsg(rec) ? extractMsg(rec) : "";
+        const msg = isSingleLineMsg(rec) ? extractMsg(rec) : "";
         if (!msg) {
             details.push(indent(extractMsg(rec)));
         }
 
-        let error = extractError(rec);
+        const error = extractError(rec);
         if (error) {
             details.push(indent(error));
         }

@@ -172,7 +172,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     private _categorizeSizes() {
         let remainingSizes = this._vmSizes.toArray();
         const categories = {};
-        for (let category of Object.keys(this._categories)) {
+        for (const category of Object.keys(this._categories)) {
             const { match, remain } = this._getSizeForCategory(remainingSizes, this._categories[category]);
             remainingSizes = remain;
             categories[category] = match.map(x => new VmSizeDecorator(x, this.prices));
@@ -189,7 +189,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
         const match = [];
         const remain = [];
 
-        for (let size of sizes) {
+        for (const size of sizes) {
             if (this._sizeMatchPattern(size, patterns)) {
                 match.push(size);
             } else {
@@ -200,7 +200,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     }
 
     private _sizeMatchPattern(size: VmSize, patterns: string[]) {
-        for (let pattern of patterns) {
+        for (const pattern of patterns) {
             if (StringUtils.matchWildcard(size.name, pattern)) {
                 return true;
             }

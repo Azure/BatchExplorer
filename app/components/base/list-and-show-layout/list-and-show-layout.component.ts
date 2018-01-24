@@ -147,7 +147,7 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
 
     @autobind()
     public deleteSelectedItems() {
-        let config = new MatDialogConfig();
+        const config = new MatDialogConfig();
 
         const dialogRef = this.dialog.open(DeleteSelectedItemsDialogComponent, config);
         dialogRef.componentInstance.items = this.list.selectedItems;

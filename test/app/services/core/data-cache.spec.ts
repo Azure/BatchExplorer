@@ -86,7 +86,7 @@ describe("DataCache", () => {
     });
 
     it("Should delete an item correcly and send notification", () => {
-        let onItemDeletedSpy = jasmine.createSpy("onItemDeleted");
+        const onItemDeletedSpy = jasmine.createSpy("onItemDeleted");
         cache.deleted.subscribe(onItemDeletedSpy);
 
         cache.deleteItem(item2);

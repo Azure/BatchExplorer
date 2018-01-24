@@ -165,7 +165,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
 
     private _parseParameters(parameters: StringMap<NcjParameter>) {
         const wrapper: NcjParameterWrapper[] = [];
-        for (let name of Object.keys(parameters)) {
+        for (const name of Object.keys(parameters)) {
             const param = parameters[name];
             wrapper.push(new NcjParameterWrapper(name, param));
         }
@@ -178,7 +178,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
             templateParameters = Object.keys(template.parameters);
         }
         const templateFormGroup = {};
-        for (let key of templateParameters) {
+        for (const key of templateParameters) {
             let defaultValue = null;
             let validator = Validators.required;
             if (exists(template.parameters[key].defaultValue)) {

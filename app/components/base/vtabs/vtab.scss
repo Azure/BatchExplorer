@@ -6,7 +6,6 @@ bl-vtab-group {
     display: flex;
 
     > .tab-navigation {
-        // flex: 0 0 200px;
         border-right: 1px solid $border-color;
 
         > .tab-navigation-item {
@@ -17,6 +16,15 @@ bl-vtab-group {
 
             &:hover {
                 background: $athens-grey;
+            }
+
+            &:focus {
+                outline: none;
+                background: $main-background;
+            }
+
+            &.active {
+                border-right: 2px solid $primary-color;
             }
         }
     }

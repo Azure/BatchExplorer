@@ -27,7 +27,7 @@ export class PredefinedFormulaService {
             next: (response: Response) => {
                 const result: AutoscaleFormula[] = new Array();
                 const data: SampleFormulaIndex[] = response.json();
-                for (let file of data) {
+                for (const file of data) {
                     const filePath = `${predefinedFormulaPath}${file.value}`;
                     this._getPredefinedFormula(filePath, file.name, result);
                 }

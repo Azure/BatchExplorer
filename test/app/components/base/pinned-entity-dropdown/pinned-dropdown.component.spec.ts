@@ -26,7 +26,7 @@ describe("PinnedDropDownComponent", () => {
     let component: PinnedDropDownComponent;
     let debugElement;
 
-    let favorites: BehaviorSubject<List<NavigableRecord>> = new BehaviorSubject(List([]));
+    const favorites: BehaviorSubject<List<NavigableRecord>> = new BehaviorSubject(List([]));
     let accountServiceSpy;
     let pinServiceSpy;
     let dropDownButton;

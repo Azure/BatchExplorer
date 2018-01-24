@@ -2,7 +2,7 @@ import { CssColor, ThemeElement } from "app/services/themes/theme-core";
 import * as tinycolor from "tinycolor2";
 import { EntityColorDefinition, ThemeDefinition } from "./theme-definition.model";
 
-export class ColorPalette extends ThemeElement {
+export class ColorPalette extends ThemeElement<string> {
     @CssColor("") public main: string;
     @CssColor() public light: string;
     @CssColor() public dark: string;
@@ -23,7 +23,7 @@ export class ColorPalette extends ThemeElement {
     @CssColor() public A700: string;
 
     constructor(color: string) {
-        super();
+        super(color);
         this._computeMaterialPalette(color);
     }
 
@@ -53,53 +53,34 @@ export class ColorPalette extends ThemeElement {
     }
 }
 
-export class EntityColor extends ThemeElement {
+export class EntityColor extends ThemeElement<EntityColorDefinition> {
     @CssColor() public text: string;
     @CssColor() public background: string;
     @CssColor("hover-text") public hoverText: string;
     @CssColor("hover-background") public hoverBackground: string;
 
     constructor(def: EntityColorDefinition) {
-        super();
-        this.text = def.text;
-        this.background = def.background;
-        this.hoverText = def["hover-text"] || def.text;
-        this.hoverBackground = def["hover-background"] || def.background;
+        super(def);
+        this.hoverText = this.hoverText || def.text;
+        this.hoverBackground = this.hoverBackground  || def.background;
     }
 }
 
-export class FileExplorerColors extends ThemeElement {
+export class FileExplorerColors extends ThemeElement<ThemeDefinition["file-explorer"]> {
     @CssColor("folder-icon") public folderIcon: string;
-
-    constructor(def: ThemeDefinition["file-explorer"]) {
-        super();
-        this.folderIcon = def["folder-icon"];
-    }
 }
 
-export class ButtonColors extends ThemeElement {
+export class ButtonColors extends ThemeElement<ThemeDefinition["button"]> {
     @CssColor("disabled-text") public disabledText: string;
     @CssColor("disabled-bg") public disabledBg: string;
-
-    constructor(def: ThemeDefinition["button"]) {
-        super();
-        this.disabledText = def["disabled-text"];
-        this.disabledBg = def["disabled-bg"];
-    }
 }
 
-export class TextColor extends ThemeElement {
+export class TextColor extends ThemeElement<ThemeDefinition["text"]> {
     @CssColor() public primary: string;
     @CssColor() public secondary: string;
-
-    constructor(def) {
-        super();
-        this.primary = def.primary;
-        this.secondary = def.secondary;
-    }
 }
 
-export class MonitorChartColor extends ThemeElement {
+export class MonitorChartColor extends ThemeElement<ThemeDefinition["monitorChart"]> {
     @CssColor("core-count") public coreCount: string;
     @CssColor("low-priority-core-count") public lowPriorityCoreCount: string;
     @CssColor("task-start-event") public taskStartEvent: string;
@@ -110,23 +91,9 @@ export class MonitorChartColor extends ThemeElement {
     @CssColor("running-node-count") public runningNodeCount: string;
     @CssColor("start-task-failed-node-count") public startTaskFailedNodeCount: string;
     @CssColor("rebooting-node-count") public rebootingNodeCount: string;
-
-    constructor(def) {
-        super();
-        this.coreCount = def["core-count"];
-        this.lowPriorityCoreCount = def["low-priority-core-count"];
-        this.taskStartEvent = def["task-start-event"];
-        this.taskCompleteEvent = def["task-complete-event"];
-        this.taskFailEvent = def["task-fail-event"];
-        this.startingNodeCount = def["starting-node-count"];
-        this.idleNodeCount = def["idle-node-count"];
-        this.runningNodeCount = def["running-node-count"];
-        this.startTaskFailedNodeCount = def["start-task-failed-node-count"];
-        this.rebootingNodeCount = def["rebooting-node-count"];
-    }
 }
 
-export class Theme extends ThemeElement {
+export class Theme extends ThemeElement<ThemeDefinition> {
     @CssColor() public primary: ColorPalette;
     @CssColor() public danger: ColorPalette;
     @CssColor() public warn: ColorPalette;
@@ -142,26 +109,6 @@ export class Theme extends ThemeElement {
     @CssColor("file-explorer") public fileExplorer: FileExplorerColors;
     @CssColor() public button: ButtonColors;
     @CssColor() public monitorChart: MonitorChartColor;
-
-    constructor(theme: ThemeDefinition) {
-        super();
-        this.primary = new ColorPalette(theme.primary);
-        this.danger = new ColorPalette(theme.danger);
-        this.warn = new ColorPalette(theme.warn);
-        this.success = new ColorPalette(theme.success);
-        this.outline = theme.outline;
-        this.mainBackground = theme["main-background"];
-        this.cardBackground = theme["card-background"];
-        this.text = new TextColor(theme.text);
-        this.header = new EntityColor(theme.header);
-        this.navigation = new EntityColor(theme.navigation);
-        this.footer = new EntityColor(theme.footer);
-        this.breadcrumb = new EntityColor(theme.breadcrumb);
-        this.fileExplorer = new FileExplorerColors(theme["file-explorer"]);
-        this.button = new ButtonColors(theme.button);
-        this.monitorChart = new MonitorChartColor(theme.monitorChart);
-    }
-
 }
 
 function multiply(rgb1, rgb2) {

@@ -82,16 +82,6 @@ mat-tab-group:not(.form-tabs) {
     }
 }
 
-mat-card.mat-card {
-    transition: none !important;
-    background: $card-background;
-    box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.2) !important;
-
-    &.details {
-        margin-top:8px !important;
-        padding:0 !important;
-    }
-}
 
 mat-icon.mat-icon {
     width: auto;

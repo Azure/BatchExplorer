@@ -17,7 +17,7 @@ import { NodeConnectComponent } from "../connect";
 })
 export class NodeDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
-        let label = tab ? `Node - ${tab}` : "Node";
+        const label = tab ? `Node - ${tab}` : "Node";
         return {
             name: id,
             label,
