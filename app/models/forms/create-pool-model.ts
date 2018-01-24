@@ -149,7 +149,7 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         appLicenses: pool.applicationLicenses || [],
         appPackages: pool.applicationPackageReferences,
         inboundNATPools: pool.networkConfiguration && pool.networkConfiguration.endpointConfiguration ?
-            pool.networkConfiguration.endpointConfiguration.inboundNATPools : null,
+            pool.networkConfiguration.endpointConfiguration.inboundNATPools : [],
         subnetId: pool.networkConfiguration && pool.networkConfiguration.subnetId,
     };
 }
