@@ -2,6 +2,7 @@ import * as moment from "moment";
 
 import { AdalService } from "app/services/adal";
 import { AccessToken } from "client/core/aad/access-token/access-token.model";
+import { Observable } from "rxjs";
 import { F } from "test/utils";
 
 const tenant1 = "tenant-1";
@@ -24,6 +25,7 @@ describe("AdalService spec", () => {
     beforeEach(() => {
         remoteSpy = {
             getBatchLabsApp: () => ({ aadService: aadServiceSpy }),
+            tenantsIds: Observable.of([]),
             send: jasmine.createSpy("accessTokenData").and.returnValue(Promise.resolve(token1)),
         };
         service = new AdalService(remoteSpy);
