@@ -24,10 +24,11 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public estimatedCost: string = "-";
     public complexFormConfig: ComplexFormConfig;
     public fileUri = "create.pool.batch.json";
+    public armNetworkOnly = true;
+
     private _osControl: FormControl;
     private _renderingSkuSelected: boolean = false;
     private _sub: Subscription;
-
     private _lastFormValue: CreatePoolModel;
 
     constructor(
@@ -62,6 +63,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             appLicenses: [[]],
             appPackages: [[]],
             inboundNATPools: [[]],
+            subnetId: [null],
         });
 
         this._sub = this._osControl.valueChanges.subscribe((value) => {
@@ -86,6 +88,17 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
                 this.form.patchValue({
                     inboundNATPools: [],
                 });
+            }
+
+            // For pools created with virtualMachineConfiguration only ARM virtual
+            // networks ('Microsoft.Network/virtualNetworks') are supported,
+            // but for pools created with cloudServiceConfiguration both ARM and
+            // classic virtual networks are supported.
+            if (value.virtualMachineConfiguration) {
+                this.armNetworkOnly = true;
+            }
+            if (value.cloudServiceConfiguration) {
+                this.armNetworkOnly = false;
             }
         });
 
@@ -130,6 +143,10 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
     public handleHasLinkedStorage(hasLinkedStorage) {
         this.hasLinkedStorage = hasLinkedStorage;
+    }
+
+    public subnetOnChange(subnetId) {
+        this.form.controls.subnetId.setValue(subnetId);
     }
 
     public get startTask() {

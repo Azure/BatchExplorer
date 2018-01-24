@@ -107,23 +107,30 @@
             </bl-form-picker>
         </bl-form-section>
 
-        <bl-form-section *ngIf="virtualMachineConfiguration" title="Pool endpoint configuration" subtitle="The configuration for endpoints on compute nodes in the Batch pool.">
-            <bl-form-multi-picker formControlName="inboundNATPools" #inboundNATPoolsPicker addTitle="Inbound NAT Pool" [max]="5">
-                <ng-template blFormPickerItem let-value>
-                    <div title>
-                        {{value?.name}}
+        <bl-form-section title="Network configuration" subtitle="The network configuration for a pool.">
+            <ng-container *ngIf="virtualMachineConfiguration">
+                <bl-form-multi-picker formControlName="inboundNATPools" #inboundNATPoolsPicker addTitle="Inbound NAT Pool" [max]="5">
+                    <ng-template blFormPickerItem let-value>
+                        <div title>
+                            {{value?.name}}
+                        </div>
+                        <div subtitle class="unaccent">
+                            {{value?.protocol}}
+                        </div>
+                    </ng-template>
+                    <div nested-form>
+                        <bl-inbound-nat-pool-picker
+                            [formControl]="inboundNATPoolsPicker.currentEditValue"
+                            [inboundNATPools]="form.controls.inboundNATPools.value">
+                        </bl-inbound-nat-pool-picker>
                     </div>
-                    <div subtitle class="unaccent">
-                        {{value?.protocol}}
-                    </div>
-                </ng-template>
-                <div nested-form>
-                    <bl-inbound-nat-pool-picker
-                        [formControl]="inboundNATPoolsPicker.currentEditValue"
-                        [inboundNATPools]="form.controls.inboundNATPools.value">
-                    </bl-inbound-nat-pool-picker>
-                </div>
-            </bl-form-multi-picker>
+                </bl-form-multi-picker>
+                <div>The configuration for endpoints on compute nodes in the Batch pool.</div>
+            </ng-container>
+            <bl-virtual-network-picker
+                [armNetworkOnly]="armNetworkOnly"
+                (subnetIdChanged)="subnetOnChange($event)">
+            </bl-virtual-network-picker>
         </bl-form-section>
     </bl-form-page>
     <div blFormSummary>

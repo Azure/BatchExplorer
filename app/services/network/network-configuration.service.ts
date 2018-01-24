@@ -13,6 +13,7 @@ export interface VirtualNetwork {
     id: string;
     location: string;
     name: string;
+    category: string;
     subnets: Subnet[];
 }
 
@@ -33,8 +34,8 @@ export class NetworkConfigurationService {
     /**
      * Get ARM virtual network observable
      */
-    public virtualNetwork(): Observable<VirtualNetwork[]> {
-        return this._getCurrentAccount().flatMap(account => {
+    public getVirtualNetwork(): Observable<VirtualNetwork[]> {
+        return this.getCurrentAccount().flatMap(account => {
             const type = ProviderType.Network;
             const url = this._getNetworkUrl(account.subscriptionId, type);
             return this.armService.get(url).flatMap(response => {
@@ -50,8 +51,8 @@ export class NetworkConfigurationService {
     /**
      * Get classic virtual network observable
      */
-    public classicVirtualNetwork(): Observable<VirtualNetwork[]> {
-        return this._getCurrentAccount().flatMap(account => {
+    public getClassicVirtualNetwork(): Observable<VirtualNetwork[]> {
+        return this.getCurrentAccount().flatMap(account => {
             const type = ProviderType.ClassicNetwork;
             const url = this._getNetworkUrl(account.subscriptionId, type);
             return this.armService.get(url).flatMap(response => {
@@ -67,7 +68,7 @@ export class NetworkConfigurationService {
     /**
      * Get account observable for retriving subscription id and location
      */
-    private _getCurrentAccount() {
+    public getCurrentAccount() {
         return this.accountService.currentAccount.flatMap(account => {
             const subscription = account && account.subscription;
             if (!subscription) {
@@ -102,6 +103,7 @@ export class NetworkConfigurationService {
                     id: object.id,
                     name: object.name,
                     location: object.location,
+                    category: provider === ProviderType.Network ? "ARM" : "Classic",
                     subnets: object.properties.subnets.map(subnet => {
                         const subnetId = provider === ProviderType.Network ?
                             subnet.id : this._getClassicVnetSubnetId(object.id, subnet.name);
