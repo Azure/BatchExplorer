@@ -1,12 +1,11 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { AADService } from "client/core/aad";
 import { AccessTokenCache } from "client/core/aad/access-token/access-token-cache";
 import { AccessToken } from "client/core/aad/access-token/access-token.model";
 import { Constants } from "common";
 import { ElectronRemote } from "../electron";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
 const defaultResource = Constants.AAD.defaultResource;
 
