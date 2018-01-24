@@ -4,7 +4,7 @@ import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import * as moment from "moment";
 
-import { ElapsedTimeComponent } from "app/components/base/elapsed-time";
+import { TimespanComponent } from "app/components/base/timespan";
 import { TaskTimelineComponent, TaskTimelineStateComponent } from "app/components/task/details/task-timeline";
 import { Job, Task, TaskState } from "app/models";
 
@@ -50,7 +50,7 @@ describe("TaskTimelineComponent", () => {
         TestBed.configureTestingModule({
             imports: [RouterTestingModule],
             declarations: [
-                ElapsedTimeComponent, TaskTimelineComponent, TaskTimelineMockComponent, TaskTimelineStateComponent,
+                TimespanComponent, TaskTimelineComponent, TaskTimelineMockComponent, TaskTimelineStateComponent,
             ],
         });
 

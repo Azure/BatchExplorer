@@ -1,7 +1,7 @@
 <div [ngSwitch]="task.state">
 	<div *ngSwitchCase="taskStates.running">
 		<i class="fa fa-clock-o" aria-hidden="true"></i>
-        <bl-elapsed-time [startTime]="startTime"></bl-elapsed-time>
+        <bl-timespan [startTime]="startTime"></bl-timespan>
 
 	</div>
 

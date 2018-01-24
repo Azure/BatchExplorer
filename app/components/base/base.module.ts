@@ -18,7 +18,6 @@ import { DialogsModule } from "./dialogs";
 import { DropdownModule } from "./dropdown";
 import { DurationPickerComponent } from "./duration-picker";
 import { EditorModule } from "./editor";
-import { ElapsedTimeComponent } from "./elapsed-time";
 import { FocusSectionModule } from "./focus-section";
 import { FormModule } from "./form";
 import { GraphsModule } from "./graphs";
@@ -41,6 +40,7 @@ import { SummaryCardModule } from "./summary-card";
 import { TableModule } from "./table";
 import { TabsModule } from "./tabs";
 import { TagsModule } from "./tags";
+import { TimespanComponent } from "./timespan";
 import { VirtualScrollModule } from "./virtual-scroll";
 import { VTabsModule } from "./vtabs";
 
@@ -79,7 +79,7 @@ const components = [
     BannerComponent,
     BannerOtherFixDirective,
     CardComponent,
-    ElapsedTimeComponent,
+    TimespanComponent,
     EntityDetailsListComponent,
     DurationPickerComponent,
     IconComponent,
