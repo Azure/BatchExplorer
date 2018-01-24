@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { FormBuilder, FormControl } from "@angular/forms";
 
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
@@ -6,6 +6,7 @@ import { Filter, FilterBuilder } from "app/utils/filter-builder";
 @Component({
     selector: "bl-job-schedule-home",
     templateUrl: "job-schedule-home.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JobScheduleHomeComponent {
     public quickSearchQuery = new FormControl();

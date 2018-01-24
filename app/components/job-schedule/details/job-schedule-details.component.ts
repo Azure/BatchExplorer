@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "app/core";
 import { remote } from "electron";
@@ -15,6 +15,7 @@ import "./job-schedule-details.scss";
 @Component({
     selector: "bl-job-schedule-details",
     templateUrl: "job-schedule-details.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {

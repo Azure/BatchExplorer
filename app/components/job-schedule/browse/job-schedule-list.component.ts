@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -19,6 +19,7 @@ import { Filter } from "app/utils/filter-builder";
 @Component({
     selector: "bl-job-schedule-list",
     templateUrl: "job-schedule-list.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JobScheduleListComponent extends ListOrTableBase implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
