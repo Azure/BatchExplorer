@@ -11,7 +11,7 @@
                 <bl-button [action]="exportAsJSON" color="light" title="Export as JSON"><i class="fa fa-code"></i></bl-button>
             </bl-button-group>
         </bl-summary-card>
-        <mat-card class="details">
+        <bl-card class="details">
             <bl-tab-group>
                 <bl-tab key="configuration">
                     <bl-tab-label>Configuration</bl-tab-label>
@@ -26,6 +26,6 @@
                     <bl-job-schedule-autopool [properties]="autoPoolSpecification"></bl-job-schedule-autopool>
                 </bl-tab>
             </bl-tab-group>
-        </mat-card>
+        </bl-card>
     </div>
 </bl-loading>

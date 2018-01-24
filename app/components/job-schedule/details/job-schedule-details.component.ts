@@ -18,7 +18,7 @@ import "./job-schedule-details.scss";
 })
 export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
-        let label = tab ? `Job schedule - ${tab}` : "Job schedule";
+        const label = tab ? `Job schedule - ${tab}` : "Job schedule";
         return {
             name: id,
             label,
