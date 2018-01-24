@@ -17,15 +17,17 @@ const token1 = new AccessToken({
     refresh_token: "foorefresh",
 });
 
-describe("AdalService spec", () => {
+fdescribe("AdalService spec", () => {
     let service: AdalService;
-    let aadServiceSpy = {};
+    let aadServiceSpy;
     let remoteSpy;
 
     beforeEach(() => {
+        aadServiceSpy = {
+            tenantsIds: Observable.of([]),
+        };
         remoteSpy = {
             getBatchLabsApp: () => ({ aadService: aadServiceSpy }),
-            tenantsIds: Observable.of([]),
             send: jasmine.createSpy("accessTokenData").and.returnValue(Promise.resolve(token1)),
         };
         service = new AdalService(remoteSpy);
