@@ -1,5 +1,11 @@
+import * as globalTunnel from "global-tunnel-ng";
 import * as path from "path";
+// const proxyUrl = "http://127.0.0.1:8888";
+// process.env.HTTP_PROXY = proxyUrl;
+// process.env.HTTPS_PROXY = proxyUrl;
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 process.env.NODE_PATH = path.join(__dirname, "..");
+globalTunnel.initialize();
 // tslint:disable-next-line:no-var-requires
 require("module").Module._initPaths();
 

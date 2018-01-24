@@ -141,6 +141,7 @@
     "element-resize-detector": "^1.1.13",
     "extract-zip": "~1.6.6",
     "font-awesome": "^4.7.0",
+    "global-tunnel-ng": "~2.1.0",
     "hammerjs": "^2.0.8",
     "immutable": "^3.8.2",
     "inflection": "^1.10.0",
