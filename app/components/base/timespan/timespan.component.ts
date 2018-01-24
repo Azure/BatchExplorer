@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy,
 } from "@angular/core";
 import * as moment from "moment";
 import { Subscription } from "rxjs";
@@ -17,7 +17,7 @@ export enum TimespanDisplayType {
     template: `{{formattedValue}}`,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TimespanComponent implements OnInit, OnChanges, OnDestroy {
+export class TimespanComponent implements OnChanges, OnDestroy {
     public formattedValue = "";
 
     @Input() public type: TimespanDisplayType = TimespanDisplayType.pretty;
@@ -47,8 +47,8 @@ export class TimespanComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    public ngOnInit() {
-        this._updateInterval();
+    public now() {
+        return moment.utc();
     }
 
     public ngOnDestroy() {
@@ -58,6 +58,7 @@ export class TimespanComponent implements OnInit, OnChanges, OnDestroy {
     private _clearInterval() {
         if (this._intervalSub) {
             this._intervalSub.unsubscribe();
+            this._intervalSub = null;
         }
     }
 
@@ -65,7 +66,6 @@ export class TimespanComponent implements OnInit, OnChanges, OnDestroy {
         this._clearInterval();
         if (this.startTime && this.endTime) { return; }
         if (!this.startTime && !this.endTime) { return; }
-
         this._intervalSub = Observable.interval(1000).subscribe(() => {
             this._updateElapsedTime();
         });
@@ -73,8 +73,8 @@ export class TimespanComponent implements OnInit, OnChanges, OnDestroy {
 
     private _computeTimespan() {
         if (!this.startTime && !this.endTime) { return null; }
-        const startTime = this.startTime ? moment.utc(this.startTime) : moment.utc();
-        const endTime = this.endTime ? moment.utc(this.endTime) : moment.utc();
+        const startTime = this.startTime ? moment.utc(this.startTime) : this.now();
+        const endTime = this.endTime ? moment.utc(this.endTime) : this.now();
         return moment.duration(endTime.diff(moment(startTime)));
     }
 
