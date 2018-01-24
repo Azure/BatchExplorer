@@ -1,4 +1,7 @@
-import { Component, EventEmitter, Input, OnDestroy, Output, forwardRef } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input,
+    OnChanges, OnDestroy, Output, forwardRef,
+} from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
@@ -14,11 +17,11 @@ import { NetworkConfigurationService, Subnet, VirtualNetwork } from "app/service
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => VirtualNetworkPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => VirtualNetworkPickerComponent), multi: true },
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VirtualNetworkPickerComponent implements ControlValueAccessor, Validator, OnDestroy {
+export class VirtualNetworkPickerComponent implements ControlValueAccessor, Validator, OnChanges, OnDestroy {
     @Input() public armNetworkOnly: boolean = true;
     @Output() public subnetIdChanged = new EventEmitter();
-
     public form: FormGroup;
     public subnets: Subnet[];
     public subscriptionId: string;
@@ -29,7 +32,9 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
     private _armVnets: VirtualNetwork[];
     private _classicVnets: VirtualNetwork[];
 
-    constructor(public formBuilder: FormBuilder, private networkService: NetworkConfigurationService) {
+    constructor(private changeDetector: ChangeDetectorRef,
+                public formBuilder: FormBuilder,
+                private networkService: NetworkConfigurationService) {
         this.form = this.formBuilder.group({
             virtualNetwork: [null],
             subnet: [null],
@@ -39,18 +44,23 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
             if (this._propagateChange) {
                 this._propagateChange(value);
             }
+            this.changeDetector.markForCheck();
         }));
+
         this._subs.push(this.networkService.getVirtualNetwork().subscribe(value => {
             this._armVnets = value;
+            this.changeDetector.markForCheck();
         }));
 
         this._subs.push(this.networkService.getClassicVirtualNetwork().subscribe(value => {
             this._classicVnets = value;
+            this.changeDetector.markForCheck();
         }));
 
         this._subs.push(this.networkService.getCurrentAccount().subscribe(value => {
             this.subscriptionId = value.subscriptionId;
             this.location = value.location;
+            this.changeDetector.markForCheck();
         }));
 
         this._subs.push(this.form.controls.virtualNetwork.valueChanges.subscribe(value => {
@@ -67,11 +77,19 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
             } else {
                 this.form.controls.subnet.setValue(null);
             }
+            this.changeDetector.markForCheck();
         }));
 
         this._subs.push(this.form.controls.subnet.valueChanges.subscribe(value => {
             this.subnetIdChanged.emit(value);
+            this.changeDetector.markForCheck();
         }));
+    }
+
+    public ngOnChanges(changes) {
+        if (changes) {
+            this.changeDetector.markForCheck();
+        }
     }
 
     public ngOnDestroy() {
