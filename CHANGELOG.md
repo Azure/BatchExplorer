@@ -1,3 +1,8 @@
+# 0.12.1
+
+### Hot fix:
+* Subscriptions not loading if not cached [\#1027](https://github.com/Azure/BatchLabs/issues/1027)
+
 # 0.12.0
 [All items](https://github.com/Azure/BatchLabs/milestone/14?closed=1)
 
