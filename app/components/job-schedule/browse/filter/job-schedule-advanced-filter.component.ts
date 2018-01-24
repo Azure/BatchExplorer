@@ -10,8 +10,7 @@ import { Filter } from "app/utils/filter-builder";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JobScheduleAdvancedFilterComponent {
-    @Output()
-    public change = new EventEmitter<Filter>();
+    @Output() public change = new EventEmitter<Filter>();
 
     public advancedFilter: AdvancedFilter;
 
