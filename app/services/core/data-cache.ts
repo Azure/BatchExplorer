@@ -23,6 +23,13 @@ export class DataCacheTracker {
         }
     }
 
+    public static disposeAll() {
+        for (const cache of ObjectUtils.values(this._caches)) {
+            cache.clear();
+            this.unregisterCache(cache);
+        }
+    }
+
     private static _caches: { [key: string]: DataCache<any> } = {};
 }
 
@@ -70,7 +77,6 @@ export class DataCache<T> {
     public dispose() {
         this.clear();
         DataCacheTracker.unregisterCache(this);
-        // TODO implement dispose
     }
 
     /**

@@ -1,8 +1,10 @@
 // tslint:disable:no-console
+import "./spec-imports";
+
 import { TestBed } from "@angular/core/testing";
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from "@angular/platform-browser-dynamic/testing";
 import { DataCacheTracker } from "app/services/core";
-import "./spec-imports";
+import "./spec-reporters";
 
 TestBed.initTestEnvironment(
     BrowserDynamicTestingModule,
@@ -20,9 +22,9 @@ const webpackRequire: any = require;
  * any file that ends with spec.ts and get its path. By passing in true
  * we say do this recursively
  */
-const testContext = webpackRequire.context("../test/app", true, /\.spec\.ts/);
-const testAppContext = webpackRequire.context("../app", true, /\.spec\.ts/);
-const testCommonContext = webpackRequire.context("../src/common", true, /\.spec\.ts/);
+const testContext = webpackRequire.context(".", true, /\.spec\.ts/);
+const testAppContext = webpackRequire.context("../../app", true, /\.spec\.ts/);
+const testCommonContext = webpackRequire.context("../../src/common", true, /\.spec\.ts/);
 
 /*
  * get all the files, for each file, call the context function
@@ -38,5 +40,5 @@ const modules = [...requireAll(testContext), ...requireAll(testAppContext), ...r
 console.log(`Running specs from ${modules.length} files`);
 
 afterEach(() => {
-    DataCacheTracker.clearAllCaches();
+    DataCacheTracker.disposeAll();
 });
