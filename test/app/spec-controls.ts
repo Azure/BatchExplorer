@@ -2,7 +2,7 @@
 // tslint:disable:no-console
 import { DataCacheTracker } from "app/services/core";
 import { GenericView } from "app/services/core/data/generic-view";
-import { MockEntityView } from "test/utils/mocks";
+import { MockEntityView, MockListView } from "test/utils/mocks";
 
 /**
  * Contains hooks that check the specs are clenanup resources correctly and other
@@ -24,13 +24,13 @@ jasmine.getEnv().addReporter({
         const dispose = GenericView.prototype.dispose;
         lastDispose = dispose;
         GenericView.prototype.init = function (this: any) {
-            if (!(this instanceof MockEntityView)) {
+            if (!(this instanceof MockEntityView || this instanceof MockListView)) {
                 this.id = counter++;
                 viewCreated[this.id] = result.fullName;
             }
         };
         GenericView.prototype.dispose = function (this: any) {
-            if (!(this instanceof MockEntityView)) {
+            if (!(this instanceof MockEntityView || this instanceof MockListView)) {
                 delete viewCreated[this.id];
                 dispose.bind(this)();
             }
