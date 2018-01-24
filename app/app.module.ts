@@ -19,6 +19,7 @@ import { ApplicationModule } from "app/components/application/application.module
 import { BaseModule } from "app/components/base";
 import { DataModule } from "app/components/data/data.module";
 import { FileModule } from "app/components/file/file.module";
+import { JobScheduleModule } from "app/components/job-schedule/job-schedule.module";
 import { JobModule } from "app/components/job/job.module";
 import { MarketModule } from "app/components/market/market.module";
 import { NodeModule } from "app/components/node/node.module";
@@ -59,6 +60,7 @@ import {
     HttpUploadService,
     InsightsMetricsService,
     JobHookTaskService,
+    JobScheduleService,
     JobService,
     LocalFileStorage,
     MonacoLoader,
@@ -87,7 +89,7 @@ import {
 
 const modules = [
     AccountModule, ApplicationModule, DataModule,
-    FileModule, JobModule, NodeModule, PoolModule,
+    FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
     SettingsModule, TaskModule, MarketModule, LayoutModule,
     MiscModule,
 ];
@@ -140,6 +142,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         HttpUploadService,
         InsightsMetricsService,
         JobHookTaskService,
+        JobScheduleService,
         JobService,
         LocalFileStorage,
         MonacoLoader,
