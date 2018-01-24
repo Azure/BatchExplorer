@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { AADService } from "client/core/aad";
 import { AccessTokenCache } from "client/core/aad/access-token/access-token-cache";
@@ -11,21 +11,25 @@ const defaultResource = Constants.AAD.defaultResource;
 
 @Injectable()
 export class AdalService {
+    public tenantsIds: Observable<string[]>;
+
     private aadService: AADService;
     private tokenCache = new AccessTokenCache();
     private _waitingPromises: StringMap<Promise<AccessToken>> = {};
+    private _tenantsIds = new BehaviorSubject<string[]>([]);
 
     constructor(private remote: ElectronRemote) {
         this.aadService = remote.getBatchLabsApp().aadService;
+        // Need to do this as aadService.tenantIds is in the node processs and electron lose information in the transfer
+        this.aadService.tenantsIds.subscribe((val) => {
+            this._tenantsIds.next(val);
+        });
+        this.tenantsIds = this._tenantsIds.asObservable();
     }
 
     public logout() {
         this.aadService.logout();
         this._waitingPromises = {};
-    }
-
-    public get tenantsIds() {
-        return this.aadService.tenantsIds;
     }
 
     public get currentUser() {
