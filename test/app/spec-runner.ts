@@ -3,7 +3,6 @@ import "./spec-imports";
 
 import { TestBed } from "@angular/core/testing";
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from "@angular/platform-browser-dynamic/testing";
-import { DataCacheTracker } from "app/services/core";
 import "./spec-reporters";
 
 TestBed.initTestEnvironment(
@@ -39,6 +38,4 @@ function requireAll(requireContext) {
 const modules = [...requireAll(testContext), ...requireAll(testAppContext), ...requireAll(testCommonContext)];
 console.log(`Running specs from ${modules.length} files`);
 
-afterEach(() => {
-    DataCacheTracker.disposeAll();
-});
+import "./spec-controls";

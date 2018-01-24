@@ -1,3 +1,4 @@
+// tslint:disable:no-console
 import * as fs from "fs";
 import * as moment from "moment";
 import { setTimeout } from "timers";
