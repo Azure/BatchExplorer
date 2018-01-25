@@ -9,7 +9,7 @@
     "name": "Microsoft Corporation",
     "email": "tiguerin@microsoft.com"
   },
-  "version": "0.12.1",
+  "version": "0.12.2",
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json",
@@ -78,7 +78,7 @@
     "cross-env": "~5.1.1",
     "css-loader": "~0.28.0",
     "devtron": "^1.4.0",
-    "electron": "~1.7.10",
+    "electron": "~1.7.11",
     "electron-builder": "~19.49.0",
     "extract-text-webpack-plugin": "~3.0.2",
     "file-loader": "~1.1.5",
