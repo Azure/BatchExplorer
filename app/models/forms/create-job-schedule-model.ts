@@ -12,18 +12,28 @@ export function createJobScheduleFormToJsonData(formData: CreateJobScheduleModel
     const data: any = {
         id: formData.id,
         displayName: formData.displayName,
-        schedule: formData.schedule,
+        schedule: {
+            doNotRunAfter: formData.schedule && formData.schedule.doNotRunAfter,
+            doNotRunUntil: formData.schedule && formData.schedule.doNotRunUntil,
+            recurrenceInterval: formData.schedule && formData.schedule.recurrenceInterval,
+            startWindow: formData.schedule && formData.schedule.startWindow,
+        },
         jobSpecification: formData.jobSpecification,
     };
     return new JobScheduleCreateDto(data);
 }
 
-export function jobScheduleToFormModel(job: JobScheduleCreateDto): CreateJobScheduleModel {
+export function jobScheduleToFormModel(jobSchedule: JobScheduleCreateDto): CreateJobScheduleModel {
     return {
-        id: job.id,
-        displayName: job.displayName,
-        metadata: job.metadata,
-        schedule: job.schedule,
-        jobSpecification: job.jobSpecification,
+        id: jobSchedule.id,
+        displayName: jobSchedule.displayName,
+        metadata: jobSchedule.metadata,
+        schedule: {
+            doNotRunAfter: jobSchedule.schedule.doNotRunAfter,
+            doNotRunUntil: jobSchedule.schedule.doNotRunUntil,
+            recurrenceInterval: jobSchedule.schedule.recurrenceInterval,
+            startWindow: jobSchedule.schedule.startWindow,
+        },
+        jobSpecification: jobSchedule.jobSpecification,
     };
 }
