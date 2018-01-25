@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
+import { JobScheduleActionModule } from "./action";
 import { JobScheduleAdvancedFilterComponent } from "./browse/filter/job-schedule-advanced-filter.component";
 import { JobScheduleListComponent } from "./browse/job-schedule-list.component";
 import { JobScheduleDetailsModule } from "./details/job-schedule-details.module";
@@ -13,7 +14,7 @@ const components = [
 ];
 
 const modules = [
-    JobScheduleDetailsModule, ...commonModules,
+    JobScheduleActionModule, JobScheduleDetailsModule, ...commonModules,
 ];
 
 @NgModule({
