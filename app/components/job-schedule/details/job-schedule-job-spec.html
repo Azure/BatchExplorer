@@ -2,7 +2,7 @@
     <bl-property-list>
         <bl-property-group label="General" class="wide">
             <bl-text-property label="Display name" [value]="decorator.displayName"></bl-text-property>
-            <bl-link-property *ngIf="job.poolInfo?.poolId" label="Pool" [value]="poolInfo.poolId" [link]="['/pools/', poolInfo.poolId]"></bl-link-property>
+            <bl-link-property *ngIf="poolInfo?.poolId" label="Pool" [value]="poolInfo.poolId" [link]="['/pools/', poolInfo.poolId]"></bl-link-property>
             <bl-text-property label="Priority" [value]="decorator.priority"></bl-text-property>
             <bl-bool-property label="Task dependencies" [value]="decorator.usesTaskDependencies"></bl-bool-property>
             <bl-text-property label="When all tasks complete" [value]="decorator.onAllTasksComplete"></bl-text-property>

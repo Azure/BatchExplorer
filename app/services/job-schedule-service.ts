@@ -116,7 +116,11 @@ export class JobScheduleService extends ServiceBase {
     }
 
     public patch(jobScheduleId: string, attributes: JobSchedulePatchDto, options: any = {}) {
-        return this.callBatchClient((client) => client.jobSchedule.patch(jobScheduleId, options));
+        return this.callBatchClient((client) => {
+            return client.jobSchedule.patch(jobScheduleId, attributes.toJS(), options);
+        }, (error) => {
+            log.error(`Error patching job schedule: ${jobScheduleId}`, error);
+        });
     }
 
     public updateTags(jobSchedule: JobSchedule, tags: List<string>) {
