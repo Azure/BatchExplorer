@@ -6,7 +6,7 @@ import { remote } from "electron";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-// import { SidebarManager } from "app/components/base/sidebar";
+import { SidebarManager } from "app/components/base/sidebar";
 import { Job, JobSchedule, JobScheduleState, Pool } from "app/models";
 import { JobScheduleDecorator } from "app/models/decorators";
 import { FileSystemService, JobScheduleParams, JobScheduleService } from "app/services";
@@ -15,6 +15,7 @@ import {
     DeleteJobScheduleDialogComponent,
     DisableJobScheduleDialogComponent,
     EnableJobScheduleDialogComponent,
+    JobScheduleCreateBasicDialogComponent,
     TerminateJobScheduleDialogComponent,
 } from "../action";
 
@@ -47,7 +48,7 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
         private dialog: MatDialog,
         private activatedRoute: ActivatedRoute,
         private fs: FileSystemService,
-        // private sidebarManager: SidebarManager,
+        private sidebarManager: SidebarManager,
         private jobScheduleService: JobScheduleService,
         private router: Router) {
 
@@ -110,11 +111,12 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
-    // @autobind()
-    // public cloneJob() {
-    //     const ref = this.sidebarManager.open(`add-job-${this.jobId}`, JobCreateBasicDialogComponent);
-    //     ref.component.setValueFromEntity(this.job);
-    // }
+    @autobind()
+    public cloneJobSchedule() {
+        const ref = this.sidebarManager.open(`add-job-schedule-${this.jobScheduleId}`,
+            JobScheduleCreateBasicDialogComponent);
+        ref.component.setValueFromEntity(this.jobSchedule);
+    }
 
     @autobind()
     public enableJobSchedule() {

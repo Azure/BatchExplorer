@@ -1,10 +1,19 @@
+import * as moment from "moment";
+
 import { JobScheduleCreateDto } from "app/models/dtos";
+
+export interface ScheduleModel {
+    doNotRunAfter: string;
+    doNotRunUntil: string;
+    recurrenceInterval: moment.Duration;
+    startWindow: moment.Duration;
+}
 
 export interface CreateJobScheduleModel {
     id: string;
     displayName: string;
     metadata: any;
-    schedule: any;
+    schedule: ScheduleModel;
     jobSpecification: any;
 }
 
