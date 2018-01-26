@@ -38,10 +38,10 @@ export function jobScheduleToFormModel(jobSchedule: JobScheduleCreateDto): Creat
         displayName: jobSchedule.displayName,
         metadata: jobSchedule.metadata,
         schedule: {
-            doNotRunAfter: jobSchedule.schedule.doNotRunAfter,
-            doNotRunUntil: jobSchedule.schedule.doNotRunUntil,
-            recurrenceInterval: jobSchedule.schedule.recurrenceInterval,
-            startWindow: jobSchedule.schedule.startWindow,
+            doNotRunAfter: jobSchedule.schedule && jobSchedule.schedule.doNotRunAfter,
+            doNotRunUntil: jobSchedule.schedule && jobSchedule.schedule.doNotRunUntil,
+            recurrenceInterval: jobSchedule.schedule && jobSchedule.schedule.recurrenceInterval,
+            startWindow: jobSchedule.schedule && jobSchedule.schedule.startWindow,
         },
         jobSpecification: jobSchedule.jobSpecification,
     };
