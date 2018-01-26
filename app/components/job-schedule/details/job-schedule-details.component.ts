@@ -40,7 +40,6 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
     public decorator: JobScheduleDecorator;
     public data: EntityView<JobSchedule, JobScheduleParams>;
     public JobScheduleState = JobScheduleState;
-    public hasHookTask = false;
 
     private _paramsSubscriber: Subscription;
 
