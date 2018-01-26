@@ -8,6 +8,11 @@
             <bl-tags summaryTags [tags]="jobSchedule.tags" [editable]="jobSchedule.editable" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                <bl-terminate-button [entity]="jobSchedule" [action]="terminateJobSchedule"></bl-terminate-button>
+                <bl-delete-button [action]="deleteJobSchedule" [enabled]="jobSchedule.state !== JobScheduleState.deleting && jobSchedule.state !== JobScheduleState.terminating"></bl-delete-button>
+                <bl-disable-button [job]="jobSchedule" [action]="disableJobSchedule"></bl-disable-button>
+                <bl-enable-button [job]="jobSchedule" [action]="enableJobSchedule"></bl-enable-button>
+                <!-- <bl-clone-button [action]="cloneJobSchedule"></bl-clone-button> -->
                 <bl-button [action]="exportAsJSON" color="light" title="Export as JSON"><i class="fa fa-code"></i></bl-button>
             </bl-button-group>
         </bl-summary-card>
@@ -19,7 +24,7 @@
                 </bl-tab>
                 <bl-tab key="jobSpecification" *ngIf="jobSpecification">
                     <bl-tab-label>Job specification</bl-tab-label>
-                    <bl-job-schedule-job-spec [job]="jobSpecification"></bl-job-schedule-job-spec>
+                    <bl-job-schedule-job-specification [job]="jobSpecification"></bl-job-schedule-job-specification>
                 </bl-tab>
                 <bl-tab key="autoPoolSpecification" *ngIf="autoPoolSpecification">
                     <bl-tab-label>Auto pool specification</bl-tab-label>

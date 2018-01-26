@@ -1,14 +1,22 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
+import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "app/core";
 import { remote } from "electron";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
+// import { SidebarManager } from "app/components/base/sidebar";
 import { Job, JobSchedule, JobScheduleState, Pool } from "app/models";
 import { JobScheduleDecorator } from "app/models/decorators";
 import { FileSystemService, JobScheduleParams, JobScheduleService } from "app/services";
 import { EntityView } from "app/services/core";
+import {
+    DeleteJobScheduleDialogComponent,
+    DisableJobScheduleDialogComponent,
+    EnableJobScheduleDialogComponent,
+    TerminateJobScheduleDialogComponent,
+} from "../action";
 
 import "./job-schedule-details.scss";
 
@@ -37,8 +45,10 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
     private _paramsSubscriber: Subscription;
 
     constructor(
+        private dialog: MatDialog,
         private activatedRoute: ActivatedRoute,
         private fs: FileSystemService,
+        // private sidebarManager: SidebarManager,
         private jobScheduleService: JobScheduleService,
         private router: Router) {
 
@@ -72,6 +82,49 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public refresh() {
         return this.data.refresh();
+    }
+
+    @autobind()
+    public terminateJobSchedule() {
+        const config = new MatDialogConfig();
+        const dialogRef = this.dialog.open(TerminateJobScheduleDialogComponent, config);
+        dialogRef.componentInstance.jobScheduleId = this.jobSchedule.id;
+        dialogRef.afterClosed().subscribe((obj) => {
+            this.refresh();
+        });
+    }
+
+    @autobind()
+    public deleteJobSchedule() {
+        const config = new MatDialogConfig();
+        const dialogRef = this.dialog.open(DeleteJobScheduleDialogComponent, config);
+        dialogRef.componentInstance.jobScheduleId = this.jobSchedule.id;
+    }
+
+    @autobind()
+    public disableJobSchedule() {
+        const config = new MatDialogConfig();
+        const dialogRef = this.dialog.open(DisableJobScheduleDialogComponent, config);
+        dialogRef.componentInstance.jobScheduleId = this.jobSchedule.id;
+        dialogRef.afterClosed().subscribe((obj) => {
+            this.refresh();
+        });
+    }
+
+    // @autobind()
+    // public cloneJob() {
+    //     const ref = this.sidebarManager.open(`add-job-${this.jobId}`, JobCreateBasicDialogComponent);
+    //     ref.component.setValueFromEntity(this.job);
+    // }
+
+    @autobind()
+    public enableJobSchedule() {
+        const config = new MatDialogConfig();
+        const dialogRef = this.dialog.open(EnableJobScheduleDialogComponent, config);
+        dialogRef.componentInstance.jobScheduleId = this.jobSchedule.id;
+        dialogRef.afterClosed().subscribe((obj) => {
+            this.refresh();
+        });
     }
 
     @autobind()
