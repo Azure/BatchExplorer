@@ -8,14 +8,14 @@ import { JobScheduleAutoPoolComponent } from "./job-schedule-autopool.component"
 import { JobScheduleConfigurationComponent } from "./job-schedule-configuration.component";
 import { JobScheduleDefaultComponent } from "./job-schedule-default.component";
 import { JobScheduleDetailsComponent } from "./job-schedule-details.component";
-import { JobScheduleJobSpecComponent } from "./job-schedule-job-spec.component";
+import { JobScheduleJobSpecificationComponent } from "./job-schedule-job-specification.component";
 
 const components = [
     JobScheduleAutoPoolComponent,
     JobScheduleConfigurationComponent,
     JobScheduleDetailsComponent,
     JobScheduleDefaultComponent,
-    JobScheduleJobSpecComponent,
+    JobScheduleJobSpecificationComponent,
 ];
 
 const modules = [

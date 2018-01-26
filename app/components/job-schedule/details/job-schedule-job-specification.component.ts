@@ -4,9 +4,9 @@ import { JobConfigurationComponent } from "app/components/job/details";
 
 // tslint:disable:trackBy-function
 @Component({
-    selector: "bl-job-schedule-job-spec",
-    templateUrl: "job-schedule-job-spec.html",
+    selector: "bl-job-schedule-job-specification",
+    templateUrl: "job-schedule-job-specification.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class JobScheduleJobSpecComponent extends JobConfigurationComponent {
+export class JobScheduleJobSpecificationComponent extends JobConfigurationComponent {
 }
