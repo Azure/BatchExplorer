@@ -122,7 +122,7 @@ export class DurationPickerComponent implements ControlValueAccessor {
      */
     private _setValueAndUnit() {
         this.unlimited = this._isDurationUnlimited(this.duration);
-        if (!this.unlimited && moment.isMoment(this.duration) {
+        if (!this.unlimited && moment.isMoment(this.duration)) {
             const days = this.duration.asDays();
             const hours = this.duration.asHours();
             const minutes = this.duration.asMinutes();
