@@ -73,6 +73,7 @@ export class PollService {
         if (!tracker) {
             return;
         }
+
         delete this._pollTrackers[key][id];
         if (tracker.running) {
             this._clearActivePoll(key);

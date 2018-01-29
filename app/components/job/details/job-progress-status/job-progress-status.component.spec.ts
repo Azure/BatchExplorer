@@ -3,13 +3,13 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { JobProgressStatusComponent } from "app/components/job/details/job-progress-status";
 import { Job, JobTaskCounts, Node, Pool } from "app/models";
 import { JobService, NodeService, PoolService } from "app/services";
 import { PollService } from "app/services/core";
 import { click } from "test/utils/helpers";
 import { MockEntityView, MockListView } from "test/utils/mocks";
 import { GaugeMockComponent } from "test/utils/mocks/components";
+import { JobProgressStatusComponent } from "./job-progress-status.component";
 
 @Component({
     template: `<bl-job-progress-status [job]="job" [poolId]="poolId"></bl-job-progress-status>`,
@@ -59,7 +59,7 @@ describe("JobProgressStatusComponent", () => {
         };
 
         pollServiceSpy = {
-            startPoll: () => ({}),
+            startPoll: () => ({destroy: () => null}),
         };
 
         TestBed.configureTestingModule({
