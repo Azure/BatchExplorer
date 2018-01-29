@@ -30,6 +30,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     public containerId: string;
     public decorator: ApplicationDecorator;
     public data: EntityView<BlobContainer, GetContainerParams>;
+    public isFileGroup = false;
 
     private _paramsSubscriber: Subscription;
 
@@ -43,6 +44,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         this.data = this.storageService.containerView();
         this.data.item.subscribe((container) => {
             this.container = container;
+            this.isFileGroup = container && container.isFileGroup;
         });
 
         this.data.deleted.subscribe((key) => {

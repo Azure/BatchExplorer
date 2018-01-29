@@ -6,6 +6,7 @@ import { Job, JobState } from "app/models";
 
 export class BaseButton {
     @Input() public action: ButtonAction;
+    @Input() public disabled: boolean;
     @Input() public tooltipPosition: string = "below";
 }
 
@@ -215,7 +216,12 @@ export class ResizeButtonComponent extends BaseButton {
 @Component({
     selector: "bl-edit-button",
     template: `
-        <bl-button color="light" [action]="action" [title]="title" icon="fa fa-pencil-square-o" permission="write">
+        <bl-button color="light"
+            [action]="action"
+            [title]="title"
+            icon="fa fa-pencil-square-o"
+            permission="write"
+            [disabled]="disabled">
         </bl-button>
     `,
 })

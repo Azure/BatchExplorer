@@ -1,3 +1,9 @@
+# 0.12.3
+
+### Hot fix:
+* File-group/container issue with adding more files(Disabled for non file group for now) [\#1033](https://github.com/Azure/BatchLabs/issues/1033)
+* Storage Container Search Broken  [\#1039](https://github.com/Azure/BatchLabs/issues/1039)
+
 # 0.12.2
 
 ### Hot fix:

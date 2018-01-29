@@ -56,6 +56,9 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
     @Output()
     public listScrolledToBottom = new EventEmitter<any>();
 
+    @Output()
+    public filterChange = new EventEmitter<Filter>();
+
     @ViewChild("quickSearchInput")
     public quickSearchInput: ElementRef;
 
@@ -167,6 +170,7 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
 
     private _updateFilter() {
         this.filter = FilterBuilder.and(this.quickFilter, this.advancedFilter);
+        this.filterChange.emit(this.filter);
     }
 
     private _clearListSubs() {
