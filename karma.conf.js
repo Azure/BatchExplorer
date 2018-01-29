@@ -28,6 +28,7 @@ module.exports = function(config) {
         autoWatchBatchDelay: 1000,
 
         browsers: ["CustomElectron"],
+        browserNoActivityTimeout: 300000,
         customLaunchers: {
             CustomElectron: {
                 base: "Electron",
