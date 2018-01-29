@@ -21,6 +21,7 @@ export class MainNavigationComponent implements OnInit {
     public selectedAccountAlias: string = "";
     public currentUserName: string = "";
     public update: any;
+
     private _autoUpdater: AppUpdater;
     private _showNotification = false;
 

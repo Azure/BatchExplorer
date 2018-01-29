@@ -54,6 +54,8 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
                 return "Batch application";
             case PinnedEntityType.Job:
                 return "Batch job";
+            case PinnedEntityType.JobSchedule:
+                return "Batch job schedule";
             case PinnedEntityType.Pool:
                 return "Batch pool";
             case PinnedEntityType.FileGroup:
@@ -69,6 +71,8 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
                 return "fa-file-archive-o";
             case PinnedEntityType.Job:
                 return "fa-tasks";
+            case PinnedEntityType.JobSchedule:
+                return "fa-calendar";
             case PinnedEntityType.Pool:
                 return "fa-database";
             case PinnedEntityType.FileGroup:

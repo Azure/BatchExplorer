@@ -1,0 +1,9 @@
+<bl-simple-form [submit]="destroyJobSchedule" [containerRef]="dialogRef" actionColor="warn" actionName="Delete" [multiUse]="false" size="small" title="Delete job schedule">
+    <div class="message">
+        <p>Do you want to delete the job schedule: '<b>{{jobScheduleId}}</b>'?</p>
+        <p>
+            Warning! Deleting job schedule'<b>{{jobScheduleId}}</b>' is irreversible. The action you're about to take can't be undone. Clicking
+            OK will delete this job schedule and any related resources permanently.
+        </p>
+    </div>
+</bl-simple-form>
