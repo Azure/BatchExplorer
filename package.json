@@ -9,7 +9,7 @@
     "name": "Microsoft Corporation",
     "email": "tiguerin@microsoft.com"
   },
-  "version": "0.12.3",
+  "version": "0.12.4",
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json",
@@ -139,7 +139,7 @@
     "core-decorators": "~0.20.0",
     "d3": "~4.12.0",
     "download": "~6.2.5",
-    "electron-updater": "~2.17.6",
+    "electron-updater": "~2.18.2",
     "element-resize-detector": "^1.1.9",
     "extract-zip": "~1.6.6",
     "font-awesome": "^4.7.0",
