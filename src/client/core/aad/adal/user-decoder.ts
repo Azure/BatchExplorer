@@ -1,8 +1,6 @@
 import { logger } from "client/logger";
 import { AADUser } from "./aad-user";
 
-declare function escape(v: string): string;
-
 export class UserDecoder {
     public decode(encoded: string): AADUser {
 
