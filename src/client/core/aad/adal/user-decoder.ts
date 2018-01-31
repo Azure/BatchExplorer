@@ -1,4 +1,3 @@
-import { logger } from "client/logger";
 import { AADUser } from "./aad-user";
 
 export class UserDecoder {
@@ -47,9 +46,7 @@ export class UserDecoder {
     }
 
     private base64DecodeStringUrlSafe(base64IdToken: string) {
-        // html5 should support atob function for decoding
         base64IdToken = base64IdToken.replace(/-/g, "+").replace(/_/g, "/");
-        logger.info("Decoding string", base64IdToken, (new Buffer(base64IdToken, "base64")).toString("utf8"));
         return (new Buffer(base64IdToken, "base64")).toString("utf8");
     }
 }
