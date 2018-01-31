@@ -1,3 +1,9 @@
+# 0.12.4
+
+### Hot fix:
+* Error redeem auth code for a token... [\#1044](https://github.com/Azure/BatchLabs/issues/1044)
+* Updater appears to be broken [\#1042](https://github.com/Azure/BatchLabs/issues/1042)
+
 # 0.12.3
 
 ### Hot fix:
