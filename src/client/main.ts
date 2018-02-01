@@ -5,6 +5,7 @@ require("module").Module._initPaths();
 
 import { Menu, app, protocol } from "electron";
 import { autoUpdater } from "electron-updater";
+import { setMenu } from "./menu";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
 import { localStorage } from "client/core/local-storage";
@@ -46,40 +47,7 @@ function startApplication() {
     batchLabsApp.init().then(() => {
         batchLabsApp.start();
     });
-
-    if (process.platform === "darwin" && process.env.NODE_ENV === "production") {
-        // Create our menu entries so that we can use MAC shortcuts
-        Menu.setApplicationMenu(Menu.buildFromTemplate([
-            {
-                label: "Application",
-                submenu: [
-                    { role: "hide" },
-                    { role: "hideothers" },
-                    { type: "separator" },
-                    { label: "Quit", accelerator: "Command+Q", click: () => app.quit() },
-                ],
-            },
-            {
-                label: "Edit",
-                submenu: [
-                    { role: "undo" },
-                    { role: "redo" },
-                    { type: "separator" },
-                    { role: "cut" },
-                    { role: "copy" },
-                    { role: "paste" },
-                    { role: "delete" },
-                    { role: "selectall" },
-                ],
-            },
-            {
-                label: "Window",
-                submenu: [
-                    { role: "minimize" },
-                ],
-            },
-        ]));
-    }
+    setMenu(batchLabsApp);
 }
 
 // This method will be called when Electron has finished
