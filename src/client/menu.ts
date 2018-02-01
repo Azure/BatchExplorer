@@ -1,5 +1,5 @@
 import { BatchLabsApplication } from "client/core";
-import { BrowserWindow, Menu, MenuItemConstructorOptions, app, dialog, shell } from "electron";
+import { BrowserWindow, Menu, MenuItemConstructorOptions, app } from "electron";
 
 const editMenu: MenuItemConstructorOptions = {
     label: "Edit",
