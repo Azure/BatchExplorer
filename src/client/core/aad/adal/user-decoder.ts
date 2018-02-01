@@ -1,7 +1,5 @@
 import { AADUser } from "./aad-user";
 
-declare function escape(v: string): string;
-
 export class UserDecoder {
     public decode(encoded: string): AADUser {
 
@@ -48,8 +46,7 @@ export class UserDecoder {
     }
 
     private base64DecodeStringUrlSafe(base64IdToken: string) {
-        // html5 should support atob function for decoding
         base64IdToken = base64IdToken.replace(/-/g, "+").replace(/_/g, "/");
-        return decodeURIComponent(escape(Buffer.from(base64IdToken, "base64").toString()));
+        return (new Buffer(base64IdToken, "base64")).toString("utf8");
     }
 }
