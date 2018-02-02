@@ -1,6 +1,5 @@
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { remote } from "electron";
-import * as MouseTrap from "mousetrap";
 
 import "./utils/extensions";
 
@@ -31,18 +30,6 @@ platformBrowserDynamic().bootstrapModule(AppModule)
         log.error("Bootstrapping failed :: ", error);
         handleCoreError(error);
     });
-
-MouseTrap.bind("ctrl+shift+i", () => {
-    if (remote.getCurrentWindow().webContents.isDevToolsOpened()) {
-        remote.getCurrentWindow().webContents.closeDevTools();
-    } else {
-        remote.getCurrentWindow().webContents.openDevTools();
-    }
-});
-
-MouseTrap.bind("ctrl+r", () => {
-    location.reload();
-});
 
 document.addEventListener("dragover", (event) => {
     event.dataTransfer.dropEffect = "none";
