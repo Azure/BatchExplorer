@@ -120,8 +120,7 @@ export class BatchLabsApplication {
 
     public openFromArguments(argv: string[]) {
         if (ClientConstants.isDev || argv.length < 2) {
-            // TODO :: ANDREW :: REMOVE LINK
-            this.openNewWindow("ms-batchlabs://route/market/blender/actions/render-movie-linux/submit?blendFile=monster.blend&useAutoPool=0");
+            this.openNewWindow();
             return;
         }
 
