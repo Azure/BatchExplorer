@@ -52,19 +52,16 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public ngOnInit() {
-        this.route.queryParams.subscribe((queryParams) => {
-            console.log("queryParams :: ", queryParams);
-            this._queryParameters = queryParams;
-            if (queryParams["useAutoPool"]) {
-                const modeAutoSelect = Boolean(parseInt(queryParams["useAutoPool"], 10))
-                    ? NcjTemplateMode.NewPoolAndJob
-                    : NcjTemplateMode.ExistingPoolAndJob;
+        this._queryParameters = Object.assign({}, this.route.snapshot.queryParams);
+        if (this._queryParameters["useAutoPool"]) {
+            const modeAutoSelect = Boolean(parseInt(this._queryParameters["useAutoPool"], 10))
+                ? NcjTemplateMode.NewPoolAndJob
+                : NcjTemplateMode.ExistingPoolAndJob;
 
-                this.pickMode(modeAutoSelect);
-            }
+            this.pickMode(modeAutoSelect);
+        }
 
-            this._applyinitialData();
-        });
+        this._applyinitialData();
     }
 
     public ngOnChanges(changes) {
@@ -213,18 +210,24 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             }
 
             templateFormGroup[key] = new FormControl(defaultValue, validator);
-            // Listen to control value change events
-            // TODO: Be nice to alter the params without reloading the page.
-            this._controlChanges.push(templateFormGroup[key].valueChanges.subscribe((change) => {
-                console.log("control value changed: ", key, change);
-                const queryParams = Object.assign({}, this.route.snapshot.queryParams);
-                queryParams[key] = change;
-                console.log("new queryParams: ", queryParams);
-                this.router.navigate([], { queryParams: queryParams });
-            }));
+            this._handleControlChangeEvents(templateFormGroup, key);
         }
 
         return new FormGroup(templateFormGroup);
+    }
+
+    private _handleControlChangeEvents(formGroup, key) {
+        // Listen to control value change events and update the route parameters to match
+        this._controlChanges.push(formGroup[key].valueChanges.subscribe((change) => {
+            this._queryParameters[key] = change;
+            const urlTree = this.router.createUrlTree([], {
+                queryParams: this._queryParameters,
+                queryParamsHandling: "merge",
+                preserveFragment: true,
+            });
+
+            this.router.navigateByUrl(urlTree);
+        }));
     }
 
     private _createForms() {
