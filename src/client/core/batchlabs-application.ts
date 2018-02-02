@@ -99,7 +99,6 @@ export class BatchLabsApplication {
             logger.error("There was a uncaught exception", error);
             this.recoverWindow.createWithError(error.message);
         });
-
     }
 
     /**
@@ -121,7 +120,8 @@ export class BatchLabsApplication {
 
     public openFromArguments(argv: string[]) {
         if (ClientConstants.isDev || argv.length < 2) {
-            this.openNewWindow();
+            // TODO :: ANDREW :: REMOVE LINK
+            this.openNewWindow("ms-batchlabs://route/market/blender/actions/render-movie-linux/submit?blendFile=monster.blend&useAutoPool=0");
             return;
         }
 
