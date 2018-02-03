@@ -60,6 +60,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
 
     public ngOnDestroy() {
         this._subs.forEach(x => x.unsubscribe());
+        this.poolsData.dispose();
     }
 
     public writeValue(poolInfo: any) {

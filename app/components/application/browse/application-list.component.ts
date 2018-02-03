@@ -67,6 +67,7 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
 
     public ngOnDestroy() {
         this._subs.forEach(x => x.unsubscribe());
+        this.data.dispose();
     }
 
     @autobind()

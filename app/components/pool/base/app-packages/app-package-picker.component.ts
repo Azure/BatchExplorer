@@ -68,7 +68,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         };
 
         // subscribe to the application data proxy
-        this._subscriptions.push(this._data.items.subscribe((applications) => {
+        this._data.items.subscribe((applications) => {
             this._applicationMap = {};
             if (applications.size > 0) {
                 this._mapApplicationPackages(applications);
@@ -83,7 +83,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
                     index++;
                 });
             }
-        }));
+        });
 
         // subscribe to the form change events
         this._subscriptions.push(this.items.valueChanges.subscribe((references: PackageReference[]) => {
@@ -114,6 +114,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     }
 
     public ngOnDestroy() {
+        this._data.dispose();
         this._subscriptions.forEach(x => x.unsubscribe());
     }
 

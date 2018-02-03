@@ -1,3 +1,20 @@
+# 0.12.4
+
+### Hot fix:
+* Error redeem auth code for a token... [\#1044](https://github.com/Azure/BatchLabs/issues/1044)
+* Updater appears to be broken [\#1042](https://github.com/Azure/BatchLabs/issues/1042)
+
+# 0.12.3
+
+### Hot fix:
+* File-group/container issue with adding more files(Disabled for non file group for now) [\#1033](https://github.com/Azure/BatchLabs/issues/1033)
+* Storage Container Search Broken  [\#1039](https://github.com/Azure/BatchLabs/issues/1039)
+
+# 0.12.2
+
+### Hot fix:
+* Update Electron to fix vulnerability [\#1030](https://github.com/Azure/BatchLabs/issues/1030)
+
 # 0.12.1
 
 ### Hot fix:

@@ -15,6 +15,7 @@ require("zone.js/dist/async-test");
 require("zone.js/dist/fake-async-test");
 Error.stackTraceLimit = 5;
 
+import "app/utils/extensions";
 import "hammerjs";
 import "moment-duration-format";
 import "test/utils/matchers";
