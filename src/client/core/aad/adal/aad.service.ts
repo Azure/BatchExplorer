@@ -33,7 +33,7 @@ export class AADService {
 
     public tenantsIds: Observable<string[]>;
 
-    private _userAuthorization: AuthenticationService;
+    public userAuthorization: AuthenticationService;
     private _accessTokenService: AccessTokenService;
     private _userDecoder: UserDecoder;
     private _newAccessTokenSubject: StringMap<Deferred<AccessToken>> = {};
@@ -47,7 +47,7 @@ export class AADService {
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
         this.tenantsIds = this._tenantsIds.asObservable();
-        this._userAuthorization = new AuthenticationService(this.app, adalConfig);
+        this.userAuthorization = new AuthenticationService(this.app, adalConfig);
         this._accessTokenService = new AccessTokenService(adalConfig);
     }
 
@@ -64,19 +64,10 @@ export class AADService {
      * It will try to use the refresh token cached to prevent a new prompt window if possible.
      */
     public async login(): Promise<any> {
-        this.app.splashScreen.updateMessage("Login to azure active directory");
         try {
             const tenantIds = await this._loadTenantIds();
-
-            this.app.splashScreen.updateMessage("Retrieving access tokens");
-
             this._tenantsIds.next(tenantIds);
-            for (const tenantId of tenantIds) {
-                for (const resource of resources) {
-                    await this._retrieveNewAccessToken(tenantId, resource);
-                }
-            }
-            this._showMainWindow();
+            this._refreshAllAccessTokens();
         } catch (error) {
             logger.error("Error login", error);
         }
@@ -89,7 +80,7 @@ export class AADService {
         this._tokenCache.clear();
         this._currentUser.next(null);
         this._clearUserSpecificCache();
-        this._userAuthorization.logout();
+        this.userAuthorization.logout();
     }
 
     public async accessTokenFor(tenantId: string, resource: string = defaultResource) {
@@ -180,9 +171,9 @@ export class AADService {
 
     private async _authorizeUser(tenantId, forceReLogin): Promise<AuthorizeResult> {
         if (forceReLogin) {
-            return this._userAuthorization.authorize(tenantId, false);
+            return this.userAuthorization.authorize(tenantId, false);
         } else {
-            return this._userAuthorization.authorizeTrySilentFirst(tenantId);
+            return this.userAuthorization.authorizeTrySilentFirst(tenantId);
         }
     }
 
@@ -248,8 +239,12 @@ export class AADService {
         localStorage.removeItem(Constants.localStorageKey.selectedAccountId);
     }
 
-    private _showMainWindow() {
-        this.app.windows.showAll();
-        this.app.splashScreen.destroy();
+    private async _refreshAllAccessTokens() {
+        const tenantIds = this._tenantsIds.value;
+        for (const tenantId of tenantIds) {
+            for (const resource of resources) {
+                await this._retrieveNewAccessToken(tenantId, resource);
+            }
+        }
     }
 }
