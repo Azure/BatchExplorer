@@ -1,5 +1,7 @@
-import { BrowserWindow, ipcMain } from "electron";
+import { BrowserWindow, app, ipcMain } from "electron";
 
+import { BehaviorSubject } from "rxjs";
+import { Observable } from "rxjs/Observable";
 import { Constants } from "../client-constants";
 import { BatchLabsApplication, FileSystem, GenericWindow, LocalFileStorage } from "../core";
 import { logger, renderLogger } from "../logger";
@@ -10,16 +12,33 @@ const devServerUrl = Constants.urls.main.dev;
 // Webpack build output
 const buildFileUrl = Constants.urls.main.prod;
 
+export enum WindowState {
+    Closed,
+    Loading,
+    /**
+     * When the javascript is done loading and the app is initializing
+     */
+    Initializing,
+    Ready,
+    /**
+     * Happens when the application fail to load because the dev server is not started or files might be corrupted
+     */
+    FailedLoad,
+}
+
 export class MainWindow extends GenericWindow {
     public appReady: Promise<void>;
+    public state: Observable<WindowState>;
     private _showWindowOnstart = false;
+    private _state = new BehaviorSubject<WindowState>(WindowState.Closed);
     private _resolveAppReady: () => void;
 
     constructor(batchLabsApp: BatchLabsApplication) {
         super(batchLabsApp);
+        this.state = this._state.asObservable();
         this.appReady = new Promise((resolve) => {
             this._resolveAppReady = resolve;
-        });
+        }).then(() => this._state.next(WindowState.Ready));
     }
 
     public debugCrash() {
@@ -38,10 +57,14 @@ export class MainWindow extends GenericWindow {
     }
 
     protected createWindow() {
+        this._state.next(WindowState.Loading);
         const window = new BrowserWindow({
+            title: app.getName(),
             height: 1000,
             icon: Constants.urls.icon,
             width: 1600,
+            minWidth: 1200,
+            minHeight: 300,
             show: this._showWindowOnstart, // Don't show the window until the user authenticated
             webPreferences: {
                 webSecurity: false,
@@ -53,9 +76,9 @@ export class MainWindow extends GenericWindow {
         window.loadURL(url);
 
         const anyWindow = window as any;
+        anyWindow.windowHandler = this;
         anyWindow.logger = renderLogger;
         anyWindow.batchLabsApp = this.batchLabsApp;
-        anyWindow.splashScreen = this.batchLabsApp.splashScreen;
         anyWindow.authenticationWindow = this.batchLabsApp.authenticationWindow;
         anyWindow.fs = new FileSystem();
         anyWindow.localFileStorage = new LocalFileStorage();
@@ -93,9 +116,14 @@ export class MainWindow extends GenericWindow {
             }
         });
 
+        ipcMain.once("initializing", (event) => {
+            if (event.sender.id === window.webContents.id) {
+                this._state.next(WindowState.Initializing);
+            }
+        });
+
         window.webContents.on("did-fail-load", (error) => {
-            this.batchLabsApp.splashScreen.updateMessage(
-                "Fail to load! Make sure you built the app or are running the dev-server.");
+            this._state.next(WindowState.FailedLoad);
             logger.error("Fail to load", error);
         });
 

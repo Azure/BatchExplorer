@@ -95,7 +95,7 @@ describe("AADService", () => {
 
             (service as any)._accessTokenService.refresh = refreshSpy;
             (service as any)._accessTokenService.redeem = redeemSpy;
-            (service as any)._userAuthorization.authorizeTrySilentFirst = authorizeSpy;
+            (service as any).userAuthorization.authorizeTrySilentFirst = authorizeSpy;
             (service as any)._userDecoder.decode = decodeSpy;
         });
 
