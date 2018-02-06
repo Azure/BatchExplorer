@@ -66,6 +66,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();
+        this.data.dispose();
     }
 
     @autobind()

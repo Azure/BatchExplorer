@@ -1,14 +1,14 @@
 import { F } from "test/utils";
 import { MockAuthenticationWindow, MockSplashScreen } from "test/utils/mocks/windows";
 import {
-    AuthenticationService, AuthorizeError, AuthorizeResult,
+    AuthenticationService, AuthenticationState, AuthorizeError, AuthorizeResult,
 } from "./authentication.service";
 
 describe("AuthenticationService", () => {
     let userAuthorization: AuthenticationService;
     let fakeAuthWindow: MockAuthenticationWindow;
     let appSpy;
-
+    let state: AuthenticationState;
     beforeEach(() => {
         appSpy = {
             splashScreen: new MockSplashScreen(),
@@ -17,6 +17,7 @@ describe("AuthenticationService", () => {
         const config = { tenant: "common", clientId: "abc", redirectUri: "http://localhost" };
         userAuthorization = new AuthenticationService(appSpy, config);
         fakeAuthWindow = appSpy.authenticationWindow;
+        userAuthorization.state.subscribe(x => state = x);
     });
 
     describe("Authorize", () => {
@@ -48,8 +49,8 @@ describe("AuthenticationService", () => {
             expect(fakeAuthWindow.isVisible()).toBe(true);
         });
 
-        it("should have hidden the splash screen", () => {
-            expect(appSpy.splashScreen.hide).toHaveBeenCalledTimes(1);
+        it("state should now be UserInput", () => {
+            expect(state).toBe(AuthenticationState.UserInput);
         });
 
         it("Should return the id token and code when sucessfull", F(async () => {
@@ -62,7 +63,7 @@ describe("AuthenticationService", () => {
             expect(error).toBeNull();
 
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
-            expect(appSpy.splashScreen.show).toHaveBeenCalledTimes(1);
+            expect(state).toBe(AuthenticationState.Authenticated);
         }));
 
         it("Should error when the url redirect returns an error", F(async () => {

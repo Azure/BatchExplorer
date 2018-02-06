@@ -1,6 +1,5 @@
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
-import { remote } from "electron";
-import * as MouseTrap from "mousetrap";
+import { ipcRenderer } from "electron";
 
 import "./utils/extensions";
 
@@ -19,7 +18,7 @@ import "./styles/main.scss";
 // console.timeEnd("Load scripts");
 // console.time("Bootstrap");
 
-(remote.getCurrentWindow() as any).splashScreen.updateMessage("Initializing app");
+ipcRenderer.send("initializing");
 
 platformBrowserDynamic().bootstrapModule(AppModule)
     .then(() => {
@@ -31,18 +30,6 @@ platformBrowserDynamic().bootstrapModule(AppModule)
         log.error("Bootstrapping failed :: ", error);
         handleCoreError(error);
     });
-
-MouseTrap.bind("ctrl+shift+i", () => {
-    if (remote.getCurrentWindow().webContents.isDevToolsOpened()) {
-        remote.getCurrentWindow().webContents.closeDevTools();
-    } else {
-        remote.getCurrentWindow().webContents.openDevTools();
-    }
-});
-
-MouseTrap.bind("ctrl+r", () => {
-    location.reload();
-});
 
 document.addEventListener("dragover", (event) => {
     event.dataTransfer.dropEffect = "none";

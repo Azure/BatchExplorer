@@ -73,6 +73,10 @@ describe("ComponentUtils", () => {
             view.items.subscribe(x => items = x);
         });
 
+        afterEach(() => {
+            view.dispose();
+        });
+
         it("prepend the missing item to the begining of the list", () => {
             childRoute = {
                 params: { id: "pool-3" },
