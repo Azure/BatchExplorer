@@ -15,7 +15,7 @@ export abstract class GenericWindow {
 
     public create() {
         this.destroy();
-        this.expectedClose = true;
+        this.expectedClose = false;
         this._window = this.createWindow();
         this._window.webContents.once("dom-ready", () => {
             this._resolveDomReady();
@@ -83,7 +83,7 @@ export abstract class UniqueWindow extends GenericWindow {
     }
 
     public setupCommonEvents(window: Electron.BrowserWindow) {
-        window.on("closed", () => {
+        window.on("close", () => {
             if (this.expectedClose) { return; }
             logger.info(`Window ${this.constructor.name} closed. Quiting the app.`);
             this.batchLabsApp.quit();
