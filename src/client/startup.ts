@@ -1,7 +1,7 @@
 
 import { app, protocol } from "electron";
 import { autoUpdater } from "electron-updater";
-import { getProxySettings } from "get-proxy-settings";
+import { getAndTestProxySettings } from "get-proxy-settings";
 import * as globalTunnel from "global-tunnel-ng";
 import * as path from "path";
 
@@ -17,11 +17,20 @@ function allowInsecureRequest() {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 }
 
+async function retrieveProxyCredentials() {
+    return { username: "1", password: "1" };
+}
+
 async function initProxySettings() {
-    const settings = await getProxySettings();
+    const settings = await getAndTestProxySettings(retrieveProxyCredentials);
     if (settings) {
-        process.env.HTTP_PROXY = settings.http;
-        process.env.HTTPS_PROXY = settings.https;
+        if (settings.http) {
+            process.env.HTTP_PROXY = settings.http.toString();
+        }
+        if (settings.https) {
+            process.env.HTTPS_PROXY = settings.https.toString();
+        }
+        process.env.NO_PROXY = "localhost:3178";
         allowInsecureRequest();
         globalTunnel.initialize();
     }
@@ -61,9 +70,9 @@ function startApplication(batchLabsApp: BatchLabsApplication) {
     registerAuthProtocol();
 
     // Uncomment to view why windows don't show up.
-    // batchLabsApp.debugCrash();
     batchLabsApp.init().then(() => {
         batchLabsApp.start();
+        batchLabsApp.debugCrash();
     });
     setMenu(batchLabsApp);
 }
@@ -76,7 +85,6 @@ export async function startBatchLabs() {
     const batchLabsApp = new BatchLabsApplication(autoUpdater);
     setupSingleInstance(batchLabsApp);
 
-    console.log("Banana 1");
     if (app.isReady()) {
         startApplication(batchLabsApp);
     } else {
@@ -84,10 +92,8 @@ export async function startBatchLabs() {
             startApplication(batchLabsApp);
         });
     }
-    console.log("Banana 3");
 
     listenToSelectCertifcateEvent();
-    console.log("Banana 4");
 
     process.on("exit", () => {
         batchLabsApp.quit();
@@ -99,5 +105,11 @@ export async function startBatchLabs() {
 
     process.on("SIGINT", () => {
         process.exit(-2);
+    });
+
+    app.on("login", (event, webContents, request, authInfo, callback) => {
+        event.preventDefault();
+        console.log("Banana is true", authInfo);
+        callback("1", "1");
     });
 }
