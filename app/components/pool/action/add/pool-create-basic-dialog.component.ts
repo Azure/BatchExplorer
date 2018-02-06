@@ -145,10 +145,6 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         this.hasLinkedStorage = hasLinkedStorage;
     }
 
-    public subnetOnChange(subnetId) {
-        this.form.controls.subnetId.setValue(subnetId);
-    }
-
     public get startTask() {
         return this.form.controls.startTask.value;
     }

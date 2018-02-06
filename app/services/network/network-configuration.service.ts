@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { AccountService } from "../account.service";
 import { ArmHttpService } from "../arm-http.service";
 
 export enum ProviderType {
@@ -13,7 +12,7 @@ export interface VirtualNetwork {
     id: string;
     location: string;
     name: string;
-    category: string;
+    category: "ARM" | "Classic";
     subnets: Subnet[];
 }
 
@@ -28,57 +27,42 @@ export interface Subnet {
  */
 @Injectable()
 export class NetworkConfigurationService {
-    constructor(private accountService: AccountService, private armService: ArmHttpService) {
+    constructor(private armService: ArmHttpService) {
     }
 
     /**
-     * Get ARM virtual network observable
+     *
+     * Get ARM virtual network observable by subscriptionId and filter by location
+     * @param subscriptionId
+     * @param location
      */
-    public getVirtualNetwork(): Observable<VirtualNetwork[]> {
-        return this.getCurrentAccount().flatMap(account => {
-            const type = ProviderType.Network;
-            const url = this._getNetworkUrl(account.subscriptionId, type);
-            return this.armService.get(url).flatMap(response => {
-                const virtualNetworks = response.json();
-                if (!virtualNetworks || !virtualNetworks.value) {
-                    return Observable.of(null);
-                }
-                return Observable.of(this._filterByLocation(virtualNetworks.value, account.location, type));
-            });
-        }).share();
-    }
-
-    /**
-     * Get classic virtual network observable
-     */
-    public getClassicVirtualNetwork(): Observable<VirtualNetwork[]> {
-        return this.getCurrentAccount().flatMap(account => {
-            const type = ProviderType.ClassicNetwork;
-            const url = this._getNetworkUrl(account.subscriptionId, type);
-            return this.armService.get(url).flatMap(response => {
-                const virtualNetworks = response.json();
-                if (!virtualNetworks || !virtualNetworks.value) {
-                    return Observable.of(null);
-                }
-                return Observable.of(this._filterByLocation(virtualNetworks.value, account.location, type));
-            });
-        }).share();
-    }
-
-    /**
-     * Get account observable for retriving subscription id and location
-     */
-    public getCurrentAccount() {
-        return this.accountService.currentAccount.flatMap(account => {
-            const subscription = account && account.subscription;
-            if (!subscription) {
+    public listArmVirtualNetworks(subscriptionId: string, location: string): Observable<VirtualNetwork[]> {
+        const type = ProviderType.Network;
+        const url = this._getNetworkUrl(subscriptionId, type);
+        return this.armService.get(url).flatMap(response => {
+            const virtualNetworks = response.json();
+            if (!virtualNetworks || !virtualNetworks.value) {
                 return Observable.of(null);
             }
-            return Observable.of({
-                subscriptionId: subscription.subscriptionId,
-                location: account.location,
-            });
-        }).share();
+            return Observable.of(this._filterByLocation(virtualNetworks.value, location, type));
+        }).first();
+    }
+
+    /**
+     * Get classic virtual network observable by subscriptionId and filter by location
+     * @param subscriptionId
+     * @param location
+     */
+    public listClassicVirtualNetworks(subscriptionId: string, location: string): Observable<VirtualNetwork[]> {
+        const type = ProviderType.ClassicNetwork;
+        const url = this._getNetworkUrl(subscriptionId, type);
+        return this.armService.get(url).flatMap(response => {
+            const virtualNetworks = response.json();
+            if (!virtualNetworks || !virtualNetworks.value) {
+                return Observable.of(null);
+            }
+            return Observable.of(this._filterByLocation(virtualNetworks.value, location, type));
+        }).first();
     }
 
     /**

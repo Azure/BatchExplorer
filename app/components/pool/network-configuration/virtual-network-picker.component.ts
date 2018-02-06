@@ -1,13 +1,15 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input,
-    OnChanges, OnDestroy, Output, forwardRef,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component,
+    Input, OnChanges, OnDestroy, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
+    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
-import { NetworkConfigurationService, Subnet, VirtualNetwork } from "app/services";
+import { autobind } from "app/core";
+import { AccountService, NetworkConfigurationService, Subnet, VirtualNetwork } from "app/services";
+import { ArmResourceUtils } from "app/utils";
 
 @Component({
     selector: "bl-virtual-network-picker",
@@ -21,69 +23,51 @@ import { NetworkConfigurationService, Subnet, VirtualNetwork } from "app/service
 })
 export class VirtualNetworkPickerComponent implements ControlValueAccessor, Validator, OnChanges, OnDestroy {
     @Input() public armNetworkOnly: boolean = true;
-    @Output() public subnetIdChanged = new EventEmitter();
-    public form: FormGroup;
+    public virtualNetworkControl = new FormControl();
+    public subnetControl = new FormControl();
     public subnets: Subnet[];
     public subscriptionId: string;
     public location: string;
 
-    private _propagateChange: (value: any) => void = null;
+    private _propagateChange: (value: string) => void = null;
     private _subs: Subscription[] = [];
-    private _armVnets: VirtualNetwork[];
-    private _classicVnets: VirtualNetwork[];
+    private _armVnetSub: Subscription;
+    private _classicVnetSub: Subscription;
+    private _armVnets: VirtualNetwork[] = [];
+    private _classicVnets: VirtualNetwork[] = [];
 
     constructor(private changeDetector: ChangeDetectorRef,
-                public formBuilder: FormBuilder,
+                private accountService: AccountService,
                 private networkService: NetworkConfigurationService) {
-        this.form = this.formBuilder.group({
-            virtualNetwork: [null],
-            subnet: [null],
-        });
-
-        this._subs.push(this.form.valueChanges.subscribe((value: VirtualNetwork) => {
+        this._subs.push(this.subnetControl.valueChanges.subscribe((subnetId: string) => {
             if (this._propagateChange) {
-                this._propagateChange(value);
+                this._propagateChange(subnetId);
             }
             this.changeDetector.markForCheck();
         }));
 
-        this._subs.push(this.networkService.getVirtualNetwork().subscribe(value => {
-            this._armVnets = value;
-            this.changeDetector.markForCheck();
-        }));
-
-        this._subs.push(this.networkService.getClassicVirtualNetwork().subscribe(value => {
-            this._classicVnets = value;
-            this.changeDetector.markForCheck();
-        }));
-
-        this._subs.push(this.networkService.getCurrentAccount().subscribe(value => {
-            this.subscriptionId = value.subscriptionId;
-            this.location = value.location;
-            this.changeDetector.markForCheck();
-        }));
-
-        this._subs.push(this.form.controls.virtualNetwork.valueChanges.subscribe(value => {
-            let subnets = null;
-            if (value) {
-                const selectedVnets = this.virtualNetworks.find(vnet => vnet.id === value);
-                if (selectedVnets) {
-                    subnets = selectedVnets.subnets;
-                }
+        this._subs.push(this.accountService.currentAccount.subscribe(account => {
+            this.subscriptionId = account && account.subscription && account.subscription.subscriptionId;
+            this.location = account.location;
+            if (!this.subscriptionId || !this.location) {
+                return;
             }
-            this.subnets = subnets;
-            if (this.subnets && this.subnets.length > 0) {
-                this.form.controls.subnet.setValue(this.subnets[0].id);
-            } else {
-                this.form.controls.subnet.setValue(null);
-            }
-            this.changeDetector.markForCheck();
-        }));
+            this._disposeVnetSubscription();
+            this._armVnetSub = this.networkService.listArmVirtualNetworks(this.subscriptionId, this.location)
+                .subscribe(value => {
+                    this._armVnets = value;
+                    this._virtualNetworkOnChange(this.virtualNetworkControl.value);
+                    this.changeDetector.markForCheck();
+                });
 
-        this._subs.push(this.form.controls.subnet.valueChanges.subscribe(value => {
-            this.subnetIdChanged.emit(value);
-            this.changeDetector.markForCheck();
+            this._classicVnetSub = this.networkService.listClassicVirtualNetworks(this.subscriptionId, this.location)
+                .subscribe(value => {
+                    this._classicVnets = value;
+                    this._virtualNetworkOnChange(this.virtualNetworkControl.value);
+                    this.changeDetector.markForCheck();
+                });
         }));
+        this._subs.push(this.virtualNetworkControl.valueChanges.subscribe(this._virtualNetworkOnChange));
     }
 
     public ngOnChanges(changes) {
@@ -94,13 +78,16 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
 
     public ngOnDestroy() {
         this._subs.forEach(sub => sub.unsubscribe());
+        this._disposeVnetSubscription();
     }
 
-    public writeValue(value: VirtualNetwork) {
-        if (value) {
-            this.form.patchValue(value);
+    public writeValue(subnetId: string) {
+        if (subnetId) {
+            this.subnetControl.setValue(subnetId);
+            this._setVirtualNetworkValue(subnetId);
         } else {
-            this.form.reset();
+            this.virtualNetworkControl.setValue(null);
+            this.subnetControl.setValue(null);
         }
     }
 
@@ -112,16 +99,8 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
         // Do nothing
     }
 
-    public validate(c: FormControl) {
-        const valid = this.form.valid;
-        if (valid) {
-            return null;
-        }
-        return {
-            virtualNetwork: {
-                valid: false,
-            },
-        };
+    public validate() {
+        return null;
     }
 
     public trackVirtualNetwork(index, vnet: VirtualNetwork) {
@@ -137,9 +116,53 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
     }
 
     public get subnet() {
-        if (!this.form.controls.subnet.value) {
+        if (!this.subnetControl.value) {
             return "-";
         }
-        return this.form.controls.subnet.value;
+        return this.subnetControl.value;
+    }
+
+    private _setVirtualNetworkValue(subnetId: string) {
+        const descriptor = ArmResourceUtils.getResourceDescriptor(subnetId);
+        // Virtual network is not part of request, it's necessary to parse subnet id to get virtual network id
+        if (descriptor.subscription && descriptor.resourceGroup) {
+            if (descriptor.resourceMap) {
+                const subId = descriptor.subscription;
+                const rg = descriptor.resourceGroup;
+                const providerKey = Object.keys(descriptor.resourceMap)[0];
+                const provider = `${providerKey}/${descriptor.resourceMap[providerKey]}`;
+                this.virtualNetworkControl.setValue(this._getVirtualNetworkId(subId, rg, provider));
+            }
+        }
+    }
+
+    @autobind()
+    private _virtualNetworkOnChange(vnetId: string) {
+        let subnets = null;
+        if (vnetId && this.virtualNetworks) {
+            const selectedVnets = this.virtualNetworks.find(vnet => vnet.id === vnetId);
+            if (selectedVnets) {
+                subnets = selectedVnets.subnets;
+            }
+        }
+        this.subnets = subnets;
+        if (!this.subnetControl.value) {
+            const defaultId = (Array.isArray(this.subnets) && this.subnets.length > 0) ? this.subnets[0].id : null;
+            this.subnetControl.setValue(defaultId);
+        }
+        this.changeDetector.markForCheck();
+    }
+
+    private _disposeVnetSubscription() {
+        if (this._armVnetSub) {
+            this._armVnetSub.unsubscribe();
+        }
+        if (this._classicVnetSub) {
+            this._classicVnetSub.unsubscribe();
+        }
+    }
+
+    private _getVirtualNetworkId(subId: string, rg: string, provider: string) {
+        return `/subscriptions/${subId}/resourceGroups/${rg}/providers/${provider}`;
     }
 }

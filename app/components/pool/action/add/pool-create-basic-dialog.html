@@ -128,8 +128,8 @@
                 <div>The configuration for endpoints on compute nodes in the Batch pool.</div>
             </ng-container>
             <bl-virtual-network-picker
-                [armNetworkOnly]="armNetworkOnly"
-                (subnetIdChanged)="subnetOnChange($event)">
+                formControlName="subnetId"
+                [armNetworkOnly]="armNetworkOnly">
             </bl-virtual-network-picker>
         </bl-form-section>
     </bl-form-page>
