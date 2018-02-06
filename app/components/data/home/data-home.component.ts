@@ -33,7 +33,7 @@ export class DataHomeComponent implements OnDestroy {
     @ViewChild(MatMenuTrigger) public trigger: MatMenuTrigger;
 
     public containerTypes = containerTypes;
-    public quickSearchQuery = new FormControl();
+    public quickSearchQuery: string = "";
     public filter: Filter = FilterBuilder.none();
     public hasAutoStorage = true;
     public containerTypePrefix = new FormControl("");
@@ -44,10 +44,6 @@ export class DataHomeComponent implements OnDestroy {
         private sidebarManager: SidebarManager,
         private dialogService: DialogService,
         public storageService: StorageService) {
-
-        this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
-            this._updateFilter();
-        });
 
         this.containerTypePrefix.valueChanges.subscribe((prefix) => {
             this._updateFilter();
@@ -60,6 +56,15 @@ export class DataHomeComponent implements OnDestroy {
 
     public ngOnDestroy() {
         this._autoStorageSub.unsubscribe();
+    }
+
+    public quickSearchFilterChanged(filter: Filter) {
+        if (filter.isEmpty()) {
+            this.quickSearchQuery = "";
+        } else {
+            this.quickSearchQuery = (filter.properties[0] as any).value;
+        }
+        this._updateFilter();
     }
 
     @autobind()
@@ -104,7 +109,7 @@ export class DataHomeComponent implements OnDestroy {
 
     private _updateFilter() {
         const prefix = this.containerTypePrefix.value || "";
-        const search = this.quickSearchQuery.value || "";
+        const search = this.quickSearchQuery || "";
         const query = prefix + search;
         if (query === "") {
             this.filter = FilterBuilder.none();

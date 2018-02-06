@@ -1,6 +1,7 @@
 export enum PinnedEntityType {
     Application,
     Job,
+    JobSchedule,
     Pool,
     FileGroup,
 }
