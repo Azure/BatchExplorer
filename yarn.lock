@@ -4133,6 +4133,12 @@ get-caller-file@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-1.0.2.tgz#f702e63127e7e231c160a80c1554acb70d5047e5"
 
+get-proxy-settings@~0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/get-proxy-settings/-/get-proxy-settings-0.1.4.tgz#4c8b1918d678fb699d7b84301e37547181786d7c"
+  dependencies:
+    npm-conf "~1.1.3"
+
 get-proxy@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/get-proxy/-/get-proxy-2.1.0.tgz#349f2b4d91d44c4d4d4e9cba2ad90143fac5ef93"
@@ -6643,6 +6649,13 @@ normalize-url@^1.4.0:
 npm-conf@^1.1.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/npm-conf/-/npm-conf-1.1.2.tgz#170a2c48a0c6ad0495f03f87aec2da11ef47a525"
+  dependencies:
+    config-chain "^1.1.11"
+    pify "^3.0.0"
+
+npm-conf@~1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/npm-conf/-/npm-conf-1.1.3.tgz#256cc47bd0e218c259c4e9550bf413bc2192aff9"
   dependencies:
     config-chain "^1.1.11"
     pify "^3.0.0"
