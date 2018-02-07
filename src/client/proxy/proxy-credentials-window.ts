@@ -1,9 +1,8 @@
 import { Deferred } from "common";
-import { BrowserWindow, ipcMain } from "electron";
+import { BrowserWindow, app, ipcMain } from "electron";
 import { ProxyCredentials } from "get-proxy-settings";
 import { Constants } from "../client-constants";
 import { BatchLabsApplication, UniqueWindow } from "../core";
-
 const urls = Constants.urls.proxyCredentials;
 const url = process.env.HOT ? urls.dev : urls.prod;
 
@@ -16,12 +15,10 @@ export class ProxyCredentialsWindow extends UniqueWindow {
         this._deferred = new Deferred();
         this.credentials = this._deferred.promise;
     }
-    public destroy() {
-        super.destroy();
-    }
 
     protected createWindow() {
         const window = new BrowserWindow({
+            title: app.getName(),
             height: 340,
             width: 340,
             icon: Constants.urls.icon,
@@ -40,11 +37,14 @@ export class ProxyCredentialsWindow extends UniqueWindow {
 
     private _setupEvents(window: BrowserWindow) {
         ipcMain.once("proxy-credentials-submitted", (event, { username, password }) => {
-            this.destroy();
+            this.hide();
             this._deferred.resolve({ username, password });
+            setTimeout(() => {
+                this.close();
+            }, 1000);
         });
         window.on("close", () => {
-            if (this._deferred.hasCompleted) {
+            if (!this._deferred.hasCompleted) {
                 this._deferred.reject(new Error("Window was closed"));
             }
         });
