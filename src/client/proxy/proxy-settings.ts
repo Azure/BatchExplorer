@@ -10,6 +10,7 @@ import { logger } from "client/logger";
 import { Constants } from "common";
 import { BehaviorSubject } from "rxjs";
 
+// @ts-ignore
 function allowInsecureRequest() {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 }
@@ -97,7 +98,8 @@ export class ProxySettingsManager {
         if (settings.https) {
             process.env.HTTPS_PROXY = settings.https.toString();
         }
-        allowInsecureRequest();
+        // Uncomment to debug with fiddler
+        // allowInsecureRequest();
         globalTunnel.initialize();
     }
 
