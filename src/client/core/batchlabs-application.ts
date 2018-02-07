@@ -3,6 +3,7 @@ import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
 import { BlIpcMain } from "client/core";
+import { localStorage } from "client/core/local-storage";
 import { ProxySettingsManager } from "client/proxy";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { BatchLabsLink, Constants } from "common";
@@ -34,7 +35,7 @@ export class BatchLabsApplication {
     public pythonServer = new PythonRpcServerProcess();
     public aadService = new AADService(this);
     public state: Observable<BatchLabsState>;
-    public proxySettings = new ProxySettingsManager(this);
+    public proxySettings = new ProxySettingsManager(this, localStorage);
     private _state = new BehaviorSubject<BatchLabsState>(BatchLabsState.Loading);
 
     constructor(public autoUpdater: AppUpdater) {
@@ -49,7 +50,7 @@ export class BatchLabsApplication {
         await this.aadService.init();
         this._registerProtocol();
         this.setupProcessEvents();
-        this.proxySettings.init();
+        await this.proxySettings.init();
     }
 
     /**
@@ -112,15 +113,6 @@ export class BatchLabsApplication {
 
             // Show splash screen
             this.start();
-        });
-
-        // Quit when all windows are closed.
-        app.on("window-all-closed", () => {
-            // On macOS it is common for applications and their menu bar
-            // to stay active until the user quits explicitly with Cmd + Q
-            if (process.platform !== "darwin") {
-                app.quit();
-            }
         });
 
         app.on("activate", () => {

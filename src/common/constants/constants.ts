@@ -104,6 +104,11 @@ export const localStorageKey = {
      * Last batch account selected.
      */
     selectedAccountId: "selected-account-id",
+
+    /**
+     * Where the proxy settings are stored
+     */
+    proxySettings: "proxy_settings",
 };
 
 export const sessionStorageKey = {

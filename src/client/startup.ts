@@ -1,7 +1,6 @@
 
 import { app, protocol } from "electron";
 import { autoUpdater } from "electron-updater";
-import * as globalTunnel from "global-tunnel-ng";
 import * as path from "path";
 
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
@@ -11,24 +10,6 @@ import { Constants } from "./client-constants";
 import { BatchLabsApplication, listenToSelectCertifcateEvent } from "./core";
 import { logger } from "./logger";
 import { setMenu } from "./menu";
-
-function allowInsecureRequest() {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-}
-
-async function initProxySettings(batchLabsApp: BatchLabsApplication) {
-    const settings = await batchLabsApp.proxySettings.settings();
-    if (settings) {
-        if (settings.http) {
-            process.env.HTTP_PROXY = settings.http.toString();
-        }
-        if (settings.https) {
-            process.env.HTTPS_PROXY = settings.https.toString();
-        }
-        allowInsecureRequest();
-        globalTunnel.initialize();
-    }
-}
 
 function initAutoUpdate() {
     if (Constants.isDev) {
@@ -61,7 +42,6 @@ function registerAuthProtocol() {
 }
 
 async function startApplication(batchLabsApp: BatchLabsApplication) {
-    await initProxySettings(batchLabsApp);
     initAutoUpdate();
     registerAuthProtocol();
 
@@ -89,7 +69,6 @@ export async function startBatchLabs() {
     listenToSelectCertifcateEvent();
 
     process.on("exit", () => {
-        console.log("On exist...");
         batchLabsApp.quit();
     });
 
