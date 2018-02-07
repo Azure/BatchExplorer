@@ -27,7 +27,6 @@ async function initProxySettings(batchLabsApp: BatchLabsApplication) {
         if (settings.https) {
             process.env.HTTPS_PROXY = settings.https.toString();
         }
-        process.env.NO_PROXY = "localhost:3178";
         allowInsecureRequest();
         globalTunnel.initialize();
     }
@@ -63,7 +62,9 @@ function registerAuthProtocol() {
     });
 }
 
-function startApplication(batchLabsApp: BatchLabsApplication) {
+async function startApplication(batchLabsApp: BatchLabsApplication) {
+    await initProxySettings(batchLabsApp);
+    initAutoUpdate();
     registerAuthProtocol();
 
     // Uncomment to view why windows don't show up.
@@ -77,15 +78,12 @@ function startApplication(batchLabsApp: BatchLabsApplication) {
 export async function startBatchLabs() {
     localStorage.load();
     const batchLabsApp = new BatchLabsApplication(autoUpdater);
-    await initProxySettings(batchLabsApp);
-    initAutoUpdate();
-
     setupSingleInstance(batchLabsApp);
 
     if (app.isReady()) {
         startApplication(batchLabsApp);
     } else {
-        app.on("ready", () => {
+        app.on("ready", async () => {
             startApplication(batchLabsApp);
         });
     }
@@ -93,6 +91,7 @@ export async function startBatchLabs() {
     listenToSelectCertifcateEvent();
 
     process.on("exit", () => {
+        console.log("On exist...");
         batchLabsApp.quit();
     });
 
@@ -102,11 +101,5 @@ export async function startBatchLabs() {
 
     process.on("SIGINT", () => {
         process.exit(-2);
-    });
-
-    app.on("login", (event, webContents, request, authInfo, callback) => {
-        event.preventDefault();
-        console.log("Banana is true", authInfo);
-        callback("1", "1");
     });
 }

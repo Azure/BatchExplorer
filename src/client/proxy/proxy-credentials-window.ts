@@ -39,9 +39,9 @@ export class ProxyCredentialsWindow extends UniqueWindow {
         ipcMain.once("proxy-credentials-submitted", (event, { username, password }) => {
             this.hide();
             this._deferred.resolve({ username, password });
-            setTimeout(() => {
-                this.close();
-            }, 1000);
+            // setTimeoutapp(() => {
+            this.close();
+            // }, 1000);
         });
         window.on("close", () => {
             if (!this._deferred.hasCompleted) {

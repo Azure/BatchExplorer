@@ -137,6 +137,14 @@ export class BatchLabsApplication {
             this.recoverWindow.createWithError(error.message);
         });
 
+        app.on("window-all-closed", () => {
+            // Required or electron will close when closing last open window before next one open
+        });
+
+        app.on("login", (event, webContents, request, authInfo, callback) => {
+            event.preventDefault();
+            callback("1", "1");
+        });
     }
 
     /**
