@@ -1,3 +1,4 @@
+import { logger } from "client/logger";
 import { MainWindow } from "client/main-window";
 import { BatchLabsLink, BatchLabsLinkAttributes, Constants, SecureUtils } from "common";
 import { BatchLabsApplication } from "./batchlabs-application";
@@ -93,8 +94,13 @@ export class MainWindowManager {
                 window.show();
             });
         }
+
         window.once("closed", () => {
             this.windows.delete(windowId);
+            if (window.expectedClose) { return; }
+            if (this.windows.size > 0) { return; }
+            logger.info(`Main Window ${this.constructor.name} closed. Quiting the app.`);
+            this.batchLabsApp.quit();
         });
 
         return window;

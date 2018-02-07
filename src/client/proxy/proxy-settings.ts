@@ -16,7 +16,7 @@ function allowInsecureRequest() {
 }
 
 export class ProxySettingsManager {
-    private _settings = new BehaviorSubject(null);
+    private _settings = new BehaviorSubject(undefined);
     private _credentials: ProxyCredentials;
     constructor(private batchLabsApp: BatchLabsApplication, private storage: LocalStorage) {
     }
@@ -30,7 +30,7 @@ export class ProxySettingsManager {
     }
 
     public get settings(): Promise<ProxySettings> {
-        return this._settings.filter(x => x !== null).toPromise();
+        return this._settings.filter(x => x !== undefined).toPromise();
     }
 
     public async credentials(): Promise<ProxyCredentials> {
@@ -47,6 +47,7 @@ export class ProxySettingsManager {
     }
 
     private async _validateProxySettings(settings: ProxySettings, askForCreds = true) {
+        if (!settings) { return null; }
         try {
             await validateProxySetting(settings.http || settings.https);
             return settings;
@@ -104,7 +105,9 @@ export class ProxySettingsManager {
     }
 
     private async _saveProxySettings() {
-        const { http, https } = this._settings.value;
+        const value = this._settings.value;
+        if (!value) { return; }
+        const { http, https } = value;
         const str = JSON.stringify({
             http: http && http.toString(),
             https: https && https.toString(),
