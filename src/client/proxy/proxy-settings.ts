@@ -1,4 +1,7 @@
-import { ProxyCredentials, ProxySetting, ProxySettings, getAndTestProxySettings } from "get-proxy-settings";
+import {
+    ProxyAuthenticationRequiredError, ProxyCredentials, ProxyInvalidCredentialsError, ProxySetting, ProxySettings,
+    getProxySettings, validateProxySetting,
+} from "get-proxy-settings";
 import * as globalTunnel from "global-tunnel-ng";
 
 import { BatchLabsApplication } from "client/core";
@@ -36,12 +39,35 @@ export class ProxySettingsManager {
     }
 
     private async _loadProxySettings() {
-        const settings = await getAndTestProxySettings(async () => {
-            this._credentials = await this.batchLabsApp.askUserForProxyCredentials();
-            return this._credentials;
-        });
+        let settings = await getProxySettings();
+        settings = await this._validateProxySettings(settings);
         this._settings.next(settings);
         await this._saveProxySettings();
+    }
+
+    private async _validateProxySettings(settings: ProxySettings, askForCreds = true) {
+        try {
+            await validateProxySetting(settings.http || settings.https);
+            return settings;
+        } catch (e) {
+
+            if (e instanceof ProxyAuthenticationRequiredError || e instanceof ProxyInvalidCredentialsError) {
+                if (askForCreds) {
+                    this._credentials = await this.batchLabsApp.askUserForProxyCredentials();
+                    if (settings.http) {
+                        settings.http.credentials = this._credentials;
+                    }
+                    if (settings.https) {
+                        settings.https.credentials = this._credentials;
+                    }
+                    return this._validateProxySettings(settings);
+                } else {
+                    return null;
+                }
+            } else {
+                throw e;
+            }
+        }
     }
 
     private async _loadSettingsFromStorage() {
@@ -49,10 +75,14 @@ export class ProxySettingsManager {
             const str = await this.storage.getItem(Constants.localStorageKey.proxySettings);
             if (!str) { return; }
             const { http, https } = JSON.parse(str);
-            this._settings.next({
+            const settings = {
                 http: http && new ProxySetting(http),
                 https: https && new ProxySetting(https),
-            });
+            };
+            const valid = await this._validateProxySettings(settings, false);
+            if (valid) {
+                this._settings.next(settings);
+            }
         } catch (e) {
             logger.error("Error loading proxy settings. Ignoring", e);
             await this.storage.removeItem(Constants.localStorageKey.proxySettings);
