@@ -29,7 +29,6 @@ export enum WindowState {
 export class MainWindow extends GenericWindow {
     public appReady: Promise<void>;
     public state: Observable<WindowState>;
-    private _showWindowOnstart = false;
     private _state = new BehaviorSubject<WindowState>(WindowState.Closed);
     private _resolveAppReady: () => void;
 
@@ -42,7 +41,7 @@ export class MainWindow extends GenericWindow {
     }
 
     public debugCrash() {
-        this._showWindowOnstart = true;
+        this.show();
     }
 
     public async send(key: string, message: string) {
@@ -65,7 +64,7 @@ export class MainWindow extends GenericWindow {
             width: 1600,
             minWidth: 1200,
             minHeight: 300,
-            show: this._showWindowOnstart, // Don't show the window until the user authenticated
+            show: false, // Don't show the window until it is ready
             webPreferences: {
                 webSecurity: false,
             },
