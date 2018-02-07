@@ -128,6 +128,8 @@ export const ApiVersion = {
     authorization: "2017-05-01",
     aadGraph: "1.6",
     monitor: "2017-05-01-preview",
+    network: "2017-10-01",
+    classicNetwork: "2015-12-01",
 };
 
 export const ExternalLinks = {

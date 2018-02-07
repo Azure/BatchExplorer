@@ -1,3 +1,3 @@
 export * from "./inbound-nat-pool-picker.component";
-export * from "./pool-endpoint.module";
+export * from "./network-configuration.module";
 export * from "./pool-endpoint-helper";

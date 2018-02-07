@@ -8,8 +8,9 @@ import { BaseModule } from "app/components/base";
 import { TaskBaseModule } from "app/components/task/base";
 import { InboundNATPoolPickerComponent } from "./inbound-nat-pool-picker.component";
 import { NetworkSecurityGroupRulesComponent } from "./network-security-group-rules.component";
+import { VirtualNetworkPickerComponent } from "./virtual-network-picker.component";
 
-const components = [InboundNATPoolPickerComponent, NetworkSecurityGroupRulesComponent];
+const components = [InboundNATPoolPickerComponent, NetworkSecurityGroupRulesComponent, VirtualNetworkPickerComponent];
 
 @NgModule({
     declarations: components,
@@ -18,6 +19,6 @@ const components = [InboundNATPoolPickerComponent, NetworkSecurityGroupRulesComp
         BaseModule, TaskBaseModule],
     entryComponents: [InboundNATPoolPickerComponent],
 })
-export class PoolEndpointModule {
+export class NetworkConfigurationModule {
 
 }
