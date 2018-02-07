@@ -1,5 +1,6 @@
 {
   "name": "batch-labs",
+  "productName": "Batch Labs",
   "description": "Batch labs is a tool to manage your Azure Batch accounts",
   "repository": {
     "type": "git",
