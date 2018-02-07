@@ -8,6 +8,7 @@ import * as path from "path";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
 import { localStorage } from "client/core/local-storage";
+import { loadProxySettings } from "client/proxy";
 import { Constants } from "./client-constants";
 import { BatchLabsApplication, listenToSelectCertifcateEvent } from "./core";
 import { logger } from "./logger";
@@ -17,12 +18,8 @@ function allowInsecureRequest() {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 }
 
-async function retrieveProxyCredentials() {
-    return { username: "1", password: "1" };
-}
-
-async function initProxySettings() {
-    const settings = await getAndTestProxySettings(retrieveProxyCredentials);
+async function initProxySettings(batchLabsApp: BatchLabsApplication) {
+    const settings = await loadProxySettings(batchLabsApp);
     if (settings) {
         if (settings.http) {
             process.env.HTTP_PROXY = settings.http.toString();
@@ -78,11 +75,11 @@ function startApplication(batchLabsApp: BatchLabsApplication) {
 }
 
 export async function startBatchLabs() {
-    await initProxySettings();
-    initAutoUpdate();
     localStorage.load();
-
     const batchLabsApp = new BatchLabsApplication(autoUpdater);
+    await initProxySettings(batchLabsApp);
+    initAutoUpdate();
+
     setupSingleInstance(batchLabsApp);
 
     if (app.isReady()) {

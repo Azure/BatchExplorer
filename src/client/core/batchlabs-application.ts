@@ -3,8 +3,10 @@ import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
 import { BlIpcMain } from "client/core";
+import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { BatchLabsLink, Constants } from "common";
 import { IpcEvent } from "common/constants";
+import { ProxyCredentials } from "get-proxy-settings";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants as ClientConstants } from "../client-constants";
 import { logger } from "../logger";
@@ -188,6 +190,12 @@ export class BatchLabsApplication {
 
     public checkForUpdates(): Promise<UpdateCheckResult> {
         return autoUpdater.checkForUpdates();
+    }
+
+    public askUserForProxyCredentials(): Promise<ProxyCredentials> {
+        const proxyCredentials = new ProxyCredentialsWindow(this);
+        proxyCredentials.create();
+        return proxyCredentials.credentials;
     }
 
     private _registerProtocol() {
