@@ -1,14 +1,12 @@
 
 import { app, protocol } from "electron";
 import { autoUpdater } from "electron-updater";
-import { getAndTestProxySettings } from "get-proxy-settings";
 import * as globalTunnel from "global-tunnel-ng";
 import * as path from "path";
 
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
 import { localStorage } from "client/core/local-storage";
-import { loadProxySettings } from "client/proxy";
 import { Constants } from "./client-constants";
 import { BatchLabsApplication, listenToSelectCertifcateEvent } from "./core";
 import { logger } from "./logger";
@@ -19,7 +17,7 @@ function allowInsecureRequest() {
 }
 
 async function initProxySettings(batchLabsApp: BatchLabsApplication) {
-    const settings = await loadProxySettings(batchLabsApp);
+    const settings = await batchLabsApp.proxySettings.settings();
     if (settings) {
         if (settings.http) {
             process.env.HTTP_PROXY = settings.http.toString();

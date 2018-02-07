@@ -3,6 +3,7 @@ import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
 import { BlIpcMain } from "client/core";
+import { ProxySettingsManager } from "client/proxy";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { BatchLabsLink, Constants } from "common";
 import { IpcEvent } from "common/constants";
@@ -33,6 +34,7 @@ export class BatchLabsApplication {
     public pythonServer = new PythonRpcServerProcess();
     public aadService = new AADService(this);
     public state: Observable<BatchLabsState>;
+    public proxySettings = new ProxySettingsManager(this);
     private _state = new BehaviorSubject<BatchLabsState>(BatchLabsState.Loading);
 
     constructor(public autoUpdater: AppUpdater) {
@@ -47,6 +49,7 @@ export class BatchLabsApplication {
         await this.aadService.init();
         this._registerProtocol();
         this.setupProcessEvents();
+        this.proxySettings.init();
     }
 
     /**
@@ -141,9 +144,10 @@ export class BatchLabsApplication {
             // Required or electron will close when closing last open window before next one open
         });
 
-        app.on("login", (event, webContents, request, authInfo, callback) => {
+        app.on("login", async (event, webContents, request, authInfo, callback) => {
             event.preventDefault();
-            callback("1", "1");
+            const { username, password } = await this.proxySettings.credentials();
+            callback(username, password);
         });
     }
 
