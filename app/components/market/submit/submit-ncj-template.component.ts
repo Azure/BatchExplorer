@@ -41,6 +41,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     private _error: ServerError;
     private _controlChanges: Subscription[] = [];
     private _queryParameters: {};
+    private _parameterTypeMap: {};
 
     constructor(
         private formBuilder: FormBuilder,
@@ -210,6 +211,12 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             }
 
             templateFormGroup[key] = new FormControl(defaultValue, validator);
+            if (template.parameters[key].metadata.advancedType) {
+                console.log("adding to map :: ", key, template.parameters[key].metadata.advancedType);
+                this._parameterTypeMap[key] = template.parameters[key].metadata.advancedType;
+            }
+
+            // console.log("_handleChange :: ", key, this._parameterTypeMap[key]);
             this._handleControlChangeEvents(templateFormGroup, key);
         }
 
@@ -219,6 +226,12 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     private _handleControlChangeEvents(formGroup, key) {
         // Listen to control value change events and update the route parameters to match
         this._controlChanges.push(formGroup[key].valueChanges.subscribe((change) => {
+            // if (this._parameterTypeMap[key] === "file-group") {
+            //     console.log("is file group");
+            //     // quickfix until we can modify the CLI to finally sort out file group prefixes
+            //     change = "fgrp-" + change;
+            // }
+
             this._queryParameters[key] = change;
             const urlTree = this.router.createUrlTree([], {
                 queryParams: this._queryParameters,
