@@ -21,6 +21,8 @@ import "./job-schedule-create-basic-dialog.scss";
 export class JobScheduleCreateBasicDialogComponent extends DynamicForm<JobSchedule, JobScheduleCreateDto> {
     public complexFormConfig: ComplexFormConfig;
     public scheduleGroup: FormGroup;
+    public fileUri = "create.jobschedule.batch.json";
+
     constructor(
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<JobScheduleCreateBasicDialogComponent>,
