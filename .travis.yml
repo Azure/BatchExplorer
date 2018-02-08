@@ -44,9 +44,11 @@ matrix:
         - pyenv global 3.6.0
         - python --version
         - python3 --version
+      install:
+        - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
       before_script:
         - export DISPLAY=:99.0
-        - sh -e /etc/init.d/xvfb start
+        - sh -e /etc/init.d/xvfb start &
         - sleep 3
 
 install:
@@ -68,5 +70,6 @@ branches:
   - fix/publish
 
 cache:
+  yarn: true
   directories:
     - node_modules
