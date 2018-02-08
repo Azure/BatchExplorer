@@ -3,9 +3,11 @@ import { FormControl } from "@angular/forms";
 import { Set } from "immutable";
 
 import { ListAndShowLayoutComponent } from "app/components/base/list-and-show-layout";
+import { autobind } from "app/core";
 import { Subscription } from "app/models";
 import { SubscriptionService } from "app/services";
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
+import { SidebarManager } from "../../base/sidebar";
 
 @Component({
     selector: "bl-account-home",
@@ -20,7 +22,7 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
 
     private _subs = [];
 
-    constructor(public subscriptionService: SubscriptionService) {
+    constructor(public subscriptionService: SubscriptionService, private sidebarManager: SidebarManager) {
 
     }
 
@@ -42,6 +44,11 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
 
     public trackByFn(index, subscription: Subscription) {
         return subscription.id;
+    }
+
+    @autobind()
+    public addBatchAccount() {
+        // this.sidebarManager.open("add-pool", AccountCreateBasicDialogComponent);
     }
 
     private _buildSubscriptionFilter(subscriptionIds: Set<string>): Filter {
