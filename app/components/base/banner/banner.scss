@@ -33,9 +33,14 @@ bl-banner > bl-card {
             align-items: center;
         }
 
-        > [message] {
+        > .message {
             padding: 5px 24px;
             flex: 1;
+            overflow-wrap: break-word;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            min-width: 10px;
         }
 
         &.expand > [message] {
