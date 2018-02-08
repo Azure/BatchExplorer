@@ -40,6 +40,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
 
         this._subs.push(Observable.combineLatest(this.poolsData.items, this.vmSizeService.sizes)
             .subscribe(([pools, sizes]) => {
+                console.log("New pools", pools && pools.size);
                 this.pools = pools;
                 const poolCores = {};
 
