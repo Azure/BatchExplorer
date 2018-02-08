@@ -90,6 +90,11 @@ export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOption
         });
 
         this.deleted = this._deleted.asObservable();
+        this.init();
+    }
+
+    public init() {
+        // Nothing to do. Used in test for stub;
     }
 
     public set params(params: TParams) {

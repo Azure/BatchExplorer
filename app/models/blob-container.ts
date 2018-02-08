@@ -1,4 +1,5 @@
 import { Model, Prop, Record } from "app/core";
+import { Constants } from "common";
 import { ContainerLease, ContainerLeaseAttributes } from "./container-lease";
 import { NavigableRecord } from "./navigable-record";
 
@@ -30,5 +31,9 @@ export class BlobContainer extends Record<BlobContainerAttributes> implements Na
 
     public get routerLink(): string[] {
         return ["/data", this.id];
+    }
+
+    public get isFileGroup() {
+        return this.id && this.id.startsWith(Constants.ncjFileGroupPrefix);
     }
 }

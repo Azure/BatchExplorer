@@ -41,6 +41,7 @@ export * from "./storage-account.service";
 export * from "./storage-client.service";
 export * from "./predefined-formula.service";
 export * from "./themes";
+export * from "./network";
 
 // This needs to be last(as it does dynamic inject which problably have dependencies on above services)
 export * from "./command-service";

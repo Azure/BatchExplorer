@@ -1,3 +1,4 @@
+import { logger } from "client/logger";
 import { MainWindow } from "client/main-window";
 import { BatchLabsLink, BatchLabsLinkAttributes, Constants, SecureUtils } from "common";
 import { BatchLabsApplication } from "./batchlabs-application";
@@ -19,7 +20,7 @@ export class MainWindowManager {
      * If the link provide a session id which already exists it will change the window with that session id.
      * @param link ms-batchlabs://...
      */
-    public openLink(link: string | BatchLabsLink | BatchLabsLinkAttributes): MainWindow {
+    public openLink(link: string | BatchLabsLink | BatchLabsLinkAttributes, showWhenReady = true): MainWindow {
         const labsLink = new BatchLabsLink(link);
         const windowId = labsLink.session || SecureUtils.uuid();
         let window: MainWindow;
@@ -27,7 +28,7 @@ export class MainWindowManager {
             window = this.windows.get(windowId);
             window.show();
         } else {
-            window = this._createNewWindow(windowId);
+            window = this._createNewWindow(windowId, showWhenReady);
         }
         this.goTo(link, window);
         return window;
@@ -37,8 +38,8 @@ export class MainWindowManager {
      * Open a new link in the ms-batchlabs format
      * @param link ms-batchlabs://...
      */
-    public openNewWindow(link?: string | BatchLabsLink | BatchLabsLinkAttributes): MainWindow {
-        const window = this._createNewWindow();
+    public openNewWindow(link?: string | BatchLabsLink | BatchLabsLinkAttributes, showWhenReady = true): MainWindow {
+        const window = this._createNewWindow(null, showWhenReady);
 
         this.goTo(link, window);
 
@@ -83,18 +84,23 @@ export class MainWindowManager {
         return this.windows[Symbol.iterator]();
     }
 
-    private _createNewWindow(windowId?: string) {
+    private _createNewWindow(windowId?: string, showWhenReady = true) {
         windowId = windowId || SecureUtils.uuid();
         const window = new MainWindow(this.batchLabsApp);
         window.create();
         this.windows.set(windowId, window);
-
-        window.appReady.then(() => {
-            window.show();
-        });
+        if (showWhenReady) {
+            window.appReady.then(() => {
+                window.show();
+            });
+        }
 
         window.once("closed", () => {
             this.windows.delete(windowId);
+            if (window.expectedClose) { return; }
+            if (this.windows.size > 0) { return; }
+            logger.info(`Main Window ${this.constructor.name} closed. Quiting the app.`);
+            this.batchLabsApp.quit();
         });
 
         return window;

@@ -1,6 +1,7 @@
 <bl-storage-error-display [noClassic]="true"></bl-storage-error-display>
 
-<bl-list-and-show-layout #layout (listScrolledToBottom)="fileGroupList.onScrollToBottom()" [list]="fileGroupList" *ngIf="storageService.hasArmAutoStorage | async">
+<bl-list-and-show-layout #layout (listScrolledToBottom)="fileGroupList.onScrollToBottom()" (filterChange)="quickSearchFilterChanged($event)"
+    [list]="fileGroupList" *ngIf="storageService.hasArmAutoStorage | async">
     <div bl-list-title>
         Storage containers
     </div>
