@@ -1,6 +1,6 @@
-<bl-banner *ngIf="loadingError" type="error">
+<bl-banner *ngIf="loadingError" type="error" >
     <div code>{{ loadingError.code }}</div>
-    <div message>{{ loadingError.message }}</div>
+    <div message [title]="loadingError.message">{{ loadingError.message }}</div>
 </bl-banner>
 
 <bl-loading [status]="data.status">
