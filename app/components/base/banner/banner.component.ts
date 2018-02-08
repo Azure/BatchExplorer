@@ -36,7 +36,8 @@ export class BannerOtherFixDirective {
 @Component({
     selector: "bl-banner",
     templateUrl: "banner.html",
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    // TODO-Change-Detection This require updating all the ng-content
+    // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BannerComponent implements OnChanges {
     public errorStates = ErrorState;
