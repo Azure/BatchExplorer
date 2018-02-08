@@ -64,11 +64,9 @@ export class VmSizeDecorator {
     ],
 })
 export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnChanges, OnDestroy {
-    @Input()
-    public osSource: PoolOsSources;
+    @Input() public osSource: PoolOsSources;
 
-    @Input()
-    public osType: "linux" | "windows";
+    @Input() public osType: "linux" | "windows";
 
     public pickedSize: string;
 
@@ -165,8 +163,8 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
         return category;
     }
 
-    public trackVmSize(index, size: VmSize) {
-        return size.id;
+    public trackVmSize(index, size: VmSizeDecorator) {
+        return size.vmSize.id;
     }
 
     private _categorizeSizes() {
