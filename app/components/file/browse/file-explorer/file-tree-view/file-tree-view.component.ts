@@ -1,10 +1,18 @@
-import { Component, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output } from "@angular/core";
+import { Component, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
 import { FileNavigator, FileTreeNode, FileTreeStructure } from "app/services/file";
 import { CloudPathUtils, DragUtils } from "app/utils";
 import { FileDeleteEvent, FileDropEvent } from "../file-explorer.component";
+
+import { ActivatedRoute } from "@angular/router";
+import { DialogService } from "app/components/base/dialogs";
+import { NotificationService } from "app/components/base/notifications";
+import { DownloadFileGroupDialogComponent } from "app/components/data/details";
+import { ServerError } from "app/models";
+import { ElectronShell } from "app/services";
+import { remote } from "electron";
 import "./file-tree-view.scss";
 
 export interface TreeRow {
@@ -19,7 +27,7 @@ export interface TreeRow {
     selector: "bl-file-tree-view",
     templateUrl: "file-tree-view.html",
 })
-export class FileTreeViewComponent implements OnChanges, OnDestroy {
+export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public fileNavigator: FileNavigator;
     @Input() public currentPath: string;
     @Input() public active: boolean = true;
@@ -38,11 +46,23 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     public refreshing: boolean;
     public isDraging = 0;
     public dropTargetPath: string = null;
+    public containerId: string;
 
     private _tree: FileTreeStructure;
     private _navigatorSubs: Subscription[] = [];
+    private _paramsSubscriber: Subscription;
 
-    constructor(private contextMenuService: ContextMenuService) { }
+    constructor(private activatedRoute: ActivatedRoute,
+                private dialog: DialogService,
+                private contextMenuService: ContextMenuService,
+                private shell: ElectronShell,
+                private notificationService: NotificationService) { }
+
+    public ngOnInit() {
+        this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
+            this.containerId = params["id"];
+        });
+    }
 
     public ngOnChanges(inputs) {
         if (inputs.fileNavigator) {
@@ -61,6 +81,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     public ngOnDestroy() {
         this._clearNavigatorSubs();
+        this._paramsSubscriber.unsubscribe();
     }
 
     public handleClick(treeRow: TreeRow) {
@@ -76,6 +97,8 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
      */
     public showContextMenu(treeRow: TreeRow) {
         const items = [];
+        items.push(new ContextMenuItem("Download", () => this.download(treeRow)));
+
         if (treeRow.isDirectory) {
             items.push(new ContextMenuItem("Refresh", () => this.refresh(treeRow.path)));
         }
@@ -146,7 +169,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     }
 
     public collapseAll() {
-        for (let key of Object.keys(this.expandedDirs)) {
+        for (const key of Object.keys(this.expandedDirs)) {
             this.expandedDirs[key] = false;
         }
         this._buildTreeRows(this._tree);
@@ -154,6 +177,28 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     public treeRowTrackBy(treeRow: TreeRow) {
         return treeRow.path;
+    }
+
+    /**
+     * Treeview context menu directory/files download actions
+     * @param treeRow
+     */
+    public download(treeRow: TreeRow) {
+        if (treeRow.isDirectory) {
+            const ref = this.dialog.open(DownloadFileGroupDialogComponent);
+            ref.componentInstance.containerId = this.containerId;
+            ref.componentInstance.subfolder = treeRow.name;
+            ref.componentInstance.pathPrefix = treeRow.path;
+        } else {
+            const dialog = remote.dialog;
+            const localPath = dialog.showSaveDialog({
+                buttonLabel: "Download",
+                defaultPath: treeRow.name,
+            });
+            if (localPath) {
+                this._saveFile(treeRow.path, treeRow.name, localPath);
+            }
+        }
     }
 
     public refresh(path?: string) {
@@ -207,8 +252,8 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     }
 
     private _getTreeRowsForNode(node: FileTreeNode, indent = 0): TreeRow[] {
-        let rows = [];
-        for (let [_, child] of node.children) {
+        const rows = [];
+        for (const [_, child] of node.children) {
             if (this.autoExpand && !(child.path in this.expandedDirs)) {
                 this.expandedDirs[child.path] = true;
             }
@@ -222,7 +267,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
             });
             if (expanded) {
                 if (child.children.size > 0) {
-                    for (let row of this._getTreeRowsForNode(child, indent + 1)) {
+                    for (const row of this._getTreeRowsForNode(child, indent + 1)) {
                         rows.push(row);
                     }
                 }
@@ -248,5 +293,31 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     private _clearNavigatorSubs() {
         this._navigatorSubs.forEach(x => x.unsubscribe());
+    }
+
+    /**
+     * Save treeview file to local disk
+     * @param filePath
+     * @param fileName
+     * @param pathToFile
+     */
+    private _saveFile(filePath: string, fileName: string, pathToFile: string) {
+        if (pathToFile === undefined) {
+            return;
+        }
+        const obs = this.fileNavigator.getFile(filePath).download(pathToFile);
+        obs.subscribe({
+            next: () => {
+                this.shell.showItemInFolder(pathToFile);
+                this.notificationService.success("Download complete!", `File was saved locally at ${pathToFile}`);
+            },
+            error: (error: ServerError) => {
+                this.notificationService.error(
+                    "Download failed",
+                    `${fileName} failed to download. ${error.message}`,
+                );
+            },
+        });
+        return obs;
     }
 }

@@ -1,14 +1,13 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
 import { ComplexFormConfig } from "app/components/base/form";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
-import { RangeValidatorDirective } from "app/components/base/validation";
-import { DynamicForm } from "app/core";
-import { AllTasksCompleteAction, Job, TaskFailureAction } from "app/models";
+import { RangeValidator } from "app/components/base/validation";
+import { DynamicForm, autobind } from "app/core";
+import { AllTasksCompleteAction, Job, TaskFailureAction, VirtualMachineConfiguration } from "app/models";
 import { JobCreateDto } from "app/models/dtos";
 import { createJobFormToJsonData, jobToFormModel } from "app/models/forms";
 import { JobService, PoolService } from "app/services";
@@ -26,6 +25,9 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
     public complexFormConfig: ComplexFormConfig;
     public constraintsGroup: FormGroup;
     public showJobReleaseTask: boolean;
+    public fileUri = "create.job.batch.json";
+    public virtualMachineConfiguration: VirtualMachineConfiguration = null;
+    public containerSettingsRequired: boolean = true;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -41,7 +43,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
             maxWallClockTime: null,
             maxTaskRetryCount: [
                 0,
-                new RangeValidatorDirective(validation.range.retry.min, validation.range.retry.max).validator,
+                new RangeValidator(validation.range.retry.min, validation.range.retry.max).validator,
             ],
         });
 
@@ -54,7 +56,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
             displayName: ["", Validators.maxLength(validation.maxLength.displayName)],
             priority: [
                 0,
-                new RangeValidatorDirective(validation.range.priority.min, validation.range.priority.max).validator,
+                new RangeValidator(validation.range.priority.min, validation.range.priority.max).validator,
             ],
             constraints: this.constraintsGroup,
             poolInfo: [null, Validators.required],
@@ -68,6 +70,36 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
         this.form.controls.jobPreparationTask.valueChanges.subscribe((value) => {
             this.showJobReleaseTask = value && value.id;
         });
+
+        // Load current pool container configuration to indicate whether job manager, preparation and release task
+        // displays task container setting accordingly
+        this.form.controls.poolInfo.valueChanges
+            .debounceTime(400)
+            .distinctUntilChanged()
+            .flatMap(pool => pool ? poolService.get(pool.poolId) : Observable.of(null))
+            .subscribe(pool => {
+                this.virtualMachineConfiguration = pool && pool.virtualMachineConfiguration;
+                if (!this.virtualMachineConfiguration || !this.virtualMachineConfiguration.containerConfiguration) {
+                    // Reset job manager, preperation and release task container settings because pool id is changed
+                    // because user might change a container-pool to a non-container pool or vice versa
+                    const jobManagerTask = this.form.controls.jobManagerTask.value;
+                    const jobPreparationTask = this.form.controls.jobPreparationTask.value;
+                    const jobReleaseTask = this.form.controls.jobReleaseTask.value;
+                    if (jobManagerTask) {
+                        jobManagerTask.containerSettings = null;
+                        this.form.controls.jobManagerTask.patchValue(jobManagerTask);
+                    }
+                    if (jobPreparationTask) {
+                        jobPreparationTask.containerSettings = null;
+                    }
+                    if (jobReleaseTask) {
+                        jobReleaseTask.containerSettings = null;
+                    }
+                    this.containerSettingsRequired = false;
+                } else {
+                    this.containerSettingsRequired = true;
+                }
+            });
     }
 
     public dtoToForm(job: JobCreateDto) {
@@ -111,7 +143,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
 
     public resetJobPreparationTask() {
         this.showJobReleaseTask = false;
-        let jobReleaseTask =  this.form.controls.jobReleaseTask;
+        const jobReleaseTask = this.form.controls.jobReleaseTask;
         jobReleaseTask.setValue(null);
     }
 

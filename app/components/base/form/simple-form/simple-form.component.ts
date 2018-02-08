@@ -27,7 +27,7 @@ export class SimpleFormComponent {
     public multiUse = true;
 
     @Input()
-    public formGroup: FormGroup;
+    public formGroup: FormGroup = new FormGroup({});
 
     @Input()
     public actionName = "Save";

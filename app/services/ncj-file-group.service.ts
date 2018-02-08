@@ -35,26 +35,4 @@ export class NcjFileGroupService {
 
         return observable;
     }
-
-    /**
-     * Calls the Batch CLI via Python to create a file-group in the Batch account's
-     * linked storage account.
-     */
-    public addFilesToFileGroup(fileGroupName: string, files: string[], root: string = null): Observable<any> {
-
-        /**
-         * TODO: This method needs a callback for updating the UI with the status of the upload
-         * progress. Anna was working on changing the file.upload callback parameter to include the
-         * filename in order for this to happen.
-         */
-        const observable = this.pythonRpcService.callWithAuth("add-files-to-file-group", [
-            fileGroupName,
-            files,
-            root,
-        ]).catch((error) => {
-            return Observable.throw(ServerError.fromPython(error));
-        });
-
-        return observable;
-    }
 }

@@ -3,7 +3,7 @@ import { BatchServiceClient, BatchServiceModels } from "azure-batch";
 import { BatchResult } from "./models";
 import { ListProxy, mapGet, wrapOptions } from "./shared";
 
-export  class NodeProxy {
+export class NodeProxy {
 
     constructor(private client: BatchServiceClient) {
     }
@@ -77,29 +77,11 @@ export  class NodeProxy {
         return this.client.computeNode.deleteUser(poolId, nodeId, userName, wrapOptions(options));
     }
 
-    public getRemoteDesktop(poolId: string, nodeId: string, options?: any): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.client.computeNode.getRemoteDesktop(
-                poolId, nodeId, wrapOptions({ computeNodeGetRemoteDesktopOptions: options }),
-                (error, result: any, request, response) => {
-                    if (error) { return reject(error); }
-                    if (result) {
-                        const chunks = [];
-                        result.on("data", (chunk) => {
-                            chunks.push(chunk);
-                        });
-
-                        result.on("end", () => {
-                            resolve({
-                                result,
-                                content: Buffer.concat(chunks),
-                                request,
-                                response,
-                            });
-                        });
-                    }
-                });
-        });
+    public async getRemoteDesktop(poolId: string, nodeId: string, options?: any): Promise<any> {
+        const stream = await this.client.computeNode.getRemoteDesktop(poolId, nodeId,
+            wrapOptions({ computeNodeGetRemoteDesktopOptions: options }));
+        const content = await this._readContent(stream);
+        return { content };
     }
 
     /**
@@ -109,5 +91,19 @@ export  class NodeProxy {
      */
     public getRemoteLoginSettings(poolId: string, nodeId: string, options?: any): Promise<any> {
         return mapGet(this.client.computeNode.getRemoteLoginSettings(poolId, nodeId, wrapOptions(options)));
+    }
+
+    private async _readContent(response: Response): Promise<string> {
+        const reader = response.body.getReader();
+
+        let text = "";
+        let result;
+        while (true) {
+            result = await reader.read();
+            if (result.done) {
+                return text;
+            }
+            text += new TextDecoder("utf-8").decode(result.value);
+        }
     }
 }

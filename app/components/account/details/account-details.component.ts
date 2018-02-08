@@ -1,15 +1,17 @@
 import { Component, NgZone, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Subscription } from "rxjs";
 
 import { AccountResource, BatchApplication, Job, Pool, ServerError } from "app/models";
 import {
     AccountParams, AccountService, ApplicationListParams, ApplicationService,
-    JobListParams, JobService, PoolListParams, PoolService,
+    InsightsMetricsService, JobListParams, JobService, PoolListParams, PoolService,
 } from "app/services";
 import { EntityView, ListView } from "app/services/core";
 
+import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
+import { DialogService } from "app/components/base/dialogs";
 import "./account-details.scss";
 
 @Component({
@@ -44,9 +46,11 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         router: Router,
         private activatedRoute: ActivatedRoute,
         private accountService: AccountService,
+        private dialogService: DialogService,
         private applicationService: ApplicationService,
         private jobService: JobService,
         private poolService: PoolService,
+        monitor: InsightsMetricsService,
         zone: NgZone,
         viewContainerRef: ViewContainerRef) {
         this.data = this.accountService.view();
@@ -64,6 +68,9 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
             this.selectAccount(this.accountId);
             this.data.params = { id: this.accountId };
             this.data.fetch().subscribe({
+                next: () => {
+                    this.loadingError = null;
+                },
                 error: (error) => {
                     this.loadingError = error;
                 },
@@ -80,9 +87,19 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         return this.data.refresh();
     }
 
+    @autobind()
+    public showKeys() {
+        const ref = this.dialogService.open(ProgramaticUsageComponent);
+        ref.componentInstance.accountId = this.accountId;
+    }
+
     public selectAccount(accountId: string): void {
         this.noLinkedStorage = false;
         this.accountService.selectAccount(accountId);
+    }
+
+    public trackByFn(index, item: Pool | Job | BatchApplication) {
+        return item.id;
     }
 
     private _loadQuickAccessLists() {

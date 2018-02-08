@@ -1,8 +1,8 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material";
-import { Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { ActivatedRoute, Router } from "@angular/router";
+import { autobind } from "app/core";
 import { Observable, Subscription } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
@@ -13,8 +13,9 @@ import { ListOrTableBase } from "app/components/base/selectable-list";
 import { TableComponent } from "app/components/base/table";
 import { Job, JobState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
-import { JobListParams, JobService } from "app/services";
+import { JobListParams, JobService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
+import { ComponentUtils } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
 import {
     DeleteJobAction,
@@ -61,16 +62,20 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
     private _filter: Filter;
 
     // todo: ask tim about setting difference select options for list and details.
-    private _baseOptions = {};
+    private _baseOptions = {  };
     private _onJobAddedSub: Subscription;
 
     constructor(
         router: Router,
         dialog: MatDialog,
+        activatedRoute: ActivatedRoute,
         private jobService: JobService,
+        private pinnedEntityService: PinnedEntityService,
         private taskManager: BackgroundTaskService) {
         super(dialog);
         this.data = this.jobService.listView();
+        ComponentUtils.setActiveItem(activatedRoute, this.data);
+
         this.status = this.data.status;
         this._onJobAddedSub = jobService.onJobAdded.subscribe((jobId) => {
             this.data.loadNewItem(jobService.get(jobId));
@@ -184,10 +189,22 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
                 click: () => this.disableJob(job),
                 enabled: !isCompleted && !isDisabled,
             }),
+            new ContextMenuItem({
+                label: this.pinnedEntityService.isFavorite(job) ? "Unpin favorite" : "Pin to favorites",
+                click: () => this._pinJob(job),
+            }),
         ]);
     }
 
     public trackByFn(index: number, job: Job) {
         return job.id;
+    }
+
+    private _pinJob(job: Job) {
+        this.pinnedEntityService.pinFavorite(job).subscribe((result) => {
+            if (result) {
+                this.pinnedEntityService.unPinFavorite(job);
+            }
+        });
     }
 }

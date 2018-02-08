@@ -1,14 +1,14 @@
-import { Component, Input, OnChanges } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { MatDialog } from "@angular/material";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { ListOrTableBase } from "app/components/base/selectable-list";
 import { ApplicationPackage, BatchApplication, PackageState } from "app/models";
 import { ApplicationService } from "app/services";
-import { DateUtils } from "app/utils";
+import { ComponentUtils, DateUtils } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 import { ActivatePackageDialogComponent, ApplicationCreateDialogComponent, DeletePackageAction } from "../action";
@@ -17,37 +17,20 @@ import { ActivatePackageDialogComponent, ApplicationCreateDialogComponent, Delet
     selector: "bl-application-package-table",
     templateUrl: "application-package-table.html",
 })
+export class ApplicationPackageTableComponent extends ListOrTableBase implements OnChanges, OnDestroy {
+    @Input() public application: BatchApplication;
+    @Input() public filter: Filter;
 
-export class ApplicationPackageTableComponent extends ListOrTableBase implements OnChanges {
-    @Input()
-    public set application(application: BatchApplication) {
-        this._application = application;
-        if (this.application) {
-            this.entityParentId = this.application.id;
-            this.packages = List(this.application.packages);
-            this._filterPackages();
-        }
-    }
-    public get application() { return this._application; }
-
-    @Input()
-    public set filter(filter: Filter) {
-        this._filter = filter;
-        this._filterPackages();
-    }
-    public get filter(): Filter { return this._filter; }
-
-    public packages: List<ApplicationPackage>;
-    public displayedPackages: List<ApplicationPackage>;
+    public packages: List<ApplicationPackage> = List([]);
+    public displayedPackages: List<ApplicationPackage> = List([]);
 
     // enabled handlers for the UI
     public deleteItemEnabled = new BehaviorSubject<boolean>(false);
     public activateItemEnabled = new BehaviorSubject<boolean>(false);
     public editItemEnabled = new BehaviorSubject<boolean>(false);
 
-    private _filter: Filter;
-    private _application: BatchApplication;
     private _stateMap: Map<string, PackageState>;
+    private _subs: Subscription[] = [];
 
     constructor(
         protected dialog: MatDialog,
@@ -58,31 +41,38 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
         super(dialog);
         this._stateMap = new Map();
         this.entityName = "application packages";
-        this.selectedItemsChange.subscribe((items) => {
+        this._subs.push(this.selectedItemsChange.subscribe((items) => {
             if (items.length !== 1) {
                 this.activateItemEnabled.next(false);
                 this.editItemEnabled.next(false);
             }
-        });
+        }));
 
-        this.activatedItemChange.subscribe((activatedItem) => {
+        this._subs.push(this.activatedItemChange.subscribe((activatedItem) => {
             this.activateItemEnabled.next(this._activatedItemActivateEnabled(activatedItem.key));
-            this.deleteItemEnabled.next(this.application.allowUpdates && this.isAnyItemSelected());
+            this.deleteItemEnabled.next(this._activatedItemDeleteEnabled(activatedItem.key));
             this.editItemEnabled.next(this._activatedItemEditEnabled(activatedItem.key));
-        });
+        }));
     }
 
     public ngOnChanges(inputs) {
         if (inputs.application) {
-            this._stateMap.clear();
-            this.application.packages.map((pkg) => {
-                this._stateMap.set(pkg.version, pkg.state);
-            });
+            if (!this.packages.equals(this.application.packages)) {
+                this._updatePackages();
+            }
+        } else if (inputs.filter) {
+            this._filterPackages();
+        }
 
+        if (ComponentUtils.recordChangedId(inputs.application)) {
             setTimeout(() => {
                 this._resetSubjects();
             });
         }
+    }
+
+    public ngOnDestroy(): void {
+        this._subs.forEach(x => x.unsubscribe());
     }
 
     public formatDate(date: Date) {
@@ -133,13 +123,34 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
         });
     }
 
-    private _activatedItemEditEnabled(activeItem: string) {
-        return activeItem && this.application.allowUpdates && !this._isPackagePending(activeItem)
-            && this.selectedItems.length <= 1;
+    public trackByFn(index, pkg: ApplicationPackage) {
+        return pkg.version;
     }
 
-    private _activatedItemActivateEnabled(activeItem: string) {
-        return activeItem && this._isPackagePending(activeItem) && this.selectedItems.length <= 1;
+    private _updatePackages() {
+        if (this.application) {
+            this.packages = this.application.packages;
+        } else {
+            this.packages = List([]);
+        }
+        this._filterPackages();
+
+        this._stateMap.clear();
+        this.application.packages.forEach((pkg) => {
+            this._stateMap.set(pkg.version, pkg.state);
+        });
+    }
+    private _activatedItemEditEnabled(activeItemKey: string) {
+        return this.application.allowUpdates && !this._isPackagePending(activeItemKey)
+        && Boolean(activeItemKey);
+    }
+
+    private _activatedItemDeleteEnabled(activeItemKey: any) {
+        return this.application.allowUpdates && this.isAnyItemSelected() && Boolean(activeItemKey);
+    }
+
+    private _activatedItemActivateEnabled(activeItemKey: string) {
+        return this._isPackagePending(activeItemKey);
     }
 
     private _isPackagePending(version: string): boolean {
@@ -156,8 +167,8 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
 
     private _filterPackages() {
         let text: string = null;
-        if (this._filter) {
-            text = (this._filter as any).value;
+        if (this.filter) {
+            text = (this.filter as any).value;
             text = text && text.toLowerCase();
         }
 

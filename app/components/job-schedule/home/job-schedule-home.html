@@ -1,0 +1,19 @@
+<bl-list-and-show-layout #layout (listScrolledToBottom)="jobScheduleList.onScrollToBottom()" [list]="jobScheduleList">
+    <div bl-list-title>
+        Job schedules
+    </div>
+    <div bl-list-buttons>
+    </div>
+    <div bl-list-content>
+        <bl-focus-section>
+            <bl-job-schedule-list #jobScheduleList [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-job-schedule-list>
+        </bl-focus-section>
+    </div>
+    <div bl-show-content>
+        <router-outlet></router-outlet>
+    </div>
+    <div bl-show-advanced-filter>
+        <bl-job-schedule-advanced-filter (change)="layout.advancedFilterChanged($event)">
+        </bl-job-schedule-advanced-filter>
+    </div>
+</bl-list-and-show-layout>

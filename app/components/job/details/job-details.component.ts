@@ -1,13 +1,14 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
+import { remote } from "electron";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import { Job, JobState } from "app/models";
 import { JobDecorator } from "app/models/decorators";
-import { JobParams, JobService } from "app/services";
+import { FileSystemService, JobParams, JobService } from "app/services";
 import { EntityView } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
 import { TaskCreateBasicDialogComponent } from "../../task/action";
@@ -18,6 +19,7 @@ import {
     JobCreateBasicDialogComponent,
     TerminateJobDialogComponent,
 } from "../action";
+
 import "./job-details.scss";
 
 @Component({
@@ -26,10 +28,11 @@ import "./job-details.scss";
 })
 export class JobDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
-        let label = tab ? `Job - ${tab}` : "Job";
+        const label = tab ? `Job - ${tab}` : "Job";
         return {
             name: id,
             label,
+            icon: "tasks",
         };
     }
 
@@ -45,6 +48,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     constructor(
         private dialog: MatDialog,
         private activatedRoute: ActivatedRoute,
+        private fs: FileSystemService,
         private sidebarManager: SidebarManager,
         private jobService: JobService,
         private router: Router) {
@@ -89,13 +93,13 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public addTask() {
-        const createRef = this.sidebarManager.open("add-basic-task", TaskCreateBasicDialogComponent);
+        const createRef = this.sidebarManager.open("add-task", TaskCreateBasicDialogComponent);
         createRef.component.jobId = this.job.id;
     }
 
     @autobind()
     public terminateJob() {
-        let config = new MatDialogConfig();
+        const config = new MatDialogConfig();
         const dialogRef = this.dialog.open(TerminateJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.afterClosed().subscribe((obj) => {
@@ -105,14 +109,14 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public deleteJob() {
-        let config = new MatDialogConfig();
+        const config = new MatDialogConfig();
         const dialogRef = this.dialog.open(DeleteJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
     }
 
     @autobind()
     public disableJob() {
-        let config = new MatDialogConfig();
+        const config = new MatDialogConfig();
         const dialogRef = this.dialog.open(DisableJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.afterClosed().subscribe((obj) => {
@@ -122,13 +126,13 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public cloneJob() {
-        const ref = this.sidebarManager.open("add-basic-pool", JobCreateBasicDialogComponent);
+        const ref = this.sidebarManager.open(`add-job-${this.jobId}`, JobCreateBasicDialogComponent);
         ref.component.setValueFromEntity(this.job);
     }
 
     @autobind()
     public enableJob() {
-        let config = new MatDialogConfig();
+        const config = new MatDialogConfig();
         const dialogRef = this.dialog.open(EnableJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.afterClosed().subscribe((obj) => {
@@ -141,5 +145,19 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         return this.jobService.updateTags(this.job, tags).flatMap(() => {
             return this.data.refresh();
         });
+    }
+
+    @autobind()
+    public exportAsJSON() {
+        const dialog = remote.dialog;
+        const localPath = dialog.showSaveDialog({
+            buttonLabel: "Export",
+            defaultPath: `${this.jobId}.json`,
+        });
+
+        if (localPath) {
+            const content = JSON.stringify(this.job._original, null, 2);
+            return Observable.fromPromise(this.fs.saveFile(localPath, content));
+        }
     }
 }

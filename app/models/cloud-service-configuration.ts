@@ -1,17 +1,23 @@
-import { Record } from "immutable";
+import { Model, Prop, Record } from "app/core";
 
-// tslint:disable:variable-name object-literal-sort-keys
-const CloudServiceConfigurationRecord = Record({
-    osFamily: null,
-    targetOSVersion: null,
-    currentOSVersion: null,
-});
-
+export interface CloudServiceConfigurationAttributes {
+    osFamily: CloudServiceOsFamily;
+    targetOSVersion: string;
+    currentOSVersion: string;
+}
 /**
  * Class for displaying Batch CloudServiceConfiguration information.
  */
-export class CloudServiceConfiguration extends CloudServiceConfigurationRecord {
-    public osFamily: number;
-    public targetOSVersion: string;
-    public currentOSVersion: string;
+@Model()
+export class CloudServiceConfiguration extends Record<CloudServiceConfigurationAttributes> {
+    @Prop() public osFamily: CloudServiceOsFamily;
+    @Prop() public targetOSVersion: string;
+    @Prop() public currentOSVersion: string;
+}
+
+export enum CloudServiceOsFamily {
+    windowsServer2008R2 = "2",
+    windowsServer2012 = "3",
+    windowsServer2012R2 = "4",
+    windowsServer2016 = "5",
 }

@@ -7,7 +7,7 @@
 
 body {
     overflow: hidden;
-    background-color: $body-background;
+    background-color: $main-background;
     /* The html and body elements cannot have any padding or margin. */
 }
 
@@ -16,20 +16,24 @@ body {
     /* needed for footer positioning*/
     margin: 0 auto;
     /* center, not in IE5 */
-    background: $body-background;
+    background: $main-background;
     height: 100vh;
     width: 100vw;
 }
 
-#header {
+header {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: $header-height;
-    min-width: 100%;
-    margin-bottom: 0;
-    background-color: $header-background;
+}
+
+footer {
+    position: absolute;
+    height: $footer-height;
+    left: 0;
+    bottom: 0;
 }
 
 nav {
@@ -38,7 +42,6 @@ nav {
     left: 0;
     bottom: $footer-height;
     width: $navigationbar-width;
-    background-color: $navigation-background;
     text-align: center;
 }
 
@@ -59,14 +62,6 @@ nav {
     }
 }
 
-footer {
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-    height: $footer-height;
-    background-color: $footer-background;
-}
-
 .flex-fill {
     display: flex;
     flex: 1;
@@ -78,6 +73,11 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
 }
 
 /*--------------------------------------------------------------------------------------
@@ -182,40 +182,6 @@ footer {
 .tab-padding {
     padding: 10px;
     padding-bottom: 4px;
-
-    .quicksearch {
-        padding: 0 0 15px;
-    }
-}
-
-.sidebar-bookmarks-btn {
-    position: relative;
-    color: white;
-    height: $header-height;
-    width: $header-height;
-    display: flex;
-    float: right;
-    text-align: center;
-    font-size: 1.5em;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    background-color: $navigation-hover;
-
-    &:hover, &.active {
-        background-color: $navigation-background;
-    }
-
-    .count {
-        font-size: 0.7em;
-        position: absolute;
-        left: 0;
-        top: 0;
-        background-color: map-get($danger, 500);
-        border-radius: 10px;
-        width: 18px;
-        height: 18px;
-    }
 }
 
 .context-button-bar {
@@ -260,10 +226,6 @@ footer {
     user-select: none;
 }
 
-.no-userinteract {
-    pointer-events: none;
-}
-
 .warn-text {
     color: map-get($warn, 800);
 }
@@ -306,59 +268,10 @@ ul.list-point {
     list-style-type: initial;
 }
 
-.no-account {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    > mat-card {
-        width: 300px;
-        height: 250px;
-        font-size: 2em;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: map-get($primary, 400);
-        cursor: pointer;
-
-        &:hover {
-            background: $whiteSmoke-darker;
-        }
-
-        i {
-            font-size: 4em;
-            margin-bottom: 20px;
-        }
-    }
+bl-card.details {
+    margin-top:5px;
+    padding:0;
 }
-
-
-.back-nav {
-    float: left;
-    > .back, > .forward {
-        padding-top: 2px;
-        display:  inline-block;
-        width: 30px;
-        height: $header-height;
-        color: $whiteSmoke;
-        cursor: pointer;
-        text-align: center;
-
-        &:hover {
-            background: $header-hover;
-            color: map-get($primary, 300);
-        }
-
-        > .fa {
-            font-size: 26px;
-            margin: 0 5px;
-        }
-    }
-}
-
 
 .fit-details-container {
     height: $contentview-height;
@@ -405,4 +318,17 @@ ul.list-point {
 
 ::-webkit-scrollbar-thumb {
     background:  $dusty-grey;
+}
+
+
+bl-app {
+    .fullscreen {
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+
+        > mat-sidenav-container {
+            height: 100%;
+        }
+    }
 }

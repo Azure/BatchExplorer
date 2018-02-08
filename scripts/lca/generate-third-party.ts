@@ -17,7 +17,7 @@ const defaultThirdPartyNoticeOptions: ThirdPartyNoticeOptions = {
 const thirdPartyNoticeFile = path.join(Constants.root, "ThirdPartyNotices.txt");
 
 const output = [];
-const gitUrlRegex = /(?:git|ssh|https?|git@[-\w.]+):(\/\/[-\w.]+\/)?(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/;
+const gitUrlRegex = /(?:git|ssh|https?|git@[-\w.]+):(\/\/[-\w.]+\/)?(.*?)(\.git)?(\/?|\#[-\d\w._]+?)$/;
 const repoNameRegex = /https?:\/\/github\.com\/(.*)/;
 const innerSeparator = "-".repeat(60);
 const outerSeparator = "=".repeat(60);
@@ -211,4 +211,4 @@ const options = commander
     .option("-c, --check", "Check the current third party notice file is valid.")
     .parse(process.argv);
 
-run(options);
+run(options as any);

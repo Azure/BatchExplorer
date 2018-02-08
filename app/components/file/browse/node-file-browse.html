@@ -1,2 +1,6 @@
-<bl-file-explorer [data]="fileNavigator" [config]="fileExplorerConfig" *ngIf="fileNavigator">
+<bl-file-explorer [data]="fileNavigator" [config]="fileExplorerConfig" *ngIf="isNodeAvailable && fileNavigator">
 </bl-file-explorer>
+<div *ngIf="!isNodeAvailable" class="info-overlay node-unavailable">
+    Node is currently
+    <span class="highlight">'{{node?.state}}'</span>, there are no files to view now.
+</div>

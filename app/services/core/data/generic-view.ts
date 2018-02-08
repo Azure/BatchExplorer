@@ -53,7 +53,7 @@ export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOption
      */
     public onError: (error: ServerError) => boolean;
 
-    protected getCache: (params: TParams) => DataCache<TEntity>;
+    public getCache: (params: TParams) => DataCache<TEntity>;
 
     protected _status = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
     protected _newDataStatus = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
@@ -90,6 +90,11 @@ export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOption
         });
 
         this.deleted = this._deleted.asObservable();
+        this.init();
+    }
+
+    public init() {
+        // Nothing to do. Used in test for stub;
     }
 
     public set params(params: TParams) {

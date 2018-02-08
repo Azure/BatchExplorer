@@ -58,10 +58,10 @@ if (!String.prototype.padStart) {
         }
 
         const str = String(this);
-        let fillLen = maxLength - str.length;
+        const fillLen = maxLength - str.length;
         if (fillLen > 0) {
-            let timesToRepeat = Math.ceil(fillLen / padString.length);
-            let truncatedStringFiller = padString
+            const timesToRepeat = Math.ceil(fillLen / padString.length);
+            const truncatedStringFiller = padString
                 .repeat(timesToRepeat)
                 .slice(0, fillLen);
 
@@ -76,7 +76,7 @@ if (!String.prototype.trimEnd) {
     String.prototype.trimEnd = function (this: string, ...values: string[]) {
         let input = String(this) || "";
         while (input) {
-            let match = values.find((value) => {
+            const match = values.find((value) => {
                 return value && input.endsWith(value);
             });
 

@@ -6,13 +6,15 @@ import {
 import { FormControl } from "@angular/forms";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { FocusSectionComponent } from "app/components/base/focus-section";
 import { SelectableList } from "app/components/base/selectable-list";
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { DeleteSelectedItemsDialogComponent } from "./delete-selected-items-dialog.component";
+
+import "./list-and-show-layout.scss";
 
 @Component({
     selector: "bl-list-and-show-layout",
@@ -53,6 +55,9 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
 
     @Output()
     public listScrolledToBottom = new EventEmitter<any>();
+
+    @Output()
+    public filterChange = new EventEmitter<Filter>();
 
     @ViewChild("quickSearchInput")
     public quickSearchInput: ElementRef;
@@ -145,7 +150,7 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
 
     @autobind()
     public deleteSelectedItems() {
-        let config = new MatDialogConfig();
+        const config = new MatDialogConfig();
 
         const dialogRef = this.dialog.open(DeleteSelectedItemsDialogComponent, config);
         dialogRef.componentInstance.items = this.list.selectedItems;
@@ -165,6 +170,7 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
 
     private _updateFilter() {
         this.filter = FilterBuilder.and(this.quickFilter, this.advancedFilter);
+        this.filterChange.emit(this.filter);
     }
 
     private _clearListSubs() {

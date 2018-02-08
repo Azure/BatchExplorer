@@ -1,5 +1,7 @@
 import { Model, Prop, Record } from "app/core";
+import { Constants } from "common";
 import { ContainerLease, ContainerLeaseAttributes } from "./container-lease";
+import { NavigableRecord } from "./navigable-record";
 
 export interface BlobContainerAttributes {
     id: string;
@@ -14,7 +16,7 @@ export interface BlobContainerAttributes {
  * Class for displaying blob container information.
  */
 @Model()
-export class BlobContainer extends Record<BlobContainerAttributes> {
+export class BlobContainer extends Record<BlobContainerAttributes> implements NavigableRecord {
     // container name
     @Prop() public id: string;
 
@@ -25,4 +27,13 @@ export class BlobContainer extends Record<BlobContainerAttributes> {
     @Prop() public metadata: any;
     @Prop() public lastModified: Date;
     @Prop() public lease: ContainerLease;
+    @Prop() public url: string;
+
+    public get routerLink(): string[] {
+        return ["/data", this.id];
+    }
+
+    public get isFileGroup() {
+        return this.id && this.id.startsWith(Constants.ncjFileGroupPrefix);
+    }
 }

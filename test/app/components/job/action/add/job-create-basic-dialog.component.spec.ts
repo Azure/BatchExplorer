@@ -60,6 +60,17 @@ describe("JobCreateBasicDialogComponent ", () => {
 
         poolServiceSpy = {
             listView: () => poolListProxy,
+            get: (poolId) => Observable.of(Fixtures.pool.create({
+                id: poolId,
+                virtualMachineConfiguration: {
+                    containerConfiguration: {
+                        type: "docker",
+                        containerImageNames: [
+                            "busybox",
+                        ],
+                    },
+                },
+            })),
         };
 
         notificationServiceSpy = {
@@ -95,7 +106,7 @@ describe("JobCreateBasicDialogComponent ", () => {
     });
 
     it("JobId is initialized", () => {
-        let control = baseForm.controls.id;
+        const control = baseForm.controls.id;
         expect(control).not.toBeNull();
         expect(control.validator).not.toBeNull();
     });
@@ -108,7 +119,7 @@ describe("JobCreateBasicDialogComponent ", () => {
     });
 
     it("DisplayName is initialized", () => {
-        let control = baseForm.controls.displayName;
+        const control = baseForm.controls.displayName;
         expect(control).not.toBeNull();
         expect(control.validator).not.toBeNull();
     });

@@ -1,8 +1,8 @@
-<bl-banner *ngFor="let error of node.errors">
+<bl-banner *ngFor="let error of node.errors;trackBy: trackError">
     <div code>{{error.code}}</div>
     <div message>{{error.message}}</div>
     <div details *ngIf="error.errorDetails.size !== 0">
-        <div *ngFor="let entry of error.errorDetails">
+        <div *ngFor="let entry of error.errorDetails;trackBy: trackErrorDetail">
             <div>{{entry.name}}: {{entry.value}}</div>
         </div>
     </div>

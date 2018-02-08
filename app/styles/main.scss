@@ -1,18 +1,17 @@
+
 // Themes
-@import "./variables";
 @import "./mixins";
+
+@import "./variables";
 @import "./common/type";
 
 // Base styles
-@import "./base/breadcrumbs";
 @import "./base/buttons";
 @import "./base/graphs/gauge";
-@import "./base/list-and-show-layout";
 @import "./base/focus-section";
 @import "./base/forms";
 @import "./base/layout";
 @import "./base/scaffolding";
-@import "./base/dropdown";
 @import "./base/list";
 @import "./base/notifications";
 @import "./base/scrollable";
@@ -37,7 +36,6 @@
 // Partial styles
 @import "./partials/grid";
 @import "./partials/heading";
-@import "./partials/header";
 @import "./partials/loading-indicators";
 @import "./partials/refresh-btn";
 @import "./partials/icons";
@@ -45,3 +43,7 @@
 // Vendor styles
 @import "./vendor/angular-extras";
 @import "./vendor/material-theme.scss";
+
+select {
+    cursor: pointer;
+}

@@ -15,7 +15,6 @@ class TestComponent {
 describe("PoolNodesPreviewComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: PoolNodesPreviewComponent;
     let de: DebugElement;
 
     beforeEach(() => {
@@ -27,7 +26,6 @@ describe("PoolNodesPreviewComponent", () => {
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-pool-nodes-preview"));
-        component = de.componentInstance;
         fixture.detectChanges();
     });
 

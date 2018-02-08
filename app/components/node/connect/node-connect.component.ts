@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { List } from "immutable";
 
 import { SidebarRef } from "app/components/base/sidebar";
@@ -57,9 +57,10 @@ export class NodeConnectComponent implements OnInit {
     public ngOnInit() {
         const data = this.nodeService.listNodeAgentSkus();
         data.fetchAll().subscribe(() => {
-            data.items.first().subscribe((agentSkus) => {
+            data.items.take(1).subscribe((agentSkus) => {
                 this.agentSkus = agentSkus;
                 this.windows = PoolUtils.isWindows(this.pool, agentSkus);
+                data.dispose();
             });
         });
         this._loadConnectionData();
@@ -96,6 +97,11 @@ export class NodeConnectComponent implements OnInit {
     @autobind()
     public specifyCredentials() {
         this.credentialSource = CredentialSource.Specified;
+    }
+
+    @autobind()
+    public goToHome() {
+        this.credentialSource = null;
     }
 
     @autobind()

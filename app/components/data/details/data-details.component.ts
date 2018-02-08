@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Subscription } from "rxjs/Subscription";
 
 import { DialogService } from "app/components/base/dialogs";
@@ -19,7 +19,7 @@ import { DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "..
 })
 export class DataDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
-        let label = tab ? `File group - ${tab}` : "File group";
+        const label = tab ? `File group - ${tab}` : "File group";
         return {
             name: id,
             label,
@@ -30,6 +30,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     public containerId: string;
     public decorator: ApplicationDecorator;
     public data: EntityView<BlobContainer, GetContainerParams>;
+    public isFileGroup = false;
 
     private _paramsSubscriber: Subscription;
 
@@ -43,6 +44,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         this.data = this.storageService.containerView();
         this.data.item.subscribe((container) => {
             this.container = container;
+            this.isFileGroup = container && container.isFileGroup;
         });
 
         this.data.deleted.subscribe((key) => {
@@ -74,7 +76,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         }));
 
         sidebarRef.afterCompletion.subscribe(() => {
-            this.storageService.onFileGroupUpdated.next();
+            this.storageService.onContainerUpdated.next();
         });
     }
 
@@ -94,5 +96,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     public download() {
         const ref = this.dialog.open(DownloadFileGroupDialogComponent);
         ref.componentInstance.containerId = this.containerId;
+        ref.componentInstance.subfolder = this.containerId;
+        ref.componentInstance.pathPrefix = "";
     }
 }

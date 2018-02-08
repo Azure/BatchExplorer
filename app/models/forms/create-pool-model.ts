@@ -1,7 +1,7 @@
 import * as moment from "moment";
 
-import { NodeFillType } from "app/models";
-import { PoolCreateDto, UserAccountDto } from "app/models/dtos";
+import { InboundNATPool, NodeFillType } from "app/models";
+import { ContainerRegistry, PoolCreateDto, UserAccountDto } from "app/models/dtos";
 
 export enum PoolOsSources {
     PaaS,
@@ -19,6 +19,11 @@ export interface PoolOSPickerModel {
             publisher: string,
             offer: string,
             sku: string,
+        },
+        containerConfiguration?: {
+            type: string,
+            containerImageNames: string[],
+            containerRegistries: ContainerRegistry[],
         },
     };
 }
@@ -50,11 +55,13 @@ export interface CreatePoolModel {
     taskSchedulingPolicy: NodeFillType;
     appLicenses: string[];
     appPackages: PackageReferenceModel[];
+    inboundNATPools: InboundNATPool[];
+    subnetId: string;
 }
 
 export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
     const outputScale: PoolScaleModel = output.scale || {} as any;
-    let data: any = {
+    const data: any = {
         id: output.id,
         displayName: output.displayName,
         vmSize: output.vmSize,
@@ -93,6 +100,21 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
     if (output.appPackages && output.appPackages.length > 0) {
         data.applicationPackageReferences = output.appPackages;
     }
+
+    if (output.inboundNATPools && output.inboundNATPools.length > 0) {
+        data.networkConfiguration = {
+            endpointConfiguration: {
+                inboundNATPools: output.inboundNATPools,
+            },
+        };
+    }
+
+    if (output.subnetId) {
+        data.networkConfiguration = {
+            subnetId: output.subnetId,
+            ...data.networkConfiguration,
+        };
+    }
     return new PoolCreateDto(data);
 }
 
@@ -126,5 +148,8 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         userAccounts: pool.userAccounts || [],
         appLicenses: pool.applicationLicenses || [],
         appPackages: pool.applicationPackageReferences,
+        inboundNATPools: pool.networkConfiguration && pool.networkConfiguration.endpointConfiguration ?
+            pool.networkConfiguration.endpointConfiguration.inboundNATPools : [],
+        subnetId: pool.networkConfiguration && pool.networkConfiguration.subnetId,
     };
 }

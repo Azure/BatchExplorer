@@ -5,11 +5,11 @@ import { List } from "immutable";
 
 import {
     Notification,
-    NotificationContainerComponent,
     NotificationLevel,
     NotificationModule,
     NotificationService,
 } from "app/components/base/notifications";
+import { AuthorizationHttpService } from "app/services";
 
 @Component({
     template: `<bl-notification-container></bl-notification-container>`,
@@ -24,20 +24,20 @@ describe("Notification", () => {
     let currentPersistedNotifications: List<Notification>;
     let fixture: ComponentFixture<FakeAppComponent>;
     let de: DebugElement;
-    let notificationContainer: NotificationContainerComponent;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [NotificationModule],
             declarations: [FakeAppComponent],
+            providers: [
+                { provide: AuthorizationHttpService, useValue: null },
+            ],
         });
         notificationService = TestBed.get(NotificationService);
         notificationService.notifications.subscribe((x) => currentNotifications = x);
         notificationService.persistedNotifications.subscribe((x) => currentPersistedNotifications = x);
         fixture = TestBed.createComponent(FakeAppComponent);
         de = fixture.debugElement;
-
-        notificationContainer = de.query(By.css("bl-notification-container")).componentInstance;
     });
 
     it("Should not have any notifications to start with", () => {

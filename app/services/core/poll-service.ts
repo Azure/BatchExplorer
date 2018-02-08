@@ -73,6 +73,7 @@ export class PollService {
         if (!tracker) {
             return;
         }
+
         delete this._pollTrackers[key][id];
         if (tracker.running) {
             this._clearActivePoll(key);
@@ -85,7 +86,7 @@ export class PollService {
 
 class PollTracker {
     public id: string;
-    private _currentTimeout: any;
+    private _currentTimeout: Subscription;
     private _running: boolean = false;
     private _obsSubscription: Subscription;
 
@@ -106,7 +107,7 @@ class PollTracker {
     public stop() {
         this._running = false;
         if (this._currentTimeout) {
-            clearTimeout(this._currentTimeout);
+            this._currentTimeout.unsubscribe();
         }
 
         if (this._obsSubscription) {
@@ -115,7 +116,7 @@ class PollTracker {
     }
 
     private _waitForNextPoll() {
-        this._currentTimeout = setTimeout(() => {
+        this._currentTimeout = Observable.timer(this.interval).subscribe(() => {
             this._currentTimeout = null;
             const output = this.callback();
             if (output && output instanceof Observable) {
@@ -125,7 +126,7 @@ class PollTracker {
             } else {
                 this._waitForNextPoll();
             }
-        }, this.interval);
+        });
     }
 }
 

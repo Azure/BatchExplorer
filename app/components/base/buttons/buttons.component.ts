@@ -1,11 +1,12 @@
 import { Component, Input } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { ButtonAction } from "./button.component";
 
 import { Job, JobState } from "app/models";
 
 export class BaseButton {
     @Input() public action: ButtonAction;
+    @Input() public disabled: boolean;
     @Input() public tooltipPosition: string = "below";
 }
 
@@ -48,7 +49,10 @@ export class ClearListSelectionButtonComponent extends BaseButton {
  */
 @Component({
     selector: "bl-add-button",
-    template: `<bl-button color="light" icon="fa fa-plus" [title]="title" [action]="action"></bl-button>`,
+    template: `
+        <bl-button color="light" icon="fa fa-plus" [title]="title" [action]="action" permission="write">
+        </bl-button>
+    `,
 })
 export class AddButtonComponent extends BaseButton {
     @Input()
@@ -58,7 +62,8 @@ export class AddButtonComponent extends BaseButton {
 @Component({
     selector: "bl-add-task-button",
     template: `
-        <bl-button color="light" [action]="action" [disabled]="!enabled" [title]="title" icon="fa fa-plus">
+        <bl-button color="light" [action]="action" [disabled]="!enabled" [title]="title"
+            icon="fa fa-plus" permission="write">
         </bl-button>
     `,
 })
@@ -80,7 +85,8 @@ export class AddTaskButtonComponent extends BaseButton {
 @Component({
     selector: "bl-terminate-button",
     template: `
-        <bl-button color="light" [action]="action" [disabled]="!enabled" icon="fa fa-stop" title="Terminate">
+        <bl-button color="light" [action]="action" [disabled]="!enabled" icon="fa fa-stop"
+            title="Terminate" permission="write">
         </bl-button>
     `,
 })
@@ -99,7 +105,8 @@ export class TerminateButtonComponent extends BaseButton {
 @Component({
     selector: "bl-delete-button",
     template: `
-        <bl-button color="light" [action]="action" [disabled]="!enabled" [title]="title" icon="fa fa-trash-o">
+        <bl-button color="light" [action]="action" [disabled]="!enabled" [title]="title"
+            icon="fa fa-trash-o" permission="write">
         </bl-button>
     `,
 })
@@ -123,7 +130,7 @@ export class DeleteButtonComponent extends BaseButton {
     selector: "bl-disable-button",
     template: `
         <bl-button color="light" [action]="action" *ngIf="visible" icon="fa fa-pause"
-            [disabled]="!enabled" title="Disable">
+            [disabled]="!enabled" title="Disable" permission="write">
         </bl-button>
     `,
 })
@@ -147,7 +154,7 @@ export class DisableButtonComponent extends BaseButton {
     selector: "bl-enable-button",
     template: `
         <bl-button color="light" *ngIf="visible" [action]="action" [disabled]="!enabled" title="Enable"
-            icon="fa fa-play">
+            icon="fa fa-play" permission="write">
         </bl-button>
     `,
 })
@@ -166,7 +173,10 @@ export class EnableButtonComponent extends BaseButton {
 
 @Component({
     selector: "bl-clone-button",
-    template: `<bl-button color="light" [action]="action" [title]="title" icon="fa fa-clone"></bl-button>`,
+    template: `
+        <bl-button color="light" [action]="action" [title]="title" icon="fa fa-clone" permission="write">
+        </bl-button>
+    `,
 })
 export class CloneButtonComponent extends BaseButton {
     @Input()
@@ -195,14 +205,25 @@ export class DownloadButtonComponent extends BaseButton {
 
 @Component({
     selector: "bl-resize-button",
-    template: `<bl-button color="light" [action]="action" title="Resize" icon="fa fa-arrows-v"></bl-button>`,
+    template: `
+        <bl-button color="light" [action]="action" title="Resize" icon="fa fa-arrows-v" permission="write">
+        </bl-button>
+    `,
 })
 export class ResizeButtonComponent extends BaseButton {
 }
 
 @Component({
     selector: "bl-edit-button",
-    template: `<bl-button color="light" [action]="action" [title]="title" icon="fa fa-pencil-square-o"></bl-button>`,
+    template: `
+        <bl-button color="light"
+            [action]="action"
+            [title]="title"
+            icon="fa fa-pencil-square-o"
+            permission="write"
+            [disabled]="disabled">
+        </bl-button>
+    `,
 })
 export class EditButtonComponent extends BaseButton {
     @Input()

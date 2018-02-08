@@ -1,4 +1,4 @@
-<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [multiUse]="multiUse" [actionName]="actionName" [config]="complexFormConfig">
+<bl-complex-form [formGroup]="form" [submit]="submit" [asyncTasks]="asyncTasks" [containerRef]="sidebarRef" [multiUse]="multiUse" [actionName]="actionName" [config]="complexFormConfig" [fileUri]="fileUri">
     <bl-form-page main-form-page [title]="title" [formGroup]="form">
         <bl-form-section title="General info" subtitle="Basic information about the task">
             <div class="grow">
@@ -46,7 +46,7 @@
         </bl-form-section>
 
         <bl-form-section title="Resource files" subtitle="List of files to be used by this task">
-            <bl-resourcefile-picker formControlName="resourceFiles"></bl-resourcefile-picker>
+            <bl-resourcefile-picker formControlName="resourceFiles" (upload)="registerFileUpload($event)"></bl-resourcefile-picker>
         </bl-form-section>
 
         <bl-form-section title="Environment variables" subtitle="A list of environment variable settings for the task">
@@ -59,6 +59,14 @@
                 <bl-error controlName="appPackages" code="invalid">Please select valid combinations of application package versions</bl-error>
                 <bl-error controlName="appPackages" code="duplicate">There is a duplicate package version selected</bl-error>
             </div>
+        </bl-form-section>
+
+        <bl-form-section *ngIf="virtualMachineConfiguration?.containerConfiguration" title="Task container settings" subtitle="The settings for the container under which the task runs.">
+            <bl-container-settings-picker
+                formControlName="containerSettings"
+                [containerConfiguration]="virtualMachineConfiguration.containerConfiguration"
+                [required]="true">
+            </bl-container-settings-picker>
         </bl-form-section>
     </bl-form-page>
 </bl-complex-form>

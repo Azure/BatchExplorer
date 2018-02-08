@@ -5,6 +5,7 @@ import { ListProp, Model, Prop, Record } from "app/core";
 import { ModelUtils, PoolUtils } from "app/utils";
 import { CloudServiceConfiguration } from "./cloud-service-configuration";
 import { Metadata, MetadataAttributes } from "./metadata";
+import { NavigableRecord } from "./navigable-record";
 import { NetworkConfiguration } from "./network-configuration";
 import { ResizeError } from "./resize-error";
 import { StartTask, StartTaskAttributes } from "./start-task";
@@ -47,7 +48,7 @@ export interface PoolAttributes {
  * Class for displaying Batch pool information.
  */
 @Model()
-export class Pool extends Record<PoolAttributes> {
+export class Pool extends Record<PoolAttributes> implements NavigableRecord  {
 
     @Prop() public allocationState: string;
 
@@ -144,6 +145,10 @@ export class Pool extends Record<PoolAttributes> {
 
     public osName(): string {
         return this._osName;
+    }
+
+    public get routerLink(): string[] {
+        return ["/pools", this.id];
     }
 }
 

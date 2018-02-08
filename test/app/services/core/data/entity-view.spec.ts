@@ -126,6 +126,7 @@ describe("EntityView", () => {
                 supplyData: dataSpy,
             });
 
+            view.dispose();
             view = new EntityView({
                 cache: () => cache,
                 getter: getter,
@@ -138,7 +139,7 @@ describe("EntityView", () => {
                 cache: () => cache,
                 supplyData: () => Observable.throw(new ServerError({ status: 404, message: "404 not found" } as any)),
             });
-
+            view.dispose();
             view = new EntityView({
                 cache: () => cache,
                 getter: getter,
@@ -172,6 +173,7 @@ describe("EntityView", () => {
             tick();
 
             expect(deleted).toEqual("1");
+            otherView.dispose();
         }));
 
         it("should not send to deleted if loading a new item that doesn't exist", fakeAsync(() => {

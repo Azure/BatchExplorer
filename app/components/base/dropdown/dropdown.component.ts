@@ -1,10 +1,14 @@
-import { Component, HostListener } from "@angular/core";
+import { Component, HostListener, Input } from "@angular/core";
+
+import "./dropdown.scss";
 
 @Component({
     selector: "bl-dropdown",
     templateUrl: "dropdown.html",
 })
 export class DropdownComponent {
+    @Input() public footer: boolean = false;
+    @Input() public align: "left" | "right" = "right";
 
     public forcedOpen = false;
     public showDropdown = false;

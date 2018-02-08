@@ -36,7 +36,8 @@
         true,
         ["batchLabsApp", "debugCrash"], // Show a warning if the main window is being shown on start for debug purposes
         {"name": "fdescribe", "message": "Don't keep jasmine fit methods in the code."},
-        {"name": "fit", "message": "Don't keep jasmine fit methods in the code."}
+        {"name": "fit", "message": "Don't keep jasmine fit methods in the code."},
+        {"name": "allowInsecureRequest", "message": "This is only for development with proxy don't leave in the code"}
     ],
     "no-empty-interface":  false,
     "space-before-function-paren": [false],
@@ -46,8 +47,12 @@
     "no-duplicate-switch-case": true,
     "no-return-await": true,
     "ban-comma-operator": true,
+    // "no-dynamic-delete": true,
+    // "prefer-readonly": true,
 
     // Codelyzer rules(Angular2)
+    "contextual-life-cycle": true,
+    "decorator-not-allowed": true,
     "directive-selector": [true, "attribute", "bl", "camelCase"],
     "component-selector": [true, "element", "bl", "kebab-case"],
     "use-input-property-decorator": true,
@@ -63,10 +68,11 @@
     "component-class-suffix": true,
     "directive-class-suffix": true,
     "import-destructuring-spacing": true,
-    "invoke-injectable": true,
     "no-shadowed-variable": false,
+    "trackBy-function": true,
+    "banana-in-box": true,
     // TODO enable
-    "prefer-const": false
+    "prefer-const": true
   },
   "jsRules": {
     "object-literal-sort-keys": false,

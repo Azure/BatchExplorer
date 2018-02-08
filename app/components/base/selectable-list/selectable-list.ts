@@ -1,6 +1,6 @@
 import { EventEmitter, OnDestroy, ViewChild } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Observable, Subscription } from "rxjs";
 
 import { DeleteSelectedItemsDialogComponent } from "app/components/base/list-and-show-layout";
@@ -78,7 +78,7 @@ export class SelectableList implements OnDestroy {
             return;
         }
 
-        let config = new MatDialogConfig();
+        const config = new MatDialogConfig();
         const dialogRef = this.dialog.open(DeleteSelectedItemsDialogComponent, config);
         dialogRef.componentInstance.items = this.selectedItems;
         dialogRef.componentInstance.entityName = this.entityName;

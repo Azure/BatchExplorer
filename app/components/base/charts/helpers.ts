@@ -121,7 +121,7 @@ export function generateColor(index: number): number[] {
  * @returns {Colors}
  */
 export function generateColors(count: number): number[][] {
-    let colorsArr: number[][] = new Array(count);
+    const colorsArr: number[][] = new Array(count);
     for (let i = 0; i < count; i++) {
         colorsArr[i] = defaultColors[i] || getRandomColor();
     }

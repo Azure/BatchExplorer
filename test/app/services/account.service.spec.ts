@@ -9,9 +9,9 @@ describe("AccountService", () => {
     let accountService: AccountService;
     let currentAccount: AccountResource;
     let currentAccountId: string;
-    let account1 = new AccountResource({ id: "account-1" } as any);
+    const account1 = new AccountResource({ id: "account-1" } as any);
     let subscriptionServiceSpy;
-    let subs: Subscription[] = [];
+    const subs: Subscription[] = [];
     let storageSpy;
 
     beforeEach(() => {
@@ -54,7 +54,7 @@ describe("AccountService", () => {
         expect(currentAccount).not.toBeUndefined();
         expect(currentAccount.id).toBe("account-1");
 
-        let accountSubject = new AsyncSubject();
+        const accountSubject = new AsyncSubject();
         accountService.get = jasmine.createSpy("get").and.returnValue(accountSubject);
 
         accountService.selectAccount("account-2");

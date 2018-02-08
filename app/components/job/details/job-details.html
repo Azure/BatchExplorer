@@ -15,6 +15,7 @@
                 <bl-disable-button [job]="job" [action]="disableJob"></bl-disable-button>
                 <bl-enable-button [job]="job" [action]="enableJob"></bl-enable-button>
                 <bl-clone-button [action]="cloneJob"></bl-clone-button>
+                <bl-button [action]="exportAsJSON" color="light" title="Export as JSON"><i class="fa fa-code"></i></bl-button>
             </bl-button-group>
             <div summaryTile>
                 <div class="job-graphs-link" [routerLink]="['/jobs', job.id, 'graphs']">
@@ -28,7 +29,7 @@
             </div>
         </bl-summary-card>
         <bl-job-error-display [job]="job"></bl-job-error-display>
-        <mat-card class="details">
+        <bl-card class="details">
             <bl-tab-group>
                 <bl-tab key="tasks">
                     <bl-tab-label>Tasks</bl-tab-label>
@@ -48,6 +49,6 @@
                     <bl-job-hook-task-browser [job]="job" *ngIf="hasHookTask"></bl-job-hook-task-browser>
                 </bl-tab>
             </bl-tab-group>
-        </mat-card>
+        </bl-card>
     </div>
 </bl-loading>

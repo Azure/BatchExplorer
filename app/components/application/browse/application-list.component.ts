@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
@@ -10,7 +10,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
 import { BatchApplication } from "app/models";
-import { ApplicationListParams, ApplicationService } from "app/services";
+import { ApplicationListParams, ApplicationService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
@@ -44,6 +44,7 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
         router: Router,
         protected dialog: MatDialog,
         private applicationService: ApplicationService,
+        private pinnedEntityService: PinnedEntityService,
         private sidebarManager: SidebarManager) {
 
         super();
@@ -66,6 +67,7 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
 
     public ngOnDestroy() {
         this._subs.forEach(x => x.unsubscribe());
+        this.data.dispose();
     }
 
     @autobind()
@@ -100,7 +102,15 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
                 label: "Edit",
                 click: () => this._editApplication(application),
             }),
+            new ContextMenuItem({
+                label: this.pinnedEntityService.isFavorite(application) ? "Unpin favorite" : "Pin to favorites",
+                click: () => this._pinApplication(application),
+            }),
         ]);
+    }
+
+    public trackByFn(index, application: BatchApplication) {
+        return application.id;
     }
 
     private _filterApplications() {
@@ -126,5 +136,13 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
     private _deleteApplication(application: BatchApplication) {
         const dialogRef = this.dialog.open(DeleteApplicationDialogComponent);
         dialogRef.componentInstance.applicationId = application.id;
+    }
+
+    private _pinApplication(application: BatchApplication) {
+        this.pinnedEntityService.pinFavorite(application).subscribe((result) => {
+            if (result) {
+                this.pinnedEntityService.unPinFavorite(application);
+            }
+        });
     }
 }

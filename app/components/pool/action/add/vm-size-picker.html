@@ -1,5 +1,5 @@
-<mat-tab-group class="form-tabs">
-    <mat-tab *ngFor="let category of categoryNames" [label]="categoryLabelName(category)">
+<mat-tab-group class="form-tabs" [@.disabled]="true">
+    <mat-tab *ngFor="let category of categoryNames;trackBy: trackCategory" [label]="categoryLabelName(category)">
         <bl-focus-section>
             <bl-table [activeItem]="pickedSize" (activeItemChange)="pickSize($event)">
                 <bl-thead>
@@ -10,7 +10,7 @@
                     <bl-column style="width: 70px" [sortable]="true">OS Disk</bl-column>
                     <bl-column [sortable]="true">Resource/Temp Disk</bl-column>
                 </bl-thead>
-                <bl-row *ngFor="let size of categories[category]" [key]="size.vmSize.id">
+                <bl-row *ngFor="let size of categories[category];trackBy: trackVmSize" [key]="size.vmSize.id">
                     <bl-cell [value]="size.vmSize.name">{{size.title}}</bl-cell>
                     <bl-cell [value]="size.price">{{size.prettyPrice}}</bl-cell>
                     <bl-cell style="width: 60px" [value]="size.vmSize.numberOfCores"></bl-cell>

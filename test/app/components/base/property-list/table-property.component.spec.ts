@@ -7,8 +7,10 @@ import { ButtonComponent } from "app/components/base/buttons";
 import {
     TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
 } from "app/components/base/property-list";
+import { AuthorizationHttpService } from "app/services";
 import { click } from "test/utils/helpers";
 
+// tslint:disable:trackBy-function
 @Component({
     template: `
         <bl-table-property label="Files">
@@ -34,8 +36,6 @@ describe("TablePropertyComponent", () => {
     let fixture: ComponentFixture<TestTableComponent>;
     let de: DebugElement;
     let component: TestTableComponent;
-    let section: DebugElement;
-    let table: TablePropertyComponent;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -47,14 +47,15 @@ describe("TablePropertyComponent", () => {
                 TablePropertyRowComponent,
                 ButtonComponent,
             ],
+            providers: [
+                { provide: AuthorizationHttpService, useValue: null },
+            ],
             schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestTableComponent);
         de = fixture.debugElement;
         component = fixture.componentInstance;
-        section = de.query(By.css("section"));
         fixture.detectChanges();
-        table = de.query(By.css("bl-table-property")).componentInstance;
     });
 
     it("Should show the label", () => {

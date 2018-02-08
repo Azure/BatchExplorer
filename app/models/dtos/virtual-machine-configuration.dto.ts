@@ -1,4 +1,5 @@
 import { Dto, DtoAttr } from "app/core";
+import { ContainerConfiguration } from "./container-setup.dto";
 
 export class VirtualMachineConfiguration extends Dto<VirtualMachineConfiguration> {
     @DtoAttr()
@@ -11,6 +12,9 @@ export class VirtualMachineConfiguration extends Dto<VirtualMachineConfiguration
         sku: string;
         version?: string;
     };
+
+    @DtoAttr()
+    public containerConfiguration: ContainerConfiguration;
 
     @DtoAttr()
     public windowsConfiguration?: {

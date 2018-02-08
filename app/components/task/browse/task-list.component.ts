@@ -1,15 +1,17 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from "@angular/core";
-import { autobind } from "core-decorators";
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { autobind } from "app/core";
 import { Observable, Subscription } from "rxjs";
 
 import { TaskListDisplayComponent } from "./display";
 
+import { ActivatedRoute } from "@angular/router";
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { LoadingStatus } from "app/components/base/loading";
 import { SelectableList } from "app/components/base/selectable-list";
 import { Task } from "app/models";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
 import { ListView } from "app/services/core";
+import { ComponentUtils } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
 import { DeleteTaskAction } from "../action";
 
@@ -17,7 +19,7 @@ import { DeleteTaskAction } from "../action";
     selector: "bl-task-list",
     templateUrl: "task-list.html",
 })
-export class TaskListComponent extends SelectableList implements OnInit {
+export class TaskListComponent extends SelectableList implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
     /**
@@ -63,10 +65,12 @@ export class TaskListComponent extends SelectableList implements OnInit {
 
     constructor(
         private taskService: TaskService,
+        activatedRoute: ActivatedRoute,
         private changeDetectorRef: ChangeDetectorRef,
         private taskManager: BackgroundTaskService) {
         super();
         this.data = this.taskService.listView();
+        ComponentUtils.setActiveItem(activatedRoute, this.data);
 
         this._onTaskAddedSub = taskService.onTaskAdded.subscribe((item: TaskParams) => {
             this.data.loadNewItem(taskService.get(item.jobId, item.id));
@@ -75,6 +79,10 @@ export class TaskListComponent extends SelectableList implements OnInit {
 
     public ngOnInit() {
         this.data.fetchNext();
+    }
+
+    public ngOnDestroy() {
+        this._onTaskAddedSub.unsubscribe();
     }
 
     @autobind()

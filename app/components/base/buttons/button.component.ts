@@ -1,14 +1,15 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding,
-    Input, OnChanges, SimpleChanges, animate, style, transition, trigger,
+    Input, animate, style, transition, trigger,
 } from "@angular/core";
 import { Observable } from "rxjs";
 
+import { AuthorizationHttpService } from "app/services";
 import { log } from "app/utils";
 import "./button.scss";
 import { ClickableComponent } from "./clickable";
 
-export type ButtonType = "square" | "round" | "wide";
+export type ButtonType = "square" | "round" | "wide" | "plain";
 export type ButtonColor = "primary" | "light" | "danger" | "warn" | "success";
 export type ButtonAction = (event?: Event) => Observable<any> | void;
 
@@ -33,7 +34,7 @@ export enum SubmitStatus {
     changeDetection: ChangeDetectionStrategy.OnPush,
 
 })
-export class ButtonComponent extends ClickableComponent implements OnChanges {
+export class ButtonComponent extends ClickableComponent {
     public SubmitStatus = SubmitStatus;
 
     @Input() public action: ButtonAction;
@@ -55,24 +56,21 @@ export class ButtonComponent extends ClickableComponent implements OnChanges {
     }
 
     public get status() { return this._status; }
+    public get tooltipTitle() { return `${this.title || ""}${this.subtitle || ""}`; }
+
     private _status = SubmitStatus.Idle;
 
-    constructor(private changeDetectionRef: ChangeDetectorRef) {
-        super();
+    constructor(authHttpService: AuthorizationHttpService,
+                private changeDetectionRef: ChangeDetectorRef) {
+        super(authHttpService);
     }
 
     public handleAction(event: Event) {
         super.handleAction(event);
-        if (this.disabled || !this.action) {
+        if (this.isDisabled || !this.action) {
             return;
         }
         this._execute(event);
-    }
-
-    public ngOnChanges(changes: SimpleChanges) {
-        if ("disabled" in changes) {
-            this.tabindex = this.disabled ? "-1" : "0";
-        }
     }
 
     public done() {

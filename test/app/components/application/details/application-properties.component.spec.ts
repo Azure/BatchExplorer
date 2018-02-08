@@ -44,17 +44,17 @@ describe("ApplicationPropertiesComponent", () => {
     });
 
     it("allow updates is displayed", () => {
-        let property = fixture.debugElement.query(By.css("bl-bool-property[label='Allow updates']"));
+        const property = fixture.debugElement.query(By.css("bl-bool-property[label='Allow updates']"));
         expect(property.nativeElement.textContent).toContain("Enabled");
     });
 
     it("display name is displayed", () => {
-        let property = fixture.debugElement.query(By.css("bl-text-property[label='Display name']"));
+        const property = fixture.debugElement.query(By.css("bl-text-property[label='Display name']"));
         expect(property.nativeElement.textContent).toContain("apples and pears");
     });
 
     it("default version is displayed", () => {
-        let property = fixture.debugElement.query(By.css("bl-text-property[label='Default version']"));
+        const property = fixture.debugElement.query(By.css("bl-text-property[label='Default version']"));
         expect(property.nativeElement.textContent).toContain("1.25");
     });
 });

@@ -61,6 +61,10 @@ export class TaskDependenciesComponent {
         }
     }
 
+    public trackByFn(index, dependency: TaskDependency) {
+        return dependency.id;
+    }
+
     private _refresh(task: Task) {
         this._skip = 0;
         this._take = 20;
@@ -79,7 +83,7 @@ export class TaskDependenciesComponent {
      * @param pageData: data for the current page
      */
     private _processMultipleTaskResponse(tasks: List<Task>, pageData: TaskDependency[]): void {
-        for (let td of pageData) {
+        for (const td of pageData) {
             td.loading = false;
 
             const found = tasks && tasks.size > 0
@@ -113,7 +117,7 @@ export class TaskDependenciesComponent {
     private _getTaskDependencyIds(dependencies: TaskDependencies): string[] {
         const ids = dependencies.taskIds;
         const ranges = dependencies.taskIdRanges;
-        let out = ids.toJS();
+        const out = ids.toJS();
 
         if (!ranges) {
             return out;

@@ -6,7 +6,7 @@
             <bl-column style="width: 25%">Format</bl-column>
             <bl-column style="width: 25%">Last activation time</bl-column>
         </bl-thead>
-        <bl-row *ngFor="let package of displayedPackages" [key]="package.version">
+        <bl-row *ngFor="let package of displayedPackages;trackBy: trackByFn" [key]="package.version">
             <bl-cell style="width: 25%" [value]="package.version"></bl-cell>
             <bl-cell style="width: 25%" [value]="package.state"></bl-cell>
             <bl-cell style="width: 25%" [value]="package.format"></bl-cell>

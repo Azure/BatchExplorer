@@ -1,6 +1,7 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
+import * as moment from "moment";
 
 import { AddNodeUserAttributes } from "app/services";
 
@@ -27,8 +28,8 @@ export class NodeUserCredentialsFormComponent {
     }
     public get isLinuxNode() { return this._isLinuxNode; }
 
-    @Input()
-    public submit: (credentials) => any;
+    @Input() public submit: (credentials) => any;
+    @Output() public close = new EventEmitter();
 
     public form: FormGroup;
 
@@ -41,6 +42,7 @@ export class NodeUserCredentialsFormComponent {
             password: [""],
             sshPublicKey: [""],
             isAdmin: [true],
+            expireIn: [moment.duration({ days: 1 })],
         });
     }
 
@@ -56,6 +58,7 @@ export class NodeUserCredentialsFormComponent {
         } else {
             credentials.password = value.password;
         }
+        credentials.expiryTime = moment().add(value.expireIn).toDate();
         return this.submit(credentials);
     }
 

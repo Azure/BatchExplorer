@@ -4,4 +4,4 @@
         {{hint}}
     </mat-hint>
 </mat-form-field>
-<bl-button type="round" [action]="openFilePickerDialog"><i class="fa fa-file"></i></bl-button>
+<bl-button type="round" [action]="openFilePickerDialog" [disabled]="!containerId" title="Select file"><i class="fa fa-file"></i></bl-button>

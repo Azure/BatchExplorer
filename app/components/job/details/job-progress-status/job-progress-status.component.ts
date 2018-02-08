@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
 
 import { GaugeConfig } from "app/components/base/graphs/gauge";
 import { Job, JobTaskCounts, Node, Pool } from "app/models";
@@ -15,11 +14,9 @@ import "./job-progress-status.scss";
     templateUrl: "job-progress-status.html",
 })
 export class JobProgressStatusComponent implements OnChanges, OnDestroy {
-    @Input()
-    public job: Job;
+    @Input() public job: Job;
 
-    @Input()
-    public poolId: string;
+    @Input() public poolId: string;
 
     public nodes: List<Node> = List([]);
     public pool: Pool;
@@ -38,7 +35,6 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
     private poolData: EntityView<Pool, PoolParams>;
 
     private _polls: PollObservable[] = [];
-    private _subs: Subscription[] = [];
 
     constructor(
         poolService: PoolService,
@@ -54,20 +50,20 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
 
         this.updateGaugeOptions();
 
-        this._subs.push(this.poolData.item.subscribe((pool) => {
+        this.poolData.item.subscribe((pool) => {
             this.pool = pool;
             this.maxRunningTasks = pool ? pool.targetNodes * pool.maxTasksPerNode : 1;
             this.updateGaugeOptions();
-        }));
+        });
 
-        this._subs.push(this.data.items.subscribe((nodes) => {
+        this.data.items.subscribe((nodes) => {
             if (this.nodes.size !== nodes.size) {
                 this.poolData.refresh();
             }
             this.nodes = nodes;
             this.countRunningTasks();
             this.updateGaugeOptions();
-        }));
+        });
 
         this._polls.push(this.data.startPoll(refreshRate));
 
@@ -89,7 +85,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
 
     public ngOnDestroy() {
         this._polls.forEach(x => x.destroy());
-        this._subs.forEach(x => x.unsubscribe());
+        this.data.dispose();
         this.poolData.dispose();
     }
 

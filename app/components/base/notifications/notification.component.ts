@@ -10,8 +10,7 @@ import "./notification.scss";
     templateUrl: "notification.html",
 })
 export class NotificationComponent {
-    @Input()
-    public notification: Notification;
+    @Input() public notification: Notification;
 
     @HostBinding("class")
     public get notificationClass(): string {
@@ -36,6 +35,16 @@ export class NotificationComponent {
         }
     }
 
+    @HostListener("mouseenter", ["$event"])
+    public pauseNotificationAutoDismiss(event: MouseEvent) {
+        this.notificationService.pauseAutoDimiss(this.notification);
+    }
+
+    @HostListener("mouseleave", ["$event"])
+    public resumeNotificationAutoDismiss(event: MouseEvent) {
+        this.notificationService.resumeAutoDimiss(this.notification);
+    }
+
     public dismiss() {
         this.notificationService.dismiss(this.notification);
     }
@@ -47,5 +56,9 @@ export class NotificationComponent {
     public performAction(event: Event, action: NotificationAction) {
         action.do();
         this.dismiss();
+    }
+
+    public trackAction(index, action: NotificationAction) {
+        return action.name;
     }
 }

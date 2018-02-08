@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, ViewChild } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Observable } from "rxjs";
 
 import { SubTaskDisplayListComponent } from "./sub-tasks";

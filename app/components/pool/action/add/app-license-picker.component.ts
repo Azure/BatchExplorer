@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild, ViewContainerRef, forwardRef } from "@angular/core";
+import { Component, OnInit, ViewChild, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
 import { MatCheckboxChange, MatDialog, MatDialogConfig } from "@angular/material";
-import { List, Map } from "immutable";
+import { List } from "immutable";
 
 import { TableComponent, TableConfig } from "app/components/base/table";
 import { ApplicationLicense } from "app/models";
@@ -34,11 +34,9 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
 
     private _propagateChange: (value: string[]) => void = null;
     private _propagateTouched: (value: boolean) => void = null;
-    private _pickedLicenses: Map<string, boolean> = Map<string, boolean>({});
     private _eulaRead: boolean = false;
 
     constructor(
-        private viewContainerRef: ViewContainerRef,
         private dialog: MatDialog) {
     }
 
@@ -74,7 +72,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
 
     public writeValue(value: any) {
         if (value) {
-            this._pickedLicenses = value;
+            this.pickedLicenses = value;
         }
     }
 
@@ -103,8 +101,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     }
 
     public viewEula(license: ApplicationLicense) {
-        let config = new MatDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
+        const config = new MatDialogConfig();
         const dialogRef = this.dialog.open(LicenseEulaDialogComponent, config);
         dialogRef.componentInstance.license = license;
     }

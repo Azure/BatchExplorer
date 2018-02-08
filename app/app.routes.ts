@@ -1,11 +1,14 @@
 // tslint:disable: object-literal-sort-keys
 import { Routes } from "@angular/router";
 
+import { NavigationGuard } from "app/components/base/guards";
 import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
 import { ChooseActionComponent } from "app/components/market/application-action";
 import { LocalTemplateBrowserComponent } from "app/components/market/local-template-browser";
 import { SubmitLocalTemplateComponent } from "app/components/market/submit-local-template";
 import { SubmitRecentTemplateComponent } from "app/components/market/submit-recent-template";
+import { ThemeColorsComponent } from "app/components/misc";
+import { PoolStandaloneGraphsComponent } from "app/components/pool/graphs/standalone";
 import { SettingsComponent } from "app/components/settings";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
@@ -13,6 +16,8 @@ import { ApplicationDefaultComponent, ApplicationDetailsComponent } from "./comp
 import { ApplicationHomeComponent } from "./components/application/home/application-home.component";
 import { DataDefaultComponent, DataDetailsComponent } from "./components/data/details";
 import { DataHomeComponent } from "./components/data/home/data-home.component";
+import { JobScheduleDefaultComponent, JobScheduleDetailsComponent } from "./components/job-schedule/details";
+import { JobScheduleHomeComponent } from "./components/job-schedule/home/job-schedule-home.component";
 import { JobDefaultComponent, JobDetailsComponent } from "./components/job/details";
 import { JobHomeComponent } from "./components/job/home/job-home.component";
 import { MarketComponent } from "./components/market/home";
@@ -41,6 +46,7 @@ export const routes: Routes = [
     },
     {
         path: "jobs",
+        canActivate: [NavigationGuard],
         component: JobHomeComponent,
         children: [
             { path: "", component: JobDefaultComponent }, // jobs/
@@ -48,7 +54,17 @@ export const routes: Routes = [
         ],
     },
     {
+        path: "jobschedules",
+        canActivate: [NavigationGuard],
+        component: JobScheduleHomeComponent,
+        children: [
+            { path: "", component: JobScheduleDefaultComponent }, // jobschedules/
+            { path: ":id", component: JobScheduleDetailsComponent }, // jobschedules/{jobschedule.id}
+        ],
+    },
+    {
         path: "pools",
+        canActivate: [NavigationGuard],
         component: PoolHomeComponent,
         children: [
             { path: "", component: PoolDefaultComponent }, // pools/
@@ -57,6 +73,7 @@ export const routes: Routes = [
     },
     {
         path: "market",
+        canActivate: [NavigationGuard],
         component: MarketComponent,
     },
     {
@@ -81,6 +98,7 @@ export const routes: Routes = [
     },
     {
         path: "applications",
+        canActivate: [NavigationGuard],
         component: ApplicationHomeComponent,
         children: [
             { path: "", component: ApplicationDefaultComponent }, // applications/
@@ -89,6 +107,7 @@ export const routes: Routes = [
     },
     {
         path: "data",
+        canActivate: [NavigationGuard],
         component: DataHomeComponent,
         children: [
             { path: "", component: DataDefaultComponent }, // data/
@@ -114,6 +133,14 @@ export const routes: Routes = [
     {
         path: "jobs/:jobId/graphs",
         component: JobGraphsComponent,
+    },
+    {
+        path: "theme/colors",
+        component: ThemeColorsComponent,
+    },
+    {
+        path: "standalone/pools/:poolId/graphs",
+        component: PoolStandaloneGraphsComponent,
     },
 ];
 

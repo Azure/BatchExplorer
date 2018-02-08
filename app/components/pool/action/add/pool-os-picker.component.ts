@@ -1,12 +1,16 @@
-import { Component, OnInit, forwardRef } from "@angular/core";
+import { Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+import { autobind } from "app/core";
+import { Subscription } from "rxjs";
 
 import { NodeAgentSku, NodeAgentSkuMap, Offer, Sku } from "app/models";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
 import { NodeService } from "app/services";
 import { ListView } from "app/services/core";
+
+import "./pool-os-picker.scss";
 
 const cloudServiceOsFamilies = [{
     id: "2",
@@ -31,7 +35,7 @@ const cloudServiceOsFamilies = [{
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => PoolOsPickerComponent), multi: true },
     ],
 })
-export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
+export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
     public value: PoolOSPickerModel;
     public accountData: ListView<NodeAgentSku, {}>;
 
@@ -47,14 +51,20 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
     // Cloud service
     public selectedFamilyName: string;
 
+    // Container configuration
+    public containerConfiguration: FormControl = new FormControl();
+    public showContainerConfiguration: boolean = false;
+
     private _propagateChange: (value: PoolOSPickerModel) => void = null;
     private _nodeAgentSkuMap: NodeAgentSkuMap = new NodeAgentSkuMap();
+    private _sub: Subscription;
 
     constructor(formBuilder: FormBuilder, private nodeService: NodeService) {
         this.accountData = this.nodeService.listNodeAgentSkus();
         this.accountData.items.subscribe((result) => {
             this._buildNodeAgentSkuMap(result);
         });
+        this._sub = this.containerConfiguration.valueChanges.subscribe(this._updateContainerConfiguration);
     }
 
     public ngOnInit() {
@@ -74,6 +84,10 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
         // Do nothing
     }
 
+    public ngOnDestroy(): void {
+        this._sub.unsubscribe();
+    }
+
     public validate(c: FormControl) {
         const valid = this.value;
         if (!valid || Boolean(valid.source !== PoolOsSources.PaaS && valid.source !== PoolOsSources.IaaS)) {
@@ -88,11 +102,27 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
         return null;
     }
 
+    public pickContainerOffer(offer: Offer) {
+        this.pickOffer(offer);
+        this.showContainerConfiguration = true;
+    }
+
+    public pickContainerSku(offer: Offer, sku: Sku) {
+        this.pickSku(offer, sku);
+        this.showContainerConfiguration = true;
+    }
+
     public pickOffer(offer: Offer) {
         this.pickSku(offer, offer.skus.first());
     }
 
     public pickSku(offer: Offer, sku: Sku) {
+        // preventing user clicking pick same sku multiple times
+        if (this.selectedOffer === offer.name &&
+            this.selectedSku === sku.name &&
+            this.selectedNodeAgentId === sku.nodeAgentId) {
+            return;
+        }
         this.value = {
             source: PoolOsSources.IaaS,
             virtualMachineConfiguration: {
@@ -110,6 +140,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
         if (this._propagateChange) {
             this._propagateChange(this.value);
         }
+        this.showContainerConfiguration = false;
     }
 
     public pickCloudService(version = null) {
@@ -126,6 +157,11 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
         if (this._propagateChange) {
             this._propagateChange(this.value);
         }
+        this.showContainerConfiguration = false;
+    }
+
+    public clearContaienrConfiguration() {
+        this.containerConfiguration.patchValue(null);
     }
 
     public get vmOffers() {
@@ -140,6 +176,25 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
         return this._nodeAgentSkuMap.renderingOffers;
     }
 
+    public get dockerOffers() {
+        return this._nodeAgentSkuMap.dockerOffers;
+    }
+
+    /**
+     * Function that determines whether this OS is active or not
+     * Two conditions must be satisfied
+     * 1, selectedOffer equals current offer name
+     * 2, selectedSku is in current offer sku list
+     */
+    public isOsActive(offer) {
+        const hasSku = offer.skus.filter(x => x.name === this.selectedSku).length > 0;
+        return offer.name === this.selectedOffer && hasSku;
+    }
+
+    public trackOffer(index, offer: Offer) {
+        return offer.name;
+    }
+
     private _updateSelection() {
         const vmConfig = this.value && this.value.virtualMachineConfiguration;
         const ref = vmConfig && vmConfig.imageReference;
@@ -151,9 +206,42 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
         const familyId = csConfig && csConfig.osFamily;
         const item = cloudServiceOsFamilies.filter(x => x.id === familyId).first();
         this.selectedFamilyName = item && item.name;
+
+        // Map values to container configuration form
+        const containerConfiguration = vmConfig && vmConfig.containerConfiguration;
+        const mappedContainerConfiguration = containerConfiguration ? {
+            type: containerConfiguration.type,
+            containerImageNames: containerConfiguration.containerImageNames.map(x => {
+                return { imageName: x };
+            }),
+            containerRegistries: containerConfiguration.containerRegistries || [],
+        } : null;
+        this.containerConfiguration.patchValue(mappedContainerConfiguration);
     }
 
     private _buildNodeAgentSkuMap(nodeAgentSkus: any) {
         this._nodeAgentSkuMap = new NodeAgentSkuMap(nodeAgentSkus);
+    }
+
+    /**
+     * Callback function of container configuration form
+     * @param value
+     */
+    @autobind()
+    private _updateContainerConfiguration(value) {
+        const vmConfig = this.value && this.value.virtualMachineConfiguration;
+        if (vmConfig) {
+            if (value) {
+                const containerRegistries = value.containerRegistries.length > 0 ?
+                    value.containerRegistries : undefined;
+                vmConfig.containerConfiguration = {
+                    type: value.type,
+                    containerImageNames: value.containerImageNames.map(x => x.imageName),
+                    containerRegistries: containerRegistries,
+                };
+            } else {
+                vmConfig.containerConfiguration = null;
+            }
+        }
     }
 }

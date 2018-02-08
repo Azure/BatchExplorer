@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Subscription } from "rxjs";
 
 import { DialogService } from "app/components/base/dialogs";
@@ -17,10 +17,11 @@ import { NodeConnectComponent } from "../connect";
 })
 export class NodeDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
-        let label = tab ? `Node - ${tab}` : "Node";
+        const label = tab ? `Node - ${tab}` : "Node";
         return {
             name: id,
             label,
+            icon: "microchip",
         };
     }
 

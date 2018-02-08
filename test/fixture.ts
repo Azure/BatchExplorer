@@ -1,8 +1,8 @@
 import { Type } from "@angular/core";
 import * as moment from "moment";
 
-import { AccountResource, ApplicationPackage, BatchApplication, File, Job, Node, PackageState, Pool,
-    Subscription, SubtaskInformation, Task,
+import { AccountResource, ApplicationPackage, BatchApplication, File, Job, Node, PackageState,
+     PinnedEntityType, Pool, Subscription, SubtaskInformation, Task,
 } from "app/models";
 
 export class FixtureFactory<TEntity> {
@@ -209,11 +209,12 @@ export const subscription = new FixtureFactory<Subscription>(Subscription, {
 });
 
 export const account = new FixtureFactory<AccountResource>(AccountResource, {
-    id: "account-id",
+    id: "account-1",
     name: "account-test",
     location: "westus",
     type: "BatchAccount",
     properties: {
+        accountEndpoint: "account-1.region.batch.azure.com",
         autoStorage: {
             storageAccountId: null,
             lastKeySync: null,
@@ -248,4 +249,11 @@ export const file = new FixtureFactory<File>(File, {
         creationTime: new Date(),
         lastModified: new Date(),
     },
+});
+
+export const pinnable = new FixtureFactory<any>(Object, {
+    id: "pin-1",
+    routerLink: [],
+    pinnableType: PinnedEntityType.Application,
+    url: "",
 });

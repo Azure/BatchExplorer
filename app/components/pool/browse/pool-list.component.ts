@@ -3,7 +3,7 @@ import {
 } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
@@ -16,8 +16,9 @@ import { SidebarManager } from "app/components/base/sidebar";
 import { TableComponent, TableConfig } from "app/components/base/table";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
-import { PoolListParams, PoolService } from "app/services";
+import { PinnedEntityService, PoolListParams, PoolService } from "app/services";
 import { ListView } from "app/services/core";
+import { ComponentUtils } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
 import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action";
 import { DeletePoolTask } from "../action/delete";
@@ -50,7 +51,7 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         this._filter = filter;
 
         if (filter.isEmpty()) {
-            this.data.setOptions({});
+            this.data.setOptions({ });
         } else {
             this.data.setOptions({ filter: filter.toOData() });
         }
@@ -73,10 +74,13 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         router: Router,
         dialog: MatDialog,
         private sidebarManager: SidebarManager,
+        private pinnedEntityService: PinnedEntityService,
         private taskManager: BackgroundTaskService) {
 
         super(dialog);
         this.data = this.poolService.listView();
+        ComponentUtils.setActiveItem(activatedRoute, this.data);
+
         this.status = this.data.status;
         this._subs.push(poolService.onPoolAdded.subscribe((poolId) => {
             this.data.loadNewItem(poolService.get(poolId));
@@ -123,27 +127,40 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         });
     }
 
-    public deletePool(pool: Pool) {
+    public deletePool(poolDecorator: PoolDecorator) {
         const dialogRef = this.dialog.open(DeletePoolDialogComponent);
-        dialogRef.componentInstance.poolId = pool.id;
+        dialogRef.componentInstance.poolId = poolDecorator.id;
     }
 
-    public resizePool(pool: Pool) {
+    public resizePool(poolDecorator: PoolDecorator) {
         const sidebarRef = this.sidebarManager.open("resize-pool", PoolResizeDialogComponent);
-        sidebarRef.component.pool = pool;
+        sidebarRef.component.pool = poolDecorator.pool;
         this.sidebarManager.onClosed.subscribe(() => {
-            this.poolService.get(pool.id);
+            this.poolService.get(poolDecorator.id);
         });
     }
 
-    public contextmenu(pool) {
+    public contextmenu(decorator: PoolDecorator) {
         return new ContextMenu([
-            new ContextMenuItem({ label: "Delete", click: () => this.deletePool(pool) }),
-            new ContextMenuItem({ label: "Resize", click: () => this.resizePool(pool) }),
+            new ContextMenuItem({ label: "Delete", click: () => this.deletePool(decorator) }),
+            new ContextMenuItem({ label: "Resize", click: () => this.resizePool(decorator) }),
+            new ContextMenuItem({
+                label: this.pinnedEntityService.isFavorite(decorator.pool) ? "Unpin favorite" : "Pin to favorites",
+                click: () => this._pinPool(decorator),
+                enabled: true,
+            }),
         ]);
     }
 
     public trackById(index, pool) {
         return pool.id;
+    }
+
+    public _pinPool(decorator: PoolDecorator) {
+        this.pinnedEntityService.pinFavorite(decorator.pool).subscribe((result) => {
+            if (result) {
+                this.pinnedEntityService.unPinFavorite(decorator.pool);
+            }
+        });
     }
 }

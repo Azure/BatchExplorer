@@ -1,0 +1,22 @@
+<div [formGroup]="form">
+    <div class="form-element">
+        <mat-slide-toggle (change)="onSlideToggle($event)" color="primary" [checked]="customValue">
+            Container registry
+        </mat-slide-toggle>
+    </div>
+    <div *ngIf="customValue" class="form-element">
+        <mat-form-field>
+            <input matInput formControlName="userName" placeholder="Username" type="text">
+        </mat-form-field>
+    </div>
+    <div *ngIf="customValue" class="form-element">
+        <mat-form-field>
+            <input matInput formControlName="password" placeholder="Password" type="text">
+        </mat-form-field>
+    </div>
+    <div *ngIf="customValue" class="form-element">
+        <mat-form-field>
+            <input matInput formControlName="registryServer" placeholder="Registry server" type="text">
+        </mat-form-field>
+    </div>
+</div>

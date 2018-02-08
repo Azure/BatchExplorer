@@ -12,7 +12,7 @@ function breadcrumbMethodMissingMessage(componentName) {
     class ${componentName} {
         // Add this method
         public static breadcrumb(params, queryParams) {
-            return {name: "Some name", label: "Some label"};
+            return {name: "Some name", label: "Some label", icon: "fontawesome-icon"};
         }
     }
 `;
@@ -26,7 +26,7 @@ export class BreadcrumbService {
     constructor(private router: Router, private activatedRoute: ActivatedRoute) {
         this._loadInitialData();
         this.router.events.filter(event => event instanceof NavigationEnd).subscribe(event => {
-            let root: ActivatedRoute = this.activatedRoute.root;
+            const root: ActivatedRoute = this.activatedRoute.root;
             const crumb = this.getBreadcrumbFromRoute(root);
             if (crumb) {
                 this.addBreadcrumb(crumb);
@@ -89,11 +89,11 @@ export class BreadcrumbService {
             return null;
         }
 
-        for (let child of route.children) {
+        for (const child of route.children) {
             if (child.outlet !== PRIMARY_OUTLET) {
                 continue;
             }
-            let current: string[] = child.snapshot.url.map(segment => segment.path);
+            const current: string[] = child.snapshot.url.map(segment => segment.path);
             segments = segments.concat(current);
             if (child.children.length === 0) {
                 // Found deepest child
@@ -135,7 +135,7 @@ export class BreadcrumbService {
         if (last.lockedFor && last.lockedFor === breadcrumb.url) {
             return crumbs;
         }
-        let removeLast = (
+        const removeLast = (
             last.url === breadcrumb.url                             // If same url don't add a new breadcrumb
             || last.url.startsWith(breadcrumb.url)                  // Breadcrumb goes back remove
             || last.componentName === breadcrumb.componentName    // If call the same component /pools/a => /pools/b

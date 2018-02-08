@@ -25,7 +25,7 @@
     // This means absolute path only works in the browser environment you need to use relative import for the code in side the client folder
     // Node.js doesn't support custom load path yet
     "baseUrl": ".",
-    "noUnusedLocals": true, // TODO enable instead of tslint no-unused-vars
+    "noUnusedLocals": true,
     "paths": {
       "*": [
         "*",
@@ -40,21 +40,22 @@
       "hammerjs"
     ],
     "typeRoots": [
-      "./node_modules/@types"
+      "node_modules/@types"
     ]
   },
   "files": [
-    "./definitions/index.d.ts",
-    "./node_modules/monaco-editor/monaco.d.ts"
+    "definitions/index.d.ts",
+    "node_modules/monaco-editor/monaco.d.ts"
   ],
   // This is not actually used for building but to let the editor know what files use this config
   "include": [
-    "./client/**/*.ts",
-    "./app/**/*.ts",
-    "./test/**/*.ts"
+    "app/**/*.ts",
+    "src/**/*.ts",
+    "test/**/*.ts"
   ],
   "awesomeTypescriptLoaderOptions": {
     "forkChecker": true,
+    "useCache": true,
     "useWebpackText": true
   }
 }

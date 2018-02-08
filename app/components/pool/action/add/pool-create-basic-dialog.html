@@ -1,4 +1,4 @@
-<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [config]="complexFormConfig">
+<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [config]="complexFormConfig" [fileUri]="fileUri">
     <bl-form-page main-form-page title="Add a pool to the account" [formGroup]="form">
         <bl-form-section title="General info" subtitle="Basic information about the pool">
             <div class="grow">
@@ -98,9 +98,39 @@
                 <div no-value-title>Add a start task</div>
                 <div value-title>{{startTask?.commandLine}}</div>
                 <div nested-form>
-                    <bl-start-task-picker [formControl]="startTaskPicker.nestedValue" [userAccounts]="form.value.userAccounts"></bl-start-task-picker>
+                    <bl-start-task-picker
+                        [formControl]="startTaskPicker.nestedValue"
+                        [userAccounts]="form.value.userAccounts"
+                        [virtualMachineConfiguration]="form.value.os.virtualMachineConfiguration">
+                    </bl-start-task-picker>
                 </div>
             </bl-form-picker>
+        </bl-form-section>
+
+        <bl-form-section title="Network configuration" subtitle="The network configuration for a pool.">
+            <ng-container *ngIf="virtualMachineConfiguration">
+                <bl-form-multi-picker formControlName="inboundNATPools" #inboundNATPoolsPicker addTitle="Inbound NAT Pool" [max]="5">
+                    <ng-template blFormPickerItem let-value>
+                        <div title>
+                            {{value?.name}}
+                        </div>
+                        <div subtitle class="unaccent">
+                            {{value?.protocol}}
+                        </div>
+                    </ng-template>
+                    <div nested-form>
+                        <bl-inbound-nat-pool-picker
+                            [formControl]="inboundNATPoolsPicker.currentEditValue"
+                            [inboundNATPools]="form.controls.inboundNATPools.value">
+                        </bl-inbound-nat-pool-picker>
+                    </div>
+                </bl-form-multi-picker>
+                <div>The configuration for endpoints on compute nodes in the Batch pool.</div>
+            </ng-container>
+            <bl-virtual-network-picker
+                formControlName="subnetId"
+                [armNetworkOnly]="armNetworkOnly">
+            </bl-virtual-network-picker>
         </bl-form-section>
     </bl-form-page>
     <div blFormSummary>

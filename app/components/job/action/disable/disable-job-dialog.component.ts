@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 
 import { JobService } from "app/services";
 
@@ -30,7 +30,7 @@ export class DisableJobDialogComponent {
 
     @autobind()
     public ok() {
-        let options: any = {};
+        const options: any = {};
         return this.jobService.disable(this.jobId, this.taskAction, options);
     }
 

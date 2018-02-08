@@ -10,11 +10,18 @@ files:
   - "package.json"
 
 extraResources:
-  - from: "python/build/"
+  - from: "python/dist/main"
     to: "python-rpc"
     filter:
       - "**/*"
   - "ThirdPartyNotices.txt"
+  - "data"
+
+protocols:
+  - name: "BatchLabs protocol"
+    role: "Viewer"
+    schemes:
+     - ms-batchlabs
 
 # Mac OS configuration
 mac:

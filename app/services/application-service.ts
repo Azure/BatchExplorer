@@ -86,7 +86,7 @@ export class ApplicationService extends ServiceBase {
         return new EntityView({
             cache: () => this._cache,
             getter: this._getter,
-            poll: Constants.PollRate.entity,
+            poll: Constants.PollRate.batchApplication,
         });
     }
 

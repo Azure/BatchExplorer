@@ -1,3 +1,126 @@
+# 0.12.4
+
+### Hot fix:
+* Error redeem auth code for a token... [\#1044](https://github.com/Azure/BatchLabs/issues/1044)
+* Updater appears to be broken [\#1042](https://github.com/Azure/BatchLabs/issues/1042)
+
+# 0.12.3
+
+### Hot fix:
+* File-group/container issue with adding more files(Disabled for non file group for now) [\#1033](https://github.com/Azure/BatchLabs/issues/1033)
+* Storage Container Search Broken  [\#1039](https://github.com/Azure/BatchLabs/issues/1039)
+
+# 0.12.2
+
+### Hot fix:
+* Update Electron to fix vulnerability [\#1030](https://github.com/Azure/BatchLabs/issues/1030)
+
+# 0.12.1
+
+### Hot fix:
+* Subscriptions not loading if not cached [\#1027](https://github.com/Azure/BatchLabs/issues/1027)
+
+# 0.12.0
+[All items](https://github.com/Azure/BatchLabs/milestone/14?closed=1)
+
+### Feature:
+
+* Data view should show all blob container not just file group [\#1006](https://github.com/Azure/BatchLabs/issues/1006)
+* Rbac permission support. Disable action in batchlabs if user doesn't have write permission [\#1000](https://github.com/Azure/BatchLabs/issues/1000)
+* Make app single instance [\#998](https://github.com/Azure/BatchLabs/issues/998)
+* Stop prompting aad login window when refresh token are still valid [\#990](https://github.com/Azure/BatchLabs/issues/990)
+* Enable AOT compilation to improve loading time [\#986](https://github.com/Azure/BatchLabs/issues/986)
+* Cache batch accounts to improve initial loading time [\#982](https://github.com/Azure/BatchLabs/issues/982)
+* Provide sample code to get started with shared key credentials entered [\#980](https://github.com/Azure/BatchLabs/issues/980)
+* Account credentials access [\#970](https://github.com/Azure/BatchLabs/issues/970)
+* Support for inbound endpoints [\#965](https://github.com/Azure/BatchLabs/issues/965)
+* Make a open component in a new window  [\#74](https://github.com/Azure/BatchLabs/issues/74)
+* Update the theming system to use json instead of scss [\#1012](https://github.com/Azure/BatchLabs/issues/1012)
+
+### Other:
+
+* Implement a new promise base communication from renderer to main process [\#1004](https://github.com/Azure/BatchLabs/issues/1004)
+* Add code coverage [\#987](https://github.com/Azure/BatchLabs/issues/987)
+* Extract AAD logic to be outside of the angular service into the node environment [\#963](https://github.com/Azure/BatchLabs/issues/963)
+
+# 0.11.0
+[All items](https://github.com/Azure/BatchLabs/milestone/12?closed=1)
+
+### feature:
+
+* Register batchlabs default protocol to open from the browser [\#934](https://github.com/Azure/BatchLabs/issues/934)
+* Batch Labs should show a clear error when it cannot connect to its python web service [\#923](https://github.com/Azure/BatchLabs/issues/923)
+* Implement a footer for the app and move some of the dropdown from the header [\#901](https://github.com/Azure/BatchLabs/issues/901)
+* Show current quota usage on the account page [\#799](https://github.com/Azure/BatchLabs/issues/799)
+* File explorer download a folder with right click [\#657](https://github.com/Azure/BatchLabs/issues/657)
+* Goto directly to an entity doesn't show the entity in the quicklist [\#199](https://github.com/Azure/BatchLabs/issues/199)
+* Export entities to template to allow cloning after deleted [\#19](https://github.com/Azure/BatchLabs/issues/19)
+* NCJ advanced type for generating a container SAS [\#757](https://github.com/Azure/BatchLabs/issues/757)
+
+### bug:
+
+* Shortcut "cmd+H" is not supported on macOS [\#948](https://github.com/Azure/BatchLabs/issues/948)
+* Pricing is broken [\#857](https://github.com/Azure/BatchLabs/issues/857)
+* Pool estimated cost take rendering license into account [\#684](https://github.com/Azure/BatchLabs/issues/684)
+
+### other:
+
+* Application package icons need updating [\#939](https://github.com/Azure/BatchLabs/issues/939)
+* Tweak quick search ui [\#924](https://github.com/Azure/BatchLabs/issues/924)
+* List multi select should change color when losing focus [\#31](https://github.com/Azure/BatchLabs/issues/31)
+
+# 0.10.2
+### Bug:
+
+* VM Size selector broken [\#940](https://github.com/Azure/BatchLabs/issues/940)
+
+# 0.10.1
+[All items](https://github.com/Azure/BatchLabs/milestone/13?closed=1)
+
+### Bug:
+
+* Nodes with start task failed state don't show the files [\#929](https://github.com/Azure/BatchLabs/issues/929)
+* OS Family Not Reported on Pool Correctly [\#927](https://github.com/Azure/BatchLabs/issues/927)
+* Error reading job prep-task [\#926](https://github.com/Azure/BatchLabs/issues/926)
+
+
+# 0.10.0
+[All items](https://github.com/Azure/BatchLabs/milestone/11?closed=1)
+
+### Feature:
+
+* Move breadcrumb in the header [\#906](https://github.com/Azure/BatchLabs/issues/906)
+* Create Pool/Job/Task monaco json editor intellisense [\#888](https://github.com/Azure/BatchLabs/issues/888)
+* Log viewer should switch to monaco editor [\#882](https://github.com/Azure/BatchLabs/issues/882)
+* Pause notification dismiss timeout when hovering the notification [\#879](https://github.com/Azure/BatchLabs/issues/879)
+* Allow to pick expiry time for user when connecting to a node [\#878](https://github.com/Azure/BatchLabs/issues/878)
+* Node files display message when node is not available [\#876](https://github.com/Azure/BatchLabs/issues/876)
+* Move from Codemirror to Monaco editor [\#870](https://github.com/Azure/BatchLabs/issues/870)
+* Make notification stay longer on the screen [\#848](https://github.com/Azure/BatchLabs/issues/848)
+* Ability to write json payload in the create forms and submit instead of UI [\#844](https://github.com/Azure/BatchLabs/issues/844)
+* Allow users to create empty file groups [\#826](https://github.com/Azure/BatchLabs/issues/826)
+
+### Bug:
+
+* Data upload in file group is not working [\#912](https://github.com/Azure/BatchLabs/issues/912)
+* Create empty file-group doesn't validate container name [\#905](https://github.com/Azure/BatchLabs/issues/905)
+* CSS for "forms in progress" needs updating and fonts made readable and consistent [\#904](https://github.com/Azure/BatchLabs/issues/904)
+* Switching fast between pools crash UI [\#898](https://github.com/Azure/BatchLabs/issues/898)
+* CSS bug when too many files in task outputs file explorer [\#893](https://github.com/Azure/BatchLabs/issues/893)
+* Account quota not updating when refreshing [\#885](https://github.com/Azure/BatchLabs/issues/885)
+* Missing SKU details about Linux N series VM [\#872](https://github.com/Azure/BatchLabs/issues/872)
+
+### Other:
+
+* Prepare release 0.10.0 [\#915](https://github.com/Azure/BatchLabs/issues/915)
+* Useragent should include OS [\#895](https://github.com/Azure/BatchLabs/issues/895)
+* Should we integrate Application Insights into Batch Labs? [\#824](https://github.com/Azure/BatchLabs/issues/824)
+* Refactor rx-list-proxy to a new system [\#814](https://github.com/Azure/BatchLabs/issues/814)
+* Suggest using iconography instead of a label for the breadcrumb bar [\#696](https://github.com/Azure/BatchLabs/issues/696)
+* Ability to pin Jobs, Tasks, or Pools. [\#456](https://github.com/Azure/BatchLabs/issues/456)
+* Add typing to RxProxy options [\#204](https://github.com/Azure/BatchLabs/issues/204)
+* Perf counter support [\#112](https://github.com/Azure/BatchLabs/issues/112)
+
 # 0.9.0
 [All items](https://github.com/Azure/BatchLabs/milestone/10?closed=1)
 

@@ -1,11 +1,11 @@
-<div *ngFor="let value of values; let i=index;" class="picked-item">
+<div *ngFor="let value of values;trackBy: trackByFn; let i=index;" class="picked-item">
     <button #button class="form-picker" (click)="openPicker($event, i)" [class.has-value]="value">
         <span *ngIf="!value" class="no-value-content">
             <i class="fa fa-plus"></i>{{addTitle}}
         </span>
         <span *ngIf="value" class="content">
             <div class="details">
-                <ng-template [ngTemplateOutlet]="itemTemplate.template"  [ngOutletContext]="{$implicit: value}"></ng-template>
+                <ng-template [ngTemplateOutlet]="itemTemplate.template"  [ngTemplateOutletContext]="{$implicit: value}"></ng-template>
             </div>
             <bl-button type="round" color="light" class="clear-btn" (click)="clearValue($event, i)"><i class="fa fa-times"></i></bl-button>
         </span>

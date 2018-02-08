@@ -34,7 +34,12 @@ bl-quick-list-item {
             min-width: 0;
 
             [bl-quick-list-item-title] {
-                color: $headings-color;
+                font-size: 14px;
+                color: $primary-text;
+            }
+
+            [bl-quick-list-item-field] {
+                color: $secondary-text;
             }
 
             [bl-quick-list-item-title], [bl-quick-list-item-field] {

@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormControl } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
@@ -31,7 +31,7 @@ export class JobHomeComponent {
 
     @autobind()
     public addJob() {
-        this.sidebarManager.open("add-basic-job", JobCreateBasicDialogComponent);
+        this.sidebarManager.open("add-job", JobCreateBasicDialogComponent);
     }
 
     public advancedFilterChanged(filter: Filter) {

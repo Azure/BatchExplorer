@@ -1,3 +1,8 @@
+<bl-banner *ngIf="loadingError" type="error" >
+    <div code>{{ loadingError.code }}</div>
+    <div message [title]="loadingError.message">{{ loadingError.message }}</div>
+</bl-banner>
+
 <bl-loading [status]="data.status">
     <div *ngIf="account">
         <bl-summary-card>
@@ -6,9 +11,10 @@
                 <div>{{account.properties.accountEndpoint}}</div>
                 <div>{{account.subscription?.displayName}}</div>
             </div>
-                <bl-button-group summaryActions>
-                    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                </bl-button-group>
+            <bl-button-group summaryActions>
+                <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                <bl-button [action]="showKeys" color="light" mdTooltip="Account shared keys"><i class="fa fa-key"></i></bl-button>
+            </bl-button-group>
             <div summaryTile>
                 <bl-account-quotas-card [account]="account"></bl-account-quotas-card>
             </div>
@@ -17,14 +23,18 @@
                 </bl-storage-account-card>
             </div>
         </bl-summary-card>
+        <div class="monitor-charts">
+            <bl-monitor-chart chartType="coreCount"></bl-monitor-chart>
+            <bl-monitor-chart chartType="failedTask"></bl-monitor-chart>
+            <bl-monitor-chart chartType="taskStates"></bl-monitor-chart>
+            <bl-monitor-chart chartType="nodeStates"></bl-monitor-chart>
+        </div>
         <div class="account-cards">
-            <mat-card class="account-card">
-                <mat-card-header>
-                    <mat-card-title>
-                        <h2>Job status</h2>
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content class="account-card-content">
+            <bl-card class="account-card">
+                <div class="title">
+                    <h2>Job status</h2>
+                </div>
+                <div class="content">
                     <div>
                         <bl-loading [status]="jobData.status | async">
                             <bl-no-item [itemCount]="(jobData.items | async).size" [status]="jobData.status | async">
@@ -34,26 +44,24 @@
                                 </p>
                             </bl-no-item>
                             <bl-table class="dashboard">
-                                <bl-row *ngFor="let job of (jobData.items | async)" [link]="['/jobs/', job.id]" [key]="job.id">
+                                <bl-row *ngFor="let job of (jobData.items | async);trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id">
                                     <bl-cell [value]="job.id"></bl-cell>
                                     <bl-cell style="text-align:right; color:steelblue;width:75px" [value]="job.state"></bl-cell>
                                 </bl-row>
                             </bl-table>
                         </bl-loading>
                     </div>
-                </mat-card-content>
-                <mat-card-actions>
-                    <button routerLink="/jobs" (click)="selectAccount(account.id)" mat-button>View all jobs</button>
-                </mat-card-actions>
-            </mat-card>
+                </div>
+                <div class="actions">
+                    <bl-clickable routerLink="/jobs" (do)="selectAccount(account.id)">View all jobs</bl-clickable>
+                </div>
+            </bl-card>
 
-            <mat-card class="account-card" routerLink="/pools" (click)="selectAccount(account.id)">
-                <mat-card-header>
-                    <mat-card-title>
-                        <h2>Pool status</h2>
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content class="account-card-content">
+            <bl-card class="account-card" routerLink="/pools" (click)="selectAccount(account.id)">
+                <div class="title">
+                    <h2>Pool status</h2>
+                </div>
+                <div class="content">
                     <div>
                         <bl-loading [status]="poolData.status | async">
                             <bl-no-item [itemCount]="(poolData.items | async).size" [status]="poolData.status | async">
@@ -63,7 +71,7 @@
                                 </p>
                             </bl-no-item>
                             <bl-table class="dashboard">
-                                <bl-row *ngFor="let pool of (poolData.items | async)" [link]="['/pools/', pool.id]" [key]="pool.id">
+                                <bl-row *ngFor="let pool of (poolData.items | async);trackBy: trackByFn" [link]="['/pools/', pool.id]" [key]="pool.id">
                                     <bl-cell [value]="pool.id"></bl-cell>
                                     <bl-cell style="width: 20px">
                                         <i aria-hidden="true" class="fa fa-{{pool.osIconName()}}"></i>
@@ -75,19 +83,17 @@
                             </bl-table>
                         </bl-loading>
                     </div>
-                </mat-card-content>
-                <mat-card-actions>
-                    <button mat-button>View all pools</button>
-                </mat-card-actions>
-            </mat-card>
+                </div>
+                <div class="actions">
+                    <bl-clickable>View all pools</bl-clickable>
+                </div>
+            </bl-card>
 
-            <mat-card class="account-card" routerLink="/applications" (click)="selectAccount(account.id)">
-                <mat-card-header>
-                    <mat-card-title>
-                        <h2>App packages</h2>
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content class="account-card-content">
+            <bl-card class="account-card" routerLink="/applications" (click)="selectAccount(account.id)">
+                <div class="title">
+                    <h2>App packages</h2>
+                </div>
+                <div class="content">
                     <bl-banner *ngIf="noLinkedStorage" height="expand" type="notice">
                         <div message>No linked storage account configured for this Batch account.</div>
                     </bl-banner>
@@ -100,17 +106,17 @@
                                 </p>
                             </bl-no-item>
                             <bl-table class="dashboard">
-                                <bl-row *ngFor="let app of (applicationData.items | async).slice(0, 10)" [link]="['/applications/', app.id]" [key]="app.id">
+                                <bl-row *ngFor="let app of (applicationData.items | async).slice(0, 10);trackBy: trackByFn" [link]="['/applications/', app.id]" [key]="app.id">
                                     <bl-cell>{{app.id}}</bl-cell>
                                 </bl-row>
                             </bl-table>
                         </bl-loading>
                     </div>
-                </mat-card-content>
-                <mat-card-actions>
-                    <button mat-button>View all packages</button>
-                </mat-card-actions>
-            </mat-card>
+                </div>
+                <div class="actions">
+                    <bl-clickable>View all packages</bl-clickable>
+                </div>
+            </bl-card>
             <span style="width:100%;display:inline-block"></span>
         </div>
     </div>

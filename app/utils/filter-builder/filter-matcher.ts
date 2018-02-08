@@ -22,14 +22,14 @@ export class FilterMatcher<T> {
             }
         }
         if (filter.connector === Connector.and) {
-            for (let subfilter of filter.properties) {
+            for (const subfilter of filter.properties) {
                 if (!this.test(subfilter, item)) {
                     return false;
                 }
             }
             return true;
         } else {
-            for (let subfilter of filter.properties) {
+            for (const subfilter of filter.properties) {
                 if (this.test(subfilter, item)) {
                     return true;
                 }

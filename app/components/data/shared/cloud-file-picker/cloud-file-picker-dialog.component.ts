@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { AsyncSubject, Observable } from "rxjs";
 
 import { FileExplorerConfig, FileExplorerSelectable } from "app/components/file/browse/file-explorer";

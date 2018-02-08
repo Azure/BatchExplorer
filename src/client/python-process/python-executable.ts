@@ -41,7 +41,6 @@ export function tryPython(pythonPath: string): Promise<string> {
  * @returns Promise that resolve the first valid path. If no path are valid reject with an error.
  */
 export function tryMultiplePythons(paths: string[]): Promise<string> {
-    const errors = {};
     if (paths.length === 0) {
         return Promise.reject({});
     }
@@ -73,7 +72,7 @@ export function getPythonPath(): Promise<string> {
         return path;
     }).catch((errors) => {
         let msg = "Fail to find a valid python 3.6 installation:";
-        for (let path of Object.keys(errors)) {
+        for (const path of Object.keys(errors)) {
             msg += `\n  - ${path}: ${errors[path].message}`;
         }
         logger.error(msg);

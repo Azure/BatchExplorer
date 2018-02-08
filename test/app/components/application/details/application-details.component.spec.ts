@@ -63,7 +63,6 @@ describe("ApplicationDetailsComponent", () => {
     let entityView: MockEntityView<BatchApplication, any>;
     let applicationServiceSpy: any;
     let activatedRouteSpy: any;
-    let accountServiceSpy: any;
     let matDialogSpy: any;
 
     beforeEach(() => {
@@ -77,10 +76,6 @@ describe("ApplicationDetailsComponent", () => {
 
         applicationServiceSpy = {
             view: () => entityView,
-        };
-
-        accountServiceSpy = {
-            currentAccount: Observable.of({ id: "some-account" }),
         };
 
         activatedRouteSpy = new ActivatedRouteMock({

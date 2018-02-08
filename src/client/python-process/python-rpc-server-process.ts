@@ -1,6 +1,4 @@
 import { ChildProcess, spawn } from "child_process";
-import * as fs from "fs";
-import * as net from "net";
 import * as path from "path";
 
 import { Constants } from "../client-constants";
@@ -9,7 +7,6 @@ import { getPythonPath } from "./python-executable";
 
 const asarPath = path.join(Constants.root, "../python-rpc/main");
 const localPath = path.join(Constants.root, "python/main.py");
-const logsFolder = Constants.logsFolder;
 
 export class PythonRpcServerProcess {
     private _spawedProcess: ChildProcess;
@@ -18,10 +15,10 @@ export class PythonRpcServerProcess {
      * Start the python server
      * @returns Promise when the process has spawned
      */
-    public start(): Promise<void> {
+    public async start(): Promise<void> {
         this._askForKill = false;
         return this._getCommandLine().then((data) => {
-            logger.info("Python path is", data.cmd, { args: data.args });
+            logger.info("Python path is2", data.cmd, { args: data.args });
             const child = this._spawedProcess = spawn(data.cmd, [...data.args]);
             pythonLogger.info("========================= STARTING PYTHON RPC SERVER PROCESS =========================");
 
@@ -52,9 +49,9 @@ export class PythonRpcServerProcess {
         }
     }
 
-    public restart() {
+    public async restart() {
         this.stop();
-        this.start();
+        return this.start();
     }
 
     private async _getCommandLine(): Promise<{ cmd: string, args: string[] }> {

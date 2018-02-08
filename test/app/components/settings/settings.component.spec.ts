@@ -9,7 +9,7 @@ import { Observable } from "rxjs";
 import { ButtonComponent } from "app/components/base/buttons";
 import { EditorComponent } from "app/components/base/editor";
 import { SettingsComponent } from "app/components/settings";
-import { SettingsService } from "app/services";
+import { AuthorizationHttpService, SettingsService } from "app/services";
 import { click } from "test/utils/helpers";
 import { MockEditorComponent } from "test/utils/mocks/components";
 
@@ -28,7 +28,6 @@ class TestComponent {
 
 describe("SettingsComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
-    let testComponent: TestComponent;
     let component: SettingsComponent;
     let de: DebugElement;
 
@@ -52,11 +51,11 @@ describe("SettingsComponent", () => {
             imports: [ReactiveFormsModule, MaterialModule, NoopAnimationsModule],
             declarations: [SettingsComponent, TestComponent, ButtonComponent, MockEditorComponent],
             providers: [
+                { provide: AuthorizationHttpService, useValue: null },
                 { provide: SettingsService, useValue: settingsServiceSpy },
             ],
         });
         fixture = TestBed.createComponent(TestComponent);
-        testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-settings"));
         component = de.componentInstance;
         fixture.detectChanges();

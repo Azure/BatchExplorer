@@ -114,7 +114,7 @@ export class ScrollableComponent implements OnDestroy, AfterViewInit {
     }
 
     @HostListener("scroll")
-    public onScroll($event: Event) {
+    public onScroll() {
         const currentSroll = {
             left: this.scrollContent.nativeElement.scrollLeft,
             top: this.scrollContent.nativeElement.scrollTop,
@@ -278,12 +278,12 @@ export class ScrollableComponent implements OnDestroy, AfterViewInit {
             : track.getBoundingClientRect().left;
 
         // Calculate how far the user's mouse is from the top/left of the scrollbar (minus the dragOffset).
-        let dragPos = eventOffset - val - this.dragOffset[orientation];
+        const dragPos = eventOffset - val - this.dragOffset[orientation];
         // Convert the mouse position into a percentage of the scrollbar height/width.
-        let dragPerc = dragPos / this._scrollbarSize(orientation);
+        const dragPerc = dragPos / this._scrollbarSize(orientation);
 
         // Scroll the content by the same percentage.
-        let scrollPos = dragPerc * this._contentSize(orientation);
+        const scrollPos = dragPerc * this._contentSize(orientation);
 
         if (orientation === Orientation.Vertical) {
             this.scrollContent.nativeElement.scrollTop = scrollPos;

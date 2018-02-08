@@ -1,5 +1,5 @@
 <mat-tab-group [selectedIndex]="selectedIndex" (selectChange)="changeTab($event)" #group [@.disabled]="true">
-    <mat-tab *ngFor="let tab of tabs" [disabled]="tab.disabled">
+    <mat-tab *ngFor="let tab of tabs;trackBy: trackTab" [disabled]="tab.disabled">
         <ng-template mat-tab-label>
             <ng-template [ngTemplateOutlet]="tab.label.content"></ng-template>
         </ng-template>

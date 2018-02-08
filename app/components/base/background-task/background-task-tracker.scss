@@ -10,8 +10,12 @@
 }
 
 bl-background-task-tracker {
-    .account-dropdown [bl-dropdown-btn] {
-        width: 300px;
+    [bl-dropdown-btn] {
+        width: 290px;
+        padding: 0 5px;
+    }
+    [bl-dropdown-content] {
+        min-width: 300px;
     }
 
     .current-task {
@@ -33,9 +37,6 @@ bl-background-task-tracker {
     .flash {
         animation: flash 1s infinite;
     }
-    .dropdown-item {
-        padding: 5px !important;
-    }
 
     bl-background-task-tracker-item {
         display: flex;
@@ -43,9 +44,9 @@ bl-background-task-tracker {
         width: 100%;
 
         > .status-icon {
-            width: 24px;
-            height: 24px;
-            margin: 0 10px;
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
             .mat-progress-spinner {
                 path {
                     stroke: $whiteSmoke;

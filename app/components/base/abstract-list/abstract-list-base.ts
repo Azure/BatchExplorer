@@ -2,7 +2,7 @@ import {
     AfterViewInit, ChangeDetectorRef, ContentChildren, EventEmitter, Input, OnDestroy, Output, QueryList,
 } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
 import { FocusSectionComponent } from "../focus-section";
@@ -69,7 +69,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     public activeItemChange = new EventEmitter<string>();
 
     @Input() public set selectedItems(items: string[]) {
-        let map = {};
+        const map = {};
         items.forEach(x => map[x] = true);
         this._selectedItems = map;
         this.selectedItemsChange.emit(items);
@@ -99,7 +99,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     constructor(
         private router: Router,
         private changeDetection: ChangeDetectorRef,
-        private focusSection: FocusSectionComponent) {
+        focusSection: FocusSectionComponent) {
 
         this._subs.push(this._activeItemKey.subscribe(x => {
             this.selectedItems = x ? [x.key] : [];
@@ -140,6 +140,10 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         }
 
         this._subs.push(this.items.changes.subscribe(() => {
+            setTimeout(() => {
+                const active = this.getActiveItemFromRouter();
+                this.setActiveItem(active && active.key);
+            });
             this._updateDisplayItems();
         }));
         this._updateDisplayItems();
@@ -148,7 +152,6 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     }
 
     public ngOnDestroy() {
-        this.focusSection = null;
         this._subs.forEach((x) => x.unsubscribe());
     }
 
@@ -289,7 +292,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         const items: AbstractListItemBase[] = this.displayItems;
         let index = 0;
         let currentItem;
-        for (let item of items) {
+        for (const item of items) {
             if (item.key === this.focusedItem.value) {
                 currentItem = item;
                 break;
@@ -367,11 +370,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      * Update the items to mark which ones are selected
      */
     private _updateSelectedItems() {
-        let i = 0;
         this.displayItems.forEach((item) => {
-            if (this._selectedItems[item.key]) {
-                i++;
-            }
             item.selected = Boolean(this._selectedItems[item.key]);
         });
         this.selectedItemsChange.emit(this.selectedItems);

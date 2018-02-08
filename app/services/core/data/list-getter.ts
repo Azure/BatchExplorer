@@ -49,7 +49,7 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
     }
 
     protected abstract list(params: TParams, options: ListOptionsAttributes): Observable<TEntity[]>;
-    protected abstract listNext(nextLink): Observable<TEntity[]>;
+    protected abstract listNext(token: ContinuationToken): Observable<TEntity[]>;
 
     private _fetch(params: TParams, options: ListOptions, forceNew = false): Observable<ListResponse<TEntity>> {
         const cache = this.getCache(params);
@@ -63,7 +63,7 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
 
     private _fetchNext(token: ContinuationToken): Observable<ListResponse<TEntity>> {
         const cache = this.getCache(token.params);
-        return this.listNext(token.nextLink).map(x => this._processItems(cache, x, token.params, token.options, false));
+        return this.listNext(token).map(x => this._processItems(cache, x, token.params, token.options, false));
     }
 
     private _fetchRemaining(

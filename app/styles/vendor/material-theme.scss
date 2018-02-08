@@ -8,14 +8,11 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue.
-$mat-primary: mat-palette($primary-theme-classic);
+$mat-primary: mat-palette($mat-indigo);
 $mat-accent:  mat-palette($mat-grey, A200, A100, A400);
 
-// The warn palette is optional (defaults to red).
-$mat-warn:    mat-palette($mat-red);
-
 // Create the theme object (a Sass map containing all of the palettes).
-$mat-theme: mat-light-theme($mat-primary, $mat-accent, $mat-warn);
+$mat-theme: mat-light-theme($mat-primary, $mat-accent);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -85,21 +82,6 @@ mat-tab-group:not(.form-tabs) {
     }
 }
 
-mat-card {
-    transition: none !important;
-    box-shadow: 1px 1px 5px 0 #d5d5d5 !important;
-
-    mat-card-subtitle {
-        div {
-            line-height: 1.5em;
-        }
-    }
-
-    &.details {
-        margin-top:8px !important;
-        padding:0 !important;
-    }
-}
 
 mat-icon.mat-icon {
     width: auto;

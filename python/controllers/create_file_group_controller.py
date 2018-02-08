@@ -40,14 +40,7 @@ async def create_file_group(request: JsonRpcRequest, name, directory, options):
 
         if options.get(PARAM_RECURSIVE):
             recursive = options.get(PARAM_RECURSIVE)
-    print("rec", recursive)
     return await upload_files(request, name, [directory], full_path=full_path, flatten=flatten, root=prefix, merge=True, recursive=recursive)
-
-
-@app.procedure("add-files-to-file-group")
-async def add_files_to_file_group(request: JsonRpcRequest, file_group_name: str, paths: List[str], root):
-    return await upload_files(request, file_group_name, paths=paths, root=root, recursive=True)
-
 
 async def upload_files(
         request: JsonRpcRequest,

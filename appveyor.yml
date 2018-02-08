@@ -24,7 +24,7 @@ install:
   # about it being out of date.
   - "pip install --disable-pip-version-check --user --upgrade pip"
 
-  - ps: Install-Product node 6.11.4 x64
+  - ps: Install-Product node 8.9.1 x64
   - npm install -g npm -s
   - npm install -g yarn -s
   - yarn install --force

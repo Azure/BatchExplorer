@@ -1,10 +1,10 @@
 import { Type } from "@angular/core";
-import { RequestOptions, Response } from "@angular/http";
+import { RequestOptions, Response, URLSearchParams } from "@angular/http";
 import { Observable } from "rxjs";
 
 import { ArmHttpService } from "../../arm-http.service";
 import { ListGetter, ListGetterConfig } from "./list-getter";
-import { ListOptions } from "./list-options";
+import { ContinuationToken, ListOptions } from "./list-options";
 
 export interface ArmListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
     uri: (params: TParams, options: any) => string;
@@ -28,8 +28,8 @@ export class ArmListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams
             this._requestOptions(options)).map(x => this._processArmResponse(x)).share();
     }
 
-    protected listNext(nextLink: string): Observable<any> {
-        return this.arm.get(nextLink).map(x => this._processArmResponse(x)).share();
+    protected listNext(token: ContinuationToken): Observable<any> {
+        return this.arm.get(token.nextLink).map(x => this._processArmResponse(x)).share();
     }
 
     private _processArmResponse(response: Response) {
@@ -54,10 +54,9 @@ export class ArmListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams
             search.set("maxResults", options.maxResults.toString());
         }
 
-        for (let key of Object.keys(options.attributes)) {
+        for (const key of Object.keys(options.attributes)) {
             search.set(key, options.attributes[key]);
         }
-
         return new RequestOptions({
             search,
         });

@@ -1,6 +1,7 @@
 
 import { Model, Prop, Record } from "app/core";
 import { ApplicationPackageReference } from "./application-package-reference";
+import { TaskContainerSettings, TaskContainerSettingsAttributes } from "./container-setup";
 import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";
 import { TaskConstraints } from "./task-constraints";
@@ -16,6 +17,7 @@ export interface JobManagerTaskAttributes {
     killJobOnCompletion: boolean;
     runElevated: boolean;
     runExclusive: boolean;
+    containerSettings: TaskContainerSettingsAttributes;
 }
 /**
  * Class for displaying job manager task information.
@@ -32,4 +34,5 @@ export class JobManagerTask extends Record<JobManagerTaskAttributes> {
     @Prop() public killJobOnCompletion: boolean;
     @Prop() public runElevated: boolean;
     @Prop() public runExclusive: boolean;
+    @Prop() public containerSettings: TaskContainerSettings;
 }

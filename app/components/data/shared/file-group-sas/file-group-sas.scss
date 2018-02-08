@@ -1,0 +1,30 @@
+@import "app/styles/variables";
+
+// todo: should probably share this CSS with file group picker
+bl-file-group-sas {
+    display: flex;
+    align-items: center;
+
+    mat-form-field {
+        flex: 1;
+    }
+
+    bl-button {
+        margin-left: 5px;
+
+        &.disabled[color] {
+            cursor: not-allowed;
+            background: map-get($primary, 50);
+            color: $whitesmoke;
+
+            &:hover, &:focus, &:active {
+                background: map-get($primary, 50);
+                color: $whitesmoke;
+            }
+        }
+
+        .fa-refresh {
+            color: $whitesmoke;
+        }
+    }
+}

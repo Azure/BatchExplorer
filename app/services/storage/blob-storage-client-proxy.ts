@@ -1,6 +1,6 @@
-import * as storage from "azure-storage";
+import { BlobService } from "azure-storage";
 
-import { BlobStorageResult, StorageRequestOptions } from "./models";
+import { BlobStorageResult, SharedAccessPolicy, StorageRequestOptions } from "./models";
 
 export interface ListBlobOptions {
     /**
@@ -26,10 +26,10 @@ export interface ListBlobResponse {
 }
 
 export class BlobStorageClientProxy {
-    private _blobService: storage.BlobService;
+    public client: BlobService;
 
-    constructor(blobService: storage.BlobService) {
-        this._blobService = blobService;
+    constructor(blobService: BlobService) {
+        this.client = blobService;
     }
 
     /**
@@ -56,7 +56,7 @@ export class BlobStorageClientProxy {
             delimiter: options.recursive ? null : "/",
         };
         return new Promise((resolve, reject) => {
-            this._blobService.listBlobsSegmentedWithPrefix(container, prefix, continuationToken, storageOptions,
+            this.client.listBlobsSegmentedWithPrefix(container, prefix, continuationToken, storageOptions,
                 (error, result, response: any) => {
                     if (error) { return reject(error); }
 
@@ -106,7 +106,7 @@ export class BlobStorageClientProxy {
 
         const blobPath = `${blobPrefix || ""}${blobName}`;
         return new Promise((resolve, reject) => {
-            this._blobService.getBlobProperties(container, blobPath, options, (error, result, response) => {
+            this.client.getBlobProperties(container, blobPath, options, (error, result, response) => {
                 if (error) {
                     reject(error);
                 } else {
@@ -137,7 +137,7 @@ export class BlobStorageClientProxy {
      */
     public getBlobContent(container: string, blob: string, options?: StorageRequestOptions) {
         return new Promise((resolve, reject) => {
-            this._blobService.getBlobToText(container, blob, options, (error, text, blockBlob, response) => {
+            this.client.getBlobToText(container, blob, options, (error, text, blockBlob, response) => {
                 if (error) {
                     reject(error);
                 } else {
@@ -161,7 +161,7 @@ export class BlobStorageClientProxy {
      */
     public getBlobToLocalFile(container: string, blob: string, localFileName: string, options?: StorageRequestOptions) {
         return new Promise((resolve, reject) => {
-            this._blobService.getBlobToLocalFile(container, blob, localFileName, options, (error, result, response) => {
+            this.client.getBlobToLocalFile(container, blob, localFileName, options, (error, result, response) => {
                 if (error) {
                     reject(error);
                 } else {
@@ -183,10 +183,10 @@ export class BlobStorageClientProxy {
      * @param {StorageRequestOptions} options - Optional request parameters
      */
     public deleteBlobIfExists(container: string, blob: string, options?: StorageRequestOptions)
-    : Promise<boolean> {
+        : Promise<boolean> {
 
         return new Promise((resolve, reject) => {
-            this._blobService.deleteBlobIfExists(container, blob, options, (error, response) => {
+            this.client.deleteBlobIfExists(container, blob, options, (error, response) => {
                 if (error) {
                     reject(error);
                 } else {
@@ -214,19 +214,20 @@ export class BlobStorageClientProxy {
         continuationToken?: any,
         options?: StorageRequestOptions): Promise<BlobStorageResult> {
 
+        prefix = prefix || "";
         const prefixAndFilter = filter ? prefix + filter : prefix;
         return new Promise((resolve, reject) => {
-            this._blobService.listContainersSegmentedWithPrefix(prefixAndFilter, continuationToken, options,
+            this.client.listContainersSegmentedWithPrefix(prefixAndFilter, continuationToken, options,
                 (error, result, response) => {
                     if (error) {
                         reject(error);
                     } else {
                         resolve({
                             data: result.entries.map((container) => {
-                                return Object.assign(container, {
+                                return {
+                                    ...container,
                                     id: container.name,
-                                    name: container.name.replace(prefix, ""),
-                                });
+                                };
                             }),
                             continuationToken: result.continuationToken,
                         });
@@ -248,15 +249,15 @@ export class BlobStorageClientProxy {
         : Promise<BlobStorageResult> {
 
         return new Promise((resolve, reject) => {
-            this._blobService.getContainerProperties(container, options, (error, result, response) => {
+            this.client.getContainerProperties(container, options, (error, result, response) => {
                 if (error) {
                     reject(error);
                 } else {
                     resolve({
-                        data: Object.assign(result, {
+                        data: {
+                            ...result,
                             id: result.name,
-                            name: result.name.replace(prefix, ""),
-                        }),
+                        },
                     });
                 }
             });
@@ -275,13 +276,87 @@ export class BlobStorageClientProxy {
         : Promise<BlobStorageResult> {
 
         return new Promise((resolve, reject) => {
-            this._blobService.deleteContainer(container, options, (error, response) => {
+            this.client.deleteContainer(container, options, (error, response) => {
                 if (error) {
                     reject(error);
                 } else {
                     resolve();
                 }
             });
+        });
+    }
+
+    /**
+     * Creates a new container under the specified account.
+     * If a container with the same name already exists, the operation fails.
+     * http://azure.github.io/azure-storage-node/BlobService.html#createContainer__anchor
+     *
+     * @param {string} container - Name of the storage container
+     */
+    public createContainer(containerName: string)
+        : Promise<BlobStorageResult> {
+
+        return new Promise((resolve, reject) => {
+            this.client.createContainer(containerName, (error, response) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    /**
+     * Creates a new container under the specified account if it doesn't exsits.
+     *
+     * @param {string} container - Name of the storage container
+     */
+    public createContainerIfNotExists(containerName: string)
+        : Promise<BlobStorageResult> {
+
+        return new Promise((resolve, reject) => {
+            this.client.createContainerIfNotExists(containerName, (error, response) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    /**
+     * Retrieves a shared access signature token.
+     * http://azure.github.io/azure-storage-node/BlobService.html#generateSharedAccessSignature__anchor
+     *
+     * @param {string} container - Name of the storage container
+     * @param {string} sharedAccessPolicy - The shared access policy
+     */
+    public generateSharedAccessSignature(
+        container: string, blob: string, sharedAccessPolicy: SharedAccessPolicy): string {
+        return this.client.generateSharedAccessSignature(container, blob, sharedAccessPolicy, null);
+    }
+
+    /**
+     * Retrieves a blob or container URL.
+     * http://azure.github.io/azure-storage-node/BlobService.html#getUrl__anchor
+     *
+     * @param {string} container - Name of the storage container
+     * @param {string} blob - Optional blob name.
+     * @param {string} sasToken - The Shared Access Signature token.
+     */
+    public getUrl(container: string, blob?: string, sasToken?: string): string {
+        return this.client.getUrl(container, blob, sasToken);
+    }
+
+    public async uploadFile(container: string, file: string, remotePath: string): Promise<BlobService.BlobResult> {
+        return new Promise<BlobService.BlobResult>((resolve, reject) => {
+            this.client.createBlockBlobFromLocalFile(container, remotePath, file,
+                (error: any, result: BlobService.BlobResult) => {
+                    if (error) { return reject(error); }
+                    resolve(result);
+                });
         });
     }
 

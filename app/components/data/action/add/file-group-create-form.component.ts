@@ -1,11 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
-import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
-import { DynamicForm } from "app/core";
+import { DynamicForm, autobind } from "app/core";
 import { BlobContainer } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { CreateFileGroupModel, createFileGroupFormToJsonData, fileGroupToFormModel } from "app/models/forms";
@@ -26,7 +25,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     public editing: boolean;
     public title: string = "Create file group";
     public description: string = "Upload files into a managed storage container that you can use " +
-    "for resource files in your jobs and tasks";
+        "for resource files in your jobs and tasks";
 
     constructor(
         public sidebarRef: SidebarRef<FileGroupCreateFormComponent>,
@@ -75,7 +74,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                 complete: () => {
                     task.progress.next(100);
                     const message = `${lastData.uploaded} files were successfully uploaded to the file group`;
-                    this.storageService.onFileGroupAdded.next(this.storageService.fileGroupContainer(formData.name));
+                    this.storageService.onContainerAdded.next(this.storageService.fileGroupContainer(formData.name));
                     this.notificationService.success("Create file group", message, { persist: true });
                 },
                 error: (error) => {
@@ -115,8 +114,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
 
     private _formGroupName(fileGroupName: string) {
         return fileGroupName && fileGroupName.length > 10
-        ? `${fileGroupName.substring(0, 9)}...`
-        : fileGroupName;
+            ? `${fileGroupName.substring(0, 9)}...`
+            : fileGroupName;
     }
 
     /**
@@ -127,7 +126,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     private _validateFileGroupName(control: FormControl): Promise<any> {
         return new Promise((resolve) => {
             setTimeout(() => {
-                const containerName = `${this.storageService.ncjFileGroupPrefix}${control.value}`;
+                const containerName = `${Constants.ncjFileGroupPrefix}${control.value}`;
                 this.storageService.getContainerOnce(containerName).subscribe({
                     next: (container: BlobContainer) => {
                         this.groupExists = true;

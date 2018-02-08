@@ -1,13 +1,7 @@
-@import "./themes/core";
-@import "./themes/classic";
 @import "./vars/material-colors";
 @import "./vars/zindex";
+@import "./themes/core";
 
-
-$header-background      : map-get($primary, 700);
-$header-hover           : map-get($primary, 800);
-$navigation-background  : map-get($primary, 600);
-$navigation-hover       : map-get($primary, 700);
 
 // Black & white
 //---------------------------------------------
@@ -24,7 +18,8 @@ $whiteSmoke-darker  :  $whitesmoke-darker;
 $concreteGray       :  #f2f2f2;
 $mercury-grey       :  #e5e5e5;
 $mercuryGray        :  $mercury-grey;
-$athensGrey         :  #edeef2;
+$athens-grey        :  #edeef2;
+$athensGrey         :  $athens-grey;
 $altoGray           :  #dfdfdf;
 $alto               :  #d5d5d5;
 $silver-grey        :  #cccccc;
@@ -51,10 +46,7 @@ $link-color                 : map-get($primary, 700);
 $link-alt-color             : map-get($primary, 300);
 $link-color-hover           : map-get($primary, 800);
 $validation-error-color     : map-get($danger, 500);
-$label-text                 : $dusty-grey;
 
-$folder-color: #f8d979;
-$outline-color: #528bff;
 
 $font-size-base     : 13px;
 $font-size-large    : 15px;
@@ -65,7 +57,8 @@ $headingsFontWeight : semilight;
 $headingWeightBold  : semibold;
 $headingsLineHeight : $baseLineHeight;
 $textColor          : $mineShaftGray;
-$main-font          : "Roboto", Helvetica, Arial, sans-serif;
+$main-font          : -apple-system,BlinkMacSystemFont,Segoe WPC,Segoe UI,HelveticaNeue-Light,Ubuntu,Droid Sans,sans-serif;
+
 
 $h1FontSize         : $font-size-base * 1.8;
 $h2FontSize         : $font-size-base * 1.6;
@@ -75,23 +68,21 @@ $h5FontSize         : $font-size-base * 1.1;
 $h6FontSize         : $font-size-base;
 
 // Theme
-$body-background: $whiteSmoke-darker;
-$content-background :  $whiteSmoke-darker;
 $listview-background :  white;
-$footer-background: white;
+$footer-background: map-get($primary, 200);
 $navigation-text: $whiteSmoke;
 $border-color: $alto;
 
 // Layout sizing
 //---------------------------------------------
 $header-height                       : 30px;
+$footer-height                       : 22px;
 $navigationbar-width                 : 60px;
 $listview-width                      : 350px;
 $listview-filtering-width            : 55vw;
 $listview-header-height              : 90px;
-$footer-height                       : 0;
 $content-top-position                : $header-height;
-$contentview-height                  : calc(100vh - #{$header-height});
+$contentview-height                  : calc(100vh - #{$header-height} - #{$footer-height});
 
 
 // Base component dimensions
