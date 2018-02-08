@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, Directive, Input, OnChanges, QueryList,
+    ChangeDetectorRef, Component, ContentChildren, Directive, Input, OnChanges, QueryList,
 } from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 
