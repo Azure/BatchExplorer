@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
@@ -62,6 +62,7 @@ export class VmSizeDecorator {
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => VmSizePickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => VmSizePickerComponent), multi: true },
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnChanges, OnDestroy {
     @Input() public osSource: PoolOsSources;
@@ -81,6 +82,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     private _categorySub: Subscription;
 
     constructor(
+        private changeDetector: ChangeDetectorRef,
         private vmSizeService: VmSizeService,
         private pricingService: PricingService) {
     }
@@ -181,6 +183,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
         // Move standard to the first position
         const names = ["standard"].concat(Object.keys(categories).filter(x => x !== "standard"));
         this.categoryNames = names.filter(x => categories[x] && categories[x].length > 0);
+        this.changeDetector.markForCheck();
     }
 
     private _getSizeForCategory(sizes: VmSize[], patterns: string[]) {
