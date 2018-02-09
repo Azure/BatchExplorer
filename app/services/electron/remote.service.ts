@@ -28,6 +28,10 @@ export class ElectronRemote {
         return remote.dialog;
     }
 
+    public get electronApp(): Electron.App {
+        return remote.app;
+    }
+
     /**
      * @returns The BrowserWindow object which this web page belongs to.
      */

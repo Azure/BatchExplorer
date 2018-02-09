@@ -1,6 +1,5 @@
 import { Component, NgZone, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { app } from "electron";
 import { AppUpdater } from "electron-updater";
 import * as path from "path";
 
@@ -144,7 +143,7 @@ export class MainNavigationComponent implements OnInit {
     private _update() {
         if (!OS.isLinux()) {
             setImmediate(() => {
-                app.removeAllListeners("window-all-closed");
+                this.remote.electronApp.removeAllListeners("window-all-closed");
                 this.remote.getCurrentWindow().close();
                 this._autoUpdater.quitAndInstall();
             });
