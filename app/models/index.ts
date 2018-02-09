@@ -41,6 +41,7 @@ export * from "./job-stats";
 export * from "./job-task-counts";
 export * from "./key-bindings";
 export * from "./list-result";
+export * from "./location";
 export * from "./metadata";
 export * from "./multi-instance-settings";
 export * from "./name-value-pair";

@@ -8,6 +8,7 @@ import { Subscription } from "app/models";
 import { SubscriptionService } from "app/services";
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
+import { AccountCreateBasicDialogComponent } from "../action/add";
 
 @Component({
     selector: "bl-account-home",
@@ -23,7 +24,6 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
     private _subs = [];
 
     constructor(public subscriptionService: SubscriptionService, private sidebarManager: SidebarManager) {
-
     }
 
     public ngOnInit() {
@@ -48,7 +48,7 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
 
     @autobind()
     public addBatchAccount() {
-        // this.sidebarManager.open("add-pool", AccountCreateBasicDialogComponent);
+        this.sidebarManager.open("add-batch-account", AccountCreateBasicDialogComponent);
     }
 
     private _buildSubscriptionFilter(subscriptionIds: Set<string>): Filter {

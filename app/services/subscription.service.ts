@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { List, Set } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { Subscription } from "app/models";
+import { Location, Subscription } from "app/models";
 import { Constants, StringUtils, log } from "app/utils";
 import { AdalService } from "./adal";
 import { AzureHttpService } from "./azure-http.service";
@@ -68,6 +68,15 @@ export class SubscriptionService {
     public get(subscriptionId: string): Observable<Subscription> {
         return this.subscriptions.first().map(subscriptions => {
             return subscriptions.filter(x => x.subscriptionId === subscriptionId).first();
+        });
+    }
+
+    public listLocations(subscriptionId): Observable<Location[]> {
+        return this.get(subscriptionId).flatMap((subscrition: Subscription) => {
+            const uri = `subscriptions/${subscriptionId}/locations`;
+            return this.azure.get(subscrition, uri).map(response => {
+                return response.json().value;
+            });
         });
     }
 
