@@ -14,7 +14,7 @@
             </div>
             <div class="form-element">
                 <mat-form-field>
-                    <mat-select formControlName="subscription" placeholder="Subscription" >
+                    <mat-select formControlName="subscription" placeholder="Subscription">
                         <mat-option
                             *ngFor="let subscription of subscriptionService.subscriptions | async;trackBy: trackBySubscriptionId"
                             [value]="subscription">
@@ -24,40 +24,49 @@
                 </mat-form-field>
                 <bl-error controlName="subscription" code="required">Subscription is a required field</bl-error>
             </div>
-            <div class="form-element" *ngIf="showCollection(resourceGroups)">
+            <div class="form-element" *ngIf="selectedSubscription">
                 <mat-radio-group formControlName="resourceGroupMode">
                     <mat-radio-button [value]="ResourceGroupMode.CreateNew">Create new</mat-radio-button>
                     <mat-radio-button [value]="ResourceGroupMode.UseExisting">Use existing</mat-radio-button>
                 </mat-radio-group>
             </div>
-            <div class="form-element" *ngIf="selectedResourceGroupMode === ResourceGroupMode.CreateNew && showCollection(resourceGroups)">
+            <div class="form-element" *ngIf="selectedSubscription && selectedResourceGroupMode === ResourceGroupMode.CreateNew">
                 <mat-form-field>
                     <input matInput formControlName="newResourceGroup" placeholder="Resource group name" />
                 </mat-form-field>
+                <bl-error controlName="newResourceGroup" code="required">Resource group is a required field</bl-error>
+                <bl-error controlName="newResourceGroup" code="resourceGroupExists">Resource group already exists in subscription '{{selectedSubscription.displayName}}'</bl-error>
             </div>
-            <div class="form-element" *ngIf="selectedResourceGroupMode === ResourceGroupMode.UseExisting && showCollection(resourceGroups)">
-                <mat-form-field>
-                    <mat-select formControlName="resourceGroup" placeholder="Resource group" >
-                        <mat-option
-                            *ngFor="let resourceGroup of resourceGroups;trackBy: trackByResourceGroup"
-                            [value]="resourceGroup">
-                            {{resourceGroup.name}} ({{resourceGroup.location}})
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <bl-error controlName="resourceGroup" code="required">Resource group is a required field</bl-error>
+            <div class="form-element" *ngIf="selectedSubscription && selectedResourceGroupMode === ResourceGroupMode.UseExisting">
+                <ng-container *ngIf="resourceGroups.length">
+                    <mat-form-field>
+                        <mat-select formControlName="resourceGroup" placeholder="Existing resource group">
+                            <mat-option
+                                *ngFor="let resourceGroup of resourceGroups;trackBy: trackByResourceGroup"
+                                [value]="resourceGroup">
+                                {{resourceGroup.name}} ({{resourceGroup.location}})
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <bl-error controlName="resourceGroup" code="required">Resource group is a required field</bl-error>
+                    <bl-error controlName="resourceGroup" code="noPermission">You don't have permission to create a batch account under this resource group</bl-error>
+                </ng-container>
+                <span *ngIf="!resourceGroups.length">No resources groups available in subscription '{{selectedSubscription.displayName}}'</span>
             </div>
-            <div class="form-element" *ngIf="showCollection(locations)">
-                <mat-form-field>
-                    <mat-select formControlName="location" placeholder="Location" >
-                        <mat-option
-                            *ngFor="let location of locations;trackBy: trackByLocation"
-                            [value]="location">
-                            {{location.displayName}} ({{location.name}})
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <bl-error controlName="location" code="required">Location is a required field</bl-error>
+            <div class="form-element" *ngIf="selectedSubscription">
+                <ng-container *ngIf="locations.length">
+                    <mat-form-field>
+                        <mat-select formControlName="location" placeholder="Location">
+                            <mat-option
+                                *ngFor="let location of locations;trackBy: trackByLocation"
+                                [value]="location">
+                                {{location.displayName}} ({{location.name}})
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <bl-error controlName="location" code="required">Location is a required field</bl-error>
+                </ng-container>
+                <span *ngIf="!locations.length">No locations available in subscription '{{selectedSubscription.displayName}}'</span>
             </div>
         </bl-form-section>
     </bl-form-page>

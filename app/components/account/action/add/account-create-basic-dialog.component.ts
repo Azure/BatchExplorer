@@ -5,9 +5,11 @@ import { Observable, Subscription } from "rxjs";
 import { SidebarRef } from "app/components/base/sidebar";
 import { autobind } from "app/core";
 import { Location, ResourceGroup, Subscription as ArmSubscription } from "app/models";
-import { AccountService, SubscriptionService } from "app/services";
+import {
+    AccountService, AuthorizationHttpService, AvailabilityResult,
+    Permission, SubscriptionService,
+} from "app/services";
 import { Constants } from "app/utils";
-
 import "./account-create-basic-dialog.scss";
 
 const accountIdSuffix = ".batch.azure.com";
@@ -36,26 +38,27 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
         private changeDetector: ChangeDetectorRef,
         private formBuilder: FormBuilder,
         public accountService: AccountService,
+        public authService: AuthorizationHttpService,
         public subscriptionService: SubscriptionService,
         public sidebarRef: SidebarRef<AccountCreateBasicDialogComponent>) {
 
         this.form = this.formBuilder.group({
-            name: [
-                "",
-                [
+            name: ["", [
                     Validators.required,
                     Validators.minLength(3),
                     Validators.maxLength(64),
                     Validators.pattern(Constants.forms.validation.regex.batchAccount),
-                ],
-                [
+                ], [
                     this._availabilityValidator(),
                 ],
             ],
             location: [null, Validators.required],
-            newResourceGroup: [null, Validators.required],
-            resourceGroupMode: [ResourceGroupMode.UseExisting, Validators.required],
-            resourceGroup: [null, Validators.required],
+            newResourceGroup: [null, [
+                Validators.required,
+                this._newResourceGroupValidator(),
+            ]],
+            resourceGroupMode: [ResourceGroupMode.CreateNew, Validators.required],
+            resourceGroup: [null, Validators.required, this._resourceGroupPermissionValidator()],
             subscription: [null, Validators.required],
         });
 
@@ -119,6 +122,10 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
         return location.id;
     }
 
+    public get selectedSubscription() {
+        return this.form.controls.subscription.value;
+    }
+
     public get selectedLocation() {
         return this.form.controls.location.value;
     }
@@ -129,10 +136,6 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
 
     public get selectedResourceGroupMode() {
         return this.form.controls.resourceGroupMode.value;
-    }
-
-    public showCollection(array: ResourceGroup[] | Location[]) {
-        return array && array.length > 0;
     }
 
     @autobind()
@@ -181,7 +184,56 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
             const location = this.form.controls.location.value;
             return this.accountService
                 .nameAvailable(accountName, subscription, location && location.name)
+                .map((response: AvailabilityResult) => {
+                    if (response.nameAvailable) {
+                        return null;
+                    }
+                    return {
+                        accountExists: {
+                            message: response.message,
+                        },
+                    };
+                })
                 .debounceTime(400);
+        };
+    }
+
+    @autobind()
+    private _resourceGroupPermissionValidator() {
+        return (control: FormControl): Observable<{[key: string]: any}> => {
+            const resourceGroup = control.value;
+            if (!resourceGroup) {
+                return Observable.of(null);
+            }
+            return this.authService
+                .getPermission(resourceGroup.id)
+                .map((response: Permission) => {
+                    if (response !== Permission.Write) {
+                        return {
+                            noPermission: true,
+                        };
+                    }
+                    return null;
+                }).debounceTime(400);
+        };
+    }
+
+    @autobind()
+    private _newResourceGroupValidator() {
+        return (control: FormControl): {[key: string]: any} => {
+            if (this.resourceGroups.length === 0) {
+                return null;
+            }
+            if (!control.value) {
+                return null;
+            }
+
+            const index = this.resourceGroups.findIndex(resourceGroup => {
+                return resourceGroup.name.toLowerCase() === control.value.toLowerCase();
+            });
+            return index !== -1 ? {
+                resourceGroupExists: true,
+            } : null;
         };
     }
 

@@ -293,7 +293,7 @@ export class AccountService {
      * Call nameAvailability api to get account conflict info per region
      * @param subscriptionId
      */
-    public nameAvailable(name: string, subscription: Subscription, location: string): Observable<any> {
+    public nameAvailable(name: string, subscription: Subscription, location: string): Observable<AvailabilityResult> {
         if (!name || !subscription || !location) {
             return Observable.of(null);
         }
@@ -303,15 +303,7 @@ export class AccountService {
             name: name,
             type: batchResourceProvider,
         }).map(response => {
-            const result: AvailabilityResult = response.json();
-            if (result.nameAvailable) {
-                return null;
-            }
-            return {
-                accountExists: {
-                    message: result.message,
-                },
-            };
+            return response.json();
         });
     }
 

@@ -7,12 +7,13 @@ import { ArmHttpService } from "../arm-http.service";
 
 export interface RoleDefinitionPermission {
     actions: string[];
-    noActions: string[];
+    notActions: string[];
 }
 
 export enum BatchAccountPermission {
     Read = "*/read",
     ReadWrite = "*",
+    Write = "Microsoft.Authorization/*/Write",
 }
 
 export enum Permission {
@@ -32,14 +33,23 @@ export class AuthorizationHttpService {
         this._permission = this.accountService.currentAccount.take(1)
             .flatMap(account => {
                 const resourceId = account && account.id;
-                if (resourceId) {
-                    const url = this._getPermissionUrl(resourceId);
-                    return this._recursiveRequest(url).flatMap(permissions => {
-                        const permission = this.checkResoucePermissions(permissions);
-                        return Observable.of(permission);
-                    });
-                }
+                return this.getPermission(resourceId);
             }).shareReplay(1);
+    }
+
+    /**
+     * Helper funtion that checks resource or resource group permission
+     * @param resourceId resource id or resource group id
+     */
+    public getPermission(resourceId: string): Observable<Permission> {
+        if (!resourceId) {
+            return Observable.of(Permission.None);
+        }
+        const url = this._getPermissionUrl(resourceId);
+        return this._recursiveRequest(url).flatMap(permissions => {
+            const permission = this.checkResoucePermissions(permissions);
+            return Observable.of(permission);
+        });
     }
 
     /**
@@ -64,15 +74,22 @@ export class AuthorizationHttpService {
             return Permission.None;
         }
         let actions = [];
+        let notactions = [];
         for (const permission of permissions) {
             if (permission.actions) {
                 actions = actions.concat(permission.actions);
             }
+            if (permission.notActions) {
+                notactions = notactions.concat(permission.notActions);
+            }
         }
         // If user only has 'Reader' role without any 'Write' roles, action should be disabled
         // Note that user could be assigned to multiple roles at same time (Reader, Owner, Contributor),
-        // in this case, permission should be checked from highest to lowest
+        // in this case, permission should be checked from highest to lowe
         if (actions.includes(BatchAccountPermission.ReadWrite)) {
+            if (notactions.includes(BatchAccountPermission.Write)) {
+                return Permission.Read;
+            }
             return Permission.Write;
         }
         if (actions.includes(BatchAccountPermission.Read)) {
