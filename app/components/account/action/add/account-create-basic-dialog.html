@@ -10,6 +10,7 @@
                 <bl-error controlName="name" code="minLength">Account name has a minimum length of 3 characters</bl-error>
                 <bl-error controlName="name" code="maxlength">Account name has a maximum length of 64 characters</bl-error>
                 <bl-error controlName="name" code="pattern">Account name can contain lower case letters and numbers</bl-error>
+                <bl-error controlName="name" code="accountExists">{{ form.controls.name.errors?.accountExists?.message }}</bl-error>
             </div>
             <div class="form-element">
                 <mat-form-field>

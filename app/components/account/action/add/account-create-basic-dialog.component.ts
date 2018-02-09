@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
 
 import { SidebarRef } from "app/components/base/sidebar";
 import { autobind } from "app/core";
 import { Location, ResourceGroup, Subscription as ArmSubscription } from "app/models";
-import { SubscriptionService } from "app/services";
+import { AccountService, SubscriptionService } from "app/services";
 import { Constants } from "app/utils";
 
 import "./account-create-basic-dialog.scss";
@@ -35,17 +35,23 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
     constructor(
         private changeDetector: ChangeDetectorRef,
         private formBuilder: FormBuilder,
+        public accountService: AccountService,
         public subscriptionService: SubscriptionService,
         public sidebarRef: SidebarRef<AccountCreateBasicDialogComponent>) {
 
         this.form = this.formBuilder.group({
-            name: ["", [
-                Validators.required,
-                Validators.minLength(3),
-                Validators.maxLength(64),
-                Validators.pattern(Constants.forms.validation.regex.batchAccount),
-                // TODO: Implement name check
-            ]],
+            name: [
+                "",
+                [
+                    Validators.required,
+                    Validators.minLength(3),
+                    Validators.maxLength(64),
+                    Validators.pattern(Constants.forms.validation.regex.batchAccount),
+                ],
+                [
+                    this._availabilityValidator(),
+                ],
+            ],
             location: [null, Validators.required],
             newResourceGroup: [null, Validators.required],
             resourceGroupMode: [ResourceGroupMode.UseExisting, Validators.required],
@@ -70,6 +76,7 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
                         });
                     this.changeDetector.markForCheck();
                 });
+            this.form.controls.name.updateValueAndValidity();
             this.changeDetector.markForCheck();
         }));
 
@@ -87,7 +94,13 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
                 this.changeDetector.markForCheck();
             }
         }));
+
+        this._subs.push(this.form.controls.location.valueChanges.subscribe((location: Location) => {
+            this.form.controls.name.updateValueAndValidity();
+            this.changeDetector.markForCheck();
+        }));
     }
+
     public ngOnDestroy(): void {
         this._subs.forEach(sub => sub.unsubscribe());
         this._disposeSubscription(this._resourceGroupSub);
@@ -158,6 +171,18 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
         //             },
         //         });
         //     });
+    }
+
+    @autobind()
+    private _availabilityValidator() {
+        return (control: FormControl): Observable<{[key: string]: any}> => {
+            const accountName = control.value;
+            const subscription = this.form.controls.subscription.value;
+            const location = this.form.controls.location.value;
+            return this.accountService
+                .nameAvailable(accountName, subscription, location && location.name)
+                .debounceTime(400);
+        };
     }
 
     private _disposeSubscription(subscription: Subscription) {

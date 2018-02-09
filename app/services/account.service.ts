@@ -13,6 +13,9 @@ import {
 import { LocalFileStorage } from "./local-file-storage.service";
 import { SubscriptionService } from "./subscription.service";
 
+const batchProvider = "Microsoft.Batch";
+const batchResourceProvider = batchProvider + "/batchAccounts";
+
 export enum AccountStatus {
     Valid,
     Invalid,
@@ -29,6 +32,12 @@ export interface AccountParams {
 
 export interface SelectedAccount {
     account: AccountResource;
+}
+
+export interface AvailabilityResult {
+    nameAvailable: boolean;
+    reason?: string;
+    message?: string;
 }
 
 @Injectable()
@@ -173,7 +182,7 @@ export class AccountService {
 
     public list(subscriptionId: string): Observable<List<AccountResource>> {
         const search = new URLSearchParams();
-        search.set("$filter", "resourceType eq 'Microsoft.Batch/batchAccounts'");
+        search.set("$filter", `resourceType eq '${batchResourceProvider}'`);
         const options = new RequestOptions({ search });
 
         return this.subscriptionService.get(subscriptionId)
@@ -278,6 +287,32 @@ export class AccountService {
             .flatMap((subscription) => {
                 return this.azure.patch(subscription, accountId, { properties: properties.toJS() });
             });
+    }
+
+    /**
+     * Call nameAvailability api to get account conflict info per region
+     * @param subscriptionId
+     */
+    public nameAvailable(name: string, subscription: Subscription, location: string): Observable<any> {
+        if (!name || !subscription || !location) {
+            return Observable.of(null);
+        }
+        const uri = `subscriptions/${subscription.subscriptionId}/providers/${batchProvider}`
+                    + `/locations/${location}/checkNameAvailability`;
+        return this.azure.post(subscription, uri, {
+            name: name,
+            type: batchResourceProvider,
+        }).map(response => {
+            const result: AvailabilityResult = response.json();
+            if (result.nameAvailable) {
+                return null;
+            }
+            return {
+                accountExists: {
+                    message: result.message,
+                },
+            };
+        });
     }
 
     private _loadFavoriteAccounts(): Observable<List<AccountResource>> {

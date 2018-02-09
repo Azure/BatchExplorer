@@ -72,14 +72,16 @@ export class SubscriptionService {
     }
 
     /**
-     * List the resource groups for given subscription id
+     * Recursively list the resource groups for given subscription id
      * @param subscriptionId
      */
     public listResourceGroups(subscription: Subscription): Observable<ResourceGroup[]> {
         const uri = `subscriptions/${subscription.subscriptionId}/resourcegroups`;
-        return this.azure.get(subscription, uri).map(response => {
-            return response.json().value;
-        });
+        return this.azure.get(subscription, uri).expand(obs => {
+            return obs.json().nextLink ? this.azure.get(subscription, obs.json().nextLink) : Observable.empty();
+        }).reduce((resourceGroups, response) => {
+            return [...resourceGroups, ...response.json().value];
+        }, []);
     }
 
     /**
