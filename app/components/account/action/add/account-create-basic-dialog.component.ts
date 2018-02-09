@@ -1,26 +1,33 @@
-import { Component, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
 
 import { SidebarRef } from "app/components/base/sidebar";
 import { autobind } from "app/core";
-import { Location, Subscription as ArmSubscription } from "app/models";
+import { Location, ResourceGroup, Subscription as ArmSubscription } from "app/models";
 import { SubscriptionService } from "app/services";
 import { Constants } from "app/utils";
+
+import "./account-create-basic-dialog.scss";
+
+const accountIdSuffix = ".batch.azure.com";
 
 @Component({
     selector: "bl-account-create-basic-dialog",
     templateUrl: "account-create-basic-dialog.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountCreateBasicDialogComponent implements OnDestroy {
     public form: FormGroup;
+    public resourceGroups: ResourceGroup[] = [];
     public locations: Location[] = [];
 
-    private _subscriptionSub: Subscription;
+    private _subs: Subscription[] = [];
     private _resourceGroupSub: Subscription;
     private _locationSub: Subscription;
 
     constructor(
+        private changeDetector: ChangeDetectorRef,
         private formBuilder: FormBuilder,
         public subscriptionService: SubscriptionService,
         public sidebarRef: SidebarRef<AccountCreateBasicDialogComponent>) {
@@ -33,27 +40,49 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
                 Validators.pattern(Constants.forms.validation.regex.batchAccount),
                 // TODO: Implement name check
             ]],
-            location: ["", Validators.required],
-            resourceGroup: ["", Validators.required],
-            subscriptionId: [null, Validators.required],
+            location: [null, Validators.required],
+            resourceGroup: [null, Validators.required],
+            subscription: [null, Validators.required],
         });
 
-        this._subscriptionSub = this.form.controls.subscriptionId.valueChanges.subscribe((subscriptionId: string) => {
-            this._disposeSubscription(this._locationSub);
-            this._locationSub = this.subscriptionService.listLocations(subscriptionId)
-                .subscribe((locations: Location[]) => {
-                    this.locations = locations;
-                    if (this.locations.length > 0) {
-                        // TODO: currently set first element as default,
-                        // Better way is get current longitude and latitude, calculate nearest location and populate
-                        // this location as default value
-                        this.form.controls.value.setValue(this.locations[0].id);
-                    }
+        this._subs.push(this.form.controls.subscription.valueChanges.subscribe((subscription: ArmSubscription) => {
+            this.form.controls.resourceGroup.setValue(null);
+            this.form.controls.location.setValue(null);
+            this._disposeSubscription(this._resourceGroupSub);
+            // List all resource groups
+            this._resourceGroupSub = this.subscriptionService.listResourceGroups(subscription)
+                .subscribe((resourceGroups: ResourceGroup[]) => {
+                    this.resourceGroups = resourceGroups;
+                    // List all locations
+                    this._disposeSubscription(this._locationSub);
+                    this._locationSub = this.subscriptionService.listLocations(subscription)
+                        .subscribe((locations: Location[]) => {
+                            this.locations = locations;
+                            this.changeDetector.markForCheck();
+                        });
+                    this.changeDetector.markForCheck();
                 });
-        });
+            this.changeDetector.markForCheck();
+        }));
+
+        this._subs.push(this.form.controls.resourceGroup.valueChanges.subscribe((resourceGroup: ResourceGroup) => {
+            if (!resourceGroup || !this.locations || this.locations.length === 0) {
+                return;
+            }
+            // Note that only set value if there is no value previously selected
+            // if location is in the list, set to this location when resource group value changed,
+            // otherwise set first item as default location
+            if (!this.form.controls.location.value) {
+                let locationIndex = this.locations.findIndex(location => location.name === resourceGroup.location);
+                locationIndex = locationIndex !== -1 ? locationIndex : 0;
+                this.form.controls.location.setValue(this.locations[locationIndex]);
+                this.changeDetector.markForCheck();
+            }
+        }));
     }
     public ngOnDestroy(): void {
-        this._disposeSubscription(this._subscriptionSub);
+        this._subs.forEach(sub => sub.unsubscribe());
+        this._disposeSubscription(this._resourceGroupSub);
         this._disposeSubscription(this._locationSub);
     }
 
@@ -61,10 +90,21 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
         return subscription.id;
     }
 
+    public trackByResourceGroup(index, resourceGroup: ResourceGroup) {
+        return resourceGroup.id;
+    }
+
     public trackByLocation(index, location: Location) {
         return location.id;
     }
 
+    public get selectedLocation() {
+        return this.form.controls.location.value;
+    }
+
+    public get accountUrlSuffix() {
+        return `.${this.selectedLocation.name}.${accountIdSuffix}`;
+    }
     @autobind()
     public submit(): Observable<any> {
         // const formData = this.form.value;

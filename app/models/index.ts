@@ -61,6 +61,7 @@ export * from "./recent-job";
 export * from "./resize-error";
 export * from "./resource-descriptor";
 export * from "./resource-file";
+export * from "./resource-group";
 export * from "./schedule";
 export * from "./settings";
 export * from "./ssh-public-key";

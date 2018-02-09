@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { List, Set } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { Location, Subscription } from "app/models";
+import { Location, ResourceGroup, Subscription } from "app/models";
 import { Constants, StringUtils, log } from "app/utils";
 import { AdalService } from "./adal";
 import { AzureHttpService } from "./azure-http.service";
@@ -71,12 +71,25 @@ export class SubscriptionService {
         });
     }
 
-    public listLocations(subscriptionId): Observable<Location[]> {
-        return this.get(subscriptionId).flatMap((subscrition: Subscription) => {
-            const uri = `subscriptions/${subscriptionId}/locations`;
-            return this.azure.get(subscrition, uri).map(response => {
-                return response.json().value;
-            });
+    /**
+     * List the resource groups for given subscription id
+     * @param subscriptionId
+     */
+    public listResourceGroups(subscription: Subscription): Observable<ResourceGroup[]> {
+        const uri = `subscriptions/${subscription.subscriptionId}/resourcegroups`;
+        return this.azure.get(subscription, uri).map(response => {
+            return response.json().value;
+        });
+    }
+
+    /**
+     * List all available geo-locations for given subscription id
+     * @param subscriptionId
+     */
+    public listLocations(subscription: Subscription): Observable<Location[]> {
+        const uri = `subscriptions/${subscription.subscriptionId}/locations`;
+        return this.azure.get(subscription, uri).map(response => {
+            return response.json().value;
         });
     }
 
