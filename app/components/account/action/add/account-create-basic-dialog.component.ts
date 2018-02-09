@@ -12,12 +12,18 @@ import "./account-create-basic-dialog.scss";
 
 const accountIdSuffix = ".batch.azure.com";
 
+export enum ResourceGroupMode {
+    CreateNew = "Create new",
+    UseExisting = "Use existing",
+}
+
 @Component({
     selector: "bl-account-create-basic-dialog",
     templateUrl: "account-create-basic-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountCreateBasicDialogComponent implements OnDestroy {
+    public ResourceGroupMode = ResourceGroupMode;
     public form: FormGroup;
     public resourceGroups: ResourceGroup[] = [];
     public locations: Location[] = [];
@@ -41,6 +47,8 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
                 // TODO: Implement name check
             ]],
             location: [null, Validators.required],
+            newResourceGroup: [null, Validators.required],
+            resourceGroupMode: [ResourceGroupMode.UseExisting, Validators.required],
             resourceGroup: [null, Validators.required],
             subscription: [null, Validators.required],
         });
@@ -105,6 +113,15 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
     public get accountUrlSuffix() {
         return `.${this.selectedLocation.name}.${accountIdSuffix}`;
     }
+
+    public get selectedResourceGroupMode() {
+        return this.form.controls.resourceGroupMode.value;
+    }
+
+    public showCollection(array: ResourceGroup[] | Location[]) {
+        return array && array.length > 0;
+    }
+
     @autobind()
     public submit(): Observable<any> {
         // const formData = this.form.value;

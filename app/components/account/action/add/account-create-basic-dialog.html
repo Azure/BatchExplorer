@@ -23,12 +23,18 @@
                 </mat-form-field>
                 <bl-error controlName="subscription" code="required">Subscription is a required field</bl-error>
             </div>
-            <div class="form-element" *ngIf="resourceGroups && resourceGroups.length > 0">
-                <mat-radio-group>
-                    <mat-radio-button value="1">Create new</mat-radio-button>
-                    <mat-radio-button value="2">Use existing</mat-radio-button>
+            <div class="form-element" *ngIf="showCollection(resourceGroups)">
+                <mat-radio-group formControlName="resourceGroupMode">
+                    <mat-radio-button [value]="ResourceGroupMode.CreateNew">Create new</mat-radio-button>
+                    <mat-radio-button [value]="ResourceGroupMode.UseExisting">Use existing</mat-radio-button>
                 </mat-radio-group>
-
+            </div>
+            <div class="form-element" *ngIf="selectedResourceGroupMode === ResourceGroupMode.CreateNew && showCollection(resourceGroups)">
+                <mat-form-field>
+                    <input matInput formControlName="newResourceGroup" placeholder="Resource group name" />
+                </mat-form-field>
+            </div>
+            <div class="form-element" *ngIf="selectedResourceGroupMode === ResourceGroupMode.UseExisting && showCollection(resourceGroups)">
                 <mat-form-field>
                     <mat-select formControlName="resourceGroup" placeholder="Resource group" >
                         <mat-option
@@ -40,7 +46,7 @@
                 </mat-form-field>
                 <bl-error controlName="resourceGroup" code="required">Resource group is a required field</bl-error>
             </div>
-            <div class="form-element" *ngIf="locations && locations.length > 0">
+            <div class="form-element" *ngIf="showCollection(locations)">
                 <mat-form-field>
                     <mat-select formControlName="location" placeholder="Location" >
                         <mat-option
