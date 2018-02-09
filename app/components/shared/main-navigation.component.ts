@@ -142,7 +142,7 @@ export class MainNavigationComponent implements OnInit {
     }
 
     private _update() {
-        if (OS.isWindows()) {
+        if (!OS.isLinux()) {
             setImmediate(() => {
                 app.removeAllListeners("window-all-closed");
                 this.remote.getCurrentWindow().close();
