@@ -141,7 +141,7 @@ export class MainNavigationComponent implements OnInit {
     }
 
     private _update() {
-        if (!OS.isLinux()) {
+        if (OS.isWindows()) {
             setImmediate(() => {
                 this.remote.electronApp.removeAllListeners("window-all-closed");
                 this.remote.getCurrentWindow().close();
