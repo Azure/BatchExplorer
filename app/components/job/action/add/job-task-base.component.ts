@@ -25,6 +25,8 @@ export class JobTaskBaseComponent implements ControlValueAccessor {
     constructor(formBuilder: FormBuilder, defaultValue: any, invalidResponse: any) {
         const validation = Constants.forms.validation;
         this.constraintsGroup = formBuilder.group({
+            maxWallClockTime: null,
+            retentionTime: null,
             maxTaskRetryCount: [
                 0,
                 new RangeValidator(validation.range.retry.min, validation.range.retry.max).validator,
