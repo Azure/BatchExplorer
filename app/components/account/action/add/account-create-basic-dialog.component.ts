@@ -7,7 +7,7 @@ import { autobind } from "app/core";
 import { Location, ResourceGroup, Subscription as ArmSubscription } from "app/models";
 import {
     AccountService, AuthorizationHttpService, AvailabilityResult,
-    Permission, SubscriptionService,
+    Permission, QuotaResult, SubscriptionService,
 } from "app/services";
 import { Constants } from "app/utils";
 import "./account-create-basic-dialog.scss";
@@ -52,7 +52,7 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
                     this._availabilityValidator(),
                 ],
             ],
-            location: [null, Validators.required],
+            location: [null, Validators.required, this._accountQuotaValidator()],
             newResourceGroup: [null, [
                 Validators.required,
                 this._newResourceGroupValidator(),
@@ -234,6 +234,28 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
             return index !== -1 ? {
                 resourceGroupExists: true,
             } : null;
+        };
+    }
+
+    @autobind()
+    private _accountQuotaValidator() {
+        return (control: FormControl): Observable<{[key: string]: any}> => {
+            const location = control.value && control.value;
+            const subscription = this.form.controls.subscription.value;
+            return this.accountService
+                .accountQuota(subscription, location && location.name)
+                .map((response: QuotaResult) => {
+                    if (!response) {
+                        return null;
+                    }
+                    if (response.used < response.quota) {
+                        return null;
+                    }
+                    return {
+                        quotaReached: response,
+                    };
+                })
+                .debounceTime(400);
         };
     }
 
