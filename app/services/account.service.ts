@@ -294,6 +294,16 @@ export class AccountService {
             });
     }
 
+    public putBatchAccount(subscription: Subscription, resourceGroupName: string, accountName: string, body: any) {
+        const uri = `subscriptions/${subscription.subscriptionId}`
+                    + `/resourceGroups/${resourceGroupName}`
+                    + `/providers/${batchProvider}`
+                    + `/batchAccounts/${accountName}`;
+        return this.azure.post(subscription, uri, body).map(response => {
+            return response.json();
+        });
+    }
+
     /**
      * Call nameAvailability api to get account conflict info per location
      * @param subscriptionId

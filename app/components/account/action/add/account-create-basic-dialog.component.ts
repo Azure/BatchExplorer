@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
 
 import { SidebarRef } from "app/components/base/sidebar";
@@ -43,28 +43,42 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
         public sidebarRef: SidebarRef<AccountCreateBasicDialogComponent>) {
 
         this.form = this.formBuilder.group({
-            name: ["", [
+            name: [
+                "",
+                [
                     Validators.required,
                     Validators.minLength(3),
                     Validators.maxLength(64),
                     Validators.pattern(Constants.forms.validation.regex.batchAccount),
-                ], [
-                    this._availabilityValidator(),
+                ],
+                this._availabilityValidator(),
+            ],
+            subscription: [
+                null,
+                Validators.required,
+            ],
+            location: [
+                null,
+                Validators.required,
+                this._accountQuotaValidator(),
+            ],
+            resourceGroupMode: [
+                ResourceGroupMode.CreateNew,
+                Validators.required,
+            ],
+            newResourceGroup: [
+                null,
+                [
+                    Validators.required,
+                    this._newResourceGroupValidator(),
                 ],
             ],
-            location: [null, Validators.required, this._accountQuotaValidator()],
-            newResourceGroup: [null, [
-                Validators.required,
-                this._newResourceGroupValidator(),
-            ]],
-            resourceGroupMode: [ResourceGroupMode.CreateNew, Validators.required],
-            resourceGroup: [null, Validators.required, this._resourceGroupPermissionValidator()],
-            subscription: [null, Validators.required],
+            resourceGroup: [null],
         });
 
         this._subs.push(this.form.controls.subscription.valueChanges.subscribe((subscription: ArmSubscription) => {
-            this.form.controls.resourceGroup.setValue(null);
-            this.form.controls.location.setValue(null);
+            this._setFormValue(this.form.controls.resourceGroup, null);
+            this._setFormValue(this.form.controls.location, null);
             this._disposeSubscription(this._resourceGroupSub);
             // List all resource groups
             this._resourceGroupSub = this.subscriptionService.listResourceGroups(subscription)
@@ -93,13 +107,31 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
             if (!this.form.controls.location.value) {
                 let locationIndex = this.locations.findIndex(location => location.name === resourceGroup.location);
                 locationIndex = locationIndex !== -1 ? locationIndex : 0;
-                this.form.controls.location.setValue(this.locations[locationIndex]);
+                this._setFormValue(this.form.controls.location, this.locations[locationIndex]);
                 this.changeDetector.markForCheck();
             }
         }));
 
         this._subs.push(this.form.controls.location.valueChanges.subscribe((location: Location) => {
             this.form.controls.name.updateValueAndValidity();
+            this.changeDetector.markForCheck();
+        }));
+
+        this._subs.push(this.form.controls.resourceGroupMode.valueChanges.subscribe((mode: ResourceGroupMode) => {
+            if (mode === ResourceGroupMode.CreateNew) {
+                this.form.controls.newResourceGroup.setValidators([
+                    Validators.required,
+                    this._newResourceGroupValidator(),
+                ]);
+                this.form.controls.resourceGroup.setValidators(null);
+                this.form.controls.resourceGroup.setAsyncValidators(null);
+            } else if (mode === ResourceGroupMode.UseExisting) {
+                this.form.controls.newResourceGroup.setValidators(null);
+                this.form.controls.resourceGroup.setValidators([Validators.required]);
+                this.form.controls.resourceGroup.setAsyncValidators([this._resourceGroupPermissionValidator()]);
+            }
+            this.form.controls.newResourceGroup.updateValueAndValidity();
+            this.form.controls.resourceGroup.updateValueAndValidity();
             this.changeDetector.markForCheck();
         }));
     }
@@ -140,40 +172,19 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
 
     @autobind()
     public submit(): Observable<any> {
-        // const formData = this.form.value;
-
+        const formData = this.form.value;
+        // console.log(formData);
         return null;
-        // return this.accountService.put(formData.id, formData.version)
-        //     .cascade((packageVersion) => this._uploadAppPackage(this.file, packageVersion.storageUrl))
-        //     .cascade(() => {
-        //         return this.accountService.activatePackage(formData.id, formData.version).subscribe({
-        //             next: () => {
-        //                 this.accountService.onAccountAdded.next(formData.id);
-        //                 this.notificationService.success(
-        //                     "Account added!",
-        //                     `Version ${formData.version} for account '${formData.id}' was successfully created!`,
-        //                 );
-        //             },
-        //             error: (response: Response) => {
-        //                 /**
-        //                  * Possible errors
-        //                  *  - trying to put a package that already exists and has allowUpdates = false
-        //                  *      409 (The settings for the specified account forbid package updates.)
-        //                  *      code : "AccountDoesntAllowPackageUpdates"
-        //                  *      message :
-        //                  *          "The settings for the specified account forbid package updates."
-        //                  *          RequestId: 0427d452-dbfe-48ff-80f9-680a26bbff27
-        //                  *          Time:2017-02-13T03:35:27.0685745Z
-        //                  */
-        //                 log.error("Failed to activate account package :: ", response);
-        //                 this.notificationService.error(
-        //                     "Activation failed",
-        //                     "The account package was uploaded into storage successfully, "
-        //                     + "but the activation process failed.",
-        //                 );
-        //             },
-        //         });
-        //     });
+    }
+
+    private _setFormValue(control: AbstractControl, value: any) {
+        control.setValue(value);
+        if (value) {
+            control.markAsTouched();
+        } else {
+            control.markAsUntouched();
+        }
+        control.updateValueAndValidity();
     }
 
     @autobind()
@@ -185,7 +196,7 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
             return this.accountService
                 .nameAvailable(accountName, subscription, location && location.name)
                 .map((response: AvailabilityResult) => {
-                    if (response.nameAvailable) {
+                    if (!response || response.nameAvailable) {
                         return null;
                     }
                     return {
@@ -214,7 +225,8 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
                         };
                     }
                     return null;
-                }).debounceTime(400);
+                })
+                .debounceTime(400);
         };
     }
 
@@ -227,7 +239,8 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
             if (!control.value) {
                 return null;
             }
-
+            // First time enter invalid value won't trigger validation, needs manually set as touched
+            control.markAsTouched();
             const index = this.resourceGroups.findIndex(resourceGroup => {
                 return resourceGroup.name.toLowerCase() === control.value.toLowerCase();
             });
@@ -240,7 +253,7 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
     @autobind()
     private _accountQuotaValidator() {
         return (control: FormControl): Observable<{[key: string]: any}> => {
-            const location = control.value && control.value;
+            const location = control.value;
             const subscription = this.form.controls.subscription.value;
             return this.accountService
                 .accountQuota(subscription, location && location.name)
