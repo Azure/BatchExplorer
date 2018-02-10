@@ -85,8 +85,9 @@ export class AuthorizationHttpService {
         }
         // If user only has 'Reader' role without any 'Write' roles, action should be disabled
         // Note that user could be assigned to multiple roles at same time (Reader, Owner, Contributor),
-        // in this case, permission should be checked from highest to lowe
+        // in this case, permission should be checked from highest to lower
         if (actions.includes(BatchAccountPermission.ReadWrite)) {
+            // when you have 'write' action specified in notActions which means read-only
             if (notactions.includes(BatchAccountPermission.Write)) {
                 return Permission.Read;
             }
