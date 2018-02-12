@@ -1,4 +1,7 @@
+import { duration } from "moment";
+
 import { Schedule } from "app/models";
+import { DateUtils } from "app/utils";
 import { DecoratorBase } from "app/utils/decorators";
 
 export class JobScheduleScheduleDecorator extends DecoratorBase<Schedule> {
@@ -12,7 +15,7 @@ export class JobScheduleScheduleDecorator extends DecoratorBase<Schedule> {
 
         this.doNotRunAfter = this.dateField(schedule.doNotRunAfter);
         this.doNotRunUntil = this.dateField(schedule.doNotRunUntil);
-        this.recurrenceInterval = this.timespanField(schedule.recurrenceInterval);
-        this.startWindow = this.timespanField(schedule.startWindow);
+        this.recurrenceInterval = DateUtils.prettyDuration(duration(schedule.recurrenceInterval));
+        this.startWindow = DateUtils.prettyDuration(duration(schedule.startWindow));
     }
 }
