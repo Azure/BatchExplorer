@@ -2,14 +2,16 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
 
+import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { autobind } from "app/core";
 import { Location, ResourceGroup, Subscription as ArmSubscription } from "app/models";
+import { createAccountFormToJsonData } from "app/models/forms/create-account-model";
 import {
     AccountService, AuthorizationHttpService, AvailabilityResult,
     Permission, QuotaResult, SubscriptionService,
 } from "app/services";
-import { Constants } from "app/utils";
+import { Constants, log } from "app/utils";
 import "./account-create-basic-dialog.scss";
 
 const accountIdSuffix = ".batch.azure.com";
@@ -35,12 +37,13 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
     private _locationSub: Subscription;
 
     constructor(
-        private changeDetector: ChangeDetectorRef,
-        private formBuilder: FormBuilder,
         public accountService: AccountService,
         public authService: AuthorizationHttpService,
         public subscriptionService: SubscriptionService,
-        public sidebarRef: SidebarRef<AccountCreateBasicDialogComponent>) {
+        public sidebarRef: SidebarRef<AccountCreateBasicDialogComponent>,
+        private changeDetector: ChangeDetectorRef,
+        private formBuilder: FormBuilder,
+        private notificationService: NotificationService) {
 
         this.form = this.formBuilder.group({
             name: [
@@ -173,8 +176,39 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
     @autobind()
     public submit(): Observable<any> {
         const formData = this.form.value;
-        // console.log(formData);
-        return null;
+        const subscription = formData.subscription;
+        const isNew = formData.resourceGroupMode === ResourceGroupMode.CreateNew;
+        const resourceGroup = isNew ? formData.newResourceGroup : formData.resourceGroup.name;
+
+        const accountName = formData.name;
+        const body = createAccountFormToJsonData(formData);
+
+        let observable: Observable<any> = null;
+        if (isNew) {
+            observable = this.accountService.putResourcGroup(subscription, resourceGroup, body)
+                .cascade(() => this.accountService.putBatchAccount(subscription, resourceGroup, accountName, body));
+        } else {
+            observable = this.accountService.putBatchAccount(subscription, resourceGroup, accountName, body);
+        }
+        observable.subscribe({
+            next: () => {
+                const accountUri = this.accountService.getAccountId(subscription, resourceGroup, accountName);
+                const sub = Observable.interval(1500).flatMap(() =>  this.accountService.get(accountUri)).retry()
+                .subscribe(response => {
+                    const message = `Batch account '${accountName}' was successfully created!`;
+                    this.notificationService.success("Create batch account", message, { persist: true });
+                    sub.unsubscribe();
+                });
+            },
+            error: (response: Response) => {
+                log.error("Failed to create batch account:: ", response);
+                this.notificationService.error(
+                    "Creating batch account failed",
+                    `Failed to create batch account ${accountName} for resource group ${resourceGroup}`,
+                );
+            },
+        });
+        return observable;
     }
 
     private _setFormValue(control: AbstractControl, value: any) {
@@ -205,6 +239,11 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
                         },
                     };
                 })
+                .catch(err => {
+                    return Observable.of({
+                        serverError: err && err.message,
+                    });
+                })
                 .debounceTime(400);
         };
     }
@@ -225,6 +264,11 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
                         };
                     }
                     return null;
+                })
+                .catch(err => {
+                    return Observable.of({
+                        serverError: err && err.message,
+                    });
                 })
                 .debounceTime(400);
         };
@@ -267,6 +311,11 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
                     return {
                         quotaReached: response,
                     };
+                })
+                .catch(err => {
+                    return Observable.of({
+                        serverError: err && err.message,
+                    });
                 })
                 .debounceTime(400);
         };

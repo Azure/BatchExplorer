@@ -294,14 +294,23 @@ export class AccountService {
             });
     }
 
-    public putBatchAccount(subscription: Subscription, resourceGroupName: string, accountName: string, body: any) {
-        const uri = `subscriptions/${subscription.subscriptionId}`
-                    + `/resourceGroups/${resourceGroupName}`
-                    + `/providers/${batchProvider}`
-                    + `/batchAccounts/${accountName}`;
-        return this.azure.post(subscription, uri, body).map(response => {
-            return response.json();
-        });
+    public putResourcGroup(sub: Subscription, resourceGroup: string, body: any) {
+        const rgUri = this.getResoureGroupId(sub, resourceGroup);
+        return this.azure.put(sub, rgUri, { body: body });
+    }
+
+    public putBatchAccount(sub: Subscription, resourceGroup: string, accountName: string, body: any): Observable<any> {
+        const accountUri = this.getAccountId(sub, resourceGroup, accountName);
+        return this.azure.put(sub, accountUri, { body: body });
+    }
+
+    public getAccountId(sub: Subscription, resourceGroup: string, accountName: string): string {
+        const uriPrefix = this.getResoureGroupId(sub, resourceGroup);
+        return `${uriPrefix}/providers/${batchProvider}/batchAccounts/${accountName}`;
+    }
+
+    public getResoureGroupId(sub: Subscription, resourceGroup: string): string {
+        return `subscriptions/${sub.subscriptionId}/resourceGroups/${resourceGroup}`;
     }
 
     /**
