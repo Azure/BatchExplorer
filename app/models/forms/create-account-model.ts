@@ -9,11 +9,20 @@ export interface CreateAccountModel {
     resourceGroupMode: ResourceGroupMode;
     newResourceGroup: string;
     resourceGroup: ResourceGroup;
+    storageAccountId: string;
 }
 
 export function createAccountFormToJsonData(formData: CreateAccountModel): AccountCreateDto {
     const data: any = {
         location: formData.location.name,
     };
+
+    if (formData.storageAccountId) {
+        data.properties = {
+            autoStorage: {
+                storageAccountId: formData.storageAccountId,
+            },
+        };
+    }
     return new AccountCreateDto(data);
 }

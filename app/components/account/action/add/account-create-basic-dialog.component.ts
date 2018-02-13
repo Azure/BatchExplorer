@@ -5,7 +5,7 @@ import { Observable, Subscription } from "rxjs";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { autobind } from "app/core";
-import { Location, ResourceGroup, Subscription as ArmSubscription } from "app/models";
+import { AccountResource, Location, ResourceGroup, Subscription as ArmSubscription } from "app/models";
 import { createAccountFormToJsonData } from "app/models/forms/create-account-model";
 import {
     AccountService, AuthorizationHttpService, AvailabilityResult,
@@ -77,6 +77,7 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
                 ],
             ],
             resourceGroup: [null],
+            storageAccountId: [null],
         });
 
         this._subs.push(this.form.controls.subscription.valueChanges.subscribe((subscription: ArmSubscription) => {
@@ -173,6 +174,17 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
         return this.form.controls.resourceGroupMode.value;
     }
 
+    public get account(): AccountResource {
+        if (this.selectedSubscription && this.selectedLocation) {
+            const account = new AccountResource({
+                subscription: this.selectedSubscription,
+                location: this.selectedLocation.name,
+            } as any);
+            return account;
+        }
+        return null;
+    }
+
     @autobind()
     public submit(): Observable<any> {
         const formData = this.form.value;
@@ -185,20 +197,24 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
 
         let observable: Observable<any> = null;
         if (isNew) {
-            observable = this.accountService.putResourcGroup(subscription, resourceGroup, body)
-                .cascade(() => this.accountService.putBatchAccount(subscription, resourceGroup, accountName, body));
+            observable = this.accountService.putResourcGroup(subscription, resourceGroup, {
+                location: formData.location.name,
+            }).cascade(() => this.accountService.putBatchAccount(subscription, resourceGroup, accountName, body));
         } else {
             observable = this.accountService.putBatchAccount(subscription, resourceGroup, accountName, body);
         }
         observable.subscribe({
             next: () => {
                 const accountUri = this.accountService.getAccountId(subscription, resourceGroup, accountName);
-                const sub = Observable.interval(1500).flatMap(() =>  this.accountService.get(accountUri)).retry()
-                .subscribe(response => {
-                    const message = `Batch account '${accountName}' was successfully created!`;
-                    this.notificationService.success("Create batch account", message, { persist: true });
-                    sub.unsubscribe();
-                });
+                // poll account every 1.5 sec to check whether it has been created
+                const sub = Observable.interval(1500)
+                    .flatMap(() =>  this.accountService.get(accountUri))
+                    .retry()
+                    .subscribe(response => {
+                        const message = `Batch account '${accountName}' was successfully created!`;
+                        this.notificationService.success("Create batch account", message, { persist: true });
+                        sub.unsubscribe();
+                    });
             },
             error: (response: Response) => {
                 log.error("Failed to create batch account:: ", response);

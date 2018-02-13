@@ -77,7 +77,11 @@
                 <span *ngIf="!locations.length">No locations available in subscription '{{selectedSubscription.displayName}}'</span>
             </div>
         </bl-form-section>
-        <!-- TODO: add storage account picker in create -->
-        <bl-form-section title="Storage account" subtitle="Please specify your storage account after created your batch account"></bl-form-section>
+        <bl-form-section title="Storage account" subtitle="Pick a storage account that will be assigned with this batch account.">
+            <span *ngIf="!account">Please specify subscription and location before picking a storage account.</span>
+            <div class="form-element" *ngIf="account">
+                <bl-storage-account-picker formControlName="storageAccountId" [account]="account"></bl-storage-account-picker>
+            </div>
+        </bl-form-section>
     </bl-form-page>
 </bl-complex-form>
