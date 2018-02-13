@@ -6,7 +6,8 @@ import { remote } from "electron";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { Job, JobState } from "app/models";
+import { JobScheduleCreateBasicDialogComponent } from "app/components/job-schedule/action";
+import { Job, JobSchedule, JobState } from "app/models";
 import { JobDecorator } from "app/models/decorators";
 import { FileSystemService, JobParams, JobService } from "app/services";
 import { EntityView } from "app/services/core";
@@ -128,6 +129,15 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     public cloneJob() {
         const ref = this.sidebarManager.open(`add-job-${this.jobId}`, JobCreateBasicDialogComponent);
         ref.component.setValueFromEntity(this.job);
+    }
+
+    @autobind()
+    public createJobSchedule() {
+        const ref = this.sidebarManager.open(`add-job-schedule`,
+            JobScheduleCreateBasicDialogComponent);
+        ref.component.setValueFromEntity(new JobSchedule({
+            jobSpecification: this.job.toJS(),
+        }));
     }
 
     @autobind()

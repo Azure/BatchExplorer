@@ -14,6 +14,7 @@ import { ButtonsModule } from "./buttons";
 import { CardComponent } from "./card";
 import { ChartsModule } from "./charts";
 import { ContextMenuModule } from "./context-menu";
+import { DatetimePickerComponent } from "./datetime-picker";
 import { DialogsModule } from "./dialogs";
 import { DropdownModule } from "./dropdown";
 import { DurationPickerComponent } from "./duration-picker";
@@ -81,6 +82,7 @@ const components = [
     CardComponent,
     TimespanComponent,
     EntityDetailsListComponent,
+    DatetimePickerComponent,
     DurationPickerComponent,
     IconComponent,
     ListAndShowLayoutComponent,

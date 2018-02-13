@@ -1,0 +1,21 @@
+bl-datetime-picker {
+    > .grow {
+        align-items: center;
+    }
+
+    .gcol {
+        height: 40px;
+        mat-form-field {
+            width: 100%;
+        }
+    }
+
+    .label {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .timezone {
+        margin-left: 34%;
+    }
+}
