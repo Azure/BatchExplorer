@@ -45,6 +45,10 @@ export class TaskService extends ServiceBase {
 
     private _basicProperties: string = "id,state,dependsOn";
     private _cache = new TargetedDataCache<TaskListParams, Task>({
+        // dependsOn: {
+        //     cache: jobService.cache,
+        //     key: (job: Job) => ({jobId: jobId})
+        // },
         key: ({ jobId }) => jobId,
     });
     private _getter: BatchEntityGetter<Task, TaskParams>;
