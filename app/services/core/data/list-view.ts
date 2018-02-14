@@ -229,8 +229,8 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         const response = this._getter.fetchFromCache(this._params, this._options);
         if (!response) { return false; }
         this._itemKeys.next(this._retrieveKeys(response.items));
-        this._lastRequest = { params: this._params, options: this._options };
-        this._hasMore.next(Boolean(response.nextLink));
+        // this._lastRequest = { params: this._params, options: this._options };
+        // this._hasMore.next(Boolean(response.nextLink));
         this._status.next(LoadingStatus.Ready);
         return true;
     }

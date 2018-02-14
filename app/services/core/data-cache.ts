@@ -149,7 +149,7 @@ export class DataCache<T> {
             return false;
         }
         this._deleted.next(key);
-        this._items.next(this._items.getValue().delete(key));
+        this._items.next(this._items.value.delete(key));
         return true;
     }
 
