@@ -167,7 +167,7 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
     }
 
     public get accountUrlSuffix() {
-        return `.${this.selectedLocation.name}.${accountIdSuffix}`;
+        return `.${this.selectedLocation.name}${accountIdSuffix}`;
     }
 
     public get selectedResourceGroupMode() {
