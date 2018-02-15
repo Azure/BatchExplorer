@@ -39,6 +39,8 @@ export class TablePropertyCellComponent {
     @Input()
     @HostBinding("attr.title")
     public value;
+    @HostBinding("class.property-content-box")
+    public box = true;
 
     public copyNotificationHidden = true;
 
