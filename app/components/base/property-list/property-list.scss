@@ -26,7 +26,6 @@ $group-padding: 28px;
 
 bl-property-list {
     display: block;
-    width: 800px;
 }
 
 bl-property-group {
@@ -55,7 +54,6 @@ bl-property-group {
     display: block;
     position: relative;
     padding: 0 $group-padding;
-    width: 100%;
 
     &:not(:last-child) {
         border-bottom: 1px solid $border-color;
