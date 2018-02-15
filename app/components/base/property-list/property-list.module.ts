@@ -17,6 +17,7 @@ import {
 import { EditorModule } from "app/components/base/editor";
 import { ButtonsModule } from "../buttons";
 import { EntityConfigurationComponent } from "./entity-configuration";
+import { PropertyFieldComponent } from "./property-field";
 import {
     TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
 } from "./table-property";
@@ -34,6 +35,7 @@ const components = [
     TablePropertyHeaderComponent,
     TablePropertyRowComponent,
     EntityConfigurationComponent,
+    PropertyFieldComponent,
 ];
 
 @NgModule({

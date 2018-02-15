@@ -4,13 +4,15 @@ import { clipboard } from "electron";
 @Component({
     selector: "bl-text-property",
     template: `
-        <section [class.one-line]="!wrap" (mouseenter)="showClipboard = true" (mouseleave)="showClipboard = false">
-            <label>{{label}}</label>
-            <span class="value" [class.wrap]="wrap" [title]="value">{{value}}</span>
-            <span [hidden]="!showClipboard" class="clipboard" *ngIf="copyable">
-                <i class="fa fa-clipboard" (click)="copyToClipBoard()"></i>
-            </span>
-        </section>
+        <bl-property-field [class.one-line]="!wrap" (mouseenter)="showClipboard = true" (mouseleave)="showClipboard = false">
+            <div propertyLabel>{{label}}</div>
+            <div propertyContent [class.wrap]="wrap" [title]="value">
+                {{value}}
+            </div>
+            <div propertyClipboard [hidden]="!showClipboard" class="clipboard" *ngIf="copyable">
+                    <i class="fa fa-clipboard" (click)="copyToClipBoard()"></i>
+            </div>
+        </bl-property-field>
     `,
 })
 export class TextPropertyComponent {
