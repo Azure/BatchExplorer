@@ -19,7 +19,7 @@ import { ButtonsModule } from "../buttons";
 import { EntityConfigurationComponent } from "./entity-configuration";
 import {
     TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
-} from "./table-property.component";
+} from "./table-property";
 import { TextPropertyComponent } from "./text-property.component";
 
 const components = [
