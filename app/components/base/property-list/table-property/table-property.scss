@@ -18,6 +18,24 @@ bl-table-property {
         display: block;
     }
 
+    table {
+        width: 100%;
+        table-layout: fixed;
+
+        [tp-column], bl-tp-cell {
+            display: table-cell;
+            color: $mineShaftGray;
+            background-color: $whitesmoke-darker;
+            padding: 8px;
+            width: auto;
+        }
+
+        [tp-column] {
+            font-weight: bold;
+            font-size: $label-font-size;
+        }
+    }
+
     .row {
         > td.label {
             padding: 5px;

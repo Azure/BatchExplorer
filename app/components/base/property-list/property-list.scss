@@ -36,6 +36,7 @@ bl-property-group {
     $label-width: 200px;
     $value-width: $property-width - $label-width - $label-value-margin - $clipboard-width;
     $property-height: 24px;
+    width: 800px;
 
     // Default value
     &.wide {
@@ -180,26 +181,6 @@ bl-property-group {
                 color: map-get($primary, 200);
             }
         }
-
-        > table {
-            $table-width: $property-width - $clipboard-width + 15;
-            width: $table-width;
-            max-width: $table-width;
-            table-layout: fixed;
-
-            [tp-column], bl-tp-cell {
-                display: table-cell;
-                color: $mineShaftGray;
-                background-color: $whitesmoke-darker;
-                padding: 8px;
-                width: auto;
-            }
-
-            [tp-column] {
-                font-weight: bold;
-                font-size: $label-font-size;
-            }
-        }
     }
 }
 
@@ -211,3 +192,36 @@ bl-bool-property {
     }
 }
 
+
+bl-tp-cell {
+    color: $mineShaftGray;
+    background-color: $whitesmoke-darker;
+    padding: 3px 8px;
+    margin: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    &:not(.wrap) {
+        white-space: nowrap;
+    }
+
+    .fa {
+        font-size: 16px !important;
+    }
+
+    &.link {
+        color: map-get($primary, 400);
+        i {
+            padding-left: 4px;
+        }
+        &:hover {
+            font-weight: 400;
+            background-color: $mercuryGray;
+            cursor: pointer;
+        }
+
+        &:active {
+            background-color: $athensGrey;
+        }
+    }
+}
