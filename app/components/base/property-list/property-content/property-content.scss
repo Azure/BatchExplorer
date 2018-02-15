@@ -1,0 +1,36 @@
+@import "app/styles/variables";
+
+bl-property-content {
+    color: $mineShaftGray;
+    background-color: $whitesmoke-darker;
+    padding: 3px 8px;
+    margin: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    width: 100%;
+
+    &:not(.wrap) {
+        white-space: nowrap;
+    }
+
+    .fa {
+        font-size: 16px !important;
+    }
+
+    &.link {
+        color: map-get($primary, 400);
+        i {
+            padding-left: 4px;
+        }
+        &:hover {
+            font-weight: 400;
+            background-color: $mercuryGray;
+            cursor: pointer;
+        }
+
+        &:active {
+            background-color: $athensGrey;
+        }
+    }
+}

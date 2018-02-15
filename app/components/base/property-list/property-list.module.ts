@@ -17,12 +17,14 @@ import {
 import { EditorModule } from "app/components/base/editor";
 import { ButtonsModule } from "../buttons";
 import { EntityConfigurationComponent } from "./entity-configuration";
+import { PropertyContentComponent } from "./property-content";
 import { PropertyFieldComponent } from "./property-field";
 import {
     TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
 } from "./table-property";
 import { TextPropertyComponent } from "./text-property.component";
 
+// TODO-TIM separate private and public
 const components = [
     BoolPropertyComponent,
     LinkPropertyComponent,
@@ -36,6 +38,7 @@ const components = [
     TablePropertyRowComponent,
     EntityConfigurationComponent,
     PropertyFieldComponent,
+    PropertyContentComponent,
 ];
 
 @NgModule({

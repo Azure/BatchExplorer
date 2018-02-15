@@ -6,9 +6,9 @@ import { clipboard } from "electron";
     template: `
         <bl-property-field [class.one-line]="!wrap" (mouseenter)="showClipboard = true" (mouseleave)="showClipboard = false">
             <div propertyLabel>{{label}}</div>
-            <div propertyContent class="property-content-box" [class.wrap]="wrap" [title]="value">
+            <bl-property-content class="property-content-box" [class.wrap]="wrap" [title]="value">
                 {{value}}
-            </div>
+            </bl-property-content>
             <div propertyClipboard [hidden]="!showClipboard" class="clipboard" *ngIf="copyable">
                     <i class="fa fa-clipboard" (click)="copyToClipBoard()"></i>
             </div>
