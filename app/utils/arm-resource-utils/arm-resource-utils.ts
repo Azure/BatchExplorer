@@ -34,7 +34,7 @@ export class ArmResourceUtils {
         try {
             return this._resourceDescriptorParser(id).resource;
         } catch (e) {
-            log.error("Failed to extract account name from accountId", id);
+            log.error("Failed to extract account name from resource Id", { id });
             return null;
         }
     }
