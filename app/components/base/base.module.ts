@@ -10,6 +10,7 @@ import { AdvancedFilterModule } from "./advanced-filter";
 import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
 import { BreadcrumbModule } from "./breadcrumbs";
+import { BrowseLayoutModule } from "./browse-layout";
 import { ButtonsModule } from "./buttons";
 import { CardComponent } from "./card";
 import { ChartsModule } from "./charts";
@@ -49,6 +50,7 @@ import { VTabsModule } from "./vtabs";
 const modules = [
     AdvancedFilterModule,
     BreadcrumbModule,
+    BrowseLayoutModule,
     ButtonsModule,
     BackgroundTaskModule,
     ChartsModule,
