@@ -3,28 +3,23 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "app/core";
 
-import {
-    BoolPropertyComponent,
-    LinkPropertyComponent,
-    PropertyListComponent,
-} from "./property-list.component";
-
-import {
-    PropertyGroupComponent,
-} from "./property-group.component";
-
 import { EditorModule } from "app/components/base/editor";
 import { ButtonsModule } from "../buttons";
+import { BoolPropertyComponent } from "./bool-property";
 import { EntityConfigurationComponent } from "./entity-configuration";
+import { LinkPropertyComponent } from "./link-property";
 import { PropertyContentComponent } from "./property-content";
 import { PropertyFieldComponent } from "./property-field";
+import { PropertyGroupComponent } from "./property-group.component";
+import { PropertyListComponent } from "./property-list.component";
 import {
     TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
 } from "./table-property";
 import { TextPropertyComponent } from "./text-property";
 
 // TODO-TIM separate private and public
-const components = [
+
+const publicComponents = [
     BoolPropertyComponent,
     LinkPropertyComponent,
     PropertyListComponent,
@@ -35,14 +30,17 @@ const components = [
     TablePropertyHeaderComponent,
     TablePropertyRowComponent,
     EntityConfigurationComponent,
+];
+
+const privateComponents = [
     PropertyFieldComponent,
     PropertyContentComponent,
 ];
 
 @NgModule({
-    declarations: components,
+    declarations: [...publicComponents, ...privateComponents],
     entryComponents: [],
-    exports: [...components],
+    exports: publicComponents,
     imports: [ButtonsModule, BrowserModule, MaterialModule, RouterModule, EditorModule],
     providers: [],
 })

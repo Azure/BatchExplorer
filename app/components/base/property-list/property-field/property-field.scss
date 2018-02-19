@@ -26,13 +26,12 @@ bl-property-field {
 
     > .property-content {
         flex: 1;
-
         min-width: 50px;
     }
 
     > .clipboard-field {
         flex-basis: $clipboard-width;
         flex-shrink: 0;
-        align-items: center;
+        align-self: center;
     }
 }

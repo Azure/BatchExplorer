@@ -1,3 +1,5 @@
+export * from "./bool-property";
+export * from "./link-property";
 export * from "./property-list.component";
 export * from "./property-list.module";
 export * from "./text-property";
