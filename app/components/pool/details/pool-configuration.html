@@ -147,7 +147,7 @@
             <div collapsed-preview>
                 <span>{{metadata?.size}} meta items</span>
             </div>
-            <bl-text-property *ngFor="let metaItem of metadata" label="{{metaItem.name}}" [value]="metaItem.value"></bl-text-property>
+            <bl-text-property *ngFor="let metaItem of metadata" label="{{metaItem.name}}" [value]="metaItem.value" [wrap]="true"></bl-text-property>
             <bl-no-item [itemCount]="metadata.size" [slimline]="true">
                 <span no-filter>This pool contains no metadata</span>
             </bl-no-item>

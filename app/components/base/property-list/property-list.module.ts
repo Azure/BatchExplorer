@@ -3,32 +3,26 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "app/core";
 
-import {
-    BoolPropertyComponent,
-    LinkPropertyComponent,
-    PropertyListComponent,
-    VoidLinkPropertyComponent,
-} from "./property-list.component";
-
-import {
-    PropertyGroupComponent,
-} from "./property-group.component";
-
 import { EditorModule } from "app/components/base/editor";
 import { ButtonsModule } from "../buttons";
+import { BoolPropertyComponent } from "./bool-property";
 import { EntityConfigurationComponent } from "./entity-configuration";
+import { LinkPropertyComponent } from "./link-property";
+import { PropertyContentComponent } from "./property-content";
+import { PropertyFieldComponent } from "./property-field";
+import { PropertyGroupComponent } from "./property-group";
+import { PropertyListComponent } from "./property-list.component";
 import {
     TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
-} from "./table-property.component";
-import { TextPropertyComponent } from "./text-property.component";
+} from "./table-property";
+import { TextPropertyComponent } from "./text-property";
 
-const components = [
+const publicComponents = [
     BoolPropertyComponent,
     LinkPropertyComponent,
     PropertyListComponent,
     PropertyGroupComponent,
     TextPropertyComponent,
-    VoidLinkPropertyComponent,
     TablePropertyCellComponent,
     TablePropertyComponent,
     TablePropertyHeaderComponent,
@@ -36,10 +30,15 @@ const components = [
     EntityConfigurationComponent,
 ];
 
+const privateComponents = [
+    PropertyFieldComponent,
+    PropertyContentComponent,
+];
+
 @NgModule({
-    declarations: components,
+    declarations: [...publicComponents, ...privateComponents],
     entryComponents: [],
-    exports: [...components],
+    exports: publicComponents,
     imports: [ButtonsModule, BrowserModule, MaterialModule, RouterModule, EditorModule],
     providers: [],
 })

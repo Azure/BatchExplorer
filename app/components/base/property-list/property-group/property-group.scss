@@ -1,0 +1,80 @@
+@import "app/styles/variables";
+
+bl-property-group {
+    width: 100%;
+
+    &.wide {
+        .group-content {
+            width: 750px;
+        }
+    }
+
+    &.normal {
+        .group-content {
+            width: 650px;
+        }
+    }
+
+    &.compact {
+        .group-content {
+            width: 550px;
+        }
+    }
+
+
+    display: block;
+    position: relative;
+    padding: 0 28px;
+
+    &:not(:last-child) {
+        border-bottom: 1px solid $border-color;
+    }
+
+    .warning-message {
+        color: $warn-color;
+        margin-bottom: 10px;
+
+        > .fa {
+            color: $warn-color;
+        }
+    }
+
+    .group-header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        padding-bottom: 5px;
+        border: 0;
+        cursor: pointer;
+
+        .collapse-icon {
+            display: flex;
+            align-items: center;
+            margin-right: 5px;
+            font-size: 20px;
+            color: $primary-color;
+            width: 15px;
+        }
+
+        h4 {
+            flex: 1;
+        }
+
+        span {
+            font-weight: 300;
+        }
+
+        bl-button {
+            margin-left: 5px;
+            width: 24px;
+            min-width: 24px;
+            height: 24px;
+            line-height: 24px;
+        }
+    }
+
+    .group-content {
+        padding-bottom: 10px;
+    }
+}

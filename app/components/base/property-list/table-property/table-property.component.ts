@@ -3,6 +3,8 @@ import {
 } from "@angular/core";
 import { clipboard } from "electron";
 
+import "./table-property.scss";
+
 @Component({
     selector: "bl-table-property-header",
     template: `
@@ -21,9 +23,6 @@ export class TablePropertyHeaderComponent {
     `,
 })
 export class TablePropertyRowComponent {
-    @Input()
-    public label: string;
-
     @ViewChild(TemplateRef)
     public content: TemplateRef<any>;
 
@@ -40,6 +39,8 @@ export class TablePropertyCellComponent {
     @Input()
     @HostBinding("attr.title")
     public value;
+    @HostBinding("class.property-content-box")
+    public box = true;
 
     public copyNotificationHidden = true;
 
