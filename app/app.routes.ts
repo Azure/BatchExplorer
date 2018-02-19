@@ -143,20 +143,3 @@ export const routes: Routes = [
         component: PoolStandaloneGraphsComponent,
     },
 ];
-
-// todo: copied here for reference only, delete when done.
-// export interface Route {
-//     path?: string;
-//     pathMatch?: string;
-//     component?: Type<any>;
-//     redirectTo?: string;
-//     outlet?: string;
-//     canActivate?: any[];
-//     canActivateChild?: any[];
-//     canDeactivate?: any[];
-//     canLoad?: any[];
-//     data?: Data;
-//     resolve?: ResolveData;
-//     children?: Route[];
-//     loadChildren?: LoadChildren;
-// }
