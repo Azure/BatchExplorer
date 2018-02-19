@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
 import { autobind } from "app/core";
 
 import "./property-group.scss";
@@ -6,6 +6,7 @@ import "./property-group.scss";
 @Component({
     selector: "bl-property-group",
     templateUrl: "property-group.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyGroupComponent {
     @Output() public collapsedChange = new EventEmitter();
@@ -32,7 +33,11 @@ export class PropertyGroupComponent {
 
     private _collapsed = false;
 
+    constructor(private changeDetector: ChangeDetectorRef) { }
+
     public toogleCollapsed() {
+        this.changeDetector.markForCheck();
+
         if (this.collapsable) {
             this.collapsed = !this.collapsed;
         }
