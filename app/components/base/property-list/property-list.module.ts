@@ -7,7 +7,6 @@ import {
     BoolPropertyComponent,
     LinkPropertyComponent,
     PropertyListComponent,
-    VoidLinkPropertyComponent,
 } from "./property-list.component";
 
 import {
@@ -31,7 +30,6 @@ const components = [
     PropertyListComponent,
     PropertyGroupComponent,
     TextPropertyComponent,
-    VoidLinkPropertyComponent,
     TablePropertyCellComponent,
     TablePropertyComponent,
     TablePropertyHeaderComponent,
