@@ -4,26 +4,6 @@ $label-value-margin: 5px;
 $clipboard-width: 30px;
 $group-padding: 28px;
 
-@mixin group-sizing($group-width) {
-    $property-width: $group-width - 2 * $group-padding;
-    $label-width: $group-width / 4;
-    $value-width: $property-width - $label-width - $label-value-margin - $clipboard-width;
-
-    section {
-        // add an extra 10px to make room for the copy button
-        width: $property-width + 10px;
-
-        label, > table td.label {
-            width: $label-width !important;
-            min-width: $label-width;
-        }
-
-        .value {
-            width: $value-width;
-        }
-    }
-}
-
 bl-property-list {
     display: block;
 }
@@ -38,17 +18,16 @@ bl-property-group {
     $property-height: 24px;
     width: 800px;
 
-    // Default value
     &.wide {
-        @include group-sizing(750);
+        // @include group-sizing(750);
     }
 
     &.normal {
-        @include group-sizing(650);
+        // @include group-sizing(650);
     }
 
     &.compact {
-        @include group-sizing(550);
+        // @include group-sizing(550);
     }
 
 
@@ -108,80 +87,6 @@ bl-property-group {
         padding-bottom: 10px;
     }
 
-    section {
-        width: $property-width;
-        padding: 0;
-        margin: 0 0 5px;
-        display: flex;
-        position: relative;
-
-        &.one-line {
-            height: $property-height;
-            align-items: center;
-        }
-
-        label, > table td.label {
-            color: $genericGray;
-            font-size: $label-font-size;
-            width: $label-width !important;
-            min-width: $label-width;
-            padding: 6px 0;
-            margin-bottom: 0;
-            margin-right: $label-value-margin;
-            font-weight: bold;
-        }
-
-        .value, bl-tp-cell {
-            color: $mineShaftGray;
-            background-color: $whitesmoke-darker;
-            font-size: $value-font-size;
-            padding: 3px 8px;
-            width: $value-width;
-            min-height: $property-height;
-            margin: 0;
-            text-overflow: ellipsis;
-            overflow: hidden;
-
-            &:not(.wrap) {
-                white-space: nowrap;
-            }
-
-            .fa {
-                font-size: 16px !important;
-            }
-
-            &.link {
-                color: map-get($primary, 400);
-                i {
-                    padding-left: 4px;
-                }
-                &:hover {
-                    font-weight: 400;
-                    background-color: $mercuryGray;
-                    cursor: pointer;
-                }
-
-                &:active {
-                    background-color: $athensGrey;
-                }
-            }
-        }
-
-        .clipboard {
-            font-size: 16px;
-            color: $genericGray;
-            cursor: pointer;
-            margin-left: 10px;
-
-            &:hover {
-                color: $dusty-grey;
-            }
-
-            &:active {
-                color: map-get($primary, 200);
-            }
-        }
-    }
 }
 
 bl-bool-property {

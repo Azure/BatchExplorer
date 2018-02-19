@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostBinding, Input } from "@angular/core";
 
 import "./property-content.scss";
 
@@ -8,5 +8,5 @@ import "./property-content.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyContentComponent {
-
+    @Input() @HostBinding("class.wrap") public wrap = false;
 }

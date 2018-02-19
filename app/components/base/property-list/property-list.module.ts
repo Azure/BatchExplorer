@@ -22,7 +22,7 @@ import { PropertyFieldComponent } from "./property-field";
 import {
     TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
 } from "./table-property";
-import { TextPropertyComponent } from "./text-property.component";
+import { TextPropertyComponent } from "./text-property";
 
 // TODO-TIM separate private and public
 const components = [

@@ -12,10 +12,10 @@ export class PropertyListComponent {
 @Component({
     selector: "bl-link-property",
     template: `
-        <section class="one-line">
+        <bl-property-field>
             <label>{{label}}</label>
             <a class="value link" [routerLink]="link" [title]="value">{{value}}</a>
-        </section>
+        </bl-property-field>
     `,
 })
 export class LinkPropertyComponent {
@@ -29,34 +29,16 @@ export class LinkPropertyComponent {
     public link: string;
 }
 
-// todo: only for testing, delete when we have task navigation working.
-@Component({
-    selector: "bl-void-link-property",
-    template: `
-        <section class="one-line">
-            <label>{{label}}</label>
-            <a class="value link" href="javascript:void(0);" [title]="value">{{value}}</a>
-        </section>
-    `,
-})
-export class VoidLinkPropertyComponent {
-    @Input()
-    public label: string;
-
-    @Input()
-    public value: string;
-}
-
 @Component({
     selector: "bl-bool-property",
     template: `
-        <section class="one-line">
-            <label>{{label}}</label>
-            <span class="value">
+        <bl-property-field>
+            <div propertyLabel>{{label}}</div>
+            <bl-property-content>
                 <i class="fa" [class.fa-toggle-on]="value" [class.fa-toggle-off]="!value"></i>
                 {{ text }}
-            </span>
-        </section>
+            </bl-property-content>
+        </bl-property-field>
     `,
 })
 export class BoolPropertyComponent {

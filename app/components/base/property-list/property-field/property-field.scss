@@ -26,56 +26,13 @@ bl-property-field {
 
     > .property-content {
         flex: 1;
-        color: $mineShaftGray;
-        // background-color: $whitesmoke-darker;
-        font-size: $value-font-size;
-        // padding: 3px 8px;
-        min-height: $property-height;
-        margin: 0;
-        text-overflow: ellipsis;
-        overflow: hidden;
+
         min-width: 50px;
-
-        &:not(.wrap) {
-            white-space: nowrap;
-        }
-
-        .fa {
-            font-size: 16px !important;
-        }
-
-        &.link {
-            color: map-get($primary, 400);
-            i {
-                padding-left: 4px;
-            }
-            &:hover {
-                font-weight: 400;
-                background-color: $mercuryGray;
-                cursor: pointer;
-            }
-
-            &:active {
-                background-color: $athensGrey;
-            }
-        }
     }
 
     > .clipboard-field {
         flex-basis: $clipboard-width;
         flex-shrink: 0;
-    }
-    &.one-line {
-        // height: $property-height;
         align-items: center;
-    }
-
-    label, > table td.label {
-
-        // width: $label-width !important;
-        // min-width: $label-width;
-        // padding: 6px 0;
-        // margin-bottom: 0;
-        // margin-right: $label-value-margin;
     }
 }
