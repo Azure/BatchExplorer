@@ -31,10 +31,8 @@ export class TablePropertyRowComponent {
 @Component({
     selector: "bl-tp-cell",
     template: `
-        <bl-property-content>
-            <div class="cell-value">{{value}}</div>
-            <div class="copied-notification" [class.hidden]="copyNotificationHidden">Copied.</div>
-        </bl-property-content>
+        <div class="cell-value">{{value}}</div>
+        <div class="copied-notification" [class.hidden]="copyNotificationHidden">Copied.</div>
     `,
 })
 export class TablePropertyCellComponent {

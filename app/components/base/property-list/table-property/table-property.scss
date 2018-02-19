@@ -28,6 +28,8 @@ bl-table-property {
             background-color: $whitesmoke-darker;
             padding: 8px;
             width: auto;
+            position: relative;
+            overflow: hidden;
         }
 
         [tp-column] {
