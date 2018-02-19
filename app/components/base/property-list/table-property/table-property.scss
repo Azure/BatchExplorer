@@ -1,18 +1,8 @@
 @import "app/styles/variables";
 
 bl-table-property {
-    // TODO get rid of this
-    $label-value-margin: 5px;
-    $clipboard-width: 30px;
-    $group-padding: 28px;
-
     $label-font-size: 13px;
     $value-font-size: 12px;
-    $group-width: 750px;
-    $property-width: $group-width - 2 * $group-padding;
-    $label-width: 200px;
-    $value-width: $property-width - $label-width - $label-value-margin - $clipboard-width;
-    $property-height: 24px;
 
     section {
         display: block;
@@ -24,8 +14,8 @@ bl-table-property {
 
         [tp-column], bl-tp-cell {
             display: table-cell;
-            color: $mineShaftGray;
-            background-color: $whitesmoke-darker;
+            color: $primary-text;
+            background-color: $main-background;
             padding: 8px;
             width: auto;
             position: relative;
@@ -52,6 +42,8 @@ bl-table-property {
             height: 20px;
             position: relative;
             padding: 0;
+            overflow: hidden;
+            white-space: nowrap;
 
             .cell-value {
                 padding: 4px 8px;
@@ -62,7 +54,7 @@ bl-table-property {
             .copied-notification {
                 top: 0;
                 z-index: 1;
-                background: map-get($success, 500);
+                background: $success-color;
                 position: absolute;
                 color: $whitesmoke;
                 padding: 5px;
@@ -78,9 +70,9 @@ bl-table-property {
     }
 
     .expand-container {
-        margin-left: $label-width;
-        padding: 5px $group-padding 0 $group-padding;
-        width: $value-width;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         > button {
             display: block;
