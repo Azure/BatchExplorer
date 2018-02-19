@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
 import { clipboard } from "electron";
 
 import "./text-property.scss";
@@ -6,6 +6,7 @@ import "./text-property.scss";
 @Component({
     selector: "bl-text-property",
     templateUrl: "text-property.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextPropertyComponent {
     @Input() public label: string;
@@ -18,8 +19,14 @@ export class TextPropertyComponent {
      */
     @Input() public wrap: boolean = false;
 
-    public showClipboard = false;
+    public clipboardDisplayed = false;
 
+    constructor(private changeDetector: ChangeDetectorRef) {}
+
+    public showClipboard(value: boolean) {
+        this.clipboardDisplayed = value;
+        this.changeDetector.markForCheck();
+    }
     public copyToClipBoard() {
         clipboard.writeText(this.value);
     }
