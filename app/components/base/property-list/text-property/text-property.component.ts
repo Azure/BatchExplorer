@@ -27,6 +27,7 @@ export class TextPropertyComponent {
         this.clipboardDisplayed = value;
         this.changeDetector.markForCheck();
     }
+
     public copyToClipBoard() {
         clipboard.writeText(this.value);
     }

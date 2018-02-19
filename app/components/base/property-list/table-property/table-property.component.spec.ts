@@ -4,11 +4,11 @@ import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
 import { ButtonComponent } from "app/components/base/buttons";
-import {
-    TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
-} from "app/components/base/property-list";
 import { AuthorizationHttpService } from "app/services";
 import { click } from "test/utils/helpers";
+import {
+    TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
+} from "./table-property.component";
 
 // tslint:disable:trackBy-function
 @Component({
@@ -59,7 +59,7 @@ describe("TablePropertyComponent", () => {
     });
 
     it("Should show the label", () => {
-        const label = de.query(By.css(".head td.label"));
+        const label = de.query(By.css("[propertyLabel]"));
         expect(label.nativeElement.textContent).toContain("Files");
     });
 
