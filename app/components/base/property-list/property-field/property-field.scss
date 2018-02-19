@@ -1,7 +1,5 @@
 @import "app/styles/variables";
 
-// TODO-TIM change variables
-
 bl-property-field {
     $label-font-size: 13px;
     $value-font-size: 12px;
@@ -17,7 +15,7 @@ bl-property-field {
     overflow: hidden;
 
     > .property-label {
-        color: $genericGray;
+        color: $secondary-text;
         font-size: $label-font-size;
         flex-basis: $label-width;
         font-weight: bold;
