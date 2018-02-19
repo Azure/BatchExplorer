@@ -10,7 +10,7 @@ import { EntityConfigurationComponent } from "./entity-configuration";
 import { LinkPropertyComponent } from "./link-property";
 import { PropertyContentComponent } from "./property-content";
 import { PropertyFieldComponent } from "./property-field";
-import { PropertyGroupComponent } from "./property-group.component";
+import { PropertyGroupComponent } from "./property-group";
 import { PropertyListComponent } from "./property-list.component";
 import {
     TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
