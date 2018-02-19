@@ -1,3 +1,29 @@
+# 0.13.0
+[All items](https://github.com/Azure/BatchLabs/milestone/15?closed=1)
+
+### feature:
+
+* Ctrl+Shift+N for new window [\#1046](https://github.com/Azure/BatchLabs/issues/1046)
+* BatchLabs behind proxy [\#1015](https://github.com/Azure/BatchLabs/issues/1015)
+* Metadata property should display as pre [\#1010](https://github.com/Azure/BatchLabs/issues/1010)
+
+### bug:
+
+* Log out button doesnt work [\#1068](https://github.com/Azure/BatchLabs/issues/1068)
+* Stale task list [\#1065](https://github.com/Azure/BatchLabs/issues/1065)
+* File explorer folder last modified invalid date [\#1061](https://github.com/Azure/BatchLabs/issues/1061)
+* BatchLabs doesn't use nextLink to retrieve all the subscriptions [\#1057](https://github.com/Azure/BatchLabs/issues/1057)
+* Pool vm size picker get weird spacing [\#1055](https://github.com/Azure/BatchLabs/issues/1055)
+* Error message box should scale to message size [\#1053](https://github.com/Azure/BatchLabs/issues/1053)
+* Authentication page hides behind app when you are not logged in [\#1043](https://github.com/Azure/BatchLabs/issues/1043)
+* Pool picker pools disappear after switched to a different batch account.  [\#1038](https://github.com/Azure/BatchLabs/issues/1038)
+* App protocol handler with session_id causes weird redraw issue [\#1037](https://github.com/Azure/BatchLabs/issues/1037)
+* Splash screen goes behind the app half way through loading [\#1035](https://github.com/Azure/BatchLabs/issues/1035)
+* Job Statistics: Graph fails to load "Loading Tasks. This can take a long time" [\#873](https://github.com/Azure/BatchLabs/issues/873)
+
+### other:
+
+
 # 0.12.4
 
 ### Hot fix:
