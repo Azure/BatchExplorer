@@ -17,8 +17,6 @@ import {
 } from "./table-property";
 import { TextPropertyComponent } from "./text-property";
 
-// TODO-TIM separate private and public
-
 const publicComponents = [
     BoolPropertyComponent,
     LinkPropertyComponent,
