@@ -1,12 +1,13 @@
+import * as moment from "moment";
+
 import { Dto, DtoAttr } from "app/core";
-import { Duration } from "moment";
 
 export class ScheduleDto extends Dto<ScheduleDto> {
-    @DtoAttr() public doNotRunAfter: Date;
+    @DtoAttr() public doNotRunAfter: string;
 
-    @DtoAttr() public doNotRunUntil: Date;
+    @DtoAttr() public doNotRunUntil: string;
 
-    @DtoAttr() public recurrenceInterval: Duration;
+    @DtoAttr(moment.duration) public recurrenceInterval: moment.Duration;
 
-    @DtoAttr() public startWindow: Duration;
+    @DtoAttr(moment.duration) public startWindow: moment.Duration;
 }

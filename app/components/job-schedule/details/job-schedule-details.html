@@ -12,7 +12,7 @@
                 <bl-delete-button [action]="deleteJobSchedule" [enabled]="jobSchedule.state !== JobScheduleState.deleting && jobSchedule.state !== JobScheduleState.terminating"></bl-delete-button>
                 <bl-disable-button [job]="jobSchedule" [action]="disableJobSchedule"></bl-disable-button>
                 <bl-enable-button [job]="jobSchedule" [action]="enableJobSchedule"></bl-enable-button>
-                <!-- <bl-clone-button [action]="cloneJobSchedule"></bl-clone-button> -->
+                <bl-clone-button [action]="cloneJobSchedule"></bl-clone-button>
                 <bl-button [action]="exportAsJSON" color="light" title="Export as JSON"><i class="fa fa-code"></i></bl-button>
             </bl-button-group>
         </bl-summary-card>

@@ -4,10 +4,12 @@ import {
     MatAutocompleteModule,
     MatButtonModule,
     MatCheckboxModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatIconModule,
     MatInputModule,
     MatMenuModule,
+    MatNativeDateModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatRadioModule,
@@ -31,10 +33,12 @@ const modules = [
     MatSelectModule,
     MatMenuModule,
     MatSlideToggleModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatSidenavModule,
     MatInputModule,
     PortalModule,
+    MatNativeDateModule,
 ];
 
 @NgModule({

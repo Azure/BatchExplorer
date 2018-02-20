@@ -58,28 +58,34 @@ export class DurationPickerComponent implements ControlValueAccessor {
 
     public onToggle(event) {
         this.unlimited = event.checked;
-        this._duration = this.unlimited ? null : this._getDuration();
-        if ( this._propagateChange) {
-            this._propagateChange(this._duration);
+        this.duration = this.unlimited ? null : this._getDuration();
+        if (this._propagateChange) {
+            this._propagateChange(this.duration);
         }
     }
 
     public onTimeChange(event) {
-        this._duration = this._getDuration();
+        this.duration = this._getDuration();
         if (this._propagateChange) {
-            this._propagateChange(this._duration);
+            this._propagateChange(this.duration);
         }
     }
 
     public onUnitChange(event) {
-        this._duration = this._getDuration();
+        this.duration = this._getDuration();
         if (this._propagateChange) {
-            this._propagateChange(this._duration);
+            this._propagateChange(this.duration);
         }
     }
 
-    public writeValue(value: moment.Duration): void {
-        this._duration = value;
+    public writeValue(value: moment.Duration | string): void {
+        if (value === null || value === undefined) {
+            this.duration = null;
+        } else if (moment.isMoment(value)) {
+            this.duration = value as moment.Duration;
+        } else {
+            this.duration = moment.duration(value);
+        }
         this._setValueAndUnit();
     }
 
@@ -97,9 +103,16 @@ export class DurationPickerComponent implements ControlValueAccessor {
 
     private _getDuration(): moment.Duration {
         const duration = moment.duration(this.value, this.unit);
+        return this._isDurationUnlimited(duration) ? null : duration;
+    }
+
+    private _isDurationUnlimited(duration: moment.Duration): boolean {
+        if (!duration) {
+            return true;
+        }
         const days = duration.asDays();
         // Days must not be greater than threshold, otherwise just set it to unlimited
-        return days > UNLIMITED_DURATION_THRESHOLD ? null : duration;
+        return days > UNLIMITED_DURATION_THRESHOLD;
     }
 
     /**
@@ -108,9 +121,8 @@ export class DurationPickerComponent implements ControlValueAccessor {
      * otherwise next smaller unit will be checked until last unit.
      */
     private _setValueAndUnit() {
-        this.unlimited = !this.duration as boolean;
-
-        if (this.duration) {
+        this.unlimited = this._isDurationUnlimited(this.duration);
+        if (!this.unlimited && moment.isMoment(this.duration)) {
             const days = this.duration.asDays();
             const hours = this.duration.asHours();
             const minutes = this.duration.asMinutes();

@@ -7,6 +7,7 @@
 const poolTemplate = JSON.parse(require("app/utils/monaco-languages/json/pool.template.json"));
 const jobTemplate = JSON.parse(require("app/utils/monaco-languages/json/job.template.json"));
 const taskTemplate = JSON.parse(require("app/utils/monaco-languages/json/task.template.json"));
+const jobscheduleTemplate = JSON.parse(require("app/utils/monaco-languages/json/jobschedule.template.json"));
 
 export class JsonLanguage {
     public static define() {
@@ -25,6 +26,11 @@ export class JsonLanguage {
                 uri: "//internal/task.template.json",
                 fileMatch: [ "*.task.batch.json" ],
                 schema: taskTemplate,
+            },
+            {
+                uri: "//internal/jobscheduleTemplate.template.json",
+                fileMatch: [ "*.jobschedule.batch.json" ],
+                schema: jobscheduleTemplate,
             }],
         });
     }

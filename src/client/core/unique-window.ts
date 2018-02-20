@@ -62,6 +62,14 @@ export abstract class GenericWindow {
         }
     }
 
+    public close() {
+        this.expectedClose = true;
+        if (this._window) {
+            this._window.close();
+            this._window = null;
+        }
+    }
+
     public destroy() {
         this.expectedClose = true;
         if (this._window) {

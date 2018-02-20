@@ -142,7 +142,11 @@ export class MainNavigationComponent implements OnInit {
 
     private _update() {
         if (OS.isWindows()) {
-            this._autoUpdater.quitAndInstall();
+            setImmediate(() => {
+                this.remote.electronApp.removeAllListeners("window-all-closed");
+                this.remote.getCurrentWindow().close();
+                this._autoUpdater.quitAndInstall();
+            });
         } else {
             this.shell.openExternal("https://azure.github.io/BatchLabs/");
         }

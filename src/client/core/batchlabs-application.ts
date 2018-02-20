@@ -3,8 +3,12 @@ import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
 import { BlIpcMain } from "client/core";
+import { localStorage } from "client/core/local-storage";
+import { ProxySettingsManager } from "client/proxy";
+import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { BatchLabsLink, Constants } from "common";
 import { IpcEvent } from "common/constants";
+import { ProxyCredentials } from "get-proxy-settings";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants as ClientConstants } from "../client-constants";
 import { logger } from "../logger";
@@ -31,6 +35,7 @@ export class BatchLabsApplication {
     public pythonServer = new PythonRpcServerProcess();
     public aadService = new AADService(this);
     public state: Observable<BatchLabsState>;
+    public proxySettings = new ProxySettingsManager(this, localStorage);
     private _state = new BehaviorSubject<BatchLabsState>(BatchLabsState.Loading);
 
     constructor(public autoUpdater: AppUpdater) {
@@ -45,6 +50,7 @@ export class BatchLabsApplication {
         await this.aadService.init();
         this._registerProtocol();
         this.setupProcessEvents();
+        await this.proxySettings.init();
     }
 
     /**
@@ -109,15 +115,6 @@ export class BatchLabsApplication {
             this.start();
         });
 
-        // Quit when all windows are closed.
-        app.on("window-all-closed", () => {
-            // On macOS it is common for applications and their menu bar
-            // to stay active until the user quits explicitly with Cmd + Q
-            if (process.platform !== "darwin") {
-                app.quit();
-            }
-        });
-
         app.on("activate", () => {
             // On macOS it's common to re-create a window in the app when the
             // dock icon is clicked and there are no other windows open.
@@ -133,6 +130,24 @@ export class BatchLabsApplication {
         process.on("uncaughtException" as any, (error: Error) => {
             logger.error("There was a uncaught exception", error);
             this.recoverWindow.createWithError(error.message);
+        });
+
+        process.on("unhandledRejection", r => {
+            logger.error("Unhandled promise error:", r);
+        });
+        app.on("window-all-closed", () => {
+            // Required or electron will close when closing last open window before next one open
+        });
+
+        app.on("login", async (event, webContents, request, authInfo, callback) => {
+            event.preventDefault();
+            try {
+                const { username, password } = await this.proxySettings.credentials();
+                callback(username, password);
+            } catch (e) {
+                logger.error("Unable to retrieve credentials for proxy settings", e);
+                this.quit();
+            }
         });
     }
 
@@ -187,6 +202,12 @@ export class BatchLabsApplication {
 
     public checkForUpdates(): Promise<UpdateCheckResult> {
         return autoUpdater.checkForUpdates();
+    }
+
+    public askUserForProxyCredentials(): Promise<ProxyCredentials> {
+        const proxyCredentials = new ProxyCredentialsWindow(this);
+        proxyCredentials.create();
+        return proxyCredentials.credentials;
     }
 
     private _registerProtocol() {

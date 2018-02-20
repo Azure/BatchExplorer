@@ -51,7 +51,7 @@ export class ArmListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams
         }
 
         if (options.maxResults) {
-            search.set("maxResults", options.maxResults.toString());
+            search.set("$top", options.maxResults.toString());
         }
 
         for (const key of Object.keys(options.attributes)) {
