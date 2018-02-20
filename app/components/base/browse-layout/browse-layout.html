@@ -1,4 +1,4 @@
-<div class="layout-container" [class.filtering]="showAdvancedFilter | async">
+<div class="layout-container" [class.filtering]="showAdvancedFilter">
     <section class="list-view">
         <div class="left-pane">
             <div class="quick-filter-content">
@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div #listContent class="bl-list-content">
-                <bl-scrollable (scrollBottom)="listScrolledToBottom.emit($event)">
+                <bl-scrollable (scrollBottom)="listScrolledToBottom($event)">
                     <ng-content select="[blBrowseLayoutList]"></ng-content>
                 </bl-scrollable>
             </div>
@@ -39,7 +39,7 @@
             <div class="content-wrapper">
                 <div style="position:relative">
                     <ng-content select="[bl-show-content]"></ng-content>
-                    <div class="advanced-filter-content" [hidden]="!(showAdvancedFilter | async)" [@slideIn]="showAdvancedFilter" class="advanced-filter-content"
+                    <div class="advanced-filter-content" [hidden]="!showAdvancedFilter" class="advanced-filter-content"
                         #advancedFilterContent>
                         <ng-content select="[bl-show-advanced-filter]"></ng-content>
                     </div>

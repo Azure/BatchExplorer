@@ -20,5 +20,12 @@
     </div>
 </bl-list-and-show-layout> -->
 <bl-browse-layout>
+    <div bl-list-title>
+        Pools
+    </div>
+    <div bl-list-buttons>
+        <bl-button icon="fa fa-plus spin-hover" title="Add a pool" [action]="addPool" type="plain" color="light" permission="write">
+        </bl-button>
+    </div>
     <bl-pool-list blBrowseLayoutList></bl-pool-list>
 </bl-browse-layout>

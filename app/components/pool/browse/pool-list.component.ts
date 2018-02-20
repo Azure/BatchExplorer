@@ -86,6 +86,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     }
 
     public handleFilter(filter: Filter) {
+        console.log("Handle new filter");
         if (filter.isEmpty()) {
             this.data.setOptions({});
         } else {

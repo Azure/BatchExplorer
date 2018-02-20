@@ -5,7 +5,6 @@ import { ListBaseComponent } from "app/components/base/browse-layout/list-base";
     selector: "[blBrowseLayoutList]",
 })
 export class BrowseLayoutListDirective {
-    constructor( @Host() @Self() private component: ListBaseComponent) {
-        console.log("List component", this.component);
+    constructor( @Host() @Self() public component: ListBaseComponent) {
     }
 }
