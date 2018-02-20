@@ -33,7 +33,6 @@ import { NotificationModule } from "./notifications";
 import { PinnedDropDownComponent } from "./pinned-entity-dropdown";
 import { PropertyListModule } from "./property-list";
 import { QuickListModule } from "./quick-list";
-import { RefreshButtonComponent } from "./refresh-btn";
 import { ScrollableModule } from "./scrollable";
 import { SidebarModule } from "./sidebar";
 import { SimpleDialogComponent } from "./simple-dialog";
@@ -92,7 +91,6 @@ const components = [
     SimpleLoadingComponent,
     SimpleDialogComponent,
     LoadingComponent,
-    RefreshButtonComponent,
     ListLoadingComponent,
     DeleteSelectedItemsDialogComponent,
 ];
