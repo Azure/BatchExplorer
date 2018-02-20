@@ -9,6 +9,7 @@ bl-property-content {
     overflow: hidden;
     display: block;
     width: 100%;
+    min-height: 24px;
 
     &:not(.wrap) {
         white-space: nowrap;
