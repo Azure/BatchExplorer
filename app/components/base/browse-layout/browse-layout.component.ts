@@ -5,6 +5,7 @@ import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
+import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-filter";
 import { BrowseLayoutListDirective } from "./browse-layout-list";
 import "./browse-layout.scss";
 
@@ -19,7 +20,11 @@ export class BrowseLayoutComponent implements AfterViewInit {
      * @default id.
      */
     @Input() public quickSearchField = "id";
-    @ContentChild(BrowseLayoutListDirective) public listDirective: BrowseLayoutListDirective;
+
+    @ContentChild(BrowseLayoutListDirective)
+    public listDirective: BrowseLayoutListDirective;
+    @ContentChild(BrowseLayoutAdvancedFilterDirective)
+    public advancedFilterDirective: BrowseLayoutAdvancedFilterDirective;
 
     public quickSearchQuery = new FormControl("");
     public filter: Filter = FilterBuilder.none();
@@ -47,6 +52,7 @@ export class BrowseLayoutComponent implements AfterViewInit {
     }
 
     public ngAfterViewInit() {
+        console.log("This adv", this.advancedFilterDirective);
         if (!this.listDirective) {
             throw new Error("BrowseLayout expect an list component to have the directive blBrowseLayoutList");
         }
@@ -74,6 +80,11 @@ export class BrowseLayoutComponent implements AfterViewInit {
     public listScrolledToBottom() {
         // console.log("TODO");
         // TODO-TIM
+    }
+
+    public advancedFilterChanged(filter: Filter) {
+        this.advancedFilter = filter;
+        this._updateFilter();
     }
 
     private _updateFilter() {

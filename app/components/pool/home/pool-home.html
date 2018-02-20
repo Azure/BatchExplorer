@@ -19,7 +19,7 @@
         </bl-pool-advanced-filter>
     </div>
 </bl-list-and-show-layout> -->
-<bl-browse-layout>
+<bl-browse-layout #layout>
     <div bl-list-title>
         Pools
     </div>
@@ -28,4 +28,6 @@
         </bl-button>
     </div>
     <bl-pool-list blBrowseLayoutList></bl-pool-list>
+    <bl-pool-advanced-filter blBrowseLayoutAdvancedFilter (change)="layout.advancedFilterChanged($event)">
+    </bl-pool-advanced-filter>
 </bl-browse-layout>

@@ -21,12 +21,12 @@
                     </div>
                     <input [formControl]="quickSearchQuery" placeholder="Search" #quickSearchInput (keydown)="handleKeyPressedInQuickSearch($event)"
                     />
-                    <bl-clickable class="toggle-advanced-filter" (do)="toggleFilter()" *ngIf="advancedFilterContent?.children.length > 0">
+                    <bl-clickable class="toggle-advanced-filter" (do)="toggleFilter()" *ngIf="advancedFilterDirective">
                         <i class="fa fa-filter"></i>
                     </bl-clickable>
                 </div>
             </div>
-            <div #listContent class="bl-list-content">
+            <div class="bl-list-content">
                 <bl-scrollable (scrollBottom)="listScrolledToBottom($event)">
                     <ng-content select="[blBrowseLayoutList]"></ng-content>
                 </bl-scrollable>
@@ -39,9 +39,8 @@
             <div class="content-wrapper">
                 <div style="position:relative">
                     <ng-content select="[bl-show-content]"></ng-content>
-                    <div class="advanced-filter-content" [hidden]="!showAdvancedFilter" class="advanced-filter-content"
-                        #advancedFilterContent>
-                        <ng-content select="[bl-show-advanced-filter]"></ng-content>
+                    <div class="advanced-filter-content" [hidden]="!showAdvancedFilter">
+                        <ng-content select="[blBrowseLayoutAdvancedFilter]"></ng-content>
                     </div>
                 </div>
             </div>
