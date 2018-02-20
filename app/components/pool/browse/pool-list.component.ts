@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, forwardRef,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild,
 } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -7,12 +7,10 @@ import { autobind } from "app/core";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
 import { ListBaseComponent, listBaseProvider } from "app/components/base/browse-layout/list-base";
 import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
-import { ListOrTableBase } from "app/components/base/selectable-list";
 import { SidebarManager } from "app/components/base/sidebar";
 import { TableComponent, TableConfig } from "app/components/base/table";
 import { Pool } from "app/models";
@@ -22,7 +20,6 @@ import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
 import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action";
-import { DeletePoolTask } from "../action/delete";
 
 @Component({
     selector: "bl-pool-list",
@@ -45,29 +42,11 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     @ViewChild(QuickListComponent)
     public list: QuickListComponent;
 
-    @Input()
-    public quickList: boolean;
-
-    @Input()
-    public set filter(filter: Filter) {
-        this._filter = filter;
-
-        if (filter.isEmpty()) {
-            this.data.setOptions({});
-        } else {
-            this.data.setOptions({ filter: filter.toOData() });
-        }
-
-        this.data.fetchNext();
-    }
-    public get filter(): Filter { return this._filter; }
-
     public tableConfig: TableConfig = {
         showCheckbox: true,
     };
 
     public pools: List<PoolDecorator> = List([]);
-    private _filter: Filter;
     private _subs: Subscription[] = [];
 
     constructor(
@@ -76,11 +55,11 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         router: Router,
         private dialog: MatDialog,
         private sidebarManager: SidebarManager,
-        private pinnedEntityService: PinnedEntityService,
-        private taskManager: BackgroundTaskService) {
+        changeDetector: ChangeDetectorRef,
+        private pinnedEntityService: PinnedEntityService) {
 
         // super(dialog);
-        super();
+        super(changeDetector);
         this.data = this.poolService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 
@@ -104,6 +83,16 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     @autobind()
     public refresh(): Observable<any> {
         return this.data.refresh();
+    }
+
+    public handleFilter(filter: Filter) {
+        if (filter.isEmpty()) {
+            this.data.setOptions({});
+        } else {
+            this.data.setOptions({ filter: filter.toOData() });
+        }
+
+        this.data.fetchNext();
     }
 
     public poolStatus(pool: Pool): QuickListItemStatus {

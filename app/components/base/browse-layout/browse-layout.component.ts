@@ -15,5 +15,6 @@ export class BrowseLayoutComponent implements AfterViewInit {
         if (!this.listDirective) {
             throw new Error("BrowseLayout expect an list component to have the directive blBrowseLayoutList");
         }
+        this.listDirective.component.quicklist = true;
     }
 }
