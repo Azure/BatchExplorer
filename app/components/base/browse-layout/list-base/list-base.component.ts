@@ -17,7 +17,7 @@ export abstract class ListBaseComponent {
     }
     public get filter() { return this._filter; }
     private _filter: Filter;
-    private _quicklist: boolean;
+    private _quicklist: boolean = false;
 
     constructor(protected changeDetector: ChangeDetectorRef) {
 

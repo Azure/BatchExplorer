@@ -33,14 +33,14 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     public data: ListView<Pool, PoolListParams>;
 
     // Inheritance bugs https://github.com/angular/angular/issues/5415
-    @Output()
-    public itemSelected: EventEmitter<any>;
+    // @Output()
+    // public itemSelected: EventEmitter<any>;
 
-    @ViewChild(TableComponent)
-    public table: TableComponent;
+    // @ViewChild(TableComponent)
+    // public table: TableComponent;
 
-    @ViewChild(QuickListComponent)
-    public list: QuickListComponent;
+    // @ViewChild(QuickListComponent)
+    // public list: QuickListComponent;
 
     public tableConfig: TableConfig = {
         showCheckbox: true,
