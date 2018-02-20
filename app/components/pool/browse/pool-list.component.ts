@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild,
+    ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, forwardRef,
 } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -8,6 +8,7 @@ import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
+import { ListBaseComponent, listBaseProvider } from "app/components/base/browse-layout/list-base";
 import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
@@ -27,8 +28,9 @@ import { DeletePoolTask } from "../action/delete";
     selector: "bl-pool-list",
     templateUrl: "pool-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [listBaseProvider(() => PoolListComponent)],
 })
-export class PoolListComponent extends ListOrTableBase implements OnInit, OnDestroy {
+export class PoolListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
     public status: Observable<LoadingStatus>;
     public data: ListView<Pool, PoolListParams>;
@@ -51,7 +53,7 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         this._filter = filter;
 
         if (filter.isEmpty()) {
-            this.data.setOptions({ });
+            this.data.setOptions({});
         } else {
             this.data.setOptions({ filter: filter.toOData() });
         }
@@ -72,12 +74,13 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         private poolService: PoolService,
         activatedRoute: ActivatedRoute,
         router: Router,
-        dialog: MatDialog,
+        private dialog: MatDialog,
         private sidebarManager: SidebarManager,
         private pinnedEntityService: PinnedEntityService,
         private taskManager: BackgroundTaskService) {
 
-        super(dialog);
+        // super(dialog);
+        super();
         this.data = this.poolService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 
@@ -120,11 +123,12 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
     }
 
     public deleteSelected() {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeletePoolTask(this.poolService, this.selectedItems);
-            task.start(backgroundTask);
-            return task.waitingDone;
-        });
+        // TODO-TIM fix this
+        // this.taskManager.startTask("", (backgroundTask) => {
+            // const task = new DeletePoolTask(this.poolService, this.selectedItems);
+            // task.start(backgroundTask);
+            // return task.waitingDone;
+        // });
     }
 
     public deletePool(poolDecorator: PoolDecorator) {

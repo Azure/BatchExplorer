@@ -1,4 +1,4 @@
-<bl-list-and-show-layout #layout (listScrolledToBottom)="poolList.onScrollToBottom()" [list]="poolList">
+<!-- <bl-list-and-show-layout #layout (listScrolledToBottom)="poolList.onScrollToBottom()" [list]="poolList">
     <div bl-list-title>
         Pools
     </div>
@@ -18,4 +18,7 @@
         <bl-pool-advanced-filter (change)="layout.advancedFilterChanged($event)">
         </bl-pool-advanced-filter>
     </div>
-</bl-list-and-show-layout>
+</bl-list-and-show-layout> -->
+<bl-browse-layout>
+    <bl-pool-list blBrowseLayoutList></bl-pool-list>
+</bl-browse-layout>

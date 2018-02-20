@@ -1,5 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, ContentChild } from "@angular/core";
 
+import { BrowseLayoutListDirective } from "./browse-layout-list";
 import "./browse-layout.scss";
 
 @Component({
@@ -7,5 +8,5 @@ import "./browse-layout.scss";
     templateUrl: "browse-layout.html",
 })
 export class BrowseLayoutComponent {
-
+    @ContentChild(BrowseLayoutListDirective) public listDirective;
 }
