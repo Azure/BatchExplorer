@@ -53,6 +53,7 @@ nsis:
 linux:
   category: Development
   target:
+    - "AppImage"
     - "deb"
     - "rpm"
 
