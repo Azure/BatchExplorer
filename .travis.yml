@@ -6,7 +6,7 @@ addons:
   apt:
     packages:
       - libgnome-keyring-dev
-      - openjpeg-tools # or libopenjp2-tools
+      # - openjpeg-tools # or libopenjp2-tools
       - graphicsmagick
       - libreadline6
       - xz-utils
