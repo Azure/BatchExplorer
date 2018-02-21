@@ -42,7 +42,6 @@ jasmine.getEnv().addReporter({
             }
         };
 
-
     },
     specDone: (result) => {
         GenericView.prototype.init = lastInit;
@@ -69,7 +68,6 @@ jasmine.getEnv().addReporter({
     },
 });
 
-
 beforeEach(() => {
     const subscribe = Observable.prototype.subscribe;
     lastSubscribe = subscribe;
@@ -78,9 +76,6 @@ beforeEach(() => {
         const sub = subscribe.bind(this)(...args);
         sub.id = counter++;
         subscriptionCreated[sub.id] = {
-            // description: result.fullName,
-            // stack: new Error().stack,
-            // obs: this,
             sub: sub,
         };
         return sub;
