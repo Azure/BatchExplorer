@@ -21,6 +21,7 @@ export class MainNavigationComponent implements OnInit {
     public selectedAccountAlias: string = "";
     public currentUserName: string = "";
     public update: any;
+
     private _autoUpdater: AppUpdater;
     private _showNotification = false;
 
@@ -82,6 +83,8 @@ export class MainNavigationComponent implements OnInit {
             new ContextMenuItem({ label: "Report a bug or feature request", click: () => this._openGithubIssues() }),
             new ContextMenuItem({ label: "About", click: () => this._showAboutPage() }),
             new ContextMenuSeparator(),
+            new ContextMenuItem({ label: "View theme colors", click: () => this._gotoThemeColors() }),
+            new ContextMenuSeparator(),
             new ContextMenuItem({ label: "Logout", click: () => this._logout() }),
         ];
 
@@ -98,6 +101,10 @@ export class MainNavigationComponent implements OnInit {
 
     private _goToSettings() {
         this.router.navigate(["/settings"]);
+    }
+
+    private _gotoThemeColors() {
+        this.router.navigate(["/theme/colors"]);
     }
 
     private _openThirdPartyNotices() {
@@ -135,7 +142,11 @@ export class MainNavigationComponent implements OnInit {
 
     private _update() {
         if (OS.isWindows()) {
-            this._autoUpdater.quitAndInstall();
+            setImmediate(() => {
+                this.remote.electronApp.removeAllListeners("window-all-closed");
+                this.remote.getCurrentWindow().close();
+                this._autoUpdater.quitAndInstall();
+            });
         } else {
             this.shell.openExternal("https://azure.github.io/BatchLabs/");
         }

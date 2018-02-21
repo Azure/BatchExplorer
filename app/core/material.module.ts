@@ -3,12 +3,13 @@ import { NgModule } from "@angular/core";
 import {
     MatAutocompleteModule,
     MatButtonModule,
-    MatCardModule,
     MatCheckboxModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatIconModule,
     MatInputModule,
     MatMenuModule,
+    MatNativeDateModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatRadioModule,
@@ -32,11 +33,12 @@ const modules = [
     MatSelectModule,
     MatMenuModule,
     MatSlideToggleModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatSidenavModule,
-    MatCardModule,
     MatInputModule,
     PortalModule,
+    MatNativeDateModule,
 ];
 
 @NgModule({

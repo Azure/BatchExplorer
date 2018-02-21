@@ -15,7 +15,7 @@ export interface CreateFileGroupModel {
 }
 
 export function createFileGroupFormToJsonData(formData: CreateFileGroupModel): any {
-    let data: any = {
+    const data: any = {
         name: formData.name,
         folder: formData.folder,
         includeSubDirectories: formData.includeSubDirectories,

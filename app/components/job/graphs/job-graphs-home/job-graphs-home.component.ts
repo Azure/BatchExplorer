@@ -31,8 +31,11 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
     public jobId: string;
     public tasks: List<Task> = List([]);
     public loading = false;
+    public loadingFromCache = false;
     public currentGraph = AvailableGraph.runningTime;
     public description: string;
+    public taskLoadedProgress = 0;
+    public taskCount: number;
 
     private _data: EntityView<Job, JobParams>;
 
@@ -59,20 +62,25 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
             this._data.fetch();
             this.updateTasks().subscribe();
         });
+        this._updateTaskCount();
     }
 
     public updateTasks(force = false): Observable<any> {
         this.loading = true;
 
-        return Observable.fromPromise(this._tryLoadTasksFromCache(force)).flatMap((success) => {
+        const obs =  Observable.fromPromise(this._tryLoadTasksFromCache(force)).flatMap((success) => {
             if (success) {
                 this.loading = false;
                 return Observable.of(null);
             }
+            this.taskLoadedProgress = 0;
+            this._updateTaskCount();
             const obs = this.taskService.listAll(this.jobId, {
                 select: "id,executionInfo,nodeInfo",
                 filter: FilterBuilder.prop("state").eq(TaskState.completed).toOData(),
                 pageSize: 1000,
+            }, (x) => {
+                this.taskLoadedProgress = x;
             });
 
             obs.subscribe({
@@ -88,6 +96,8 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
             return obs;
 
         }).share();
+        obs.subscribe();
+        return obs;
     }
 
     public ngOnDestroy() {
@@ -114,6 +124,12 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
         }));
     }
 
+    private _updateTaskCount() {
+        this.jobService.getTaskCounts(this.jobId).subscribe((taskCount) => {
+            this.taskCount = taskCount.completed;
+        });
+    }
+
     private _updateDescription() {
         switch (this.currentGraph) {
             case AvailableGraph.runningTime:
@@ -136,11 +152,14 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
         if (force) {
             return false;
         }
+        this.loadingFromCache = true;
         const data = await this.cacheDataService.read(this._cacheKey);
         if (data) {
             this.tasks = List(data.map(x => new Task(x)));
+            this.loadingFromCache = false;
             return true;
         }
+        this.loadingFromCache = false;
         return false;
     }
 }

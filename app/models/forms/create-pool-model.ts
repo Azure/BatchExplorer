@@ -56,11 +56,12 @@ export interface CreatePoolModel {
     appLicenses: string[];
     appPackages: PackageReferenceModel[];
     inboundNATPools: InboundNATPool[];
+    subnetId: string;
 }
 
 export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
     const outputScale: PoolScaleModel = output.scale || {} as any;
-    let data: any = {
+    const data: any = {
         id: output.id,
         displayName: output.displayName,
         vmSize: output.vmSize,
@@ -107,6 +108,13 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
             },
         };
     }
+
+    if (output.subnetId) {
+        data.networkConfiguration = {
+            subnetId: output.subnetId,
+            ...data.networkConfiguration,
+        };
+    }
     return new PoolCreateDto(data);
 }
 
@@ -141,6 +149,7 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         appLicenses: pool.applicationLicenses || [],
         appPackages: pool.applicationPackageReferences,
         inboundNATPools: pool.networkConfiguration && pool.networkConfiguration.endpointConfiguration ?
-            pool.networkConfiguration.endpointConfiguration.inboundNATPools : null,
+            pool.networkConfiguration.endpointConfiguration.inboundNATPools : [],
+        subnetId: pool.networkConfiguration && pool.networkConfiguration.subnetId,
     };
 }

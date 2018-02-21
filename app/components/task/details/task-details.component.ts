@@ -18,7 +18,7 @@ import { DeleteTaskDialogComponent, TaskCreateBasicDialogComponent, TerminateTas
 })
 export class TaskDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
-        let label = tab ? `Task - ${tab}` : "Task";
+        const label = tab ? `Task - ${tab}` : "Task";
         return {
             name: id,
             label,
@@ -95,7 +95,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public terminateTask() {
-        let config = new MatDialogConfig();
+        const config = new MatDialogConfig();
         const dialogRef = this.dialog.open(TerminateTaskDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.componentInstance.taskId = this.taskId;
@@ -106,7 +106,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public deleteTask() {
-        let config = new MatDialogConfig();
+        const config = new MatDialogConfig();
         const dialogRef = this.dialog.open(DeleteTaskDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.componentInstance.taskId = this.taskId;

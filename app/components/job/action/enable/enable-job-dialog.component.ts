@@ -18,7 +18,7 @@ export class EnableJobDialogComponent {
 
     @autobind()
     public ok() {
-        let options: any = {};
+        const options: any = {};
 
         return this.jobService.enable(this.jobId, options);
     }

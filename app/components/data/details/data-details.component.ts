@@ -19,7 +19,7 @@ import { DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "..
 })
 export class DataDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
-        let label = tab ? `File group - ${tab}` : "File group";
+        const label = tab ? `File group - ${tab}` : "File group";
         return {
             name: id,
             label,

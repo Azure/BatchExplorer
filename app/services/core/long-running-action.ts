@@ -113,7 +113,7 @@ export abstract class LongRunningDeleteAction extends LongRunningAction {
 
     protected wait(taskManager?: BackgroundTaskService) {
         this._updateWaitingMessage();
-        for (let id of this.itemIds) {
+        for (const id of this.itemIds) {
             this.waitForDelete(id, taskManager);
         }
     }
@@ -158,7 +158,7 @@ export abstract class LongRunningUploadAction extends LongRunningAction {
 
     protected wait(taskManager?: BackgroundTaskService) {
         this._updateWaitingMessage();
-        for (let stream of this.fileStreams) {
+        for (const stream of this.fileStreams) {
             this.waitForUpload(stream, taskManager);
         }
     }

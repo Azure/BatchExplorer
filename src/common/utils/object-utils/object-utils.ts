@@ -15,7 +15,7 @@ export class ObjectUtils {
      */
     public static slice(obj: { [key: string]: any }, keys: string[]): { [key: string]: any } {
         const out = {};
-        for (let key of keys) {
+        for (const key of keys) {
             if (key in obj) {
                 out[key] = obj[key];
             }
@@ -30,7 +30,7 @@ export class ObjectUtils {
      */
     public static except(obj: { [key: string]: any }, keys: string[]): { [key: string]: any } {
         const out = Object.assign({}, obj);
-        for (let key of keys) {
+        for (const key of keys) {
             delete out[key];
         }
         return out;
@@ -43,7 +43,7 @@ export class ObjectUtils {
      */
     public static compact(obj: { [key: string]: any }): { [key: string]: any } {
         const out = {};
-        for (let key of Object.keys(obj)) {
+        for (const key of Object.keys(obj)) {
             if (obj[key] !== null && obj[key] !== undefined) {
                 out[key] = obj[key];
             }

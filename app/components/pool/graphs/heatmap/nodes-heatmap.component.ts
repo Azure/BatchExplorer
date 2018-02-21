@@ -367,9 +367,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     private _computeDimensions() {
         const area = this._height * this._width;
         const areaPerTile = area / this._nodes.size;
-        let estimatedSize = Math.floor(Math.sqrt(areaPerTile));
-        let rows = this._height / estimatedSize;
-        let columns = this._width / estimatedSize;
+        const estimatedSize = Math.floor(Math.sqrt(areaPerTile));
+        const rows = this._height / estimatedSize;
+        const columns = this._width / estimatedSize;
         this._computeBestDimension(rows, columns);
 
         const dimensions = this.dimensions;

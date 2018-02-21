@@ -1,7 +1,9 @@
-<mat-card [class]="type">
+<bl-card [class]="type">
     <div class="summary-container" [ngClass]="height" (click)="showDetails = !showDetails && details.children.length !== 0" [class.expandable]="details.children.length !== 0">
         <ng-content select="[code]"></ng-content>
-        <ng-content select="[message]"></ng-content>
+        <div class="message">
+            <ng-content select="[message]"></ng-content>
+        </div>
         <div class="quick-fix-btn-container noselect" *ngIf="fixMessage" (mouseleave)="showOtherFixes = false">
             <div class="btn" (click)="triggerFix()" [ngSwitch]="state" [class.disabled]="state !== errorStates.Error">
                 <span *ngSwitchCase="errorStates.Error">Fix: {{ fixMessage }}</span>
@@ -26,4 +28,4 @@
     <div class="details-container" [hidden]="!showDetails" #details>
         <ng-content select="[details]"></ng-content>
     </div>
-</mat-card>
+</bl-card>

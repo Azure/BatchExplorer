@@ -5,7 +5,7 @@ bl-banner {
     margin-top: 10px;
 }
 
-bl-banner > mat-card {
+bl-banner > bl-card {
     padding: 0;
     display: block;
 
@@ -33,9 +33,14 @@ bl-banner > mat-card {
             align-items: center;
         }
 
-        > [message] {
+        > .message {
             padding: 5px 24px;
             flex: 1;
+            overflow-wrap: break-word;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            min-width: 10px;
         }
 
         &.expand > [message] {
@@ -135,17 +140,17 @@ bl-banner > mat-card {
     }
 }
 
-bl-banner > mat-card.error {
+bl-banner > bl-card.error {
     @include banner-scheme(map-get($danger, 500), map-get($danger, 800));
     color: $whiteSmoke-darker;
 }
 
-bl-banner > mat-card.warning {
+bl-banner > bl-card.warning {
     @include banner-scheme(map-get($warn, 500), map-get($warn, 800));
     color: $whiteSmoke-darker;
 }
 
-bl-banner > mat-card.notice {
+bl-banner > bl-card.notice {
     @include banner-scheme($concreteGray, $dusty-grey );
     color: $genericGray;
 }

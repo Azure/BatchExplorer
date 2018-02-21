@@ -1,8 +1,7 @@
 @import "app/styles/variables";
 
 bl-summary-card {
-    box-shadow: 1px 1px 5px 0 $alto;
-    background: white;
+    background: $card-background;
     display: flex;
 
     > .actions {

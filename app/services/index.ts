@@ -13,6 +13,7 @@ export * from "./fs.service";
 export * from "./github-data.service";
 export * from "./http-upload-service";
 export * from "./job-service";
+export * from "./job-schedule-service";
 export * from "./job-hook-task.service";
 export * from "./local-file-storage.service";
 export * from "./monaco-loader.service";
@@ -40,6 +41,7 @@ export * from "./storage-account.service";
 export * from "./storage-client.service";
 export * from "./predefined-formula.service";
 export * from "./themes";
+export * from "./network";
 
 // This needs to be last(as it does dynamic inject which problably have dependencies on above services)
 export * from "./command-service";

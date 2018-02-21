@@ -1,6 +1,7 @@
 import { BatchLabsApplication } from "client/core//batchlabs-application";
 import { Deferred } from "common";
 import { SecureUtils } from "common/utils";
+import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
 import * as AdalConstants from "../adal-constants";
 
@@ -28,16 +29,26 @@ interface AuthorizeQueueItem {
     deferred: Deferred<any>;
 }
 
+export enum AuthenticationState {
+    None,
+    UserInput,
+    Authenticated,
+}
+
 /**
  * This will open a new window at the /authorize endpoint to get the user
  */
 export class AuthenticationService {
+    public state: Observable<AuthenticationState>;
     // @ts-ignore
     private _waitingForAuth = false;
     private _authorizeQueue: AuthorizeQueueItem[] = [];
     private _currentAuthorization: AuthorizeQueueItem = null;
+    private _state = new BehaviorSubject(AuthenticationState.None);
 
-    constructor(private app: BatchLabsApplication, private config: AADConfig) { }
+    constructor(private app: BatchLabsApplication, private config: AADConfig) {
+        this.state = this._state.asObservable();
+    }
     /**
      * Authorize the user.
      * @param silent If set to true it will not ask the user for prompt. (i.e prompt=none for AD)
@@ -91,7 +102,7 @@ export class AuthenticationService {
 
         if (!silent) {
             authWindow.show();
-            this.app.splashScreen.hide();
+            this._state.next(AuthenticationState.UserInput);
         }
     }
 
@@ -143,6 +154,7 @@ export class AuthenticationService {
         if ((params as any).error) {
             auth.deferred.reject(params as AuthorizeError);
         } else {
+            this._state.next(AuthenticationState.Authenticated);
             auth.deferred.resolve(params as AuthorizeResult);
         }
         this._authorizeNext();
@@ -161,7 +173,7 @@ export class AuthenticationService {
     private _getRedirectUrlParams(url: string): AuthorizeResult | AuthorizeError {
         const segments = url.split("#");
         const params = {};
-        for (let str of segments[1].split("&")) {
+        for (const str of segments[1].split("&")) {
             const [key, value] = str.split("=");
             params[key] = value;
         }
@@ -187,9 +199,6 @@ export class AuthenticationService {
     private _closeWindow() {
         const window = this.app.authenticationWindow;
         if (window) {
-            if (window.isVisible()) {
-                this.app.splashScreen.show();
-            }
             window.destroy();
         }
     }

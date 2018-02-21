@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewContainerRef, forwardRef } from "@angular/core";
+import { Component, OnInit, ViewChild, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
@@ -37,7 +37,6 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     private _eulaRead: boolean = false;
 
     constructor(
-        private viewContainerRef: ViewContainerRef,
         private dialog: MatDialog) {
     }
 
@@ -102,8 +101,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     }
 
     public viewEula(license: ApplicationLicense) {
-        let config = new MatDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
+        const config = new MatDialogConfig();
         const dialogRef = this.dialog.open(LicenseEulaDialogComponent, config);
         dialogRef.componentInstance.license = license;
     }

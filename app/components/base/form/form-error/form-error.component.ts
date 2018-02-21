@@ -47,7 +47,7 @@ export class FormErrorComponent implements OnChanges, OnDestroy {
 
     public retrieveControl(): AbstractControl {
         let current: AbstractControl = this.formGroup.control;
-        for (let segment of this.path) {
+        for (const segment of this.path) {
             current = current.get(segment);
             if (!current) {
                 throw new Error(`Path ${this.path} for bl-error is invalid,`

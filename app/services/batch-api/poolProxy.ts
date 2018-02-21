@@ -44,7 +44,7 @@ export class PoolProxy {
      * @param options: Optional Parameters.
      */
     public resize(poolId: string, target: any, options?: any): Promise<any> {
-        let resizeBody: any = {};
+        const resizeBody: any = {};
         resizeBody.targetDedicatedNodes = Number(target.targetDedicatedNodes);
         resizeBody.targetLowPriorityNodes = Number(target.targetLowPriorityNodes);
 

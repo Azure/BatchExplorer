@@ -95,13 +95,13 @@ export class MockAuthenticationWindow extends MockUniqueWindow {
     }
 
     public notifyRedirect(newUrl) {
-        for (let callback of this._onRedirectCallbacks) {
+        for (const callback of this._onRedirectCallbacks) {
             callback(newUrl);
         }
     }
 
     public notifyClose() {
-        for (let callback of this._onCloseCallbacks) {
+        for (const callback of this._onCloseCallbacks) {
             callback();
         }
     }

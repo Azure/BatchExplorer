@@ -68,7 +68,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         };
 
         // subscribe to the application data proxy
-        this._subscriptions.push(this._data.items.subscribe((applications) => {
+        this._data.items.subscribe((applications) => {
             this._applicationMap = {};
             if (applications.size > 0) {
                 this._mapApplicationPackages(applications);
@@ -83,7 +83,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
                     index++;
                 });
             }
-        }));
+        });
 
         // subscribe to the form change events
         this._subscriptions.push(this.items.valueChanges.subscribe((references: PackageReference[]) => {
@@ -98,7 +98,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
             if (this._propagateChange) {
                 const cloned = this.items.value.slice(0, -1).map(item => {
-                    let clone = JSON.parse(JSON.stringify(item));
+                    const clone = JSON.parse(JSON.stringify(item));
                     if (clone.version === this._defaultVersionValue) {
                         clone.version = null;
                     }
@@ -114,6 +114,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     }
 
     public ngOnDestroy() {
+        this._data.dispose();
         this._subscriptions.forEach(x => x.unsubscribe());
     }
 
@@ -121,7 +122,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         this._writingValue = true;
         this.items.controls = [];
         if (references) {
-            for (let reference of references) {
+            for (const reference of references) {
                 this.addNewItem(reference.applicationId, reference.version || this._defaultVersionValue);
             }
         } else {
@@ -148,7 +149,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         }
 
         const tempMap: any = {};
-        for (let reference of control.value) {
+        for (const reference of control.value) {
             // TODO: remove lowerCase when API is fixed.
             const application = reference.applicationId.toLowerCase();
             const key = `${application}-${reference.version}`;

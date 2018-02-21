@@ -20,7 +20,7 @@ import {
 })
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
-        let label = tab ? `Application - ${tab}` : "Application";
+        const label = tab ? `Application - ${tab}` : "Application";
         return {
             name: id,
             label,
@@ -66,6 +66,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();
+        this.data.dispose();
     }
 
     @autobind()

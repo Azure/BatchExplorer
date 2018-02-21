@@ -72,7 +72,7 @@ export class ListFilterControl extends AdvancedFilterControlBase {
         if (!value) {
             return { items: [], ranges: [] };
         }
-        let values = this._parseInput(value);
+        const values = this._parseInput(value);
 
         let {items, ranges} = this._extractRanges(values) as any;
 
@@ -124,7 +124,7 @@ export class ListFilterControl extends AdvancedFilterControlBase {
         }
         const items: string[] = [];
         const ranges: string[][] = [];
-        for (let v of values) {
+        for (const v of values) {
             const range = v.split(this._config.rangeSeparator, 2).filter(x => x !== "");
             if (range.length === 1) {
                 items.push(v);

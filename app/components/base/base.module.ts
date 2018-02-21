@@ -11,13 +11,14 @@ import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
 import { BreadcrumbModule } from "./breadcrumbs";
 import { ButtonsModule } from "./buttons";
+import { CardComponent } from "./card";
 import { ChartsModule } from "./charts";
 import { ContextMenuModule } from "./context-menu";
+import { DatetimePickerComponent } from "./datetime-picker";
 import { DialogsModule } from "./dialogs";
 import { DropdownModule } from "./dropdown";
 import { DurationPickerComponent } from "./duration-picker";
 import { EditorModule } from "./editor";
-import { ElapsedTimeComponent } from "./elapsed-time";
 import { FocusSectionModule } from "./focus-section";
 import { FormModule } from "./form";
 import { GraphsModule } from "./graphs";
@@ -40,6 +41,7 @@ import { SummaryCardModule } from "./summary-card";
 import { TableModule } from "./table";
 import { TabsModule } from "./tabs";
 import { TagsModule } from "./tags";
+import { TimespanComponent } from "./timespan";
 import { VirtualScrollModule } from "./virtual-scroll";
 import { VTabsModule } from "./vtabs";
 
@@ -77,8 +79,10 @@ const modules = [
 const components = [
     BannerComponent,
     BannerOtherFixDirective,
-    ElapsedTimeComponent,
+    CardComponent,
+    TimespanComponent,
     EntityDetailsListComponent,
+    DatetimePickerComponent,
     DurationPickerComponent,
     IconComponent,
     ListAndShowLayoutComponent,

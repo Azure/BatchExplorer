@@ -1,0 +1,94 @@
+@import "app/styles/variables";
+
+bl-table-property {
+    $label-font-size: 13px;
+    $value-font-size: 12px;
+
+    section {
+        display: block;
+    }
+
+    table {
+        width: 100%;
+        table-layout: fixed;
+
+        [tp-column], bl-tp-cell {
+            display: table-cell;
+            color: $primary-text;
+            background-color: $main-background;
+            padding: 8px;
+            width: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        [tp-column] {
+            font-weight: bold;
+            font-size: $label-font-size;
+        }
+    }
+
+    .row {
+        > td.label {
+            padding: 5px;
+            padding-left: 20px;
+            font-size: $value-font-size;
+            height: 20px;
+        }
+
+        bl-tp-cell {
+            cursor: pointer;
+            font-size: $value-font-size;
+            height: 20px;
+            position: relative;
+            padding: 0;
+            overflow: hidden;
+            white-space: nowrap;
+
+            .cell-value {
+                padding: 4px 8px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+
+            .copied-notification {
+                top: 0;
+                z-index: 1;
+                background: $success-color;
+                position: absolute;
+                color: $whitesmoke;
+                padding: 5px;
+                transition: 100ms ease-in-out;
+                overflow: hidden;
+                height: 100%;
+
+                &.hidden {
+                    transform: translateX(-100%);
+                }
+            }
+        }
+    }
+
+    .expand-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        > button {
+            display: block;
+            margin: auto;
+        }
+
+        > button.expand {
+            line-height: 26px;
+            padding: 0 5px;
+        }
+
+        > button.collapse {
+            width: 26px !important;
+            height: 26px !important;
+            font-size: 16px;
+            color: map-get($primary, 500);
+        }
+    }
+}

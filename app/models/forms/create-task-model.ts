@@ -25,7 +25,7 @@ export interface CreateTaskModel {
 }
 
 export function createTaskFormToJsonData(formData: CreateTaskModel): TaskCreateDto {
-    let data: any = {
+    const data: any = {
         id: formData.id,
         displayName: formData.displayName,
         commandLine: formData.commandLine,

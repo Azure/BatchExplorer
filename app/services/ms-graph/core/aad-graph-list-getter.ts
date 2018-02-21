@@ -61,7 +61,7 @@ export class AADGraphListGetter<TEntity, TParams> extends ListGetter<TEntity, TP
             params = params.set("maxResults", options.maxResults.toString());
         }
 
-        for (let key of Object.keys(options.attributes)) {
+        for (const key of Object.keys(options.attributes)) {
             params = params.set(key, options.attributes[key]);
         }
 

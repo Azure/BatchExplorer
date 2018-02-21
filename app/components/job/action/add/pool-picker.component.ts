@@ -60,6 +60,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
 
     public ngOnDestroy() {
         this._subs.forEach(x => x.unsubscribe());
+        this.poolsData.dispose();
     }
 
     public writeValue(poolInfo: any) {
@@ -99,7 +100,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
     }
 
     private _computeOptions(query: string = null) {
-        let options: ListOptionsAttributes = { maxItems: 20 };
+        const options: ListOptionsAttributes = { maxItems: 20 };
         if (query) {
             options.filter = FilterBuilder.prop("id").startswith(query.clearWhitespace()).toOData();
         }
