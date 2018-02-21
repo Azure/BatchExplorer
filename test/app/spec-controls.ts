@@ -2,6 +2,7 @@
 // tslint:disable:no-console
 import { DataCacheTracker } from "app/services/core";
 import { GenericView } from "app/services/core/data/generic-view";
+import { Observable, Subscription } from "rxjs";
 import { MockEntityView, MockListView } from "test/utils/mocks";
 
 /**
@@ -13,9 +14,14 @@ afterEach(() => {
     DataCacheTracker.disposeAll();
 });
 
-const viewCreated = {};
+// Generic view
+let viewCreated = {};
 let lastInit;
 let lastDispose;
+
+// Observable
+let subscriptionCreated = {};
+let lastSubscribe;
 let counter = 0;
 
 jasmine.getEnv().addReporter({
@@ -35,11 +41,14 @@ jasmine.getEnv().addReporter({
                 dispose.bind(this)();
             }
         };
+
+
     },
     specDone: (result) => {
         GenericView.prototype.init = lastInit;
         GenericView.prototype.dispose = lastDispose;
         if (result.status === "disabled") { return; }
+
     },
 
     jasmineDone: () => {
@@ -55,5 +64,37 @@ jasmine.getEnv().addReporter({
             }
             console.warn("=".repeat(100));
         }
+
+        viewCreated = {};
     },
+});
+
+
+beforeEach(() => {
+    const subscribe = Observable.prototype.subscribe;
+    lastSubscribe = subscribe;
+
+    Observable.prototype.subscribe = function (this: any, ...args) {
+        const sub = subscribe.bind(this)(...args);
+        sub.id = counter++;
+        subscriptionCreated[sub.id] = {
+            // description: result.fullName,
+            // stack: new Error().stack,
+            // obs: this,
+            sub: sub,
+        };
+        return sub;
+    };
+});
+
+afterEach(() => {
+    Observable.prototype.subscribe = lastSubscribe;
+    const subIds = Object.keys(subscriptionCreated);
+    if (subIds.length > 0) {
+        for (const value of Object.values(subscriptionCreated) as any) {
+            value.sub.unsubscribe();
+        }
+    }
+
+    subscriptionCreated = {};
 });
