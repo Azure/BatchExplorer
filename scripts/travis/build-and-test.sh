@@ -31,7 +31,7 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ] || [ "${TRAVIS_BRANCH}" = "stable" ]; 
     if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_BRANCH}" = "stable" ]; then
         npm run package -- --publish always --draft
     else
-        npm run package -- --publish never # TODO replace with this
+        npm run package -- --publish never
     fi
     ls release
 else
