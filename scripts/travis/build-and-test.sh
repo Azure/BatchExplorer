@@ -43,7 +43,7 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ] || [ "${TRAVIS_BRANCH}" = "stable" ]; 
         -v ~/.cache/electron:/root/.cache/electron \
         -v ~/.cache/electron-builder:/root/.cache/electron-builder \
         electronuserland/builder:wine \
-        /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn release --linux --win --publish never"
+        /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn release --linux --publish never"
     fi
     ls release
 else
