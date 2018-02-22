@@ -23,7 +23,7 @@ export class SelectableList {
     @Output() public selectionChange = new EventEmitter<ListSelection>();
 
     private _activeItem: string;
-    private _selection: ListSelection;
+    private _selection: ListSelection = new ListSelection();
 
     constructor(protected changeDetector: ChangeDetectorRef) {
     }

@@ -8,10 +8,11 @@ export interface ListSelectionAttributes {
 }
 
 export class ListSelection {
-    public all: boolean;
+    public all: boolean = false;
     public keys = new Set();
 
     constructor(selection?: ListSelection | ListSelectionAttributes) {
+        if (!selection) { return; }
         this.all = selection.all || false;
 
         if (selection instanceof ListSelection) {
