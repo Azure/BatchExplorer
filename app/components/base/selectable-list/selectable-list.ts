@@ -14,10 +14,10 @@ export class SelectableList implements OnDestroy {
         if (list && this._list !== list) {
             this._clearListSubs();
             this._list = list;
-            this._listSubs.push(list.selectedItemsChange.subscribe((items) => {
-                this.selectedItemsChange.emit(items);
-                this.selectedItems = items;
-            }));
+            // this._listSubs.push(list.selectedItemsChange.subscribe((items) => {
+            //     this.selectedItemsChange.emit(items);
+            //     this.selectedItems = items;
+            // }));
 
             // TODO-TIM check dis
             // this._listSubs.push(list.activatedItemChange.subscribe((event) => {

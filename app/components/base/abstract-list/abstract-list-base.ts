@@ -1,10 +1,10 @@
 import {
     AfterViewInit, ChangeDetectorRef, ContentChildren, EventEmitter, Input, OnDestroy, Output, QueryList,
 } from "@angular/core";
-import { NavigationEnd, Router } from "@angular/router";
-import { autobind } from "app/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
+import { autobind } from "app/core";
+import { SelectableList } from "app/core/list";
 import { FocusSectionComponent } from "../focus-section";
 import { AbstractListItemBase } from "./abstract-list-item-base";
 
@@ -28,7 +28,7 @@ export const abstractListDefaultConfig: AbstractListBaseConfig = {
  * 1. Extend class
  * 2. Refefine items with @ContentChildren and the class that inherit SelectableListItemBase
  */
-export class AbstractListBase implements AfterViewInit, OnDestroy {
+export class AbstractListBase extends SelectableList implements AfterViewInit, OnDestroy {
     @ContentChildren(AbstractListItemBase)
     public items: QueryList<AbstractListItemBase>;
 
@@ -42,51 +42,17 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     }
     public get config() { return this._config; }
 
-    @Input()
-    public set activeItem(key) {
-        if (!this.config.activable) {
-            return;
-        }
-        this._activeItem = key;
-        this.clearSelection();
-    }
-
-    /**
-     * When the list of selected item change.
-     */
-    @Output()
-    public selectedItemsChange = new EventEmitter<string[]>();
-
-    @Output()
-    public activeItemChange = new EventEmitter<string>();
-
-    @Input() public set selectedItems(items: string[]) {
-        const map = {};
-        items.forEach(x => map[x] = true);
-        this._selectedItems = map;
-        this.selectedItemsChange.emit(items);
-    }
-
-    /**
-     *  The active item is always in the selected list.
-     */
-    public get selectedItems() { return Object.keys(this._selectedItems); }
-
     public listFocused: boolean = false;
     public focusedItem = new BehaviorSubject<string>(null);
 
     protected _config: AbstractListBaseConfig = abstractListDefaultConfig;
-    /**
-     * Map of the selected items. Used for better performance to check if an item is selected.
-     */
-    private _selectedItems: { [key: string]: boolean } = {};
-    private _activeItem = null;
 
     private _subs: Subscription[] = [];
 
     constructor(
-        private changeDetection: ChangeDetectorRef,
+        changeDetection: ChangeDetectorRef,
         focusSection: FocusSectionComponent) {
+        super(changeDetection);
 
         // this._subs.push(this._activeItemKey.subscribe(x => {
         //     this.selectedItems = x ? [x.key] : [];
@@ -112,7 +78,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
             this._updateDisplayItems();
         }));
         this._updateDisplayItems();
-        this.changeDetection.detectChanges();
+        this.changeDetector.detectChanges();
 
     }
 
@@ -124,14 +90,14 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      * Test if the given key is in the list of selected items.
      */
     public isSelected(key: string): boolean {
-        return key in this._selectedItems;
+        return this.selection.has(key);
     }
 
     /**
      * Test to check if the given key is the active item.
      */
     public isActive(key: string): boolean {
-        return this.config.activable && Boolean(this._activeItem === key);
+        return this.config.activable && Boolean(this.activeItem === key);
     }
 
     /**
@@ -143,7 +109,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         if (event) {
             event.stopPropagation();
         }
-        this.onSelectedChange(key, !this._selectedItems[key]);
+        this.onSelectedChange(key, !this.selection.has(key));
     }
 
     /**
@@ -154,11 +120,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      * @param selected If the item with the given key should be selected
      */
     public onSelectedChange(key: string, selected: boolean) {
-        if (selected) {
-            this._selectedItems[key] = true;
-        } else {
-            delete this._selectedItems[key];
-        }
+        this.selection.select(key, selected);
         this._updateSelectedItems();
     }
 
@@ -166,11 +128,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      * Clear the selection by removing all selected items but the active one if applicable.
      */
     public clearSelection() {
-        this._selectedItems = {};
-        if (this._activeItem) {
-            this._selectedItems[this._activeItem] = true;
-        }
-
+        this.selection.clear();
         this._updateSelectedItems();
     }
 
@@ -179,13 +137,13 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      */
     public selectTo(key: string) {
         let foundStart = false;
-        const activeKey = this._activeItem;
+        const activeKey = this.activeItem;
         this.displayItems.some((item) => {
             if (!foundStart && (item.key === activeKey || item.key === key)) {
                 foundStart = true;
-                this._selectedItems[item.key] = true;
+                this.selection.add(item.key);
             } else if (foundStart) {
-                this._selectedItems[item.key] = true;
+                this.selection.add(item.key);
                 // Reached the end of the selection
                 if (item.key === activeKey || item.key === key) {
                     return true;
@@ -198,10 +156,9 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     @autobind()
     public onFocus(event: FocusEvent) {
         this.listFocused = true;
-        const active = this._activeItem;
         if (!this.focusedItem.value) {
-            this.focusedItem.next(active && active.key);
-            this.changeDetection.markForCheck();
+            this.focusedItem.next(this.activeItem);
+            this.changeDetector.markForCheck();
         }
     }
 
@@ -209,7 +166,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     public onBlur(event) {
         this.listFocused = false;
         this.focusedItem.next(null);
-        this.changeDetection.markForCheck();
+        this.changeDetector.markForCheck();
     }
 
     public setFocusedItem(key: string) {
@@ -272,9 +229,8 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      */
     private _updateSelectedItems() {
         this.displayItems.forEach((item) => {
-            item.selected = Boolean(this._selectedItems[item.key]);
+            item.selected = Boolean(this.selection.has(item.key));
         });
-        this.selectedItemsChange.emit(this.selectedItems);
-        this.changeDetection.markForCheck();
+        this.changeDetector.markForCheck();
     }
 }

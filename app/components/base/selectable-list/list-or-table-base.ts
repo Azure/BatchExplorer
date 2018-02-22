@@ -10,10 +10,10 @@ export class ListOrTableBase extends SelectableList implements OnDestroy {
         if (table && this._table !== table) {
             this._table = table;
             this._clearTableSubs();
-            this._tableSubs.push(table.selectedItemsChange.subscribe((items) => {
-                this.selectedItemsChange.emit(items);
-                this.selectedItems = items;
-            }));
+            // this._tableSubs.push(table.selectedItemsChange.subscribe((items) => {
+            //     this.selectedItemsChange.emit(items);
+            //     this.selectedItems = items;
+            // }));
 
             // TODO-Tim check dis
             // this._tableSubs.push(table.activatedItemChange.subscribe((event) => {
