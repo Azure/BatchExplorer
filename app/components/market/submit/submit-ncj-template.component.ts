@@ -7,7 +7,9 @@ import { Observable, Subscription } from "rxjs";
 import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, NcjTemplateMode, ServerError } from "app/models";
 import { NcjSubmitService, NcjTemplateService } from "app/services";
 import { exists, log } from "app/utils";
-import { NcjParameterWrapper } from "./market-application.model";
+import { Constants } from "common";
+import { NcjParameterExtendedType, NcjParameterWrapper } from "./market-application.model";
+
 import "./submit-ncj-template.scss";
 
 @Component({
@@ -39,13 +41,14 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     public poolParametersWrapper: NcjParameterWrapper[];
 
     private _error: ServerError;
+    private _fgrpPrefix = "fgrp-";
     private _controlChanges: Subscription[] = [];
+    private _parameterTypeMap = {};
     private _queryParameters: {};
-    private _parameterTypeMap: {};
 
     constructor(
         private formBuilder: FormBuilder,
-        private route: ActivatedRoute,
+        private activatedRoute: ActivatedRoute,
         private router: Router,
         private templateService: NcjTemplateService,
         private ncjSubmitService: NcjSubmitService) {
@@ -53,9 +56,10 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public ngOnInit() {
-        this._queryParameters = Object.assign({}, this.route.snapshot.queryParams);
-        if (this._queryParameters["useAutoPool"]) {
-            const modeAutoSelect = Boolean(parseInt(this._queryParameters["useAutoPool"], 10))
+        this._queryParameters = Object.assign({}, this.activatedRoute.snapshot.queryParams);
+        const autoPoolParameter = Constants.KnownQueryParameters.useAutoPool;
+        if (this._queryParameters[autoPoolParameter]) {
+            const modeAutoSelect = Boolean(parseInt(this._queryParameters[autoPoolParameter], 10))
                 ? NcjTemplateMode.NewPoolAndJob
                 : NcjTemplateMode.ExistingPoolAndJob;
 
@@ -72,6 +76,8 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
                 this.modeState = this.poolTemplate ? NcjTemplateMode.NewPool : NcjTemplateMode.ExistingPoolAndJob;
             }
 
+            this._queryParameters = {};
+            this._parameterTypeMap = {};
             this._processParameters();
             this._createForms();
         }
@@ -184,9 +190,11 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     private _parseParameters(parameters: StringMap<NcjParameter>) {
+        console.log("parse parameters");
         const wrapper: NcjParameterWrapper[] = [];
         for (const name of Object.keys(parameters)) {
             const param = parameters[name];
+            console.log("pushing: ", name, param);
             wrapper.push(new NcjParameterWrapper(name, param));
         }
 
@@ -212,11 +220,11 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
 
             templateFormGroup[key] = new FormControl(defaultValue, validator);
             if (template.parameters[key].metadata.advancedType) {
-                console.log("adding to map :: ", key, template.parameters[key].metadata.advancedType);
+                // Store the advanced data type as we need it for change events from file-groups
                 this._parameterTypeMap[key] = template.parameters[key].metadata.advancedType;
             }
 
-            // console.log("_handleChange :: ", key, this._parameterTypeMap[key]);
+            // Wire up a control change event handler
             this._handleControlChangeEvents(templateFormGroup, key);
         }
 
@@ -226,12 +234,14 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     private _handleControlChangeEvents(formGroup, key) {
         // Listen to control value change events and update the route parameters to match
         this._controlChanges.push(formGroup[key].valueChanges.subscribe((change) => {
-            // if (this._parameterTypeMap[key] === "file-group") {
-            //     console.log("is file group");
-            //     // quickfix until we can modify the CLI to finally sort out file group prefixes
-            //     change = "fgrp-" + change;
-            // }
+            if (this._parameterTypeMap[key] === NcjParameterExtendedType.fileGroup &&
+                !change.startsWith(this._fgrpPrefix)) {
 
+                // Quick-Fix until we modify the CLI to finally sort out file group prefixes
+                change = this._fgrpPrefix + change;
+            }
+
+            // Set the parameters on the route so when page reloads we keep the existing parameters
             this._queryParameters[key] = change;
             const urlTree = this.router.createUrlTree([], {
                 queryParams: this._queryParameters,

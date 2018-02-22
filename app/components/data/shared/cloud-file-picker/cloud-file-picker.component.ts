@@ -92,6 +92,7 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges
         }
 
         // validate that the blob exists in the selected container
+        // note: value includes prefix
         this.storageService.getBlobPropertiesOnce(this.containerId, value).subscribe((blob) => {
             this.warning = false;
         }, (error) => {
