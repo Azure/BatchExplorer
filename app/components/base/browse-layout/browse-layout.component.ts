@@ -37,13 +37,11 @@ export class BrowseLayoutComponent implements AfterViewInit {
 
     constructor(activeRoute: ActivatedRoute, private changeDetector: ChangeDetectorRef) {
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
-            console.log("GOT hreer");
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
             } else {
                 this.quickFilter = FilterBuilder.prop(this.quickSearchField).startswith(query.clearWhitespace());
             }
-            console.log("GOT hreer2");
             this._updateFilter();
         });
 
@@ -68,13 +66,11 @@ export class BrowseLayoutComponent implements AfterViewInit {
     }
 
     public ngAfterViewInit() {
-        console.log("This adv", this.advancedFilterDirective);
         if (!this.listDirective) {
             throw new Error("BrowseLayout expect an list component to have the directive blBrowseLayoutList");
         }
         setTimeout(() => {
             this.listDirective.component.quicklist = true;
-            console.log("Set initial?", this._activeItemKey);
             this.listDirective.component.activeItem = this._activeItemKey;
         });
     }
@@ -94,6 +90,7 @@ export class BrowseLayoutComponent implements AfterViewInit {
 
     public toggleFilter(value?: boolean) {
         this.showAdvancedFilter = (value === undefined ? !this.showAdvancedFilter : value);
+        this.listDirective.component.quicklist = !this.showAdvancedFilter;
         this.changeDetector.markForCheck();
     }
 
@@ -110,7 +107,6 @@ export class BrowseLayoutComponent implements AfterViewInit {
     public updateActiveItem(key: string) {
         this._activeItemKey = key;
         if (this.listDirective) {
-            console.log("Set from route", key);
             this.listDirective.component.activeItem = key;
         }
     }
