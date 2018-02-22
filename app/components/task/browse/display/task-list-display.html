@@ -31,9 +31,9 @@
                 <span class="danger" *ngIf="task.preparationTaskFailed">&nbsp;(Prep task failed)</span>
             </bl-cell>
             <bl-cell [value]="formatDate(task.creationTime)"></bl-cell>
-            <bl-cell [value]="formatDate(task.executionInfo.startTime)"></bl-cell>
-            <bl-cell [value]="formatDate(task.executionInfo.endTime)"></bl-cell>
-            <bl-cell [value]="task.executionInfo.exitCode"></bl-cell>
+            <bl-cell [value]="formatDate(task.executionInfo?.startTime)"></bl-cell>
+            <bl-cell [value]="formatDate(task.executionInfo?.endTime)"></bl-cell>
+            <bl-cell [value]="task.executionInfo?.exitCode"></bl-cell>
         </bl-row>
     </bl-table>
 

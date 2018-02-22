@@ -2,7 +2,7 @@
     <div blBrowseLayoutTitle>
             Compute nodes
     </div>
-    <bl-node-list blBrowseLayoutList></bl-node-list>
+    <bl-node-list blBrowseLayoutList [poolId]="poolId"></bl-node-list>
     <bl-node-advanced-filter blBrowseLayoutAdvancedFilter (change)="layout.advancedFilterChanged($event)">
     </bl-node-advanced-filter>
 </bl-browse-layout>

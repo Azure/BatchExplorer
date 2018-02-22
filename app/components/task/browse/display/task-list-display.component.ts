@@ -1,12 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { List } from "immutable";
 
 import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
-import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
-import { ListOrTableBase } from "app/components/base/selectable-list";
-import { TableComponent } from "app/components/base/table";
+import { QuickListItemStatus } from "app/components/base/quick-list";
 import { DeleteTaskDialogComponent, TerminateTaskDialogComponent } from "app/components/task/action";
 import { ListBaseComponent } from "app/core/list";
 import { Task, TaskState } from "app/models";

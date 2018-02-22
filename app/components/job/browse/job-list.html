@@ -1,6 +1,6 @@
 <bl-focus-section>
     <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
-    <bl-quick-list *ngIf="quickList" [(activeItem)]="activeItem" [(selection)]="selection">
+    <bl-quick-list *ngIf="quicklist" [(activeItem)]="activeItem" [(selection)]="selection">
         <bl-quick-list-item *ngFor="let job of data.items | async; trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id"
             [contextmenu]="contextmenu(job)">
             <bl-quick-list-item-status [status]="jobStatus(job)" [tooltip]="jobStatusText(job)">
@@ -17,7 +17,7 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quickList" [(activeItem)]="activeItem" [(selection)]="selection">
+    <bl-table *ngIf="!quicklist" [(activeItem)]="activeItem" [(selection)]="selection">
         <bl-thead>
             <bl-column>Id</bl-column>
             <bl-column>State</bl-column>
