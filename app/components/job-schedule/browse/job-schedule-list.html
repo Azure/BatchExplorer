@@ -1,5 +1,5 @@
 <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
-<bl-quick-list *ngIf="quickList">
+<bl-quick-list *ngIf="quicklist">
     <bl-quick-list-item *ngFor="let jobSchedule of data.items | async; trackBy: trackByFn" [link]="['/jobschedules/', jobSchedule.id]" [key]="jobSchedule.id" [contextmenu]="contextmenu(jobSchedule)">
         <bl-quick-list-item-status [status]="jobScheduleStatus(jobSchedule)" [tooltip]="jobScheduleStatusText(jobSchedule)">
         </bl-quick-list-item-status>
@@ -11,7 +11,7 @@
     </bl-quick-list-item>
 </bl-quick-list>
 
-<bl-table *ngIf="!quickList">
+<bl-table *ngIf="!quicklist">
     <bl-thead>
         <bl-column>Id</bl-column>
         <bl-column>State</bl-column>

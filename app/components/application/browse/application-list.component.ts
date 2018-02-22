@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { Router } from "@angular/router";
 import { autobind } from "app/core";
@@ -8,8 +8,7 @@ import { Observable, Subscription } from "rxjs";
 import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
-import { ListOrTableBase } from "app/components/base/selectable-list";
-import { listBaseProvider } from "app/core/list";
+import { ListBaseComponent, listBaseProvider } from "app/core/list";
 import { BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
@@ -22,7 +21,7 @@ import { ApplicationEditDialogComponent, DeleteApplicationDialogComponent } from
     templateUrl: "application-list.html",
     providers: [listBaseProvider(() => ApplicationListComponent)],
 })
-export class ApplicationListComponent extends ListOrTableBase implements OnInit, OnDestroy {
+export class ApplicationListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public status: Observable<LoadingStatus>;
     public data: ListView<BatchApplication, ApplicationListParams>;
     public applications: List<BatchApplication>;
@@ -30,16 +29,15 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
 
     private _baseOptions = { maxresults: 50 };
     private _subs: Subscription[] = [];
-    private _filter: Filter;
 
     constructor(
         router: Router,
+        changeDetector: ChangeDetectorRef,
         protected dialog: MatDialog,
         private applicationService: ApplicationService,
         private pinnedEntityService: PinnedEntityService,
         private sidebarManager: SidebarManager) {
-
-        super();
+        super(changeDetector);
 
         this.data = this.applicationService.listView(this._baseOptions);
         this._subs.push(this.data.items.subscribe((applications) => {
@@ -68,7 +66,6 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
     }
 
     public handleFilter(filter: Filter) {
-        this._filter = filter;
         this._filterApplications();
     }
 
@@ -112,8 +109,8 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
 
     private _filterApplications() {
         let text: string = null;
-        if (this._filter && this._filter.properties.length > 0) {
-            text = (this._filter.properties[0] as any).value;
+        if (this.filter && this.filter.properties.length > 0) {
+            text = (this.filter.properties[0] as any).value;
             text = text && text.toLowerCase();
         }
 
