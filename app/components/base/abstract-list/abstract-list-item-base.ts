@@ -125,7 +125,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
      * @parm andFocus If we should also focus the item
      */
     public activateItem(andFocus = false) {
-        this.list.setActiveItem(this.key);
+        this.list.activeItem = this.key;
         this._triggerRouter();
     }
 

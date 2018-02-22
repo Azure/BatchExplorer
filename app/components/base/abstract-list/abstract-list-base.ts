@@ -258,10 +258,6 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      */
     protected computeDisplayedItems?(): AbstractListItemBase[];
 
-    private _checkItemActive(item: AbstractListItemBase): boolean {
-        return this.isActive(item.key);
-    }
-
     private _updateDisplayItems() {
         if (this.computeDisplayedItems) {
             this.displayItems = this.computeDisplayedItems();
