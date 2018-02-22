@@ -61,8 +61,9 @@ export class BrowseLayoutComponent implements AfterViewInit {
                 if (key) {
                     this.updateActiveItem(key);
                 }
+            } else {
+                this.updateActiveItem(null);
             }
-            this.updateActiveItem(null);
         });
     }
 

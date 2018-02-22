@@ -59,12 +59,6 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     @Output()
     public selectedItemsChange = new EventEmitter<string[]>();
 
-    /**
-     * Event when the activated item(With the route) change. Send the item key.
-     */
-    @Output()
-    public activatedItemChange = new EventEmitter<ActivatedItemChangeEvent>();
-
     @Output()
     public activeItemChange = new EventEmitter<string>();
 
@@ -97,14 +91,12 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     private _subs: Subscription[] = [];
 
     constructor(
-        private router: Router,
         private changeDetection: ChangeDetectorRef,
         focusSection: FocusSectionComponent) {
 
         this._subs.push(this._activeItemKey.subscribe(x => {
             this.selectedItems = x ? [x.key] : [];
 
-            this.activatedItemChange.emit(x);
             if (!x || x.key !== this._activeItemInput) {
                 this.activeItemChange.emit(x && x.key);
             }
@@ -119,15 +111,6 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
             this._subs.push(focusSection.onFocus.subscribe(this.onFocus));
             this._subs.push(focusSection.onBlur.subscribe(this.onBlur));
         }
-
-        this._subs.push(router.events.filter(event => event instanceof NavigationEnd).subscribe(event => {
-            if (this.items) {
-                if (this._activeItemKey.value) {
-                    const active = this.getActiveItemFromRouter();
-                    this.setActiveItem(active && active.key);
-                }
-            }
-        }));
     }
 
     public ngAfterViewInit() {
@@ -350,11 +333,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     }
 
     private _checkItemActive(item: AbstractListItemBase): boolean {
-        if (item.urlTree) {
-            return this.router.isActive(item.urlTree, false);
-        } else {
-            return this.isActive(item.key);
-        }
+        return this.isActive(item.key);
     }
 
     private _updateDisplayItems() {

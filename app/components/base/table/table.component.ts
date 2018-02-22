@@ -62,8 +62,8 @@ export class TableComponent extends AbstractListBase {
     /**
      * To enable keyboard navigation in the list it must be inside a focus section
      */
-    constructor(router: Router, changeDetection: ChangeDetectorRef, @Optional() focusSection?: FocusSectionComponent) {
-        super(router, changeDetection, focusSection);
+    constructor(changeDetection: ChangeDetectorRef, @Optional() focusSection?: FocusSectionComponent) {
+        super(changeDetection, focusSection);
     }
 
     public handleDragHover(event: DragEvent) {

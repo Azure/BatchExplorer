@@ -19,8 +19,8 @@ export class QuickListComponent extends AbstractListBase {
     @ContentChildren(QuickListItemComponent)
     public items: QueryList<QuickListItemComponent>;
 
-    constructor( @Optional() focusSection: FocusSectionComponent, changeDetection: ChangeDetectorRef, router: Router) {
-        super(router, changeDetection, focusSection);
+    constructor( @Optional() focusSection: FocusSectionComponent, changeDetection: ChangeDetectorRef) {
+        super(changeDetection, focusSection);
     }
 }
 
