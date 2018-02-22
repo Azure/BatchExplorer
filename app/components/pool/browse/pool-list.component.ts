@@ -7,12 +7,12 @@ import { autobind } from "app/core";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { ListBaseComponent, listBaseProvider } from "app/components/base/browse-layout/list-base";
 import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
-import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
+import { QuickListItemStatus } from "app/components/base/quick-list";
 import { SidebarManager } from "app/components/base/sidebar";
-import { TableComponent, TableConfig } from "app/components/base/table";
+import { TableConfig } from "app/components/base/table";
+import { ListBaseComponent, listBaseProvider } from "app/core/list";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
 import { PinnedEntityService, PoolListParams, PoolService } from "app/services";
@@ -31,16 +31,6 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     public LoadingStatus = LoadingStatus;
     public status: Observable<LoadingStatus>;
     public data: ListView<Pool, PoolListParams>;
-
-    // Inheritance bugs https://github.com/angular/angular/issues/5415
-    // @Output()
-    // public itemSelected: EventEmitter<any>;
-
-    // @ViewChild(TableComponent)
-    // public table: TableComponent;
-
-    // @ViewChild(QuickListComponent)
-    // public list: QuickListComponent;
 
     public tableConfig: TableConfig = {
         showCheckbox: true,
@@ -115,9 +105,9 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     public deleteSelected() {
         // TODO-TIM fix this
         // this.taskManager.startTask("", (backgroundTask) => {
-            // const task = new DeletePoolTask(this.poolService, this.selectedItems);
-            // task.start(backgroundTask);
-            // return task.waitingDone;
+        // const task = new DeletePoolTask(this.poolService, this.selectedItems);
+        // task.start(backgroundTask);
+        // return task.waitingDone;
         // });
     }
 

@@ -1,5 +1,5 @@
 import { Directive, Host, Self } from "@angular/core";
-import { ListBaseComponent } from "app/components/base/browse-layout/list-base";
+import { ListBaseComponent } from "app/core/list";
 
 @Directive({
     selector: "[blBrowseLayoutList]",
