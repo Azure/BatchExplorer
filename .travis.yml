@@ -2,16 +2,16 @@ language: node_js
 dist: trusty
 sudo: false
 
-addons:
-  apt:
-    packages:
-      - libgnome-keyring-dev
-      - openjpeg-tools # or libopenjp2-tools
-      - graphicsmagick
-      - libreadline6
-      - xz-utils
-      - rpm
-      - bsdtar
+# addons:
+#   apt:
+#     packages:
+#       - libgnome-keyring-dev
+#       - openjpeg-tools # or libopenjp2-tools
+#       - graphicsmagick
+#       - libreadline6
+#       - xz-utils
+#       - rpm
+#       - bsdtar
 
 node_js:
   - 9
@@ -37,6 +37,7 @@ matrix:
 
     - language: node_js
       os: linux
+      services: docker
       before_install:
         - pyenv versions
         - pyenv install --list
@@ -71,3 +72,5 @@ cache:
   yarn: true
   directories:
     - node_modules
+    - $HOME/.cache/electron
+    - $HOME/.cache/electron-builder

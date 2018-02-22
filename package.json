@@ -40,7 +40,7 @@
     "tslint": "tslint --project tsconfig.json -c tslint.json \"app/**/*.ts\" \"src/**/*.ts\" \"test/**/*.ts\" \"./*.js\" \"config/**/*.js\"",
     "stylelint": "stylelint --syntax scss \"app/**/*.scss\"",
     "lint": "npm run -s tslint && npm run -s stylelint",
-    "package": "build",
+    "package": "electron-builder",
     "publish": "npm run -s ts -- scripts/publish/publish.ts",
     "build-and-pack": "npm run -s build:prod && npm run -s build-python && npm run -s package",
     "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js",
