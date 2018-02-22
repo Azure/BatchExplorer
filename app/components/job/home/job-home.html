@@ -6,7 +6,7 @@
         <bl-button color="light" type="plain" icon="fa fa-plus spin-hover" title="Add a job" [action]="addJob" permission="write">
         </bl-button>
     </div>
-    <bl-job-list blBrowseLayoutList ></bl-job-list>
+    <bl-job-list blBrowseLayoutList></bl-job-list>
     <bl-job-advanced-filter blBrowseLayoutAdvancedFilter (change)="layout.advancedFilterChanged($event)">
     </bl-job-advanced-filter>
 </bl-browse-layout>

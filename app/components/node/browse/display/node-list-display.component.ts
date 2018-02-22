@@ -1,20 +1,18 @@
-import { Component, Input, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, ViewChild } from "@angular/core";
 import { List } from "immutable";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
 import { TableComponent } from "app/components/base/table";
+import { ListBaseComponent } from "app/core/list";
 import { Node } from "app/models";
 
 @Component({
     selector: "bl-node-list-display",
     templateUrl: "node-list-display.html",
 })
-export class NodeListDisplayComponent extends ListOrTableBase {
-    @Input()
-    public quickList: boolean;
-
+export class NodeListDisplayComponent extends ListBaseComponent {
     @Input()
     public poolId: string;
 
@@ -33,8 +31,8 @@ export class NodeListDisplayComponent extends ListOrTableBase {
     @ViewChild(TableComponent)
     public table: TableComponent;
 
-    constructor() {
-        super();
+    constructor(changeDetector: ChangeDetectorRef) {
+        super(changeDetector);
     }
 
     public isErrorState(node: any) {

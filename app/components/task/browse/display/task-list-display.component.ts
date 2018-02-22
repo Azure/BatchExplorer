@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { List } from "immutable";
 
@@ -8,6 +8,7 @@ import { QuickListComponent, QuickListItemStatus } from "app/components/base/qui
 import { ListOrTableBase } from "app/components/base/selectable-list";
 import { TableComponent } from "app/components/base/table";
 import { DeleteTaskDialogComponent, TerminateTaskDialogComponent } from "app/components/task/action";
+import { ListBaseComponent } from "app/core/list";
 import { Task, TaskState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
 import { TaskService } from "app/services";
@@ -18,10 +19,7 @@ import { DateUtils } from "app/utils";
     templateUrl: "task-list-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskListDisplayComponent extends ListOrTableBase {
-    @Input()
-    public quickList: boolean;
-
+export class TaskListDisplayComponent extends ListBaseComponent {
     @Input()
     public jobId: string;
 
@@ -31,13 +29,9 @@ export class TaskListDisplayComponent extends ListOrTableBase {
     @Input()
     public status: LoadingStatus;
 
-    @ViewChild(QuickListComponent)
-    public list: QuickListComponent;
-
-    @ViewChild(TableComponent)
-    public table: TableComponent;
-
-    constructor(private taskService: TaskService, dialog: MatDialog) { super(dialog); }
+    constructor(private taskService: TaskService, private dialog: MatDialog, changeDetector: ChangeDetectorRef) {
+        super(changeDetector);
+    }
 
     public taskStatus(task: Task): QuickListItemStatus {
         if (task.state === TaskState.completed && task.executionInfo.exitCode !== 0) {

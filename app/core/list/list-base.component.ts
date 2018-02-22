@@ -8,6 +8,10 @@ import { SelectableList } from "./selectable-list";
 export interface ListBaseComponent {
     // Optional methods
     deleteSelection?(selection: ListSelection);
+
+    refresh?(): Observable<any>;
+
+    handleFilter?(filter: Filter);
 }
 
 export abstract class ListBaseComponent extends SelectableList {
@@ -30,11 +34,6 @@ export abstract class ListBaseComponent extends SelectableList {
     constructor(changeDetector: ChangeDetectorRef) {
         super(changeDetector);
     }
-
-    public abstract refresh(): Observable<any>;
-
-    public abstract handleFilter(filter: Filter);
-
 }
 
 export function listBaseProvider(callback: () => Type<any>) {
