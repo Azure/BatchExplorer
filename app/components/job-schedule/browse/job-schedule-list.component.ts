@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component,  OnDestroy, OnInit,
+} from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -7,10 +9,9 @@ import { Observable, Subscription } from "rxjs";
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
-import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
-import { ListOrTableBase } from "app/components/base/selectable-list";
-import { TableComponent } from "app/components/base/table";
+import { QuickListItemStatus } from "app/components/base/quick-list";
 import { autobind } from "app/core";
+import { ListBaseComponent, ListSelection, listBaseProvider } from "app/core/list";
 import { JobSchedule, JobScheduleState } from "app/models";
 import { JobScheduleListParams, JobScheduleService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
@@ -28,48 +29,27 @@ import {
     selector: "bl-job-schedule-list",
     templateUrl: "job-schedule-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [listBaseProvider(() => JobScheduleListComponent)],
 })
-export class JobScheduleListComponent extends ListOrTableBase implements OnInit, OnDestroy {
+export class JobScheduleListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
     public status: Observable<LoadingStatus>;
     public data: ListView<JobSchedule, JobScheduleListParams>;
     public searchQuery = new FormControl();
 
-    @ViewChild(QuickListComponent)
-    public list: QuickListComponent;
-
-    @ViewChild(TableComponent)
-    public table: TableComponent;
-
-    @Input() public quickList: boolean;
-
-    @Input()
-    public set filter(filter: Filter) {
-        this._filter = filter;
-
-        if (filter.isEmpty()) {
-            this.data.setOptions({ ...this._baseOptions });
-        } else {
-            this.data.setOptions({ ...this._baseOptions, filter: filter.toOData() });
-        }
-
-        this.data.fetchNext();
-    }
-    public get filter(): Filter { return this._filter; }
-
-    private _filter: Filter;
-    private _baseOptions = {  };
+    private _baseOptions = {};
     private _onJobScheduleAddedSub: Subscription;
 
     constructor(
         router: Router,
-        dialog: MatDialog,
         activatedRoute: ActivatedRoute,
+        changeDetector: ChangeDetectorRef,
+        private dialog: MatDialog,
         private jobScheduleService: JobScheduleService,
         private pinnedEntityService: PinnedEntityService,
         private taskManager: BackgroundTaskService) {
-        super(dialog);
+        super(changeDetector);
         this.data = this.jobScheduleService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 
@@ -92,6 +72,16 @@ export class JobScheduleListComponent extends ListOrTableBase implements OnInit,
     @autobind()
     public refresh(): Observable<any> {
         return this.data.refresh();
+    }
+
+    public handleFilter(filter: Filter) {
+        if (filter.isEmpty()) {
+            this.data.setOptions({ ...this._baseOptions });
+        } else {
+            this.data.setOptions({ ...this._baseOptions, filter: filter.toOData() });
+        }
+
+        this.data.fetchNext();
     }
 
     public jobScheduleStatus(jobSchedule: JobSchedule): QuickListItemStatus {
@@ -149,9 +139,9 @@ export class JobScheduleListComponent extends ListOrTableBase implements OnInit,
         ]);
     }
 
-    public deleteSelected() {
+    public deleteSelection(selection: ListSelection) {
         this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteJobScheduleAction(this.jobScheduleService, this.selectedItems);
+            const task = new DeleteJobScheduleAction(this.jobScheduleService, [...selection.keys]);
             task.start(backgroundTask);
             return task.waitingDone;
         });

@@ -9,6 +9,7 @@ import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
+import { listBaseProvider } from "app/core/list";
 import { BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
@@ -19,22 +20,13 @@ import { ApplicationEditDialogComponent, DeleteApplicationDialogComponent } from
 @Component({
     selector: "bl-application-list",
     templateUrl: "application-list.html",
+    providers: [listBaseProvider(() => ApplicationListComponent)],
 })
 export class ApplicationListComponent extends ListOrTableBase implements OnInit, OnDestroy {
     public status: Observable<LoadingStatus>;
     public data: ListView<BatchApplication, ApplicationListParams>;
     public applications: List<BatchApplication>;
     public displayedApplications: List<BatchApplication>;
-
-    @Input()
-    public quickList: boolean;
-
-    @Input()
-    public set filter(filter: Filter) {
-        this._filter = filter;
-        this._filterApplications();
-    }
-    public get filter(): Filter { return this._filter; }
 
     private _baseOptions = { maxresults: 50 };
     private _subs: Subscription[] = [];
@@ -73,6 +65,11 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
     @autobind()
     public refresh(): Observable<any> {
         return this.data.refresh();
+    }
+
+    public handleFilter(filter: Filter) {
+        this._filter = filter;
+        this._filterApplications();
     }
 
     public appStatus(application: BatchApplication): QuickListItemStatus {

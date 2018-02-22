@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { ChangeDetectorRef, Component, Input } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { autobind } from "app/core";
 import { List } from "immutable";
@@ -6,33 +6,29 @@ import { Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
+import { ListBaseComponent, listBaseProvider } from "app/core/list";
 import { AccountResource } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
-import { Filter, FilterBuilder, FilterMatcher, Operator } from "app/utils/filter-builder";
+import { Filter, FilterMatcher, Operator } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 
 @Component({
     selector: "bl-account-list",
     templateUrl: "account-list.html",
+    providers: [listBaseProvider(() => AccountListComponent)],
 })
-export class AccountListComponent {
-    @Input()
-    public set filter(filter: Filter) {
-        this._filter = filter;
-        this._updateDisplayedAccounts();
-    }
-    public get filter(): Filter { return this._filter; }
+export class AccountListComponent extends ListBaseComponent {
 
     public displayedAccounts: Observable<List<AccountResource>>;
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
-
-    private _filter: Filter = FilterBuilder.none();
 
     constructor(
         private accountService: AccountService,
         activatedRoute: ActivatedRoute,
         sidebarManager: SidebarManager,
+        changeDetector: ChangeDetectorRef,
         subscriptionService: SubscriptionService) {
+        super(changeDetector);
         this._updateDisplayedAccounts();
 
         this.accountService.accountsLoaded.subscribe(() => {
@@ -43,6 +39,10 @@ export class AccountListComponent {
     @autobind()
     public refresh(): Observable<any> {
         return this.accountService.load();
+    }
+
+    public handleFilter(filter: Filter) {
+        this._updateDisplayedAccounts();
     }
 
     public isAccountFavorite(accountId: string) {
@@ -79,7 +79,7 @@ export class AccountListComponent {
             });
 
             return List<AccountResource>(accounts.filter((x) => {
-                return matcher.test(this._filter, x);
+                return matcher.test(this.filter, x);
             }).sort((a, b) => {
                 if (a.name < b.name) {
                     return -1;
