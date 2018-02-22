@@ -2,7 +2,7 @@
 // tslint:disable:no-console
 import { DataCacheTracker } from "app/services/core";
 import { GenericView } from "app/services/core/data/generic-view";
-import { Observable, Subscription } from "rxjs";
+import { Observable } from "rxjs";
 import { MockEntityView, MockListView } from "test/utils/mocks";
 
 /**
