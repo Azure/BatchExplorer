@@ -61,6 +61,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         private breadcrumbService: BreadcrumbService) {
 
         this.isFocused = this.list.focusedItem.map(x => x === this.key);
+        this._activeItemKey = list.activeItem;
         this._activeSub = list.activeItemChange.subscribe((key) => {
             this._activeItemKey = key;
         });
