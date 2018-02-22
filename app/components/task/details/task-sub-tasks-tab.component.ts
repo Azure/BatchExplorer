@@ -47,13 +47,14 @@ export class TaskSubTasksTabComponent extends SelectableList {
         super();
 
         this.data = this.taskService.listSubTasksView({});
-        this.activatedItemChange.subscribe((item) => {
-            this.data.items.subscribe((subTasks) => {
-                this._selectedTask = subTasks.find((subTask) => {
-                    return subTask.id === item.key;
-                });
-            });
-        });
+        // TODO-TIM Check dis
+        // this.activatedItemChange.subscribe((item) => {
+        //     this.data.items.subscribe((subTasks) => {
+        //         this._selectedTask = subTasks.find((subTask) => {
+        //             return subTask.id === item.key;
+        //         });
+        //     });
+        // });
     }
 
     @autobind()

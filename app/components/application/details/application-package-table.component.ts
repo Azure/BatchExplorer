@@ -48,11 +48,12 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
             }
         }));
 
-        this._subs.push(this.activatedItemChange.subscribe((activatedItem) => {
-            this.activateItemEnabled.next(this._activatedItemActivateEnabled(activatedItem.key));
-            this.deleteItemEnabled.next(this._activatedItemDeleteEnabled(activatedItem.key));
-            this.editItemEnabled.next(this._activatedItemEditEnabled(activatedItem.key));
-        }));
+        // TODO-TIM check this
+        // this._subs.push(this.activatedItemChange.subscribe((activatedItem) => {
+        //     this.activateItemEnabled.next(this._activatedItemActivateEnabled(activatedItem.key));
+        //     this.deleteItemEnabled.next(this._activatedItemDeleteEnabled(activatedItem.key));
+        //     this.editItemEnabled.next(this._activatedItemEditEnabled(activatedItem.key));
+        // }));
     }
 
     public ngOnChanges(inputs) {

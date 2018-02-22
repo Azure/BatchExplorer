@@ -56,7 +56,7 @@ describe("QuickListComponent", () => {
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-quick-list"));
         quicklist = de.componentInstance;
-        quicklist.activatedItemChange.subscribe(e => activeItemKey = e.key);
+        quicklist.activeItemChange.subscribe(x => activeItemKey = x);
         quicklist.selectedItemsChange.subscribe(x => selectedItems = x);
         fixture.detectChanges();
         items = de.queryAll(By.css("bl-quick-list-item"));

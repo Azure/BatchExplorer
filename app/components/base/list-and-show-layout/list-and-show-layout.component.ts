@@ -107,11 +107,12 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
     public ngOnChanges(inputs) {
         if (inputs.list) {
             this._clearListSubs();
-            if (this.list.activatedItemChange) {
-                this._activatedItemSub = this.list.activatedItemChange.subscribe((x) => {
-                    this._itemActivated(x);
-                });
-            }
+            // TODO-TIM check dis
+            // if (this.list.activatedItemChange) {
+            //     this._activatedItemSub = this.list.activatedItemChange.subscribe((x) => {
+            //         this._itemActivated(x);
+            //     });
+            // }
 
             if (this.list.selectedItemsChange) {
                 this._selectedItemsSub = this.list.selectedItemsChange.subscribe((items) => {

@@ -15,12 +15,13 @@ export class ListOrTableBase extends SelectableList implements OnDestroy {
                 this.selectedItems = items;
             }));
 
-            this._tableSubs.push(table.activatedItemChange.subscribe((event) => {
-                if (!(event.initialValue && this.activatedItem)) {
-                    this.activatedItemChange.emit(event);
-                    this.activatedItem = event.key;
-                }
-            }));
+            // TODO-Tim check dis
+            // this._tableSubs.push(table.activatedItemChange.subscribe((event) => {
+            //     if (!(event.initialValue && this.activatedItem)) {
+            //         this.activatedItemChange.emit(event);
+            //         this.activatedItem = event.key;
+            //     }
+            // }));
         }
     }
     public get table() { return this._table; }

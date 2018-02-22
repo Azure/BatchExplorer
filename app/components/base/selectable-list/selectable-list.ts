@@ -19,12 +19,13 @@ export class SelectableList implements OnDestroy {
                 this.selectedItems = items;
             }));
 
-            this._listSubs.push(list.activatedItemChange.subscribe((event) => {
-                if (!(event.initialValue && this.activatedItem)) {
-                    this.activatedItemChange.emit(event);
-                    this.activatedItem = event.key;
-                }
-            }));
+            // TODO-TIM check dis
+            // this._listSubs.push(list.activatedItemChange.subscribe((event) => {
+            //     if (!(event.initialValue && this.activatedItem)) {
+            //         this.activatedItemChange.emit(event);
+            //         this.activatedItem = event.key;
+            //     }
+            // }));
         }
     }
 
