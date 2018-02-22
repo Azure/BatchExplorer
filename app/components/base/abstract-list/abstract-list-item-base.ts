@@ -42,14 +42,12 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     public selected: boolean = null;
 
     public get active(): boolean {
-        return this.list && this._activeItemKey === this.key;
+        return this.list && this.list.activeItem === this.key;
     }
 
     public urlTree: any = null;
 
     private _routerLink: any = null;
-    private _activeItemKey: string = null;
-    private _activeSub: Subscription;
     /**
      * Need to inject list
      * e.g.  @Inject(forwardRef(() => QuickListComponent)) list: QuickListComponent
@@ -61,10 +59,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         private breadcrumbService: BreadcrumbService) {
 
         this.isFocused = this.list.focusedItem.map(x => x === this.key);
-        this._activeItemKey = list.activeItem;
-        this._activeSub = list.activeItemChange.subscribe((key) => {
-            this._activeItemKey = key;
-        });
     }
 
     public ngOnInit() {
@@ -76,9 +70,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
 
     public ngOnDestroy() {
         this.list = null;
-        if (this._activeSub) {
-            this._activeSub.unsubscribe();
-        }
     }
 
     public handleClick(event: MouseEvent, activate = true) {
