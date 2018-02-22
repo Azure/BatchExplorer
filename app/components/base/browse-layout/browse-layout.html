@@ -4,7 +4,7 @@
             <div class="quick-filter-content">
                 <div class="layout-list-header">
                     <div class="title">
-                        <ng-content select="[bl-list-title]"></ng-content>
+                        <ng-content select="[blBrowseLayoutTitle]"></ng-content>
                     </div>
                     <div class="flex-separator"></div>
                     <div class="actions">
@@ -12,7 +12,7 @@
                             [action]="deleteSelection">
                         </bl-button>
                         <bl-refresh-btn [refresh]="refresh" *ngIf="refresh" type="plain" color="light"></bl-refresh-btn>
-                        <ng-content select="[bl-list-buttons]"></ng-content>
+                        <ng-content select="[blBrowseLayoutButtons]"></ng-content>
                     </div>
                 </div>
                 <div class="quicksearch">
