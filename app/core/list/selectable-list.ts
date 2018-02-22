@@ -1,4 +1,4 @@
-import { Input, Output, EventEmitter, ChangeDetectorRef } from "@angular/core";
+import { ChangeDetectorRef, EventEmitter, Input, Output } from "@angular/core";
 import { ListSelection } from "./list-selection";
 
 export class SelectableList {
@@ -6,6 +6,7 @@ export class SelectableList {
         if (activeItem === this._activeItem) { return; }
         this._activeItem = activeItem;
         this.activeItemChange.emit(activeItem);
+        this.selection = new ListSelection();
         this.changeDetector.markForCheck();
     }
     public get activeItem() { return this._activeItem; }

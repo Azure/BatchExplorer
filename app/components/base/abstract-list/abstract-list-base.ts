@@ -4,7 +4,7 @@ import {
 import { BehaviorSubject, Subscription } from "rxjs";
 
 import { autobind } from "app/core";
-import { SelectableList } from "app/core/list";
+import { ListSelection, SelectableList } from "app/core/list";
 import { FocusSectionComponent } from "../focus-section";
 import { AbstractListItemBase } from "./abstract-list-item-base";
 
@@ -41,6 +41,12 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
         this._config = { ...abstractListDefaultConfig, ...config };
     }
     public get config() { return this._config; }
+
+    public set selection(selection: ListSelection) {
+        super.selection = selection;
+        this._updateSelectedItems();
+    }
+    public get selection() { return super.selection; }
 
     public listFocused: boolean = false;
     public focusedItem = new BehaviorSubject<string>(null);
