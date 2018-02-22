@@ -20,6 +20,7 @@ export class BrowseLayoutComponent implements AfterViewInit {
      * @default id.
      */
     @Input() public quickSearchField = "id";
+    @Input() public keyField = "id";
 
     @ContentChild(BrowseLayoutListDirective)
     public listDirective: BrowseLayoutListDirective;
@@ -32,7 +33,9 @@ export class BrowseLayoutComponent implements AfterViewInit {
     public advancedFilter: Filter = FilterBuilder.none();
     public showAdvancedFilter = false;
 
-    constructor(private activatedRoute: ActivatedRoute, private changeDetector: ChangeDetectorRef) {
+    private _activeItemKey: string = null;
+
+    constructor(activeRoute: ActivatedRoute, private changeDetector: ChangeDetectorRef) {
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
             console.log("GOT hreer");
             if (query === "") {
@@ -44,10 +47,22 @@ export class BrowseLayoutComponent implements AfterViewInit {
             this._updateFilter();
         });
 
-        this.activatedRoute.queryParams.subscribe((params: any) => {
+        activeRoute.queryParams.subscribe((params: any) => {
             if (params.filter) {
                 this.toggleFilter(true);
             }
+        });
+
+        activeRoute.url.subscribe((url) => {
+            const child = activeRoute.snapshot.firstChild;
+            if (child) {
+                const params = child.params;
+                const key = params[this.keyField];
+                if (key) {
+                    this.updateActiveItem(key);
+                }
+            }
+            this.updateActiveItem(null);
         });
     }
 
@@ -58,7 +73,9 @@ export class BrowseLayoutComponent implements AfterViewInit {
         }
         setTimeout(() => {
             this.listDirective.component.quicklist = true;
-        })
+            console.log("Set initial?", this._activeItemKey);
+            this.listDirective.component.activeItem = this._activeItemKey;
+        });
     }
 
     /**
@@ -87,6 +104,14 @@ export class BrowseLayoutComponent implements AfterViewInit {
     public advancedFilterChanged(filter: Filter) {
         this.advancedFilter = filter;
         this._updateFilter();
+    }
+
+    public updateActiveItem(key: string) {
+        this._activeItemKey = key;
+        if (this.listDirective) {
+            console.log("Set from route", key);
+            this.listDirective.component.activeItem = key;
+        }
     }
 
     private _updateFilter() {

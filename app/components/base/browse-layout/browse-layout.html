@@ -38,7 +38,7 @@
         <bl-scrollable class="block">
             <div class="content-wrapper">
                 <div style="position:relative">
-                    <ng-content select="[bl-show-content]"></ng-content>
+                    <router-outlet></router-outlet>
                     <div class="advanced-filter-content" [hidden]="!showAdvancedFilter">
                         <ng-content select="[blBrowseLayoutAdvancedFilter]"></ng-content>
                     </div>

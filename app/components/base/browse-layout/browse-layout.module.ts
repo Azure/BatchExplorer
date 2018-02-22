@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
+import { RouterModule } from "@angular/router";
 
 import { ButtonsModule } from "app/components/base/buttons";
 import { ScrollableModule } from "app/components/base/scrollable";
@@ -12,7 +13,7 @@ const privateComponents = [];
 const publicComponents = [BrowseLayoutComponent, BrowseLayoutListDirective, BrowseLayoutAdvancedFilterDirective];
 
 @NgModule({
-    imports: [ScrollableModule, BrowserModule, FormsModule, ReactiveFormsModule, ButtonsModule],
+    imports: [ScrollableModule, BrowserModule, FormsModule, ReactiveFormsModule, ButtonsModule, RouterModule],
     declarations: [...privateComponents, publicComponents],
     exports: publicComponents,
 })
