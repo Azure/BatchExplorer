@@ -3,10 +3,10 @@ import { ListSelection } from "./list-selection";
 
 export class SelectableList {
     @Input() public set activeItem(activeItem: string) {
+        this.selection = new ListSelection();
         if (activeItem === this._activeItem) { return; }
         this._activeItem = activeItem;
         this.activeItemChange.emit(activeItem);
-        this.selection = new ListSelection();
         this.changeDetector.markForCheck();
     }
     public get activeItem() { return this._activeItem; }

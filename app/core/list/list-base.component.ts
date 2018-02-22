@@ -1,8 +1,14 @@
 import { ChangeDetectorRef, Input, Type, forwardRef } from "@angular/core";
 import { Observable } from "rxjs";
 
+import { ListSelection } from "app/core/list";
 import { Filter } from "app/utils/filter-builder";
 import { SelectableList } from "./selectable-list";
+
+export interface ListBaseComponent {
+    // Optional methods
+    deleteSelection?(selection: ListSelection);
+}
 
 export abstract class ListBaseComponent extends SelectableList {
     @Input() public set quicklist(quicklist: boolean) {
@@ -28,6 +34,7 @@ export abstract class ListBaseComponent extends SelectableList {
     public abstract refresh(): Observable<any>;
 
     public abstract handleFilter(filter: Filter);
+
 }
 
 export function listBaseProvider(callback: () => Type<any>) {

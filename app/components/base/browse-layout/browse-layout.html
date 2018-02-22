@@ -8,8 +8,8 @@
                     </div>
                     <div class="flex-separator"></div>
                     <div class="actions">
-                        <bl-button icon="fa fa-trash" type="plain" color="light" *ngIf="deleteSelectedIsEnabled && selectedItems.length > 0" [skipSuccess]="true"
-                            [action]="deleteSelectedItems">
+                        <bl-button icon="fa fa-trash" type="plain" color="light" *ngIf="deleteSelectionIsEnabled && selection.hasAny()" [skipSuccess]="true"
+                            [action]="deleteSelection">
                         </bl-button>
                         <bl-refresh-btn [refresh]="refresh" *ngIf="refresh" type="plain" color="light"></bl-refresh-btn>
                         <ng-content select="[bl-list-buttons]"></ng-content>

@@ -4,7 +4,12 @@ import {
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 
+import { MatDialog } from "@angular/material";
+import { DeleteSelectedItemsDialogComponent } from "app/components/base/list-and-show-layout";
+import { autobind } from "app/core";
+import { ListSelection } from "app/core/list";
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
+import { Subscription } from "rxjs";
 import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-filter";
 import { BrowseLayoutListDirective } from "./browse-layout-list";
 import "./browse-layout.scss";
@@ -32,10 +37,14 @@ export class BrowseLayoutComponent implements AfterViewInit {
     public quickFilter: Filter = FilterBuilder.none();
     public advancedFilter: Filter = FilterBuilder.none();
     public showAdvancedFilter = false;
+    public deleteSelectionIsEnabled = false;
+
+    public selection = new ListSelection();
 
     private _activeItemKey: string = null;
+    private _selectionChangeSub: Subscription;
 
-    constructor(activeRoute: ActivatedRoute, private changeDetector: ChangeDetectorRef) {
+    constructor(activeRoute: ActivatedRoute, private changeDetector: ChangeDetectorRef, private dialog: MatDialog) {
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
@@ -69,10 +78,23 @@ export class BrowseLayoutComponent implements AfterViewInit {
         if (!this.listDirective) {
             throw new Error("BrowseLayout expect an list component to have the directive blBrowseLayoutList");
         }
+        const component = this.listDirective.component;
         setTimeout(() => {
-            this.listDirective.component.quicklist = true;
-            this.listDirective.component.activeItem = this._activeItemKey;
+            component.quicklist = true;
+            component.activeItem = this._activeItemKey;
+            this.selection = component.selection;
+            this.deleteSelectionIsEnabled = Boolean(component.deleteSelection);
         });
+        this._selectionChangeSub = this.listDirective.component.selectionChange.subscribe((x) => {
+            this.selection = x;
+            this.changeDetector.markForCheck();
+        });
+    }
+
+    public _ngOnDestroy() {
+        if (this._selectionChangeSub) {
+            this._selectionChangeSub.unsubscribe();
+        }
     }
 
     /**
@@ -109,6 +131,21 @@ export class BrowseLayoutComponent implements AfterViewInit {
         if (this.listDirective) {
             this.listDirective.component.activeItem = key;
         }
+    }
+
+    /**
+     * Show a dialog promping the user for confirmation then callback to the list for deleting
+     */
+    @autobind()
+    public deleteSelection() {
+        const dialogRef = this.dialog.open(DeleteSelectedItemsDialogComponent);
+        dialogRef.componentInstance.items = [...this.selection.keys];
+        dialogRef.afterClosed().subscribe((proceed) => {
+            if (proceed) {
+                this.listDirective.component.deleteSelection(this.selection);
+                this.listDirective.component.selection = new ListSelection();
+            }
+        });
     }
 
     private _updateFilter() {

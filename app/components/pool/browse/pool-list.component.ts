@@ -7,19 +7,20 @@ import { autobind } from "app/core";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
+import { BackgroundTaskService } from "app/components/base/background-task";
 import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
 import { SidebarManager } from "app/components/base/sidebar";
 import { TableConfig } from "app/components/base/table";
-import { ListBaseComponent, listBaseProvider } from "app/core/list";
+import { ListBaseComponent, ListSelection, listBaseProvider } from "app/core/list";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
 import { PinnedEntityService, PoolListParams, PoolService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
-import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action";
+import { DeletePoolDialogComponent, DeletePoolTask, PoolResizeDialogComponent } from "../action";
 
 @Component({
     selector: "bl-pool-list",
@@ -46,6 +47,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         private dialog: MatDialog,
         private sidebarManager: SidebarManager,
         changeDetector: ChangeDetectorRef,
+        private taskManager: BackgroundTaskService,
         private pinnedEntityService: PinnedEntityService) {
 
         // super(dialog);
@@ -102,13 +104,12 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         this.data.fetchNext();
     }
 
-    public deleteSelected() {
-        // TODO-TIM fix this
-        // this.taskManager.startTask("", (backgroundTask) => {
-        // const task = new DeletePoolTask(this.poolService, this.selectedItems);
-        // task.start(backgroundTask);
-        // return task.waitingDone;
-        // });
+    public deleteSelection(selection: ListSelection) {
+        this.taskManager.startTask("", (backgroundTask) => {
+            const task = new DeletePoolTask(this.poolService, [...this.selection.keys]);
+            task.start(backgroundTask);
+            return task.waitingDone;
+        });
     }
 
     public deletePool(poolDecorator: PoolDecorator) {
