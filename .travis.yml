@@ -14,7 +14,7 @@ sudo: false
 #       - bsdtar
 
 node_js:
-  - 9
+  - 9.4.0
 python:
   - "3.6"
 
@@ -32,8 +32,8 @@ matrix:
         - virtualenv env -p python3
         - source env/bin/activate
         - python3 --version
-        - nvm install 6.11.4
-        - nvm use 6.11.4
+        - nvm install 9.4.0
+        - nvm use 9.4.0
 
     - language: node_js
       os: linux
