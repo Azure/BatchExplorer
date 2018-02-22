@@ -36,7 +36,7 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ] || [ "${TRAVIS_BRANCH}" = "stable" ]; 
             -v ~/.cache/electron:/root/.cache/electron \
             -v ~/.cache/electron-builder:/root/.cache/electron-builder \
             electronuserland/builder:wine \
-            /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn release --linux --win --publish always --draft"
+            /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn package --linux --publish always --draft"
         else
             npm run package -- --publish always --draft
         fi
