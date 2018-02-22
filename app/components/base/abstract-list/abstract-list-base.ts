@@ -8,11 +8,6 @@ import { BehaviorSubject, Subscription } from "rxjs";
 import { FocusSectionComponent } from "../focus-section";
 import { AbstractListItemBase } from "./abstract-list-item-base";
 
-export interface ActivatedItemChangeEvent {
-    key: string;
-    initialValue?: boolean;
-}
-
 export interface AbstractListBaseConfig {
     /**
      * If it should allow the user to activate an item(And the routerlink if applicable)
@@ -49,8 +44,11 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
 
     @Input()
     public set activeItem(key) {
-        this._activeItemInput = key;
-        this.setActiveItem(key);
+        if (!this.config.activable) {
+            return;
+        }
+        this._activeItem = key;
+        this.clearSelection();
     }
 
     /**
@@ -82,29 +80,25 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      * Map of the selected items. Used for better performance to check if an item is selected.
      */
     private _selectedItems: { [key: string]: boolean } = {};
-    private _activeItemKey = new BehaviorSubject<ActivatedItemChangeEvent>(null);
+    private _activeItem = null;
 
-    /**
-     * Save the value provided in the activeItem input
-     */
-    private _activeItemInput = null;
     private _subs: Subscription[] = [];
 
     constructor(
         private changeDetection: ChangeDetectorRef,
         focusSection: FocusSectionComponent) {
 
-        this._subs.push(this._activeItemKey.subscribe(x => {
-            this.selectedItems = x ? [x.key] : [];
+        // this._subs.push(this._activeItemKey.subscribe(x => {
+        //     this.selectedItems = x ? [x.key] : [];
 
-            if (!x || x.key !== this._activeItemInput) {
-                this.activeItemChange.emit(x && x.key);
-            }
+        //     if (!x || x.key !== this._activeItemInput) {
+        //         this.activeItemChange.emit(x && x.key);
+        //     }
 
-            if (this.listFocused) {
-                this.focusedItem.next(x && x.key);
-            }
-        }));
+        //     if (this.listFocused) {
+        //         this.focusedItem.next(x && x.key);
+        //     }
+        // }));
 
         if (focusSection) {
             this._subs.push(focusSection.keypress.subscribe(this.keyPressed));
@@ -114,19 +108,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     }
 
     public ngAfterViewInit() {
-        if (this.items.length > 0) {
-            this._processInitialItems(this.items);
-        } else {
-            this.items.changes.take(1).subscribe((newItems: QueryList<AbstractListItemBase>) => {
-                this._processInitialItems(newItems);
-            });
-        }
-
         this._subs.push(this.items.changes.subscribe(() => {
-            setTimeout(() => {
-                const active = this.getActiveItemFromRouter();
-                this.setActiveItem(active && active.key);
-            });
             this._updateDisplayItems();
         }));
         this._updateDisplayItems();
@@ -149,15 +131,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      * Test to check if the given key is the active item.
      */
     public isActive(key: string): boolean {
-        return this.config.activable && Boolean(this.activeKey === key);
-    }
-
-    /**
-     * @returns the current key
-     */
-    public get activeKey(): string {
-        const event = this._activeItemKey.value;
-        return event && event.key;
+        return this.config.activable && Boolean(this._activeItem === key);
     }
 
     /**
@@ -193,39 +167,11 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      */
     public clearSelection() {
         this._selectedItems = {};
-        if (this._activeItemKey.value) {
-            this._selectedItems[this._activeItemKey.value.key] = true;
+        if (this._activeItem) {
+            this._selectedItems[this._activeItem] = true;
         }
 
         this._updateSelectedItems();
-    }
-
-    /**
-     * Get the item actually selected(With the routerlink)
-     */
-    public getActiveItemFromRouter(): AbstractListItemBase {
-        const vals = this.items.filter((x) => this._checkItemActive(x));
-        if (vals.length === 0) {
-            return null;
-        } else {
-            return vals[0];
-        }
-    }
-
-    /**
-     * Set the current active item. It will also clear the selection if any
-     * @param key Key of the initial item
-     */
-    public setActiveItem(key: string, initialValue = false) {
-        if (!this.config.activable) {
-            return;
-        }
-        const activeKey = this._activeItemKey;
-        const sameKey = activeKey.value && activeKey.value.key === key;
-        if (!sameKey) {
-            this._activeItemKey.next({ key, initialValue });
-        }
-        this.clearSelection();
     }
 
     /**
@@ -233,7 +179,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      */
     public selectTo(key: string) {
         let foundStart = false;
-        const activeKey = this.activeKey;
+        const activeKey = this._activeItem;
         this.displayItems.some((item) => {
             if (!foundStart && (item.key === activeKey || item.key === key)) {
                 foundStart = true;
@@ -252,7 +198,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     @autobind()
     public onFocus(event: FocusEvent) {
         this.listFocused = true;
-        const active = this._activeItemKey.value;
+        const active = this._activeItem;
         if (!this.focusedItem.value) {
             this.focusedItem.next(active && active.key);
             this.changeDetection.markForCheck();
@@ -311,26 +257,6 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      * Implement this to apply some sorting or other logic
      */
     protected computeDisplayedItems?(): AbstractListItemBase[];
-
-    private _setInitialActivatedItem() {
-        const item = this.getActiveItemFromRouter();
-
-        if (item) {
-            this.setActiveItem(item.key, true);
-            this._updateSelectedItems();
-        }
-    }
-
-    /**
-     * Goes through the initial list of items to check if one is active.
-     */
-    private _processInitialItems(items: QueryList<AbstractListItemBase>) {
-        setTimeout(() => {
-            if (items.length && !this._activeItemKey.value) {
-                this._setInitialActivatedItem();
-            }
-        });
-    }
 
     private _checkItemActive(item: AbstractListItemBase): boolean {
         return this.isActive(item.key);
