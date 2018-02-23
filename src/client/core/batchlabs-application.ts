@@ -1,3 +1,4 @@
+import * as commander from "commander";
 import { app, dialog, ipcMain, session } from "electron";
 import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
@@ -168,11 +169,14 @@ export class BatchLabsApplication {
     }
 
     public openFromArguments(argv: string[]): MainWindow {
-        if (ClientConstants.isDev || argv.length < 2) {
+        const program = commander
+            .version(app.getVersion())
+            .option("--updated", "If the application was just updated")
+            .parse(argv);
+        const arg = program.args[1];
+        if (ClientConstants.isDev || !arg) {
             return this.windows.openNewWindow(null, false);
         }
-
-        const arg = argv[1];
         try {
             const link = new BatchLabsLink(arg);
             return this.openLink(link, false);
