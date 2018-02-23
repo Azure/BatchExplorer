@@ -76,6 +76,7 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
     }
 
     public handleFilter(filter: Filter) {
+        console.log("Handler filter??", filter.toOData());
         if (filter.isEmpty()) {
             this.data.setOptions({ ...this._baseOptions });
         } else {

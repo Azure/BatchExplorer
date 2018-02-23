@@ -122,7 +122,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         }
     }
 
-    public onScrollToBottom(x) {
+    public onScrollToBottom() {
         this.data.fetchNext();
     }
 
