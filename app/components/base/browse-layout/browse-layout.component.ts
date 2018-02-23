@@ -65,7 +65,7 @@ export class BrowseLayoutComponent implements AfterContentInit {
     public selection = new ListSelection();
 
     private _activeItemKey: string = null;
-    private _config: BrowseLayoutConfig;
+    private _config: BrowseLayoutConfig = defaultConfig;
     private _selectionChangeSub: Subscription;
 
     constructor(activeRoute: ActivatedRoute, private changeDetector: ChangeDetectorRef, private dialog: MatDialog) {

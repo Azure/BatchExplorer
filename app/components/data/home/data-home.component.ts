@@ -4,7 +4,7 @@ import { autobind } from "app/core";
 import { Observable, Subscription } from "rxjs";
 
 import { StorageService } from "app/services";
-import { Filter, FilterBuilder } from "app/utils/filter-builder";
+import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 import { FileGroupCreateFormComponent } from "../action";
 
@@ -43,7 +43,7 @@ export class DataHomeComponent implements OnDestroy {
     public containerTypePrefix = new FormControl("");
 
     public layoutConfig: BrowseLayoutConfig = {
-        mergeFilter: this._mergeFilter,
+        mergeFilter: this._mergeFilter.bind(this),
     };
     private _autoStorageSub: Subscription;
 
@@ -130,6 +130,8 @@ export class DataHomeComponent implements OnDestroy {
     private _getFilterValue(filter: Filter): string {
         if (filter.isEmpty()) {
             return "";
+        } else if (filter instanceof Property) {
+            return filter.value;
         } else {
             return (filter.properties[0] as any).value;
         }
