@@ -3,8 +3,6 @@ import { app, protocol } from "electron";
 import { autoUpdater } from "electron-updater";
 import * as path from "path";
 
-app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
-
 import { localStorage } from "client/core/local-storage";
 import { Constants } from "./client-constants";
 import { BatchLabsApplication, listenToSelectCertifcateEvent } from "./core";
