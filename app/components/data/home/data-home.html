@@ -1,6 +1,6 @@
 <bl-storage-error-display [noClassic]="true"></bl-storage-error-display>
 
-<bl-browse-layout #layout>
+<bl-browse-layout #layout [config]="layoutConfig">
     <div blBrowseLayoutTitle>
         Storage containers
     </div>
@@ -23,5 +23,5 @@
                 </select>
             </div>
         </div>
-    <bl-data-container-list blBrowseLayoutList></bl-data-container-list>
+    <bl-data-container-list blBrowseLayoutList [filter]="filter"></bl-data-container-list>
 </bl-browse-layout>

@@ -14,6 +14,26 @@ import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-fi
 import { BrowseLayoutListDirective } from "./browse-layout-list";
 import "./browse-layout.scss";
 
+export interface BrowseLayoutConfig {
+    /**
+     * Name of the field the quicksearch is going to build
+     * @default id
+     */
+    quickSearchField?: string;
+    /**
+     * Field to be used for the key
+     * Route param should match this
+     * @default id
+    */
+    keyField?: string;
+
+    mergeFilter?: (quickSearch: Filter, advanced: Filter) => Filter;
+}
+
+const defaultConfig: BrowseLayoutConfig = {
+    quickSearchField: "id",
+    keyField: "id",
+};
 @Component({
     selector: "bl-browse-layout",
     templateUrl: "browse-layout.html",
@@ -24,7 +44,10 @@ export class BrowseLayoutComponent implements AfterContentInit {
      * Field for the quicksearch.
      * @default id.
      */
-    @Input() public quickSearchField = "id";
+    @Input() public set config(config: BrowseLayoutConfig) {
+        this._config = { ...defaultConfig, ...config };
+    }
+    public get config() { return this._config; }
     @Input() public keyField = "id";
 
     @ContentChild(BrowseLayoutListDirective)
@@ -42,6 +65,7 @@ export class BrowseLayoutComponent implements AfterContentInit {
     public selection = new ListSelection();
 
     private _activeItemKey: string = null;
+    private _config: BrowseLayoutConfig;
     private _selectionChangeSub: Subscription;
 
     constructor(activeRoute: ActivatedRoute, private changeDetector: ChangeDetectorRef, private dialog: MatDialog) {
@@ -49,7 +73,7 @@ export class BrowseLayoutComponent implements AfterContentInit {
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
             } else {
-                this.quickFilter = FilterBuilder.prop(this.quickSearchField).startswith(query.clearWhitespace());
+                this.quickFilter = FilterBuilder.prop(this.config.quickSearchField).startswith(query.clearWhitespace());
             }
             this._updateFilter();
         });
@@ -86,7 +110,6 @@ export class BrowseLayoutComponent implements AfterContentInit {
         this.changeDetector.markForCheck();
         this._selectionChangeSub = this.listDirective.component.selectionChange.subscribe((x) => {
             this.selection = x;
-            console.log("Selection changed??", x);
             this.changeDetector.markForCheck();
         });
     }
@@ -149,7 +172,11 @@ export class BrowseLayoutComponent implements AfterContentInit {
     }
 
     private _updateFilter() {
-        this.filter = FilterBuilder.and(this.quickFilter, this.advancedFilter);
+        if (this.config.mergeFilter) {
+            this.filter = this.config.mergeFilter(this.quickFilter, this.advancedFilter);
+        } else {
+            this.filter = FilterBuilder.and(this.quickFilter, this.advancedFilter);
+        }
         this.listDirective.component.filter = this.filter;
     }
 }

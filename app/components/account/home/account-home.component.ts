@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Set } from "immutable";
 
-import { ListAndShowLayoutComponent } from "app/components/base/list-and-show-layout";
+import { BrowseLayoutComponent } from "app/components/base/browse-layout";
 import { Subscription } from "app/models";
 import { SubscriptionService } from "app/services";
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
@@ -14,7 +14,7 @@ import { Filter, FilterBuilder } from "app/utils/filter-builder";
 export class AccountHomeComponent implements OnInit, OnDestroy {
 
     @ViewChild("layout")
-    public layout: ListAndShowLayoutComponent;
+    public layout: BrowseLayoutComponent;
 
     public subscriptionIds = new FormControl();
 
