@@ -115,7 +115,9 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
      */
     public onSelectedChange(key: string, selected: boolean) {
         const selection = new ListSelection(this.selection);
+        console.log("Selection?", [...selection.keys]);
         selection.select(key, selected);
+        console.log("Selection after?", [...selection.keys]);
         this.selection = selection;
         this._updateSelectedItems();
     }

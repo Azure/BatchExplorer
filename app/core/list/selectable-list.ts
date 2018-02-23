@@ -8,6 +8,7 @@ export class SelectableList {
         });
         if (activeItem === this._activeItem) { return; }
         this._activeItem = activeItem;
+        console.log("Activate dis", activeItem);
         this.activeItemChange.emit(activeItem);
         this.changeDetector.markForCheck();
     }

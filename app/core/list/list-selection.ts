@@ -47,9 +47,9 @@ export class ListSelection {
         if (this.all) { return; }
 
         if (isSelected) {
-            this.keys.add(isSelected);
+            this.keys.add(key);
         } else {
-            this.keys.delete(isSelected);
+            this.keys.delete(key);
         }
     }
 
@@ -64,6 +64,10 @@ export class ListSelection {
 
     public hasAny() {
         return this.all || this.keys.size > 0;
+    }
+
+    public hasMultiple() {
+        return this.all || this.keys.size > 1;
     }
 
     public asJS() {

@@ -52,10 +52,7 @@ export enum QuickListItemStatus {
     `,
 })
 export class QuickListItemStatusComponent {
+    @Input() public tooltip: string;
 
-    @Input()
-    public tooltip: string;
-
-    @Input()
-    public status: QuickListItemStatus;
+    @Input() public status: QuickListItemStatus;
 }

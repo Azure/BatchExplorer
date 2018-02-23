@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { autobind } from "app/core";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { Observable } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { ListBaseComponent } from "app/core/list";
@@ -21,11 +21,6 @@ export class ApplicationPackageTableComponent extends ListBaseComponent implemen
 
     public packages: List<ApplicationPackage> = List([]);
     public displayedPackages: List<ApplicationPackage> = List([]);
-
-    // enabled handlers for the UI
-    public deleteItemEnabled = new BehaviorSubject<boolean>(false);
-    public activateItemEnabled = new BehaviorSubject<boolean>(false);
-    public editItemEnabled = new BehaviorSubject<boolean>(false);
 
     constructor(
         protected dialog: MatDialog,

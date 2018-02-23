@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 
+import { ListSelection } from "app/core/list";
 import { BatchApplication, PackageState } from "app/models";
 import { ComponentUtils } from "app/utils";
 
@@ -10,11 +11,15 @@ import { ComponentUtils } from "app/utils";
 })
 
 export class ApplicationPackagesComponent implements OnChanges {
+
     @Input() public application: BatchApplication;
 
     public deleteEnabled = false;
     public editEnabled = false;
     public activateEnabled = false;
+
+    private _selection: ListSelection = new ListSelection();
+    private _activeItem: string;
 
     constructor(private changeDetector: ChangeDetectorRef) {
 
@@ -29,29 +34,39 @@ export class ApplicationPackagesComponent implements OnChanges {
     }
 
     public activeItemChanged(key: string) {
-        this.activateEnabled = this._activatedItemActivateEnabled(key);
-        this.deleteEnabled = this._activatedItemDeleteEnabled(key);
-        this.editEnabled = this._activatedItemEditEnabled(key);
-        this.changeDetector.markForCheck();
+        this._activeItem = key;
+        this._updateEnabled();
     }
 
-    private _activatedItemEditEnabled(activeItemKey: string) {
-        return this.application.allowUpdates && !this._isPackagePending(activeItemKey)
-            && Boolean(activeItemKey);
+    public selectionChanged(selection: ListSelection) {
+        this._selection = selection;
+        this._updateEnabled();
     }
 
-    private _activatedItemDeleteEnabled(activeItemKey: any) {
-        return this.application.allowUpdates && Boolean(activeItemKey);
+    private _activatedItemEditEnabled() {
+        return this.application.allowUpdates && !this._isPackagePending(this._activeItem)
+            && Boolean(this._activeItem) && !this._selection.hasMultiple();
     }
 
-    private _activatedItemActivateEnabled(activeItemKey: string) {
-        return this._isPackagePending(activeItemKey);
+    private _activatedItemDeleteEnabled() {
+        return this.application.allowUpdates && Boolean(this._activeItem);
+    }
+
+    private _activatedItemActivateEnabled() {
+        return this._isPackagePending(this._activeItem) && !this._selection.hasMultiple();
     }
 
     private _isPackagePending(version: string): boolean {
         if (!version) { return false; }
         const pkg = this.application.packages.filter(x => x.version === version).first();
-        return pkg && pkg.version === PackageState.pending;
+        return pkg && pkg.state === PackageState.pending;
+    }
+
+    private _updateEnabled() {
+        this.activateEnabled = this._activatedItemActivateEnabled();
+        this.deleteEnabled = this._activatedItemDeleteEnabled();
+        this.editEnabled = this._activatedItemEditEnabled();
+        this.changeDetector.markForCheck();
     }
 
     private _resetEnabled() {

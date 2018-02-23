@@ -3,7 +3,7 @@ import { Observable } from "rxjs";
 
 import { FocusSectionComponent } from "app/components/base/focus-section";
 import { ListSelection } from "app/core/list";
-import { Filter } from "app/utils/filter-builder";
+import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { SelectableList } from "./selectable-list";
 
 export interface ListBaseComponent {
@@ -33,7 +33,7 @@ export abstract class ListBaseComponent extends SelectableList {
 
     @ViewChild(FocusSectionComponent) public focusSection: FocusSectionComponent;
 
-    private _filter: Filter;
+    private _filter: Filter = FilterBuilder.none();
     private _quicklist: boolean = false;
 
     constructor(changeDetector: ChangeDetectorRef) {
