@@ -86,6 +86,7 @@ export class BrowseLayoutComponent implements AfterContentInit {
         this.changeDetector.markForCheck();
         this._selectionChangeSub = this.listDirective.component.selectionChange.subscribe((x) => {
             this.selection = x;
+            console.log("Selection changed??", x);
             this.changeDetector.markForCheck();
         });
     }

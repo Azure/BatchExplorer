@@ -3,7 +3,9 @@ import { ListSelection } from "./list-selection";
 
 export class SelectableList {
     @Input() public set activeItem(activeItem: string) {
-        this.selection = new ListSelection();
+        this.selection = new ListSelection({
+            keys: activeItem ? [activeItem] : [],
+        });
         if (activeItem === this._activeItem) { return; }
         this._activeItem = activeItem;
         this.activeItemChange.emit(activeItem);

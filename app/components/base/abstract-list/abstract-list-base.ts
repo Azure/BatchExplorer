@@ -60,18 +60,6 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
         focusSection: FocusSectionComponent) {
         super(changeDetection);
 
-        // this._subs.push(this._activeItemKey.subscribe(x => {
-        //     this.selectedItems = x ? [x.key] : [];
-
-        //     if (!x || x.key !== this._activeItemInput) {
-        //         this.activeItemChange.emit(x && x.key);
-        //     }
-
-        //     if (this.listFocused) {
-        //         this.focusedItem.next(x && x.key);
-        //     }
-        // }));
-
         if (focusSection) {
             this._subs.push(focusSection.keypress.subscribe(this.keyPressed));
             this._subs.push(focusSection.onFocus.subscribe(this.onFocus));

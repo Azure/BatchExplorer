@@ -1,10 +1,10 @@
 export interface ListSelectionAttributes {
-    all: boolean;
+    all?: boolean;
 
     /**
      * List of keys selected
     */
-    keys: string[];
+    keys?: string[];
 }
 
 export class ListSelection {
