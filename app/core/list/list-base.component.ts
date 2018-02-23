@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Input, Type, forwardRef } from "@angular/core";
+import { ChangeDetectorRef, Input, Type, ViewChild, forwardRef } from "@angular/core";
 import { Observable } from "rxjs";
 
+import { FocusSectionComponent } from "app/components/base/focus-section";
 import { ListSelection } from "app/core/list";
 import { Filter } from "app/utils/filter-builder";
 import { SelectableList } from "./selectable-list";
@@ -24,12 +25,13 @@ export abstract class ListBaseComponent extends SelectableList {
     public get quicklist() { return this._quicklist; }
 
     @Input() public set filter(filter: Filter) {
-        console.log("Set filter?", filter.toOData());
         this._filter = filter;
         this.handleFilter(filter);
         this.changeDetector.markForCheck();
     }
     public get filter() { return this._filter; }
+
+    @ViewChild(FocusSectionComponent) public focusSection: FocusSectionComponent;
 
     private _filter: Filter;
     private _quicklist: boolean = false;

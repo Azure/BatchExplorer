@@ -1,5 +1,5 @@
 import {
-    AfterViewInit, ChangeDetectorRef, ContentChildren, EventEmitter, Input, OnDestroy, Output, QueryList,
+    AfterViewInit, ChangeDetectorRef, ContentChildren, Input, OnDestroy, QueryList,
 } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
@@ -154,7 +154,12 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
     public onFocus(event: FocusEvent) {
         this.listFocused = true;
         if (!this.focusedItem.value) {
-            this.focusedItem.next(this.activeItem);
+            if (this.activeItem) {
+                this.focusedItem.next(this.activeItem);
+            } else {
+                const first = this.items.first;
+                this.focusedItem.next(first && first.key);
+            }
             this.changeDetector.markForCheck();
         }
     }

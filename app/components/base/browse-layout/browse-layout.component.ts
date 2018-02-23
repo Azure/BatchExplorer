@@ -128,8 +128,9 @@ export class BrowseLayoutComponent implements AfterContentInit {
         if (event.code === "ArrowDown") {
             event.preventDefault();
             event.stopPropagation();
-            // TODO-TIM check that
-            // this.listFocusSection.focus();
+            if (this.listDirective.component.focusSection) {
+                this.listDirective.component.focusSection.focus();
+            }
         }
     }
 
