@@ -140,8 +140,9 @@ export class BrowseLayoutComponent implements AfterContentInit {
     }
 
     public listScrolledToBottom() {
-        // console.log("TODO");
-        // TODO-TIM
+        if (this.listDirective.component.onScrollToBottom) {
+            this.listDirective.component.onScrollToBottom();
+        }
     }
 
     public advancedFilterChanged(filter: Filter) {

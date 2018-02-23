@@ -12,6 +12,8 @@ export interface ListBaseComponent {
     refresh?(): Observable<any>;
 
     handleFilter?(filter: Filter);
+
+    onScrollToBottom?();
 }
 
 export abstract class ListBaseComponent extends SelectableList {
