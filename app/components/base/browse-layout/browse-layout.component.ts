@@ -1,5 +1,5 @@
 import {
-    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input,
+    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
@@ -19,7 +19,7 @@ import "./browse-layout.scss";
     templateUrl: "browse-layout.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BrowseLayoutComponent implements AfterViewInit {
+export class BrowseLayoutComponent implements AfterContentInit {
     /**
      * Field for the quicksearch.
      * @default id.
@@ -74,17 +74,16 @@ export class BrowseLayoutComponent implements AfterViewInit {
         });
     }
 
-    public ngAfterViewInit() {
+    public ngAfterContentInit() {
         if (!this.listDirective) {
             throw new Error("BrowseLayout expect an list component to have the directive blBrowseLayoutList");
         }
         const component = this.listDirective.component;
-        setTimeout(() => {
-            component.quicklist = true;
-            component.activeItem = this._activeItemKey;
-            this.selection = component.selection;
-            this.deleteSelectionIsEnabled = Boolean(component.deleteSelection);
-        });
+        component.quicklist = true;
+        component.activeItem = this._activeItemKey;
+        this.selection = component.selection;
+        this.deleteSelectionIsEnabled = Boolean(component.deleteSelection);
+        this.changeDetector.markForCheck();
         this._selectionChangeSub = this.listDirective.component.selectionChange.subscribe((x) => {
             this.selection = x;
             this.changeDetector.markForCheck();

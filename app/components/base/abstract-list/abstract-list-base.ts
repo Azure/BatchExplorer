@@ -126,7 +126,9 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
      * @param selected If the item with the given key should be selected
      */
     public onSelectedChange(key: string, selected: boolean) {
-        this.selection.select(key, selected);
+        const selection = new ListSelection(this.selection);
+        selection.select(key, selected);
+        this.selection = selection;
         this._updateSelectedItems();
     }
 
@@ -134,7 +136,7 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
      * Clear the selection by removing all selected items but the active one if applicable.
      */
     public clearSelection() {
-        this.selection.clear();
+        this.selection = new ListSelection();
         this._updateSelectedItems();
     }
 
@@ -144,19 +146,20 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
     public selectTo(key: string) {
         let foundStart = false;
         const activeKey = this.activeItem;
+        const selection = new ListSelection(this.selection);
         this.displayItems.some((item) => {
             if (!foundStart && (item.key === activeKey || item.key === key)) {
                 foundStart = true;
-                this.selection.add(item.key);
+                selection.add(item.key);
             } else if (foundStart) {
-                this.selection.add(item.key);
+                selection.add(item.key);
                 // Reached the end of the selection
                 if (item.key === activeKey || item.key === key) {
                     return true;
                 }
             }
         });
-        this._updateSelectedItems();
+        this.selection = selection;
     }
 
     @autobind()
