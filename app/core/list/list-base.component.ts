@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Input, Type, ViewChild, forwardRef } from "@angular/core";
+import { ChangeDetectorRef, Input, ViewChild } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { FocusSectionComponent } from "app/components/base/focus-section";
