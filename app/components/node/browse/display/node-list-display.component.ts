@@ -3,7 +3,6 @@ import { List } from "immutable";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent } from "app/components/base/quick-list";
-import { ListOrTableBase } from "app/components/base/selectable-list";
 import { TableComponent } from "app/components/base/table";
 import { ListBaseComponent } from "app/core/list";
 import { Node } from "app/models";

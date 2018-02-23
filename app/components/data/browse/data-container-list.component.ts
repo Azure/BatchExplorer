@@ -8,7 +8,6 @@ import { BackgroundTaskService } from "app/components/base/background-task";
 import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
-import { ListOrTableBase } from "app/components/base/selectable-list";
 import { SidebarManager } from "app/components/base/sidebar";
 import { ListBaseComponent, ListSelection, listBaseProvider } from "app/core/list";
 import { BlobContainer, LeaseStatus } from "app/models";
