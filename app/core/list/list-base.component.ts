@@ -24,7 +24,7 @@ export abstract class ListBaseComponent extends SelectableList {
     public get quicklist() { return this._quicklist; }
 
     @Input() public set filter(filter: Filter) {
-        console.log("Set filter?");
+        console.log("Set filter?", filter.toOData());
         this._filter = filter;
         this.handleFilter(filter);
         this.changeDetector.markForCheck();
