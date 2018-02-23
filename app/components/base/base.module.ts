@@ -26,7 +26,7 @@ import { GraphsModule } from "./graphs";
 import { GuardsModule } from "./guards";
 import { InfoBoxModule } from "./info-box";
 import {
-    DeleteSelectedItemsDialogComponent, EntityDetailsListComponent, ListAndShowLayoutComponent, ListLoadingComponent,
+    DeleteSelectedItemsDialogComponent, EntityDetailsListComponent, ListLoadingComponent,
 } from "./list-and-show-layout";
 import { LoadingComponent, SimpleLoadingComponent } from "./loading";
 import { NotificationModule } from "./notifications";
