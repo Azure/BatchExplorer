@@ -1,7 +1,6 @@
 import {
     ChangeDetectorRef, Component, ContentChildren, Input, Optional, QueryList,
 } from "@angular/core";
-import { Router } from "@angular/router";
 
 import { AbstractListBase } from "../abstract-list";
 import { FocusSectionComponent } from "../focus-section";

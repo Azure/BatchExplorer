@@ -2,7 +2,6 @@ import {
     ChangeDetectorRef, Component, ContentChild, ContentChildren, EventEmitter,
     HostBinding, Input, Optional, Output, QueryList,
 } from "@angular/core";
-import { Router } from "@angular/router";
 
 import { FocusSectionComponent } from "app/components/base/focus-section";
 import { DragUtils, log } from "app/utils";

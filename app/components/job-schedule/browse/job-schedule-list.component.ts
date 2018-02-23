@@ -108,7 +108,7 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
         }
     }
 
-    public onScrollToBottom(x) {
+    public onScrollToBottom() {
         this.data.fetchNext();
     }
 

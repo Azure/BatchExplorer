@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "app/core";
@@ -104,7 +104,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         }
     }
 
-    public onScrollToBottom(x) {
+    public onScrollToBottom() {
         if (this.hasAutoStorage) {
             this.data.fetchNext();
         }

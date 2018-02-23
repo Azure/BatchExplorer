@@ -1,6 +1,6 @@
 import { Input, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { Observable, Subscription } from "rxjs";
+import { Observable } from "rxjs";
 
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
 import { ContextMenuService } from "app/components/base/context-menu";

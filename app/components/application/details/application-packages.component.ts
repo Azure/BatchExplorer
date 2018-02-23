@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 
-import { ListSelection } from "app/core/list";
 import { BatchApplication, PackageState } from "app/models";
 import { ComponentUtils } from "app/utils";
 
@@ -30,7 +29,6 @@ export class ApplicationPackagesComponent implements OnChanges {
     }
 
     public activeItemChanged(key: string) {
-        console.log("Mark for check???");
         this.activateEnabled = this._activatedItemActivateEnabled(key);
         this.deleteEnabled = this._activatedItemDeleteEnabled(key);
         this.editEnabled = this._activatedItemEditEnabled(key);
