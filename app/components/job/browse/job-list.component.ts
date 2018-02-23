@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, forwardRef } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -10,7 +10,7 @@ import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
 import { TableComponent } from "app/components/base/table";
-import { ListBaseComponent, ListSelection, listBaseProvider } from "app/core/list";
+import { ListBaseComponent, ListSelection } from "app/core/list";
 import { Job, JobState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
 import { JobListParams, JobService, PinnedEntityService } from "app/services";
@@ -28,7 +28,10 @@ import {
 @Component({
     selector: "bl-job-list",
     templateUrl: "job-list.html",
-    providers: [listBaseProvider(() => JobListComponent)],
+    providers: [{
+        provide: ListBaseComponent,
+        useExisting: forwardRef(() => JobListComponent),
+    }],
 })
 export class JobListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;

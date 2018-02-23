@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { Router } from "@angular/router";
 import { autobind } from "app/core";
@@ -8,7 +8,7 @@ import { Observable, Subscription } from "rxjs";
 import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
-import { ListBaseComponent, listBaseProvider } from "app/core/list";
+import { ListBaseComponent } from "app/core/list";
 import { BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
@@ -19,7 +19,10 @@ import { ApplicationEditDialogComponent, DeleteApplicationDialogComponent } from
 @Component({
     selector: "bl-application-list",
     templateUrl: "application-list.html",
-    providers: [listBaseProvider(() => ApplicationListComponent)],
+    providers: [{
+        provide: ListBaseComponent,
+        useExisting: forwardRef(() => ApplicationListComponent),
+    }],
 })
 export class ApplicationListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public status: Observable<LoadingStatus>;

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from "@angular/core";
+import { ChangeDetectorRef, Component, forwardRef } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { autobind } from "app/core";
 import { List } from "immutable";
@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
-import { ListBaseComponent, listBaseProvider } from "app/core/list";
+import { ListBaseComponent } from "app/core/list";
 import { AccountResource } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
 import { Filter, FilterMatcher, Operator } from "app/utils/filter-builder";
@@ -15,7 +15,10 @@ import { SidebarManager } from "../../base/sidebar";
 @Component({
     selector: "bl-account-list",
     templateUrl: "account-list.html",
-    providers: [listBaseProvider(() => AccountListComponent)],
+    providers: [{
+        provide: ListBaseComponent,
+        useExisting: forwardRef(() => AccountListComponent),
+    }],
 })
 export class AccountListComponent extends ListBaseComponent {
 

@@ -12,7 +12,10 @@ export class BrowseLayoutListDirective {
             log.error("Container ref: ", ref.element.nativeElement);
             throw new Error(`The component under this directive is not of type ListBaseComponent.`
                 + `Make sure you extends ListBaseComponent and set the provider`
-                + `providers: [listBaseProvider(() => MyComponent)],`);
+                + `providers: [{
+                    provide: ListBaseComponent,
+                    useExisting: forwardRef(() => MyComponent),
+                }],`);
         }
     }
 }

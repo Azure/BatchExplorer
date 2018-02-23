@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, OnInit, forwardRef } from "@angular/core";
 import { autobind } from "app/core";
 import { Observable } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
 import { LoadingStatus } from "app/components/base/loading";
-import { ListBaseComponent, listBaseProvider } from "app/core/list";
+import { ListBaseComponent } from "app/core/list";
 import { Node } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
 import { ListView } from "app/services/core";
@@ -14,7 +14,10 @@ import { Filter } from "app/utils/filter-builder";
 @Component({
     selector: "bl-node-list",
     templateUrl: "node-list.html",
-    providers: [listBaseProvider(() => NodeListComponent)],
+    providers: [{
+        provide: ListBaseComponent,
+        useExisting: forwardRef(() => NodeListComponent),
+    }],
 })
 export class NodeListComponent extends ListBaseComponent implements OnInit {
     public LoadingStatus = LoadingStatus;

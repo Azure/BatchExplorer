@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "app/core";
@@ -9,7 +9,7 @@ import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
 import { SidebarManager } from "app/components/base/sidebar";
-import { ListBaseComponent, ListSelection, listBaseProvider } from "app/core/list";
+import { ListBaseComponent, ListSelection } from "app/core/list";
 import { BlobContainer, LeaseStatus } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { ListContainerParams, PinnedEntityService, StorageService } from "app/services";
@@ -25,7 +25,10 @@ const defaultListOptions = {
 @Component({
     selector: "bl-data-container-list",
     templateUrl: "data-container-list.html",
-    providers: [listBaseProvider(() => DataContainerListComponent)],
+    providers: [{
+        provide: ListBaseComponent,
+        useExisting: forwardRef(() => DataContainerListComponent),
+    }],
 })
 export class DataContainerListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public status: Observable<LoadingStatus>;

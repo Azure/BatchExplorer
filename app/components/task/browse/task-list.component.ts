@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild, forwardRef } from "@angular/core";
 import { autobind } from "app/core";
 import { Observable, Subscription } from "rxjs";
 
@@ -7,7 +7,7 @@ import { TaskListDisplayComponent } from "./display";
 import { ActivatedRoute } from "@angular/router";
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { LoadingStatus } from "app/components/base/loading";
-import { ListBaseComponent, ListSelection, listBaseProvider } from "app/core/list";
+import { ListBaseComponent, ListSelection } from "app/core/list";
 import { Task } from "app/models";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
 import { ListView } from "app/services/core";
@@ -18,7 +18,10 @@ import { DeleteTaskAction } from "../action";
 @Component({
     selector: "bl-task-list",
     templateUrl: "task-list.html",
-    providers: [listBaseProvider(() => TaskListComponent)],
+    providers: [{
+        provide: ListBaseComponent,
+        useExisting: forwardRef(() => TaskListComponent),
+    }],
 })
 export class TaskListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;

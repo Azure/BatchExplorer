@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component,  OnDestroy, OnInit,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component,  OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material";
@@ -11,7 +11,7 @@ import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
 import { autobind } from "app/core";
-import { ListBaseComponent, ListSelection, listBaseProvider } from "app/core/list";
+import { ListBaseComponent, ListSelection } from "app/core/list";
 import { JobSchedule, JobScheduleState } from "app/models";
 import { JobScheduleListParams, JobScheduleService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
@@ -29,7 +29,10 @@ import {
     selector: "bl-job-schedule-list",
     templateUrl: "job-schedule-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [listBaseProvider(() => JobScheduleListComponent)],
+    providers: [{
+        provide: ListBaseComponent,
+        useExisting: forwardRef(() => JobScheduleListComponent),
+    }],
 })
 export class JobScheduleListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;

@@ -40,10 +40,3 @@ export abstract class ListBaseComponent extends SelectableList {
         super(changeDetector);
     }
 }
-
-export function listBaseProvider(callback: () => Type<any>) {
-    return {
-        provide: ListBaseComponent,
-        useExisting: forwardRef(callback),
-    };
-}

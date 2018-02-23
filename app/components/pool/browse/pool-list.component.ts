@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -13,7 +13,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
 import { SidebarManager } from "app/components/base/sidebar";
 import { TableConfig } from "app/components/base/table";
-import { ListBaseComponent, ListSelection, listBaseProvider } from "app/core/list";
+import { ListBaseComponent, ListSelection } from "app/core/list";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
 import { PinnedEntityService, PoolListParams, PoolService } from "app/services";
@@ -26,7 +26,10 @@ import { DeletePoolDialogComponent, DeletePoolTask, PoolResizeDialogComponent } 
     selector: "bl-pool-list",
     templateUrl: "pool-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [listBaseProvider(() => PoolListComponent)],
+    providers: [{
+        provide: ListBaseComponent,
+        useExisting: forwardRef(() => PoolListComponent),
+    }],
 })
 export class PoolListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
