@@ -115,14 +115,13 @@ describe("QuickListComponent", () => {
             click(items[3].query(By.css(".quick-list-item")), ButtonClickEvents.leftCtrl);
             fixture.detectChanges();
             expect(activeItemKey).toEqual("item-2", "Should not have changed active item");
-            console.log("Selection", [...selection.keys]);
+
             expect(selection.keys.size).toBe(2);
             expect(selection.keys.has("item-2")).toBe(true, "has item-2");
             expect(selection.keys.has("item-4")).toBe(true, "has item-4");
 
             click(items[4].query(By.css(".quick-list-item")), ButtonClickEvents.leftCtrl);
             expect(selection.keys.size).toBe(3);
-            console.log("Selection2", [...selection.keys]);
 
             expect(selection.keys.has("item-2")).toBe(true, "has item-2");
             expect(selection.keys.has("item-4")).toBe(true, "has item-4");

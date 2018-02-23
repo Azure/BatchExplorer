@@ -89,7 +89,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
                     this.list.selectTo(this.key);
                 } else if (ctrlKey) {
                     this.selected = !this.selected;
-                    console.log("chagne selected?", this.key, this.selected);
                     this.list.onSelectedChange(this.key, this.selected);
                 }
                 event.stopPropagation();

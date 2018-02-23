@@ -3,7 +3,7 @@ export interface ListSelectionAttributes {
 
     /**
      * List of keys selected
-    */
+     */
     keys?: string[];
 }
 

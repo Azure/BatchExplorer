@@ -24,7 +24,7 @@ export interface BrowseLayoutConfig {
      * Field to be used for the key
      * Route param should match this
      * @default id
-    */
+     */
     keyField?: string;
 
     mergeFilter?: (quickSearch: Filter, advanced: Filter) => Filter;
@@ -61,6 +61,7 @@ export class BrowseLayoutComponent implements AfterContentInit {
     public advancedFilter: Filter = FilterBuilder.none();
     public showAdvancedFilter = false;
     public deleteSelectionIsEnabled = false;
+    public refreshEnabled = false;
 
     public selection = new ListSelection();
 
@@ -107,6 +108,7 @@ export class BrowseLayoutComponent implements AfterContentInit {
         component.activeItem = this._activeItemKey;
         this.selection = component.selection;
         this.deleteSelectionIsEnabled = Boolean(component.deleteSelection);
+        this.refreshEnabled = Boolean(component.refresh);
         this.changeDetector.markForCheck();
         this._selectionChangeSub = this.listDirective.component.selectionChange.subscribe((x) => {
             this.selection = x;
@@ -144,6 +146,12 @@ export class BrowseLayoutComponent implements AfterContentInit {
         if (this.listDirective.component.onScrollToBottom) {
             this.listDirective.component.onScrollToBottom();
         }
+    }
+
+    @autobind()
+    public refresh() {
+        if (!this.listDirective.component.refresh) { return; }
+        return this.listDirective.component.refresh();
     }
 
     public advancedFilterChanged(filter: Filter) {

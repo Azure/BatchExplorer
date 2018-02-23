@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, ViewChild,
+} from "@angular/core";
 import { autobind } from "app/core";
 import { Observable } from "rxjs";
 

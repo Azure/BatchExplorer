@@ -63,7 +63,6 @@ export class EntityDetailsListComponent {
 
     constructor(changeDetector: ChangeDetectorRef) {
         this.searchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
-            console.log("Set query??");
             if (query === "") {
                 this.filter = FilterBuilder.none();
             } else {
