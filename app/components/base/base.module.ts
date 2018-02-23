@@ -86,7 +86,6 @@ const components = [
     DatetimePickerComponent,
     DurationPickerComponent,
     IconComponent,
-    ListAndShowLayoutComponent,
     PinnedDropDownComponent,
     SimpleLoadingComponent,
     SimpleDialogComponent,
