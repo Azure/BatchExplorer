@@ -169,12 +169,15 @@ export class BatchLabsApplication {
     }
 
     public openFromArguments(argv: string[]): MainWindow {
+        if (ClientConstants.isDev) {
+            return this.windows.openNewWindow(null, false);
+        }
         const program = commander
             .version(app.getVersion())
             .option("--updated", "If the application was just updated")
-            .parse(argv);
-        const arg = program.args[1];
-        if (ClientConstants.isDev || !arg) {
+            .parse(["", ...argv]);
+        const arg = program.args[0];
+        if (!arg) {
             return this.windows.openNewWindow(null, false);
         }
         try {
