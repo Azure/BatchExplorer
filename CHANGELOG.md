@@ -1,3 +1,10 @@
+# 0.13.1
+
+Hot fixes:
+* Logs being in the wrong folder [#1087](https://github.com/Azure/BatchLabs/issues/1087)
+* Proxy settings crashing if not in the expected format
+* Error popup after updating [#1083](https://github.com/Azure/BatchLabs/issues/1083)
+
 # 0.13.0
 [All items](https://github.com/Azure/BatchLabs/milestone/15?closed=1)
 
