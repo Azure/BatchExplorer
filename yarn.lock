@@ -3976,9 +3976,9 @@ get-caller-file@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-1.0.2.tgz#f702e63127e7e231c160a80c1554acb70d5047e5"
 
-get-proxy-settings@~0.1.8:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/get-proxy-settings/-/get-proxy-settings-0.1.8.tgz#18a8cec0d74b2fdabfff72c6c6be06dfafe739e6"
+get-proxy-settings@~0.1.9:
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/get-proxy-settings/-/get-proxy-settings-0.1.9.tgz#c10960d5c72ad5d219e1547fc506bd3a921ec2b0"
   dependencies:
     npm-conf "~1.1.3"
 
