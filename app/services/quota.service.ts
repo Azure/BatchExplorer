@@ -70,7 +70,6 @@ export class QuotaService implements OnDestroy {
     }
 
     private _extractUsage(pools: List<Pool>, jobs: List<Job>) {
-        console.log("oools", this.poolService);
         const { dedicatedCores, lowpriCores } = this._getCoreUsages(pools);
         return new BatchQuotas({
             pools: pools.size,

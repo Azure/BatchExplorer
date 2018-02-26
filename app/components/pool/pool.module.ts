@@ -12,6 +12,7 @@ import { TaskBaseModule } from "app/components/task/base";
 import { NetworkConfigurationModule } from "./network-configuration";
 import { UserAccountModule } from "./user-account";
 
+import { CommonModule } from "app/components/common";
 import {
     AppLicensePickerComponent,
     AutoscaleFormulaPickerComponent,
@@ -27,7 +28,6 @@ import {
     PoolScalePickerComponent,
     VmSizePickerComponent,
 } from "app/components/pool/action";
-import { AccountModule } from "../account/account.module";
 
 const components = [
     AppLicensePickerComponent, AutoscaleFormulaPickerComponent,
@@ -39,7 +39,7 @@ const components = [
 
 const modules = [
     PoolBaseModule, PoolDetailsModule, NetworkConfigurationModule, PoolGraphsModule,
-    StartTaskModule, UserAccountModule, AccountModule,
+    StartTaskModule, UserAccountModule,
     TaskBaseModule, ...commonModules,
 ];
 

@@ -32,6 +32,7 @@ import { BatchLabsErrorHandler } from "app/error-handler";
 
 // services
 import { HttpModule } from "@angular/http";
+import { CommonModule } from "app/components/common";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
 import { MaterialModule } from "app/core";
@@ -135,6 +136,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         BatchClientService,
         CacheDataService,
         CommandService,
+        CommonModule,
         ComputeService,
         ElectronRemote,
         ElectronShell,

@@ -5,7 +5,6 @@ import { EditStorageAccountFormComponent } from "app/components/account/action/e
 import { StorageAccountPickerComponent } from "app/components/account/base/storage-account-picker";
 import { PoolBaseModule } from "app/components/pool/base";
 import { DeleteAccountDialogComponent } from "./action/delete/delete-account-dialog.component";
-import { InlineQuotaComponent } from "./base/inline-quota";
 import { AccountBrowseModule } from "./browse";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./details";
 import { AccountQuotasCardComponent } from "./details/account-quotas-card";
@@ -18,7 +17,7 @@ const components = [
     AccountDefaultComponent, AccountDetailsComponent,
     AccountHomeComponent, DeleteAccountDialogComponent, StorageAccountCardComponent,
     EditStorageAccountFormComponent, StorageAccountPickerComponent, AccountQuotasCardComponent,
-    MonitorChartComponent, InlineQuotaComponent,
+    MonitorChartComponent,
 ];
 
 const modules = [
