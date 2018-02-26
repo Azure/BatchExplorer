@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -10,74 +10,51 @@ import { Observable, Subscription } from "rxjs";
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
-import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
-import { ListOrTableBase } from "app/components/base/selectable-list";
+import { QuickListItemStatus } from "app/components/base/quick-list";
 import { SidebarManager } from "app/components/base/sidebar";
-import { TableComponent, TableConfig } from "app/components/base/table";
+import { TableConfig } from "app/components/base/table";
+import { ListBaseComponent, ListSelection } from "app/core/list";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
 import { PinnedEntityService, PoolListParams, PoolService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
-import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action";
-import { DeletePoolTask } from "../action/delete";
+import { DeletePoolDialogComponent, DeletePoolTask, PoolResizeDialogComponent } from "../action";
 
 @Component({
     selector: "bl-pool-list",
     templateUrl: "pool-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [{
+        provide: ListBaseComponent,
+        useExisting: forwardRef(() => PoolListComponent),
+    }],
 })
-export class PoolListComponent extends ListOrTableBase implements OnInit, OnDestroy {
+export class PoolListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
     public status: Observable<LoadingStatus>;
     public data: ListView<Pool, PoolListParams>;
-
-    // Inheritance bugs https://github.com/angular/angular/issues/5415
-    @Output()
-    public itemSelected: EventEmitter<any>;
-
-    @ViewChild(TableComponent)
-    public table: TableComponent;
-
-    @ViewChild(QuickListComponent)
-    public list: QuickListComponent;
-
-    @Input()
-    public quickList: boolean;
-
-    @Input()
-    public set filter(filter: Filter) {
-        this._filter = filter;
-
-        if (filter.isEmpty()) {
-            this.data.setOptions({ });
-        } else {
-            this.data.setOptions({ filter: filter.toOData() });
-        }
-
-        this.data.fetchNext();
-    }
-    public get filter(): Filter { return this._filter; }
 
     public tableConfig: TableConfig = {
         showCheckbox: true,
     };
 
     public pools: List<PoolDecorator> = List([]);
-    private _filter: Filter;
     private _subs: Subscription[] = [];
 
     constructor(
         private poolService: PoolService,
         activatedRoute: ActivatedRoute,
         router: Router,
-        dialog: MatDialog,
+        private dialog: MatDialog,
         private sidebarManager: SidebarManager,
-        private pinnedEntityService: PinnedEntityService,
-        private taskManager: BackgroundTaskService) {
+        changeDetector: ChangeDetectorRef,
+        private taskManager: BackgroundTaskService,
+        private pinnedEntityService: PinnedEntityService) {
 
-        super(dialog);
+        // super(dialog);
+        super(changeDetector);
         this.data = this.poolService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 
@@ -103,6 +80,16 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         return this.data.refresh();
     }
 
+    public handleFilter(filter: Filter) {
+        if (filter.isEmpty()) {
+            this.data.setOptions({});
+        } else {
+            this.data.setOptions({ filter: filter.toOData() });
+        }
+
+        this.data.fetchNext();
+    }
+
     public poolStatus(pool: Pool): QuickListItemStatus {
         return pool.resizeErrors.size > 0 ? QuickListItemStatus.warning : null;
     }
@@ -115,13 +102,13 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         return "";
     }
 
-    public onScrollToBottom(x) {
+    public onScrollToBottom() {
         this.data.fetchNext();
     }
 
-    public deleteSelected() {
+    public deleteSelection(selection: ListSelection) {
         this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeletePoolTask(this.poolService, this.selectedItems);
+            const task = new DeletePoolTask(this.poolService, [...this.selection.keys]);
             task.start(backgroundTask);
             return task.waitingDone;
         });

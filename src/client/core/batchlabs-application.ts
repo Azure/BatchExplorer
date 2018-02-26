@@ -1,3 +1,4 @@
+import * as commander from "commander";
 import { app, dialog, ipcMain, session } from "electron";
 import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
@@ -131,15 +132,22 @@ export class BatchLabsApplication {
             logger.error("There was a uncaught exception", error);
             this.recoverWindow.createWithError(error.message);
         });
-
+        process.on("unhandledRejection", r => {
+            logger.error("Unhandled promise error:", r);
+        });
         app.on("window-all-closed", () => {
             // Required or electron will close when closing last open window before next one open
         });
 
         app.on("login", async (event, webContents, request, authInfo, callback) => {
             event.preventDefault();
-            const { username, password } = await this.proxySettings.credentials();
-            callback(username, password);
+            try {
+                const { username, password } = await this.proxySettings.credentials();
+                callback(username, password);
+            } catch (e) {
+                logger.error("Unable to retrieve credentials for proxy settings", e);
+                this.quit();
+            }
         });
     }
 
@@ -161,11 +169,17 @@ export class BatchLabsApplication {
     }
 
     public openFromArguments(argv: string[]): MainWindow {
-        if (ClientConstants.isDev || argv.length < 2) {
+        if (ClientConstants.isDev) {
             return this.windows.openNewWindow(null, false);
         }
-
-        const arg = argv[1];
+        const program = commander
+            .version(app.getVersion())
+            .option("--updated", "If the application was just updated")
+            .parse(["", ...argv]);
+        const arg = program.args[0];
+        if (!arg) {
+            return this.windows.openNewWindow(null, false);
+        }
         try {
             const link = new BatchLabsLink(arg);
             return this.openLink(link, false);

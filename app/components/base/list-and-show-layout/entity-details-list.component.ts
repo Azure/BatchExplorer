@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Observable } from "rxjs";
 
@@ -13,6 +13,7 @@ import "./entity-details-list.scss";
 @Component({
     selector: "bl-entity-details-list",
     templateUrl: "entity-details-list.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EntityDetailsListComponent {
     @Input()
@@ -60,13 +61,14 @@ export class EntityDetailsListComponent {
     public filter = FilterBuilder.none();
     public searchQuery = new FormControl();
 
-    constructor() {
+    constructor(changeDetector: ChangeDetectorRef) {
         this.searchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
             if (query === "") {
                 this.filter = FilterBuilder.none();
             } else {
                 this.filter = FilterBuilder.prop(this.quickSearchField).startswith(query);
             }
+            changeDetector.markForCheck();
         });
     }
 

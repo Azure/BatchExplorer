@@ -17,26 +17,29 @@ function allowInsecureRequest() {
 
 export class ProxySettingsManager {
     private _settings = new BehaviorSubject(undefined);
-    private _credentials: ProxyCredentials;
     constructor(private batchLabsApp: BatchLabsApplication, private storage: LocalStorage) {
     }
 
     public async init() {
         await this._loadSettingsFromStorage();
         if (!this._settings.value) {
-            await this._loadProxySettings();
+            try {
+                await this._loadProxySettings();
+            } catch (e) {
+                logger.error("Failed to load proxy settings", e);
+            }
         }
         this._applyProxySettings(this._settings.value);
     }
 
     public get settings(): Promise<ProxySettings> {
-        return this._settings.filter(x => x !== undefined).toPromise();
+        return this._settings.filter(x => x !== undefined).take(1).toPromise();
     }
 
     public async credentials(): Promise<ProxyCredentials> {
-        if (this._settings) { return this._credentials; }
+        if (this._settings.value) { return this._currentCredentials; }
         await this.settings;
-        return this._credentials;
+        return this._currentCredentials;
     }
 
     private async _loadProxySettings() {
@@ -55,12 +58,12 @@ export class ProxySettingsManager {
 
             if (e instanceof ProxyAuthenticationRequiredError || e instanceof ProxyInvalidCredentialsError) {
                 if (askForCreds) {
-                    this._credentials = await this.batchLabsApp.askUserForProxyCredentials();
+                    const credentials = await this.batchLabsApp.askUserForProxyCredentials();
                     if (settings.http) {
-                        settings.http.credentials = this._credentials;
+                        settings.http.credentials = credentials;
                     }
                     if (settings.https) {
-                        settings.https.credentials = this._credentials;
+                        settings.https.credentials = credentials;
                     }
                     return this._validateProxySettings(settings);
                 } else {
@@ -113,5 +116,12 @@ export class ProxySettingsManager {
             https: https && https.toString(),
         });
         await this.storage.setItem(Constants.localStorageKey.proxySettings, str);
+    }
+
+    private get _currentCredentials() {
+        if (!this._settings.value) { return null; }
+        const { http, https } = this._settings.value;
+
+        return https.credentials || http.credentials;
     }
 }

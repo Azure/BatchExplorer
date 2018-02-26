@@ -74,7 +74,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
         if (changes.poolId) {
             this.poolData.params = ({ id: this.poolId });
             this.poolData.refresh();
-            this.data.updateParams({ poolId: this.poolId });
+            this.data.params = { poolId: this.poolId };
             this.data.refreshAll(false);
         }
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "app/core";
@@ -8,8 +8,8 @@ import { BackgroundTaskService } from "app/components/base/background-task";
 import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
-import { ListOrTableBase } from "app/components/base/selectable-list";
 import { SidebarManager } from "app/components/base/sidebar";
+import { ListBaseComponent, ListSelection } from "app/core/list";
 import { BlobContainer, LeaseStatus } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { ListContainerParams, PinnedEntityService, StorageService } from "app/services";
@@ -25,34 +25,30 @@ const defaultListOptions = {
 @Component({
     selector: "bl-data-container-list",
     templateUrl: "data-container-list.html",
+    providers: [{
+        provide: ListBaseComponent,
+        useExisting: forwardRef(() => DataContainerListComponent),
+    }],
 })
-export class DataContainerListComponent extends ListOrTableBase implements OnInit, OnDestroy {
+export class DataContainerListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public status: Observable<LoadingStatus>;
     public data: ListView<BlobContainer, ListContainerParams>;
     public hasAutoStorage: boolean;
 
-    @Input() public quickList: boolean;
-
-    @Input() public set filter(filter: Filter) {
-        this._filter = filter;
-        this._setContainerFilter(this._filter);
-    }
-    public get filter(): Filter { return this._filter; }
-
     private _autoStorageSub: Subscription;
     private _onGroupAddedSub: Subscription;
-    private _filter: Filter;
 
     constructor(
         router: Router,
-        dialog: MatDialog,
+        changeDetector: ChangeDetectorRef,
         activatedRoute: ActivatedRoute,
+        private dialog: MatDialog,
         private sidebarManager: SidebarManager,
         private taskManager: BackgroundTaskService,
         private pinnedEntityService: PinnedEntityService,
         private storageService: StorageService) {
 
-        super(dialog);
+        super(changeDetector);
         this.data = this.storageService.containerListView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 
@@ -89,6 +85,19 @@ export class DataContainerListComponent extends ListOrTableBase implements OnIni
         return Observable.of(null);
     }
 
+    public handleFilter(filter: Filter) {
+        if (filter.isEmpty()) {
+            this.data.setOptions({ ...defaultListOptions });
+        } else {
+            const filterText = (filter as any).value;
+            this.data.setOptions({ ...defaultListOptions, filter: filterText && filterText.toLowerCase() });
+        }
+
+        if (this.hasAutoStorage) {
+            this.data.fetchNext();
+        }
+    }
+
     public containerStatus(container: BlobContainer): QuickListItemStatus {
         switch (container.lease && container.lease.status) {
             case LeaseStatus.locked:
@@ -98,15 +107,15 @@ export class DataContainerListComponent extends ListOrTableBase implements OnIni
         }
     }
 
-    public onScrollToBottom(x) {
+    public onScrollToBottom() {
         if (this.hasAutoStorage) {
             this.data.fetchNext();
         }
     }
 
-    public deleteSelected() {
+    public deleteSelection(selection: ListSelection) {
         this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteContainerAction(this.storageService, this.selectedItems);
+            const task = new DeleteContainerAction(this.storageService, [...selection.keys]);
             task.start(backgroundTask);
 
             return task.waitingDone;
@@ -126,19 +135,6 @@ export class DataContainerListComponent extends ListOrTableBase implements OnIni
 
     public trackFileGroup(index, fileGroup: BlobContainer) {
         return fileGroup.id;
-    }
-
-    private _setContainerFilter(filter: Filter) {
-        if (filter.isEmpty()) {
-            this.data.setOptions({ ...defaultListOptions });
-        } else {
-            const filterText = (this._filter as any).value;
-            this.data.setOptions({ ...defaultListOptions, filter: filterText && filterText.toLowerCase() });
-        }
-
-        if (this.hasAutoStorage) {
-            this.data.fetchNext();
-        }
     }
 
     private _deleteFileGroup(container: BlobContainer) {
