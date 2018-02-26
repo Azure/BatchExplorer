@@ -10,7 +10,6 @@ import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components
 import { Constants } from "common";
 import "./inline-quota.scss";
 
-
 const labels = {
     pools: "Pools quota",
     jobs: "Jobs quota",
