@@ -33,7 +33,6 @@ import { NoItemMockComponent } from "test/utils/mocks/components";
     `,
 })
 class TestComponent {
-    // TODO: maybe add to fixtures to make re-usable.
     public jobTemplate: NcjJobTemplate = {
         parameters: {
             poolId: {
@@ -65,7 +64,6 @@ class TestComponent {
         },
     };
 
-    // TODO: maybe add to fixtures to make re-usable.
     public poolTemplate: NcjPoolTemplate = {
         parameters: {
             poolId: {
@@ -82,7 +80,7 @@ class TestComponent {
     };
 }
 
-describe("SubmitNcjTemplateComponent", () => {
+fdescribe("SubmitNcjTemplateComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: SubmitNcjTemplateComponent;

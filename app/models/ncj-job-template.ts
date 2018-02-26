@@ -26,8 +26,8 @@ export interface NcjJobTemplate {
 
 export interface NcjPoolTemplate {
     parameters: StringMap<NcjParameter>;
-    variables?: StringMap<any>;
-    pool: StringMap<string>;
+    variables?: any;
+    pool: any;
 }
 
 export enum NcjTemplateType {
