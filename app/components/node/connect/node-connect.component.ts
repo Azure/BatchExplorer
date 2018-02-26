@@ -125,6 +125,6 @@ export class NodeConnectComponent implements OnInit {
     }
 
     public get expireTime() {
-        return this.credentials && DateUtils.prettyDate(this.credentials.expiryTime);
+        return this.credentials && DateUtils.fullDateAndTime(this.credentials.expiryTime);
     }
 }
