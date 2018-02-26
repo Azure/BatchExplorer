@@ -1,9 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input, OnChanges, OnDestroy, OnInit,
+} from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { BatchQuotas, BatchQuotasAttributes } from "app/models";
-import { QuotaService } from "app/services";
+import { ElectronShell, QuotaService } from "app/services";
 
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
+import { Constants } from "common";
 import "./inline-quota.scss";
 
 type ProgressColorClass = "high-usage" | "medium-usage" | "low-usage";
@@ -19,7 +23,7 @@ const labels = {
     templateUrl: "inline-quota.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InlineQuotaComponent implements OnDestroy, OnInit {
+export class InlineQuotaComponent implements OnChanges, OnDestroy {
     @Input() public set include(quotas: string | string[]) {
         this._include = Array.isArray(quotas) ? quotas : quotas.split(",") as any;
     }
@@ -33,25 +37,34 @@ export class InlineQuotaComponent implements OnDestroy, OnInit {
 
     private _include: Array<keyof (BatchQuotasAttributes)> = [];
     private _quotaSub: Subscription;
+    private _usageSub: Subscription;
 
-    constructor(private quotaService: QuotaService, private changeDetector: ChangeDetectorRef) {
+    constructor(
+        private quotaService: QuotaService,
+        private changeDetector: ChangeDetectorRef,
+        private contextMenuService: ContextMenuService,
+        private shell: ElectronShell) {
         this._quotaSub = this.quotaService.quotas.subscribe((quotas) => {
             this.quotas = quotas;
             this._update();
         });
-    }
 
-    public ngOnInit() {
-        this.quotaService.getUsage().subscribe((quota) => {
+        this._usageSub = this.quotaService.usage.subscribe((quota) => {
             this.loadingUse = false;
             this.use = quota;
             this._update();
-
         });
+    }
+
+    public ngOnChanges(changes) {
+        if (changes.include) {
+            this._update();
+        }
     }
 
     public ngOnDestroy(): void {
         this._quotaSub.unsubscribe();
+        this._usageSub.unsubscribe();
     }
 
     public get mainStatus() {
@@ -64,21 +77,20 @@ export class InlineQuotaComponent implements OnDestroy, OnInit {
         }).join("\n");
     }
 
-    /**
-     * Defines usage progress bar color for pool usage, dedicated/lowPriority cores usage.
-     * Use 3 different states (error, warn and success) to represent high usage, medium usage and low usage
-     * @param percent
-     */
-    public getColorClass(percent: number): ProgressColorClass {
-        if (percent <= 100 && percent >= 90) {
-            return "high-usage";
-        } else if (percent >= 50) {
-            return "medium-usage";
-        }
-        return "low-usage";
+    @HostListener("contextmenu")
+    public showContextMenu() {
+        this.contextMenuService.openMenu(new ContextMenu([
+            new ContextMenuItem("Refresh", () => this.quotaService.refresh()),
+            new ContextMenuItem("Request quota increase", () => this._gotoQuotaRequest()),
+        ]));
+    }
+
+    private _gotoQuotaRequest() {
+        this.shell.openExternal(Constants.ExternalLinks.supportRequest);
     }
 
     private _update() {
+        console.log("UPDate dist", this._include, this.use.toJS());
         this.statues = this._include.map((name) => {
             const use = this.use && this.use[name];
             const quota = this.quotas && this.quotas[name];

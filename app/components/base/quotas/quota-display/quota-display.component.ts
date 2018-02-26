@@ -1,5 +1,8 @@
-import { ChangeDetectionStrategy, Component, HostBinding, Input, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostBinding, HostListener, Input, OnChanges, Output, EventEmitter } from "@angular/core";
 
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
+import { ElectronShell } from "app/services";
+import { Constants } from "common";
 import "./quota-display.scss";
 
 type ProgressColorClass = "high-usage" | "medium-usage" | "low-usage";
@@ -15,6 +18,7 @@ export enum QuotaDisplayType {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuotaDisplayComponent implements OnChanges {
+
     @Input() public label: string;
     @Input() public use: number = null;
     @Input() public quota: number = null;
@@ -53,6 +57,7 @@ export class QuotaDisplayComponent implements OnChanges {
         }
         return `${this.use}/${this.quota} (${Math.floor(this.percent)}%)`;
     }
+
     /**
      * Calculate percentage of used pools, dedicated/lowPriority cores
      * @param used

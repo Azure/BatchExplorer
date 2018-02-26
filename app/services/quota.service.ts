@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { Observable, Subscription } from "rxjs";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { AccountResource, BatchQuotas, Job, JobState, Pool } from "app/models";
 import { AccountService } from "app/services";
@@ -16,6 +16,8 @@ import { VmSizeService } from "./vm-size.service";
 @Injectable()
 export class QuotaService implements OnDestroy {
     public quotas: Observable<BatchQuotas>;
+    public usage: Observable<BatchQuotas>;
+    private readonly _usage = new BehaviorSubject(new BatchQuotas());
 
     private vmSizeCores: StringMap<number>;
     private _subs: Subscription[] = [];
@@ -39,44 +41,60 @@ export class QuotaService implements OnDestroy {
         this.quotas = this.accountService.currentAccount.flatMap((account) => {
             return this._computeQuotas(account);
         }).shareReplay(1);
+        this.usage = this._usage.asObservable();
+
+        this.updateUsages();
     }
 
     public ngOnDestroy() {
         this._subs.forEach(x => x.unsubscribe());
     }
 
-    public getUsage(include: { job?: boolean, pool?: boolean } = null): Observable<BatchQuotas> {
-        include = include || { job: true, pool: true };
-        let poolObs;
-        let jobObs;
-        if (include.pool) {
-            poolObs = this.poolService.listAll({
-                select: "id,vmSize,currentDedicatedNodes,currentLowPriorityNodes",
-            });
-        } else {
-            poolObs = Observable.of(List([]));
-        }
-        if (include.job) {
-            jobObs = this.jobService.listAll({
-                filter: FilterBuilder.prop("state").eq(JobState.active).toOData(),
-                select: "id",
-            });
-        } else {
-            jobObs = Observable.of(List([]));
-        }
-        return Observable.forkJoin(poolObs, jobObs).map(([pools, jobs]: any) => {
-            return this._extractUsage(pools, jobs);
-        }).share();
+    public refresh() {
+        return Observable.forkJoin(this.accountService.refresh(), this.updateUsages());
     }
 
-    private _extractUsage(pools: List<Pool>, jobs: List<Job>) {
-        const { dedicatedCores, lowpriCores } = this._getCoreUsages(pools);
-        return new BatchQuotas({
-            pools: pools.size,
-            dedicatedCores,
-            lowpriCores,
-            jobs: jobs.size,
+    public updateUsages() {
+        return Observable.forkJoin(this.updatePoolUsage(), this.updateJobUsage());
+    }
+
+    public updatePoolUsage() {
+        const obs = this.poolService.listAll({
+            select: "id,vmSize,currentDedicatedNodes,currentLowPriorityNodes",
         });
+        obs.subscribe((pools) => {
+            const { dedicatedCores, lowpriCores } = this._getCoreUsages(pools);
+
+            this._usage.next(new BatchQuotas({
+                ...this._getExistingQuota().toJS(),
+                pools: pools.size,
+                dedicatedCores,
+                lowpriCores,
+            }));
+        });
+        return obs;
+    }
+
+    public updateJobUsage() {
+        const obs = this.jobService.listAll({
+            filter: FilterBuilder.prop("state").eq(JobState.active).toOData(),
+            select: "id",
+        });
+        obs.subscribe((jobs) => {
+            this._usage.next(new BatchQuotas({
+                ...this._getExistingQuota().toJS(),
+                jobs: jobs.size,
+            }));
+        });
+        return obs;
+    }
+
+    public resetUsage() {
+        this._usage.next(new BatchQuotas());
+    }
+
+    private _getExistingQuota() {
+        return this._usage.value || new BatchQuotas();
     }
 
     private _computeQuotas(account: AccountResource): Observable<BatchQuotas> {
