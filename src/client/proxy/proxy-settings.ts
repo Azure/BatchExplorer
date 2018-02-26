@@ -23,7 +23,11 @@ export class ProxySettingsManager {
     public async init() {
         await this._loadSettingsFromStorage();
         if (!this._settings.value) {
-            await this._loadProxySettings();
+            try {
+                await this._loadProxySettings();
+            } catch (e) {
+                logger.error("Failed to load proxy settings", e);
+            }
         }
         this._applyProxySettings(this._settings.value);
     }

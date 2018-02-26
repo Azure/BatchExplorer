@@ -70,7 +70,7 @@ branches:
 
 cache:
   yarn: true
-  directories:
-    - node_modules
-    - $HOME/.cache/electron
-    - $HOME/.cache/electron-builder
+  # directories:
+    # - node_modules
+    # - $HOME/.cache/electron
+    # - $HOME/.cache/electron-builder
