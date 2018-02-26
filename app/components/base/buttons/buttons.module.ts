@@ -20,6 +20,7 @@ import {
 } from "./buttons.component";
 import { ClickableComponent } from "./clickable";
 import { DirectoryPickerComponent } from "./directory-picker.component";
+import { RefreshButtonComponent } from "./refresh-btn";
 
 const components = [
     ButtonComponent,
@@ -36,6 +37,7 @@ const components = [
     EnableButtonComponent,
     LoadingButtonComponent,
     ResizeButtonComponent,
+    RefreshButtonComponent,
     TerminateButtonComponent,
     ClickableComponent,
 ];

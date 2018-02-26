@@ -1,43 +1,49 @@
-<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
-<bl-quick-list #list *ngIf="quickList">
-    <bl-quick-list-item *ngFor="let pool of pools, trackBy: trackById" [link]="['/pools/', pool.id]" [key]="pool.id" [contextmenu]="contextmenu(pool)">
-        <bl-quick-list-item-status [status]="poolStatus(pool.original)" [tooltip]="poolStatusText(pool.original)">
-        </bl-quick-list-item-status>
-        <div bl-quick-list-item-title>{{pool.id}}</div>
-        <div bl-quick-list-item-field>
-            {{pool.state}}
-            <bl-tags [tags]="pool?.original.tags" [maxTags]="3"></bl-tags>
-        </div>
+<bl-focus-section>
+    <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
+    <bl-quick-list *ngIf="quicklist" [(activeItem)]="activeItem" [(selection)]="selection">
+        <bl-quick-list-item *ngFor="let pool of pools, trackBy: trackById" [link]="['/pools/', pool.id]" [key]="pool.id" [contextmenu]="contextmenu(pool)">
+            <bl-quick-list-item-status [status]="poolStatus(pool.original)" [tooltip]="poolStatusText(pool.original)">
+            </bl-quick-list-item-status>
+            <div bl-quick-list-item-title>{{pool.id}}</div>
+            <div bl-quick-list-item-field>
+                {{pool.state}}
+                <bl-tags [tags]="pool?.original.tags" [maxTags]="3"></bl-tags>
+            </div>
 
-        <div bl-quick-list-item-preview>
-            <bl-pool-nodes-preview [pool]="pool.original"></bl-pool-nodes-preview>
-        </div>
-    </bl-quick-list-item>
-</bl-quick-list>
+            <div bl-quick-list-item-preview>
+                <bl-pool-nodes-preview [pool]="pool.original"></bl-pool-nodes-preview>
+            </div>
+        </bl-quick-list-item>
+    </bl-quick-list>
 
-<bl-table *ngIf="!quickList" [config]="tableConfig">
-    <bl-thead>
-        <bl-column>Id</bl-column>
-        <bl-column>State</bl-column>
-        <bl-column>Allocation state</bl-column>
-        <bl-column>VmSize</bl-column>
-        <bl-column>Dedicated <i class="fa fa-tv"></i></bl-column>
-        <bl-column>Low priority <i class="fa fa-tv"></i></bl-column>
-    </bl-thead>
-    <bl-row *ngFor="let pool of pools, trackBy: trackById" [link]="['/pools/', pool.id]" [key]="pool.id" [contextmenu]="contextmenu(pool)">
-        <bl-cell>{{pool.id}}</bl-cell>
-        <bl-cell>{{pool.state}}</bl-cell>
-        <bl-cell>{{pool.allocationState}}</bl-cell>
-        <bl-cell>{{pool.vmSize}}</bl-cell>
-        <bl-cell [value]="pool.targetDedicatedNodes">{{pool.dedicatedNodes}}</bl-cell>
-        <bl-cell [value]="pool.targetLowPriorityNodes">{{pool.lowPriorityNodes}}</bl-cell>
-    </bl-row>
-</bl-table>
+    <bl-table *ngIf="!quicklist" [config]="tableConfig" [(activeItem)]="activeItem" [(selection)]="selection">
+        <bl-thead>
+            <bl-column>Id</bl-column>
+            <bl-column>State</bl-column>
+            <bl-column>Allocation state</bl-column>
+            <bl-column>VmSize</bl-column>
+            <bl-column>Dedicated
+                <i class="fa fa-tv"></i>
+            </bl-column>
+            <bl-column>Low priority
+                <i class="fa fa-tv"></i>
+            </bl-column>
+        </bl-thead>
+        <bl-row *ngFor="let pool of pools, trackBy: trackById" [link]="['/pools/', pool.id]" [key]="pool.id" [contextmenu]="contextmenu(pool)">
+            <bl-cell>{{pool.id}}</bl-cell>
+            <bl-cell>{{pool.state}}</bl-cell>
+            <bl-cell>{{pool.allocationState}}</bl-cell>
+            <bl-cell>{{pool.vmSize}}</bl-cell>
+            <bl-cell [value]="pool.targetDedicatedNodes">{{pool.dedicatedNodes}}</bl-cell>
+            <bl-cell [value]="pool.targetLowPriorityNodes">{{pool.lowPriorityNodes}}</bl-cell>
+        </bl-row>
+    </bl-table>
 
-<bl-no-item [itemCount]="(data.items | async).size" [filter]="filter" [status]="status | async">
-    <i icon class="fa fa-database small"></i>
-    <span no-filter>No pools</span>
-    <span with-filter>No pool match this filter</span>
-</bl-no-item>
+    <bl-no-item [itemCount]="(data.items | async).size" [filter]="filter" [status]="status | async">
+        <i icon class="fa fa-database small"></i>
+        <span no-filter>No pools</span>
+        <span with-filter>No pool match this filter</span>
+    </bl-no-item>
 
-<bl-loading [status]="status | async"></bl-loading>
+    <bl-loading [status]="status | async"></bl-loading>
+</bl-focus-section>

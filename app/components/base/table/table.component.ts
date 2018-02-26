@@ -2,7 +2,6 @@ import {
     ChangeDetectorRef, Component, ContentChild, ContentChildren, EventEmitter,
     HostBinding, Input, Optional, Output, QueryList,
 } from "@angular/core";
-import { Router } from "@angular/router";
 
 import { FocusSectionComponent } from "app/components/base/focus-section";
 import { DragUtils, log } from "app/utils";
@@ -62,8 +61,8 @@ export class TableComponent extends AbstractListBase {
     /**
      * To enable keyboard navigation in the list it must be inside a focus section
      */
-    constructor(router: Router, changeDetection: ChangeDetectorRef, @Optional() focusSection?: FocusSectionComponent) {
-        super(router, changeDetection, focusSection);
+    constructor(changeDetection: ChangeDetectorRef, @Optional() focusSection?: FocusSectionComponent) {
+        super(changeDetection, focusSection);
     }
 
     public handleDragHover(event: DragEvent) {

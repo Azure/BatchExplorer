@@ -1,8 +1,6 @@
-<bl-list-and-show-layout #layout [list]="list">
-    <div bl-list-title>
-        Batch Accounts
-    </div>
-    <div bl-list-buttons>
+<bl-browse-layout #layout>
+    <div blBrowseLayoutTitle>
+            Batch Accounts
     </div>
     <div pre-quicksearch>
         <mat-form-field>
@@ -13,10 +11,5 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <div bl-list-content>
-        <bl-account-list #list [filter]="layout.filter"></bl-account-list>
-    </div>
-    <div bl-show-content>
-        <router-outlet></router-outlet>
-    </div>
-</bl-list-and-show-layout>
+    <bl-account-list blBrowseLayoutList></bl-account-list>
+</bl-browse-layout>
