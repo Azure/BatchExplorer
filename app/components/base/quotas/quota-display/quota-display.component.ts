@@ -45,10 +45,13 @@ export class QuotaDisplayComponent implements OnChanges {
     }
 
     public get status() {
-        if (this.use !== null && this.quota !== null) {
-            return `${this.use}/${this.quota} (${Math.floor(this.percent)}%)`;
+        if (this.quota === null) {
+            return "N/A";
         }
-        return "N/A";
+        if (this.use === null) {
+            return this.quota;
+        }
+        return `${this.use}/${this.quota} (${Math.floor(this.percent)}%)`;
     }
     /**
      * Calculate percentage of used pools, dedicated/lowPriority cores
