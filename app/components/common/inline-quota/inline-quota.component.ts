@@ -33,7 +33,8 @@ export class InlineQuotaComponent implements OnChanges, OnDestroy {
     public quotas: BatchQuotas = new BatchQuotas();
     public use: BatchQuotas = new BatchQuotas();
     public loadingUse = true;
-    public statues = [];
+    public statuses = [];
+    public expanded: boolean = false;
 
     private _include: Array<keyof (BatchQuotasAttributes)> = [];
     private _quotaSub: Subscription;
@@ -68,19 +69,25 @@ export class InlineQuotaComponent implements OnChanges, OnDestroy {
     }
 
     public get mainStatus() {
-        return this.statues.first();
+        return this.statuses.first();
     }
 
     public get title() {
-        return this.statues.map(x => {
+        return this.statuses.map(x => {
             return `${x.label.padEnd(20)}: ${x.use}/${x.quota}(${x.percent}%)`;
         }).join("\n");
+    }
+
+    @HostListener("click")
+    public toggleExpanded() {
+        this.expanded = !this.expanded;
+        this.changeDetector.markForCheck();
     }
 
     @HostListener("contextmenu")
     public showContextMenu() {
         this.contextMenuService.openMenu(new ContextMenu([
-            new ContextMenuItem("Refresh", () => this.quotaService.refresh()),
+            new ContextMenuItem("Refresh quotas", () => this.quotaService.refresh()),
             new ContextMenuItem("Request quota increase", () => this._gotoQuotaRequest()),
         ]));
     }
@@ -91,7 +98,7 @@ export class InlineQuotaComponent implements OnChanges, OnDestroy {
 
     private _update() {
         console.log("UPDate dist", this._include, this.use.toJS());
-        this.statues = this._include.map((name) => {
+        this.statuses = this._include.map((name) => {
             const use = this.use && this.use[name];
             const quota = this.quotas && this.quotas[name];
             const percent = this._calculatePercentage(use, quota);
