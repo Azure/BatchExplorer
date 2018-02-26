@@ -27,6 +27,7 @@ import {
     PoolScalePickerComponent,
     VmSizePickerComponent,
 } from "app/components/pool/action";
+import { AccountModule } from "../account/account.module";
 
 const components = [
     AppLicensePickerComponent, AutoscaleFormulaPickerComponent,
@@ -37,7 +38,8 @@ const components = [
 ];
 
 const modules = [
-    PoolBaseModule, PoolDetailsModule, NetworkConfigurationModule, PoolGraphsModule, StartTaskModule, UserAccountModule,
+    PoolBaseModule, PoolDetailsModule, NetworkConfigurationModule, PoolGraphsModule,
+    StartTaskModule, UserAccountModule, AccountModule,
     TaskBaseModule, ...commonModules,
 ];
 

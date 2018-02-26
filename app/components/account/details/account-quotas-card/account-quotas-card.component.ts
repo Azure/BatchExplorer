@@ -16,9 +16,8 @@ type ProgressColorClass = "high-usage" | "medium-usage" | "low-usage";
 export class AccountQuotasCardComponent implements OnDestroy, OnInit {
     @Input() public account: AccountResource;
 
-    public get bufferValue(): number {
-        return 100;
-    }
+    public bufferValue = 100;
+
     public quotas: BatchQuotas = new BatchQuotas();
     public use: BatchQuotas = new BatchQuotas();
     public loadingUse = true;

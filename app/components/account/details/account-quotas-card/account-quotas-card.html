@@ -1,47 +1,16 @@
 <div>
     <div class="quota">
-        <div class="label">Pool usage</div>
-        <div class="value">
-            {{ poolStatus }}
-        </div>
-        <div class="progress">
-            <mat-progress-bar
-                [ngClass]="getColorClass(poolUsagePercent)"
-                [value]="poolUsagePercent"
-                [bufferValue]="bufferValue">
-            </mat-progress-bar>
-        </div>
+        <bl-quota-display label="Pool quota" [use]="use.pools" [quota]="quotas.pools"></bl-quota-display>
     </div>
     <div class="quota">
-        <div class="label">Job quota</div>
-        <div class="value">{{quotas?.jobs}}</div>
+        <bl-quota-display label="Job quota" [quota]="quotas.jobs"></bl-quota-display>
     </div>
 </div>
 <div>
     <div class="quota">
-        <div class="label">Dedicated core usage</div>
-        <div class="value">
-            {{ dedicatedCoresStatus }}
-        </div>
-        <div class="progress">
-            <mat-progress-bar
-                [ngClass]="getColorClass(dedicatedCoresPercent)"
-                [value]="dedicatedCoresPercent"
-                [bufferValue]="bufferValue">
-            </mat-progress-bar>
-        </div>
+        <bl-quota-display label="Pool quota" [use]="use.dedicatedCores" [quota]="quotas.dedicatedCores"></bl-quota-display>
     </div>
     <div class="quota" title="Low priority VMs only works with pools allocated with the Batch Service">
-        <div class="label">Low-pri core usage</div>
-        <div class="value">
-            {{ lowPriCoresStatus }}
-        </div>
-        <div class="progress">
-            <mat-progress-bar
-                [ngClass]="getColorClass(lowPriorityCoresPercent)"
-                [value]="lowPriorityCoresPercent"
-                [bufferValue]="bufferValue">
-            </mat-progress-bar>
-        </div>
+        <bl-quota-display label="Pool quota" [use]="use.lowpriCores" [quota]="quotas.lowpriCores"></bl-quota-display>
     </div>
 </div>

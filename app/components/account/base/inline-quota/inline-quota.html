@@ -1,0 +1,9 @@
+<div *ngIf="mainStatus">
+    <div class="label">
+        {{mainStatus.name}} ({{mainStatus.usage}}/{{mainStatus.total}})
+    </div>
+    <div class="progress">
+        <mat-progress-bar [ngClass]="getColorClass(poolUsagePercent)" [value]="poolUsagePercent" [bufferValue]="bufferValue">
+        </mat-progress-bar>
+    </div>
+</div>

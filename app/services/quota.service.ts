@@ -44,7 +44,6 @@ export class QuotaService implements OnDestroy {
 
     public getUsage(): Observable<BatchQuotas> {
         return this.poolService.listAll().map((pools) => {
-            console.log("pools", pools && pools.toJS());
             const { dedicatedCores, lowpriCores } = this._getCoreUsages(pools);
             return new BatchQuotas({
                 pools: pools.size,

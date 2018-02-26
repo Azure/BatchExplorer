@@ -2,6 +2,7 @@
     <div blBrowseLayoutTitle>
         Pools
     </div>
+    <bl-inline-quota blBrowseLayoutQuotas include="pools,dedicatedCores,lowpriCores"></bl-inline-quota>
     <div blBrowseLayoutButtons>
         <bl-button icon="fa fa-plus spin-hover" title="Add a pool" [action]="addPool" type="plain" color="light" permission="write">
         </bl-button>
