@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
-import { AccountResource, BatchQuotas, Job, JobState, Pool } from "app/models";
+import { AccountResource, BatchQuotas, JobState, Pool } from "app/models";
 import { AccountService } from "app/services";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { List } from "immutable";
+import { ApplicationService } from "./application-service";
 import { ComputeService } from "./compute.service";
 import { JobService } from "./job-service";
 import { PoolService } from "./pool.service";
@@ -25,6 +26,7 @@ export class QuotaService implements OnDestroy {
     constructor(
         private accountService: AccountService,
         private computeService: ComputeService,
+        private applicationService: ApplicationService,
         private poolService: PoolService,
         private jobService: JobService,
         private vmSizeService: VmSizeService) {
@@ -55,7 +57,10 @@ export class QuotaService implements OnDestroy {
     }
 
     public updateUsages() {
-        return Observable.forkJoin(this.updatePoolUsage(), this.updateJobUsage());
+        return Observable.forkJoin(
+            this.updatePoolUsage(),
+            this.updateJobUsage(),
+            this.updateApplicationUsage());
     }
 
     public updatePoolUsage() {
@@ -89,6 +94,19 @@ export class QuotaService implements OnDestroy {
         return obs;
     }
 
+    public updateApplicationUsage() {
+        const obs = this.applicationService.listAll({
+            select: "id",
+        });
+        obs.subscribe((applications) => {
+            this._usage.next(new BatchQuotas({
+                ...this._getExistingQuota().toJS(),
+                applications: applications.size,
+            }));
+        });
+        return obs;
+    }
+
     public resetUsage() {
         this._usage.next(new BatchQuotas());
     }
@@ -104,6 +122,7 @@ export class QuotaService implements OnDestroy {
                 lowpriCores: account.properties.lowPriorityCoreQuota,
                 pools: account.properties.poolQuota,
                 jobs: account.properties.activeJobAndJobScheduleQuota,
+                applications: 20,
             }));
         } else {
             this.computeService.getCoreQuota().map((dedicatedCoreQuota) => {
@@ -112,6 +131,7 @@ export class QuotaService implements OnDestroy {
                     lowpriCores: null,
                     pools: account.properties.poolQuota,
                     jobs: account.properties.activeJobAndJobScheduleQuota,
+                    applications: 20,
                 }));
             });
         }

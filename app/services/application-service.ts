@@ -75,6 +75,10 @@ export class ApplicationService extends ServiceBase {
         });
     }
 
+    public listAll(options?: ListOptionsAttributes) {
+        return this._listGetter.fetchAll(options);
+    }
+
     public get(applicationId: string, options: any = {}): Observable<BatchApplication> {
         return this._getter.fetch({ id: applicationId });
     }

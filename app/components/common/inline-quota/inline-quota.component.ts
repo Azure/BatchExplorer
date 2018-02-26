@@ -10,14 +10,15 @@ import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components
 import { Constants } from "common";
 import "./inline-quota.scss";
 
-type ProgressColorClass = "high-usage" | "medium-usage" | "low-usage";
 
 const labels = {
     pools: "Pools quota",
     jobs: "Jobs quota",
     dedicatedCores: "Dedicated cores quota",
     lowpriCores: "LowPri cores quota",
+    applications: "Applications quota",
 };
+
 @Component({
     selector: "bl-inline-quota",
     templateUrl: "inline-quota.html",
