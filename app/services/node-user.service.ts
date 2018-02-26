@@ -15,6 +15,7 @@ export interface UpdateNodeUserAttributes {
 export interface AddNodeUserAttributes extends UpdateNodeUserAttributes {
     name?: string;
     isAdmin?: boolean;
+    expiryTime?: Date;
 }
 
 @Injectable()

@@ -29,6 +29,19 @@ bl-complex-form {
         > .form-footer {
             box-shadow: 0 0 40px -10px #a5a5a5;
         }
+
+        .form-server-error {
+            position: absolute;
+            bottom: $footer-height;
+            width: 100%;
+            z-index: 100;
+        }
+    }
+
+    &:not(.sticky-footer) {
+        .form-server-error {
+            margin-top: 20px;
+        }
     }
 
     .header {
@@ -82,10 +95,7 @@ bl-complex-form {
     }
 
     > .form-server-error {
-        position: absolute;
-        bottom: $footer-height;
-        width: 100%;
-        z-index: 100;
+
     }
 
     > .form-footer {

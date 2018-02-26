@@ -122,25 +122,24 @@ export class DurationPickerComponent implements ControlValueAccessor {
      */
     private _setValueAndUnit() {
         this.unlimited = this._isDurationUnlimited(this.duration);
-        if (!this.unlimited && moment.isMoment(this.duration)) {
-            const days = this.duration.asDays();
-            const hours = this.duration.asHours();
-            const minutes = this.duration.asMinutes();
-            const seconds = this.duration.asSeconds();
-            if (this._isValidUnit(days)) {
-                this.value = days;
-                this.unit = ConstraintsUnit.days;
-            } else if (this._isValidUnit(hours)) {
-                this.value = hours;
-                this.unit = ConstraintsUnit.hours;
-            } else if (this._isValidUnit(minutes)) {
-                this.value = minutes;
-                this.unit = ConstraintsUnit.minutes;
-            } else if (seconds > 0) {
-                // don't check whether second is integer or not, just display whatever this value is
-                this.value = seconds;
-                this.unit = ConstraintsUnit.seconds;
-            }
+        if (this.unlimited || moment.isMoment(this.duration)) { return; }
+        const days = this.duration.asDays();
+        const hours = this.duration.asHours();
+        const minutes = this.duration.asMinutes();
+        const seconds = this.duration.asSeconds();
+        if (this._isValidUnit(days)) {
+            this.value = days;
+            this.unit = ConstraintsUnit.days;
+        } else if (this._isValidUnit(hours)) {
+            this.value = hours;
+            this.unit = ConstraintsUnit.hours;
+        } else if (this._isValidUnit(minutes)) {
+            this.value = minutes;
+            this.unit = ConstraintsUnit.minutes;
+        } else if (seconds > 0) {
+            // don't check whether second is integer or not, just display whatever this value is
+            this.value = seconds;
+            this.unit = ConstraintsUnit.seconds;
         }
     }
 
