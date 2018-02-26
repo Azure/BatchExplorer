@@ -2,7 +2,7 @@
     <div class="quota">
         <div class="label">Pool usage</div>
         <div class="value">
-            {{ quotas?.pools }}
+            {{ poolStatus }}
         </div>
         <div class="progress">
             <mat-progress-bar
@@ -21,7 +21,7 @@
     <div class="quota">
         <div class="label">Dedicated core usage</div>
         <div class="value">
-            {{ quotas?.dedicatedCores }}
+            {{ dedicatedCoresStatus }}
         </div>
         <div class="progress">
             <mat-progress-bar
@@ -34,7 +34,7 @@
     <div class="quota" title="Low priority VMs only works with pools allocated with the Batch Service">
         <div class="label">Low-pri core usage</div>
         <div class="value">
-            {{ quotas?.lowpriCores }}
+            {{ lowPriCoresStatus }}
         </div>
         <div class="progress">
             <mat-progress-bar

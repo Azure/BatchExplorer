@@ -1,14 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { LoadingStatus } from "app/components/base/loading";
-import { AccountResource, BatchQuotas, Pool } from "app/models";
-import { ComputeService, PoolListParams, PoolService, QuotaService, VmSizeService } from "app/services";
-import { ListView } from "app/services/core";
-import { ComponentUtils } from "app/utils";
+import { AccountResource, BatchQuotas, BatchQuotasAttributes } from "app/models";
+import { QuotaService } from "app/services";
 
-import { List } from "immutable";
-import { Observable } from "rxjs/Observable";
 import "./account-quotas-card.scss";
 
 type ProgressColorClass = "high-usage" | "medium-usage" | "low-usage";
@@ -25,7 +20,8 @@ export class AccountQuotasCardComponent implements OnDestroy, OnInit {
         return 100;
     }
     public quotas: BatchQuotas = new BatchQuotas();
-    public use: BatchQuotas  = new BatchQuotas();
+    public use: BatchQuotas = new BatchQuotas();
+    public loadingUse = true;
 
     private _quotaSub: Subscription;
 
@@ -38,7 +34,9 @@ export class AccountQuotasCardComponent implements OnDestroy, OnInit {
 
     public ngOnInit() {
         this.quotaService.getUsage().subscribe((quota) => {
+            this.loadingUse = false;
             this.use = quota;
+            this.changeDetector.markForCheck();
         });
     }
 
@@ -54,10 +52,30 @@ export class AccountQuotasCardComponent implements OnDestroy, OnInit {
     }
 
     /**
+     * Get friendly message displayed for pools
+     * Format: {{used}}/{{total}} ({{Percent}})
+     */
+    public get poolStatus(): string {
+        return this._prettyUsage("pools");
+    }
+
+    public get jobStatus(): string {
+        return this._prettyUsage("jobs");
+    }
+
+    public get dedicatedCoresStatus(): string {
+        return this._prettyUsage("dedicatedCores");
+    }
+
+    public get lowPriCoresStatus(): string {
+        return this._prettyUsage("lowpriCores");
+    }
+
+    /**
      * Get dedicated cores usage progress bar percent
      */
     public get dedicatedCoresPercent() {
-        return this._calculatePercentage(this.use.jobs, this.quotas.jobs);
+        return this._calculatePercentage(this.use.dedicatedCores, this.quotas.dedicatedCores);
     }
 
     /**
@@ -91,5 +109,14 @@ export class AccountQuotasCardComponent implements OnDestroy, OnInit {
             return (used / total) * 100;
         }
         return 0;
+    }
+
+    private _prettyUsage(name: keyof (BatchQuotasAttributes)) {
+        const used = this.use && this.use[name];
+        const total = this.quotas && this.quotas[name];
+        if (used !== null && total !== null) {
+            return `${used}/${total} (${Math.floor(this._calculatePercentage(used, total))}%)`;
+        }
+        return "N/A";
     }
 }
