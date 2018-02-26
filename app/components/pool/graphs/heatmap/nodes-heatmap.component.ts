@@ -14,7 +14,7 @@ import { SidebarManager } from "app/components/base/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
 import { Job, Node, NodeState, Pool, ServerError } from "app/models";
 import { NodeService } from "app/services";
-import { log } from "app/utils";
+import { ComponentUtils, log } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";
 import "./nodes-heatmap.scss";
 import { StateTree } from "./state-tree";
@@ -120,14 +120,11 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.pool) {
-            const prev = changes.pool.previousValue;
-            const cur = changes.pool.currentValue;
-            if (prev && cur && prev.id === cur.id) {
-                return;
-            }
-            this.selectedNodeId.next(null);
-            if (this._svg) {
-                this._svg.selectAll("g.node-group").remove();
+            if (ComponentUtils.recordChangedId(changes.pool)) {
+                this.selectedNodeId.next(null);
+                if (this._svg) {
+                    this._svg.selectAll("g.node-group").remove();
+                }
             }
         }
 
