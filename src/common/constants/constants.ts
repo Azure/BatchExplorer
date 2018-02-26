@@ -238,3 +238,7 @@ export const ncjFileGroupPrefix = "fgrp-";
 export const ListPageSizes = {
     default: 50,
 };
+
+export const KnownQueryParameters = {
+    useAutoPool: "useAutoPool",
+};

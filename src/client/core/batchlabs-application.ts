@@ -132,6 +132,7 @@ export class BatchLabsApplication {
             logger.error("There was a uncaught exception", error);
             this.recoverWindow.createWithError(error.message);
         });
+
         process.on("unhandledRejection", r => {
             logger.error("Unhandled promise error:", r);
         });
