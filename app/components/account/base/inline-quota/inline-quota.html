@@ -1,3 +1,7 @@
-<div *ngIf="mainStatus">
-    <bl-quota-display [label]="mainStatus.label" [use]="mainStatus.use" [quota]="mainStatus.quota" type="compact"></bl-quota-display>
-</div>
+<bl-quota-display *ngIf="mainStatus"
+    [title]="title"
+    [label]="mainStatus.label"
+    [use]="mainStatus.use"
+    [quota]="mainStatus.quota"
+    type="compact">
+</bl-quota-display>

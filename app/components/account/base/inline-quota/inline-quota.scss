@@ -1,0 +1,8 @@
+bl-inline-quota {
+    display: block;
+    position: relative;
+
+    > bl-quota-display {
+        margin: 5px;
+    }
+}

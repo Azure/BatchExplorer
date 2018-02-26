@@ -7,10 +7,6 @@
                         <ng-content select="[blBrowseLayoutTitle]"></ng-content>
                     </div>
                     <div class="flex-separator"></div>
-                    <div class="quotas">
-                        <ng-content select="[blBrowseLayoutQuotas]"></ng-content>
-                    </div>
-                    <div class="flex-separator"></div>
                     <div class="actions">
                         <bl-button icon="fa fa-trash" type="plain" color="light" *ngIf="deleteSelectionIsEnabled && selection.hasAny()" [skipSuccess]="true"
                             [action]="deleteSelection">
@@ -34,6 +30,9 @@
                 <bl-scrollable (scrollBottom)="listScrolledToBottom()">
                     <ng-content select="[blBrowseLayoutList]"></ng-content>
                 </bl-scrollable>
+            </div>
+            <div class="quotas">
+                <ng-content select="[blBrowseLayoutQuotas]"></ng-content>
             </div>
         </div>
     </section>

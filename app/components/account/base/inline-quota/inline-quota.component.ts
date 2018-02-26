@@ -58,6 +58,12 @@ export class InlineQuotaComponent implements OnDestroy, OnInit {
         return this.statues.first();
     }
 
+    public get title() {
+        return this.statues.map(x => {
+            return `${x.label.padEnd(20)}: ${x.use}/${x.quota}(${x.percent}%)`;
+        }).join("\n");
+    }
+
     /**
      * Defines usage progress bar color for pool usage, dedicated/lowPriority cores usage.
      * Use 3 different states (error, warn and success) to represent high usage, medium usage and low usage
