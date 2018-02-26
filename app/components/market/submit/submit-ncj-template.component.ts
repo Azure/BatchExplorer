@@ -42,6 +42,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
 
     private _error: ServerError;
     private _controlChanges: Subscription[] = [];
+    private _routeParametersSub: Subscription;
     private _parameterTypeMap = {};
     private _queryParameters: {};
     private _loaded = false;
@@ -57,7 +58,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public ngOnInit() {
-        this.activatedRoute.queryParams.subscribe((params: any) => {
+        this._routeParametersSub = this.activatedRoute.queryParams.subscribe((params: any) => {
             this._queryParameters = Object.assign({}, params);
             const autoPoolParameter = Constants.KnownQueryParameters.useAutoPool;
             if (this._queryParameters[autoPoolParameter]) {
@@ -91,6 +92,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public ngOnDestroy() {
+        this._routeParametersSub.unsubscribe();
         this._controlChanges.forEach(x => x.unsubscribe());
     }
 
