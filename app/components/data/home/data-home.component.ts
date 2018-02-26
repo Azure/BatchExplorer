@@ -4,11 +4,12 @@ import { autobind } from "app/core";
 import { Observable, Subscription } from "rxjs";
 
 import { StorageService } from "app/services";
-import { Filter, FilterBuilder } from "app/utils/filter-builder";
+import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 import { FileGroupCreateFormComponent } from "../action";
 
 import { MatMenuTrigger } from "@angular/material";
+import { BrowseLayoutComponent, BrowseLayoutConfig } from "app/components/base/browse-layout";
 import { DialogService } from "app/components/base/dialogs";
 import { BlobContainer } from "app/models";
 import { Constants } from "common";
@@ -32,12 +33,18 @@ const containerTypes = [
 export class DataHomeComponent implements OnDestroy {
     @ViewChild(MatMenuTrigger) public trigger: MatMenuTrigger;
 
+    @ViewChild("layout")
+    public layout: BrowseLayoutComponent;
+
     public containerTypes = containerTypes;
     public quickSearchQuery: string = "";
     public filter: Filter = FilterBuilder.none();
     public hasAutoStorage = true;
     public containerTypePrefix = new FormControl("");
 
+    public layoutConfig: BrowseLayoutConfig = {
+        mergeFilter: this._mergeFilter.bind(this),
+    };
     private _autoStorageSub: Subscription;
 
     constructor(
@@ -46,7 +53,7 @@ export class DataHomeComponent implements OnDestroy {
         public storageService: StorageService) {
 
         this.containerTypePrefix.valueChanges.subscribe((prefix) => {
-            this._updateFilter();
+            this.layout.advancedFilterChanged(FilterBuilder.prop("id").startswith(prefix));
         });
 
         this._autoStorageSub = this.storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
@@ -56,15 +63,6 @@ export class DataHomeComponent implements OnDestroy {
 
     public ngOnDestroy() {
         this._autoStorageSub.unsubscribe();
-    }
-
-    public quickSearchFilterChanged(filter: Filter) {
-        if (filter.isEmpty()) {
-            this.quickSearchQuery = "";
-        } else {
-            this.quickSearchQuery = (filter.properties[0] as any).value;
-        }
-        this._updateFilter();
     }
 
     @autobind()
@@ -115,6 +113,27 @@ export class DataHomeComponent implements OnDestroy {
             this.filter = FilterBuilder.none();
         } else {
             this.filter = FilterBuilder.prop("id").startswith(query);
+        }
+    }
+
+    private _mergeFilter(quickSearch: Filter, advanced: Filter) {
+        const prefix = this._getFilterValue(advanced);
+        const search = this._getFilterValue(quickSearch);
+        const query = prefix + search;
+        if (query === "") {
+            return FilterBuilder.none();
+        } else {
+            return FilterBuilder.prop("id").startswith(query);
+        }
+    }
+
+    private _getFilterValue(filter: Filter): string {
+        if (filter.isEmpty()) {
+            return "";
+        } else if (filter instanceof Property) {
+            return filter.value;
+        } else {
+            return (filter.properties[0] as any).value;
         }
     }
 

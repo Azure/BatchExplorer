@@ -1,7 +1,6 @@
 import {
     ChangeDetectorRef, Component, ContentChildren, Input, Optional, QueryList,
 } from "@angular/core";
-import { Router } from "@angular/router";
 
 import { AbstractListBase } from "../abstract-list";
 import { FocusSectionComponent } from "../focus-section";
@@ -19,8 +18,8 @@ export class QuickListComponent extends AbstractListBase {
     @ContentChildren(QuickListItemComponent)
     public items: QueryList<QuickListItemComponent>;
 
-    constructor( @Optional() focusSection: FocusSectionComponent, changeDetection: ChangeDetectorRef, router: Router) {
-        super(router, changeDetection, focusSection);
+    constructor( @Optional() focusSection: FocusSectionComponent, changeDetection: ChangeDetectorRef) {
+        super(changeDetection, focusSection);
     }
 }
 
@@ -53,10 +52,7 @@ export enum QuickListItemStatus {
     `,
 })
 export class QuickListItemStatusComponent {
+    @Input() public tooltip: string;
 
-    @Input()
-    public tooltip: string;
-
-    @Input()
-    public status: QuickListItemStatus;
+    @Input() public status: QuickListItemStatus;
 }

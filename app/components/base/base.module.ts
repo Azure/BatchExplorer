@@ -10,6 +10,7 @@ import { AdvancedFilterModule } from "./advanced-filter";
 import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
 import { BreadcrumbModule } from "./breadcrumbs";
+import { BrowseLayoutModule } from "./browse-layout";
 import { ButtonsModule } from "./buttons";
 import { CardComponent } from "./card";
 import { ChartsModule } from "./charts";
@@ -25,14 +26,13 @@ import { GraphsModule } from "./graphs";
 import { GuardsModule } from "./guards";
 import { InfoBoxModule } from "./info-box";
 import {
-    DeleteSelectedItemsDialogComponent, EntityDetailsListComponent, ListAndShowLayoutComponent, ListLoadingComponent,
+    DeleteSelectedItemsDialogComponent, EntityDetailsListComponent, ListLoadingComponent,
 } from "./list-and-show-layout";
 import { LoadingComponent, SimpleLoadingComponent } from "./loading";
 import { NotificationModule } from "./notifications";
 import { PinnedDropDownComponent } from "./pinned-entity-dropdown";
 import { PropertyListModule } from "./property-list";
 import { QuickListModule } from "./quick-list";
-import { RefreshButtonComponent } from "./refresh-btn";
 import { ScrollableModule } from "./scrollable";
 import { SidebarModule } from "./sidebar";
 import { SimpleDialogComponent } from "./simple-dialog";
@@ -49,6 +49,7 @@ import { VTabsModule } from "./vtabs";
 const modules = [
     AdvancedFilterModule,
     BreadcrumbModule,
+    BrowseLayoutModule,
     ButtonsModule,
     BackgroundTaskModule,
     ChartsModule,
@@ -85,12 +86,10 @@ const components = [
     DatetimePickerComponent,
     DurationPickerComponent,
     IconComponent,
-    ListAndShowLayoutComponent,
     PinnedDropDownComponent,
     SimpleLoadingComponent,
     SimpleDialogComponent,
     LoadingComponent,
-    RefreshButtonComponent,
     ListLoadingComponent,
     DeleteSelectedItemsDialogComponent,
 ];

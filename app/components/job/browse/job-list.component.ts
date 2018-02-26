@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, forwardRef } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -9,8 +9,8 @@ import { BackgroundTaskService } from "app/components/base/background-task";
 import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
-import { ListOrTableBase } from "app/components/base/selectable-list";
 import { TableComponent } from "app/components/base/table";
+import { ListBaseComponent, ListSelection } from "app/core/list";
 import { Job, JobState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
 import { JobListParams, JobService, PinnedEntityService } from "app/services";
@@ -28,8 +28,12 @@ import {
 @Component({
     selector: "bl-job-list",
     templateUrl: "job-list.html",
+    providers: [{
+        provide: ListBaseComponent,
+        useExisting: forwardRef(() => JobListComponent),
+    }],
 })
-export class JobListComponent extends ListOrTableBase implements OnInit, OnDestroy {
+export class JobListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
     public status: Observable<LoadingStatus>;
@@ -42,37 +46,19 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
     @ViewChild(TableComponent)
     public table: TableComponent;
 
-    @Input()
-    public quickList: boolean;
-
-    @Input()
-    public set filter(filter: Filter) {
-        this._filter = filter;
-
-        if (filter.isEmpty()) {
-            this.data.setOptions({ ...this._baseOptions });
-        } else {
-            this.data.setOptions({ ...this._baseOptions, filter: filter.toOData() });
-        }
-
-        this.data.fetchNext();
-    }
-    public get filter(): Filter { return this._filter; }
-
-    private _filter: Filter;
-
     // todo: ask tim about setting difference select options for list and details.
-    private _baseOptions = {  };
+    private _baseOptions = {};
     private _onJobAddedSub: Subscription;
 
     constructor(
         router: Router,
-        dialog: MatDialog,
+        private dialog: MatDialog,
         activatedRoute: ActivatedRoute,
+        changeDetector: ChangeDetectorRef,
         private jobService: JobService,
         private pinnedEntityService: PinnedEntityService,
         private taskManager: BackgroundTaskService) {
-        super(dialog);
+        super(changeDetector);
         this.data = this.jobService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 
@@ -93,6 +79,16 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
     @autobind()
     public refresh(): Observable<any> {
         return this.data.refresh();
+    }
+
+    public handleFilter(filter: Filter) {
+        if (filter.isEmpty()) {
+            this.data.setOptions({ ...this._baseOptions });
+        } else {
+            this.data.setOptions({ ...this._baseOptions, filter: filter.toOData() });
+        }
+
+        this.data.fetchNext();
     }
 
     public jobStatus(job: Job): QuickListItemStatus {
@@ -129,13 +125,13 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
         }
     }
 
-    public onScrollToBottom(x) {
+    public onScrollToBottom() {
         this.data.fetchNext();
     }
 
-    public deleteSelected() {
+    public deleteSelection(selection: ListSelection) {
         this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteJobAction(this.jobService, this.selectedItems);
+            const task = new DeleteJobAction(this.jobService, [...this.selection.keys]);
             task.start(backgroundTask);
             return task.waitingDone;
         });

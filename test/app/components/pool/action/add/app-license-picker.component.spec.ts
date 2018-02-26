@@ -6,6 +6,7 @@ import { By } from "@angular/platform-browser";
 
 import { AppLicensePickerComponent } from "app/components/pool/action/add";
 import { MaterialModule } from "app/core";
+import { ListSelection } from "app/core/list";
 
 @Component({
     template: `<bl-app-license-picker [(ngModel)]="appLicenses"></bl-app-license-picker>`,
@@ -73,7 +74,7 @@ describe("AppLicensePickerComponent", () => {
     });
 
     it("Should select license by checking checkbox", fakeAsync(() => {
-        component.updateSelection(["maya"]);
+        component.updateSelection(new ListSelection({ keys: ["maya"] }));
         tick();
         fixture.detectChanges();
         expect(testComponent.appLicenses.length).toEqual(1);
@@ -81,9 +82,9 @@ describe("AppLicensePickerComponent", () => {
     }));
 
     it("Uncheck should not add the license", fakeAsync(() => {
-        component.updateSelection(["maya"]);
+        component.updateSelection(new ListSelection({ keys: ["maya"] }));
         tick();
-        component.updateSelection([]);
+        component.updateSelection(new ListSelection());
         tick();
         fixture.detectChanges();
         expect(testComponent.appLicenses.length).toEqual(0);
@@ -102,14 +103,14 @@ describe("AppLicensePickerComponent", () => {
         }));
 
         it("Validation fails if license selected and checkbox not checked", fakeAsync(() => {
-            component.updateSelection(["maya"]);
+            component.updateSelection(new ListSelection({ keys: ["maya"] }));
             tick();
             fixture.detectChanges();
             expect(component.validate(null)).toEqual({ required: true });
         }));
 
         it("Validation passes if license selected and checkbox checked", fakeAsync(() => {
-            component.updateSelection(["maya"]);
+            component.updateSelection(new ListSelection({ keys: ["maya"] }));
             tick();
             component.eulaCheck({ checked: true } as MatCheckboxChange);
             tick();

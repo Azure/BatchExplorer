@@ -76,8 +76,8 @@ export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOption
         this.newDataStatus = this._newDataStatus.asObservable();
         this.error = this._error.asObservable();
         this.isDisposed = new AsyncSubject();
-        this.params = {} as any;
-
+        this._params = {} as any;
+        this._onParamsChanged();
         this.status.subscribe((status) => {
             if (status === LoadingStatus.Loading) {
                 this._error.next(null);
@@ -99,13 +99,7 @@ export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOption
 
     public set params(params: TParams) {
         this._params = params;
-        this.cache = this.getCache(params);
-        if (this._pollObservable) {
-
-            this._pollObservable.updateKey(this._key());
-        }
-        this.markLoadingNewData();
-        this.abortFetch();
+        this._onParamsChanged();
     }
 
     public get params() {
@@ -255,5 +249,14 @@ export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOption
         const paramsKey = ObjectUtils.serialize(this._params);
         const optionsKey = this._options && ObjectUtils.serialize(this._options.original);
         return `${paramsKey}|${optionsKey}`;
+    }
+
+    private _onParamsChanged() {
+        this.cache = this.getCache(this.params);
+        if (this._pollObservable) {
+            this._pollObservable.updateKey(this._key());
+        }
+        this.markLoadingNewData();
+        this.abortFetch();
     }
 }
