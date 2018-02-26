@@ -41,10 +41,10 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     public poolParametersWrapper: NcjParameterWrapper[];
 
     private _error: ServerError;
-    private _fgrpPrefix = "fgrp-";
     private _controlChanges: Subscription[] = [];
     private _parameterTypeMap = {};
     private _queryParameters: {};
+    private _loaded = false;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -52,21 +52,28 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         private router: Router,
         private templateService: NcjTemplateService,
         private ncjSubmitService: NcjSubmitService) {
+
         this.form = new FormGroup({});
     }
 
     public ngOnInit() {
-        this._queryParameters = Object.assign({}, this.activatedRoute.snapshot.queryParams);
-        const autoPoolParameter = Constants.KnownQueryParameters.useAutoPool;
-        if (this._queryParameters[autoPoolParameter]) {
-            const modeAutoSelect = Boolean(parseInt(this._queryParameters[autoPoolParameter], 10))
-                ? NcjTemplateMode.NewPoolAndJob
-                : NcjTemplateMode.ExistingPoolAndJob;
+        this.activatedRoute.queryParams.subscribe((params: any) => {
+            this._queryParameters = Object.assign({}, params);
+            const autoPoolParameter = Constants.KnownQueryParameters.useAutoPool;
+            if (this._queryParameters[autoPoolParameter]) {
+                const modeAutoSelect = Boolean(parseInt(this._queryParameters[autoPoolParameter], 10))
+                    ? NcjTemplateMode.NewPoolAndJob
+                    : NcjTemplateMode.ExistingPoolAndJob;
 
-            this.pickMode(modeAutoSelect);
-        }
+                this.pickMode(modeAutoSelect);
+            }
 
-        this._applyinitialData();
+            if (!this._loaded) {
+                // Subscribe is fired every time a value changes now so don't want to re-apply
+                this._applyinitialData();
+                this._loaded = true;
+            }
+        });
     }
 
     public ngOnChanges(changes) {
@@ -190,11 +197,9 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     private _parseParameters(parameters: StringMap<NcjParameter>) {
-        console.log("parse parameters");
         const wrapper: NcjParameterWrapper[] = [];
         for (const name of Object.keys(parameters)) {
             const param = parameters[name];
-            console.log("pushing: ", name, param);
             wrapper.push(new NcjParameterWrapper(name, param));
         }
 
@@ -235,10 +240,10 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         // Listen to control value change events and update the route parameters to match
         this._controlChanges.push(formGroup[key].valueChanges.subscribe((change) => {
             if (this._parameterTypeMap[key] === NcjParameterExtendedType.fileGroup &&
-                !change.startsWith(this._fgrpPrefix)) {
+                !change.startsWith(Constants.ncjFileGroupPrefix)) {
 
                 // Quick-Fix until we modify the CLI to finally sort out file group prefixes
-                change = this._fgrpPrefix + change;
+                change = Constants.ncjFileGroupPrefix + change;
             }
 
             // Set the parameters on the route so when page reloads we keep the existing parameters
