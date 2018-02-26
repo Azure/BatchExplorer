@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostBinding, Input, OnChanges } from "@angular/core";
 
 import "./quota-display.scss";
 
@@ -18,6 +18,7 @@ export class QuotaDisplayComponent implements OnChanges {
     @Input() public label: string;
     @Input() public use: number = null;
     @Input() public quota: number = null;
+    @HostBinding("attr.type")
     @Input() public type: QuotaDisplayType = QuotaDisplayType.normal;
 
     public percent: number;

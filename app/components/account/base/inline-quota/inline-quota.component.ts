@@ -8,6 +8,12 @@ import "./inline-quota.scss";
 
 type ProgressColorClass = "high-usage" | "medium-usage" | "low-usage";
 
+const labels = {
+    pools: "Pools quota",
+    jobs: "Jobs quota",
+    dedicatedCores: "Dedicated cores quota",
+    lowpriCores: "LowPri cores quota",
+};
 @Component({
     selector: "bl-inline-quota",
     templateUrl: "inline-quota.html",
@@ -25,7 +31,7 @@ export class InlineQuotaComponent implements OnDestroy, OnInit {
     public loadingUse = true;
     public statues = [];
 
-    private _include: Array<keyof (BatchQuotasAttributes)>;
+    private _include: Array<keyof (BatchQuotasAttributes)> = [];
     private _quotaSub: Subscription;
 
     constructor(private quotaService: QuotaService, private changeDetector: ChangeDetectorRef) {
@@ -68,14 +74,14 @@ export class InlineQuotaComponent implements OnDestroy, OnInit {
 
     private _update() {
         this.statues = this._include.map((name) => {
-            const usage = this.use && this.use[name];
-            const total = this.quotas && this.quotas[name];
-            const percent = this._calculatePercentage(usage, total);
+            const use = this.use && this.use[name];
+            const quota = this.quotas && this.quotas[name];
+            const percent = this._calculatePercentage(use, quota);
 
             return {
-                name,
-                usage,
-                total,
+                label: labels[name],
+                use,
+                quota,
                 percent,
             };
         }).sort((a, b) => b.percent - a.percent);
