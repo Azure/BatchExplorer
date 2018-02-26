@@ -1,6 +1,6 @@
 import { Input, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { Observable, Subscription } from "rxjs";
+import { Observable } from "rxjs";
 
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
 import { ContextMenuService } from "app/components/base/context-menu";
@@ -42,14 +42,12 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     public selected: boolean = null;
 
     public get active(): boolean {
-        return this.list && this._activeItemKey === this.key;
+        return this.list && this.list.activeItem === this.key;
     }
 
     public urlTree: any = null;
 
     private _routerLink: any = null;
-    private _activeItemKey: string = null;
-    private _activeSub: Subscription;
     /**
      * Need to inject list
      * e.g.  @Inject(forwardRef(() => QuickListComponent)) list: QuickListComponent
@@ -61,9 +59,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         private breadcrumbService: BreadcrumbService) {
 
         this.isFocused = this.list.focusedItem.map(x => x === this.key);
-        this._activeSub = list.activatedItemChange.subscribe((event) => {
-            this._activeItemKey = event && event.key;
-        });
     }
 
     public ngOnInit() {
@@ -75,9 +70,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
 
     public ngOnDestroy() {
         this.list = null;
-        if (this._activeSub) {
-            this._activeSub.unsubscribe();
-        }
     }
 
     public handleClick(event: MouseEvent, activate = true) {
@@ -125,7 +117,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
      * @parm andFocus If we should also focus the item
      */
     public activateItem(andFocus = false) {
-        this.list.setActiveItem(this.key);
+        this.list.activeItem = this.key;
         this._triggerRouter();
     }
 

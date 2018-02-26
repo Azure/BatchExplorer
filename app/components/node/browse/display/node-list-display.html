@@ -1,5 +1,5 @@
 <bl-focus-section>
-    <bl-quick-list *ngIf="quickList">
+    <bl-quick-list *ngIf="quicklist"  [(activeItem)]="activeItem" [(selection)]="selection">
         <bl-quick-list-item *ngFor="let node of nodes;trackBy: trackNode" [link]="['/pools', poolId, 'nodes', node.id]" [key]="node.id">
             <bl-quick-list-item-status [status]="" [tooltip]="">
             </bl-quick-list-item-status>
@@ -9,7 +9,7 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quickList">
+    <bl-table *ngIf="!quicklist" [(activeItem)]="activeItem" [(selection)]="selection">
         <bl-thead>
             <bl-column style="width: 300px">Id</bl-column>
             <bl-column>State</bl-column>

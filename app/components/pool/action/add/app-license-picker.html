@@ -1,5 +1,5 @@
 <bl-focus-section>
-    <bl-table [config]="tableConfig" [selectedItems]="pickedLicenses" (selectedItemsChange)="updateSelection($event)">
+    <bl-table [config]="tableConfig" [selection]="pickedLicenses" (selectionChange)="updateSelection($event)">
         <bl-thead>
             <bl-column>Software license name</bl-column>
             <bl-column style="width: 85px">EULA</bl-column>

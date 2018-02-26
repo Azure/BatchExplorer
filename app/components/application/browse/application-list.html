@@ -1,4 +1,4 @@
-<bl-quick-list *ngIf="quickList">
+<bl-quick-list *ngIf="quicklist">
     <bl-quick-list-item *ngFor="let application of displayedApplications;trackBy: trackByFn" [link]="['/applications/', application.id]"
         [key]="application.id" [contextmenu]="contextmenu(application)">
         <bl-quick-list-item-status [status]="appStatus(application)">
@@ -12,7 +12,7 @@
     </bl-quick-list-item>
 </bl-quick-list>
 
-<bl-table *ngIf="!quickList">
+<bl-table *ngIf="!quicklist">
     <bl-thead>
         <bl-column>Id</bl-column>
         <bl-column>Packages</bl-column>

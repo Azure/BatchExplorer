@@ -132,7 +132,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             this._checkTabIsValid();
 
             this.performanceData.update();
-            this.data.updateParams({ poolId: this.pool.id });
+            this.data.params = { poolId: this.pool.id };
             this.data.refreshAll(false);
 
             this._jobData.patchOptions({

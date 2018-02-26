@@ -52,13 +52,13 @@ export class NodeUserCredentialsFormComponent {
         const credentials: AddNodeUserAttributes = {
             name: value.username,
             isAdmin: value.isAdmin,
+            expiryTime: moment().add(value.expireIn).toDate(),
         };
         if (value.mode === CredentialsMode.SSHPublicKey) {
             credentials.sshPublicKey = value.sshPublicKey;
         } else {
             credentials.password = value.password;
         }
-        credentials.expiryTime = moment().add(value.expireIn).toDate();
         return this.submit(credentials);
     }
 

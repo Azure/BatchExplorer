@@ -74,10 +74,12 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         return super.startPoll(interval);
     }
 
-    public updateParams(params: TParams) {
-        this.params = params;
+    public set params(params: TParams) {
+        super.params = params;
         this._handleChanges();
+        this._hasMore.next(true);
     }
+    public get params() { return super.params; }
 
     public setOptions(options: ListOptionsAttributes, clearItems = true) {
         super.setOptions(new ListOptions(options));
