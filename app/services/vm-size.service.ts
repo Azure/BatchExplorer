@@ -66,14 +66,14 @@ export class VmSizeService {
                 return sizes;
             }
             return this._filterSizes(sizes, excluded.all.concat(excluded.paas));
-        }).share();
+        }).shareReplay(1);
 
         this.virtualMachineSizes = obs.map(([sizes, excluded]) => {
             if (!excluded) {
                 return sizes;
             }
             return this._filterSizes(sizes, excluded.all.concat(excluded.iaas));
-        }).share();
+        }).shareReplay(1);
 
         this.vmSizeCategories = this._vmSizeCategories.asObservable();
     }

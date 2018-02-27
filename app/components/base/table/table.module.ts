@@ -6,10 +6,10 @@ import { MaterialModule } from "app/core";
 
 import { FocusSectionModule } from "../focus-section";
 import { VirtualScrollModule } from "../virtual-scroll";
-import { TableCellComponent } from "./table-cell.component";
-import { TableColumnComponent } from "./table-column.component";
-import { TableHeadComponent } from "./table-head.component";
-import { TableRowComponent } from "./table-row.component";
+import { TableCellComponent } from "./table-cell";
+import { TableColumnComponent } from "./table-column";
+import { TableHeadComponent } from "./table-head";
+import { TableRowComponent } from "./table-row";
 import { TableComponent } from "./table.component";
 
 const components = [

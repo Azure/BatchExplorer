@@ -3,7 +3,7 @@ import {
 } from "@angular/core";
 
 import { SecureUtils } from "app/utils";
-import { TableComponent } from "./table.component";
+import { TableComponent } from "../table.component";
 
 export enum SortDirection {
     Asc,
