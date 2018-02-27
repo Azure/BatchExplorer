@@ -8,24 +8,14 @@ bl-table {
     display: block;
     width: 100%;
     margin-bottom: 25px;
-
-    table {
-        width: 100%;
-        border-spacing: 0;
-        border-collapse: collapse;
-        overflow: hidden;
-        display: table;
-        table-layout: fixed;
+    bl-thead, > .row {
+        display: flex;
+        align-items: center;
     }
 
-
     bl-thead {
-        display: table-header-group;
-        color: $genericGray;
-
-        > tr {
-            height: $table-heading-height;
-        }
+        color: $secondary-text;
+        height: $table-heading-height;
     }
 
     .checkbox-column {
@@ -49,37 +39,33 @@ bl-table {
         }
     }
 
-    tbody {
-        display: table-header-group;
+    > div.row {
+        border-top: 1px $athensGrey solid;
+        height: $table-row-height;
 
-        > tr {
-            border-top: 1px $athensGrey solid;
-            height: $table-row-height;
+        &.selected {
+            background-color: map-get($primary, 100);
 
-            &.selected {
-                background-color: map-get($primary, 100);
-
-                p {
-                    color: $mineShaftGray;
-                }
+            p {
+                color: $mineShaftGray;
             }
+        }
 
-            &.focused {
-                outline: 2px dashed map-get($primary, 200);
-                outline-offset: -2px;
-            }
+        &.focused {
+            outline: 2px dashed map-get($primary, 200);
+            outline-offset: -2px;
+        }
 
-            &.drop-target {
-                background: $altoGray;
-            }
+        &.drop-target {
+            background: $altoGray;
+        }
 
-            &:hover:not(.selected) {
-                background-color: $altoGray;
-            }
+        &:hover:not(.selected) {
+            background-color: $altoGray;
+        }
 
-            &:last-child {
-                border-bottom: 1px $athensGrey solid;
-            }
+        &:last-child {
+            border-bottom: 1px $athensGrey solid;
         }
     }
 
@@ -90,6 +76,8 @@ bl-table {
         padding: 0 5px;
         overflow: hidden;
         text-overflow: ellipsis;
+        flex: 1;
+        word-wrap: break-word;
 
         &:first-child {
             padding: 0 0 0 $padding-first-and-last;
