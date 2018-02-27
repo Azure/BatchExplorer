@@ -46,7 +46,7 @@ async function startApplication(batchLabsApp: BatchLabsApplication) {
     // Uncomment to view why windows don't show up.
     batchLabsApp.init().then(() => {
         batchLabsApp.start();
-        batchLabsApp.debugCrash();
+        // batchLabsApp.debugCrash();
     });
     setMenu(batchLabsApp);
 }

@@ -12,7 +12,6 @@ import { TaskBaseModule } from "app/components/task/base";
 import { NetworkConfigurationModule } from "./network-configuration";
 import { UserAccountModule } from "./user-account";
 
-import { CommonModule } from "app/components/common";
 import {
     AppLicensePickerComponent,
     AutoscaleFormulaPickerComponent,

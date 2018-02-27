@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input, OnChanges, OnDestroy, OnInit,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input, OnChanges, OnDestroy,
 } from "@angular/core";
 import { Subscription } from "rxjs";
 
@@ -92,12 +92,15 @@ export class InlineQuotaComponent implements OnChanges, OnDestroy {
         ]));
     }
 
+    public trackStatus(index, status) {
+        return status.label;
+    }
+
     private _gotoQuotaRequest() {
         this.shell.openExternal(Constants.ExternalLinks.supportRequest);
     }
 
     private _update() {
-        console.log("UPDate dist", this._include, this.use.toJS());
         this.statuses = this._include.map((name) => {
             const use = this.use && this.use[name];
             const quota = this.quotas && this.quotas[name];

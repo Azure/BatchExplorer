@@ -6,7 +6,7 @@
     type="compact">
 </bl-quota-display>
 <div class="expanded" *ngIf="expanded">
-    <bl-quota-display *ngFor="let status of statuses"
+    <bl-quota-display *ngFor="let status of statuses;trackBy: trackStatus"
         [label]="status.label"
         [use]="status.use"
         [quota]="status.quota"

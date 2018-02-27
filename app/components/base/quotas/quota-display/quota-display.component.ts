@@ -1,8 +1,5 @@
-import { ChangeDetectionStrategy, Component, HostBinding, HostListener, Input, OnChanges, Output, EventEmitter } from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostBinding, Input, OnChanges } from "@angular/core";
 
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
-import { ElectronShell } from "app/services";
-import { Constants } from "common";
 import "./quota-display.scss";
 
 type ProgressColorClass = "high-usage" | "medium-usage" | "low-usage";
