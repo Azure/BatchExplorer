@@ -4,11 +4,11 @@ import {
 } from "@angular/core";
 import { Router } from "@angular/router";
 
+import { AbstractListItemBase } from "app/components/base/abstract-list";
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
 import { ContextMenuService } from "app/components/base/context-menu";
-import { AbstractListItemBase } from "../abstract-list";
-import { TableCellComponent } from "./table-cell.component";
-import { TableComponent } from "./table.component";
+import { TableCellComponent } from "../table-cell";
+import { TableComponent } from "../table.component";
 
 @Component({
     selector: "bl-row",

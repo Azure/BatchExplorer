@@ -6,10 +6,10 @@ import {
 import { FocusSectionComponent } from "app/components/base/focus-section";
 import { DragUtils, log } from "app/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
-import { TableCellComponent } from "./table-cell.component";
-import { SortDirection, TableColumnComponent } from "./table-column.component";
-import { TableHeadComponent } from "./table-head.component";
-import { TableRowComponent } from "./table-row.component";
+import { TableCellComponent } from "./table-cell";
+import { SortDirection, TableColumnComponent } from "./table-column";
+import { TableHeadComponent } from "./table-head";
+import { TableRowComponent } from "./table-row";
 import "./table.scss";
 
 export interface TableConfig extends AbstractListBaseConfig {
