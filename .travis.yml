@@ -14,7 +14,7 @@ sudo: false
 #       - bsdtar
 
 node_js:
-  - 9.2.1
+  - 9.6.1
 python:
   - "3.6"
 
@@ -32,8 +32,8 @@ matrix:
         - virtualenv env -p python3
         - source env/bin/activate
         - python3 --version
-        - nvm install 9.2.1
-        - nvm use 9.2.1
+        - nvm install 9.6.1
+        - nvm use 9.6.1
 
     - language: node_js
       os: linux
@@ -55,6 +55,7 @@ install:
   - npm install -g codecov
   - npm install -g yarn
   - yarn install
+  - ls ./node_modules/karma-electron/node_modules
   - python3 --version
   - pip3 install -r python/requirements.txt
 
@@ -69,7 +70,7 @@ branches:
   - fix/publish
 
 cache:
-  yarn: true
+  # yarn: true
   # directories:
     # - node_modules
     # - $HOME/.cache/electron
