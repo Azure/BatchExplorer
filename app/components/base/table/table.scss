@@ -1,10 +1,11 @@
 @import "app/styles/variables";
 
-$padding-first-and-last: 10px;
-$table-heading-height: 40px;
-$table-row-height: 30px;
-
 bl-table {
+    $padding-first-and-last: 10px;
+    $table-heading-height: 34px;
+    $table-row-height: 28px;
+
+
     display: block;
     width: 100%;
     margin-bottom: 25px;
@@ -28,7 +29,7 @@ bl-table {
 
         &:hover {
             .mat-checkbox-frame {
-                border-color: map-get($primary, 600);
+                border-color: $primary-color;
             }
         }
     }
@@ -98,10 +99,10 @@ bl-table {
     }
 
     bl-column {
-        display: table-cell;
         font-size: 0.9em;
         font-weight: bold;
         white-space: nowrap;
+        user-select: none;
 
         &.sortable {
             cursor: pointer;
@@ -115,15 +116,14 @@ bl-table {
         }
 
         &.sorting {
-            color: map-get($primary, 500);
+            color: $primary-color;
             > .sort-icon {
-                color: map-get($primary, 500);
+                color: $primary-color;
             }
         }
     }
 
     bl-cell {
-        display: table-cell;
         font-size: 13px;
         position: relative;
         white-space: nowrap;
@@ -137,5 +137,5 @@ bl-table {
 }
 
 .cell-spinner {
-    color: map-get($primary, 400);
+    color: $primary-color;
 }

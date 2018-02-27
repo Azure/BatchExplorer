@@ -1,3 +1,4 @@
+Categories: {{categoryNames.length}}
 <mat-tab-group class="form-tabs" [@.disabled]="true">
     <mat-tab *ngFor="let category of categoryNames;trackBy: trackCategory" [label]="categoryLabelName(category)">
         <bl-focus-section>
