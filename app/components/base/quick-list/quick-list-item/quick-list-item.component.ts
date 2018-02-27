@@ -3,10 +3,10 @@ import {
 } from "@angular/core";
 import { Router } from "@angular/router";
 
+import { AbstractListItemBase } from "app/components/base/abstract-list";
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
 import { ContextMenuService } from "app/components/base/context-menu";
-import { AbstractListItemBase } from "../abstract-list";
-import { QuickListComponent } from "./quick-list.component";
+import { QuickListComponent } from "../quick-list.component";
 
 import "./quick-list-item.scss";
 
