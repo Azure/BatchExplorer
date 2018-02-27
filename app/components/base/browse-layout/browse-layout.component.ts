@@ -104,7 +104,7 @@ export class BrowseLayoutComponent implements AfterContentInit {
             throw new Error("BrowseLayout expect an list component to have the directive blBrowseLayoutList");
         }
         const component = this.listDirective.component;
-        component.quicklist = false; // TODO-TIM change back
+        component.quicklist = true;
         component.activeItem = this._activeItemKey;
         this.selection = component.selection;
         this.deleteSelectionIsEnabled = Boolean(component.deleteSelection);

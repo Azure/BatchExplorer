@@ -1,6 +1,6 @@
 import {
     ChangeDetectorRef, Component, ContentChild, ContentChildren, EventEmitter,
-    HostBinding, Input, Optional, Output, QueryList,
+    HostBinding, Input, Optional, Output, QueryList, HostListener,
 } from "@angular/core";
 
 import { FocusSectionComponent } from "app/components/base/focus-section";
@@ -52,7 +52,9 @@ export class TableComponent extends AbstractListBase {
     @ContentChild(TableHeadComponent) public head: TableHeadComponent;
     @ContentChildren(TableRowComponent) public items: QueryList<TableRowComponent>;
     @HostBinding("class.drag-hover") public isDraging = 0;
-
+    @HostBinding("class.activable") public get activable() {
+        return this.config.activable;
+    }
     public dropTargetRowKey: string = null;
 
     protected _config: TableConfig = tableDefaultConfig;
@@ -65,6 +67,7 @@ export class TableComponent extends AbstractListBase {
         super(changeDetection, focusSection);
     }
 
+    @HostListener("dragover", ["$event"])
     public handleDragHover(event: DragEvent) {
         DragUtils.allowDrop(event, this.config.droppable);
     }

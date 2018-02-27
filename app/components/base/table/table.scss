@@ -33,13 +33,13 @@ bl-table {
         }
     }
 
-    table.activable {
-        tbody > tr {
+    &.activable {
+        > .row {
             cursor: pointer;
         }
     }
 
-    > div.row {
+    > .row {
         border-top: 1px $athensGrey solid;
         height: $table-row-height;
 

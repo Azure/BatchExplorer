@@ -1,7 +1,13 @@
 <ng-content select="bl-thead"></ng-content>
-<div class="row" *ngFor="let item of displayItems, trackBy: trackByFn" (click)="item.handleClick($event)" (contextmenu)="item.openContextMenu($event)"
-    [class.selected]="item.selected" [class.focused]="listFocused && item.key === (focusedItem | async)" [class.drop-target]="item.key === dropTargetRowKey"
-    (dragenter)="dragEnter(item, $event)" (dragleave)="dragLeave(item, $event)" (drop)="handleDropOnRow(item, $event)">
+<div class="row" *ngFor="let item of displayItems, trackBy: trackByFn"
+    (click)="item.handleClick($event)"
+    (contextmenu)="item.openContextMenu($event)"
+    [class.selected]="item.selected"
+    [class.focused]="listFocused && item.key === (focusedItem | async)"
+    [class.drop-target]="item.key === dropTargetRowKey"
+    (dragenter)="dragEnter(item, $event)"
+    (dragleave)="dragLeave(item, $event)"
+    (drop)="handleDropOnRow(item, $event)">
 
     <td class="checkbox-column" (click)="item.handleClick($event, false)" *ngIf="config.showCheckbox">
         <mat-checkbox color="primary" (click)="$event.stopPropagation()" (change)="item.handleClick(null, false)" [checked]="item.selected"></mat-checkbox>
