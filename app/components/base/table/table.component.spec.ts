@@ -45,7 +45,7 @@ describe("TableComponent", () => {
 
     function getRows(): HTMLElement[] {
         // Cannot use de.queryAll angular bug: https://github.com/angular/angular/issues/13066
-        return de.nativeElement.querySelectorAll("tbody tr");
+        return de.nativeElement.querySelectorAll(".row");
     }
 
     beforeEach(() => {

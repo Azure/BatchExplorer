@@ -2,8 +2,8 @@ import {
     AfterViewInit, Component, ContentChildren, Inject, QueryList, forwardRef,
 } from "@angular/core";
 
-import { TableColumnComponent } from "./table-column.component";
-import { TableComponent } from "./table.component";
+import { TableColumnComponent } from "../table-column";
+import { TableComponent } from "../table.component";
 
 @Component({
     selector: "bl-thead",

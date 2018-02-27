@@ -1,15 +1,15 @@
 import {
     ChangeDetectorRef, Component, ContentChild, ContentChildren, EventEmitter,
-    HostBinding, Input, Optional, Output, QueryList,
+    HostBinding, HostListener, Input, Optional, Output, QueryList,
 } from "@angular/core";
 
 import { FocusSectionComponent } from "app/components/base/focus-section";
 import { DragUtils, log } from "app/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
-import { TableCellComponent } from "./table-cell.component";
-import { SortDirection, TableColumnComponent } from "./table-column.component";
-import { TableHeadComponent } from "./table-head.component";
-import { TableRowComponent } from "./table-row.component";
+import { TableCellComponent } from "./table-cell";
+import { SortDirection, TableColumnComponent } from "./table-column";
+import { TableHeadComponent } from "./table-head";
+import { TableRowComponent } from "./table-row";
 import "./table.scss";
 
 export interface TableConfig extends AbstractListBaseConfig {
@@ -52,7 +52,9 @@ export class TableComponent extends AbstractListBase {
     @ContentChild(TableHeadComponent) public head: TableHeadComponent;
     @ContentChildren(TableRowComponent) public items: QueryList<TableRowComponent>;
     @HostBinding("class.drag-hover") public isDraging = 0;
-
+    @HostBinding("class.activable") public get activable() {
+        return this.config.activable;
+    }
     public dropTargetRowKey: string = null;
 
     protected _config: TableConfig = tableDefaultConfig;
@@ -65,6 +67,7 @@ export class TableComponent extends AbstractListBase {
         super(changeDetection, focusSection);
     }
 
+    @HostListener("dragover", ["$event"])
     public handleDragHover(event: DragEvent) {
         DragUtils.allowDrop(event, this.config.droppable);
     }
