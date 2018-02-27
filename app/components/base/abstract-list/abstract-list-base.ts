@@ -22,7 +22,7 @@ export const abstractListDefaultConfig: AbstractListBaseConfig = {
 };
 
 /**
- * Base class for a list component. Used by quicklist and table
+ * Base class for quick-list and table component
  *
  * Usage:
  * 1. Extend class
@@ -36,6 +36,11 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
      * List of items to display(Which might be different from the full items list because of sorting and other)
      */
     public displayItems: AbstractListItemBase[] = [];
+
+    /**
+     * List of items that are currently being displayed with the virtual scroll
+     */
+    public viewPortItems: AbstractListItemBase[] = [];
 
     @Input() public set config(config: AbstractListBaseConfig) {
         this._config = { ...abstractListDefaultConfig, ...config };
@@ -78,6 +83,11 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
 
     public ngOnDestroy() {
         this._subs.forEach((x) => x.unsubscribe());
+    }
+
+    public updateViewPortItems(items) {
+        this.viewPortItems = items;
+        this.changeDetector.markForCheck();
     }
 
     /**

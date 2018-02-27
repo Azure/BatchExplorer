@@ -64,6 +64,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         }));
         this._subs.push(this.data.items.subscribe((pools) => {
             this.pools = List<PoolDecorator>(pools.map(x => new PoolDecorator(x)));
+            this.changeDetector.markForCheck();
         }));
     }
 

@@ -1,7 +1,6 @@
-<bl-focus-section>
-    <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
+<bl-focus-section *ngIf="jobs.size > 0">
     <bl-quick-list *ngIf="quicklist" [(activeItem)]="activeItem" [(selection)]="selection">
-        <bl-quick-list-item *ngFor="let job of data.items | async; trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id"
+        <bl-quick-list-item *ngFor="let job of jobs; trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id"
             [contextmenu]="contextmenu(job)">
             <bl-quick-list-item-status [status]="jobStatus(job)" [tooltip]="jobStatusText(job)">
             </bl-quick-list-item-status>
@@ -24,19 +23,18 @@
             <bl-column>Pool</bl-column>
         </bl-thead>
 
-        <bl-row *ngFor="let job of data.items | async; trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id" [contextmenu]="contextmenu(job)">
+        <bl-row *ngFor="let job of jobs; trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id" [contextmenu]="contextmenu(job)">
             <bl-cell>{{job.id}}</bl-cell>
             <bl-cell>{{job.state}}</bl-cell>
             <bl-cell>{{job.poolInfo?.poolId}}</bl-cell>
         </bl-row>
     </bl-table>
-
-    <bl-no-item [itemCount]="(data.items | async).size" [filter]="filter" [status]="status | async">
-        <i icon class="fa fa-tasks"></i>
-        <span no-filter>No jobs</span>
-        <span with-filter>No jobs match this filter</span>
-    </bl-no-item>
-
-    <bl-loading [status]="status | async"></bl-loading>
-
 </bl-focus-section>
+<bl-no-item [itemCount]="jobs.size" [filter]="filter" [status]="status | async">
+    <i icon class="fa fa-tasks"></i>
+    <span no-filter>No jobs</span>
+    <span with-filter>No jobs match this filter</span>
+</bl-no-item>
+
+<bl-loading [status]="status | async"></bl-loading>
+<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
