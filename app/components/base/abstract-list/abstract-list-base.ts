@@ -87,6 +87,7 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
 
     public updateViewPortItems(items) {
         this.viewPortItems = items;
+        console.log("Viewport items", items.length);
         this.changeDetector.markForCheck();
     }
 
@@ -218,7 +219,7 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
         this.focusedItem.next(newItem.key);
     }
 
-    public trackByFn(index, item) {
+    public trackItem(index, item) {
         return item.key;
     }
 

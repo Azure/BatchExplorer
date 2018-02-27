@@ -1,10 +1,11 @@
-import { ModuleWithProviders, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "app/core";
 
 import { FocusSectionModule } from "../focus-section";
+import { VirtualScrollModule } from "../virtual-scroll";
 import { TableCellComponent } from "./table-cell.component";
 import { TableColumnComponent } from "./table-column.component";
 import { TableHeadComponent } from "./table-head.component";
@@ -27,16 +28,11 @@ const components = [
         FormsModule,
         ReactiveFormsModule,
         MaterialModule,
+        VirtualScrollModule,
     ],
     exports: components,
     declarations: components,
     providers: [],
 })
 export class TableModule {
-    public static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: TableModule,
-            providers: [],
-        };
-    }
 }

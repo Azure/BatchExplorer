@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, forwardRef } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -57,7 +57,12 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         this.data = this.jobService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
         this.data.items.subscribe((jobs) => {
-            this.jobs = jobs;
+            const otherJobs = [];
+
+            for (let i = 0; i < 50; i++) {
+                otherJobs.push(new Job({ id: `other_${i}`, state: JobState.completed }));
+            }
+            this.jobs = List(jobs.concat(otherJobs));
             this.changeDetector.markForCheck();
         });
         this.status = this.data.status;

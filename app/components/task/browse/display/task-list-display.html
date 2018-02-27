@@ -1,5 +1,4 @@
-<bl-focus-section>
-
+<bl-focus-section *ngIf="tasks.size > 0">
     <bl-quick-list *ngIf="quicklist" [(activeItem)]="activeItem" [(selection)]="selection">
         <bl-quick-list-item *ngFor="let task of tasks;trackBy: trackByFn" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id"
             [contextmenu]="contextmenu(task)">
@@ -36,10 +35,9 @@
             <bl-cell [value]="task.executionInfo?.exitCode"></bl-cell>
         </bl-row>
     </bl-table>
-
-    <bl-no-item [itemCount]="tasks.size" [status]="status">
-        <i icon class="fa fa-tasks"></i>
-        <span no-filter>No tasks</span>
-        <span with-filter>No task match this filter</span>
-    </bl-no-item>
 </bl-focus-section>
+<bl-no-item [itemCount]="tasks.size" [status]="status">
+    <i icon class="fa fa-tasks"></i>
+    <span no-filter>No tasks</span>
+    <span with-filter>No task match this filter</span>
+</bl-no-item>

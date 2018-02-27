@@ -1,5 +1,3 @@
 <bl-virtual-scroll [items]="displayItems" (update)="updateViewPortItems($event)" [childHeight]="48">
-    <ng-container *ngFor="let item of viewPortItems">
-        <ng-template [ngTemplateOutlet]="item.content"></ng-template>
-    </ng-container>
+    <ng-template *ngFor="let item of viewPortItems; trackBy: trackItem" [ngTemplateOutlet]="item.content"></ng-template>
 </bl-virtual-scroll>
