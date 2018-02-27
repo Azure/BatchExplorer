@@ -65,6 +65,10 @@ export class PoolService extends ServiceBase {
         }
     }
 
+    public listAll(options?: ListOptionsAttributes) {
+        return this._listGetter.fetchAll(options);
+    }
+
     public listView(options: ListOptionsAttributes = {}): ListView<Pool, PoolListParams> {
         return new ListView({
             cache: () => this._cache,
