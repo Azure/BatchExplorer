@@ -27,9 +27,9 @@
                 </div>
             </div>
             <div class="bl-list-content">
-                <bl-scrollable (scrollBottom)="listScrolledToBottom()">
-                    <ng-content select="[blBrowseLayoutList]"></ng-content>
-                </bl-scrollable>
+                <!-- <bl-scrollable (scrollBottom)="listScrolledToBottom()"> -->
+                <ng-content select="[blBrowseLayoutList]"></ng-content>
+                <!-- </bl-scrollable> -->
             </div>
             <div class="quotas">
                 <ng-content select="[blBrowseLayoutQuotas]"></ng-content>

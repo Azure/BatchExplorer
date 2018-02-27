@@ -39,6 +39,9 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() public childWidth: number;
 
+    /**
+     * Heigth of the rows. This is required to compute which row to show
+     */
     @Input() public childHeight: number;
 
     @Input() public bufferAmount: number = 0;

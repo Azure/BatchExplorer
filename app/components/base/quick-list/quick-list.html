@@ -1,0 +1,5 @@
+<bl-virtual-scroll [items]="displayItems" (update)="updateViewPortItems($event)" style="height: 100%" [childHeight]="48">
+    <ng-container *ngFor="let item of viewPortItems">
+        <ng-template [ngTemplateOutlet]="item.content"></ng-template>
+    </ng-container>
+</bl-virtual-scroll>

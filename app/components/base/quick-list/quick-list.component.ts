@@ -10,16 +10,20 @@ import "./quick-list.scss";
 
 @Component({
     selector: "bl-quick-list",
-    template: `
-        <ng-content></ng-content>
-    `,
+    templateUrl: "quick-list.html",
 })
 export class QuickListComponent extends AbstractListBase {
     @ContentChildren(QuickListItemComponent)
     public items: QueryList<QuickListItemComponent>;
 
-    constructor( @Optional() focusSection: FocusSectionComponent, changeDetection: ChangeDetectorRef) {
+    public viewPortItems = [];
+    constructor(@Optional() focusSection: FocusSectionComponent, changeDetection: ChangeDetectorRef) {
         super(changeDetection, focusSection);
+    }
+
+    public updateViewPortItems(items) {
+        this.viewPortItems = items;
+        this.changeDetector.markForCheck();
     }
 }
 
