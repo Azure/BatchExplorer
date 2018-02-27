@@ -1,6 +1,6 @@
 import {
     ChangeDetectorRef, Component, ContentChild, ContentChildren, EventEmitter,
-    HostBinding, Input, Optional, Output, QueryList, HostListener,
+    HostBinding, HostListener, Input, Optional, Output, QueryList,
 } from "@angular/core";
 
 import { FocusSectionComponent } from "app/components/base/focus-section";
