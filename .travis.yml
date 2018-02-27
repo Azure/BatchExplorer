@@ -55,7 +55,6 @@ install:
   - npm install -g codecov
   - npm install -g yarn
   - yarn install
-  - ls ./node_modules/karma-electron/node_modules
   - python3 --version
   - pip3 install -r python/requirements.txt
 
