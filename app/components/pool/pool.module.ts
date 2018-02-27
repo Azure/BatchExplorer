@@ -37,7 +37,8 @@ const components = [
 ];
 
 const modules = [
-    PoolBaseModule, PoolDetailsModule, NetworkConfigurationModule, PoolGraphsModule, StartTaskModule, UserAccountModule,
+    PoolBaseModule, PoolDetailsModule, NetworkConfigurationModule, PoolGraphsModule,
+    StartTaskModule, UserAccountModule,
     TaskBaseModule, ...commonModules,
 ];
 
