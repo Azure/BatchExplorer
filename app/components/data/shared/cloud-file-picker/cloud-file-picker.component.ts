@@ -1,16 +1,12 @@
-import { Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { autobind } from "app/core";
-import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { DialogService } from "app/components/base/dialogs";
-import { BlobContainer } from "app/models";
-import { ListContainerParams, StorageService } from "app/services";
-import { ListView } from "app/services/core";
-import { Constants } from "common";
+import { StorageService } from "app/services";
 import { CloudFilePickerDialogComponent } from "./cloud-file-picker-dialog.component";
 import "./cloud-file-picker.scss";
 
@@ -23,7 +19,7 @@ import "./cloud-file-picker.scss";
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => CloudFilePickerComponent), multi: true },
     ],
 })
-export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges, OnDestroy {
     @Input() public label: string;
     @Input() public hint: string;
 
@@ -32,20 +28,13 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
      */
     @Input() public containerId: string;
 
-    public fileGroups: List<BlobContainer>;
     public value = new FormControl();
-    public fileGroupsData: ListView<BlobContainer, ListContainerParams>;
     public warning = false;
 
     private _propagateChange: (value: any[]) => void = null;
     private _subscriptions: Subscription[] = [];
 
     constructor(private storageService: StorageService, private dialog: DialogService) {
-        this.fileGroupsData = this.storageService.containerListView(Constants.ncjFileGroupPrefix);
-        this.fileGroupsData.items.subscribe((fileGroups) => {
-            this.fileGroups = fileGroups;
-        });
-
         this._subscriptions.push(this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
             this._checkValid(value);
             if (this._propagateChange) {
@@ -54,13 +43,15 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
         }));
     }
 
-    public ngOnInit() {
-        this.fileGroupsData.fetchNext();
+    public ngOnChanges(changes) {
+        if (changes.containerId) {
+            // check validity if the selected file group changes
+            this._checkValid(this.value.value);
+        }
     }
 
     public ngOnDestroy() {
         this._subscriptions.forEach(x => x.unsubscribe());
-        this.fileGroupsData.dispose();
     }
 
     public writeValue(value: string) {
@@ -90,11 +81,22 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
                 this.value.setValue(component.pickedFile);
             }
         });
+
         return component.done;
     }
 
     private _checkValid(value: string) {
-        const valid = !value || this.fileGroups.map(x => x.name).includes(value);
-        this.warning = !valid;
+        if (!value) {
+            this.warning = false;
+            return;
+        }
+
+        // validate that the blob exists in the selected container
+        // note: value includes prefix
+        this.storageService.getBlobPropertiesOnce(this.containerId, value).subscribe((blob) => {
+            this.warning = false;
+        }, (error) => {
+            this.warning = true;
+        });
     }
 }

@@ -33,6 +33,7 @@ import { NotificationModule } from "./notifications";
 import { PinnedDropDownComponent } from "./pinned-entity-dropdown";
 import { PropertyListModule } from "./property-list";
 import { QuickListModule } from "./quick-list";
+import { QuotasModule } from "./quotas";
 import { ScrollableModule } from "./scrollable";
 import { SidebarModule } from "./sidebar";
 import { SimpleDialogComponent } from "./simple-dialog";
@@ -69,6 +70,7 @@ const modules = [
     TabsModule,
     TagsModule,
     FormModule,
+    QuotasModule,
     ScrollableModule,
     SplitPaneModule,
     SummaryCardModule,

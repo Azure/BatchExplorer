@@ -13,6 +13,7 @@ export * from "./application-package-reference";
 export * from "./auto-user";
 export * from "./autoscale-formula";
 export * from "./batch-error";
+export * from "./batch-quotas";
 export * from "./blob-container";
 export * from "./certificate-reference";
 export * from "./cloud-service-configuration";

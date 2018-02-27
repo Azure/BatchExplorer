@@ -1,0 +1,16 @@
+<bl-quota-display *ngIf="mainStatus && !expanded"
+    [title]="title"
+    [label]="mainStatus.label"
+    [use]="mainStatus.use"
+    [quota]="mainStatus.quota"
+    type="compact">
+</bl-quota-display>
+<div class="expanded" *ngIf="expanded">
+    <bl-quota-display *ngFor="let status of statuses;trackBy: trackStatus"
+        [label]="status.label"
+        [use]="status.use"
+        [quota]="status.quota"
+        type="compact">
+    </bl-quota-display>
+</div>
+

@@ -24,6 +24,7 @@ export class CloudFilePickerDialogComponent {
         showTreeView: false,
         selectable: FileExplorerSelectable.file,
     };
+
     private _saved = false;
 
     public set containerId(containerId: string) {
