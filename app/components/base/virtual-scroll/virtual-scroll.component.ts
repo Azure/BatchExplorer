@@ -1,4 +1,5 @@
 import {
+    AfterViewInit,
     Component,
     ContentChild,
     ElementRef,
@@ -16,6 +17,7 @@ import {
     ViewChild,
 } from "@angular/core";
 import * as tween from "@tweenjs/tween.js";
+import * as elementResizeDetectorMaker from "element-resize-detector";
 
 import { autobind } from "app/core";
 import { VirtualScrollTailComponent } from "./virtual-scroll-tail";
@@ -43,7 +45,8 @@ interface VirtualScrollDimensions {
     selector: "bl-virtual-scroll",
     templateUrl: "virtual-scroll.html",
 })
-export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
+export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+
     @Input() public items: any[] = [];
 
     @Input() public scrollbarWidth: number;
@@ -100,6 +103,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     private _lastScrollHeight = -1;
     private _lastTopPadding = -1;
     private _tail: VirtualScrollTailComponent;
+    private _erd: any;
 
     @ViewChild("padding", { read: ElementRef })
     private _paddingElementRef: ElementRef;
@@ -125,7 +129,18 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         this.scrollbarHeight = 0;
     }
 
+    public ngAfterViewInit() {
+        this._erd = elementResizeDetectorMaker({
+            strategy: "scroll",
+        });
+
+        this._erd.listenTo(this.element.nativeElement, (element) => {
+            this.refresh();
+        });
+    }
+
     public ngOnDestroy() {
+        this._erd.uninstall(this.element.nativeElement);
         this._removeParentEventHandlers(this.parentScroll);
     }
 

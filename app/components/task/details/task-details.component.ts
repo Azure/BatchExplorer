@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ChangeDetectorRef } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "app/core";
@@ -60,6 +60,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
         this.data.item.subscribe((task) => {
             this.task = task;
             this.decorator = task && new TaskDecorator(task);
+            changeDetector.markForCheck();
         });
 
         this.data.deleted.subscribe((key) => {
@@ -68,7 +69,10 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.jobData.item.subscribe(x => this.job = x);
+        this.jobData.item.subscribe(x => {
+            this.job = x;
+            changeDetector.markForCheck();
+        });
     }
 
     public ngOnInit() {

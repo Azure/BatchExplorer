@@ -90,11 +90,11 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
 
     public ngAfterContentInit() {
         this._subs.push(this.items.changes.subscribe(() => {
+            console.log("Content changed?", this.items.length);
             this._updateDisplayItems();
         }));
+        console.log("Content init?", this.items.length);
         this._updateDisplayItems();
-        this.changeDetector.detectChanges();
-
     }
 
     public ngOnDestroy() {
@@ -103,6 +103,7 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
 
     public updateViewPortItems(items) {
         this.viewPortItems = items;
+        console.log("THose items", this.constructor.name, items.length);
         if (items.length === this.displayItems.length) {
             this.scrollBottom.emit();
         }

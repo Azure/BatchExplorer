@@ -17,8 +17,8 @@ export class TaskDependenciesComponent implements OnChanges {
 
     public dependentIds: string[] = [];
     public dependencies: List<TaskDependency> = List([]);
-    public loaded = 0;
 
+    private _loaded = 0;
     private _tasks = new Map<string, Task>();
 
     constructor(
@@ -32,7 +32,7 @@ export class TaskDependenciesComponent implements OnChanges {
         }
 
         if (changes.jobId || ComponentUtils.recordChangedId(changes.task)) {
-            this.loaded = 0;
+            this._loaded = 0;
             this._refresh(this.task);
         }
     }
@@ -50,20 +50,21 @@ export class TaskDependenciesComponent implements OnChanges {
     }
 
     private _loadStates() {
-        if (this.loaded >= this.dependentIds.length) { return; }
-        this.taskService.getMultiple(this.jobId, this.dependentIds.slice(this.loaded, this.loaded + 20),
+        if (this._loaded >= this.dependentIds.length) { return; }
+        this.taskService.getMultiple(this.jobId, this.dependentIds.slice(this._loaded, this._loaded + 20),
             this.taskService.basicProperties).subscribe({
                 next: (tasks: List<Task>) => {
-                    this.loaded = this.loaded + 20;
+                    this._loaded = this._loaded + 20;
                     this._processMultipleTaskResponse(tasks);
                     this._loadStates();
                 },
             });
     }
+
     private _updateDependencies() {
         this.dependencies = List(this.dependentIds.map((id, index) => {
             const dep = new TaskDependency(id);
-            dep.loading = this.loaded < index;
+            dep.loading = this._loaded < index;
             if (this._tasks.has(id)) {
                 const task = this._tasks.get(id);
                 dep.state = task.state;
@@ -85,6 +86,7 @@ export class TaskDependenciesComponent implements OnChanges {
 
             return dep;
         }));
+        console.log("dependencies are?", this.dependencies.size);
         this.changeDetector.markForCheck();
     }
 
