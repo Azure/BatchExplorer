@@ -63,6 +63,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     @Output() public change = new EventEmitter<ChangeEvent>();
     @Output() public start = new EventEmitter<ChangeEvent>();
     @Output() public end = new EventEmitter<ChangeEvent>();
+    @Output() public scroll = new EventEmitter<Event>();
 
     public viewPortItems: any[];
 
@@ -78,7 +79,6 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     public previousEnd: number;
     public startupLoop: boolean = true;
     public currentTween: any;
-    public window = window;
 
     private _parentScroll: Element | Window;
 
@@ -255,7 +255,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         };
     }
 
-    private _calculateItems() {
+    private _calculateItems(forceViewportUpdate: boolean = false) {
         const el = this._getScrollElement();
         const d = this._calculateDimensions();
         const items = this.items || [];
@@ -269,9 +269,24 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         const scrollTop = Math.max(0, elScrollTop - offsetTop);
+        let { start, end } = this._computeRange(d, scrollTop);
+
+        this.topPadding = d.childHeight * Math.ceil(start / d.itemsPerRow)
+            - (d.childHeight * Math.min(start, this.bufferAmount));
+        start = !isNaN(start) ? start : -1;
+        end = !isNaN(end) ? end : -1;
+        start -= this.bufferAmount;
+        start = Math.max(0, start);
+        end += this.bufferAmount;
+        end = Math.min(items.length, end);
+        this._applyChanges(items, start, end);
+    }
+
+    private _computeRange(d, scrollTop) {
         const indexByScrollTop = scrollTop / this.scrollHeight * d.itemCount / d.itemsPerRow;
-        let end = Math.min(d.itemCount,
+        const end = Math.min(d.itemCount,
             Math.ceil(indexByScrollTop) * d.itemsPerRow + d.itemsPerRow * (d.itemsPerCol + 1));
+        console.log("End?", d.itemCount, scrollTop, this.scrollHeight, d.itemCount, d.itemsPerRow);
 
         let maxStartEnd = end;
         const modEnd = end % d.itemsPerRow;
@@ -279,17 +294,12 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
             maxStartEnd = end + d.itemsPerRow - modEnd;
         }
         const maxStart = Math.max(0, maxStartEnd - d.itemsPerCol * d.itemsPerRow - d.itemsPerRow);
-        let start = Math.min(maxStart, Math.floor(indexByScrollTop) * d.itemsPerRow);
+        const start = Math.min(maxStart, Math.floor(indexByScrollTop) * d.itemsPerRow);
 
-        this.topPadding = d.childHeight * Math.ceil(start / d.itemsPerRow)
-            - (d.childHeight * Math.min(start, this.bufferAmount));
-
-        start = !isNaN(start) ? start : -1;
-        end = !isNaN(end) ? end : -1;
-        start -= this.bufferAmount;
-        start = Math.max(0, start);
-        end += this.bufferAmount;
-        end = Math.min(items.length, end);
+        return { start, end };
+    }
+    private _applyChanges(items, start, end) {
+        console.log("Changed", items, start, end);
         if (start !== this.previousStart || end !== this.previousEnd) {
 
             // update the scroll list

@@ -53,9 +53,10 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         private taskManager: BackgroundTaskService,
         private pinnedEntityService: PinnedEntityService) {
 
-        // super(dialog);
         super(changeDetector);
-        this.data = this.poolService.listView();
+        this.data = this.poolService.listView({
+            pageSize: 2,
+        });
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 
         this.status = this.data.status;
@@ -104,6 +105,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     }
 
     public onScrollToBottom() {
+        console.log("Scrolled to the bottom");
         this.data.fetchNext();
     }
 
