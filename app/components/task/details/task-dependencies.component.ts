@@ -4,6 +4,7 @@ import { List } from "immutable";
 import { LoadingStatus } from "app/components/base/loading";
 import { Task, TaskDependencies, TaskDependency } from "app/models";
 import { TaskService } from "app/services";
+import { ComponentUtils } from "app/utils";
 
 @Component({
     selector: "bl-task-dependencies",
@@ -16,11 +17,9 @@ export class TaskDependenciesComponent implements OnChanges {
 
     public dependentIds: string[] = [];
     public dependencies: List<TaskDependency> = List([]);
-    public status = LoadingStatus.Loading;
-    public hasMore: boolean = false;
+    public loaded = 0;
 
-    private _skip: number;
-    private _take: number;
+    private _tasks = new Map<string, Task>();
 
     constructor(
         private changeDetector: ChangeDetectorRef,
@@ -28,33 +27,14 @@ export class TaskDependenciesComponent implements OnChanges {
     }
 
     public ngOnChanges(changes) {
-        if (changes.jobId || changes.task) {
+        if (changes.jobId) {
+            this._tasks.clear();
+        }
+
+        if (changes.jobId || ComponentUtils.recordChangedId(changes.task)) {
+            this.loaded = 0;
             this._refresh(this.task);
         }
-    }
-    public loadMore() {
-        this.status = LoadingStatus.Loading;
-        if (this.dependentIds.length > 0) {
-            const endIndex = this._skip + Math.min(this._take, this.dependentIds.length - this._skip);
-            const taskIdSet = this.dependentIds.slice(this._skip, endIndex);
-            const currentPage = taskIdSet.map(id => {
-                return new TaskDependency(id);
-            });
-            this.dependencies = List(this.dependencies.concat(currentPage));
-            this.taskService.getMultiple(this.jobId, taskIdSet, this.taskService.basicProperties).subscribe({
-                next: (tasks: List<Task>) => {
-                    if (tasks) {
-                        this._processMultipleTaskResponse(tasks, currentPage);
-                    }
-                },
-            });
-
-            this._skip += this._take;
-            this.hasMore = this._skip < this.dependentIds.length;
-        } else {
-            this.hasMore = false;
-        }
-        this.changeDetector.markForCheck();
     }
 
     public trackByFn(index, dependency: TaskDependency) {
@@ -62,15 +42,50 @@ export class TaskDependenciesComponent implements OnChanges {
     }
 
     private _refresh(task: Task) {
-        this._skip = 0;
-        this._take = 20;
-
-        this.dependencies = List([]);
         this.dependentIds = (task && task.dependsOn)
             ? this._getTaskDependencyIds(task.dependsOn)
             : [];
+        this._updateDependencies();
+        this._loadStates();
+    }
 
-        this.loadMore();
+    private _loadStates() {
+        if (this.loaded >= this.dependentIds.length) { return; }
+        this.taskService.getMultiple(this.jobId, this.dependentIds.slice(this.loaded, this.loaded + 20),
+            this.taskService.basicProperties).subscribe({
+                next: (tasks: List<Task>) => {
+                    this.loaded = this.loaded + 20;
+                    this._processMultipleTaskResponse(tasks);
+                    this._loadStates();
+                },
+            });
+    }
+    private _updateDependencies() {
+        this.dependencies = List(this.dependentIds.map((id, index) => {
+            const dep = new TaskDependency(id);
+            dep.loading = this.loaded < index;
+            if (this._tasks.has(id)) {
+                const task = this._tasks.get(id);
+                dep.state = task.state;
+                dep.loading = false;
+
+                const dependencies = task.dependsOn;
+                if (dependencies) {
+                    const count = this._taskDependenciesCount(dependencies);
+                    if (count > 0 && count <= 2) {
+                        const ids = this._getTaskDependencyIds(dependencies);
+                        dep.dependsOn = ids.join(",");
+                    } else {
+                        dep.dependsOn = `${count} tasks`;
+                    }
+                } else {
+                    dep.dependsOn = "No tasks";
+                }
+            }
+
+            return dep;
+        }));
+        this.changeDetector.markForCheck();
     }
 
     /**
@@ -78,35 +93,11 @@ export class TaskDependenciesComponent implements OnChanges {
      * @param response: api reponse
      * @param pageData: data for the current page
      */
-    private _processMultipleTaskResponse(tasks: List<Task>, pageData: TaskDependency[]): void {
-        this.status = LoadingStatus.Ready;
-
-        for (const td of pageData) {
-            td.loading = false;
-
-            const found = tasks && tasks.size > 0
-                ? tasks.filter(item => item.id === td.id).first()
-                : null;
-
-            if (!found) {
-                continue;
-            }
-
-            td.state = found.state;
-            const dependencies = found.dependsOn;
-            if (dependencies) {
-                const count = this._taskDependenciesCount(dependencies);
-                if (count > 0 && count <= 2) {
-                    const ids = this._getTaskDependencyIds(dependencies);
-                    td.dependsOn = ids.join(",");
-                } else {
-                    td.dependsOn = `${count} tasks`;
-                }
-            } else {
-                td.dependsOn = "no tasks";
-            }
-        }
-        this.changeDetector.markForCheck();
+    private _processMultipleTaskResponse(tasks: List<Task>): void {
+        tasks.forEach((x) => {
+            this._tasks.set(x.id, x);
+        });
+        this._updateDependencies();
     }
 
     /**

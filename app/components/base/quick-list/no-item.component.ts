@@ -9,7 +9,7 @@ import { Filter } from "app/utils/filter-builder";
         <div
             class="no-item-message"
             [class.slim]="slimline"
-            *ngIf="status !== loadingStatuses.Loading && itemCount === 0">
+            *ngIf="status !== LoadingStatus.Loading && itemCount === 0">
 
             <ng-content select="[icon]"></ng-content>
             <ng-content select="[no-filter]" *ngIf="!withFilter"></ng-content>
@@ -20,19 +20,16 @@ import { Filter } from "app/utils/filter-builder";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NoItemComponent {
-    @Input()
-    public status: LoadingStatus;
+    @Input() public status: LoadingStatus = LoadingStatus.Ready;
 
-    @Input()
-    public itemCount: number;
+    @Input() public itemCount: number;
 
-    @Input()
-    public set filter(filter: Filter) {
+    @Input() public set filter(filter: Filter) {
         this.withFilter = Boolean(filter && !filter.isEmpty());
     }
 
     @Input() public slimline = false;
 
     public withFilter = false;
-    public loadingStatuses = LoadingStatus;
+    public LoadingStatus = LoadingStatus;
 }

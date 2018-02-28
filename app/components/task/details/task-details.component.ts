@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "app/core";
@@ -52,6 +52,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
         private fs: FileSystemService,
         taskService: TaskService,
         jobService: JobService,
+        private changeDetector: ChangeDetectorRef,
         private router: Router) {
 
         this.data = taskService.view();
@@ -138,6 +139,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
             this.data.params = { id: this.taskId, jobId: this.jobId };
             this.data.fetch();
             this._refreshJobData();
+            this.changeDetector.markForCheck();
         }
     }
 
