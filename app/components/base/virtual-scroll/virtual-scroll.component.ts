@@ -81,6 +81,11 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     public currentTween: any;
 
     private _parentScroll: Element | Window;
+    /** Cache of the last scroll height to prevent setting CSS when not needed. */
+    private _lastScrollHeight = -1;
+
+    @ViewChild("padding", { read: ElementRef })
+    private _paddingElementRef: ElementRef;
 
     constructor(
         private readonly element: ElementRef,
@@ -238,9 +243,14 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
             ? (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0)
             : el.scrollTop;
         const scrollTop = Math.max(0, elScrollTop);
-        if (itemsPerCol === 1
-            && Math.floor(scrollTop / this.scrollHeight * itemCount) + itemsPerRowByCalc >= itemCount) {
+        const scrollHeight = childHeight * Math.ceil(itemCount / itemsPerRow);
+        if (itemsPerCol === 1 && Math.floor(scrollTop / scrollHeight * itemCount) + itemsPerRowByCalc >= itemCount) {
             itemsPerRow = itemsPerRowByCalc;
+        }
+
+        if (scrollHeight !== this._lastScrollHeight) {
+            this.renderer.setStyle(this._paddingElementRef.nativeElement, "height", `${scrollHeight}px`);
+            this._lastScrollHeight = scrollHeight;
         }
 
         return {
