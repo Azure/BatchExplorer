@@ -1,4 +1,4 @@
-<bl-focus-section *ngIf="tasks.size > 0">
+<bl-focus-section *ngIf="nodes.size > 0">
     <bl-quick-list *ngIf="quicklist"  [(activeItem)]="activeItem" [(selection)]="selection">
         <bl-quick-list-item *ngFor="let node of nodes;trackBy: trackNode" [link]="['/pools', poolId, 'nodes', node.id]" [key]="node.id">
             <bl-quick-list-item-status [status]="" [tooltip]="">

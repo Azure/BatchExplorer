@@ -1,4 +1,4 @@
-<bl-table>
+<bl-table *ngIf="(dependencies | async).size > 0">
     <bl-thead>
         <bl-column>Task ID</bl-column>
         <bl-column>State</bl-column>
