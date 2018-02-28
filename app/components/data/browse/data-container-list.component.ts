@@ -17,8 +17,8 @@ import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
 import { Constants } from "common";
-import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 import { List } from "immutable";
+import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
 const defaultListOptions = {
     pageSize: Constants.ListPageSizes.default,

@@ -103,7 +103,6 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     }
 
     public onScrollToBottom() {
-        console.log("Scrolled to the bottom");
         this.data.fetchNext();
     }
 
