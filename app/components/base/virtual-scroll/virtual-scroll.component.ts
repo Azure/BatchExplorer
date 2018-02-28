@@ -15,15 +15,15 @@ import {
     SimpleChanges,
     ViewChild,
 } from "@angular/core";
-
 import * as tween from "@tweenjs/tween.js";
+
+import { autobind } from "app/core";
 
 export interface ChangeEvent {
     start?: number;
     end?: number;
 }
 
-import { autobind } from "app/core";
 import "./virtual-scroll.scss";
 
 @Component({
@@ -74,7 +74,6 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     public containerElementRef: ElementRef;
 
     public topPadding: number;
-    public scrollHeight: number;
     public previousStart: number;
     public previousEnd: number;
     public startupLoop: boolean = true;
@@ -83,6 +82,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     private _parentScroll: Element | Window;
     /** Cache of the last scroll height to prevent setting CSS when not needed. */
     private _lastScrollHeight = -1;
+    private _lastTopPadding = -1;
 
     @ViewChild("padding", { read: ElementRef })
     private _paddingElementRef: ElementRef;
@@ -193,17 +193,6 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    private _countItemsPerRow() {
-        let offsetTop;
-        const children = this.contentElementRef.nativeElement.children;
-        for (let itemsPerRow = 0; itemsPerRow < children.length; itemsPerRow++) {
-            if (offsetTop !== undefined && offsetTop !== children[itemsPerRow].offsetTop) {
-                return itemsPerRow;
-            }
-            offsetTop = children[itemsPerRow].offsetTop;
-        }
-    }
-
     private _getElementsOffset(): number {
         let offsetTop = 0;
         if (this.containerElementRef && this.containerElementRef.nativeElement) {
@@ -236,17 +225,9 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         const childWidth = this.childWidth || contentDimensions.width;
         const childHeight = this.childHeight || contentDimensions.height;
 
-        let itemsPerRow = Math.max(1, this._countItemsPerRow());
-        const itemsPerRowByCalc = Math.max(1, Math.floor(viewWidth / childWidth));
+        const itemsPerRow = Math.max(1, Math.floor(viewWidth / childWidth));
         const itemsPerCol = Math.max(1, Math.floor(viewHeight / childHeight));
-        const elScrollTop = this.parentScroll instanceof Window
-            ? (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0)
-            : el.scrollTop;
-        const scrollTop = Math.max(0, elScrollTop);
         const scrollHeight = childHeight * Math.ceil(itemCount / itemsPerRow);
-        if (itemsPerCol === 1 && Math.floor(scrollTop / scrollHeight * itemCount) + itemsPerRowByCalc >= itemCount) {
-            itemsPerRow = itemsPerRowByCalc;
-        }
 
         if (scrollHeight !== this._lastScrollHeight) {
             this.renderer.setStyle(this._paddingElementRef.nativeElement, "height", `${scrollHeight}px`);
@@ -261,43 +242,30 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
             childHeight: childHeight,
             itemsPerRow: itemsPerRow,
             itemsPerCol: itemsPerCol,
-            itemsPerRowByCalc: itemsPerRowByCalc,
+            scrollHeight,
         };
     }
 
     private _calculateItems(forceViewportUpdate: boolean = false) {
-        const el = this._getScrollElement();
         const d = this._calculateDimensions();
         const items = this.items || [];
-        const offsetTop = this._getElementsOffset();
-        let elScrollTop = this.parentScroll instanceof Window
-            ? (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0)
-            : el.scrollTop;
-        this.scrollHeight = d.childHeight * d.itemCount / d.itemsPerRow;
-        if (elScrollTop > this.scrollHeight) {
-            elScrollTop = this.scrollHeight + offsetTop;
-        }
+        let { start, end } = this._computeRange(d);
 
-        const scrollTop = Math.max(0, elScrollTop - offsetTop);
-        let { start, end } = this._computeRange(d, scrollTop);
+        this._applyTopPadding(items, start, d);
 
-        this.topPadding = d.childHeight * Math.ceil(start / d.itemsPerRow)
-            - (d.childHeight * Math.min(start, this.bufferAmount));
         start = !isNaN(start) ? start : -1;
         end = !isNaN(end) ? end : -1;
         start -= this.bufferAmount;
         start = Math.max(0, start);
         end += this.bufferAmount;
         end = Math.min(items.length, end);
-        this._applyChanges(items, start, end);
+        this._detectViewportChanges(items, start, end, forceViewportUpdate);
     }
 
-    private _computeRange(d, scrollTop) {
-        const indexByScrollTop = scrollTop / this.scrollHeight * d.itemCount / d.itemsPerRow;
-        const end = Math.min(d.itemCount,
-            Math.ceil(indexByScrollTop) * d.itemsPerRow + d.itemsPerRow * (d.itemsPerCol + 1));
-        console.log("End?", d.itemCount, scrollTop, this.scrollHeight, d.itemCount, d.itemsPerRow);
-
+    private _computeRange(d) {
+        const scrollTop = this._computeScrollTop(d);
+        const indexByScrollTop = scrollTop / d.scrollHeight * d.itemCount / d.itemsPerRow;
+        const end = Math.min(d.itemCount, d.itemsPerRow * (Math.ceil(indexByScrollTop) + d.itemsPerCol + 1));
         let maxStartEnd = end;
         const modEnd = end % d.itemsPerRow;
         if (modEnd) {
@@ -308,36 +276,68 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
 
         return { start, end };
     }
-    private _applyChanges(items, start, end) {
-        console.log("Changed", items, start, end);
-        if (start !== this.previousStart || end !== this.previousEnd) {
 
-            // update the scroll list
-            this.viewPortItems = items.slice(start, end);
-            this.update.emit(this.viewPortItems);
+    private _computeScrollTop(d): number {
+        const el = this._getScrollElement();
+        const offsetTop = this._getElementsOffset();
 
-            // emit 'start' event
-            if (start !== this.previousStart && this.startupLoop === false) {
-                this.start.emit({ start, end });
-            }
+        let elScrollTop = this.parentScroll instanceof Window
+            ? (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0)
+            : el.scrollTop;
 
-            // emit 'end' event
-            if (end !== this.previousEnd && this.startupLoop === false) {
-                this.end.emit({ start, end });
-            }
+        if (elScrollTop > d.scrollHeight) {
+            elScrollTop = d.scrollHeight + offsetTop;
+        }
 
-            this.previousStart = start;
-            this.previousEnd = end;
+        return Math.max(0, elScrollTop - offsetTop);
+    }
 
-            if (this.startupLoop === true) {
-                this.refresh();
-            } else {
-                this.change.emit({ start, end });
-            }
+    private _applyTopPadding(items, start, d) {
+        let topPadding = 0;
+        if (items) {
+            topPadding = d.childHeight * (Math.ceil(start / d.itemsPerRow) - Math.min(start, this.bufferAmount));
+        }
+        if (topPadding !== this._lastTopPadding) {
+            this.renderer.setStyle(this.contentElementRef.nativeElement, "transform", `translateY(${topPadding}px)`);
+            this._lastTopPadding = topPadding;
+        }
+    }
 
+    private _detectViewportChanges(items: any, start: number, end: number, forceViewportUpdate: boolean) {
+        if (start !== this.previousStart || end !== this.previousEnd || forceViewportUpdate === true) {
+            this.zone.run(() => {
+                this._applyViewportChanges(items, start, end, forceViewportUpdate);
+            });
         } else if (this.startupLoop === true) {
             this.startupLoop = false;
             this.refresh();
+        }
+    }
+
+    private _applyViewportChanges(items: any, start: number, end: number, forceViewportUpdate: boolean) {
+        // To prevent from accidentally selecting the entire array with a negative 1 (-1) in the end position.
+        const _end = end >= 0 ? end : 0;
+        // update the scroll list
+        this.viewPortItems = items.slice(start, _end);
+        this.update.emit(this.viewPortItems);
+
+        // emit 'start' event
+        if (start !== this.previousStart && this.startupLoop === false) {
+            this.start.emit({ start, end });
+        }
+
+        // emit 'end' event
+        if (end !== this.previousEnd && this.startupLoop === false) {
+            this.end.emit({ start, end });
+        }
+
+        this.previousStart = start;
+        this.previousEnd = end;
+
+        if (this.startupLoop === true) {
+            this.refresh();
+        } else {
+            this.change.emit({ start, end });
         }
     }
 }
