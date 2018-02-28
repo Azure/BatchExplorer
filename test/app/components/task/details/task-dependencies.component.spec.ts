@@ -18,7 +18,7 @@ const taskMap: Map<string, Task> = new Map()
     .set("1", new Task({ id: "1", dependsOn: { taskIds: ["1", "2"] } } as any))
     .set("2", new Task({ id: "2", dependsOn: { taskIds: ["3", "4", "5"] } } as any));
 
-describe("TaskDependenciesComponent", () => {
+fdescribe("TaskDependenciesComponent", () => {
     let fixture: ComponentFixture<TaskDependenciesComponent>;
     let component: TaskDependenciesComponent;
     let taskServiceSpy: any;
@@ -65,8 +65,7 @@ describe("TaskDependenciesComponent", () => {
 
         it("no dependencies should have been found", () => {
             expect(component.dependentIds.length).toBe(0);
-            expect(component.dependencies.value.length).toBe(0);
-            expect(component.hasMore).toBe(false);
+            expect(component.dependencies.size).toBe(0);
         });
     });
 
@@ -89,11 +88,7 @@ describe("TaskDependenciesComponent", () => {
 
         it("shoud have 3 dependent task id's", () => {
             expect(component.dependentIds.length).toBe(3);
-            expect(component.dependencies.value.length).toBe(3);
-        });
-
-        it("should not show load more", () => {
-            expect(component.hasMore).toBe(false);
+            expect(component.dependencies.size).toBe(3);
         });
     });
 
@@ -112,11 +107,7 @@ describe("TaskDependenciesComponent", () => {
 
         it("shoud have 8 dependent task id's", () => {
             expect(component.dependentIds.length).toBe(8);
-            expect(component.dependencies.value.length).toBe(8);
-        });
-
-        it("should not show load more", () => {
-            expect(component.hasMore).toBe(false);
+            expect(component.dependencies.size).toBe(8);
         });
     });
 
@@ -136,11 +127,7 @@ describe("TaskDependenciesComponent", () => {
 
         it("shoud have 6 dependent task id's", () => {
             expect(component.dependentIds.length).toBe(6);
-            expect(component.dependencies.value.length).toBe(6);
-        });
-
-        it("should not show load more", () => {
-            expect(component.hasMore).toBe(false);
+            expect(component.dependencies.size).toBe(6);
         });
     });
 
@@ -155,10 +142,6 @@ describe("TaskDependenciesComponent", () => {
             } as any);
 
             fixture.detectChanges();
-        });
-
-        it("should enable load more button", () => {
-            expect(component.hasMore).toBe(true);
         });
     });
 
@@ -177,11 +160,11 @@ describe("TaskDependenciesComponent", () => {
 
         it("shoud have 3 dependencies", () => {
             expect(component.dependentIds.length).toBe(3);
-            expect(component.dependencies.value.length).toBe(3);
+            expect(component.dependencies.size).toBe(3);
         });
 
         it("dependsOn property is correct", () => {
-            const dependencies = component.dependencies.value;
+            const dependencies = component.dependencies.toJS();
             expect(dependencies[0].dependsOn).toBe("1,2");
             expect(dependencies[1].dependsOn).toBe("3 tasks");
             expect(dependencies[2].dependsOn).toBe("no tasks");

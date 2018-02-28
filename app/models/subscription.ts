@@ -8,6 +8,7 @@ export interface SubscriptionAttributes {
     state: string;
 }
 
+console.log("Sub", Record);
 /**
  * Class for displaying MPI sub task information.
  */

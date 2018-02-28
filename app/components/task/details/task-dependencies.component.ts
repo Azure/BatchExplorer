@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 import { List } from "immutable";
 
-import { LoadingStatus } from "app/components/base/loading";
 import { Task, TaskDependencies, TaskDependency } from "app/models";
 import { TaskService } from "app/services";
 import { ComponentUtils } from "app/utils";
