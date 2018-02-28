@@ -36,6 +36,7 @@ interface VirtualScrollDimensions {
     itemsPerRow: number;
     itemsPerCol: number;
     scrollHeight: number;
+    tail: number;
 }
 
 @Component({
@@ -230,7 +231,8 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
 
         const itemsPerRow = Math.max(1, Math.floor(viewWidth / childWidth));
         const itemsPerCol = Math.max(1, Math.floor(viewHeight / childHeight));
-        const scrollHeight = childHeight * Math.ceil(itemCount / itemsPerRow);
+        const tail = this.tail && this.tail.height || 0;
+        const scrollHeight = childHeight * Math.ceil(itemCount / itemsPerRow) + tail;
 
         if (scrollHeight !== this._lastScrollHeight) {
             this.renderer.setStyle(this._paddingElementRef.nativeElement, "height", `${scrollHeight}px`);
@@ -245,6 +247,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
             childHeight: childHeight,
             itemsPerRow: itemsPerRow,
             itemsPerCol: itemsPerCol,
+            tail,
             scrollHeight,
         };
     }
@@ -266,7 +269,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private _computeRange(d: VirtualScrollDimensions) {
-        console.log("Compute range", d);
+        console.log("Compute range", d.scrollHeight);
         const scrollTop = this._computeScrollTop(d);
         const indexByScrollTop = scrollTop / d.scrollHeight * d.itemCount / d.itemsPerRow;
         const end = Math.min(d.itemCount, d.itemsPerRow * (Math.ceil(indexByScrollTop) + d.itemsPerCol + 1));
@@ -319,7 +322,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private _applyViewportChanges(items: any, start: number, end: number, forceViewportUpdate: boolean) {
-        console.log("Chagnes?", {items: items.length, start, end});
+        console.log("Chagnes?", { items: items.length, start, end });
         // To prevent from accidentally selecting the entire array with a negative 1 (-1) in the end position.
         const _end = end >= 0 ? end : 0;
         // update the scroll list
