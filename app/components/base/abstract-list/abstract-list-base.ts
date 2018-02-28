@@ -99,6 +99,9 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
 
     public updateViewPortItems(items) {
         this.viewPortItems = items;
+        if (items.length === this.displayItems.length) {
+            this.scrollBottom.emit();
+        }
         this.changeDetector.markForCheck();
     }
 

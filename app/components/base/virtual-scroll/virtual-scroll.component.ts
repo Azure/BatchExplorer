@@ -24,6 +24,17 @@ export interface ChangeEvent {
     end?: number;
 }
 
+interface VirtualScrollDimensions {
+    itemCount: number;
+    viewWidth: number;
+    viewHeight: number;
+    childWidth: number;
+    childHeight: number;
+    itemsPerRow: number;
+    itemsPerCol: number;
+    scrollHeight: number;
+}
+
 import "./virtual-scroll.scss";
 
 @Component({
@@ -204,7 +215,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         return offsetTop;
     }
 
-    private _calculateDimensions() {
+    private _calculateDimensions(): VirtualScrollDimensions {
         const el = this._getScrollElement();
         const items = this.items || [];
         const itemCount = items.length;
@@ -248,6 +259,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
 
     private _calculateItems(forceViewportUpdate: boolean = false) {
         const d = this._calculateDimensions();
+        console.log("Computed dimensions", d);
         const items = this.items || [];
         let { start, end } = this._computeRange(d);
 
@@ -262,7 +274,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         this._detectViewportChanges(items, start, end, forceViewportUpdate);
     }
 
-    private _computeRange(d) {
+    private _computeRange(d: VirtualScrollDimensions) {
         const scrollTop = this._computeScrollTop(d);
         const indexByScrollTop = scrollTop / d.scrollHeight * d.itemCount / d.itemsPerRow;
         const end = Math.min(d.itemCount, d.itemsPerRow * (Math.ceil(indexByScrollTop) + d.itemsPerCol + 1));
@@ -292,7 +304,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         return Math.max(0, elScrollTop - offsetTop);
     }
 
-    private _applyTopPadding(items, start, d) {
+    private _applyTopPadding(items, start, d: VirtualScrollDimensions) {
         let topPadding = 0;
         if (items) {
             topPadding = d.childHeight * (Math.ceil(start / d.itemsPerRow) - Math.min(start, this.bufferAmount));
