@@ -54,9 +54,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         private pinnedEntityService: PinnedEntityService) {
 
         super(changeDetector);
-        this.data = this.poolService.listView({
-            pageSize: 2,
-        });
+        this.data = this.poolService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 
         this.status = this.data.status;

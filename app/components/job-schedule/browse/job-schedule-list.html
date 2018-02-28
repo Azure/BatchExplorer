@@ -1,5 +1,5 @@
 <bl-focus-section *ngIf="jobSchedules.size > 0">
-    <bl-quick-list *ngIf="quicklist">
+    <bl-quick-list *ngIf="quicklist" [status]="status | async" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
         <bl-quick-list-item *ngFor="let jobSchedule of jobSchedules; trackBy: trackByFn" [link]="['/jobschedules/', jobSchedule.id]" [key]="jobSchedule.id" [contextmenu]="contextmenu(jobSchedule)">
             <bl-quick-list-item-status [status]="jobScheduleStatus(jobSchedule)" [tooltip]="jobScheduleStatusText(jobSchedule)">
             </bl-quick-list-item-status>
@@ -11,7 +11,7 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quicklist">
+    <bl-table *ngIf="!quicklist" [status]="status | async" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
         <bl-thead>
             <bl-column>Id</bl-column>
             <bl-column>State</bl-column>
@@ -33,5 +33,3 @@
     <span no-filter>No job schedules</span>
     <span with-filter>No job schedules match this filter</span>
 </bl-no-item>
-
-<bl-loading [status]="status | async"></bl-loading>
