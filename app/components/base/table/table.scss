@@ -9,7 +9,6 @@ bl-table {
     display: block;
     width: 100%;
     height: 100%;
-    margin-bottom: 25px;
     bl-thead, .bl-table-row {
         display: flex;
         align-items: center;
@@ -29,9 +28,9 @@ bl-table {
 
     > .table-body {
         position: relative;
-        height: 100%;
+        height: calc(100% - #{$table-heading-height});
         > bl-virtual-scroll {
-            height: calc(100% - #{$table-heading-height});
+            height: 100%;
         }
     }
 
