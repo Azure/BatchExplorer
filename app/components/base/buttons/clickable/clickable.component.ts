@@ -1,6 +1,6 @@
 import {
     Component, EventEmitter, HostBinding, HostListener,
-    Input, OnChanges, OnDestroy, Output, SimpleChanges,
+    Inject, Input, OnChanges, OnDestroy, Output, SimpleChanges, forwardRef,
 } from "@angular/core";
 
 import { AuthorizationHttpService, Permission } from "app/services";
@@ -36,7 +36,7 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     private _sub: Subscription;
     private _permissionDisabled = false;
 
-    constructor(private authHttpService: AuthorizationHttpService) {
+    constructor(@Inject(forwardRef(() => AuthorizationHttpService)) private authHttpService: AuthorizationHttpService) {
     }
 
     public ngOnChanges(changes: SimpleChanges): void {

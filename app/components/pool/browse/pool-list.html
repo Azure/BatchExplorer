@@ -1,5 +1,5 @@
 <bl-focus-section *ngIf="pools.size > 0">
-    <bl-quick-list *ngIf="quicklist" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
+    <bl-quick-list *ngIf="quicklist" [status]="status | async" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
         <bl-quick-list-item *ngFor="let pool of pools, trackBy: trackById" [link]="['/pools/', pool.id]" [key]="pool.id" [contextmenu]="contextmenu(pool)">
             <bl-quick-list-item-status [status]="poolStatus(pool.original)" [tooltip]="poolStatusText(pool.original)">
             </bl-quick-list-item-status>
@@ -15,7 +15,7 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quicklist" [config]="tableConfig" [(activeItem)]="activeItem" [(selection)]="selection"  (scrollBottom)="onScrollToBottom()">
+    <bl-table *ngIf="!quicklist" [config]="tableConfig" [status]="status | async" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
         <bl-thead>
             <bl-column>Id</bl-column>
             <bl-column>State</bl-column>
@@ -45,5 +45,3 @@
     <span no-filter>No pools</span>
     <span with-filter>No pool match this filter</span>
 </bl-no-item>
-
-<bl-loading [status]="status | async"></bl-loading>

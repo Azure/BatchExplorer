@@ -18,6 +18,9 @@ import {
 import * as tween from "@tweenjs/tween.js";
 
 import { autobind } from "app/core";
+import { VirtualScrollTailComponent } from "./virtual-scroll-tail";
+
+import "./virtual-scroll.scss";
 
 export interface ChangeEvent {
     start?: number;
@@ -34,8 +37,6 @@ interface VirtualScrollDimensions {
     itemsPerCol: number;
     scrollHeight: number;
 }
-
-import "./virtual-scroll.scss";
 
 @Component({
     selector: "bl-virtual-scroll",
@@ -81,8 +82,11 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     @ViewChild("content", { read: ElementRef })
     public contentElementRef: ElementRef;
 
-    @ContentChild("container")
-    public containerElementRef: ElementRef;
+    @ContentChild(VirtualScrollTailComponent)
+    public set tail(tail: VirtualScrollTailComponent) {
+        this._tail = tail;
+    }
+    public get tail() { return this._tail; }
 
     public topPadding: number;
     public previousStart: number;
@@ -94,6 +98,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     /** Cache of the last scroll height to prevent setting CSS when not needed. */
     private _lastScrollHeight = -1;
     private _lastTopPadding = -1;
+    private _tail: VirtualScrollTailComponent;
 
     @ViewChild("padding", { read: ElementRef })
     private _paddingElementRef: ElementRef;
@@ -206,9 +211,6 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
 
     private _getElementsOffset(): number {
         let offsetTop = 0;
-        if (this.containerElementRef && this.containerElementRef.nativeElement) {
-            offsetTop += this.containerElementRef.nativeElement.offsetTop;
-        }
         if (this.parentScroll) {
             offsetTop += this.element.nativeElement.offsetTop;
         }
@@ -222,19 +224,9 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         const viewWidth = el.clientWidth - this.scrollbarWidth;
         const viewHeight = el.clientHeight - this.scrollbarHeight;
 
-        let contentDimensions;
-        if (this.childWidth === undefined || this.childHeight === undefined) {
-            let content = this.contentElementRef.nativeElement;
-            if (this.containerElementRef && this.containerElementRef.nativeElement) {
-                content = this.containerElementRef.nativeElement;
-            }
-            contentDimensions = content.children[0] ? content.children[0].getBoundingClientRect() : {
-                width: viewWidth,
-                height: viewHeight,
-            };
-        }
-        const childWidth = this.childWidth || contentDimensions.width;
-        const childHeight = this.childHeight || contentDimensions.height;
+        const containerDimensions = this.element.nativeElement.getBoundingClientRect();
+        const childWidth = this.childWidth || containerDimensions.width;
+        const childHeight = this.childHeight || containerDimensions.height;
 
         const itemsPerRow = Math.max(1, Math.floor(viewWidth / childWidth));
         const itemsPerCol = Math.max(1, Math.floor(viewHeight / childHeight));
@@ -259,7 +251,6 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
 
     private _calculateItems(forceViewportUpdate: boolean = false) {
         const d = this._calculateDimensions();
-        console.log("Computed dimensions", d);
         const items = this.items || [];
         let { start, end } = this._computeRange(d);
 
@@ -275,6 +266,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private _computeRange(d: VirtualScrollDimensions) {
+        console.log("Compute range", d);
         const scrollTop = this._computeScrollTop(d);
         const indexByScrollTop = scrollTop / d.scrollHeight * d.itemCount / d.itemsPerRow;
         const end = Math.min(d.itemCount, d.itemsPerRow * (Math.ceil(indexByScrollTop) + d.itemsPerCol + 1));
@@ -327,6 +319,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private _applyViewportChanges(items: any, start: number, end: number, forceViewportUpdate: boolean) {
+        console.log("Chagnes?", {items: items.length, start, end});
         // To prevent from accidentally selecting the entire array with a negative 1 (-1) in the end position.
         const _end = end >= 0 ? end : 0;
         // update the scroll list

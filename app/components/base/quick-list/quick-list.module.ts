@@ -4,6 +4,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "app/core";
 
+import { LoadingModule } from "app/components/base/loading";
 import { VirtualScrollModule } from "app/components/base/virtual-scroll";
 import { ContextMenuModule } from "../context-menu";
 import { NoItemComponent } from "./no-item.component";
@@ -28,6 +29,7 @@ const publicComponents = [
         MaterialModule,
         ContextMenuModule,
         VirtualScrollModule,
+        LoadingModule,
     ],
 })
 export class QuickListModule {

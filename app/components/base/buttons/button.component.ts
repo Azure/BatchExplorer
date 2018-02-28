@@ -1,6 +1,6 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding,
-    Input, animate, style, transition, trigger,
+    Input, animate, style, transition, trigger, forwardRef, Inject,
 } from "@angular/core";
 import { Observable } from "rxjs";
 
@@ -60,7 +60,7 @@ export class ButtonComponent extends ClickableComponent {
 
     private _status = SubmitStatus.Idle;
 
-    constructor(authHttpService: AuthorizationHttpService,
+    constructor(@Inject(forwardRef(() => AuthorizationHttpService)) authHttpService: AuthorizationHttpService,
                 private changeDetectionRef: ChangeDetectorRef) {
         super(authHttpService);
     }

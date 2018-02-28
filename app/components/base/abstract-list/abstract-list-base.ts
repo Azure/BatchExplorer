@@ -1,9 +1,10 @@
 import {
-    AfterContentInit, AfterViewInit, ChangeDetectorRef, ContentChildren, EventEmitter,
+    AfterContentInit, ChangeDetectorRef, ContentChildren, EventEmitter,
     Input, OnDestroy, Output, QueryList, ViewChild,
 } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
+import { LoadingStatus } from "app/components/base/loading";
 import { autobind } from "app/core";
 import { ListSelection, SelectableList } from "app/core/list";
 import { FocusSectionComponent } from "../focus-section";
@@ -37,6 +38,7 @@ export const abstractListDefaultConfig: AbstractListBaseConfig = {
  * 2. Refefine items with @ContentChildren and the class that inherit SelectableListItemBase
  */
 export class AbstractListBase extends SelectableList implements AfterContentInit, OnDestroy {
+    public LoadingStatus = LoadingStatus;
     @Output() public scrollBottom = new EventEmitter();
 
     @ContentChildren(AbstractListItemBase) public items: QueryList<AbstractListItemBase>;
@@ -57,6 +59,8 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
         this._config = { ...abstractListDefaultConfig, ...config };
     }
     public get config() { return this._config; }
+
+    @Input() public status: LoadingStatus;
 
     public set selection(selection: ListSelection) {
         super.selection = selection;
