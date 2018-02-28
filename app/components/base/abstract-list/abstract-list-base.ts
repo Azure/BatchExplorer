@@ -55,6 +55,7 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
 
     public listFocused: boolean = false;
     public focusedItem = new BehaviorSubject<string>(null);
+    public showScrollShadow: boolean;
 
     protected _config: AbstractListBaseConfig = abstractListDefaultConfig;
 
@@ -87,7 +88,6 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
 
     public updateViewPortItems(items) {
         this.viewPortItems = items;
-        console.log("Viewport items", items.length);
         this.changeDetector.markForCheck();
     }
 
@@ -129,6 +129,14 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
         selection.select(key, selected);
         this.selection = selection;
         this._updateSelectedItems();
+    }
+
+    public handleScrollChange(event) {
+        const show = event.target.scrollTop > 0;
+        if (this.showScrollShadow !== show) {
+            this.showScrollShadow = show;
+            this.changeDetector.markForCheck();
+        }
     }
 
     /**

@@ -30,3 +30,12 @@ bl-no-item {
         }
     }
 }
+
+.scroll-shadow {
+    position: absolute;
+    top:0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    box-shadow: rgba(0, 0, 0, 0.5) 0 6px 6px -6px inset;
+}
