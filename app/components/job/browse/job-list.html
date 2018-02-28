@@ -36,5 +36,4 @@
     <span with-filter>No jobs match this filter</span>
 </bl-no-item>
 
-<bl-loading [status]="status | async"></bl-loading>
 <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
