@@ -57,12 +57,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         this.data = this.jobService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
         this.data.items.subscribe((jobs) => {
-            const otherJobs = [];
-
-            for (let i = 0; i < 50; i++) {
-                otherJobs.push(new Job({ id: `other_${i}`, state: JobState.completed }));
-            }
-            this.jobs = List(jobs.concat(otherJobs));
+            this.jobs = jobs;
             this.changeDetector.markForCheck();
         });
         this.status = this.data.status;
