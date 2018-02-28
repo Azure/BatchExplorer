@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 import { List } from "immutable";
 
 import { LoadingStatus } from "app/components/base/loading";
@@ -24,6 +24,8 @@ export class SubTaskDisplayListComponent extends ListBaseComponent {
 
     @ViewChild(QuickListComponent)
     public list: QuickListComponent;
+
+    @Output() public scrollBottom = new EventEmitter();
 
     constructor(changeDetector: ChangeDetectorRef) {
         super(changeDetector);

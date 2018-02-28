@@ -78,6 +78,9 @@ export class TaskSubTasksTabComponent extends ListBaseComponent implements OnCha
         this.changeDetector.markForCheck();
     }
 
+    public onScrollToBottom() {
+        this.data.fetchNext();
+    }
     private _updateSelectedTask() {
         this.selectedTask = this.subTasks.find((subTask) => {
             return subTask.id === this.selectedTaskId;
