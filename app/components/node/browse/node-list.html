@@ -1,5 +1,4 @@
-<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
-<bl-node-list-display
+<bl-node-list-display *ngIf="(data.items | async).size > 0"
     [poolId]="poolId"
     [nodes]="data.items | async"
     [status]="status"
@@ -7,4 +6,5 @@
     [(activeItem)]="activeItem"
     [(selection)]="selection">
 </bl-node-list-display>
+<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
 <bl-list-loading [manualLoading]="manualLoading" [data]="data"></bl-list-loading>
