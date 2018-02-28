@@ -31,6 +31,7 @@ bl-scrollable {
 
     .scrollable-container .simplebar-scroll-content {
         overflow: scroll;
+        transform: translate3d(0, 0, 0);
 
         //Hide the default scrollbar
         &::-webkit-scrollbar {

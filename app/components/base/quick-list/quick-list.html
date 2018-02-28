@@ -1,3 +1,4 @@
-<bl-virtual-scroll [items]="displayItems" (update)="updateViewPortItems($event)" [childHeight]="48">
+<div class="scroll-shadow" *ngIf="showScrollShadow"></div>
+<bl-virtual-scroll [items]="displayItems" [childHeight]="48" (update)="updateViewPortItems($event)" (scroll)="handleScrollChange($event)">
     <ng-template *ngFor="let item of viewPortItems; trackBy: trackItem" [ngTemplateOutlet]="item.content"></ng-template>
 </bl-virtual-scroll>
