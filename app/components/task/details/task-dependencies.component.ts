@@ -1,51 +1,46 @@
-import { Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 import { List } from "immutable";
-import { BehaviorSubject } from "rxjs";
 
+import { LoadingStatus } from "app/components/base/loading";
 import { Task, TaskDependencies, TaskDependency } from "app/models";
 import { TaskService } from "app/services";
 
 @Component({
     selector: "bl-task-dependencies",
     templateUrl: "task-dependencies.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskDependenciesComponent {
-    @Input()
-    public set jobId(value: string) {
-        this._jobId = (value && value.trim());
-    }
-    public get jobId() { return this._jobId; }
-
-    @Input()
-    public set task(task: Task) {
-        this._task = task;
-        this._refresh(task);
-    }
-    public get task() { return this._task; }
+export class TaskDependenciesComponent implements OnChanges {
+    @Input() public jobId: string;
+    @Input() public task: Task;
 
     public dependentIds: string[] = [];
-    public dependencies: BehaviorSubject<TaskDependency[]>;
-    public loadingMore: boolean = false;
+    public dependencies: List<TaskDependency> = List([]);
+    public status = LoadingStatus.Loading;
     public hasMore: boolean = false;
 
-    private _jobId: string;
-    private _task: Task;
     private _skip: number;
     private _take: number;
 
     constructor(
+        private changeDetector: ChangeDetectorRef,
         private taskService: TaskService) {
     }
 
+    public ngOnChanges(changes) {
+        if (changes.jobId || changes.task) {
+            this._refresh(this.task);
+        }
+    }
     public loadMore() {
+        this.status = LoadingStatus.Loading;
         if (this.dependentIds.length > 0) {
             const endIndex = this._skip + Math.min(this._take, this.dependentIds.length - this._skip);
             const taskIdSet = this.dependentIds.slice(this._skip, endIndex);
             const currentPage = taskIdSet.map(id => {
                 return new TaskDependency(id);
             });
-
-            this.dependencies.next(this.dependencies.value.concat(currentPage));
+            this.dependencies = List(this.dependencies.concat(currentPage));
             this.taskService.getMultiple(this.jobId, taskIdSet, this.taskService.basicProperties).subscribe({
                 next: (tasks: List<Task>) => {
                     if (tasks) {
@@ -59,6 +54,7 @@ export class TaskDependenciesComponent {
         } else {
             this.hasMore = false;
         }
+        this.changeDetector.markForCheck();
     }
 
     public trackByFn(index, dependency: TaskDependency) {
@@ -69,7 +65,7 @@ export class TaskDependenciesComponent {
         this._skip = 0;
         this._take = 20;
 
-        this.dependencies = new BehaviorSubject<TaskDependency[]>([]);
+        this.dependencies = List([]);
         this.dependentIds = (task && task.dependsOn)
             ? this._getTaskDependencyIds(task.dependsOn)
             : [];
@@ -83,6 +79,8 @@ export class TaskDependenciesComponent {
      * @param pageData: data for the current page
      */
     private _processMultipleTaskResponse(tasks: List<Task>, pageData: TaskDependency[]): void {
+        this.status = LoadingStatus.Ready;
+
         for (const td of pageData) {
             td.loading = false;
 
@@ -108,6 +106,7 @@ export class TaskDependenciesComponent {
                 td.dependsOn = "no tasks";
             }
         }
+        this.changeDetector.markForCheck();
     }
 
     /**
