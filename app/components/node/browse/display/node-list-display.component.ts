@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 import { List } from "immutable";
 
 import { LoadingStatus } from "app/components/base/loading";
@@ -23,6 +23,8 @@ export class NodeListDisplayComponent extends ListBaseComponent {
 
     @Input()
     public status: LoadingStatus;
+
+    @Output() public scrollBottom = new EventEmitter();
 
     @ViewChild(QuickListComponent)
     public list: QuickListComponent;

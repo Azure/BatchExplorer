@@ -26,11 +26,9 @@ import { DeleteTaskAction } from "../action";
 export class TaskListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
-    @Input()
-    public manualLoading: boolean;
+    @Input() public manualLoading: boolean;
 
-    @Input()
-    public set jobId(value: string) {
+    @Input() public set jobId(value: string) {
         this._jobId = (value && value.trim());
         this.refresh();
     }
@@ -88,8 +86,7 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
         this.data.fetchNext();
     }
 
-    @autobind()
-    public loadMore(): Observable<any> {
+    public onScrollToBottom(): Observable<any> {
         return this.data.fetchNext();
     }
 

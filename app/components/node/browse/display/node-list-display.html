@@ -1,5 +1,5 @@
 <bl-focus-section *ngIf="nodes.size > 0">
-    <bl-quick-list *ngIf="quicklist"  [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
+    <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="scrollBottom.emit()">
         <bl-quick-list-item *ngFor="let node of nodes;trackBy: trackNode" [link]="['/pools', poolId, 'nodes', node.id]" [key]="node.id">
             <bl-quick-list-item-status [status]="" [tooltip]="">
             </bl-quick-list-item-status>
@@ -9,7 +9,7 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quicklist" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
+    <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="scrollBottom.emit()">
         <bl-thead>
             <bl-column style="width: 300px">Id</bl-column>
             <bl-column>State</bl-column>
@@ -27,7 +27,7 @@
     </bl-table>
 </bl-focus-section>
 
-<bl-no-item [itemCount]="nodes.size" [status]="status | async">
+<bl-no-item [itemCount]="nodes.size" [status]="status">
     <i icon class="fa fa-tv"></i>
     <span no-filter>No nodes</span>
     <span with-filter>No node match this filter</span>

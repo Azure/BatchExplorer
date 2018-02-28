@@ -64,8 +64,7 @@ export class NodeListComponent extends ListBaseComponent implements OnInit {
         this.data.fetchNext();
     }
 
-    @autobind()
-    public loadMore(): Observable<any> {
+    public onScrollToBottom(): Observable<any> {
         return this.data.fetchNext();
     }
 }
