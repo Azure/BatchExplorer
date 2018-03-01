@@ -8,11 +8,11 @@ import { Observable } from "rxjs";
 import {
     TableCellComponent, TableColumnComponent, TableComponent, TableHeadComponent,
 } from "app/components/base/table";
-import { TaskDependenciesComponent } from "app/components/task/details";
 import { Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { NoItemMockComponent } from "test/utils/mocks/components";
+import { TaskDependenciesComponent } from "./task-dependencies.component";
 
 const taskMap: Map<string, Task> = new Map()
     .set("1", new Task({ id: "1", dependsOn: { taskIds: ["1", "2"] } } as any))
