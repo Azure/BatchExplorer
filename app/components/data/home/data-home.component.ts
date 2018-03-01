@@ -4,7 +4,7 @@ import { autobind } from "app/core";
 import { Observable, Subscription } from "rxjs";
 
 import { StorageService } from "app/services";
-import { Filter, FilterBuilder, Property } from "common";
+import { Constants, Filter, FilterBuilder, Property } from "common";
 import { SidebarManager } from "../../base/sidebar";
 import { FileGroupCreateFormComponent } from "../action";
 
@@ -12,7 +12,6 @@ import { MatMenuTrigger } from "@angular/material";
 import { BrowseLayoutComponent, BrowseLayoutConfig } from "app/components/base/browse-layout";
 import { DialogService } from "app/components/base/dialogs";
 import { BlobContainer } from "app/models";
-import { Constants } from "common";
 import "./data-home.scss";
 
 const containerTypes = [

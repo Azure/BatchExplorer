@@ -85,7 +85,6 @@ export class TaskDependenciesComponent implements OnChanges {
 
             return dep;
         }));
-        console.log("dependencies are?", this.dependencies.size);
         this.changeDetector.markForCheck();
     }
 
