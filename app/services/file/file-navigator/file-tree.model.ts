@@ -1,6 +1,6 @@
 import { List } from "immutable";
 
-import { LoadingStatus } from "app/components/base/loading";
+import { LoadingStatus } from "app/components/base/loading/loading-status";
 import { File } from "app/models";
 import { CloudPathUtils } from "app/utils";
 import { fileToTreeNode, generateDir, sortTreeNodes } from "./helper";

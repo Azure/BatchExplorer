@@ -1,3 +1,5 @@
+export * from "common/utils";
+
 // tslint:disable:variable-name
 export * from "./array";
 export * from "./color";
@@ -19,7 +21,6 @@ export * from "./arm-resource-utils";
 export * from "./shared-key-utils";
 export * from "./storage-utils";
 export * from "./string-utils";
-export * from "common/utils";
 export * from "./constants";
 
 import * as icons from "./icons";

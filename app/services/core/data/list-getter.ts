@@ -2,7 +2,7 @@ import { Type } from "@angular/core";
 import { Iterable, List, OrderedSet } from "immutable";
 import { Observable } from "rxjs";
 
-import { DataCache } from "app/services/core";
+import { DataCache } from "app/services/core/data-cache";
 import { GenericGetter, GenericGetterConfig } from "./generic-getter";
 import { ContinuationToken, ListOptions, ListOptionsAttributes } from "./list-options";
 

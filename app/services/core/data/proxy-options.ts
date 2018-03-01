@@ -1,4 +1,4 @@
-import { ObjectUtils } from "app/utils";
+import { ObjectUtils } from "common";
 
 export interface OptionsBase {
     select?: string;

@@ -2,8 +2,8 @@ import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { ServerError } from "app/models";
-import { StorageClientService } from "app/services";
 import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
+import { StorageClientService } from "app/services/themes";
 import { ContinuationToken } from "./list-options";
 
 export interface StorageListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {

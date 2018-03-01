@@ -1,7 +1,9 @@
 import * as inflection from "inflection";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { BackgroundTask, BackgroundTaskService } from "app/components/base/background-task";
+import { BackgroundTask } from "app/components/base/background-task/background-task.model";
+import { BackgroundTaskService } from "app/components/base/background-task/background-task.service";
+
 /**
  * Base class for a long running action
  * e.g. Delete a pool takes a long time and need polling to check the status
