@@ -1,4 +1,4 @@
-import { nil } from "app/utils";
+import { nil } from "common";
 
 const primitives = new Set(["Array", "Number", "String", "Object", "Boolean"]);
 
