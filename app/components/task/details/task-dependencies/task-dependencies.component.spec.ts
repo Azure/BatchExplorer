@@ -1,4 +1,4 @@
-import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -18,8 +18,18 @@ const taskMap: Map<string, Task> = new Map()
     .set("1", new Task({ id: "1", dependsOn: { taskIds: ["1", "2"] } } as any))
     .set("2", new Task({ id: "2", dependsOn: { taskIds: ["3", "4", "5"] } } as any));
 
+@Component({
+    template: `<bl-task-dependencies [jobId]="jobId" [task]="task"></bl-task-dependencies>`,
+})
+class TestComponent {
+    public jobId = "job-id-1";
+
+    public task: Task;
+}
+
 fdescribe("TaskDependenciesComponent", () => {
-    let fixture: ComponentFixture<TaskDependenciesComponent>;
+    let fixture: ComponentFixture<TestComponent>;
+    let testComponent: TestComponent;
     let component: TaskDependenciesComponent;
     let taskServiceSpy: any;
 
@@ -40,7 +50,7 @@ fdescribe("TaskDependenciesComponent", () => {
         TestBed.configureTestingModule({
             imports: [RouterTestingModule],
             declarations: [
-                NoItemMockComponent, TableCellComponent, TableColumnComponent, TableComponent,
+                TestComponent, NoItemMockComponent, TableCellComponent, TableColumnComponent, TableComponent,
                 TableHeadComponent, TaskDependenciesComponent,
             ],
             providers: [
@@ -49,10 +59,10 @@ fdescribe("TaskDependenciesComponent", () => {
             schemas: [NO_ERRORS_SCHEMA],
         });
 
-        fixture = TestBed.createComponent(TaskDependenciesComponent);
-        component = fixture.componentInstance;
-        component.jobId = "job-id-1";
-        component.task = Fixtures.task.create();
+        fixture = TestBed.createComponent(TestComponent);
+        testComponent = fixture.componentInstance;
+        testComponent.task = Fixtures.task.create();
+        component = fixture.debugElement.query(By.css("bl-task-dependencies")).componentInstance;
         fixture.detectChanges();
     });
 
@@ -71,7 +81,7 @@ fdescribe("TaskDependenciesComponent", () => {
 
     describe("when task depends on taskId array only", () => {
         beforeEach(() => {
-            component.task = new Task({
+            testComponent.task = new Task({
                 id: "2001",
                 state: TaskState.completed,
                 dependsOn: {
@@ -94,7 +104,7 @@ fdescribe("TaskDependenciesComponent", () => {
 
     describe("when task depends on taskIdRanges array only", () => {
         beforeEach(() => {
-            component.task = new Task({
+            testComponent.task = new Task({
                 id: "2001",
                 state: TaskState.completed,
                 dependsOn: {
@@ -113,7 +123,7 @@ fdescribe("TaskDependenciesComponent", () => {
 
     describe("when task depends on both taskId and taskIdRanges arrays", () => {
         beforeEach(() => {
-            component.task = new Task({
+            testComponent.task = new Task({
                 id: "2001",
                 state: TaskState.completed,
                 dependsOn: {
@@ -133,7 +143,7 @@ fdescribe("TaskDependenciesComponent", () => {
 
     describe("more than 20 dependencies enables load more", () => {
         beforeEach(() => {
-            component.task = new Task({
+            testComponent.task = new Task({
                 id: "2001",
                 state: TaskState.completed,
                 dependsOn: {
@@ -147,7 +157,7 @@ fdescribe("TaskDependenciesComponent", () => {
 
     describe("correctly decorates dependsOn of returned dependency", () => {
         beforeEach(() => {
-            component.task = new Task({
+            testComponent.task = new Task({
                 id: "2001",
                 state: TaskState.completed,
                 dependsOn: {
