@@ -2,9 +2,9 @@ import {
     Component, EventEmitter, HostBinding, HostListener,
     Inject, Input, OnChanges, OnDestroy, Output, SimpleChanges, forwardRef,
 } from "@angular/core";
+import { Subscription } from "rxjs";
 
 import { AuthorizationHttpService, Permission } from "app/services";
-import { Subscription } from "rxjs";
 import "./clickable.scss";
 
 @Component({

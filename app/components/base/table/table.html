@@ -4,7 +4,7 @@
 <div class="table-body">
     <div class="scroll-shadow" *ngIf="showScrollShadow"></div>
     <bl-virtual-scroll [items]="displayItems"  [childHeight]="28" (update)="updateViewPortItems($event)" (scroll)="handleScrollChange($event)">
-        <div class="bl-table-row" *ngFor="let item of viewPortItems, trackBy: trackByFn"
+        <div class="bl-table-row" *ngFor="let item of viewPortItems, trackBy: trackItem"
             (click)="item.handleClick($event)"
             (contextmenu)="item.openContextMenu($event)"
             [class.selected]="item.selected"

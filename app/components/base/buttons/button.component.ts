@@ -3,9 +3,14 @@ import {
     Inject, Input, animate, forwardRef, style, transition, trigger,
 } from "@angular/core";
 import { Observable } from "rxjs";
+console.log("Importing button component?");
 
 import { AuthorizationHttpService } from "app/services";
+console.log("Importing button component 2?");
+
 import { log } from "app/utils";
+console.log("Importing button component 3?");
+
 import "./button.scss";
 import { ClickableComponent } from "./clickable";
 
@@ -114,3 +119,5 @@ export class ButtonComponent extends ClickableComponent {
 })
 export class ButtonGroupComponent {
 }
+
+console.log("Button is , ", ButtonComponent);
