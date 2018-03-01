@@ -177,7 +177,7 @@ fdescribe("TaskDependenciesComponent", () => {
             const dependencies = component.dependencies.toJS();
             expect(dependencies[0].dependsOn).toBe("1,2");
             expect(dependencies[1].dependsOn).toBe("3 tasks");
-            expect(dependencies[2].dependsOn).toBe("no tasks");
+            expect(dependencies[2].dependsOn).toBe("No tasks");
         });
     });
 });
