@@ -16,7 +16,6 @@ export class VirtualScrollMockComponent implements OnChanges {
     }
 }
 
-
 @Component({
     selector: "bl-virtual-scroll-tail",
     template: "<ng-content></ng-content>",

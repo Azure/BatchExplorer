@@ -10,6 +10,7 @@ import {
 } from "app/components/base/table";
 import { VmSize } from "app/models";
 import { click } from "test/utils/helpers";
+import { virtualScrollMockComponents } from "test/utils/mocks/components";
 
 const sizeA = new VmSize({ name: "Size A", numberOfCores: 1, resourceDiskSizeInMB: 1000 } as any);
 const sizeB = new VmSize({ name: "Size B", numberOfCores: 8, resourceDiskSizeInMB: 2000 } as any);
@@ -45,7 +46,7 @@ describe("TableComponent", () => {
 
     function getRows(): HTMLElement[] {
         // Cannot use de.queryAll angular bug: https://github.com/angular/angular/issues/13066
-        return de.nativeElement.querySelectorAll(".row");
+        return de.nativeElement.querySelectorAll(".bl-table-row");
     }
 
     beforeEach(() => {
@@ -54,6 +55,7 @@ describe("TableComponent", () => {
             declarations: [
                 TableComponent, TableRowComponent, TableHeadComponent,
                 TableCellComponent, TableColumnComponent, TestComponent,
+                ...virtualScrollMockComponents,
             ],
             providers: [
                 { provide: ContextMenuService, useValue: null },
