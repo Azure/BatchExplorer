@@ -2,7 +2,7 @@ import { Component, Input } from "@angular/core";
 import { autobind } from "app/core";
 import { Observable } from "rxjs";
 
-import { LoadingStatus } from "app/components/base/loading";
+import { LoadingStatus } from "../loading-status";
 
 @Component({
     selector: "bl-list-loading",

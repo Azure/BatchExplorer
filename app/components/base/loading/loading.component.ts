@@ -10,20 +10,8 @@ import {
 import { BehaviorSubject } from "rxjs";
 
 import { ServerError } from "app/models";
+import { DisplayStatus, LoadingStatus } from "./loading-status";
 import "./loading.scss";
-
-export enum LoadingStatus {
-    Loading = 0,
-    Ready = 1,
-    Error = 2,
-}
-
-export enum DisplayStatus {
-    Loading = 0,
-    Ready = 1,
-    Error = 2,
-    ParentLoading = 3,
-}
 
 @Component({
     selector: "bl-loading",
@@ -67,7 +55,7 @@ export class LoadingComponent implements AfterViewInit {
     private _parentDisplayStatus = DisplayStatus.Ready;
     private _alreadyLoaded = false;
 
-    constructor( @SkipSelf() @Optional() private parentLoading: LoadingComponent) {
+    constructor(@SkipSelf() @Optional() private parentLoading: LoadingComponent) {
         // If this loading component is inside another loading component
         if (parentLoading) {
             this.parentLoading.displayStatus.subscribe((parentDisplayStatus) => {

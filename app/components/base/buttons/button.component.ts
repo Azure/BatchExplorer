@@ -1,15 +1,10 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding,
-    Inject, Input, animate, forwardRef, style, transition, trigger,
+    Injector, Input, animate, style, transition, trigger,
 } from "@angular/core";
 import { Observable } from "rxjs";
-console.log("Importing button component?");
-
-import { AuthorizationHttpService } from "app/services";
-console.log("Importing button component 2?");
 
 import { log } from "app/utils";
-console.log("Importing button component 3?");
 
 import "./button.scss";
 import { ClickableComponent } from "./clickable";
@@ -65,9 +60,9 @@ export class ButtonComponent extends ClickableComponent {
 
     private _status = SubmitStatus.Idle;
 
-    constructor(@Inject(forwardRef(() => AuthorizationHttpService)) authHttpService: AuthorizationHttpService,
+    constructor(injector: Injector,
                 private changeDetectionRef: ChangeDetectorRef) {
-        super(authHttpService);
+        super(injector);
     }
 
     public handleAction(event: Event) {
@@ -110,14 +105,3 @@ export class ButtonComponent extends ClickableComponent {
         });
     }
 }
-
-@Component({
-    selector: "bl-button-group",
-    template: `
-        <ng-content></ng-content>
-    `,
-})
-export class ButtonGroupComponent {
-}
-
-console.log("Button is , ", ButtonComponent);

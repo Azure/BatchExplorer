@@ -5,7 +5,6 @@ import { Observable } from "rxjs";
 
 import { StorageAccountCardComponent } from "app/components/account/details";
 import { ButtonComponent } from "app/components/base/buttons";
-import * as buttons from "app/components/base/buttons";
 import { SidebarManager } from "app/components/base/sidebar";
 import { AccountResource, ServerError, StorageAccount } from "app/models";
 import { AuthorizationHttpService , StorageAccountService } from "app/services";
@@ -33,9 +32,8 @@ const storage1 = new StorageAccount({ id: "sub-1/storage-1", name: "storage-1", 
 class TestComponent {
     public account = accountWithStorage;
 }
-console.log("Storage card?", StorageAccountCardComponent, TestComponent, ButtonComponent);
-console.log("Other buttons", buttons.ButtonComponent);
-fdescribe("StorageAccountCardComponent", () => {
+
+describe("StorageAccountCardComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
@@ -79,7 +77,7 @@ fdescribe("StorageAccountCardComponent", () => {
             fixture.detectChanges();
         });
 
-        fit("should show the button with setup text", () => {
+        it("should show the button with setup text", () => {
             const btn = de.query(By.css("bl-button.edit"));
             expect(btn).not.toBeFalsy();
             expect(btn.nativeElement.textContent).toContain("Setup");
