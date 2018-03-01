@@ -1,4 +1,4 @@
-import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -8,18 +8,28 @@ import { Observable } from "rxjs";
 import {
     TableCellComponent, TableColumnComponent, TableComponent, TableHeadComponent,
 } from "app/components/base/table";
-import { TaskDependenciesComponent } from "app/components/task/details";
 import { Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { NoItemMockComponent } from "test/utils/mocks/components";
+import { TaskDependenciesComponent } from "./task-dependencies.component";
 
 const taskMap: Map<string, Task> = new Map()
     .set("1", new Task({ id: "1", dependsOn: { taskIds: ["1", "2"] } } as any))
     .set("2", new Task({ id: "2", dependsOn: { taskIds: ["3", "4", "5"] } } as any));
 
+@Component({
+    template: `<bl-task-dependencies [jobId]="jobId" [task]="task"></bl-task-dependencies>`,
+})
+class TestComponent {
+    public jobId = "job-id-1";
+
+    public task: Task;
+}
+
 describe("TaskDependenciesComponent", () => {
-    let fixture: ComponentFixture<TaskDependenciesComponent>;
+    let fixture: ComponentFixture<TestComponent>;
+    let testComponent: TestComponent;
     let component: TaskDependenciesComponent;
     let taskServiceSpy: any;
 
@@ -40,7 +50,7 @@ describe("TaskDependenciesComponent", () => {
         TestBed.configureTestingModule({
             imports: [RouterTestingModule],
             declarations: [
-                NoItemMockComponent, TableCellComponent, TableColumnComponent, TableComponent,
+                TestComponent, NoItemMockComponent, TableCellComponent, TableColumnComponent, TableComponent,
                 TableHeadComponent, TaskDependenciesComponent,
             ],
             providers: [
@@ -49,10 +59,10 @@ describe("TaskDependenciesComponent", () => {
             schemas: [NO_ERRORS_SCHEMA],
         });
 
-        fixture = TestBed.createComponent(TaskDependenciesComponent);
-        component = fixture.componentInstance;
-        component.jobId = "job-id-1";
-        component.task = Fixtures.task.create();
+        fixture = TestBed.createComponent(TestComponent);
+        testComponent = fixture.componentInstance;
+        testComponent.task = Fixtures.task.create();
+        component = fixture.debugElement.query(By.css("bl-task-dependencies")).componentInstance;
         fixture.detectChanges();
     });
 
@@ -65,14 +75,13 @@ describe("TaskDependenciesComponent", () => {
 
         it("no dependencies should have been found", () => {
             expect(component.dependentIds.length).toBe(0);
-            expect(component.dependencies.value.length).toBe(0);
-            expect(component.hasMore).toBe(false);
+            expect(component.dependencies.size).toBe(0);
         });
     });
 
     describe("when task depends on taskId array only", () => {
         beforeEach(() => {
-            component.task = new Task({
+            testComponent.task = new Task({
                 id: "2001",
                 state: TaskState.completed,
                 dependsOn: {
@@ -89,17 +98,13 @@ describe("TaskDependenciesComponent", () => {
 
         it("shoud have 3 dependent task id's", () => {
             expect(component.dependentIds.length).toBe(3);
-            expect(component.dependencies.value.length).toBe(3);
-        });
-
-        it("should not show load more", () => {
-            expect(component.hasMore).toBe(false);
+            expect(component.dependencies.size).toBe(3);
         });
     });
 
     describe("when task depends on taskIdRanges array only", () => {
         beforeEach(() => {
-            component.task = new Task({
+            testComponent.task = new Task({
                 id: "2001",
                 state: TaskState.completed,
                 dependsOn: {
@@ -112,17 +117,13 @@ describe("TaskDependenciesComponent", () => {
 
         it("shoud have 8 dependent task id's", () => {
             expect(component.dependentIds.length).toBe(8);
-            expect(component.dependencies.value.length).toBe(8);
-        });
-
-        it("should not show load more", () => {
-            expect(component.hasMore).toBe(false);
+            expect(component.dependencies.size).toBe(8);
         });
     });
 
     describe("when task depends on both taskId and taskIdRanges arrays", () => {
         beforeEach(() => {
-            component.task = new Task({
+            testComponent.task = new Task({
                 id: "2001",
                 state: TaskState.completed,
                 dependsOn: {
@@ -136,17 +137,13 @@ describe("TaskDependenciesComponent", () => {
 
         it("shoud have 6 dependent task id's", () => {
             expect(component.dependentIds.length).toBe(6);
-            expect(component.dependencies.value.length).toBe(6);
-        });
-
-        it("should not show load more", () => {
-            expect(component.hasMore).toBe(false);
+            expect(component.dependencies.size).toBe(6);
         });
     });
 
     describe("more than 20 dependencies enables load more", () => {
         beforeEach(() => {
-            component.task = new Task({
+            testComponent.task = new Task({
                 id: "2001",
                 state: TaskState.completed,
                 dependsOn: {
@@ -156,15 +153,11 @@ describe("TaskDependenciesComponent", () => {
 
             fixture.detectChanges();
         });
-
-        it("should enable load more button", () => {
-            expect(component.hasMore).toBe(true);
-        });
     });
 
     describe("correctly decorates dependsOn of returned dependency", () => {
         beforeEach(() => {
-            component.task = new Task({
+            testComponent.task = new Task({
                 id: "2001",
                 state: TaskState.completed,
                 dependsOn: {
@@ -177,14 +170,14 @@ describe("TaskDependenciesComponent", () => {
 
         it("shoud have 3 dependencies", () => {
             expect(component.dependentIds.length).toBe(3);
-            expect(component.dependencies.value.length).toBe(3);
+            expect(component.dependencies.size).toBe(3);
         });
 
         it("dependsOn property is correct", () => {
-            const dependencies = component.dependencies.value;
+            const dependencies = component.dependencies.toJS();
             expect(dependencies[0].dependsOn).toBe("1,2");
             expect(dependencies[1].dependsOn).toBe("3 tasks");
-            expect(dependencies[2].dependsOn).toBe("no tasks");
+            expect(dependencies[2].dependsOn).toBe("No tasks");
         });
     });
 });

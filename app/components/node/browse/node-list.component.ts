@@ -9,7 +9,7 @@ import { Node } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { Filter } from "app/utils/filter-builder";
+import { Filter } from "common";
 
 @Component({
     selector: "bl-node-list",
@@ -64,8 +64,7 @@ export class NodeListComponent extends ListBaseComponent implements OnInit {
         this.data.fetchNext();
     }
 
-    @autobind()
-    public loadMore(): Observable<any> {
+    public onScrollToBottom(): Observable<any> {
         return this.data.fetchNext();
     }
 }

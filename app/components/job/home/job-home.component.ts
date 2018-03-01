@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { FormBuilder, FormControl } from "@angular/forms";
 import { autobind } from "app/core";
 
-import { Filter, FilterBuilder } from "app/utils/filter-builder";
+import { Filter, FilterBuilder } from "common";
 import { SidebarManager } from "../../base/sidebar";
 import { JobCreateBasicDialogComponent } from "../action";
 

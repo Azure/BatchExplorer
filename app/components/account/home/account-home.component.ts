@@ -5,7 +5,7 @@ import { Set } from "immutable";
 import { BrowseLayoutComponent } from "app/components/base/browse-layout";
 import { Subscription } from "app/models";
 import { SubscriptionService } from "app/services";
-import { Filter, FilterBuilder } from "app/utils/filter-builder";
+import { Filter, FilterBuilder } from "common";
 
 @Component({
     selector: "bl-account-home",

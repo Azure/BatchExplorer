@@ -8,15 +8,30 @@ bl-table {
 
     display: block;
     width: 100%;
-    margin-bottom: 25px;
-    bl-thead, > .row {
+    height: 100%;
+    bl-thead, .bl-table-row {
         display: flex;
         align-items: center;
     }
 
-    bl-thead {
+    > .table-head {
         color: $secondary-text;
         height: $table-heading-height;
+        > bl-thead {
+            height: $table-heading-height;
+        }
+
+        &.no-scroll {
+            border-bottom: 2px solid $athensGrey;
+        }
+    }
+
+    > .table-body {
+        position: relative;
+        height: calc(100% - #{$table-heading-height});
+        > bl-virtual-scroll {
+            height: 100%;
+        }
     }
 
     .checkbox-column {
@@ -35,13 +50,15 @@ bl-table {
     }
 
     &.activable {
-        > .row {
+        .bl-table-row {
             cursor: pointer;
         }
     }
 
-    > .row {
-        border-top: 1px $athensGrey solid;
+    .bl-table-row {
+        &:not(:last-child) {
+            border-bottom: 1px solid $athensGrey;
+        }
         height: $table-row-height;
 
         &.selected {

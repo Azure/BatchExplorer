@@ -74,9 +74,9 @@ bl-browse-layout {
                 width: $listview-width;
 
                 .bl-list-content {
-                    flex: 1 1 auto;
+                    flex: 1;
+                    min-height: 100px;
                     position: relative;
-                    display: flex;
                 }
             }
 
@@ -119,7 +119,7 @@ bl-browse-layout {
 .load-more-btn {
     display: flex;
     justify-content: center;
-    padding: 20px 0;
+    padding: 5px 0;
 }
 
 .quicksearch {

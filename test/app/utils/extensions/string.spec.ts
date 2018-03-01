@@ -1,4 +1,4 @@
-import "app/utils/extensions/string";
+import "common/extensions/string";
 
 describe("String extensions", () => {
     describe("string.format", () => {

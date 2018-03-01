@@ -1,6 +1,6 @@
 import { Subscription } from "rxjs";
 
-import { Theme, ThemeService } from "app/services";
+import { Theme, ThemeService } from "app/services/themes";
 import { MonitorChartAggregation, MonitorChartMetrics, MonitorMetricsBase } from "./monitor-metrics-base";
 
 export class NodeStatesMetrics extends MonitorMetricsBase {

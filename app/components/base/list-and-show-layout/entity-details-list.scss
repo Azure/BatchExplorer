@@ -1,7 +1,13 @@
 bl-entity-details-list {
+    $header-height: 30px;
+    display: block;
+    height: 100%;
+    padding-top: 10px;
+
     > .entity-details-list-header {
         display: flex;
         width: 100%;
+        height: $header-height;
         align-items: center;
 
         > .quicksearch {
@@ -17,5 +23,9 @@ bl-entity-details-list {
                 line-height: 24px;
             }
         }
+    }
+
+    > .entity-details-list-content {
+        height:  calc(100% - #{$header-height});
     }
 }

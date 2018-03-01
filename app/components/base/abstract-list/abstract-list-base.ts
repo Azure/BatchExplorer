@@ -1,11 +1,14 @@
 import {
-    AfterViewInit, ChangeDetectorRef, ContentChildren, Input, OnDestroy, QueryList,
+    AfterContentInit, ChangeDetectorRef, ContentChildren, EventEmitter,
+    Input, OnDestroy, Output, QueryList, ViewChild,
 } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
+import { LoadingStatus } from "app/components/base/loading";
 import { autobind } from "app/core";
 import { ListSelection, SelectableList } from "app/core/list";
 import { FocusSectionComponent } from "../focus-section";
+import { VirtualScrollComponent } from "../virtual-scroll";
 import { AbstractListItemBase } from "./abstract-list-item-base";
 
 export interface AbstractListBaseConfig {
@@ -15,32 +18,49 @@ export interface AbstractListBaseConfig {
      */
     activable?: boolean;
 
+    /**
+     * What is the buffer for trigerring scroll to the bottom event
+     * @default 0
+     */
+    scrollBottomBuffer?: number;
 }
 
 export const abstractListDefaultConfig: AbstractListBaseConfig = {
     activable: true,
+    scrollBottomBuffer: 0,
 };
 
 /**
- * Base class for a list component. Used by quicklist and table
+ * Base class for quick-list and table component
  *
  * Usage:
  * 1. Extend class
  * 2. Refefine items with @ContentChildren and the class that inherit SelectableListItemBase
  */
-export class AbstractListBase extends SelectableList implements AfterViewInit, OnDestroy {
-    @ContentChildren(AbstractListItemBase)
-    public items: QueryList<AbstractListItemBase>;
+export class AbstractListBase extends SelectableList implements AfterContentInit, OnDestroy {
+    public LoadingStatus = LoadingStatus;
+    @Output() public scrollBottom = new EventEmitter();
+
+    @ContentChildren(AbstractListItemBase) public items: QueryList<AbstractListItemBase>;
+
+    @ViewChild(VirtualScrollComponent) public virtualScrollComponent: VirtualScrollComponent;
 
     /**
      * List of items to display(Which might be different from the full items list because of sorting and other)
      */
     public displayItems: AbstractListItemBase[] = [];
 
+    /**
+     * List of items that are currently being displayed with the virtual scroll
+     */
+    public viewPortItems: AbstractListItemBase[] = [];
+
     @Input() public set config(config: AbstractListBaseConfig) {
         this._config = { ...abstractListDefaultConfig, ...config };
     }
     public get config() { return this._config; }
+
+    @Input() public status: LoadingStatus;
 
     public set selection(selection: ListSelection) {
         super.selection = selection;
@@ -50,6 +70,7 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
 
     public listFocused: boolean = false;
     public focusedItem = new BehaviorSubject<string>(null);
+    public showScrollShadow: boolean;
 
     protected _config: AbstractListBaseConfig = abstractListDefaultConfig;
 
@@ -67,17 +88,23 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
         }
     }
 
-    public ngAfterViewInit() {
+    public ngAfterContentInit() {
         this._subs.push(this.items.changes.subscribe(() => {
             this._updateDisplayItems();
         }));
         this._updateDisplayItems();
-        this.changeDetector.detectChanges();
-
     }
 
     public ngOnDestroy() {
         this._subs.forEach((x) => x.unsubscribe());
+    }
+
+    public updateViewPortItems(items) {
+        this.viewPortItems = items;
+        if (items.length === this.displayItems.length) {
+            this.scrollBottom.emit();
+        }
+        this.changeDetector.markForCheck();
     }
 
     /**
@@ -118,6 +145,20 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
         selection.select(key, selected);
         this.selection = selection;
         this._updateSelectedItems();
+    }
+
+    public handleScrollChange(event) {
+        const show = event.target.scrollTop > 0;
+        const bottom = event.target.scrollTop + event.target.offsetHeight;
+        const hitBottom = event.target.scrollHeight - bottom <= this.config.scrollBottomBuffer;
+        if (this.showScrollShadow !== show) {
+            this.showScrollShadow = show;
+            this.changeDetector.markForCheck();
+        }
+
+        if (hitBottom) {
+            this.scrollBottom.emit();
+        }
     }
 
     /**
@@ -208,7 +249,7 @@ export class AbstractListBase extends SelectableList implements AfterViewInit, O
         this.focusedItem.next(newItem.key);
     }
 
-    public trackByFn(index, item) {
+    public trackItem(index, item) {
         return item.key;
     }
 

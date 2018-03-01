@@ -14,7 +14,7 @@ export interface TaskDependenciesAttributes {
  */
 @Model()
 export class TaskDependencies extends Record<TaskDependenciesAttributes> {
-    @ListProp(Object) public taskIds: List<string> = List([]);
+    @ListProp(String) public taskIds: List<string> = List([]);
     @ListProp(Object) public taskIdRanges: List<TaskIdRange> = List([]);
 }
 

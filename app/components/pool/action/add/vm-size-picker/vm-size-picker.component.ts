@@ -56,6 +56,8 @@ export class VmSizeDecorator {
     }
 }
 
+import "./vm-size-picker.scss";
+
 // tslint:disable:no-forward-ref
 @Component({
     selector: "bl-vm-size-picker",

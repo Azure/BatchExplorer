@@ -3,8 +3,8 @@ import { BatchServiceClient } from "azure-batch";
 import { Observable } from "rxjs";
 
 import { ServerError } from "app/models";
-import { BatchClientService } from "app/services";
-import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
+import { BatchClientService } from "app/services/batch-client.service";
+import { ListGetter, ListGetterConfig } from "./list-getter";
 import { ContinuationToken, ListOptions } from "./list-options";
 
 export interface BatchListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {

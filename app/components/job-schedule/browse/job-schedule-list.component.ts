@@ -1,9 +1,10 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component,  OnDestroy, OnInit, forwardRef,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
+import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
@@ -16,7 +17,7 @@ import { JobSchedule, JobScheduleState } from "app/models";
 import { JobScheduleListParams, JobScheduleService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { Filter } from "app/utils/filter-builder";
+import { Filter } from "common";
 import {
     DeleteJobScheduleAction,
     DeleteJobScheduleDialogComponent,
@@ -35,6 +36,7 @@ import {
     }],
 })
 export class JobScheduleListComponent extends ListBaseComponent implements OnInit, OnDestroy {
+    public jobSchedules: List<JobSchedule>;
     public LoadingStatus = LoadingStatus;
 
     public status: Observable<LoadingStatus>;
@@ -55,7 +57,10 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
         super(changeDetector);
         this.data = this.jobScheduleService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
-
+        this.data.items.subscribe((jobSchedules) => {
+            this.jobSchedules = jobSchedules;
+            this.changeDetector.markForCheck();
+        });
         this.status = this.data.status;
         this._onJobScheduleAddedSub = jobScheduleService.onJobScheduleAdded.subscribe((jobScheduleId) => {
             this.data.loadNewItem(jobScheduleService.get(jobScheduleId));

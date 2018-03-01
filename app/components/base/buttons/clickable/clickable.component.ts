@@ -1,10 +1,10 @@
 import {
     Component, EventEmitter, HostBinding, HostListener,
-    Input, OnChanges, OnDestroy, Output, SimpleChanges,
+    Injector, Input, OnChanges, OnDestroy, Output, SimpleChanges,
 } from "@angular/core";
-
-import { AuthorizationHttpService, Permission } from "app/services";
 import { Subscription } from "rxjs";
+
+import { AuthorizationHttpService, Permission } from "app/services/authorization-http//authorization-http.service";
 import "./clickable.scss";
 
 @Component({
@@ -33,10 +33,12 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     @HostBinding("class.focus-outline") public focusOutline = true;
     public subtitle = "";
 
+    private authHttpService: any;
     private _sub: Subscription;
     private _permissionDisabled = false;
 
-    constructor(private authHttpService: AuthorizationHttpService) {
+    constructor(injector: Injector) {
+        this.authHttpService = injector.get(AuthorizationHttpService);
     }
 
     public ngOnChanges(changes: SimpleChanges): void {

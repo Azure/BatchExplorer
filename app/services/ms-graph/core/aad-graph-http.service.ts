@@ -5,7 +5,8 @@ import { Observable } from "rxjs";
 
 import { HttpRequestOptions, HttpService } from "app/core";
 import { ServerError } from "app/models";
-import { AccountService, AdalService } from "app/services";
+import { AccountService } from "app/services/account.service";
+import { AdalService } from "app/services/adal";
 import { AADUser } from "client/core/aad/adal/aad-user";
 import { Constants, UrlUtils } from "common";
 

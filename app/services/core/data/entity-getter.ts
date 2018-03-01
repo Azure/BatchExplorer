@@ -2,7 +2,7 @@ import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { ServerError } from "app/models";
-import { DataCache } from "app/services/core";
+import { DataCache } from "app/services/core/data-cache";
 import { log } from "app/utils";
 import { HttpCode } from "common/constants";
 import { GenericGetter, GenericGetterConfig } from "./generic-getter";

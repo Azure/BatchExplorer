@@ -15,8 +15,8 @@ import { FileGroupCreateDto } from "app/models/dtos";
 import { ListContainerParams, PinnedEntityService, StorageService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { Filter } from "app/utils/filter-builder";
-import { Constants } from "common";
+import { Constants, Filter } from "common";
+import { List } from "immutable";
 import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
 const defaultListOptions = {
@@ -31,6 +31,7 @@ const defaultListOptions = {
     }],
 })
 export class DataContainerListComponent extends ListBaseComponent implements OnInit, OnDestroy {
+    public containers: List<BlobContainer>;
     public status: Observable<LoadingStatus>;
     public data: ListView<BlobContainer, ListContainerParams>;
     public hasAutoStorage: boolean;
@@ -51,6 +52,11 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         super(changeDetector);
         this.data = this.storageService.containerListView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
+
+        this.data.items.subscribe((containers) => {
+            this.containers = containers;
+            this.changeDetector.markForCheck();
+        });
 
         this.hasAutoStorage = false;
         this._autoStorageSub = storageService.hasAutoStorage.subscribe((hasAutoStorage) => {

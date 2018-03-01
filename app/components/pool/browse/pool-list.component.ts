@@ -19,7 +19,7 @@ import { PoolDecorator } from "app/models/decorators";
 import { PinnedEntityService, PoolListParams, PoolService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { Filter } from "app/utils/filter-builder";
+import { Filter } from "common";
 import { DeletePoolDialogComponent, DeletePoolTask, PoolResizeDialogComponent } from "../action";
 
 @Component({
@@ -53,7 +53,6 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         private taskManager: BackgroundTaskService,
         private pinnedEntityService: PinnedEntityService) {
 
-        // super(dialog);
         super(changeDetector);
         this.data = this.poolService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
@@ -64,6 +63,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         }));
         this._subs.push(this.data.items.subscribe((pools) => {
             this.pools = List<PoolDecorator>(pools.map(x => new PoolDecorator(x)));
+            this.changeDetector.markForCheck();
         }));
     }
 

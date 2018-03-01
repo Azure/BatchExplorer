@@ -1,11 +1,11 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding,
-    Input, animate, style, transition, trigger,
+    Injector, Input, animate, style, transition, trigger,
 } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { AuthorizationHttpService } from "app/services";
 import { log } from "app/utils";
+
 import "./button.scss";
 import { ClickableComponent } from "./clickable";
 
@@ -60,9 +60,9 @@ export class ButtonComponent extends ClickableComponent {
 
     private _status = SubmitStatus.Idle;
 
-    constructor(authHttpService: AuthorizationHttpService,
+    constructor(injector: Injector,
                 private changeDetectionRef: ChangeDetectorRef) {
-        super(authHttpService);
+        super(injector);
     }
 
     public handleAction(event: Event) {
@@ -104,13 +104,4 @@ export class ButtonComponent extends ClickableComponent {
             },
         });
     }
-}
-
-@Component({
-    selector: "bl-button-group",
-    template: `
-        <ng-content></ng-content>
-    `,
-})
-export class ButtonGroupComponent {
 }

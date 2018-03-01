@@ -1,13 +1,17 @@
-import { Component, DebugElement, ViewChild } from "@angular/core";
+import { Component, DebugElement, NO_ERRORS_SCHEMA, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 
 import { BreadcrumbModule } from "app/components/base/breadcrumbs";
+import { ContextMenuService } from "app/components/base/context-menu";
 import { FocusSectionComponent } from "app/components/base/focus-section";
-import { QuickListComponent, QuickListModule } from "app/components/base/quick-list";
+import {
+    QuickListComponent, QuickListItemComponent, QuickListItemStatusComponent,
+} from "app/components/base/quick-list";
 import { ListSelection } from "app/core/list";
 import { ButtonClickEvents, click } from "test/utils/helpers";
+import { virtualScrollMockComponents } from "test/utils/mocks/components";
 
 interface TestItem {
     id: string;
@@ -16,7 +20,7 @@ interface TestItem {
 // tslint:disable:trackBy-function
 @Component({
     template: `
-        <bl-focus-section #focusSection>
+        <bl-focus-section #focusSection style="height: 1000px">
             <bl-quick-list>
                 <bl-quick-list-item *ngFor="let item of items" [key]="item.id">
                     <div bl-quick-list-item-title>{{item.name}}</div>
@@ -50,8 +54,18 @@ describe("QuickListComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [QuickListModule, RouterTestingModule.withRoutes([]), BreadcrumbModule],
-            declarations: [TestComponent, FocusSectionComponent],
+            imports: [BreadcrumbModule, RouterTestingModule],
+            declarations: [
+                TestComponent, FocusSectionComponent,
+                ...virtualScrollMockComponents,
+                QuickListComponent,
+                QuickListItemComponent,
+                QuickListItemStatusComponent,
+            ],
+            providers: [
+                { provide: ContextMenuService, useValue: null },
+            ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
@@ -60,7 +74,7 @@ describe("QuickListComponent", () => {
         quicklist.activeItemChange.subscribe(x => activeItemKey = x);
         quicklist.selectionChange.subscribe(x => selection = x);
         fixture.detectChanges();
-        items = de.queryAll(By.css("bl-quick-list-item"));
+        items = de.queryAll(By.css(".quick-list-item"));
     });
 
     it("should display all the content", () => {
@@ -73,7 +87,7 @@ describe("QuickListComponent", () => {
     });
 
     it("click on an item should make the item active", () => {
-        click(items[1].query(By.css(".quick-list-item")));
+        click(items[1]);
         fixture.detectChanges();
         expect(activeItemKey).toEqual("item-2");
         expect(items[1].componentInstance.active).toBe(true);
@@ -83,7 +97,7 @@ describe("QuickListComponent", () => {
     });
 
     it("click on an item should also focus it", () => {
-        const item = items[1].query(By.css(".quick-list-item"));
+        const item = items[1];
         testComponent.focusSection.focus();
 
         click(item.nativeElement);
@@ -102,7 +116,7 @@ describe("QuickListComponent", () => {
         });
 
         it("Shift click should select all items between current active and clicked", () => {
-            click(items[3].query(By.css(".quick-list-item")), ButtonClickEvents.leftShift);
+            click(items[3], ButtonClickEvents.leftShift);
             fixture.detectChanges();
             expect(activeItemKey).toEqual("item-2", "Should not have changed active item");
             expect(selection.keys.size).toBe(3);
@@ -112,7 +126,7 @@ describe("QuickListComponent", () => {
         });
 
         it("Ctrl click should select on item + the active item", () => {
-            click(items[3].query(By.css(".quick-list-item")), ButtonClickEvents.leftCtrl);
+            click(items[3], ButtonClickEvents.leftCtrl);
             fixture.detectChanges();
             expect(activeItemKey).toEqual("item-2", "Should not have changed active item");
 
@@ -120,7 +134,7 @@ describe("QuickListComponent", () => {
             expect(selection.keys.has("item-2")).toBe(true, "has item-2");
             expect(selection.keys.has("item-4")).toBe(true, "has item-4");
 
-            click(items[4].query(By.css(".quick-list-item")), ButtonClickEvents.leftCtrl);
+            click(items[4], ButtonClickEvents.leftCtrl);
             expect(selection.keys.size).toBe(3);
 
             expect(selection.keys.has("item-2")).toBe(true, "has item-2");
@@ -129,16 +143,16 @@ describe("QuickListComponent", () => {
         });
 
         it("Ctrl click on a selected item should unselect", () => {
-            click(items[3].query(By.css(".quick-list-item")), ButtonClickEvents.leftCtrl);
-            click(items[4].query(By.css(".quick-list-item")), ButtonClickEvents.leftCtrl);
+            click(items[3], ButtonClickEvents.leftCtrl);
+            click(items[4], ButtonClickEvents.leftCtrl);
             fixture.detectChanges();
             expect(selection.keys.size).toBe(3);
-            click(items[3].query(By.css(".quick-list-item")), ButtonClickEvents.leftCtrl);
+            click(items[3], ButtonClickEvents.leftCtrl);
             expect(selection.keys.size).toBe(2);
             expect(selection.keys.has("item-2")).toBe(true);
             expect(selection.keys.has("item-5")).toBe(true);
 
-            click(items[4].query(By.css(".quick-list-item")), ButtonClickEvents.leftCtrl);
+            click(items[4], ButtonClickEvents.leftCtrl);
 
             expect(selection.keys.size).toBe(1, "Should not have unselected the active");
             expect(selection.keys.has("item-2")).toBe(true, "Should not have unselected the active");

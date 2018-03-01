@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, forwardRef } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -8,15 +8,15 @@ import { Observable, Subscription } from "rxjs";
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
-import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
-import { TableComponent } from "app/components/base/table";
+import { QuickListItemStatus } from "app/components/base/quick-list";
 import { ListBaseComponent, ListSelection } from "app/core/list";
 import { Job, JobState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
 import { JobListParams, JobService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { Filter } from "app/utils/filter-builder";
+import { Filter } from "common";
+import { List } from "immutable";
 import {
     DeleteJobAction,
     DeleteJobDialogComponent,
@@ -34,17 +34,12 @@ import {
     }],
 })
 export class JobListComponent extends ListBaseComponent implements OnInit, OnDestroy {
+    public jobs: List<Job> = List([]);
     public LoadingStatus = LoadingStatus;
 
     public status: Observable<LoadingStatus>;
     public data: ListView<Job, JobListParams>;
     public searchQuery = new FormControl();
-
-    @ViewChild(QuickListComponent)
-    public list: QuickListComponent;
-
-    @ViewChild(TableComponent)
-    public table: TableComponent;
 
     // todo: ask tim about setting difference select options for list and details.
     private _baseOptions = {};
@@ -61,7 +56,10 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         super(changeDetector);
         this.data = this.jobService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
-
+        this.data.items.subscribe((jobs) => {
+            this.jobs = jobs;
+            this.changeDetector.markForCheck();
+        });
         this.status = this.data.status;
         this._onJobAddedSub = jobService.onJobAdded.subscribe((jobId) => {
             this.data.loadNewItem(jobService.get(jobId));
@@ -73,6 +71,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     }
 
     public ngOnDestroy() {
+        this.data.dispose();
         this._onJobAddedSub.unsubscribe();
     }
 

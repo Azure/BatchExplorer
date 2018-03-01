@@ -10,7 +10,7 @@ import { Job, Task, TaskState } from "app/models";
 import { CacheDataService, ElectronShell, FileSystemService, JobParams, JobService, TaskService } from "app/services";
 import { EntityView } from "app/services/core";
 import { log } from "app/utils";
-import { FilterBuilder } from "app/utils/filter-builder";
+import { FilterBuilder } from "common";
 import "./job-graphs-home.scss";
 
 enum AvailableGraph {

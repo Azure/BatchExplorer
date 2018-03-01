@@ -1,4 +1,4 @@
-<bl-focus-section>
+<bl-focus-section *ngIf="displayedPackages.size > 0">
     <bl-table [(activeItem)]="activeItem" [(selection)]="selection">
         <bl-thead>
             <bl-column style="width: 25%">Version</bl-column>

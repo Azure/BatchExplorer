@@ -7,7 +7,7 @@ import { Observable } from "rxjs";
 import { AccountListComponent } from "app/components/account/browse";
 import { SidebarManager } from "app/components/base/sidebar";
 import { AccountService, SubscriptionService } from "app/services";
-import { FilterBuilder } from "app/utils/filter-builder";
+import { FilterBuilder } from "common";
 import * as Fixtures from "test/fixture";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 

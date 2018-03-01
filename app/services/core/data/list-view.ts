@@ -1,7 +1,7 @@
-import { LoadingStatus } from "app/components/base/loading";
 import { List, OrderedSet } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
+import { LoadingStatus } from "app/components/base/loading/loading-status";
 import { log } from "app/utils";
 import { GenericView, GenericViewConfig } from "./generic-view";
 import { ListGetter, ListResponse } from "./list-getter";

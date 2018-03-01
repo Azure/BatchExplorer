@@ -5,6 +5,8 @@ import { RouterModule } from "@angular/router";
 import { MaterialModule } from "app/core";
 
 import { FocusSectionModule } from "../focus-section";
+import { LoadingModule } from "../loading";
+import { VirtualScrollModule } from "../virtual-scroll";
 import { TableCellComponent } from "./table-cell";
 import { TableColumnComponent } from "./table-column";
 import { TableHeadComponent } from "./table-head";
@@ -27,6 +29,8 @@ const components = [
         FormsModule,
         ReactiveFormsModule,
         MaterialModule,
+        VirtualScrollModule,
+        LoadingModule,
     ],
     exports: components,
     declarations: components,

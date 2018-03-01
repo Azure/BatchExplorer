@@ -1,4 +1,4 @@
-import { FilterBuilder, FilterMatcher, Operator } from "app/utils/filter-builder";
+import { FilterBuilder, FilterMatcher, Operator } from "common";
 
 const matcher = new FilterMatcher({
     id: (item: any, value: any, operator: Operator) => {

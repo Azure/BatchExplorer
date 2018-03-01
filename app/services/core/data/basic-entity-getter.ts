@@ -1,7 +1,7 @@
 import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { EntityGetter, EntityGetterConfig } from "app/services/core/data/entity-getter";
+import { EntityGetter, EntityGetterConfig } from "./entity-getter";
 
 export interface BasicEntityGetterConfig<TEntity, TParams> extends EntityGetterConfig<TEntity, TParams> {
     /**

@@ -1,7 +1,7 @@
 import { Type } from "@angular/core";
 
 import { ServerError } from "app/models";
-import { StorageClientService } from "app/services";
+import { StorageClientService } from "app/services//storage-client.service";
 import { EntityGetter, EntityGetterConfig } from "app/services/core/data/entity-getter";
 import { Observable } from "rxjs";
 

@@ -1,6 +1,7 @@
-import { ObjectUtils, SecureUtils } from "app/utils";
 import { Map } from "immutable";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
+
+import { ObjectUtils, SecureUtils } from "common";
 import { PollService } from "./poll-service";
 import { QueryCache } from "./query-cache";
 

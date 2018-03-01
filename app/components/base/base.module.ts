@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
@@ -26,9 +26,9 @@ import { GraphsModule } from "./graphs";
 import { GuardsModule } from "./guards";
 import { InfoBoxModule } from "./info-box";
 import {
-    DeleteSelectedItemsDialogComponent, EntityDetailsListComponent, ListLoadingComponent,
+    DeleteSelectedItemsDialogComponent, EntityDetailsListComponent,
 } from "./list-and-show-layout";
-import { LoadingComponent, SimpleLoadingComponent } from "./loading";
+import { LoadingModule } from "./loading";
 import { NotificationModule } from "./notifications";
 import { PinnedDropDownComponent } from "./pinned-entity-dropdown";
 import { PropertyListModule } from "./property-list";
@@ -60,6 +60,7 @@ const modules = [
     EditorModule,
     FocusSectionModule,
     InfoBoxModule,
+    LoadingModule,
     NotificationModule,
     PropertyListModule,
     GraphsModule,
@@ -89,10 +90,7 @@ const components = [
     DurationPickerComponent,
     IconComponent,
     PinnedDropDownComponent,
-    SimpleLoadingComponent,
     SimpleDialogComponent,
-    LoadingComponent,
-    ListLoadingComponent,
     DeleteSelectedItemsDialogComponent,
 ];
 
@@ -115,10 +113,4 @@ const components = [
     ],
 })
 export class BaseModule {
-    public static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: BaseModule,
-            providers: [],
-        };
-    }
 }

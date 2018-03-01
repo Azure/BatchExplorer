@@ -3,7 +3,8 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "app/core";
 
-import { ButtonComponent, ButtonGroupComponent } from "./button.component";
+import { ButtonGroupComponent } from "./button-group.component";
+import { ButtonComponent } from "./button.component";
 import {
     AddButtonComponent,
     AddTaskButtonComponent,

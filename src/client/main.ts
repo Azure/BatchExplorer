@@ -6,6 +6,11 @@ require("module").Module._initPaths();
 import { app } from "electron";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
+/**
+ * Setup a few extension functions
+ */
+import "common/extensions";
+
 import { logger } from "client/logger";
 import { startBatchLabs } from "./startup";
 

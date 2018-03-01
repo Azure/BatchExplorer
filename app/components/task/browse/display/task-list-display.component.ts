@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { List } from "immutable";
 
@@ -18,14 +18,13 @@ import { DateUtils } from "app/utils";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskListDisplayComponent extends ListBaseComponent {
-    @Input()
-    public jobId: string;
+    @Input() public jobId: string;
 
-    @Input()
-    public tasks: List<Task>;
+    @Input() public tasks: List<Task>;
 
-    @Input()
-    public status: LoadingStatus;
+    @Input() public status: LoadingStatus;
+
+    @Output() public scrollBottom = new EventEmitter();
 
     constructor(private taskService: TaskService, private dialog: MatDialog, changeDetector: ChangeDetectorRef) {
         super(changeDetector);
