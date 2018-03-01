@@ -1,13 +1,14 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 
-import {
-    CoreCountMetrics, FailedTaskMetrics, MonitorChartTimeFrame, MonitorChartType,
-    MonitorMetrics, NodeStatesMetrics, TaskStatesMetrics,
-} from "app/services";
 import { AccountService } from "../account.service";
 import { ArmHttpService } from "../arm-http.service";
 import { ThemeService } from "../themes";
+import { CoreCountMetrics } from "./core-count-metrics";
+import { FailedTaskMetrics } from "./failed-task-metrics";
+import { MonitorChartTimeFrame, MonitorChartType, MonitorMetrics } from "./monitor-metrics-base";
+import { NodeStatesMetrics } from "./node-states-metrics";
+import { TaskStatesMetrics } from "./task-states-metrics";
 
 export interface LocalizableString {
     value: string;
@@ -172,7 +173,7 @@ export class InsightsMetricsService {
      */
     private _convertToSentenceCase(text: string): string {
         return text.split(" ")
-                .map((value, index) => index !== 0 ? value.toLowerCase() : value)
-                .join(" ");
+            .map((value, index) => index !== 0 ? value.toLowerCase() : value)
+            .join(" ");
     }
 }

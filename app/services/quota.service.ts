@@ -2,9 +2,9 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { AccountResource, BatchQuotas, JobState, Pool } from "app/models";
-import { AccountService } from "app/services";
 import { FilterBuilder } from "common";
 import { List } from "immutable";
+import { AccountService } from "./account.service";
 import { ApplicationService } from "./application-service";
 import { ComputeService } from "./compute.service";
 import { JobService } from "./job-service";
