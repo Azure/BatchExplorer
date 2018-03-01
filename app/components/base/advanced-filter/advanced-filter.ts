@@ -3,7 +3,7 @@ import { Map } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { log } from "app/utils";
-import * as FilterBuilder from "app/utils/filter-builder";
+import * as FilterBuilder from "common";
 import { AdvancedFilterControlBase } from "./control-base";
 
 export class AdvancedFilter {

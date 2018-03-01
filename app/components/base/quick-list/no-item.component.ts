@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { Filter } from "app/utils/filter-builder";
+import { Filter } from "common";
 
 @Component({
     selector: "bl-no-item",

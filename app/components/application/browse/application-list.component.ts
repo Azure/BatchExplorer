@@ -12,7 +12,7 @@ import { ListBaseComponent } from "app/core/list";
 import { BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
-import { Filter } from "app/utils/filter-builder";
+import { Filter } from "common";
 import { SidebarManager } from "../../base/sidebar";
 import { ApplicationEditDialogComponent, DeleteApplicationDialogComponent } from "../action";
 

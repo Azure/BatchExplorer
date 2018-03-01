@@ -5,7 +5,7 @@ import { Observable, Subject } from "rxjs";
 import { SubtaskInformation, Task, TaskState } from "app/models";
 import { TaskCreateDto } from "app/models/dtos";
 import { Constants, log } from "app/utils";
-import { FilterBuilder } from "app/utils/filter-builder";
+import { FilterBuilder } from "common";
 import { BatchClientService } from "./batch-client.service";
 import {
     BatchEntityGetter,

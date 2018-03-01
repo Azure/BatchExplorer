@@ -7,7 +7,7 @@ import { Pool } from "app/models";
 import { PoolListParams, PoolService, VmSizeService } from "app/services";
 import { ListOptionsAttributes, ListView } from "app/services/core";
 import { PoolUtils } from "app/utils";
-import { FilterBuilder } from "app/utils/filter-builder";
+import { FilterBuilder } from "common";
 
 // tslint:disable:no-forward-ref
 @Component({

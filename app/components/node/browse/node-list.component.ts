@@ -9,7 +9,7 @@ import { Node } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { Filter } from "app/utils/filter-builder";
+import { Filter } from "common";
 
 @Component({
     selector: "bl-node-list",

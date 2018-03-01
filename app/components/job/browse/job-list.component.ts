@@ -15,7 +15,7 @@ import { FailureInfoDecorator } from "app/models/decorators";
 import { JobListParams, JobService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { Filter } from "app/utils/filter-builder";
+import { Filter } from "common";
 import { List } from "immutable";
 import {
     DeleteJobAction,

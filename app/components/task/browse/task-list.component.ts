@@ -12,7 +12,7 @@ import { Task } from "app/models";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { Filter } from "app/utils/filter-builder";
+import { Filter } from "common";
 import { DeleteTaskAction } from "../action";
 
 @Component({

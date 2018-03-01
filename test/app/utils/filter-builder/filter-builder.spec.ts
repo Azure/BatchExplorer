@@ -1,4 +1,4 @@
-import { FilterBuilder } from "app/utils/filter-builder";
+import { FilterBuilder } from "common";
 
 // tslint:disable:max-line-length
 describe("Filter builder", () => {

@@ -12,7 +12,7 @@ import {
     AppInsightsQueryService, ElectronRemote, JobListParams, JobService, NodeListParams, NodeService,
 } from "app/services";
 import { ListView, PollObservable, PollService } from "app/services/core";
-import { FilterBuilder } from "app/utils/filter-builder";
+import { FilterBuilder } from "common";
 import { StateCounter } from "./heatmap";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import "./pool-graphs.scss";

@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import {
     AppInsightsMetricSegment, AppInsightsMetricsResult, BatchPerformanceMetricType, BatchPerformanceMetrics,
 } from "app/models/app-insights/metrics-result";
-import { FilterBuilder } from "app/utils/filter-builder";
+import { FilterBuilder } from "common";
 import { Observable } from "rxjs";
 import { AppInsightsApiService } from "./app-insights-api.service";
 

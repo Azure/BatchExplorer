@@ -4,7 +4,7 @@ import { autobind } from "app/core";
 import { Observable, Subscription } from "rxjs";
 
 import { StorageService } from "app/services";
-import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
+import { Filter, FilterBuilder, Property } from "common";
 import { SidebarManager } from "../../base/sidebar";
 import { FileGroupCreateFormComponent } from "../action";
 

@@ -19,7 +19,7 @@ import { PoolDecorator } from "app/models/decorators";
 import { PinnedEntityService, PoolListParams, PoolService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { Filter } from "app/utils/filter-builder";
+import { Filter } from "common";
 import { DeletePoolDialogComponent, DeletePoolTask, PoolResizeDialogComponent } from "../action";
 
 @Component({

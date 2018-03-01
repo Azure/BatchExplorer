@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output } from "@angular/core";
 
 import { AdvancedFilter, ListFilterControl, StatePickerControl } from "app/components/base/advanced-filter";
 import { TaskState } from "app/models";
-import { Filter } from "app/utils/filter-builder";
+import { Filter } from "common";
 import { ODataFields } from "common/constants";
 
 @Component({

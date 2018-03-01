@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { Node, NodeAgentSku, NodeConnectionSettings, NodeState } from "app/models";
 import { ArrayUtils, Constants, ObservableUtils, log } from "app/utils";
-import { FilterBuilder } from "app/utils/filter-builder";
+import { FilterBuilder } from "common";
 import { BatchClientService } from "./batch-client.service";
 import {
     BatchEntityGetter, BatchListGetter, ContinuationToken, DataCache,

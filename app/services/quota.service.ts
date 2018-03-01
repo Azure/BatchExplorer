@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { AccountResource, BatchQuotas, JobState, Pool } from "app/models";
 import { AccountService } from "app/services";
-import { FilterBuilder } from "app/utils/filter-builder";
+import { FilterBuilder } from "common";
 import { List } from "immutable";
 import { ApplicationService } from "./application-service";
 import { ComputeService } from "./compute.service";

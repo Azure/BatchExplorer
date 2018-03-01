@@ -10,7 +10,7 @@ import { BackgroundTaskService } from "app/components/base/background-task";
 import { SidebarManager } from "app/components/base/sidebar";
 import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
-import { Property } from "app/utils/filter-builder";
+import { Property } from "common";
 import * as Fixtures from "test/fixture";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 

@@ -7,7 +7,7 @@ import { Subscription } from "rxjs";
 import { FormControl } from "@angular/forms";
 import { Job, JobState } from "app/models";
 import { JobService } from "app/services";
-import { FilterBuilder } from "app/utils/filter-builder";
+import { FilterBuilder } from "common";
 import "./all-job-graphs-home.scss";
 
 enum TimeRange {

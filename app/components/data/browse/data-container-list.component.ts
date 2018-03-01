@@ -15,7 +15,7 @@ import { FileGroupCreateDto } from "app/models/dtos";
 import { ListContainerParams, PinnedEntityService, StorageService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { Filter } from "app/utils/filter-builder";
+import { Filter } from "common";
 import { Constants } from "common";
 import { List } from "immutable";
 import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";

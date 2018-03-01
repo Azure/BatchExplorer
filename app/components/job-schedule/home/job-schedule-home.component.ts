@@ -3,7 +3,7 @@ import { FormBuilder, FormControl } from "@angular/forms";
 
 import { SidebarManager } from "app/components/base/sidebar";
 import { autobind } from "app/core";
-import { Filter, FilterBuilder } from "app/utils/filter-builder";
+import { Filter, FilterBuilder } from "common";
 import { JobScheduleCreateBasicDialogComponent } from "../action";
 
 @Component({

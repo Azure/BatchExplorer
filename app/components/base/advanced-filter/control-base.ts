@@ -1,6 +1,6 @@
 import { FormGroup } from "@angular/forms";
 
-import { Filter } from "app/utils/filter-builder";
+import { Filter } from "common";
 import { AdvancedFilter } from "./advanced-filter";
 
 export abstract class AdvancedFilterControlBase {

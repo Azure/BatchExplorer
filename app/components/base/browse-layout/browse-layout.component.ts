@@ -8,7 +8,7 @@ import { MatDialog } from "@angular/material";
 import { DeleteSelectedItemsDialogComponent } from "app/components/base/list-and-show-layout";
 import { autobind } from "app/core";
 import { ListSelection } from "app/core/list";
-import { Filter, FilterBuilder } from "app/utils/filter-builder";
+import { Filter, FilterBuilder } from "common";
 import { Subscription } from "rxjs";
 import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-filter";
 import { BrowseLayoutListDirective } from "./browse-layout-list";

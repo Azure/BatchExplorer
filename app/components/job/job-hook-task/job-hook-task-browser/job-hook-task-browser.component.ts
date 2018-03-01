@@ -7,7 +7,7 @@ import { Job, JobHookTask, JobHookTaskResult, JobHookTaskState } from "app/model
 import { JobHookTaskListParams, JobHookTaskService } from "app/services";
 import { ListView } from "app/services/core";
 import { DateUtils } from "app/utils";
-import { FilterBuilder } from "app/utils/filter-builder";
+import { FilterBuilder } from "common";
 
 import "./job-hook-task-browser.scss";
 

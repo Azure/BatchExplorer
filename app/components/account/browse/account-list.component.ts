@@ -9,7 +9,7 @@ import { QuickListItemStatus } from "app/components/base/quick-list";
 import { ListBaseComponent } from "app/core/list";
 import { AccountResource } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
-import { Filter, FilterMatcher, Operator } from "app/utils/filter-builder";
+import { Filter, FilterMatcher, Operator } from "common";
 import { SidebarManager } from "../../base/sidebar";
 
 @Component({
