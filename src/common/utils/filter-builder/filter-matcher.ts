@@ -1,4 +1,3 @@
-import { log } from "app/utils";
 import { Connector } from "./connector";
 import { Filter } from "./filter";
 import { Operator } from "./operator";
@@ -16,7 +15,8 @@ export class FilterMatcher<T> {
             if (property.name in this._matchers) {
                 return this._matchers[property.name](item, property.value, property.operator);
             } else {
-                log.error(`Cannot find matcher for property with name "${property.name}!"`,
+                // tslint:disable-next-line:no-console
+                console.error(`Cannot find matcher for property with name "${property.name}!"`,
                     { matchers: this._matchers });
                 return true;
             }
