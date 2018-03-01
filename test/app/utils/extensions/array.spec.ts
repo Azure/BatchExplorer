@@ -1,4 +1,4 @@
-import "app/utils/extensions/array";
+import "common/extensions/array";
 
 describe("Array extensions", () => {
     describe("#first()", () => {
