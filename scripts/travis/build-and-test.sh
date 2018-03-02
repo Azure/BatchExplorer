@@ -11,6 +11,9 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then # Only run the CI checks on the linux 
     npm run test -s
     codecov
 
+    # Run some special guards for @bl-common package
+    npm run ts ./scripts/guards/bl-common.ts
+
     # Run the lint
     npm run lint -s
 fi
