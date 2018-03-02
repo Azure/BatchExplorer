@@ -21,21 +21,16 @@ python:
 matrix:
   fast_finish: true
   allow_failures:
-    - os: osx # This allows not to wait for the osx build to be scheduled
+    os: osx # This allows not to wait for the osx build to be scheduled
 
   include:
     - language: generic
       os: osx
-      env: PYTHON=3.6.0
       before_install:
         - brew update
-        - brew outdated pyenv || brew upgrade pyenv
-        - brew install pyenv-virtualenv
-        - pyenv install $PYTHON
-        - export PYENV_VERSION=$PYTHON
-        - export PATH="/Users/travis/.pyenv/shims:${PATH}"
-        - pyenv-virtualenv venv
-        - source venv/bin/activate
+        - brew upgrade python
+        - virtualenv env -p python3
+        - source env/bin/activate
         - python3 --version
         - nvm install 9.6.1
         - nvm use 9.6.1
