@@ -1,0 +1,171 @@
+@import "app/styles/variables";
+
+bl-banner {
+    display: block;
+    margin-top: 10px;
+}
+
+bl-banner > bl-card {
+    padding: 0;
+    display: block;
+
+    > .summary-container {
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+
+        &.expandable {
+            cursor: pointer;
+        }
+
+        &.standard {
+            height: 36px;
+        }
+
+        &.expand {
+            height: auto;
+        }
+
+        > [code] {
+            padding: 5px 24px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        > .message {
+            padding: 5px 24px;
+            flex: 1;
+            overflow-wrap: break-word;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            min-width: 10px;
+        }
+
+        &.expand > [message] {
+            padding: 10px;
+            flex: 1;
+        }
+
+        > .quick-fix-btn-container {
+            padding: 0 10px;
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+
+            > .btn, > .other-fixes-btn {
+                border-radius: 3px;
+                cursor: pointer;
+                height: 28px;
+
+                &.disabled {
+                    cursor: default;
+                }
+            }
+
+            > .btn {
+                padding: 2px 10px;
+
+                .fa {
+                    margin-right: 5px;
+                }
+
+            }
+
+            > .other-fixes-btn {
+                border-left: none;
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                padding: 3px 5px 5px 6px;
+                margin-left: -3px;
+            }
+        }
+
+        > .caret {
+            width: 32px;
+            text-align: center;
+            font-size: 24px;
+        }
+    }
+
+    > .details-container {
+        padding: 10px 24px;
+        border-top: 1px solid map-get($danger, 800);
+        font-weight: 500;
+    }
+}
+
+
+@mixin banner-scheme($main, $accent) {
+    background: $main;
+
+    > .summary-container {
+        > [code] {
+            border-right: 1px solid $accent;
+        }
+
+        > .quick-fix-btn-container {
+            border-right: 1px solid $accent;
+            border-left: 1px solid $accent;
+
+            > .btn, > .other-fixes-btn {
+                border: 3px solid $accent;
+
+                &:hover:not(.disabled) {
+                    background: $accent;
+                }
+            }
+        }
+    }
+
+    > .details-container {
+        border-top: 1px solid $accent;
+    }
+
+    .other-fixes {
+        background: $main;
+        border: 3px solid $accent;
+
+        > .other-fix {
+            &:not(:last-child) {
+                border-bottom: 3px solid $accent;
+            }
+
+            &:hover:not(.disabled) {
+                background: $accent;
+            }
+        }
+    }
+}
+
+bl-banner > bl-card.error {
+    @include banner-scheme(map-get($danger, 500), map-get($danger, 800));
+    color: $whiteSmoke-darker;
+}
+
+bl-banner > bl-card.warning {
+    @include banner-scheme(map-get($warn, 500), map-get($warn, 800));
+    color: $whiteSmoke-darker;
+}
+
+bl-banner > bl-card.notice {
+    @include banner-scheme($concreteGray, $dusty-grey );
+    color: $genericGray;
+}
+
+.other-fixes {
+    position: absolute;
+    top: 29px;
+    right: 10px;
+    z-index: 100;
+    width: calc(100% - 20px);
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+
+    > .other-fix {
+        cursor: pointer;
+        padding: 2px 10px;
+    }
+}

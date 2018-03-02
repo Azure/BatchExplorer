@@ -1,0 +1,45 @@
+@import "app/styles/variables";
+
+bl-summary-card {
+    background: $card-background;
+    display: flex;
+
+    > .actions {
+        width: $action-btn-size + 1;
+    }
+
+    > .main-tile {
+        padding: 10px 10px 7px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+
+        > .content-container {
+            display: flex;
+            > .content {
+                > .title {
+                    font-size: 16px;
+                    color: map-get($primary, 500);
+                }
+
+                > .subtitle {
+                    color: $generic-grey;
+                }
+
+                > .details {
+                    color: $generic-grey;
+                }
+            }
+        }
+
+        > .summary-footer {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+    }
+
+    > [summaryTile] {
+        border-left: 1px solid $border-color;
+    }
+}

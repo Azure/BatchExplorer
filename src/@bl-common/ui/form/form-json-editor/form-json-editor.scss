@@ -1,0 +1,15 @@
+@import "app/styles/variables";
+
+bl-form-json-editor {
+    display: block;
+    height: 100%;
+
+    > .editor-header {
+        height: 20px;
+        border-bottom: 1px solid $border-color;
+    }
+
+    > bl-editor {
+        height: calc(100% - 20px);
+    }
+}

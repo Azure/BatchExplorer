@@ -1,0 +1,158 @@
+@import "app/styles/variables";
+
+bl-table {
+    $padding-first-and-last: 10px;
+    $table-heading-height: 34px;
+    $table-row-height: 28px;
+
+
+    display: block;
+    width: 100%;
+    height: 100%;
+    bl-thead, .bl-table-row {
+        display: flex;
+        align-items: center;
+    }
+
+    > .table-head {
+        color: $secondary-text;
+        height: $table-heading-height;
+        > bl-thead {
+            height: $table-heading-height;
+        }
+
+        &.no-scroll {
+            border-bottom: 2px solid $athensGrey;
+        }
+    }
+
+    > .table-body {
+        position: relative;
+        height: calc(100% - #{$table-heading-height});
+        > bl-virtual-scroll {
+            height: 100%;
+        }
+    }
+
+    .checkbox-column {
+        width: 30px;
+        padding: 5px;
+
+        .mat-checkbox-frame {
+            border-color: $alto;
+        }
+
+        &:hover {
+            .mat-checkbox-frame {
+                border-color: $primary-color;
+            }
+        }
+    }
+
+    &.activable {
+        .bl-table-row {
+            cursor: pointer;
+        }
+    }
+
+    .bl-table-row {
+        &:not(:last-child) {
+            border-bottom: 1px solid $athensGrey;
+        }
+        height: $table-row-height;
+
+        &.selected {
+            background-color: map-get($primary, 100);
+
+            p {
+                color: $mineShaftGray;
+            }
+        }
+
+        &.focused {
+            outline: 2px dashed map-get($primary, 200);
+            outline-offset: -2px;
+        }
+
+        &.drop-target {
+            background: $altoGray;
+        }
+
+        &:hover:not(.selected) {
+            background-color: $altoGray;
+        }
+
+        &:last-child {
+            border-bottom: 1px $athensGrey solid;
+        }
+    }
+
+    bl-cell,
+    bl-column {
+        vertical-align: middle;
+        text-align: left;
+        padding: 0 5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 1;
+        word-wrap: break-word;
+
+        &:first-child {
+            padding: 0 0 0 $padding-first-and-last;
+        }
+
+        &:last-child {
+            padding: 0 $padding-first-and-last 0 0;
+        }
+
+        // If only one cell
+        &:only-child {
+            padding: 0 $padding-first-and-last;
+        }
+
+        &[numericField] {
+            text-align: right;
+        }
+    }
+
+    bl-column {
+        font-size: 0.9em;
+        font-weight: bold;
+        white-space: nowrap;
+        user-select: none;
+
+        &.sortable {
+            cursor: pointer;
+            > .sort-icon {
+                color: $main-background;
+            }
+
+            &:hover:not(.sorting) > .sort-icon {
+                color: $genericGray;
+            }
+        }
+
+        &.sorting {
+            color: $primary-color;
+            > .sort-icon {
+                color: $primary-color;
+            }
+        }
+    }
+
+    bl-cell {
+        font-size: 13px;
+        position: relative;
+        white-space: nowrap;
+
+        .cell-value {
+            width: 98%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}
+
+.cell-spinner {
+    color: $primary-color;
+}
