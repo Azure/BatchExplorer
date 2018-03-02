@@ -12,7 +12,7 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then # Only run the CI checks on the linux 
     codecov
 
     # Run some special guards for @batch-flask package
-    npm run ts ./scripts/guards/bl-common.ts
+    npm run ts ./scripts/guards/batch-flask.ts
 
     # Run the lint
     npm run lint -s
