@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { FormControl } from "@angular/forms";
 import { Observable } from "rxjs";
 
-import { FilterBuilder } from "common";
+import { FilterBuilder } from "@bl-common/core";
 
 import "./entity-details-list.scss";
 

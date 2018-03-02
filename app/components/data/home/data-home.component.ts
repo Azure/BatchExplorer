@@ -1,11 +1,11 @@
 import { Component, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
-import { autobind } from "@bl-common/core";
 import { Observable, Subscription } from "rxjs";
 
+import { Filter, FilterBuilder, Property, autobind } from "@bl-common/core";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { StorageService } from "app/services";
-import { Constants, Filter, FilterBuilder, Property } from "common";
-import { SidebarManager } from"@bl-common/ui/sidebar";
+import { Constants } from "common";
 import { FileGroupCreateFormComponent } from "../action";
 
 import { MatMenuTrigger } from "@angular/material";

@@ -4,10 +4,10 @@ import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Observable } from "rxjs";
 
-import { AccountListComponent } from "app/components/account/browse";
+import { FilterBuilder } from "@bl-common/core";
 import { SidebarManager } from "@bl-common/ui/sidebar";
+import { AccountListComponent } from "app/components/account/browse";
 import { AccountService, SubscriptionService } from "app/services";
-import { FilterBuilder } from "common";
 import * as Fixtures from "test/fixture";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 

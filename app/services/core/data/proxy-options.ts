@@ -1,4 +1,4 @@
-import { ObjectUtils } from "common";
+import { ObjectUtils } from "@bl-common/utils";
 
 export interface OptionsBase {
     select?: string;

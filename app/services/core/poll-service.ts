@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 
-import { ObjectUtils, SecureUtils } from "common";
+import { ObjectUtils, SecureUtils } from "@bl-common/utils";
 
 @Injectable()
 export class PollService {

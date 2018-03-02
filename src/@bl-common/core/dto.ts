@@ -1,4 +1,4 @@
-import { nil } from "common";
+import { nil } from "@bl-common/utils";
 
 const primitives = new Set(["Array", "Number", "String", "Object", "Boolean"]);
 

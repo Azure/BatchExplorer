@@ -1,7 +1,8 @@
 import { Location } from "@angular/common";
 import { HttpEvent, HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
+import { UrlUtils } from "@bl-common/utils";
 import { AccessToken } from "client/core/aad/access-token";
-import { Constants, UrlUtils } from "common";
+import { Constants } from "common";
 import { Observable } from "rxjs";
 
 export type HttpRequestObservable = "body" | "events" | "response";

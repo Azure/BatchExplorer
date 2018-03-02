@@ -4,6 +4,7 @@ import { autobind } from "@bl-common/core";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
+import { FilterBuilder } from "@bl-common/core";
 import { SidebarManager } from "@bl-common/ui/sidebar";
 import { PerformanceData } from "app/components/pool/graphs/performance-graph";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
@@ -12,7 +13,6 @@ import {
     AppInsightsQueryService, ElectronRemote, JobListParams, JobService, NodeListParams, NodeService,
 } from "app/services";
 import { ListView, PollObservable, PollService } from "app/services/core";
-import { FilterBuilder } from "common";
 import { StateCounter } from "./heatmap";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import "./pool-graphs.scss";

@@ -5,12 +5,12 @@ import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Subject } from "rxjs";
 
-import { ApplicationListComponent } from "app/components/application/browse";
+import { FilterBuilder } from "@bl-common/core";
 import { BackgroundTaskService } from "@bl-common/ui/background-task";
 import { SidebarManager } from "@bl-common/ui/sidebar";
+import { ApplicationListComponent } from "app/components/application/browse";
 import { BatchApplication } from "app/models";
 import { ApplicationService, PinnedEntityService } from "app/services";
-import { FilterBuilder } from "common";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";

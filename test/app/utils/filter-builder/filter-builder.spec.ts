@@ -1,4 +1,4 @@
-import { FilterBuilder } from "common";
+import { FilterBuilder } from "@bl-common/core";
 
 // tslint:disable:max-line-length
 describe("Filter builder", () => {

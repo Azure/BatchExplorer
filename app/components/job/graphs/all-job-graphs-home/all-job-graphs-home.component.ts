@@ -5,9 +5,9 @@ import * as moment from "moment";
 import { Subscription } from "rxjs";
 
 import { FormControl } from "@angular/forms";
+import { FilterBuilder } from "@bl-common/core";
 import { Job, JobState } from "app/models";
 import { JobService } from "app/services";
-import { FilterBuilder } from "common";
 import "./all-job-graphs-home.scss";
 
 enum TimeRange {

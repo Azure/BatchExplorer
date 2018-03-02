@@ -2,10 +2,10 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
+import { FilterBuilder } from "@bl-common/core";
 import { BackgroundTaskService } from "@bl-common/ui/background-task";
 import { Node, NodeAgentSku, NodeConnectionSettings, NodeState } from "app/models";
 import { ArrayUtils, Constants, ObservableUtils, log } from "app/utils";
-import { FilterBuilder } from "common";
 import { BatchClientService } from "./batch-client.service";
 import {
     BatchEntityGetter, BatchListGetter, ContinuationToken, DataCache,
