@@ -21,16 +21,17 @@ python:
 matrix:
   fast_finish: true
   allow_failures:
-    os: osx # This allows not to wait for the osx build to be scheduled
+    - os: osx # This allows not to wait for the osx build to be scheduled
 
   include:
     - language: generic
       os: osx
       before_install:
         - brew update
-        - brew install python3
-        - virtualenv env -p python3
-        - source env/bin/activate
+        - brew outdated pyenv || brew upgrade pyenv
+        - brew install pyenv-virtualenv
+        - pyenv install 3.6.0
+        - pyenv global 3.6.0
         - python3 --version
         - nvm install 9.6.1
         - nvm use 9.6.1
