@@ -1,4 +1,4 @@
-import { SecureUtils } from "app/utils";
+import { SecureUtils } from "@bl-common/utils";
 
 export enum NotificationLevel {
     info = "info",

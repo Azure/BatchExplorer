@@ -1,6 +1,6 @@
 import { Model, Prop, Record } from "@bl-common/core";
 
-import { SecureUtils } from "app/utils";
+import { SecureUtils } from "@bl-common/utils";
 
 export interface SSHPublicKeyAttributes {
     id: string;

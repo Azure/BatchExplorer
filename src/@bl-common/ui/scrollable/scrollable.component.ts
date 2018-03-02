@@ -13,7 +13,7 @@ import {
 } from "@angular/core";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 
-import { SecureUtils } from "app/utils";
+import { SecureUtils } from "@bl-common/utils";
 import { ScrollableService } from "./scrollable.service";
 
 enum Orientation {

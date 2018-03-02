@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy, Component, HostBinding, HostListener, Inject, Input, forwardRef,
 } from "@angular/core";
 
-import { SecureUtils } from "app/utils";
+import { SecureUtils } from "@bl-common/utils";
 import { TableComponent } from "../table.component";
 
 export enum SortDirection {

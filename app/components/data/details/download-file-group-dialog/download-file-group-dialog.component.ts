@@ -5,11 +5,11 @@ import { List } from "immutable";
 import * as path from "path";
 import { AsyncSubject, Observable } from "rxjs";
 
+import { autobind } from "@bl-common/core";
 import { BackgroundTask, BackgroundTaskService } from "@bl-common/ui/background-task";
 import { NotificationService } from "@bl-common/ui/notifications";
-import { autobind } from "@bl-common/core";
+import { SecureUtils } from "@bl-common/utils";
 import { ElectronShell, FileSystemService, StorageService } from "app/services";
-import { SecureUtils } from "app/utils";
 import * as minimatch from "minimatch";
 import "./download-file-group-dialog.scss";
 
