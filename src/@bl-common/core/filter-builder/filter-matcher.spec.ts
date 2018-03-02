@@ -1,4 +1,4 @@
-import { FilterBuilder, FilterMatcher, Operator } from "common";
+import { FilterBuilder, FilterMatcher, Operator } from "@bl-common/core/filter-builder";
 
 const matcher = new FilterMatcher({
     id: (item: any, value: any, operator: Operator) => {

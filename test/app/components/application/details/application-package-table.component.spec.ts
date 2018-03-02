@@ -5,12 +5,12 @@ import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Observable } from "rxjs";
 
-import { ApplicationPackageTableComponent } from "app/components/application/details";
+import { Property } from "@bl-common/core";
 import { BackgroundTaskService } from "@bl-common/ui/background-task";
 import { SidebarManager } from "@bl-common/ui/sidebar";
+import { ApplicationPackageTableComponent } from "app/components/application/details";
 import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
-import { Property } from "common";
 import * as Fixtures from "test/fixture";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 

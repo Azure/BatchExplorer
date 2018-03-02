@@ -1,5 +1,5 @@
-import { DateUtils } from "app/utils";
 import * as moment from "moment";
+import { DateUtils } from "./date-utils";
 
 describe("DateUtils", () => {
     describe("#withinRange()", () => {

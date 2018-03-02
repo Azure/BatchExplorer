@@ -1,5 +1,5 @@
 import { FormControl, FormGroup } from "@angular/forms";
-import { FormUtils } from "app/utils";
+import { FormUtils } from "./form-utils";
 
 describe("FormUtils", () => {
 

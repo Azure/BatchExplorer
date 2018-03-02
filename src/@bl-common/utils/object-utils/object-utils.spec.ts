@@ -1,4 +1,4 @@
-import { ObjectUtils, exists, nil } from "common/utils/object-utils";
+import { ObjectUtils, exists, nil } from "./object-utils";
 
 describe("Object extensions", () => {
     it("Should slice an object correctly", () => {
