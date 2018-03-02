@@ -29,9 +29,9 @@ matrix:
       before_install:
         - brew update
         - brew upgrade python
-        - virtualenv env -p python3
+        # - virtualenv env -p python3
         - source env/bin/activate
-        - python3 --version
+        - python --version
         - nvm install 9.6.1
         - nvm use 9.6.1
 
