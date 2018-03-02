@@ -1,6 +1,6 @@
 import { Component, HostBinding, HostListener, Input } from "@angular/core";
 
-import { Constants } from "app/utils";
+import { MouseButton } from "@bl-common/core";
 import { Notification, NotificationAction } from "./notification";
 import { NotificationService } from "./notification-service";
 import "./notification.scss";
@@ -30,7 +30,7 @@ export class NotificationComponent {
 
     @HostListener("mouseup", ["$event"])
     public handleMouseUp(event: MouseEvent, tab) {
-        if (event.button === Constants.MouseButton.middle) { // Middle click
+        if (event.button === MouseButton.middle) { // Middle click
             this.dismiss();
         }
     }

@@ -1,7 +1,8 @@
 import { Type } from "@angular/core";
 
+import { HttpCode } from "@bl-common/core";
 import { ServerError } from "app/models";
-import { Constants, exists, log } from "app/utils";
+import { exists, log } from "app/utils";
 import { DataCache } from "../data-cache";
 
 export interface GenericGetterConfig<TEntity, TParams> {
@@ -31,7 +32,7 @@ export class GenericGetter<TEntity, TParams> {
 
     constructor(public type: Type<TEntity>, protected config: GenericGetterConfig<TEntity, TParams>) {
         this.getCache = config.cache;
-        this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [Constants.HttpCode.NotFound];
+        this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [HttpCode.NotFound];
     }
 
     protected processError(error: ServerError) {

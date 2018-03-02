@@ -1,11 +1,12 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { HttpCode } from "@bl-common/core";
 import {
     FileExplorerConfig, FileExplorerWorkspace, FileNavigatorEntry,
 } from "app/components/file/browse/file-explorer";
 import { ServerError, Task, TaskState } from "app/models";
 import { FileService, StorageService } from "app/services";
 import { FileLoader } from "app/services/file";
-import { ComponentUtils, Constants, StorageUtils } from "app/utils";
+import { ComponentUtils,  StorageUtils } from "app/utils";
 import "./task-outputs.scss";
 
 enum OutputType {
@@ -109,14 +110,14 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     }
 
     private _processTaskFilesError(error: ServerError): ServerError {
-        if (error.status === Constants.HttpCode.NotFound) {
+        if (error.status === HttpCode.NotFound) {
             return new ServerError({
                 status: 404,
                 code: "NodeNotFound",
                 message: "The node the task ran on doesn't exist anymore or is in an invalid state.",
                 original: error.original,
             });
-        } else if (error.status === Constants.HttpCode.Conflict) {
+        } else if (error.status === HttpCode.Conflict) {
             return new ServerError({
                 status: 404,
                 code: "TaskFilesDeleted",
@@ -128,7 +129,7 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     }
 
     private _processBlobError(error: ServerError): ServerError {
-        if (error.status === Constants.HttpCode.NotFound && error.code === "ContainerNotFound") {
+        if (error.status === HttpCode.NotFound && error.code === "ContainerNotFound") {
             return new ServerError({
                 status: 404,
                 code: "NoPersistedOutput",

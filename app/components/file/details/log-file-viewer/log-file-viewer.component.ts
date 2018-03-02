@@ -5,8 +5,9 @@ import { ScrollableComponent, ScrollableService } from "@bl-common/ui/scrollable
 import { File, ServerError } from "app/models";
 import { TaskService } from "app/services";
 import { FileLoader } from "app/services/file";
-import { Constants, log } from "app/utils";
+import { log } from "app/utils";
 
+import { HttpCode } from "@bl-common/core";
 import { EditorComponent, EditorConfig } from "@bl-common/ui/editor";
 import "./log-file-viewer.scss";
 
@@ -204,10 +205,10 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
         this.loading = false;
 
         clearInterval(this._refreshInterval);
-        if (e.status === Constants.HttpCode.NotFound) {
+        if (e.status === HttpCode.NotFound) {
             this.nodeNotFound = true;
             return;
-        } else if (e.status === Constants.HttpCode.Conflict) {
+        } else if (e.status === HttpCode.Conflict) {
             this.fileCleanupOperation = true;
             return;
         } else if (!e.status && e.message && e.message.startsWith("An incorrect number of bytes")) {

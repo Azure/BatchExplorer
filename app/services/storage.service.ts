@@ -2,6 +2,7 @@ import { Injectable, NgZone } from "@angular/core";
 import * as path from "path";
 import { AsyncSubject, Observable, Subject } from "rxjs";
 
+import { HttpCode } from "@bl-common/core";
 import { BackgroundTaskService } from "@bl-common/ui/background-task";
 import { BlobContainer, File, ServerError } from "app/models";
 import { SharedAccessPolicy } from "app/services/storage/models";
@@ -52,8 +53,8 @@ export interface NavigateBlobsOptions {
 }
 // List of error we don't want to log for storage requests
 const storageIgnoredErrors = [
-    Constants.HttpCode.NotFound,
-    Constants.HttpCode.Conflict,
+    HttpCode.NotFound,
+    HttpCode.Conflict,
 ];
 
 export interface BulkUploadStatus {

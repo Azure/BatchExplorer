@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import * as path from "path";
 
+import { HttpCode } from "@bl-common/core";
+import { exists } from "@bl-common/utils";
 import { File, ServerError } from "app/models";
-import { Constants, exists } from "app/utils";
 import { Observable } from "rxjs";
 import { BatchClientService } from "./batch-client.service";
 import {
@@ -48,8 +49,8 @@ export interface NaviagateTaskFileOptions {
 
 // List of error we don't want to log for files
 export const fileIgnoredErrors = [
-    Constants.HttpCode.NotFound,
-    Constants.HttpCode.Conflict,
+    HttpCode.NotFound,
+    HttpCode.Conflict,
 ];
 
 @Injectable()

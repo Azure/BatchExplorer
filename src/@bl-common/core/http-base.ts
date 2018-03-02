@@ -1,9 +1,11 @@
 import { Location } from "@angular/common";
 import { HttpEvent, HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
+import { RetryableHttpCode } from "@bl-common/core/constants";
 import { UrlUtils } from "@bl-common/utils";
 import { AccessToken } from "client/core/aad/access-token";
-import { Constants } from "common";
 import { Observable } from "rxjs";
+
+export const badHttpCodeMaxRetryCount = 5;
 
 export type HttpRequestObservable = "body" | "events" | "response";
 
@@ -74,16 +76,16 @@ export abstract class HttpService {
     }
 
     protected retryWhen(attempts: Observable<Response>) {
-        const retryRange = Observable.range(0, Constants.badHttpCodeMaxRetryCount + 1);
+        const retryRange = Observable.range(0, badHttpCodeMaxRetryCount + 1);
         return attempts
             .switchMap((x: any) => {
-                if (Constants.RetryableHttpCode.has(x.status)) {
+                if (RetryableHttpCode.has(x.status)) {
                     return Observable.of(x);
                 }
                 return Observable.throw(x);
             })
             .zip(retryRange, (attempt, retryCount) => {
-                if (retryCount >= Constants.badHttpCodeMaxRetryCount) {
+                if (retryCount >= badHttpCodeMaxRetryCount) {
                     throw attempt;
                 }
                 return retryCount;
