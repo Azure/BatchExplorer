@@ -41,7 +41,7 @@ a {
 
 .jumbotron {
     margin-bottom: 0px !important;
-    background-color: aliceblue !important;
+    background-color: white !important;
     border-radius: 0px !important;
 }
 
@@ -158,8 +158,7 @@ a {
 }
 
 .swimlane .screenshot {
-    /* margin-top: 28px; */
-    height: 280px;
+    height: 380px;
 }
 
 .dark {
