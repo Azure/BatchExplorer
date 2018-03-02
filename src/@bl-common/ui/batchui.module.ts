@@ -5,7 +5,6 @@ import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@bl-common/core";
 
 // components
-import { IconComponent } from "./icon";
 import { AdvancedFilterModule } from "./advanced-filter";
 import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
@@ -24,6 +23,7 @@ import { FocusSectionModule } from "./focus-section";
 import { FormModule } from "./form";
 import { GraphsModule } from "./graphs";
 import { GuardsModule } from "./guards";
+import { IconComponent } from "./icon";
 import { InfoBoxModule } from "./info-box";
 import {
     DeleteSelectedItemsDialogComponent, EntityDetailsListComponent,

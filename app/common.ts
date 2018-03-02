@@ -2,9 +2,9 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
+import { MaterialModule } from "@bl-common/core";
 import { BaseModule } from "@bl-common/ui";
 import { CommonModule } from "app/components/common";
-import { MaterialModule } from "@bl-common/core";
 
 export const commonModules = [
     BrowserModule, MaterialModule, RouterModule,

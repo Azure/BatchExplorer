@@ -9,6 +9,7 @@ import { List } from "immutable";
 import { BehaviorSubject, Subject } from "rxjs";
 import { Observable } from "rxjs/Observable";
 
+import { MaterialModule } from "@bl-common/core";
 import { DialogService } from "@bl-common/ui/dialogs";
 import { SidebarManager } from "@bl-common/ui/sidebar";
 import { FileGroupPickerComponent } from "app/components/data/shared";
@@ -16,7 +17,6 @@ import { CloudFilePickerComponent } from "app/components/data/shared/cloud-file-
 import { FileGroupSasComponent } from "app/components/data/shared/file-group-sas";
 import { PoolPickerComponent } from "app/components/job/action/add";
 import { ParameterInputComponent, SubmitNcjTemplateComponent } from "app/components/market/submit";
-import { MaterialModule } from "@bl-common/core";
 import { NcjJobTemplate, NcjParameterRawType, NcjPoolTemplate, NcjTemplateMode, Pool } from "app/models";
 import { NcjSubmitService, NcjTemplateService, PoolService, StorageService, VmSizeService } from "app/services";
 import * as Fixtures from "test/fixture";

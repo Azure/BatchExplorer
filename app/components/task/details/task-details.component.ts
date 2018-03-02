@@ -5,11 +5,11 @@ import { autobind } from "@bl-common/core";
 import { remote } from "electron";
 import { Observable, Subscription } from "rxjs";
 
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { Job, Task } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
 import { FileSystemService, JobParams, JobService, TaskParams, TaskService } from "app/services";
 import { EntityView } from "app/services/core";
-import { SidebarManager } from"@bl-common/ui/sidebar";
 import { DeleteTaskDialogComponent, TaskCreateBasicDialogComponent, TerminateTaskDialogComponent } from "../action";
 
 @Component({

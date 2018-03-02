@@ -2,10 +2,10 @@ import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Observable } from "rxjs";
 
+import { DynamicForm, autobind } from "@bl-common/core";
 import { ComplexFormConfig } from "@bl-common/ui/form";
 import { NotificationService } from "@bl-common/ui/notifications";
 import { SidebarRef } from "@bl-common/ui/sidebar";
-import { DynamicForm, autobind } from "@bl-common/core";
 import { JobSchedule } from "app/models";
 import { JobScheduleCreateDto } from "app/models/dtos";
 import { createJobScheduleFormToJsonData, jobScheduleToFormModel } from "app/models/forms";

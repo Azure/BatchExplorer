@@ -5,9 +5,9 @@ import { Response, ResponseOptions } from "@angular/http";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { ApplicationEditDialogComponent } from "app/components/application/action";
 import { NotificationService } from "@bl-common/ui/notifications";
 import { SidebarRef } from "@bl-common/ui/sidebar";
+import { ApplicationEditDialogComponent } from "app/components/application/action";
 import { ServerError } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";

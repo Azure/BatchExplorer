@@ -2,10 +2,9 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@an
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "@bl-common/core";
 import { Observable, Subscription } from "rxjs";
 
-import { Filter } from "@bl-common/core";
+import { Filter, autobind } from "@bl-common/core";
 import { ListBaseComponent, ListSelection } from "@bl-common/core/list";
 import { BackgroundTaskService } from "@bl-common/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@bl-common/ui/context-menu";

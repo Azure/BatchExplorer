@@ -3,9 +3,9 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { StorageAccountCardComponent } from "app/components/account/details";
 import { ButtonComponent } from "@bl-common/ui/buttons";
 import { SidebarManager } from "@bl-common/ui/sidebar";
+import { StorageAccountCardComponent } from "app/components/account/details";
 import { AccountResource, ServerError, StorageAccount } from "app/models";
 import { AuthorizationHttpService , StorageAccountService } from "app/services";
 

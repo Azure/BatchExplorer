@@ -4,9 +4,9 @@ import { Response } from "@angular/http";
 import * as storage from "azure-storage";
 import { Observable } from "rxjs";
 
+import { autobind } from "@bl-common/core";
 import { NotificationService } from "@bl-common/ui/notifications";
 import { SidebarRef } from "@bl-common/ui/sidebar";
-import { autobind } from "@bl-common/core";
 import { BatchApplication } from "app/models";
 import { applicationToCreateFormModel } from "app/models/forms";
 import { ApplicationService, StorageService } from "app/services";

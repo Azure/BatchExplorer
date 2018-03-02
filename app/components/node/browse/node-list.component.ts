@@ -1,9 +1,8 @@
 import { ChangeDetectorRef, Component, Input, OnInit, forwardRef } from "@angular/core";
-import { autobind } from "@bl-common/core";
 import { Observable } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
-import { Filter } from "@bl-common/core";
+import { Filter, autobind } from "@bl-common/core";
 import { ListBaseComponent } from "@bl-common/core/list";
 import { LoadingStatus } from "@bl-common/ui/loading";
 import { Node } from "app/models";

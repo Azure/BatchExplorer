@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { FormBuilder, FormControl } from "@angular/forms";
 
-import { autobind } from "@bl-common/core";
-import { Filter, FilterBuilder } from "@bl-common/core";
+import { Filter, FilterBuilder, autobind } from "@bl-common/core";
 import { SidebarManager } from "@bl-common/ui/sidebar";
 import { JobScheduleCreateBasicDialogComponent } from "../action";
 

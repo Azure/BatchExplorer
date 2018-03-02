@@ -10,8 +10,8 @@ import {
 } from "app/services";
 import { EntityView, ListView } from "app/services/core";
 
-import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
 import { DialogService } from "@bl-common/ui/dialogs";
+import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
 import "./account-details.scss";
 
 @Component({

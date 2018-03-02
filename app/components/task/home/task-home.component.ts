@@ -4,7 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { autobind } from "@bl-common/core";
 import { Subscription } from "rxjs";
 
-import { SidebarManager } from"@bl-common/ui/sidebar";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { TaskCreateBasicDialogComponent } from "../action";
 
 @Component({

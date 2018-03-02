@@ -2,13 +2,13 @@ import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
-import { ApplicationPropertiesComponent } from "app/components/application/details";
 import {
     BoolPropertyComponent,
     PropertyGroupComponent,
     PropertyListComponent,
     TextPropertyComponent,
 } from "@bl-common/ui/property-list";
+import { ApplicationPropertiesComponent } from "app/components/application/details";
 import * as Fixtures from "test/fixture";
 
 describe("ApplicationPropertiesComponent", () => {

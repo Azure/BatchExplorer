@@ -5,8 +5,7 @@ import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 
 import { MatDialog } from "@angular/material";
-import { autobind } from "@bl-common/core";
-import { Filter, FilterBuilder } from "@bl-common/core";
+import { Filter, FilterBuilder, autobind } from "@bl-common/core";
 import { ListSelection } from "@bl-common/core/list";
 import { DeleteSelectedItemsDialogComponent } from "@bl-common/ui/list-and-show-layout";
 import { Subscription } from "rxjs";

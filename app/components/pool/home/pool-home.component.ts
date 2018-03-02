@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { autobind } from "@bl-common/core";
 
-import { SidebarManager } from"@bl-common/ui/sidebar";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { PoolCreateBasicDialogComponent } from "../action";
 
 @Component({

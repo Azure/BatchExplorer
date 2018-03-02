@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@bl-common/core";
 import { Subscription } from "rxjs/Subscription";
 
-import { SidebarManager } from"@bl-common/ui/sidebar";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { BatchApplication } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
 import { ApplicationParams, ApplicationService } from "app/services";

@@ -4,9 +4,9 @@ import { FormsModule } from "@angular/forms";
 import { MatCheckboxChange, MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 
-import { AppLicensePickerComponent } from "app/components/pool/action/add";
 import { MaterialModule } from "@bl-common/core";
 import { ListSelection } from "@bl-common/core/list";
+import { AppLicensePickerComponent } from "app/components/pool/action/add";
 
 @Component({
     template: `<bl-app-license-picker [(ngModel)]="appLicenses"></bl-app-license-picker>`,

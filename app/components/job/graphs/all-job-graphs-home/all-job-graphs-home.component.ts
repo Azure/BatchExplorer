@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
-import { autobind } from "@bl-common/core";
 import { List } from "immutable";
 import * as moment from "moment";
 import { Subscription } from "rxjs";
 
 import { FormControl } from "@angular/forms";
-import { FilterBuilder } from "@bl-common/core";
+import { FilterBuilder, autobind } from "@bl-common/core";
 import { Job, JobState } from "app/models";
 import { JobService } from "app/services";
 import "./all-job-graphs-home.scss";

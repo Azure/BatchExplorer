@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { BehaviorSubject } from "rxjs";
 
-import { ApplicationErrorDisplayComponent } from "app/components/application/errors";
 import { SidebarManager } from "@bl-common/ui/sidebar";
+import { ApplicationErrorDisplayComponent } from "app/components/application/errors";
 import { AccountResource, BatchApplication } from "app/models";
 import { AccountService } from "app/services";
 import * as Fixtures from "test/fixture";

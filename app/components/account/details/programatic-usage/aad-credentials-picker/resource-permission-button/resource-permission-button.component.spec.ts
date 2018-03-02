@@ -4,8 +4,8 @@ import { By } from "@angular/platform-browser";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { ButtonComponent } from "@bl-common/ui/buttons";
 import { MaterialModule } from "@bl-common/core";
+import { ButtonComponent } from "@bl-common/ui/buttons";
 import { RoleAssignment, RoleDefinition } from "app/models";
 import { AuthorizationHttpService, ResourceAccessService } from "app/services";
 import { click } from "test/utils/helpers";

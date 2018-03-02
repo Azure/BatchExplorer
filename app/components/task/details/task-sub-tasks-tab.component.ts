@@ -6,8 +6,8 @@ import { Observable } from "rxjs";
 
 import { SubTaskDisplayListComponent } from "./sub-tasks";
 
-import { LoadingStatus } from "@bl-common/ui/loading";
 import { ListBaseComponent } from "@bl-common/core/list";
+import { LoadingStatus } from "@bl-common/ui/loading";
 import { SubtaskInformation } from "app/models";
 import { SubtaskListParams, TaskService } from "app/services";
 import { ListView } from "app/services/core";

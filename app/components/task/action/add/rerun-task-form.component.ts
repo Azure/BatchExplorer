@@ -2,9 +2,9 @@ import { Component } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { Observable } from "rxjs";
 
+import { autobind } from "@bl-common/core";
 import { NotificationService } from "@bl-common/ui/notifications";
 import { SidebarRef } from "@bl-common/ui/sidebar";
-import { autobind } from "@bl-common/core";
 import { TaskCreateDto } from "app/models/dtos";
 import { JobService, PoolService, TaskService } from "app/services";
 import { ObservableUtils } from "app/utils";
