@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnDestroy, OnInit, forwardRef } from "@ang
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { List } from "immutable";
 import * as moment from "moment";
 import { Subscription } from "rxjs";

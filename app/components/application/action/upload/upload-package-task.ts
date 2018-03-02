@@ -1,8 +1,8 @@
 // TODO :: Work in progress
-// import { autobind } from "app/core";
+// import { autobind } from "@bl-common/core";
 // import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
+import { BackgroundTaskService } from "@bl-common/ui/background-task";
 // import { Pool } from "app/models";
 import { PoolService } from "app/services";
 import { LongRunningUploadAction } from "app/services/core";

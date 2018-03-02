@@ -1,16 +1,16 @@
 import { Component, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { Observable, Subscription } from "rxjs";
 
 import { StorageService } from "app/services";
 import { Constants, Filter, FilterBuilder, Property } from "common";
-import { SidebarManager } from "../../base/sidebar";
+import { SidebarManager } from"@bl-common/ui/sidebar";
 import { FileGroupCreateFormComponent } from "../action";
 
 import { MatMenuTrigger } from "@angular/material";
-import { BrowseLayoutComponent, BrowseLayoutConfig } from "app/components/base/browse-layout";
-import { DialogService } from "app/components/base/dialogs";
+import { BrowseLayoutComponent, BrowseLayoutConfig } from "@bl-common/ui/browse-layout";
+import { DialogService } from "@bl-common/ui/dialogs";
 import { BlobContainer } from "app/models";
 import "./data-home.scss";
 

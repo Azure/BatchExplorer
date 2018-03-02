@@ -1,19 +1,19 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { Router } from "@angular/router";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
-import { LoadingStatus } from "app/components/base/loading";
-import { QuickListItemStatus } from "app/components/base/quick-list";
-import { ListBaseComponent } from "app/core/list";
+import { ContextMenu, ContextMenuItem } from "@bl-common/ui/context-menu";
+import { LoadingStatus } from "@bl-common/ui/loading";
+import { QuickListItemStatus } from "@bl-common/ui/quick-list";
+import { ListBaseComponent } from "@bl-common/core/list";
 import { BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
 import { Filter } from "common";
-import { SidebarManager } from "../../base/sidebar";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { ApplicationEditDialogComponent, DeleteApplicationDialogComponent } from "../action";
 
 @Component({

@@ -1,4 +1,4 @@
-import { Prop, Record } from "app/core";
+import { Prop, Record } from "@bl-common/core";
 
 export interface PasswordCredentialAttributes {
     keyId: string;

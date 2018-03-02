@@ -7,7 +7,7 @@ import { List } from "immutable";
 import { Observable } from "rxjs";
 
 import { StorageAccountPickerComponent } from "app/components/account/base/storage-account-picker";
-import { TableCellComponent } from "app/components/base/table";
+import { TableCellComponent } from "@bl-common/ui/table";
 import { AccountResource, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
 import { LoadingMockComponent, TableMockComponent } from "test/utils/mocks/components";

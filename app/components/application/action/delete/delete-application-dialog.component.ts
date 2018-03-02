@@ -1,9 +1,9 @@
 import { Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 
 import { DeleteApplicationAction } from "app/components/application/action";
-import { BackgroundTaskService } from "app/components/base/background-task";
+import { BackgroundTaskService } from "@bl-common/ui/background-task";
 import { ApplicationService } from "app/services";
 
 @Component({

@@ -3,9 +3,9 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { ButtonComponent } from "app/components/base/buttons";
-import { PropertyGroupComponent, TextPropertyComponent } from "app/components/base/property-list";
-import { SidebarRef } from "app/components/base/sidebar";
+import { ButtonComponent } from "@bl-common/ui/buttons";
+import { PropertyGroupComponent, TextPropertyComponent } from "@bl-common/ui/property-list";
+import { SidebarRef } from "@bl-common/ui/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
 import { NodeAgentSku } from "app/models";
 import { AuthorizationHttpService, ElectronShell, FileSystemService, NodeService, NodeUserService } from "app/services";

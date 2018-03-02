@@ -1,4 +1,4 @@
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 export class WaitForDeletePoller {

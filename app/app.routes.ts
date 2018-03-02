@@ -1,7 +1,7 @@
 // tslint:disable: object-literal-sort-keys
 import { Routes } from "@angular/router";
 
-import { NavigationGuard } from "app/components/base/guards";
+import { NavigationGuard } from "@bl-common/ui/guards";
 import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
 import { ChooseActionComponent } from "app/components/market/application-action";
 import { LocalTemplateBrowserComponent } from "app/components/market/local-template-browser";

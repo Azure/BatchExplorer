@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
+import { NotificationService } from "@bl-common/ui/notifications";
+import { SidebarRef } from "@bl-common/ui/sidebar";
 import { Pool } from "app/models";
 import { PoolPatchDto } from "app/models/dtos";
 import { NodeService, PoolService } from "app/services";

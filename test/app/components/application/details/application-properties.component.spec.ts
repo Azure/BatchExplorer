@@ -8,7 +8,7 @@ import {
     PropertyGroupComponent,
     PropertyListComponent,
     TextPropertyComponent,
-} from "app/components/base/property-list";
+} from "@bl-common/ui/property-list";
 import * as Fixtures from "test/fixture";
 
 describe("ApplicationPropertiesComponent", () => {

@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "app/core";
+import { Model, Prop, Record } from "@bl-common/core";
 import { FailureInfoAttributes } from "./failure-info";
 
 export enum JobHookTaskState {

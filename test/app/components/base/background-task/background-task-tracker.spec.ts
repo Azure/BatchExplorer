@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed, fakeAsync, inject, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { MaterialModule } from "app/core";
+import { MaterialModule } from "@bl-common/core";
 import { Subject } from "rxjs";
 
 import {
     BackgroundTaskModule, BackgroundTaskService, BackgroundTaskTrackerComponent,
-} from "app/components/base/background-task";
+} from "@bl-common/ui/background-task";
 
 describe("BackgroundTaskTrackerComponent", () => {
     let fixture: ComponentFixture<BackgroundTaskTrackerComponent>;

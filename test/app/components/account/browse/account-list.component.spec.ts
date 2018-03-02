@@ -5,7 +5,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { Observable } from "rxjs";
 
 import { AccountListComponent } from "app/components/account/browse";
-import { SidebarManager } from "app/components/base/sidebar";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { AccountService, SubscriptionService } from "app/services";
 import { FilterBuilder } from "common";
 import * as Fixtures from "test/fixture";

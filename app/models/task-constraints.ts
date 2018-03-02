@@ -1,4 +1,4 @@
-import { Model, Prop, TransformDuration } from "app/core";
+import { Model, Prop, TransformDuration } from "@bl-common/core";
 import { Duration, duration } from "moment";
 
 import { Constraints } from "./constraints";

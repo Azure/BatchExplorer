@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { Subscription } from "rxjs";
 
-import { DialogService } from "app/components/base/dialogs";
-import { SidebarManager } from "app/components/base/sidebar";
+import { DialogService } from "@bl-common/ui/dialogs";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Node, Pool } from "app/models";
 import { FileService, NodeParams, NodeService, PoolParams, PoolService } from "app/services";

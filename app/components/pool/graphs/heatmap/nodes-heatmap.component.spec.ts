@@ -5,7 +5,7 @@ import { Router } from "@angular/router";
 import * as d3 from "d3";
 import { List } from "immutable";
 
-import { SidebarManager } from "app/components/base/sidebar";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { Node, NodeState, Pool } from "app/models";
 import { NodeService } from "app/services";
 import * as Fixture from "test/fixture";

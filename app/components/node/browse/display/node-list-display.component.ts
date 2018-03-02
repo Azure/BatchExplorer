@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 import { List } from "immutable";
 
-import { LoadingStatus } from "app/components/base/loading";
-import { QuickListComponent } from "app/components/base/quick-list";
-import { TableComponent } from "app/components/base/table";
-import { ListBaseComponent } from "app/core/list";
+import { LoadingStatus } from "@bl-common/ui/loading";
+import { QuickListComponent } from "@bl-common/ui/quick-list";
+import { TableComponent } from "@bl-common/ui/table";
+import { ListBaseComponent } from "@bl-common/core/list";
 import { Node } from "app/models";
 
 @Component({

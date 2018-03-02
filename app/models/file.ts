@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "app/core";
+import { Model, Prop, Record } from "@bl-common/core";
 import { Partial } from "app/utils";
 import { FileProperties, FilePropertiesAttributes } from "./file-properties";
 

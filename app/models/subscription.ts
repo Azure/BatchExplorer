@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "app/core";
+import { Model, Prop, Record } from "@bl-common/core";
 
 export interface SubscriptionAttributes {
     id: string;

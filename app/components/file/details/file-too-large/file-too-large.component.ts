@@ -1,7 +1,7 @@
 import { Component, Input } from "@angular/core";
 import { ElectronRemote, ElectronShell } from "app/services";
 
-import { NotificationService } from "app/components/base/notifications";
+import { NotificationService } from "@bl-common/ui/notifications";
 import { File } from "app/models";
 import { FileLoader } from "app/services/file";
 import "./file-too-large.scss";

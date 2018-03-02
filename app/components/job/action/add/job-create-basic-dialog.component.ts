@@ -2,11 +2,11 @@ import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Observable } from "rxjs";
 
-import { ComplexFormConfig } from "app/components/base/form";
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
-import { RangeValidator } from "app/components/base/validation";
-import { DynamicForm, autobind } from "app/core";
+import { ComplexFormConfig } from "@bl-common/ui/form";
+import { NotificationService } from "@bl-common/ui/notifications";
+import { SidebarRef } from "@bl-common/ui/sidebar";
+import { RangeValidator } from "@bl-common/ui/validation";
+import { DynamicForm, autobind } from "@bl-common/core";
 import { AllTasksCompleteAction, Job, TaskFailureAction, VirtualMachineConfiguration } from "app/models";
 import { JobCreateDto } from "app/models/dtos";
 import { createJobFormToJsonData, jobToFormModel } from "app/models/forms";

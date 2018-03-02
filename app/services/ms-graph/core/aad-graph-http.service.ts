@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { HttpRequestOptions, HttpService } from "app/core";
+import { HttpRequestOptions, HttpService } from "@bl-common/core";
 import { ServerError } from "app/models";
 import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/c
 import { prerequisites, sampleTemplates } from "./samples";
 
 import { AADCredential, CredentialType } from "app/components/account/details/programatic-usage";
-import { EditorConfig } from "app/components/base/editor";
+import { EditorConfig } from "@bl-common/ui/editor";
 import { AccountKeys, AccountResource } from "app/models";
 import "./programing-sample.scss";
 

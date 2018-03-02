@@ -6,7 +6,7 @@ import { Subscription } from "rxjs";
 import { BatchQuotas, BatchQuotasAttributes } from "app/models";
 import { ElectronShell, QuotaService } from "app/services";
 
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@bl-common/ui/context-menu";
 import { Constants } from "common";
 import "./inline-quota.scss";
 

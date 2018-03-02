@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
-import { BaseModule } from "app/components/base";
+import { BaseModule } from "@bl-common/ui";
 import { JobActionModule } from "app/components/job/action";
 import { JobScheduleCreateBasicDialogComponent } from "./add/job-schedule-create-basic-dialog.component";
 import { JobScheduleJobSpecificationComponent } from "./add/job-schedule-job-specification.component";

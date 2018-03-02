@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild, forwardRef } from "@angular/core";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { Observable, Subscription } from "rxjs";
 
 import { TaskListDisplayComponent } from "./display";
 
 import { ActivatedRoute } from "@angular/router";
-import { BackgroundTaskService } from "app/components/base/background-task";
-import { LoadingStatus } from "app/components/base/loading";
-import { ListBaseComponent, ListSelection } from "app/core/list";
+import { BackgroundTaskService } from "@bl-common/ui/background-task";
+import { LoadingStatus } from "@bl-common/ui/loading";
+import { ListBaseComponent, ListSelection } from "@bl-common/core/list";
 import { Task } from "app/models";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
 import { ListView } from "app/services/core";

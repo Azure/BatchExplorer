@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
 import { Observable, Subject } from "rxjs";
 
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
+import { NotificationService } from "@bl-common/ui/notifications";
+import { SidebarRef } from "@bl-common/ui/sidebar";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool, ServerError } from "app/models";
 import { JobService, PoolService } from "app/services";

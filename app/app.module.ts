@@ -16,7 +16,7 @@ import { MainNavigationComponent } from "app/components/shared/main-navigation.c
 // extenal modules
 import { AccountModule } from "app/components/account/account.module";
 import { ApplicationModule } from "app/components/application/application.module";
-import { BaseModule } from "app/components/base";
+import { BaseModule } from "@bl-common/ui";
 import { DataModule } from "app/components/data/data.module";
 import { FileModule } from "app/components/file/file.module";
 import { JobScheduleModule } from "app/components/job-schedule/job-schedule.module";
@@ -35,7 +35,7 @@ import { HttpModule } from "@angular/http";
 import { CommonModule } from "app/components/common";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
-import { MaterialModule } from "app/core";
+import { MaterialModule } from "@bl-common/core";
 import { PollService } from "app/services/core";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 import { AADGraphHttpService, MsGraphHttpService } from "app/services/ms-graph/core";

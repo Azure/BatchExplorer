@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 
-import { ListSelection } from "app/core/list";
+import { ListSelection } from "@bl-common/core/list";
 import { BatchApplication, PackageState } from "app/models";
 import { ComponentUtils } from "app/utils";
 

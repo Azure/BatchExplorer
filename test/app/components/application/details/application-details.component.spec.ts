@@ -7,7 +7,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { Observable } from "rxjs";
 
 import { ApplicationDetailsComponent } from "app/components/application/details";
-import { SidebarManager } from "app/components/base/sidebar";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";

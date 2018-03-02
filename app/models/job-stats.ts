@@ -1,7 +1,7 @@
 /**
  * Statistics about an executed job
  */
-import { Model, Prop, Record } from "app/core";
+import { Model, Prop, Record } from "@bl-common/core";
 import { Duration } from "moment";
 
 export interface JobStatsAttributes {

@@ -4,8 +4,8 @@ import { MatSidenav } from "@angular/material";
 import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/testing";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
-import { SidebarContentComponent, SidebarManager, SidebarModule } from "app/components/base/sidebar";
-import { MaterialModule } from "app/core";
+import { SidebarContentComponent, SidebarManager, SidebarModule } from "@bl-common/ui/sidebar";
+import { MaterialModule } from "@bl-common/core";
 
 @Component({
     template: "<h1>{{text}}</h1>",

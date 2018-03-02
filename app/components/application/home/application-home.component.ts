@@ -1,9 +1,9 @@
 import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 
 import { Filter, FilterBuilder } from "common";
-import { SidebarManager } from "../../base/sidebar";
+import { SidebarManager } from"@bl-common/ui/sidebar";
 import { ApplicationCreateDialogComponent } from "../action";
 
 @Component({

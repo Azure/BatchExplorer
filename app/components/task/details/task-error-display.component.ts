@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from "@angular/core";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 
-import { SidebarManager } from "app/components/base/sidebar";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { RerunTaskFormComponent } from "app/components/task/action";
 import { FailureInfo, NameValuePairAttributes, Task, TaskState } from "app/models";
 import { TaskService } from "app/services";

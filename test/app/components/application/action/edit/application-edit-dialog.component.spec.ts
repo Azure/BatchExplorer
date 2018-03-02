@@ -6,8 +6,8 @@ import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { ApplicationEditDialogComponent } from "app/components/application/action";
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
+import { NotificationService } from "@bl-common/ui/notifications";
+import { SidebarRef } from "@bl-common/ui/sidebar";
 import { ServerError } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";

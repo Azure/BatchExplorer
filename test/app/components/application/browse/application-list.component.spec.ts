@@ -6,8 +6,8 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { Subject } from "rxjs";
 
 import { ApplicationListComponent } from "app/components/application/browse";
-import { BackgroundTaskService } from "app/components/base/background-task";
-import { SidebarManager } from "app/components/base/sidebar";
+import { BackgroundTaskService } from "@bl-common/ui/background-task";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { BatchApplication } from "app/models";
 import { ApplicationService, PinnedEntityService } from "app/services";
 import { FilterBuilder } from "common";

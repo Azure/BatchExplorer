@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import * as d3 from "d3";
 
-import { GaugeComponent, GaugeConfig } from "app/components/base/graphs/gauge";
+import { GaugeComponent, GaugeConfig } from "@bl-common/ui/graphs/gauge";
 
 @Component({
     template: `<bl-gauge [value]="value" options [options]="options" [size]="size"></bl-gauge>`,

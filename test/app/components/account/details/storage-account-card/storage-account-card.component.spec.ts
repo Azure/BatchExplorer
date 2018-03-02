@@ -4,8 +4,8 @@ import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { StorageAccountCardComponent } from "app/components/account/details";
-import { ButtonComponent } from "app/components/base/buttons";
-import { SidebarManager } from "app/components/base/sidebar";
+import { ButtonComponent } from "@bl-common/ui/buttons";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { AccountResource, ServerError, StorageAccount } from "app/models";
 import { AuthorizationHttpService , StorageAccountService } from "app/services";
 

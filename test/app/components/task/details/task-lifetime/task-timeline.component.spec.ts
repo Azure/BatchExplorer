@@ -4,7 +4,7 @@ import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import * as moment from "moment";
 
-import { TimespanComponent } from "app/components/base/timespan";
+import { TimespanComponent } from "@bl-common/ui/timespan";
 import { TaskTimelineComponent, TaskTimelineStateComponent } from "app/components/task/details/task-timeline";
 import { Job, Task, TaskState } from "app/models";
 

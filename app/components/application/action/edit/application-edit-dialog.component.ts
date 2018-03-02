@@ -1,12 +1,12 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
+import { NotificationService } from "@bl-common/ui/notifications";
+import { SidebarRef } from "@bl-common/ui/sidebar";
 import { ApplicationPackage, BatchApplication } from "app/models";
 import { applicationToEditFormModel, editApplicationFormToJsonData } from "app/models/forms";
 import { ApplicationService } from "app/services";

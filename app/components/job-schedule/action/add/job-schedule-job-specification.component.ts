@@ -11,7 +11,7 @@ import {
 import { Subscription } from "rxjs";
 import { Observable } from "rxjs/Observable";
 
-import { RangeValidator } from "app/components/base/validation";
+import { RangeValidator } from "@bl-common/ui/validation";
 import { AllTasksCompleteAction, TaskFailureAction, VirtualMachineConfiguration } from "app/models";
 import { PoolService } from "app/services";
 import { Constants } from "app/utils";

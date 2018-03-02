@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { AccountResource, RoleDefinition, ServerError } from "app/models";
 import { AADApplication, PasswordCredential, ServicePrincipal } from "app/models/ms-graph";
 

@@ -1,4 +1,4 @@
-import { ArmRecord, ArmRecordAttributes, Model, Prop, Record } from "app/core";
+import { ArmRecord, ArmRecordAttributes, Model, Prop, Record } from "@bl-common/core";
 
 interface StorageAccountPropertiesAttributes {
     creationTime: Date;

@@ -1,9 +1,9 @@
 import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { Observable } from "rxjs";
 
-import { SidebarRef } from "app/components/base/sidebar";
+import { SidebarRef } from "@bl-common/ui/sidebar";
 import { AccountResource } from "app/models";
 import { AccountPatchDto } from "app/models/dtos";
 import { AccountService } from "app/services";

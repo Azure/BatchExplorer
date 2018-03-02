@@ -5,11 +5,11 @@ import {
 import { MatCheckboxChange, MatDialog, MatDialogConfig } from "@angular/material";
 import { List } from "immutable";
 
-import { TableComponent, TableConfig } from "app/components/base/table";
+import { TableComponent, TableConfig } from "@bl-common/ui/table";
 import { ApplicationLicense } from "app/models";
 import { LicenseEulaDialogComponent } from "./";
 
-import { ListSelection } from "app/core/list";
+import { ListSelection } from "@bl-common/core/list";
 import "./app-license-picker.scss";
 
 // tslint:disable:no-forward-ref

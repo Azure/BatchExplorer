@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "app/core";
+import { Dto, DtoAttr } from "@bl-common/core";
 import { MetaDataDto, PoolCreateDto } from "app/models/dtos";
 
 export class JobPatchDto extends Dto<JobPatchDto> {

@@ -4,8 +4,8 @@ import { MatTooltip } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
-import { ButtonComponent } from "app/components/base/buttons/button.component";
-import { MaterialModule } from "app/core";
+import { ButtonComponent } from "@bl-common/ui/buttons/button.component";
+import { MaterialModule } from "@bl-common/core";
 import { AuthorizationHttpService } from "app/services";
 import { click } from "test/utils/helpers";
 

@@ -4,9 +4,9 @@ import { By } from "@angular/platform-browser";
 
 import { MatDialog } from "@angular/material";
 import { ApplicationPackageTableComponent, ApplicationPackagesComponent } from "app/components/application/details";
-import { BackgroundTaskService } from "app/components/base/background-task";
-import { SidebarManager } from "app/components/base/sidebar";
-import { ListSelection } from "app/core/list";
+import { BackgroundTaskService } from "@bl-common/ui/background-task";
+import { SidebarManager } from "@bl-common/ui/sidebar";
+import { ListSelection } from "@bl-common/core/list";
 import { BatchApplication, PackageState } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";

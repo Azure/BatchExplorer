@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges } from "@angular/core";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
-import { SidebarManager } from "app/components/base/sidebar";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { AccountResource, ServerError, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
 

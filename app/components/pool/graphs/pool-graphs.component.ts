@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { SidebarManager } from "app/components/base/sidebar";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { PerformanceData } from "app/components/pool/graphs/performance-graph";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Job, JobState, Node, NodeState, Pool, Task } from "app/models";

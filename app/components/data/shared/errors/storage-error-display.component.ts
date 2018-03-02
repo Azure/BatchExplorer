@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from "@angular/core";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { Subscription } from "rxjs";
 
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
-import { SidebarManager } from "app/components/base/sidebar";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { AccountResource } from "app/models";
 import { AccountService } from "app/services";
 

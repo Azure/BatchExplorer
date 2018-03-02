@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { List } from "immutable";
 import * as moment from "moment";
 import { Subscription } from "rxjs";

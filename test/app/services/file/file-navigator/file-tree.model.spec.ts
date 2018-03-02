@@ -1,6 +1,6 @@
 import { List } from "immutable";
 
-import { LoadingStatus } from "app/components/base/loading";
+import { LoadingStatus } from "@bl-common/ui/loading";
 import { File } from "app/models";
 import { FileTreeNode, FileTreeStructure } from "app/services/file";
 

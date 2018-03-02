@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
+import { BackgroundTaskService } from "@bl-common/ui/background-task";
 import { Node, NodeAgentSku, NodeConnectionSettings, NodeState } from "app/models";
 import { ArrayUtils, Constants, ObservableUtils, log } from "app/utils";
 import { FilterBuilder } from "common";

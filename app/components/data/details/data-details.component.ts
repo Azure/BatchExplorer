@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { Subscription } from "rxjs/Subscription";
 
-import { DialogService } from "app/components/base/dialogs";
-import { SidebarManager } from "app/components/base/sidebar";
+import { DialogService } from "@bl-common/ui/dialogs";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { DownloadFileGroupDialogComponent } from "app/components/data/details";
 import { BlobContainer } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";

@@ -5,8 +5,8 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { DropdownModule } from "app/components/base/dropdown";
-import { PinnedDropDownComponent } from "app/components/base/pinned-entity-dropdown";
+import { DropdownModule } from "@bl-common/ui/dropdown";
+import { PinnedDropDownComponent } from "@bl-common/ui/pinned-entity-dropdown";
 import { NavigableRecord, PinnableEntity, PinnedEntityType } from "app/models";
 import { AccountService, PinnedEntityService } from "app/services";
 import * as Fixtures from "test/fixture";

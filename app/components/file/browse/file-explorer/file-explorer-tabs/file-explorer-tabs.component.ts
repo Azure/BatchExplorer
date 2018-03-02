@@ -1,5 +1,5 @@
 import { Component, HostListener, Input, OnChanges, OnDestroy } from "@angular/core";
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@bl-common/ui/context-menu";
 import { FileExplorerWorkspace, FileSource, OpenedFile } from "app/components/file/browse/file-explorer";
 import { FileLoader } from "app/services/file";
 import { Constants } from "app/utils";

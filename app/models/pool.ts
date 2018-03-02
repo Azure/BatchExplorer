@@ -1,7 +1,7 @@
 import { List } from "immutable";
 import { Duration } from "moment";
 
-import { ListProp, Model, Prop, Record } from "app/core";
+import { ListProp, Model, Prop, Record } from "@bl-common/core";
 import { ModelUtils, PoolUtils } from "app/utils";
 import { CloudServiceConfiguration } from "./cloud-service-configuration";
 import { Metadata, MetadataAttributes } from "./metadata";

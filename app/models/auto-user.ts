@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "app/core";
+import { Model, Prop, Record } from "@bl-common/core";
 import { UserAccountElevationLevel } from "./user-account";
 
 export interface AutoUserAttributes {

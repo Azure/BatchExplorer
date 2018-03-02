@@ -1,6 +1,6 @@
 import * as moment from "moment";
 
-import { Dto, DtoAttr } from "app/core";
+import { Dto, DtoAttr } from "@bl-common/core";
 
 export class ScheduleDto extends Dto<ScheduleDto> {
     @DtoAttr() public doNotRunAfter: string;

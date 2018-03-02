@@ -1,4 +1,4 @@
-import { Icon, IconSources } from "app/components/base/icon";
+import { Icon, IconSources } from "@bl-common/ui/icon";
 
 /**
  * This contains some helper to pick icons to use with bl-icon

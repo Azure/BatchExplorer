@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { DialogService } from "app/components/base/dialogs";
+import { DialogService } from "@bl-common/ui/dialogs";
 import { FileDeleteEvent, FileDropEvent, FileExplorerConfig } from "app/components/file/browse/file-explorer";
 import { File } from "app/models";
 import { StorageService } from "app/services";

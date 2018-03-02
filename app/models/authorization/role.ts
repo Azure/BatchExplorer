@@ -1,4 +1,4 @@
-import { ArmRecord, ListProp, Model, Prop, Record } from "app/core";
+import { ArmRecord, ListProp, Model, Prop, Record } from "@bl-common/core";
 import { List } from "immutable";
 
 export interface RoleDefinitionPropertiesAttributes {

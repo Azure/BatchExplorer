@@ -1,13 +1,13 @@
 import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { ScrollableComponent, ScrollableService } from "app/components/base/scrollable";
+import { ScrollableComponent, ScrollableService } from "@bl-common/ui/scrollable";
 import { File, ServerError } from "app/models";
 import { TaskService } from "app/services";
 import { FileLoader } from "app/services/file";
 import { Constants, log } from "app/utils";
 
-import { EditorComponent, EditorConfig } from "app/components/base/editor";
+import { EditorComponent, EditorConfig } from "@bl-common/ui/editor";
 import "./log-file-viewer.scss";
 
 const maxSize = 10000000; // 10MB

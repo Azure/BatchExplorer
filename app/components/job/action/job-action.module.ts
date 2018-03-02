@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { commonModules } from "app/common";
 
-import { BaseModule } from "app/components/base";
+import { BaseModule } from "@bl-common/ui";
 import { TaskBaseModule } from "app/components/task/base";
 import {
     JobCreateBasicDialogComponent,

@@ -2,7 +2,7 @@ import { Component, Input, OnInit, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { List } from "immutable";
 
-import { LoadingStatus } from "app/components/base/loading";
+import { LoadingStatus } from "@bl-common/ui/loading";
 import { AccountResource, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
 

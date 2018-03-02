@@ -2,7 +2,7 @@ import { HttpParams } from "@angular/common/http";
 import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { HttpRequestOptions } from "app/core";
+import { HttpRequestOptions } from "@bl-common/core";
 import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
 import { ContinuationToken, ListOptions } from "app/services/core/data/list-options";
 import { AADGraphHttpService } from "./aad-graph-http.service";

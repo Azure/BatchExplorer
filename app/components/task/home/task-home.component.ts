@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { Subscription } from "rxjs";
 
-import { SidebarManager } from "../../base/sidebar";
+import { SidebarManager } from"@bl-common/ui/sidebar";
 import { TaskCreateBasicDialogComponent } from "../action";
 
 @Component({

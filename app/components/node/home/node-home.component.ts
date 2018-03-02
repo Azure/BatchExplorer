@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 
-import { SidebarManager } from "../../base/sidebar";
+import { SidebarManager } from"@bl-common/ui/sidebar";
 
 @Component({
     selector: "bl-node-home",

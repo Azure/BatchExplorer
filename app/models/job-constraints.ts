@@ -1,4 +1,4 @@
-import { Model } from "app/core";
+import { Model } from "@bl-common/core";
 import { Constraints } from "./constraints";
 
 /**

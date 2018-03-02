@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { List } from "immutable";
 
-import { EditMetadataFormComponent } from "app/components/base/form/edit-metadata-form";
-import { SidebarManager } from "app/components/base/sidebar";
+import { EditMetadataFormComponent } from "@bl-common/ui/form/edit-metadata-form";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { Job, Metadata, NameValuePair } from "app/models";
 import {
     JobDecorator,

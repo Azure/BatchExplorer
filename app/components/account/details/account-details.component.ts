@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { Subscription } from "rxjs";
 
 import { AccountResource, BatchApplication, Job, Pool, ServerError } from "app/models";
@@ -11,7 +11,7 @@ import {
 import { EntityView, ListView } from "app/services/core";
 
 import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
-import { DialogService } from "app/components/base/dialogs";
+import { DialogService } from "@bl-common/ui/dialogs";
 import "./account-details.scss";
 
 @Component({

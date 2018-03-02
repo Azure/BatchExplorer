@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
-import { BaseModule } from "app/components/base";
+import { BaseModule } from "@bl-common/ui";
 import { InlineQuotaComponent } from "./inline-quota";
 
 const privateComponents = [];

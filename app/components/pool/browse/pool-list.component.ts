@@ -3,17 +3,17 @@ import {
 } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
-import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
-import { LoadingStatus } from "app/components/base/loading";
-import { QuickListItemStatus } from "app/components/base/quick-list";
-import { SidebarManager } from "app/components/base/sidebar";
-import { TableConfig } from "app/components/base/table";
-import { ListBaseComponent, ListSelection } from "app/core/list";
+import { BackgroundTaskService } from "@bl-common/ui/background-task";
+import { ContextMenu, ContextMenuItem } from "@bl-common/ui/context-menu";
+import { LoadingStatus } from "@bl-common/ui/loading";
+import { QuickListItemStatus } from "@bl-common/ui/quick-list";
+import { SidebarManager } from "@bl-common/ui/sidebar";
+import { TableConfig } from "@bl-common/ui/table";
+import { ListBaseComponent, ListSelection } from "@bl-common/core/list";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
 import { PinnedEntityService, PoolListParams, PoolService } from "app/services";

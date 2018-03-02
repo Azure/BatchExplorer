@@ -6,8 +6,8 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { Observable } from "rxjs";
 
 import { ApplicationPackageTableComponent } from "app/components/application/details";
-import { BackgroundTaskService } from "app/components/base/background-task";
-import { SidebarManager } from "app/components/base/sidebar";
+import { BackgroundTaskService } from "@bl-common/ui/background-task";
+import { SidebarManager } from "@bl-common/ui/sidebar";
 import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import { Property } from "common";
@@ -16,7 +16,7 @@ import { NoItemMockComponent } from "test/utils/mocks/components";
 
 import {
     TableCellComponent, TableColumnComponent, TableComponent, TableHeadComponent,
-} from "app/components/base/table";
+} from "@bl-common/ui/table";
 
 const appWithPackagesId: string = "app-2";
 const appWithoutPackagesId: string = "app-1";

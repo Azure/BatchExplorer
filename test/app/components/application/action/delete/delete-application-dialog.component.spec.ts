@@ -5,7 +5,7 @@ import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { DeleteApplicationDialogComponent } from "app/components/application/action";
-import { BackgroundTaskService } from "app/components/base/background-task";
+import { BackgroundTaskService } from "@bl-common/ui/background-task";
 import { BatchApplication, ServerError } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";

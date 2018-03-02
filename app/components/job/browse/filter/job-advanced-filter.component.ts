@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 
-import { AdvancedFilter, StatePickerControl } from "app/components/base/advanced-filter";
+import { AdvancedFilter, StatePickerControl } from "@bl-common/ui/advanced-filter";
 import { JobState } from "app/models";
 import { Filter } from "common";
 

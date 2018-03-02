@@ -1,7 +1,7 @@
 import { ServerError } from "app/models";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { LoadingStatus } from "app/components/base/loading/loading-status";
+import { LoadingStatus } from "@bl-common/ui/loading/loading-status";
 import { PollObservable } from "app/services/core/poll-service";
 import { HttpCode } from "common/constants";
 import { EntityGetter } from "./entity-getter";

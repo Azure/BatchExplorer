@@ -2,10 +2,10 @@ import { Component, OnDestroy } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
 
-import { ComplexFormConfig } from "app/components/base/form";
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
-import { DynamicForm, autobind } from "app/core";
+import { ComplexFormConfig } from "@bl-common/ui/form";
+import { NotificationService } from "@bl-common/ui/notifications";
+import { SidebarRef } from "@bl-common/ui/sidebar";
+import { DynamicForm, autobind } from "@bl-common/core";
 import { NodeFillType, Pool } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
 import { CreatePoolModel, PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";

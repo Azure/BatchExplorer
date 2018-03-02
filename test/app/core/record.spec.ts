@@ -1,4 +1,4 @@
-import { ListProp, Model, Prop, Record } from "app/core";
+import { ListProp, Model, Prop, Record } from "@bl-common/core";
 import { List } from "immutable";
 
 @Model()

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { remote } from "electron";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
@@ -12,7 +12,7 @@ import { PoolDecorator } from "app/models/decorators";
 import { ElectronRemote, FileSystemService, PoolParams, PoolService, PricingService } from "app/services";
 import { EntityView } from "app/services/core/data";
 import { NumberUtils } from "app/utils";
-import { SidebarManager } from "../../base/sidebar";
+import { SidebarManager } from"@bl-common/ui/sidebar";
 import { DeletePoolDialogComponent, PoolCreateBasicDialogComponent, PoolResizeDialogComponent } from "../action";
 
 import "./pool-details.scss";
