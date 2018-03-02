@@ -39,6 +39,17 @@ a {
     opacity: 0.7;
 }
 
+.jumbotron {
+    margin-bottom: 0px !important;
+    background-color: aliceblue !important;
+    border-radius: 0px !important;
+}
+
+.jumbotron .btn {
+    border-radius: 0;
+    height: 48px;
+}
+
 .header .btn {
     display: inline-block;
     margin-bottom: 1rem;
@@ -68,9 +79,15 @@ a {
     color: #2e6083;
 }
 
+.btn-download {
+    border-radius: 0 !important;
+    width: 180px;
+    height: 60px;
+}
+
 .demo-image {
     display: block;
-    width: 800px;
+    width: 100%;
     margin: 15px auto;
     box-shadow:  1px 1px 20px 0 rgba(0, 0, 0, 0.2);
 }
@@ -83,15 +100,15 @@ a {
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    margin: 2rem;
+    background-color: #333333;
+    padding: 1em;
 }
 
 .os-download {
-    margin: 0 50px;
-    width: 160px;
+    margin: 0 40px;
+    width: 200px;
     text-align: center;
     color: #5b5b5b;
-    background: white;
 }
 
 .os-download .type {
@@ -100,6 +117,7 @@ a {
 
 .os-download .type .fa {
     font-size: 6rem;
+    color: white;
 }
 
 .os-download .type > .label {
@@ -107,12 +125,63 @@ a {
     font-size: 2rem;
 }
 
-.os-download .option {
+.os-download .type > .label {
+    margin-top: 1rem;
+    font-size: 2rem;
+}
+
+.os-download .alternate-downloads a{
+    color:lightgray;
+}
+
+.os-download .alternate-downloads {
+    color:grey;
+}
+
+.swimlane {
+    padding: 6rem 0 6rem;
+    min-height: 30rem;
+    position: relative;
+
+    /* font-family: "Segoe UI","Helvetica Neue","Helvetica",Arial,sans-serif; */
+}
+
+.swimlane h2 {
+    color:#333333;
+    margin-bottom: 1.5rem;
+}
+
+.swimlane p {
+    line-height: 2.5rem;
+    color:gray;
+    /* font-size: 1.8rem; */
+}
+
+.swimlane .screenshot {
+    /* margin-top: 28px; */
+    height: 280px;
+}
+
+.dark {
+    background-color: #e5e5e5;
+}
+
+.feature-content {
+    text-align: center;
+    padding: 4em 10em;
+    background-color: #fff;
+}
+
+.feature-content-dark {
+    text-align: center;
+    padding: 4em 10em;
+    background-color: #e5e5e5;
+}
+
+.feature-image {
     display: block;
-    border-top: 1px solid #e5e5e5;
-    cursor: pointer;
-    font-size: 1.1rem;
-    color: #5b5b5b;
+    height: 280px;
+    box-shadow:  1px 1px 20px 0 rgba(0, 0, 0, 0.2);
 }
 
 .os-download .option:hover {

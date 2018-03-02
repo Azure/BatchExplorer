@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/style.css">
     <link rel="stylesheet" href="assets/outdatedbrowser/outdatedbrowser.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -15,50 +16,76 @@
 </head>
 
 <body>
-    <section class="header">
-        <h1 class="title">BatchLabs</h1>
-        <h2 class="subtitle">A client tool to help create, debug and monitor Azure Batch Applications</h2>
-        <div class="btn" id="batch-labs-version" title="Version">-</div>
-        <a href="https://github.com/Azure/BatchLabs" class="btn">View on GitHub</a>
-    </section>
-    <img src="assets/images/job-home.png" class="demo-image overlaping-image">
-    <div class="content">
-        <a href="https://github.com/Azure/BatchLabs/releases">
+    <nav class="navbar navbar-dark" style="background-color:#333333">
+        <span class="navbar-brand mb-0 h1"> <i class="fa fa-flask"></i> Batch Labs</span>
+    </nav>
+    <div class="navbar navbar-light" style="display: block; background-color:#e3e3e3">
+        <div class="text-center">Version 0.12.4 (Beta) is now available! Find more details below.</div>
+        <!-- <div class="text-center" style="text-align:center">
+        </div> -->
+    </div>
+    <div class="jumbotron">
+        <div class="row" style="padding: 0px 20%">
+            <div class="col-md-4">
+                <div style="margin-top:14px;">
+                    <h1 class="text-center">Batch Labs</h1>
+                    <p class="text-center">Debug and monitor your Azure Batch applications</p>
+                    <div class="text-center">
+                        <button class="btn" style="text-align:center">Download</button>
+                        <button class="btn btn-success" ><a style="color:white" href="https://github.com/Azure/BatchLabs">View on GitHub</a></button>
+                        
+                    </div>
+                    <p class="text-center" style="font-size: small; padding-top:8px; color:grey">By using Batch Labs, you aree to its <a href="#" >licence</a> and <a href="#">privacy statement</a></p>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <img src="assets/images/job-home.png" class="demo-image">
+            </div>
+        </div>
+    </div>
+    <div class="download-content">
+        <!-- <a href="https://github.com/Azure/BatchLabs/releases">
             <h2 class="download-title">Downloads</h2>
-        </a>
+        </a> -->
         <div class="downloads">
             <div class="os-download">
                 <div class="type">
                     <i class="fa fa-windows"></i>
-                    <div class="label">Windows</div>
                 </div>
-                <a class="option" id="download-windows-installer">
-                    Installer
-                </a>
-                <a class="option" id="download-windows-zip">
-                    Zip
-                </a>
+                <button class="btn btn-success btn-download">
+                    Windows
+                </button>
+                <div class="alternate-downloads">
+                    <span><a href="#" id="download-windows-installer">msi</a> | <a href="#" id="download-windows-zip">zip</a></span>
+                </div>
             </div>
 
             <div class="os-download">
                 <div class="type">
                     <i class="fa fa-apple"></i>
-                    <div class="label">OSX</div>
+                    <!-- <div class="label">OSX</div> -->
                 </div>
-                <a class="option" id="download-osx-dmg">
+                <!-- <a class="option" id="download-osx-dmg">
                     Dmg
                 </a>
                 <a class="option" id="download-osx-zip">
                     Zip
-                </a>
+                </a> -->
+                <button class="btn btn-success btn-download">
+                        OSX
+                </button>
+                <div class="alternate-downloads">
+                    <span><a href="#" id="download-osx-dmg">dmg</a> | <a href="#" id="download-osx-zip">zip</a></span>
+                </div>
+                    
             </div>
 
             <div class="os-download">
                 <div class="type">
                     <i class="fa fa-linux"></i>
-                    <div class="label">Linux</div>
+                    <!-- <div class="label">Linux</div> -->
                 </div>
-                <a class="option" id="download-linux-deb">
+                <!-- <a class="option" id="download-linux-deb">
                     Deb
                 </a>
                 <a class="option" id="download-linux-rpm">
@@ -66,11 +93,19 @@
                 </a>
                 <a class="option" id="download-linux-appimage">
                     AppImage
-                </a>
+                </a> -->
+                <button class="btn btn-success btn-download">
+                        Linux
+                </button>
+                <div class="alternate-downloads">
+                    <span><a href="#" id="download-linux-deb">deb</a> 
+                        | <a href="#" id="download-linux-rpm">rpm</a> 
+                        | <a href="#" id="download-linux-appimage">AppImage</a></span>
+                </div>
             </div>
         </div>
 
-        <div>
+        <!-- <div>
             <h2 class="download-title">Pool heatmap</h2>
 
             <img src="assets/images/pool-home.png" class="demo-image">
@@ -79,8 +114,112 @@
         <div>
             <h2 class="download-title">Find anomalies in your job</h2>
             <img src="assets/images/job-running-tasks-graph.png" class="demo-image">
+        </div> -->
+    </div>
+    
+    <!-- <div class="feature-content">
+        <div class="row">
+            <div class="col-sm-6 offset-sm-1">
+                <h2 style="text-align:left; font-weight:lighter; color:#333333">Plotting support</h2>
+                <p style="text-align:left; color:gray">See trends or find anomalies in your jobs</p>
+            </div>
+            <div class="col-sm-4">
+                <img src="assets/images/job-running-tasks-graph.png" class="feature-image">
+            </div>
+        </div>
+    </div> -->
+    <div class="swimlane">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <img src="assets/images/job-running-tasks-graph.png" class="screenshot">
+                </div>
+                <div class="col-sm-6 offset-sm-2">
+                    <h2>Plotting support</h2>
+                    <p>Go beyond syntax highlighting and autocomplete with IntelliSense, which provides smart completions based on variable types, function definitions, and imported modules.</p>
+                </div>
+            </div>
         </div>
     </div>
+
+    <div class="swimlane dark">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h2>Plotting support</h2>
+                    <p>Go beyond syntax highlighting and autocomplete with IntelliSense, which provides smart completions based on variable types, function definitions, and imported modules.</p>
+                </div>
+                <div class="col-sm-4 offset-sm-2">
+                    <img src="assets/images/job-running-tasks-graph.png" class="screenshot">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="swimlane">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <img src="assets/images/job-running-tasks-graph.png" class="screenshot">
+                </div>
+                <div class="col-sm-6 offset-sm-2">
+                    <h2>Plotting support</h2>
+                    <p>Go beyond syntax highlighting and autocomplete with IntelliSense, which provides smart completions based on variable types, function definitions, and imported modules.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="swimlane dark">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h2>Plotting support</h2>
+                    <p>Go beyond syntax highlighting and autocomplete with IntelliSense, which provides smart completions based on variable types, function definitions, and imported modules.</p>
+                </div>
+                <div class="col-sm-4 offset-sm-2">
+                    <img src="assets/images/job-running-tasks-graph.png" class="screenshot">
+                </div>
+            </div>
+        </div>
+    </div>
+<!--     
+    <div class="feature-content-dark">
+        <div class="row">
+            <div class="col-sm-4 offset-sm-1">
+                <img src="assets/images/pool-home.png" class="feature-image">
+            </div>
+            <div class="col-sm-6 offset-sm-1">
+                <h2 style="text-align:left; font-weight:lighter; color:#333333">Heatmap visualizations</h2>
+                <p style="text-align:left; color:gray">This is some cool feature that lets you do some stuff</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="feature-content">
+        <div class="row">
+            <div class="col-sm-8">
+                <h2 style="font-weight:lighter; color:#333333">Plotting support</h2>
+                <p style="color:gray">See trends or find anomalies in your jobs</p>
+            </div>
+            <div class="col-sm-4">
+                <img src="assets/images/job-running-tasks-graph.png" class="feature-image">
+            </div>
+        </div>
+    </div>
+    
+    <div class="feature-content-dark">
+        <div class="row">
+            <div class="col-sm-4">
+                <img src="assets/images/pool-home.png" class="feature-image">
+            </div>
+            <div class="col-sm-7 col-sm-push-1">
+                <h2 style="font-weight:lighter; color:#333333">Heatmap visualizations</h2>
+                <p style="color:gray">This is some cool feature that lets you do some stuff</p>
+            </div>
+        </div>
+    </div> -->
+
     <div id="outdated">
         <h6>Your browser is out-of-date!</h6>
         <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update my browser now </a></p>
