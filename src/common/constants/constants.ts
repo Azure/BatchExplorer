@@ -90,13 +90,6 @@ export const localStorageKey = {
     proxySettings: "proxy_settings",
 };
 
-export const sessionStorageKey = {
-    /**
-     * Sessionstorage key that save the last breadcrumb.
-     */
-    breadcrumb: "breadcrumb",
-};
-
 export const ApiVersion = {
     arm: "2016-09-01",
     armClassicStorage: "2016-11-01",

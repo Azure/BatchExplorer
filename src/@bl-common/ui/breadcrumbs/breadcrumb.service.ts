@@ -2,8 +2,10 @@ import { Injectable } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, PRIMARY_OUTLET, Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { Constants, log } from "app/utils";
+import {  log } from "app/utils";
 import { Breadcrumb, RouteComponent } from "./breadcrumb-models";
+
+const sessionStorageKey = "breadcrumb";
 
 function breadcrumbMethodMissingMessage(componentName) {
     const message = "The breadcrumb could not be generated because the route component"
@@ -34,7 +36,7 @@ export class BreadcrumbService {
         });
         this.crumbs = this._crumbs.asObservable();
         this._crumbs.subscribe((data) => {
-            sessionStorage.setItem(Constants.sessionStorageKey.breadcrumb, JSON.stringify(data));
+            sessionStorage.setItem(sessionStorageKey, JSON.stringify(data));
         });
     }
 
@@ -151,14 +153,14 @@ export class BreadcrumbService {
     }
 
     private _loadInitialData() {
-        const breadCrumbStr = sessionStorage.getItem(Constants.sessionStorageKey.breadcrumb);
+        const breadCrumbStr = sessionStorage.getItem(sessionStorageKey);
         if (breadCrumbStr) {
             try {
                 const crumbs = JSON.parse(breadCrumbStr);
                 this._crumbs.next(crumbs);
             } catch (e) {
                 log.warn("Invalid error in breadcrumbs");
-                sessionStorage.removeItem(Constants.sessionStorageKey.breadcrumb);
+                sessionStorage.removeItem(sessionStorageKey);
             }
         }
     }
