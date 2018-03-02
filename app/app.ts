@@ -1,7 +1,7 @@
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { ipcRenderer } from "electron";
 
-import "@bl-common/extensions";
+import "@batch-flask/extensions";
 
 import { log } from "app/utils";
 import { AppModule } from "./app.module";

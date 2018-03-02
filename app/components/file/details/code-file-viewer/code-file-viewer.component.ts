@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges } from "@angular/core";
 
-import { EditorConfig } from "@bl-common/ui/editor";
-import { LoadingStatus } from "@bl-common/ui/loading";
+import { EditorConfig } from "@batch-flask/ui/editor";
+import { LoadingStatus } from "@batch-flask/ui/loading";
 import { File } from "app/models";
 import { FileLoader } from "app/services/file";
 import "./code-file-viewer.scss";

@@ -2,9 +2,9 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
-import { MaterialModule } from "@bl-common/core";
+import { MaterialModule } from "@batch-flask/core";
 
-import { BaseModule } from "@bl-common/ui";
+import { BaseModule } from "@batch-flask/ui";
 import { TaskBaseModule } from "app/components/task/base";
 import { InboundNATPoolPickerComponent } from "./inbound-nat-pool-picker.component";
 import { NetworkSecurityGroupRulesComponent } from "./network-security-group-rules.component";

@@ -1,7 +1,7 @@
 import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { HttpCode } from "@bl-common/core";
+import { HttpCode } from "@batch-flask/core";
 import { ServerError } from "app/models";
 import { DataCache } from "app/services/core/data-cache";
 import { log } from "app/utils";

@@ -6,7 +6,7 @@ import { Subscription } from "rxjs";
 import { AccountResource, BatchQuotas } from "app/models";
 import { ElectronShell, QuotaService } from "app/services";
 
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "@bl-common/ui/context-menu";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { Constants } from "common";
 import "./account-quotas-card.scss";
 

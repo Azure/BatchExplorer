@@ -1,4 +1,4 @@
-import { Icon, IconSources } from "@bl-common/ui/icon";
+import { Icon, IconSources } from "@batch-flask/ui/icon";
 import { CloudServiceOsFamily, Pool, PoolAllocationState, VmSize } from "app/models";
 import { SoftwarePricing, VMPrices } from "app/services/pricing";
 import * as Icons from "./icons";

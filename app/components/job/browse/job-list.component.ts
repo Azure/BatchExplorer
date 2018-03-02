@@ -4,12 +4,12 @@ import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 
-import { Filter, autobind } from "@bl-common/core";
-import { ListBaseComponent, ListSelection } from "@bl-common/core/list";
-import { BackgroundTaskService } from "@bl-common/ui/background-task";
-import { ContextMenu, ContextMenuItem } from "@bl-common/ui/context-menu";
-import { LoadingStatus } from "@bl-common/ui/loading";
-import { QuickListItemStatus } from "@bl-common/ui/quick-list";
+import { Filter, autobind } from "@batch-flask/core";
+import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
+import { LoadingStatus } from "@batch-flask/ui/loading";
+import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { Job, JobState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
 import { JobListParams, JobService, PinnedEntityService } from "app/services";

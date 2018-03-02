@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "@bl-common/ui/context-menu";
-import { LoadingStatus } from "@bl-common/ui/loading";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
+import { LoadingStatus } from "@batch-flask/ui/loading";
 import { InsightsMetricsService, Metric, MetricResponse, MonitorChartTimeFrame, MonitorChartType } from "app/services";
 
 import "./monitor-chart.scss";

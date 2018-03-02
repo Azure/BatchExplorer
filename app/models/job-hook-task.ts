@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "@bl-common/core";
+import { Model, Prop, Record } from "@batch-flask/core";
 import { JobHookTaskExecutionInfo } from "./job-hook-task-execution-info";
 
 export interface JobHookTaskAttributes {

@@ -4,8 +4,8 @@ import { AutoScaleRunError } from "azure-batch/typings/lib/models";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { DialogService } from "@bl-common/ui/dialogs";
-import { EditorConfig } from "@bl-common/ui/editor";
+import { DialogService } from "@batch-flask/ui/dialogs";
+import { EditorConfig } from "@batch-flask/ui/editor";
 import { AutoscaleFormula, Pool } from "app/models";
 import { AutoscaleFormulaService, PoolService } from "app/services";
 import { PredefinedFormulaService } from "app/services/predefined-formula.service";

@@ -1,7 +1,7 @@
 import { AsyncSubject, BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
 
-import { LoadingStatus } from "@bl-common/ui/loading/loading-status";
-import { ObjectUtils } from "@bl-common/utils";
+import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
+import { ObjectUtils } from "@batch-flask/utils";
 import { ServerError } from "app/models";
 import { DataCache } from "app/services/core/data-cache";
 import { PollObservable } from "../poll-service";

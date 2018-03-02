@@ -1,6 +1,6 @@
 import { List } from "immutable";
 
-import { LoadingStatus } from "@bl-common/ui/loading/loading-status";
+import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { File } from "app/models";
 import { CloudPathUtils } from "app/utils";
 import { fileToTreeNode, generateDir, sortTreeNodes } from "./helper";

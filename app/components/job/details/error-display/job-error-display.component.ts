@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { Router } from "@angular/router";
-import { autobind } from "@bl-common/core";
+import { autobind } from "@batch-flask/core";
 import { Observable } from "rxjs";
 
-import { ListFilterType } from "@bl-common/ui/advanced-filter";
+import { ListFilterType } from "@batch-flask/ui/advanced-filter";
 import { Job, JobTerminateReason, NameValuePair, TaskState } from "app/models";
 import { DateUtils } from "app/utils";
 import { ODataFields } from "common/constants";

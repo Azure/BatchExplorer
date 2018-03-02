@@ -4,7 +4,7 @@ import { MatDialogRef } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { BackgroundTaskService } from "@bl-common/ui/background-task";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { DeleteApplicationDialogComponent } from "app/components/application/action";
 import { BatchApplication, ServerError } from "app/models";
 import { ApplicationService } from "app/services";

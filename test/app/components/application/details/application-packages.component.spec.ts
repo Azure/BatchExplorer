@@ -3,9 +3,9 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
 import { MatDialog } from "@angular/material";
-import { ListSelection } from "@bl-common/core/list";
-import { BackgroundTaskService } from "@bl-common/ui/background-task";
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { ListSelection } from "@batch-flask/core/list";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationPackageTableComponent, ApplicationPackagesComponent } from "app/components/application/details";
 import { BatchApplication, PackageState } from "app/models";
 import { ApplicationService } from "app/services";

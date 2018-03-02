@@ -2,9 +2,9 @@ import { ChangeDetectorRef, Component, Input, OnInit, forwardRef } from "@angula
 import { Observable } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
-import { Filter, autobind } from "@bl-common/core";
-import { ListBaseComponent } from "@bl-common/core/list";
-import { LoadingStatus } from "@bl-common/ui/loading";
+import { Filter, autobind } from "@batch-flask/core";
+import { ListBaseComponent } from "@batch-flask/core/list";
+import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Node } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
 import { ListView } from "app/services/core";

@@ -10,7 +10,7 @@ import { CloudPathUtils, DragUtils } from "app/utils";
 import { BlobUtilities } from "azure-storage";
 import * as moment from "moment";
 
-import { SecureUtils, UrlUtils } from "@bl-common/utils";
+import { SecureUtils, UrlUtils } from "@batch-flask/utils";
 import { FileSystemService, SettingsService, StorageService } from "app/services";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import "./resourcefile-picker.scss";

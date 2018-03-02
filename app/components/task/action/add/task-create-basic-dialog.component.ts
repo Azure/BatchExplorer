@@ -3,11 +3,11 @@ import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Observable } from "rxjs";
 
 import { OnInit } from "@angular/core/src/metadata/lifecycle_hooks";
-import { DynamicForm, autobind } from "@bl-common/core";
-import { ComplexFormConfig } from "@bl-common/ui/form";
-import { NotificationService } from "@bl-common/ui/notifications";
-import { SidebarRef } from "@bl-common/ui/sidebar";
-import { RangeValidator } from "@bl-common/ui/validation";
+import { DynamicForm, autobind } from "@batch-flask/core";
+import { ComplexFormConfig } from "@batch-flask/ui/form";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
+import { RangeValidator } from "@batch-flask/ui/validation";
 import { UploadResourceFileEvent } from "app/components/task/base";
 import { Task, VirtualMachineConfiguration } from "app/models";
 import { TaskCreateDto } from "app/models/dtos";

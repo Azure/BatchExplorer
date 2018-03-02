@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { autobind } from "@bl-common/core";
+import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs";
 
-import { DialogService } from "@bl-common/ui/dialogs";
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { DialogService } from "@batch-flask/ui/dialogs";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Node, Pool } from "app/models";
 import { FileService, NodeParams, NodeService, PoolParams, PoolService } from "app/services";

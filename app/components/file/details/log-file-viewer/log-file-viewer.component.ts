@@ -1,14 +1,14 @@
 import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { ScrollableComponent, ScrollableService } from "@bl-common/ui/scrollable";
+import { ScrollableComponent, ScrollableService } from "@batch-flask/ui/scrollable";
 import { File, ServerError } from "app/models";
 import { TaskService } from "app/services";
 import { FileLoader } from "app/services/file";
 import { log } from "app/utils";
 
-import { HttpCode } from "@bl-common/core";
-import { EditorComponent, EditorConfig } from "@bl-common/ui/editor";
+import { HttpCode } from "@batch-flask/core";
+import { EditorComponent, EditorConfig } from "@batch-flask/ui/editor";
 import "./log-file-viewer.scss";
 
 const maxSize = 10000000; // 10MB

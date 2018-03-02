@@ -1,6 +1,6 @@
 import * as moment from "moment";
 
-import { exists } from "@bl-common/utils";
+import { exists } from "@batch-flask/utils";
 
 // tslint:disable:variable-name
 

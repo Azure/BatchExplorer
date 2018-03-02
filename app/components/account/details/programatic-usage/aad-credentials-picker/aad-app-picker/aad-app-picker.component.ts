@@ -10,7 +10,7 @@ import { ArmHttpService, AuthorizationHttpService, ResourceAccessService } from 
 import { ListView } from "app/services/core";
 import { AADApplicationListParams, AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 
-import { HttpCode } from "@bl-common/core";
+import { HttpCode } from "@batch-flask/core";
 import "./aad-app-picker.scss";
 
 @Component({

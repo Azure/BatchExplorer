@@ -2,10 +2,10 @@ import { Component, Input, OnChanges, OnDestroy, forwardRef } from "@angular/cor
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { autobind } from "@bl-common/core";
+import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs";
 
-import { DialogService } from "@bl-common/ui/dialogs";
+import { DialogService } from "@batch-flask/ui/dialogs";
 import { StorageService } from "app/services";
 import { CloudFilePickerDialogComponent } from "./cloud-file-picker-dialog.component";
 import "./cloud-file-picker.scss";

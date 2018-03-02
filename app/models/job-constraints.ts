@@ -1,4 +1,4 @@
-import { Model } from "@bl-common/core";
+import { Model } from "@batch-flask/core";
 import { Constraints } from "./constraints";
 
 /**

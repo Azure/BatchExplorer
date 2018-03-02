@@ -1,7 +1,7 @@
 import { List, OrderedSet } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { LoadingStatus } from "@bl-common/ui/loading/loading-status";
+import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { log } from "app/utils";
 import { GenericView, GenericViewConfig } from "./generic-view";
 import { ListGetter, ListResponse } from "./list-getter";

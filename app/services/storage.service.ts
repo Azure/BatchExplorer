@@ -2,8 +2,8 @@ import { Injectable, NgZone } from "@angular/core";
 import * as path from "path";
 import { AsyncSubject, Observable, Subject } from "rxjs";
 
-import { HttpCode } from "@bl-common/core";
-import { BackgroundTaskService } from "@bl-common/ui/background-task";
+import { HttpCode } from "@batch-flask/core";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { BlobContainer, File, ServerError } from "app/models";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { CloudPathUtils, log } from "app/utils";

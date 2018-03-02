@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
-import { HttpCode, autobind } from "@bl-common/core";
+import { HttpCode, autobind } from "@batch-flask/core";
 import { AccountResource, RoleDefinition, ServerError } from "app/models";
 import { AADApplication, PasswordCredential, ServicePrincipal } from "app/models/ms-graph";
 import { ResourceAccessService } from "app/services";

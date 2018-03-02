@@ -1,12 +1,12 @@
 import { ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 import { MatDialog } from "@angular/material";
-import { autobind } from "@bl-common/core";
+import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { ListBaseComponent } from "@bl-common/core/list";
-import { BackgroundTaskService } from "@bl-common/ui/background-task";
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { ListBaseComponent } from "@batch-flask/core/list";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationPackage, BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import { DateUtils } from "app/utils";

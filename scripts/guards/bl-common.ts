@@ -25,7 +25,7 @@ async function fileContains(file, pattern) {
 }
 
 async function findInvalidFiles(pattern) {
-    const files = await listFiles(path.join(root, "/src/@bl-common/**/*.ts"));
+    const files = await listFiles(path.join(root, "/src/@batch-flask/**/*.ts"));
     const fileValid = await Promise.all(files.map(async x => {
         return {
             file: x,
@@ -39,14 +39,14 @@ async function run() {
     const invalidFiles = await findInvalidFiles(`from "app`);
 
     if (invalidFiles) {
-        const readme = path.join(root, "src/@bl-common/Readme.md");
+        const readme = path.join(root, "src/@batch-flask/Readme.md");
         console.log("=".repeat(150));
-        console.error("ERROR: There is some files in the @bl-common package which import from outside of the package.");
-        console.error(`This needs to be removed. @bl-common should be self contained. See ${readme}`);
+        console.error("ERROR: There is some files in the @batch-flask package which import from outside of the package.");
+        console.error(`This needs to be removed. @batch-flask should be self contained. See ${readme}`);
 
         console.log("-".repeat(150));
         for (const file of invalidFiles) {
-            console.log(`@bl-common package contains imports to the app folder: ${file}`);
+            console.log(`@batch-flask package contains imports to the app folder: ${file}`);
         }
         console.log("=".repeat(150));
 

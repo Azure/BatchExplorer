@@ -1,6 +1,6 @@
 import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, inject } from "@angular/core/testing";
-import { SidebarManager, SidebarPageComponent, SidebarRef } from "@bl-common/ui/sidebar";
+import { SidebarManager, SidebarPageComponent, SidebarRef } from "@batch-flask/ui/sidebar";
 
 import { FakeComponent, setupSidebarTest } from "./sidebar-spec-helper";
 

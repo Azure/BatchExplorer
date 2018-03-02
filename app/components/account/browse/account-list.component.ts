@@ -3,11 +3,11 @@ import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { Filter, FilterMatcher, Operator, autobind } from "@bl-common/core";
-import { ListBaseComponent } from "@bl-common/core/list";
-import { LoadingStatus } from "@bl-common/ui/loading";
-import { QuickListItemStatus } from "@bl-common/ui/quick-list";
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { Filter, FilterMatcher, Operator, autobind } from "@batch-flask/core";
+import { ListBaseComponent } from "@batch-flask/core/list";
+import { LoadingStatus } from "@batch-flask/ui/loading";
+import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { AccountResource } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
 

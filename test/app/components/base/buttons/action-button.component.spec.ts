@@ -4,8 +4,8 @@ import { MatTooltip } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
-import { MaterialModule } from "@bl-common/core";
-import { ButtonComponent } from "@bl-common/ui/buttons/button.component";
+import { MaterialModule } from "@batch-flask/core";
+import { ButtonComponent } from "@batch-flask/ui/buttons/button.component";
 import { AuthorizationHttpService } from "app/services";
 import { click } from "test/utils/helpers";
 

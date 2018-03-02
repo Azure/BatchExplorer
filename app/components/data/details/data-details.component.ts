@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "@bl-common/core";
+import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs/Subscription";
 
-import { DialogService } from "@bl-common/ui/dialogs";
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { DialogService } from "@batch-flask/ui/dialogs";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { DownloadFileGroupDialogComponent } from "app/components/data/details";
 import { BlobContainer } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";

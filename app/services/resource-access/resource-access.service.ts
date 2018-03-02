@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 
-import { SecureUtils } from "@bl-common/utils";
+import { SecureUtils } from "@batch-flask/utils";
 import { RoleAssignment, RoleDefinition } from "app/models";
 import { ArmListGetter, TargetedDataCache } from "app/services/core";
 import { List } from "immutable";

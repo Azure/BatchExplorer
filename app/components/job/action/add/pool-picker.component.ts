@@ -3,7 +3,7 @@ import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } f
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { FilterBuilder } from "@bl-common/core";
+import { FilterBuilder } from "@batch-flask/core";
 import { Pool } from "app/models";
 import { PoolListParams, PoolService, VmSizeService } from "app/services";
 import { ListOptionsAttributes, ListView } from "app/services/core";

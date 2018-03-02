@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { ButtonComponent } from "@bl-common/ui/buttons";
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { ButtonComponent } from "@batch-flask/ui/buttons";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StorageAccountCardComponent } from "app/components/account/details";
 import { AccountResource, ServerError, StorageAccount } from "app/models";
 import { AuthorizationHttpService , StorageAccountService } from "app/services";

@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@bl-common/core";
+import { Dto, DtoAttr } from "@batch-flask/core";
 import { FileGroupOptionsDto } from "./file-group-options.dto";
 
 export class FileGroupCreateDto extends Dto<FileGroupCreateDto> {

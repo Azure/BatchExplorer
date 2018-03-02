@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { LoadingStatus } from "@bl-common/ui/loading";
+import { LoadingStatus } from "@batch-flask/ui/loading";
 import { FileLoader } from "app/services/file";
 import "./image-file-viewer.scss";
 

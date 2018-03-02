@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output } from "@angular/core";
 
-import { Filter } from "@bl-common/core";
-import { AdvancedFilter, StatePickerControl } from "@bl-common/ui/advanced-filter";
+import { Filter } from "@batch-flask/core";
+import { AdvancedFilter, StatePickerControl } from "@batch-flask/ui/advanced-filter";
 import { JobScheduleState } from "app/models";
 
 @Component({

@@ -3,8 +3,8 @@ import { FormControl } from "@angular/forms";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { FilterBuilder, autobind } from "@bl-common/core";
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { FilterBuilder, autobind } from "@batch-flask/core";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { PerformanceData } from "app/components/pool/graphs/performance-graph";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Job, JobState, Node, NodeState, Pool, Task } from "app/models";

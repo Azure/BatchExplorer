@@ -1,6 +1,6 @@
 import { Component, HostListener, Input, OnChanges, OnDestroy } from "@angular/core";
-import { MouseButton } from "@bl-common/core";
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "@bl-common/ui/context-menu";
+import { MouseButton } from "@batch-flask/core";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FileExplorerWorkspace, FileSource, OpenedFile } from "app/components/file/browse/file-explorer";
 import { FileLoader } from "app/services/file";
 import * as path from "path";

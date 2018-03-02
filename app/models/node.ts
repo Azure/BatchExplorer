@@ -1,6 +1,6 @@
 import { List } from "immutable";
 
-import { ListProp, Model, Prop, Record } from "@bl-common/core";
+import { ListProp, Model, Prop, Record } from "@batch-flask/core";
 import { CertificateReference } from "app/models/certificate-reference";
 import { NodeRecentTask } from "app/models/node-recent-task";
 import { StartTaskInfo } from "app/models/start-task-info";

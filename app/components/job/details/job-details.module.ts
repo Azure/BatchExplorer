@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 
-import { BaseModule } from "@bl-common/ui";
+import { BaseModule } from "@batch-flask/ui";
 import { commonModules } from "app/common";
 import { FileBrowseModule } from "app/components/file/browse";
 import { FileDetailsModule } from "app/components/file/details";

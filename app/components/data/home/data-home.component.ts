@@ -2,15 +2,15 @@ import { Component, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
 
-import { Filter, FilterBuilder, Property, autobind } from "@bl-common/core";
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { Filter, FilterBuilder, Property, autobind } from "@batch-flask/core";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StorageService } from "app/services";
 import { Constants } from "common";
 import { FileGroupCreateFormComponent } from "../action";
 
 import { MatMenuTrigger } from "@angular/material";
-import { BrowseLayoutComponent, BrowseLayoutConfig } from "@bl-common/ui/browse-layout";
-import { DialogService } from "@bl-common/ui/dialogs";
+import { BrowseLayoutComponent, BrowseLayoutConfig } from "@batch-flask/ui/browse-layout";
+import { DialogService } from "@batch-flask/ui/dialogs";
 import { BlobContainer } from "app/models";
 import "./data-home.scss";
 

@@ -3,10 +3,10 @@ import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { ActivatedRoute, Router } from "@angular/router";
-import { MaterialModule } from "@bl-common/core";
+import { MaterialModule } from "@batch-flask/core";
 import { BehaviorSubject } from "rxjs";
 
-import { TabsModule } from "@bl-common/ui/tabs";
+import { TabsModule } from "@batch-flask/ui/tabs";
 
 @Component({
     template: `

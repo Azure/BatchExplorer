@@ -1,7 +1,7 @@
 import { List } from "immutable";
 import * as moment from "moment";
 
-import { ListProp, Model, Prop, Record } from "@bl-common/core";
+import { ListProp, Model, Prop, Record } from "@batch-flask/core";
 import { AffinityInformation } from "./affinity-information";
 import { ApplicationPackageReference } from "./application-package-reference";
 import { ComputeNodeInformation } from "./compute-node-information";

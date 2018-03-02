@@ -5,7 +5,7 @@ import {
 } from "@angular/http";
 import { Observable } from "rxjs";
 
-import { RetryableHttpCode } from "@bl-common/core";
+import { RetryableHttpCode } from "@batch-flask/core";
 import { ServerError, Subscription } from "app/models";
 import { AccessToken } from "client/core/aad/access-token";
 import { Constants } from "common";

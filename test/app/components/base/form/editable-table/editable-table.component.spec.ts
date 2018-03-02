@@ -4,7 +4,7 @@ import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { MatSelectModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 
-import { EditableTableColumnComponent, EditableTableComponent } from "@bl-common/ui/form/editable-table";
+import { EditableTableColumnComponent, EditableTableComponent } from "@batch-flask/ui/form/editable-table";
 import { click, updateInput } from "test/utils/helpers";
 
 @Component({

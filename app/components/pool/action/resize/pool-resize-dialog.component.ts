@@ -1,11 +1,11 @@
 import { Component, Input } from "@angular/core";
 import { FormBuilder, FormControl } from "@angular/forms";
-import { autobind } from "@bl-common/core";
+import { autobind } from "@batch-flask/core";
 import * as moment from "moment";
 import { Observable } from "rxjs";
 
-import { NotificationService } from "@bl-common/ui/notifications";
-import { SidebarRef } from "@bl-common/ui/sidebar";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Pool } from "app/models";
 import { PoolEnableAutoScaleDto, PoolResizeDto } from "app/models/dtos";
 import { PoolScaleModel } from "app/models/forms";

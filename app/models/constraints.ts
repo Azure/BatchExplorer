@@ -1,4 +1,4 @@
-import { Model, Prop, Record, TransformDuration } from "@bl-common/core";
+import { Model, Prop, Record, TransformDuration } from "@batch-flask/core";
 import { Duration, duration } from "moment";
 
 export interface ConstraintsAttributes {

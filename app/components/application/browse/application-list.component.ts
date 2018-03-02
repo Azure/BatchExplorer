@@ -4,12 +4,12 @@ import { Router } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { Filter, autobind } from "@bl-common/core";
-import { ListBaseComponent } from "@bl-common/core/list";
-import { ContextMenu, ContextMenuItem } from "@bl-common/ui/context-menu";
-import { LoadingStatus } from "@bl-common/ui/loading";
-import { QuickListItemStatus } from "@bl-common/ui/quick-list";
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { Filter, autobind } from "@batch-flask/core";
+import { ListBaseComponent } from "@batch-flask/core/list";
+import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
+import { LoadingStatus } from "@batch-flask/ui/loading";
+import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";

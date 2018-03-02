@@ -7,7 +7,7 @@ import {
     Validators,
 } from "@angular/forms";
 
-import { RangeValidator } from "@bl-common/ui/validation";
+import { RangeValidator } from "@batch-flask/ui/validation";
 import { UserAccount, VirtualMachineConfiguration } from "app/models";
 import { Constants } from "app/utils";
 import { List } from "immutable";

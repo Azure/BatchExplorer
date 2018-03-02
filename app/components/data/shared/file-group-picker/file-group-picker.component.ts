@@ -6,7 +6,7 @@ import { MatOptionSelectionChange } from "@angular/material";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { BlobContainer } from "app/models";
 import { ListContainerParams, StorageService } from "app/services";

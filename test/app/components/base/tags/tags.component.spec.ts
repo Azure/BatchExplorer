@@ -4,7 +4,7 @@ import { By } from "@angular/platform-browser";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { TagsComponent } from "@bl-common/ui/tags";
+import { TagsComponent } from "@batch-flask/ui/tags";
 import { click } from "test/utils/helpers";
 
 @Component({

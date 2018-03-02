@@ -9,9 +9,9 @@ import { List } from "immutable";
 import { BehaviorSubject, Subject } from "rxjs";
 import { Observable } from "rxjs/Observable";
 
-import { MaterialModule } from "@bl-common/core";
-import { DialogService } from "@bl-common/ui/dialogs";
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { MaterialModule } from "@batch-flask/core";
+import { DialogService } from "@batch-flask/ui/dialogs";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { FileGroupPickerComponent } from "app/components/data/shared";
 import { CloudFilePickerComponent } from "app/components/data/shared/cloud-file-picker";
 import { FileGroupSasComponent } from "app/components/data/shared/file-group-sas";

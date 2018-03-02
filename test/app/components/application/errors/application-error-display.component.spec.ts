@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { BehaviorSubject } from "rxjs";
 
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationErrorDisplayComponent } from "app/components/application/errors";
 import { AccountResource, BatchApplication } from "app/models";
 import { AccountService } from "app/services";

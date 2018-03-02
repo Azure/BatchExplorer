@@ -1,6 +1,6 @@
 import { BehaviorSubject } from "rxjs";
 
-import { BackgroundTaskService } from "@bl-common/ui/background-task";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { WaitForDeletePoller } from "app/components/core/pollers";
 import { JobSchedule } from "app/models";
 import { JobScheduleService } from "app/services";

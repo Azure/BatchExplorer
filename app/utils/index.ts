@@ -1,4 +1,4 @@
-export * from "@bl-common/utils";
+export * from "@batch-flask/utils";
 
 // tslint:disable:variable-name
 export * from "./array";

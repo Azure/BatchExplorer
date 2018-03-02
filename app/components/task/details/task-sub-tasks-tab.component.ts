@@ -1,13 +1,13 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, ViewChild,
 } from "@angular/core";
-import { autobind } from "@bl-common/core";
+import { autobind } from "@batch-flask/core";
 import { Observable } from "rxjs";
 
 import { SubTaskDisplayListComponent } from "./sub-tasks";
 
-import { ListBaseComponent } from "@bl-common/core/list";
-import { LoadingStatus } from "@bl-common/ui/loading";
+import { ListBaseComponent } from "@batch-flask/core/list";
+import { LoadingStatus } from "@batch-flask/ui/loading";
 import { SubtaskInformation } from "app/models";
 import { SubtaskListParams, TaskService } from "app/services";
 import { ListView } from "app/services/core";

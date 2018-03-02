@@ -3,9 +3,9 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { ButtonComponent } from "@bl-common/ui/buttons";
-import { PropertyGroupComponent, TextPropertyComponent } from "@bl-common/ui/property-list";
-import { SidebarRef } from "@bl-common/ui/sidebar";
+import { ButtonComponent } from "@batch-flask/ui/buttons";
+import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/property-list";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
 import { NodeAgentSku } from "app/models";
 import { AuthorizationHttpService, ElectronShell, FileSystemService, NodeService, NodeUserService } from "app/services";

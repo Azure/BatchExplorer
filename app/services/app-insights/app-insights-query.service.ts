@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { FilterBuilder } from "@bl-common/core";
+import { FilterBuilder } from "@batch-flask/core";
 import {
     AppInsightsMetricSegment, AppInsightsMetricsResult, BatchPerformanceMetricType, BatchPerformanceMetrics,
 } from "app/models/app-insights/metrics-result";

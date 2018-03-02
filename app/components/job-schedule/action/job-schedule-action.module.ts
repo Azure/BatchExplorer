@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 
-import { BaseModule } from "@bl-common/ui";
+import { BaseModule } from "@batch-flask/ui";
 import { commonModules } from "app/common";
 import { JobActionModule } from "app/components/job/action";
 import { JobScheduleCreateBasicDialogComponent } from "./add/job-schedule-create-basic-dialog.component";

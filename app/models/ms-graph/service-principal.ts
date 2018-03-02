@@ -1,4 +1,4 @@
-import { ListProp, Prop, Record } from "@bl-common/core";
+import { ListProp, Prop, Record } from "@batch-flask/core";
 import { List } from "immutable";
 
 export interface ServicePrincipalAttributes {

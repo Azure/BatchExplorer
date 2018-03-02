@@ -5,8 +5,8 @@ import * as path from "path";
 
 import {
     ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService,
-} from "@bl-common/ui/context-menu";
-import { NotificationService } from "@bl-common/ui/notifications";
+} from "@batch-flask/ui/context-menu";
+import { NotificationService } from "@batch-flask/ui/notifications";
 import { AccountService, AdalService, ElectronRemote, ElectronShell, FileSystemService } from "app/services";
 import { Constants, OS } from "app/utils";
 import "./main-navigation.scss";

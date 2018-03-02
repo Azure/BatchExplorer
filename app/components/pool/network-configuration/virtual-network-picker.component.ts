@@ -7,7 +7,7 @@ import {
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
-import { autobind } from "@bl-common/core";
+import { autobind } from "@batch-flask/core";
 import { AccountService, NetworkConfigurationService, Subnet, VirtualNetwork } from "app/services";
 import { ArmResourceUtils } from "app/utils";
 

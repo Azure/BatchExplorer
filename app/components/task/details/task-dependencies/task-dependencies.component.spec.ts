@@ -7,7 +7,7 @@ import { Observable } from "rxjs";
 
 import {
     TableCellComponent, TableColumnComponent, TableComponent, TableHeadComponent,
-} from "@bl-common/ui/table";
+} from "@batch-flask/ui/table";
 import { Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
 import * as Fixtures from "test/fixture";

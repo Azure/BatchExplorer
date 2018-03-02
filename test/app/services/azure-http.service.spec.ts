@@ -4,7 +4,7 @@ import { BaseRequestOptions, ConnectionBackend, Http, RequestOptions, Response, 
 import { MockBackend, MockConnection } from "@angular/http/testing";
 import { Observable } from "rxjs";
 
-import { HttpCode } from "@bl-common/core";
+import { HttpCode } from "@batch-flask/core";
 import { ServerError } from "app/models";
 import { AdalService, AzureHttpService } from "app/services";
 

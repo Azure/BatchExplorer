@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
-import { HttpCode, autobind } from "@bl-common/core";
+import { HttpCode, autobind } from "@batch-flask/core";
 import { remote } from "electron";
 import { Observable } from "rxjs";
 
 import "./file-details-view.scss";
 
-import { NotificationService } from "@bl-common/ui/notifications";
+import { NotificationService } from "@batch-flask/ui/notifications";
 import { File, ServerError } from "app/models";
 import { ElectronShell } from "app/services";
 import { FileLoader } from "app/services/file";

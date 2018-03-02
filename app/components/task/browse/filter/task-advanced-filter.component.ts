@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 
-import { Filter } from "@bl-common/core";
-import { AdvancedFilter, ListFilterControl, StatePickerControl } from "@bl-common/ui/advanced-filter";
+import { Filter } from "@batch-flask/core";
+import { AdvancedFilter, ListFilterControl, StatePickerControl } from "@batch-flask/ui/advanced-filter";
 import { TaskState } from "app/models";
 import { ODataFields } from "common/constants";
 

@@ -5,9 +5,9 @@ import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Subject } from "rxjs";
 
-import { FilterBuilder } from "@bl-common/core";
-import { BackgroundTaskService } from "@bl-common/ui/background-task";
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { FilterBuilder } from "@batch-flask/core";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationListComponent } from "app/components/application/browse";
 import { BatchApplication } from "app/models";
 import { ApplicationService, PinnedEntityService } from "app/services";

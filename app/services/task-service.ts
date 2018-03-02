@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { Observable, Subject } from "rxjs";
 
-import { FilterBuilder } from "@bl-common/core";
+import { FilterBuilder } from "@batch-flask/core";
 import { SubtaskInformation, Task, TaskState } from "app/models";
 import { TaskCreateDto } from "app/models/dtos";
 import { Constants, log } from "app/utils";

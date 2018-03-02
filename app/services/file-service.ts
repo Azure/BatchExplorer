@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import * as path from "path";
 
-import { HttpCode } from "@bl-common/core";
-import { exists } from "@bl-common/utils";
+import { HttpCode } from "@batch-flask/core";
+import { exists } from "@batch-flask/utils";
 import { File, ServerError } from "app/models";
 import { Observable } from "rxjs";
 import { BatchClientService } from "./batch-client.service";

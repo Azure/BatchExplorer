@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { FormBuilder, FormControl } from "@angular/forms";
 
-import { Filter, FilterBuilder, autobind } from "@bl-common/core";
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { JobScheduleCreateBasicDialogComponent } from "../action";
 
 @Component({

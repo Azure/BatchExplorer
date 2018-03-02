@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@bl-common/core";
+import { Dto, DtoAttr } from "@batch-flask/core";
 
 import { JobConstraintDto } from "./job-constraints.dto";
 import { EnvironmentSetting, MetaDataDto } from "./metadata.dto";

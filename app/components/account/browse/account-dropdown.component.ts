@@ -3,7 +3,7 @@ import { AccountResource } from "app/models";
 import { AccountService, AccountStatus } from "app/services";
 import { ArmResourceUtils } from "app/utils";
 
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "@bl-common/ui/context-menu";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import "./account-dropdown.scss";
 
 @Component({

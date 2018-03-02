@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 
-import { BaseModule } from "@bl-common/ui";
+import { BaseModule } from "@batch-flask/ui";
 import { commonModules } from "app/common";
 import { JobDetailsModule } from "app/components/job/details";
 import { PoolDetailsModule } from "app/components/pool/details";

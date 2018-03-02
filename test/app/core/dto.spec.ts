@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@bl-common/core";
+import { Dto, DtoAttr } from "@batch-flask/core";
 
 class FakeNestedDto extends Dto<FakeNestedDto> {
     @DtoAttr()

@@ -6,7 +6,7 @@ import { ActivatedRoute } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Observable } from "rxjs";
 
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationDetailsComponent } from "app/components/application/details";
 import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";

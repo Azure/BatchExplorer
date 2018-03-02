@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "@bl-common/core";
+import { autobind } from "@batch-flask/core";
 import { remote } from "electron";
 import { Observable, Subscription } from "rxjs";
 
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, Task } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
 import { FileSystemService, JobParams, JobService, TaskParams, TaskService } from "app/services";

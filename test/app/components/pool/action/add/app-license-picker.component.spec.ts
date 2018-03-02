@@ -4,8 +4,8 @@ import { FormsModule } from "@angular/forms";
 import { MatCheckboxChange, MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 
-import { MaterialModule } from "@bl-common/core";
-import { ListSelection } from "@bl-common/core/list";
+import { MaterialModule } from "@batch-flask/core";
+import { ListSelection } from "@batch-flask/core/list";
 import { AppLicensePickerComponent } from "app/components/pool/action/add";
 
 @Component({

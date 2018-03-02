@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import * as moment from "moment";
 
-import { LoadingStatus } from "@bl-common/ui/loading";
-import { DropEvent, TableConfig } from "@bl-common/ui/table";
+import { LoadingStatus } from "@batch-flask/ui/loading";
+import { DropEvent, TableConfig } from "@batch-flask/ui/table";
 import { ServerError } from "app/models";
 import { FileTreeNode } from "app/services/file";
 import { DragUtils, prettyBytes } from "app/utils";

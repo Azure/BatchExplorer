@@ -2,7 +2,7 @@ import { BasicEntityGetter, BasicListGetter, DataCache, ListView } from "app/ser
 import { List, OrderedSet } from "immutable";
 import { Observable } from "rxjs";
 
-import { LoadingStatus } from "@bl-common/ui/loading";
+import { LoadingStatus } from "@batch-flask/ui/loading";
 import { ServerError } from "app/models";
 import { FakeModel } from "./fake-model";
 

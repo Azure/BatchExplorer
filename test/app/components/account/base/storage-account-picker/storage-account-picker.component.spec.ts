@@ -6,7 +6,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { TableCellComponent } from "@bl-common/ui/table";
+import { TableCellComponent } from "@batch-flask/ui/table";
 import { StorageAccountPickerComponent } from "app/components/account/base/storage-account-picker";
 import { AccountResource, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";

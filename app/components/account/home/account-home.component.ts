@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Set } from "immutable";
 
-import { Filter, FilterBuilder } from "@bl-common/core";
-import { BrowseLayoutComponent } from "@bl-common/ui/browse-layout";
+import { Filter, FilterBuilder } from "@batch-flask/core";
+import { BrowseLayoutComponent } from "@batch-flask/ui/browse-layout";
 import { Subscription } from "app/models";
 import { SubscriptionService } from "app/services";
 

@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
-import { HttpCode } from "@bl-common/core";
+import { HttpCode } from "@batch-flask/core";
 import {
     FileExplorerConfig, FileExplorerWorkspace, FileNavigatorEntry,
 } from "app/components/file/browse/file-explorer";

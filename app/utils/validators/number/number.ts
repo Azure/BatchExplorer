@@ -1,5 +1,5 @@
 import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
-import { exists } from "@bl-common/utils/object-utils";
+import { exists } from "@batch-flask/utils/object-utils";
 
 /**
  * Validator that requires controls to have a value of a min value.

@@ -5,9 +5,9 @@ import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Observable } from "rxjs";
 
-import { Property } from "@bl-common/core";
-import { BackgroundTaskService } from "@bl-common/ui/background-task";
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { Property } from "@batch-flask/core";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationPackageTableComponent } from "app/components/application/details";
 import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
@@ -16,7 +16,7 @@ import { NoItemMockComponent } from "test/utils/mocks/components";
 
 import {
     TableCellComponent, TableColumnComponent, TableComponent, TableHeadComponent,
-} from "@bl-common/ui/table";
+} from "@batch-flask/ui/table";
 
 const appWithPackagesId: string = "app-2";
 const appWithoutPackagesId: string = "app-1";

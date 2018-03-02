@@ -18,11 +18,11 @@ e.g.
 ```typescript
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { autobind } from "@bl-common/core";
+import { autobind } from "@batch-flask/core";
 import { Observable } from "rxjs";
 
-import { NotificationService } from "@bl-common/ui/notifications";
-import { SidebarRef } from "@bl-common/ui/sidebar";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 
 // Code goes here
 ```

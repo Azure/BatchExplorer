@@ -1,5 +1,5 @@
 
-import { ListFilterControl, ListFilterType } from "@bl-common/ui/advanced-filter";
+import { ListFilterControl, ListFilterType } from "@batch-flask/ui/advanced-filter";
 
 describe("AdvancedFilterListComponent", () => {
     let control: ListFilterControl;

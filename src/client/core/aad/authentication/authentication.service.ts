@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { SecureUtils } from "@bl-common/utils";
+import { SecureUtils } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core/batchlabs-application";
 import { Deferred } from "common";
 import { AADConfig } from "../aad-config";

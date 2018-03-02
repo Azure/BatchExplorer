@@ -1,4 +1,4 @@
-import { ArmRecord, ListProp, Model, Prop, Record } from "@bl-common/core";
+import { ArmRecord, ListProp, Model, Prop, Record } from "@batch-flask/core";
 import { List } from "immutable";
 
 export interface RoleDefinitionPropertiesAttributes {

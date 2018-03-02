@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@bl-common/core";
+import { Dto, DtoAttr } from "@batch-flask/core";
 import { AppPackageReferenceDto } from "./application-package-reference.dto";
 import { TaskContainerSettings } from "./container-setup.dto";
 import { EnvironmentSetting } from "./metadata.dto";

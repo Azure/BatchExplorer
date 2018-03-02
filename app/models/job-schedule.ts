@@ -1,6 +1,6 @@
 import { List } from "immutable";
 
-import { ListProp, Model, Prop, Record } from "@bl-common/core";
+import { ListProp, Model, Prop, Record } from "@batch-flask/core";
 import { ModelUtils } from "app/utils";
 import { Job } from "./job";
 import {

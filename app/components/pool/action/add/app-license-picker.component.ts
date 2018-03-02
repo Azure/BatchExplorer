@@ -5,11 +5,11 @@ import {
 import { MatCheckboxChange, MatDialog, MatDialogConfig } from "@angular/material";
 import { List } from "immutable";
 
-import { TableComponent, TableConfig } from "@bl-common/ui/table";
+import { TableComponent, TableConfig } from "@batch-flask/ui/table";
 import { ApplicationLicense } from "app/models";
 import { LicenseEulaDialogComponent } from "./";
 
-import { ListSelection } from "@bl-common/core/list";
+import { ListSelection } from "@batch-flask/core/list";
 import "./app-license-picker.scss";
 
 // tslint:disable:no-forward-ref

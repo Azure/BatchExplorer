@@ -3,9 +3,9 @@ import {
 } from "@angular/core";
 import { List } from "immutable";
 
-import { ListBaseComponent } from "@bl-common/core/list";
-import { LoadingStatus } from "@bl-common/ui/loading";
-import { QuickListComponent, QuickListItemStatus } from "@bl-common/ui/quick-list";
+import { ListBaseComponent } from "@batch-flask/core/list";
+import { LoadingStatus } from "@batch-flask/ui/loading";
+import { QuickListComponent, QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { SubtaskInformation, TaskState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
 

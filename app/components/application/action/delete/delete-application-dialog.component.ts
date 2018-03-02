@@ -1,8 +1,8 @@
 import { Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
-import { autobind } from "@bl-common/core";
+import { autobind } from "@batch-flask/core";
 
-import { BackgroundTaskService } from "@bl-common/ui/background-task";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { DeleteApplicationAction } from "app/components/application/action";
 import { ApplicationService } from "app/services";
 

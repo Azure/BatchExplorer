@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, Input, Output } from "@angular/core";
 import { List } from "immutable";
 
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "@bl-common/ui/context-menu";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { Node, Pool } from "app/models";
 import { NodeService } from "app/services";
 import { StateCounter } from "../state-counter";

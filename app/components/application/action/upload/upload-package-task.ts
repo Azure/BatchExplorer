@@ -1,8 +1,8 @@
 // TODO :: Work in progress
-// import { autobind } from "@bl-common/core";
+// import { autobind } from "@batch-flask/core";
 // import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { BackgroundTaskService } from "@bl-common/ui/background-task";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 // import { Pool } from "app/models";
 import { PoolService } from "app/services";
 import { LongRunningUploadAction } from "app/services/core";

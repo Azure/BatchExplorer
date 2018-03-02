@@ -7,7 +7,7 @@ import {
     PropertyGroupComponent,
     PropertyListComponent,
     TextPropertyComponent,
-} from "@bl-common/ui/property-list";
+} from "@batch-flask/ui/property-list";
 import { ApplicationPropertiesComponent } from "app/components/application/details";
 import * as Fixtures from "test/fixture";
 

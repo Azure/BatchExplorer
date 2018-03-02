@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { autobind } from "@bl-common/core";
+import { autobind } from "@batch-flask/core";
 
-import { NotificationService } from "@bl-common/ui/notifications";
-import { SidebarRef } from "@bl-common/ui/sidebar";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Pool } from "app/models";
 import { PoolPatchDto } from "app/models/dtos";
 import { NodeService, PoolService } from "app/services";

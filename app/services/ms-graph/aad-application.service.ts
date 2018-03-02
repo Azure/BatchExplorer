@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { SecureUtils } from "@bl-common/utils";
+import { SecureUtils } from "@batch-flask/utils";
 import { AADApplication, PasswordCredential, PasswordCredentialAttributes } from "app/models/ms-graph";
 import { DataCache, ListOptionsAttributes, ListView } from "app/services/core";
 import {

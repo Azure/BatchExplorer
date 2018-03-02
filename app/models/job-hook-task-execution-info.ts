@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "@bl-common/core";
+import { Model, Prop, Record } from "@batch-flask/core";
 import { FailureInfoAttributes } from "./failure-info";
 
 export enum JobHookTaskState {

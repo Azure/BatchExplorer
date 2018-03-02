@@ -1,4 +1,4 @@
-import { ArmRecord, Model, Prop } from "@bl-common/core";
+import { ArmRecord, Model, Prop } from "@batch-flask/core";
 
 @Model()
 class TestModel extends ArmRecord<any> {

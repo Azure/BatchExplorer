@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
-import { autobind } from "@bl-common/core";
+import { autobind } from "@batch-flask/core";
 
-import { SidebarManager } from "@bl-common/ui/sidebar";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { PoolCreateBasicDialogComponent } from "../action";
 
 @Component({

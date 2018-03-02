@@ -4,7 +4,7 @@ import {
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
-import { EditableTableColumnType } from "@bl-common/ui/form/editable-table";
+import { EditableTableColumnType } from "@batch-flask/ui/form/editable-table";
 import { NetworkSecurityGroupRule, NetworkSecurityGroupRuleAccess } from "app/models";
 import * as EndpointHelper from "./pool-endpoint-helper";
 

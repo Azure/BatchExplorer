@@ -4,7 +4,7 @@ import * as moment from "moment";
 import { Subscription } from "rxjs";
 
 import { FormControl } from "@angular/forms";
-import { FilterBuilder, autobind } from "@bl-common/core";
+import { FilterBuilder, autobind } from "@batch-flask/core";
 import { Job, JobState } from "app/models";
 import { JobService } from "app/services";
 import "./all-job-graphs-home.scss";

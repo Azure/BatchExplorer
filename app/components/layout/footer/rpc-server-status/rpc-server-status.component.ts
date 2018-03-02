@@ -3,7 +3,7 @@ import * as path from "path";
 
 import {
     ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService,
-} from "@bl-common/ui/context-menu";
+} from "@batch-flask/ui/context-menu";
 import { ElectronShell, FileSystemService, PythonRpcService } from "app/services";
 import "./rpc-server-status.scss";
 

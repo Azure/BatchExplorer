@@ -1,4 +1,4 @@
-import { autobind } from "@bl-common/core";
+import { autobind } from "@batch-flask/core";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 export class WaitForDeletePoller {

@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { HttpService } from "@bl-common/core";
+import { HttpService } from "@batch-flask/core";
 import { ServerError } from "app/models";
 import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";

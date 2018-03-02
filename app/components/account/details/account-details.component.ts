@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "@bl-common/core";
+import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs";
 
 import { AccountResource, BatchApplication, Job, Pool, ServerError } from "app/models";
@@ -10,7 +10,7 @@ import {
 } from "app/services";
 import { EntityView, ListView } from "app/services/core";
 
-import { DialogService } from "@bl-common/ui/dialogs";
+import { DialogService } from "@batch-flask/ui/dialogs";
 import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
 import "./account-details.scss";
 

@@ -14,7 +14,7 @@ import { AppComponent } from "app/app.component";
 import { MainNavigationComponent } from "app/components/shared/main-navigation.component";
 
 // extenal modules
-import { BaseModule } from "@bl-common/ui";
+import { BaseModule } from "@batch-flask/ui";
 import { AccountModule } from "app/components/account/account.module";
 import { ApplicationModule } from "app/components/application/application.module";
 import { DataModule } from "app/components/data/data.module";
@@ -32,7 +32,7 @@ import { BatchLabsErrorHandler } from "app/error-handler";
 
 // services
 import { HttpModule } from "@angular/http";
-import { MaterialModule } from "@bl-common/core";
+import { MaterialModule } from "@batch-flask/core";
 import { CommonModule } from "app/components/common";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";

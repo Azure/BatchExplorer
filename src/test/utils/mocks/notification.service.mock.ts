@@ -1,4 +1,4 @@
-import { NotificationService } from "@bl-common/ui/notifications";
+import { NotificationService } from "@batch-flask/ui/notifications";
 
 export class NotificationServiceMock {
     public error: jasmine.Spy;
