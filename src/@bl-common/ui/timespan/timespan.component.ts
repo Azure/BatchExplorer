@@ -4,7 +4,7 @@ import {
 import * as moment from "moment";
 import { Subscription } from "rxjs";
 
-import { DateUtils } from "app/utils";
+import { DateUtils } from "@bl-common/utils";
 import { Observable } from "rxjs/Observable";
 
 export enum TimespanDisplayType {

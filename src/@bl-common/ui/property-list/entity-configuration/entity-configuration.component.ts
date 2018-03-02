@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from "@angular/core";
-import { EditorConfig } from "@bl-common/ui/editor";
 import { Record } from "@bl-common/core";
+import { EditorConfig } from "@bl-common/ui/editor";
 import { EntityConfigurationView } from "app/models";
 import { SettingsService } from "app/services";
 

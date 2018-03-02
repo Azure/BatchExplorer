@@ -1,7 +1,7 @@
 import { Type } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Dto } from "@bl-common/core/dto";
-import { FormUtils } from "app/utils/form-utils";
+import { FormUtils } from "@bl-common/utils";
 import { BehaviorSubject, Observable } from "rxjs";
 
 export interface AsyncTask {

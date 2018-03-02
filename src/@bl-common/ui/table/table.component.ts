@@ -4,7 +4,8 @@ import {
 } from "@angular/core";
 
 import { FocusSectionComponent } from "@bl-common/ui/focus-section";
-import { DragUtils, log } from "app/utils";
+import { DragUtils } from "@bl-common/utils";
+import { log } from "app/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
 import { TableCellComponent } from "./table-cell";
 import { SortDirection, TableColumnComponent } from "./table-column";
