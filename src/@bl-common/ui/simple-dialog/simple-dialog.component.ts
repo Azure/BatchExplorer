@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 
 import "./simple-dialog.scss";
 

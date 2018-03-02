@@ -1,4 +1,4 @@
-import { NotificationService } from "app/components/base/notifications";
+import { NotificationService } from "@bl-common/ui/notifications";
 
 export class NotificationServiceMock {
     public error: jasmine.Spy;

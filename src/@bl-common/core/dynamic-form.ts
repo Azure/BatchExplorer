@@ -1,6 +1,6 @@
 import { Type } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Dto } from "app/core/dto";
+import { Dto } from "@bl-common/core/dto";
 import { FormUtils } from "app/utils/form-utils";
 import { BehaviorSubject, Observable } from "rxjs";
 

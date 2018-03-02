@@ -2,8 +2,8 @@ import { Input, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 
-import { BreadcrumbService } from "app/components/base/breadcrumbs";
-import { ContextMenuService } from "app/components/base/context-menu";
+import { BreadcrumbService } from "@bl-common/ui/breadcrumbs";
+import { ContextMenuService } from "@bl-common/ui/context-menu";
 import { log } from "app/utils";
 import { ContextMenu } from "../context-menu";
 import { AbstractListBase } from "./abstract-list-base";

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, fakeAsync } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { AsyncSubject } from "rxjs";
 
-import { BannerComponent, BannerOtherFixDirective } from "app/components/base/banner";
+import { BannerComponent, BannerOtherFixDirective } from "@bl-common/ui/banner";
 import { mouseenter } from "test/utils/helpers";
 
 @Component({

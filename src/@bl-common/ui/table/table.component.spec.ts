@@ -3,11 +3,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 
-import { BreadcrumbService } from "app/components/base/breadcrumbs";
-import { ContextMenuService } from "app/components/base/context-menu";
+import { BreadcrumbService } from "@bl-common/ui/breadcrumbs";
+import { ContextMenuService } from "@bl-common/ui/context-menu";
 import {
     TableCellComponent, TableColumnComponent, TableComponent, TableHeadComponent, TableRowComponent,
-} from "app/components/base/table";
+} from "@bl-common/ui/table";
 import { VmSize } from "app/models";
 import { click } from "test/utils/helpers";
 import { virtualScrollMockComponents } from "test/utils/mocks/components";

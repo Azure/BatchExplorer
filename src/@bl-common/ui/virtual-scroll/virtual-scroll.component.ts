@@ -19,7 +19,7 @@ import {
 import * as tween from "@tweenjs/tween.js";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { VirtualScrollTailComponent } from "./virtual-scroll-tail";
 
 import "./virtual-scroll.scss";

@@ -3,13 +3,13 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 
-import { BreadcrumbModule } from "app/components/base/breadcrumbs";
-import { ContextMenuService } from "app/components/base/context-menu";
-import { FocusSectionComponent } from "app/components/base/focus-section";
+import { BreadcrumbModule } from "@bl-common/ui/breadcrumbs";
+import { ContextMenuService } from "@bl-common/ui/context-menu";
+import { FocusSectionComponent } from "@bl-common/ui/focus-section";
 import {
     QuickListComponent, QuickListItemComponent, QuickListItemStatusComponent,
-} from "app/components/base/quick-list";
-import { ListSelection } from "app/core/list";
+} from "@bl-common/ui/quick-list";
+import { ListSelection } from "@bl-common/core/list";
 import { ButtonClickEvents, click } from "test/utils/helpers";
 import { virtualScrollMockComponents } from "test/utils/mocks/components";
 

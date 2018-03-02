@@ -2,7 +2,7 @@ import { ComponentType } from "@angular/cdk/portal";
 import { Injectable } from "@angular/core";
 import { AsyncValidatorFn, ValidatorFn } from "@angular/forms";
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material";
-import { PromptDialogComponent } from "app/components/base/dialogs";
+import { PromptDialogComponent } from "@bl-common/ui/dialogs";
 import { Observable } from "rxjs";
 import { ConfirmationDialogComponent } from "./confirmation-dialog.component";
 

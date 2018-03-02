@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
-import { ListLoadingComponent } from "app/components/base/loading";
+import { ListLoadingComponent } from "@bl-common/ui/loading";
 import { ButtonsModule } from "../buttons/buttons.module";
 import { LoadingComponent } from "./loading.component";
 import { SimpleLoadingComponent } from "./simple-loading.component";

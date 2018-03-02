@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { GaugeConfig } from "app/components/base/graphs/gauge";
+import { GaugeConfig } from "@bl-common/ui/graphs/gauge";
 
 @Component({
     selector: "bl-gauge",

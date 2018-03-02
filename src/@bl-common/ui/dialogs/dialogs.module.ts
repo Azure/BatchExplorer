@@ -1,10 +1,10 @@
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
-import { MaterialModule } from "app/core";
+import { MaterialModule } from "@bl-common/core";
 
-import { PromptDialogComponent } from "app/components/base/dialogs/prompt";
-import { FormModule } from "app/components/base/form";
+import { PromptDialogComponent } from "@bl-common/ui/dialogs/prompt";
+import { FormModule } from "@bl-common/ui/form";
 import { ConfirmationDialogComponent } from "./confirmation-dialog.component";
 import { DialogService } from "./dialog.service";
 

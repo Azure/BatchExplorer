@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { ButtonAction } from "./button.component";
 
 import { Job, JobState } from "app/models";

@@ -3,10 +3,10 @@ import {
 } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 
-import { FormPageComponent } from "app/components/base/form/form-page";
+import { FormPageComponent } from "@bl-common/ui/form/form-page";
 import { ComplexFormComponent, ComplexFormConfig } from "../complex-form.component";
 
-import { AsyncTask } from "app/core";
+import { AsyncTask } from "@bl-common/core";
 import { ServerError } from "app/models";
 import { Subscription } from "rxjs";
 import "./form-footer.scss";

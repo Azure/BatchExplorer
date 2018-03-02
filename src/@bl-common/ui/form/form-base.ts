@@ -1,7 +1,7 @@
 import { EventEmitter, Input, Output } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 
 import { ServerError } from "app/models";
 import { SidebarRef } from "../sidebar";

@@ -2,9 +2,9 @@ import { ModuleWithProviders, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
-import { MaterialModule } from "app/core";
+import { MaterialModule } from "@bl-common/core";
 
-import { EditorModule } from "app/components/base/editor";
+import { EditorModule } from "@bl-common/ui/editor";
 import { ButtonsModule } from "../buttons";
 import { ComplexFormComponent } from "./complex-form";
 import { FormFooterComponent } from "./complex-form/footer";

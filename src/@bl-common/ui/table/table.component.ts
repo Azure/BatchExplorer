@@ -3,7 +3,7 @@ import {
     HostBinding, HostListener, Input, Optional, Output, QueryList,
 } from "@angular/core";
 
-import { FocusSectionComponent } from "app/components/base/focus-section";
+import { FocusSectionComponent } from "@bl-common/ui/focus-section";
 import { DragUtils, log } from "app/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
 import { TableCellComponent } from "./table-cell";

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 
 import "./property-group.scss";
 

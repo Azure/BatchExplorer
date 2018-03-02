@@ -1,7 +1,7 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
-import { MaterialModule } from "app/core";
+import { MaterialModule } from "@bl-common/core";
 
 import { AdvancedFilterComponent } from "./advanced-filter.component";
 import { AdvancedFilterListComponent } from "./list-filter-control/list-filter-control";

@@ -6,7 +6,7 @@ You can add a context menu on right click(or any other trigger if needed).
 Example of usage.
 ```typescript
 
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@bl-common/ui/context-menu";
 
 @Component({
     template: `<div (contextmenu)="onContextMenu()"></div>`

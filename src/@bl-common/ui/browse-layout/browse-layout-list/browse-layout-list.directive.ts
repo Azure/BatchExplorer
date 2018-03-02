@@ -1,6 +1,6 @@
 import { Directive, Host, Optional, Self, ViewContainerRef } from "@angular/core";
 
-import { ListBaseComponent } from "app/core/list";
+import { ListBaseComponent } from "@bl-common/core/list";
 import { log } from "app/utils";
 
 @Directive({

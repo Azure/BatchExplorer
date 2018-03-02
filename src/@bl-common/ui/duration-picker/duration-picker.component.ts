@@ -5,7 +5,7 @@ import {
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 
-import { UNLIMITED_DURATION_THRESHOLD } from "app/core";
+import { UNLIMITED_DURATION_THRESHOLD } from "@bl-common/core";
 import * as moment from "moment";
 
 import "./duration-picker.scss";

@@ -2,8 +2,8 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
-import { ButtonComponent } from "app/components/base/buttons";
-import { PropertyGroupComponent } from "app/components/base/property-list";
+import { ButtonComponent } from "@bl-common/ui/buttons";
+import { PropertyGroupComponent } from "@bl-common/ui/property-list";
 import { click } from "test/utils/helpers";
 
 @Component({

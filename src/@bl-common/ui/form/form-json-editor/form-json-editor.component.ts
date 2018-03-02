@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { Subscription } from "rxjs";
 
-import { EditorConfig } from "app/components/base/editor";
+import { EditorConfig } from "@bl-common/ui/editor";
 import { validJsonConfig } from "app/utils/validators";
 import "./form-json-editor.scss";
 

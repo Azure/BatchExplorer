@@ -1,10 +1,10 @@
 import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { SidebarRef } from "app/components/base/sidebar";
+import { SidebarRef } from "@bl-common/ui/sidebar";
 import { Metadata } from "app/models";
 
 @Component({

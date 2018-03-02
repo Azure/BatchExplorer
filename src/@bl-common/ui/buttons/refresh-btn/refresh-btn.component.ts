@@ -1,5 +1,5 @@
 import { Component, Input, animate, style, transition, trigger } from "@angular/core";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { Observable } from "rxjs";
 
 export enum RefreshStatus {

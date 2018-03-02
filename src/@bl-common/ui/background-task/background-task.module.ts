@@ -1,7 +1,7 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
-import { MaterialModule } from "app/core";
+import { MaterialModule } from "@bl-common/core";
 
 import { DropdownModule } from "../dropdown";
 import { NotificationModule } from "../notifications";

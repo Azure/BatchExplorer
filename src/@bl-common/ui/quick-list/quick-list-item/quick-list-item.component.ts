@@ -3,9 +3,9 @@ import {
 } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { AbstractListItemBase } from "app/components/base/abstract-list";
-import { BreadcrumbService } from "app/components/base/breadcrumbs";
-import { ContextMenuService } from "app/components/base/context-menu";
+import { AbstractListItemBase } from "@bl-common/ui/abstract-list";
+import { BreadcrumbService } from "@bl-common/ui/breadcrumbs";
+import { ContextMenuService } from "@bl-common/ui/context-menu";
 import { QuickListComponent } from "../quick-list.component";
 
 import "./quick-list-item.scss";

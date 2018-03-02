@@ -4,9 +4,9 @@ import {
 } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
-import { LoadingStatus } from "app/components/base/loading";
-import { autobind } from "app/core";
-import { ListSelection, SelectableList } from "app/core/list";
+import { LoadingStatus } from "@bl-common/ui/loading";
+import { autobind } from "@bl-common/core";
+import { ListSelection, SelectableList } from "@bl-common/core/list";
 import { FocusSectionComponent } from "../focus-section";
 import { VirtualScrollComponent } from "../virtual-scroll";
 import { AbstractListItemBase } from "./abstract-list-item-base";

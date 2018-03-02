@@ -4,9 +4,9 @@ import {
 } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { AbstractListItemBase } from "app/components/base/abstract-list";
-import { BreadcrumbService } from "app/components/base/breadcrumbs";
-import { ContextMenuService } from "app/components/base/context-menu";
+import { AbstractListItemBase } from "@bl-common/ui/abstract-list";
+import { BreadcrumbService } from "@bl-common/ui/breadcrumbs";
+import { ContextMenuService } from "@bl-common/ui/context-menu";
 import { TableCellComponent } from "../table-cell";
 import { TableComponent } from "../table.component";
 

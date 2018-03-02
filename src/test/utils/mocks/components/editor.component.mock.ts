@@ -1,6 +1,6 @@
 import { Component, Input, forwardRef } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { EditorConfig } from "app/components/base/editor";
+import { EditorConfig } from "@bl-common/ui/editor";
 
 @Component({
     selector: "bl-editor",

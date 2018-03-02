@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { autobind } from "app/core";
+import { autobind } from "@bl-common/core";
 import { Observable } from "rxjs";
 
 import { LoadingStatus } from "../loading-status";

@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "app/core/record";
+import { Model, Prop, Record } from "@bl-common/core/record";
 
 export enum IconSources {
     svg = "svg",

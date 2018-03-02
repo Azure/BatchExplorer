@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
-import { MaterialModule } from "app/core";
+import { MaterialModule } from "@bl-common/core";
 
 import { TabGroupComponent } from "./tab-group.component";
 import { TabComponent, TabLabelComponent } from "./tab.component";

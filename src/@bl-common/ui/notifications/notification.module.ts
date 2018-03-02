@@ -2,9 +2,9 @@ import { ModuleWithProviders, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
-import { MaterialModule } from "app/core";
+import { MaterialModule } from "@bl-common/core";
 
-import { ButtonsModule } from "app/components/base/buttons";
+import { ButtonsModule } from "@bl-common/ui/buttons";
 import { DropdownModule } from "../dropdown";
 import { NotificationContainerComponent } from "./notification-container.component";
 import { NotificationService } from "./notification-service";

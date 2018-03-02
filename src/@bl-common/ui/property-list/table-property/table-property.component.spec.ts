@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
-import { ButtonComponent } from "app/components/base/buttons";
+import { ButtonComponent } from "@bl-common/ui/buttons";
 import { AuthorizationHttpService } from "app/services";
 import { click } from "test/utils/helpers";
 import {

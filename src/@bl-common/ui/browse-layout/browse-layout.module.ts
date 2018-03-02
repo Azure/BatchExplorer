@@ -3,8 +3,8 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
-import { ButtonsModule } from "app/components/base/buttons";
-import { ScrollableModule } from "app/components/base/scrollable";
+import { ButtonsModule } from "@bl-common/ui/buttons";
+import { ScrollableModule } from "@bl-common/ui/scrollable";
 import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-filter";
 import { BrowseLayoutListDirective } from "./browse-layout-list";
 import { BrowseLayoutComponent } from "./browse-layout.component";

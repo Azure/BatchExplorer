@@ -3,7 +3,7 @@ import {
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 
-import { AsyncTask, Dto, autobind } from "app/core";
+import { AsyncTask, Dto, autobind } from "@bl-common/core";
 import { ServerError } from "app/models";
 import { log } from "app/utils";
 import { validJsonConfig } from "app/utils/validators";
