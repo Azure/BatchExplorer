@@ -3,13 +3,13 @@ import { autobind } from "@bl-common/core";
 import { Observable } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
-import { LoadingStatus } from "@bl-common/ui/loading";
+import { Filter } from "@bl-common/core";
 import { ListBaseComponent } from "@bl-common/core/list";
+import { LoadingStatus } from "@bl-common/ui/loading";
 import { Node } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { Filter } from "common";
 
 @Component({
     selector: "bl-node-list",

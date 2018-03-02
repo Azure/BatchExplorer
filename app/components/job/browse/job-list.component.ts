@@ -5,17 +5,17 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@bl-common/core";
 import { Observable, Subscription } from "rxjs";
 
+import { Filter } from "@bl-common/core";
+import { ListBaseComponent, ListSelection } from "@bl-common/core/list";
 import { BackgroundTaskService } from "@bl-common/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@bl-common/ui/context-menu";
 import { LoadingStatus } from "@bl-common/ui/loading";
 import { QuickListItemStatus } from "@bl-common/ui/quick-list";
-import { ListBaseComponent, ListSelection } from "@bl-common/core/list";
 import { Job, JobState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
 import { JobListParams, JobService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { Filter } from "common";
 import { List } from "immutable";
 import {
     DeleteJobAction,

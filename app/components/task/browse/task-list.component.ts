@@ -5,14 +5,14 @@ import { Observable, Subscription } from "rxjs";
 import { TaskListDisplayComponent } from "./display";
 
 import { ActivatedRoute } from "@angular/router";
+import { Filter } from "@bl-common/core";
+import { ListBaseComponent, ListSelection } from "@bl-common/core/list";
 import { BackgroundTaskService } from "@bl-common/ui/background-task";
 import { LoadingStatus } from "@bl-common/ui/loading";
-import { ListBaseComponent, ListSelection } from "@bl-common/core/list";
 import { Task } from "app/models";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { Filter } from "common";
 import { DeleteTaskAction } from "../action";
 
 @Component({

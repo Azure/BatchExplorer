@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { autobind } from "@bl-common/core";
 
-import { Filter, FilterBuilder } from "common";
+import { Filter, FilterBuilder } from "@bl-common/core";
 import { SidebarManager } from"@bl-common/ui/sidebar";
 import { ApplicationCreateDialogComponent } from "../action";
 

@@ -1,7 +1,7 @@
 import { Component, Input } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 
-import { Filter, and, none, or, prop } from "common";
+import { Filter, and, none, or, prop } from "@bl-common/core";
 import { AdvancedFilter } from "../advanced-filter";
 import { AdvancedFilterControlBase } from "../control-base";
 

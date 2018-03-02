@@ -5,10 +5,10 @@ import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 
 import { MatDialog } from "@angular/material";
-import { DeleteSelectedItemsDialogComponent } from "@bl-common/ui/list-and-show-layout";
 import { autobind } from "@bl-common/core";
+import { Filter, FilterBuilder } from "@bl-common/core";
 import { ListSelection } from "@bl-common/core/list";
-import { Filter, FilterBuilder } from "common";
+import { DeleteSelectedItemsDialogComponent } from "@bl-common/ui/list-and-show-layout";
 import { Subscription } from "rxjs";
 import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-filter";
 import { BrowseLayoutListDirective } from "./browse-layout-list";

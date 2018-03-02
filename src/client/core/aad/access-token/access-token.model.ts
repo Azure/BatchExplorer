@@ -1,6 +1,6 @@
 import * as moment from "moment";
 
-import { exists } from "common/utils";
+import { exists } from "@bl-common/utils";
 
 // tslint:disable:variable-name
 

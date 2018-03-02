@@ -10,9 +10,9 @@ This is to prevent cirular dependencies as elements of this module are being use
 
 ## Structure
 
-* `core`:
-* `ui`:
-* `utils`: Utils
+* `utils`: All core utilities function you would use as functions `DateUtils.prettyDate()`
+* `core`:  All classes, object that are needed to be reusued across the app `Record,Dto`
+* `ui`:    All the angular/ui specific elements(components, services, modules, etc.)
 
 
 ## Import graph

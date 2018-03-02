@@ -1,4 +1,4 @@
-export * from "common/utils";
+export * from "@bl-common/utils";
 
 // tslint:disable:variable-name
 export * from "./array";

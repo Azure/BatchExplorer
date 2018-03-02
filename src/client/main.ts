@@ -9,7 +9,7 @@ app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 /**
  * Setup a few extension functions
  */
-import "common/extensions";
+import "@bl-common/extensions";
 
 import { logger } from "client/logger";
 import { startBatchLabs } from "./startup";

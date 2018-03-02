@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Input, ViewChild } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { FocusSectionComponent } from "@bl-common/ui/focus-section/focus-section.component";
+import { Filter, FilterBuilder } from "@bl-common/core";
 import { ListSelection } from "@bl-common/core/list";
-import { Filter, FilterBuilder } from "common";
+import { FocusSectionComponent } from "@bl-common/ui/focus-section/focus-section.component";
 import { SelectableList } from "./selectable-list";
 
 export interface ListBaseComponent {

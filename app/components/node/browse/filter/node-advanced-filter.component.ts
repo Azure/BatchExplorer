@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 
+import { Filter } from "@bl-common/core";
 import { AdvancedFilter, StatePickerControl } from "@bl-common/ui/advanced-filter";
 import { NodeState } from "app/models";
-import { Filter } from "common";
 
 @Component({
     selector: "bl-node-advanced-filter",

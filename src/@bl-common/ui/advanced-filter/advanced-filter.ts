@@ -2,8 +2,8 @@ import { FormGroup } from "@angular/forms";
 import { Map } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
+import * as FilterBuilder from "@bl-common/core/filter-builder";
 import { log } from "app/utils";
-import * as FilterBuilder from "common";
 import { AdvancedFilterControlBase } from "./control-base";
 
 export class AdvancedFilter {
