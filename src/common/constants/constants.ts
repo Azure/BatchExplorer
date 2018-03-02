@@ -12,27 +12,6 @@ export const caching = {
     maxTargetedCache: 2,
 };
 
-export enum HttpCode {
-    Ok = 200,
-    Accepted = 201,
-    NotFound = 404,
-    BadRequest = 400,
-    RequestTimeout = 408,
-    Conflict = 409,
-    InteralServerError = 500,
-    BadGateway = 502,
-    ServiceUnavailable = 503,
-    GatewayTimeout = 504,
-}
-
-export const RetryableHttpCode = new Set([
-    HttpCode.RequestTimeout,
-    HttpCode.InteralServerError,
-    HttpCode.BadGateway,
-    HttpCode.ServiceUnavailable,
-    HttpCode.GatewayTimeout,
-]);
-
 export const badHttpCodeMaxRetryCount = 5;
 
 export const FileUrlStrings = {
@@ -111,13 +90,6 @@ export const localStorageKey = {
     proxySettings: "proxy_settings",
 };
 
-export const sessionStorageKey = {
-    /**
-     * Sessionstorage key that save the last breadcrumb.
-     */
-    breadcrumb: "breadcrumb",
-};
-
 export const ApiVersion = {
     arm: "2016-09-01",
     armClassicStorage: "2016-11-01",
@@ -189,12 +161,6 @@ export const LowPriDiscount = {
     windows: 0.40, // 60%
     linux: 0.20,   // 80%
 };
-
-export enum MouseButton {
-    left = 0,
-    middle = 1,
-    right = 2,
-}
 
 export const AAD = {
     /**

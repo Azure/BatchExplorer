@@ -4,8 +4,8 @@ import { By } from "@angular/platform-browser";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { ButtonComponent } from "app/components/base/buttons";
-import { MaterialModule } from "app/core";
+import { MaterialModule } from "@batch-flask/core";
+import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { RoleAssignment, RoleDefinition } from "app/models";
 import { AuthorizationHttpService, ResourceAccessService } from "app/services";
 import { click } from "test/utils/helpers";

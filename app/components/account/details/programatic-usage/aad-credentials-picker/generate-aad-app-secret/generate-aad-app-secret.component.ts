@@ -3,7 +3,7 @@ import {
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
 import { AccountResource } from "app/models";
 import { AADApplication } from "app/models/ms-graph";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";

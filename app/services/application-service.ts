@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
+import { HttpCode } from "@batch-flask/core";
 import { ApplicationPackage, BatchApplication, ServerError } from "app/models";
 import { Constants } from "app/utils";
 import { AccountService } from "./account.service";
@@ -19,7 +20,7 @@ export interface ApplicationParams {
 
 // List of error we don't want to log for storage requests
 const applicationIgnoredErrors = [
-    Constants.HttpCode.Conflict,
+    HttpCode.Conflict,
 ];
 
 @Injectable()

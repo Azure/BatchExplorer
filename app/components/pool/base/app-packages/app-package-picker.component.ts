@@ -6,11 +6,11 @@ import { MatSelectChange } from "@angular/material";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { LoadingStatus } from "app/components/base/loading";
+import { LoadingStatus } from "@batch-flask/ui/loading";
 import { ApplicationPackage, BatchApplication, ServerError } from "app/models";
 import { ApplicationListParams, ApplicationService } from "app/services";
 
-import "app/components/base/form/editable-table/editable-table.scss";
+import "@batch-flask/ui/form/editable-table/editable-table.scss";
 import { ListView } from "app/services/core";
 
 interface PackageReference {

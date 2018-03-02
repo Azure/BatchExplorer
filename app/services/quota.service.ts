@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
+import { FilterBuilder } from "@batch-flask/core";
 import { AccountResource, BatchQuotas, JobState, Pool } from "app/models";
-import { FilterBuilder } from "common";
 import { List } from "immutable";
 import { AccountService } from "./account.service";
 import { ApplicationService } from "./application-service";

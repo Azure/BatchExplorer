@@ -1,7 +1,7 @@
 import { List } from "immutable";
 import * as path from "path";
 
-import { LoadingStatus } from "app/components/base/loading/loading-status";
+import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { File } from "app/models";
 import { CloudPathUtils, StringUtils, prettyBytes } from "app/utils";
 import { FileTreeNode } from "./file-tree.model";

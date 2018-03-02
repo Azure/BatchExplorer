@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
 import * as moment from "moment";
 
 import { AddNodeUserAttributes } from "app/services";

@@ -1,6 +1,6 @@
 import { List, Record } from "immutable";
 
-import { ObjectUtils } from "common";
+import { ObjectUtils } from "@batch-flask/utils";
 import { JobAction } from "./job-action";
 
 // tslint:disable:variable-name

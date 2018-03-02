@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 import { List } from "immutable";
 
-import { LoadingStatus } from "app/components/base/loading";
-import { QuickListComponent } from "app/components/base/quick-list";
-import { TableComponent } from "app/components/base/table";
-import { ListBaseComponent } from "app/core/list";
+import { ListBaseComponent } from "@batch-flask/core/list";
+import { LoadingStatus } from "@batch-flask/ui/loading";
+import { QuickListComponent } from "@batch-flask/ui/quick-list";
+import { TableComponent } from "@batch-flask/ui/table";
 import { Node } from "app/models";
 
 @Component({

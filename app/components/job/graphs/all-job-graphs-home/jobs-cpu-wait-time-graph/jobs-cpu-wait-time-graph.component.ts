@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
 import * as moment from "moment";
 

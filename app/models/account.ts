@@ -1,4 +1,4 @@
-import { ArmRecord, Model, Prop, Record } from "app/core";
+import { ArmRecord, Model, Prop, Record } from "@batch-flask/core";
 import { StorageUtils } from "app/utils";
 import { Subscription } from "./subscription";
 

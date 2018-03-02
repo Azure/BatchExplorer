@@ -1,7 +1,7 @@
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable, Subscription } from "rxjs";
 
-import { LoadingStatus } from "app/components/base/loading/loading-status";
+import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { File, ServerError } from "app/models";
 import { DataCache, ListView } from "app/services/core";
 import { FileLoader } from "app/services/file";

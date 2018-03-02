@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { DialogService } from "app/components/base/dialogs";
+import { DialogService } from "@batch-flask/ui/dialogs";
 import { FileDeleteEvent, FileDropEvent, FileExplorerConfig } from "app/components/file/browse/file-explorer";
 import { File } from "app/models";
 import { StorageService } from "app/services";

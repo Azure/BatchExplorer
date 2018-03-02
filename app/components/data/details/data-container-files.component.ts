@@ -1,10 +1,10 @@
 import { Component, Input, OnDestroy, ViewChild } from "@angular/core";
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
 import * as path from "path";
 import { Subscription } from "rxjs";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
-import { NotificationService } from "app/components/base/notifications";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { NotificationService } from "@batch-flask/ui/notifications";
 import { BlobFilesBrowserComponent } from "app/components/file/browse";
 import { FileDropEvent } from "app/components/file/browse/file-explorer";
 import { BlobContainer, File } from "app/models";

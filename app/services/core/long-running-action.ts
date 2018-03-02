@@ -1,8 +1,8 @@
 import * as inflection from "inflection";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { BackgroundTask } from "app/components/base/background-task/background-task.model";
-import { BackgroundTaskService } from "app/components/base/background-task/background-task.service";
+import { BackgroundTask } from "@batch-flask/ui/background-task/background-task.model";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task/background-task.service";
 
 /**
  * Base class for a long running action

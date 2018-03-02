@@ -3,7 +3,7 @@ import { FormControl } from "@angular/forms";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
 import { Application } from "app/models";
 import { NcjTemplateService, StorageService } from "app/services";
 import "./market.scss";

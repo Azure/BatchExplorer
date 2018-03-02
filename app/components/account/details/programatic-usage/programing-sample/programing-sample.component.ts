@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/core";
 import { prerequisites, sampleTemplates } from "./samples";
 
+import { EditorConfig } from "@batch-flask/ui/editor";
 import { AADCredential, CredentialType } from "app/components/account/details/programatic-usage";
-import { EditorConfig } from "app/components/base/editor";
 import { AccountKeys, AccountResource } from "app/models";
 import "./programing-sample.scss";
 

@@ -1,6 +1,7 @@
+import { SecureUtils } from "@batch-flask/utils";
 import { logger } from "client/logger";
 import { MainWindow } from "client/main-window";
-import { BatchLabsLink, BatchLabsLinkAttributes, Constants, SecureUtils } from "common";
+import { BatchLabsLink, BatchLabsLinkAttributes, Constants } from "common";
 import { BatchLabsApplication } from "./batchlabs-application";
 
 /**

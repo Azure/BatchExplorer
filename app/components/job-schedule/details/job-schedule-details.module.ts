@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 
+import { BaseModule } from "@batch-flask/ui";
 import { commonModules } from "app/common";
-import { BaseModule } from "app/components/base";
 import { JobDetailsModule } from "app/components/job/details";
 import { PoolDetailsModule } from "app/components/pool/details";
 import { JobScheduleAutoPoolComponent } from "./job-schedule-autopool.component";

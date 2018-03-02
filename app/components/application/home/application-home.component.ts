@@ -1,9 +1,8 @@
 import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { autobind } from "app/core";
 
-import { Filter, FilterBuilder } from "common";
-import { SidebarManager } from "../../base/sidebar";
+import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationCreateDialogComponent } from "../action";
 
 @Component({

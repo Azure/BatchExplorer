@@ -5,18 +5,18 @@ import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Observable } from "rxjs";
 
+import { Property } from "@batch-flask/core";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationPackageTableComponent } from "app/components/application/details";
-import { BackgroundTaskService } from "app/components/base/background-task";
-import { SidebarManager } from "app/components/base/sidebar";
 import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
-import { Property } from "common";
 import * as Fixtures from "test/fixture";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 
 import {
     TableCellComponent, TableColumnComponent, TableComponent, TableHeadComponent,
-} from "app/components/base/table";
+} from "@batch-flask/ui/table";
 
 const appWithPackagesId: string = "app-2";
 const appWithoutPackagesId: string = "app-1";

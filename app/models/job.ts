@@ -1,6 +1,6 @@
 import { List } from "immutable";
 
-import { ListProp, Model, Prop, Record } from "app/core";
+import { ListProp, Model, Prop, Record } from "@batch-flask/core";
 import { ModelUtils } from "app/utils";
 import { AllTasksCompleteAction, TaskFailureAction } from "./job-action";
 import { JobConstraints } from "./job-constraints";

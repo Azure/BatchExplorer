@@ -2,9 +2,9 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
-import { BaseModule } from "app/components/base";
+import { MaterialModule } from "@batch-flask/core";
+import { BaseModule } from "@batch-flask/ui";
 import { CommonModule } from "app/components/common";
-import { MaterialModule } from "app/core";
 
 export const commonModules = [
     BrowserModule, MaterialModule, RouterModule,

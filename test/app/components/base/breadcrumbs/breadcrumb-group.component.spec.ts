@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { BehaviorSubject } from "rxjs";
 
-import { BreadcrumbGroupComponent, BreadcrumbModule, BreadcrumbService } from "app/components/base/breadcrumbs";
+import { BreadcrumbGroupComponent, BreadcrumbModule, BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { pool1Crumb, pool1PropertiesCrumb, poolsCrumb } from "./crumbs-data";
 
 describe("BreadcrumbGroupComponent", () => {

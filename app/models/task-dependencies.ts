@@ -1,6 +1,6 @@
 import { List } from "immutable";
 
-import { ListProp, Model, Record } from "app/core";
+import { ListProp, Model, Record } from "@batch-flask/core";
 
 export interface TaskDependenciesAttributes {
     taskIds: string[];

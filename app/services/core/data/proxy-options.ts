@@ -1,4 +1,4 @@
-import { ObjectUtils } from "common";
+import { ObjectUtils } from "@batch-flask/utils";
 
 export interface OptionsBase {
     select?: string;

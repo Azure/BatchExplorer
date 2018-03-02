@@ -4,8 +4,8 @@ import { MatSidenav } from "@angular/material";
 import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/testing";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
-import { SidebarContentComponent, SidebarManager, SidebarModule } from "app/components/base/sidebar";
-import { MaterialModule } from "app/core";
+import { MaterialModule } from "@batch-flask/core";
+import { SidebarContentComponent, SidebarManager, SidebarModule } from "@batch-flask/ui/sidebar";
 
 @Component({
     template: "<h1>{{text}}</h1>",

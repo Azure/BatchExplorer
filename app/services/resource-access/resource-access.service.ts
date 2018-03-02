@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 
+import { SecureUtils } from "@batch-flask/utils";
 import { RoleAssignment, RoleDefinition } from "app/models";
 import { ArmListGetter, TargetedDataCache } from "app/services/core";
-import { SecureUtils } from "common";
 import { List } from "immutable";
 import { Observable } from "rxjs/Observable";
 import { AccountService } from "../account.service";

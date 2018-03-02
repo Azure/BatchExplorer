@@ -8,9 +8,9 @@ import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarManager } from "app/components/base/sidebar";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
 import { Job, Node, NodeState, Pool, ServerError } from "app/models";
 import { NodeService } from "app/services";

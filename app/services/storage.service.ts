@@ -2,7 +2,8 @@ import { Injectable, NgZone } from "@angular/core";
 import * as path from "path";
 import { AsyncSubject, Observable, Subject } from "rxjs";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
+import { HttpCode } from "@batch-flask/core";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { BlobContainer, File, ServerError } from "app/models";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { CloudPathUtils, log } from "app/utils";
@@ -52,8 +53,8 @@ export interface NavigateBlobsOptions {
 }
 // List of error we don't want to log for storage requests
 const storageIgnoredErrors = [
-    Constants.HttpCode.NotFound,
-    Constants.HttpCode.Conflict,
+    HttpCode.NotFound,
+    HttpCode.Conflict,
 ];
 
 export interface BulkUploadStatus {

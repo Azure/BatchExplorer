@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
 import { shell } from "electron";
 
 import { NameValuePair, Pool, ResizeError, ResizeErrorCode } from "app/models";

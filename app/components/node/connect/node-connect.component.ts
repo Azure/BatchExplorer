@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
 
-import { SidebarRef } from "app/components/base/sidebar";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
 import { AddNodeUserAttributes, NodeService, NodeUserService } from "app/services";
 import { DateUtils, PoolUtils, SecureUtils } from "app/utils";

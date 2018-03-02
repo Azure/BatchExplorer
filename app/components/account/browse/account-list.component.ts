@@ -1,16 +1,15 @@
 import { ChangeDetectorRef, Component, forwardRef } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { autobind } from "app/core";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { LoadingStatus } from "app/components/base/loading";
-import { QuickListItemStatus } from "app/components/base/quick-list";
-import { ListBaseComponent } from "app/core/list";
+import { Filter, FilterMatcher, Operator, autobind } from "@batch-flask/core";
+import { ListBaseComponent } from "@batch-flask/core/list";
+import { LoadingStatus } from "@batch-flask/ui/loading";
+import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { AccountResource } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
-import { Filter, FilterMatcher, Operator } from "common";
-import { SidebarManager } from "../../base/sidebar";
 
 @Component({
     selector: "bl-account-list",

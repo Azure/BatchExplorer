@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { List } from "immutable";
 
-import { GaugeConfig } from "app/components/base/graphs/gauge";
+import { GaugeConfig } from "@batch-flask/ui/graphs/gauge";
 import { Job, JobTaskCounts, Node, Pool } from "app/models";
 import { JobService, NodeListParams, NodeService, PoolParams, PoolService } from "app/services";
 import { EntityView, ListView, PollObservable, PollService } from "app/services/core";

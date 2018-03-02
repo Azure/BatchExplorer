@@ -5,9 +5,9 @@ import { Response, ResponseOptions } from "@angular/http";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { ApplicationEditDialogComponent } from "app/components/application/action";
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
 import { ServerError } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";

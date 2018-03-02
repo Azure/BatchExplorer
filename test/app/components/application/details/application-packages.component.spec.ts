@@ -3,10 +3,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
 import { MatDialog } from "@angular/material";
+import { ListSelection } from "@batch-flask/core/list";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationPackageTableComponent, ApplicationPackagesComponent } from "app/components/application/details";
-import { BackgroundTaskService } from "app/components/base/background-task";
-import { SidebarManager } from "app/components/base/sidebar";
-import { ListSelection } from "app/core/list";
 import { BatchApplication, PackageState } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
