@@ -24,6 +24,7 @@ const webpackRequire: any = require;
 const testContext = webpackRequire.context(".", true, /\.spec\.ts/);
 const testAppContext = webpackRequire.context("../../app", true, /\.spec\.ts/);
 const testCommonContext = webpackRequire.context("../../src/common", true, /\.spec\.ts/);
+const testBlCommonContext = webpackRequire.context("../../src/@bl-common", true, /\.spec\.ts/);
 
 /*
  * get all the files, for each file, call the context function
@@ -35,7 +36,12 @@ function requireAll(requireContext) {
 }
 
 // requires and returns all modules that match
-const modules = [...requireAll(testContext), ...requireAll(testAppContext), ...requireAll(testCommonContext)];
+const modules = [
+    ...requireAll(testContext),
+    ...requireAll(testAppContext),
+    ...requireAll(testCommonContext),
+    ...requireAll(testBlCommonContext),
+];
 console.log(`Running specs from ${modules.length} files`);
 
 import "./spec-controls";

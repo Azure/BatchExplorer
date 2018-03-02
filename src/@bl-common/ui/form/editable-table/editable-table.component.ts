@@ -6,7 +6,7 @@ import {
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
-import { ObjectUtils } from "app/utils";
+import { ObjectUtils } from "@bl-common/utils";
 import { EditableTableColumnComponent, EditableTableColumnType } from "./editable-table-column.component";
 
 import "./editable-table.scss";

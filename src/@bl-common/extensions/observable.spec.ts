@@ -1,6 +1,6 @@
 import { Observable } from "rxjs";
 
-import "common/extensions/observable";
+import "./observable";
 
 describe("Observable extensions", () => {
     it("Should cascade observable", (done) => {

@@ -1,4 +1,4 @@
-import { SecureUtils, exists } from "app/utils";
+import { SecureUtils, exists } from "@bl-common/utils";
 
 export class ContextMenu {
     public args: any[];

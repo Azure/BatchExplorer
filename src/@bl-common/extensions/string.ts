@@ -1,5 +1,3 @@
-// import { ArrayUtils } from "app/utils/array";
-
 // tslint:disable:only-arrow-functions
 interface String {
     /**
