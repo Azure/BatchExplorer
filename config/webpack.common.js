@@ -28,10 +28,12 @@ const commonRules = [
 
 exports.defineEnv = function(env) {
     return new DefinePlugin({
+        "ENV": JSON.stringify(env),
         "process.env": {
             "ENV": JSON.stringify(env),
             "NODE_ENV": JSON.stringify(env),
-            "RENDERER": JSON.stringify(true)
+            "RENDERER": JSON.stringify(true),
+            "HOT": process.env.HOT,
         },
     });
 };

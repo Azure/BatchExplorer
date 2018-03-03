@@ -18,7 +18,7 @@ export class PythonRpcServerProcess {
     public async start(): Promise<void> {
         this._askForKill = false;
         return this._getCommandLine().then((data) => {
-            logger.info(`"Python path is: ${data.cmd} ${data.args}`);
+            logger.info(`Python path is: '${data.cmd}', Args: ${data.args}`);
             const child = this._spawedProcess = spawn(data.cmd, [...data.args]);
             pythonLogger.info("========================= STARTING PYTHON RPC SERVER PROCESS =========================");
 
@@ -36,6 +36,9 @@ export class PythonRpcServerProcess {
                 } else {
                     logger.error("Python Rpc server has exited unexpectedly with code!", code);
                 }
+            });
+            child.on("error", (e) => {
+                console.log("Error with this", e);
             });
             logger.info("Python Rpc server started!");
         });
