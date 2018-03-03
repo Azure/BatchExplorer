@@ -1,6 +1,7 @@
 import { Subject } from "rxjs";
 
 import { Breadcrumb, BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
+import { log } from "@batch-flask/utils";
 import { jobsCrumb, node1Crumb, pool1Crumb, pool1PropertiesCrumb, poolsCrumb } from "./crumbs-data";
 
 describe("Breadcrumb service", () => {
@@ -49,7 +50,7 @@ describe("Breadcrumb service", () => {
         let errorSpy: jasmine.Spy;
 
         beforeEach(() => {
-            errorSpy = spyOn(console, "error");
+            errorSpy = spyOn(log, "error");
         });
         it("create a breadcrumb from a given route succeed", () => {
             const snapshot = {
