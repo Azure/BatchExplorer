@@ -1,58 +1,23 @@
-import * as bunyan from "bunyan";
 import * as path from "path";
 
+import { NodeLogger } from "@batch-flask/utils/logger/node-logger";
 import { Constants } from "../client-constants";
-import { PrettyStream } from "./pretty-stream";
 
 const logsFolder = Constants.logsFolder;
 
-const stream = new PrettyStream();
-stream.pipe(process.stderr);
-
-export const logger = bunyan.createLogger({
+export const logger = new NodeLogger({
     name: "BatchLabs Main",
-    level: "debug",
-    streams: [
-        {
-            stream: stream as any,
-        },
-        {
-            type: "rotating-file",
-            path: path.join(logsFolder, "client.log"),
-            period: "1d",       // daily rotation
-            count: 3,           // keep 3 back copies
-        },
-    ],
+    path: path.join(logsFolder, "client.log"),
 });
 
-export const pythonLogger = bunyan.createLogger({
+export const pythonLogger = new NodeLogger({
     name: "BatchLabs Python",
-    level: "debug",
-    streams: [
-        {
-            stream: stream as any,
-        },
-        {
-            type: "rotating-file",
-            path: path.join(logsFolder, "python-server.log"),
-            period: "1d",       // daily rotation
-            count: 3,           // keep 3 back copies
-        },
-    ],
+    path: path.join(logsFolder, "python-server.log"),
 });
 
-export const renderLogger = bunyan.createLogger({
+export const renderLogger = new NodeLogger({
     name: "BatchLabs Renderer",
-    level: "debug",
-    streams: [
-        {
-            stream: stream as any,
-        },
-        {
-            type: "rotating-file",
-            path: path.join(logsFolder, "app.log"),
-            period: "1d",       // daily rotation
-            count: 3,           // keep 3 back copies
-        },
-    ],
+    path: path.join(logsFolder, "app.log"),
 });
+
+NodeLogger.mainLogger = logger;

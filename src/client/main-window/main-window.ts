@@ -105,7 +105,7 @@ export class MainWindow extends GenericWindow {
 
     private _setupEvents(window: Electron.BrowserWindow) {
         window.webContents.on("crashed", (event: Electron.Event, killed: boolean) => {
-            logger.error("There was a crash", event, killed);
+            logger.error("There was a crash", { event, killed });
             this.batchLabsApp.recoverWindow.createWithError(event.returnValue);
         });
 

@@ -3,7 +3,7 @@ import { ipcRenderer } from "electron";
 
 import "@batch-flask/extensions";
 
-import { log } from "app/utils";
+import { log } from "@batch-flask/utils";
 import { AppModule } from "./app.module";
 import { handleCoreError } from "./error-handler";
 

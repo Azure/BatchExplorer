@@ -18,7 +18,7 @@ export class PythonRpcServerProcess {
     public async start(): Promise<void> {
         this._askForKill = false;
         return this._getCommandLine().then((data) => {
-            logger.info("Python path is2", data.cmd, { args: data.args });
+            logger.info(`"Python path is: ${data.cmd} ${data.args}`);
             const child = this._spawedProcess = spawn(data.cmd, [...data.args]);
             pythonLogger.info("========================= STARTING PYTHON RPC SERVER PROCESS =========================");
 

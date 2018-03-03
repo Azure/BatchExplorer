@@ -1,4 +1,5 @@
 const helpers = require("./helpers");
+const { DefinePlugin } = require("webpack");
 
 const rules = {
     html: {
@@ -24,6 +25,16 @@ const rules = {
 const commonRules = [
     rules.html, rules.json, rules.file, rules.font,
 ];
+
+exports.defineEnv = function(env) {
+    return new DefinePlugin({
+        "process.env": {
+            "ENV": JSON.stringify(env),
+            "NODE_ENV": JSON.stringify(env),
+            "RENDERER": JSON.stringify(true)
+        },
+    });
+};
 
 exports.rules = rules;
 exports.commonRules = commonRules;

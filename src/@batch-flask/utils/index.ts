@@ -1,3 +1,4 @@
+export * from "./logger";
 export * from "./date-utils";
 export * from "./form-utils";
 export * from "./secure-utils";

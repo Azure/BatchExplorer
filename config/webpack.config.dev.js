@@ -7,6 +7,7 @@ const DefinePlugin = require("webpack/lib/DefinePlugin");
 const DllBundlesPlugin = require("webpack-dll-bundles-plugin").DllBundlesPlugin;
 const AddAssetHtmlPlugin = require("add-asset-html-webpack-plugin");
 const WriteFilePlugin = require("write-file-webpack-plugin");
+const { defineEnv } = require("./webpack.common");
 
 const webpackMergeDll = merge.strategy({ plugins: "replace" });
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
@@ -58,9 +59,7 @@ module.exports = merge(config, {
         ],
     },
     plugins: [
-        new DefinePlugin({
-            "ENV": JSON.stringify(ENV),
-        }),
+        defineEnv(ENV),
         new WriteFilePlugin({
             test: /vendor\/vs.*/
         }),
