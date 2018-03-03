@@ -37,8 +37,9 @@ export class PythonRpcServerProcess {
                     logger.error("Python Rpc server has exited unexpectedly with code!", code);
                 }
             });
+
             child.on("error", (e) => {
-                console.log("Error with this", e);
+                logger.error("Error with python server", e);
             });
             logger.info("Python Rpc server started!");
         });
