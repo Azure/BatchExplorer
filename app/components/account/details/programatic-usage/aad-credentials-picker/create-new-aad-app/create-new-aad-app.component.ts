@@ -2,11 +2,11 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angu
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 import { HttpCode, autobind } from "@batch-flask/core";
+import { log } from "@batch-flask/utils";
 import { AccountResource, RoleDefinition, ServerError } from "app/models";
 import { AADApplication, PasswordCredential, ServicePrincipal } from "app/models/ms-graph";
 import { ResourceAccessService } from "app/services";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
-import { log } from "app/utils";
 import { Observable } from "rxjs";
 import "./create-new-aad-app.scss";
 

@@ -4,7 +4,7 @@ import {
 } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { log } from "app/utils";
+import { log } from "@batch-flask/utils";
 
 import "./button.scss";
 import { ClickableComponent } from "./clickable";

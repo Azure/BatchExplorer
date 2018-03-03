@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, OnChanges, ViewChild } from "@angular/cor
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { log } from "app/utils";
+import { log } from "@batch-flask/utils";
 
 import "./tags.scss";
 

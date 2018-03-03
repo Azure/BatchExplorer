@@ -7,6 +7,7 @@ const LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 const merge = require("webpack-merge");
 const OptimizeJsPlugin = require("optimize-js-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const { defineEnv } = require("./webpack.common");
 
 const ENV = "production";
 const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
@@ -88,14 +89,7 @@ module.exports = merge(config, {
          * @see https://github.com/webpack/extract-text-webpack-plugin
          */
         new ExtractTextPlugin("[name].[contenthash].css"),
-
-        new DefinePlugin({
-            "ENV": JSON.stringify(ENV),
-            "process.env": {
-                "ENV": JSON.stringify(ENV),
-                "NODE_ENV": JSON.stringify(ENV),
-            }
-        }),
+        defineEnv(ENV),
 
         /**
          * Plugin: UglifyJsPlugin

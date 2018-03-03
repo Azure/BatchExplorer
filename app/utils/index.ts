@@ -6,7 +6,6 @@ export * from "./color";
 export * from "./cloud-path-utils";
 export * from "./component-utils";
 export * from "./file-url-utils";
-export * from "./logger";
 export * from "./observable";
 export * from "./misc";
 export * from "./model-utils";

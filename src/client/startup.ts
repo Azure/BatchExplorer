@@ -3,10 +3,10 @@ import { app, protocol } from "electron";
 import { autoUpdater } from "electron-updater";
 import * as path from "path";
 
+import { log } from "@batch-flask/utils";
 import { localStorage } from "client/core/local-storage";
 import { Constants } from "./client-constants";
 import { BatchLabsApplication, listenToSelectCertifcateEvent } from "./core";
-import { logger } from "./logger";
 import { setMenu } from "./menu";
 
 function initAutoUpdate() {
@@ -15,13 +15,13 @@ function initAutoUpdate() {
     }
     autoUpdater.allowPrerelease = true;
     autoUpdater.autoDownload = true;
-    autoUpdater.logger = logger;
+    autoUpdater.logger = log;
 }
 
 function setupSingleInstance(batchLabsApp: BatchLabsApplication) {
     if (Constants.isDev) { return; }
     const shouldQuit = app.makeSingleInstance((commandLine) => {
-        logger.info("Try to open labs again", commandLine);
+        log.info("Try to open labs again", commandLine);
         batchLabsApp.openFromArguments(commandLine);
     });
 

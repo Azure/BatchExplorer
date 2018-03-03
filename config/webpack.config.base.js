@@ -5,7 +5,7 @@ const CheckerPlugin = require("awesome-typescript-loader").CheckerPlugin;
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ngcWebpack = require("ngc-webpack");
-const {commonRules} = require("./webpack.common");
+const { commonRules } = require("./webpack.common");
 
 const isDevServer = helpers.isWebpackDevServer();
 const AOT = !isDevServer;
@@ -30,7 +30,7 @@ const baseConfig = {
         rules: [
             {
                 test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
-                use: [ "@ngtools/webpack" ],
+                use: ["@ngtools/webpack"],
                 exclude: [/\.spec\.ts/, /src\/test\//]
             },
             ...commonRules,
@@ -48,7 +48,7 @@ const baseConfig = {
             { context: "src/client/splash-screen", from: "**/*", to: "client/splash-screen" },
             { context: "src/client/proxy", from: "**/*", to: "client/proxy" },
             { context: "app/assets", from: "**/*", to: "assets" },
-            { from: "node_modules/monaco-editor/min/vs", to: "vendor/vs",  },
+            { from: "node_modules/monaco-editor/min/vs", to: "vendor/vs", },
         ]),
         new CommonsChunkPlugin({
             name: "polyfills",

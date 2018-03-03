@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { log } from "app/utils";
+import { log } from "@batch-flask/utils";
 import { NotificationService } from "../notifications";
 import {
     BackgroundTask, GroupedBackgroundTask, NamedTaskFunction, SingleBackgroundTask, TaskFunction,

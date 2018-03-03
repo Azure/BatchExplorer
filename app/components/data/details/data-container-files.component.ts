@@ -5,11 +5,11 @@ import { Subscription } from "rxjs";
 
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { NotificationService } from "@batch-flask/ui/notifications";
+import { log } from "@batch-flask/utils";
 import { BlobFilesBrowserComponent } from "app/components/file/browse";
 import { FileDropEvent } from "app/components/file/browse/file-explorer";
 import { BlobContainer, File } from "app/models";
 import { StorageService } from "app/services";
-import { log } from "app/utils";
 
 @Component({
     selector: "bl-data-container-files",

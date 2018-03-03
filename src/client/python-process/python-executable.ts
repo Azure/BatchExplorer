@@ -1,5 +1,5 @@
+import { log } from "@batch-flask/utils";
 import { execCommand } from "../core";
-import { logger } from "../logger";
 
 let computedPythonPath: string = null;
 
@@ -75,7 +75,7 @@ export function getPythonPath(): Promise<string> {
         for (const path of Object.keys(errors)) {
             msg += `\n  - ${path}: ${errors[path].message}`;
         }
-        logger.error(msg);
+        log.error(msg);
         return null;
     });
 }

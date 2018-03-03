@@ -1,4 +1,4 @@
-import { logger } from "client/logger";
+import { log } from "@batch-flask/utils";
 import * as path from "path";
 import { FileSystem } from "./fs";
 
@@ -14,7 +14,7 @@ export class LocalFileStorage {
         try {
             return JSON.parse(content);
         } catch (e) {
-            logger.error("Loading file from storage has invalid json", { key, content });
+            log.error("Loading file from storage has invalid json", { key, content });
             return {} as any;
         }
     }

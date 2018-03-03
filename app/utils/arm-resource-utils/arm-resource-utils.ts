@@ -1,5 +1,5 @@
+import { log } from "@batch-flask/utils";
 import { ResourceDescriptor } from "app/models";
-import { log } from "app/utils";
 
 // tslint:disable:max-line-length
 /**

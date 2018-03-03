@@ -1,19 +1,35 @@
+/**
+ * This file contains code that is initializing the app so the rest of the files run correctly.
+ *
+ * There is a few steps(IMPORTANT: those steps MUST be run in this exact order):
+ *   1. Add the src/ folder to the NODE_PATH to be able to do absolute import(Relative to src folder)
+ *   2. Update electron user data folder
+ *   3. Initialize the logger
+ *   4. Setup extension functions
+ *   5. Call startBatchLabs from startup.ts
+ */
+
+// 1. Add the src/ folder to the NODE_PATH to be able to do absolute import(Relative to src folder)
 import * as path from "path";
 process.env.NODE_PATH = path.join(__dirname, "..");
 // tslint:disable-next-line:no-var-requires
 require("module").Module._initPaths();
-// IMPORTANT this needs to be before the first import of the logger
+
+// 2. Update electron user data folder
 import { app } from "electron";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
-/**
- * Setup a few extension functions
- */
+// 3. Initialize the logger
+import { initLogger } from "client/logger";
+initLogger();
+
+// 4. Setup extension functions
 import "@batch-flask/extensions";
 
-import { logger } from "client/logger";
+// 5. Call startBatchLabs from startup.ts
+import { log } from "@batch-flask/utils";
 import { startBatchLabs } from "./startup";
 
 startBatchLabs().catch((e) => {
-    logger.error("Error starting batchlabs", e);
+    log.error("Error starting batchlabs", e);
 });
