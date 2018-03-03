@@ -1,5 +1,5 @@
 import { SecureUtils } from "@batch-flask/utils";
-import { logger } from "client/logger";
+import { log } from "@batch-flask/utils";
 import { MainWindow } from "client/main-window";
 import { BatchLabsLink, BatchLabsLinkAttributes, Constants } from "common";
 import { BatchLabsApplication } from "./batchlabs-application";
@@ -100,7 +100,7 @@ export class MainWindowManager {
             this.windows.delete(windowId);
             if (window.expectedClose) { return; }
             if (this.windows.size > 0) { return; }
-            logger.info(`Main Window ${this.constructor.name} closed. Quiting the app.`);
+            log.info(`Main Window ${this.constructor.name} closed. Quiting the app.`);
             this.batchLabsApp.quit();
         });
 

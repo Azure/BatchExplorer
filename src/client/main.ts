@@ -11,9 +11,9 @@ app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
  */
 import "@batch-flask/extensions";
 
-import { logger } from "client/logger";
+import { log } from "@batch-flask/utils";
 import { startBatchLabs } from "./startup";
 
 startBatchLabs().catch((e) => {
-    logger.error("Error starting batchlabs", e);
+    log.error("Error starting batchlabs", e);
 });

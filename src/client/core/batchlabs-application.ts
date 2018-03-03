@@ -3,6 +3,7 @@ import { app, dialog, ipcMain, session } from "electron";
 import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
+import { log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core";
 import { localStorage } from "client/core/local-storage";
 import { ProxySettingsManager } from "client/proxy";
@@ -12,7 +13,6 @@ import { IpcEvent } from "common/constants";
 import { ProxyCredentials } from "get-proxy-settings";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants as ClientConstants } from "../client-constants";
-import { logger } from "../logger";
 import { MainWindow, WindowState } from "../main-window";
 import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
@@ -129,12 +129,12 @@ export class BatchLabsApplication {
         });
 
         process.on("uncaughtException" as any, (error: Error) => {
-            logger.error("There was a uncaught exception", error);
+            log.error("There was a uncaught exception", error);
             this.recoverWindow.createWithError(error.message);
         });
 
         process.on("unhandledRejection", r => {
-            logger.error("Unhandled promise error:", r);
+            log.error("Unhandled promise error:", r);
         });
         app.on("window-all-closed", () => {
             // Required or electron will close when closing last open window before next one open
@@ -146,7 +146,7 @@ export class BatchLabsApplication {
                 const { username, password } = await this.proxySettings.credentials();
                 callback(username, password);
             } catch (e) {
-                logger.error("Unable to retrieve credentials for proxy settings", e);
+                log.error("Unable to retrieve credentials for proxy settings", e);
                 this.quit();
             }
         });
@@ -223,9 +223,9 @@ export class BatchLabsApplication {
         }
 
         if (app.setAsDefaultProtocolClient(Constants.customProtocolName)) {
-            logger.info(`Registered ${Constants.customProtocolName}:// as a protocol for batchlabs`);
+            log.info(`Registered ${Constants.customProtocolName}:// as a protocol for batchlabs`);
         } else {
-            logger.error(`Failed to register ${Constants.customProtocolName}:// as a protocol for batchlabs`);
+            log.error(`Failed to register ${Constants.customProtocolName}:// as a protocol for batchlabs`);
         }
     }
 
