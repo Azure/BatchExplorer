@@ -3,7 +3,7 @@ import { Map } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import * as FilterBuilder from "@batch-flask/core/filter-builder";
-import { log } from "@batch-flask/utils";;
+import { log } from "@batch-flask/utils";
 import { AdvancedFilterControlBase } from "./control-base";
 
 export class AdvancedFilter {

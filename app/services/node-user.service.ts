@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { log } from "@batch-flask/utils";;
+import { log } from "@batch-flask/utils";
 import { ServerError } from "app/models";
 import { BatchClientService } from "./batch-client.service";
 import { ServiceBase } from "./service-base";

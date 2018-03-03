@@ -2,10 +2,10 @@ import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, View
 import { Subscription } from "rxjs";
 
 import { ScrollableComponent, ScrollableService } from "@batch-flask/ui/scrollable";
+import { log } from "@batch-flask/utils";
 import { File, ServerError } from "app/models";
 import { TaskService } from "app/services";
 import { FileLoader } from "app/services/file";
-import { log } from "@batch-flask/utils";;
 
 import { HttpCode } from "@batch-flask/core";
 import { EditorComponent, EditorConfig } from "@batch-flask/ui/editor";

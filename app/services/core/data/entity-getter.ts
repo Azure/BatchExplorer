@@ -2,7 +2,7 @@ import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { HttpCode } from "@batch-flask/core";
-import { log } from "@batch-flask/utils";;
+import { log } from "@batch-flask/utils";
 import { ServerError } from "app/models";
 import { DataCache } from "app/services/core/data-cache";
 import { GenericGetter, GenericGetterConfig } from "./generic-getter";

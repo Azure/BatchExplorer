@@ -6,10 +6,10 @@ import { Observable, Subscription } from "rxjs";
 
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { EditorConfig } from "@batch-flask/ui/editor";
+import { log } from "@batch-flask/utils";
 import { AutoscaleFormula, Pool } from "app/models";
 import { AutoscaleFormulaService, PoolService } from "app/services";
 import { PredefinedFormulaService } from "app/services/predefined-formula.service";
-import { log } from "@batch-flask/utils";;
 import "./autoscale-formula-picker.scss";
 
 @Component({

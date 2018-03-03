@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
-import { log } from "@batch-flask/utils";;
+import { log } from "@batch-flask/utils";
 import { KeyBindings, Settings, defaultKeybindings } from "app/models";
 import { LocalFileStorage } from "./local-file-storage.service";
 

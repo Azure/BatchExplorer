@@ -11,7 +11,7 @@ import {
     ViewEncapsulation,
 } from "@angular/core";
 
-import { log } from "@batch-flask/utils";;
+import { log } from "@batch-flask/utils";
 import { SidebarInjector } from "./sidebar-injector";
 import { SidebarManager } from "./sidebar-manager";
 import { SidebarRef } from "./sidebar-ref";
