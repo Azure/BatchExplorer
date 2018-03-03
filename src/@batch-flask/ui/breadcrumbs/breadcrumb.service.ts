@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, PRIMARY_OUTLET, Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import {  log } from "app/utils";
+import { log } from "@batch-flask/utils";
 import { Breadcrumb, RouteComponent } from "./breadcrumb-models";
 
 const sessionStorageKey = "breadcrumb";
@@ -112,7 +112,7 @@ export class BreadcrumbService {
      */
     public createBreadcrumbFromRoute(route: ActivatedRoute, path: string[]): Breadcrumb {
         const component: RouteComponent = route.snapshot.component as any;
-        const {params, queryParams} = route.snapshot;
+        const { params, queryParams } = route.snapshot;
         if (!component.breadcrumb) {
             log.error(breadcrumbMethodMissingMessage(component.name));
             return null;

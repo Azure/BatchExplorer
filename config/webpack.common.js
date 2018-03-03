@@ -33,7 +33,7 @@ exports.defineEnv = function(env) {
             "ENV": JSON.stringify(env),
             "NODE_ENV": JSON.stringify(env),
             "RENDERER": JSON.stringify(true),
-            "HOT": process.env.HOT,
+            "HOT": JSON.stringify(process.env.HOT),
         },
     });
 };
