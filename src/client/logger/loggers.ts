@@ -1,6 +1,6 @@
 import * as path from "path";
 
-import { NodeLogger } from "@batch-flask/utils/logger/node-logger";
+import { NodeLogger } from "@batch-flask/utils/logging/node-logger";
 import { Constants } from "../client-constants";
 
 const logsFolder = Constants.logsFolder;
