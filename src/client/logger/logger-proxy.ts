@@ -20,4 +20,6 @@ export const renderLogger = new NodeLogger({
     path: path.join(logsFolder, "app.log"),
 });
 
-NodeLogger.mainLogger = logger;
+export function initLogger() {
+    NodeLogger.mainLogger = logger;
+}
