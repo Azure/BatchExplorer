@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 import { MatSidenav } from "@angular/material";
 
-import { log } from "app/utils";
+import { log } from "@batch-flask/utils";;
 import { SidebarManager } from "./sidebar-manager";
 import { SidebarPageComponent } from "./sidebar-page";
 import { SidebarRef } from "./sidebar-ref";

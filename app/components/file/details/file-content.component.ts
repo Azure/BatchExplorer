@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
 
+import { log } from "@batch-flask/utils";;
 import { SettingsService } from "app/services";
 import { FileLoader } from "app/services/file";
-import { log } from "app/utils";
 import "./file-content.scss";
 
 enum FileType {

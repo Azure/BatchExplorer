@@ -2,7 +2,7 @@ import { List, OrderedSet } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
-import { log } from "app/utils";
+import { log } from "@batch-flask/utils";
 import { GenericView, GenericViewConfig } from "./generic-view";
 import { ListGetter, ListResponse } from "./list-getter";
 import { ContinuationToken, ListOptions, ListOptionsAttributes } from "./list-options";

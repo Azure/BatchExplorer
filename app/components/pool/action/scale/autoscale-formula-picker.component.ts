@@ -9,7 +9,7 @@ import { EditorConfig } from "@batch-flask/ui/editor";
 import { AutoscaleFormula, Pool } from "app/models";
 import { AutoscaleFormulaService, PoolService } from "app/services";
 import { PredefinedFormulaService } from "app/services/predefined-formula.service";
-import { log } from "app/utils";
+import { log } from "@batch-flask/utils";;
 import "./autoscale-formula-picker.scss";
 
 @Component({

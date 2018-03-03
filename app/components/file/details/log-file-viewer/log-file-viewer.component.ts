@@ -5,7 +5,7 @@ import { ScrollableComponent, ScrollableService } from "@batch-flask/ui/scrollab
 import { File, ServerError } from "app/models";
 import { TaskService } from "app/services";
 import { FileLoader } from "app/services/file";
-import { log } from "app/utils";
+import { log } from "@batch-flask/utils";;
 
 import { HttpCode } from "@batch-flask/core";
 import { EditorComponent, EditorConfig } from "@batch-flask/ui/editor";

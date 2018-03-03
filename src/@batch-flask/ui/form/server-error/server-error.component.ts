@@ -1,7 +1,7 @@
 import { Component, Input } from "@angular/core";
 
 import { ErrorDetail, ServerError } from "app/models";
-import { log } from "app/utils";
+import { log } from "@batch-flask/utils";;
 
 @Component({
     selector: "bl-server-error",

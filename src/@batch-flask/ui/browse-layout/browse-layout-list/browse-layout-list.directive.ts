@@ -1,7 +1,7 @@
 import { Directive, Host, Optional, Self, ViewContainerRef } from "@angular/core";
 
 import { ListBaseComponent } from "@batch-flask/core/list";
-import { log } from "app/utils";
+import { log } from "@batch-flask/utils";;
 
 @Directive({
     selector: "[blBrowseLayoutList]",

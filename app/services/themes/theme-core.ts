@@ -1,4 +1,4 @@
-import { log } from "app/utils";
+import { log } from "@batch-flask/utils";
 
 const attrMetadataKey = "csscolor:attrs";
 

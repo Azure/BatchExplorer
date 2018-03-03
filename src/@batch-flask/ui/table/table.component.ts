@@ -5,7 +5,7 @@ import {
 
 import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import { DragUtils } from "@batch-flask/utils";
-import { log } from "app/utils";
+import { log } from "@batch-flask/utils";;
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
 import { TableCellComponent } from "./table-cell";
 import { SortDirection, TableColumnComponent } from "./table-column";

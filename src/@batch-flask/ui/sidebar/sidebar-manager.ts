@@ -5,7 +5,7 @@ import {
 import { MatSidenav } from "@angular/material";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { log } from "app/utils";
+import { log } from "@batch-flask/utils";;
 import { SidebarContentComponent } from "./sidebar-content";
 import { SidebarRef } from "./sidebar-ref";
 

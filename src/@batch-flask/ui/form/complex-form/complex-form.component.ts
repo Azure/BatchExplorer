@@ -5,7 +5,7 @@ import { FormControl } from "@angular/forms";
 
 import { AsyncTask, Dto, autobind } from "@batch-flask/core";
 import { ServerError } from "app/models";
-import { log } from "app/utils";
+import { log } from "@batch-flask/utils";;
 import { validJsonConfig } from "app/utils/validators";
 import { Observable, Subscription } from "rxjs";
 import { FormBase } from "../form-base";

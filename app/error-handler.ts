@@ -1,5 +1,5 @@
 import { ErrorHandler } from "@angular/core";
-import { log } from "app/utils";
+import { log } from "@batch-flask/utils";
 import { remote } from "electron";
 
 function extractMessage(error: any): string {
