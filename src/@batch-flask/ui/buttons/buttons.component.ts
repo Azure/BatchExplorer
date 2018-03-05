@@ -2,8 +2,6 @@ import { Component, Input } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { ButtonAction } from "./button.component";
 
-import { Job, JobState } from "app/models";
-
 export class BaseButton {
     @Input() public action: ButtonAction;
     @Input() public disabled: boolean;
@@ -60,49 +58,6 @@ export class AddButtonComponent extends BaseButton {
 }
 
 @Component({
-    selector: "bl-add-task-button",
-    template: `
-        <bl-button color="light" [action]="action" [disabled]="!enabled" [title]="title"
-            icon="fa fa-plus" permission="write">
-        </bl-button>
-    `,
-})
-export class AddTaskButtonComponent extends BaseButton {
-    @Input()
-    public job: Job;
-
-    @Input()
-    public title: string = "Add";
-
-    public get enabled() {
-        return this.job
-            && this.job.state !== JobState.completed
-            && this.job.state !== JobState.deleting
-            && this.job.state !== JobState.terminating;
-    }
-}
-
-@Component({
-    selector: "bl-terminate-button",
-    template: `
-        <bl-button color="light" [action]="action" [disabled]="!enabled" icon="fa fa-stop"
-            title="Terminate" permission="write">
-        </bl-button>
-    `,
-})
-export class TerminateButtonComponent extends BaseButton {
-    @Input()
-    public entity: any;
-
-    public get enabled() {
-        return this.entity
-            && this.entity.state !== JobState.completed
-            && this.entity.state !== JobState.terminating
-            && this.entity.state !== JobState.deleting;
-    }
-}
-
-@Component({
     selector: "bl-delete-button",
     template: `
         <bl-button color="light" [action]="action" [disabled]="!enabled" [title]="title"
@@ -123,51 +78,6 @@ export class DeleteButtonComponent extends BaseButton {
 
     public get enabled() {
         return this._enabled;
-    }
-}
-
-@Component({
-    selector: "bl-disable-button",
-    template: `
-        <bl-button color="light" [action]="action" *ngIf="visible" icon="fa fa-pause"
-            [disabled]="!enabled" title="Disable" permission="write">
-        </bl-button>
-    `,
-})
-export class DisableButtonComponent extends BaseButton {
-    @Input()
-    public job: Job;
-
-    public get enabled() {
-        return this.job
-            && this.job.state === JobState.active;
-    }
-
-    public get visible() {
-        return this.job
-            && this.job.state !== JobState.disabling
-            && this.job.state !== JobState.disabled;
-    }
-}
-
-@Component({
-    selector: "bl-enable-button",
-    template: `
-        <bl-button color="light" *ngIf="visible" [action]="action" [disabled]="!enabled" title="Enable"
-            icon="fa fa-play" permission="write">
-        </bl-button>
-    `,
-})
-export class EnableButtonComponent extends BaseButton {
-    @Input()
-    public job: Job;
-
-    public get enabled() {
-        return this.job && this.job.state === JobState.disabled;
-    }
-
-    public get visible() {
-        return this.enabled;
     }
 }
 
