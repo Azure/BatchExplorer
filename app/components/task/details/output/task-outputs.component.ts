@@ -6,7 +6,7 @@ import {
 import { ServerError, Task, TaskState } from "app/models";
 import { FileService, StorageService } from "app/services";
 import { FileLoader } from "app/services/file";
-import { ComponentUtils,  StorageUtils } from "app/utils";
+import { ComponentUtils, StorageUtils } from "app/utils";
 import "./task-outputs.scss";
 
 enum OutputType {
