@@ -1,4 +1,4 @@
-import { ContextMenuService } from "app/components/base/context-menu";
+import { ContextMenuService } from "@batch-flask/ui/context-menu";
 
 export class ContextMenuServiceMock {
     public openMenu: jasmine.Spy;

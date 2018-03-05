@@ -1,7 +1,9 @@
+import * as commander from "commander";
 import { app, dialog, ipcMain, session } from "electron";
 import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
+import { log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core";
 import { localStorage } from "client/core/local-storage";
 import { ProxySettingsManager } from "client/proxy";
@@ -11,7 +13,6 @@ import { IpcEvent } from "common/constants";
 import { ProxyCredentials } from "get-proxy-settings";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants as ClientConstants } from "../client-constants";
-import { logger } from "../logger";
 import { MainWindow, WindowState } from "../main-window";
 import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
@@ -128,18 +129,26 @@ export class BatchLabsApplication {
         });
 
         process.on("uncaughtException" as any, (error: Error) => {
-            logger.error("There was a uncaught exception", error);
+            log.error("There was a uncaught exception", error);
             this.recoverWindow.createWithError(error.message);
         });
 
+        process.on("unhandledRejection", r => {
+            log.error("Unhandled promise error:", r);
+        });
         app.on("window-all-closed", () => {
             // Required or electron will close when closing last open window before next one open
         });
 
         app.on("login", async (event, webContents, request, authInfo, callback) => {
             event.preventDefault();
-            const { username, password } = await this.proxySettings.credentials();
-            callback(username, password);
+            try {
+                const { username, password } = await this.proxySettings.credentials();
+                callback(username, password);
+            } catch (e) {
+                log.error("Unable to retrieve credentials for proxy settings", e);
+                this.quit();
+            }
         });
     }
 
@@ -161,11 +170,17 @@ export class BatchLabsApplication {
     }
 
     public openFromArguments(argv: string[]): MainWindow {
-        if (ClientConstants.isDev || argv.length < 2) {
+        if (ClientConstants.isDev) {
             return this.windows.openNewWindow(null, false);
         }
-
-        const arg = argv[1];
+        const program = commander
+            .version(app.getVersion())
+            .option("--updated", "If the application was just updated")
+            .parse(["", ...argv]);
+        const arg = program.args[0];
+        if (!arg) {
+            return this.windows.openNewWindow(null, false);
+        }
         try {
             const link = new BatchLabsLink(arg);
             return this.openLink(link, false);
@@ -208,9 +223,9 @@ export class BatchLabsApplication {
         }
 
         if (app.setAsDefaultProtocolClient(Constants.customProtocolName)) {
-            logger.info(`Registered ${Constants.customProtocolName}:// as a protocol for batchlabs`);
+            log.info(`Registered ${Constants.customProtocolName}:// as a protocol for batchlabs`);
         } else {
-            logger.error(`Failed to register ${Constants.customProtocolName}:// as a protocol for batchlabs`);
+            log.error(`Failed to register ${Constants.customProtocolName}:// as a protocol for batchlabs`);
         }
     }
 

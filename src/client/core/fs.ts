@@ -1,6 +1,6 @@
+import { log } from "@batch-flask/utils";
 import * as chokidar from "chokidar";
 import { FileUtils } from "client/api";
-import { logger } from "client/logger";
 import { app } from "electron";
 import * as fs from "fs";
 import * as mkdirp from "mkdirp";
@@ -121,7 +121,7 @@ export class FileSystem {
         return new Promise<string>((resolve, reject) => {
             fs.writeFile(path, content, (err) => {
                 if (err) {
-                    logger.error(`An error occured writing file "${path}" to disk`, err);
+                    log.error(`An error occured writing file "${path}" to disk`, err);
                     reject(err);
                 }
                 resolve(path);

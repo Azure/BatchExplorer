@@ -1,8 +1,8 @@
-<bl-list-and-show-layout #layout [list]="list">
-    <div bl-list-title>
+<bl-browse-layout #layout>
+    <div blBrowseLayoutTitle>
         Batch Accounts
     </div>
-    <div bl-list-buttons>
+    <div blBrowseLayoutButtons>
         <bl-button icon="fa fa-plus spin-hover" title="Add a batch account" [action]="addBatchAccount" type="plain" color="light">
         </bl-button>
     </div>
@@ -15,10 +15,5 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <div bl-list-content>
-        <bl-account-list #list [filter]="layout.filter"></bl-account-list>
-    </div>
-    <div bl-show-content>
-        <router-outlet></router-outlet>
-    </div>
-</bl-list-and-show-layout>
+    <bl-account-list blBrowseLayoutList></bl-account-list>
+</bl-browse-layout>

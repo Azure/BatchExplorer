@@ -2,10 +2,8 @@ const DefinePlugin = require("webpack/lib/DefinePlugin");
 const config = require("./webpack.config.base");
 const webpack = require("webpack");
 const helpers = require("./helpers");
+const { commonRules, defineEnv } = require("./webpack.common");
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
-const {
-    commonRules
-} = require("./webpack.common");
 
 const ENV = "test";
 
@@ -16,9 +14,7 @@ config.devtool = "inline-source-map";
 
 // Karma webpack doesn't support CommonChunkPlugin yet https://github.com/webpack-contrib/karma-webpack/issues/24
 config.plugins = [
-    new DefinePlugin({
-        "ENV": JSON.stringify(ENV),
-    }),
+    defineEnv(ENV),
 ];
 config.module.rules = config.module.rules = [{
         test: /\.ts$/,

@@ -3,7 +3,7 @@ import { AsyncSubject, BehaviorSubject, Observable, Subject } from "rxjs";
 
 import { AccountResource, ServerError } from "app/models";
 import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";
-import { ElectronRemote } from "app/services";
+import { ElectronRemote } from "app/services/electron";
 import { Constants, SecureUtils, log } from "app/utils";
 import { PythonRpcServerProcess } from "client/python-process";
 import { AccountService } from "../account.service";

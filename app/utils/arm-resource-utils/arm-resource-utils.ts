@@ -1,5 +1,5 @@
+import { log } from "@batch-flask/utils";
 import { ResourceDescriptor } from "app/models";
-import { log } from "app/utils";
 
 // tslint:disable:max-line-length
 /**
@@ -34,7 +34,7 @@ export class ArmResourceUtils {
         try {
             return this._resourceDescriptorParser(id).resource;
         } catch (e) {
-            log.error("Failed to extract account name from accountId", id);
+            log.error("Failed to extract account name from resource Id", { id });
             return null;
         }
     }

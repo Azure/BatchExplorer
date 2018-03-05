@@ -2,10 +2,10 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
+import { FilterBuilder } from "@batch-flask/core";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { Node, NodeAgentSku, NodeConnectionSettings, NodeState } from "app/models";
 import { ArrayUtils, Constants, ObservableUtils, log } from "app/utils";
-import { FilterBuilder } from "app/utils/filter-builder";
 import { BatchClientService } from "./batch-client.service";
 import {
     BatchEntityGetter, BatchListGetter, ContinuationToken, DataCache,

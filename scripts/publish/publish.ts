@@ -47,8 +47,9 @@ function checkGithubToken() {
     if (!githubToken) {
         failure("GH_TOKEN environment variable is not set."
             + "Please create a new env var with a github token to use the github api");
+    } else {
+        success("GH_TOKEN has a github token");
     }
-    success("GH_TOKEN has a github token");
 }
 
 /**
@@ -126,7 +127,7 @@ async function commitChanges() {
 }
 
 async function push() {
-    await run(`git push -u"`);
+    await run(`git push -u`);
 }
 
 async function createIssueIfNot(millestoneId, version) {

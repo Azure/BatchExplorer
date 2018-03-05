@@ -1,7 +1,7 @@
 
+import { log } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core";
 import { localStorage } from "client/core/local-storage";
-import { logger } from "client/logger";
 import { Constants } from "common";
 import { Deferred } from "common/deferred";
 import fetch from "node-fetch";
@@ -69,7 +69,7 @@ export class AADService {
             this._tenantsIds.next(tenantIds);
             this._refreshAllAccessTokens();
         } catch (error) {
-            logger.error("Error login", error);
+            log.error("Error login", error);
         }
     }
 
@@ -160,7 +160,7 @@ export class AADService {
             defer.resolve(token);
 
         } catch (e) {
-            logger.error(`Error redeem auth code for a token for resource ${resource}`, e);
+            log.error(`Error redeem auth code for a token for resource ${resource}`, e);
             if (this._processAccessTokenError(tenantId, resource, e)) {
                 return;
             }
@@ -189,7 +189,7 @@ export class AADService {
             this._processAccessToken(tenantId, resource, token);
             return token;
         } catch (error) {
-            logger.warn("Refresh token is not valid", error);
+            log.warn("Refresh token is not valid", error);
             this._tokenCache.removeToken(tenantId, resource);
             return this._retrieveNewAccessToken(tenantId, resource);
         }

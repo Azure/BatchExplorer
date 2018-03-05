@@ -1,4 +1,4 @@
-import { Breadcrumb } from "app/components/base/breadcrumbs";
+import { Breadcrumb } from "@batch-flask/ui/breadcrumbs";
 
 export const poolsCrumb: Breadcrumb = {
     url: "/pools",

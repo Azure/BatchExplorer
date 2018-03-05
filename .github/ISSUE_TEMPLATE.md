@@ -10,3 +10,8 @@ Before submitting a bug please check the following:
 **Description**
 
 **Instruction to repro the problem if applicable**
+
+**Version of BatchLabs(For bugs)**
+
+**Logs, for bugs(Click profile > View Logs > app.log, client.log)**
+

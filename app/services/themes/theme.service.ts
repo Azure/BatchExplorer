@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
-import { NotificationService } from "app/components/base/notifications";
+import { NotificationService } from "@batch-flask/ui/notifications";
 import { FileSystemService } from "app/services/fs.service";
 import { Constants, log } from "app/utils";
 import { Theme } from "./theme.model";

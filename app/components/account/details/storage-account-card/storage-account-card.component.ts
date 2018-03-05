@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges } from "@angular/core";
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
 
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
-import { SidebarManager } from "app/components/base/sidebar";
 import { AccountResource, ServerError, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
 

@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
+import { HttpCode } from "@batch-flask/core";
 import { ApplicationPackage, BatchApplication, ServerError } from "app/models";
 import { Constants } from "app/utils";
 import { AccountService } from "./account.service";
@@ -19,7 +20,7 @@ export interface ApplicationParams {
 
 // List of error we don't want to log for storage requests
 const applicationIgnoredErrors = [
-    Constants.HttpCode.Conflict,
+    HttpCode.Conflict,
 ];
 
 @Injectable()
@@ -73,6 +74,10 @@ export class ApplicationService extends ServiceBase {
             getter: this._listGetter,
             initialOptions: options,
         });
+    }
+
+    public listAll(options?: ListOptionsAttributes) {
+        return this._listGetter.fetchAll(options);
     }
 
     public get(applicationId: string, options: any = {}): Observable<BatchApplication> {

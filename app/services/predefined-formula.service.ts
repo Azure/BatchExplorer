@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Response } from "@angular/http";
+import { log } from "@batch-flask/utils";
 import { AutoscaleFormula } from "app/models";
-import { log } from "app/utils";
 import { BehaviorSubject, Observable } from "rxjs";
 import { GithubDataService } from "./github-data.service";
 

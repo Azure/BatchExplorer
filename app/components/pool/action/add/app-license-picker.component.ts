@@ -5,10 +5,11 @@ import {
 import { MatCheckboxChange, MatDialog, MatDialogConfig } from "@angular/material";
 import { List } from "immutable";
 
-import { TableComponent, TableConfig } from "app/components/base/table";
+import { TableComponent, TableConfig } from "@batch-flask/ui/table";
 import { ApplicationLicense } from "app/models";
 import { LicenseEulaDialogComponent } from "./";
 
+import { ListSelection } from "@batch-flask/core/list";
 import "./app-license-picker.scss";
 
 // tslint:disable:no-forward-ref
@@ -30,7 +31,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     };
 
     public licenses: List<ApplicationLicense> = List([]);
-    public pickedLicenses: string[] = [];
+    public pickedLicenses = new ListSelection();
 
     private _propagateChange: (value: string[]) => void = null;
     private _propagateTouched: (value: boolean) => void = null;
@@ -85,13 +86,13 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
         this._propagateTouched = fn;
     }
 
-    public updateSelection(ids: string[]) {
-        this.pickedLicenses = ids;
+    public updateSelection(selection: ListSelection) {
+        this.pickedLicenses = selection;
         this._emitChangeAndTouchedEvents();
     }
 
     public validate(control: FormControl) {
-        if (this.pickedLicenses.length > 0 && !this._eulaRead) {
+        if (this.pickedLicenses.hasAny() && !this._eulaRead) {
             return {
                 required: true,
             };
@@ -127,7 +128,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     private _fireChangeEvent() {
         if (this._propagateChange) {
             setTimeout(() => {
-                this._propagateChange(this.pickedLicenses);
+                this._propagateChange([...this.pickedLicenses.keys]);
             });
         }
     }

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { log } from "app/utils";
+import { log } from "@batch-flask/utils";
 import { LocalFileStorage as NodeLocalFileStorage } from "client/core";
 import { ElectronRemote } from "./electron";
 

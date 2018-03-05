@@ -2,12 +2,11 @@ import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Set } from "immutable";
 
-import { ListAndShowLayoutComponent } from "app/components/base/list-and-show-layout";
-import { autobind } from "app/core";
+import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
+import { BrowseLayoutComponent } from "@batch-flask/ui/browse-layout";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Subscription } from "app/models";
 import { SubscriptionService } from "app/services";
-import { Filter, FilterBuilder } from "app/utils/filter-builder";
-import { SidebarManager } from "../../base/sidebar";
 import { AccountCreateBasicDialogComponent } from "../action/add";
 
 @Component({
@@ -17,7 +16,7 @@ import { AccountCreateBasicDialogComponent } from "../action/add";
 export class AccountHomeComponent implements OnInit, OnDestroy {
 
     @ViewChild("layout")
-    public layout: ListAndShowLayoutComponent;
+    public layout: BrowseLayoutComponent;
 
     public subscriptionIds = new FormControl();
 

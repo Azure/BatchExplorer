@@ -1,11 +1,11 @@
 import { Component, OnDestroy } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
 import { Observable, Subscription } from "rxjs";
 
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
-import { EditorConfig, KeyCode, KeyMod } from "app/components/base/editor";
+import { EditorConfig, KeyCode, KeyMod } from "@batch-flask/ui/editor";
 import { SettingsService } from "app/services";
 import { validJsonConfig } from "app/utils/validators";
 import "./settings.scss";

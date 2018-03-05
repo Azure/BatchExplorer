@@ -1,7 +1,8 @@
-import { BatchLabsApplication } from "client/core//batchlabs-application";
-import { Deferred } from "common";
-import { SecureUtils } from "common/utils";
 import { BehaviorSubject, Observable } from "rxjs";
+
+import { SecureUtils } from "@batch-flask/utils";
+import { BatchLabsApplication } from "client/core/batchlabs-application";
+import { Deferred } from "common";
 import { AADConfig } from "../aad-config";
 import * as AdalConstants from "../adal-constants";
 

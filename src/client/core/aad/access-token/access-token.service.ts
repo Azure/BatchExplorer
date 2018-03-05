@@ -1,6 +1,6 @@
 import fetch, { RequestInit } from "node-fetch";
 
-import { logger } from "client/logger";
+import { log } from "@batch-flask/utils";
 import { AADConfig } from "../aad-config";
 import { baseUrl, objectToParams } from "../adal-constants";
 import { AccessToken } from "./access-token.model";
@@ -41,7 +41,7 @@ export class AccessTokenService {
 
             return this._processResponse(data);
         } catch (error) {
-            logger.error("Error redeem the auth code for access token", error);
+            log.error("Error redeem the auth code for access token", error);
             throw error;
         }
     }
@@ -56,7 +56,7 @@ export class AccessTokenService {
             const data = await response.json();
             return this._processResponse(data);
         } catch (error) {
-            logger.error("Error refresh access token", error);
+            log.error("Error refresh access token", error);
             throw error;
         }
     }

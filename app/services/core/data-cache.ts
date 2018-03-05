@@ -1,6 +1,7 @@
-import { ObjectUtils, SecureUtils } from "app/utils";
 import { Map } from "immutable";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
+
+import { ObjectUtils, SecureUtils } from "@batch-flask/utils";
 import { PollService } from "./poll-service";
 import { QueryCache } from "./query-cache";
 
@@ -149,7 +150,7 @@ export class DataCache<T> {
             return false;
         }
         this._deleted.next(key);
-        this._items.next(this._items.getValue().delete(key));
+        this._items.next(this._items.value.delete(key));
         return true;
     }
 

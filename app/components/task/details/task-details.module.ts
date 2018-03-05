@@ -9,7 +9,7 @@ import { TaskOutputsComponent } from "./output";
 import { SubTaskDisplayListComponent, SubTaskPropertiesComponent } from "./sub-tasks";
 import { TaskConfigurationComponent } from "./task-configuration.component";
 import { TaskDefaultComponent } from "./task-default.component";
-import { TaskDependenciesComponent } from "./task-dependencies.component";
+import { TaskDependenciesComponent } from "./task-dependencies";
 import { TaskDetailsComponent } from "./task-details.component";
 import { TaskErrorDisplayComponent } from "./task-error-display.component";
 import { TaskResourceFilesComponent } from "./task-resource-files.component";

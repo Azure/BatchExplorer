@@ -1,14 +1,14 @@
 import { Component, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FileNavigator, FileTreeNode, FileTreeStructure } from "app/services/file";
 import { CloudPathUtils, DragUtils } from "app/utils";
 import { FileDeleteEvent, FileDropEvent } from "../file-explorer.component";
 
 import { ActivatedRoute } from "@angular/router";
-import { DialogService } from "app/components/base/dialogs";
-import { NotificationService } from "app/components/base/notifications";
+import { DialogService } from "@batch-flask/ui/dialogs";
+import { NotificationService } from "@batch-flask/ui/notifications";
 import { DownloadFileGroupDialogComponent } from "app/components/data/details";
 import { ServerError } from "app/models";
 import { ElectronShell } from "app/services";

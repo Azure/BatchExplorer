@@ -8,7 +8,7 @@ import {
     NotificationLevel,
     NotificationModule,
     NotificationService,
-} from "app/components/base/notifications";
+} from "@batch-flask/ui/notifications";
 import { AuthorizationHttpService } from "app/services";
 
 @Component({

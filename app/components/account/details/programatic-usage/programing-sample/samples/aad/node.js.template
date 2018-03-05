@@ -6,7 +6,9 @@ const tenantId = "{1}";
 const clientId = "{2}";
 const secret = "{3}";
 
-async function run(batchClient) {
+async function run() {
+    const credentials = await loginWithServicePrincipalSecret(clientId, secret, tenantId, { tokenAudience: "https://batch.core.windows.net/" });
+    const batchClient = new ServiceClient(credentials, accountUrl);
     const jobs = await batchClient.job.list();
 
     for (const job of jobs) {
@@ -15,10 +17,4 @@ async function run(batchClient) {
     }
 }
 
-loginWithServicePrincipalSecret(clientId, secret, tenantId, (err, credentials) => {
-    const batchClient = new ServiceClient(credentials, accountUrl);
-
-    run(batchClient).then(() => {
-        process.exit();
-    });
-});
+run().catch(e => console.error("Error", e));

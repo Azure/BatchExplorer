@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { LoadingStatus } from "app/components/base/loading";
-import { SplitPaneConfig } from "app/components/base/split-pane";
+import { LoadingStatus } from "@batch-flask/ui/loading";
+import { SplitPaneConfig } from "@batch-flask/ui/split-pane";
 import { CurrentNode, FileExplorerWorkspace, FileSource, OpenedFile } from "app/components/file/browse/file-explorer";
 import { FileNavigator, FileTreeNode } from "app/services/file";
 import "./file-explorer.scss";

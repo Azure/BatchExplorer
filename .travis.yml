@@ -2,19 +2,19 @@ language: node_js
 dist: trusty
 sudo: false
 
-addons:
-  apt:
-    packages:
-      - libgnome-keyring-dev
-      - icnsutils
-      - graphicsmagick
-      - libreadline6
-      - xz-utils
-      - rpm
-      - bsdtar
+# addons:
+#   apt:
+#     packages:
+#       - libgnome-keyring-dev
+#       - openjpeg-tools # or libopenjp2-tools
+#       - graphicsmagick
+#       - libreadline6
+#       - xz-utils
+#       - rpm
+#       - bsdtar
 
 node_js:
-  - 9
+  - 9.6.1
 python:
   - "3.6"
 
@@ -28,15 +28,14 @@ matrix:
       os: osx
       before_install:
         - brew update
-        - brew install python3
-        - virtualenv env -p python3
-        - source env/bin/activate
-        - python3 --version
-        - nvm install 6.11.4
-        - nvm use 6.11.4
+        - brew upgrade python
+        - python --version
+        - nvm install 9.6.1
+        - nvm use 9.6.1
 
     - language: node_js
       os: linux
+      services: docker
       before_install:
         - pyenv versions
         - pyenv install --list
@@ -68,6 +67,8 @@ branches:
   - fix/publish
 
 cache:
-  yarn: true
-  directories:
-    - node_modules
+  # yarn: true
+  # directories:
+    # - node_modules
+    # - $HOME/.cache/electron
+    # - $HOME/.cache/electron-builder

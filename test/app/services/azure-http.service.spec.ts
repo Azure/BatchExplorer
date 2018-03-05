@@ -4,9 +4,9 @@ import { BaseRequestOptions, ConnectionBackend, Http, RequestOptions, Response, 
 import { MockBackend, MockConnection } from "@angular/http/testing";
 import { Observable } from "rxjs";
 
+import { HttpCode } from "@batch-flask/core";
 import { ServerError } from "app/models";
 import { AdalService, AzureHttpService } from "app/services";
-import { Constants } from "app/utils";
 
 describe("AzureHttpService", () => {
     let service: AzureHttpService;
@@ -44,7 +44,7 @@ describe("AzureHttpService", () => {
     it("when returning retyable errors it should retry until max retry", fakeAsync(() => {
         backend.connections.subscribe((connection: MockConnection) => {
             connection.mockError(new Response(new ResponseOptions({
-                status: Constants.HttpCode.GatewayTimeout,
+                status: HttpCode.GatewayTimeout,
                 body: JSON.stringify({}),
             })) as any);
         });
@@ -61,6 +61,6 @@ describe("AzureHttpService", () => {
         tick(8100);
         expect(lastError).toBeNull();
         tick(24300);
-        expect(lastError.status).toBe(Constants.HttpCode.GatewayTimeout);
+        expect(lastError.status).toBe(HttpCode.GatewayTimeout);
     }));
 });

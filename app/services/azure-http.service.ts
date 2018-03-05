@@ -5,6 +5,7 @@ import {
 } from "@angular/http";
 import { Observable } from "rxjs";
 
+import { RetryableHttpCode } from "@batch-flask/core";
 import { ServerError, Subscription } from "app/models";
 import { AccessToken } from "client/core/aad/access-token";
 import { Constants } from "common";
@@ -139,7 +140,7 @@ export class AzureHttpService {
         const retryRange = Observable.range(0, Constants.badHttpCodeMaxRetryCount + 1);
         return attempts
             .switchMap((x: any) => {
-                if (Constants.RetryableHttpCode.has(x.status)) {
+                if (RetryableHttpCode.has(x.status)) {
                     return Observable.of(x);
                 }
                 return Observable.throw(x);

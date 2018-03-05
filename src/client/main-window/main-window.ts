@@ -1,10 +1,11 @@
 import { BrowserWindow, app, ipcMain } from "electron";
 
+import { log } from "@batch-flask/utils";
 import { BehaviorSubject } from "rxjs";
 import { Observable } from "rxjs/Observable";
 import { Constants } from "../client-constants";
 import { BatchLabsApplication, FileSystem, GenericWindow, LocalFileStorage } from "../core";
-import { logger, renderLogger } from "../logger";
+import { renderLogger } from "../logger";
 
 // Webpack dev server url when using HOT=1
 const devServerUrl = Constants.urls.main.dev;
@@ -95,7 +96,7 @@ export class MainWindow extends GenericWindow {
                     BrowserWindow.addDevToolsExtension(require("devtron").path);
                 }
             } catch (error) {
-                logger.error("Error adding devtron", error);
+                log.error("Error adding devtron", error);
             }
 
         }
@@ -105,7 +106,7 @@ export class MainWindow extends GenericWindow {
 
     private _setupEvents(window: Electron.BrowserWindow) {
         window.webContents.on("crashed", (event: Electron.Event, killed: boolean) => {
-            logger.error("There was a crash", event, killed);
+            log.error("There was a crash", { event, killed });
             this.batchLabsApp.recoverWindow.createWithError(event.returnValue);
         });
 
@@ -123,11 +124,11 @@ export class MainWindow extends GenericWindow {
 
         window.webContents.on("did-fail-load", (error) => {
             this._state.next(WindowState.FailedLoad);
-            logger.error("Fail to load", error);
+            log.error("Fail to load", error);
         });
 
         window.on("unresponsive", (error: Error) => {
-            logger.error("There was a crash", error);
+            log.error("There was a crash", error);
             this.batchLabsApp.recoverWindow.createWithError(error.message);
         });
     }

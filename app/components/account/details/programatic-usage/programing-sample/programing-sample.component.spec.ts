@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { PropertyListModule } from "app/components/base/property-list";
+import { PropertyListModule } from "@batch-flask/ui/property-list";
 import { AccountKeys } from "app/models";
 import * as Fixtures from "test/fixture";
 import { MockEditorComponent } from "test/utils/mocks/components";

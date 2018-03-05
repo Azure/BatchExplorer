@@ -96,10 +96,17 @@ export class SubscriptionService {
     }
 
     private _loadSubscriptionsForTenant(tenantId: string): Observable<Subscription[]> {
-        return this.azure.get(tenantId, "subscriptions").map(response => {
-            const subscriptionData = response.json().value;
-            return subscriptionData.map(x => this._createSubscription(tenantId, x));
-        });
+        return this.azure.get(tenantId, "subscriptions").expand(response => {
+            const data = response.json();
+            if (data.nextLink) {
+                this.azure.get(tenantId, data.nextLink);
+            } else {
+                return Observable.empty();
+            }
+        }).reduce((subs, response) => {
+            const newSubs = response.json().value.map(x => this._createSubscription(tenantId, x));
+            return [...subs, ...newSubs];
+        }, []);
     }
 
     private _createSubscription(tenantId: string, data: any): Subscription {

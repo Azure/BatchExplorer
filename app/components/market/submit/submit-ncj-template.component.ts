@@ -1,20 +1,22 @@
-import { Component, Input, OnChanges, OnInit } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
-import { autobind } from "app/core";
-import { Observable } from "rxjs";
+import { ActivatedRoute, Router } from "@angular/router";
+import { autobind } from "@batch-flask/core";
+import { Observable, Subscription } from "rxjs";
 
 import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, NcjTemplateMode, ServerError } from "app/models";
 import { NcjSubmitService, NcjTemplateService } from "app/services";
 import { exists, log } from "app/utils";
-import { NcjParameterWrapper } from "./market-application.model";
+import { Constants } from "common";
+import { NcjParameterExtendedType, NcjParameterWrapper } from "./market-application.model";
+
 import "./submit-ncj-template.scss";
 
 @Component({
     selector: "bl-submit-ncj-template",
     templateUrl: "submit-ncj-template.html",
 })
-export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
+export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public jobTemplate: NcjJobTemplate;
     @Input() public poolTemplate: NcjPoolTemplate;
     @Input() public title: string;
@@ -37,31 +39,61 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
     public poolParams: FormGroup;
     public jobParametersWrapper: NcjParameterWrapper[];
     public poolParametersWrapper: NcjParameterWrapper[];
-    private error: ServerError;
+
+    private _error: ServerError;
+    private _controlChanges: Subscription[] = [];
+    private _routeParametersSub: Subscription;
+    private _parameterTypeMap = {};
+    private _queryParameters: {};
+    private _loaded = false;
 
     constructor(
         private formBuilder: FormBuilder,
+        private activatedRoute: ActivatedRoute,
         private router: Router,
         private templateService: NcjTemplateService,
         private ncjSubmitService: NcjSubmitService) {
+
         this.form = new FormGroup({});
     }
 
     public ngOnInit() {
-        this._applyinitialData();
+        this._routeParametersSub = this.activatedRoute.queryParams.subscribe((params: any) => {
+            this._queryParameters = Object.assign({}, params);
+            const autoPoolParameter = Constants.KnownQueryParameters.useAutoPool;
+            if (this._queryParameters[autoPoolParameter]) {
+                const modeAutoSelect = Boolean(parseInt(this._queryParameters[autoPoolParameter], 10))
+                    ? NcjTemplateMode.NewPoolAndJob
+                    : NcjTemplateMode.ExistingPoolAndJob;
+
+                this.pickMode(modeAutoSelect);
+            }
+
+            if (!this._loaded) {
+                // Subscribe is fired every time a value changes now so don't want to re-apply
+                this._applyinitialData();
+                this._loaded = true;
+            }
+        });
     }
 
     public ngOnChanges(changes) {
         this.multipleModes = Boolean(this.jobTemplate && this.poolTemplate);
-
         if (changes.jobTemplate || changes.poolTemplate) {
             if (!this.multipleModes) {
                 this.modeState = this.poolTemplate ? NcjTemplateMode.NewPool : NcjTemplateMode.ExistingPoolAndJob;
             }
 
+            this._queryParameters = {};
+            this._parameterTypeMap = {};
             this._processParameters();
             this._createForms();
         }
+    }
+
+    public ngOnDestroy() {
+        this._routeParametersSub.unsubscribe();
+        this._controlChanges.forEach(x => x.unsubscribe());
     }
 
     public get showPoolForm(): boolean {
@@ -96,7 +128,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
 
     @autobind()
     public submit() {
-        this.error = null;
+        this._error = null;
         let method;
         const methods = {
             [NcjTemplateMode.NewPoolAndJob]: this._createJobWithAutoPool,
@@ -108,7 +140,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
         if (method) {
             const obs = method();
             obs.subscribe({
-                error: (err) => this.error = err,
+                error: (err) => this._error = err,
             });
 
             return obs;
@@ -151,13 +183,16 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
                 "You must provide at least one of job, pool or generic template.");
             return;
         }
+
         if (this.jobTemplate) {
             // Remove the poolId param as we are writting it manually
             if (this.jobTemplate.parameters.poolId) {
                 delete this.jobTemplate.parameters.poolId;
             }
+
             this.jobParametersWrapper = this._parseParameters(this.jobTemplate.parameters);
         }
+
         if (this.poolTemplate) {
             this.poolParametersWrapper = this._parseParameters(this.poolTemplate.parameters);
         }
@@ -169,6 +204,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
             const param = parameters[name];
             wrapper.push(new NcjParameterWrapper(name, param));
         }
+
         return wrapper;
     }
 
@@ -177,6 +213,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
         if (template && template.parameters) {
             templateParameters = Object.keys(template.parameters);
         }
+
         const templateFormGroup = {};
         for (const key of templateParameters) {
             let defaultValue = null;
@@ -187,9 +224,40 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
                     validator = null;
                 }
             }
+
             templateFormGroup[key] = new FormControl(defaultValue, validator);
+            if (template.parameters[key].metadata.advancedType) {
+                // Store the advanced data type as we need it for change events from file-groups
+                this._parameterTypeMap[key] = template.parameters[key].metadata.advancedType;
+            }
+
+            // Wire up a control change event handler
+            this._handleControlChangeEvents(templateFormGroup, key);
         }
+
         return new FormGroup(templateFormGroup);
+    }
+
+    private _handleControlChangeEvents(formGroup, key) {
+        // Listen to control value change events and update the route parameters to match
+        this._controlChanges.push(formGroup[key].valueChanges.subscribe((change) => {
+            if (this._parameterTypeMap[key] === NcjParameterExtendedType.fileGroup &&
+                !change.startsWith(Constants.ncjFileGroupPrefix)) {
+
+                // Quick-Fix until we modify the CLI to finally sort out file group prefixes
+                change = Constants.ncjFileGroupPrefix + change;
+            }
+
+            // Set the parameters on the route so when page reloads we keep the existing parameters
+            this._queryParameters[key] = change;
+            const urlTree = this.router.createUrlTree([], {
+                queryParams: this._queryParameters,
+                queryParamsHandling: "merge",
+                preserveFragment: true,
+            });
+
+            this.router.navigateByUrl(urlTree);
+        }));
     }
 
     private _createForms() {
@@ -227,11 +295,11 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
     }
 
     private _applyinitialData() {
-        if (this.initialJobParams) {
-            this.jobParams.patchValue(this.initialJobParams);
+        if (this._queryParameters || this.initialJobParams) {
+            this.jobParams.patchValue({ ... this._queryParameters, ... this.initialJobParams });
         }
-        if (this.initialPoolParams) {
-            this.poolParams.patchValue(this.initialPoolParams);
+        if (this._queryParameters || this.initialPoolParams) {
+            this.poolParams.patchValue({ ... this._queryParameters, ... this.initialPoolParams });
         }
 
         if (this.initialPickedPool) {
@@ -242,6 +310,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
             this.modeState = this.initialModeState;
         }
     }
+
     private _redirectToJob(id) {
         if (id) {
             this.router.navigate(["/jobs", id]);

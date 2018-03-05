@@ -5,8 +5,8 @@ import * as path from "path";
 
 import {
     ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService,
-} from "app/components/base/context-menu";
-import { NotificationService } from "app/components/base/notifications";
+} from "@batch-flask/ui/context-menu";
+import { NotificationService } from "@batch-flask/ui/notifications";
 import { AccountService, AdalService, ElectronRemote, ElectronShell, FileSystemService } from "app/services";
 import { Constants, OS } from "app/utils";
 import "./main-navigation.scss";
@@ -144,8 +144,8 @@ export class MainNavigationComponent implements OnInit {
         if (OS.isWindows()) {
             setImmediate(() => {
                 this.remote.electronApp.removeAllListeners("window-all-closed");
-                this.remote.getCurrentWindow().close();
                 this._autoUpdater.quitAndInstall();
+                this.remote.getCurrentWindow().close();
             });
         } else {
             this.shell.openExternal("https://azure.github.io/BatchLabs/");
