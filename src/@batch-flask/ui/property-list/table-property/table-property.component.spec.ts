@@ -4,7 +4,7 @@ import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
 import { ButtonComponent } from "@batch-flask/ui/buttons";
-import { AuthorizationHttpService } from "app/services";
+import { PermissionService } from "@batch-flask/ui/permission";
 import { click } from "test/utils/helpers";
 import {
     TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
@@ -48,7 +48,7 @@ describe("TablePropertyComponent", () => {
                 ButtonComponent,
             ],
             providers: [
-                { provide: AuthorizationHttpService, useValue: null },
+                { provide: PermissionService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

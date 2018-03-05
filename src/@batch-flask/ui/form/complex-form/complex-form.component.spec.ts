@@ -11,7 +11,7 @@ import {
 } from "@batch-flask/ui/form";
 import { FormFooterComponent } from "@batch-flask/ui/form/complex-form/footer";
 import { ServerErrorComponent } from "@batch-flask/ui/form/server-error";
-import { AuthorizationHttpService } from "app/services";
+import { PermissionService } from "@batch-flask/ui/permission";
 import { click } from "test/utils/helpers";
 
 const date = new Date(2017, 9, 13, 23, 43, 38);
@@ -101,7 +101,7 @@ describe("ComplexFormComponent", () => {
                 FormFooterComponent,
             ],
             providers: [
-                { provide: AuthorizationHttpService, useValue: null },
+                { provide: PermissionService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

@@ -30,6 +30,7 @@ import {
 } from "./list-and-show-layout";
 import { LoadingModule } from "./loading";
 import { NotificationModule } from "./notifications";
+import { PermissionModule } from "./permission";
 import { PropertyListModule } from "./property-list";
 import { QuickListModule } from "./quick-list";
 import { QuotasModule } from "./quotas";
@@ -62,6 +63,7 @@ const modules = [
     InfoBoxModule,
     LoadingModule,
     NotificationModule,
+    PermissionModule,
     PropertyListModule,
     GraphsModule,
     QuickListModule,

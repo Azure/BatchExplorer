@@ -38,7 +38,7 @@ async function findInvalidFiles(pattern) {
 async function run() {
     const invalidFiles = await findInvalidFiles(`from "app`);
 
-    if (invalidFiles) {
+    if (invalidFiles.length > 0) {
         const readme = path.join(root, "src/@batch-flask/Readme.md");
         console.log("=".repeat(150));
         console.error("ERROR: There is some files in the @batch-flask package" +
@@ -53,6 +53,8 @@ async function run() {
 
         // TODO enable when clenup is done
         // process.exit(-1);
+    } else {
+        console.log("@batch-flask package imports look good.");
     }
 }
 
