@@ -29,6 +29,7 @@ describe("TaskLogComponent", () => {
         fakeNavigator = {
             init: () => null,
             getFile: () => null,
+            dispose: () => null,
         };
         spyOn(StorageUtils, "getSafeContainerName").and.callFake(x => Promise.resolve(x));
         fileServiceSpy = {
