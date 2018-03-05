@@ -6,3 +6,4 @@ export * from "./material.module";
 export * from "./decorators";
 export * from "./http-base";
 export * from "./filter-builder";
+export * from "./server-error";
