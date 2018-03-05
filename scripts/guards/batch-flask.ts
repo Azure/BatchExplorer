@@ -44,16 +44,16 @@ async function fileContains(content, imports) {
 
 async function findInvalidImports(file: string) {
     const content = await readFile(file);
+    const invalidImports = [];
     for (const { from, imports } of forbiddenImports) {
         if (!from || file.startsWith(from)) {
             const imp = await fileContains(content, imports);
             if (imp) {
-                console.log("Contain this import", imp);
-                return imp;
+                invalidImports.push(imp);
             }
         }
     }
-    return null;
+    return invalidImports;
 }
 
 async function findInvalidFiles(pattern) {
@@ -61,10 +61,10 @@ async function findInvalidFiles(pattern) {
     const fileValid = await Promise.all(files.map(async x => {
         return {
             file: x,
-            invalidImport: await findInvalidImports(x),
+            invalidImports: await findInvalidImports(x),
         };
     }));
-    return fileValid.filter(x => Boolean(x.invalidImport));
+    return fileValid.filter(x => Boolean(x.invalidImports));
 }
 
 async function run() {
@@ -78,8 +78,10 @@ async function run() {
         console.error(`This needs to be removed. @batch-flask should be self contained. See ${readme}`);
 
         console.log("-".repeat(150));
-        for (const {file, invalidImport} of invalidFiles) {
-            console.log(`${file}: File contains reference to forbiden import "${invalidImport}"`);
+        for (const { file, invalidImports } of invalidFiles) {
+            for (const invalidImport of invalidImports) {
+                console.log(`${file}: File contains reference to forbiden import "${invalidImport}"`);
+            }
         }
         console.log("=".repeat(150));
 
