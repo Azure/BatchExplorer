@@ -1,6 +1,7 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
@@ -53,7 +54,7 @@ describe("ResourcePermissionButtonComponenent", () => {
             listRoleDefinitions: () => Observable.of([contributorRole, readerRole, customRole]),
         };
         TestBed.configureTestingModule({
-            imports: [MaterialModule],
+            imports: [MaterialModule, NoopAnimationsModule],
             declarations: [ButtonComponent, ResourcePermissionButtonComponent, TestComponent],
             providers: [
                 { provide: AuthorizationHttpService, useValue: null },
