@@ -5,10 +5,10 @@ import { Observable } from "rxjs";
 
 import { RetryableHttpCode } from "@batch-flask/core";
 import { ServerError } from "@batch-flask/core";
+import { AccessToken } from "@batch-flask/core";
 import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
 import { Constants } from "app/utils";
-import { AccessToken } from "client/core/aad/access-token";
 
 function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
     const options = original || new RequestOptions();

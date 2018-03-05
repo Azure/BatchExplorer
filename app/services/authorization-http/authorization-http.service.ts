@@ -38,10 +38,6 @@ export class AuthorizationHttpService {
                     });
                 }
             }).shareReplay(1);
-
-        permissionService.setUserPermissionProvider(() => {
-            return this.getResourcePermission();
-        });
     }
 
     /**

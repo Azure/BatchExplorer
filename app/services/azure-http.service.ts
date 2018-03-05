@@ -6,8 +6,8 @@ import {
 import { Observable } from "rxjs";
 
 import { RetryableHttpCode, ServerError } from "@batch-flask/core";
+import { AccessToken } from "@batch-flask/core";
 import { Subscription } from "app/models";
-import { AccessToken } from "client/core/aad/access-token";
 import { Constants } from "common";
 import { AdalService } from "./adal";
 

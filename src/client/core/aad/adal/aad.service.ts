@@ -1,4 +1,5 @@
 
+import { AccessToken } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core";
 import { localStorage } from "client/core/local-storage";
@@ -8,7 +9,7 @@ import fetch from "node-fetch";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
 import {
-    AccessToken, AccessTokenCache,
+     AccessTokenCache,
     AccessTokenError, AccessTokenErrorResult, AccessTokenService,
 } from "../access-token";
 import { AuthenticationService, AuthorizeResult } from "../authentication";

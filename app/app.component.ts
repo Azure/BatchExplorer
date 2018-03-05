@@ -5,11 +5,12 @@ import { Observable } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
 import { MonacoLoader } from "@batch-flask/ui/editor";
+import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
-    AccountService, AdalService, AutoscaleFormulaService, CommandService,
-    NavigatorService, NcjTemplateService, NodeService, PredefinedFormulaService, PricingService,
-    PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
+    AccountService, AdalService, AuthorizationHttpService, AutoscaleFormulaService,
+    CommandService, NavigatorService, NcjTemplateService, NodeService, PredefinedFormulaService,
+    PricingService, PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
 } from "app/services";
 import { Constants } from "app/utils";
 import { ipcRenderer } from "electron";
@@ -39,6 +40,8 @@ export class AppComponent implements OnInit {
         themeService: ThemeService,
         private route: ActivatedRoute,
         monacoLoader: MonacoLoader,
+        permissionService: PermissionService,
+        authHttpService: AuthorizationHttpService,
         private pricingService: PricingService,
         private ncjTemplateService: NcjTemplateService,
         private predefinedFormulaService: PredefinedFormulaService,
@@ -73,6 +76,9 @@ export class AppComponent implements OnInit {
         this.route.queryParams.subscribe(({ fullscreen }) => {
             // console.log("Query params?", fullscreen);
             this.fullscreen = Boolean(fullscreen);
+        });
+        permissionService.setUserPermissionProvider(() => {
+            return authHttpService.getResourcePermission();
         });
 
         ipcRenderer.send("app-ready");
