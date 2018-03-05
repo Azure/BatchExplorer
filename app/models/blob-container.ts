@@ -1,4 +1,4 @@
-import { Model, Prop, Record, NavigableRecord } from "@batch-flask/core";
+import { Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
 import { Constants } from "common";
 import { ContainerLease, ContainerLeaseAttributes } from "./container-lease";
 

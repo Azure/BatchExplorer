@@ -3,9 +3,7 @@ import { Injectable } from "@angular/core";
 import { Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response } from "@angular/http";
 import { Observable } from "rxjs";
 
-import { RetryableHttpCode } from "@batch-flask/core";
-import { ServerError } from "@batch-flask/core";
-import { AccessToken } from "@batch-flask/core";
+import { AccessToken, RetryableHttpCode, ServerError } from "@batch-flask/core";
 import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
 import { Constants } from "app/utils";

@@ -2,8 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { HttpService } from "@batch-flask/core";
-import { ServerError } from "@batch-flask/core";
+import { HttpService, ServerError } from "@batch-flask/core";
 import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
 import { AADUser } from "client/core/aad/adal/aad-user";

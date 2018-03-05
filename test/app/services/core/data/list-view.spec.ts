@@ -2,8 +2,8 @@ import { BasicEntityGetter, BasicListGetter, DataCache, ListView } from "app/ser
 import { List, OrderedSet } from "immutable";
 import { Observable } from "rxjs";
 
-import { LoadingStatus } from "@batch-flask/ui/loading";
 import { ServerError } from "@batch-flask/core";
+import { LoadingStatus } from "@batch-flask/ui/loading";
 import { FakeModel } from "./fake-model";
 
 const firstPage = [

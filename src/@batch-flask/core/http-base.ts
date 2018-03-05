@@ -5,7 +5,6 @@ import { UrlUtils } from "@batch-flask/utils";
 import { Observable } from "rxjs";
 import { AccessToken } from "./aad/access-token";
 
-
 export const badHttpCodeMaxRetryCount = 5;
 
 export type HttpRequestObservable = "body" | "events" | "response";

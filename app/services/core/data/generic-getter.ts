@@ -1,7 +1,6 @@
 import { Type } from "@angular/core";
 
-import { HttpCode } from "@batch-flask/core";
-import { ServerError } from "@batch-flask/core";
+import { HttpCode, ServerError } from "@batch-flask/core";
 import { exists, log } from "app/utils";
 import { DataCache } from "../data-cache";
 

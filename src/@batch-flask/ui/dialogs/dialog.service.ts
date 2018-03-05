@@ -2,9 +2,9 @@ import { ComponentType } from "@angular/cdk/portal";
 import { Injectable } from "@angular/core";
 import { AsyncValidatorFn, ValidatorFn } from "@angular/forms";
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material";
-import { PromptDialogComponent } from "@batch-flask/ui/dialogs";
 import { Observable } from "rxjs";
 import { ConfirmationDialogComponent } from "./confirmation-dialog.component";
+import { PromptDialogComponent } from "./prompt";
 
 export interface ConfirmOptions {
     description?: string;

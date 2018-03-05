@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Input, ViewChild } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { Filter, FilterBuilder } from "@batch-flask/core";
+import { Filter, FilterBuilder } from "@batch-flask/core/filter-builder";
 import { ListSelection } from "@batch-flask/core/list";
 import { FocusSectionComponent } from "@batch-flask/ui/focus-section/focus-section.component";
 import { SelectableList } from "./selectable-list";

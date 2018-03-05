@@ -10,7 +10,7 @@ const publicComponents = [];
     exports: publicComponents,
     providers: [
         PermissionService,
-    ]
+    ],
 })
 export class PermissionModule {
 

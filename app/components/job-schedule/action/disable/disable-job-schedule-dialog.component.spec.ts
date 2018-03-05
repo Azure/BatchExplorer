@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatDialogRef } from "@angular/material";
 import { Observable } from "rxjs";
 
-import { DisableJobScheduleDialogComponent } from "app/components/job-schedule/action";
 import { ServerError } from "@batch-flask/core";
+import { DisableJobScheduleDialogComponent } from "app/components/job-schedule/action";
 import { JobScheduleService } from "app/services";
 import { InfoBoxMockComponent, ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 

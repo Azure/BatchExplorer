@@ -5,8 +5,7 @@ import {
 } from "@angular/http";
 import { Observable } from "rxjs";
 
-import { RetryableHttpCode, ServerError } from "@batch-flask/core";
-import { AccessToken } from "@batch-flask/core";
+import { AccessToken, RetryableHttpCode, ServerError } from "@batch-flask/core";
 import { Subscription } from "app/models";
 import { Constants } from "common";
 import { AdalService } from "./adal";
