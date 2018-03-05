@@ -2,7 +2,7 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA, ViewChild } from "@angular/c
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { autobind } from "@batch-flask/core";
+import { ServerError, autobind } from "@batch-flask/core";
 import { AsyncSubject } from "rxjs";
 
 import { ButtonComponent } from "@batch-flask/ui/buttons";
@@ -11,7 +11,6 @@ import {
 } from "@batch-flask/ui/form";
 import { FormFooterComponent } from "@batch-flask/ui/form/complex-form/footer";
 import { ServerErrorComponent } from "@batch-flask/ui/form/server-error";
-import { ServerError } from "@batch-flask/core";
 import { AuthorizationHttpService } from "app/services";
 import { click } from "test/utils/helpers";
 

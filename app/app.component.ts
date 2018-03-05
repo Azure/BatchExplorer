@@ -4,9 +4,10 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
+import { MonacoLoader } from "@batch-flask/ui/editor";
 import { registerIcons } from "app/config";
 import {
-    AccountService, AdalService, AutoscaleFormulaService, CommandService, MonacoLoader,
+    AccountService, AdalService, AutoscaleFormulaService, CommandService,
     NavigatorService, NcjTemplateService, NodeService, PredefinedFormulaService, PricingService,
     PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
 } from "app/services";

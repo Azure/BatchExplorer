@@ -21,6 +21,3 @@ export * from "./constants";
 
 import * as icons from "./icons";
 export const Icons = icons;
-
-import * as validators from "./validators";
-export const CustomValidators = validators;

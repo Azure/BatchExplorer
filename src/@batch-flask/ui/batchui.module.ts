@@ -18,7 +18,7 @@ import { DatetimePickerComponent } from "./datetime-picker";
 import { DialogsModule } from "./dialogs";
 import { DropdownModule } from "./dropdown";
 import { DurationPickerComponent } from "./duration-picker";
-import { EditorModule } from "./editor";
+import { EditorModule, MonacoLoader } from "./editor";
 import { FocusSectionModule } from "./focus-section";
 import { FormModule } from "./form";
 import { GraphsModule } from "./graphs";
@@ -108,6 +108,7 @@ const components = [
         ...modules,
     ],
     providers: [
+        MonacoLoader,
     ],
 })
 export class BaseModule {
