@@ -2,8 +2,9 @@ import { Location } from "@angular/common";
 import { HttpEvent, HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
 import { RetryableHttpCode } from "@batch-flask/core/constants";
 import { UrlUtils } from "@batch-flask/utils";
-import { AccessToken } from "client/core/aad/access-token";
 import { Observable } from "rxjs";
+import { AccessToken } from "./aad/access-token";
+
 
 export const badHttpCodeMaxRetryCount = 5;
 

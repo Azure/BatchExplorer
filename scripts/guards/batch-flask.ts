@@ -33,23 +33,25 @@ async function readFile(file) {
 }
 
 async function fileContains(content, imports) {
+    const invalidImports = [];
+
     for (const imp of imports) {
         const regex = new RegExp(`from "${imp.replace(/\*/g, ".*")}"`);
         if (regex.test(content)) {
-            return imp;
+            invalidImports.push(imp);
         }
     }
-    return null;
+    return invalidImports;
 }
 
 async function findInvalidImports(file: string) {
     const content = await readFile(file);
-    const invalidImports = [];
+    let invalidImports = [];
     for (const { from, imports } of forbiddenImports) {
         if (!from || file.startsWith(from)) {
             const imp = await fileContains(content, imports);
             if (imp) {
-                invalidImports.push(imp);
+                invalidImports = invalidImports.concat(imp);
             }
         }
     }

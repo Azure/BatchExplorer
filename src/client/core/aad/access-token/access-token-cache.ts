@@ -1,6 +1,6 @@
+import { AccessToken } from "@batch-flask/core";
 import { LocalStorage } from "client/core/local-storage";
 import { Constants } from "common";
-import { AccessToken } from "./access-token.model";
 
 /**
  * Hellper class to storage the access tokens in memory and in the localstorage.
