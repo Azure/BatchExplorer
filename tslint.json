@@ -7,7 +7,7 @@
   ],
   "rules": {
     // Custom rules
-    "forbiden-imports": [true, {}],
+    "forbidden-imports": [true, {}],
     "no-parent-imports": [true, {}],
 
     // TSLint override

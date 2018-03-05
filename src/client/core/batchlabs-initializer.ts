@@ -1,6 +1,7 @@
-import { BatchLabsApplication } from "client/core";
-import { SplashScreen } from "client/splash-screen";
 import { BehaviorSubject, Subscription } from "rxjs";
+
+import { SplashScreen } from "client/splash-screen";
+import { BatchLabsApplication } from "./batchlabs-application";
 
 interface InitializerTask {
     message: string;

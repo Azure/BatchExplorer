@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { PermissionService } from "@batch-flask/ui/permission";
+import { PermissionService } from "./permission.service";
 
 const privateComponents = [];
 const publicComponents = [];
