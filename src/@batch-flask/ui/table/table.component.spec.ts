@@ -34,7 +34,7 @@ const sizeD = { name: "Size D", numberOfCores: 2, resourceDiskSizeInMB: 4000 };
     `,
 })
 class TestComponent {
-    public sizes: VmSize[] = [];
+    public sizes: any[] = [];
     public picedSize: string;
 }
 

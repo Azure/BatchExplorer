@@ -4,11 +4,12 @@ import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { ButtonComponent } from "@batch-flask/ui/buttons";
+import { PermissionService } from "@batch-flask/ui/permission";
 import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/property-list";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
 import { NodeAgentSku } from "app/models";
-import { AuthorizationHttpService, ElectronShell, FileSystemService, NodeService, NodeUserService } from "app/services";
+import { ElectronShell, FileSystemService, NodeService, NodeUserService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
 
@@ -50,7 +51,7 @@ describe("NodeConnectComponent", () => {
                 { provide: NodeUserService, useValue: nodeUserServiceSpy },
                 { provide: NodeUserService, useValue: nodeUserServiceSpy },
                 { provide: FileSystemService, useValue: null },
-                { provide: AuthorizationHttpService, useValue: null },
+                { provide: PermissionService, useValue: null },
                 { provide: ElectronShell, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],

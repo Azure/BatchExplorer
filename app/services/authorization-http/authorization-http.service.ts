@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { RequestOptionsArgs } from "@angular/http";
 import { Observable } from "rxjs";
 
-import { Permission, PermissionService } from "@batch-flask/ui/permission";
+import { Permission } from "@batch-flask/ui/permission";
 import { AccountService } from "../account.service";
 import { ArmHttpService } from "../arm-http.service";
 
@@ -25,8 +25,7 @@ export class AuthorizationHttpService {
     private _permission: Observable<Permission>;
     constructor(
         private accountService: AccountService,
-        private armService: ArmHttpService,
-        permissionService: PermissionService) {
+        private armService: ArmHttpService) {
         this._permission = this.accountService.currentAccount.take(1)
             .flatMap(account => {
                 const resourceId = account && account.id;
