@@ -30,7 +30,6 @@ import {
 } from "./list-and-show-layout";
 import { LoadingModule } from "./loading";
 import { NotificationModule } from "./notifications";
-import { PinnedDropDownComponent } from "./pinned-entity-dropdown";
 import { PropertyListModule } from "./property-list";
 import { QuickListModule } from "./quick-list";
 import { QuotasModule } from "./quotas";
@@ -89,7 +88,6 @@ const components = [
     DatetimePickerComponent,
     DurationPickerComponent,
     IconComponent,
-    PinnedDropDownComponent,
     SimpleDialogComponent,
     DeleteSelectedItemsDialogComponent,
 ];
