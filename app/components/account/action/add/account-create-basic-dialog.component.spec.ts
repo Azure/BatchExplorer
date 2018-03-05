@@ -5,9 +5,9 @@ import { Response, ResponseOptions } from "@angular/http";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { AccountCreateBasicDialogComponent } from "app/components/account/action/add";
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
 import { ServerError } from "app/models";
 import { AccountService, AuthorizationHttpService, Permission, SubscriptionService } from "app/services";
 import * as TestConstants from "test/test-constants";

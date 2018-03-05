@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
 
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { AccountResource, Location, ResourceGroup, Subscription as ArmSubscription } from "app/models";
 import { createAccountFormToJsonData } from "app/models/forms/create-account-model";
 import {
