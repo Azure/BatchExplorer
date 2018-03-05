@@ -61,7 +61,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     @autobind()
     public submit(): Observable<any> {
         const formData = this.getCurrentValue();
-        const name = `Uploading files: ${this._formGroupName(formData.name)}`;
+        const name = `Uploading file group: ${this._formGroupName(formData.name)}`;
         this.backgroundTaskService.startTask(name, (task) => {
             const observable = this.fileGroupService.createFileGroup(formData);
             let lastData;
