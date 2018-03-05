@@ -8,6 +8,7 @@ import { MaterialModule } from "@batch-flask/core";
 import { AdvancedFilterModule } from "./advanced-filter";
 import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
+import { BatchFlaskSettingsModule } from "./batch-flask-settings";
 import { BreadcrumbModule } from "./breadcrumbs";
 import { BrowseLayoutModule } from "./browse-layout";
 import { ButtonsModule } from "./buttons";
@@ -47,6 +48,7 @@ import { VTabsModule } from "./vtabs";
 // Add submodules there
 const modules = [
     AdvancedFilterModule,
+    BatchFlaskSettingsModule,
     BreadcrumbModule,
     BrowseLayoutModule,
     ButtonsModule,
