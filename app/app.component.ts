@@ -11,6 +11,7 @@ import {
     NavigatorService, NcjTemplateService, NodeService, PredefinedFormulaService, PricingService,
     PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
 } from "app/services";
+import { Constants } from "app/utils";
 import { ipcRenderer } from "electron";
 
 @Component({
@@ -54,7 +55,7 @@ export class AppComponent implements OnInit {
         pythonRpcService.init();
         this.predefinedFormulaService.init();
         themeService.init();
-        monacoLoader.get();
+        monacoLoader.init(Constants.Client.root);
 
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)

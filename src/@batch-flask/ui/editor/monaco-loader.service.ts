@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
-import { Constants, OS } from "app/utils";
-import { AutoscaleLanguage } from "app/utils/monaco-languages/autoscale.language";
-import { JsonLanguage } from "app/utils/monaco-languages/json/json.language";
+import { OS } from "@batch-flask/utils";
+
+import { AutoscaleLanguage } from "./monaco-languages/autoscale.language";
+import { JsonLanguage } from "./monaco-languages/json/json.language";
 
 import * as path from "path";
 
@@ -11,8 +12,8 @@ const anyWindow: any = window;
 export class MonacoLoader {
     private _promise: Promise<any>;
 
-    constructor() {
-        this._promise = this.load().then(() => {
+    public init(root: string) {
+        this._promise = this.load(root).then(() => {
             AutoscaleLanguage.define();
             JsonLanguage.define();
         });
@@ -22,9 +23,9 @@ export class MonacoLoader {
         return this._promise;
     }
 
-    public load(): Promise<any> {
+    public load(root: string): Promise<any> {
         return new Promise((resolve) => {
-            let baseUrl = path.join(Constants.Client.root, "build/vendor/");
+            let baseUrl = path.join(root, "build/vendor/");
             if (!OS.isWindows()) {
                 baseUrl = `file://${baseUrl}`;
             }
