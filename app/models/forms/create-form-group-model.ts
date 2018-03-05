@@ -1,4 +1,5 @@
 import { FileGroupCreateDto } from "app/models/dtos";
+import { Constants } from "app/utils";
 
 export interface FileGroupOptionsModel {
     prefix?: string;
@@ -28,7 +29,10 @@ export function createFileGroupFormToJsonData(formData: CreateFileGroupModel): a
 
 export function fileGroupToFormModel(fileGroup: FileGroupCreateDto): CreateFileGroupModel {
     return {
-        name: fileGroup.name,
+        // we don't want the prefix on the group name when editing.
+        name: fileGroup.name.startsWith(Constants.ncjFileGroupPrefix)
+            ? fileGroup.name.substr(Constants.ncjFileGroupPrefix.length, fileGroup.name.length)
+            : fileGroup.name,
         folder: fileGroup.folder,
         includeSubDirectories: fileGroup.includeSubDirectories,
         accessPolicy: fileGroup.accessPolicy,
