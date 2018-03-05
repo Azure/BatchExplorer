@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
@@ -8,7 +8,6 @@ import { EditorModule } from "@batch-flask/ui/editor";
 import { ButtonsModule } from "../buttons";
 import { ComplexFormComponent } from "./complex-form";
 import { FormFooterComponent } from "./complex-form/footer";
-import { EditMetadataFormComponent } from "./edit-metadata-form";
 import { EditableTableColumnComponent, EditableTableComponent } from "./editable-table";
 import { ExpandingTextareaComponent } from "./expanding-textarea";
 import { FormErrorComponent } from "./form-error";
@@ -40,7 +39,6 @@ const components = [
     EditableTableComponent,
     EditableTableColumnComponent,
     KeyValuePickerComponent,
-    EditMetadataFormComponent,
     ExpandingTextareaComponent,
     SingleLineTextareaDirective,
     FormJsonEditorComponent,
@@ -62,13 +60,6 @@ const components = [
     ],
     providers: [
     ],
-    entryComponents: [EditMetadataFormComponent],
 })
 export class FormModule {
-    public static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: FormModule,
-            providers: [],
-        };
-    }
 }

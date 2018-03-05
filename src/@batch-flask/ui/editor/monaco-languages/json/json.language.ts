@@ -4,10 +4,10 @@
  */
 
 // tslint:disable:no-var-requires
-const poolTemplate = JSON.parse(require("app/utils/monaco-languages/json/pool.template.json"));
-const jobTemplate = JSON.parse(require("app/utils/monaco-languages/json/job.template.json"));
-const taskTemplate = JSON.parse(require("app/utils/monaco-languages/json/task.template.json"));
-const jobscheduleTemplate = JSON.parse(require("app/utils/monaco-languages/json/jobschedule.template.json"));
+const poolTemplate = JSON.parse(require("./pool.template.json"));
+const jobTemplate = JSON.parse(require("./job.template.json"));
+const taskTemplate = JSON.parse(require("./task.template.json"));
+const jobscheduleTemplate = JSON.parse(require("./jobschedule.template.json"));
 
 export class JsonLanguage {
     public static define() {
