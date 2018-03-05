@@ -11,7 +11,7 @@ import {
 } from "@batch-flask/ui/form";
 import { FormFooterComponent } from "@batch-flask/ui/form/complex-form/footer";
 import { ServerErrorComponent } from "@batch-flask/ui/form/server-error";
-import { ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
 import { AuthorizationHttpService } from "app/services";
 import { click } from "test/utils/helpers";
 

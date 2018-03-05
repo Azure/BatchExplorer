@@ -2,7 +2,8 @@ import { Injectable } from "@angular/core";
 import { BlobService } from "azure-storage";
 import { Observable } from "rxjs";
 
-import { AutoStorageAccount, ServerError, StorageKeys, StorageKeysAttributes } from "app/models";
+import { ServerError } from "@batch-flask/core";
+import { AutoStorageAccount, StorageKeys, StorageKeysAttributes } from "app/models";
 import { ArmResourceUtils } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";

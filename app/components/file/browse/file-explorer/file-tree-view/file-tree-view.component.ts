@@ -10,7 +10,7 @@ import { ActivatedRoute } from "@angular/router";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { DownloadFileGroupDialogComponent } from "app/components/data/details";
-import { ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
 import { ElectronShell } from "app/services";
 import { remote } from "electron";
 import "./file-tree-view.scss";

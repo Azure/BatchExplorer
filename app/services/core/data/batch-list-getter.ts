@@ -2,7 +2,7 @@ import { Type } from "@angular/core";
 import { BatchServiceClient } from "azure-batch";
 import { Observable } from "rxjs";
 
-import { ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
 import { BatchClientService } from "app/services/batch-client.service";
 import { ListGetter, ListGetterConfig } from "./list-getter";
 import { ContinuationToken, ListOptions } from "./list-options";

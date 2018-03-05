@@ -4,7 +4,7 @@ import { MatDialogRef } from "@angular/material";
 import { Observable } from "rxjs";
 
 import { EnableJobDialogComponent } from "app/components/job/action";
-import { ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
 import { JobService } from "app/services";
 import { ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 

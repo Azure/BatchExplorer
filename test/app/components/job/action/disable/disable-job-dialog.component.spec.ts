@@ -5,7 +5,7 @@ import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { DisableJobDialogComponent } from "app/components/job/action";
-import { ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
 import { JobService } from "app/services";
 import { InfoBoxMockComponent, ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 

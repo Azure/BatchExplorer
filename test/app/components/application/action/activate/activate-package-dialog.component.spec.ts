@@ -5,7 +5,7 @@ import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { ActivatePackageDialogComponent } from "app/components/application/action";
-import { ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
 import { ApplicationService } from "app/services";
 import { ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 

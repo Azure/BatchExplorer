@@ -1,4 +1,4 @@
-import { ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { HttpCode } from "@batch-flask/core";

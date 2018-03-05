@@ -4,7 +4,7 @@ import { Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Respo
 import { Observable } from "rxjs";
 
 import { RetryableHttpCode } from "@batch-flask/core";
-import { ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
 import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
 import { Constants } from "app/utils";

@@ -7,7 +7,7 @@ import { FormPageComponent } from "@batch-flask/ui/form/form-page";
 import { ComplexFormComponent, ComplexFormConfig } from "../complex-form.component";
 
 import { AsyncTask } from "@batch-flask/core";
-import { ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
 import { Subscription } from "rxjs";
 import "./form-footer.scss";
 

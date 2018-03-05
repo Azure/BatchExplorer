@@ -1,7 +1,8 @@
 import { Injectable, NgZone } from "@angular/core";
 import { AsyncSubject, BehaviorSubject, Observable, Subject } from "rxjs";
 
-import { AccountResource, ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
+import { AccountResource } from "app/models";
 import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";
 import { ElectronRemote } from "app/services/electron";
 import { Constants, SecureUtils, log } from "app/utils";

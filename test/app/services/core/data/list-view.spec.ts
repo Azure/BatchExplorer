@@ -3,7 +3,7 @@ import { List, OrderedSet } from "immutable";
 import { Observable } from "rxjs";
 
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
 import { FakeModel } from "./fake-model";
 
 const firstPage = [

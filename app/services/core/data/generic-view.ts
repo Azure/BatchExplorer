@@ -2,7 +2,7 @@ import { AsyncSubject, BehaviorSubject, Observable, Subject, Subscription } from
 
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { ObjectUtils } from "@batch-flask/utils";
-import { ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
 import { DataCache } from "app/services/core/data-cache";
 import { PollObservable } from "../poll-service";
 import { ProxyOptions } from "./proxy-options";
