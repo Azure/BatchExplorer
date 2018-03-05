@@ -2,11 +2,10 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChildren, HostBinding, Input, OnChanges, QueryList, Type,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
-
-import { AsyncTask, Dto, autobind } from "@batch-flask/core";
+import { AsyncTask, Dto, ServerError, autobind } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
-import { ServerError } from "@batch-flask/core";
-import { validJsonConfig } from "app/utils/validators";
+
+import { validJsonConfig } from "@batch-flask/utils/validators";
 import { Observable, Subscription } from "rxjs";
 import { FormBase } from "../form-base";
 import { FormPageComponent } from "../form-page";

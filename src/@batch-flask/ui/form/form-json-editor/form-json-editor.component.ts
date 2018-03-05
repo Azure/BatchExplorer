@@ -3,7 +3,7 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/f
 import { Subscription } from "rxjs";
 
 import { EditorConfig } from "@batch-flask/ui/editor";
-import { validJsonConfig } from "app/utils/validators";
+import { validJsonConfig } from "@batch-flask/utils/validators";
 import "./form-json-editor.scss";
 
 const emptyJson = "{\n\n}";
