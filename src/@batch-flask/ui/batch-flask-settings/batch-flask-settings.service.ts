@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BatchFlaskSettings, EntityConfigurationView } from "@batch-flask/ui/batch-flask-settings";
+import { BatchFlaskSettings, EntityConfigurationView } from "./batch-flask-settings.model";
 
 const defaultSettings: BatchFlaskSettings = {
     entityConfiguration: {
