@@ -6,6 +6,18 @@ import { promisify } from "util";
 
 const root = path.join(__dirname, "../..");
 
+const forbiddenImports = [
+    {
+        from: "",
+        imports: [
+            "app/*",
+            "common",
+            "common/*",
+            "client/*",
+        ],
+    },
+];
+
 async function listFiles(pattern): Promise<string[]> {
     return new Promise<string[]>((resolve, reject) => {
         glob(pattern, (err, files) => {
@@ -16,12 +28,32 @@ async function listFiles(pattern): Promise<string[]> {
 }
 
 async function readFile(file) {
-    return promisify(fs.readFile)(file);
+    return promisify(fs.readFile)(file).then(x => x.toString());
+
 }
 
-async function fileContains(file, pattern) {
-    const buffer = await readFile(file);
-    return buffer.toString().indexOf(pattern) !== -1;
+async function fileContains(content, imports) {
+    for (const imp of imports) {
+        const regex = new RegExp(`from "${imp.replace(/\*/g, ".*")}"`);
+        if (regex.test(content)) {
+            return imp;
+        }
+    }
+    return null;
+}
+
+async function findInvalidImports(file: string) {
+    const content = await readFile(file);
+    for (const { from, imports } of forbiddenImports) {
+        if (!from || file.startsWith(from)) {
+            const imp = await fileContains(content, imports);
+            if (imp) {
+                console.log("Contain this import", imp);
+                return imp;
+            }
+        }
+    }
+    return null;
 }
 
 async function findInvalidFiles(pattern) {
@@ -29,10 +61,10 @@ async function findInvalidFiles(pattern) {
     const fileValid = await Promise.all(files.map(async x => {
         return {
             file: x,
-            valid: !(await fileContains(x, pattern)),
+            invalidImport: await findInvalidImports(x),
         };
     }));
-    return fileValid.filter(x => !x.valid).map(x => x.file);
+    return fileValid.filter(x => Boolean(x.invalidImport));
 }
 
 async function run() {
@@ -46,13 +78,12 @@ async function run() {
         console.error(`This needs to be removed. @batch-flask should be self contained. See ${readme}`);
 
         console.log("-".repeat(150));
-        for (const file of invalidFiles) {
-            console.log(`@batch-flask package contains imports to the app folder: ${file}`);
+        for (const {file, invalidImport} of invalidFiles) {
+            console.log(`${file}: File contains reference to forbiden import "${invalidImport}"`);
         }
         console.log("=".repeat(150));
 
-        // TODO enable when clenup is done
-        // process.exit(-1);
+        process.exit(-1);
     } else {
         console.log("@batch-flask package imports look good.");
     }
