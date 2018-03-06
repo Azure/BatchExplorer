@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MaterialModule } from "@batch-flask/core";
 import { BaseModule } from "@batch-flask/ui";
 import { DownloadFolderComponent } from "./download-folder-dialog";
 import { EditMetadataFormComponent } from "./edit-metadata-form";
@@ -24,7 +25,7 @@ const publicModules = [
  *  - BaseModule and other Common components are the only exceptions.
  */
 @NgModule({
-    imports: [BrowserModule, BaseModule, FormsModule, ReactiveFormsModule, ...publicModules],
+    imports: [BrowserModule, BaseModule, FormsModule, ReactiveFormsModule, MaterialModule, ...publicModules],
     declarations: [...privateComponents, publicComponents],
     exports: [...publicComponents, ...publicModules],
     entryComponents: [EditMetadataFormComponent, DownloadFolderComponent],

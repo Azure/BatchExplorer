@@ -4,12 +4,12 @@ import { AsyncSubject, BehaviorSubject, Observable, Subscription } from "rxjs";
 import { ServerError } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { File } from "app/models";
-import { DataCache, ListGetter, ListView } from "app/services/core";
+import { DataCache, ListGetter } from "app/services/core";
 import { FileLoader } from "app/services/file";
-import { CloudPathUtils, ObjectUtils } from "app/utils";
+import { CloudPathUtils } from "app/utils";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 
-export interface FileNavigatorConfig {
+export interface FileNavigatorConfig<TParams = any> {
     /**
      *  Method that return the cache given the params.
      * This allow the use of targeted data cache which depends on some params.
@@ -26,12 +26,12 @@ export interface FileNavigatorConfig {
     /**
      * Params to pass to the getter
      */
-    params: any;
+    params: TParams;
 
     /**
      * List getter that is used to load the data
      */
-    getter: ListGetter<File, any>;
+    getter: ListGetter<File, TParams>;
 
     /**
      * Callback called when navigating to a file.
@@ -52,7 +52,7 @@ export interface FileNavigatorConfig {
  * Generic navigator class for a file explorer.
  * This can be extended for a node, task or blob file list
  */
-export class FileNavigator {
+export class FileNavigator<TParams = any> {
     public loadingStatus = LoadingStatus.Ready;
     public basePath: string;
     public tree: Observable<FileTreeStructure>;
@@ -60,15 +60,15 @@ export class FileNavigator {
     public error: ServerError;
 
     private _tree = new BehaviorSubject<FileTreeStructure>(null);
-    private _getter: ListGetter<File, any>;
-    private _params: any;
+    private _getter: ListGetter<File, TParams>;
+    private _params: TParams;
     private _cache: DataCache<File>;
     private _fileDeletedSub: Subscription;
 
     private _getFileLoader: (filename: string) => FileLoader;
     private _onError: (error: ServerError) => ServerError;
 
-    constructor(config: FileNavigatorConfig) {
+    constructor(config: FileNavigatorConfig<TParams>) {
         this.basePath = config.basePath || "";
         this._getter = config.getter;
         this._params = config.params;
@@ -168,7 +168,7 @@ export class FileNavigator {
     private _loadPath(path: string, recursive = false): Observable<List<File>> {
         return this._getter.fetchAll(this._params, {
             recursive,
-            startswith: path,
+            folder: path,
         });
     }
 
