@@ -1,8 +1,7 @@
 import { Component, Input, OnChanges } from "@angular/core";
 import { Record } from "@batch-flask/core";
+import { BatchFlaskSettingsService, EntityConfigurationView } from "@batch-flask/ui/batch-flask-settings";
 import { EditorConfig } from "@batch-flask/ui/editor";
-import { EntityConfigurationView } from "app/models";
-import { SettingsService } from "app/services";
 
 import "./entity-configuration.scss";
 
@@ -21,7 +20,7 @@ export class EntityConfigurationComponent implements OnChanges {
         tabSize: 2,
     } as any;
 
-    constructor(settingsService: SettingsService) {
+    constructor(settingsService: BatchFlaskSettingsService) {
         const defaultView = settingsService.settings["configuration.default-view"];
         if (defaultView === EntityConfigurationView.json) {
             this.showJson = true;

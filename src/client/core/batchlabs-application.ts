@@ -4,7 +4,7 @@ import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
 import { log } from "@batch-flask/utils";
-import { BlIpcMain } from "client/core";
+import { BlIpcMain } from "client/core/bl-ipc-main";
 import { localStorage } from "client/core/local-storage";
 import { ProxySettingsManager } from "client/proxy";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";

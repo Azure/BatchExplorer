@@ -7,8 +7,9 @@ import { Observable } from "rxjs";
 
 import { MaterialModule } from "@batch-flask/core";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
+import { PermissionService } from "@batch-flask/ui/permission";
 import { RoleAssignment, RoleDefinition } from "app/models";
-import { AuthorizationHttpService, ResourceAccessService } from "app/services";
+import { ResourceAccessService } from "app/services";
 import { click } from "test/utils/helpers";
 import { ResourcePermissionButtonComponent } from "./resource-permission-button.component";
 
@@ -38,7 +39,7 @@ class TestComponent {
     public principalId = null;
 }
 
-describe("ResourcePermissionButtonComponenent", () => {
+describe("ResourcePermissionButtonComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: ResourcePermissionButtonComponent;
@@ -57,7 +58,7 @@ describe("ResourcePermissionButtonComponenent", () => {
             imports: [MaterialModule, NoopAnimationsModule],
             declarations: [ButtonComponent, ResourcePermissionButtonComponent, TestComponent],
             providers: [
-                { provide: AuthorizationHttpService, useValue: null },
+                { provide: PermissionService, useValue: null },
                 { provide: ResourceAccessService, useValue: resourceAccessServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],

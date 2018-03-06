@@ -2,9 +2,9 @@ import { Injectable, NgZone } from "@angular/core";
 import * as path from "path";
 import { AsyncSubject, Observable, Subject } from "rxjs";
 
-import { HttpCode } from "@batch-flask/core";
+import { HttpCode, ServerError } from "@batch-flask/core";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
-import { BlobContainer, File, ServerError } from "app/models";
+import { BlobContainer, File } from "app/models";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { CloudPathUtils, log } from "app/utils";
 import { BlobService, createBlobServiceWithSas } from "azure-storage";
@@ -156,12 +156,8 @@ export class StorageService {
         return new FileNavigator({
             cache: this.getBlobFileCache({ container: container }),
             basePath: prefix,
-            loadPath: (folder) => {
-                return this.blobListView(container, {
-                    recursive: false,
-                    startswith: folder,
-                });
-            },
+            params: { container },
+            getter: this._blobListGetter,
             getFile: (filename: string) => this.getBlobContent(container, filename),
             onError: options.onError,
         });

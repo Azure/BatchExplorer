@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { PythonRpcService } from "./python-rpc/python-rpc.service";
 

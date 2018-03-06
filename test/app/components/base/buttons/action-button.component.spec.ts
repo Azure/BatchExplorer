@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
 import { MaterialModule } from "@batch-flask/core";
 import { ButtonComponent } from "@batch-flask/ui/buttons/button.component";
-import { AuthorizationHttpService } from "app/services";
+import { PermissionService } from "@batch-flask/ui/permission";
 import { click } from "test/utils/helpers";
 
 @Component({
@@ -36,7 +36,7 @@ describe("ActionButton", () => {
             imports: [MaterialModule, NoopAnimationsModule],
             declarations: [ButtonComponent, TestComponent],
             providers: [
-                { provide: AuthorizationHttpService, useValue: null },
+                { provide: PermissionService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

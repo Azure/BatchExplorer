@@ -1,10 +1,7 @@
+import { EntityConfigurationView } from "@batch-flask/ui/batch-flask-settings";
+
 export enum Theme {
     classic = "classic",
-}
-
-export enum EntityConfigurationView {
-    json = "json",
-    pretty = "pretty",
 }
 
 /**

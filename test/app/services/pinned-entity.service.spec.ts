@@ -1,7 +1,8 @@
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { BatchApplication, Job, PinnableEntity, PinnedEntityType } from "app/models";
+import { PinnableEntity, PinnedEntityType } from "@batch-flask/core";
+import { BatchApplication, Job } from "app/models";
 import { PinnedEntityService } from "app/services";
 import * as Fixtures from "test/fixture";
 

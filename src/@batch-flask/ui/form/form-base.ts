@@ -1,9 +1,8 @@
 import { EventEmitter, Input, Output } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
-import { autobind } from "@batch-flask/core";
 
-import { ServerError } from "app/models";
+import { ServerError, autobind } from "@batch-flask/core";
 import { SidebarRef } from "../sidebar";
 
 export type ContainerRef = MatDialogRef<any> | SidebarRef<any> | GenericContainer;

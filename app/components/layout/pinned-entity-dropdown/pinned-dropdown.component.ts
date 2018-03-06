@@ -3,7 +3,7 @@ import { NavigationEnd, Router } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { PinnableEntity, PinnedEntityType } from "app/models";
+import { PinnableEntity, PinnedEntityType } from "@batch-flask/core";
 import { AccountService, PinnedEntityService } from "app/services";
 
 import "./pinned-dropdown.scss";

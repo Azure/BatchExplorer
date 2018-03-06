@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs";
 
-import { AccountResource, BatchApplication, Job, Pool, ServerError } from "app/models";
+import { ServerError, autobind } from "@batch-flask/core";
+import { AccountResource, BatchApplication, Job, Pool } from "app/models";
 import {
     AccountParams, AccountService, ApplicationListParams, ApplicationService,
     InsightsMetricsService, JobListParams, JobService, PoolListParams, PoolService,

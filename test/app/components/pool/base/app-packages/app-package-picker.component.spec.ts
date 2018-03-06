@@ -3,11 +3,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { MaterialModule } from "@batch-flask/core";
+import { MaterialModule, ServerError } from "@batch-flask/core";
 import { List } from "immutable";
 
 import { AppPackagePickerComponent } from "app/components/pool/base";
-import { BatchApplication, ServerError } from "app/models";
+import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
