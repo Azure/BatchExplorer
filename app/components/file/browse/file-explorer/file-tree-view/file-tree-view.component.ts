@@ -44,11 +44,12 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     @HostBinding("class.expanded") public expanded = true;
 
-    public expandedDirs: StringMap<boolean> = {};
+    public expandedDirs = new Set<string>();
     public treeRows: TreeRow[] = [];
     public refreshing: boolean;
     public isDraging = 0;
     public dropTargetPath: string = null;
+    public isFocused = false;
     public focusedIndex: number = 0;
 
     private _tree: FileTreeStructure;
@@ -89,7 +90,6 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     }
 
     public handleKeyboardNavigation(event) {
-        console.log("Navigate", event);
         const curTreeRow = this.treeRows[this.focusedIndex];
         switch (event.code) {
             case "ArrowDown": // Move focus down
@@ -115,6 +115,11 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
             default:
         }
         this.focusedIndex = (this.focusedIndex + this.treeRows.length) % this.treeRows.length;
+        this.changeDetector.markForCheck();
+    }
+
+    public setFocus(focus: boolean) {
+        this.isFocused = focus;
         this.changeDetector.markForCheck();
     }
 
@@ -149,15 +154,15 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     }
 
     public expand(treeRow: TreeRow) {
-        if (this.expandedDirs[treeRow.path] || !treeRow.isDirectory) { return; }
-        this.expandedDirs[treeRow.path] = true;
+        if (this.expandedDirs.has(treeRow.path) || !treeRow.isDirectory) { return; }
+        this.expandedDirs.add(treeRow.path);
         this.fileNavigator.loadPath(treeRow.path);
         this._buildTreeRows(this._tree);
     }
 
     public collapse(treeRow: TreeRow) {
-        if (!this.expandedDirs[treeRow.path] || !treeRow.isDirectory) { return; }
-        this.expandedDirs[treeRow.path] = false;
+        if (!this.expandedDirs.has(treeRow.path) || !treeRow.isDirectory) { return; }
+        this.expandedDirs.delete(treeRow.path);
         this._buildTreeRows(this._tree);
     }
 
@@ -166,11 +171,11 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
      * @returns boolean if the row is now expanded or not
      */
     public toggleExpanded(treeRow: TreeRow): boolean {
-        const isExpanded = this.expandedDirs[treeRow.path];
+        const isExpanded = this.expandedDirs.has(treeRow.path);
         if (isExpanded) {
-            this.expandedDirs[treeRow.path] = false;
+            this.expandedDirs.delete(treeRow.path);
         } else {
-            this.expandedDirs[treeRow.path] = true;
+            this.expandedDirs.add(treeRow.path);
         }
         this._buildTreeRows(this._tree);
         this.changeDetector.markForCheck();
@@ -186,7 +191,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         for (let i = 0; i < segments.length; i++) {
 
             const pathToExpand = segments.slice(0, segments.length - i).join("/");
-            this.expandedDirs[pathToExpand] = true;
+            this.expandedDirs.add(pathToExpand);
         }
 
         if (this._tree) {
@@ -208,9 +213,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     }
 
     public collapseAll() {
-        for (const key of Object.keys(this.expandedDirs)) {
-            this.expandedDirs[key] = false;
-        }
+        this.expandedDirs.clear();
         this._buildTreeRows(this._tree);
     }
 
@@ -301,9 +304,9 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         const rows = [];
         for (const [_, child] of node.children) {
             if (this.autoExpand && !(child.path in this.expandedDirs)) {
-                this.expandedDirs[child.path] = true;
+                this.expandedDirs.add(child.path);
             }
-            const expanded = this.expandedDirs[child.path];
+            const expanded = this.expandedDirs.has(child.path);
             rows.push({
                 name: child.name,
                 path: child.path,
