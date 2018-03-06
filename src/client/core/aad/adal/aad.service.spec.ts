@@ -1,11 +1,11 @@
 import * as moment from "moment";
 
+import { AccessToken } from "@batch-flask/core";
 import { localStorage } from "client/core/local-storage";
 import { Constants } from "common";
 import { F } from "test/utils";
 import { mockNodeStorage } from "test/utils/mocks/storage";
 import { MockBrowserWindow, MockSplashScreen } from "test/utils/mocks/windows";
-import { AccessToken } from "../access-token";
 import { AADUser } from "./aad-user";
 import { AADService } from "./aad.service";
 

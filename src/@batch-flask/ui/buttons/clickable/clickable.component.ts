@@ -4,7 +4,7 @@ import {
 } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { AuthorizationHttpService, Permission } from "app/services/authorization-http//authorization-http.service";
+import { Permission, PermissionService } from "@batch-flask/ui/permission";
 import "./clickable.scss";
 
 @Component({
@@ -33,19 +33,18 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     @HostBinding("class.focus-outline") public focusOutline = true;
     public subtitle = "";
 
-    private authHttpService: any;
+    private permissionService: PermissionService;
     private _sub: Subscription;
     private _permissionDisabled = false;
 
     constructor(injector: Injector) {
-        this.authHttpService = injector.get(AuthorizationHttpService);
+        this.permissionService = injector.get(PermissionService);
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.permission) {
             this._clearSubscription();
-            this._sub = this.authHttpService.hasPermission(this.permission).subscribe((hasPermission) => {
-                console.log(this.permission, hasPermission);
+            this._sub = this.permissionService.hasPermission(this.permission).subscribe((hasPermission) => {
                 this._permissionDisabled = !hasPermission;
                 if (hasPermission) {
                     this.subtitle = "";

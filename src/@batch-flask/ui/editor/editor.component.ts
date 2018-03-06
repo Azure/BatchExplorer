@@ -3,9 +3,9 @@ import {
     EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, ViewChild, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { MonacoLoader } from "app/services";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import "./editor.scss";
+import { MonacoLoader } from "./monaco-loader.service";
 
 export interface EditorKeyBinding {
     key: any;

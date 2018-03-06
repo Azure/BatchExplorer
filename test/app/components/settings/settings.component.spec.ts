@@ -8,8 +8,9 @@ import { Observable } from "rxjs";
 
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { EditorComponent } from "@batch-flask/ui/editor";
+import { PermissionService } from "@batch-flask/ui/permission";
 import { SettingsComponent } from "app/components/settings";
-import { AuthorizationHttpService, SettingsService } from "app/services";
+import { SettingsService } from "app/services";
 import { click } from "test/utils/helpers";
 import { MockEditorComponent } from "test/utils/mocks/components";
 
@@ -51,7 +52,7 @@ describe("SettingsComponent", () => {
             imports: [ReactiveFormsModule, MaterialModule, NoopAnimationsModule],
             declarations: [SettingsComponent, TestComponent, ButtonComponent, MockEditorComponent],
             providers: [
-                { provide: AuthorizationHttpService, useValue: null },
+                { provide: PermissionService, useValue: null },
                 { provide: SettingsService, useValue: settingsServiceSpy },
             ],
         });

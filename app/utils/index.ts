@@ -9,9 +9,7 @@ export * from "./file-url-utils";
 export * from "./observable";
 export * from "./misc";
 export * from "./model-utils";
-export * from "./monaco-languages";
 export * from "./number-utils";
-export * from "./os";
 export * from "./pool-utils";
 export * from "./arm-resource-utils";
 export * from "./shared-key-utils";
@@ -21,6 +19,3 @@ export * from "./constants";
 
 import * as icons from "./icons";
 export const Icons = icons;
-
-import * as validators from "./validators";
-export const CustomValidators = validators;

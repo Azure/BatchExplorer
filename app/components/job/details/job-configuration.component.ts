@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
 
-import { EditMetadataFormComponent } from "@batch-flask/ui/form/edit-metadata-form";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { EditMetadataFormComponent } from "app/components/common/edit-metadata-form";
 import { Job, Metadata, NameValuePair } from "app/models";
 import {
     JobDecorator,

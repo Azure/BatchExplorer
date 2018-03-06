@@ -1,11 +1,15 @@
 @import "app/styles/variables";
 
 bl-file-too-large {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+
     h2 {
         margin-bottom: 20px;
     }
 
-    button {
+    bl-button {
         padding: 10px;
         cursor: pointer;
         background: map-get($primary, 300);
@@ -21,5 +25,10 @@ bl-file-too-large {
             cursor: not-allowed;
             background: $alto;
         }
+    }
+
+    .downloading {
+        margin-top: 20px;
+        color: $secondary-text;
     }
 }

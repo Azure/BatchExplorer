@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
 import { BatchClientService } from "./";
 
 export class ServiceBase {

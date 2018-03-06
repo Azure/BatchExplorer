@@ -2,8 +2,8 @@ import { Component, Input } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
 
-import { EditMetadataFormComponent } from "@batch-flask/ui/form/edit-metadata-form";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { EditMetadataFormComponent } from "app/components/common/edit-metadata-form";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { ApplicationPackageReference, CertificateReference, Metadata, Pool, StartTask } from "app/models";
 import { PoolDecorator } from "app/models/decorators";

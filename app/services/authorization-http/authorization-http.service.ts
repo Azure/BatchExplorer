@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { RequestOptionsArgs } from "@angular/http";
 import { Observable } from "rxjs";
 
+import { Permission } from "@batch-flask/ui/permission";
 import { AccountService } from "../account.service";
 import { ArmHttpService } from "../arm-http.service";
 
@@ -16,12 +17,6 @@ export enum BatchAccountPermission {
     Write = "Microsoft.Authorization/*/Write",
 }
 
-export enum Permission {
-    None = "none",
-    Read = "read",
-    Write = "write",
-}
-
 /**
  * Wrapper around the http service so call the azure ARM authorization api.
  * Set the Authorization header and the api version
@@ -29,7 +24,9 @@ export enum Permission {
 @Injectable()
 export class AuthorizationHttpService {
     private _permission: Observable<Permission>;
-    constructor(private accountService: AccountService, private armService: ArmHttpService) {
+    constructor(
+        private accountService: AccountService,
+        private armService: ArmHttpService) {
         this._permission = this.accountService.currentAccount.take(1)
             .flatMap(account => {
                 const resourceId = account && account.id;

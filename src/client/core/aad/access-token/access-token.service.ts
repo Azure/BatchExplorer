@@ -1,9 +1,9 @@
 import fetch, { RequestInit } from "node-fetch";
 
+import { AccessToken } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { AADConfig } from "../aad-config";
 import { baseUrl, objectToParams } from "../adal-constants";
-import { AccessToken } from "./access-token.model";
 
 const contentType = "application/x-www-form-urlencoded";
 

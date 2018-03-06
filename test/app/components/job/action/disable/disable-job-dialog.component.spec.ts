@@ -4,8 +4,8 @@ import { MatDialogRef } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
+import { ServerError } from "@batch-flask/core";
 import { DisableJobDialogComponent } from "app/components/job/action";
-import { ServerError } from "app/models";
 import { JobService } from "app/services";
 import { InfoBoxMockComponent, ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 

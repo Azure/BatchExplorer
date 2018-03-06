@@ -1,7 +1,7 @@
 import * as moment from "moment";
 
+import { AccessToken } from "@batch-flask/core";
 import { AdalService } from "app/services/adal";
-import { AccessToken } from "client/core/aad/access-token/access-token.model";
 import { Observable } from "rxjs";
 import { F } from "test/utils";
 

@@ -1,5 +1,5 @@
 import { Headers, Response, ResponseOptions } from "@angular/http";
-import { ServerError } from "app/models";
+import { ServerError } from "./server-error";
 
 const date = new Date(2017, 9, 13, 23, 43, 38);
 
