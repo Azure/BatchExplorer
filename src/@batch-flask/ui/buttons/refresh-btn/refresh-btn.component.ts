@@ -2,7 +2,6 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, animate, style, transition, trigger,
 } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Observable } from "rxjs";
 
 export enum RefreshStatus {
@@ -34,7 +33,7 @@ export class RefreshButtonComponent {
 
     @Input() public tooltipPosition: string = "above";
 
-    public set status(status: LoadingStatus) {
+    public set status(status: RefreshStatus) {
         this._status = status;
         this.changeDetector.markForCheck();
     }
@@ -44,8 +43,8 @@ export class RefreshButtonComponent {
     private _status = RefreshStatus.Idle;
 
     constructor(private changeDetector: ChangeDetectorRef) {
-
     }
+
     @autobind()
     public onClick() {
         this.status = RefreshStatus.Refreshing;
