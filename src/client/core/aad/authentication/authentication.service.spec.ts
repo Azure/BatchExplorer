@@ -14,7 +14,12 @@ describe("AuthenticationService", () => {
             splashScreen: new MockSplashScreen(),
             authenticationWindow: new MockAuthenticationWindow(),
         };
-        const config = { tenant: "common", clientId: "abc", redirectUri: "http://localhost" };
+        const config = {
+            tenant: "common",
+            clientId: "abc",
+            redirectUri: "http://localhost",
+            logoutRedirectUri: "http://localhost",
+        };
         userAuthorization = new AuthenticationService(appSpy, config);
         fakeAuthWindow = appSpy.authenticationWindow;
         userAuthorization.state.subscribe(x => state = x);

@@ -1,4 +1,3 @@
-export const baseUrl = "https://login.microsoftonline.com";
 export const defaultTenant = "common";
 
 export interface AuthorizeUrlParams {
@@ -22,13 +21,14 @@ export interface TokenUrlParams {
 export interface LogoutParams {
     post_logout_redirect_uri?: string;
 }
-export function authorizeUrl(tenant: string, params: AuthorizeUrlParams) {
+
+export function authorizeUrl(aadUrl: string, tenant: string, params: AuthorizeUrlParams) {
     const query = objectToParams(params);
-    return `${baseUrl}/${tenant}/oauth2/authorize?${query}`;
+    return `${aadUrl}/${tenant}/oauth2/authorize?${query}`;
 }
 
-export function logoutUrl(tenant: string) {
-    return `${baseUrl}/${tenant}/oauth2/logout`;
+export function logoutUrl(aadUrl: string, tenant: string) {
+    return `${aadUrl}/${tenant}/oauth2/logout`;
 }
 
 export function objectToParams(object): string {

@@ -9,25 +9,19 @@ import fetch from "node-fetch";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
 import {
-     AccessTokenCache,
+    AccessTokenCache,
     AccessTokenError, AccessTokenErrorResult, AccessTokenService,
 } from "../access-token";
 import { AuthenticationService, AuthorizeResult } from "../authentication";
 import { AADUser } from "./aad-user";
 import { UserDecoder } from "./user-decoder";
 
-const resources = [
-    Constants.ResourceUrl.arm,
-    Constants.ResourceUrl.batch,
-];
-
 const adalConfig: AADConfig = {
     tenant: "common",
     clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46", // Azure CLI
     redirectUri: "urn:ietf:wg:oauth:2.0:oob",
+    logoutRedirectUri: "urn:ietf:wg:oauth:2.0:oob/logout",
 };
-
-const defaultResource = Constants.AAD.defaultResource;
 
 export class AADService {
     public currentUser: Observable<AADUser>;
@@ -49,7 +43,7 @@ export class AADService {
         this.currentUser = this._currentUser.asObservable();
         this.tenantsIds = this._tenantsIds.asObservable();
         this.userAuthorization = new AuthenticationService(this.app, adalConfig);
-        this._accessTokenService = new AccessTokenService(adalConfig);
+        this._accessTokenService = new AccessTokenService(app, adalConfig);
     }
 
     public async init() {
@@ -65,8 +59,11 @@ export class AADService {
      * It will try to use the refresh token cached to prevent a new prompt window if possible.
      */
     public async login(): Promise<any> {
+        console.log("init login");
         try {
             const tenantIds = await this._loadTenantIds();
+            console.log("login got tenants");
+
             this._tenantsIds.next(tenantIds);
             this._refreshAllAccessTokens();
         } catch (error) {
@@ -74,17 +71,18 @@ export class AADService {
         }
     }
 
-    public logout(): void {
+    public async logout() {
         localStorage.removeItem(Constants.localStorageKey.currentUser);
         localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
         this.app.windows.hideAll();
         this._tokenCache.clear();
+        this._tenantsIds.next([]);
         this._currentUser.next(null);
         this._clearUserSpecificCache();
-        this.userAuthorization.logout();
+        await this.userAuthorization.logout();
     }
 
-    public async accessTokenFor(tenantId: string, resource: string = defaultResource) {
+    public async accessTokenFor(tenantId: string, resource: string = null) {
         return this.accessTokenData(tenantId, resource).then(x => x.access_token);
     }
 
@@ -93,7 +91,8 @@ export class AADService {
      * @param tenantId
      * @param resource
      */
-    public async accessTokenData(tenantId: string, resource: string = defaultResource): Promise<AccessToken> {
+    public async accessTokenData(tenantId: string, resource: string = null): Promise<AccessToken> {
+        resource = resource || this._getDefaultResource();
         if (this._tokenCache.hasToken(tenantId, resource)) {
             const token = this._tokenCache.getToken(tenantId, resource);
             if (!token.expireInLess(Constants.AAD.refreshMargin)) {
@@ -102,6 +101,10 @@ export class AADService {
         }
 
         return this._retrieveNewAccessToken(tenantId, resource);
+    }
+
+    private _getDefaultResource() {
+        return this.app.azureEnvironment.armUrl;
     }
 
     /**
@@ -228,8 +231,9 @@ export class AADService {
             Authorization: `${token.token_type} ${token.access_token}`,
         };
         const options = { headers };
-        const url = `${Constants.ServiceUrl.arm}/tenants?api-version=${Constants.ApiVersion.arm}`;
+        const url = `${this.app.azureEnvironment.armUrl}tenants?api-version=${Constants.ApiVersion.arm}`;
         const response = await fetch(url, options);
+        const json = await response.json();
         const { value } = await response.json();
         return value.map(x => x.tenantId);
     }
@@ -243,9 +247,17 @@ export class AADService {
     private async _refreshAllAccessTokens() {
         const tenantIds = this._tenantsIds.value;
         for (const tenantId of tenantIds) {
-            for (const resource of resources) {
+            for (const resource of this._resources()) {
                 await this._retrieveNewAccessToken(tenantId, resource);
             }
         }
+    }
+
+    private _resources() {
+        const env = this.app.azureEnvironment;
+        return [
+            env.armUrl,
+            env.batchUrl,
+        ];
     }
 }

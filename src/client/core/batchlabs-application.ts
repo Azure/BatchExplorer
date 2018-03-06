@@ -3,9 +3,11 @@ import { app, dialog, ipcMain, session } from "electron";
 import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
+import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { localStorage } from "client/core/local-storage";
+import { setMenu } from "client/menu";
 import { ProxySettingsManager } from "client/proxy";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { BatchLabsLink, Constants } from "common";
@@ -37,6 +39,10 @@ export class BatchLabsApplication {
     public aadService = new AADService(this);
     public state: Observable<BatchLabsState>;
     public proxySettings = new ProxySettingsManager(this, localStorage);
+
+    public get azureEnvironment() { return this._azureEnvironemnt; }
+
+    private _azureEnvironemnt = AzureEnvironment.Azure;
     private _state = new BehaviorSubject<BatchLabsState>(BatchLabsState.Loading);
 
     constructor(public autoUpdater: AppUpdater) {
@@ -50,7 +56,7 @@ export class BatchLabsApplication {
         BlIpcMain.init();
         await this.aadService.init();
         this._registerProtocol();
-        this.setupProcessEvents();
+        this._setupProcessEvents();
         await this.proxySettings.init();
     }
 
@@ -58,6 +64,8 @@ export class BatchLabsApplication {
      * Start the app by showing the splash screen
      */
     public async start() {
+        setMenu(this);
+
         const initializer = new BatchLabsInitializer(this);
         this.pythonServer.start();
 
@@ -105,51 +113,17 @@ export class BatchLabsApplication {
         initializer.complete();
     }
 
-    public setupProcessEvents() {
-        ipcMain.on("reload", () => {
-            // Destroy window and error window if applicable
-            this.windows.closeAll();
-            this.recoverWindow.destroy();
-            this.authenticationWindow.destroy();
-
-            // Show splash screen
-            this.start();
-        });
-
-        app.on("activate", () => {
-            // On macOS it's common to re-create a window in the app when the
-            // dock icon is clicked and there are no other windows open.
-            if (this.windows.size === 0) {
-                this.start();
-            }
-        });
-
-        ipcMain.once("exit", () => {
-            process.exit(1);
-        });
-
-        process.on("uncaughtException" as any, (error: Error) => {
-            log.error("There was a uncaught exception", error);
-            this.recoverWindow.createWithError(error.message);
-        });
-
-        process.on("unhandledRejection", r => {
-            log.error("Unhandled promise error:", r);
-        });
-        app.on("window-all-closed", () => {
-            // Required or electron will close when closing last open window before next one open
-        });
-
-        app.on("login", async (event, webContents, request, authInfo, callback) => {
-            event.preventDefault();
-            try {
-                const { username, password } = await this.proxySettings.credentials();
-                callback(username, password);
-            } catch (e) {
-                log.error("Unable to retrieve credentials for proxy settings", e);
-                this.quit();
-            }
-        });
+    /**
+     * Update the current azure environemnt.
+     * Warning: This will log the user out and redirect him the the loging page.
+     */
+    public async updateAzureEnvironment(env: AzureEnvironment) {
+        console.log("Changing environemnt", env.name);
+        await this.aadService.logout();
+        console.log("Logout done");
+        this._azureEnvironemnt = env;
+        await this.aadService.login();
+        this.windows.showAll();
     }
 
     /**
@@ -215,6 +189,53 @@ export class BatchLabsApplication {
         const proxyCredentials = new ProxyCredentialsWindow(this);
         proxyCredentials.create();
         return proxyCredentials.credentials;
+    }
+
+    private _setupProcessEvents() {
+        ipcMain.on("reload", () => {
+            // Destroy window and error window if applicable
+            this.windows.closeAll();
+            this.recoverWindow.destroy();
+            this.authenticationWindow.destroy();
+
+            // Show splash screen
+            this.start();
+        });
+
+        app.on("activate", () => {
+            // On macOS it's common to re-create a window in the app when the
+            // dock icon is clicked and there are no other windows open.
+            if (this.windows.size === 0) {
+                this.start();
+            }
+        });
+
+        ipcMain.once("exit", () => {
+            process.exit(1);
+        });
+
+        process.on("uncaughtException" as any, (error: Error) => {
+            log.error("There was a uncaught exception", error);
+            this.recoverWindow.createWithError(error.message);
+        });
+
+        process.on("unhandledRejection", r => {
+            log.error("Unhandled promise error:", r);
+        });
+        app.on("window-all-closed", () => {
+            // Required or electron will close when closing last open window before next one open
+        });
+
+        app.on("login", async (event, webContents, request, authInfo, callback) => {
+            event.preventDefault();
+            try {
+                const { username, password } = await this.proxySettings.credentials();
+                callback(username, password);
+            } catch (e) {
+                log.error("Unable to retrieve credentials for proxy settings", e);
+                this.quit();
+            }
+        });
     }
 
     private _registerProtocol() {

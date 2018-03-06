@@ -121,20 +121,16 @@ export const Environment = {
 };
 
 export const ServiceUrl = {
-    arm: "https://management.azure.com",
     githubRaw: "https://raw.githubusercontent.com",
-    appInsights: "https://api.applicationinsights.io/v1",
-    msGraph: "https://graph.microsoft.com/beta",
-    aadGraph: "https://graph.windows.net",
 };
 
-export const ResourceUrl = {
-    batch: "https://batch.core.windows.net/",
-    arm: "https://management.core.windows.net/",
-    appInsights: "https://api.applicationinsights.io",
-    msGraph: "https://graph.microsoft.com",
-    aadGraph: "https://graph.windows.net",
-};
+// export const ResourceUrl = {
+//     batch: "https://batch.core.windows.net/",
+//     arm: "https://management.core.windows.net/",
+//     appInsights: "https://api.applicationinsights.io",
+//     msGraph: "https://graph.microsoft.com",
+//     aadGraph: "https://graph.windows.net",
+// };
 
 export const APIErrorCodes = {
     containerNotFound: "ContainerNotFound",
@@ -168,7 +164,6 @@ export const AAD = {
      * 2 minutes
      */
     refreshMargin: 1000 * 120,
-    defaultResource: ResourceUrl.arm,
 };
 
 /**
