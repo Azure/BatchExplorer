@@ -146,13 +146,6 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         }
     }
 
-    public handleCaretClick(treeRow: TreeRow, event: MouseEvent) {
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-        this.fileNavigator.loadPath(treeRow.path);
-        this.toggleExpanded(treeRow);
-    }
-
     public expand(treeRow: TreeRow) {
         if (this.expandedDirs.has(treeRow.path) || !treeRow.isDirectory) { return; }
         this.expandedDirs.add(treeRow.path);
@@ -176,6 +169,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
             this.expandedDirs.delete(treeRow.path);
         } else {
             this.expandedDirs.add(treeRow.path);
+            this.fileNavigator.loadPath(treeRow.path);
         }
         this._buildTreeRows(this._tree);
         this.changeDetector.markForCheck();

@@ -1,4 +1,4 @@
-<span class="caret" (click)="handleCaretClick(treeRow, $event)">
+<span class="caret" (click)="handleCaretClick($event)">
     <i class="fa" [class.fa-caret-down]="treeRow.expanded" [class.fa-caret-right]="!treeRow.expanded" *ngIf="treeRow.isDirectory"></i>
 </span>
 <span class="file-icon">

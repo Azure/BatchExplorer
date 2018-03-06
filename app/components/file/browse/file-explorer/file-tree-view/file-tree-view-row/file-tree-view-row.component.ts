@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, Output,
+} from "@angular/core";
 
 import { TreeRow } from "..";
 import "./file-tree-view-row.scss";
@@ -15,6 +17,8 @@ export class FileTreeViewRowComponent {
     @Input() @HostBinding("class.drop-target") public dropHover: boolean;
     @Input() @HostBinding("class.focused") public focused: boolean;
 
+    @Output() public toggleExpand = new EventEmitter();
+
     constructor(private changeDetector: ChangeDetectorRef) {
     }
 
@@ -26,5 +30,12 @@ export class FileTreeViewRowComponent {
     @HostBinding("attr.title")
     public get title() {
         return this.treeRow.path;
+    }
+
+    public handleCaretClick(event: MouseEvent) {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        // this.fileNavigator.loadPath(treeRow.path);
+        // this.toggleExpanded(treeRow);
     }
 }

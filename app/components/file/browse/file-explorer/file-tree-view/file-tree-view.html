@@ -32,6 +32,7 @@
             [dropHover]="treeRow.path.startsWith(dropTargetPath)"
             [focused]="isFocused && focusedIndex === i"
             (click)="activateRow(treeRow)"
+            (toggleExpand)="toggleExpand(treeRow)"
             (contextmenu)="showContextMenu(treeRow)"
             (dragenter)="dragEnterRow($event, treeRow)"
             (dragleave)="dragLeaveRow($event, treeRow)"
