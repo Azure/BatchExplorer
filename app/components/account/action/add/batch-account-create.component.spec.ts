@@ -7,20 +7,18 @@ import { Observable } from "rxjs";
 
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
-import { AccountCreateBasicDialogComponent } from "app/components/account/action/add";
+import { BatchAccountCreateComponent } from "app/components/account/action/add";
 import { ServerError } from "app/models";
 import { AccountService, AuthorizationHttpService, Permission, SubscriptionService } from "app/services";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
 
-// import * as Fixtures from "test/fixture";
-// import { MockedFile } from "test/utils/mocks";
 import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
-import { ResourceGroupMode } from "./account-create-basic-dialog.component";
+import { ResourceGroupMode } from "./batch-account-create.component";
 
-describe("AccountCreateBasicDialogComponent ", () => {
-    let fixture: ComponentFixture<AccountCreateBasicDialogComponent>;
-    let component: AccountCreateBasicDialogComponent;
+describe("BatchAccountCreateComponent ", () => {
+    let fixture: ComponentFixture<BatchAccountCreateComponent>;
+    let component: BatchAccountCreateComponent;
     let debugElement: DebugElement;
     let accountServiceSpy: any;
     let authServiceSpy: any;
@@ -161,7 +159,7 @@ describe("AccountCreateBasicDialogComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            declarations: [...complexFormMockComponents, AccountCreateBasicDialogComponent, ServerErrorMockComponent],
+            declarations: [...complexFormMockComponents, BatchAccountCreateComponent, ServerErrorMockComponent],
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: SidebarRef, useValue: null },
@@ -173,7 +171,7 @@ describe("AccountCreateBasicDialogComponent ", () => {
             schemas: [NO_ERRORS_SCHEMA],
         });
 
-        fixture = TestBed.createComponent(AccountCreateBasicDialogComponent);
+        fixture = TestBed.createComponent(BatchAccountCreateComponent);
         component = fixture.componentInstance;
         debugElement = fixture.debugElement;
         fixture.detectChanges();

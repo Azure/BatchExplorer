@@ -1,1 +1,1 @@
-export * from "./account-create-basic-dialog.component";
+export * from "./batch-account-create.component";

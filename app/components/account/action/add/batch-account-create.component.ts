@@ -12,7 +12,7 @@ import {
     Permission, QuotaResult, SubscriptionService,
 } from "app/services";
 import { Constants, log } from "app/utils";
-import "./account-create-basic-dialog.scss";
+import "./batch-account-create.scss";
 
 const accountIdSuffix = ".batch.azure.com";
 
@@ -22,11 +22,11 @@ export enum ResourceGroupMode {
 }
 
 @Component({
-    selector: "bl-account-create-basic-dialog",
-    templateUrl: "account-create-basic-dialog.html",
+    selector: "bl-batch-account-create",
+    templateUrl: "batch-account-create.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountCreateBasicDialogComponent implements OnDestroy {
+export class BatchAccountCreateComponent implements OnDestroy {
     public ResourceGroupMode = ResourceGroupMode;
     public form: FormGroup;
     public resourceGroups: ResourceGroup[] = [];
@@ -40,7 +40,7 @@ export class AccountCreateBasicDialogComponent implements OnDestroy {
         public accountService: AccountService,
         public authService: AuthorizationHttpService,
         public subscriptionService: SubscriptionService,
-        public sidebarRef: SidebarRef<AccountCreateBasicDialogComponent>,
+        public sidebarRef: SidebarRef<BatchAccountCreateComponent>,
         private changeDetector: ChangeDetectorRef,
         private formBuilder: FormBuilder,
         private notificationService: NotificationService) {

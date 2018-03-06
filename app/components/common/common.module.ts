@@ -3,9 +3,10 @@ import { BrowserModule } from "@angular/platform-browser";
 
 import { BaseModule } from "@batch-flask/ui";
 import { InlineQuotaComponent } from "./inline-quota";
+import { SubscriptionPickerComponent } from "./subscription-picker";
 
 const privateComponents = [];
-const publicComponents = [InlineQuotaComponent];
+const publicComponents = [InlineQuotaComponent, SubscriptionPickerComponent];
 
 /**
  * Commons module shouldn't import any module that:

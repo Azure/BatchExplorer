@@ -1,0 +1,10 @@
+<mat-form-field>
+    <mat-select formControlName="subscription" placeholder="Subscription">
+        <mat-option
+            *ngFor="let subscription of subscriptionService.subscriptions | async;trackBy: trackBySubscriptionId"
+            [value]="subscription">
+            {{subscription.displayName}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+<bl-error controlName="subscription" code="required">Subscription is a required field</bl-error>

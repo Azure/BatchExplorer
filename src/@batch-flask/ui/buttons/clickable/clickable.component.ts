@@ -45,6 +45,7 @@ export class ClickableComponent implements OnChanges, OnDestroy {
         if (changes.permission) {
             this._clearSubscription();
             this._sub = this.authHttpService.hasPermission(this.permission).subscribe((hasPermission) => {
+                console.log(this.permission, hasPermission);
                 this._permissionDisabled = !hasPermission;
                 if (hasPermission) {
                     this.subtitle = "";

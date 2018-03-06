@@ -4,7 +4,7 @@ import { commonModules } from "app/common";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
 import { StorageAccountPickerComponent } from "app/components/account/base/storage-account-picker";
 import { PoolBaseModule } from "app/components/pool/base";
-import { AccountCreateBasicDialogComponent } from "./action/add";
+import { BatchAccountCreateComponent } from "./action/add";
 import { DeleteAccountDialogComponent } from "./action/delete/delete-account-dialog.component";
 import { AccountBrowseModule } from "./browse";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./details";
@@ -15,10 +15,10 @@ import { StorageAccountCardComponent } from "./details/storage-account-card";
 import { AccountHomeComponent } from "./home";
 
 const components = [
-    AccountDefaultComponent, AccountDetailsComponent,
-    AccountHomeComponent, DeleteAccountDialogComponent, StorageAccountCardComponent,
+    AccountDefaultComponent, AccountDetailsComponent, AccountHomeComponent,
+    BatchAccountCreateComponent, DeleteAccountDialogComponent, StorageAccountCardComponent,
     EditStorageAccountFormComponent, StorageAccountPickerComponent, AccountQuotasCardComponent,
-    MonitorChartComponent, AccountCreateBasicDialogComponent,
+    MonitorChartComponent,
 ];
 
 const modules = [
@@ -30,7 +30,7 @@ const modules = [
     exports: [...modules, ...components],
     imports: [...modules],
     entryComponents: [
-        AccountCreateBasicDialogComponent,
+        BatchAccountCreateComponent,
         DeleteAccountDialogComponent,
         EditStorageAccountFormComponent,
     ],

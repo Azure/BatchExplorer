@@ -7,7 +7,7 @@ import { BrowseLayoutComponent } from "@batch-flask/ui/browse-layout";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Subscription } from "app/models";
 import { SubscriptionService } from "app/services";
-import { AccountCreateBasicDialogComponent } from "../action/add";
+import { BatchAccountCreateComponent } from "../action/add";
 
 @Component({
     selector: "bl-account-home",
@@ -47,7 +47,7 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
 
     @autobind()
     public addBatchAccount() {
-        this.sidebarManager.open("add-batch-account", AccountCreateBasicDialogComponent);
+        this.sidebarManager.open("add-batch-account", BatchAccountCreateComponent);
     }
 
     private _buildSubscriptionFilter(subscriptionIds: Set<string>): Filter {
