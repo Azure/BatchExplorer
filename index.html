@@ -21,9 +21,7 @@
         <span class="navbar-brand mb-0 h1"> <i class="fa fa-flask"></i> Batch Labs</span>
     </nav>
     <div class="navbar navbar-light" style="display: block; background-color:#e3e3e3">
-        <div class="text-center">Version 0.12.4 (Beta) is now available! Find more details below.</div>
-        <!-- <div class="text-center" style="text-align:center">
-        </div> -->
+        <div class="text-center">Version <span id="batch-labs-version">0.13.1 (Beta)</span> is now available! Find more details below.</div>
     </div>
     <div class="jumbotron">
         <div class="row" style="padding: 0px 20%">
@@ -31,12 +29,20 @@
                 <div style="margin-top:14px;">
                     <h1 class="text-center">Batch Labs</h1>
                     <p class="text-center">Debug and monitor your Azure Batch applications</p>
-                    <div class="text-center">
-                        <button class="btn" style="text-align:center">Download</button>
-                        <button class="btn btn-success" ><a style="color:white" href="https://github.com/Azure/BatchLabs">View on GitHub</a></button>
-                        
+                    <div class="text-center row">
+                        <div class="col-sm-4">
+                            <button class="btn" style="text-align:center">Download</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-success btn-link" href="https://github.com/Azure/BatchLabs">
+                                View on GitHub
+                            </a>
+                        </div>
                     </div>
-                    <p class="text-center" style="font-size: small; padding-top:8px; color:grey">By using Batch Labs, you aree to its <a href="EULA.html" >licence</a> and <a href="https://privacy.microsoft.com/en-us/privacystatement">privacy statement</a></p>
+                    <p class="text-center" style="font-size: small; padding-top:8px; color:grey">
+                        By using Batch Labs, you aree to its <a href="EULA.html" >licence</a> 
+                        and <a href="https://privacy.microsoft.com/en-us/privacystatement">privacy statement</a>
+                    </p>
                 </div>
             </div>
             <div class="col-md-8">
@@ -45,17 +51,16 @@
         </div>
     </div>
     <div class="download-content">
-        <!-- <a href="https://github.com/Azure/BatchLabs/releases">
-            <h2 class="download-title">Downloads</h2>
-        </a> -->
         <div class="downloads">
             <div class="os-download">
                 <div class="type">
                     <i class="fa fa-windows"></i>
                 </div>
-                <button class="btn btn-success btn-download">
+                <a
+                    class="btn btn-success btn-link" 
+                    id="download-windows-installer-btn">
                     Windows
-                </button>
+                </a>
                 <div class="alternate-downloads">
                     <span><a href="#" id="download-windows-installer">msi</a> | <a href="#" id="download-windows-zip">zip</a></span>
                 </div>
@@ -64,17 +69,12 @@
             <div class="os-download">
                 <div class="type">
                     <i class="fa fa-apple"></i>
-                    <!-- <div class="label">OSX</div> -->
                 </div>
-                <!-- <a class="option" id="download-osx-dmg">
-                    Dmg
-                </a>
-                <a class="option" id="download-osx-zip">
-                    Zip
-                </a> -->
-                <button class="btn btn-success btn-download">
+                <a 
+                    class="btn btn-success btn-link"
+                    id="download-osx-dmg-btn">
                         OSX
-                </button>
+                </a>
                 <div class="alternate-downloads">
                     <span><a href="#" id="download-osx-dmg">dmg</a> | <a href="#" id="download-osx-zip">zip</a></span>
                 </div>
@@ -84,20 +84,10 @@
             <div class="os-download">
                 <div class="type">
                     <i class="fa fa-linux"></i>
-                    <!-- <div class="label">Linux</div> -->
                 </div>
-                <!-- <a class="option" id="download-linux-deb">
-                    Deb
-                </a>
-                <a class="option" id="download-linux-rpm">
-                    Rpm
-                </a>
-                <a class="option" id="download-linux-appimage">
-                    AppImage
-                </a> -->
-                <button class="btn btn-success btn-download">
+                <a class="btn btn-success btn-link" id="download-linux-deb-btn">
                         Linux
-                </button>
+                </a>
                 <div class="alternate-downloads">
                     <span><a href="#" id="download-linux-deb">deb</a> 
                         | <a href="#" id="download-linux-rpm">rpm</a> 
@@ -105,39 +95,19 @@
                 </div>
             </div>
         </div>
-
-        <!-- <div>
-            <h2 class="download-title">Pool heatmap</h2>
-
-            <img src="assets/images/pool-home.png" class="demo-image">
-        </div>
-
-        <div>
-            <h2 class="download-title">Find anomalies in your job</h2>
-            <img src="assets/images/job-running-tasks-graph.png" class="demo-image">
-        </div> -->
     </div>
-    
-    <!-- <div class="feature-content">
-        <div class="row">
-            <div class="col-sm-6 offset-sm-1">
-                <h2 style="text-align:left; font-weight:lighter; color:#333333">Plotting support</h2>
-                <p style="text-align:left; color:gray">See trends or find anomalies in your jobs</p>
-            </div>
-            <div class="col-sm-4">
-                <img src="assets/images/job-running-tasks-graph.png" class="feature-image">
-            </div>
-        </div>
-    </div> -->
     <div class="swimlane">
         <div class="container">
             <div class="row">
                 <div class="col-sm-4">
-                    <img src="assets/images/dashboard.png" class="screenshot">
+                    <a href="assets/images/dashboard.png" target="_blank">
+                        <img src="assets/images/dashboard.png" class="screenshot">
+                    </a>
                 </div>
                 <div class="col-sm-6 offset-sm-2">
                     <h2>Account overviews</h2>
-                    <p>Go beyond syntax highlighting and autocomplete with IntelliSense, which provides smart completions based on variable types, function definitions, and imported modules.</p>
+                    <p>Manage your accounts, view high level statistics, quotas and account properties at a glance. 
+                        Use the dashboard for high level management or to quickly drill into any features offered by the Azure Batch service.</p>
                 </div>
             </div>
         </div>
@@ -148,10 +118,13 @@
             <div class="row">
                 <div class="col-sm-6">
                     <h2>Pool views</h2>
-                    <p>Go beyond syntax highlighting and autocomplete with IntelliSense, which provides smart completions based on variable types, function definitions, and imported modules.</p>
+                    <p>See what the nodes in your pool are doing at any given time with with a real-time heat map. 
+                        Also included are out-of-the box metrics and quick drill-downs to node properties and file explorers.</p>
                 </div>
                 <div class="col-sm-4 offset-sm-2">
-                    <img src="assets/images/pool-home.png" class="screenshot">
+                    <a href="assets/images/pool-home.png" target="_blank">
+                        <img src="assets/images/pool-home.png" class="screenshot">
+                    </a>
                 </div>
             </div>
         </div>
@@ -161,11 +134,14 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-4">
-                    <img src="assets/images/job-home.png" class="screenshot">
+                    <a href="assets/images/job-home.png" target="_blank">
+                        <img src="assets/images/job-home.png" class="screenshot">
+                    </a>
                 </div>
                 <div class="col-sm-6 offset-sm-2">
                     <h2>Job mangament</h2>
-                    <p>Go beyond syntax highlighting and autocomplete with IntelliSense, which provides smart completions based on variable types, function definitions, and imported modules.</p>
+                    <p>Quickly track the progress of jobs, view the size of the queue and job throughput and highlight errors. 
+                        The jobs view is a great place to view the state of progress of work of your tasks.</p>
                 </div>
             </div>
         </div>
@@ -176,10 +152,12 @@
             <div class="row">
                 <div class="col-sm-6">
                     <h2>Task performance</h2>
-                    <p>Go beyond syntax highlighting and autocomplete with IntelliSense, which provides smart completions based on variable types, function definitions, and imported modules.</p>
+                    <p>Use graphing tools to understand task runtime distribution to find outliers, hidden issue or performance bottlenecks.</p>
                 </div>
                 <div class="col-sm-4 offset-sm-2">
-                    <img src="assets/images/job-running-tasks-graph.png" class="screenshot">
+                    <a href="assets/images/job-running-tasks-graph.png" target="_blank">
+                        <img src="assets/images/job-running-tasks-graph.png" class="screenshot">
+                    </a>
                 </div>
             </div>
         </div>
@@ -194,7 +172,9 @@
 
     <div id="outdated">
         <h6>Your browser is out-of-date!</h6>
-        <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+        <p>Update your browser to view this website correctly. 
+            <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update my browser now </a>
+        </p>
         <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
     </div>
     <script src="assets/outdatedbrowser/outdatedbrowser.js"></script>

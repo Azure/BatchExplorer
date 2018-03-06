@@ -79,10 +79,14 @@ a {
     color: #2e6083;
 }
 
-.btn-download {
+.btn-link {
     border-radius: 0 !important;
     width: 180px;
     height: 60px;
+    background-color: #28a745 !important;
+    color: white !important;
+    display: inline-grid !important;
+    align-items: center;
 }
 
 .demo-image {

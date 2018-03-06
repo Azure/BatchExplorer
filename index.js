@@ -38,6 +38,10 @@ function updateDownloadLinks() {
     for (const key of Object.keys(downloadLinkEls)) {
         downloadLinkEls[key].href = downloadLinks[key];
     }
+
+    document.getElementById("download-windows-installer-btn").href = downloadLinks["windowsInstaller"]
+    document.getElementById("download-osx-dmg-btn").href = downloadLinks["osxDmg"]
+    document.getElementById("download-linux-deb-btn").href = downloadLinks["linuxDeb"]
 }
 
 document.addEventListener("DOMContentLoaded", (event) => {
