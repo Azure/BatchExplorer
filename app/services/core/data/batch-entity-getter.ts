@@ -1,6 +1,6 @@
 import { Type } from "@angular/core";
 
-import { ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
 import { BatchClientProxy } from "app/services/batch-api";
 import { BatchClientService } from "app/services/batch-client.service";
 import { Observable } from "rxjs";

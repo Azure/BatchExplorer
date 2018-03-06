@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "@batch-flask/core";
 import { Observable, Subscription } from "rxjs";
 
-import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, NcjTemplateMode, ServerError } from "app/models";
+import { ServerError, autobind } from "@batch-flask/core";
+import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, NcjTemplateMode } from "app/models";
 import { NcjSubmitService, NcjTemplateService } from "app/services";
 import { exists, log } from "app/utils";
 import { Constants } from "common";

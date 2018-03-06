@@ -7,17 +7,13 @@ import { ButtonGroupComponent } from "./button-group.component";
 import { ButtonComponent } from "./button.component";
 import {
     AddButtonComponent,
-    AddTaskButtonComponent,
     ClearListSelectionButtonComponent,
     CloneButtonComponent,
     DeleteButtonComponent,
-    DisableButtonComponent,
     DownloadButtonComponent,
     EditButtonComponent,
-    EnableButtonComponent,
     LoadingButtonComponent,
     ResizeButtonComponent,
-    TerminateButtonComponent,
 } from "./buttons.component";
 import { ClickableComponent } from "./clickable";
 import { DirectoryPickerComponent } from "./directory-picker.component";
@@ -27,19 +23,15 @@ const components = [
     ButtonComponent,
     ButtonGroupComponent,
     AddButtonComponent,
-    AddTaskButtonComponent,
     ClearListSelectionButtonComponent,
     CloneButtonComponent,
     DeleteButtonComponent,
     DirectoryPickerComponent,
-    DisableButtonComponent,
     DownloadButtonComponent,
     EditButtonComponent,
-    EnableButtonComponent,
     LoadingButtonComponent,
     ResizeButtonComponent,
     RefreshButtonComponent,
-    TerminateButtonComponent,
     ClickableComponent,
 ];
 

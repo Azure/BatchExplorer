@@ -9,7 +9,7 @@ import {
 } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 
-import { ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
 import { DisplayStatus, LoadingStatus } from "./loading-status";
 import "./loading.scss";
 
