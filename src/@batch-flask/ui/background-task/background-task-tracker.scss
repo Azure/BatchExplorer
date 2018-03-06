@@ -11,11 +11,12 @@
 
 bl-background-task-tracker {
     [bl-dropdown-btn] {
-        width: 290px;
+        width: 340px;
         padding: 0 5px;
     }
+
     [bl-dropdown-content] {
-        min-width: 300px;
+        min-width: 330px;
     }
 
     .current-task {

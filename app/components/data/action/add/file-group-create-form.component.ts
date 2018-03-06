@@ -69,7 +69,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                 next: (data) => {
                     lastData = data;
                     if (data.partial) {
-                        task.name.next(`Processing large file: ${data.partial}% (${data.uploaded}/${data.total})`);
+                        // tslint:disable-next-line:max-line-length
+                        task.name.next(`Processing large file: ${data.partial}%, completed (${data.uploaded}/${data.total})`);
                     } else {
                         task.name.next(`${name} (${data.uploaded}/${data.total})`);
                     }
@@ -118,8 +119,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     }
 
     private _formGroupName(fileGroupName: string) {
-        return fileGroupName && fileGroupName.length > 10
-            ? `${fileGroupName.substring(0, 9)}...`
+        return fileGroupName && fileGroupName.length > 20
+            ? `${fileGroupName.substring(0, 19)}...`
             : fileGroupName;
     }
 
