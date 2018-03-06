@@ -125,28 +125,6 @@ export class FileService extends ServiceBase {
         return this._taskFileCache.getCache(params);
     }
 
-    // public listFromComputeNode(
-    //     initialPoolId: string,
-    //     initialNodeId: string,
-    //     recursive = true,
-    //     initialOptions: any = {},
-    //     onError?: (error: ServerError) => boolean): RxListProxy<NodeFileListParams, File> {
-    //     return new RxBatchListProxy<NodeFileListParams, File>(File, this.batchService, {
-    //         cache: (params) => this.getNodeFileCache(params),
-    //         proxyConstructor: (client, params, options) => {
-    //             const batchOptions = { ...options };
-    //             if (options.folder) {
-    //                 batchOptions.filter = `startswith(name, '${options.folder}')`;
-    //             }
-    //             return client.file.listFromComputeNode(params.poolId, params.nodeId, recursive, batchOptions);
-    //         },
-    //         initialParams: { poolId: initialPoolId, nodeId: initialNodeId },
-    //         initialOptions,
-    //         logIgnoreError: fileIgnoredErrors,
-    //         onError: onError,
-    //     });
-    // }
-
     public listFromNodeView(poolId: string, nodeId: string, options: ListOptionsAttributes = {}) {
         const view = new ListView({
             cache: (params) => this.getNodeFileCache(params),
@@ -170,14 +148,16 @@ export class FileService extends ServiceBase {
     public navigateNodeFiles(poolId: string, nodeId: string, config: NaviagateNodeFileConfig = {}) {
         return new FileNavigator({
             basePath: config.basePath,
-            loadPath: (folder) => this.listFromNodeView(poolId, nodeId, { recursive: false, folder }),
+            params: { poolId, nodeId },
+            getter: this._nodeFileListGetter,
             getFile: (filename: string) => this.fileFromNode(poolId, nodeId, filename),
         });
     }
 
     public navigateTaskFile(jobId: string, taskId: string, options: NaviagateTaskFileOptions) {
         return new FileNavigator({
-            loadPath: (folder) => this.listFromTaskView(jobId, taskId, { recursive: false, folder }),
+            params: { jobId, taskId },
+            getter: this._taskFileListGetter,
             getFile: (filename: string) => this.fileFromTask(jobId, taskId, filename),
             onError: options.onError,
         });

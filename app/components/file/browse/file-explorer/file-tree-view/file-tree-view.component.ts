@@ -1,4 +1,7 @@
-import { Component, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
+    HostBinding, Input, OnChanges, OnDestroy, Output,
+} from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
@@ -6,11 +9,10 @@ import { FileNavigator, FileTreeNode, FileTreeStructure } from "app/services/fil
 import { CloudPathUtils, DragUtils } from "app/utils";
 import { FileDeleteEvent, FileDropEvent } from "../file-explorer.component";
 
-import { ActivatedRoute } from "@angular/router";
 import { ServerError } from "@batch-flask/core";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
-import { DownloadFileGroupDialogComponent } from "app/components/data/details";
+import { DownloadFolderComponent } from "app/components/common/download-folder-dialog";
 import { ElectronShell } from "app/services";
 import { remote } from "electron";
 import "./file-tree-view.scss";
@@ -26,8 +28,9 @@ export interface TreeRow {
 @Component({
     selector: "bl-file-tree-view",
     templateUrl: "file-tree-view.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
+export class FileTreeViewComponent implements OnChanges, OnDestroy {
     @Input() public fileNavigator: FileNavigator;
     @Input() public currentPath: string;
     @Input() public active: boolean = true;
@@ -46,23 +49,16 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
     public refreshing: boolean;
     public isDraging = 0;
     public dropTargetPath: string = null;
-    public containerId: string;
 
     private _tree: FileTreeStructure;
     private _navigatorSubs: Subscription[] = [];
-    private _paramsSubscriber: Subscription;
 
-    constructor(private activatedRoute: ActivatedRoute,
-                private dialog: DialogService,
-                private contextMenuService: ContextMenuService,
-                private shell: ElectronShell,
-                private notificationService: NotificationService) { }
-
-    public ngOnInit() {
-        this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
-            this.containerId = params["id"];
-        });
-    }
+    constructor(
+        private dialog: DialogService,
+        private contextMenuService: ContextMenuService,
+        private shell: ElectronShell,
+        private changeDetector: ChangeDetectorRef,
+        private notificationService: NotificationService) { }
 
     public ngOnChanges(inputs) {
         if (inputs.fileNavigator) {
@@ -81,7 +77,6 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
 
     public ngOnDestroy() {
         this._clearNavigatorSubs();
-        this._paramsSubscriber.unsubscribe();
     }
 
     public handleClick(treeRow: TreeRow) {
@@ -134,7 +129,7 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
             this.expandedDirs[treeRow.path] = true;
         }
         this._buildTreeRows(this._tree);
-
+        this.changeDetector.markForCheck();
         return !isExpanded;
     }
 
@@ -185,10 +180,10 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
      */
     public download(treeRow: TreeRow) {
         if (treeRow.isDirectory) {
-            const ref = this.dialog.open(DownloadFileGroupDialogComponent);
-            ref.componentInstance.containerId = this.containerId;
+            const ref = this.dialog.open(DownloadFolderComponent);
+            ref.componentInstance.navigator = this.fileNavigator;
             ref.componentInstance.subfolder = treeRow.name;
-            ref.componentInstance.pathPrefix = treeRow.path;
+            ref.componentInstance.folder = treeRow.path;
         } else {
             const dialog = remote.dialog;
             const localPath = dialog.showSaveDialog({
@@ -203,12 +198,15 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
 
     public refresh(path?: string) {
         this.refreshing = true;
+        this.changeDetector.markForCheck();
         this.fileNavigator.refresh(path).subscribe({
             next: () => {
                 this.refreshing = false;
+                this.changeDetector.markForCheck();
             },
             error: () => {
                 this.refreshing = false;
+                this.changeDetector.markForCheck();
             },
         });
     }
@@ -218,6 +216,7 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
         if (!this.canDropExternalFiles) { return; }
         this.isDraging++;
         this.dropTargetPath = this._getDropTarget(treeRow);
+        this.changeDetector.markForCheck();
     }
 
     public dragLeaveRow(event: DragEvent, treeRow?: TreeRow) {
@@ -228,6 +227,7 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
         if (this._getDropTarget(treeRow) === this.dropTargetPath && this.isDraging <= 0) {
             this.dropTargetPath = null;
         }
+        this.changeDetector.markForCheck();
     }
 
     public handleDropOnRow(event: DragEvent, treeRow?: TreeRow) {
@@ -240,6 +240,7 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
         this.dropTargetPath = null;
         this.isDraging = 0;
         this.dropFiles.emit({ path, files });
+        this.changeDetector.markForCheck();
     }
 
     public handleDragHover(event: DragEvent) {
@@ -249,6 +250,7 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
     private _buildTreeRows(tree) {
         const root = tree.root;
         this.treeRows = this._getTreeRowsForNode(root);
+        this.changeDetector.markForCheck();
     }
 
     private _getTreeRowsForNode(node: FileTreeNode, indent = 0): TreeRow[] {
