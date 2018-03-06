@@ -9,31 +9,31 @@ import { autobind } from "@batch-flask/core";
 import { BackgroundTask, BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SecureUtils } from "@batch-flask/utils";
-import { ElectronShell, FileSystemService, StorageService } from "app/services";
+import { ElectronShell, FileSystemService } from "app/services";
+import { FileNavigator } from "app/services/file";
 import * as minimatch from "minimatch";
-import "./download-file-group-dialog.scss";
+import "./download-folder-dialog.scss";
 
 @Component({
-    selector: "bl-download-file-group-dialog",
-    templateUrl: "download-file-group-dialog.html",
+    selector: "bl-download-folder-dialog",
+    templateUrl: "download-folder-dialog.html",
 })
-export class DownloadFileGroupDialogComponent {
-    public set containerId(containerId: string) {
-        this._containerId = containerId;
+export class DownloadFolderComponent {
+    public set navigator(navigator: FileNavigator) {
+        this._navigator = navigator;
         this.downloadFolder.setValue(this._defaultDownloadFolder);
     }
-    public get containerId() { return this._containerId; }
+    public get navigator() { return this._navigator; }
 
     public patterns = new FormControl("**/*");
     public downloadFolder = new FormControl("");
     public subfolder: string = "";
     public pathPrefix: string = "";
 
-    private _containerId: string;
+    private _navigator: FileNavigator;
 
     constructor(
-        public dialogRef: MatDialogRef<DownloadFileGroupDialogComponent>,
-        private storageService: StorageService,
+        public dialogRef: MatDialogRef<DownloadFolderComponent>,
         private backgroundTaskService: BackgroundTaskService,
         private fs: FileSystemService,
         private shell: ElectronShell,
@@ -83,7 +83,7 @@ export class DownloadFileGroupDialogComponent {
         return this.patterns.value.split("\n");
     }
 
-    private _getDownloadFolder(): Promise<string> {
+    private async _getDownloadFolder(): Promise<string> {
         // Gets current selected folder by joining base download folder and selected directory name
         // Ensures that this selected directory is unique under base download folder
         const folder = path.join(this.downloadFolder.value, this.subfolder);
@@ -99,7 +99,7 @@ export class DownloadFileGroupDialogComponent {
     private _downloadFiles(task: BackgroundTask, folder: string, files: List<File>): Array<Observable<any>> {
         const progressStep = 90 / files.size;
         return files.map((file) => {
-            const fileLoader = this.storageService.getBlobContent(this.containerId, file.name);
+            const fileLoader = this.navigator.getFile(file.name);
             const fileName = this._getSubdirectoryPath(file.name);
             const filePath = path.join(folder, fileName);
             return fileLoader.download(filePath).do(() => {
@@ -110,14 +110,8 @@ export class DownloadFileGroupDialogComponent {
 
     private _getListOfFilesToDownload(): Observable<List<File>> {
         const patterns = this._getPatterns();
-        const data = this.storageService.blobListView(this.containerId, { recursive: true });
-        return data.fetchAll().flatMap(() => data.items.take(1)).map((items) => {
-            data.dispose();
+        return this.navigator.listAllFiles(this.pathPrefix).map((items) => {
             const files = items.filter((file) => {
-                // Filter files that are not part of this directory
-                if (!file.name.startsWith(this.pathPrefix)) {
-                    return false;
-                }
                 for (const pattern of patterns) {
                     // Path prefix must be excluded when compared to pattern
                     const fileName = this._getSubdirectoryPath(file.name);

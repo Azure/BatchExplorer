@@ -170,14 +170,16 @@ export class FileService extends ServiceBase {
     public navigateNodeFiles(poolId: string, nodeId: string, config: NaviagateNodeFileConfig = {}) {
         return new FileNavigator({
             basePath: config.basePath,
-            loadPath: (folder) => this.listFromNodeView(poolId, nodeId, { recursive: false, folder }),
+            params: { poolId, nodeId },
+            getter: this._nodeFileListGetter,
             getFile: (filename: string) => this.fileFromNode(poolId, nodeId, filename),
         });
     }
 
     public navigateTaskFile(jobId: string, taskId: string, options: NaviagateTaskFileOptions) {
         return new FileNavigator({
-            loadPath: (folder) => this.listFromTaskView(jobId, taskId, { recursive: false, folder }),
+            params: { jobId, taskId },
+            getter: this._taskFileListGetter,
             getFile: (filename: string) => this.fileFromTask(jobId, taskId, filename),
             onError: options.onError,
         });

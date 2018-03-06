@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { LoadingStatus } from "@batch-flask/ui/loading";
@@ -104,7 +104,7 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     private _workspaceSubs: Subscription[] = [];
     private _config: FileExplorerConfig = fileExplorerDefaultConfig;
 
-    constructor() {
+    constructor(private changeDetector: ChangeDetectorRef) {
         this._updateSplitPanelConfig();
     }
 
@@ -164,10 +164,12 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
         this._clearWorkspaceSubs();
         this._workspaceSubs.push(this.workspace.currentSource.subscribe((source) => {
             this.currentSource = source;
+            this.changeDetector.markForCheck();
         }));
 
         this._workspaceSubs.push(this.workspace.currentNode.subscribe((node) => {
             this.currentNode = { ...node, treeNode: new FileTreeNode(node.treeNode) };
+            this.changeDetector.markForCheck();
         }));
     }
 
