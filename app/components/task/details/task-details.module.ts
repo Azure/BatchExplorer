@@ -5,6 +5,7 @@ import { FileBrowseModule } from "app/components/file/browse";
 import { FileDetailsModule } from "app/components/file/details";
 import { TaskBrowseModule } from "app/components/task/browse";
 
+import { JobActionModule } from "../../job/action";
 import { TaskOutputsComponent } from "./output";
 import { SubTaskDisplayListComponent, SubTaskPropertiesComponent } from "./sub-tasks";
 import { TaskConfigurationComponent } from "./task-configuration.component";
@@ -27,7 +28,8 @@ const components = [
     declarations: components,
     exports: components,
     imports: [...commonModules,
-        FileBrowseModule, FileDetailsModule, TaskBrowseModule],
+        FileBrowseModule, FileDetailsModule, TaskBrowseModule, JobActionModule,
+    ],
 })
 export class TaskDetailsModule {
 }

@@ -1,4 +1,4 @@
-import { UniqueWindow } from "client/core";
+import { UniqueWindow } from "client/core/unique-window";
 import { BrowserWindow } from "electron";
 
 export class AuthenticationWindow extends UniqueWindow {

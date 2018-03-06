@@ -8,6 +8,7 @@ import { MaterialModule } from "@batch-flask/core";
 import { AdvancedFilterModule } from "./advanced-filter";
 import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
+import { BatchFlaskSettingsModule } from "./batch-flask-settings";
 import { BreadcrumbModule } from "./breadcrumbs";
 import { BrowseLayoutModule } from "./browse-layout";
 import { ButtonsModule } from "./buttons";
@@ -22,7 +23,6 @@ import { EditorModule } from "./editor";
 import { FocusSectionModule } from "./focus-section";
 import { FormModule } from "./form";
 import { GraphsModule } from "./graphs";
-import { GuardsModule } from "./guards";
 import { IconComponent } from "./icon";
 import { InfoBoxModule } from "./info-box";
 import {
@@ -30,7 +30,7 @@ import {
 } from "./list-and-show-layout";
 import { LoadingModule } from "./loading";
 import { NotificationModule } from "./notifications";
-import { PinnedDropDownComponent } from "./pinned-entity-dropdown";
+import { PermissionModule } from "./permission";
 import { PropertyListModule } from "./property-list";
 import { QuickListModule } from "./quick-list";
 import { QuotasModule } from "./quotas";
@@ -49,6 +49,7 @@ import { VTabsModule } from "./vtabs";
 // Add submodules there
 const modules = [
     AdvancedFilterModule,
+    BatchFlaskSettingsModule,
     BreadcrumbModule,
     BrowseLayoutModule,
     ButtonsModule,
@@ -62,9 +63,9 @@ const modules = [
     InfoBoxModule,
     LoadingModule,
     NotificationModule,
+    PermissionModule,
     PropertyListModule,
     GraphsModule,
-    GuardsModule,
     QuickListModule,
     SidebarModule,
     TableModule,
@@ -89,7 +90,6 @@ const components = [
     DatetimePickerComponent,
     DurationPickerComponent,
     IconComponent,
-    PinnedDropDownComponent,
     SimpleDialogComponent,
     DeleteSelectedItemsDialogComponent,
 ];

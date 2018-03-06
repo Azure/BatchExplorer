@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatDialogRef } from "@angular/material";
 import { Observable } from "rxjs";
 
+import { ServerError } from "@batch-flask/core";
 import { TerminateJobDialogComponent } from "app/components/job/action";
-import { ServerError } from "app/models";
 import { JobService } from "app/services";
 import { ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 

@@ -24,6 +24,8 @@ import { initLogger } from "client/logger";
 initLogger();
 
 // 4. Setup extension functions
+import "reflect-metadata";
+
 import "@batch-flask/extensions";
 
 // 5. Call startBatchLabs from startup.ts

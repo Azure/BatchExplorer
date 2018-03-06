@@ -8,11 +8,12 @@ import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
+import { ServerError } from "@batch-flask/core";
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
-import { Job, Node, NodeState, Pool, ServerError } from "app/models";
+import { Job, Node, NodeState, Pool } from "app/models";
 import { NodeService } from "app/services";
 import { ComponentUtils, log } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";

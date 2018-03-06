@@ -2,7 +2,7 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA, ViewChild } from "@angular/c
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { autobind } from "@batch-flask/core";
+import { ServerError, autobind } from "@batch-flask/core";
 import { AsyncSubject } from "rxjs";
 
 import { ButtonComponent } from "@batch-flask/ui/buttons";
@@ -11,8 +11,7 @@ import {
 } from "@batch-flask/ui/form";
 import { FormFooterComponent } from "@batch-flask/ui/form/complex-form/footer";
 import { ServerErrorComponent } from "@batch-flask/ui/form/server-error";
-import { ServerError } from "app/models";
-import { AuthorizationHttpService } from "app/services";
+import { PermissionService } from "@batch-flask/ui/permission";
 import { click } from "test/utils/helpers";
 
 const date = new Date(2017, 9, 13, 23, 43, 38);
@@ -102,7 +101,7 @@ describe("ComplexFormComponent", () => {
                 FormFooterComponent,
             ],
             providers: [
-                { provide: AuthorizationHttpService, useValue: null },
+                { provide: PermissionService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

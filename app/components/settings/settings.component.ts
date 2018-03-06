@@ -6,8 +6,8 @@ import { Observable, Subscription } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 import { EditorConfig, KeyCode, KeyMod } from "@batch-flask/ui/editor";
+import { validJsonConfig } from "@batch-flask/utils/validators";
 import { SettingsService } from "app/services";
-import { validJsonConfig } from "app/utils/validators";
 import "./settings.scss";
 
 // tslint:disable-next-line:no-var-requires
