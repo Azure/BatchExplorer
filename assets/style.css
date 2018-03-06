@@ -81,7 +81,7 @@ a {
 
 .btn-link {
     border-radius: 0 !important;
-    width: 180px;
+    min-width: 180px;
     height: 60px;
     background-color: #28a745 !important;
     color: white !important;
@@ -94,10 +94,6 @@ a {
     width: 100%;
     margin: 15px auto;
     box-shadow:  1px 1px 20px 0 rgba(0, 0, 0, 0.2);
-}
-
-.demo-image.overlaping-image {
-    margin-top: -200px;
 }
 
 .downloads {
@@ -167,24 +163,6 @@ a {
 
 .dark {
     background-color: #e5e5e5;
-}
-
-.feature-content {
-    text-align: center;
-    padding: 4em 10em;
-    background-color: #fff;
-}
-
-.feature-content-dark {
-    text-align: center;
-    padding: 4em 10em;
-    background-color: #e5e5e5;
-}
-
-.feature-image {
-    display: block;
-    height: 280px;
-    box-shadow:  1px 1px 20px 0 rgba(0, 0, 0, 0.2);
 }
 
 .os-download .option:hover {
