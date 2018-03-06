@@ -11,7 +11,8 @@ import { HttpCode } from "@batch-flask/core";
 import { EditorComponent, EditorConfig } from "@batch-flask/ui/editor";
 import "./log-file-viewer.scss";
 
-const maxSize = 10000000; // 10MB
+const maxSize = 100000; // 10MB
+// const maxSize = 10000000; // 10MB TODO-TIM
 
 @Component({
     selector: "bl-log-file-viewer",
