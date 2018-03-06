@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input } from "@angular/core";
 
+import { TreeRow } from "..";
 import "./file-tree-view-row.scss";
 
 @Component({
@@ -8,7 +9,21 @@ import "./file-tree-view-row.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileTreeViewRowComponent {
-    constructor(private changeDetector: ChangeDetectorRef) {
+    @Input() public treeRow: TreeRow;
 
+    @Input() @HostBinding("class.active") public active: boolean;
+    @Input() @HostBinding("class.drop-target") public dropHover: boolean;
+
+    constructor(private changeDetector: ChangeDetectorRef) {
+    }
+
+    @HostBinding("style.padding-left")
+    public get paddingLeft() {
+        return `${(this.treeRow.indent + 1) * 12}px`;
+    }
+
+    @HostBinding("attr.title")
+    public get title() {
+        return this.treeRow.path;
     }
 }
