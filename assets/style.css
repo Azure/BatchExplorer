@@ -91,7 +91,7 @@ a {
 
 .demo-image {
     display: block;
-    width: 100%;
+    width: 800px;
     margin: 15px auto;
     box-shadow:  1px 1px 20px 0 rgba(0, 0, 0, 0.2);
 }
@@ -100,15 +100,15 @@ a {
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    background-color: #333333;
-    padding: 1em;
+    margin: 2rem;
 }
 
 .os-download {
-    margin: 0 40px;
-    width: 200px;
+    margin: 0 50px;
+    width: 160px;
     text-align: center;
     color: #5b5b5b;
+    background: white;
 }
 
 .os-download .type {
@@ -117,12 +117,6 @@ a {
 
 .os-download .type .fa {
     font-size: 6rem;
-    color: white;
-}
-
-.os-download .type > .label {
-    margin-top: 1rem;
-    font-size: 2rem;
 }
 
 .os-download .type > .label {
