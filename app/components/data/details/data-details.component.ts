@@ -100,6 +100,6 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         const ref = this.dialog.open(DownloadFolderComponent);
         ref.componentInstance.navigator = this.storageService.navigateContainerBlobs(this.containerId);
         ref.componentInstance.subfolder = this.containerId;
-        ref.componentInstance.pathPrefix = "";
+        ref.componentInstance.folder = "";
     }
 }

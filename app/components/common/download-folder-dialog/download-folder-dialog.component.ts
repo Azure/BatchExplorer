@@ -19,6 +19,9 @@ import "./download-folder-dialog.scss";
     templateUrl: "download-folder-dialog.html",
 })
 export class DownloadFolderComponent {
+    /**
+     * Navigator used to list the files. This make sure this component is generic and can be used with any file sources
+     */
     public set navigator(navigator: FileNavigator) {
         this._navigator = navigator;
         this.downloadFolder.setValue(this._defaultDownloadFolder);
@@ -28,7 +31,10 @@ export class DownloadFolderComponent {
     public patterns = new FormControl("**/*");
     public downloadFolder = new FormControl("");
     public subfolder: string = "";
-    public pathPrefix: string = "";
+    /**
+     * Folder to download. Leave blank to download all files under navigator
+     */
+    public folder: string = "";
 
     private _navigator: FileNavigator;
 
@@ -39,6 +45,14 @@ export class DownloadFolderComponent {
         private shell: ElectronShell,
         private notificationService: NotificationService,
     ) { }
+
+    public get title() {
+        if (this.folder) {
+            return `Download directory: ${this.folder}`;
+        } else {
+            return "Download all files";
+        }
+    }
 
     @autobind()
     public startDownload() {
@@ -53,7 +67,7 @@ export class DownloadFolderComponent {
     private async _startDownloadAsync() {
         const folder = await this._getDownloadFolder();
 
-        this.backgroundTaskService.startTask(`Download ${this.pathPrefix}`, (task: BackgroundTask) => {
+        this.backgroundTaskService.startTask(this.title, (task: BackgroundTask) => {
             const subject = new AsyncSubject();
             task.progress.next(1);
             this._getListOfFilesToDownload().subscribe((files) => {
@@ -110,7 +124,7 @@ export class DownloadFolderComponent {
 
     private _getListOfFilesToDownload(): Observable<List<File>> {
         const patterns = this._getPatterns();
-        return this.navigator.listAllFiles(this.pathPrefix).map((items) => {
+        return this.navigator.listAllFiles(this.folder).map((items) => {
             const files = items.filter((file) => {
                 for (const pattern of patterns) {
                     // Path prefix must be excluded when compared to pattern
@@ -130,6 +144,6 @@ export class DownloadFolderComponent {
     }
 
     private _getSubdirectoryPath(filePath: string) {
-        return filePath.slice(this.pathPrefix.length);
+        return filePath.slice(this.folder.length);
     }
 }

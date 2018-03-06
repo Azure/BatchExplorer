@@ -1,5 +1,6 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
+    HostBinding, Input, OnChanges, OnDestroy, Output,
 } from "@angular/core";
 import { Subscription } from "rxjs";
 
@@ -53,11 +54,11 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     private _navigatorSubs: Subscription[] = [];
 
     constructor(
-                private dialog: DialogService,
-                private contextMenuService: ContextMenuService,
-                private shell: ElectronShell,
-                private changeDetector: ChangeDetectorRef,
-                private notificationService: NotificationService) { }
+        private dialog: DialogService,
+        private contextMenuService: ContextMenuService,
+        private shell: ElectronShell,
+        private changeDetector: ChangeDetectorRef,
+        private notificationService: NotificationService) { }
 
     public ngOnChanges(inputs) {
         if (inputs.fileNavigator) {
@@ -182,7 +183,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
             const ref = this.dialog.open(DownloadFolderComponent);
             ref.componentInstance.navigator = this.fileNavigator;
             ref.componentInstance.subfolder = treeRow.name;
-            ref.componentInstance.pathPrefix = treeRow.path;
+            ref.componentInstance.folder = treeRow.path;
         } else {
             const dialog = remote.dialog;
             const localPath = dialog.showSaveDialog({

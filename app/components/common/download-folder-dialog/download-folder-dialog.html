@@ -2,7 +2,7 @@
                 [containerRef]="dialogRef"
                 [multiUse]="false"
                 [formGroup]="patterns"
-                title=" {{ pathPrefix ? 'Download directory: ' + pathPrefix : 'Download files in this file group' }}"
+                [title]="title"
                 actionName="Download">
     <div>
         <mat-form-field class="form-element">
