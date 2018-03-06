@@ -17,7 +17,7 @@ export class FileTreeViewRowComponent {
     @Input() @HostBinding("class.drop-target") public dropHover: boolean;
     @Input() @HostBinding("class.focused") public focused: boolean;
 
-    @Output() public toggleExpand = new EventEmitter();
+    @Output() public toggleExpanded = new EventEmitter();
 
     constructor(private changeDetector: ChangeDetectorRef) {
     }
@@ -35,7 +35,6 @@ export class FileTreeViewRowComponent {
     public handleCaretClick(event: MouseEvent) {
         event.stopPropagation();
         event.stopImmediatePropagation();
-        // this.fileNavigator.loadPath(treeRow.path);
-        // this.toggleExpanded(treeRow);
+        this.toggleExpanded.emit();
     }
 }
