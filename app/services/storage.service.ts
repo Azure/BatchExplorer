@@ -156,12 +156,8 @@ export class StorageService {
         return new FileNavigator({
             cache: this.getBlobFileCache({ container: container }),
             basePath: prefix,
-            loadPath: (folder) => {
-                return this.blobListView(container, {
-                    recursive: false,
-                    startswith: folder,
-                });
-            },
+            params: { container },
+            getter: this._blobListGetter,
             getFile: (filename: string) => this.getBlobContent(container, filename),
             onError: options.onError,
         });
