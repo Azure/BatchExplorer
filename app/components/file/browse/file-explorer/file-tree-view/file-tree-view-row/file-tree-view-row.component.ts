@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, Output,
+    ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output,
 } from "@angular/core";
 
 import { TreeRow } from "..";
@@ -18,9 +18,6 @@ export class FileTreeViewRowComponent {
     @Input() @HostBinding("class.focused") public focused: boolean;
 
     @Output() public toggleExpanded = new EventEmitter();
-
-    constructor(private changeDetector: ChangeDetectorRef) {
-    }
 
     @HostBinding("style.padding-left")
     public get paddingLeft() {

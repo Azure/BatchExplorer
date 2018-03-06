@@ -23,6 +23,7 @@ export interface TreeRow {
     expanded: boolean;
     isDirectory: boolean;
     indent: number;
+    index: number;
 }
 
 @Component({
@@ -85,6 +86,8 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         if (treeRow.isDirectory && !treeRow.expanded) {
             this.toggleExpanded(treeRow);
         }
+        this.focusedIndex = treeRow.index;
+        this.changeDetector.markForCheck();
 
         this.navigate.emit(treeRow.path);
     }
@@ -109,6 +112,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
                 event.preventDefault();
                 break;
             case "Space":
+            case "Enter":
                 this.activateRow(curTreeRow);
                 event.preventDefault();
                 return;
@@ -316,7 +320,9 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
                 }
             }
         }
-
+        for (const [index, row] of rows.entries()) {
+            row.index = index;
+        }
         return rows;
     }
 
