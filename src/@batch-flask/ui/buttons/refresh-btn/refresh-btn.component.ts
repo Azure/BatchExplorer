@@ -1,4 +1,6 @@
-import { Component, Input, animate, style, transition, trigger } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, animate, style, transition, trigger,
+} from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { Observable } from "rxjs";
 
@@ -20,20 +22,28 @@ export enum RefreshStatus {
             ]),
         ]),
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RefreshButtonComponent {
     public statuses = RefreshStatus;
 
-    @Input()
-    public refresh: () => Observable<any>;
+    @Input() public refresh: () => Observable<any>;
 
-    @Input()
-    public type: string = "square";
+    @Input() public type: string = "square";
 
-    @Input()
-    public tooltipPosition: string = "above";
+    @Input() public tooltipPosition: string = "above";
 
-    public status = RefreshStatus.Idle;
+    public set status(status: RefreshStatus) {
+        this._status = status;
+        this.changeDetector.markForCheck();
+    }
+
+    public get status() { return this._status; }
+
+    private _status = RefreshStatus.Idle;
+
+    constructor(private changeDetector: ChangeDetectorRef) {
+    }
 
     @autobind()
     public onClick() {
