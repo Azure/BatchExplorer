@@ -14,7 +14,7 @@
         <i class="fa fa-compress collapse-all action" title="Collapse all"></i>
     </bl-clickable>
 </div>
-<div *ngIf="expanded" class="tree-view-content">
+<bl-focus-section *ngIf="expanded" class="tree-view-content">
     <div *ngIf="fileNavigator.error" class="tree-view-error">{{fileNavigator.error.message}}</div>
     <div class="tree-rows-container"
         [class.drop-target]="dropTargetPath === ''"
@@ -47,4 +47,4 @@
             <span class="label">{{treeRow.name}}</span>
         </div>
     </div>
-</div>
+</bl-focus-section>
