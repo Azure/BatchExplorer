@@ -49,6 +49,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     public refreshing: boolean;
     public isDraging = 0;
     public dropTargetPath: string = null;
+    public focusedIndex: number = 0;
 
     private _tree: FileTreeStructure;
     private _navigatorSubs: Subscription[] = [];
@@ -79,12 +80,42 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         this._clearNavigatorSubs();
     }
 
-    public handleClick(treeRow: TreeRow) {
+    public activateRow(treeRow: TreeRow) {
         if (treeRow.isDirectory && !treeRow.expanded) {
             this.toggleExpanded(treeRow);
         }
 
         this.navigate.emit(treeRow.path);
+    }
+
+    public handleKeyboardNavigation(event) {
+        console.log("Navigate", event);
+        const curTreeRow = this.treeRows[this.focusedIndex];
+        switch (event.code) {
+            case "ArrowDown": // Move focus down
+                this.focusedIndex++;
+                event.preventDefault();
+                break;
+            case "ArrowUp":   // Move focus up
+                this.focusedIndex--;
+                event.preventDefault();
+                break;
+            case "ArrowRight": // Expand current row if applicable
+                this.expand(curTreeRow);
+                event.preventDefault();
+                break;
+            case "ArrowLeft": // Expand current row if applicable
+                this.collapse(curTreeRow);
+                event.preventDefault();
+                break;
+            case "Space":
+                this.activateRow(curTreeRow);
+                event.preventDefault();
+                return;
+            default:
+        }
+        this.focusedIndex = (this.focusedIndex + this.treeRows.length) % this.treeRows.length;
+        this.changeDetector.markForCheck();
     }
 
     /**
@@ -115,6 +146,19 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         event.stopImmediatePropagation();
         this.fileNavigator.loadPath(treeRow.path);
         this.toggleExpanded(treeRow);
+    }
+
+    public expand(treeRow: TreeRow) {
+        if (this.expandedDirs[treeRow.path] || !treeRow.isDirectory) { return; }
+        this.expandedDirs[treeRow.path] = true;
+        this.fileNavigator.loadPath(treeRow.path);
+        this._buildTreeRows(this._tree);
+    }
+
+    public collapse(treeRow: TreeRow) {
+        if (!this.expandedDirs[treeRow.path] || !treeRow.isDirectory) { return; }
+        this.expandedDirs[treeRow.path] = false;
+        this._buildTreeRows(this._tree);
     }
 
     /**

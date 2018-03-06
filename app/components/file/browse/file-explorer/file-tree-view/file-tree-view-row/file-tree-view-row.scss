@@ -4,6 +4,7 @@ bl-file-tree-view-row {
     cursor: pointer;
     display: block;
     height: 22px;
+    line-height: 22px;
     vertical-align: middle;
     user-select: none;
     text-overflow: ellipsis;
@@ -16,6 +17,10 @@ bl-file-tree-view-row {
 
     &.active {
         background: $whitesmoke-darker;
+    }
+
+    &.focused {
+        background: $primary-color-light;
     }
 
     &.drop-target {

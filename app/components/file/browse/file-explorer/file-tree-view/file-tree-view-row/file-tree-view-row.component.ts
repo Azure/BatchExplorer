@@ -13,6 +13,7 @@ export class FileTreeViewRowComponent {
 
     @Input() @HostBinding("class.active") public active: boolean;
     @Input() @HostBinding("class.drop-target") public dropHover: boolean;
+    @Input() @HostBinding("class.focused") public focused: boolean;
 
     constructor(private changeDetector: ChangeDetectorRef) {
     }
