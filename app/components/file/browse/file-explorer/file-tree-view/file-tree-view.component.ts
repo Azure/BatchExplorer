@@ -198,12 +198,15 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     public refresh(path?: string) {
         this.refreshing = true;
+        this.changeDetector.markForCheck();
         this.fileNavigator.refresh(path).subscribe({
             next: () => {
                 this.refreshing = false;
+                this.changeDetector.markForCheck();
             },
             error: () => {
                 this.refreshing = false;
+                this.changeDetector.markForCheck();
             },
         });
     }
@@ -213,6 +216,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         if (!this.canDropExternalFiles) { return; }
         this.isDraging++;
         this.dropTargetPath = this._getDropTarget(treeRow);
+        this.changeDetector.markForCheck();
     }
 
     public dragLeaveRow(event: DragEvent, treeRow?: TreeRow) {
@@ -223,6 +227,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         if (this._getDropTarget(treeRow) === this.dropTargetPath && this.isDraging <= 0) {
             this.dropTargetPath = null;
         }
+        this.changeDetector.markForCheck();
     }
 
     public handleDropOnRow(event: DragEvent, treeRow?: TreeRow) {

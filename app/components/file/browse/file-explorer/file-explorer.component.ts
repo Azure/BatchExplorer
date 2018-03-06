@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { LoadingStatus } from "@batch-flask/ui/loading";
@@ -74,6 +74,7 @@ const fileExplorerDefaultConfig: FileExplorerConfig = {
 @Component({
     selector: "bl-file-explorer",
     templateUrl: "file-explorer.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileExplorerComponent implements OnChanges, OnDestroy {
     @Input() public set data(data: FileExplorerWorkspace | FileNavigator) {
@@ -189,5 +190,6 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
             },
             initialDividerPosition: 250,
         };
+        this.changeDetector.markForCheck();
     }
 }
