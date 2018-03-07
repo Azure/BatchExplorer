@@ -116,13 +116,13 @@ export class MainWindow extends GenericWindow {
         });
 
         ipcMain.once("app-ready", (event) => {
-            if (event.sender.id === window.webContents.id) {
+            if (this._window && event.sender.id === this._window.webContents.id) {
                 this._resolveAppReady();
             }
         });
 
         ipcMain.once("initializing", (event) => {
-            if (event.sender.id === window.webContents.id) {
+            if (this._window &&  event.sender.id === this._window.webContents.id) {
                 this._state.next(WindowState.Initializing);
             }
         });

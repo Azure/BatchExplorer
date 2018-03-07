@@ -88,7 +88,6 @@ export class AADService {
     }
 
     public async logout() {
-        this._currentUser.next(null);
         localStorage.removeItem(Constants.localStorageKey.currentUser);
         localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
         this._tokenCache.clear();
