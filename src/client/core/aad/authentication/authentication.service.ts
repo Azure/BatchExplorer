@@ -82,9 +82,11 @@ export class AuthenticationService {
      */
     public async logout() {
         this._waitingForAuth = true;
+
         if (this._logoutDeferred) {
             return this._logoutDeferred.promise;
         }
+
         const url = AdalConstants.logoutUrl(this.app.azureEnvironment.aadUrl, this.config.tenant);
         const authWindow = this.app.authenticationWindow;
         authWindow.create();
@@ -145,8 +147,7 @@ export class AuthenticationService {
     }
 
     private _handleNavigate(url: string) {
-        if (this._logoutDeferred &&
-            url === AdalConstants.logoutUrl(this.app.azureEnvironment.aadUrl, this.config.tenant)) {
+        if (this._logoutDeferred && url.endsWith("oauth2/logout")) {
             this._closeWindow();
             this._waitingForAuth = false;
             const deferred = this._logoutDeferred;
