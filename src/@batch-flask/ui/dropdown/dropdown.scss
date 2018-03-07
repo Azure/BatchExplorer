@@ -89,6 +89,10 @@ bl-dropdown {
 
             &:hover, &.active {
                 background-color: $dropdown-content-hover-color;
+
+                .fa {
+                    color: $dropdown-content-color;
+                }
             }
 
             .main {

@@ -44,14 +44,14 @@ bl-button {
         &[color="primary"] {
             color: $primary-color;
             &:hover, &:focus {
-                color: $primary-color-dark;
+                color: $primary-color-light;
             }
         }
 
         &[color="light"] {
             color: $black;
             &:hover, &:focus {
-                color: $main-background;
+                color: $button-disabled-text-color;
             }
         }
 
