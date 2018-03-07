@@ -63,7 +63,6 @@ export class AuthenticationService {
      *      If silent is true and the access fail the observable will return and error of type AuthorizeError
      */
     public async authorize(tenantId: string, silent = false): Promise<AuthorizeResult> {
-        console.log("Authorizing?");
         if (this._isAuthorizingTenant(tenantId)) {
             return this._getTenantDeferred(tenantId).promise;
         }
