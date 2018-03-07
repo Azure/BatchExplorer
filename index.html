@@ -14,6 +14,7 @@
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <script src="index.js"></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
 </head>
 
 <body>
@@ -30,7 +31,12 @@
                     <h1 class="text-center">Batch Labs</h1>
                     <p class="text-center">Debug and monitor your Azure Batch applications</p>
                     <div class="text-center">
-                        <button style="text-align:right;" class="btn">Download</button>
+                        <a
+                            class="btn btn-link" 
+                            style="min-width: 60px; background-color:gray !important;"
+                            id="primary-download-btn">
+                            Download
+                        </a>
                         <a class="btn btn-success btn-link" href="https://github.com/Azure/BatchLabs">
                             View on GitHub
                         </a>
@@ -51,7 +57,6 @@
             <div class="os-download">
                 <div class="type">
                     <i class="fa fa-windows"></i>
-                    <div class="label">Windows</div>
                 </div>
                 <a
                     class="btn btn-success btn-link" 
@@ -162,8 +167,31 @@
 
     <footer class="footer">
         <div class="container">
-            <span class="text-muted">TODO: Add attributions to Font Awesome and other stuff here...</span>
-            <p>&copy; 2017-2018 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+            <div class="row">
+                    <div class="left col-md-8">
+                            <ul class="links">
+                                <li>
+                                    <span class="message">Hello from Seattle.</span>
+                                </li>
+                                <li>
+                                    <a 
+                                        class="github-button" 
+                                        href="https://github.com/Azure/BatchLabs" 
+                                        data-show-count="true"
+                                        data-icon="octicon-star"
+                                        aria-label="Star Azure/BatchLabs on GitHub">Star
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                <div class="right col-md-4">
+                        <ul class="links">
+                            <li><a id="footer-issues-link" href="https://github.com/Azure/BatchLabs/issues">Issues</a></li>
+                            <li><a id="footer-privacy-link" href="https://www.microsoft.com/privacystatement/en-us/core/default.aspx" target="_blank">Privacy</a></li>
+                            <li><a id="footer-license-link" href="EULA.html">License</a></li>
+                        </ul>
+                    </div>
+            </div>
         </div>
     </footer>
 
