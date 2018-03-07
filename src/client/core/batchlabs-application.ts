@@ -52,6 +52,9 @@ export class BatchLabsApplication {
         BlIpcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {
             return this.aadService.accessTokenData(tenantId, resource);
         });
+        BlIpcMain.on(IpcEvent.logoutAndLogin, () => {
+            return this.logoutAndLogin();
+        });
         this.azureEnvironmentObs = this._azureEnvironment.asObservable();
         this._loadAzureEnviornment();
     }
