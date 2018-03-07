@@ -5,6 +5,7 @@ import { Observable, Subscription } from "rxjs";
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { AccountResource, Location, ResourceGroup, Subscription as ArmSubscription } from "app/models";
 import { createAccountFormToJsonData } from "app/models/forms/create-account-model";
 import {
@@ -34,6 +35,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
         public accountService: AccountService,
         public authService: AuthorizationHttpService,
         public subscriptionService: SubscriptionService,
+        public sidebarRef: SidebarRef<BatchAccountCreateComponent>,
         private changeDetector: ChangeDetectorRef,
         private formBuilder: FormBuilder,
         private notificationService: NotificationService) {
