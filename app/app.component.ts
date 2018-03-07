@@ -8,7 +8,7 @@ import { MonacoLoader } from "@batch-flask/ui/editor";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
-    AccountService, AdalService, AuthorizationHttpService, AutoscaleFormulaService,
+    AccountService, AuthorizationHttpService, AutoscaleFormulaService,
     CommandService, NavigatorService, NcjTemplateService, NodeService, PredefinedFormulaService,
     PricingService, PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
 } from "app/services";
