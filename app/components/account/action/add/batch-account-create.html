@@ -18,33 +18,20 @@
                 <bl-error controlName="subscription" code="required">Subscription is a required field</bl-error>
             </div>
             <div class="form-element" *ngIf="selectedSubscription">
-                <mat-radio-group formControlName="resourceGroupMode">
-                    <mat-radio-button [value]="ResourceGroupMode.CreateNew">Create new</mat-radio-button>
-                    <mat-radio-button [value]="ResourceGroupMode.UseExisting">Use existing</mat-radio-button>
-                </mat-radio-group>
-            </div>
-            <div class="form-element" *ngIf="selectedSubscription && selectedResourceGroupMode === ResourceGroupMode.CreateNew">
-                <mat-form-field>
-                    <input matInput formControlName="newResourceGroup" placeholder="Resource group name" />
-                </mat-form-field>
-                <bl-error controlName="newResourceGroup" code="required">Resource group is a required field</bl-error>
-                <bl-error controlName="newResourceGroup" code="resourceGroupExists">Resource group already exists in subscription '{{selectedSubscription.displayName}}'</bl-error>
-            </div>
-            <div class="form-element" *ngIf="selectedSubscription && selectedResourceGroupMode === ResourceGroupMode.UseExisting">
                 <ng-container *ngIf="resourceGroups.length">
                     <mat-form-field>
-                        <mat-select formControlName="resourceGroup" placeholder="Existing resource group">
-                            <mat-option
-                                *ngFor="let resourceGroup of resourceGroups;trackBy: trackByResourceGroup"
-                                [value]="resourceGroup">
-                                {{resourceGroup.name}} ({{resourceGroup.location}})
-                            </mat-option>
-                        </mat-select>
+                        <input matInput [matAutocomplete]="auto" formControlName="resourceGroup" placeholder="Resource group" />
                     </mat-form-field>
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResourceGroup">
+                        <mat-option *ngFor="let resourceGroup of resourceGroups;trackBy: trackByResourceGroup" [value]="resourceGroup">
+                            {{resourceGroup.name}} ({{resourceGroup.location}})
+                        </mat-option>
+                    </mat-autocomplete>
                     <bl-error controlName="resourceGroup" code="required">Resource group is a required field</bl-error>
                     <bl-error controlName="resourceGroup" code="noPermission">You don't have permission to create a batch account under this resource group</bl-error>
                     <bl-error controlName="resourceGroup" code="serverError">{{ form.controls.resourceGroup.errors?.serverError }}</bl-error>
                 </ng-container>
+                <span *ngIf="isNewResourceGroup">This resource group doesn't exist yet, and it will be created before batch account.</span>
                 <span *ngIf="!resourceGroups.length">No resources groups available in subscription '{{selectedSubscription.displayName}}'</span>
             </div>
             <div class="form-element" *ngIf="selectedSubscription">

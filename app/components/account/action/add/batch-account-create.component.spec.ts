@@ -15,7 +15,7 @@ import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
 
 import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
-import { ResourceGroupMode } from "./batch-account-create.component";
+// import { ResourceGroupMode } from "./batch-account-create.component";
 
 describe("BatchAccountCreateComponent ", () => {
     let fixture: ComponentFixture<BatchAccountCreateComponent>;
@@ -236,8 +236,8 @@ describe("BatchAccountCreateComponent ", () => {
             validateControl(component.form, "subscription").fails(validators.required).with("");
             validateControl(component.form, "subscription").passes(validators.required).with("sub-1");
             validateControl(component.form, "resourceGroupMode").fails(validators.required).with(null);
-            validateControl(component.form, "resourceGroupMode").passes(validators.required)
-                .with(ResourceGroupMode.CreateNew);
+            // validateControl(component.form, "resourceGroupMode").passes(validators.required)
+            //     .with(ResourceGroupMode.CreateNew);
         });
 
         it("should intialize resource groups and locations after subscription is selected", fakeAsync(() => {
@@ -255,14 +255,14 @@ describe("BatchAccountCreateComponent ", () => {
         it("should have correct control displayed when switching between two resource group modes ", fakeAsync(() => {
             component.form.controls.subscription.setValue({ subscriptionId: "dummy-1", displayName: "sub-1" });
             const resourceGroupMode = component.form.controls.resourceGroupMode;
-            resourceGroupMode.setValue(ResourceGroupMode.CreateNew);
+            // resourceGroupMode.setValue(ResourceGroupMode.CreateNew);
             fixture.detectChanges();
 
             let rg = debugElement.query(By.css("mat-select[formControlName=resourceGroup]"));
             let newRg = debugElement.query(By.css("input[formControlName=newResourceGroup]"));
             expect(rg).toBeNull();
             expect(newRg).not.toBeNull();
-            resourceGroupMode.setValue(ResourceGroupMode.UseExisting);
+            // resourceGroupMode.setValue(ResourceGroupMode.UseExisting);
             fixture.detectChanges();
             rg = debugElement.query(By.css("mat-select[formControlName=resourceGroup]"));
             newRg = debugElement.query(By.css("input[formControlName=newResourceGroup]"));
@@ -274,14 +274,14 @@ describe("BatchAccountCreateComponent ", () => {
 
         it("should show existed resource group validation for new resource group input", fakeAsync(() => {
             component.form.controls.subscription.setValue({ subscriptionId: "dummy-1", displayName: "sub-1" });
-            component.form.controls.resourceGroupMode.setValue(ResourceGroupMode.CreateNew);
+            // component.form.controls.resourceGroupMode.setValue(ResourceGroupMode.CreateNew);
             fixture.detectChanges();
             validateControl(component.form, "newResourceGroup").fails("resourceGroupExists").with("dummy-1-rg-1");
         }));
 
         it("should show permission validation for resource group dropdown list", fakeAsync(() => {
             component.form.controls.subscription.setValue({ subscriptionId: "dummy-2", displayName: "sub-2" });
-            component.form.controls.resourceGroupMode.setValue(ResourceGroupMode.UseExisting);
+            // component.form.controls.resourceGroupMode.setValue(ResourceGroupMode.UseExisting);
             fixture.detectChanges();
             validateControl(component.form, "resourceGroup").fails("noPermission").with({ id: "dummy-1-rg-2" });
             validateControl(component.form, "resourceGroup").fails("serverError").with({ id: "servererror" });

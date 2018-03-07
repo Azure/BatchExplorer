@@ -17,18 +17,13 @@ import "./batch-account-create.scss";
 
 const accountIdSuffix = ".batch.azure.com";
 
-export enum ResourceGroupMode {
-    CreateNew = "Create new",
-    UseExisting = "Use existing",
-}
-
 @Component({
     selector: "bl-batch-account-create",
     templateUrl: "batch-account-create.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BatchAccountCreateComponent implements OnDestroy {
-    public ResourceGroupMode = ResourceGroupMode;
+    // public ResourceGroupMode = ResourceGroupMode;
     public form: FormGroup;
     public resourceGroups: ResourceGroup[] = [];
     public locations: Location[] = [];
@@ -60,23 +55,16 @@ export class BatchAccountCreateComponent implements OnDestroy {
                 null,
                 Validators.required,
             ],
+            resourceGroup: [
+                null,
+                Validators.required,
+                this._resourceGroupPermissionValidator(),
+            ],
             location: [
                 null,
                 Validators.required,
                 this._accountQuotaValidator(),
             ],
-            resourceGroupMode: [
-                ResourceGroupMode.CreateNew,
-                Validators.required,
-            ],
-            newResourceGroup: [
-                null,
-                [
-                    Validators.required,
-                    this._newResourceGroupValidator(),
-                ],
-            ],
-            resourceGroup: [null],
             storageAccountId: [null],
         });
 
@@ -101,41 +89,28 @@ export class BatchAccountCreateComponent implements OnDestroy {
             this.changeDetector.markForCheck();
         }));
 
-        this._subs.push(this.form.controls.resourceGroup.valueChanges.subscribe((resourceGroup: ResourceGroup) => {
-            if (!resourceGroup || !this.locations || this.locations.length === 0) {
-                return;
-            }
-            // Note that only set value if there is no value previously selected
-            // if location is in the list, set to this location when resource group value changed,
-            // otherwise set first item as default location
-            if (!this.form.controls.location.value) {
-                let locationIndex = this.locations.findIndex(location => location.name === resourceGroup.location);
-                locationIndex = locationIndex !== -1 ? locationIndex : 0;
-                this._setFormValue(this.form.controls.location, this.locations[locationIndex]);
-                this.changeDetector.markForCheck();
-            }
-        }));
+        this._subs.push(
+            this.form.controls.resourceGroup.valueChanges.subscribe((resourceGroup: ResourceGroup | string) => {
+                if (!resourceGroup || !this.locations || this.locations.length === 0) {
+                    return;
+                }
+                if (typeof resourceGroup === "string") {
+                    return;
+                }
+                // Note that only set value if there is no value previously selected
+                // if location is in the list, set to this location when resource group value changed,
+                // otherwise set first item as default location
+                if (!this.form.controls.location.value) {
+                    let locationIndex = this.locations.findIndex(location => location.name === resourceGroup.location);
+                    locationIndex = locationIndex !== -1 ? locationIndex : 0;
+                    this._setFormValue(this.form.controls.location, this.locations[locationIndex]);
+                    this.changeDetector.markForCheck();
+                }
+            }),
+        );
 
         this._subs.push(this.form.controls.location.valueChanges.subscribe((location: Location) => {
             this.form.controls.name.updateValueAndValidity();
-            this.changeDetector.markForCheck();
-        }));
-
-        this._subs.push(this.form.controls.resourceGroupMode.valueChanges.subscribe((mode: ResourceGroupMode) => {
-            if (mode === ResourceGroupMode.CreateNew) {
-                this.form.controls.newResourceGroup.setValidators([
-                    Validators.required,
-                    this._newResourceGroupValidator(),
-                ]);
-                this.form.controls.resourceGroup.setValidators(null);
-                this.form.controls.resourceGroup.setAsyncValidators(null);
-            } else if (mode === ResourceGroupMode.UseExisting) {
-                this.form.controls.newResourceGroup.setValidators(null);
-                this.form.controls.resourceGroup.setValidators([Validators.required]);
-                this.form.controls.resourceGroup.setAsyncValidators([this._resourceGroupPermissionValidator()]);
-            }
-            this.form.controls.newResourceGroup.updateValueAndValidity();
-            this.form.controls.resourceGroup.updateValueAndValidity();
             this.changeDetector.markForCheck();
         }));
     }
@@ -166,10 +141,6 @@ export class BatchAccountCreateComponent implements OnDestroy {
         return `.${this.selectedLocation.name}${accountIdSuffix}`;
     }
 
-    public get selectedResourceGroupMode() {
-        return this.form.controls.resourceGroupMode.value;
-    }
-
     public get account(): AccountResource {
         if (this.selectedSubscription && this.selectedLocation) {
             const account = new AccountResource({
@@ -181,18 +152,37 @@ export class BatchAccountCreateComponent implements OnDestroy {
         return null;
     }
 
+    public get isNewResourceGroup(): boolean {
+        const resourceGroup = this.form.value.resourceGroup;
+        if (!resourceGroup) {
+            return false;
+        }
+        const isNewResourceGroup = (typeof resourceGroup === "string" && this._containsResourceGroup(resourceGroup));
+        this.changeDetector.markForCheck();
+        return isNewResourceGroup;
+    }
+
+    public displayResourceGroup(resourceGroup: ResourceGroup) {
+        return resourceGroup ? resourceGroup.name : resourceGroup;
+    }
+
     @autobind()
     public submit(): Observable<any> {
         const formData = this.form.value;
         const subscription = formData.subscription;
-        const isNew = formData.resourceGroupMode === ResourceGroupMode.CreateNew;
-        const resourceGroup = isNew ? formData.newResourceGroup : formData.resourceGroup.name;
+
+        let resourceGroup = formData.resourceGroup;
+        if (!this.isNewResourceGroup) {
+            if (typeof resourceGroup !== "string") {
+                resourceGroup = resourceGroup.name;
+            }
+        }
 
         const accountName = formData.name;
         const body = createAccountFormToJsonData(formData);
 
         let observable: Observable<any> = null;
-        if (isNew) {
+        if (this.isNewResourceGroup) {
             observable = this.accountService.putResourcGroup(subscription, resourceGroup, {
                 location: formData.location.name,
             }).cascade(() => this.accountService.putBatchAccount(subscription, resourceGroup, accountName, body));
@@ -263,9 +253,16 @@ export class BatchAccountCreateComponent implements OnDestroy {
     @autobind()
     private _resourceGroupPermissionValidator() {
         return (control: FormControl): Observable<{[key: string]: any}> => {
-            const resourceGroup = control.value;
+            let resourceGroup = control.value;
             if (!resourceGroup) {
                 return Observable.of(null);
+            }
+            if (typeof resourceGroup === "string") {
+                if (this._containsResourceGroup(resourceGroup)) {
+                    resourceGroup = this.resourceGroups.find(rg => rg.name === resourceGroup);
+                } else {
+                    return Observable.of(null);
+                }
             }
             return this.authService
                 .getPermission(resourceGroup.id)
@@ -283,26 +280,6 @@ export class BatchAccountCreateComponent implements OnDestroy {
                     });
                 })
                 .debounceTime(400);
-        };
-    }
-
-    @autobind()
-    private _newResourceGroupValidator() {
-        return (control: FormControl): {[key: string]: any} => {
-            if (this.resourceGroups.length === 0) {
-                return null;
-            }
-            if (!control.value) {
-                return null;
-            }
-            // First time enter invalid value won't trigger validation, needs manually set as touched
-            control.markAsTouched();
-            const index = this.resourceGroups.findIndex(resourceGroup => {
-                return resourceGroup.name.toLowerCase() === control.value.toLowerCase();
-            });
-            return index !== -1 ? {
-                resourceGroupExists: true,
-            } : null;
         };
     }
 
@@ -331,6 +308,13 @@ export class BatchAccountCreateComponent implements OnDestroy {
                 })
                 .debounceTime(400);
         };
+    }
+
+    private _containsResourceGroup(resourceGroup: string) {
+        const index = this.resourceGroups.findIndex(rg => {
+            return rg.name.toLowerCase() === resourceGroup.toLowerCase();
+        });
+        return index !== -1;
     }
 
     private _disposeSubscription(subscription: Subscription) {
