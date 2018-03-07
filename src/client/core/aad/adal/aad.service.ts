@@ -12,7 +12,7 @@ import {
     AccessTokenCache,
     AccessTokenError, AccessTokenErrorResult, AccessTokenService,
 } from "../access-token";
-import { AuthenticationService, AuthorizeResult } from "../authentication";
+import { AuthenticationService, AuthenticationState, AuthorizeResult, LogoutError } from "../authentication";
 import { AADUser } from "./aad-user";
 import { UserDecoder } from "./user-decoder";
 
@@ -29,6 +29,9 @@ export class AADService {
     public tenantsIds: Observable<string[]>;
 
     public userAuthorization: AuthenticationService;
+    public authenticationState: Observable<AuthenticationState>;
+
+    private _authenticationState = new BehaviorSubject<AuthenticationState>(null);
     private _accessTokenService: AccessTokenService;
     private _userDecoder: UserDecoder;
     private _newAccessTokenSubject: StringMap<Deferred<AccessToken>> = {};
@@ -44,6 +47,11 @@ export class AADService {
         this.tenantsIds = this._tenantsIds.asObservable();
         this.userAuthorization = new AuthenticationService(this.app, adalConfig);
         this._accessTokenService = new AccessTokenService(app, adalConfig);
+        this.authenticationState = this._authenticationState.asObservable();
+
+        this.userAuthorization.state.subscribe((state) => {
+            this._authenticationState.next(state);
+        });
     }
 
     public async init() {
@@ -59,6 +67,16 @@ export class AADService {
      * It will try to use the refresh token cached to prevent a new prompt window if possible.
      */
     public async login(): Promise<any> {
+        try {
+            await this.accessTokenData("common");
+            this._authenticationState.next(AuthenticationState.Authenticated);
+        } catch (error) {
+            if (error instanceof LogoutError) {
+                throw error;
+            } else {
+                log.error("Error login in ", error);
+            }
+        }
         try {
             const tenantIds = await this._loadTenantIds();
 
@@ -78,6 +96,9 @@ export class AADService {
         this._currentUser.next(null);
         this._clearUserSpecificCache();
         await this.userAuthorization.logout();
+        for (const [_, window] of this.app.windows) {
+            window.webContents.session.clearStorageData({ storages: ["localStorage"] });
+        }
     }
 
     public async accessTokenFor(tenantId: string, resource: string = null) {
@@ -215,6 +236,9 @@ export class AADService {
     }
 
     private async _processAccessTokenError(tenantId: string, resource: string, error: Response) {
+        if (error instanceof LogoutError) {
+            return;
+        }
         const data: AccessTokenErrorResult = await error.json();
         if (data.error === AccessTokenError.invalidGrant) {
             // TODO redeem a new token once(need to track number of failure)

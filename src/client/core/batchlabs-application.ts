@@ -10,7 +10,7 @@ import { localStorage } from "client/core/local-storage";
 import { setMenu } from "client/menu";
 import { ProxySettingsManager } from "client/proxy";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
-import { BatchLabsLink, Constants } from "common";
+import { BatchLabsLink, Constants, Deferred } from "common";
 import { IpcEvent } from "common/constants";
 import { ProxyCredentials } from "get-proxy-settings";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -40,18 +40,19 @@ export class BatchLabsApplication {
     public state: Observable<BatchLabsState>;
     public proxySettings = new ProxySettingsManager(this, localStorage);
 
-    public get azureEnvironment(): AzureEnvironment { return this._azureEnvironemnt.value; }
+    public get azureEnvironment(): AzureEnvironment { return this._azureEnvironment.value; }
     public azureEnvironmentObs: Observable<AzureEnvironment>;
 
-    private _azureEnvironemnt = new BehaviorSubject(AzureEnvironment.Azure);
+    private _azureEnvironment = new BehaviorSubject(AzureEnvironment.Azure);
     private _state = new BehaviorSubject<BatchLabsState>(BatchLabsState.Loading);
+    private _initializer = new BatchLabsInitializer(this);
 
     constructor(public autoUpdater: AppUpdater) {
         this.state = this._state.asObservable();
         BlIpcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {
             return this.aadService.accessTokenData(tenantId, resource);
         });
-        this.azureEnvironmentObs = this._azureEnvironemnt.asObservable();
+        this.azureEnvironmentObs = this._azureEnvironment.asObservable();
         this._loadAzureEnviornment();
     }
 
@@ -68,52 +69,51 @@ export class BatchLabsApplication {
      */
     public async start() {
         setMenu(this);
-
-        const initializer = new BatchLabsInitializer(this);
+        const appReady = new Deferred();
+        const loggedIn = new Deferred();
         this.pythonServer.start();
+        this._initializer.init();
 
         this._setCommonHeaders();
-        initializer.setTaskStatus("login", "Login to azure active directory", 10);
-        const loggedIn = this.aadService.login().then(() => {
-            initializer.completeTask("login");
-        });
-        initializer.setTaskStatus("window", "Loading application");
+        this.aadService.login();
+        this._initializer.setTaskStatus("window", "Loading application");
         const window = this.openFromArguments(process.argv);
-        const subs = [];
-        subs.push(window.state.subscribe((state) => {
+        const windowSub = window.state.subscribe((state) => {
             switch (state) {
                 case WindowState.Loading:
-                    initializer.setTaskStatus("window", "Loading application");
+                    this._initializer.setTaskStatus("window", "Loading application");
                     break;
                 case WindowState.Initializing:
-                    initializer.setTaskStatus("window", "Initializing application");
+                    this._initializer.setTaskStatus("window", "Initializing application");
                     break;
                 case WindowState.FailedLoad:
-                    initializer.setTaskStatus("window",
+                    this._initializer.setTaskStatus("window",
                         "Fail to load! Make sure you built the app or are running the dev-server.");
                     break;
                 case WindowState.Ready:
-                    initializer.completeTask("window");
-
+                    this._initializer.completeTask("window");
+                    windowSub.unsubscribe();
+                    appReady.resolve();
             }
-        }));
-        subs.push(this.aadService.userAuthorization.state.subscribe((state) => {
+        });
+        const authSub = this.aadService.authenticationState.subscribe((state) => {
             switch (state) {
-                case AuthenticationState.Authenticated:
-                    initializer.show();
+                case AuthenticationState.None:
+                    this._initializer.setLoginStatus("Login to azure active directory");
                     break;
                 case AuthenticationState.UserInput:
-                    initializer.hide();
+                    this._initializer.setLoginStatus("Prompting for user input");
                     break;
-                default:
+                case AuthenticationState.Authenticated:
+                    this._initializer.completeLogin();
+                    authSub.unsubscribe();
+                    loggedIn.resolve();
                     break;
 
             }
-        }));
-        await Promise.all([loggedIn, window.appReady]);
-        subs.forEach(x => x.unsubscribe());
+        });
+        await Promise.all([appReady.promise, loggedIn.promise]);
         window.show();
-        initializer.complete();
     }
 
     /**
@@ -121,15 +121,20 @@ export class BatchLabsApplication {
      * Warning: This will log the user out and redirect him the the loging page.
      */
     public async updateAzureEnvironment(env: AzureEnvironment) {
-        console.log("Changing environemnt", env.name);
         await this.aadService.logout();
-        console.log("Logout done");
         localStorage.setItem(Constants.localStorageKey.azureEnvironment, env.id);
-        this._azureEnvironemnt.next(env);
+        this._azureEnvironment.next(env);
         await this.aadService.login();
+        this.windows.reloadAll();
         this.windows.showAll();
     }
 
+    public async logoutAndLogin() {
+        await this.aadService.logout();
+        await this.aadService.login();
+        this.windows.reloadAll();
+        this.windows.showAll();
+    }
     /**
      * Open a new link in the ms-batchlabs format
      * If the link provide a session id which already exists it will change the window with that session id.
@@ -270,7 +275,7 @@ export class BatchLabsApplication {
         const initialEnv = await localStorage.getItem(Constants.localStorageKey.azureEnvironment);
         console.log("Initial env", initialEnv);
         if (initialEnv in SupportedEnvironments) {
-            this._azureEnvironemnt.next(SupportedEnvironments[initialEnv]);
+            this._azureEnvironment.next(SupportedEnvironments[initialEnv]);
         }
     }
 }

@@ -30,6 +30,11 @@ export enum WindowState {
 export class MainWindow extends GenericWindow {
     public appReady: Promise<void>;
     public state: Observable<WindowState>;
+
+    public get webContents() {
+        return this._window.webContents;
+    }
+
     private _state = new BehaviorSubject<WindowState>(WindowState.Closed);
     private _resolveAppReady: () => void;
 

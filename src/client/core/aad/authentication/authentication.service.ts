@@ -36,6 +36,10 @@ export enum AuthenticationState {
     Authenticated,
 }
 
+export class LogoutError extends Error {
+
+}
+
 /**
  * This will open a new window at the /authorize endpoint to get the user
  */
@@ -59,6 +63,7 @@ export class AuthenticationService {
      *      If silent is true and the access fail the observable will return and error of type AuthorizeError
      */
     public async authorize(tenantId: string, silent = false): Promise<AuthorizeResult> {
+        console.log("Authorizing?");
         if (this._isAuthorizingTenant(tenantId)) {
             return this._getTenantDeferred(tenantId).promise;
         }
@@ -73,6 +78,9 @@ export class AuthenticationService {
      */
     public async authorizeTrySilentFirst(tenantId: string): Promise<AuthorizeResult> {
         return this.authorize(tenantId, true).catch((error) => {
+            if (error instanceof LogoutError) {
+                throw error;
+            }
             return this.authorize(tenantId, false);
         });
     }
@@ -91,7 +99,11 @@ export class AuthenticationService {
         const authWindow = this.app.authenticationWindow;
         authWindow.create();
         this._setupEvents();
+        if (this._currentAuthorization) {
+            this._currentAuthorization.deferred.reject(new LogoutError());
+        }
         this._currentAuthorization = null;
+        this._authorizeQueue.forEach(x => x.deferred.reject(new LogoutError()));
         this._authorizeQueue = [];
         authWindow.clearCookies();
         authWindow.loadURL(url);

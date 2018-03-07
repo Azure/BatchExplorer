@@ -78,6 +78,10 @@ export abstract class GenericWindow {
         }
     }
 
+    public reload() {
+        this._window.reload();
+    }
+
     protected abstract createWindow(): Electron.BrowserWindow;
 
 }
