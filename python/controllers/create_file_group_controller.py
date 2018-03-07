@@ -23,10 +23,9 @@ PARAM_INDEX_ACCOUNT = 5
 
 ERROR_REQUIRED_PARAM = "{} is a required parameter"
 
-
 @app.procedure("create-file-group")
 async def create_file_group(request: JsonRpcRequest, name, directory, options):
-    # default these parameters as they are optional
+    # Default these parameters as they are optional
     prefix, flatten, full_path, recursive = [None, False, False, False]
     if options:
         if options.get(PARAM_PREFIX):
@@ -40,6 +39,7 @@ async def create_file_group(request: JsonRpcRequest, name, directory, options):
 
         if options.get(PARAM_RECURSIVE):
             recursive = options.get(PARAM_RECURSIVE)
+
     return await upload_files(request, name, [directory], full_path=full_path, flatten=flatten, root=prefix, merge=True, recursive=recursive)
 
 async def upload_files(
@@ -53,7 +53,6 @@ async def upload_files(
         merge=False):
 
     total_files = count_files_in_paths(paths)
-
     uploaded_files = 0
 
     def __uploadCallback(current, file_size):
@@ -62,11 +61,19 @@ async def upload_files(
         """
         nonlocal uploaded_files
 
+        if current == 0:
+            print("returning")
+            return
+
         if current == file_size:
             uploaded_files += 1
-            request.push_stream(
-                dict(uploaded=uploaded_files, total=total_files))
-            print("Uploded {0}/{1}".format(uploaded_files, total_files))
+            request.push_stream(dict(uploaded=uploaded_files, total=total_files))
+            print("Complete uploads {0}/{1}".format(uploaded_files, total_files))
+        else:
+            # Files larger than 64MB trigger a block upload in storage client
+            percent = round((current / file_size) * 100)
+            request.push_stream(dict(uploaded=uploaded_files, total=total_files, partial=percent))
+            print("Partial upload: {0}% of {1}".format(percent, file_size))
 
     for path in paths:
         remote_path = None
@@ -85,8 +92,7 @@ async def upload_files(
             local_path = os.path.join(path, SUBDIR_FILTER)
 
         try:
-            request.push_stream(
-                dict(uploaded=0, total=total_files))
+            request.push_stream(dict(uploaded=0, total=total_files))
             request.auth.client.file.upload(
                 local_path=local_path,
                 file_group=file_group_name,
@@ -102,7 +108,6 @@ async def upload_files(
 
     return dict(uploaded=uploaded_files, total=total_files)
 
-
 def count_files_in_paths(paths: List[str]):
     total_files = 0
     for path in paths:
@@ -113,7 +118,6 @@ def count_files_in_paths(paths: List[str]):
         for _, _, files in os.walk(path):
             total_files += len(files)
     return total_files
-
 
 def __getRequiredParameterError(parameter):
     return error.JsonRpcError(
