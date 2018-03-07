@@ -4,7 +4,7 @@ import { AsyncSubject, BehaviorSubject, Observable, Subject } from "rxjs";
 import { ServerError } from "@batch-flask/core";
 import { AccountResource } from "app/models";
 import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";
-import {BatchLabsService} from "app/services/batch-labs.service";
+import { BatchLabsService } from "app/services/batch-labs.service";
 import { ElectronRemote } from "app/services/electron";
 import { Constants, SecureUtils, log } from "app/utils";
 import { PythonRpcServerProcess } from "client/python-process";

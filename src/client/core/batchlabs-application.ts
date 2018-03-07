@@ -273,7 +273,6 @@ export class BatchLabsApplication {
 
     private async _loadAzureEnviornment() {
         const initialEnv = await localStorage.getItem(Constants.localStorageKey.azureEnvironment);
-        console.log("Initial env", initialEnv);
         if (initialEnv in SupportedEnvironments) {
             this._azureEnvironment.next(SupportedEnvironments[initialEnv]);
         }
