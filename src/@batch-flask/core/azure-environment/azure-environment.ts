@@ -42,7 +42,7 @@ export interface AzureEnvironmentAttributes {
 export class AzureEnvironment implements AzureEnvironmentAttributes {
     public static Azure = new AzureEnvironment({
         id: "Azure",
-        name: "Azure Public",
+        name: "Azure Public(Default)",
         aadUrl: "https://login.microsoftonline.com/",
         armUrl: "https://management.azure.com/",
         batchUrl: "https://batch.core.windows.net/",
