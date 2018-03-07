@@ -29,7 +29,6 @@ export class AppComponent implements OnInit {
         private autoscaleFormulaService: AutoscaleFormulaService,
         private settingsService: SettingsService,
         private commandService: CommandService,
-        private adalService: AdalService,
         private accountService: AccountService,
         private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
