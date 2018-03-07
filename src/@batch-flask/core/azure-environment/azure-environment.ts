@@ -31,6 +31,11 @@ export interface AzureEnvironmentAttributes {
      * Application insights api
      */
     appInsights: string;
+
+    /**
+     * Azure storage endpoint
+     */
+    storageEndpoint: string;
 }
 
 // tslint:disable:variable-name
@@ -44,6 +49,7 @@ export class AzureEnvironment implements AzureEnvironmentAttributes {
         msGraph: "https://graph.microsoft.com/",
         aadGraph: "https://graph.windows.net/",
         appInsights: "https://api.applicationinsights.io/",
+        storageEndpoint: "core.windows.net",
     });
 
     public static AzureChina = new AzureEnvironment({
@@ -55,6 +61,31 @@ export class AzureEnvironment implements AzureEnvironmentAttributes {
         msGraph: "https://graph.microsoft.com/",
         aadGraph: "https://graph.chinacloudapi.cn/",
         appInsights: "https://api.applicationinsights.io/",
+        storageEndpoint: "core.chinacloudapi.cn",
+    });
+
+    public static AzureGermany = new AzureEnvironment({
+        id: "AzureGermany",
+        name: "Azure Germany",
+        aadUrl: "https://login.microsoftonline.de/",
+        armUrl: "https://management.microsoftazure.de",
+        batchUrl: "https://batch.microsoftazure.de/",
+        msGraph: "https://graph.microsoft.com/",
+        aadGraph: "https://graph.cloudapi.de/",
+        appInsights: "https://api.applicationinsights.io/",
+        storageEndpoint: "core.cloudapi.de",
+    });
+
+    public static AzureUSGov = new AzureEnvironment({
+        id: "AzureUSGov",
+        name: "Azure US Goverment",
+        aadUrl: "https://login.microsoftonline.us/",
+        armUrl: "https://management.usgovcloudapi.net",
+        batchUrl: "https://batch.core.usgovcloudapi.net/",
+        msGraph: "https://graph.microsoft.com/",
+        aadGraph: "https://graph.windows.net/",
+        appInsights: "https://api.applicationinsights.io/",
+        storageEndpoint: "core.usgovcloudapi.net",
     });
 
     public id: string;
@@ -65,6 +96,7 @@ export class AzureEnvironment implements AzureEnvironmentAttributes {
     public msGraph: string;
     public aadGraph: string;
     public appInsights: string;
+    public storageEndpoint: string;
 
     constructor(attr: AzureEnvironmentAttributes) {
         Object.assign(this, attr);
@@ -74,4 +106,6 @@ export class AzureEnvironment implements AzureEnvironmentAttributes {
 export const SupportedEnvironments = {
     [AzureEnvironment.Azure.id]: AzureEnvironment.Azure,
     [AzureEnvironment.AzureChina.id]: AzureEnvironment.AzureChina,
+    [AzureEnvironment.AzureGermany.id]: AzureEnvironment.AzureGermany,
+    [AzureEnvironment.AzureUSGov.id]: AzureEnvironment.AzureUSGov,
 };
