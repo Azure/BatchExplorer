@@ -80,7 +80,7 @@ export class AzureEnvironment implements AzureEnvironmentAttributes {
         id: "AzureUSGov",
         name: "Azure US Goverment",
         aadUrl: "https://login.microsoftonline.us/",
-        armUrl: "https://management.usgovcloudapi.net",
+        armUrl: "https://management.usgovcloudapi.net/",
         batchUrl: "https://batch.core.usgovcloudapi.net/",
         msGraph: "https://graph.microsoft.com/",
         aadGraph: "https://graph.windows.net/",
