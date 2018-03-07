@@ -295,7 +295,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
             return this.accountService
                 .accountQuota(subscription, location && location.name)
                 .map((response: QuotaResult) => {
-                    if (!response) {
+                    if (!response || !response.quota) {
                         return null;
                     }
                     if (response.used < response.quota) {
