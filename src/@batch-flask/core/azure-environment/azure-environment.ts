@@ -1,4 +1,5 @@
 export interface AzureEnvironmentAttributes {
+    id: string;
     name: string;
 
     /**
@@ -35,6 +36,7 @@ export interface AzureEnvironmentAttributes {
 // tslint:disable:variable-name
 export class AzureEnvironment implements AzureEnvironmentAttributes {
     public static Azure = new AzureEnvironment({
+        id: "Azure",
         name: "Azure",
         aadUrl: "https://login.microsoftonline.com/",
         armUrl: "https://management.azure.com/",
@@ -45,6 +47,7 @@ export class AzureEnvironment implements AzureEnvironmentAttributes {
     });
 
     public static AzureChina = new AzureEnvironment({
+        id: "AzureChina",
         name: "Azure China",
         aadUrl: "https://login.chinacloudapi.cn/",
         armUrl: "https://management.chinacloudapi.cn/",
@@ -54,6 +57,7 @@ export class AzureEnvironment implements AzureEnvironmentAttributes {
         appInsights: "https://api.applicationinsights.io/",
     });
 
+    public id: string;
     public name: string;
     public aadUrl: string;
     public armUrl: string;
@@ -68,6 +72,6 @@ export class AzureEnvironment implements AzureEnvironmentAttributes {
 }
 
 export const SupportedEnvironments = {
-    Azure: AzureEnvironment.Azure,
-    AzureChina: AzureEnvironment.AzureChina,
+    [AzureEnvironment.Azure.id]: AzureEnvironment.Azure,
+    [AzureEnvironment.AzureChina.id]: AzureEnvironment.AzureChina,
 };

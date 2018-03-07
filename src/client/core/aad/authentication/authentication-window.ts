@@ -11,8 +11,8 @@ export class AuthenticationWindow extends UniqueWindow {
             webPreferences: {
                 nodeIntegration: false,
             },
-            title: `BatchLabs: Login to ${this.batchLabsApp.azureEnvironment.name}`,
         });
+        window.setTitle(`BatchLabs: Login to ${this.batchLabsApp.azureEnvironment.name}`);
 
         // Uncomment to debug auth errors
         // window.webContents.openDevTools();

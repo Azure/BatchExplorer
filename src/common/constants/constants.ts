@@ -88,6 +88,11 @@ export const localStorageKey = {
      * Where the proxy settings are stored
      */
     proxySettings: "proxy_settings",
+
+    /**
+     * Save the latest azure environemnt used
+     */
+    azureEnvironment: "azure_environment",
 };
 
 export const ApiVersion = {
@@ -124,13 +129,13 @@ export const ServiceUrl = {
     githubRaw: "https://raw.githubusercontent.com",
 };
 
-// export const ResourceUrl = {
-//     batch: "https://batch.core.windows.net/",
-//     arm: "https://management.core.windows.net/",
-//     appInsights: "https://api.applicationinsights.io",
-//     msGraph: "https://graph.microsoft.com",
-//     aadGraph: "https://graph.windows.net",
-// };
+export const ResourceUrl = {
+    batch: "https://batch.core.windows.net/",
+    arm: "https://management.core.windows.net/",
+    appInsights: "https://api.applicationinsights.io",
+    msGraph: "https://graph.microsoft.com",
+    aadGraph: "https://graph.windows.net",
+};
 
 export const APIErrorCodes = {
     containerNotFound: "ContainerNotFound",

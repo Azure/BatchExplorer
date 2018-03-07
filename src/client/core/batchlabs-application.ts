@@ -3,7 +3,7 @@ import { app, dialog, ipcMain, session } from "electron";
 import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
-import { AzureEnvironment } from "@batch-flask/core/azure-environment";
+import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { localStorage } from "client/core/local-storage";
@@ -52,6 +52,7 @@ export class BatchLabsApplication {
             return this.aadService.accessTokenData(tenantId, resource);
         });
         this.azureEnvironmentObs = this._azureEnvironemnt.asObservable();
+        this._loadAzureEnviornment();
     }
 
     public async init() {
@@ -123,6 +124,7 @@ export class BatchLabsApplication {
         console.log("Changing environemnt", env.name);
         await this.aadService.logout();
         console.log("Logout done");
+        localStorage.setItem(Constants.localStorageKey.azureEnvironment, env.id);
         this._azureEnvironemnt.next(env);
         await this.aadService.login();
         this.windows.showAll();
@@ -262,5 +264,13 @@ export class BatchLabsApplication {
             details.requestHeaders["User-Agent"] = userAgent;
             callback({ cancel: false, requestHeaders: details.requestHeaders });
         });
+    }
+
+    private async _loadAzureEnviornment() {
+        const initialEnv = await localStorage.getItem(Constants.localStorageKey.azureEnvironment);
+        console.log("Initial env", initialEnv);
+        if (initialEnv in SupportedEnvironments) {
+            this._azureEnvironemnt.next(SupportedEnvironments[initialEnv]);
+        }
     }
 }
