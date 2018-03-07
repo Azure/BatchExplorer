@@ -125,15 +125,13 @@ export class BatchLabsApplication {
         localStorage.setItem(Constants.localStorageKey.azureEnvironment, env.id);
         this._azureEnvironment.next(env);
         await this.aadService.login();
-        this.windows.reloadAll();
-        this.windows.showAll();
+        this.windows.openNewWindow();
     }
 
     public async logoutAndLogin() {
         await this.aadService.logout();
         await this.aadService.login();
-        this.windows.reloadAll();
-        this.windows.showAll();
+        this.windows.openNewWindow();
     }
     /**
      * Open a new link in the ms-batchlabs format

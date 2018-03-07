@@ -89,10 +89,6 @@ export class AppComponent implements OnInit {
         this.accountService.load();
     }
 
-    public logout() {
-        this.adalService.logout();
-    }
-
     /**
      * Preload some data needed.
      */

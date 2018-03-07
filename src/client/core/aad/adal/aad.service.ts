@@ -88,17 +88,17 @@ export class AADService {
     }
 
     public async logout() {
+        this._currentUser.next(null);
         localStorage.removeItem(Constants.localStorageKey.currentUser);
         localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
-        this.app.windows.hideAll();
         this._tokenCache.clear();
         this._tenantsIds.next([]);
-        this._currentUser.next(null);
         this._clearUserSpecificCache();
-        await this.userAuthorization.logout();
         for (const [_, window] of this.app.windows) {
             window.webContents.session.clearStorageData({ storages: ["localStorage"] });
         }
+        this.app.windows.closeAll();
+        await this.userAuthorization.logout();
     }
 
     public async accessTokenFor(tenantId: string, resource: string = null) {
