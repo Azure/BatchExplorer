@@ -3,19 +3,17 @@ import { ComponentFixture, TestBed, fakeAsync } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
 import { Response, ResponseOptions } from "@angular/http";
 import { By } from "@angular/platform-browser";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { Observable } from "rxjs";
 
-import { ServerError } from "@batch-flask/core";
+import { MaterialModule, ServerError } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
-import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { BatchAccountCreateComponent } from "app/components/account/action/add";
 import { AccountService, AuthorizationHttpService, SubscriptionService } from "app/services";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
-
 import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
-// import { ResourceGroupMode } from "./batch-account-create.component";
 
 describe("BatchAccountCreateComponent ", () => {
     let fixture: ComponentFixture<BatchAccountCreateComponent>;
@@ -120,7 +118,7 @@ describe("BatchAccountCreateComponent ", () => {
                 { subscriptionId: "dummy-2", displayName: "sub-2" },
                 { subscriptionId: "dummy-3", displayName: "sub-3" },
             ]),
-            listResourceGroups: jasmine.createSpy("nameAvailable").and.callFake((sub) => {
+            listResourceGroups: jasmine.createSpy("listResourceGroups").and.callFake((sub) => {
                 if (sub.subscriptionId === "dummy-1") {
                     return Observable.of([
                         { id: "dummy-1-rg-1", name: "dummy-1-rg-1", location: "eastus" },
@@ -135,7 +133,7 @@ describe("BatchAccountCreateComponent ", () => {
                 }
                 return Observable.of([]);
             }),
-            listLocations: jasmine.createSpy("nameAvailable").and.callFake((sub) => {
+            listLocations: jasmine.createSpy("listLocations").and.callFake((sub) => {
                 if (sub.subscriptionId === "dummy-1") {
                     return Observable.of([
                         { id: "dummy-1-loc-1", name: "eastus1", displayName: "East US", subscriptionId: "dummy-1" },
@@ -160,10 +158,10 @@ describe("BatchAccountCreateComponent ", () => {
         };
 
         TestBed.configureTestingModule({
+            imports: [MaterialModule, NoopAnimationsModule],
             declarations: [...complexFormMockComponents, BatchAccountCreateComponent, ServerErrorMockComponent],
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
-                { provide: SidebarRef, useValue: null },
                 { provide: AccountService, useValue: accountServiceSpy },
                 { provide: AuthorizationHttpService, useValue: authServiceSpy },
                 { provide: SubscriptionService, useValue: subscriptionServiceSpy },
@@ -217,17 +215,8 @@ describe("BatchAccountCreateComponent ", () => {
 
     describe("Subscription and resource group", () => {
         it("should initialized subscription list with subscriptions", () => {
-            const select = debugElement.query(By.css("mat-select[formControlName=subscription]")).nativeElement;
-            expect(select).toBeDefined();
-            const options = select.querySelectorAll("mat-option");
-            expect(options.length).toBe(3);
-            // Everything below subscription should not be shown until subscription is picked
-            const rgm = debugElement.query(By.css("mat-radio-group[formControlName=resourceGroupMode]"));
-            const newRg = debugElement.query(By.css("input[formControlName=newResourceGroup]"));
             const rg = debugElement.query(By.css("mat-select[formControlName=resourceGroup]"));
             const loc = debugElement.query(By.css("mat-select[formControlName=location]"));
-            expect(rgm).toBeNull();
-            expect(newRg).toBeNull();
             expect(rg).toBeNull();
             expect(loc).toBeNull();
         });
@@ -235,53 +224,19 @@ describe("BatchAccountCreateComponent ", () => {
         it("should have required validation", () => {
             validateControl(component.form, "subscription").fails(validators.required).with("");
             validateControl(component.form, "subscription").passes(validators.required).with("sub-1");
-            validateControl(component.form, "resourceGroupMode").fails(validators.required).with(null);
-            // validateControl(component.form, "resourceGroupMode").passes(validators.required)
-            //     .with(ResourceGroupMode.CreateNew);
         });
 
         it("should intialize resource groups and locations after subscription is selected", fakeAsync(() => {
             component.form.controls.subscription.setValue({ subscriptionId: "dummy-1", displayName: "sub-1" });
             fixture.detectChanges();
-            const rgm = debugElement.query(By.css("mat-radio-group[formControlName=resourceGroupMode]"));
+            const rgm = debugElement.query(By.css("input[formControlName=resourceGroup]"));
             const loc = debugElement.query(By.css("mat-select[formControlName=location]"));
             expect(rgm).not.toBeNull();
             expect(loc).not.toBeNull();
-            // make sure location list is populated
-            const locOptions = loc.nativeElement.querySelectorAll("mat-option");
-            expect(locOptions.length).toBe(4);
-        }));
-
-        it("should have correct control displayed when switching between two resource group modes ", fakeAsync(() => {
-            component.form.controls.subscription.setValue({ subscriptionId: "dummy-1", displayName: "sub-1" });
-            const resourceGroupMode = component.form.controls.resourceGroupMode;
-            // resourceGroupMode.setValue(ResourceGroupMode.CreateNew);
-            fixture.detectChanges();
-
-            let rg = debugElement.query(By.css("mat-select[formControlName=resourceGroup]"));
-            let newRg = debugElement.query(By.css("input[formControlName=newResourceGroup]"));
-            expect(rg).toBeNull();
-            expect(newRg).not.toBeNull();
-            // resourceGroupMode.setValue(ResourceGroupMode.UseExisting);
-            fixture.detectChanges();
-            rg = debugElement.query(By.css("mat-select[formControlName=resourceGroup]"));
-            newRg = debugElement.query(By.css("input[formControlName=newResourceGroup]"));
-            expect(rg).not.toBeNull();
-            expect(newRg).toBeNull();
-            const rgOptions = rg.nativeElement.querySelectorAll("mat-option");
-            expect(rgOptions.length).toBe(2);
-        }));
-
-        it("should show existed resource group validation for new resource group input", fakeAsync(() => {
-            component.form.controls.subscription.setValue({ subscriptionId: "dummy-1", displayName: "sub-1" });
-            // component.form.controls.resourceGroupMode.setValue(ResourceGroupMode.CreateNew);
-            fixture.detectChanges();
-            validateControl(component.form, "newResourceGroup").fails("resourceGroupExists").with("dummy-1-rg-1");
         }));
 
         it("should show permission validation for resource group dropdown list", fakeAsync(() => {
             component.form.controls.subscription.setValue({ subscriptionId: "dummy-2", displayName: "sub-2" });
-            // component.form.controls.resourceGroupMode.setValue(ResourceGroupMode.UseExisting);
             fixture.detectChanges();
             validateControl(component.form, "resourceGroup").fails("noPermission").with({ id: "dummy-1-rg-2" });
             validateControl(component.form, "resourceGroup").fails("serverError").with({ id: "servererror" });
@@ -294,8 +249,6 @@ describe("BatchAccountCreateComponent ", () => {
             fixture.detectChanges();
             let loc = debugElement.query(By.css("mat-select[formControlName=location]"));
             expect(loc).not.toBeNull();
-            const locOptions = loc.nativeElement.querySelectorAll("mat-option");
-            expect(locOptions.length).toBe(3);
 
             component.form.controls.subscription.setValue({ subscriptionId: "dummy-3", displayName: "sub-3" });
             fixture.detectChanges();
