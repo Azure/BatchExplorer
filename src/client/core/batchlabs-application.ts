@@ -40,9 +40,10 @@ export class BatchLabsApplication {
     public state: Observable<BatchLabsState>;
     public proxySettings = new ProxySettingsManager(this, localStorage);
 
-    public get azureEnvironment() { return this._azureEnvironemnt; }
+    public get azureEnvironment(): AzureEnvironment { return this._azureEnvironemnt.value; }
+    public azureEnvironmentObs: Observable<AzureEnvironment>;
 
-    private _azureEnvironemnt = AzureEnvironment.Azure;
+    private _azureEnvironemnt = new BehaviorSubject(AzureEnvironment.Azure);
     private _state = new BehaviorSubject<BatchLabsState>(BatchLabsState.Loading);
 
     constructor(public autoUpdater: AppUpdater) {
@@ -50,6 +51,7 @@ export class BatchLabsApplication {
         BlIpcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {
             return this.aadService.accessTokenData(tenantId, resource);
         });
+        this.azureEnvironmentObs = this._azureEnvironemnt.asObservable();
     }
 
     public async init() {
@@ -121,7 +123,7 @@ export class BatchLabsApplication {
         console.log("Changing environemnt", env.name);
         await this.aadService.logout();
         console.log("Logout done");
-        this._azureEnvironemnt = env;
+        this._azureEnvironemnt.next(env);
         await this.aadService.login();
         this.windows.showAll();
     }

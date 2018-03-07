@@ -47,7 +47,7 @@ export class AzureEnvironment implements AzureEnvironmentAttributes {
     public static AzureChina = new AzureEnvironment({
         name: "Azure China",
         aadUrl: "https://login.chinacloudapi.cn/",
-        armUrl: "https://management.core.chinacloudapi.cn/",
+        armUrl: "https://management.chinacloudapi.cn/",
         batchUrl: "https://batch.chinacloudapi.cn/",
         msGraph: "https://graph.microsoft.com/",
         aadGraph: "https://graph.chinacloudapi.cn/",

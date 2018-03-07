@@ -1,12 +1,18 @@
-import { ElectronRemote } from "./electron";
+import { Injectable } from "@angular/core";
+import { AzureEnvironment } from "@batch-flask/core/azure-environment";
+import { ElectronRemote } from "./electron/remote.service";
 
+@Injectable()
 export class BatchLabsService {
-    constructor(private remote: ElectronRemote) {
+    private _azureEnvironment: AzureEnvironment;
 
+    constructor(remote: ElectronRemote) {
+        remote.getBatchLabsApp().azureEnvironmentObs.subscribe((x) => {
+            this._azureEnvironment = x;
+        });
     }
 
     public get azureEnvironment() {
-        // TODO-TIM change to be more performant
-        return this.remote.getBatchLabsApp().azureEnvironment;
+        return this._azureEnvironment;
     }
 }

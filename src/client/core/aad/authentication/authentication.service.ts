@@ -3,7 +3,6 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { SecureUtils } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core/batchlabs-application";
 import { Deferred } from "common";
-import { session } from "electron";
 import { AADConfig } from "../aad-config";
 import * as AdalConstants from "../adal-constants";
 

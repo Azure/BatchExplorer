@@ -59,10 +59,8 @@ export class AADService {
      * It will try to use the refresh token cached to prevent a new prompt window if possible.
      */
     public async login(): Promise<any> {
-        console.log("init login");
         try {
             const tenantIds = await this._loadTenantIds();
-            console.log("login got tenants");
 
             this._tenantsIds.next(tenantIds);
             this._refreshAllAccessTokens();
@@ -233,7 +231,6 @@ export class AADService {
         const options = { headers };
         const url = `${this.app.azureEnvironment.armUrl}tenants?api-version=${Constants.ApiVersion.arm}`;
         const response = await fetch(url, options);
-        const json = await response.json();
         const { value } = await response.json();
         return value.map(x => x.tenantId);
     }
