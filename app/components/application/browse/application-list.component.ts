@@ -7,7 +7,6 @@ import { Observable, Subscription } from "rxjs";
 import { Filter, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/core/list";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
-import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { BatchApplication } from "app/models";
@@ -24,7 +23,6 @@ import { ApplicationEditDialogComponent, DeleteApplicationDialogComponent } from
     }],
 })
 export class ApplicationListComponent extends ListBaseComponent implements OnInit, OnDestroy {
-    public status: Observable<LoadingStatus>;
     public data: ListView<BatchApplication, ApplicationListParams>;
     public applications: List<BatchApplication>;
     public displayedApplications: List<BatchApplication>;
@@ -47,7 +45,10 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
             this._filterApplications();
         }));
 
-        this.status = this.data.status;
+        this.data.status.subscribe((status) => {
+            this.status = status;
+        });
+
         this._subs.push(applicationService.onApplicationAdded.subscribe((applicationId) => {
             this.data.loadNewItem(applicationService.get(applicationId));
         }));

@@ -1,4 +1,4 @@
-<bl-focus-section *ngIf="tasks.size > 0">
+<bl-focus-section>
     <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="scrollBottom.emit()">
         <bl-quick-list-item *ngFor="let task of tasks;trackBy: trackByFn" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id"
             [contextmenu]="contextmenu(task)">

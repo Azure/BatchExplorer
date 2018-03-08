@@ -37,7 +37,6 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
     public list: TaskListDisplayComponent;
 
     public data: ListView<Task, TaskListParams>;
-    public status: Observable<LoadingStatus>;
 
     private _jobId: string;
     private _baseOptions = { pageSize: 25 };
@@ -51,6 +50,10 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
         super(changeDetectorRef);
         this.data = this.taskService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
+
+        this.data.status.subscribe((status) => {
+            this.status = status;
+        });
 
         this._onTaskAddedSub = taskService.onTaskAdded.subscribe((item: TaskParams) => {
             this.data.loadNewItem(taskService.get(item.jobId, item.id));
@@ -69,7 +72,6 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
     public refresh(): Observable<any> {
         this.data.params = { jobId: this.jobId };
         this.data.setOptions(Object.assign({}, this._baseOptions));
-        this.status = this.data.status;
         this.changeDetectorRef.detectChanges();
 
         return this.data.fetchNext(true);

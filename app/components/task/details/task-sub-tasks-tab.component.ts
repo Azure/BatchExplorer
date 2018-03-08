@@ -7,7 +7,6 @@ import { Observable } from "rxjs";
 import { SubTaskDisplayListComponent } from "./sub-tasks";
 
 import { ListBaseComponent } from "@batch-flask/core/list";
-import { LoadingStatus } from "@batch-flask/ui/loading";
 import { SubtaskInformation } from "app/models";
 import { SubtaskListParams, TaskService } from "app/services";
 import { ListView } from "app/services/core";
@@ -33,7 +32,6 @@ export class TaskSubTasksTabComponent extends ListBaseComponent implements OnCha
     public list: SubTaskDisplayListComponent;
 
     public data: ListView<SubtaskInformation, SubtaskListParams>;
-    public status: Observable<LoadingStatus>;
 
     public selectedTask: SubtaskInformation;
     public selectedTaskId: string;
@@ -51,7 +49,10 @@ export class TaskSubTasksTabComponent extends ListBaseComponent implements OnCha
             this._updateSelectedTask();
             this.changeDetector.markForCheck();
         });
-        this.status = this.data.status;
+
+        this.data.status.subscribe((status) => {
+            this.status = status;
+        });
     }
 
     public ngOnChanges(changes) {
