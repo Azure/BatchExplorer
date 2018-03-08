@@ -28,8 +28,9 @@ matrix:
       os: osx
       before_install:
         - brew update
-        - brew upgrade python
+        - brew install python3
         - python --version
+        - python3 --version
         - nvm install 9.6.1
         - nvm use 9.6.1
 
