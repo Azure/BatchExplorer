@@ -1,39 +1,41 @@
-<bl-quick-list *ngIf="quickList">
-    <bl-quick-list-item *ngFor="let task of tasks;trackBy: trackByFn" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id" [contextmenu]="contextmenu(task)">
-        <bl-quick-list-item-status [status]="taskStatus(task)" [tooltip]="taskStatusText(task)">
-        </bl-quick-list-item-status>
+<bl-focus-section *ngIf="tasks.size > 0">
+    <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="scrollBottom.emit()">
+        <bl-quick-list-item *ngFor="let task of tasks;trackBy: trackByFn" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id"
+            [contextmenu]="contextmenu(task)">
+            <bl-quick-list-item-status [status]="taskStatus(task)" [tooltip]="taskStatusText(task)">
+            </bl-quick-list-item-status>
 
-        <div bl-quick-list-item-title>{{task.id}} {{task.displayName}}</div>
-        <p bl-quick-list-item-field>{{task.state}}</p>
-        <div bl-quick-list-item-preview>
-            <bl-task-preview [task]="task"></bl-task-preview>
-        </div>
-    </bl-quick-list-item>
-</bl-quick-list>
+            <div bl-quick-list-item-title>{{task.id}} {{task.displayName}}</div>
+            <p bl-quick-list-item-field>{{task.state}}</p>
+            <div bl-quick-list-item-preview>
+                <bl-task-preview [task]="task"></bl-task-preview>
+            </div>
+        </bl-quick-list-item>
+    </bl-quick-list>
 
-<bl-table *ngIf="!quickList">
-    <bl-thead>
-        <bl-column style="width: 200px">Id</bl-column>
-        <bl-column>State</bl-column>
-        <bl-column>Created</bl-column>
-        <bl-column>Started</bl-column>
-        <bl-column>Completed</bl-column>
-        <bl-column>Exit code</bl-column>
-    </bl-thead>
+    <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="scrollBottom.emit()">
+        <bl-thead>
+            <bl-column style="width: 200px">Id</bl-column>
+            <bl-column>State</bl-column>
+            <bl-column>Created</bl-column>
+            <bl-column>Started</bl-column>
+            <bl-column>Completed</bl-column>
+            <bl-column>Exit code</bl-column>
+        </bl-thead>
 
-    <bl-row *ngFor="let task of tasks;trackBy: trackByFn" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id" [contextmenu]="contextmenu(task)">
-        <bl-cell [value]="task.id"></bl-cell>
-        <bl-cell [value]="task.state">
-            {{task.state}}
-            <span class="danger" *ngIf="task.preparationTaskFailed">&nbsp;(Prep task failed)</span>
-        </bl-cell>
-        <bl-cell [value]="formatDate(task.creationTime)"></bl-cell>
-        <bl-cell [value]="formatDate(task.executionInfo.startTime)"></bl-cell>
-        <bl-cell [value]="formatDate(task.executionInfo.endTime)"></bl-cell>
-        <bl-cell [value]="task.executionInfo.exitCode"></bl-cell>
-    </bl-row>
-</bl-table>
-
+        <bl-row *ngFor="let task of tasks;trackBy: trackByFn" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id" [contextmenu]="contextmenu(task)">
+            <bl-cell [value]="task.id"></bl-cell>
+            <bl-cell [value]="task.state">
+                {{task.state}}
+                <span class="danger" *ngIf="task.preparationTaskFailed">&nbsp;(Prep task failed)</span>
+            </bl-cell>
+            <bl-cell [value]="formatDate(task.creationTime)"></bl-cell>
+            <bl-cell [value]="formatDate(task.executionInfo?.startTime)"></bl-cell>
+            <bl-cell [value]="formatDate(task.executionInfo?.endTime)"></bl-cell>
+            <bl-cell [value]="task.executionInfo?.exitCode"></bl-cell>
+        </bl-row>
+    </bl-table>
+</bl-focus-section>
 <bl-no-item [itemCount]="tasks.size" [status]="status">
     <i icon class="fa fa-tasks"></i>
     <span no-filter>No tasks</span>

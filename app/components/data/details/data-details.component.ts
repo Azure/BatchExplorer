@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs/Subscription";
 
-import { DialogService } from "app/components/base/dialogs";
-import { SidebarManager } from "app/components/base/sidebar";
-import { DownloadFileGroupDialogComponent } from "app/components/data/details";
+import { DialogService } from "@batch-flask/ui/dialogs";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { DownloadFolderComponent } from "app/components/common/download-folder-dialog";
 import { BlobContainer } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
 import { FileGroupCreateDto } from "app/models/dtos";
@@ -30,10 +30,12 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     public containerId: string;
     public decorator: ApplicationDecorator;
     public data: EntityView<BlobContainer, GetContainerParams>;
+    public isFileGroup = false;
 
     private _paramsSubscriber: Subscription;
 
     constructor(
+        private changeDetector: ChangeDetectorRef,
         private activatedRoute: ActivatedRoute,
         private dialog: DialogService,
         private router: Router,
@@ -43,6 +45,8 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         this.data = this.storageService.containerView();
         this.data.item.subscribe((container) => {
             this.container = container;
+            this.isFileGroup = container && container.isFileGroup;
+            changeDetector.markForCheck();
         });
 
         this.data.deleted.subscribe((key) => {
@@ -57,6 +61,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
             this.containerId = params["id"];
             this.data.params = { id: this.containerId };
             this.data.fetch();
+            this.changeDetector.markForCheck();
         });
     }
 
@@ -92,9 +97,9 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public download() {
-        const ref = this.dialog.open(DownloadFileGroupDialogComponent);
-        ref.componentInstance.containerId = this.containerId;
+        const ref = this.dialog.open(DownloadFolderComponent);
+        ref.componentInstance.navigator = this.storageService.navigateContainerBlobs(this.containerId);
         ref.componentInstance.subfolder = this.containerId;
-        ref.componentInstance.pathPrefix = "";
+        ref.componentInstance.folder = "";
     }
 }

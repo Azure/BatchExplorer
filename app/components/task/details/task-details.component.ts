@@ -1,15 +1,15 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
 import { remote } from "electron";
 import { Observable, Subscription } from "rxjs";
 
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, Task } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
 import { FileSystemService, JobParams, JobService, TaskParams, TaskService } from "app/services";
 import { EntityView } from "app/services/core";
-import { SidebarManager } from "../../base/sidebar";
 import { DeleteTaskDialogComponent, TaskCreateBasicDialogComponent, TerminateTaskDialogComponent } from "../action";
 
 @Component({
@@ -52,6 +52,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
         private fs: FileSystemService,
         taskService: TaskService,
         jobService: JobService,
+        private changeDetector: ChangeDetectorRef,
         private router: Router) {
 
         this.data = taskService.view();
@@ -59,6 +60,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
         this.data.item.subscribe((task) => {
             this.task = task;
             this.decorator = task && new TaskDecorator(task);
+            changeDetector.markForCheck();
         });
 
         this.data.deleted.subscribe((key) => {
@@ -67,7 +69,10 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.jobData.item.subscribe(x => this.job = x);
+        this.jobData.item.subscribe(x => {
+            this.job = x;
+            changeDetector.markForCheck();
+        });
     }
 
     public ngOnInit() {
@@ -138,6 +143,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
             this.data.params = { id: this.taskId, jobId: this.jobId };
             this.data.fetch();
             this._refreshJobData();
+            this.changeDetector.markForCheck();
         }
     }
 

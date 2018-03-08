@@ -1,10 +1,10 @@
 import { Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
-import { autobind } from "app/core";
+import { ServerError, autobind } from "@batch-flask/core";
 import { AsyncSubject, Observable } from "rxjs";
 
 import { FileExplorerConfig, FileExplorerSelectable } from "app/components/file/browse/file-explorer";
-import { BlobContainer, ServerError } from "app/models";
+import { BlobContainer } from "app/models";
 import { GetContainerParams, StorageService } from "app/services";
 import { EntityView } from "app/services/core";
 import "./cloud-file-picker-dialog.scss";
@@ -24,6 +24,7 @@ export class CloudFilePickerDialogComponent {
         showTreeView: false,
         selectable: FileExplorerSelectable.file,
     };
+
     private _saved = false;
 
     public set containerId(containerId: string) {

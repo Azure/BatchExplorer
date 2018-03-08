@@ -3,10 +3,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
 import { Observable, Subject } from "rxjs";
 
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
+import { ServerError } from "@batch-flask/core";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
-import { Pool, ServerError } from "app/models";
+import { Pool } from "app/models";
 import { JobService, PoolService } from "app/services";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";

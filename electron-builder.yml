@@ -47,6 +47,7 @@ win:
 # Config for the windows installer
 nsis:
   oneClick: true
+  perMachine: true
 
 # Linux configuration
 linux:

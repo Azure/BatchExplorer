@@ -1,10 +1,10 @@
 import { Component, ElementRef, OnDestroy, ViewChild, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { DialogService } from "app/components/base/dialogs";
+import { DialogService } from "@batch-flask/ui/dialogs";
 import { SSHPublicKey } from "app/models";
 import { SSHKeyService } from "app/services";
 

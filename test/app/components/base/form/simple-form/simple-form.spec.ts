@@ -2,11 +2,11 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA, ViewChild } from "@angular/c
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { MaterialModule } from "app/core";
+import { MaterialModule } from "@batch-flask/core";
 
-import { ButtonComponent } from "app/components/base/buttons";
-import { ServerErrorComponent } from "app/components/base/form/server-error";
-import { SimpleFormComponent } from "app/components/base/form/simple-form";
+import { ButtonComponent } from "@batch-flask/ui/buttons";
+import { ServerErrorComponent } from "@batch-flask/ui/form/server-error";
+import { SimpleFormComponent } from "@batch-flask/ui/form/simple-form";
 import { complexFormMockComponents } from "test/utils/mocks/components";
 
 @Component({

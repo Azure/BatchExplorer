@@ -1,10 +1,9 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { MaterialModule } from "app/core";
+import { MaterialModule, ServerError } from "@batch-flask/core";
 
-import { ServerErrorComponent } from "app/components/base/form/server-error";
-import { ServerError } from "app/models";
+import { ServerErrorComponent } from "@batch-flask/ui/form/server-error";
 
 const date = new Date(2017, 9, 13, 23, 43, 38);
 

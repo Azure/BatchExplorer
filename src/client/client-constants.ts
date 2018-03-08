@@ -37,6 +37,10 @@ const urls = {
         dev: `file://${root}/src/client/splash-screen/splash-screen.html`,
         prod: `file://${root}/build/client/splash-screen/splash-screen.html`,
     },
+    proxyCredentials: {
+        dev: `file://${root}/src/client/proxy/proxy-credentials.html`,
+        prod: `file://${root}/build/client/proxy/proxy-credentials.html`,
+    },
     recover: {
         dev: `file://${root}/src/client/recover-window/recover-window.html`,
         prod: `file://${root}/build/client/recover-window/recover-window.html`,

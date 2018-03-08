@@ -14,11 +14,12 @@ import { AppComponent } from "app/app.component";
 import { MainNavigationComponent } from "app/components/shared/main-navigation.component";
 
 // extenal modules
+import { BaseModule } from "@batch-flask/ui";
 import { AccountModule } from "app/components/account/account.module";
 import { ApplicationModule } from "app/components/application/application.module";
-import { BaseModule } from "app/components/base";
 import { DataModule } from "app/components/data/data.module";
 import { FileModule } from "app/components/file/file.module";
+import { JobScheduleModule } from "app/components/job-schedule/job-schedule.module";
 import { JobModule } from "app/components/job/job.module";
 import { MarketModule } from "app/components/market/market.module";
 import { NodeModule } from "app/components/node/node.module";
@@ -31,9 +32,10 @@ import { BatchLabsErrorHandler } from "app/error-handler";
 
 // services
 import { HttpModule } from "@angular/http";
+import { MaterialModule } from "@batch-flask/core";
+import { CommonModule } from "app/components/common";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
-import { MaterialModule } from "app/core";
 import { PollService } from "app/services/core";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 import { AADGraphHttpService, MsGraphHttpService } from "app/services/ms-graph/core";
@@ -48,6 +50,7 @@ import {
     AutoscaleFormulaService,
     AzureHttpService,
     BatchClientService,
+    BatchLabsService,
     CacheDataService,
     CommandService,
     ComputeService,
@@ -59,13 +62,14 @@ import {
     HttpUploadService,
     InsightsMetricsService,
     JobHookTaskService,
+    JobScheduleService,
     JobService,
     LocalFileStorage,
-    MonacoLoader,
     NavigatorService,
     NcjFileGroupService,
     NcjSubmitService,
     NcjTemplateService,
+    NetworkConfigurationService,
     NodeService,
     NodeUserService,
     PinnedEntityService,
@@ -73,6 +77,7 @@ import {
     PredefinedFormulaService,
     PricingService,
     PythonRpcService,
+    QuotaService,
     ResourceAccessService,
     SSHKeyService,
     SettingsService,
@@ -87,7 +92,7 @@ import {
 
 const modules = [
     AccountModule, ApplicationModule, DataModule,
-    FileModule, JobModule, NodeModule, PoolModule,
+    FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
     SettingsModule, TaskModule, MarketModule, LayoutModule,
     MiscModule,
 ];
@@ -129,8 +134,10 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         ArmHttpService,
         AuthorizationHttpService,
         BatchClientService,
+        BatchLabsService,
         CacheDataService,
         CommandService,
+        CommonModule,
         ComputeService,
         ElectronRemote,
         ElectronShell,
@@ -140,19 +147,21 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         HttpUploadService,
         InsightsMetricsService,
         JobHookTaskService,
+        JobScheduleService,
         JobService,
         LocalFileStorage,
-        MonacoLoader,
         NavigatorService,
         NcjFileGroupService,
         NcjSubmitService,
         NcjTemplateService,
+        NetworkConfigurationService,
         NodeService,
         NodeUserService,
         PinnedEntityService,
         PollService,
         PoolService,
         PricingService,
+        QuotaService,
         PythonRpcService,
         ResourceAccessService,
         SettingsService,

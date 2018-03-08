@@ -9,7 +9,7 @@ import { PoolGraphsModule } from "app/components/pool/graphs";
 import { PoolHomeComponent } from "app/components/pool/home/pool-home.component";
 import { StartTaskModule } from "app/components/pool/start-task";
 import { TaskBaseModule } from "app/components/task/base";
-import { PoolEndpointModule } from "./pool-endpoint";
+import { NetworkConfigurationModule } from "./network-configuration";
 import { UserAccountModule } from "./user-account";
 
 import {
@@ -37,7 +37,8 @@ const components = [
 ];
 
 const modules = [
-    PoolBaseModule, PoolDetailsModule, PoolEndpointModule, PoolGraphsModule, StartTaskModule, UserAccountModule,
+    PoolBaseModule, PoolDetailsModule, NetworkConfigurationModule, PoolGraphsModule,
+    StartTaskModule, UserAccountModule,
     TaskBaseModule, ...commonModules,
 ];
 

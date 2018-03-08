@@ -11,7 +11,8 @@ import {
     NcjTemplateMode,
     NcjTemplateType,
 } from "app/models";
-import { FileSystemService, LocalFileStorage } from "app/services";
+import { FileSystemService } from "app/services/fs.service";
+import { LocalFileStorage } from "app/services/local-file-storage.service";
 import { DateUtils, SecureUtils, log } from "app/utils";
 
 const branch = "master";

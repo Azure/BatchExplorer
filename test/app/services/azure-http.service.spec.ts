@@ -4,9 +4,9 @@ import { BaseRequestOptions, ConnectionBackend, Http, RequestOptions, Response, 
 import { MockBackend, MockConnection } from "@angular/http/testing";
 import { Observable } from "rxjs";
 
-import { ServerError } from "app/models";
-import { AdalService, AzureHttpService } from "app/services";
-import { Constants } from "app/utils";
+import { HttpCode, ServerError } from "@batch-flask/core";
+import { AzureEnvironment } from "@batch-flask/core/azure-environment";
+import { AdalService, AzureHttpService, BatchLabsService } from "app/services";
 
 describe("AzureHttpService", () => {
     let service: AzureHttpService;
@@ -15,6 +15,7 @@ describe("AzureHttpService", () => {
     let backend: MockBackend;
     let lastResponse: Response = null;
     let lastError: ServerError = null;
+    let appServiceSpy;
 
     function subscribeResponse(obs: Observable<Response>) {
         obs.subscribe({
@@ -29,10 +30,15 @@ describe("AzureHttpService", () => {
             accessTokenData: () => Observable.of({ accessToken: "abc" }),
         };
 
+        appServiceSpy = {
+            azureEnvironment: AzureEnvironment.Azure,
+        };
+
         injector = ReflectiveInjector.resolveAndCreate([
             { provide: ConnectionBackend, useClass: MockBackend },
             { provide: RequestOptions, useClass: BaseRequestOptions },
             { provide: AdalService, useValue: adalSpy },
+            { provide: BatchLabsService, useValue: appServiceSpy },
             Http,
             AzureHttpService,
         ]);
@@ -44,7 +50,7 @@ describe("AzureHttpService", () => {
     it("when returning retyable errors it should retry until max retry", fakeAsync(() => {
         backend.connections.subscribe((connection: MockConnection) => {
             connection.mockError(new Response(new ResponseOptions({
-                status: Constants.HttpCode.GatewayTimeout,
+                status: HttpCode.GatewayTimeout,
                 body: JSON.stringify({}),
             })) as any);
         });
@@ -61,6 +67,6 @@ describe("AzureHttpService", () => {
         tick(8100);
         expect(lastError).toBeNull();
         tick(24300);
-        expect(lastError.status).toBe(Constants.HttpCode.GatewayTimeout);
+        expect(lastError.status).toBe(HttpCode.GatewayTimeout);
     }));
 });

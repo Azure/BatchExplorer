@@ -1,0 +1,12 @@
+<bl-browse-layout #layout>
+    <div blBrowseLayoutTitle>
+            Job schedules
+    </div>
+    <div blBrowseLayoutButtons>
+        <bl-button color="light" type="plain" icon="fa fa-plus spin-hover" title="Add a job schedule" [action]="addJobSchedule" permission="write">
+        </bl-button>
+    </div>
+    <bl-job-schedule-list blBrowseLayoutList></bl-job-schedule-list>
+    <bl-job-schedule-advanced-filter blBrowseLayoutAdvancedFilter (change)="layout.advancedFilterChanged($event)">
+    </bl-job-schedule-advanced-filter>
+</bl-browse-layout>

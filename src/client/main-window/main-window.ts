@@ -1,8 +1,11 @@
-import { BrowserWindow, ipcMain } from "electron";
+import { BrowserWindow, app, ipcMain } from "electron";
 
+import { log } from "@batch-flask/utils";
+import { BehaviorSubject } from "rxjs";
+import { Observable } from "rxjs/Observable";
 import { Constants } from "../client-constants";
 import { BatchLabsApplication, FileSystem, GenericWindow, LocalFileStorage } from "../core";
-import { logger, renderLogger } from "../logger";
+import { renderLogger } from "../logger";
 
 // Webpack dev server url when using HOT=1
 const devServerUrl = Constants.urls.main.dev;
@@ -10,20 +13,41 @@ const devServerUrl = Constants.urls.main.dev;
 // Webpack build output
 const buildFileUrl = Constants.urls.main.prod;
 
+export enum WindowState {
+    Closed,
+    Loading,
+    /**
+     * When the javascript is done loading and the app is initializing
+     */
+    Initializing,
+    Ready,
+    /**
+     * Happens when the application fail to load because the dev server is not started or files might be corrupted
+     */
+    FailedLoad,
+}
+
 export class MainWindow extends GenericWindow {
     public appReady: Promise<void>;
-    private _showWindowOnstart = false;
+    public state: Observable<WindowState>;
+
+    public get webContents() {
+        return this._window.webContents;
+    }
+
+    private _state = new BehaviorSubject<WindowState>(WindowState.Closed);
     private _resolveAppReady: () => void;
 
     constructor(batchLabsApp: BatchLabsApplication) {
         super(batchLabsApp);
+        this.state = this._state.asObservable();
         this.appReady = new Promise((resolve) => {
             this._resolveAppReady = resolve;
-        });
+        }).then(() => this._state.next(WindowState.Ready));
     }
 
     public debugCrash() {
-        this._showWindowOnstart = true;
+        this.show();
     }
 
     public async send(key: string, message: string) {
@@ -38,11 +62,15 @@ export class MainWindow extends GenericWindow {
     }
 
     protected createWindow() {
+        this._state.next(WindowState.Loading);
         const window = new BrowserWindow({
+            title: app.getName(),
             height: 1000,
             icon: Constants.urls.icon,
             width: 1600,
-            show: this._showWindowOnstart, // Don't show the window until the user authenticated
+            minWidth: 1200,
+            minHeight: 300,
+            show: false, // Don't show the window until it is ready
             webPreferences: {
                 webSecurity: false,
             },
@@ -53,9 +81,9 @@ export class MainWindow extends GenericWindow {
         window.loadURL(url);
 
         const anyWindow = window as any;
+        anyWindow.windowHandler = this;
         anyWindow.logger = renderLogger;
         anyWindow.batchLabsApp = this.batchLabsApp;
-        anyWindow.splashScreen = this.batchLabsApp.splashScreen;
         anyWindow.authenticationWindow = this.batchLabsApp.authenticationWindow;
         anyWindow.fs = new FileSystem();
         anyWindow.localFileStorage = new LocalFileStorage();
@@ -73,7 +101,7 @@ export class MainWindow extends GenericWindow {
                     BrowserWindow.addDevToolsExtension(require("devtron").path);
                 }
             } catch (error) {
-                logger.error("Error adding devtron", error);
+                log.error("Error adding devtron", error);
             }
 
         }
@@ -83,24 +111,29 @@ export class MainWindow extends GenericWindow {
 
     private _setupEvents(window: Electron.BrowserWindow) {
         window.webContents.on("crashed", (event: Electron.Event, killed: boolean) => {
-            logger.error("There was a crash", event, killed);
+            log.error("There was a crash", { event, killed });
             this.batchLabsApp.recoverWindow.createWithError(event.returnValue);
         });
 
         ipcMain.once("app-ready", (event) => {
-            if (event.sender.id === window.webContents.id) {
+            if (this._window && event.sender.id === this._window.webContents.id) {
                 this._resolveAppReady();
             }
         });
 
+        ipcMain.once("initializing", (event) => {
+            if (this._window &&  event.sender.id === this._window.webContents.id) {
+                this._state.next(WindowState.Initializing);
+            }
+        });
+
         window.webContents.on("did-fail-load", (error) => {
-            this.batchLabsApp.splashScreen.updateMessage(
-                "Fail to load! Make sure you built the app or are running the dev-server.");
-            logger.error("Fail to load", error);
+            this._state.next(WindowState.FailedLoad);
+            log.error("Fail to load", error);
         });
 
         window.on("unresponsive", (error: Error) => {
-            logger.error("There was a crash", error);
+            log.error("There was a crash", error);
             this.batchLabsApp.recoverWindow.createWithError(error.message);
         });
     }

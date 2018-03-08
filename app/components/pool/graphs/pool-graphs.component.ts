@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { autobind } from "app/core";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { SidebarManager } from "app/components/base/sidebar";
+import { FilterBuilder, autobind } from "@batch-flask/core";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { PerformanceData } from "app/components/pool/graphs/performance-graph";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Job, JobState, Node, NodeState, Pool, Task } from "app/models";
@@ -12,7 +12,6 @@ import {
     AppInsightsQueryService, ElectronRemote, JobListParams, JobService, NodeListParams, NodeService,
 } from "app/services";
 import { ListView, PollObservable, PollService } from "app/services/core";
-import { FilterBuilder } from "app/utils/filter-builder";
 import { StateCounter } from "./heatmap";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import "./pool-graphs.scss";
@@ -132,7 +131,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             this._checkTabIsValid();
 
             this.performanceData.update();
-            this.data.updateParams({ poolId: this.pool.id });
+            this.data.params = { poolId: this.pool.id };
             this.data.refreshAll(false);
 
             this._jobData.patchOptions({

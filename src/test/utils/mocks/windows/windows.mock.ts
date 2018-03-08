@@ -74,6 +74,7 @@ export class MockSplashScreen extends MockUniqueWindow {
 export class MockAuthenticationWindow extends MockUniqueWindow {
     public loadURL: jasmine.Spy;
     private _onRedirectCallbacks = [];
+    private _onNavigateCallbacks = [];
     private _onCloseCallbacks = [];
 
     constructor() {
@@ -82,6 +83,7 @@ export class MockAuthenticationWindow extends MockUniqueWindow {
         this.loadURL = jasmine.createSpy("loadURL");
         this.destroy = this.destroy.and.callFake(() => {
             this._onRedirectCallbacks = [];
+            this._onNavigateCallbacks = [];
             this._onCloseCallbacks = [];
         });
     }
@@ -90,12 +92,22 @@ export class MockAuthenticationWindow extends MockUniqueWindow {
         this._onRedirectCallbacks.push(callback);
     }
 
+    public onNavigate(callback) {
+        this._onNavigateCallbacks.push(callback);
+    }
+
     public onClose(callback) {
         this._onCloseCallbacks.push(callback);
     }
 
     public notifyRedirect(newUrl) {
         for (const callback of this._onRedirectCallbacks) {
+            callback(newUrl);
+        }
+    }
+
+    public notifyNavigate(newUrl) {
+        for (const callback of this._onNavigateCallbacks) {
             callback(newUrl);
         }
     }

@@ -1,9 +1,9 @@
 import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { ServerError } from "app/models";
-import { StorageClientService } from "app/services";
+import { ServerError } from "@batch-flask/core";
 import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
+import { StorageClientService } from "app/services/storage-client.service";
 import { ContinuationToken } from "./list-options";
 
 export interface StorageListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {

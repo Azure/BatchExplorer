@@ -12,27 +12,6 @@ export const caching = {
     maxTargetedCache: 2,
 };
 
-export enum HttpCode {
-    Ok = 200,
-    Accepted = 201,
-    NotFound = 404,
-    BadRequest = 400,
-    RequestTimeout = 408,
-    Conflict = 409,
-    InteralServerError = 500,
-    BadGateway = 502,
-    ServiceUnavailable = 503,
-    GatewayTimeout = 504,
-}
-
-export const RetryableHttpCode = new Set([
-    HttpCode.RequestTimeout,
-    HttpCode.InteralServerError,
-    HttpCode.BadGateway,
-    HttpCode.ServiceUnavailable,
-    HttpCode.GatewayTimeout,
-]);
-
 export const badHttpCodeMaxRetryCount = 5;
 
 export const FileUrlStrings = {
@@ -61,6 +40,7 @@ export const forms = {
             appVersion: /^[a-zA-Z0-9_-][a-zA-Z0-9_.-]*$/i,
             appFilename: /\.zip$/i,
             fileGroup: /^[a-z0-9]([a-z0-9]|-(?!-|\z))*$/,
+            batchAccount: /^[0-9a-z]*$/,
         },
         range: {
             retry: { min: -1, max: 100 },
@@ -104,13 +84,16 @@ export const localStorageKey = {
      * Last batch account selected.
      */
     selectedAccountId: "selected-account-id",
-};
 
-export const sessionStorageKey = {
     /**
-     * Sessionstorage key that save the last breadcrumb.
+     * Where the proxy settings are stored
      */
-    breadcrumb: "breadcrumb",
+    proxySettings: "proxy_settings",
+
+    /**
+     * Save the latest azure environemnt used
+     */
+    azureEnvironment: "azure_environment",
 };
 
 export const ApiVersion = {
@@ -123,6 +106,8 @@ export const ApiVersion = {
     authorization: "2017-05-01",
     aadGraph: "1.6",
     monitor: "2017-05-01-preview",
+    network: "2017-10-01",
+    classicNetwork: "2015-12-01",
 };
 
 export const ExternalLinks = {
@@ -142,11 +127,7 @@ export const Environment = {
 };
 
 export const ServiceUrl = {
-    arm: "https://management.azure.com",
     githubRaw: "https://raw.githubusercontent.com",
-    appInsights: "https://api.applicationinsights.io/v1",
-    msGraph: "https://graph.microsoft.com/beta",
-    aadGraph: "https://graph.windows.net",
 };
 
 export const ResourceUrl = {
@@ -183,19 +164,12 @@ export const LowPriDiscount = {
     linux: 0.20,   // 80%
 };
 
-export enum MouseButton {
-    left = 0,
-    middle = 1,
-    right = 2,
-}
-
 export const AAD = {
     /**
      * Minimum number of milliseconds the token should have left before we refresh
      * 2 minutes
      */
     refreshMargin: 1000 * 120,
-    defaultResource: ResourceUrl.arm,
 };
 
 /**
@@ -213,6 +187,7 @@ export const IpcEvent = {
     AAD: {
         accessTokenData: "AAD_ACCESS_TOKEN_DATA",
     },
+    logoutAndLogin: "LOGOUT_AND_LOGIN",
 };
 
 export const customProtocolName = "ms-batchlabs";
@@ -230,4 +205,8 @@ export const ncjFileGroupPrefix = "fgrp-";
 
 export const ListPageSizes = {
     default: 50,
+};
+
+export const KnownQueryParameters = {
+    useAutoPool: "useAutoPool",
 };

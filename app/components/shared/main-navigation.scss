@@ -9,8 +9,16 @@ bl-app-nav {
     > ul {
         margin: 0;
         user-select: none;
-
-        > li > a {
+        > li {
+            position: relative;
+            > a {
+                &.active {
+                    background-color: map-get($primary, 500);
+                    color: $white;
+                }
+            }
+        }
+        > li > a, > li > .menu-items > a {
             position: relative;
             height: $navigationbar-width;
             display: block;
@@ -27,16 +35,34 @@ bl-app-nav {
 
             .label {
                 margin-top: 5px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
-            &:hover, &:focus {
+            &:hover:not(.active), &:focus:not(.active) {
                 background-color: map-get($navigation-color, hover-bg);
                 color: map-get($navigation-color, hover-text);
             }
+        }
+        > li > .menu-items {
+            position: absolute;
+            min-width: 60px;
+            height: 60px;
+            left: 60px;
+            top: 0;
+            outline: none;
+            color: $navigation-text;
+            -webkit-user-drag: none;
+            z-index: 99999;
+            background-color: map-get($navigation-color, bg);
 
-            &.active {
-                background-color: map-get($primary, 500);
-                color: $white;
+            > a {
+                padding: 13px 5px;
+                &:hover, &:focus {
+                    background-color: map-get($navigation-color, hover-bg);
+                    color: map-get($navigation-color, hover-text);
+                }
             }
         }
     }

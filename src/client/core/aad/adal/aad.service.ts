@@ -1,39 +1,37 @@
 
-import { BatchLabsApplication } from "client/core";
+import { AccessToken } from "@batch-flask/core";
+import { log } from "@batch-flask/utils";
+import { BatchLabsApplication } from "client/core/batchlabs-application";
 import { localStorage } from "client/core/local-storage";
-import { logger } from "client/logger";
 import { Constants } from "common";
 import { Deferred } from "common/deferred";
 import fetch from "node-fetch";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
 import {
-    AccessToken, AccessTokenCache,
+    AccessTokenCache,
     AccessTokenError, AccessTokenErrorResult, AccessTokenService,
 } from "../access-token";
-import { AuthenticationService, AuthorizeResult } from "../authentication";
+import { AuthenticationService, AuthenticationState, AuthorizeResult, LogoutError } from "../authentication";
 import { AADUser } from "./aad-user";
 import { UserDecoder } from "./user-decoder";
-
-const resources = [
-    Constants.ResourceUrl.arm,
-    Constants.ResourceUrl.batch,
-];
 
 const adalConfig: AADConfig = {
     tenant: "common",
     clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46", // Azure CLI
     redirectUri: "urn:ietf:wg:oauth:2.0:oob",
+    logoutRedirectUri: "urn:ietf:wg:oauth:2.0:oob/logout",
 };
-
-const defaultResource = Constants.AAD.defaultResource;
 
 export class AADService {
     public currentUser: Observable<AADUser>;
 
     public tenantsIds: Observable<string[]>;
 
-    private _userAuthorization: AuthenticationService;
+    public userAuthorization: AuthenticationService;
+    public authenticationState: Observable<AuthenticationState>;
+
+    private _authenticationState = new BehaviorSubject<AuthenticationState>(null);
     private _accessTokenService: AccessTokenService;
     private _userDecoder: UserDecoder;
     private _newAccessTokenSubject: StringMap<Deferred<AccessToken>> = {};
@@ -47,8 +45,13 @@ export class AADService {
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
         this.tenantsIds = this._tenantsIds.asObservable();
-        this._userAuthorization = new AuthenticationService(this.app, adalConfig);
-        this._accessTokenService = new AccessTokenService(adalConfig);
+        this.userAuthorization = new AuthenticationService(this.app, adalConfig);
+        this._accessTokenService = new AccessTokenService(app, adalConfig);
+        this.authenticationState = this._authenticationState.asObservable();
+
+        this.userAuthorization.state.subscribe((state) => {
+            this._authenticationState.next(state);
+        });
     }
 
     public async init() {
@@ -64,35 +67,40 @@ export class AADService {
      * It will try to use the refresh token cached to prevent a new prompt window if possible.
      */
     public async login(): Promise<any> {
-        this.app.splashScreen.updateMessage("Login to azure active directory");
+        try {
+            await this.accessTokenData("common");
+            this._authenticationState.next(AuthenticationState.Authenticated);
+        } catch (error) {
+            if (error instanceof LogoutError) {
+                throw error;
+            } else {
+                log.error("Error login in ", error);
+            }
+        }
         try {
             const tenantIds = await this._loadTenantIds();
 
-            this.app.splashScreen.updateMessage("Retrieving access tokens");
-
             this._tenantsIds.next(tenantIds);
-            for (const tenantId of tenantIds) {
-                for (const resource of resources) {
-                    await this._retrieveNewAccessToken(tenantId, resource);
-                }
-            }
-            this._showMainWindow();
+            this._refreshAllAccessTokens();
         } catch (error) {
-            logger.error("Error login", error);
+            log.error("Error login", error);
         }
     }
 
-    public logout(): void {
+    public async logout() {
         localStorage.removeItem(Constants.localStorageKey.currentUser);
         localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
-        this.app.windows.hideAll();
         this._tokenCache.clear();
-        this._currentUser.next(null);
+        this._tenantsIds.next([]);
         this._clearUserSpecificCache();
-        this._userAuthorization.logout();
+        for (const [_, window] of this.app.windows) {
+            window.webContents.session.clearStorageData({ storages: ["localStorage"] });
+        }
+        this.app.windows.closeAll();
+        await this.userAuthorization.logout();
     }
 
-    public async accessTokenFor(tenantId: string, resource: string = defaultResource) {
+    public async accessTokenFor(tenantId: string, resource: string = null) {
         return this.accessTokenData(tenantId, resource).then(x => x.access_token);
     }
 
@@ -101,7 +109,8 @@ export class AADService {
      * @param tenantId
      * @param resource
      */
-    public async accessTokenData(tenantId: string, resource: string = defaultResource): Promise<AccessToken> {
+    public async accessTokenData(tenantId: string, resource: string = null): Promise<AccessToken> {
+        resource = resource || this._getDefaultResource();
         if (this._tokenCache.hasToken(tenantId, resource)) {
             const token = this._tokenCache.getToken(tenantId, resource);
             if (!token.expireInLess(Constants.AAD.refreshMargin)) {
@@ -110,6 +119,10 @@ export class AADService {
         }
 
         return this._retrieveNewAccessToken(tenantId, resource);
+    }
+
+    private _getDefaultResource() {
+        return this.app.azureEnvironment.armUrl;
     }
 
     /**
@@ -169,7 +182,7 @@ export class AADService {
             defer.resolve(token);
 
         } catch (e) {
-            logger.error(`Error redeem auth code for a token for resource ${resource}`, e);
+            log.error(`Error redeem auth code for a token for resource ${resource}`, e);
             if (this._processAccessTokenError(tenantId, resource, e)) {
                 return;
             }
@@ -180,9 +193,9 @@ export class AADService {
 
     private async _authorizeUser(tenantId, forceReLogin): Promise<AuthorizeResult> {
         if (forceReLogin) {
-            return this._userAuthorization.authorize(tenantId, false);
+            return this.userAuthorization.authorize(tenantId, false);
         } else {
-            return this._userAuthorization.authorizeTrySilentFirst(tenantId);
+            return this.userAuthorization.authorizeTrySilentFirst(tenantId);
         }
     }
 
@@ -198,7 +211,7 @@ export class AADService {
             this._processAccessToken(tenantId, resource, token);
             return token;
         } catch (error) {
-            logger.warn("Refresh token is not valid", error);
+            log.warn("Refresh token is not valid", error);
             this._tokenCache.removeToken(tenantId, resource);
             return this._retrieveNewAccessToken(tenantId, resource);
         }
@@ -222,6 +235,9 @@ export class AADService {
     }
 
     private async _processAccessTokenError(tenantId: string, resource: string, error: Response) {
+        if (error instanceof LogoutError) {
+            return;
+        }
         const data: AccessTokenErrorResult = await error.json();
         if (data.error === AccessTokenError.invalidGrant) {
             // TODO redeem a new token once(need to track number of failure)
@@ -236,7 +252,7 @@ export class AADService {
             Authorization: `${token.token_type} ${token.access_token}`,
         };
         const options = { headers };
-        const url = `${Constants.ServiceUrl.arm}/tenants?api-version=${Constants.ApiVersion.arm}`;
+        const url = `${this.app.azureEnvironment.armUrl}tenants?api-version=${Constants.ApiVersion.arm}`;
         const response = await fetch(url, options);
         const { value } = await response.json();
         return value.map(x => x.tenantId);
@@ -248,8 +264,20 @@ export class AADService {
         localStorage.removeItem(Constants.localStorageKey.selectedAccountId);
     }
 
-    private _showMainWindow() {
-        this.app.windows.showAll();
-        this.app.splashScreen.destroy();
+    private async _refreshAllAccessTokens() {
+        const tenantIds = this._tenantsIds.value;
+        for (const tenantId of tenantIds) {
+            for (const resource of this._resources()) {
+                await this._retrieveNewAccessToken(tenantId, resource);
+            }
+        }
+    }
+
+    private _resources() {
+        const env = this.app.azureEnvironment;
+        return [
+            env.armUrl,
+            env.batchUrl,
+        ];
     }
 }

@@ -5,9 +5,11 @@ import * as path from "path";
 
 import {
     ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService,
-} from "app/components/base/context-menu";
-import { NotificationService } from "app/components/base/notifications";
-import { AccountService, AdalService, ElectronRemote, ElectronShell, FileSystemService } from "app/services";
+} from "@batch-flask/ui/context-menu";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import {
+    AccountService, AdalService, BatchLabsService, ElectronRemote, ElectronShell, FileSystemService,
+} from "app/services";
 import { Constants, OS } from "app/utils";
 import "./main-navigation.scss";
 
@@ -21,12 +23,14 @@ export class MainNavigationComponent implements OnInit {
     public selectedAccountAlias: string = "";
     public currentUserName: string = "";
     public update: any;
+
     private _autoUpdater: AppUpdater;
     private _showNotification = false;
 
     constructor(
         accountService: AccountService,
-        private adalService: AdalService,
+        adalService: AdalService,
+        private batchLabs: BatchLabsService,
         private shell: ElectronShell,
         private remote: ElectronRemote,
         private contextMenuService: ContextMenuService,
@@ -131,7 +135,7 @@ export class MainNavigationComponent implements OnInit {
     }
 
     private _logout() {
-        this.adalService.logout();
+        this.batchLabs.logoutAndLogin();
     }
 
     private _checkForUpdates(showNotification = true) {
@@ -141,7 +145,11 @@ export class MainNavigationComponent implements OnInit {
 
     private _update() {
         if (OS.isWindows()) {
-            this._autoUpdater.quitAndInstall();
+            setImmediate(() => {
+                this.remote.electronApp.removeAllListeners("window-all-closed");
+                this._autoUpdater.quitAndInstall();
+                this.remote.getCurrentWindow().close();
+            });
         } else {
             this.shell.openExternal("https://azure.github.io/BatchLabs/");
         }

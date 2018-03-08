@@ -4,9 +4,9 @@ import { MatTooltip } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
-import { ButtonComponent } from "app/components/base/buttons/button.component";
-import { MaterialModule } from "app/core";
-import { AuthorizationHttpService } from "app/services";
+import { MaterialModule } from "@batch-flask/core";
+import { ButtonComponent } from "@batch-flask/ui/buttons/button.component";
+import { PermissionService } from "@batch-flask/ui/permission";
 import { click } from "test/utils/helpers";
 
 @Component({
@@ -36,7 +36,7 @@ describe("ActionButton", () => {
             imports: [MaterialModule, NoopAnimationsModule],
             declarations: [ButtonComponent, TestComponent],
             providers: [
-                { provide: AuthorizationHttpService, useValue: null },
+                { provide: PermissionService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

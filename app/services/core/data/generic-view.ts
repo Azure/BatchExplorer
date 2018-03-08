@@ -1,8 +1,9 @@
-import { LoadingStatus } from "app/components/base/loading";
-import { ServerError } from "app/models";
-import { DataCache } from "app/services/core";
-import { ObjectUtils } from "app/utils";
 import { AsyncSubject, BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
+
+import { ServerError } from "@batch-flask/core";
+import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
+import { ObjectUtils } from "@batch-flask/utils";
+import { DataCache } from "app/services/core/data-cache";
 import { PollObservable } from "../poll-service";
 import { ProxyOptions } from "./proxy-options";
 
@@ -76,8 +77,8 @@ export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOption
         this.newDataStatus = this._newDataStatus.asObservable();
         this.error = this._error.asObservable();
         this.isDisposed = new AsyncSubject();
-        this.params = {} as any;
-
+        this._params = {} as any;
+        this._onParamsChanged();
         this.status.subscribe((status) => {
             if (status === LoadingStatus.Loading) {
                 this._error.next(null);
@@ -90,17 +91,16 @@ export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOption
         });
 
         this.deleted = this._deleted.asObservable();
+        this.init();
+    }
+
+    public init() {
+        // Nothing to do. Used in test for stub;
     }
 
     public set params(params: TParams) {
         this._params = params;
-        this.cache = this.getCache(params);
-        if (this._pollObservable) {
-
-            this._pollObservable.updateKey(this._key());
-        }
-        this.markLoadingNewData();
-        this.abortFetch();
+        this._onParamsChanged();
     }
 
     public get params() {
@@ -250,5 +250,14 @@ export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOption
         const paramsKey = ObjectUtils.serialize(this._params);
         const optionsKey = this._options && ObjectUtils.serialize(this._options.original);
         return `${paramsKey}|${optionsKey}`;
+    }
+
+    private _onParamsChanged() {
+        this.cache = this.getCache(this.params);
+        if (this._pollObservable) {
+            this._pollObservable.updateKey(this._key());
+        }
+        this.markLoadingNewData();
+        this.abortFetch();
     }
 }

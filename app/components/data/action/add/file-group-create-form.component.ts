@@ -2,16 +2,16 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { Observable } from "rxjs";
 
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
-import { DynamicForm, autobind } from "app/core";
+import { DynamicForm, autobind } from "@batch-flask/core";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { BlobContainer } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { CreateFileGroupModel, createFileGroupFormToJsonData, fileGroupToFormModel } from "app/models/forms";
 import { NcjFileGroupService, StorageService } from "app/services";
 import { Constants, log } from "app/utils";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import "./file-group-create-form.scss";
 
 @Component({
@@ -68,7 +68,13 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
             observable.subscribe({
                 next: (data) => {
                     lastData = data;
-                    task.name.next(`${name} (${data.uploaded}/${data.total})`);
+                    if (data.partial) {
+                        // tslint:disable-next-line:max-line-length
+                        task.name.next(`Processing large file: ${data.partial}%, completed (${data.uploaded}/${data.total})`);
+                    } else {
+                        task.name.next(`${name} (${data.uploaded}/${data.total})`);
+                    }
+
                     task.progress.next(data.uploaded / data.total * 100);
                 },
                 complete: () => {
@@ -113,8 +119,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     }
 
     private _formGroupName(fileGroupName: string) {
-        return fileGroupName && fileGroupName.length > 10
-            ? `${fileGroupName.substring(0, 9)}...`
+        return fileGroupName && fileGroupName.length > 20
+            ? `${fileGroupName.substring(0, 19)}...`
             : fileGroupName;
     }
 

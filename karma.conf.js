@@ -9,7 +9,7 @@ module.exports = function(config) {
         basePath: ".",
         frameworks: ["jasmine"],
         files: [{
-            pattern: "./config/karma.shim.js",
+            pattern: "./test/app/spec-entry.js",
             watched: false
         }, ],
 
@@ -28,6 +28,7 @@ module.exports = function(config) {
         autoWatchBatchDelay: 1000,
 
         browsers: ["CustomElectron"],
+        browserNoActivityTimeout: 300000,
         customLaunchers: {
             CustomElectron: {
                 base: "Electron",
@@ -45,7 +46,7 @@ module.exports = function(config) {
         reporters: ["mocha", ...coverageReporters],
 
         preprocessors: {
-            "config/karma.shim.js": ["coverage", "webpack", "sourcemap", "electron"],
+            "test/app/spec-entry.js": ["coverage", "webpack", "sourcemap", "electron"],
         },
         client: {
             useIframe: false,

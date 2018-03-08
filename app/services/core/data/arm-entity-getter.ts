@@ -30,10 +30,10 @@ export class ArmEntityGetter<TEntity, TParams> extends EntityGetter<TEntity, TPa
     }
 
     private _computeURI(params: TParams): string {
-        if (this._provideUri instanceof String) {
-            return this._provideUri;
-        } else {
+        if (this._provideUri instanceof Function) {
             return this._provideUri(params);
+        } else {
+            return this._provideUri;
         }
     }
 }

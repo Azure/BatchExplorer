@@ -4,10 +4,10 @@ import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Observable } from "rxjs";
 
+import { FilterBuilder } from "@batch-flask/core";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { AccountListComponent } from "app/components/account/browse";
-import { SidebarManager } from "app/components/base/sidebar";
 import { AccountService, SubscriptionService } from "app/services";
-import { FilterBuilder } from "app/utils/filter-builder";
 import * as Fixtures from "test/fixture";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 

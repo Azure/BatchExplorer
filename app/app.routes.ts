@@ -1,7 +1,7 @@
 // tslint:disable: object-literal-sort-keys
 import { Routes } from "@angular/router";
 
-import { NavigationGuard } from "app/components/base/guards";
+import { NavigationGuard } from "app/components/common/guards";
 import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
 import { ChooseActionComponent } from "app/components/market/application-action";
 import { LocalTemplateBrowserComponent } from "app/components/market/local-template-browser";
@@ -16,6 +16,8 @@ import { ApplicationDefaultComponent, ApplicationDetailsComponent } from "./comp
 import { ApplicationHomeComponent } from "./components/application/home/application-home.component";
 import { DataDefaultComponent, DataDetailsComponent } from "./components/data/details";
 import { DataHomeComponent } from "./components/data/home/data-home.component";
+import { JobScheduleDefaultComponent, JobScheduleDetailsComponent } from "./components/job-schedule/details";
+import { JobScheduleHomeComponent } from "./components/job-schedule/home/job-schedule-home.component";
 import { JobDefaultComponent, JobDetailsComponent } from "./components/job/details";
 import { JobHomeComponent } from "./components/job/home/job-home.component";
 import { MarketComponent } from "./components/market/home";
@@ -49,6 +51,15 @@ export const routes: Routes = [
         children: [
             { path: "", component: JobDefaultComponent }, // jobs/
             { path: ":id", component: JobDetailsComponent }, // jobs/{job.id}
+        ],
+    },
+    {
+        path: "jobschedules",
+        canActivate: [NavigationGuard],
+        component: JobScheduleHomeComponent,
+        children: [
+            { path: "", component: JobScheduleDefaultComponent }, // jobschedules/
+            { path: ":id", component: JobScheduleDetailsComponent }, // jobschedules/{jobschedule.id}
         ],
     },
     {
@@ -132,20 +143,3 @@ export const routes: Routes = [
         component: PoolStandaloneGraphsComponent,
     },
 ];
-
-// todo: copied here for reference only, delete when done.
-// export interface Route {
-//     path?: string;
-//     pathMatch?: string;
-//     component?: Type<any>;
-//     redirectTo?: string;
-//     outlet?: string;
-//     canActivate?: any[];
-//     canActivateChild?: any[];
-//     canDeactivate?: any[];
-//     canLoad?: any[];
-//     data?: Data;
-//     resolve?: ResolveData;
-//     children?: Route[];
-//     loadChildren?: LoadChildren;
-// }

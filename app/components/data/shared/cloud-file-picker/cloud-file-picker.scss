@@ -7,6 +7,10 @@ bl-cloud-file-picker {
 
     mat-form-field {
         flex: 1;
+
+        .warning {
+            color: map-get($warn, 500);
+        }
     }
 
     bl-button {

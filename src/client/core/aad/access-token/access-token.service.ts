@@ -1,9 +1,10 @@
 import fetch, { RequestInit } from "node-fetch";
 
-import { logger } from "client/logger";
+import { AccessToken } from "@batch-flask/core";
+import { log } from "@batch-flask/utils";
+import { BatchLabsApplication } from "client/core//batchlabs-application";
 import { AADConfig } from "../aad-config";
-import { baseUrl, objectToParams } from "../adal-constants";
-import { AccessToken } from "./access-token.model";
+import { objectToParams } from "../adal-constants";
 
 const contentType = "application/x-www-form-urlencoded";
 
@@ -24,7 +25,7 @@ export interface AccessTokenErrorResult {
  * This service handle the retrival of the access token to auth AAD queries
  */
 export class AccessTokenService {
-    constructor(private config: AADConfig) {
+    constructor(private app: BatchLabsApplication, private config: AADConfig) {
     }
 
     /**
@@ -41,7 +42,7 @@ export class AccessTokenService {
 
             return this._processResponse(data);
         } catch (error) {
-            logger.error("Error redeem the auth code for access token", error);
+            log.error("Error redeem the auth code for access token", error);
             throw error;
         }
     }
@@ -56,13 +57,13 @@ export class AccessTokenService {
             const data = await response.json();
             return this._processResponse(data);
         } catch (error) {
-            logger.error("Error refresh access token", error);
+            log.error("Error refresh access token", error);
             throw error;
         }
     }
 
     private _buildUrl(tenantId: string) {
-        return `${baseUrl}/${tenantId}/oauth2/token`;
+        return `${this.app.azureEnvironment.aadUrl}/${tenantId}/oauth2/token`;
     }
 
     private _redeemBody(resource: string, authorizationCode: string) {

@@ -1,58 +1,34 @@
-import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 import { MatDialog } from "@angular/material";
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
-import { BehaviorSubject, Observable, Subscription } from "rxjs";
+import { Observable } from "rxjs";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
-import { ListOrTableBase } from "app/components/base/selectable-list";
-import { ApplicationPackage, BatchApplication, PackageState } from "app/models";
+import { ListBaseComponent } from "@batch-flask/core/list";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { ApplicationPackage, BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
-import { ComponentUtils, DateUtils } from "app/utils";
-import { Filter } from "app/utils/filter-builder";
-import { SidebarManager } from "../../base/sidebar";
+import { DateUtils } from "app/utils";
 import { ActivatePackageDialogComponent, ApplicationCreateDialogComponent, DeletePackageAction } from "../action";
 
 @Component({
     selector: "bl-application-package-table",
     templateUrl: "application-package-table.html",
 })
-export class ApplicationPackageTableComponent extends ListOrTableBase implements OnChanges, OnDestroy {
+export class ApplicationPackageTableComponent extends ListBaseComponent implements OnChanges {
     @Input() public application: BatchApplication;
-    @Input() public filter: Filter;
 
     public packages: List<ApplicationPackage> = List([]);
     public displayedPackages: List<ApplicationPackage> = List([]);
-
-    // enabled handlers for the UI
-    public deleteItemEnabled = new BehaviorSubject<boolean>(false);
-    public activateItemEnabled = new BehaviorSubject<boolean>(false);
-    public editItemEnabled = new BehaviorSubject<boolean>(false);
-
-    private _stateMap: Map<string, PackageState>;
-    private _subs: Subscription[] = [];
 
     constructor(
         protected dialog: MatDialog,
         private applicationService: ApplicationService,
         private sidebarManager: SidebarManager,
+        changeDetector: ChangeDetectorRef,
         private taskManager: BackgroundTaskService) {
-
-        super(dialog);
-        this._stateMap = new Map();
-        this.entityName = "application packages";
-        this._subs.push(this.selectedItemsChange.subscribe((items) => {
-            if (items.length !== 1) {
-                this.activateItemEnabled.next(false);
-                this.editItemEnabled.next(false);
-            }
-        }));
-
-        this._subs.push(this.activatedItemChange.subscribe((activatedItem) => {
-            this.activateItemEnabled.next(this._activatedItemActivateEnabled(activatedItem.key));
-            this.deleteItemEnabled.next(this._activatedItemDeleteEnabled(activatedItem.key));
-            this.editItemEnabled.next(this._activatedItemEditEnabled(activatedItem.key));
-        }));
+        super(changeDetector);
     }
 
     public ngOnChanges(inputs) {
@@ -60,19 +36,11 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
             if (!this.packages.equals(this.application.packages)) {
                 this._updatePackages();
             }
-        } else if (inputs.filter) {
-            this._filterPackages();
-        }
-
-        if (ComponentUtils.recordChangedId(inputs.application)) {
-            setTimeout(() => {
-                this._resetSubjects();
-            });
         }
     }
 
-    public ngOnDestroy(): void {
-        this._subs.forEach(x => x.unsubscribe());
+    public handleFilter(filter) {
+        this._filterPackages();
     }
 
     public formatDate(date: Date) {
@@ -88,9 +56,10 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
     }
 
     @autobind()
-    public deleteSelected() {
+    public deleteSelection() {
         this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeletePackageAction(this.applicationService, this.application.id, this.selectedItems);
+            const task = new DeletePackageAction(this.applicationService, this.application.id,
+                [...this.selection.keys]);
             task.start(backgroundTask);
             return task.waitingDone;
         }).subscribe((done) => {
@@ -108,7 +77,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
     public activateActiveItem() {
         const dialogRef = this.dialog.open(ActivatePackageDialogComponent);
         dialogRef.componentInstance.applicationId = this.application.id;
-        dialogRef.componentInstance.packageVersion = this.activatedItem;
+        dialogRef.componentInstance.packageVersion = this.activeItem;
         dialogRef.afterClosed().subscribe((obj) => {
             this.refresh();
         });
@@ -117,7 +86,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
     @autobind()
     public updatePackageVersion() {
         const sidebarRef = this.sidebarManager.open("update-package", ApplicationCreateDialogComponent);
-        sidebarRef.component.setValue(this.application, this.activatedItem);
+        sidebarRef.component.setValue(this.application, this.activeItem);
         sidebarRef.afterCompletion.subscribe(() => {
             this.refresh();
         });
@@ -134,35 +103,6 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
             this.packages = List([]);
         }
         this._filterPackages();
-
-        this._stateMap.clear();
-        this.application.packages.forEach((pkg) => {
-            this._stateMap.set(pkg.version, pkg.state);
-        });
-    }
-    private _activatedItemEditEnabled(activeItemKey: string) {
-        return this.application.allowUpdates && !this._isPackagePending(activeItemKey)
-        && Boolean(activeItemKey);
-    }
-
-    private _activatedItemDeleteEnabled(activeItemKey: any) {
-        return this.application.allowUpdates && this.isAnyItemSelected() && Boolean(activeItemKey);
-    }
-
-    private _activatedItemActivateEnabled(activeItemKey: string) {
-        return this._isPackagePending(activeItemKey);
-    }
-
-    private _isPackagePending(version: string): boolean {
-        return version
-            ? this._stateMap.get(version) === PackageState.pending
-            : false;
-    }
-
-    private _resetSubjects() {
-        this.deleteItemEnabled.next(false);
-        this.activateItemEnabled.next(false);
-        this.editItemEnabled.next(false);
     }
 
     private _filterPackages() {

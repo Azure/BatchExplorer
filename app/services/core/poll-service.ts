@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 
-import { ObjectUtils, SecureUtils } from "app/utils";
+import { ObjectUtils, SecureUtils } from "@batch-flask/utils";
 
 @Injectable()
 export class PollService {
@@ -73,6 +73,7 @@ export class PollService {
         if (!tracker) {
             return;
         }
+
         delete this._pollTrackers[key][id];
         if (tracker.running) {
             this._clearActivePoll(key);

@@ -8,13 +8,14 @@ import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarManager } from "app/components/base/sidebar";
+import { ServerError } from "@batch-flask/core";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
-import { Job, Node, NodeState, Pool, ServerError } from "app/models";
+import { Job, Node, NodeState, Pool } from "app/models";
 import { NodeService } from "app/services";
-import { log } from "app/utils";
+import { ComponentUtils, log } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";
 import "./nodes-heatmap.scss";
 import { StateTree } from "./state-tree";
@@ -120,14 +121,11 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.pool) {
-            const prev = changes.pool.previousValue;
-            const cur = changes.pool.currentValue;
-            if (prev && cur && prev.id === cur.id) {
-                return;
-            }
-            this.selectedNodeId.next(null);
-            if (this._svg) {
-                this._svg.selectAll("g.node-group").remove();
+            if (ComponentUtils.recordChangedId(changes.pool)) {
+                this.selectedNodeId.next(null);
+                if (this._svg) {
+                    this._svg.selectAll("g.node-group").remove();
+                }
             }
         }
 

@@ -2,10 +2,10 @@ import { Component, OnDestroy } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
 
-import { ComplexFormConfig } from "app/components/base/form";
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
-import { DynamicForm, autobind } from "app/core";
+import { DynamicForm, autobind } from "@batch-flask/core";
+import { ComplexFormConfig } from "@batch-flask/ui/form";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { NodeFillType, Pool } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
 import { CreatePoolModel, PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
@@ -24,10 +24,11 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public estimatedCost: string = "-";
     public complexFormConfig: ComplexFormConfig;
     public fileUri = "create.pool.batch.json";
+    public armNetworkOnly = true;
+
     private _osControl: FormControl;
     private _renderingSkuSelected: boolean = false;
     private _sub: Subscription;
-
     private _lastFormValue: CreatePoolModel;
 
     constructor(
@@ -62,6 +63,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             appLicenses: [[]],
             appPackages: [[]],
             inboundNATPools: [[]],
+            subnetId: [null],
         });
 
         this._sub = this._osControl.valueChanges.subscribe((value) => {
@@ -86,6 +88,17 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
                 this.form.patchValue({
                     inboundNATPools: [],
                 });
+            }
+
+            // For pools created with virtualMachineConfiguration only ARM virtual
+            // networks ('Microsoft.Network/virtualNetworks') are supported,
+            // but for pools created with cloudServiceConfiguration both ARM and
+            // classic virtual networks are supported.
+            if (value.virtualMachineConfiguration) {
+                this.armNetworkOnly = true;
+            }
+            if (value.cloudServiceConfiguration) {
+                this.armNetworkOnly = false;
             }
         });
 

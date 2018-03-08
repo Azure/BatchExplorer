@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
 import * as path from "path";
 import { Observable } from "rxjs";
 

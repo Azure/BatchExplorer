@@ -1,7 +1,8 @@
 import * as moment from "moment";
 
+import { AccessToken } from "@batch-flask/core";
 import { AdalService } from "app/services/adal";
-import { AccessToken } from "client/core/aad/access-token/access-token.model";
+import { Observable } from "rxjs";
 import { F } from "test/utils";
 
 const tenant1 = "tenant-1";
@@ -18,10 +19,13 @@ const token1 = new AccessToken({
 
 describe("AdalService spec", () => {
     let service: AdalService;
-    const aadServiceSpy = {};
+    let aadServiceSpy;
     let remoteSpy;
 
     beforeEach(() => {
+        aadServiceSpy = {
+            tenantsIds: Observable.of([]),
+        };
         remoteSpy = {
             getBatchLabsApp: () => ({ aadService: aadServiceSpy }),
             send: jasmine.createSpy("accessTokenData").and.returnValue(Promise.resolve(token1)),

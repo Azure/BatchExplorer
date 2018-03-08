@@ -1,11 +1,11 @@
 import * as moment from "moment";
 
+import { AccessToken } from "@batch-flask/core";
 import { localStorage } from "client/core/local-storage";
 import { Constants } from "common";
 import { F } from "test/utils";
 import { mockNodeStorage } from "test/utils/mocks/storage";
 import { MockBrowserWindow, MockSplashScreen } from "test/utils/mocks/windows";
-import { AccessToken } from "../access-token";
 import { AADUser } from "./aad-user";
 import { AADService } from "./aad.service";
 
@@ -95,7 +95,7 @@ describe("AADService", () => {
 
             (service as any)._accessTokenService.refresh = refreshSpy;
             (service as any)._accessTokenService.redeem = redeemSpy;
-            (service as any)._userAuthorization.authorizeTrySilentFirst = authorizeSpy;
+            (service as any).userAuthorization.authorizeTrySilentFirst = authorizeSpy;
             (service as any)._userDecoder.decode = decodeSpy;
         });
 

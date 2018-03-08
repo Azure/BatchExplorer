@@ -15,7 +15,6 @@ import {
     DataContainerFilesComponent,
     DataDefaultComponent,
     DataDetailsComponent,
-    DownloadFileGroupDialogComponent,
 } from "./details";
 import { DataHomeComponent } from "./home";
 
@@ -23,7 +22,6 @@ const components = [
     DataContainerConfigurationComponent, DataContainerFilesComponent, DataHomeComponent,
     DataDefaultComponent, DataDetailsComponent, FileGroupCreateFormComponent, DeleteContainerDialogComponent,
     DataContainerListComponent, FileGroupOptionsPickerComponent, FileGroupPreviewComponent,
-    DownloadFileGroupDialogComponent,
 ];
 
 @NgModule({
@@ -33,7 +31,6 @@ const components = [
     entryComponents: [
         DeleteContainerDialogComponent,
         FileGroupCreateFormComponent,
-        DownloadFileGroupDialogComponent,
     ],
 })
 export class DataModule {

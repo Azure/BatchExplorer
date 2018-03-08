@@ -1,17 +1,17 @@
 import { Component, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
-import { autobind } from "app/core";
 import { Observable, Subscription } from "rxjs";
 
+import { Filter, FilterBuilder, Property, autobind } from "@batch-flask/core";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StorageService } from "app/services";
-import { Filter, FilterBuilder } from "app/utils/filter-builder";
-import { SidebarManager } from "../../base/sidebar";
+import { Constants } from "common";
 import { FileGroupCreateFormComponent } from "../action";
 
 import { MatMenuTrigger } from "@angular/material";
-import { DialogService } from "app/components/base/dialogs";
+import { BrowseLayoutComponent, BrowseLayoutConfig } from "@batch-flask/ui/browse-layout";
+import { DialogService } from "@batch-flask/ui/dialogs";
 import { BlobContainer } from "app/models";
-import { Constants } from "common";
 import "./data-home.scss";
 
 const containerTypes = [
@@ -32,12 +32,18 @@ const containerTypes = [
 export class DataHomeComponent implements OnDestroy {
     @ViewChild(MatMenuTrigger) public trigger: MatMenuTrigger;
 
+    @ViewChild("layout")
+    public layout: BrowseLayoutComponent;
+
     public containerTypes = containerTypes;
-    public quickSearchQuery = new FormControl();
+    public quickSearchQuery: string = "";
     public filter: Filter = FilterBuilder.none();
     public hasAutoStorage = true;
     public containerTypePrefix = new FormControl("");
 
+    public layoutConfig: BrowseLayoutConfig = {
+        mergeFilter: this._mergeFilter.bind(this),
+    };
     private _autoStorageSub: Subscription;
 
     constructor(
@@ -45,12 +51,8 @@ export class DataHomeComponent implements OnDestroy {
         private dialogService: DialogService,
         public storageService: StorageService) {
 
-        this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
-            this._updateFilter();
-        });
-
         this.containerTypePrefix.valueChanges.subscribe((prefix) => {
-            this._updateFilter();
+            this.layout.advancedFilterChanged(FilterBuilder.prop("id").startswith(prefix));
         });
 
         this._autoStorageSub = this.storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
@@ -104,12 +106,33 @@ export class DataHomeComponent implements OnDestroy {
 
     private _updateFilter() {
         const prefix = this.containerTypePrefix.value || "";
-        const search = this.quickSearchQuery.value || "";
+        const search = this.quickSearchQuery || "";
         const query = prefix + search;
         if (query === "") {
             this.filter = FilterBuilder.none();
         } else {
             this.filter = FilterBuilder.prop("id").startswith(query);
+        }
+    }
+
+    private _mergeFilter(quickSearch: Filter, advanced: Filter) {
+        const prefix = this._getFilterValue(advanced);
+        const search = this._getFilterValue(quickSearch);
+        const query = prefix + search;
+        if (query === "") {
+            return FilterBuilder.none();
+        } else {
+            return FilterBuilder.prop("id").startswith(query);
+        }
+    }
+
+    private _getFilterValue(filter: Filter): string {
+        if (filter.isEmpty()) {
+            return "";
+        } else if (filter instanceof Property) {
+            return filter.value;
+        } else {
+            return (filter.properties[0] as any).value;
         }
     }
 

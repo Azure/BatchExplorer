@@ -4,9 +4,9 @@ import { Response } from "@angular/http";
 import * as storage from "azure-storage";
 import { Observable } from "rxjs";
 
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { BatchApplication } from "app/models";
 import { applicationToCreateFormModel } from "app/models/forms";
 import { ApplicationService, StorageService } from "app/services";

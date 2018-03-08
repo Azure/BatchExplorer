@@ -3,10 +3,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import * as path from "path";
 
-import { ButtonComponent } from "app/components/base/buttons";
+import { ButtonComponent } from "@batch-flask/ui/buttons";
+import { PermissionService } from "@batch-flask/ui/permission";
 import { DownloadRdpComponent } from "app/components/node/connect";
 import { NodeConnectionSettings } from "app/models";
-import { AuthorizationHttpService, ElectronShell, FileSystemService } from "app/services";
+import { ElectronShell, FileSystemService } from "app/services";
 import { OS } from "app/utils";
 
 @Component({
@@ -48,7 +49,7 @@ describe("DownloadRdpComponent", () => {
         TestBed.configureTestingModule({
             declarations: [DownloadRdpComponent, DownloadRdpMockComponent, ButtonComponent],
             providers: [
-                { provide: AuthorizationHttpService, useValue: null },
+                { provide: PermissionService, useValue: null },
                 { provide: FileSystemService, useValue: fsServiceSpy },
                 { provide: ElectronShell, useValue: shellSpy },
             ],

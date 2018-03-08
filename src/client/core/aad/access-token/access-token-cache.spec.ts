@@ -1,10 +1,10 @@
 import * as moment from "moment";
 
+import { AccessToken } from "@batch-flask/core";
 import { localStorage } from "client/core/local-storage";
 import { Constants } from "common";
 import { mockNodeStorage } from "test/utils/mocks/storage";
 import { AccessTokenCache } from "./access-token-cache";
-import { AccessToken } from "./access-token.model";
 
 const tenant1 = "tenant-1";
 const resource1 = "http://example.com";

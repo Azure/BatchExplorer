@@ -2,10 +2,10 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { Observable, Subject } from "rxjs";
 
+import { FilterBuilder } from "@batch-flask/core";
 import { SubtaskInformation, Task, TaskState } from "app/models";
 import { TaskCreateDto } from "app/models/dtos";
 import { Constants, log } from "app/utils";
-import { FilterBuilder } from "app/utils/filter-builder";
 import { BatchClientService } from "./batch-client.service";
 import {
     BatchEntityGetter,
@@ -13,6 +13,7 @@ import {
     ContinuationToken,
     DataCache,
     EntityView,
+    FetchAllProgressCallback,
     ListOptionsAttributes,
     ListView,
     TargetedDataCache,
@@ -44,6 +45,10 @@ export class TaskService extends ServiceBase {
 
     private _basicProperties: string = "id,state,dependsOn";
     private _cache = new TargetedDataCache<TaskListParams, Task>({
+        // dependsOn: {
+        //     cache: jobService.cache,
+        //     key: (job: Job) => ({jobId: jobId})
+        // },
         key: ({ jobId }) => jobId,
     });
     private _getter: BatchEntityGetter<Task, TaskParams>;
@@ -116,8 +121,11 @@ export class TaskService extends ServiceBase {
         });
     }
 
-    public listAll(jobId: string, options: TaskListOptions = {}): Observable<List<Task>> {
-        return this._listGetter.fetchAll({ jobId }, options);
+    public listAll(
+        jobId: string,
+        options: TaskListOptions = {},
+        progress?: FetchAllProgressCallback): Observable<List<Task>> {
+        return this._listGetter.fetchAll({ jobId }, options, progress);
     }
 
     public get(jobId: string, taskId: string, options: any = {}): Observable<Task> {

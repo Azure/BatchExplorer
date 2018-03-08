@@ -16,6 +16,7 @@ export class MockedFile implements File {
     public type: string;
     public webkitRelativePath: string;
     public size: number;
+    public lastModified: number;
 
     constructor(data: Partial<MockedFileAttributes> = {}) {
         Object.assign(this, data);

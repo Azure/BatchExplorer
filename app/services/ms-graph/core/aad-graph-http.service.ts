@@ -3,20 +3,26 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { HttpRequestOptions, HttpService } from "app/core";
-import { ServerError } from "app/models";
-import { AccountService, AdalService } from "app/services";
+import { HttpRequestOptions, HttpService, ServerError } from "@batch-flask/core";
+import { UrlUtils } from "@batch-flask/utils";
+import { AccountService } from "app/services/account.service";
+import { AdalService } from "app/services/adal";
+import { BatchLabsService } from "app/services/batch-labs.service";
 import { AADUser } from "client/core/aad/adal/aad-user";
-import { Constants, UrlUtils } from "common";
+import { Constants } from "common";
 
 @Injectable()
 export class AADGraphHttpService extends HttpService {
     public get serviceUrl() {
-        return Constants.ServiceUrl.aadGraph;
+        return this.batchLabs.azureEnvironment.aadGraph;
     }
 
     private _currentUser: AADUser;
-    constructor(private http: HttpClient, private adal: AdalService, private accountService: AccountService) {
+    constructor(
+        private http: HttpClient,
+        private adal: AdalService,
+        private accountService: AccountService,
+        private batchLabs: BatchLabsService) {
         super();
         this.adal.currentUser.subscribe(x => this._currentUser = x);
         this.http.get("");
@@ -25,7 +31,7 @@ export class AADGraphHttpService extends HttpService {
     public request<T = any>(method: string, uri: string, options: any): Observable<T> {
         return this.accountService.currentAccount.take(1)
             .flatMap((account) => {
-                return this.adal.accessTokenData(account.subscription.tenantId, Constants.ResourceUrl.aadGraph)
+                return this.adal.accessTokenData(account.subscription.tenantId, this.serviceUrl)
                     .flatMap((accessToken) => {
                         options = this.addAuthorizationHeader(options, accessToken);
                         options = this._addApiVersion(options);

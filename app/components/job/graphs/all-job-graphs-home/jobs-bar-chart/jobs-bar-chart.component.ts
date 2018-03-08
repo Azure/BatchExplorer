@@ -2,7 +2,7 @@ import { Component, HostBinding, Input, OnChanges, OnInit } from "@angular/core"
 import { Router } from "@angular/router";
 import { List } from "immutable";
 
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { Job } from "app/models";
 
 import "./jobs-bar-chart.scss";

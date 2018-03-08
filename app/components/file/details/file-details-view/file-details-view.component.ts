@@ -1,15 +1,15 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
-import { autobind } from "app/core";
 import { remote } from "electron";
 import { Observable } from "rxjs";
 
 import "./file-details-view.scss";
 
-import { NotificationService } from "app/components/base/notifications";
-import { File, ServerError } from "app/models";
+import { HttpCode, ServerError, autobind } from "@batch-flask/core";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { File } from "app/models";
 import { ElectronShell } from "app/services";
 import { FileLoader } from "app/services/file";
-import { Constants, DateUtils, prettyBytes } from "app/utils";
+import { DateUtils, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-details-view",
@@ -102,7 +102,7 @@ export class FileDetailsViewComponent implements OnChanges {
                 this.lastModified = DateUtils.prettyDate(file.properties.lastModified);
             },
             error: (error: ServerError) => {
-                if (error.status === Constants.HttpCode.NotFound) {
+                if (error.status === HttpCode.NotFound) {
                     this.fileNotFound = true;
                 }
             },

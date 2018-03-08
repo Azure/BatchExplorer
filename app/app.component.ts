@@ -4,12 +4,15 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
+import { MonacoLoader } from "@batch-flask/ui/editor";
+import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
-    AccountService, AdalService, AutoscaleFormulaService, CommandService, MonacoLoader,
-    NavigatorService, NcjTemplateService, NodeService, PredefinedFormulaService, PricingService,
-    PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
+    AccountService, AuthorizationHttpService, AutoscaleFormulaService,
+    CommandService, NavigatorService, NcjTemplateService, NodeService, PredefinedFormulaService,
+    PricingService, PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
 } from "app/services";
+import { Constants } from "app/utils";
 import { ipcRenderer } from "electron";
 
 @Component({
@@ -26,7 +29,6 @@ export class AppComponent implements OnInit {
         private autoscaleFormulaService: AutoscaleFormulaService,
         private settingsService: SettingsService,
         private commandService: CommandService,
-        private adalService: AdalService,
         private accountService: AccountService,
         private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
@@ -37,6 +39,8 @@ export class AppComponent implements OnInit {
         themeService: ThemeService,
         private route: ActivatedRoute,
         monacoLoader: MonacoLoader,
+        permissionService: PermissionService,
+        authHttpService: AuthorizationHttpService,
         private pricingService: PricingService,
         private ncjTemplateService: NcjTemplateService,
         private predefinedFormulaService: PredefinedFormulaService,
@@ -53,7 +57,7 @@ export class AppComponent implements OnInit {
         pythonRpcService.init();
         this.predefinedFormulaService.init();
         themeService.init();
-        monacoLoader.get();
+        monacoLoader.init(Constants.Client.root);
 
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
@@ -72,6 +76,9 @@ export class AppComponent implements OnInit {
             // console.log("Query params?", fullscreen);
             this.fullscreen = Boolean(fullscreen);
         });
+        permissionService.setUserPermissionProvider(() => {
+            return authHttpService.getResourcePermission();
+        });
 
         ipcRenderer.send("app-ready");
     }
@@ -79,10 +86,6 @@ export class AppComponent implements OnInit {
     public ngOnInit() {
         this.subscriptionService.load();
         this.accountService.load();
-    }
-
-    public logout() {
-        this.adalService.logout();
     }
 
     /**

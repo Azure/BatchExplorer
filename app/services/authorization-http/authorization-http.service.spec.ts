@@ -1,8 +1,9 @@
 import { Response, ResponseOptions } from "@angular/http";
+import { Permission } from "@batch-flask/ui/permission";
 import { Observable, Subscription } from "rxjs";
 import * as Fixtures from "test/fixture";
 
-import { AuthorizationHttpService, BatchAccountPermission, Permission } from "./authorization-http.service";
+import { AuthorizationHttpService, BatchAccountPermission } from "./authorization-http.service";
 
 describe("AuthorizationHttpService", () => {
     let authService: AuthorizationHttpService;
@@ -94,7 +95,7 @@ describe("AuthorizationHttpService", () => {
         let permission: Permission;
         beforeEach(() => {
             const getResourcePermissionSpy = jasmine.createSpy("getResourcePermission").and.callFake(() => {
-               return Observable.of(permission);
+                return Observable.of(permission);
             });
             authService.getResourcePermission = getResourcePermissionSpy;
         });

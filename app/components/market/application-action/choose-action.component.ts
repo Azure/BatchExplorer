@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 

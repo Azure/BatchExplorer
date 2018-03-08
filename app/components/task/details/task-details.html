@@ -40,9 +40,7 @@
                 </bl-tab>
                 <bl-tab key="dependencies" [disabled]="!hasDependencies">
                     <bl-tab-label>Dependencies</bl-tab-label>
-                    <div class="tab-padding">
-                        <bl-task-dependencies [jobId]="job.id" [task]="task"></bl-task-dependencies>
-                    </div>
+                    <bl-task-dependencies [jobId]="job.id" [task]="task"></bl-task-dependencies>
                 </bl-tab>
             </bl-tab-group>
         </bl-card>

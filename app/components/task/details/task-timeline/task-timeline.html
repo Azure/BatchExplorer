@@ -21,7 +21,7 @@
     <!-- Running-->
     <bl-task-timeline-state state="running" [currentState]="task.state">
         <div *ngIf="started" [class.warn]="isTaskTimeoutClose" [class.error]="task.didTimeout" [title]="timeoutMessage">
-            <bl-elapsed-time [startTime]="task.executionInfo?.startTime" [endTime]="task.executionInfo?.endTime"></bl-elapsed-time>
+            <bl-timespan [startTime]="task.executionInfo?.startTime" [endTime]="task.executionInfo?.endTime"></bl-timespan>
         </div>
         <div *ngIf="started && retryCount" class="warn">{{retryCount}} retries</div>
     </bl-task-timeline-state>

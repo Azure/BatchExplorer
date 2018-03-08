@@ -5,12 +5,12 @@ import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Subject } from "rxjs";
 
+import { FilterBuilder } from "@batch-flask/core";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationListComponent } from "app/components/application/browse";
-import { BackgroundTaskService } from "app/components/base/background-task";
-import { SidebarManager } from "app/components/base/sidebar";
 import { BatchApplication } from "app/models";
 import { ApplicationService, PinnedEntityService } from "app/services";
-import { FilterBuilder } from "app/utils/filter-builder";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";

@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { Router } from "@angular/router";
 import { ipcRenderer } from "electron";
 
@@ -16,12 +16,14 @@ export interface GotoOptions {
 
 @Injectable()
 export class NavigatorService {
-    constructor(private accountService: AccountService, private router: Router) {
+    constructor(private accountService: AccountService, private router: Router, private zone: NgZone) {
     }
 
     public init() {
         ipcRenderer.on(Constants.rendererEvents.batchlabsLink, (event, link) => {
-            this.openBatchLabsLink(link);
+            this.zone.run(() => {
+                this.openBatchLabsLink(link);
+            });
         });
     }
 

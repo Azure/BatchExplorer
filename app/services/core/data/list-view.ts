@@ -1,8 +1,8 @@
-import { LoadingStatus } from "app/components/base/loading";
 import { List, OrderedSet } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { log } from "app/utils";
+import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
+import { log } from "@batch-flask/utils";
 import { GenericView, GenericViewConfig } from "./generic-view";
 import { ListGetter, ListResponse } from "./list-getter";
 import { ContinuationToken, ListOptions, ListOptionsAttributes } from "./list-options";
@@ -63,6 +63,9 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
 
         this._cacheCleared.subscribe((deletedKey) => {
             this._itemKeys.next(OrderedSet<string>([]));
+            this._handleChanges();
+            this._hasMore.next(true);
+            this.fetchNext();
         });
     }
 
@@ -71,10 +74,12 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         return super.startPoll(interval);
     }
 
-    public updateParams(params: TParams) {
-        this.params = params;
+    public set params(params: TParams) {
+        super.params = params;
         this._handleChanges();
+        this._hasMore.next(true);
     }
+    public get params() { return super.params; }
 
     public setOptions(options: ListOptionsAttributes, clearItems = true) {
         super.setOptions(new ListOptions(options));
@@ -226,8 +231,8 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         const response = this._getter.fetchFromCache(this._params, this._options);
         if (!response) { return false; }
         this._itemKeys.next(this._retrieveKeys(response.items));
-        this._lastRequest = { params: this._params, options: this._options };
-        this._hasMore.next(Boolean(response.nextLink));
+        // this._lastRequest = { params: this._params, options: this._options };
+        // this._hasMore.next(Boolean(response.nextLink));
         this._status.next(LoadingStatus.Ready);
         return true;
     }

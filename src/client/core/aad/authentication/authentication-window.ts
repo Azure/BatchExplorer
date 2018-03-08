@@ -1,19 +1,25 @@
-import { UniqueWindow } from "client/core";
+import { UniqueWindow } from "client/core/unique-window";
 import { BrowserWindow } from "electron";
 
 export class AuthenticationWindow extends UniqueWindow {
     public createWindow() {
         const window = new BrowserWindow({
-            width: 800, height: 700, show: false,
+            width: 800,
+            height: 700,
+            show: false,
             center: true,
             webPreferences: {
                 nodeIntegration: false,
             },
+            title: `BatchLabs: Login to ${this.batchLabsApp.azureEnvironment.name}`,
+        });
+
+        window.on("page-title-updated", (e, title) => {
+            e.preventDefault();
         });
 
         // Uncomment to debug auth errors
         // window.webContents.openDevTools();
-        window.setMenu(null);
         return window;
     }
 
@@ -30,9 +36,19 @@ export class AuthenticationWindow extends UniqueWindow {
         });
     }
 
+    public onNavigate(callback: (url: string) => void) {
+        this._window.webContents.on("did-navigate", (event, url) => {
+            callback(url);
+        });
+    }
+
     public onClose(callback: () => void) {
         this._window.on("close", (event) => {
             callback();
         });
+    }
+
+    public clearCookies() {
+        this._window.webContents.session.clearStorageData({ storages: ["cookies"] });
     }
 }

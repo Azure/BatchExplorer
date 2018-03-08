@@ -1,6 +1,6 @@
+import { log } from "@batch-flask/utils";
 import * as chokidar from "chokidar";
 import { FileUtils } from "client/api";
-import { logger } from "client/logger";
 import { app } from "electron";
 import * as fs from "fs";
 import * as mkdirp from "mkdirp";
@@ -102,15 +102,22 @@ export class FileSystem {
         });
     }
 
-    public async readdir(path: string): Promise<string[]> {
-        return new Promise<string[]>((resolve, reject) => {
-            fs.readdir(path, (error, files) => {
-                if (error) {
-                    return reject(error);
-                }
-                resolve(files);
-            });
-        });
+    public async readdir(dir: string, recursive = true): Promise<string[]> {
+        const content = await this._readDir(dir);
+        if (!recursive) { return content; }
+        let result = [];
+        for (const entry of content) {
+            const stats = await this.lstat(path.join(dir, entry));
+            if (stats.isFile()) {
+                result.push(entry);
+            } else {
+                const subFiles = await this.readdir(path.join(dir, entry), true);
+                result = result.concat(subFiles.map((x) => {
+                    return path.join(path.join(entry, x));
+                }));
+            }
+        }
+        return result;
     }
 
     public watch(path: string): chokidar.FSWatcher {
@@ -121,10 +128,21 @@ export class FileSystem {
         return new Promise<string>((resolve, reject) => {
             fs.writeFile(path, content, (err) => {
                 if (err) {
-                    logger.error(`An error occured writing file "${path}" to disk`, err);
+                    log.error(`An error occured writing file "${path}" to disk`, err);
                     reject(err);
                 }
                 resolve(path);
+            });
+        });
+    }
+
+    private async _readDir(path: string) {
+        return new Promise<string[]>((resolve, reject) => {
+            fs.readdir(path, (error, files) => {
+                if (error) {
+                    return reject(error);
+                }
+                resolve(files);
             });
         });
     }

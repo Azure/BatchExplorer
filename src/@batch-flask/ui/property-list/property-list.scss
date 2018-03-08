@@ -1,0 +1,14 @@
+@import "app/styles/variables";
+
+
+bl-property-list {
+    display: block;
+}
+
+bl-bool-property {
+    &.enabled {
+        .fa-toggle-on {
+            color: map-get($success, 500);
+        }
+    }
+}

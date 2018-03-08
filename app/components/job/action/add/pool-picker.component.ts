@@ -3,11 +3,11 @@ import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } f
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
+import { FilterBuilder } from "@batch-flask/core";
 import { Pool } from "app/models";
 import { PoolListParams, PoolService, VmSizeService } from "app/services";
 import { ListOptionsAttributes, ListView } from "app/services/core";
 import { PoolUtils } from "app/utils";
-import { FilterBuilder } from "app/utils/filter-builder";
 
 // tslint:disable:no-forward-ref
 @Component({
@@ -60,6 +60,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
 
     public ngOnDestroy() {
         this._subs.forEach(x => x.unsubscribe());
+        this.poolsData.dispose();
     }
 
     public writeValue(poolInfo: any) {
