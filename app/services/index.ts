@@ -5,6 +5,7 @@ export * from "./app-insights";
 export * from "./autoscale-formula.service";
 export * from "./azure-http.service";
 export * from "./arm-http.service";
+export * from "./batch-labs.service";
 export * from "./cache-data.service";
 export * from "./compute.service";
 export * from "./electron";

@@ -68,11 +68,10 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
         const description = event.isDirectory
             ? `All files will be deleted from the folder: ${path}`
             : `The file '${FileUrlUtils.getFileName(path)}' will be deleted.`;
-
         this.dialogService.confirm(`Delete files`, {
             description: description,
             yes: () => {
-                const listParams = { recursive: true, startswith: path };
+                const listParams = { recursive: true, folder: path };
                 const data = this.storageService.blobListView(this.container, listParams);
                 const obs = data.fetchAll().flatMap(() => data.items.take(1)).shareReplay(1);
                 obs.subscribe((items) => {
