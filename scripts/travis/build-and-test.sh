@@ -15,11 +15,6 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then # Only run the CI checks on the linux 
     npm run lint -s
 fi
 
-# TODO-TIM remove when working
-npm run -s build:prod
-npm run -s build-python
-npm run package -- --publish never
-
 # Only run on a PR against stable or on stable branch
 #if [ "${TRAVIS_BRANCH}" = "stable" ]; then
   # Check third party notices is up to date
