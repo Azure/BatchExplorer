@@ -26,6 +26,9 @@ export interface ComputeUsage {
     unit: string;
 }
 
+const computeProvider = "Microsoft.Compute";
+const computeImageProvider = computeProvider + "/images";
+
 @Injectable()
 export class ComputeService {
     constructor(private arm: ArmHttpService,
@@ -47,9 +50,9 @@ export class ComputeService {
         return this.getQuotas().map(x => this._getTotalRegionalQuotas(x)).share();
     }
 
-    public listResources(subscriptionId: string, provider: string, location: string): Observable<Resource[]> {
+    public listCustomImages(subscriptionId: string, location: string): Observable<Resource[]> {
         const search = new URLSearchParams();
-        search.set("$filter", `resourceType eq '${provider}' and location eq '${location}'`);
+        search.set("$filter", `resourceType eq '${computeImageProvider}' and location eq '${location}'`);
         const options = new RequestOptions({ search });
 
         return this.subscriptionService.get(subscriptionId).flatMap((subscription) => {

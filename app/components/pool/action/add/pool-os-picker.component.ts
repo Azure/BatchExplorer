@@ -26,14 +26,12 @@ const cloudServiceOsFamilies = [{
     name: "2016",
 }].reverse(); // Reverse so we have most recent first
 
-const computeProvider = "Microsoft.Compute";
-const computeImageProvider = computeProvider + "/images";
-
 export enum CustomImagesState {
     Ready,
     Empty,
     Error,
 }
+
 // tslint:disable:no-forward-ref
 @Component({
     selector: "bl-pool-os-picker",
@@ -291,7 +289,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
                 return;
             }
             this._subs.push(
-                this.computeService.listResources(subscriptionId, computeImageProvider, location).subscribe({
+                this.computeService.listCustomImages(subscriptionId, location).subscribe({
                     next: (resources) => {
                         this.customImages = resources;
                         if (resources.length > 0) {
