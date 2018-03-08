@@ -5,18 +5,22 @@ bl-account-details {
         margin: 0 auto;
         text-align: justify;
         display: grid;
-        grid-template-columns: minmax(210px, 1fr) minmax(210px, 1fr) minmax(210px, 1fr);
+        grid-template-columns: repeat(3, 1fr);
 
         .account-card {
             margin-top: 5px;
             margin-right: 5px;
             padding: 12px;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
 
             > .title {
                 margin-bottom: 5px;
             }
 
             > .content {
+                flex: 1;
             }
 
             > .actions {
@@ -31,6 +35,10 @@ bl-account-details {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         text-align: justify;
+
+        > bl-monitor-chart {
+            min-width: 0;
+        }
     }
 
     bl-table.dashboard {
