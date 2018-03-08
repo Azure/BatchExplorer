@@ -2,10 +2,12 @@ import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Set } from "immutable";
 
-import { Filter, FilterBuilder } from "@batch-flask/core";
+import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
 import { BrowseLayoutComponent } from "@batch-flask/ui/browse-layout";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Subscription } from "app/models";
 import { SubscriptionService } from "app/services";
+import { BatchAccountCreateComponent } from "../action/add";
 
 @Component({
     selector: "bl-account-home",
@@ -20,8 +22,7 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
 
     private _subs = [];
 
-    constructor(public subscriptionService: SubscriptionService) {
-
+    constructor(public subscriptionService: SubscriptionService, private sidebarManager: SidebarManager) {
     }
 
     public ngOnInit() {
@@ -42,6 +43,11 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
 
     public trackByFn(index, subscription: Subscription) {
         return subscription.id;
+    }
+
+    @autobind()
+    public addBatchAccount() {
+        this.sidebarManager.open("add-batch-account", BatchAccountCreateComponent);
     }
 
     private _buildSubscriptionFilter(subscriptionIds: Set<string>): Filter {

@@ -40,6 +40,7 @@ export const forms = {
             appVersion: /^[a-zA-Z0-9_-][a-zA-Z0-9_.-]*$/i,
             appFilename: /\.zip$/i,
             fileGroup: /^[a-z0-9]([a-z0-9]|-(?!-|\z))*$/,
+            batchAccount: /^[0-9a-z]*$/,
         },
         range: {
             retry: { min: -1, max: 100 },

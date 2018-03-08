@@ -1,6 +1,10 @@
 <bl-browse-layout #layout>
     <div blBrowseLayoutTitle>
-            Batch Accounts
+        Batch Accounts
+    </div>
+    <div blBrowseLayoutButtons>
+        <bl-button icon="fa fa-plus spin-hover" title="Add a batch account" [action]="addBatchAccount" type="plain" color="light">
+        </bl-button>
     </div>
     <div pre-quicksearch>
         <mat-form-field>

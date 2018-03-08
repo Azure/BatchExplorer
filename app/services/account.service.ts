@@ -14,6 +14,9 @@ import {
 import { LocalFileStorage } from "./local-file-storage.service";
 import { SubscriptionService } from "./subscription.service";
 
+const batchProvider = "Microsoft.Batch";
+const batchResourceProvider = batchProvider + "/batchAccounts";
+
 export enum AccountStatus {
     Valid,
     Invalid,
@@ -30,6 +33,17 @@ export interface AccountParams {
 
 export interface SelectedAccount {
     account: AccountResource;
+}
+
+export interface AvailabilityResult {
+    nameAvailable: boolean;
+    reason?: string;
+    message?: string;
+}
+
+export interface QuotaResult {
+    used: number;
+    quota: number;
 }
 
 @Injectable()
@@ -174,7 +188,7 @@ export class AccountService {
 
     public list(subscriptionId: string): Observable<List<AccountResource>> {
         const search = new URLSearchParams();
-        search.set("$filter", "resourceType eq 'Microsoft.Batch/batchAccounts'");
+        search.set("$filter", `resourceType eq '${batchResourceProvider}'`);
         const options = new RequestOptions({ search });
 
         return this.subscriptionService.get(subscriptionId)
@@ -279,6 +293,83 @@ export class AccountService {
             .flatMap((subscription) => {
                 return this.azure.patch(subscription, accountId, { properties: properties.toJS() });
             });
+    }
+
+    public putResourcGroup(sub: Subscription, resourceGroup: string, body: any) {
+        const rgUri = this.getResoureGroupId(sub, resourceGroup);
+        return this.azure.put(sub, rgUri, { body: body });
+    }
+
+    public putBatchAccount(sub: Subscription, resourceGroup: string, accountName: string, body: any): Observable<any> {
+        const accountUri = this.getAccountId(sub, resourceGroup, accountName);
+        return this.azure.put(sub, accountUri, { body: body });
+    }
+
+    public getAccountId(sub: Subscription, resourceGroup: string, accountName: string): string {
+        const uriPrefix = this.getResoureGroupId(sub, resourceGroup);
+        return `${uriPrefix}/providers/${batchProvider}/batchAccounts/${accountName}`;
+    }
+
+    public getResoureGroupId(sub: Subscription, resourceGroup: string): string {
+        return `subscriptions/${sub.subscriptionId}/resourceGroups/${resourceGroup}`;
+    }
+
+    /**
+     * Call nameAvailability api to get account conflict info per location
+     * @param subscriptionId
+     */
+    public nameAvailable(name: string, subscription: Subscription, location: string): Observable<AvailabilityResult> {
+        if (!name || !subscription || !location) {
+            return Observable.of(null);
+        }
+        const uri = `subscriptions/${subscription.subscriptionId}/providers/${batchProvider}`
+                    + `/locations/${location}/checkNameAvailability`;
+        return this.azure.post(subscription, uri, {
+            name: name,
+            type: batchResourceProvider,
+        }).map(response => {
+            return response.json();
+        });
+    }
+
+    /**
+     * Call quota api and resource api to get result of whether current subscription quota reached or not
+     * @param subscription
+     * @param location
+     */
+    public accountQuota(subscription: Subscription, location: string): Observable<QuotaResult> {
+        if (!subscription || !location) {
+            return Observable.of(null);
+        }
+
+        // get current subscription account quota
+        const quotaUri = `subscriptions/${subscription.subscriptionId}/providers/${batchProvider}`
+                    + `/locations/${location}/quotas`;
+        const getQuotaObs = this.azure.get(subscription, quotaUri).map(response => {
+            return response.json();
+        });
+
+        // get current batch accounts number
+        const resourceUri = `/subscriptions/${subscription.subscriptionId}/resources`;
+        const search = new URLSearchParams();
+        search.set("$filter", `resourceType eq '${batchResourceProvider}' and location eq '${location}'`);
+        const options = new RequestOptions({ search });
+        const batchAccountObs = this.azure.get(subscription, resourceUri, options).expand(obs => {
+            return obs.json().nextLink ?
+                this.azure.get(subscription, obs.json().nextLink, options) : Observable.empty();
+        }).reduce((batchAccounts, response) => {
+            return [...batchAccounts, ...response.json().value];
+        }, []);
+
+        return Observable.forkJoin([getQuotaObs, batchAccountObs]).map(results => {
+            if (!results[0] || !Array.isArray(results[1])) {
+                return null;
+            }
+            return {
+                used: results[1].length,
+                quota: results[0].accountQuota,
+            };
+        });
     }
 
     private _loadFavoriteAccounts(): Observable<List<AccountResource>> {
