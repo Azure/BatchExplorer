@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, ViewChild } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import * as path from "path";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -9,7 +9,8 @@ import { log } from "@batch-flask/utils";
 import { BlobFilesBrowserComponent } from "app/components/file/browse";
 import { FileDropEvent } from "app/components/file/browse/file-explorer";
 import { BlobContainer, File } from "app/models";
-import { StorageService } from "app/services";
+import { FileSystemService, StorageService } from "app/services";
+import { CloudPathUtils } from "app/utils";
 
 @Component({
     selector: "bl-data-container-files",
@@ -25,6 +26,7 @@ export class DataContainerFilesComponent implements OnDestroy {
     private _onGroupUpdatedSub: Subscription;
 
     constructor(
+        private fs: FileSystemService,
         private storageService: StorageService,
         private backgroundTaskService: BackgroundTaskService,
         private notificationService: NotificationService) {
@@ -40,31 +42,37 @@ export class DataContainerFilesComponent implements OnDestroy {
 
     @autobind()
     public handleFileUpload(event: FileDropEvent) {
-        const paths = event.files.map(x => x.path);
-        const container = this.container.name;
-        const message = `Uploading ${paths.length} files to ${container}`;
-        return this.backgroundTaskService.startTask(message, (task) => {
-            const observable = this.storageService.uploadFiles(this.container.name, paths, event.path);
-            let lastData;
-            observable.subscribe({
-                next: (data) => {
-                    lastData = data;
-                    const { uploaded, total, current } = data;
-                    task.name.next(`Uploading ${path.basename(current)} to ${container} (${uploaded}/${total})`);
-                    task.progress.next(data.uploaded / data.total * 100);
-                },
-                complete: () => {
-                    task.progress.next(100);
-                    const message = `${lastData.uploaded} files were successfully uploaded to the file group`;
-                    this.notificationService.success("Added files to group", message);
-                },
-                error: (error) => {
-                    log.error("Failed to create form group", error);
-                },
-            });
+        const obs = Observable.fromPromise(this._getFilesToUpload(event.files));
 
-            return observable;
+        const container = this.container.name;
+        obs.subscribe((files) => {
+            console.log("Files are", files);
+            const message = `Uploading ${files.length} files to ${container}`;
+            this.backgroundTaskService.startTask(message, (task) => {
+                const observable = this.storageService.uploadFiles(this.container.name, files, event.path);
+                let lastData;
+                observable.subscribe({
+                    next: (data) => {
+                        lastData = data;
+                        const { uploaded, total, current } = data;
+                        task.name.next(`Uploading ${path.basename(current.localPath)} to ${container} (${uploaded}/${total})`);
+                        task.progress.next(data.uploaded / data.total * 100);
+                    },
+                    complete: () => {
+                        task.progress.next(100);
+                        const message = `${lastData.uploaded} files were successfully uploaded to the file group`;
+                        this.notificationService.success("Added files to group", message);
+                    },
+                    error: (error) => {
+                        log.error("Failed to create form group", error);
+                    },
+                });
+
+                return observable;
+            });
         });
+
+        return obs;
     }
 
     @autobind()
@@ -78,5 +86,26 @@ export class DataContainerFilesComponent implements OnDestroy {
             },
         });
         return obs;
+    }
+
+    private async _getFilesToUpload(files: any[]) {
+        const result = [];
+        for (const file of files) {
+            const base = path.basename(file.path);
+            const stats = await this.fs.lstat(file.path);
+            if (stats.isFile()) {
+                result.push({ localPath: file.path, remotePath: base });
+            } else {
+
+                const dirFiles = await this.fs.readdir(file.path);
+                for (const dirFile of dirFiles) {
+                    result.push({
+                        localPath: path.join(file.path, dirFile),
+                        remotePath: CloudPathUtils.join(base, CloudPathUtils.normalize(dirFile)),
+                    });
+                }
+            }
+        }
+        return result;
     }
 }

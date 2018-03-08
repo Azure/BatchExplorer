@@ -117,6 +117,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
         }
         this.loading = true;
         const obs = ready.flatMap(() => {
+            console.log("Complex form submit");
             return this.submit(this.getCurrentDto());
         }).shareReplay(1);
         obs.subscribe({
