@@ -29,7 +29,6 @@ export class NodeListComponent extends ListBaseComponent implements OnInit {
     }
     public get poolId() { return this._poolId; }
 
-    public status: Observable<LoadingStatus>;
     public data: ListView<Node, NodeListParams>;
 
     private _poolId: string;
@@ -37,6 +36,10 @@ export class NodeListComponent extends ListBaseComponent implements OnInit {
     constructor(private nodeService: NodeService, activatedRoute: ActivatedRoute, changeDetector: ChangeDetectorRef) {
         super(changeDetector);
         this.data = this.nodeService.listView();
+
+        this.data.status.subscribe((status) => {
+            this.status = status;
+        });
         ComponentUtils.setActiveItem(activatedRoute, this.data);
     }
 
@@ -47,7 +50,6 @@ export class NodeListComponent extends ListBaseComponent implements OnInit {
     @autobind()
     public refresh(): Observable<any> {
         this.data.params = { poolId: this.poolId };
-        this.status = this.data.status;
         this.data.setOptions({}); // This clears the previous list objects
 
         return this.data.fetchNext(true);

@@ -36,7 +36,6 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     public jobs: List<Job> = List([]);
     public LoadingStatus = LoadingStatus;
 
-    public status: Observable<LoadingStatus>;
     public data: ListView<Job, JobListParams>;
     public searchQuery = new FormControl();
 
@@ -59,7 +58,11 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
             this.jobs = jobs;
             this.changeDetector.markForCheck();
         });
-        this.status = this.data.status;
+
+        this.data.status.subscribe((status) => {
+            this.status = status;
+        });
+
         this._onJobAddedSub = jobService.onJobAdded.subscribe((jobId) => {
             this.data.loadNewItem(jobService.get(jobId));
         });

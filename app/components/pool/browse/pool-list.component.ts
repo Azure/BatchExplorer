@@ -32,7 +32,6 @@ import { DeletePoolDialogComponent, DeletePoolTask, PoolResizeDialogComponent } 
 })
 export class PoolListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
-    public status: Observable<LoadingStatus>;
     public data: ListView<Pool, PoolListParams>;
 
     public tableConfig: TableConfig = {
@@ -56,7 +55,10 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         this.data = this.poolService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 
-        this.status = this.data.status;
+        this.data.status.subscribe((status) => {
+            this.status = status;
+        });
+
         this._subs.push(poolService.onPoolAdded.subscribe((poolId) => {
             this.data.loadNewItem(poolService.get(poolId));
         }));

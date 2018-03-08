@@ -33,7 +33,6 @@ export class TaskSubTasksTabComponent extends ListBaseComponent implements OnCha
     public list: SubTaskDisplayListComponent;
 
     public data: ListView<SubtaskInformation, SubtaskListParams>;
-    public status: Observable<LoadingStatus>;
 
     public selectedTask: SubtaskInformation;
     public selectedTaskId: string;
@@ -51,7 +50,10 @@ export class TaskSubTasksTabComponent extends ListBaseComponent implements OnCha
             this._updateSelectedTask();
             this.changeDetector.markForCheck();
         });
-        this.status = this.data.status;
+
+        this.data.status.subscribe((status) => {
+            this.status = status;
+        });
     }
 
     public ngOnChanges(changes) {

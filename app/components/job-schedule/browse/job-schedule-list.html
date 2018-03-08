@@ -1,5 +1,5 @@
 <bl-focus-section *ngIf="jobSchedules.size > 0">
-    <bl-quick-list *ngIf="quicklist" [status]="status | async" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
+    <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
         <bl-quick-list-item *ngFor="let jobSchedule of jobSchedules; trackBy: trackByFn" [link]="['/jobschedules/', jobSchedule.id]" [key]="jobSchedule.id" [contextmenu]="contextmenu(jobSchedule)">
             <bl-quick-list-item-status [status]="jobScheduleStatus(jobSchedule)" [tooltip]="jobScheduleStatusText(jobSchedule)">
             </bl-quick-list-item-status>
@@ -11,7 +11,7 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quicklist" [status]="status | async" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
+    <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
         <bl-thead>
             <bl-column>Id</bl-column>
             <bl-column>State</bl-column>
@@ -26,9 +26,9 @@
     </bl-table>
 </bl-focus-section>
 
-<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
+<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>
 
-<bl-no-item [itemCount]="jobSchedules.size" [filter]="filter" [status]="status | async">
+<bl-no-item [itemCount]="jobSchedules.size" [filter]="filter" [status]="status">
     <i icon class="fa fa-calendar"></i>
     <span no-filter>No job schedules</span>
     <span with-filter>No job schedules match this filter</span>

@@ -38,7 +38,6 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
     public jobSchedules: List<JobSchedule>;
     public LoadingStatus = LoadingStatus;
 
-    public status: Observable<LoadingStatus>;
     public data: ListView<JobSchedule, JobScheduleListParams>;
     public searchQuery = new FormControl();
 
@@ -60,7 +59,11 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
             this.jobSchedules = jobSchedules;
             this.changeDetector.markForCheck();
         });
-        this.status = this.data.status;
+
+        this.data.status.subscribe((status) => {
+            this.status = status;
+        });
+
         this._onJobScheduleAddedSub = jobScheduleService.onJobScheduleAdded.subscribe((jobScheduleId) => {
             this.data.loadNewItem(jobScheduleService.get(jobScheduleId));
         });
