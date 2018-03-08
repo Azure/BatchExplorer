@@ -11,8 +11,7 @@ import { FileLoader } from "app/services/file";
 import { EditorComponent, EditorConfig } from "@batch-flask/ui/editor";
 import "./log-file-viewer.scss";
 
-const maxSize = 100000; // 10MB
-// const maxSize = 10000000; // 10MB TODO-TIM
+const maxSize = 10000000; // 10MB
 
 @Component({
     selector: "bl-log-file-viewer",
