@@ -5,7 +5,8 @@ import { MockBackend, MockConnection } from "@angular/http/testing";
 import { Observable } from "rxjs";
 
 import { HttpCode, ServerError } from "@batch-flask/core";
-import { AdalService, AzureHttpService } from "app/services";
+import { AzureEnvironment } from "@batch-flask/core/azure-environment";
+import { AdalService, AzureHttpService, BatchLabsService } from "app/services";
 
 describe("AzureHttpService", () => {
     let service: AzureHttpService;
@@ -14,6 +15,7 @@ describe("AzureHttpService", () => {
     let backend: MockBackend;
     let lastResponse: Response = null;
     let lastError: ServerError = null;
+    let appServiceSpy;
 
     function subscribeResponse(obs: Observable<Response>) {
         obs.subscribe({
@@ -28,10 +30,15 @@ describe("AzureHttpService", () => {
             accessTokenData: () => Observable.of({ accessToken: "abc" }),
         };
 
+        appServiceSpy = {
+            azureEnvironment: AzureEnvironment.Azure,
+        };
+
         injector = ReflectiveInjector.resolveAndCreate([
             { provide: ConnectionBackend, useClass: MockBackend },
             { provide: RequestOptions, useClass: BaseRequestOptions },
             { provide: AdalService, useValue: adalSpy },
+            { provide: BatchLabsService, useValue: appServiceSpy },
             Http,
             AzureHttpService,
         ]);
