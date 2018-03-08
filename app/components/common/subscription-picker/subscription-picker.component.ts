@@ -18,20 +18,26 @@ import "./subscription-picker.scss";
 })
 export class SubscriptionPickerComponent implements ControlValueAccessor, OnDestroy {
     public subscription: FormControl;
+    public subscriptionList: ArmSubscription[];
 
     private _propagateChange: (value: any) => void = null;
-    private _sub: Subscription;
+    private _subs: Subscription[] = [];
 
     constructor(
         public subscriptionService: SubscriptionService,
         private changeDetector: ChangeDetectorRef) {
         this.subscription = new FormControl();
-        this._sub = this.subscription.valueChanges.subscribe((subscription) => {
+
+        this._subs.push(this.subscriptionService.subscriptions.subscribe((subscriptions) => {
+            this.subscriptionList = subscriptions.toArray();
+            this.changeDetector.markForCheck();
+        }));
+
+        this._subs.push(this.subscription.valueChanges.subscribe((subscription) => {
             if (this._propagateChange) {
                 this._propagateChange(subscription);
             }
-            this.changeDetector.markForCheck();
-        });
+        }));
     }
 
     public writeValue(value: any): void {
@@ -53,8 +59,8 @@ export class SubscriptionPickerComponent implements ControlValueAccessor, OnDest
     }
 
     public ngOnDestroy(): void {
-        if (this._sub) {
-            this._sub.unsubscribe();
+        if (this._subs) {
+            this._subs.forEach((sub) => sub.unsubscribe());
         }
     }
 
