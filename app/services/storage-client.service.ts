@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 import { ServerError } from "@batch-flask/core";
 import { AutoStorageAccount, StorageKeys, StorageKeysAttributes } from "app/models";
 import { ArmResourceUtils } from "app/utils";
+import { BatchLabsService } from ".";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
 import { StorageAccountSharedKeyOptions, StorageClientProxyFactory } from "./storage";
@@ -32,6 +33,7 @@ export class StorageClientService {
     private _storageKeyMap: StringMap<StorageKeyCachedItem> = {};
 
     constructor(
+        private batchLabs: BatchLabsService,
         private accountService: AccountService,
         private arm: ArmHttpService) {
 
@@ -74,6 +76,7 @@ export class StorageClientService {
                 return Observable.of(this.getForSharedKey({
                     account: cachedItem.storageAccountName,
                     key: cachedItem.keys.primaryKey,
+                    endpoint: this.batchLabs.azureEnvironment.storageEndpoint,
                 }));
             } else {
                 const url = `${settings.storageAccountId}/listkeys`;
@@ -89,6 +92,7 @@ export class StorageClientService {
                         return Observable.of(this.getForSharedKey({
                             account: cachedItem.storageAccountName,
                             key: keys.primaryKey,
+                            endpoint: this.batchLabs.azureEnvironment.storageEndpoint,
                         }));
                     });
             }

@@ -1,7 +1,7 @@
 export class Deferred<T> {
     public promise: Promise<T>;
     public hasCompleted = false;
-    public resolve: (v: T) => void;
+    public resolve: (v?: T) => void;
     public reject: (e) => void;
 
     constructor() {

@@ -4,13 +4,12 @@ import { AsyncSubject, BehaviorSubject, Observable, Subject } from "rxjs";
 import { ServerError } from "@batch-flask/core";
 import { AccountResource } from "app/models";
 import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";
+import { BatchLabsService } from "app/services/batch-labs.service";
 import { ElectronRemote } from "app/services/electron";
 import { Constants, SecureUtils, log } from "app/utils";
 import { PythonRpcServerProcess } from "client/python-process";
 import { AccountService } from "../account.service";
 import { AdalService } from "../adal";
-
-const ResourceUrl = Constants.ResourceUrl;
 
 @Injectable()
 export class PythonRpcService {
@@ -27,6 +26,7 @@ export class PythonRpcService {
         private accountService: AccountService,
         private adalService: AdalService,
         private _zone: NgZone,
+        private batchLabs: BatchLabsService,
     ) {
         this._serverProcess = remote.getBatchLabsApp().pythonServer;
         this.connected = this._connected.asObservable();
@@ -126,9 +126,10 @@ export class PythonRpcService {
     }
 
     public callWithAuth(method: string, params: any[]): Observable<any> {
+        const resourceUrl = this.batchLabs.azureEnvironment;
         return this.accountService.currentAccount.first().flatMap((account: AccountResource) => {
-            const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, ResourceUrl.batch);
-            const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, ResourceUrl.arm);
+            const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.batchUrl);
+            const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.armUrl);
             return Observable.combineLatest(batchToken, armToken).first().flatMap(([batchToken, armToken]) => {
                 const authParam = { batchToken, armToken, account: account.toJS() };
                 return this.call(method, params, {

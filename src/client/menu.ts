@@ -1,3 +1,5 @@
+import { SupportedEnvironments } from "@batch-flask/core/azure-environment";
+import { log } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core";
 import { BrowserWindow, Menu, MenuItemConstructorOptions, app } from "electron";
 
@@ -84,6 +86,24 @@ function getWindowMenu(batchLabsApp: BatchLabsApplication): MenuItemConstructorO
     };
 }
 
+function environmentMenu(app: BatchLabsApplication) {
+
+    return {
+        label: "Environment",
+        submenu: [{
+            label: "Azure Environment",
+            submenu: Object.values(SupportedEnvironments).map((env) => {
+                return {
+                    label: env.name,
+                    click: () => app.updateAzureEnvironment(env).catch((error) => {
+                        log.error("Error updating the azure environment", error);
+                    }),
+                };
+            }),
+        }],
+    };
+}
+
 function setupOSXSpecificMenu(template) {
     if (process.platform === "darwin") {
         const name = app.getName();
@@ -119,11 +139,13 @@ function setupOSXSpecificMenu(template) {
 
     }
 }
+
 export function setMenu(app: BatchLabsApplication) {
     const template = [
         editMenu,
         viewMenu,
         getWindowMenu(app),
+        environmentMenu(app),
     ];
     setupOSXSpecificMenu(template);
     const menu = Menu.buildFromTemplate(template);
