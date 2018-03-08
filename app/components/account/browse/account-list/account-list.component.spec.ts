@@ -2,6 +2,7 @@ import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
+import { List } from "immutable";
 import { Observable } from "rxjs";
 
 import { FilterBuilder } from "@batch-flask/core";
@@ -29,7 +30,7 @@ const sub3 = Fixtures.subscription.create({
     displayName: "His test subscription",
 });
 
-describe("AccountListComponent", () => {
+fdescribe("AccountListComponent", () => {
     let fixture: ComponentFixture<AccountListComponent>;
     let component: AccountListComponent;
     let de: DebugElement;
@@ -40,12 +41,12 @@ describe("AccountListComponent", () => {
     beforeEach(() => {
         accountService = {
             accountsLoaded: Observable.of(true),
-            accounts: Observable.of([
+            accounts: Observable.of(List([
                 Fixtures.account.create({ id: "acc-1", name: "Batch 1", location: "westus", subscription: sub1 }),
                 Fixtures.account.create({ id: "acc-2", name: "Account 2", location: "eastus", subscription: sub1 }),
                 Fixtures.account.create({ id: "acc-3", name: "Account 3", location: "canada", subscription: sub2 }),
                 Fixtures.account.create({ id: "acc-4", name: "Zoo Account 4", location: "eastus", subscription: sub2 }),
-            ]),
+            ])),
             isAccountFavorite: (accountId) => false,
         };
 
