@@ -58,7 +58,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                     borderColor: metric.color,
                     backgroundColor: metric.color,
                 });
-                this.lastValue.push(metric.data.last().total || 0)
+                this.lastValue.push(metric.data.last().total || 0);
                 return {
                     label: metric.name.localizedValue,
                     data: metric.data.map(data => {
@@ -79,21 +79,27 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
 
     public openTimeFramePicker() {
         const items = [
-            new ContextMenuItem({ label: "Past hour", click: () => {
-                this.timeFrame = MonitorChartTimeFrame.Hour;
-                this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
-                this.fetchObservable();
-            }}),
-            new ContextMenuItem({ label: "Past day", click: () => {
-                this.timeFrame = MonitorChartTimeFrame.Day;
-                this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
-                this.fetchObservable();
-            }}),
-            new ContextMenuItem({ label: "Past week", click: () => {
-                this.timeFrame = MonitorChartTimeFrame.Week;
-                this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
-                this.fetchObservable();
-            }}),
+            new ContextMenuItem({
+                label: "Past hour", click: () => {
+                    this.timeFrame = MonitorChartTimeFrame.Hour;
+                    this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
+                    this.fetchObservable();
+                },
+            }),
+            new ContextMenuItem({
+                label: "Past day", click: () => {
+                    this.timeFrame = MonitorChartTimeFrame.Day;
+                    this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
+                    this.fetchObservable();
+                },
+            }),
+            new ContextMenuItem({
+                label: "Past week", click: () => {
+                    this.timeFrame = MonitorChartTimeFrame.Week;
+                    this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
+                    this.fetchObservable();
+                },
+            }),
         ];
         this.contextMenuService.openMenu(new ContextMenu(items));
     }
@@ -104,6 +110,10 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
 
     public get chartError() {
         return this.loadingStatus === LoadingStatus.Error;
+    }
+
+    public trackDataSet(index, dataset) {
+        return dataset.label;
     }
 
     private _getChartObservable(): Observable<MetricResponse> {
