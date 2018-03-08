@@ -1,5 +1,4 @@
 import { Injectable, NgZone } from "@angular/core";
-import * as path from "path";
 import { AsyncSubject, Observable, Subject } from "rxjs";
 
 import { HttpCode, ServerError } from "@batch-flask/core";
@@ -51,6 +50,12 @@ export interface NavigateBlobsOptions {
      */
     onError?: (error: ServerError) => ServerError;
 }
+
+export interface FileUpload {
+    localPath: string;
+    remotePath: string;
+}
+
 // List of error we don't want to log for storage requests
 const storageIgnoredErrors = [
     HttpCode.NotFound,
@@ -60,7 +65,7 @@ const storageIgnoredErrors = [
 export interface BulkUploadStatus {
     uploaded: number;
     total: number;
-    current: string;
+    current: FileUpload;
 }
 
 // Regex to extract the host, container and blob from a sasUrl
@@ -413,7 +418,7 @@ export class StorageService {
      * @param files List of absolute path to the files to upload
      * @param remotePath Optional path on the blob where to put the files.
      */
-    public uploadFiles(container: string, files: string[], remotePath?: string): Observable<BulkUploadStatus> {
+    public uploadFiles(container: string, files: FileUpload[], remotePath?: string): Observable<BulkUploadStatus> {
         const total = files.length;
         return Observable.from(files).concatMap((file, index) => {
             const status: BulkUploadStatus = {
@@ -421,9 +426,8 @@ export class StorageService {
                 total,
                 current: file,
             };
-            const filename = path.basename(file);
-            const blob = remotePath ? CloudPathUtils.join(remotePath, filename) : filename;
-            const uploadObs = this.uploadFile(container, file, blob).map(x => ({
+            const blob = remotePath ? CloudPathUtils.join(remotePath, file.remotePath) : file.remotePath;
+            const uploadObs = this.uploadFile(container, file.localPath, blob).map(x => ({
                 uploaded: index + 1,
                 total,
                 current: file,

@@ -40,6 +40,7 @@ export const forms = {
             appVersion: /^[a-zA-Z0-9_-][a-zA-Z0-9_.-]*$/i,
             appFilename: /\.zip$/i,
             fileGroup: /^[a-z0-9]([a-z0-9]|-(?!-|\z))*$/,
+            batchAccount: /^[0-9a-z]*$/,
         },
         range: {
             retry: { min: -1, max: 100 },
@@ -88,6 +89,11 @@ export const localStorageKey = {
      * Where the proxy settings are stored
      */
     proxySettings: "proxy_settings",
+
+    /**
+     * Save the latest azure environemnt used
+     */
+    azureEnvironment: "azure_environment",
 };
 
 export const ApiVersion = {
@@ -121,11 +127,7 @@ export const Environment = {
 };
 
 export const ServiceUrl = {
-    arm: "https://management.azure.com",
     githubRaw: "https://raw.githubusercontent.com",
-    appInsights: "https://api.applicationinsights.io/v1",
-    msGraph: "https://graph.microsoft.com/beta",
-    aadGraph: "https://graph.windows.net",
 };
 
 export const ResourceUrl = {
@@ -168,7 +170,6 @@ export const AAD = {
      * 2 minutes
      */
     refreshMargin: 1000 * 120,
-    defaultResource: ResourceUrl.arm,
 };
 
 /**
@@ -186,6 +187,7 @@ export const IpcEvent = {
     AAD: {
         accessTokenData: "AAD_ACCESS_TOKEN_DATA",
     },
+    logoutAndLogin: "LOGOUT_AND_LOGIN",
 };
 
 export const customProtocolName = "ms-batchlabs";

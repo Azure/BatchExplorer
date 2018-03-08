@@ -1,3 +1,4 @@
+import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { F } from "test/utils";
 import { MockAuthenticationWindow, MockSplashScreen } from "test/utils/mocks/windows";
 import {
@@ -13,8 +14,14 @@ describe("AuthenticationService", () => {
         appSpy = {
             splashScreen: new MockSplashScreen(),
             authenticationWindow: new MockAuthenticationWindow(),
+            azureEnvironment: AzureEnvironment.Azure,
         };
-        const config = { tenant: "common", clientId: "abc", redirectUri: "http://localhost" };
+        const config = {
+            tenant: "common",
+            clientId: "abc",
+            redirectUri: "http://localhost",
+            logoutRedirectUri: "http://localhost",
+        };
         userAuthorization = new AuthenticationService(appSpy, config);
         fakeAuthWindow = appSpy.authenticationWindow;
         userAuthorization.state.subscribe(x => state = x);
@@ -37,7 +44,7 @@ describe("AuthenticationService", () => {
             expect(args.length).toBe(1);
             const url = args[0];
             expect(url).toContain("https://login.microsoftonline.com/tenant-1/oauth2/authorize");
-            expect(url).toContain("&resource=https://management.core.windows.net/");
+            expect(url).toContain("&resource=https://management.azure.com/");
             expect(url).toContain("?response_type=id_token+code");
             expect(url).toContain("&scope=user_impersonation+openid");
             expect(url).toContain("&client_id=abc");

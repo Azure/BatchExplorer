@@ -70,6 +70,12 @@ export class MainWindowManager {
         }
     }
 
+    public reloadAll() {
+        for (const [_, window] of this) {
+            window.reload();
+        }
+    }
+
     public closeAll() {
         for (const [_, window] of this) {
             window.destroy();

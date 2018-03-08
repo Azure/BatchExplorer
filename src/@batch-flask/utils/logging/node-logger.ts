@@ -38,6 +38,7 @@ export class NodeLogger implements Logger {
         this._logger = bunyan.createLogger({
             name: config.name,
             level: "debug",
+            serializers: bunyan.stdSerializers,
             streams: [
                 {
                     stream: stream as any,
@@ -72,6 +73,10 @@ export class NodeLogger implements Logger {
     }
 
     public error(message: string, error?: any) {
-        this._logger.error({ err: { ...error } }, message);
+        if (error instanceof Error) {
+            this._logger.error({ err: error }, message);
+        } else {
+            this._logger.error({ error }, message);
+        }
     }
 }

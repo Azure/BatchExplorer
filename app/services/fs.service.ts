@@ -48,8 +48,8 @@ export class FileSystemService {
         return this._fs.readFile(path);
     }
 
-    public async readdir(path: string): Promise<string[]> {
-        return this._fs.readdir(path);
+    public async readdir(path: string, recursive = true): Promise<string[]> {
+        return this._fs.readdir(path, recursive);
     }
 
     public download(source: string, dest: string): Promise<string> {

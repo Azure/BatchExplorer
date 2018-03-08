@@ -39,11 +39,11 @@ export class RendererLogger implements Logger {
 
     public warn(message: string, params?: any) {
         console.warn(message, params);
-        this._logger.warn({ warn: { ...params } }, message);
+        this._logger.warn(message, ...params);
     }
 
     public error(message: string, error?: any) {
         console.error(message, error);
-        this._logger.error({ err: { ...error } }, message);
+        this._logger.error({ err: error }, message);
     }
 }

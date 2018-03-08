@@ -30,6 +30,11 @@ export enum WindowState {
 export class MainWindow extends GenericWindow {
     public appReady: Promise<void>;
     public state: Observable<WindowState>;
+
+    public get webContents() {
+        return this._window.webContents;
+    }
+
     private _state = new BehaviorSubject<WindowState>(WindowState.Closed);
     private _resolveAppReady: () => void;
 
@@ -111,13 +116,13 @@ export class MainWindow extends GenericWindow {
         });
 
         ipcMain.once("app-ready", (event) => {
-            if (event.sender.id === window.webContents.id) {
+            if (this._window && event.sender.id === this._window.webContents.id) {
                 this._resolveAppReady();
             }
         });
 
         ipcMain.once("initializing", (event) => {
-            if (event.sender.id === window.webContents.id) {
+            if (this._window &&  event.sender.id === this._window.webContents.id) {
                 this._state.next(WindowState.Initializing);
             }
         });

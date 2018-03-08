@@ -8,12 +8,15 @@ import { DownloadFolderComponent } from "./download-folder-dialog";
 import { EditMetadataFormComponent } from "./edit-metadata-form";
 import { GuardsModule } from "./guards";
 import { InlineQuotaComponent } from "./inline-quota";
+import { SubscriptionPickerComponent } from "./subscription-picker";
 
 const privateComponents = [];
+
 const publicComponents = [
     InlineQuotaComponent,
     EditMetadataFormComponent,
     DownloadFolderComponent,
+    SubscriptionPickerComponent,
 ];
 
 const publicModules = [
