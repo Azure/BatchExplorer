@@ -8,4 +8,4 @@
     [(selection)]="selection"
     (scrollBottom)="onScrollToBottom()">
 </bl-task-list-display>
-<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
+<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>

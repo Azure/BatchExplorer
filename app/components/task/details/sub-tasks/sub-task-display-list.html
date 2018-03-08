@@ -1,4 +1,4 @@
-<bl-focus-section *ngIf="subTasks.size > 0">
+<bl-focus-section>
     <bl-quick-list [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="scrollBottom.emit()">
         <bl-quick-list-item *ngFor="let task of subTasks;trackBy: trackByFn" [key]="task.id">
             <bl-quick-list-item-status [status]="taskStatus(task)" [tooltip]="taskStatusText(task)">
