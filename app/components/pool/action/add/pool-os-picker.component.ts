@@ -298,13 +298,14 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
                             this.currentCustomImageState = CustomImagesState.Ready;
                         } else {
                             this.currentCustomImageState = CustomImagesState.Empty;
-                            this.customImagesEmptyMsg =
-                                `No custom images found for '${subscriptionId}' in location '${location}'`;
+                            this.customImagesEmptyMsg = `Custom images of subscription '${subscriptionId}'` +
+                                ` are not found in location '${location}'.`;
                         }
                     },
                     error: (error) => {
                         this.currentCustomImageState = CustomImagesState.Error;
-                        this.customImagesErrorMsg = error ? `${error.code}: ${error.message}` : "Error encountered";
+                        this.customImagesErrorMsg = error ? `${error.code}: ${error.message}`
+                            : "Server encountered an error loading custom images, please try again later.";
                     },
                 }),
             );
