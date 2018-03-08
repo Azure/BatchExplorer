@@ -30,7 +30,7 @@ const sub3 = Fixtures.subscription.create({
     displayName: "His test subscription",
 });
 
-fdescribe("AccountListComponent", () => {
+describe("AccountListComponent", () => {
     let fixture: ComponentFixture<AccountListComponent>;
     let component: AccountListComponent;
     let de: DebugElement;
