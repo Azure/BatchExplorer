@@ -7,7 +7,6 @@ import { Observable } from "rxjs";
 import { SubTaskDisplayListComponent } from "./sub-tasks";
 
 import { ListBaseComponent } from "@batch-flask/core/list";
-import { LoadingStatus } from "@batch-flask/ui/loading";
 import { SubtaskInformation } from "app/models";
 import { SubtaskListParams, TaskService } from "app/services";
 import { ListView } from "app/services/core";
