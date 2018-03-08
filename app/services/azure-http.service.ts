@@ -9,10 +9,10 @@ import { AccessToken, RetryableHttpCode, ServerError } from "@batch-flask/core";
 import { Subscription } from "app/models";
 import { Constants } from "common";
 import { AdalService } from "./adal";
+import { BatchLabsService } from "./batch-labs.service";
 
 const apiVersionParams = "api-version";
 const apiVersion = Constants.ApiVersion.arm;
-const baseUrl = Constants.ServiceUrl.arm;
 
 function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
     const options = original || new RequestOptions();
@@ -44,7 +44,7 @@ type SubscriptionOrTenant = Subscription | string;
  */
 @Injectable()
 export class AzureHttpService {
-    constructor(private http: Http, private adal: AdalService) {
+    constructor(private http: Http, private adal: AdalService, private batchLabs: BatchLabsService) {
     }
 
     public request(
@@ -62,6 +62,10 @@ export class AzureHttpService {
                         return Observable.throw(err);
                     });
             }).share();
+    }
+
+    public get baseUrl() {
+        return this.batchLabs.azureEnvironment.armUrl;
     }
 
     public get(subscription: SubscriptionOrTenant, uri: string, options?: RequestOptionsArgs) {
@@ -131,7 +135,7 @@ export class AzureHttpService {
         if (/^https?:\/\//i.test(uri)) {
             return uri;
         } else {
-            return Location.joinWithSlash(baseUrl, uri);
+            return Location.joinWithSlash(this.baseUrl, uri);
         }
     }
 

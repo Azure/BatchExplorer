@@ -7,7 +7,9 @@ import {
     ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService,
 } from "@batch-flask/ui/context-menu";
 import { NotificationService } from "@batch-flask/ui/notifications";
-import { AccountService, AdalService, ElectronRemote, ElectronShell, FileSystemService } from "app/services";
+import {
+    AccountService, AdalService, BatchLabsService, ElectronRemote, ElectronShell, FileSystemService,
+} from "app/services";
 import { Constants, OS } from "app/utils";
 import "./main-navigation.scss";
 
@@ -27,7 +29,8 @@ export class MainNavigationComponent implements OnInit {
 
     constructor(
         accountService: AccountService,
-        private adalService: AdalService,
+        adalService: AdalService,
+        private batchLabs: BatchLabsService,
         private shell: ElectronShell,
         private remote: ElectronRemote,
         private contextMenuService: ContextMenuService,
@@ -132,7 +135,7 @@ export class MainNavigationComponent implements OnInit {
     }
 
     private _logout() {
-        this.adalService.logout();
+        this.batchLabs.logoutAndLogin();
     }
 
     private _checkForUpdates(showNotification = true) {

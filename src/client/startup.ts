@@ -7,7 +7,6 @@ import { log } from "@batch-flask/utils";
 import { localStorage } from "client/core/local-storage";
 import { Constants } from "./client-constants";
 import { BatchLabsApplication, listenToSelectCertifcateEvent } from "./core";
-import { setMenu } from "./menu";
 
 function initAutoUpdate() {
     if (Constants.isDev) {
@@ -48,7 +47,6 @@ async function startApplication(batchLabsApp: BatchLabsApplication) {
         batchLabsApp.start();
         // batchLabsApp.debugCrash();
     });
-    setMenu(batchLabsApp);
 }
 
 export async function startBatchLabs() {

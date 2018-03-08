@@ -8,7 +8,7 @@ import { MonacoLoader } from "@batch-flask/ui/editor";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
-    AccountService, AdalService, AuthorizationHttpService, AutoscaleFormulaService,
+    AccountService, AuthorizationHttpService, AutoscaleFormulaService,
     CommandService, NavigatorService, NcjTemplateService, NodeService, PredefinedFormulaService,
     PricingService, PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
 } from "app/services";
@@ -29,7 +29,6 @@ export class AppComponent implements OnInit {
         private autoscaleFormulaService: AutoscaleFormulaService,
         private settingsService: SettingsService,
         private commandService: CommandService,
-        private adalService: AdalService,
         private accountService: AccountService,
         private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
@@ -87,10 +86,6 @@ export class AppComponent implements OnInit {
     public ngOnInit() {
         this.subscriptionService.load();
         this.accountService.load();
-    }
-
-    public logout() {
-        this.adalService.logout();
     }
 
     /**
