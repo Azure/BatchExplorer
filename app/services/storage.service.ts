@@ -1,5 +1,4 @@
 import { Injectable, NgZone } from "@angular/core";
-import * as path from "path";
 import { AsyncSubject, Observable, Subject } from "rxjs";
 
 import { HttpCode, ServerError } from "@batch-flask/core";
