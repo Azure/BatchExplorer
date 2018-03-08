@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { Subscription } from "rxjs";
 
@@ -22,12 +22,15 @@ export class SubscriptionPickerComponent implements ControlValueAccessor, OnDest
     private _propagateChange: (value: any) => void = null;
     private _sub: Subscription;
 
-    constructor(public subscriptionService: SubscriptionService) {
+    constructor(
+        public subscriptionService: SubscriptionService,
+        private changeDetector: ChangeDetectorRef) {
         this.subscription = new FormControl();
         this._sub = this.subscription.valueChanges.subscribe((subscription) => {
             if (this._propagateChange) {
                 this._propagateChange(subscription);
             }
+            this.changeDetector.markForCheck();
         });
     }
 
