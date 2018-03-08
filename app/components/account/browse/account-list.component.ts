@@ -96,14 +96,6 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
         this.displayedAccounts = List<AccountResource>(this.accounts.filter((x) => {
             return matcher.test(this.filter, x);
         }).sortBy(x => x.name));
-        // .sort((a, b) => {
-        //     if (a.name < b.name) {
-        //         return -1;
-        //     } else if (a.name > b.name) {
-        //         return 1;
-        //     }
-        //     return 0;
-        // }));
 
         this.changeDetector.markForCheck();
     }
