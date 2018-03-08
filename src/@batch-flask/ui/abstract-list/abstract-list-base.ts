@@ -1,6 +1,6 @@
 import {
     AfterContentInit, ChangeDetectorRef, ContentChildren, EventEmitter,
-    Input, OnDestroy, Output, QueryList, ViewChild,
+    HostBinding, Input, OnDestroy, Output, QueryList, ViewChild,
 } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
@@ -61,6 +61,12 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
     public get config() { return this._config; }
 
     @Input() public status: LoadingStatus;
+
+    @HostBinding("style.display")
+    public get showComponent() {
+        const hide = this.displayItems.length === 0 && this.status === LoadingStatus.Ready;
+        return hide ? "none" : "block";
+    }
 
     public set selection(selection: ListSelection) {
         super.selection = selection;
