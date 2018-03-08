@@ -16,9 +16,10 @@ export interface PoolOSPickerModel {
     virtualMachineConfiguration: {
         nodeAgentSKUId: string,
         imageReference: {
-            publisher: string,
-            offer: string,
-            sku: string,
+            publisher?: string,
+            offer?: string,
+            sku?: string,
+            virtualMachineImageId?: string,
         },
         containerConfiguration?: {
             type: string,

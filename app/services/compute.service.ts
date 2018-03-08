@@ -13,7 +13,7 @@ export function computeUrl(subscriptionId: string) {
 }
 
 export function resourceUrl(subscriptionId: string) {
-    return  `/subscriptions/${subscriptionId}/resources`;
+    return `/subscriptions/${subscriptionId}/resources`;
 }
 
 export interface ComputeUsage {
