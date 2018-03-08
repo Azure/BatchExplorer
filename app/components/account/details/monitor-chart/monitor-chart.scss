@@ -1,16 +1,54 @@
 @import "app/styles/variables";
 
 bl-monitor-chart {
-    .header {
-        padding-bottom: 12px;
+    $header-height: 40px;
+    background-color: $card-background;
+    margin-top: 5px;
+    margin-right: 5px;
+    // padding: 10px;
+    height: 210px;
+
+    > .header {
+        padding: 5px 10px;
+        height: $header-height;
         .timeframe-picker {
             float: right;
             cursor: pointer;
         }
     }
-    background-color: $card-background;
-    margin-top: 5px;
-    margin-right: 5px;
-    padding: 10px;
-    height: 210px;
+
+    > .content {
+        padding: 10px;
+        height: calc(100% - #{$header-height});
+        position: relative;
+        display: flex;
+        flex-direction: column;
+
+        > .chart-container {
+            flex: 1;
+            min-height: 10px;
+        }
+
+        > .legend {
+            flex-shrink: 0;
+            // height: 30px;
+            display: flex;
+            justify-content: space-around;
+
+            > .legend-item {
+                text-align: center;
+                flex: 1;
+
+                > .value {
+                    color: $secondary-text;
+                    font-size: 18px;
+                }
+
+                > .label {
+                    color: $secondary-text;
+                    font-size: 14px;
+                }
+            }
+        }
+    }
 }

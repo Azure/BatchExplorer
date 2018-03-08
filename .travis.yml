@@ -29,7 +29,11 @@ matrix:
       before_install:
         - brew update
         - brew upgrade python
+        - brew install python@2
         - python --version
+        - python3 --version
+        - which python
+        - npm config set python python2.7
         - nvm install 9.6.1
         - nvm use 9.6.1
 

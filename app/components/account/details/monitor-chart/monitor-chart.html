@@ -6,8 +6,20 @@
         </a>
     </h2>
 </div>
-<div *ngIf="isChartReady">
-    <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type" [colors]="colors"></canvas>
+<div *ngIf="isChartReady" class="content">
+    <div class="chart-container">
+        <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type" [colors]="colors"></canvas>
+    </div>
+    <div class="legend">
+        <div class="legend-item" *ngFor="let dataset of datasets;trackBy: trackDataSet;let index=index">
+            <div class="value" [style.color2]="colors[index]?.backgroundColor">
+                {{lastValue[index]}}
+            </div>
+            <div class="label" [style.color]="colors[index]?.backgroundColor">
+                {{dataset.label}}
+            </div>
+        </div>
+    </div>
 </div>
 <div *ngIf="chartError">
     There is an error occurred when loading this chart
