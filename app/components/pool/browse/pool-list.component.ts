@@ -56,7 +56,6 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 
         this.data.status.subscribe((status) => {
-            console.log("Status", status);
             this.status = status;
         });
 
