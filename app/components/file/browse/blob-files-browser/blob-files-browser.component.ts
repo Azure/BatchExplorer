@@ -54,13 +54,11 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
         this.dialogService.confirm(`Upload files`, {
             description: `Files will be uploaded to /${path}`,
             yes: () => {
-                console.log("trigger upload.");
-                const obs = this.upload(event);
-                obs.subscribe(() => {
+                this.upload(event).subscribe(() => {
                     this.fileNavigator.refresh(path);
                 });
 
-                return obs;
+                return Observable.of(null);
             },
         });
     }

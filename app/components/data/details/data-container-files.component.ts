@@ -42,20 +42,18 @@ export class DataContainerFilesComponent implements OnDestroy {
 
     @autobind()
     public handleFileUpload(event: FileDropEvent) {
-        const obs = Observable.fromPromise(this._getFilesToUpload(event.files));
-
         const container = this.container.name;
-        obs.subscribe((files) => {
-            console.log("Files are", files);
+        return Observable.fromPromise(this._getFilesToUpload(event.files)).flatMap((files) => {
             const message = `Uploading ${files.length} files to ${container}`;
-            this.backgroundTaskService.startTask(message, (task) => {
+            return this.backgroundTaskService.startTask(message, (task) => {
                 const observable = this.storageService.uploadFiles(this.container.name, files, event.path);
                 let lastData;
                 observable.subscribe({
                     next: (data) => {
                         lastData = data;
                         const { uploaded, total, current } = data;
-                        task.name.next(`Uploading ${path.basename(current.localPath)} to ${container} (${uploaded}/${total})`);
+                        const name = path.basename(current.localPath);
+                        task.name.next(`Uploading ${name} to ${container} (${uploaded}/${total})`);
                         task.progress.next(data.uploaded / data.total * 100);
                     },
                     complete: () => {
@@ -70,9 +68,8 @@ export class DataContainerFilesComponent implements OnDestroy {
 
                 return observable;
             });
-        });
+        }).shareReplay(1);
 
-        return obs;
     }
 
     @autobind()
