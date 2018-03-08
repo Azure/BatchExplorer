@@ -6,6 +6,7 @@ export class ImageReferenceDecorator extends DecoratorBase<ImageReference> {
     public offer: string;
     public sku: string;
     public version: string;
+    public virtualMachineImageId: string;
 
     constructor(imageReference: ImageReference) {
         super(imageReference);
@@ -14,5 +15,6 @@ export class ImageReferenceDecorator extends DecoratorBase<ImageReference> {
         this.offer = this.stringField(imageReference.offer);
         this.sku = this.stringField(imageReference.sku);
         this.version = this.stringField(imageReference.version);
+        this.virtualMachineImageId = this.stringField(imageReference.virtualMachineImageId);
     }
 }
