@@ -1,5 +1,5 @@
-<bl-focus-section *ngIf="containers.size > 0">
-    <bl-quick-list *ngIf="quicklist" [status]="status | async" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
+<bl-focus-section>
+    <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
         <bl-quick-list-item *ngFor="let container of containers;trackBy: trackFileGroup" [link]="['/data/', container.id]"
             [key]="container.id" [contextmenu]="contextmenu(container)">
             <bl-quick-list-item-status [status]="containerStatus(container)">
@@ -13,7 +13,7 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quicklist" [status]="status | async" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
+    <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
         <bl-thead>
             <bl-column>Name</bl-column>
             <bl-column>Lease state</bl-column>
@@ -29,7 +29,7 @@
         </bl-row>
     </bl-table>
 </bl-focus-section>
-<bl-no-item [itemCount]="containers.size" [filter]="filter" [status]="status | async">
+<bl-no-item [itemCount]="containers.size" [filter]="filter" [status]="status">
     <i icon class="fa fa-cloud-upload small"></i>
     <span no-filter>No file groups</span>
     <span with-filter>No file groups match this filter</span>

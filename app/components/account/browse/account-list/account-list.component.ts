@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, forwardRef } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import { Filter, FilterMatcher, Operator, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/core/list";
@@ -18,11 +18,15 @@ import { AccountService, SubscriptionService } from "app/services";
         provide: ListBaseComponent,
         useExisting: forwardRef(() => AccountListComponent),
     }],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountListComponent extends ListBaseComponent {
+export class AccountListComponent extends ListBaseComponent implements OnDestroy {
 
-    public displayedAccounts: Observable<List<AccountResource>>;
+    public accounts: List<AccountResource> = List([]);
+    public displayedAccounts: List<AccountResource> = List([]);
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
+
+    private _accountSub: Subscription;
 
     constructor(
         private accountService: AccountService,
@@ -35,7 +39,17 @@ export class AccountListComponent extends ListBaseComponent {
 
         this.accountService.accountsLoaded.subscribe(() => {
             this.loadingStatus = LoadingStatus.Ready;
+            changeDetector.markForCheck();
         });
+
+        this._accountSub = this.accountService.accounts.subscribe((accounts) => {
+            this.accounts = accounts;
+            this._updateDisplayedAccounts();
+        });
+    }
+
+    public ngOnDestroy() {
+        this._accountSub.unsubscribe();
     }
 
     @autobind()
@@ -70,26 +84,19 @@ export class AccountListComponent extends ListBaseComponent {
     }
 
     private _updateDisplayedAccounts() {
-        this.displayedAccounts = this.accountService.accounts.map((accounts) => {
-            const matcher = new FilterMatcher<AccountResource>({
-                id: (item: AccountResource, value: any, operator: Operator) => {
-                    return value === "" || item.name.toLowerCase().startsWith(value.toLowerCase());
-                },
-                subscriptionId: (item: AccountResource, value: any, operator: Operator) => {
-                    return value === "" || item.subscription.subscriptionId === value;
-                },
-            });
-
-            return List<AccountResource>(accounts.filter((x) => {
-                return matcher.test(this.filter, x);
-            }).sort((a, b) => {
-                if (a.name < b.name) {
-                    return -1;
-                } else if (a.name > b.name) {
-                    return 1;
-                }
-                return 0;
-            }));
+        const matcher = new FilterMatcher<AccountResource>({
+            id: (item: AccountResource, value: any, operator: Operator) => {
+                return value === "" || item.name.toLowerCase().startsWith(value.toLowerCase());
+            },
+            subscriptionId: (item: AccountResource, value: any, operator: Operator) => {
+                return value === "" || item.subscription.subscriptionId === value;
+            },
         });
+
+        this.displayedAccounts = List<AccountResource>(this.accounts.filter((x) => {
+            return matcher.test(this.filter, x);
+        }).sortBy(x => x.name));
+
+        this.changeDetector.markForCheck();
     }
 }

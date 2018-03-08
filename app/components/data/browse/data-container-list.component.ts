@@ -32,7 +32,6 @@ const defaultListOptions = {
 })
 export class DataContainerListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public containers: List<BlobContainer>;
-    public status: Observable<LoadingStatus>;
     public data: ListView<BlobContainer, ListContainerParams>;
     public hasAutoStorage: boolean;
 
@@ -62,11 +61,15 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         this._autoStorageSub = storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
             this.hasAutoStorage = hasAutoStorage;
             if (!hasAutoStorage) {
-                this.status = Observable.of(LoadingStatus.Ready);
+                this.status = LoadingStatus.Ready;
+                changeDetector.markForCheck();
             }
         });
 
-        this.status = this.data.status;
+        this.data.status.subscribe((status) => {
+            this.status = status;
+        });
+
         this._onGroupAddedSub = this.storageService.onContainerAdded.subscribe((fileGroupId: string) => {
             this.data.loadNewItem(storageService.getContainerOnce(fileGroupId));
         });

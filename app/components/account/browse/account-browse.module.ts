@@ -5,7 +5,7 @@ import { MaterialModule } from "@batch-flask/core";
 
 import { BaseModule } from "@batch-flask/ui";
 import { AccountDropDownComponent } from "./account-dropdown.component";
-import { AccountListComponent } from "./account-list.component";
+import { AccountListComponent } from "./account-list";
 
 const components = [AccountDropDownComponent, AccountListComponent];
 
