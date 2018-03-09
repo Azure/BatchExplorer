@@ -3,8 +3,9 @@ import { Observable, Subscription } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { InsightsMetricsService, Metric, MetricResponse, MonitorChartTimeFrame, MonitorChartType } from "app/services";
+import { InsightsMetricsService,  MonitorChartTimeFrame, MonitorChartType } from "app/services";
 
+import { Metric, MonitoringMetricList } from "app/models/monitoring";
 import "./monitor-chart.scss";
 
 @Component({
@@ -50,7 +51,6 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         this._sub = obs.subscribe(response => {
             this._updateLoadingStatus(LoadingStatus.Loading);
             this.colors = [];
-            this.timeFrame = response.timeFrame;
             this.total = [];
             this.datasets = response.metrics.map((metric: Metric): Chart.ChartDataSets => {
                 this.colors.push({
@@ -84,21 +84,18 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             new ContextMenuItem({
                 label: "Past hour", click: () => {
                     this.timeFrame = MonitorChartTimeFrame.Hour;
-                    this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
                     this.refreshMetrics();
                 },
             }),
             new ContextMenuItem({
                 label: "Past day", click: () => {
                     this.timeFrame = MonitorChartTimeFrame.Day;
-                    this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
                     this.refreshMetrics();
                 },
             }),
             new ContextMenuItem({
                 label: "Past week", click: () => {
                     this.timeFrame = MonitorChartTimeFrame.Week;
-                    this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
                     this.refreshMetrics();
                 },
             }),
@@ -118,16 +115,16 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         return dataset.label;
     }
 
-    private _loadMetrics(): Observable<MetricResponse> {
+    private _loadMetrics(): Observable<MonitoringMetricList> {
         switch (this.chartType) {
             case MonitorChartType.CoreCount:
-                return this.monitor.getCoreCount();
+                return this.monitor.getCoreMinutes(this.timeFrame);
             case MonitorChartType.FailedTask:
-                return this.monitor.getFailedTask();
+                return this.monitor.getFailedTask(this.timeFrame);
             case MonitorChartType.NodeStates:
-                return this.monitor.getNodeStates();
+                return this.monitor.getNodeStates(this.timeFrame);
             case MonitorChartType.TaskStates:
-                return this.monitor.getTaskStates();
+                return this.monitor.getTaskStates(this.timeFrame);
         }
     }
 

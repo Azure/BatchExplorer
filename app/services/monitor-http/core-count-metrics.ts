@@ -1,32 +1,16 @@
-import { Subscription } from "rxjs";
+import {
+    MonitorChartAggregation, MonitorChartMetrics, MonitorChartTimeFrame, MonitoringMetricDefinition,
+} from "./monitor-metrics-base";
 
-import { Theme, ThemeService } from "app/services/themes";
-import { MonitorChartAggregation, MonitorChartMetrics, MonitorMetricsBase } from "./monitor-metrics-base";
-
-export class CoreCountMetrics extends MonitorMetricsBase {
-    private _sub: Subscription;
-
-    constructor(themeService: ThemeService) {
-        super([
-            MonitorChartMetrics.CoreCount,
-            MonitorChartMetrics.LowPriorityCoreCount,
-        ], [
-            MonitorChartAggregation.Total,
-            MonitorChartAggregation.Total,
-        ]);
-
-        this._sub = themeService.currentTheme.subscribe((theme: Theme) => {
-            const statesColor = [
-                { state: MonitorChartMetrics.CoreCount, color: theme.monitorChart.coreCount },
-                { state: MonitorChartMetrics.LowPriorityCoreCount, color: theme.monitorChart.lowPriorityCoreCount },
-            ];
-            super.setColor(statesColor);
+export class CoreCountMetrics extends MonitoringMetricDefinition {
+    constructor(timespan: MonitorChartTimeFrame) {
+        super({
+            name: "Core minutes",
+            timespan,
+            metrics: [
+                { name: MonitorChartMetrics.CoreCount, aggregation: MonitorChartAggregation.Total },
+                { name: MonitorChartMetrics.LowPriorityCoreCount, aggregation: MonitorChartAggregation.Total },
+            ],
         });
-    }
-
-    public dispose(): void {
-        if (this._sub) {
-            this._sub.unsubscribe();
-        }
     }
 }

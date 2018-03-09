@@ -1,25 +1,14 @@
-import { Subscription } from "rxjs";
+import { MonitorChartTimeFrame } from "app/services";
+import { MonitorChartAggregation, MonitorChartMetrics, MonitoringMetricDefinition } from "./monitor-metrics-base";
 
-import { Theme, ThemeService } from "app/services/themes";
-import { MonitorChartAggregation, MonitorChartMetrics, MonitorMetricsBase } from "./monitor-metrics-base";
-
-export class FailedTaskMetrics extends MonitorMetricsBase {
-    private _sub: Subscription;
-
-    constructor(themeService: ThemeService) {
-        super([ MonitorChartMetrics.TaskFailEvent ], [ MonitorChartAggregation.Total ]);
-
-        this._sub = themeService.currentTheme.subscribe((theme: Theme) => {
-            const statesColor = [
-                { state: MonitorChartMetrics.TaskFailEvent, color: theme.monitorChart.taskFailEvent },
-            ];
-            super.setColor(statesColor);
+export class FailedTaskMetrics extends MonitoringMetricDefinition {
+    constructor(timespan: MonitorChartTimeFrame) {
+        super({
+            name: "Task failed events",
+            timespan,
+            metrics: [
+                { name: MonitorChartMetrics.TaskFailEvent, aggregation: MonitorChartAggregation.Total },
+            ],
         });
-    }
-
-    public dispose(): void {
-        if (this._sub) {
-            this._sub.unsubscribe();
-        }
     }
 }

@@ -1,44 +1,18 @@
-import { Subscription } from "rxjs";
+import { MonitorChartTimeFrame } from "app/services";
+import { MonitorChartAggregation, MonitorChartMetrics, MonitoringMetricDefinition } from "./monitor-metrics-base";
 
-import { Theme, ThemeService } from "app/services/themes";
-import { MonitorChartAggregation, MonitorChartMetrics, MonitorMetricsBase } from "./monitor-metrics-base";
-
-export class NodeStatesMetrics extends MonitorMetricsBase {
-    private _sub: Subscription;
-
-    constructor(themeService: ThemeService) {
-        super([
-            MonitorChartMetrics.StartingNodeCount,
-            MonitorChartMetrics.IdleNodeCount,
-            MonitorChartMetrics.RunningNodeCount,
-            MonitorChartMetrics.StartTaskFailedNodeCount,
-            MonitorChartMetrics.RebootingNodeCount,
-        ], [
-            MonitorChartAggregation.Total,
-            MonitorChartAggregation.Total,
-            MonitorChartAggregation.Total,
-            MonitorChartAggregation.Total,
-            MonitorChartAggregation.Total,
-        ]);
-
-        this._sub = themeService.currentTheme.subscribe((theme: Theme) => {
-            const statesColor = [
-                { state: MonitorChartMetrics.StartingNodeCount, color: theme.monitorChart.startingNodeCount },
-                { state: MonitorChartMetrics.IdleNodeCount, color: theme.monitorChart.idleNodeCount },
-                { state: MonitorChartMetrics.RunningNodeCount, color: theme.monitorChart.runningNodeCount },
-                {
-                    state: MonitorChartMetrics.StartTaskFailedNodeCount,
-                    color: theme.monitorChart.startTaskFailedNodeCount,
-                },
-                { state: MonitorChartMetrics.RebootingNodeCount, color: theme.monitorChart.rebootingNodeCount },
-            ];
-            super.setColor(statesColor);
+export class NodeStatesMetrics extends MonitoringMetricDefinition {
+    constructor(timespan: MonitorChartTimeFrame) {
+        super({
+            name: "Task failed events",
+            timespan,
+            metrics: [
+                { name: MonitorChartMetrics.StartingNodeCount, aggregation: MonitorChartAggregation.Total },
+                { name: MonitorChartMetrics.IdleNodeCount, aggregation: MonitorChartAggregation.Total },
+                { name: MonitorChartMetrics.RunningNodeCount, aggregation: MonitorChartAggregation.Total },
+                { name: MonitorChartMetrics.StartTaskFailedNodeCount, aggregation: MonitorChartAggregation.Total },
+                { name: MonitorChartMetrics.RebootingNodeCount, aggregation: MonitorChartAggregation.Total },
+            ],
         });
-    }
-
-    public dispose(): void {
-        if (this._sub) {
-            this._sub.unsubscribe();
-        }
     }
 }
