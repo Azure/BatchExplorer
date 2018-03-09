@@ -9,6 +9,7 @@ import {
     MonitorChartTimeFrame, MonitorChartType, ThemeService,
 } from "app/services";
 
+import { DateUtils } from "@batch-flask/utils";
 import { Metric, MonitoringMetricList } from "app/models/monitoring";
 import "./monitor-chart.scss";
 
@@ -83,9 +84,10 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                     borderColor: color,
                     backgroundColor: color,
                 });
-                this.total.push(metric.data.map(x => x.total || 0).reduce((a, b) => {
+                const total = metric.data.map(x => x.total || 0).reduce((a, b) => {
                     return a + b;
-                }), 0);
+                }, 0);
+                this.total.push(total);
                 return {
                     label: metric.label,
                     data: metric.data.map(data => {
