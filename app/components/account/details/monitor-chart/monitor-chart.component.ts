@@ -14,18 +14,16 @@ import "./monitor-chart.scss";
 })
 export class MonitorChartComponent implements OnChanges, OnDestroy {
     @Input() public chartType: MonitorChartType;
-    @Input() public type: string = "bar";
-
+    public type: string = "bar";
     public title = "";
     public datasets: Chart.ChartDataSets[];
-    public lastValue: any[] = [];
+    public total: any[] = [];
     public options: Chart.ChartOptions = {};
     public timeFrame: MonitorChartTimeFrame = MonitorChartTimeFrame.Hour;
     public colors: any[];
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
 
     private _sub: Subscription;
-    private _observable: Observable<MetricResponse>;
     constructor(
         private changeDetector: ChangeDetectorRef,
         private monitor: InsightsMetricsService,
@@ -35,7 +33,8 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
 
     public ngOnChanges(changes): void {
         if (changes.chartType) {
-            this.fetchObservable();
+            this.refreshMetrics();
+            this._updateTitle();
         }
     }
 
@@ -43,24 +42,25 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         this._destroySub();
     }
 
-    public fetchObservable() {
-        this._observable = this._getChartObservable();
-        if (!this._observable) {
-            return;
-        }
+    public refreshMetrics() {
+        const obs = this._loadMetrics();
+        if (!obs) { return; }
+
         this._destroySub();
-        this._sub = this._observable.subscribe(response => {
+        this._sub = obs.subscribe(response => {
             this._updateLoadingStatus(LoadingStatus.Loading);
             this.colors = [];
             this.timeFrame = response.timeFrame;
-            this.lastValue = [];
+            this.total = [];
             this.datasets = response.metrics.map((metric: Metric): Chart.ChartDataSets => {
                 this.colors.push({
                     borderColor: metric.color,
                     backgroundColor: metric.color,
                 });
 
-                this.lastValue.push(metric.data.last().total || 0);
+                this.total.push(metric.data.map(x => x.total || 0).reduce((a, b) => {
+                    return a + b;
+                }), 0);
                 return {
                     label: metric.name.localizedValue,
                     data: metric.data.map(data => {
@@ -85,21 +85,21 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                 label: "Past hour", click: () => {
                     this.timeFrame = MonitorChartTimeFrame.Hour;
                     this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
-                    this.fetchObservable();
+                    this.refreshMetrics();
                 },
             }),
             new ContextMenuItem({
                 label: "Past day", click: () => {
                     this.timeFrame = MonitorChartTimeFrame.Day;
                     this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
-                    this.fetchObservable();
+                    this.refreshMetrics();
                 },
             }),
             new ContextMenuItem({
                 label: "Past week", click: () => {
                     this.timeFrame = MonitorChartTimeFrame.Week;
                     this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
-                    this.fetchObservable();
+                    this.refreshMetrics();
                 },
             }),
         ];
@@ -118,27 +118,35 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         return dataset.label;
     }
 
-    private _getChartObservable(): Observable<MetricResponse> {
-        let observable: Observable<MetricResponse>;
+    private _loadMetrics(): Observable<MetricResponse> {
+        switch (this.chartType) {
+            case MonitorChartType.CoreCount:
+                return this.monitor.getCoreCount();
+            case MonitorChartType.FailedTask:
+                return this.monitor.getFailedTask();
+            case MonitorChartType.NodeStates:
+                return this.monitor.getNodeStates();
+            case MonitorChartType.TaskStates:
+                return this.monitor.getTaskStates();
+        }
+    }
+
+    private _updateTitle() {
         switch (this.chartType) {
             case MonitorChartType.CoreCount:
                 this.title = "Core minutes";
-                observable = this.monitor.getCoreCount();
                 break;
             case MonitorChartType.FailedTask:
                 this.title = "Failed task";
-                observable = this.monitor.getFailedTask();
                 break;
             case MonitorChartType.NodeStates:
                 this.title = "Node states";
-                observable = this.monitor.getNodeStates();
                 break;
             case MonitorChartType.TaskStates:
                 this.title = "Task states";
-                observable = this.monitor.getTaskStates();
                 break;
         }
-        return observable;
+        this.changeDetector.markForCheck();
     }
 
     private _setChartOptions() {

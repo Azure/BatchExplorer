@@ -17,7 +17,7 @@ export interface LocalizableString {
 
 export interface MetricValue {
     timeStamp: string;
-    total: string;
+    total: number;
 }
 
 export interface Metric {
