@@ -58,6 +58,7 @@ export * from "./pool-endpoint-configuration";
 export * from "./rate-card";
 export * from "./recent-job";
 export * from "./resize-error";
+export * from "./resource";
 export * from "./resource-descriptor";
 export * from "./resource-file";
 export * from "./resource-group";

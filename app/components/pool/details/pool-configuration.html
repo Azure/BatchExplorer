@@ -47,6 +47,7 @@
             <bl-text-property label="Offer" [value]="decorator.virtualMachineConfiguration.imageReference.offer"></bl-text-property>
             <bl-text-property label="Sku" [value]="decorator.virtualMachineConfiguration.imageReference.sku"></bl-text-property>
             <bl-text-property label="Version" [value]="decorator.virtualMachineConfiguration.imageReference.version"></bl-text-property>
+            <bl-text-property label="Virtual machine image id" [value]="decorator.virtualMachineConfiguration.imageReference.virtualMachineImageId"></bl-text-property>
             <bl-text-property label="Node agent sku id" [value]="decorator.virtualMachineConfiguration.nodeAgentSKUId"></bl-text-property>
             <bl-text-property *ngIf="decorator.virtualMachineConfiguration.windowsConfiguration" label="Enable automatic updates" [value]="decorator.virtualMachineConfiguration.windowsConfiguration.enableAutomaticUpdates"></bl-text-property>
             <bl-text-property *ngIf="containerConfiguration" label="Container type" [value]="containerConfiguration.type"></bl-text-property>

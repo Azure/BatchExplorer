@@ -40,5 +40,39 @@
             </bl-form-picker>
         </div>
     </mat-tab>
+    <mat-tab label="Custom image">
+        <div class="editable-table" *ngIf="currentCustomImageState === CustomImagesState.Ready" style="padding: 10px;">
+            <table class="noselect" cellspacing="0" cellpadding="0">
+                <thead>
+                    <tr>
+                        <th>Custom image</th>
+                        <th>Node agent skus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <mat-select [formControl]="customImage">
+                                <mat-option *ngFor="let image of customImages;trackBy: trackResource"
+                                    [value]="image.id">{{ image.name }}</mat-option>
+                            </mat-select>
+                        </td>
+                        <td>
+                            <mat-select [formControl]="nodeAgentSku">
+                                <mat-option *ngFor="let nodeAgent of nodeAgentSkus;trackBy: trackNodeAgentSku"
+                                    [value]="nodeAgent.id">{{ nodeAgent.id }}</mat-option>
+                            </mat-select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div *ngIf="currentCustomImageState === CustomImagesState.Empty" style="padding: 10px;">
+            {{ customImagesEmptyMsg }}
+        </div>
+        <div *ngIf="currentCustomImageState === CustomImagesState.Error" style="padding: 10px;">
+            {{ customImagesErrorMsg }}
+        </div>
+    </mat-tab>
 </mat-tab-group>
 <p *ngIf="selectedSku" style="padding-top: 10px;">Based on your selection, node agent <b>'{{selectedNodeAgentId}}'</b> will be used</p>
