@@ -1,18 +1,14 @@
 import { Model, Prop, Record } from "@batch-flask/core";
 import * as moment from "moment";
 
-export interface LocalizableString {
-    value: string;
-    localizedValue: string;
-}
-
 export interface MetricValue {
     timeStamp: string;
     total: number;
 }
 
 export interface Metric {
-    name: LocalizableString;
+    name: string;
+    label: string;
     data: MetricValue[];
     color: string;
 }

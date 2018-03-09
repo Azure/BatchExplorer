@@ -3,7 +3,7 @@ import { Observable, Subscription } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { InsightsMetricsService,  MonitorChartTimeFrame, MonitorChartType } from "app/services";
+import { InsightsMetricsService, MonitorChartColor, MonitorChartMetrics, MonitorChartTimeFrame, MonitorChartType, ThemeService } from "app/services";
 
 import { Metric, MonitoringMetricList } from "app/models/monitoring";
 import "./monitor-chart.scss";
@@ -24,12 +24,30 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     public colors: any[];
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
 
+    private _themeSub: Subscription;
     private _sub: Subscription;
+    private _theme: StringMap<string>;
     constructor(
+        themeService: ThemeService,
         private changeDetector: ChangeDetectorRef,
         private monitor: InsightsMetricsService,
         private contextMenuService: ContextMenuService) {
         this._setChartOptions();
+
+        this._themeSub = themeService.currentTheme.subscribe((theme) => {
+            this._theme = {
+                [MonitorChartMetrics.CoreCount]: theme.monitorChart.coreCount,
+                [MonitorChartMetrics.IdleNodeCount]: theme.monitorChart.idleNodeCount,
+                [MonitorChartMetrics.LowPriorityCoreCount]: theme.monitorChart.lowPriorityCoreCount,
+                [MonitorChartMetrics.RebootingNodeCount]: theme.monitorChart.rebootingNodeCount,
+                [MonitorChartMetrics.RunningNodeCount]: theme.monitorChart.runningNodeCount,
+                [MonitorChartMetrics.StartingNodeCount]: theme.monitorChart.startingNodeCount,
+                [MonitorChartMetrics.StartTaskFailedNodeCount]: theme.monitorChart.startTaskFailedNodeCount,
+                [MonitorChartMetrics.TaskCompleteEvent]: theme.monitorChart.taskCompleteEvent,
+                [MonitorChartMetrics.TaskFailEvent]: theme.monitorChart.taskFailEvent,
+                [MonitorChartMetrics.TaskStartEvent]: theme.monitorChart.taskStartEvent,
+            };
+        });
     }
 
     public ngOnChanges(changes): void {
@@ -41,6 +59,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
 
     public ngOnDestroy(): void {
         this._destroySub();
+        this._themeSub.unsubscribe();
     }
 
     public refreshMetrics() {
@@ -53,16 +72,18 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             this.colors = [];
             this.total = [];
             this.datasets = response.metrics.map((metric: Metric): Chart.ChartDataSets => {
+                console.log("name", metric.name, metric.name in this._theme);
+                const color = this._theme[metric.name];
                 this.colors.push({
-                    borderColor: metric.color,
-                    backgroundColor: metric.color,
+                    borderColor: color,
+                    backgroundColor: color,
                 });
 
                 this.total.push(metric.data.map(x => x.total || 0).reduce((a, b) => {
                     return a + b;
                 }), 0);
                 return {
-                    label: metric.name.localizedValue,
+                    label: metric.label,
                     data: metric.data.map(data => {
                         return {
                             x: data.timeStamp,
