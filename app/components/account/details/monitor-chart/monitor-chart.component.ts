@@ -14,8 +14,9 @@ import "./monitor-chart.scss";
 })
 export class MonitorChartComponent implements OnChanges, OnDestroy {
     @Input() public chartType: MonitorChartType;
+    @Input() public type: string = "bar";
+
     public title = "";
-    public type = "line";
     public datasets: Chart.ChartDataSets[];
     public lastValue: any[] = [];
     public options: Chart.ChartOptions = {};
@@ -58,6 +59,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                     borderColor: metric.color,
                     backgroundColor: metric.color,
                 });
+
                 this.lastValue.push(metric.data.last().total || 0);
                 return {
                     label: metric.name.localizedValue,
@@ -120,7 +122,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         let observable: Observable<MetricResponse>;
         switch (this.chartType) {
             case MonitorChartType.CoreCount:
-                this.title = "Core count";
+                this.title = "Core minutes";
                 observable = this.monitor.getCoreCount();
                 break;
             case MonitorChartType.FailedTask:
@@ -162,6 +164,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             },
             scales: {
                 yAxes: [{
+                    stacked: true,
                     type: "linear",
                     display: true,
                     ticks: {
@@ -175,6 +178,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                     },
                 }],
                 xAxes: [{
+                    stacked: true,
                     type: "time",
                     position: "bottom",
                     display: false,

@@ -41,6 +41,8 @@ export enum MonitorChartMetrics {
  */
 export enum MonitorChartAggregation {
     Total = "Total",
+    Average = "Average",
+    Count = "Count",
 }
 
 /**

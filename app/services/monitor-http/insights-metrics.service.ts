@@ -152,10 +152,7 @@ export class InsightsMetricsService {
                 return {
                     name: object.name,
                     data: object.timeseries[0].data.map((data): MetricValue => {
-                        return {
-                            timeStamp: data.timeStamp,
-                            total: data.total,
-                        } as MetricValue;
+                        return data as MetricValue;
                     }),
                     color: color,
                 } as Metric;
