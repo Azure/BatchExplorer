@@ -1,9 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import * as moment from "moment";
 import { Observable, Subscription } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { InsightsMetricsService, MonitorChartColor, MonitorChartMetrics, MonitorChartTimeFrame, MonitorChartType, ThemeService } from "app/services";
+import {
+    InsightsMetricsService, MonitorChartMetrics,
+    MonitorChartTimeFrame, MonitorChartType, ThemeService,
+} from "app/services";
 
 import { Metric, MonitoringMetricList } from "app/models/monitoring";
 import "./monitor-chart.scss";
@@ -19,6 +23,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     public title = "";
     public datasets: Chart.ChartDataSets[];
     public total: any[] = [];
+    public interval: moment.Duration;
     public options: Chart.ChartOptions = {};
     public timeFrame: MonitorChartTimeFrame = MonitorChartTimeFrame.Hour;
     public colors: any[];
@@ -71,14 +76,13 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             this._updateLoadingStatus(LoadingStatus.Loading);
             this.colors = [];
             this.total = [];
+            this.interval = response.interval;
             this.datasets = response.metrics.map((metric: Metric): Chart.ChartDataSets => {
-                console.log("name", metric.name, metric.name in this._theme);
                 const color = this._theme[metric.name];
                 this.colors.push({
                     borderColor: color,
                     backgroundColor: color,
                 });
-
                 this.total.push(metric.data.map(x => x.total || 0).reduce((a, b) => {
                     return a + b;
                 }), 0);

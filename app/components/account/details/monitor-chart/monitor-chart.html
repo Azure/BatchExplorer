@@ -20,6 +20,9 @@
             </div>
         </div>
     </div>
+    <div class="interval-label" *ngIf="interval">
+        Aggregated over {{interval.humanize()}} interval
+    </div>
 </div>
 <div *ngIf="chartError">
     There is an error occurred when loading this chart

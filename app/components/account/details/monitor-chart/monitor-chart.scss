@@ -16,7 +16,7 @@ bl-monitor-chart {
     }
 
     > .content {
-        padding: 10px;
+        padding: 10px 10px 2px;
         height: calc(100% - #{$header-height});
         position: relative;
         display: flex;
@@ -47,6 +47,12 @@ bl-monitor-chart {
                     font-size: 14px;
                 }
             }
+        }
+
+        > .interval-label {
+            color: $secondary-text;
+            text-align: center;
+            font-size: 9px;
         }
     }
 }
