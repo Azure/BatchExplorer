@@ -43,6 +43,7 @@ a {
     margin-bottom: 0px !important;
     background-color: white !important;
     border-radius: 0px !important;
+    padding: 1em 5% !important;
 }
 
 .jumbotron .btn {
@@ -81,12 +82,19 @@ a {
 
 .btn-link {
     border-radius: 0 !important;
-    min-width: 180px;
-    height: 60px;
     background-color: #28a745 !important;
     color: white !important;
     display: inline-grid !important;
     align-items: center;
+    min-width: 160px;
+    max-width: 320px;
+    width: 100%;
+    margin: 2px;
+}
+
+.os-download-btn {
+    min-width: 180px;
+    height: 60px;
 }
 
 .demo-image {

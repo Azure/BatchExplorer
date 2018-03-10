@@ -25,21 +25,26 @@
         <div class="text-center">Version <span id="batch-labs-version">0.13.1 (Beta)</span> is now available! Find more details below.</div>
     </div>
     <div class="jumbotron">
-        <div class="row" style="padding: 0px 20%">
-            <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-5">
                 <div style="margin-top:14px;">
                     <h1 class="text-center">Batch Labs</h1>
                     <p class="text-center">Debug and monitor your Azure Batch applications</p>
-                    <div class="text-center">
-                        <a
-                            class="btn btn-link" 
-                            style="min-width: 60px; background-color:gray !important;"
-                            id="primary-download-btn">
-                            Download
-                        </a>
-                        <a class="btn btn-success btn-link" href="https://github.com/Azure/BatchLabs">
-                            View on GitHub
-                        </a>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-5 col-lg-12 text-center">
+                            <a
+                                class="btn btn-link" 
+                                id="primary-download-btn">
+                                Download
+                            </a>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-7 col-lg-12 text-center">
+                            <a class="btn btn-success btn-link" 
+                                style="background-color:gray !important; border-color: gray !important;"
+                                href="https://github.com/Azure/BatchLabs">
+                                View on GitHub
+                            </a>
+                        </div>
                     </div>
                     <p class="text-center" style="font-size: small; padding-top:8px; color:grey">
                         By using Batch Labs, you aree to its <a href="EULA.html" >license</a> 
@@ -47,7 +52,7 @@
                     </p>
                 </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-7">
                 <img src="assets/images/job-home.png" class="demo-image">
             </div>
         </div>
@@ -59,7 +64,7 @@
                     <i class="fa fa-windows"></i>
                 </div>
                 <a
-                    class="btn btn-success btn-link" 
+                    class="btn btn-success btn-link os-download-btn" 
                     id="download-windows-installer-btn">
                     Windows
                 </a>
@@ -73,7 +78,7 @@
                     <i class="fa fa-apple"></i>
                 </div>
                 <a 
-                    class="btn btn-success btn-link"
+                    class="btn btn-success btn-link btn-link os-download-btn"
                     id="download-osx-dmg-btn">
                         OSX
                 </a>
@@ -87,7 +92,8 @@
                 <div class="type">
                     <i class="fa fa-linux"></i>
                 </div>
-                <a class="btn btn-success btn-link" id="download-linux-deb-btn">
+                <a class="btn btn-success btn-link btn-link os-download-btn" 
+                    id="download-linux-deb-btn">
                         Linux
                 </a>
                 <div class="alternate-downloads">
