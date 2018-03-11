@@ -145,6 +145,11 @@ bl-table {
         position: relative;
         white-space: nowrap;
 
+        &.fixed-size {
+            flex-grow:0;
+            flex-shrink:0;
+        }
+
         .cell-value {
             width: 98%;
             overflow: hidden;
