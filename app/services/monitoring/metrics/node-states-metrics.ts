@@ -1,5 +1,6 @@
-import { MonitorChartTimeFrame } from "app/services";
-import { MonitorChartAggregation, MonitorChartMetrics, MonitoringMetricDefinition } from "./monitor-metrics-base";
+import {
+    MonitorChartAggregation, MonitorChartMetrics, MonitorChartTimeFrame, MonitoringMetricDefinition,
+} from "./monitor-metrics-base";
 
 export class NodeStatesMetrics extends MonitoringMetricDefinition {
     constructor(timespan: MonitorChartTimeFrame) {

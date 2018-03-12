@@ -127,6 +127,12 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                     this.refreshMetrics();
                 },
             }),
+            new ContextMenuItem({
+                label: "Past month", click: () => {
+                    this.timeFrame = MonitorChartTimeFrame.Month;
+                    this.refreshMetrics();
+                },
+            }),
         ];
         this.contextMenuService.openMenu(new ContextMenu(items));
         this.changeDetector.markForCheck();

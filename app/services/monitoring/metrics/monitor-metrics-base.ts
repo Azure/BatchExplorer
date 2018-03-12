@@ -8,6 +8,7 @@ export enum MonitorChartTimeFrame {
     Hour = "1h",
     Day = "1d",
     Week = "1w",
+    Month = "1M",
 }
 
 /**
@@ -69,6 +70,7 @@ export interface MonitorChartColorPair {
 const hourTimeSpan = moment.duration({ hours: 1 });
 const dayTimeSpan = moment.duration({ days: 1 });
 const weekTimeSpan = moment.duration({ weeks: 1 });
+const monthTimeSpan = moment.duration({ month: 1 });
 const minInterval = moment.duration({ minutes: 1 });
 const quarterHourInterval = moment.duration({ minutes: 15 });
 const oneHoursInterval = moment.duration({ hours: 1 });
@@ -158,6 +160,9 @@ export class MonitoringMetricDefinition implements MonitoringMetricDefinitionAtt
             case MonitorChartTimeFrame.Week:
                 this.interval = oneHoursInterval;
                 break;
+            case MonitorChartTimeFrame.Month:
+                this.interval = oneHoursInterval;
+                break;
         }
     }
 
@@ -177,6 +182,9 @@ export class MonitoringMetricDefinition implements MonitoringMetricDefinitionAtt
                 break;
             case MonitorChartTimeFrame.Week:
                 timespan.subtract(weekTimeSpan);
+                break;
+            case MonitorChartTimeFrame.Month:
+                timespan.subtract(monthTimeSpan);
                 break;
         }
         this._timeSpanStart = timespan.toISOString();
