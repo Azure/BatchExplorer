@@ -31,7 +31,7 @@ module.exports = function(config) {
         browserNoActivityTimeout: 300000,
         customLaunchers: {
             CustomElectron: {
-                base: "Electron",
+                base: "Chrome",
                 flags: ["--show", "--enable-precise-memory-info"]
             }
         },

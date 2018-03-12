@@ -28,7 +28,7 @@ export class PythonRpcService {
         private _zone: NgZone,
         private batchLabs: BatchLabsService,
     ) {
-        this._serverProcess = remote.getBatchLabsApp().pythonServer;
+        this._serverProcess = batchLabs.pythonServer;
         this.connected = this._connected.asObservable();
     }
     /**

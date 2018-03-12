@@ -3,6 +3,7 @@ import { AccessToken } from "@batch-flask/core";
 import { ElectronRemote } from "@batch-flask/ui";
 import { BehaviorSubject, Observable } from "rxjs";
 
+import { BatchLabsService } from "app/services/batch-labs.service";
 import { AADService } from "client/core/aad";
 import { AccessTokenCache } from "client/core/aad/access-token/access-token-cache";
 import { Constants } from "common";
@@ -16,8 +17,8 @@ export class AdalService {
     private _waitingPromises: StringMap<Promise<AccessToken>> = {};
     private _tenantsIds = new BehaviorSubject<string[]>([]);
 
-    constructor(private remote: ElectronRemote) {
-        this.aadService = remote.getBatchLabsApp().aadService;
+    constructor(private remote: ElectronRemote, batchLabs: BatchLabsService) {
+        this.aadService = batchLabs.aadService;
         // Need to do this as aadService.tenantIds is in the node processs and electron lose information in the transfer
         this.aadService.tenantsIds.subscribe((val) => {
             this._tenantsIds.next(val);

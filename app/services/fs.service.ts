@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { ElectronRemote } from "@batch-flask/ui";
 import { FSWatcher } from "chokidar";
 
+import { BatchLabsService } from "app/services/batch-labs.service";
 import { CommonFolders, FileSystem } from "client/core";
 
 /**
@@ -12,8 +12,8 @@ export class FileSystemService {
     public commonFolders: CommonFolders;
     private _fs: FileSystem;
 
-    constructor(remote: ElectronRemote) {
-        this._fs = remote.getFileSystem();
+    constructor(batchLabs: BatchLabsService) {
+        this._fs = batchLabs.getFileSystem();
         this.commonFolders = this._fs.commonFolders;
     }
 

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
-import { ClipboardService } from "@batch-flask/ui";
+import { ClipboardService } from "@batch-flask/ui/electron";
 
 import "./text-property.scss";
 

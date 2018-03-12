@@ -40,7 +40,7 @@ export class MainNavigationComponent implements OnInit {
         private notificationService: NotificationService,
         private fs: FileSystemService,
         private router: Router) {
-        this._autoUpdater = remote.getBatchLabsApp().autoUpdater;
+        this._autoUpdater = batchLabs.autoUpdater;
 
         accountService.currentAccountId.subscribe((accountId) => {
             if (accountId) {
@@ -142,7 +142,7 @@ export class MainNavigationComponent implements OnInit {
 
     private _checkForUpdates(showNotification = true) {
         this._showNotification = showNotification;
-        this.remote.getBatchLabsApp().checkForUpdates();
+        this.batchLabs.autoUpdater.checkForUpdates();
     }
 
     private _update() {
