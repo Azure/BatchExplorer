@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, QueryList, ContentChildren } from "@angular/core";
+import {
+    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, QueryList,
+} from "@angular/core";
 
 import { MetricsMonitorGraphComponent } from "./metrics-monitor-graph";
 
@@ -9,10 +11,14 @@ import "./metrics-monitor.scss";
     templateUrl: "metrics-monitor.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MetricsMonitorComponent {
+export class MetricsMonitorComponent implements AfterContentInit {
     @ContentChildren(MetricsMonitorGraphComponent) public graphs: QueryList<MetricsMonitorGraphComponent>;
 
     constructor(private changeDetector: ChangeDetectorRef) {
 
+    }
+
+    public ngAfterContentInit() {
+        this.graphs.changes.subscribe(() => this.changeDetector.markForCheck());
     }
 }

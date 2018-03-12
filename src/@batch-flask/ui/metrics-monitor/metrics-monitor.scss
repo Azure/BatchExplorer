@@ -1,8 +1,12 @@
 @import "app/styles/variables";
 
 bl-metrics-monitor {
-    bl-vtab-group > .tab-navigation > .tab-navigation-item {
-        padding: 0;
+    bl-vtab-group > .tab-navigation  {
+        width: 200px;
+
+        > .tab-navigation-item {
+            padding: 0;
+        }
     }
 
     .preview {
@@ -11,6 +15,7 @@ bl-metrics-monitor {
         display: flex;
         height: 55px;
         flex: 1;
+        user-select: none;
 
         > .info {
             margin-left: 5px;

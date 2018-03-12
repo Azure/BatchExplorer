@@ -6,6 +6,7 @@ bl-vtab-group {
     display: flex;
 
     > .tab-navigation {
+        flex-shrink: 0;
         border-right: 1px solid $border-color;
 
         > .tab-navigation-item {
@@ -31,5 +32,6 @@ bl-vtab-group {
 
     > .tab-content {
         flex-grow: 1;
+        min-width: 10px;
     }
 }
