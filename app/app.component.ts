@@ -4,12 +4,13 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
+import { IpcService } from "@batch-flask/ui";
 import { MonacoLoader } from "@batch-flask/ui/editor";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
     AccountService, AuthorizationHttpService, AutoscaleFormulaService,
-    BatchLabsService, CommandService, IpcService, NavigatorService, NcjTemplateService,
+    BatchLabsService, CommandService, NavigatorService, NcjTemplateService,
     NodeService, PredefinedFormulaService, PricingService, PythonRpcService, SSHKeyService,
     SettingsService, SubscriptionService, ThemeService, VmSizeService,
 } from "app/services";

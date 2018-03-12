@@ -1,10 +1,11 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input, OnDestroy, OnInit,
 } from "@angular/core";
+import { ElectronShell } from "@batch-flask/ui";
 import { Subscription } from "rxjs";
 
 import { AccountResource, BatchQuotas } from "app/models";
-import { ElectronShell, QuotaService } from "app/services";
+import { QuotaService } from "app/services";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { Constants } from "common";

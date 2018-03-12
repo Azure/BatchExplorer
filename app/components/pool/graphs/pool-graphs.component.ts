@@ -4,12 +4,13 @@ import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { FilterBuilder, autobind } from "@batch-flask/core";
+import { ElectronRemote } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { PerformanceData } from "app/components/pool/graphs/performance-graph";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Job, JobState, Node, NodeState, Pool, Task } from "app/models";
 import {
-    AppInsightsQueryService, ElectronRemote, JobListParams, JobService, NodeListParams, NodeService,
+    AppInsightsQueryService, JobListParams, JobService, NodeListParams, NodeService,
 } from "app/services";
 import { ListView, PollObservable, PollService } from "app/services/core";
 import { StateCounter } from "./heatmap";

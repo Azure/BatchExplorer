@@ -1,12 +1,12 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input, OnChanges, OnDestroy,
 } from "@angular/core";
+import { ElectronShell } from "@batch-flask/ui";
 import { Subscription } from "rxjs";
 
-import { BatchQuotas, BatchQuotasAttributes } from "app/models";
-import { ElectronShell, QuotaService } from "app/services";
-
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
+import { BatchQuotas, BatchQuotasAttributes } from "app/models";
+import { QuotaService } from "app/services";
 import { Constants } from "common";
 import "./inline-quota.scss";
 

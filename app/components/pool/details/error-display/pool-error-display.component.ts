@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { autobind } from "@batch-flask/core";
+import { ElectronShell } from "@batch-flask/ui";
 
 import { NameValuePair, Pool, ResizeError, ResizeErrorCode } from "app/models";
 import { PoolResizeDto } from "app/models/dtos";
-import { AccountService, ElectronShell, PoolService } from "app/services";
+import { AccountService, PoolService } from "app/services";
 import { ExternalLinks } from "common/constants";
 
 @Component({

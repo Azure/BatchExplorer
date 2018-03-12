@@ -10,10 +10,10 @@ import { CloudPathUtils, DragUtils } from "app/utils";
 import { FileDeleteEvent, FileDropEvent } from "../file-explorer.component";
 
 import { ServerError } from "@batch-flask/core";
+import { ElectronRemote, ElectronShell } from "@batch-flask/ui";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { DownloadFolderComponent } from "app/components/common/download-folder-dialog";
-import { ElectronRemote, ElectronShell } from "app/services";
 import "./file-tree-view.scss";
 
 export interface TreeRow {

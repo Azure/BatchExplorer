@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
+import { ElectronRemote } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { LocalFileStorage as NodeLocalFileStorage } from "client/core";
-import { ElectronRemote } from "./electron";
 
 /**
  * This service is used to read/write files to the user data folder.

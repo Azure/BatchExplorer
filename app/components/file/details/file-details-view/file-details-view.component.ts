@@ -4,9 +4,9 @@ import { Observable } from "rxjs";
 import "./file-details-view.scss";
 
 import { HttpCode, ServerError, autobind } from "@batch-flask/core";
+import { ElectronRemote, ElectronShell } from "@batch-flask/ui";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { File } from "app/models";
-import { ElectronRemote, ElectronShell } from "app/services";
 import { FileLoader } from "app/services/file";
 import { DateUtils, prettyBytes } from "app/utils";
 

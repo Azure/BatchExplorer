@@ -9,7 +9,7 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { JobScheduleCreateBasicDialogComponent } from "app/components/job-schedule/action";
 import { Job, JobSchedule, JobState } from "app/models";
 import { JobDecorator } from "app/models/decorators";
-import { ElectronRemote, FileSystemService, JobParams, JobService } from "app/services";
+import {  FileSystemService, JobParams, JobService } from "app/services";
 import { EntityView } from "app/services/core";
 import { TaskCreateBasicDialogComponent } from "../../task/action";
 import {
@@ -20,6 +20,7 @@ import {
     TerminateJobDialogComponent,
 } from "../action";
 
+import { ElectronRemote } from "@batch-flask/ui";
 import "./job-details.scss";
 
 @Component({

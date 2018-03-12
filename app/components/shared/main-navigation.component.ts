@@ -1,5 +1,6 @@
 import { Component, NgZone, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { ElectronRemote, ElectronShell } from "@batch-flask/ui";
 import { OS } from "@batch-flask/utils";
 import { AppUpdater } from "electron-updater";
 import * as path from "path";
@@ -9,8 +10,9 @@ import {
 } from "@batch-flask/ui/context-menu";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import {
-    AccountService, AdalService, BatchLabsService, ElectronRemote, ElectronShell, FileSystemService,
+    AccountService, AdalService, BatchLabsService, FileSystemService,
 } from "app/services";
+
 import "./main-navigation.scss";
 
 @Component({

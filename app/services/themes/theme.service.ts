@@ -31,7 +31,7 @@ export class ThemeService {
         this.currentTheme.subscribe((theme) => {
             this._applyTheme(theme);
         });
-        console.log("Rex", batchLabs.resourcesFolder);
+
         this._themesLoadPath = [
             path.join(batchLabs.resourcesFolder, "data", "themes"),
             path.join(fs.commonFolders.userData, "themes"),

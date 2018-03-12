@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
+import { ElectronRemote } from "@batch-flask/ui";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
@@ -9,7 +10,7 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
-import { ElectronRemote, FileSystemService, PoolParams, PoolService, PricingService } from "app/services";
+import {  FileSystemService, PoolParams, PoolService, PricingService } from "app/services";
 import { EntityView } from "app/services/core/data";
 import { NumberUtils } from "app/utils";
 import { DeletePoolDialogComponent, PoolCreateBasicDialogComponent, PoolResizeDialogComponent } from "../action";

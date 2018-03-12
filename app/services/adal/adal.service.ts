@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
+import { AccessToken } from "@batch-flask/core";
+import { ElectronRemote } from "@batch-flask/ui";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { AccessToken } from "@batch-flask/core";
 import { AADService } from "client/core/aad";
 import { AccessTokenCache } from "client/core/aad/access-token/access-token-cache";
 import { Constants } from "common";
-import { ElectronRemote } from "../electron";
 
 @Injectable()
 export class AdalService {

@@ -2,13 +2,14 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
+import { ElectronRemote } from "@batch-flask/ui";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, JobSchedule, JobScheduleState, Pool } from "app/models";
 import { JobScheduleDecorator } from "app/models/decorators";
-import { ElectronRemote, FileSystemService, JobScheduleParams, JobScheduleService } from "app/services";
+import { FileSystemService, JobScheduleParams, JobScheduleService } from "app/services";
 import { EntityView } from "app/services/core";
 import {
     DeleteJobScheduleDialogComponent,

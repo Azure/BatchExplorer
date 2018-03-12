@@ -20,6 +20,7 @@ import { DialogsModule } from "./dialogs";
 import { DropdownModule } from "./dropdown";
 import { DurationPickerComponent } from "./duration-picker";
 import { EditorModule } from "./editor";
+import { ElectronModule } from "./electron";
 import { FocusSectionModule } from "./focus-section";
 import { FormModule } from "./form";
 import { GraphsModule } from "./graphs";
@@ -78,6 +79,7 @@ const modules = [
     SummaryCardModule,
     VirtualScrollModule,
     VTabsModule,
+    ElectronModule,
 ];
 
 // Add subcomponnent not in a module here

@@ -1,8 +1,9 @@
 import { Component, OnDestroy } from "@angular/core";
+import { ElectronRemote } from "@batch-flask/ui";
 import { Subscription } from "rxjs";
 
 import { NcjTemplateMode } from "app/models";
-import { ElectronRemote, NcjTemplateService, RecentSubmission } from "app/services";
+import { NcjTemplateService, RecentSubmission } from "app/services";
 import "./recent-template-list.scss";
 
 @Component({

@@ -2,12 +2,13 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
+import { ElectronRemote } from "@batch-flask/ui";
 import { Observable, Subscription } from "rxjs";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, Task } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
-import { ElectronRemote, FileSystemService, JobParams, JobService, TaskParams, TaskService } from "app/services";
+import { FileSystemService, JobParams, JobService, TaskParams, TaskService } from "app/services";
 import { EntityView } from "app/services/core";
 import { DeleteTaskDialogComponent, TaskCreateBasicDialogComponent, TerminateTaskDialogComponent } from "../action";
 

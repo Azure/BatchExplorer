@@ -1,4 +1,4 @@
-import { ElectronRemote } from "app/services";
+import { ElectronRemote } from "@batch-flask/ui";
 import { AuthenticationWindow } from "client/core/aad/authentication";
 import { SplashScreen } from "client/splash-screen";
 import { MockAuthenticationWindow, MockBrowserWindow, MockSplashScreen } from "../windows";

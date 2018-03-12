@@ -1,10 +1,10 @@
 import { Injectable, NgZone } from "@angular/core";
 import { Router } from "@angular/router";
+import { IpcService } from "@batch-flask/ui";
 
 import { Constants } from "app/utils";
 import { BatchLabsLink, BatchLabsLinkAction } from "common";
 import { AccountService } from "./account.service";
-import { IpcService } from "./electron";
 
 export interface GotoOptions {
     /**
