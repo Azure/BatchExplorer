@@ -8,6 +8,7 @@ export enum MonitorChartTimeFrame {
     Hour = "1h",
     Day = "1d",
     Week = "1w",
+    Month = "1M",
 }
 
 /**
@@ -41,6 +42,8 @@ export enum MonitorChartMetrics {
  */
 export enum MonitorChartAggregation {
     Total = "Total",
+    Average = "Average",
+    Count = "Count",
 }
 
 /**
@@ -62,57 +65,41 @@ export interface MonitorChartColorPair {
 }
 
 /**
- * MonitorMetrics defines the class signature of monitor chart instances
- */
-export interface MonitorMetrics {
-    metrics: MonitorChartMetrics[];
-    aggregation: MonitorChartAggregation[];
-    colors: MonitorChartColorPair[];
-    timeFrame: MonitorChartTimeFrame;
-    setTimeFrame(timeFrame: MonitorChartTimeFrame): void;
-    getRequestUrl(resourceId: string): string;
-    getRequestOptions(): RequestOptions;
-}
-
-/**
  * Timespan and interval constants used for rendering the charts
  */
 const hourTimeSpan = moment.duration({ hours: 1 });
 const dayTimeSpan = moment.duration({ days: 1 });
 const weekTimeSpan = moment.duration({ weeks: 1 });
+const monthTimeSpan = moment.duration({ month: 1 });
 const minInterval = moment.duration({ minutes: 1 });
 const quarterHourInterval = moment.duration({ minutes: 15 });
 const oneHoursInterval = moment.duration({ hours: 1 });
 const parameterDelimiter = ",";
 
-export class MonitorMetricsBase implements MonitorMetrics {
-    public metrics: MonitorChartMetrics[];
-    public aggregation: MonitorChartAggregation[];
-    public colors: MonitorChartColorPair[];
-    public timeFrame: MonitorChartTimeFrame;
+export interface MonitoringMetric {
+    name: string;
+    aggregation: MonitorChartAggregation;
+    label?: string;
+}
 
-    // Set internally
-    // supported interval are: 00:01:00,00:05:00,00:15:00,00:30:00,01:00:00,06:00:00,12:00:00,1.00:00:00
-    private _interval: moment.Duration;
-    private _timeSpanStart: string;
+export interface MonitoringMetricDefinitionAttributes {
+    name: string;
+    timespan: MonitorChartTimeFrame;
+    metrics: MonitoringMetric[];
+}
+
+export class MonitoringMetricDefinition implements MonitoringMetricDefinitionAttributes {
+    public name: string;
+    public timespan: MonitorChartTimeFrame;
+    public metrics: MonitoringMetric[];
+    public interval: moment.Duration;
     private _timeSpanEnd: string;
+    private _timeSpanStart: string;
 
-    constructor(metrics: MonitorChartMetrics[], aggregation: MonitorChartAggregation[] ) {
-        this.metrics = metrics;
-        this.aggregation = aggregation;
-        this.setTimeFrame(MonitorChartTimeFrame.Hour);
-    }
-
-    /** Set theme colors after calling themeService */
-    public setColor(colors?: MonitorChartColorPair[]) {
-        this.colors = colors;
-    }
-
-    /**
-     * Function that returns first half of the request url to Monitor api
-     */
-    public getRequestUrl(resourceId: string): string {
-        return `${resourceId}/providers/Microsoft.Insights/metrics`;
+    constructor(attrs: MonitoringMetricDefinitionAttributes) {
+        Object.assign(this, attrs);
+        this._computeTimeInterval();
+        this._computeTimeSpan();
     }
 
     /**
@@ -128,44 +115,10 @@ export class MonitorMetricsBase implements MonitorMetrics {
     }
 
     /**
-     * Function that sets timespan and interval monitor chart history
-     * @param timeFrame
+     * Function that returns first half of the request url to Monitor api
      */
-    public setTimeFrame(timeFrame: MonitorChartTimeFrame): void {
-        switch (timeFrame) {
-            case MonitorChartTimeFrame.Hour:
-                this._interval = minInterval;
-                break;
-            case MonitorChartTimeFrame.Day:
-                this._interval = quarterHourInterval;
-                break;
-            case MonitorChartTimeFrame.Week:
-                this._interval = oneHoursInterval;
-                break;
-        }
-        this.timeFrame = timeFrame;
-        this._setTimeSpan(timeFrame);
-    }
-
-    /**
-     * Set timespan start and end, these variables are used to construct request url
-     * Timespan start and timespan end are two ISO format string
-     */
-    private _setTimeSpan(timeFrame: MonitorChartTimeFrame): void {
-        const timespan = moment();
-        this._timeSpanEnd = timespan.toISOString();
-        switch (timeFrame) {
-            case MonitorChartTimeFrame.Hour:
-                timespan.subtract(hourTimeSpan);
-                break;
-            case MonitorChartTimeFrame.Day:
-                timespan.subtract(dayTimeSpan);
-                break;
-            case MonitorChartTimeFrame.Week:
-                timespan.subtract(weekTimeSpan);
-                break;
-        }
-        this._timeSpanStart = timespan.toISOString();
+    public getRequestUrl(resourceId: string): string {
+        return `${resourceId}/providers/Microsoft.Insights/metrics`;
     }
 
     /**
@@ -179,20 +132,61 @@ export class MonitorMetricsBase implements MonitorMetrics {
      * Get interval parameter value which is used for constructing request url
      */
     private get _intervalParam(): string {
-        return `${this._interval.toISOString()}`;
+        return `${this.interval.toISOString()}`;
     }
 
     /**
      * Get metric parameter value which is used for constructing request url
      */
     private get _metricsParam(): string {
-        return `${this.metrics.join(parameterDelimiter)}`;
+        return `${this.metrics.map(x => x.name).join(parameterDelimiter)}`;
     }
 
     /**
      * Get aggregation parameter value which is used for constructing request url
      */
     private get _aggregationParam(): string {
-        return `${this.aggregation.join(parameterDelimiter)}`;
+        return `${this.metrics.map(x => x.aggregation).join(parameterDelimiter)}`;
+    }
+
+    private _computeTimeInterval(): void {
+        switch (this.timespan) {
+            case MonitorChartTimeFrame.Hour:
+                this.interval = minInterval;
+                break;
+            case MonitorChartTimeFrame.Day:
+                this.interval = quarterHourInterval;
+                break;
+            case MonitorChartTimeFrame.Week:
+                this.interval = oneHoursInterval;
+                break;
+            case MonitorChartTimeFrame.Month:
+                this.interval = oneHoursInterval;
+                break;
+        }
+    }
+
+    /**
+     * Set timespan start and end, these variables are used to construct request url
+     * Timespan start and timespan end are two ISO format string
+     */
+    private _computeTimeSpan(): void {
+        const timespan = moment();
+        this._timeSpanEnd = timespan.toISOString();
+        switch (this.timespan) {
+            case MonitorChartTimeFrame.Hour:
+                timespan.subtract(hourTimeSpan);
+                break;
+            case MonitorChartTimeFrame.Day:
+                timespan.subtract(dayTimeSpan);
+                break;
+            case MonitorChartTimeFrame.Week:
+                timespan.subtract(weekTimeSpan);
+                break;
+            case MonitorChartTimeFrame.Month:
+                timespan.subtract(monthTimeSpan);
+                break;
+        }
+        this._timeSpanStart = timespan.toISOString();
     }
 }

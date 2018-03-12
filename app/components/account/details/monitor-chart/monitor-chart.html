@@ -2,7 +2,8 @@
     <h2>
         {{ title }}
         <a (click)="openTimeFramePicker()" class="timeframe-picker">
-            <i class="fa fa-clock-o" aria-hidden="true"></i>&nbsp;{{timeFrame}}
+            <i class="fa fa-clock-o" aria-hidden="true"></i>
+            <span>&nbsp;{{timeFrame}}</span>
         </a>
     </h2>
 </div>
@@ -12,13 +13,16 @@
     </div>
     <div class="legend">
         <div class="legend-item" *ngFor="let dataset of datasets;trackBy: trackDataSet;let index=index">
-            <div class="value" [style.color2]="colors[index]?.backgroundColor">
-                {{lastValue[index]}}
+            <div class="value">
+                {{total[index]}}
             </div>
             <div class="label" [style.color]="colors[index]?.backgroundColor">
                 {{dataset.label}}
             </div>
         </div>
+    </div>
+    <div class="interval-label" *ngIf="interval">
+        Aggregated over {{interval.humanize()}} interval
     </div>
 </div>
 <div *ngIf="chartError">
