@@ -11,9 +11,7 @@
 
 // 1. Add the src/ folder to the NODE_PATH to be able to do absolute import(Relative to src folder)
 import * as path from "path";
-process.env.NODE_PATH = path.join(__dirname, "..");
-// tslint:disable-next-line:no-var-requires
-require("module").Module._initPaths();
+import "./init";
 
 // 2. Update electron user data folder
 import { app } from "electron";
