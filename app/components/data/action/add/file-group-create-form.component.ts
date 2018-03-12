@@ -1,5 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
+import { MatCheckboxChange } from "@angular/material";
 import { Observable } from "rxjs";
 
 import { DynamicForm, autobind } from "@batch-flask/core";
@@ -18,14 +19,15 @@ import "./file-group-create-form.scss";
     selector: "bl-file-group-create-form",
     templateUrl: "file-group-create-form.html",
 })
-export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, FileGroupCreateDto> implements OnInit {
+export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, FileGroupCreateDto> {
     public folder: string;
-    public folderControl: FormControl;
     public groupExists: boolean;
-    public editing: boolean;
     public title: string = "Create file group";
     public description: string = "Upload files into a managed storage container that you can use " +
         "for resource files in your jobs and tasks";
+    public createEmptyGroup: boolean = false;
+
+    private _folderControl: FormControl;
 
     constructor(
         public sidebarRef: SidebarRef<FileGroupCreateFormComponent>,
@@ -39,7 +41,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
 
         const validation = Constants.forms.validation;
 
-        this.folderControl = formBuilder.control([], Validators.required);
+        this._folderControl = formBuilder.control([], Validators.required);
         this.form = this.formBuilder.group({
             name: ["", [
                 Validators.required,
@@ -47,27 +49,80 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                 Validators.pattern(validation.regex.fileGroup),
             ], [
                     this._validateFileGroupName.bind(this),
-                ]],
-            folder: this.folderControl,
+            ]],
+            folder: this._folderControl,
             includeSubDirectories: [true],
-            emptyFileGroup: [false],
             options: [null, []],
             accessPolicy: ["private"],
         });
 
-        this.folderControl.valueChanges.subscribe((value) => {
-            console.log("folderControl chaged :: ", this.folderControl.value);
+        this._folderControl.valueChanges.subscribe((value) => {
+            console.log("folderControl chaged :: ", this._folderControl.value);
         });
-    }
-
-    public ngOnInit() {
-        this.editing = false;
     }
 
     @autobind()
     public submit(): Observable<any> {
         const formData = this.getCurrentValue();
-        const name = `Uploading file group: ${this._formGroupName(formData.name)}`;
+        if (this.createEmptyGroup) {
+            return this._createEmptyFileGroup(formData.name);
+        }
+
+        return this._uploadFileGroupData(formData);
+    }
+
+    @autobind()
+    public async selectFolder(folder: string) {
+        this._folderControl.markAsTouched();
+        const stats = await this.fs.lstat(folder);
+        const files = this._folderControl.value.concat([{
+            path: folder,
+            isFile: stats.isFile(),
+        }]);
+
+        this._folderControl.setValue(files);
+    }
+
+    public emptyCheck(event: MatCheckboxChange) {
+        this.createEmptyGroup = event.checked;
+        // remove validator from path list control if not required
+        const validators = !this.createEmptyGroup ? Validators.required : null;
+        this._folderControl.setValidators(validators);
+        this._folderControl.updateValueAndValidity();
+    }
+
+    public dtoToForm(fileGroup: FileGroupCreateDto): CreateFileGroupModel {
+        this.title = "Add folder to file group";
+        this.description = "Add another folder to an already existing file group";
+        this.form.controls.name.disable();
+
+        return fileGroupToFormModel(fileGroup);
+    }
+
+    public formToDto(data: CreateFileGroupModel): FileGroupCreateDto {
+        return createFileGroupFormToJsonData(data);
+    }
+
+    public hasValidFolder(): boolean {
+        return this.folder && this._folderControl.valid;
+    }
+
+    private _createEmptyFileGroup(name: string) {
+        const container = `${Constants.ncjFileGroupPrefix}${name}`;
+        const obs = this.storageService.createContainer(container);
+        obs.subscribe({
+            next: () => {
+                this.storageService.onContainerAdded.next(container);
+            },
+            error: () => null,
+        });
+
+        return obs;
+    }
+
+    private _uploadFileGroupData(formData: FileGroupCreateDto) {
+        // TODO: check valid path, ignore and log if not valid
+        const name = `Uploading file group: ${this._sanitizeFileGroupName(formData.name)}`;
         this.backgroundTaskService.startTask(name, (task) => {
             const observable = this.fileGroupService.createFileGroup(formData);
             let lastData;
@@ -100,38 +155,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         return Observable.of(true);
     }
 
-    public dtoToForm(fileGroup: FileGroupCreateDto): CreateFileGroupModel {
-        this.editing = true;
-        this.title = "Add folder to file group";
-        this.description = "Add another folder to an already existing file group";
-        this.form.controls.name.disable();
-
-        return fileGroupToFormModel(fileGroup);
-    }
-
-    public formToDto(data: CreateFileGroupModel): FileGroupCreateDto {
-        return createFileGroupFormToJsonData(data);
-    }
-
-    @autobind()
-    public async selectFolder(folder: string) {
-        this.folderControl.markAsTouched();
-        // this.folder = folder;
-        // this.folderControl.setValue(folder);
-        const stats = await this.fs.lstat(folder);
-        const files = this.folderControl.value.concat([{
-            path: folder,
-            isFile: stats.isFile(),
-        }]);
-
-        this.folderControl.setValue(files);
-    }
-
-    public hasValidFolder(): boolean {
-        return this.folder && this.folderControl.valid;
-    }
-
-    private _formGroupName(fileGroupName: string) {
+    private _sanitizeFileGroupName(fileGroupName: string) {
         return fileGroupName && fileGroupName.length > 20
             ? `${fileGroupName.substring(0, 19)}...`
             : fileGroupName;
@@ -142,23 +166,15 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
      * If it does exist then we inform the user that they will be modifying
      * the existing group and not creating a new one.
      */
-    private _validateFileGroupName(control: FormControl): Promise<any> {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const containerName = `${Constants.ncjFileGroupPrefix}${control.value}`;
-                this.storageService.getContainerOnce(containerName).subscribe({
-                    next: (container: BlobContainer) => {
-                        this.groupExists = true;
-                        resolve(null);
-                    },
-                    error: (error) => {
-                        this.groupExists = false;
-                        resolve(null);
-                    },
-                });
-                // timeout for allowing the user to type more than one character.
-                // async validation fires after every kepress.
-            }, 500);
-        });
+    private _validateFileGroupName(control: FormControl) {
+        const containerName = `${Constants.ncjFileGroupPrefix}${control.value}`;
+        return Observable.of(null).debounceTime(500)
+            .flatMap(() => this.storageService.getContainerOnce(containerName))
+            .map((container: BlobContainer) => {
+                this.groupExists = true;
+            }).catch(() => {
+                this.groupExists = false;
+                return Observable.of(null);
+            });
     }
 }

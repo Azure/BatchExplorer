@@ -1,8 +1,7 @@
-import { Component, HostListener, OnDestroy, forwardRef } from "@angular/core";
+import { Component, HostListener, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import * as path from "path";
 import { Subscription } from "rxjs";
 
 import { ResourceFileAttributes } from "app/models";
@@ -24,8 +23,11 @@ export interface FileOrDirectory {
     ],
 })
 export class FileOrDirectoryPickerComponent implements ControlValueAccessor, OnDestroy {
+    @Input()
+    public dragMessage: string = "Drag and drop files or folders here";
+
     public isDraging = 0;
-    public files: FormControl<FileOrDirectory[]>;
+    public paths: FormControl<FileOrDirectory[]>;
 
     private _propagateChange: (value: FileOrDirectory[]) => void = null;
     private _sub: Subscription;
@@ -33,10 +35,10 @@ export class FileOrDirectoryPickerComponent implements ControlValueAccessor, OnD
     constructor(
         private formBuilder: FormBuilder) {
 
-        this.files = this.formBuilder.control([]);
-        this._sub = this.files.valueChanges.subscribe((files) => {
+        this.paths = this.formBuilder.control([]);
+        this._sub = this.paths.valueChanges.subscribe((paths) => {
             if (this._propagateChange) {
-                this._propagateChange(files);
+                this._propagateChange(paths);
             }
         });
     }
@@ -47,7 +49,7 @@ export class FileOrDirectoryPickerComponent implements ControlValueAccessor, OnD
 
     public writeValue(value: ResourceFileAttributes[]) {
         if (value) {
-            this.files.setValue(value);
+            this.paths.setValue(value);
         }
     }
 
@@ -87,14 +89,14 @@ export class FileOrDirectoryPickerComponent implements ControlValueAccessor, OnD
         event.preventDefault();
         event.stopPropagation();
 
-        const files = [...event.dataTransfer.files as any];
-        files.map(x => this._addPath(x.path));
+        const filesAndFolders = [...event.dataTransfer.files as any];
+        filesAndFolders.map(x => this._addPath(x.path));
         this.isDraging = 0;
     }
 
     private _addPath(path: string) {
-        const files = this.files.value.concat([{ path: path }]);
-        this.files.setValue(files);
+        const filesAndFolders = this.paths.value.concat([{ path: path }]);
+        this.paths.setValue(filesAndFolders);
     }
 
     private _canDrop(dataTransfer: DataTransfer) {
