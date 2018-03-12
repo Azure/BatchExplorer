@@ -19,8 +19,6 @@ import "./monitor-chart.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MonitorChartComponent implements OnChanges, OnDestroy {
-    public LoadingStatus = LoadingStatus;
-
     @Input() public chartType: MonitorChartType;
     public type: string = "bar";
     public title = "";
@@ -30,6 +28,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     public timeFrame: MonitorChartTimeFrame = MonitorChartTimeFrame.Hour;
     public colors: any[];
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
+    public options: Chart.ChartOptions = {};
 
     private _themeSub: Subscription;
     private _sub: Subscription;
