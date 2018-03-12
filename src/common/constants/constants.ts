@@ -172,17 +172,6 @@ export const AAD = {
     refreshMargin: 1000 * 120,
 };
 
-/**
- * Internal events used by the ipc promise utility to be able to use promise
- */
-export const IpcPromiseEvent = {
-    request: "ipc-promise-request",
-    successSuffix: "-success",
-    failureSuffix: "-failure",
-    responseSuccess: "ipc-promise-response-success",
-    responseFailure: "ipc-promise-response-failure",
-};
-
 export const IpcEvent = {
     AAD: {
         accessTokenData: "AAD_ACCESS_TOKEN_DATA",

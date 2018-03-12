@@ -1,5 +1,16 @@
 import { Injectable } from "@angular/core";
-import { IpcPromiseEvent } from "common/constants";
+
+/**
+ * Internal events used by the ipc promise utility to be able to use promise
+ */
+// tslint:disable-next-line:variable-name
+export const IpcPromiseEvent = {
+    request: "ipc-promise-request",
+    successSuffix: "-success",
+    failureSuffix: "-failure",
+    responseSuccess: "ipc-promise-response-success",
+    responseFailure: "ipc-promise-response-failure",
+};
 
 /**
  * Wrapper around electron ipcRenderer
