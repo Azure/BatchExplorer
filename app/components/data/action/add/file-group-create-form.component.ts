@@ -8,7 +8,7 @@ import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { BlobContainer } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { CreateFileGroupModel, createFileGroupFormToJsonData, fileGroupToFormModel } from "app/models/forms";
-import { NcjFileGroupService, StorageService } from "app/services";
+import { FileSystemService, NcjFileGroupService, StorageService } from "app/services";
 import { Constants, log } from "app/utils";
 
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
@@ -31,6 +31,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         public sidebarRef: SidebarRef<FileGroupCreateFormComponent>,
         private formBuilder: FormBuilder,
         private fileGroupService: NcjFileGroupService,
+        private fs: FileSystemService,
         private notificationService: NotificationService,
         private backgroundTaskService: BackgroundTaskService,
         private storageService: StorageService) {
@@ -38,7 +39,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
 
         const validation = Constants.forms.validation;
 
-        this.folderControl = formBuilder.control("", Validators.required);
+        this.folderControl = formBuilder.control([], Validators.required);
         this.form = this.formBuilder.group({
             name: ["", [
                 Validators.required,
@@ -49,8 +50,13 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                 ]],
             folder: this.folderControl,
             includeSubDirectories: [true],
+            emptyFileGroup: [false],
             options: [null, []],
             accessPolicy: ["private"],
+        });
+
+        this.folderControl.valueChanges.subscribe((value) => {
+            console.log("folderControl chaged :: ", this.folderControl.value);
         });
     }
 
@@ -108,10 +114,17 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     }
 
     @autobind()
-    public selectFolder(folder: string) {
+    public async selectFolder(folder: string) {
         this.folderControl.markAsTouched();
-        this.folder = folder;
-        this.folderControl.setValue(folder);
+        // this.folder = folder;
+        // this.folderControl.setValue(folder);
+        const stats = await this.fs.lstat(folder);
+        const files = this.folderControl.value.concat([{
+            path: folder,
+            isFile: stats.isFile(),
+        }]);
+
+        this.folderControl.setValue(files);
     }
 
     public hasValidFolder(): boolean {
