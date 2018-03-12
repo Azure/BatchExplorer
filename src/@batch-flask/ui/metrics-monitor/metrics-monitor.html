@@ -1,0 +1,7 @@
+<bl-vtab-group class="content">
+    <bl-vtab *ngFor="let graph of graphs">
+        <div tabLabel>
+            <ng-template [ngTemplateOutlet]="graph.preview"></ng-template>
+        </div>
+    </bl-vtab>
+</bl-vtab-group>

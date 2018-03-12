@@ -19,7 +19,6 @@ export enum BatchUsageMetrics {
 export class PerformanceGraphComponent implements OnChanges {
     @Input() public interactive: boolean = true;
     @Input() public data: PerformanceData;
-    @Input() public metric: BatchUsageMetrics = BatchUsageMetrics.disk;
 
     public type = "line";
     public unit = "";
