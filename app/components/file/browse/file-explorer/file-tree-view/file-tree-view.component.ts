@@ -13,8 +13,7 @@ import { ServerError } from "@batch-flask/core";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { DownloadFolderComponent } from "app/components/common/download-folder-dialog";
-import { ElectronShell } from "app/services";
-import { remote } from "electron";
+import { ElectronRemote, ElectronShell } from "app/services";
 import "./file-tree-view.scss";
 
 export interface TreeRow {
@@ -60,6 +59,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         private dialog: DialogService,
         private contextMenuService: ContextMenuService,
         private shell: ElectronShell,
+        private remote: ElectronRemote,
         private changeDetector: ChangeDetectorRef,
         private notificationService: NotificationService) { }
 
@@ -230,7 +230,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
             ref.componentInstance.subfolder = treeRow.name;
             ref.componentInstance.folder = treeRow.path;
         } else {
-            const dialog = remote.dialog;
+            const dialog = this.remote.dialog;
             const localPath = dialog.showSaveDialog({
                 buttonLabel: "Download",
                 defaultPath: treeRow.name,

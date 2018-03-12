@@ -6,6 +6,7 @@ import { ElectronRemote } from "./electron/remote.service";
 
 @Injectable()
 export class BatchLabsService {
+    public rootPath: string;
     private _app: BatchLabsApplication;
     private _azureEnvironment: AzureEnvironment;
 
@@ -14,6 +15,7 @@ export class BatchLabsService {
         this._app.azureEnvironmentObs.subscribe((x) => {
             this._azureEnvironment = x;
         });
+        this.rootPath = this._app.rootPath;
     }
 
     public get azureEnvironment() {

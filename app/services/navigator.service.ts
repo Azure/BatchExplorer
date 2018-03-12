@@ -1,10 +1,10 @@
 import { Injectable, NgZone } from "@angular/core";
 import { Router } from "@angular/router";
-import { ipcRenderer } from "electron";
 
 import { Constants } from "app/utils";
 import { BatchLabsLink, BatchLabsLinkAction } from "common";
 import { AccountService } from "./account.service";
+import { IpcService } from "./electron";
 
 export interface GotoOptions {
     /**
@@ -16,11 +16,15 @@ export interface GotoOptions {
 
 @Injectable()
 export class NavigatorService {
-    constructor(private accountService: AccountService, private router: Router, private zone: NgZone) {
+    constructor(
+        private accountService: AccountService,
+        private router: Router,
+        private zone: NgZone,
+        private ipc: IpcService) {
     }
 
     public init() {
-        ipcRenderer.on(Constants.rendererEvents.batchlabsLink, (event, link) => {
+        this.ipc.on(Constants.rendererEvents.batchlabsLink, (event, link) => {
             this.zone.run(() => {
                 this.openBatchLabsLink(link);
             });

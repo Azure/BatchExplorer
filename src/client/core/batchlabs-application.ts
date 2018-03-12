@@ -201,6 +201,10 @@ export class BatchLabsApplication {
         return proxyCredentials.credentials;
     }
 
+    public get rootPath() {
+        return ClientConstants.root;
+    }
+
     private _setupProcessEvents() {
         ipcMain.on("reload", () => {
             // Destroy window and error window if applicable

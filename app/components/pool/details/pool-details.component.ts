@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { remote } from "electron";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
@@ -126,7 +125,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public exportAsJSON() {
-        const dialog = remote.dialog;
+        const dialog = this.remote.dialog;
         const localPath = dialog.showSaveDialog({
             buttonLabel: "Export",
             defaultPath: `${this.pool.id}.json`,

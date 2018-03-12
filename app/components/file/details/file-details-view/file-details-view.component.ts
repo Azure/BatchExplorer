@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
-import { remote } from "electron";
 import { Observable } from "rxjs";
 
 import "./file-details-view.scss";
@@ -7,7 +6,7 @@ import "./file-details-view.scss";
 import { HttpCode, ServerError, autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { File } from "app/models";
-import { ElectronShell } from "app/services";
+import { ElectronRemote, ElectronShell } from "app/services";
 import { FileLoader } from "app/services/file";
 import { DateUtils, prettyBytes } from "app/utils";
 
@@ -29,6 +28,7 @@ export class FileDetailsViewComponent implements OnChanges {
 
     constructor(
         private shell: ElectronShell,
+        private remote: ElectronRemote,
         private notificationService: NotificationService) {
         this.downloadEnabled = true;
     }
@@ -47,7 +47,7 @@ export class FileDetailsViewComponent implements OnChanges {
 
     @autobind()
     public downloadFile() {
-        const dialog = remote.dialog;
+        const dialog = this.remote.dialog;
         const localPath = dialog.showSaveDialog({
             buttonLabel: "Download",
             defaultPath: this.filename,

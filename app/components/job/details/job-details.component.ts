@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { remote } from "electron";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
@@ -10,7 +9,7 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { JobScheduleCreateBasicDialogComponent } from "app/components/job-schedule/action";
 import { Job, JobSchedule, JobState } from "app/models";
 import { JobDecorator } from "app/models/decorators";
-import { FileSystemService, JobParams, JobService } from "app/services";
+import { ElectronRemote, FileSystemService, JobParams, JobService } from "app/services";
 import { EntityView } from "app/services/core";
 import { TaskCreateBasicDialogComponent } from "../../task/action";
 import {
@@ -50,6 +49,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         private dialog: MatDialog,
         private activatedRoute: ActivatedRoute,
         private fs: FileSystemService,
+        private remote: ElectronRemote,
         private sidebarManager: SidebarManager,
         private jobService: JobService,
         private router: Router) {
@@ -159,7 +159,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public exportAsJSON() {
-        const dialog = remote.dialog;
+        const dialog = this.remote.dialog;
         const localPath = dialog.showSaveDialog({
             buttonLabel: "Export",
             defaultPath: `${this.jobId}.json`,

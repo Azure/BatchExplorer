@@ -9,11 +9,10 @@ import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
     AccountService, AuthorizationHttpService, AutoscaleFormulaService,
-    CommandService, NavigatorService, NcjTemplateService, NodeService, PredefinedFormulaService,
-    PricingService, PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
+    BatchLabsService, CommandService, IpcService, NavigatorService, NcjTemplateService,
+    NodeService, PredefinedFormulaService, PricingService, PythonRpcService, SSHKeyService,
+    SettingsService, SubscriptionService, ThemeService, VmSizeService,
 } from "app/services";
-import { Constants } from "app/utils";
-import { ipcRenderer } from "electron";
 
 @Component({
     selector: "bl-app",
@@ -34,6 +33,7 @@ export class AppComponent implements OnInit {
         private subscriptionService: SubscriptionService,
         private nodeService: NodeService,
         private sshKeyService: SSHKeyService,
+        batchLabsService: BatchLabsService,
         pythonRpcService: PythonRpcService,
         private vmSizeService: VmSizeService,
         themeService: ThemeService,
@@ -41,6 +41,7 @@ export class AppComponent implements OnInit {
         monacoLoader: MonacoLoader,
         permissionService: PermissionService,
         authHttpService: AuthorizationHttpService,
+        ipc: IpcService,
         private pricingService: PricingService,
         private ncjTemplateService: NcjTemplateService,
         private predefinedFormulaService: PredefinedFormulaService,
@@ -57,7 +58,7 @@ export class AppComponent implements OnInit {
         pythonRpcService.init();
         this.predefinedFormulaService.init();
         themeService.init();
-        monacoLoader.init(Constants.Client.root);
+        monacoLoader.init(batchLabsService.rootPath);
 
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
@@ -80,7 +81,7 @@ export class AppComponent implements OnInit {
             return authHttpService.getResourcePermission();
         });
 
-        ipcRenderer.send("app-ready");
+        ipc.sendEvent("app-ready");
     }
 
     public ngOnInit() {

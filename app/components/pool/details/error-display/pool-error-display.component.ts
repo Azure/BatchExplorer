@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import { shell } from "electron";
 
 import { NameValuePair, Pool, ResizeError, ResizeErrorCode } from "app/models";
 import { PoolResizeDto } from "app/models/dtos";
-import { AccountService, PoolService } from "app/services";
+import { AccountService, ElectronShell, PoolService } from "app/services";
 import { ExternalLinks } from "common/constants";
 
 @Component({
@@ -17,7 +16,10 @@ export class PoolErrorDisplayComponent {
 
     @Input() public pool: Pool;
 
-    constructor(private poolService: PoolService, private accountService: AccountService) {
+    constructor(
+        private poolService: PoolService,
+        private accountService: AccountService,
+        private shell: ElectronShell) {
     }
 
     public get dedicatedQuota() {
@@ -42,7 +44,7 @@ export class PoolErrorDisplayComponent {
     }
 
     public increaseQuota() {
-        shell.openExternal(ExternalLinks.supportRequest);
+        this.shell.openExternal(ExternalLinks.supportRequest);
     }
 
     public refreshPool() {

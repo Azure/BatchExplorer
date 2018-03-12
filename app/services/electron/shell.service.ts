@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { shell } from "electron";
 
 /**
  * Injectable service wrapping electron shell.
@@ -7,12 +6,16 @@ import { shell } from "electron";
  */
 @Injectable()
 export class ElectronShell {
+    private _shell: Electron.Shell;
+    constructor() {
+        this._shell = require("electron").shell;
+    }
     /**
      * Show the given file in a file manager. If possible, select the file.
      * @returns Whether the item was successfully shown.
      */
     public showItemInFolder(fullPath: string): boolean {
-        return shell.showItemInFolder(fullPath);
+        return this._shell.showItemInFolder(fullPath);
     }
 
     /**
@@ -20,7 +23,7 @@ export class ElectronShell {
      * @returns Whether the item was successfully shown.
      */
     public openItem(fullPath: string): boolean {
-        return shell.openItem(fullPath);
+        return this._shell.openItem(fullPath);
     }
 
     /**
@@ -40,6 +43,6 @@ export class ElectronShell {
                 + " It could be used to run commands on osx for example.\n"
                 + " Use openItem for opening a local file instead");
         }
-        return shell.openExternal(url, options);
+        return this._shell.openExternal(url, options);
     }
 }

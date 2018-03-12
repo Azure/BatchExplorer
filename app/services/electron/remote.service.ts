@@ -2,8 +2,7 @@ import { Injectable } from "@angular/core";
 import { BatchLabsApplication, FileSystem, LocalFileStorage } from "client/core";
 import { AuthenticationWindow } from "client/core/aad";
 import { SplashScreen } from "client/splash-screen";
-import { IpcPromiseEvent } from "common/constants";
-import { ipcRenderer, remote } from "electron";
+import { IpcService } from "./ipc.service";
 
 // Uncomment bellow to check sendSync performance issues
 // let total = 0;
@@ -23,13 +22,17 @@ import { ipcRenderer, remote } from "electron";
  */
 @Injectable()
 export class ElectronRemote {
+    public _remote: Electron.Remote;
+    constructor(private ipc: IpcService) {
+        this._remote = require("electron").remote;
+    }
 
     public get dialog(): Electron.Dialog {
-        return remote.dialog;
+        return this._remote.dialog;
     }
 
     public get electronApp(): Electron.App {
-        return remote.app;
+        return this._remote.app;
     }
 
     /**
@@ -43,7 +46,7 @@ export class ElectronRemote {
      * @returns The BrowserWindow object which this web page belongs to.
      */
     public getCurrentWindow(): Electron.BrowserWindow {
-        return remote.getCurrentWindow();
+        return this._remote.getCurrentWindow();
     }
 
     public getSplashScreen(): SplashScreen {
@@ -62,53 +65,11 @@ export class ElectronRemote {
         return this._currentWindow().localFileStorage;
     }
 
-    /**
-     * trigger event.
-     *
-     * @param eventName event name of common event emitter on main process.
-     * @param data data for send.
-     * @return promise.
-     */
-    public send(eventName: string, data?: any): Promise<any> {
-        return new Promise((resolve, reject) => {
-            const id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-            const onSuccess = (event, params) => {
-                if (params.id !== id || params.eventName !== eventName) {
-                    return;
-                }
-
-                // remove this listener.
-                ipcRenderer.removeListener(IpcPromiseEvent.responseSuccess, onSuccess);
-                ipcRenderer.removeListener(IpcPromiseEvent.responseFailure, onFailure);
-
-                resolve(params.data);
-            };
-            const onFailure = (event, params) => {
-                if (params.id !== id || params.eventName !== eventName) {
-                    return;
-                }
-
-                // remove this listener.
-                ipcRenderer.removeListener(IpcPromiseEvent.responseSuccess, onSuccess);
-                ipcRenderer.removeListener(IpcPromiseEvent.responseFailure, onFailure);
-
-                reject(params.data);
-            };
-
-            // add listener to ipc for renderer process.
-            ipcRenderer.on(IpcPromiseEvent.responseSuccess, onSuccess);
-            ipcRenderer.on(IpcPromiseEvent.responseFailure, onFailure);
-
-            // send to ipc for main process.
-            ipcRenderer.send(IpcPromiseEvent.request, {
-                data,
-                eventName,
-                id,
-            });
-        });
+    public async send(eventName: string, data?: any) {
+        return this.ipc.send(eventName, data);
     }
 
     private _currentWindow(): any {
-        return remote.getCurrentWindow();
+        return this._remote.getCurrentWindow();
     }
 }
