@@ -1,13 +1,14 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { ElectronShell } from "@batch-flask/ui";
 import * as path from "path";
 
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { DownloadRdpComponent } from "app/components/node/connect";
 import { NodeConnectionSettings } from "app/models";
-import { ElectronShell, FileSystemService } from "app/services";
+import { FileSystemService } from "app/services";
 import { OS } from "app/utils";
 
 @Component({

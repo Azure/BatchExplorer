@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { log } from "@batch-flask/utils";
+import { BatchLabsService } from "app/services/batch-labs.service";
 import { LocalFileStorage as NodeLocalFileStorage } from "client/core";
-import { ElectronRemote } from "./electron";
 
 /**
  * This service is used to read/write files to the user data folder.
@@ -14,8 +14,8 @@ import { ElectronRemote } from "./electron";
 export class LocalFileStorage {
     private _localStorage: NodeLocalFileStorage;
 
-    constructor(remote: ElectronRemote) {
-        this._localStorage = remote.getLocalFileStorage();
+    constructor(batchLabs: BatchLabsService) {
+        this._localStorage = batchLabs.getLocalFileStorage();
 
     }
 

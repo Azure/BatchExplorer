@@ -46,7 +46,7 @@ module.exports = function(config) {
         reporters: ["mocha", ...coverageReporters],
 
         preprocessors: {
-            "test/app/spec-entry.js": ["coverage", "webpack", "sourcemap", "electron"],
+            "test/app/spec-entry.js": ["coverage", "webpack", "sourcemap"],
         },
         client: {
             useIframe: false,

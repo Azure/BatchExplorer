@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
-import { ElectronRemote, ElectronShell } from "app/services";
+import { ElectronRemote, ElectronShell } from "@batch-flask/ui";
 
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { File } from "app/models";

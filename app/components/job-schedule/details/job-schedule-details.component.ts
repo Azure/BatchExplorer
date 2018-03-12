@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { remote } from "electron";
+import { ElectronRemote } from "@batch-flask/ui";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
@@ -48,6 +48,7 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
         private dialog: MatDialog,
         private activatedRoute: ActivatedRoute,
         private fs: FileSystemService,
+        private remote: ElectronRemote,
         private sidebarManager: SidebarManager,
         private jobScheduleService: JobScheduleService,
         private router: Router) {
@@ -137,7 +138,7 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public exportAsJSON() {
-        const dialog = remote.dialog;
+        const dialog = this.remote.dialog;
         const localPath = dialog.showSaveDialog({
             buttonLabel: "Export",
             defaultPath: `${this.jobScheduleId}.json`,
