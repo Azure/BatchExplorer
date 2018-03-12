@@ -9,7 +9,7 @@ export class MockElectronRemote extends ElectronRemote {
     public splashScreen: MockSplashScreen;
 
     constructor() {
-        super();
+        super(null);
         this.currentWindow = new MockBrowserWindow();
         this.splashScreen = new MockSplashScreen();
         this.authenticationWindow = new MockAuthenticationWindow();

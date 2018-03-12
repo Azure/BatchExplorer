@@ -1,6 +1,7 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { ElectronShell } from "@batch-flask/ui";
 import { Observable } from "rxjs";
 
 import { ButtonComponent } from "@batch-flask/ui/buttons";
@@ -9,7 +10,7 @@ import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/p
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
 import { NodeAgentSku } from "app/models";
-import { ElectronShell, FileSystemService, NodeService, NodeUserService } from "app/services";
+import { FileSystemService, NodeService, NodeUserService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
 
