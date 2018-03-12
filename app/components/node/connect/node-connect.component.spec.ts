@@ -1,7 +1,7 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { ElectronShell } from "@batch-flask/ui";
+import { ClipboardService, ElectronShell } from "@batch-flask/ui";
 import { Observable } from "rxjs";
 
 import { ButtonComponent } from "@batch-flask/ui/buttons";
@@ -54,6 +54,7 @@ describe("NodeConnectComponent", () => {
                 { provide: FileSystemService, useValue: null },
                 { provide: PermissionService, useValue: null },
                 { provide: ElectronShell, useValue: null },
+                { provide: ClipboardService, useValue: {} },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
