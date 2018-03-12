@@ -1,4 +1,6 @@
 // tslint:disable:no-console
+import "../../src/init";
+
 import * as path from "path";
 import { Constants } from "../../src/client/client-constants";
 import { execCommand } from "../../src/client/core";
