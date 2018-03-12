@@ -1,10 +1,16 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import * as moment from "moment";
 import { Observable, Subscription } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { InsightsMetricsService, Metric, MetricResponse, MonitorChartTimeFrame, MonitorChartType } from "app/services";
+import {
+    InsightsMetricsService, MonitorChartMetrics,
+    MonitorChartTimeFrame, MonitorChartType, ThemeService,
+} from "app/services";
 
+import { log } from "@batch-flask/utils";
+import { Metric, MonitoringMetricList } from "app/models/monitoring";
 import "./monitor-chart.scss";
 
 @Component({
@@ -14,53 +20,76 @@ import "./monitor-chart.scss";
 })
 export class MonitorChartComponent implements OnChanges, OnDestroy {
     @Input() public chartType: MonitorChartType;
+    public type: string = "bar";
     public title = "";
-    public type = "line";
     public datasets: Chart.ChartDataSets[];
-    public lastValue: any[] = [];
-    public options: Chart.ChartOptions = {};
+    public total: any[] = [];
+    public interval: moment.Duration;
     public timeFrame: MonitorChartTimeFrame = MonitorChartTimeFrame.Hour;
     public colors: any[];
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
+    public options: Chart.ChartOptions = {};
 
+    private _themeSub: Subscription;
     private _sub: Subscription;
-    private _observable: Observable<MetricResponse>;
+    private _theme: StringMap<string>;
     constructor(
+        themeService: ThemeService,
         private changeDetector: ChangeDetectorRef,
         private monitor: InsightsMetricsService,
         private contextMenuService: ContextMenuService) {
         this._setChartOptions();
+
+        this._themeSub = themeService.currentTheme.subscribe((theme) => {
+            this._theme = {
+                [MonitorChartMetrics.CoreCount]: theme.monitorChart.coreCount,
+                [MonitorChartMetrics.IdleNodeCount]: theme.monitorChart.idleNodeCount,
+                [MonitorChartMetrics.LowPriorityCoreCount]: theme.monitorChart.lowPriorityCoreCount,
+                [MonitorChartMetrics.RebootingNodeCount]: theme.monitorChart.rebootingNodeCount,
+                [MonitorChartMetrics.RunningNodeCount]: theme.monitorChart.runningNodeCount,
+                [MonitorChartMetrics.StartingNodeCount]: theme.monitorChart.startingNodeCount,
+                [MonitorChartMetrics.StartTaskFailedNodeCount]: theme.monitorChart.startTaskFailedNodeCount,
+                [MonitorChartMetrics.TaskCompleteEvent]: theme.monitorChart.taskCompleteEvent,
+                [MonitorChartMetrics.TaskFailEvent]: theme.monitorChart.taskFailEvent,
+                [MonitorChartMetrics.TaskStartEvent]: theme.monitorChart.taskStartEvent,
+            };
+        });
     }
 
     public ngOnChanges(changes): void {
         if (changes.chartType) {
-            this.fetchObservable();
+            this.refreshMetrics();
+            this._updateTitle();
         }
     }
 
     public ngOnDestroy(): void {
         this._destroySub();
+        this._themeSub.unsubscribe();
     }
 
-    public fetchObservable() {
-        this._observable = this._getChartObservable();
-        if (!this._observable) {
-            return;
-        }
+    public refreshMetrics() {
+        const obs = this._loadMetrics();
+        if (!obs) { return; }
+
         this._destroySub();
-        this._sub = this._observable.subscribe(response => {
-            this._updateLoadingStatus(LoadingStatus.Loading);
+        this._updateLoadingStatus(LoadingStatus.Loading);
+        this._sub = obs.subscribe(response => {
             this.colors = [];
-            this.timeFrame = response.timeFrame;
-            this.lastValue = [];
+            this.total = [];
+            this.interval = response.interval;
             this.datasets = response.metrics.map((metric: Metric): Chart.ChartDataSets => {
+                const color = this._theme[metric.name];
                 this.colors.push({
-                    borderColor: metric.color,
-                    backgroundColor: metric.color,
+                    borderColor: color,
+                    backgroundColor: color,
                 });
-                this.lastValue.push(metric.data.last().total || 0);
+                const total = metric.data.map(x => x.total || 0).reduce((a, b) => {
+                    return a + b;
+                }, 0);
+                this.total.push(total);
                 return {
-                    label: metric.name.localizedValue,
+                    label: metric.label,
                     data: metric.data.map(data => {
                         return {
                             x: data.timeStamp,
@@ -73,6 +102,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             });
             this._updateLoadingStatus(LoadingStatus.Ready);
         }, (error) => {
+            log.error(`Error loading metrics for account metrics type: ${this.chartType}`, error);
             this._updateLoadingStatus(LoadingStatus.Error);
         });
     }
@@ -82,26 +112,30 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             new ContextMenuItem({
                 label: "Past hour", click: () => {
                     this.timeFrame = MonitorChartTimeFrame.Hour;
-                    this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
-                    this.fetchObservable();
+                    this.refreshMetrics();
                 },
             }),
             new ContextMenuItem({
                 label: "Past day", click: () => {
                     this.timeFrame = MonitorChartTimeFrame.Day;
-                    this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
-                    this.fetchObservable();
+                    this.refreshMetrics();
                 },
             }),
             new ContextMenuItem({
                 label: "Past week", click: () => {
                     this.timeFrame = MonitorChartTimeFrame.Week;
-                    this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
-                    this.fetchObservable();
+                    this.refreshMetrics();
+                },
+            }),
+            new ContextMenuItem({
+                label: "Past month", click: () => {
+                    this.timeFrame = MonitorChartTimeFrame.Month;
+                    this.refreshMetrics();
                 },
             }),
         ];
         this.contextMenuService.openMenu(new ContextMenu(items));
+        this.changeDetector.markForCheck();
     }
 
     public get isChartReady() {
@@ -116,27 +150,35 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         return dataset.label;
     }
 
-    private _getChartObservable(): Observable<MetricResponse> {
-        let observable: Observable<MetricResponse>;
+    private _loadMetrics(): Observable<MonitoringMetricList> {
         switch (this.chartType) {
             case MonitorChartType.CoreCount:
-                this.title = "Core count";
-                observable = this.monitor.getCoreCount();
+                return this.monitor.getCoreMinutes(this.timeFrame);
+            case MonitorChartType.FailedTask:
+                return this.monitor.getFailedTask(this.timeFrame);
+            case MonitorChartType.NodeStates:
+                return this.monitor.getNodeStates(this.timeFrame);
+            case MonitorChartType.TaskStates:
+                return this.monitor.getTaskStates(this.timeFrame);
+        }
+    }
+
+    private _updateTitle() {
+        switch (this.chartType) {
+            case MonitorChartType.CoreCount:
+                this.title = "Core minutes";
                 break;
             case MonitorChartType.FailedTask:
                 this.title = "Failed task";
-                observable = this.monitor.getFailedTask();
                 break;
             case MonitorChartType.NodeStates:
                 this.title = "Node states";
-                observable = this.monitor.getNodeStates();
                 break;
             case MonitorChartType.TaskStates:
                 this.title = "Task states";
-                observable = this.monitor.getTaskStates();
                 break;
         }
-        return observable;
+        this.changeDetector.markForCheck();
     }
 
     private _setChartOptions() {
@@ -162,6 +204,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             },
             scales: {
                 yAxes: [{
+                    stacked: true,
                     type: "linear",
                     display: true,
                     ticks: {
@@ -175,6 +218,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                     },
                 }],
                 xAxes: [{
+                    stacked: true,
                     type: "time",
                     position: "bottom",
                     display: false,

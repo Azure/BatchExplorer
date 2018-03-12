@@ -17,7 +17,7 @@ export * from "./job-service";
 export * from "./job-schedule-service";
 export * from "./job-hook-task.service";
 export * from "./local-file-storage.service";
-export * from "./monitor-http";
+export * from "./monitoring";
 export * from "./navigator.service";
 export * from "./pinned-entity.service";
 export * from "./pool.service";
