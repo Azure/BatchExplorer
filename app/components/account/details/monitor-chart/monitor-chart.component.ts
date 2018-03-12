@@ -9,7 +9,7 @@ import {
     MonitorChartTimeFrame, MonitorChartType, ThemeService,
 } from "app/services";
 
-import { DateUtils } from "@batch-flask/utils";
+import { log } from "@batch-flask/utils";
 import { Metric, MonitoringMetricList } from "app/models/monitoring";
 import "./monitor-chart.scss";
 
@@ -19,13 +19,14 @@ import "./monitor-chart.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MonitorChartComponent implements OnChanges, OnDestroy {
+    public LoadingStatus = LoadingStatus;
+
     @Input() public chartType: MonitorChartType;
     public type: string = "bar";
     public title = "";
     public datasets: Chart.ChartDataSets[];
     public total: any[] = [];
     public interval: moment.Duration;
-    public options: Chart.ChartOptions = {};
     public timeFrame: MonitorChartTimeFrame = MonitorChartTimeFrame.Hour;
     public colors: any[];
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
@@ -73,8 +74,8 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         if (!obs) { return; }
 
         this._destroySub();
+        this._updateLoadingStatus(LoadingStatus.Loading);
         this._sub = obs.subscribe(response => {
-            this._updateLoadingStatus(LoadingStatus.Loading);
             this.colors = [];
             this.total = [];
             this.interval = response.interval;
@@ -102,6 +103,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             });
             this._updateLoadingStatus(LoadingStatus.Ready);
         }, (error) => {
+            log.error(`Error loading metrics for account metrics type: ${this.chartType}`, error);
             this._updateLoadingStatus(LoadingStatus.Error);
         });
     }
@@ -128,6 +130,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             }),
         ];
         this.contextMenuService.openMenu(new ContextMenu(items));
+        this.changeDetector.markForCheck();
     }
 
     public get isChartReady() {
