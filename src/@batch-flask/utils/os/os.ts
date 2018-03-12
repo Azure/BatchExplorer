@@ -7,7 +7,7 @@ enum Platform {
 
 let platform;
 
-if (typeof platform !== "undefined") {
+if (typeof process !== "undefined") {
     platform = process.platform;
 } else {
     platform = Platform.Browser;
