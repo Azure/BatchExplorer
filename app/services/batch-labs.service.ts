@@ -6,7 +6,21 @@ import { ElectronRemote } from "./electron/remote.service";
 
 @Injectable()
 export class BatchLabsService {
+    /**
+     * Root path of where BatchLabs is running.
+     */
     public rootPath: string;
+
+    /**
+     * Version of BatchLabs
+     */
+    public version: string;
+
+    /**
+     * Points to the resource folder if running packaged app or the root of the app if in dev
+     */
+    public resourcesFolder: string;
+
     private _app: BatchLabsApplication;
     private _azureEnvironment: AzureEnvironment;
 
@@ -16,6 +30,8 @@ export class BatchLabsService {
             this._azureEnvironment = x;
         });
         this.rootPath = this._app.rootPath;
+        this.version = this._app.version;
+        this.resourcesFolder = this._app.resourcesFolder;
     }
 
     public get azureEnvironment() {

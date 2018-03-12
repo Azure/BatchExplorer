@@ -6,7 +6,7 @@ import { AccountResource } from "app/models";
 import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";
 import { BatchLabsService } from "app/services/batch-labs.service";
 import { ElectronRemote } from "app/services/electron";
-import { Constants, SecureUtils, log } from "app/utils";
+import { SecureUtils, log } from "app/utils";
 import { PythonRpcServerProcess } from "client/python-process";
 import { AccountService } from "../account.service";
 import { AdalService } from "../adal";
@@ -57,9 +57,7 @@ export class PythonRpcService {
      * Call this if the connection got cut to try again.
      */
     public resetConnection(): Observable<any> {
-        const portConfig = Constants.Client.pythonServerPort;
-        const portPromise = process.env.HOT ? portConfig.dev : portConfig.prod;
-        portPromise.then((port) => {
+        this._serverProcess.port.then((port) => {
             this._ready = new AsyncSubject<any>();
             const socket = this._socket = new WebSocket(`ws://127.0.0.1:${port}/ws`);
             socket.onopen = (event: Event) => {
