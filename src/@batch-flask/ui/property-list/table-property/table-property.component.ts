@@ -1,7 +1,7 @@
 import {
     Component, ContentChild, ContentChildren, HostBinding, HostListener, Input, QueryList, TemplateRef, ViewChild,
 } from "@angular/core";
-import { clipboard } from "electron";
+import { ClipboardService } from "@batch-flask/ui/electron";
 
 import "./table-property.scss";
 
@@ -44,10 +44,13 @@ export class TablePropertyCellComponent {
 
     public copyNotificationHidden = true;
 
+    constructor(private clipboard: ClipboardService) {
+
+    }
     @HostListener("click")
     public onClick() {
         this.copyNotificationHidden = false;
-        clipboard.writeText(this.value);
+        this.clipboard.writeText(this.value);
         setTimeout(() => {
             this.copyNotificationHidden = true;
         }, 1000);

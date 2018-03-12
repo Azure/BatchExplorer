@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { ClipboardService } from "@batch-flask/ui";
 import { PropertyListModule } from "@batch-flask/ui/property-list";
 import { AccountKeys } from "app/models";
 import * as Fixtures from "test/fixture";
@@ -34,6 +35,9 @@ describe("ProgramingSampleComponent", () => {
             imports: [PropertyListModule, FormsModule, ReactiveFormsModule],
             declarations: [ProgramingSampleComponent, TestComponent, MockEditorComponent],
             schemas: [NO_ERRORS_SCHEMA],
+            providers: [
+                { provide: ClipboardService, useValue: {} },
+            ],
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;

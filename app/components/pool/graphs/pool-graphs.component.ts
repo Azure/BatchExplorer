@@ -9,7 +9,7 @@ import { PerformanceData } from "app/components/pool/graphs/performance-graph";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Job, JobState, Node, NodeState, Pool, Task } from "app/models";
 import {
-    AppInsightsQueryService, ElectronRemote, JobListParams, JobService, NodeListParams, NodeService,
+    AppInsightsQueryService, BatchLabsService, JobListParams, JobService, NodeListParams, NodeService,
 } from "app/services";
 import { ListView, PollObservable, PollService } from "app/services/core";
 import { StateCounter } from "./heatmap";
@@ -78,7 +78,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         pollService: PollService,
         private nodeService: NodeService,
         jobService: JobService,
-        private remote: ElectronRemote,
+        private batchLabs: BatchLabsService,
         private sidebarManager: SidebarManager,
     ) {
         this.performanceData = new PerformanceData(appInsightsQueryService);
@@ -173,7 +173,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     @autobind()
     public openInNewWindow() {
         const link = `ms-batchlabs://route/standalone/pools/${this.pool.id}/graphs?fullscreen=true`;
-        const window = this.remote.getBatchLabsApp().openNewWindow(link);
+        const window = this.batchLabs.openNewWindow(link);
 
         return Observable.fromPromise(window.domReady);
     }

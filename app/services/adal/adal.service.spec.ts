@@ -21,16 +21,19 @@ describe("AdalService spec", () => {
     let service: AdalService;
     let aadServiceSpy;
     let remoteSpy;
+    let batchLabsSpy;
 
     beforeEach(() => {
         aadServiceSpy = {
             tenantsIds: Observable.of([]),
         };
         remoteSpy = {
-            getBatchLabsApp: () => ({ aadService: aadServiceSpy }),
             send: jasmine.createSpy("accessTokenData").and.returnValue(Promise.resolve(token1)),
         };
-        service = new AdalService(remoteSpy);
+        batchLabsSpy = {
+            aadService: aadServiceSpy,
+        };
+        service = new AdalService(remoteSpy, batchLabsSpy);
     });
 
     it("#accessTokenFor returns observable with token string", (done) => {

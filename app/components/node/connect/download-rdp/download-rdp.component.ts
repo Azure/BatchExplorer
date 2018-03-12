@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { autobind } from "@batch-flask/core";
+import { ElectronShell } from "@batch-flask/ui";
 import * as path from "path";
 import { Observable } from "rxjs";
 
-import { ElectronShell, FileSystemService } from "app/services";
+import { FileSystemService } from "app/services";
 import { OS } from "app/utils";
 
 @Component({

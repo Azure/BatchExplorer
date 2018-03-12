@@ -1,4 +1,17 @@
-const platform = process.platform;
+enum Platform {
+    Windows = "win32",
+    OSX = "darwin",
+    Linux = "linux",
+    Browser = "browser",
+}
+
+let platform;
+
+if (typeof process !== "undefined") {
+    platform = process.platform;
+} else {
+    platform = Platform.Browser;
+}
 
 export class OS {
     public static isWindows(): boolean {

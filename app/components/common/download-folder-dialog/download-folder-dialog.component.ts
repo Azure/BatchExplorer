@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
+import { ElectronShell } from "@batch-flask/ui";
 import { List } from "immutable";
 import * as path from "path";
 import { AsyncSubject, Observable } from "rxjs";
@@ -9,7 +10,7 @@ import { autobind } from "@batch-flask/core";
 import { BackgroundTask, BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SecureUtils } from "@batch-flask/utils";
-import { ElectronShell, FileSystemService } from "app/services";
+import { FileSystemService } from "app/services";
 import { FileNavigator } from "app/services/file";
 import * as minimatch from "minimatch";
 import "./download-folder-dialog.scss";
