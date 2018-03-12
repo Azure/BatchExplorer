@@ -1,4 +1,3 @@
-import { remote } from "electron";
 import { Logger } from "./base-logger";
 // tslint:disable:no-console
 
@@ -8,7 +7,7 @@ import { Logger } from "./base-logger";
 export class RendererLogger implements Logger {
     private _logger: any;
     constructor() {
-        this._logger = (remote.getCurrentWindow() as any).logger;
+        this._logger = (require("electron").remote.getCurrentWindow() as any).logger;
         if (!this._logger) {
             this._logger = {
                 trace: () => null,

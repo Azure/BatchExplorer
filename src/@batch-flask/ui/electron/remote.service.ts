@@ -22,9 +22,16 @@ import { IpcService } from "./ipc.service";
  */
 @Injectable()
 export class ElectronRemote {
+    // tslint:disable-next-line:variable-name
+    public Menu: typeof Electron.Menu;
+    // tslint:disable-next-line:variable-name
+    public MenuItem: typeof Electron.MenuItem;
+
     public _remote: Electron.Remote;
     constructor(private ipc: IpcService) {
         this._remote = require("electron").remote;
+        this.Menu = this._remote.Menu;
+        this.MenuItem = this._remote.MenuItem;
     }
 
     public get dialog(): Electron.Dialog {

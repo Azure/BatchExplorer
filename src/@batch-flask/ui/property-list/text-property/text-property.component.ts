@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
-import { clipboard } from "electron";
+import { ClipboardService } from "@batch-flask/ui";
 
 import "./text-property.scss";
 
@@ -21,7 +21,7 @@ export class TextPropertyComponent {
 
     public clipboardDisplayed = false;
 
-    constructor(private changeDetector: ChangeDetectorRef) {}
+    constructor(private changeDetector: ChangeDetectorRef, private clipboard: ClipboardService) {}
 
     public showClipboard(value: boolean) {
         this.clipboardDisplayed = value;
@@ -29,6 +29,6 @@ export class TextPropertyComponent {
     }
 
     public copyToClipBoard() {
-        clipboard.writeText(this.value);
+        this.clipboard.writeText(this.value);
     }
 }
