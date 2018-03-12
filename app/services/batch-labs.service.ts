@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
+import { ElectronRemote } from "@batch-flask/ui";
 import { BatchLabsApplication } from "client/core";
 import { IpcEvent } from "common/constants";
-import { ElectronRemote } from "./electron/remote.service";
 
 @Injectable()
 export class BatchLabsService {

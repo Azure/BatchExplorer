@@ -15,7 +15,7 @@ const services = [
 @NgModule({
     imports: [],
     declarations: [...privateComponents, publicComponents],
-    exports: publicComponents,
+    exports: [...publicComponents],
     providers: services,
 })
 export class ElectronModule {

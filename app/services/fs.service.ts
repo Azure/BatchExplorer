@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
+import { ElectronRemote } from "@batch-flask/ui";
 import { FSWatcher } from "chokidar";
 
 import { CommonFolders, FileSystem } from "client/core";
-import { ElectronRemote } from "./electron/remote.service";
 
 /**
  * Service to handle saving files to the client FileSystem
