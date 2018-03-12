@@ -8,7 +8,6 @@ export * from "./arm-http.service";
 export * from "./batch-labs.service";
 export * from "./cache-data.service";
 export * from "./compute.service";
-export * from "./electron";
 export * from "./file-service";
 export * from "./fs.service";
 export * from "./github-data.service";

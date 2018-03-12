@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, HostListener } from "@angular/core";
+import { ElectronShell } from "@batch-flask/ui";
 import * as path from "path";
 
 import {
     ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService,
 } from "@batch-flask/ui/context-menu";
-import { ElectronShell, FileSystemService, PythonRpcService } from "app/services";
+import { FileSystemService, PythonRpcService } from "app/services";
 import "./rpc-server-status.scss";
 
 @Component({

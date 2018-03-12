@@ -5,10 +5,11 @@ import * as path from "path";
 import { Observable } from "rxjs";
 
 import { FilterBuilder, autobind } from "@batch-flask/core";
+import { ElectronShell } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { tasksToCsv } from "app/components/job/graphs/job-graphs-home/helpers";
 import { Job, Task, TaskState } from "app/models";
-import { CacheDataService, ElectronShell, FileSystemService, JobParams, JobService, TaskService } from "app/services";
+import { CacheDataService,  FileSystemService, JobParams, JobService, TaskService } from "app/services";
 import { EntityView } from "app/services/core";
 import "./job-graphs-home.scss";
 

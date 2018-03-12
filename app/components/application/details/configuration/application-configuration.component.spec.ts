@@ -2,29 +2,33 @@ import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
+import { ClipboardService } from "@batch-flask/ui";
 import {
     BoolPropertyComponent,
     PropertyGroupComponent,
     PropertyListComponent,
     TextPropertyComponent,
 } from "@batch-flask/ui/property-list";
-import { ApplicationPropertiesComponent } from "app/components/application/details";
 import * as Fixtures from "test/fixture";
+import { ApplicationConfigurationComponent } from "./application-configuration.component";
 
-describe("ApplicationPropertiesComponent", () => {
-    let fixture: ComponentFixture<ApplicationPropertiesComponent>;
-    let component: ApplicationPropertiesComponent;
+describe("ApplicationConfigurationComponent", () => {
+    let fixture: ComponentFixture<ApplicationConfigurationComponent>;
+    let component: ApplicationConfigurationComponent;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [
-                ApplicationPropertiesComponent, BoolPropertyComponent, PropertyGroupComponent,
+                ApplicationConfigurationComponent, BoolPropertyComponent, PropertyGroupComponent,
                 PropertyListComponent, TextPropertyComponent,
+            ],
+            providers: [
+                { provide: ClipboardService, useValue: {} },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
 
-        fixture = TestBed.createComponent(ApplicationPropertiesComponent);
+        fixture = TestBed.createComponent(ApplicationConfigurationComponent);
         component = fixture.componentInstance;
         component.application = Fixtures.application.create({
             id: "app-1",

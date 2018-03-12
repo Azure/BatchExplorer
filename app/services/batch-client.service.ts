@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
+import { ElectronRemote } from "@batch-flask/ui";
 import { Observable } from "rxjs";
 
 import { AccountService } from "./account.service";
 import { AdalService } from "./adal";
 import { BatchClientProxy, BatchClientProxyFactory } from "./batch-api";
 import { BatchLabsService } from "./batch-labs.service";
-import { ElectronRemote } from "./electron";
 
 const factory = new BatchClientProxyFactory();
 

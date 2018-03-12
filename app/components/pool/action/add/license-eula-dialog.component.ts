@@ -1,8 +1,8 @@
 import { Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
+import { ElectronShell } from "@batch-flask/ui";
 
 import { ApplicationLicense } from "app/models";
-import { ElectronShell } from "app/services";
 
 @Component({
     selector: "bl-license-eula-dialog",

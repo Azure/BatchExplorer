@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { remote } from "electron";
+import { ElectronRemote } from "@batch-flask/ui";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
@@ -10,7 +10,7 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
-import { ElectronRemote, FileSystemService, PoolParams, PoolService, PricingService } from "app/services";
+import { BatchLabsService, FileSystemService, PoolParams, PoolService, PricingService } from "app/services";
 import { EntityView } from "app/services/core/data";
 import { NumberUtils } from "app/utils";
 import { DeletePoolDialogComponent, PoolCreateBasicDialogComponent, PoolResizeDialogComponent } from "../action";
@@ -48,6 +48,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private dialog: MatDialog,
+        private batchLabs: BatchLabsService,
         private fs: FileSystemService,
         private sidebarManager: SidebarManager,
         private remote: ElectronRemote,
@@ -126,7 +127,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public exportAsJSON() {
-        const dialog = remote.dialog;
+        const dialog = this.remote.dialog;
         const localPath = dialog.showSaveDialog({
             buttonLabel: "Export",
             defaultPath: `${this.pool.id}.json`,
@@ -141,7 +142,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public openInNewWindow() {
         const link = `ms-batchlabs://route/standalone/pools/${this.pool.id}/graphs?fullscreen=true`;
-        const window = this.remote.getBatchLabsApp().openNewWindow(link);
+        const window = this.batchLabs.openNewWindow(link);
 
         return Observable.fromPromise(window.appReady);
     }
