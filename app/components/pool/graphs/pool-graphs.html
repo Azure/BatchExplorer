@@ -60,4 +60,16 @@
             <bl-enable-app-insights-doc blMonitorGraphChart></bl-enable-app-insights-doc>
         </bl-metrics-monitor-graph>
     </ng-container>
+
+    <div blMetricsMonitorConfig>
+        <div class="history-length">
+            <span>Last</span>
+            <select [formControl]="selectedHistoryLength" placeholder="History" class="select">
+                <option [value]="historyLength.TenMinute">10 Minutes</option>
+                <option [value]="historyLength.OneHour">1 Hour</option>
+                <option [value]="historyLength.OnDay">24 Hour</option>
+                <option [value]="historyLength.OnDay">7 days</option>
+            </select>
+        </div>
+    </div>
 </bl-metrics-monitor>

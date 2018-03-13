@@ -5,4 +5,8 @@
         </div>
         <ng-template [ngTemplateOutlet]="graph.chart"></ng-template>
     </bl-vtab>
+
+    <div blVtabFooter>
+        <ng-content select="[blMetricsMonitorConfig]"></ng-content>
+    </div>
 </bl-vtab-group>

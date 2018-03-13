@@ -12,8 +12,4 @@ export class MetricsMonitorGraphComponent {
 
     @ViewChild("preview") public preview: TemplateRef<any>;
     @ViewChild("chart") public chart: TemplateRef<any>;
-
-    constructor(private changeDetector: ChangeDetectorRef) {
-
-    }
 }

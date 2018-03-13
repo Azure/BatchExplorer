@@ -8,6 +8,7 @@ bl-vtab-group {
     > .tab-navigation {
         flex-shrink: 0;
         border-right: 1px solid $border-color;
+        overflow-y: auto;
 
         > .tab-navigation-item {
             display: block;

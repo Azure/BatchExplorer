@@ -41,4 +41,9 @@ bl-metrics-monitor {
             border: 1px solid map-get($primary, 100);
         }
     }
+
+    [blMetricsMonitorConfig] {
+        padding: 10px;
+        text-align: center;
+    }
 }
