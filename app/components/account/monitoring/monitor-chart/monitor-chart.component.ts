@@ -211,7 +211,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             },
             tooltips: {
                 enabled: true,
-                mode: "nearest",
+                mode: "index",
                 callbacks: {
                     title: (tooltipItems, data) => {
                         return this._computeTooltipTitle(tooltipItems[0], data);
