@@ -3,7 +3,7 @@ import { ActivatedRoute, NavigationEnd, PRIMARY_OUTLET, Router } from "@angular/
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { log } from "@batch-flask/utils";
-import { Breadcrumb, RouteComponent } from "./breadcrumb-models";
+import { Breadcrumb, RouteComponent } from "./breadcrumbs.model";
 
 const sessionStorageKey = "breadcrumb";
 

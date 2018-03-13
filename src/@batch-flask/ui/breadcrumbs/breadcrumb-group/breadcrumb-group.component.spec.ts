@@ -3,7 +3,7 @@ import { By } from "@angular/platform-browser";
 import { BehaviorSubject } from "rxjs";
 
 import { BreadcrumbGroupComponent, BreadcrumbModule, BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
-import { pool1Crumb, pool1PropertiesCrumb, poolsCrumb } from "./crumbs-data";
+import { pool1Crumb, pool1PropertiesCrumb, poolsCrumb } from "../crumbs-data.spec";
 
 describe("BreadcrumbGroupComponent", () => {
     let fixture: ComponentFixture<BreadcrumbGroupComponent>;
