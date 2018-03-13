@@ -447,6 +447,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         const actions = [
             new ContextMenuItem({ label: "Go to", click: () => this._gotoNode(node) }),
             new ContextMenuItem({ label: "Connect", click: () => this._connectTo(node) }),
+            new ContextMenuItem({ label: "Monitor", click: () => this._monitor(node) }),
             new ContextMenuItem({ label: "Reboot", click: () => this._reboot(node) }),
             new ContextMenuItem({
                 label: "Reimage",
@@ -494,6 +495,14 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     private _gotoNode(node: Node) {
         this.router.navigate(["/pools", this.pool.id, "nodes", node.id]);
+    }
+
+    private _monitor(node: Node) {
+        this.router.navigate(["/pools", this.pool.id, "nodes", node.id], {
+            queryParams: {
+                tab: "monitoring",
+            },
+        });
     }
 
     private _connectTo(node: Node) {

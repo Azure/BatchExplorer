@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from "@angular/core";
+import { Component, Input, OnChanges, HostBinding } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
 import { NumberUtils } from "app/utils";
@@ -19,6 +19,8 @@ export enum BatchUsageMetrics {
 export class PerformanceGraphComponent implements OnChanges {
     @Input() public interactive: boolean = true;
     @Input() public data: PerformanceData;
+
+    @HostBinding("class.bl-performance-graph") public baseCssCls = true;
 
     public type = "line";
     public unit = "";
