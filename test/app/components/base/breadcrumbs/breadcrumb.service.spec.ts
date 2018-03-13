@@ -11,7 +11,7 @@ describe("Breadcrumb service", () => {
     beforeEach(() => {
         routerSpy = {
             events: new Subject(),
-            navigate: jasmine.createSpy("router navigate option"),
+            navigateByUrl: jasmine.createSpy("router navigate option"),
         };
         service = new BreadcrumbService(routerSpy, null);
     });
@@ -39,8 +39,8 @@ describe("Breadcrumb service", () => {
     it("Navigate to breadcrumb call router navigate", () => {
         service.navigateTo(pool1Crumb);
 
-        expect(routerSpy.navigate).toHaveBeenCalledOnce();
-        expect(routerSpy.navigate).toHaveBeenCalledWith(["/pools/a"], {
+        expect(routerSpy.navigateByUrl).toHaveBeenCalledOnce();
+        expect(routerSpy.navigateByUrl).toHaveBeenCalledWith("/pools/a", {
             relativeTo: null,
             queryParams: { tab: "nodes" },
         });
