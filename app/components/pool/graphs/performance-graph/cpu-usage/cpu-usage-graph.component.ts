@@ -1,4 +1,4 @@
-import { Component, OnChanges } from "@angular/core";
+import { Component, Input, OnChanges } from "@angular/core";
 import { PerformanceGraphComponent } from "../performance-graph.component";
 
 import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
@@ -9,6 +9,8 @@ import "./cpu-usage-graph.scss";
     templateUrl: "cpu-usage-graph.html",
 })
 export class CpuUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
+    @Input() public showIndividualCpu = false;
+
     public max = 100;
     public unit = "%";
 

@@ -4,34 +4,38 @@
     <div *ngIf="isPaasPool" [other-fix]="reimageFailedNodes" fixMessage="Reimage failed nodes"></div>
 </bl-banner>
 <bl-metrics-monitor class="graphs-container">
-    <bl-metrics-monitor-metric label="Heatmap">
-        <bl-nodes-heatmap blMonitorGraphPreview [pool]="pool" [nodes]="nodes" [showRunningTasks]="false" [showLegend]="false" [interactive]="false"
-            [limitNode]="10"></bl-nodes-heatmap>
+    <!-- Only show the heatmap, available nodes and running tasks on the pool -->
+    <ng-container *ngIf="!node">
+        <bl-metrics-monitor-metric label="Heatmap">
+            <bl-nodes-heatmap blMonitorGraphPreview [pool]="pool" [nodes]="nodes" [showRunningTasks]="false" [showLegend]="false" [interactive]="false"
+                [limitNode]="10"></bl-nodes-heatmap>
 
-        <bl-nodes-heatmap blMonitorGraphChart [pool]="pool" [nodes]="nodes" [jobs]="jobs"></bl-nodes-heatmap>
-    </bl-metrics-monitor-metric>
-    <bl-metrics-monitor-metric label="Available nodes">
-        <bl-history-graph blMonitorGraphPreview [max]="pool.targetNodes"  [history]="runningNodesHistory.history"
-            [interactive]="false" [historySize]="selectedHistoryLength.value">
-        </bl-history-graph>
+            <bl-nodes-heatmap blMonitorGraphChart [pool]="pool" [nodes]="nodes"></bl-nodes-heatmap>
+        </bl-metrics-monitor-metric>
+        <bl-metrics-monitor-metric label="Available nodes">
+            <bl-history-graph blMonitorGraphPreview [max]="pool.targetNodes"  [history]="runningNodesHistory.history"
+                [interactive]="false" [historySize]="selectedHistoryLength.value">
+            </bl-history-graph>
 
-        <bl-history-graph blMonitorGraphChart [max]="pool.targetNodes" class="full-display" [history]="runningNodesHistory.history" [historySize]="selectedHistoryLength.value">
-        </bl-history-graph>
-    </bl-metrics-monitor-metric>
-    <bl-metrics-monitor-metric label="Running tasks">
-        <bl-history-graph blMonitorGraphPreview [max]="maxRunningTasks" [history]="runningTaskHistory.history" [interactive]="false"
-            [historySize]="selectedHistoryLength.value">
-        </bl-history-graph>
+            <bl-history-graph blMonitorGraphChart [max]="pool.targetNodes" class="full-display" [history]="runningNodesHistory.history" [historySize]="selectedHistoryLength.value">
+            </bl-history-graph>
+        </bl-metrics-monitor-metric>
+        <bl-metrics-monitor-metric label="Running tasks">
+            <bl-history-graph blMonitorGraphPreview [max]="maxRunningTasks" [history]="runningTaskHistory.history" [interactive]="false"
+                [historySize]="selectedHistoryLength.value">
+            </bl-history-graph>
 
-        <bl-history-graph blMonitorGraphChart [max]="maxRunningTasks" class="full-display" [history]="runningTaskHistory.history" [historySize]="selectedHistoryLength.value">
-        </bl-history-graph>
-    </bl-metrics-monitor-metric>
+            <bl-history-graph blMonitorGraphChart [max]="maxRunningTasks" class="full-display" [history]="runningTaskHistory.history" [historySize]="selectedHistoryLength.value">
+            </bl-history-graph>
+        </bl-metrics-monitor-metric>
+    </ng-container>
+
     <ng-container *ngIf="appInsightsEnabled">
         <bl-metrics-monitor-metric label="Cpu">
             <bl-cpu-usage-graph blMonitorGraphPreview #cpuUsage [data]="performanceData" [interactive]="false"></bl-cpu-usage-graph>
             <div blMetricsStatus>{{cpuUsage.status | async}}</div>
 
-            <bl-cpu-usage-graph blMonitorGraphChart [data]="performanceData" class="full-display"></bl-cpu-usage-graph>
+            <bl-cpu-usage-graph blMonitorGraphChart [data]="performanceData" [showIndividualCpu]="node" class="full-display"></bl-cpu-usage-graph>
         </bl-metrics-monitor-metric>
         <bl-metrics-monitor-metric label="Memory">
             <bl-memory-usage-graph blMonitorGraphPreview #memUsage [data]="performanceData" [interactive]="false"></bl-memory-usage-graph>
