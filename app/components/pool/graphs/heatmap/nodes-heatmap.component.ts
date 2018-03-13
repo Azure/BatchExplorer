@@ -13,7 +13,7 @@ import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/u
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
-import { Job, Node, NodeState, Pool } from "app/models";
+import { Node, NodeState, Pool } from "app/models";
 import { NodeService } from "app/services";
 import { ComponentUtils, log } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";
@@ -81,8 +81,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     @Input() public limitNode: number = null;
 
     @Input() public nodes: List<Node>;
-
-    @Input() public jobs: List<Job> = List([]);
 
     @ViewChild("heatmap") public heatmapEl: ElementRef;
 
