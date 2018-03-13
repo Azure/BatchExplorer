@@ -20,6 +20,8 @@ import "./monitor-chart.scss";
 })
 export class MonitorChartComponent implements OnChanges, OnDestroy {
     @Input() public chartType: MonitorChartType;
+    @Input() public preview: boolean = false;
+
     public type: string = "bar";
     public title = "";
     public datasets: Chart.ChartDataSets[];
@@ -60,6 +62,9 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         if (changes.chartType) {
             this.refreshMetrics();
             this._updateTitle();
+        }
+        if (changes.preview) {
+            this._setChartOptions();
         }
     }
 
@@ -206,7 +211,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                 yAxes: [{
                     stacked: true,
                     type: "linear",
-                    display: true,
+                    display: !this.preview,
                     ticks: {
                         min: 0,
                         autoSkip: true,
