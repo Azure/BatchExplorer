@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
 import { VTabsModule } from "@batch-flask/ui/vtabs";
-import { MetricsMonitorGraphComponent } from "./metrics-monitor-graph";
+import { MetricsMonitorGraphComponent } from "./metrics-monitor-metric";
 import { MetricsMonitorComponent } from "./metrics-monitor.component";
 
 const privateComponents = [];

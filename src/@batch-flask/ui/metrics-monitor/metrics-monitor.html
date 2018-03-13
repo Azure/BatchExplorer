@@ -1,5 +1,5 @@
 <bl-vtab-group class="content">
-    <bl-vtab *ngFor="let graph of graphs">
+    <bl-vtab *ngFor="let graph of graphs;trackBy: trackMetric">
         <div tabLabel>
             <ng-template [ngTemplateOutlet]="graph.preview"></ng-template>
         </div>

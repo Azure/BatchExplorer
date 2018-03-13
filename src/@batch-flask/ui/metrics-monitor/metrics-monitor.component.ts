@@ -2,7 +2,7 @@ import {
     AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, QueryList,
 } from "@angular/core";
 
-import { MetricsMonitorGraphComponent } from "./metrics-monitor-graph";
+import { MetricsMonitorGraphComponent } from "./metrics-monitor-metric";
 
 import "./metrics-monitor.scss";
 
@@ -20,5 +20,9 @@ export class MetricsMonitorComponent implements AfterContentInit {
 
     public ngAfterContentInit() {
         this.graphs.changes.subscribe(() => this.changeDetector.markForCheck());
+    }
+
+    public trackMetric(index, metric: MetricsMonitorGraphComponent) {
+        return index;
     }
 }

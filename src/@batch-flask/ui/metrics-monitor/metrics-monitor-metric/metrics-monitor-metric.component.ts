@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, TemplateRef, ViewChild } from "@angular/core";
 
-import "./metrics-monitor-graph.scss";
+import "./metrics-monitor-metric.scss";
 
 @Component({
-    selector: "bl-metrics-monitor-graph",
-    templateUrl: "metrics-monitor-graph.html",
+    selector: "bl-metrics-monitor-metric",
+    templateUrl: "metrics-monitor-metric.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetricsMonitorGraphComponent {
