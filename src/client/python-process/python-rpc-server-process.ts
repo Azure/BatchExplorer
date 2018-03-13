@@ -8,8 +8,11 @@ import { getPythonPath } from "./python-executable";
 
 const asarPath = path.join(Constants.root, "../python-rpc/main");
 const localPath = path.join(Constants.root, "python/main.py");
+const portPromise = process.env.HOT ? Constants.pythonServerPort.dev : Constants.pythonServerPort.prod;
 
 export class PythonRpcServerProcess {
+    public port: Promise<number> = portPromise;
+
     private _spawedProcess: ChildProcess;
     private _askForKill: boolean;
     /**
@@ -60,7 +63,6 @@ export class PythonRpcServerProcess {
     }
 
     private async _getCommandLine(): Promise<{ cmd: string, args: string[] }> {
-        const portPromise = process.env.HOT ? Constants.pythonServerPort.dev : Constants.pythonServerPort.prod;
 
         return portPromise.then((port) => {
             const portStr = port.toString();

@@ -4,11 +4,11 @@ import { BatchApplication } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
 
 @Component({
-    selector: "bl-application-properties",
-    templateUrl: "application-properties.html",
+    selector: "bl-application-configuration",
+    templateUrl: "application-configuration.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApplicationPropertiesComponent {
+export class ApplicationConfigurationComponent {
     @Input()
     public set application(application: BatchApplication) {
         this._application = application;

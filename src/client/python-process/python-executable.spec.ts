@@ -1,4 +1,4 @@
-import * as core from "../core";
+import * as core from "../core/subprocess";
 import * as pythonExecutable from "./python-executable";
 
 describe("python-executable", () => {

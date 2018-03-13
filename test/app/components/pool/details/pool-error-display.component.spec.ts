@@ -1,6 +1,7 @@
 import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { ElectronShell } from "@batch-flask/ui";
 import { Observable } from "rxjs";
 
 import { PoolErrorDisplayComponent } from "app/components/pool/details";
@@ -33,6 +34,7 @@ describe("PoolErrorDisplayComponent", () => {
             providers: [
                 { provide: AccountService, useValue: accountServiceSpy },
                 { provide: PoolService, useValue: null },
+                { provide: ElectronShell, useValue: {} },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

@@ -3,6 +3,7 @@ import { Observable, Subscription } from "rxjs";
 import * as Fixtures from "test/fixture";
 
 import { InsightsMetricsService } from "./insights-metrics.service";
+import { MonitorChartTimeFrame } from "./monitor-metrics-base";
 
 describe("InsightsMetricsService", () => {
     let monitorService: InsightsMetricsService;
@@ -93,14 +94,14 @@ describe("InsightsMetricsService", () => {
             }),
         };
 
-        subs.push(monitorService.getTaskStates().subscribe(response => {
+        subs.push(monitorService.getTaskStates(MonitorChartTimeFrame.Hour).subscribe(response => {
             expect(requestUrl).toEqual("myaccount/providers/Microsoft.Insights/metrics");
             expect(response.metrics.length).toEqual(2);
-            expect(response.metrics[0].name.value).toEqual("TaskCompleteEvent");
-            expect(response.metrics[0].name.localizedValue).toEqual("Task complete events");
+            expect(response.metrics[0].name).toEqual("TaskCompleteEvent");
+            expect(response.metrics[0].label).toEqual("Task complete events");
             expect(response.metrics[0].data.length).toEqual(7);
-            expect(response.metrics[1].name.value).toEqual("TaskStartEvent");
-            expect(response.metrics[1].name.localizedValue).toEqual("Task start events");
+            expect(response.metrics[1].name).toEqual("TaskStartEvent");
+            expect(response.metrics[1].label).toEqual("Task start events");
             expect(response.metrics[1].data.length).toEqual(3);
         }));
     });
@@ -110,8 +111,8 @@ describe("InsightsMetricsService", () => {
             body: JSON.stringify({
                 value: [{
                     name: {
-                        value: "TestNodeCount",
-                        localizedValue: "Test Node Count",
+                        value: "StartingNodeCount",
+                        localizedValue: "Starting Node Count",
                     },
                     timeseries: [{
                         data: [],
@@ -120,11 +121,11 @@ describe("InsightsMetricsService", () => {
             }),
         };
 
-        subs.push(monitorService.getNodeStates().subscribe(response => {
+        subs.push(monitorService.getNodeStates(MonitorChartTimeFrame.Hour).subscribe(response => {
             expect(requestUrl).toEqual("myaccount/providers/Microsoft.Insights/metrics");
             expect(response.metrics.length).toEqual(1);
-            expect(response.metrics[0].name.localizedValue).toEqual("Test");
-            expect(response.metrics[0].name.value).toEqual("TestNodeCount");
+            expect(response.metrics[0].name).toEqual("StartingNodeCount");
+            expect(response.metrics[0].label).toEqual("Starting");
         }));
     });
 });

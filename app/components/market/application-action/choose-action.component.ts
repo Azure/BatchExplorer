@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { autobind } from "@batch-flask/core";
+import { ElectronShell } from "@batch-flask/ui";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { Application, ApplicationAction } from "app/models";
-import { ElectronShell, NcjTemplateService } from "app/services";
+import { NcjTemplateService } from "app/services";
 import "./choose-action.scss";
 
 @Component({
