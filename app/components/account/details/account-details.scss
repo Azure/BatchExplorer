@@ -45,8 +45,7 @@ bl-account-details {
             grid-row: span 2;
             grid-column: span 2;
             background-color: $card-background;
-            // margin-top: 5px;
-            // margin-right: 5px;
+            cursor: pointer;
         }
 
         > .node-states {

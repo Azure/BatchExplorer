@@ -112,7 +112,10 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         });
     }
 
-    public openTimeFramePicker() {
+    public openTimeFramePicker(event: Event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        event.stopPropagation();
         const items = [
             new ContextMenuItem({
                 label: "Past hour", click: () => {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 import "./account-monitoring-home.scss";
 
@@ -9,10 +9,6 @@ import "./account-monitoring-home.scss";
 })
 export class AccountMonitoringHomeComponent {
     public static breadcrumb(params, queryParams) {
-        return {name: "Some name", label: "Some label", icon: "fontawesome-icon"};
-    }
-
-    constructor(private changeDetector: ChangeDetectorRef) {
-
+        return {name: "Monitoring"};
     }
 }
