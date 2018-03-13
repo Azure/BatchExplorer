@@ -36,8 +36,10 @@ export class DeleteAccountDialogComponent {
 
     @autobind()
     public destroyBatchAccount() {
-        const task = new DeleteAccountTask(this.accountService, [this.accountId]);
-        task.startAndWaitAsync(this.taskManager);
-        return task.actionDone;
+        this.taskManager.startTask("", (backgroundTask) => {
+            const task = new DeleteAccountTask(this.accountService, [this.accountId]);
+            task.start(backgroundTask);
+            return task.waitingDone;
+        });
     }
 }

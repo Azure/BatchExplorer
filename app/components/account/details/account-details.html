@@ -14,6 +14,8 @@
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
                 <bl-button [action]="showKeys" color="light" mdTooltip="Account shared keys"><i class="fa fa-key"></i></bl-button>
+                <bl-delete-button [action]="deleteBatchAccount"
+                    [enabled]="accountState !== accountProvisioningState.Creating && accountState !== accountProvisioningState.Deleting"></bl-delete-button>
             </bl-button-group>
             <div summaryTile>
                 <bl-account-quotas-card [account]="account"></bl-account-quotas-card>

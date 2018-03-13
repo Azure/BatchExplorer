@@ -32,7 +32,7 @@ export class DeleteAccountTask extends LongRunningDeleteAction {
                 }
             },
             error: (error) => {
-                // No need to watch for Job schedule it is already deleted
+                // No need to watch for Batch account it is already deleted
                 this.markItemAsDeleted();
             },
         });
