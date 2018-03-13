@@ -40,7 +40,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     public jobParametersWrapper: NcjParameterWrapper[];
     public poolParametersWrapper: NcjParameterWrapper[];
 
-    private _error: ServerError;
+    public error: ServerError;
     private _controlChanges: Subscription[] = [];
     private _routeParametersSub: Subscription;
     private _parameterTypeMap = {};
@@ -128,7 +128,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
 
     @autobind()
     public submit() {
-        this._error = null;
+        this.error = null;
         let method;
         const methods = {
             [NcjTemplateMode.NewPoolAndJob]: this._createJobWithAutoPool,
@@ -140,7 +140,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         if (method) {
             const obs = method();
             obs.subscribe({
-                error: (err) => this._error = err,
+                error: (err) => this.error = err,
             });
 
             return obs;
