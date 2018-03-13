@@ -238,12 +238,6 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                     type: "time",
                     position: "bottom",
                     display: false,
-                    // ticks: {
-                    //     display: false,
-                    // },
-                    // scaleLabel: {
-                    //     display: false,
-                    // }
                 }],
             },
         };
