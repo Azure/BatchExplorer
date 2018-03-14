@@ -11,13 +11,13 @@
             </div>
             <p *ngIf="groupExists" class="exists">This file group already exists, any selected files will be added to this existing group</p>
             <div class="form-element">
-                    <mat-checkbox (change)="emptyCheck($event)" color="primary">Create an empty file group</mat-checkbox>
+                    <mat-checkbox (change)="createEmptyCheckChanged($event)" color="primary">Create an empty file group</mat-checkbox>
                 </div>
         </bl-form-section>
 
         <bl-form-section *ngIf="!createEmptyGroup" title="Files" subtitle="Drag and drop directories or files that you want to include in the file group">
             <div class="form-element">
-                <bl-file-or-directory-picker formControlName="folder" dragMessage="Drag and drop files or folders here or select items with the buttons below"></bl-file-or-directory-picker>
+                <bl-file-or-directory-picker formControlName="paths" dragMessage="Drag and drop files or folders here or select items with the buttons below"></bl-file-or-directory-picker>
                 <bl-directory-picker (onChange)="selectFolder($event)">Select a folder</bl-directory-picker>
                 <bl-directory-picker (onChange)="selectFolder($event)" [canPickFile]="true">Select a file</bl-directory-picker>
             </div>

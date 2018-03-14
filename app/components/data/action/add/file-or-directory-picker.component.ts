@@ -4,14 +4,10 @@ import {
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
-import { ResourceFileAttributes } from "app/models";
+import { FileOrDirectoryDto } from "app/models/dtos";
 import { DragUtils } from "app/utils";
 
 import "./file-or-directory-picker.scss";
-
-export interface FileOrDirectory {
-    path: string;
-}
 
 // tslint:disable:no-forward-ref
 @Component({
@@ -27,9 +23,9 @@ export class FileOrDirectoryPickerComponent implements ControlValueAccessor, OnD
     public dragMessage: string = "Drag and drop files or folders here";
 
     public isDraging = 0;
-    public paths: FormControl<FileOrDirectory[]>;
+    public paths: FormControl<FileOrDirectoryDto[]>;
 
-    private _propagateChange: (value: FileOrDirectory[]) => void = null;
+    private _propagateChange: (value: FileOrDirectoryDto[]) => void = null;
     private _sub: Subscription;
 
     constructor(
@@ -47,7 +43,7 @@ export class FileOrDirectoryPickerComponent implements ControlValueAccessor, OnD
         this._sub.unsubscribe();
     }
 
-    public writeValue(value: ResourceFileAttributes[]) {
+    public writeValue(value: FileOrDirectoryDto[]) {
         if (value) {
             this.paths.setValue(value);
         }
