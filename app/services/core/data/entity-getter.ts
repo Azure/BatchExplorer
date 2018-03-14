@@ -71,7 +71,10 @@ export abstract class EntityGetter<TEntity, TParams> extends GenericGetter<TEnti
             } else {
                 const paramsString = Object.keys(params).join(",");
                 // tslint:disable-next-line:max-line-length
-                log.warn(`Unable to find unique key for cached item. Property: ${cache.uniqueField}, with params: ${paramsString}. The property must exist in the params collection.`);
+
+                log.warn(`Unable to find unique key for cached item ${this.type.name}. `
+                    + `Cache key is: ${cache.uniqueField}, with params: ${paramsString}. `
+                    + `The property must exist in the params collection.`, { params });
             }
         }
     }
