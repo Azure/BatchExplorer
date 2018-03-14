@@ -62,6 +62,11 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
                 this._loadQuickAccessLists();
             }
         });
+
+        this.poolData = this.poolService.listView();
+        this.jobData = this.jobService.listView();
+        this.applicationData = this.applicationService.listView();
+
     }
 
     public ngOnInit() {
@@ -82,6 +87,9 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();
+        this.poolData.dispose();
+        this.jobData.dispose();
+        this.applicationData.dispose();
     }
 
     @autobind()
@@ -105,7 +113,6 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     }
 
     private _loadQuickAccessLists() {
-        this.applicationData = this.applicationService.listView();
         this.applicationData.setOptions(this.initialOptions);
         this.applicationData.fetchNext();
         this.applicationData.onError = (error: ServerError) => {
@@ -118,13 +125,10 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
             return !handled;
         };
 
-        this.jobData = this.jobService.listView();
         this.jobData.setOptions(this.initialOptions);
         this.jobData.fetchNext();
 
-        this.poolData = this.poolService.listView();
         this.poolData.setOptions(this.initialOptions);
-
         this.poolData.fetchNext();
     }
 }
