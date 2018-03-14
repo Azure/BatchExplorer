@@ -1,6 +1,10 @@
 import { FileGroupCreateDto } from "app/models/dtos";
 import { Constants } from "app/utils";
 
+export interface FileOrDirectoryModel {
+    path: string;
+}
+
 export interface FileGroupOptionsModel {
     prefix?: string;
     flatten: boolean;
@@ -9,7 +13,7 @@ export interface FileGroupOptionsModel {
 
 export interface CreateFileGroupModel {
     name: string;
-    paths: string[];
+    paths: FileOrDirectoryModel[];
     includeSubDirectories: boolean;
     accessPolicy: string;
     options: FileGroupOptionsModel;
