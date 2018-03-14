@@ -4,7 +4,7 @@ import { InboundNATPool } from "app/models";
 
 export const MININUM_PORT = 1;
 export const MAXIMUM_BACKEND_PORT = 65535;
-export const RESERVED_BACKEND_PORT: number[] = [22, 3389, 29876, 29877];
+export const RESERVED_BACKEND_PORT: number[] = [29876, 29877];
 export const MAXIMUM_FRONTEND_PORT = 65534;
 export const MINIMUM_RESERVED_FRONTEND_PORT = 50000;
 export const MAXIMUM_RESERVED_FRONTEND_PORT = 55000;
