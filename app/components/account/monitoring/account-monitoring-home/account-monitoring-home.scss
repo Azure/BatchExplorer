@@ -1,0 +1,11 @@
+@import "app/styles/variables";
+
+bl-account-monitoring-home {
+    display: block;
+    height: $contentview-height;
+    width: 100%;
+
+    .tab-content {
+        // height: 500px;
+    }
+}
