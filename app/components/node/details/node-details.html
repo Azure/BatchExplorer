@@ -24,6 +24,10 @@
                     <bl-tab-label>Configuration</bl-tab-label>
                     <bl-node-configuration [pool]="pool" [node]="node"></bl-node-configuration>
                 </bl-tab>
+                <bl-tab key="monitoring">
+                    <bl-tab-label>Monitoring</bl-tab-label>
+                    <bl-pool-graphs [pool]="pool" [node]="node"></bl-pool-graphs>
+                </bl-tab>
             </bl-tab-group>
         </bl-card>
     </div>

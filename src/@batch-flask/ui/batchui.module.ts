@@ -30,6 +30,7 @@ import {
     DeleteSelectedItemsDialogComponent, EntityDetailsListComponent,
 } from "./list-and-show-layout";
 import { LoadingModule } from "./loading";
+import { MetricsMonitorModule } from "./metrics-monitor";
 import { NotificationModule } from "./notifications";
 import { PermissionModule } from "./permission";
 import { PropertyListModule } from "./property-list";
@@ -63,6 +64,7 @@ const modules = [
     FocusSectionModule,
     InfoBoxModule,
     LoadingModule,
+    MetricsMonitorModule,
     NotificationModule,
     PermissionModule,
     PropertyListModule,

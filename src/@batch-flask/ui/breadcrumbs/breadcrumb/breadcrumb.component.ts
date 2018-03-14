@@ -1,7 +1,7 @@
 import { Component, HostBinding, HostListener, Input } from "@angular/core";
 
-import { Breadcrumb } from "./breadcrumb-models";
-import { BreadcrumbService } from "./breadcrumb.service";
+import { BreadcrumbService } from "../breadcrumb.service";
+import { Breadcrumb } from "../breadcrumbs.model";
 
 @Component({
     selector: "bl-breadcrumb",

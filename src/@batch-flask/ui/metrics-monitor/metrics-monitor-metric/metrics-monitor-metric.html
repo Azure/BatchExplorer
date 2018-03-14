@@ -1,0 +1,17 @@
+<ng-template #preview>
+    <div class="preview">
+        <div class="graph">
+            <ng-content select=[blMonitorGraphPreview]></ng-content>
+        </div>
+        <div class="info">
+            <div class="label">{{label}}</div>
+            <div class="status">
+                <ng-content select=[blMetricsStatus]></ng-content>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #chart>
+    <ng-content select=[blMonitorGraphChart]></ng-content>
+</ng-template>

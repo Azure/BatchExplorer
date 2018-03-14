@@ -1,8 +1,8 @@
 import { Component, ElementRef, HostListener, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { Breadcrumb } from "./breadcrumb-models";
-import { BreadcrumbService } from "./breadcrumb.service";
+import { Breadcrumb } from "..//breadcrumbs.model";
+import { BreadcrumbService } from "../breadcrumb.service";
 
 import "./breadcrumb-group.scss";
 

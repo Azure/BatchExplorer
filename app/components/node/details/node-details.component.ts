@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs";
@@ -40,6 +40,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
         private poolService: PoolService,
         private dialog: DialogService,
         fileService: FileService,
+        changeDetector: ChangeDetectorRef,
         private sidebarManager: SidebarManager) {
 
         this.data = nodeService.view();
@@ -47,6 +48,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
             if (node) {
                 // this.decorator = new NodeDecorator(node);
                 this.node = node;
+                changeDetector.markForCheck();
             }
         });
 

@@ -20,6 +20,8 @@ import "./monitor-chart.scss";
 })
 export class MonitorChartComponent implements OnChanges, OnDestroy {
     @Input() public chartType: MonitorChartType;
+    @Input() public preview: boolean = false;
+
     public type: string = "bar";
     public title = "";
     public datasets: Chart.ChartDataSets[];
@@ -33,6 +35,8 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     private _themeSub: Subscription;
     private _sub: Subscription;
     private _theme: StringMap<string>;
+    private _metricList: MonitoringMetricList;
+
     constructor(
         themeService: ThemeService,
         private changeDetector: ChangeDetectorRef,
@@ -61,6 +65,9 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             this.refreshMetrics();
             this._updateTitle();
         }
+        if (changes.preview) {
+            this._setChartOptions();
+        }
     }
 
     public ngOnDestroy(): void {
@@ -75,6 +82,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         this._destroySub();
         this._updateLoadingStatus(LoadingStatus.Loading);
         this._sub = obs.subscribe(response => {
+            this._metricList = response;
             this.colors = [];
             this.total = [];
             this.interval = response.interval;
@@ -107,7 +115,10 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         });
     }
 
-    public openTimeFramePicker() {
+    public openTimeFramePicker(event: Event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        event.stopPropagation();
         const items = [
             new ContextMenuItem({
                 label: "Past hour", click: () => {
@@ -200,13 +211,18 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             },
             tooltips: {
                 enabled: true,
-                mode: "nearest",
+                mode: "index",
+                callbacks: {
+                    title: (tooltipItems, data) => {
+                        return this._computeTooltipTitle(tooltipItems[0], data);
+                    },
+                },
             },
             scales: {
                 yAxes: [{
                     stacked: true,
                     type: "linear",
-                    display: true,
+                    display: !this.preview,
                     ticks: {
                         min: 0,
                         autoSkip: true,
@@ -222,12 +238,6 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                     type: "time",
                     position: "bottom",
                     display: false,
-                    // ticks: {
-                    //     display: false,
-                    // },
-                    // scaleLabel: {
-                    //     display: false,
-                    // }
                 }],
             },
         };
@@ -242,5 +252,12 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         if (this._sub) {
             this._sub.unsubscribe();
         }
+    }
+
+    private _computeTooltipTitle(item: Chart.ChartTooltipItem, data) {
+        const interval = this._metricList.interval;
+        const start = moment(item.xLabel);
+        const end = moment(start).add(interval);
+        return `Data between ${start.format("hh:mm A")} and ${end.format("hh:mm A")} on ${start.format("LL")}`;
     }
 }
