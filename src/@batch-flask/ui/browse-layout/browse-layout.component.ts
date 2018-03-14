@@ -154,6 +154,7 @@ export class BrowseLayoutComponent implements AfterContentInit {
     }
 
     public advancedFilterChanged(filter: Filter) {
+        console.log("Advanced filter chnaged?", filter);
         this.advancedFilter = filter;
         this._updateFilter();
     }

@@ -58,10 +58,10 @@ export class FileService extends ServiceBase {
     private _basicProperties: string = "name, url";
     private _nodeFilecache = new TargetedDataCache<NodeFileListParams, File>({
         key: ({ poolId, nodeId }) => poolId + "/" + nodeId,
-    }, "url");
+    }, "filename");
     private _taskFileCache = new TargetedDataCache<TaskFileListParams, File>({
         key: ({ jobId, taskId }) => jobId + "/" + taskId,
-    }, "url");
+    }, "filename");
 
     private _taskFileGetter: BatchEntityGetter<File, TaskFileParams>;
     private _nodeFileGetter: BatchEntityGetter<File, NodeFileParams>;
