@@ -73,7 +73,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
 
     public writeValue(value: any) {
         if (value) {
-            this.pickedLicenses = value;
+            this.pickedLicenses = new ListSelection({ keys: value });
         }
     }
 
