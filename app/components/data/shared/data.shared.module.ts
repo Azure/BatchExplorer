@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
 import { FileBrowseModule } from "app/components/file/browse";
+import { BlobContainerPickerComponent } from "./blob-container-picker";
 import { CloudFilePickerComponent, CloudFilePickerDialogComponent } from "./cloud-file-picker";
 import { StorageErrorDisplayComponent } from "./errors";
 import { FileGroupPickerComponent } from "./file-group-picker";
@@ -11,7 +12,7 @@ import { FileGroupsPickerComponent } from "./file-groups-picker";
 const components = [
     FileGroupPickerComponent, FileGroupSasComponent, FileGroupsPickerComponent,
     CloudFilePickerComponent, CloudFilePickerDialogComponent,
-    StorageErrorDisplayComponent,
+    StorageErrorDisplayComponent, BlobContainerPickerComponent,
 ];
 
 @NgModule({
