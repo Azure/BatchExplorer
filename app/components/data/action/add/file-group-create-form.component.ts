@@ -143,13 +143,15 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     }
 
     private _uploadFileGroupData(formData: FileGroupCreateDto) {
-        return Observable.fromPromise(this._getValidPaths(formData.paths)).flatMap((validPaths) => {
-            const lastData: DataTotals = this._initDataTotals(1, validPaths.length);
-            const trimmedName = this._sanitizeFileGroupName(formData.name);
-            const msgFormat = `Processing ({0}/${lastData.pathsExpected}) paths to: {1}`;
-            let message = msgFormat.format(lastData.pathCounter, trimmedName);
+        const msgFormat = `Processing ({0}/{1}) paths to: {2}`;
+        const trimmedName = this._sanitizeFileGroupName(formData.name);
 
-            return this.backgroundTaskService.startTask(message, (task) => {
+        return this.backgroundTaskService.startTask("Uploading files to file group", (task) => {
+            const observable = Observable.fromPromise(this._getValidPaths(formData.paths)).flatMap((validPaths) => {
+                const lastData: DataTotals = this._initDataTotals(1, validPaths.length);
+                let message = msgFormat.format(lastData.pathCounter, lastData.pathsExpected, trimmedName);
+                task.name.next(message);
+
                 return Observable.from(validPaths).flatMap((fileOrDirPath) => {
                     const createObs = this.fileGroupService.createOrUpdateFileGroup(
                         formData.name,
@@ -165,7 +167,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                                     // tslint:disable-next-line:max-line-length
                                     task.name.next(`Processing large file: ${data.partial}%, completed (${lastData.pathCounter - 1}/${lastData.pathsExpected}) paths`);
                                 } else {
-                                    task.name.next(`${message} (${data.uploaded}/${data.total})`);
+                                    task.name.next(`${message}, (${data.uploaded}/${data.total}) files.`);
                                 }
 
                                 task.progress.next(data.uploaded / data.total * 100);
@@ -178,8 +180,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
 
                                 lastData.actual += lastData.uploaded;
                                 lastData.expected += lastData.total;
-                                message = msgFormat.format(lastData.pathCounter, trimmedName);
-                                task.name.next(`${message} (${lastData.uploaded}/${lastData.total})`);
+                                message = msgFormat.format(lastData.pathCounter, lastData.pathsExpected, trimmedName);
+                                task.name.next(`${message}, (${lastData.uploaded}/${lastData.total}) files`);
                             },
                             error: (error) => {
                                 log.error("Failed to create or modify file group", error);
@@ -188,8 +190,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                         });
 
                     return createObs;
-                })
-                .finally(() => {
+                }).finally(() => {
                     task.progress.next(100);
                     const fileGroupName = this.storageService.fileGroupContainer(formData.name);
                     this.storageService.onContainerAdded.next(fileGroupName);
@@ -198,8 +199,10 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                         `${lastData.actual} files were successfully uploaded to the file group`,
                     );
                 });
-            });
-        }).share();
+            }).share();
+
+            return observable;
+        });
     }
 
     /**
