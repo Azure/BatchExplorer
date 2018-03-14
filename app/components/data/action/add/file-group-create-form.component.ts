@@ -38,6 +38,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     public description: string = "Upload files into a managed storage container that you can use " +
         "for resource files in your jobs and tasks";
     public createEmptyGroup: boolean = false;
+    public modifyExisting: boolean = false;
 
     private _pathsControl: FormControl;
 
@@ -93,9 +94,11 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     }
 
     public dtoToForm(fileGroup: FileGroupCreateDto): CreateFileGroupModel {
-        this.title = "Add folder to file group";
-        this.description = "Add another folder to an already existing file group";
+        this.title = "Add more files to file group";
+        this.description = "Add more files to an already existing file group. " +
+            "Any files that exist already will be updated 'only' if they have changed.";
         this.form.controls.name.disable();
+        this.modifyExisting = true;
 
         return fileGroupToFormModel(fileGroup);
     }
@@ -121,25 +124,6 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         });
 
         return obs;
-    }
-
-    // interface DataTotals {
-    //     uploaded?: number;
-    //     total?: number;
-    //     partial?: number;
-    //     pathCounter: number;
-    //     runningTotal?: number;
-    //     expected?: number;
-    // }
-
-    private _initDataTotals(pathsHit, paths) {
-        return {
-            pathCounter: pathsHit,
-            pathsExpected: paths,
-            actual: 0,
-            expected: 0,
-            failed: 0,
-        };
     }
 
     private _uploadFileGroupData(formData: FileGroupCreateDto) {
@@ -203,6 +187,16 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
 
             return observable;
         });
+    }
+
+    private _initDataTotals(pathsHit, paths) {
+        return {
+            pathCounter: pathsHit,
+            pathsExpected: paths,
+            actual: 0,
+            expected: 0,
+            failed: 0,
+        };
     }
 
     /**

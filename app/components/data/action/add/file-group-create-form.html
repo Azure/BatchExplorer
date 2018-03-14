@@ -1,4 +1,4 @@
-<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" actionName="Create">
+<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [actionName]="modifyExisting ? 'Update' : 'Create' ">
     <bl-form-page main-form-page [title]="title" [subtitle]="description" [formGroup]="form">
         <bl-form-section title="General info" subtitle="Basic information about the file group">
             <div class="form-element">
@@ -11,8 +11,8 @@
             </div>
             <p *ngIf="groupExists" class="exists">This file group already exists, any selected files will be added to this existing group</p>
             <div class="form-element">
-                    <mat-checkbox (change)="createEmptyCheckChanged($event)" color="primary">Create an empty file group</mat-checkbox>
-                </div>
+                <mat-checkbox *ngIf="!modifyExisting" (change)="createEmptyCheckChanged($event)" color="primary">Create an empty file group</mat-checkbox>
+            </div>
         </bl-form-section>
 
         <bl-form-section *ngIf="!createEmptyGroup" title="Files" subtitle="Drag and drop directories or files that you want to include in the file group">
