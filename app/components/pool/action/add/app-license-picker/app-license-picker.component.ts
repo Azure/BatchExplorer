@@ -7,7 +7,7 @@ import { List } from "immutable";
 
 import { TableComponent, TableConfig } from "@batch-flask/ui/table";
 import { ApplicationLicense } from "app/models";
-import { LicenseEulaDialogComponent } from "./";
+import { LicenseEulaDialogComponent } from "../license-eula-dialog";
 
 import { ListSelection } from "@batch-flask/core/list";
 import "./app-license-picker.scss";
