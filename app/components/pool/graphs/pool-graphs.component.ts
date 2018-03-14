@@ -107,6 +107,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         this._appInsightsPoll = this.pollService.startPoll("pool-app-insights", appInsightsRefreshRate, () => {
             return this.performanceData.update();
         });
+        this._startListNodePoll();
     }
 
     public ngOnChanges(changes: SimpleChanges) {
