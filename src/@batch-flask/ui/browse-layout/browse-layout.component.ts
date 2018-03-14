@@ -103,7 +103,7 @@ export class BrowseLayoutComponent implements AfterContentInit {
             throw new Error("BrowseLayout expect an list component to have the directive blBrowseLayoutList");
         }
         const component = this.listDirective.component;
-        component.quicklist = true;
+        component.quicklist = !this.showAdvancedFilter;
         component.activeItem = this._activeItemKey;
         this.selection = component.selection;
         this.deleteSelectionIsEnabled = Boolean(component.deleteSelection);
@@ -137,7 +137,9 @@ export class BrowseLayoutComponent implements AfterContentInit {
 
     public toggleFilter(value?: boolean) {
         this.showAdvancedFilter = (value === undefined ? !this.showAdvancedFilter : value);
-        this.listDirective.component.quicklist = !this.showAdvancedFilter;
+        if (this.listDirective) {
+            this.listDirective.component.quicklist = !this.showAdvancedFilter;
+        }
         this.changeDetector.markForCheck();
     }
 
