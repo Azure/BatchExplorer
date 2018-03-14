@@ -1,4 +1,4 @@
-import { IpcPromiseEvent } from "common/constants";
+import { IpcPromiseEvent } from "@batch-flask/ui/electron";
 import { ipcMain } from "electron";
 import { EventEmitter } from "events";
 

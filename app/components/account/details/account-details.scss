@@ -33,11 +33,23 @@ bl-account-details {
 
     .monitor-charts {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: repeat(4, 105px);
+        grid-gap: 5px;
         text-align: justify;
+        margin-top: 5px;
+        margin-right: 5px;
 
         > bl-monitor-chart {
             min-width: 0;
+            grid-row: span 2;
+            grid-column: span 2;
+            background-color: $card-background;
+            cursor: pointer;
+        }
+
+        > .node-states {
+            grid-column: span 3;
         }
     }
 

@@ -1,0 +1,49 @@
+@import "app/styles/variables";
+
+bl-metrics-monitor {
+    bl-vtab-group > .tab-navigation  {
+        width: 200px;
+
+        > .tab-navigation-item {
+            padding: 0;
+        }
+    }
+
+    .preview {
+        cursor: pointer;
+        padding: 5px;
+        display: flex;
+        height: 55px;
+        flex: 1;
+        user-select: none;
+
+        > .info {
+            margin-left: 5px;
+
+            > .label {
+                font-size: 11px;
+                line-height: 11px;
+                margin-bottom: 3px;
+            }
+
+            > .status {
+                font-size: 11px;
+                color: $secondary-text;
+            }
+
+        }
+
+        > .graph {
+            display: block;
+            position: relative;
+            width: 60px;
+            height: 40px;
+            border: 1px solid map-get($primary, 100);
+        }
+    }
+
+    [blMetricsMonitorConfig] {
+        padding: 10px;
+        text-align: center;
+    }
+}

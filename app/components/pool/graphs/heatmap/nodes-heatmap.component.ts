@@ -13,7 +13,7 @@ import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/u
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
-import { Job, Node, NodeState, Pool } from "app/models";
+import { Node, NodeState, Pool } from "app/models";
 import { NodeService } from "app/services";
 import { ComponentUtils, log } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";
@@ -81,8 +81,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     @Input() public limitNode: number = null;
 
     @Input() public nodes: List<Node>;
-
-    @Input() public jobs: List<Job> = List([]);
 
     @ViewChild("heatmap") public heatmapEl: ElementRef;
 
@@ -449,6 +447,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         const actions = [
             new ContextMenuItem({ label: "Go to", click: () => this._gotoNode(node) }),
             new ContextMenuItem({ label: "Connect", click: () => this._connectTo(node) }),
+            new ContextMenuItem({ label: "Monitor", click: () => this._monitor(node) }),
             new ContextMenuItem({ label: "Reboot", click: () => this._reboot(node) }),
             new ContextMenuItem({
                 label: "Reimage",
@@ -496,6 +495,14 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     private _gotoNode(node: Node) {
         this.router.navigate(["/pools", this.pool.id, "nodes", node.id]);
+    }
+
+    private _monitor(node: Node) {
+        this.router.navigate(["/pools", this.pool.id, "nodes", node.id], {
+            queryParams: {
+                tab: "monitoring",
+            },
+        });
     }
 
     private _connectTo(node: Node) {

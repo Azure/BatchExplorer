@@ -2,6 +2,7 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
+import { ClipboardService } from "@batch-flask/ui/electron";
 import { mouseenter, mouseleave } from "test/utils/helpers";
 import { TextPropertyComponent } from "./text-property.component";
 
@@ -27,6 +28,9 @@ describe("TextPropertyComponent", () => {
         TestBed.configureTestingModule({
             declarations: [TestComponent, TextPropertyComponent],
             schemas: [NO_ERRORS_SCHEMA],
+            providers: [
+                { provide: ClipboardService, useValue: {} },
+            ],
         });
         fixture = TestBed.createComponent(TestComponent);
         de = fixture.debugElement;

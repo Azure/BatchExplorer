@@ -45,12 +45,19 @@ export class AppInsightsQueryService {
 
     public getPoolPerformance(appId: string, poolId: string, lastNMinutes: number):
         Observable<BatchPerformanceMetrics> {
-        return this.metrics(appId, this._buildQuery(poolId, lastNMinutes)).map((data) => {
+        return this.metrics(appId, this._buildQuery(poolId, null, lastNMinutes)).map((data) => {
             return this._processMetrics(data.json());
         });
     }
 
-    private _buildQuery(poolId: string, timespanInMinutes: number) {
+    public getNodePerformance(appId: string, poolId: string, nodeId: string, lastNMinutes: number):
+        Observable<BatchPerformanceMetrics> {
+        return this.metrics(appId, this._buildQuery(poolId, nodeId, lastNMinutes)).map((data) => {
+            return this._processMetrics(data.json());
+        });
+    }
+
+    private _buildQuery(poolId: string, nodeId: string, timespanInMinutes: number) {
         const timespan = `PT${timespanInMinutes}M`;
         const interval = this._computeInterval(timespanInMinutes);
         return Object.keys(metrics).map((id) => {
@@ -60,7 +67,7 @@ export class AppInsightsQueryService {
                 parameters: {
                     aggregation: "avg",
                     metricId: metric.metricId,
-                    filter: this._buildFilter(poolId).toOData(),
+                    filter: this._buildFilter(poolId, nodeId).toOData(),
                     interval,
                     timespan,
                     segment: metric.segment,

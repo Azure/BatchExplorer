@@ -1,4 +1,4 @@
-import { ElectronRemote } from "app/services";
+import { ElectronRemote } from "@batch-flask/ui";
 import { AuthenticationWindow } from "client/core/aad/authentication";
 import { SplashScreen } from "client/splash-screen";
 import { MockAuthenticationWindow, MockBrowserWindow, MockSplashScreen } from "../windows";
@@ -9,7 +9,7 @@ export class MockElectronRemote extends ElectronRemote {
     public splashScreen: MockSplashScreen;
 
     constructor() {
-        super();
+        super(null);
         this.currentWindow = new MockBrowserWindow();
         this.splashScreen = new MockSplashScreen();
         this.authenticationWindow = new MockAuthenticationWindow();

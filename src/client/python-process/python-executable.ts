@@ -1,5 +1,5 @@
 import { log } from "@batch-flask/utils";
-import { execCommand } from "../core";
+import { execCommand } from "../core/subprocess";
 
 let computedPythonPath: string = null;
 

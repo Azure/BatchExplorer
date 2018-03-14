@@ -97,6 +97,11 @@ bl-table {
         flex: 1;
         word-wrap: break-word;
 
+        &.fixed-size {
+            flex-grow:0;
+            flex-shrink:0;
+        }
+
         &:first-child {
             padding: 0 0 0 $padding-first-and-last;
         }
@@ -144,11 +149,6 @@ bl-table {
         font-size: 13px;
         position: relative;
         white-space: nowrap;
-
-        &.fixed-size {
-            flex-grow:0;
-            flex-shrink:0;
-        }
 
         .cell-value {
             width: 98%;

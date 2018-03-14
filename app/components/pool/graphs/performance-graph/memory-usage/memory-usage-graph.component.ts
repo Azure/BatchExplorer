@@ -1,7 +1,7 @@
 import { Component, OnChanges } from "@angular/core";
 import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
 import { NumberUtils } from "app/utils";
-import { BatchUsageMetrics, PerformanceGraphComponent } from "../performance-graph.component";
+import { PerformanceGraphComponent } from "../performance-graph.component";
 
 @Component({
     selector: "bl-memory-usage-graph",
@@ -10,7 +10,6 @@ import { BatchUsageMetrics, PerformanceGraphComponent } from "../performance-gra
 export class MemoryUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
     public max = 100;
     public unit = "B";
-    public metric = BatchUsageMetrics.cpu;
 
     public memUsages: PerformanceMetric[] = [];
     public showOverallUsage = true;

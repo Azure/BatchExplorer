@@ -3,7 +3,7 @@ import { ActivatedRoute, NavigationEnd, PRIMARY_OUTLET, Router } from "@angular/
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { log } from "@batch-flask/utils";
-import { Breadcrumb, RouteComponent } from "./breadcrumb-models";
+import { Breadcrumb, RouteComponent } from "./breadcrumbs.model";
 
 const sessionStorageKey = "breadcrumb";
 
@@ -80,7 +80,7 @@ export class BreadcrumbService {
     }
 
     public navigateTo(crumb: Breadcrumb) {
-        this.router.navigate([crumb.url], {
+        this.router.navigateByUrl(crumb.url, {
             relativeTo: this.activatedRoute,
             queryParams: crumb.queryParams,
         });

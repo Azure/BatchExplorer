@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { remote } from "electron";
+import { ElectronRemote } from "@batch-flask/ui";
 import { Observable, Subscription } from "rxjs";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
@@ -52,6 +52,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
         private fs: FileSystemService,
         taskService: TaskService,
         jobService: JobService,
+        private remote: ElectronRemote,
         private changeDetector: ChangeDetectorRef,
         private router: Router) {
 
@@ -126,7 +127,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public exportAsJSON() {
-        const dialog = remote.dialog;
+        const dialog = this.remote.dialog;
         const localPath = dialog.showSaveDialog({
             buttonLabel: "Export",
             defaultPath: `${this.jobId}.${this.taskId}.json`,
