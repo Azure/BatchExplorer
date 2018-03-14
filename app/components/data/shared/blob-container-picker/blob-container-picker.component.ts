@@ -1,13 +1,12 @@
-import { Component, Input, OnDestroy, OnInit,ChangeDetectionStrategy,ChangeDetectorRef,   forwardRef } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, forwardRef,
+} from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { MatOptionSelectionChange } from "@angular/material";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
-import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { BlobContainer } from "app/models";
 import { ListContainerParams, StorageService } from "app/services";
 import { ListView } from "app/services/core";
@@ -42,18 +41,8 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnIni
         this.containersData = this.storageService.containerListView();
         this.containersData.items.subscribe((containers) => {
             this.containers = containers;
-            console.log("Containers", containers.toJS());
-            changeDetector.markForCheck()
+            changeDetector.markForCheck();
         });
-
-        // listen to file group add events
-        this._subscriptions.push(this.storageService.onContainerAdded.subscribe((fileGroupId: string) => {
-            const container = storageService.getContainerOnce(fileGroupId);
-            this.fileGroupsData.loadNewItem(container);
-            container.subscribe((blobContainer) => {
-                this._checkValid(blobContainer.name);
-            });
-        }));
 
         this._subscriptions.push(this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
             this._checkValid(value);

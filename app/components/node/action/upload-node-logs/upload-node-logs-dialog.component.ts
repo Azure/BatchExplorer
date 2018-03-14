@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
+import * as moment from "moment";
 
 import { Node, Pool } from "app/models";
 
@@ -35,8 +36,8 @@ export class UploadNodeLogsDialogComponent {
     ) {
         this.form = formBuilder.group({
             container: ["", Validators.required],
-            startTime: [null, Validators.required],
-            endTime: [null, Validators.required],
+            startTime: [moment().subtract(1, "hour").toDate(), Validators.required],
+            endTime: [new Date(), Validators.required],
         });
     }
 }
