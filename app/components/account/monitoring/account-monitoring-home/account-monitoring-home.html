@@ -1,0 +1,18 @@
+<bl-metrics-monitor>
+    <bl-metrics-monitor-metric label="Core Minutes">
+        <bl-monitor-chart blMonitorGraphPreview chartType="coreCount" [preview]="true"></bl-monitor-chart>
+        <bl-monitor-chart blMonitorGraphChart chartType="coreCount"></bl-monitor-chart>
+    </bl-metrics-monitor-metric>
+    <bl-metrics-monitor-metric label="Failed task">
+        <bl-monitor-chart blMonitorGraphPreview chartType="failedTask" [preview]="true"></bl-monitor-chart>
+        <bl-monitor-chart blMonitorGraphChart chartType="failedTask"></bl-monitor-chart>
+    </bl-metrics-monitor-metric>
+    <bl-metrics-monitor-metric label="Task states">
+        <bl-monitor-chart blMonitorGraphPreview chartType="taskStates" [preview]="true"></bl-monitor-chart>
+        <bl-monitor-chart blMonitorGraphChart chartType="taskStates"></bl-monitor-chart>
+    </bl-metrics-monitor-metric>
+    <bl-metrics-monitor-metric label="Node states">
+        <bl-monitor-chart blMonitorGraphPreview chartType="nodeStates" [preview]="true"></bl-monitor-chart>
+        <bl-monitor-chart blMonitorGraphChart chartType="nodeStates"></bl-monitor-chart>
+    </bl-metrics-monitor-metric>
+</bl-metrics-monitor>

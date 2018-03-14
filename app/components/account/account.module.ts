@@ -9,20 +9,19 @@ import { DeleteAccountDialogComponent } from "./action/delete/delete-account-dia
 import { AccountBrowseModule } from "./browse";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./details";
 import { AccountQuotasCardComponent } from "./details/account-quotas-card";
-import { MonitorChartComponent } from "./details/monitor-chart";
 import { ProgramaticUsageModule } from "./details/programatic-usage";
 import { StorageAccountCardComponent } from "./details/storage-account-card";
 import { AccountHomeComponent } from "./home";
+import { AccountMonitoringModule } from "./monitoring";
 
 const components = [
     AccountDefaultComponent, AccountDetailsComponent, AccountHomeComponent,
     BatchAccountCreateComponent, DeleteAccountDialogComponent, StorageAccountCardComponent,
     EditStorageAccountFormComponent, StorageAccountPickerComponent, AccountQuotasCardComponent,
-    MonitorChartComponent,
 ];
 
 const modules = [
-    AccountBrowseModule, PoolBaseModule, ProgramaticUsageModule, ...commonModules,
+    AccountBrowseModule, AccountMonitoringModule, PoolBaseModule, ProgramaticUsageModule, ...commonModules,
 ];
 
 @NgModule({
