@@ -26,10 +26,10 @@ import "./certificate-details.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CertificateDetailsComponent implements OnInit, OnDestroy {
-    public static breadcrumb({ id }, { tab }) {
-        const label = tab ? `Certificate - ${tab}` : "Certificate";
+    public static breadcrumb({ thumbprint }) {
+        const label = `Certificate - ${thumbprint}`;
         return {
-            name: id,
+            name: thumbprint,
             label,
             icon: "certificate",
         };
@@ -89,6 +89,10 @@ export class CertificateDetailsComponent implements OnInit, OnDestroy {
         // const config = new MatDialogConfig();
         // const dialogRef = this.dialog.open(DeleteCertificateDialogComponent, config);
         // dialogRef.componentInstance.certificateId = this.certificate.id;
+    }
+
+    @autobind()
+    public reactivateCertificate() {
     }
 
     @autobind()

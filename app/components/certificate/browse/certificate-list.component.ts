@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { Filter, autobind } from "@batch-flask/core";
+import { Filter, FilterMatcher, Operator, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 // import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
@@ -36,12 +36,11 @@ import { ComponentUtils } from "app/utils";
 })
 export class CertificateListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public certificates: List<Certificate>;
+    public displayedCertificates: List<Certificate> = List([]);
     public LoadingStatus = LoadingStatus;
-
     public data: ListView<Certificate, CertificateListParams>;
     public searchQuery = new FormControl();
 
-    private _baseOptions = {};
     private _onCertificateAddedSub: Subscription;
 
     constructor(
@@ -58,7 +57,7 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
         ComponentUtils.setActiveItem(activatedRoute, this.data);
         this.data.items.subscribe((certificates) => {
             this.certificates = certificates;
-            this.changeDetector.markForCheck();
+            this._updateDisplayedCertificates();
         });
 
         this.data.status.subscribe((status) => {
@@ -86,13 +85,7 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
     }
 
     public handleFilter(filter: Filter) {
-        if (filter.isEmpty()) {
-            this.data.setOptions({ ...this._baseOptions });
-        } else {
-            this.data.setOptions({ ...this._baseOptions, filter: filter.toOData() });
-        }
-
-        this.data.fetchNext();
+        this._updateDisplayedCertificates();
     }
 
     public certificateStatus(certificate: Certificate): QuickListItemStatus {
@@ -163,5 +156,20 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
                 this.pinnedEntityService.unPinFavorite(certificate);
             }
         });
+    }
+
+    private _updateDisplayedCertificates() {
+        const matcher = new FilterMatcher<Certificate>({
+            thumbprint: (item: Certificate, value: any, operator: Operator) => {
+                return value === "" || item.thumbprint.toLowerCase().startsWith(value.toLowerCase());
+            },
+            state: (item: Certificate, value: any, operator: Operator) => {
+                return value === "" || item.state === value;
+            },
+        });
+        this.displayedCertificates = List<Certificate>(this.certificates.filter((x) => {
+            return matcher.test(this.filter, x);
+        }));
+        this.changeDetector.markForCheck();
     }
 }

@@ -8,6 +8,7 @@
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
                 <bl-delete-button [action]="deleteCertificate" [enabled]="certificate.state !== CertificateState.deleting"></bl-delete-button>
+                <bl-button [action]="reactivateCertificate" color="light" title="Reactivate certificate"><i class="fa fa-undo"></i></bl-button>
                 <bl-button [action]="exportAsJSON" color="light" title="Export as JSON"><i class="fa fa-code"></i></bl-button>
             </bl-button-group>
         </bl-summary-card>

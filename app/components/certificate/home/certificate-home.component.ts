@@ -17,12 +17,17 @@ export class CertificateHomeComponent {
     public quickFilter: Filter = FilterBuilder.none();
     public advancedFilter: Filter = FilterBuilder.none();
 
+    public keyField = "thumbprint";
+    public config = {
+        quickSearchField: "thumbprint",
+        keyField: "thumbprint",
+    };
+
     constructor(
         formBuilder: FormBuilder,
         // private sidebarManager: SidebarManager
     ) {
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
-            console.log("query", query);
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
             } else {
