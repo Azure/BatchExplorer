@@ -125,14 +125,14 @@ export class QuotaService implements OnDestroy {
                 applications: 20,
             }));
         } else {
-            this.computeService.getCoreQuota().map((dedicatedCoreQuota) => {
-                return Observable.of(new BatchQuotas({
+            return this.computeService.getCoreQuota().map((dedicatedCoreQuota) => {
+                return new BatchQuotas({
                     dedicatedCores: dedicatedCoreQuota,
                     lowpriCores: null,
                     pools: account.properties.poolQuota,
                     jobs: account.properties.activeJobAndJobScheduleQuota,
                     applications: 20,
-                }));
+                });
             });
         }
     }

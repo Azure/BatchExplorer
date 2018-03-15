@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
+import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
 import { ServerError, autobind } from "@batch-flask/core";
-import { AccountResource, BatchApplication, Job, Pool } from "app/models";
+import { AccountProvisingState, AccountResource, BatchApplication, Job, Pool } from "app/models";
 import {
     AccountParams, AccountService, ApplicationListParams, ApplicationService,
     InsightsMetricsService, JobListParams, JobService, PoolListParams, PoolService,
@@ -12,6 +13,8 @@ import { EntityView, ListView } from "app/services/core";
 
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
+import { DeleteAccountDialogComponent } from "../action/delete";
+
 import "./account-details.scss";
 
 @Component({
@@ -28,6 +31,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         return { name: name, label: "Account" };
     }
 
+    public accountProvisioningState = AccountProvisingState;
     public account: AccountResource;
     public accountId: string;
     public loadingError: any;
@@ -44,6 +48,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     constructor(
         router: Router,
+        private dialog: MatDialog,
         private changeDetector: ChangeDetectorRef,
         private activatedRoute: ActivatedRoute,
         private accountService: AccountService,
@@ -62,6 +67,11 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
                 this._loadQuickAccessLists();
             }
         });
+
+        this.poolData = this.poolService.listView();
+        this.jobData = this.jobService.listView();
+        this.applicationData = this.applicationService.listView();
+
     }
 
     public ngOnInit() {
@@ -82,6 +92,9 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();
+        this.poolData.dispose();
+        this.jobData.dispose();
+        this.applicationData.dispose();
     }
 
     @autobind()
@@ -95,6 +108,17 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         ref.componentInstance.accountId = this.accountId;
     }
 
+    @autobind()
+    public deleteBatchAccount() {
+        const config = new MatDialogConfig();
+        const dialogRef = this.dialog.open(DeleteAccountDialogComponent, config);
+        dialogRef.componentInstance.accountId = this.accountId;
+        dialogRef.componentInstance.accountName = this.account && this.account.name;
+    }
+
+    public get accountState() {
+        return this.account && this.account.properties && this.account.properties.provisioningState;
+    }
     public selectAccount(accountId: string): void {
         this.noLinkedStorage = false;
         this.accountService.selectAccount(accountId);
@@ -105,7 +129,6 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     }
 
     private _loadQuickAccessLists() {
-        this.applicationData = this.applicationService.listView();
         this.applicationData.setOptions(this.initialOptions);
         this.applicationData.fetchNext();
         this.applicationData.onError = (error: ServerError) => {
@@ -118,13 +141,10 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
             return !handled;
         };
 
-        this.jobData = this.jobService.listView();
         this.jobData.setOptions(this.initialOptions);
         this.jobData.fetchNext();
 
-        this.poolData = this.poolService.listView();
         this.poolData.setOptions(this.initialOptions);
-
         this.poolData.fetchNext();
     }
 }

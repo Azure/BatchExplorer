@@ -1,10 +1,9 @@
-<div class="confirmation-dialog">
-	<div class="message">
-        Delete account
-		<p>Are you sure you want to delete the account: '<b>{{accountName}}</b>'?</p>
-	</div>
-	<div class="buttons">
-		<button mat-raised-button color="warn" type="button" (click)="destroyAccount()">Yes</button>
-		<button mat-raised-button type="primary" (click)="dialogRef.close()">No</button>
-	</div>
-</div>
+<bl-simple-form [submit]="destroyBatchAccount" [containerRef]="dialogRef" actionColor="warn" actionName="Delete" [multiUse]="false" size="small" title="Delete batch account">
+    <div class="message">
+        <p>Do you want to delete this batch account: '<b>{{accountName}}</b>'?</p>
+        <p style="word-wrap: break-word;">
+            Warning! Deleting batch account '{{accountId}}' is irreversible. The action you're about to take can't be undone. Clicking
+            OK will delete this batch account and any related resources permanently.
+        </p>
+    </div>
+</bl-simple-form>

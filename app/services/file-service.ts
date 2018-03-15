@@ -19,7 +19,7 @@ export interface NodeFileListParams {
 }
 
 export interface NodeFileParams extends NodeFileListParams {
-    filename: string;
+    name: string;
 }
 
 export interface TaskFileListParams {
@@ -28,7 +28,7 @@ export interface TaskFileListParams {
 }
 
 export interface TaskFileParams extends TaskFileListParams {
-    filename: string;
+    name: string;
 }
 
 export interface FileContentResult {
@@ -58,10 +58,10 @@ export class FileService extends ServiceBase {
     private _basicProperties: string = "name, url";
     private _nodeFilecache = new TargetedDataCache<NodeFileListParams, File>({
         key: ({ poolId, nodeId }) => poolId + "/" + nodeId,
-    }, "url");
+    }, "name");
     private _taskFileCache = new TargetedDataCache<TaskFileListParams, File>({
         key: ({ jobId, taskId }) => jobId + "/" + taskId,
-    }, "url");
+    }, "name");
 
     private _taskFileGetter: BatchEntityGetter<File, TaskFileParams>;
     private _nodeFileGetter: BatchEntityGetter<File, NodeFileParams>;
@@ -73,14 +73,14 @@ export class FileService extends ServiceBase {
 
         this._taskFileGetter = new BatchEntityGetter(File, this.batchService, {
             cache: (params) => this.getTaskFileCache(params),
-            getFn: (client, { jobId, taskId, filename }) =>
-                client.file.getTaskFileProperties(jobId, taskId, filename),
+            getFn: (client, { jobId, taskId, name }) =>
+                client.file.getTaskFileProperties(jobId, taskId, name),
         });
 
         this._nodeFileGetter = new BatchEntityGetter(File, this.batchService, {
             cache: (params) => this.getNodeFileCache(params),
-            getFn: (client, { poolId, nodeId, filename }) =>
-                client.file.getComputeNodeFileProperties(poolId, nodeId, filename),
+            getFn: (client, { poolId, nodeId, name }) =>
+                client.file.getComputeNodeFileProperties(poolId, nodeId, name),
         });
 
         this._taskFileListGetter = new BatchListGetter(File, this.batchService, {
@@ -194,7 +194,7 @@ export class FileService extends ServiceBase {
         nodeId: string,
         filename: string,
         options: any = {}): Observable<File> {
-        return this._nodeFileGetter.fetch({ poolId, nodeId, filename });
+        return this._nodeFileGetter.fetch({ poolId, nodeId, name });
     }
 
     public fileFromTask(jobId: string, taskId: string, filename: string): FileLoader {
@@ -230,6 +230,6 @@ export class FileService extends ServiceBase {
         taskId: string,
         filename: string,
         options: any = {}): Observable<File> {
-        return this._taskFileGetter.fetch({ jobId, taskId, filename });
+        return this._taskFileGetter.fetch({ jobId, taskId, name });
     }
 }

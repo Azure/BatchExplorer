@@ -10,8 +10,7 @@ import { ODataFields } from "common/constants";
     templateUrl: "task-advanced-filter.html",
 })
 export class TaskAdvancedFilterComponent {
-    @Output()
-    public filterChange = new EventEmitter<Filter>();
+    @Output() public change = new EventEmitter<Filter>();
 
     public advancedFilter: AdvancedFilter;
 
@@ -27,7 +26,7 @@ export class TaskAdvancedFilterComponent {
         });
 
         this.advancedFilter.filterChange.subscribe((filter: Filter) => {
-            this.filterChange.emit(filter);
+            this.change.emit(filter);
         });
     }
 }
