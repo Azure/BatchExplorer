@@ -50,6 +50,10 @@ export class Certificate extends Record<CertificateAttributes> implements Naviga
         return this.thumbprint;
     }
 
+    public get name(): string {
+        return this.thumbprint;
+    }
+
     public get routerLink(): string[] {
         return ["/certificates", this.thumbprint];
     }

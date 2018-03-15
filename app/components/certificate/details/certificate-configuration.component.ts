@@ -12,7 +12,6 @@ import { CertificateDecorator } from "app/models/decorators";
 export class CertificateConfigurationComponent {
     @Input()
     public set certificate(certificate: Certificate) {
-        console.log("xxx", certificate);
         this._certificate = certificate;
         this.refresh(certificate);
     }
@@ -25,7 +24,6 @@ export class CertificateConfigurationComponent {
     public refresh(certificate: Certificate) {
         if (this.certificate) {
             this.decorator = new CertificateDecorator(this.certificate);
-            console.log(this.decorator);
         }
     }
 }
