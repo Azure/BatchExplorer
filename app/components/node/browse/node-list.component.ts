@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit, forwardRef } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
@@ -18,7 +18,7 @@ import { ComponentUtils } from "app/utils";
         useExisting: forwardRef(() => NodeListComponent),
     }],
 })
-export class NodeListComponent extends ListBaseComponent implements OnInit {
+export class NodeListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
     @Input() public manualLoading: boolean;
@@ -45,6 +45,10 @@ export class NodeListComponent extends ListBaseComponent implements OnInit {
 
     public ngOnInit() {
         this.data.fetchNext();
+    }
+
+    public ngOnDestroy() {
+        this.data.dispose();
     }
 
     @autobind()

@@ -66,6 +66,7 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
 
     public ngOnDestroy() {
         this._onTaskAddedSub.unsubscribe();
+        this.data.dispose();
     }
 
     @autobind()
