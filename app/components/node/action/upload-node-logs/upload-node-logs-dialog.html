@@ -15,7 +15,9 @@
         <bl-blob-container-picker
             label="Storage container"
             hint="Logs will be uploaded as blob in a virtual folder in this container"
-            formControlName="container">
+            formControlName="container"
+            output="sasUrl"
+            sasPermissions="w">
         </bl-blob-container-picker>
     </div>
 </bl-simple-form>
