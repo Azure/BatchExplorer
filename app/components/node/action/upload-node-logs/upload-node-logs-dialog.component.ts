@@ -1,11 +1,16 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
 import { autobind } from "@batch-flask/core";
+import { BackgroundTaskService, NotificationService } from "@batch-flask/ui";
+import { StorageService } from "app/services";
+import { CloudPathUtils } from "app/utils";
 import * as moment from "moment";
 
 import { Node, Pool } from "app/models";
 
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { AsyncSubject, Observable } from "rxjs";
 import "./upload-node-logs-dialog.scss";
 
 enum TimeRangePreset {
@@ -42,6 +47,10 @@ export class UploadNodeLogsDialogComponent {
     constructor(
         public dialogRef: MatDialogRef<UploadNodeLogsDialogComponent>,
         private changeDetector: ChangeDetectorRef,
+        private backgroundTaskService: BackgroundTaskService,
+        private storageService: StorageService,
+        private notificationService: NotificationService,
+        private router: Router,
         formBuilder: FormBuilder,
     ) {
         this.form = formBuilder.group({
@@ -76,6 +85,42 @@ export class UploadNodeLogsDialogComponent {
 
     @autobind()
     public submit() {
+        this._watchUpload("abc", "svg", 10);
+        return Observable.of(null);
+    }
 
+    private _watchUpload(container: string, folder: string, numberOfFiles: number) {
+        this.backgroundTaskService.startTask("Node logs uploading", (task) => {
+            const done = new AsyncSubject();
+            const sub = Observable.interval(5000)
+                .flatMap(() => {
+                    return this.storageService.listBlobs(container, {
+                        folder: CloudPathUtils.asBaseDirectory(folder),
+                    }, true);
+                })
+                .subscribe((blobs) => {
+                    const uploaded = blobs.items.size;
+                    if (uploaded >= numberOfFiles) {
+                        task.progress.next(100);
+                        done.complete();
+                        sub.unsubscribe();
+                        this._notifyLogUploaded(container, folder, numberOfFiles);
+                    } else {
+                        task.name.next(`Node logs uploading (${uploaded}/${numberOfFiles})`);
+                        task.progress.next(uploaded / numberOfFiles * 100);
+                    }
+                });
+
+            return done;
+        });
+    }
+
+    private _notifyLogUploaded(container: string, folder: string, numberOfFiles: number)  {
+        this.notificationService.success(`Node ${this.node.id} logs have been uploaded`,
+            `${numberOfFiles} were uploaded under ${folder} in ${container} container`, {
+                action: () => {
+                    this.router.navigate(["/data", container]);
+                },
+            });
     }
 }
