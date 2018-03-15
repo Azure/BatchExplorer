@@ -17,7 +17,7 @@ enum TimeRangePreset {
 @Component({
     selector: "bl-upload-node-logs-dialog",
     templateUrl: "upload-node-logs-dialog.html",
-    // changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UploadNodeLogsDialogComponent {
     public TimeRangePreset = TimeRangePreset;
@@ -49,13 +49,11 @@ export class UploadNodeLogsDialogComponent {
             startTime: [moment().subtract(1, "hour").toDate(), Validators.required],
             endTime: [new Date(), Validators.required],
         });
-        console.log("Required valid", this.form.valid);
 
         this.form.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
             const diff = moment.duration(moment(value.endTime).diff(value.startTime));
             this.warningTimeRange = diff.asDays() > 1;
             this.changeDetector.markForCheck();
-            console.log("Required valid", this.form.valid);
         });
     }
 
@@ -77,7 +75,7 @@ export class UploadNodeLogsDialogComponent {
     }
 
     @autobind()
-    public subbmit() {
+    public submit() {
 
     }
 }
