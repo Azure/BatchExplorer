@@ -1,3 +1,5 @@
+@import "app/styles/variables";
+
 bl-datetime-picker {
     > .grow {
         align-items: center;
@@ -32,5 +34,6 @@ bl-datetime-picker {
     }
     .timezone {
         margin-left: 34%;
+        color: $secondary-text;
     }
 }

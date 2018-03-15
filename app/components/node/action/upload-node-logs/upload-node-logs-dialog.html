@@ -4,12 +4,19 @@
         actionName="Upload"
         [formGroup]="form"
         [containerRef]="dialogRef">
-
+    <div class="presets">
+        <bl-button class="preset" type="wide" color="light" (do)="setPreset(TimeRangePreset.LastDay)">Last 24 hours</bl-button>
+        <bl-button class="preset" type="wide" color="light" (do)="setPreset(TimeRangePreset.SinceReboot)">Since last reboot</bl-button>
+        <bl-button class="preset" type="wide" color="light" (do)="setPreset(TimeRangePreset.SinceCreated)">Since node allocation</bl-button>
+    </div>
     <div class="form-element">
         <bl-datetime-picker label="From" formControlName="startTime"></bl-datetime-picker>
     </div>
     <div class="form-element">
         <bl-datetime-picker label="To" formControlName="endTime"></bl-datetime-picker>
+    </div>
+    <div class="warning" *ngIf="warningTimeRange">
+        This time range is over 24 hours. Logs might be too long depending on the usage of the node.
     </div>
     <div class="form-element">
         <bl-blob-container-picker

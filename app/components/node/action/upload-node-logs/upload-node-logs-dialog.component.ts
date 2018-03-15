@@ -7,12 +7,20 @@ import { Node, Pool } from "app/models";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import "./upload-node-logs-dialog.scss";
 
+enum TimeRangePreset {
+    LastDay,
+    SinceReboot,
+    SinceCreated,
+}
+
 @Component({
     selector: "bl-upload-node-logs-dialog",
     templateUrl: "upload-node-logs-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UploadNodeLogsDialogComponent {
+    public TimeRangePreset = TimeRangePreset;
+
     public set pool(pool: Pool) {
         this._pool = pool;
         this.changeDetector.markForCheck();
@@ -26,6 +34,7 @@ export class UploadNodeLogsDialogComponent {
     public get node() { return this._node; }
 
     public form: FormGroup;
+    public warningTimeRange = false;
     private _pool: Pool;
     private _node: Node;
 
@@ -39,5 +48,28 @@ export class UploadNodeLogsDialogComponent {
             startTime: [moment().subtract(1, "hour").toDate(), Validators.required],
             endTime: [new Date(), Validators.required],
         });
+
+        this.form.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
+            const diff = moment.duration(moment(value.endTime).diff(value.startTime));
+            this.warningTimeRange = diff.asDays() > 1;
+            this.changeDetector.markForCheck();
+        });
+    }
+
+    public setPreset(preset: TimeRangePreset) {
+        const now = new Date();
+        let startTime;
+        switch (preset) {
+            case TimeRangePreset.LastDay:
+                startTime = moment(now).subtract(24, "hour");
+                break;
+            case TimeRangePreset.SinceCreated:
+                startTime = this.node.allocationTime;
+                break;
+            case TimeRangePreset.SinceReboot:
+                startTime = this.node.lastBootTime;
+                break;
+        }
+        this.form.patchValue({ startTime, endTime: now });
     }
 }

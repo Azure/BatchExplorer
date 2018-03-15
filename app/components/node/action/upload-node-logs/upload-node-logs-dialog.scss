@@ -1,7 +1,17 @@
+@import "app/styles/variables";
+
 bl-upload-node-logs-dialog {
     display: block;
     height: 400px;
 
+    .presets {
+        > .preset {
+            margin-right: 10px;
+            &:hover {
+                color: $primary-color;
+            }
+        }
+    }
     .time-range  {
         margin-bottom: 20px;
     }
