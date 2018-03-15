@@ -13,7 +13,12 @@
             </bl-button-group>
         </bl-summary-card>
         <bl-card class="details">
-            Hello, world
+            <bl-tab-group>
+                <bl-tab key="configuration">
+                    <bl-tab-label>Configuration</bl-tab-label>
+                    <bl-certificate-configuration [certificate]="certificate"></bl-certificate-configuration>
+                </bl-tab>
+            </bl-tab-group>
         </bl-card>
     </div>
 </bl-loading>

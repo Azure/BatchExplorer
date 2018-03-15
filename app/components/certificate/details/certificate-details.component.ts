@@ -93,6 +93,7 @@ export class CertificateDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public reactivateCertificate() {
+        // TODO
     }
 
     @autobind()

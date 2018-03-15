@@ -11,6 +11,7 @@ export class CertificateDecorator extends DecoratorBase<Certificate> {
     public thumbprintAlgorithm: string;
     public thumbprint: string;
     public publicData: string;
+    public url: string;
 
     public deleteCertificateError: DeleteCertificateErrorDecorator;
 
@@ -22,6 +23,7 @@ export class CertificateDecorator extends DecoratorBase<Certificate> {
         this.stateIcon = this._getStateIcon(certificate.state);
         this.previousState = this.stateField(certificate.previousState);
         this.previousStateTransitionTime = this.dateField(certificate.previousStateTransitionTime);
+        this.url = this.stringField(certificate.url);
         this.thumbprintAlgorithm = this.stringField(certificate.thumbprintAlgorithm);
         this.thumbprint = this.stringField(certificate.thumbprint);
         this.publicData = this.stringField(certificate.publicData);

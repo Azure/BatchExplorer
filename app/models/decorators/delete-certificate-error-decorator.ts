@@ -4,6 +4,7 @@ import { DecoratorBase } from "app/utils/decorators";
 export class DeleteCertificateErrorDecorator extends DecoratorBase<DeleteCertificateError> {
     public code: string;
     public message: string;
+    public values: NameValuePair[];
     public details: string;
 
     /**
@@ -22,6 +23,7 @@ export class DeleteCertificateErrorDecorator extends DecoratorBase<DeleteCertifi
         this.exists = Boolean(error);
         this.code = this.stringField(error.code);
         this.message = this.stringField(error.message);
+        this.values = error.values;
         this.details = this._getDetails(error.values);
         this.summary = this.exists
             ? `code: ${error.code}, message: ${error.message}`

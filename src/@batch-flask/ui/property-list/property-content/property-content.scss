@@ -15,6 +15,10 @@ bl-property-content {
         white-space: nowrap;
     }
 
+    &.wrap {
+        word-wrap: break-word;
+    }
+
     .fa {
         font-size: 16px !important;
     }
