@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "@batch-flask/core";
+import { Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
 import { NameValuePair } from ".";
 
 export interface DeleteCertificateError {
@@ -22,7 +22,7 @@ export interface CertificateAttributes {
  * Class for displaying Batch certificate information.
  */
 @Model()
-export class Certificate extends Record<CertificateAttributes> {
+export class Certificate extends Record<CertificateAttributes> implements NavigableRecord {
     @Prop() public url: string;
     @Prop() public thumbprint: string;
     @Prop() public thumbprintAlgorithm: string;
@@ -42,6 +42,12 @@ export class Certificate extends Record<CertificateAttributes> {
     constructor(data: Partial<CertificateAttributes> = {}) {
         super(data);
         this.reactivable = this.state === CertificateState.deletefailed;
+    }
+
+    // There is no id field in certificate, we need mock an id field for
+    // pin/unpin favorite function passing NavigableRecord
+    public get id(): string {
+        return this.thumbprint;
     }
 
     public get routerLink(): string[] {

@@ -7,6 +7,7 @@ export * from "./azure-http.service";
 export * from "./arm-http.service";
 export * from "./batch-labs.service";
 export * from "./cache-data.service";
+export * from "./certificate.service";
 export * from "./compute.service";
 export * from "./file-service";
 export * from "./fs.service";
