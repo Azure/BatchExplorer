@@ -4,6 +4,8 @@ export * from "./compute-node-info-decorator";
 export * from "./container-configuration-decorator";
 export * from "./container-decorator";
 export * from "./container-lease-decorator";
+export * from "./certificate-decorator";
+export * from "./delete-certificate-error-decorator";
 export * from "./failure-info-decorator";
 export * from "./image-reference-decorator";
 export * from "./job-constraints-decorator";
