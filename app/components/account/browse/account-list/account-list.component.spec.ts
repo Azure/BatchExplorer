@@ -1,11 +1,13 @@
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
 import { FilterBuilder } from "@batch-flask/core";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { AccountListComponent } from "app/components/account/browse";
 import { AccountService, SubscriptionService } from "app/services";
@@ -61,6 +63,8 @@ describe("AccountListComponent", () => {
                 { provide: AccountService, useValue: accountService },
                 { provide: SidebarManager, useValue: null },
                 { provide: SubscriptionService, useValue: subscriptionService },
+                { provide: MatDialog, useValue: null },
+                { provide: BackgroundTaskService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
