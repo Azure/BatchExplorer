@@ -118,6 +118,7 @@ export class FormFooterComponent implements OnChanges, OnDestroy {
         if (this.showJsonEditor) {
             return this.jsonValue.valid;
         } else if (this.currentPage) {
+            console.log("Submit enabled?", this.currentPage.formGroup);
             return !this.currentPage.formGroup || this.currentPage.formGroup.valid;
         } else {
             return false;
