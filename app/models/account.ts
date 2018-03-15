@@ -8,7 +8,12 @@ export enum PoolAllocationMode {
 }
 
 export enum AccountProvisingState {
+    Invalid = "Invalid",
+    Creating = "Creating",
+    Deleting = "Deleting",
     Succeeded = "Succeeded",
+    Failed = "Failed",
+    Cancelled = "Cancelled",
 }
 
 export interface AutoStorageAccountAttributes {
