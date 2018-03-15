@@ -74,6 +74,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
 
     public ngOnDestroy() {
         this._subs.forEach(x => x.unsubscribe());
+        this.data.dispose();
     }
 
     @autobind()

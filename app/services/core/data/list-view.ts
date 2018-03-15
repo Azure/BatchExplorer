@@ -61,7 +61,7 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
             this._itemKeys.next(OrderedSet<string>(this._itemKeys.value.filter((key) => key !== deletedKey)));
         });
 
-        this._cacheCleared.subscribe((deletedKey) => {
+        this._cacheCleared.subscribe(() => {
             this._itemKeys.next(OrderedSet<string>([]));
             this._handleChanges();
             this._hasMore.next(true);

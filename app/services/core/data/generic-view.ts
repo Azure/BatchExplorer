@@ -147,6 +147,7 @@ export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOption
      * otherwise internal subscribe will never get cleared and the list porxy will not get GC
      */
     public dispose() {
+        this.abortFetch();
         this.isDisposed.next(true);
         this.isDisposed.complete();
         this._clearDeleteSub();
@@ -154,6 +155,7 @@ export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOption
         this._deleted.complete();
         this._status.complete();
         this._error.complete();
+        this._cacheCleared.complete();
     }
 
     protected set cache(cache: DataCache<TEntity>) {
