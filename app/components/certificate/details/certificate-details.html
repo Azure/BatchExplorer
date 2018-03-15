@@ -1,0 +1,18 @@
+<bl-loading [status]="data.newDataStatus | async">
+    <div *ngIf="certificate" class="fit-details-container">
+        <bl-summary-card>
+            <div summaryTitle>{{decorator.thumbprint}}</div>
+            <div summarySubtitle>
+                <i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}
+            </div>
+            <bl-button-group summaryActions>
+                <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                <bl-delete-button [action]="deleteCertificate" [enabled]="certificate.state !== CertificateState.deleting"></bl-delete-button>
+                <bl-button [action]="exportAsJSON" color="light" title="Export as JSON"><i class="fa fa-code"></i></bl-button>
+            </bl-button-group>
+        </bl-summary-card>
+        <bl-card class="details">
+            Hello, world
+        </bl-card>
+    </div>
+</bl-loading>

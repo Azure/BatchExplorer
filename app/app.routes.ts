@@ -80,8 +80,8 @@ export const routes: Routes = [
         canActivate: [NavigationGuard],
         component: CertificateHomeComponent,
         children: [
-            { path: "", component: CertificateDefaultComponent }, // pools/
-            { path: ":thumbprint", component: CertificateDetailsComponent }, // pools/{pool.id}
+            { path: "", component: CertificateDefaultComponent }, // thumbprint/
+            { path: ":thumbprint", component: CertificateDetailsComponent }, // certificate/{certificate.thumbprint}
         ],
     },
     {

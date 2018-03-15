@@ -1,20 +1,21 @@
 import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
-// import { JobScheduleActionModule } from "./action";
-// import { JobScheduleAdvancedFilterComponent } from "./browse/filter/job-schedule-advanced-filter.component";
-// import { JobScheduleListComponent } from "./browse/job-schedule-list.component";
-// import { JobScheduleDetailsModule } from "./details/job-schedule-details.module";
-// import { JobScheduleHomeComponent } from "./home/job-schedule-home.component";
+import { CertificateListComponent } from "./browse/certificate-list.component";
+// import { CertificateActionModule } from "./action";
+import { CertificateAdvancedFilterComponent } from "./browse/filter/certificate-advanced-filter.component";
+import { CertificateDetailsModule } from "./details/certificate-details.module";
+import { CertificateHomeComponent } from "./home/certificate-home.component";
 
 const components = [
-    // JobScheduleAdvancedFilterComponent,
-    // JobScheduleHomeComponent,
-    // JobScheduleListComponent,
+    CertificateAdvancedFilterComponent,
+    CertificateHomeComponent,
+    CertificateListComponent,
 ];
 
 const modules = [
-    // JobScheduleActionModule, JobScheduleDetailsModule, 
+    // CertificateActionModule,
+    CertificateDetailsModule,
     ...commonModules,
 ];
 
