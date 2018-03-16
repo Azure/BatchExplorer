@@ -106,8 +106,7 @@ export class CertificateService extends ServiceBase {
         });
     }
 
-    public delete(thumbprint: string, options: any = {}, thumbprintAlgorithm?: string)
-    : Observable<{}> {
+    public delete(thumbprint: string, options: any = {}, thumbprintAlgorithm?: string): Observable<{}> {
         return this.callBatchClient((client) => {
             const algorithm = thumbprintAlgorithm || defaultThumbprintAlgorithm;
             return client.certificate.delete(algorithm, thumbprint, options);
@@ -123,7 +122,7 @@ export class CertificateService extends ServiceBase {
     public cancelDelete(thumbprint: string, options: any = {}, thumbprintAlgorithm?: string) {
         return this.callBatchClient((client) => {
             const algorithm = thumbprintAlgorithm || defaultThumbprintAlgorithm;
-            return client.certificate.cancelDelete(algorithm, thumbprint, options);
+            return client.certificate.cancelDeletion(algorithm, thumbprint, options);
         }, (error) => {
             log.error(`Error cancel delete certificate: ${thumbprint}`, error);
         });

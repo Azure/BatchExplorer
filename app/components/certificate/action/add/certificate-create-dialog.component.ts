@@ -5,7 +5,6 @@ import { Observable } from "rxjs";
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
-import { CertificateCreateDto } from "app/models/dtos";
 import { CertificateFormat, CertificateService } from "app/services";
 import { Constants } from "app/utils";
 
@@ -36,8 +35,9 @@ export class CertificateCreateDialogComponent {
     }
 
     @autobind()
-    public submit(data: CertificateCreateDto): Observable<any> {
-        const obs = this.certificateService.parseCertificate(this.file, data.password);
+    public submit(): Observable<any> {
+        const formData = this.form.value;
+        const obs = this.certificateService.parseCertificate(this.file, formData.password);
 
         obs.subscribe({
             next: (certificate: any) => {

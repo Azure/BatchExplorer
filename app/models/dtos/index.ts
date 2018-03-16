@@ -5,7 +5,6 @@
 export * from "./account-create.dto";
 export * from "./account-patch.dto";
 export * from "./application-package-reference.dto";
-export * from "./certificate-create.dto";
 export * from "./container-setup.dto";
 export * from "./file-group-create.dto";
 export * from "./file-group-options.dto";
