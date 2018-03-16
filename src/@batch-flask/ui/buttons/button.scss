@@ -150,11 +150,6 @@ bl-button {
             &:hover, &:focus {
                 background: map-get($success, 800);
             }
-
-            &.disabled[color] {
-                color: $button-disabled-text-color;
-                background: $button-disabled-bg-color;
-            }
         }
     }
 }

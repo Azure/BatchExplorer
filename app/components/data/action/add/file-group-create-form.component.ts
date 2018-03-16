@@ -32,7 +32,6 @@ interface DataTotals {
     templateUrl: "file-group-create-form.html",
 })
 export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, FileGroupCreateDto> {
-    public folder: string;
     public groupExists: boolean;
     public title: string = "Create file group";
     public description: string = "Upload files into a managed storage container that you can use " +
