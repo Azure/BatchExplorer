@@ -1,0 +1,9 @@
+<bl-simple-form [submit]="destroyCertificate" [containerRef]="dialogRef" actionColor="warn" actionName="Delete" [multiUse]="false" size="small" title="Delete certificate">
+    <div class="message">
+        <p>Do you want to delete the certificate: '<b>{{certificateThumbprint}}</b>'?</p>
+        <p>
+            Warning! Deleting certificate'<b>{{certificateThumbprint}}</b>' is irreversible. The action you're about to take can't be undone. Clicking
+            OK will delete this certificate permanently.
+        </p>
+    </div>
+</bl-simple-form>
