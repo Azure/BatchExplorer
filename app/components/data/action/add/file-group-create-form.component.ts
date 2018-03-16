@@ -127,7 +127,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     }
 
     private _uploadFileGroupData(formData: FileGroupCreateDto) {
-        const msgFormat = `Processing ({0}/{1}) paths to: {2}`;
+        const msgFormat = `Syncing ({0}/{1}) paths to: {2}`;
         const trimmedName = this._sanitizeFileGroupName(formData.name);
 
         return this.backgroundTaskService.startTask("Uploading files to file group", (task) => {
@@ -149,7 +149,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                                 // check partial to see if we are uploading a large file in chunks.
                                 if (data.partial) {
                                     // tslint:disable-next-line:max-line-length
-                                    task.name.next(`Processing large file: ${data.partial}%, completed (${lastData.pathCounter - 1}/${lastData.pathsExpected}) paths`);
+                                    task.name.next(`Syncing large file: ${data.partial}%, completed (${lastData.pathCounter - 1}/${lastData.pathsExpected}) paths`);
                                 } else {
                                     task.name.next(`${message}, (${data.uploaded}/${data.total}) files.`);
                                 }
@@ -235,8 +235,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     }
 
     private _sanitizeFileGroupName(fileGroupName: string) {
-        return fileGroupName && fileGroupName.length > 20
-            ? `${fileGroupName.substring(0, 19)}...`
+        return fileGroupName && fileGroupName.length > 16
+            ? `${fileGroupName.substring(0, 15)}...`
             : fileGroupName;
     }
 }
