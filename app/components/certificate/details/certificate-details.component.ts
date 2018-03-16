@@ -1,22 +1,17 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
-// import { MatDialog, MatDialogConfig } from "@angular/material";
+import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
 import { ElectronRemote } from "@batch-flask/ui";
 import { Observable, Subscription } from "rxjs";
 
-// import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Certificate, CertificateState } from "app/models";
 import { CertificateDecorator } from "app/models/decorators";
 import { CertificateParams, CertificateService, FileSystemService } from "app/services";
 import { EntityView } from "app/services/core";
-// import {
-//     DeleteCertificateDialogComponent,
-//     DisableCertificateDialogComponent,
-//     EnableCertificateDialogComponent,
-//     CertificateCreateBasicDialogComponent,
-//     TerminateCertificateDialogComponent,
-// } from "../action";
+import {
+    DeleteCertificateDialogComponent, ReactivateCertificateDialogComponent,
+} from "../action";
 
 import "./certificate-details.scss";
 
@@ -44,11 +39,10 @@ export class CertificateDetailsComponent implements OnInit, OnDestroy {
     private _paramsSubscriber: Subscription;
 
     constructor(
-        // private dialog: MatDialog,
+        private dialog: MatDialog,
         private activatedRoute: ActivatedRoute,
         private fs: FileSystemService,
         private remote: ElectronRemote,
-        // private sidebarManager: SidebarManager,
         private certificateService: CertificateService,
         private router: Router) {
 
@@ -86,14 +80,16 @@ export class CertificateDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public deleteCertificate() {
-        // const config = new MatDialogConfig();
-        // const dialogRef = this.dialog.open(DeleteCertificateDialogComponent, config);
-        // dialogRef.componentInstance.certificateId = this.certificate.id;
+        const config = new MatDialogConfig();
+        const dialogRef = this.dialog.open(DeleteCertificateDialogComponent, config);
+        dialogRef.componentInstance.certificateThumbprint = this.certificate.thumbprint;
     }
 
     @autobind()
     public reactivateCertificate() {
-        // TODO
+        const config = new MatDialogConfig();
+        const dialogRef = this.dialog.open(ReactivateCertificateDialogComponent, config);
+        dialogRef.componentInstance.certificateThumbprint = this.certificate.thumbprint;
     }
 
     @autobind()
