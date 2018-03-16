@@ -6,14 +6,13 @@
                 <bl-error controlName="certificate" code="required">Please select a valid certificate file</bl-error>
                 <bl-error controlName="certificate" code="pattern">Certificate need to be valid CER or PFX files only</bl-error>
             </div>
-            {{ showPassword }}
         </bl-form-section>
-        <bl-form-section *ngIf="showPassword" title="Password" subtitle="Password is required if the certificate format is pfx">
+        <bl-form-section *ngIf="showPassword" title="Password" subtitle="Type password for pfx certificate format">
             <div class="form-element">
                 <mat-form-field>
                     <input matInput formControlName="password" placeholder="Password" type="password" />
                 </mat-form-field>
-                <!-- <bl-error controlName="displayName" code="maxlength"></bl-error> -->
+                <bl-error controlName="password" code="pfxPasswordRequired">Password is required if the certificate format is pfx</bl-error>
             </div>
         </bl-form-section>
     </bl-form-page>

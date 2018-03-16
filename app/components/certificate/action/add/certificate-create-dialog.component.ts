@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { Observable } from "rxjs";
 
 import { autobind } from "@batch-flask/core";
@@ -31,7 +31,7 @@ export class CertificateCreateDialogComponent {
                 Validators.required,
                 Validators.pattern(validation.regex.certificateFileName),
             ]],
-            password: [null],
+            password: [null, this._passwordValidator()],
         });
     }
 
@@ -64,7 +64,6 @@ export class CertificateCreateDialogComponent {
     public fileSelected(changeEvent: Event) {
         const element = changeEvent.srcElement as any;
         this.form.controls["certificate"].markAsTouched();
-
         if (element.files.length > 0) {
             this.file = element.files[0];
             this.form.controls["certificate"].setValue(this.file.name);
@@ -72,11 +71,25 @@ export class CertificateCreateDialogComponent {
             this.file = null;
             this.form.controls["certificate"].setValue(null);
         }
-
         this.form.controls["password"].setValue(null);
     }
 
-    public showPassword() {
+    public get showPassword() {
         return this.file && this.certificateService.getCertificateExtension(this.file) === CertificateFormat.pfx;
+    }
+
+    private _passwordValidator() {
+        return (control: FormControl): {[key: string]: any} => {
+            if (this.showPassword) {
+                if (!control.value) {
+                    return {
+                        pfxPasswordRequired: {
+                            value: true,
+                        },
+                    };
+                }
+            }
+            return null;
+        };
     }
 }
