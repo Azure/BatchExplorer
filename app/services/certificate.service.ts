@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
 import { List } from "immutable";
-import { Observable, Subject } from "rxjs";
+import { AsyncSubject, Observable, Subject } from "rxjs";
+// tslint:disable-next-line:no-var-requires
+const forge = require("node-forge");
 
 import { Certificate } from "app/models";
-import { CertificateCreateDto } from "app/models/dtos";
 import { Constants, log } from "app/utils";
 import { BatchClientService } from "./batch-client.service";
 import {
@@ -23,7 +24,12 @@ export interface CertificateParams {
 export interface CertificateListOptions extends ListOptionsAttributes {
 }
 
-const defaultThumbprintAlgorithm = "sha1";
+export const defaultThumbprintAlgorithm = "sha1";
+
+export enum CertificateFormat {
+    pfx = "pfx",
+    cer = "cer",
+}
 
 @Injectable()
 export class CertificateService extends ServiceBase {
@@ -110,8 +116,8 @@ export class CertificateService extends ServiceBase {
         });
     }
 
-    public add(certificate: CertificateCreateDto, options: any = {}): Observable<{}> {
-        return this.callBatchClient((client) => client.certificate.add(certificate.toJS(), options));
+    public add(certificate: any, options: any = {}): Observable<{}> {
+        return this.callBatchClient((client) => client.certificate.add(certificate, options));
     }
 
     public cancelDelete(thumbprint: string, options: any = {}, thumbprintAlgorithm?: string) {
@@ -121,5 +127,85 @@ export class CertificateService extends ServiceBase {
         }, (error) => {
             log.error(`Error cancel delete certificate: ${thumbprint}`, error);
         });
+    }
+
+    /**
+     * parseCertificate helps to parse uploaded certificate and return parameters which can be
+     * used to create batch certificate
+     * @param file uploaded certificate
+     * @param password password for pfx certifcate
+     */
+    public parseCertificate(file: File, password: string) {
+        const subject = new AsyncSubject();
+        const reader = new FileReader();
+        reader.readAsBinaryString(file);
+        reader.onload = () => {
+            // try catch potential error when get thumbprint
+            try {
+                const certificateFormat = this.getCertificateExtension(file);
+                const binaryEncodedData = reader.result;
+                const base64EncodedData = btoa(binaryEncodedData);
+                const isCer = certificateFormat === CertificateFormat.cer;
+                const data = isCer ? binaryEncodedData : base64EncodedData;
+                const thumbprint = this._generateThumbprint(data,
+                    CertificateFormat[certificateFormat], password);
+                subject.next({
+                    thumbprintAlgorithm: defaultThumbprintAlgorithm,
+                    thumbprint: thumbprint,
+                    data: base64EncodedData,
+                    certificateFormat: certificateFormat,
+                    password: !isCer ? password : null,
+                });
+                subject.complete();
+            } catch (err) {
+                subject.error(err);
+            }
+        };
+        reader.onerror = () => {
+            subject.error("Error encountered reading certificate file as binary string.");
+        };
+        return subject.asObservable();
+    }
+
+    /**
+     * Helper function to get certificate extension string
+     * @param file
+     */
+    public getCertificateExtension(file: File) {
+        return file.name.substr(file.name.length - 3, 3).toLowerCase();
+    }
+
+    /**
+     * This function is a helper function for generating certificate thumbprint based on input
+     * data, certificate format and password. Now only support pfx and cer certificate thumbprint generation
+     * @param data binary string of uploaded file
+     * @param format certificate type. Ex. cer or pfx
+     * @param password only specify password when foramt is pfx
+     */
+    private _generateThumbprint(data: string, format: CertificateFormat, password?: string): string {
+        let certDer: string = null;
+        switch (format) {
+            case CertificateFormat.pfx:
+                const p12Der = forge.util.decode64(data);
+                const p12Asn1 = forge.asn1.fromDer(p12Der);
+                const outCert = forge.pkcs12.pkcs12FromAsn1(p12Asn1, false, password);
+                const keyBags = outCert.getBags({ bagType: forge.pki.oids.certBag });
+                const bag = keyBags[forge.pki.oids.certBag][0];
+                const certAsn1 = forge.pki.certificateToAsn1(bag.cert);
+                certDer = forge.asn1.toDer(certAsn1).getBytes();
+                break;
+            case CertificateFormat.cer:
+                const outAsn1 = forge.asn1.fromDer(data);
+                certDer = forge.asn1.toDer(outAsn1).getBytes();
+                break;
+            default:
+                throw new Error(`Supported certificate type are CER and PFX,
+                    current certificate type is not supported.`);
+        }
+        const md = forge.md.sha1.create();
+        md.start();
+        md.update(certDer);
+        const digest = md.digest();
+        return digest.toHex();
     }
 }

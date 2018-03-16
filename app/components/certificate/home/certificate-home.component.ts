@@ -3,7 +3,7 @@ import { FormBuilder, FormControl } from "@angular/forms";
 
 import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { CertificateCreateBasicDialogComponent } from "../action/add";
+import { CertificateCreateDialogComponent } from "../action/add";
 
 @Component({
     selector: "bl-certificate-home",
@@ -37,7 +37,7 @@ export class CertificateHomeComponent {
 
     @autobind()
     public addCertificate() {
-        this.sidebarManager.open("add-certificate", CertificateCreateBasicDialogComponent);
+        this.sidebarManager.open("add-certificate", CertificateCreateDialogComponent);
     }
 
     public advancedFilterChanged(filter: Filter) {

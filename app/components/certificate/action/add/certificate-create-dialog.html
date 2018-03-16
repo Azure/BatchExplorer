@@ -1,18 +1,14 @@
-<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [config]="complexFormConfig" [fileUri]="fileUri">
+<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef">
     <bl-form-page main-form-page title="Create certificate" [formGroup]="form">
         <bl-form-section title="Certificate" subtitle="Select a certificate (pfx or cer) to upload">
             <div class="form-element">
                 <input type="file" (change)="fileSelected($event)" />
                 <bl-error controlName="certificate" code="required">Please select a valid certificate file</bl-error>
                 <bl-error controlName="certificate" code="pattern">Certificate need to be valid CER or PFX files only</bl-error>
-                <!-- <div *ngIf="hasValidFile()" class="input-summary">
-                    <h4>Selected file details</h4>
-                    <p><b>{{ file.name }}</b> ({{ prettyFileSize(file.size) }})</p>
-                    <p *ngIf="progress"><b>Progress:</b> {{ progress }}</p>
-                </div> -->
             </div>
+            {{ showPassword }}
         </bl-form-section>
-        <bl-form-section title="Password" subtitle="Password is required if the certificate format is pfx">
+        <bl-form-section *ngIf="showPassword" title="Password" subtitle="Password is required if the certificate format is pfx">
             <div class="form-element">
                 <mat-form-field>
                     <input matInput formControlName="password" placeholder="Password" type="password" />

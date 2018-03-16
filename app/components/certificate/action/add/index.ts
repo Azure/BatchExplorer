@@ -1,1 +1,1 @@
-export * from "./certificate-create-basic-dialog.component";
+export * from "./certificate-create-dialog.component";
