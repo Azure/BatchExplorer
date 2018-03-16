@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { FormBuilder, FormControl } from "@angular/forms";
 
 import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
-// import { SidebarManager } from "@batch-flask/ui/sidebar";
-// import { CertificateCreateBasicDialogComponent } from "../action";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { CertificateCreateBasicDialogComponent } from "../action/add";
 
 @Component({
     selector: "bl-certificate-home",
@@ -23,10 +23,7 @@ export class CertificateHomeComponent {
         keyField: "thumbprint",
     };
 
-    constructor(
-        formBuilder: FormBuilder,
-        // private sidebarManager: SidebarManager
-    ) {
+    constructor(formBuilder: FormBuilder, private sidebarManager: SidebarManager) {
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
@@ -40,7 +37,7 @@ export class CertificateHomeComponent {
 
     @autobind()
     public addCertificate() {
-        // this.sidebarManager.open("add-certificate", CertificateCreateBasicDialogComponent);
+        this.sidebarManager.open("add-certificate", CertificateCreateBasicDialogComponent);
     }
 
     public advancedFilterChanged(filter: Filter) {

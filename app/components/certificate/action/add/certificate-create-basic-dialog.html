@@ -1,0 +1,12 @@
+<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [config]="complexFormConfig" [fileUri]="fileUri">
+    <bl-form-page main-form-page title="Create certificate" [formGroup]="form">
+        <bl-form-section title="General info" subtitle="Basic information about the certificate">
+            <div class="form-element">
+                <mat-form-field>
+                    <input matInput formControlName="password" placeholder="Password" type="password" />
+                </mat-form-field>
+                <!-- <bl-error controlName="displayName" code="maxlength">Password is required if the certificate format is pfx.</bl-error> -->
+            </div>
+        </bl-form-section>
+    </bl-form-page>
+</bl-complex-form>

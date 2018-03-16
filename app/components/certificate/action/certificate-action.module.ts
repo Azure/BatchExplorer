@@ -3,11 +3,12 @@ import { NgModule } from "@angular/core";
 import { BaseModule } from "@batch-flask/ui";
 import { commonModules } from "app/common";
 import { JobActionModule } from "app/components/job/action";
+import { CertificateCreateBasicDialogComponent } from "./add/certificate-create-basic-dialog.component";
 import { DeleteCertificateDialogComponent } from "./delete/delete-certificate-dialog.component";
 import { ReactivateCertificateDialogComponent } from "./reactivate/reactivate-certificate-dialog.component";
 
 const components = [
-    DeleteCertificateDialogComponent, ReactivateCertificateDialogComponent,
+    DeleteCertificateDialogComponent, ReactivateCertificateDialogComponent, CertificateCreateBasicDialogComponent,
 ];
 
 @NgModule({

@@ -1,4 +1,5 @@
 export * from "./create-application-model";
+export * from "./create-certificate-model";
 export * from "./create-form-group-model";
 export * from "./create-job-model";
 export * from "./create-job-schedule-model";
