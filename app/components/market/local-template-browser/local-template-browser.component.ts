@@ -1,8 +1,10 @@
-import { Component } from "@angular/core";
+import { Component, HostListener } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { NcjTemplateType } from "app/models";
 import { NcjTemplateService } from "app/services";
+import { DragUtils } from "app/utils";
+
 import "./local-template-browser.scss";
 
 @Component({
@@ -14,8 +16,8 @@ export class LocalTemplateBrowserComponent {
         return { name: "Local templates" };
     }
 
+    public isDraging = 0;
     public NcjTemplateType = NcjTemplateType;
-
     public pickedTemplateFile: File = null;
     public valid = false;
     public error: string;
@@ -37,6 +39,44 @@ export class LocalTemplateBrowserComponent {
         });
     }
 
+    @HostListener("dragover", ["$event"])
+    public handleDragHover(event: DragEvent) {
+        const allowDrop = this._canDrop(event.dataTransfer);
+        DragUtils.allowDrop(event, allowDrop);
+    }
+
+    @HostListener("dragenter", ["$event"])
+    public dragEnter(event: DragEvent) {
+        if (!this._canDrop(event.dataTransfer)) { return; }
+        event.stopPropagation();
+        this.isDraging++;
+    }
+
+    @HostListener("dragleave", ["$event"])
+    public dragLeave(event: DragEvent) {
+        if (!this._canDrop(event.dataTransfer)) { return; }
+        this.isDraging--;
+    }
+
+    @HostListener("drop", ["$event"])
+    public handleDrop(event: DragEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        // const filesAndFolders = [...event.dataTransfer.files as any];
+        // filesAndFolders.map(x => this._addPath(x.path));
+        this.isDraging = 0;
+    }
+
+    private _canDrop(dataTransfer: DataTransfer) {
+        return this._hasFile(dataTransfer);
+    }
+
+    private _hasFile(dataTransfer: DataTransfer) {
+        console.log("_hasFile.dataTransfer: ", dataTransfer);
+        return dataTransfer.types.includes("Files");
+    }
+
     private async _loadTemplateFile() {
         const path = this.pickedTemplateFile.path;
         try {
@@ -51,6 +91,7 @@ export class LocalTemplateBrowserComponent {
         } catch (error) {
             this.error = error;
             this.valid = false;
+
             return;
         }
     }
