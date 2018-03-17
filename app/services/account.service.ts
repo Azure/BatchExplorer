@@ -305,6 +305,13 @@ export class AccountService {
         return this.azure.put(sub, accountUri, { body: body });
     }
 
+    public deleteBatchAccount(accountId: string): Observable<any> {
+        return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(accountId))
+            .flatMap((subscription) => {
+                return this.azure.delete(subscription, accountId);
+            });
+    }
+
     public getAccountId(sub: Subscription, resourceGroup: string, accountName: string): string {
         const uriPrefix = this.getResoureGroupId(sub, resourceGroup);
         return `${uriPrefix}/providers/${batchProvider}/batchAccounts/${accountName}`;

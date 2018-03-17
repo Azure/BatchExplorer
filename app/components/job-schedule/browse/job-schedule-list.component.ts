@@ -74,6 +74,7 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
     }
 
     public ngOnDestroy() {
+        this.data.dispose();
         if (this._onJobScheduleAddedSub) {
             this._onJobScheduleAddedSub.unsubscribe();
         }

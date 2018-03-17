@@ -76,6 +76,10 @@ export class ApplicationService extends ServiceBase {
         });
     }
 
+    public list(options?: ListOptionsAttributes) {
+        return this._listGetter.fetch(options);
+    }
+
     public listAll(options?: ListOptionsAttributes) {
         return this._listGetter.fetchAll(options);
     }
