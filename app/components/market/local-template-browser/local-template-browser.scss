@@ -57,6 +57,10 @@ bl-local-template-browser {
                 border: 3px solid map-get($danger, 300);
             }
         }
+
+        .error {
+            margin-top: 10px;
+        }
     }
 
     .drop-overlay {

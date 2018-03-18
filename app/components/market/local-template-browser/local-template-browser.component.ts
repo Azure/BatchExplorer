@@ -24,6 +24,7 @@ export class LocalTemplateBrowserComponent {
     public templateType: NcjTemplateType = null;
 
     constructor(private router: Router, private templateService: NcjTemplateService) { }
+
     public pickTemplateFile(template: any) {
         this.pickedTemplateFile = template.target.files[0];
         this._loadTemplateFile();
@@ -62,19 +63,29 @@ export class LocalTemplateBrowserComponent {
     public handleDrop(event: DragEvent) {
         event.preventDefault();
         event.stopPropagation();
+        this._resetDragDrop();
 
-        // const filesAndFolders = [...event.dataTransfer.files as any];
-        // filesAndFolders.map(x => this._addPath(x.path));
+        const filesAndFolders = [...event.dataTransfer.files as any];
+        if (filesAndFolders.length > 1) {
+            this.error = "Unable to drop more than one JSON template. Please select one template.";
+            this.valid = false;
+        } else {
+            this.pickedTemplateFile = filesAndFolders[0];
+            this._loadTemplateFile();
+        }
+
         this.isDraging = 0;
     }
 
     private _canDrop(dataTransfer: DataTransfer) {
-        return this._hasFile(dataTransfer);
+        return dataTransfer.types.includes("Files");
     }
 
-    private _hasFile(dataTransfer: DataTransfer) {
-        console.log("_hasFile.dataTransfer: ", dataTransfer);
-        return dataTransfer.types.includes("Files");
+    private _resetDragDrop() {
+        this.valid = true;
+        this.pickedTemplateFile = null;
+        this.templateType = null;
+        this.error = "";
     }
 
     private async _loadTemplateFile() {
