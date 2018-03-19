@@ -6,7 +6,7 @@ import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { CertificateFormat, CertificateService } from "app/services";
-import { Constants } from "app/utils";
+import { Constants, FileUrlUtils } from "app/utils";
 
 import "./certificate-create-dialog.scss";
 
@@ -75,7 +75,7 @@ export class CertificateCreateDialogComponent {
     }
 
     public get showPassword() {
-        return this.file && this.certificateService.getCertificateExtension(this.file) === CertificateFormat.pfx;
+        return this.file && FileUrlUtils.getFileExtension(this.file.name) === CertificateFormat.pfx;
     }
 
     private _passwordValidator() {

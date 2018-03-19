@@ -1,11 +1,10 @@
 import { Injectable } from "@angular/core";
 import { List } from "immutable";
+import * as forge from "node-forge";
 import { AsyncSubject, Observable, Subject } from "rxjs";
-// tslint:disable-next-line:no-var-requires
-const forge = require("node-forge");
 
 import { Certificate } from "app/models";
-import { Constants, log } from "app/utils";
+import { Constants, FileUrlUtils, log } from "app/utils";
 import { BatchClientService } from "./batch-client.service";
 import {
     BatchEntityGetter, BatchListGetter, ContinuationToken,
@@ -141,7 +140,7 @@ export class CertificateService extends ServiceBase {
         reader.onload = () => {
             // try catch potential error when get thumbprint
             try {
-                const certificateFormat = this.getCertificateExtension(file);
+                const certificateFormat = FileUrlUtils.getFileExtension(file.name);
                 const binaryEncodedData = reader.result;
                 const base64EncodedData = btoa(binaryEncodedData);
                 const isCer = certificateFormat === CertificateFormat.cer;
@@ -167,19 +166,11 @@ export class CertificateService extends ServiceBase {
     }
 
     /**
-     * Helper function to get certificate extension string
-     * @param file
-     */
-    public getCertificateExtension(file: File) {
-        return file.name.substr(file.name.length - 3, 3).toLowerCase();
-    }
-
-    /**
      * This function is a helper function for generating certificate thumbprint based on input
      * data, certificate format and password. Now only support pfx and cer certificate thumbprint generation
      * @param data binary string of uploaded file
      * @param format certificate type. Ex. cer or pfx
-     * @param password only specify password when foramt is pfx
+     * @param password only specify password when format is pfx
      */
     private _generateThumbprint(data: string, format: CertificateFormat, password?: string): string {
         let certDer: string = null;

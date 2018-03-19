@@ -102,7 +102,7 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
             case CertificateState.active:
                 return "";
             default:
-                return `Certficate is ${certificate.state}`;
+                return `Certificate is ${certificate.state}`;
         }
     }
 
