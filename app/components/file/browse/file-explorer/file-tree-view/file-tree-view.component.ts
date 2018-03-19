@@ -38,6 +38,8 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     @Input() public autoExpand = false;
     @Input() public canDropExternalFiles = false;
     @Input() public canDeleteFiles = false;
+    @Input() public hideOnErrorCodes: string[] = [];
+
     @Output() public navigate = new EventEmitter<string>();
     @Output() public dropFiles = new EventEmitter<FileDropEvent>();
     @Output() public deleteFiles = new EventEmitter<FileDeleteEvent>();
@@ -290,6 +292,16 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     public handleDragHover(event: DragEvent) {
         DragUtils.allowDrop(event, this.canDropExternalFiles);
+    }
+
+    /**
+     * Too many people are getting confused by the persisted outputs tree thinking that there are
+     * no outputs for their job. Until we can show the new task outputs collection here i think we should
+     * just hide this navigator if there are no persisted outputs from the file conventions library.
+     */
+    public shouldShowTreeView() {
+        return !this.fileNavigator.error ||
+            !this.hideOnErrorCodes.includes(this.fileNavigator.error.code);
     }
 
     private _buildTreeRows(tree) {
