@@ -192,7 +192,7 @@ export class FileService extends ServiceBase {
     public getFilePropertiesFromComputeNode(
         poolId: string,
         nodeId: string,
-        filename: string,
+        name: string,
         options: any = {}): Observable<File> {
         return this._nodeFileGetter.fetch({ poolId, nodeId, name });
     }
@@ -228,7 +228,7 @@ export class FileService extends ServiceBase {
     public getFilePropertiesFromTask(
         jobId: string,
         taskId: string,
-        filename: string,
+        name: string,
         options: any = {}): Observable<File> {
         return this._taskFileGetter.fetch({ jobId, taskId, name });
     }
