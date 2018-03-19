@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 
 import { ServerError, autobind } from "@batch-flask/core";
+import { NotificationService } from "@batch-flask/ui/notifications";
 import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, NcjTemplateMode } from "app/models";
 import { NcjSubmitService, NcjTemplateService } from "app/services";
 import { exists, log } from "app/utils";
@@ -52,6 +53,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     constructor(
         private formBuilder: FormBuilder,
         private activatedRoute: ActivatedRoute,
+        private notificationService: NotificationService,
         private router: Router,
         private templateService: NcjTemplateService,
         private ncjSubmitService: NcjSubmitService) {
@@ -328,6 +330,8 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             } else {
                 this.router.navigate(["/jobs"]);
             }
+        } else {
+            this._notifySuccess("Create Job", id);
         }
     }
 
@@ -338,6 +342,14 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             } else {
                 this.router.navigate(["/pools"]);
             }
+        } else {
+            this._notifySuccess("Create Pool", id);
         }
+    }
+
+    private _notifySuccess(type, id) {
+        // If we don't want to redirect, I still want to know that the job/pool was submitted.
+        const message = `${type} with ID: '${id}' was successfully submitted to the service.`;
+        this.notificationService.success(type, message);
     }
 }
