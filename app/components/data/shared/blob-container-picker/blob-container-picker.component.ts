@@ -46,10 +46,10 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnIni
     public container = new FormControl();
     public containersData: ListView<BlobContainer, ListContainerParams>;
     public warning = false;
+    public loading: boolean = true;
 
     private _propagateChange: (value: any[]) => void = null;
     private _subscriptions: Subscription[] = [];
-    private loading: boolean = true;
 
     constructor(private storageService: StorageService, private changeDetector: ChangeDetectorRef) {
 
