@@ -29,7 +29,7 @@
                 <div nested-form>
                     <bl-job-manager-task-picker
                         [formControl]="jobManagerTaskPicker.nestedValue"
-                        [userAccounts]="form.value.userAccounts"
+                        [userAccounts]="userAccounts"
                         [virtualMachineConfiguration]="virtualMachineConfiguration"
                         [containerSettingsRequired]="containerSettingsRequired">
                     </bl-job-manager-task-picker>
@@ -41,7 +41,7 @@
                 <div nested-form>
                     <bl-job-preparation-task-picker
                         [formControl]="jobPreparationTaskPicker.nestedValue"
-                        [userAccounts]="form.value.userAccounts"
+                        [userAccounts]="userAccounts"
                         [virtualMachineConfiguration]="virtualMachineConfiguration">
                     </bl-job-preparation-task-picker>
                 </div>
@@ -52,7 +52,7 @@
                 <div nested-form>
                     <bl-job-release-task-picker
                         [formControl]="jobReleaseTaskPicker.nestedValue"
-                        [userAccounts]="form.value.userAccounts"
+                        [userAccounts]="userAccounts"
                         [virtualMachineConfiguration]="virtualMachineConfiguration">
                     </bl-job-release-task-picker>
                 </div>
