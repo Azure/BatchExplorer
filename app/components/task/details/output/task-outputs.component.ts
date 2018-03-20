@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 
 import { HttpCode, ServerError } from "@batch-flask/core";
 import {
-    FileExplorerConfig, FileExplorerWorkspace, FileNavigatorEntry,
+    FileExplorerConfig, FileExplorerWorkspace, FileNavigatorEntry, FileSource,
 } from "app/components/file/browse/file-explorer";
 import { Task, TaskState } from "app/models";
 import { FileService, StorageService } from "app/services";
@@ -27,7 +27,6 @@ const outputTabs = [
 })
 export class TaskOutputsComponent implements OnChanges, OnDestroy {
     @Input() public jobId: string;
-
     @Input() public task: Task;
 
     public OutputType = OutputType;
@@ -41,6 +40,8 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     public workspace: FileExplorerWorkspace;
     public fileExplorerConfig: FileExplorerConfig = {};
 
+    private _persistedSourceName: string = "Persisted output";
+
     constructor(private fileService: FileService, private storageService: StorageService) { }
 
     public ngOnChanges(changes) {
@@ -50,15 +51,18 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
             if (isTaskQueued !== this.isTaskQueued) {
                 updateNavigator = true;
             }
+
             this.isTaskQueued = isTaskQueued;
             this._updateStateTooltip();
             this._updateFileExplorerConfig();
         }
+
         if (changes.jobId || ComponentUtils.recordChangedId(changes.task)) {
             if (!this.isTaskQueued) {
                 updateNavigator = true;
             }
         }
+
         if (updateNavigator) {
             this._updateNavigator();
         }
@@ -81,32 +85,43 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
             tailable: this.task.state === TaskState.running,
         };
     }
+
     private _updateNavigator() {
         this._disposeWorkspace();
         if (this.isTaskQueued) {
             return;
         }
+
         StorageUtils.getSafeContainerName(this.jobId).then((container) => {
             this._clearFileNavigator();
             const nodeNavigator = this.fileService.navigateTaskFile(this.jobId, this.task.id, {
                 onError: (error) => this._processTaskFilesError(error),
             });
             nodeNavigator.init();
-
             const taskOutputPrefix = `${this.task.id}`;
             const taskOutputNavigator = this.storageService.navigateContainerBlobs(container, taskOutputPrefix, {
-                onError: (error) => this._processBlobError(error),
+                onError: (error) => {
+                    // failed to load any persisted outputs so remove the source.
+                    const index = this.workspace.sources.findIndex((source: FileSource) => {
+                        return source.name === this._persistedSourceName;
+                    });
+                    if (index > -1) {
+                        this.workspace.sources.splice(index, 1);
+                    }
+
+                    return this._processBlobError(error);
+                },
             });
             taskOutputNavigator.init();
 
-            this.workspace = new FileExplorerWorkspace([
-                {
-                    name: "Node files",
-                    navigator: nodeNavigator,
-                    openedFiles: ["stdout.txt", "stderr.txt"],
-                },
-                { name: "Persisted output", navigator: taskOutputNavigator },
-            ]);
+            this.workspace = new FileExplorerWorkspace([{
+                name: "Node files",
+                navigator: nodeNavigator,
+                openedFiles: ["stdout.txt", "stderr.txt"],
+            }, {
+                name: this._persistedSourceName,
+                navigator: taskOutputNavigator,
+            }]);
         });
     }
 
@@ -126,6 +141,7 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
                 original: error.original,
             });
         }
+
         return error;
     }
 
@@ -138,6 +154,7 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
                 original: error.original,
             });
         }
+
         return error;
     }
 

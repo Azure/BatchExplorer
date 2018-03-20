@@ -16,7 +16,7 @@ class TestComponent {
     public task = new Task({ id: "task-0", state: TaskState.active });
 }
 
-describe("TaskLogComponent", () => {
+describe("TaskOutputsComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: TaskOutputsComponent;
