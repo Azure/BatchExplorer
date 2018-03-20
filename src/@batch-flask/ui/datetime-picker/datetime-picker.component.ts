@@ -48,7 +48,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     private _propagateChange: (value: string) => void = null;
     private _datetime: string;
     private _date: moment.Moment;
-    private _sub: Subscription;
+    private _subs: Subscription[] = [];
 
     constructor(private changeDetector: ChangeDetectorRef, formBuilder: FormBuilder) {
         this.timeOptions = this._buildTimeOptions();
@@ -60,10 +60,14 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         const timeZoneName = Array.isArray(zoneMatch) ? zoneMatch[0] : "";
         this.currentTimeZone = `${moment().format("Z")} ${timeZoneName}`;
 
-        this._sub = this.selectedDate.valueChanges.subscribe((value: any) => {
+        this._subs.push(this.selectedDate.valueChanges.subscribe((value: any) => {
             this._date = moment(value);
             this._setDateTime();
-        });
+        }));
+
+        this._subs.push(this.selectedTime.valueChanges.subscribe((value: any) => {
+            this._setDateTime();
+        }));
     }
 
     public onTimeChange(event) {
@@ -71,9 +75,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     }
 
     public ngOnDestroy(): void {
-        if (this._sub) {
-            this._sub.unsubscribe();
-        }
+        this._subs.forEach(x => x.unsubscribe());
     }
 
     public writeValue(value: string): void {

@@ -1,4 +1,5 @@
 import { BatchServiceClient, BatchServiceModels } from "azure-batch";
+import { UploadBatchServiceLogsConfiguration } from "azure-batch/typings/lib/models";
 
 import { BatchResult } from "./models";
 import { ListProxy, mapGet, wrapOptions } from "./shared";
@@ -75,6 +76,16 @@ export class NodeProxy {
      */
     public deleteUser(poolId: string, nodeId: string, userName: string, options?: any): Promise<any> {
         return this.client.computeNode.deleteUser(poolId, nodeId, userName, wrapOptions(options));
+    }
+
+    /**
+     * Adds a user account to the specified compute node.
+     * @param poolId: The id of the pool.
+     * @param nodeId: The id of the node to reboot
+     * @param userName: The username of the account to delete
+     */
+    public uploadLogs(poolId: string, nodeId: string, config: UploadBatchServiceLogsConfiguration): Promise<any> {
+        return this.client.computeNode.uploadBatchServiceLogs(poolId, nodeId, config);
     }
 
     public async getRemoteDesktop(poolId: string, nodeId: string, options?: any): Promise<any> {

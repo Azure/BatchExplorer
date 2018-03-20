@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/
 import { MatDialogRef } from "@angular/material";
 import { autobind } from "@batch-flask/core";
 import { BackgroundTaskService, NotificationService } from "@batch-flask/ui";
-import { StorageService } from "app/services";
-import { CloudPathUtils } from "app/utils";
+import { NodeService, StorageService, AccountService } from "app/services";
+import { CloudPathUtils, StorageUtils } from "app/utils";
 import * as moment from "moment";
 
 import { Node, Pool } from "app/models";
@@ -48,6 +48,8 @@ export class UploadNodeLogsDialogComponent {
         public dialogRef: MatDialogRef<UploadNodeLogsDialogComponent>,
         private changeDetector: ChangeDetectorRef,
         private backgroundTaskService: BackgroundTaskService,
+        private nodeService: NodeService,
+        private accountService: AccountService,
         private storageService: StorageService,
         private notificationService: NotificationService,
         private router: Router,
@@ -55,12 +57,13 @@ export class UploadNodeLogsDialogComponent {
     ) {
         this.form = formBuilder.group({
             container: ["", Validators.required],
-            startTime: [moment().subtract(1, "hour").toDate(), Validators.required],
+            startTime: [moment().subtract(2, "hour").toDate(), Validators.required],
             endTime: [new Date(), Validators.required],
         });
 
-        this.form.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
+        this.form.valueChanges.distinctUntilChanged().subscribe((value) => {
             const diff = moment.duration(moment(value.endTime).diff(value.startTime));
+            console.log("As days", diff.asDays(), diff.asMinutes(), value.endTime, value.startTime);
             this.warningTimeRange = diff.asDays() > 1;
             this.changeDetector.markForCheck();
         });
@@ -71,7 +74,7 @@ export class UploadNodeLogsDialogComponent {
         let startTime;
         switch (preset) {
             case TimeRangePreset.LastDay:
-                startTime = moment(now).subtract(24, "hour");
+                startTime = moment(now).subtract(24, "hour").toDate();
                 break;
             case TimeRangePreset.SinceCreated:
                 startTime = this.node.allocationTime;
@@ -85,8 +88,25 @@ export class UploadNodeLogsDialogComponent {
 
     @autobind()
     public submit() {
-        this._watchUpload("abc", "svg", 10);
-        return Observable.of(null);
+        const value = this.form.value;
+        const obs = this.nodeService.uploadLogs(this.pool.id, this.node.id, {
+            containerUrl: value.container,
+            startTime: value.startTime,
+            endTime: value.endTime,
+        });
+
+        obs.subscribe((result) => {
+            const { container, account } = StorageUtils.getContainerFromUrl(value.container);
+            this.accountService.currentAccount.first().subscribe((batchAccount) => {
+                if (batchAccount.autoStorage && batchAccount.autoStorage.storageAccountId.contains(account)) {
+                    this._watchUpload(container, result.virtualDirectoryName, result.numberOfFilesUploaded);
+                } else {
+                    this.notificationService.info("Uploading node logs",
+                        `Azure batch node agent logs are being uploaded to container ${container}`)
+                }
+            })
+        });
+        return obs;
     }
 
     private _watchUpload(container: string, folder: string, numberOfFiles: number) {
@@ -115,7 +135,7 @@ export class UploadNodeLogsDialogComponent {
         });
     }
 
-    private _notifyLogUploaded(container: string, folder: string, numberOfFiles: number)  {
+    private _notifyLogUploaded(container: string, folder: string, numberOfFiles: number) {
         this.notificationService.success(`Node ${this.node.id} logs have been uploaded`,
             `${numberOfFiles} were uploaded under ${folder} in ${container} container`, {
                 action: () => {
