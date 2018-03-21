@@ -1,7 +1,7 @@
 # 0.14.0
 [All items](https://github.com/Azure/BatchLabs/milestone/16?closed=1)
 
-### feature:
+### Feature:
 
 * Add MS and NCS_V3 sizes to vm size picker. [\#1191](https://github.com/Azure/BatchLabs/issues/1191)
 * Allow to pick custom user accounts when adding a task [\#1188](https://github.com/Azure/BatchLabs/issues/1188)
@@ -26,7 +26,7 @@
 * More finely grained upload progress for file groups. [\#707](https://github.com/Azure/BatchLabs/issues/707)
 * Support for adding custom image to pools [\#434](https://github.com/Azure/BatchLabs/issues/434)
 
-### bug:
+### Bug:
 
 * Batch account with no autostorage add pool doesn't show user accounts and start task picker [\#1190](https://github.com/Azure/BatchLabs/issues/1190)
 * Getting a 400 error when trying to load files from Node.  [\#1181](https://github.com/Azure/BatchLabs/issues/1181)
@@ -47,20 +47,23 @@
 * Heatmap change detection issue [\#1095](https://github.com/Azure/BatchLabs/issues/1095)
 * Error message after updating [\#1083](https://github.com/Azure/BatchLabs/issues/1083)
 * Should disable "add a pool button" before vmSize is initialized [\#985](https://github.com/Azure/BatchLabs/issues/985)
+* Task advanced filter is not applying [\#1158](https://github.com/Azure/BatchLabs/issues/1158)
 
-### other:
+### Usability:
 
 * Do not show the pool os information is using custom image [\#1192](https://github.com/Azure/BatchLabs/issues/1192)
-* Task advanced filter is not applying [\#1158](https://github.com/Azure/BatchLabs/issues/1158)
 * Pool cpu usage individual cpu is confusing [\#1145](https://github.com/Azure/BatchLabs/issues/1145)
-* Remove all import from "electron" [\#1140](https://github.com/Azure/BatchLabs/issues/1140)
 * Account charts are a bit confusing [\#1138](https://github.com/Azure/BatchLabs/issues/1138)
+
+### Other:
+
+* Remove all import from "electron" [\#1140](https://github.com/Azure/BatchLabs/issues/1140)
 * Complete making @batch-flask independent [\#1109](https://github.com/Azure/BatchLabs/issues/1109)
 * Move logger to @batch-flask package [\#1108](https://github.com/Azure/BatchLabs/issues/1108)
 * Create a new @batch-flask folder to simulate a package [\#1106](https://github.com/Azure/BatchLabs/issues/1106)
+* Connect to Node - always says creds valid for 24 hours on node [\#1085](https://github.com/Azure/BatchLabs/issues/1085)
 * Update EULA, license and thirdpartynotices [\#1105](https://github.com/Azure/BatchLabs/issues/1105)
 * Redesign table component [\#1101](https://github.com/Azure/BatchLabs/issues/1101)
-* Connect to Node - always says creds valid for 24 hours on node [\#1085](https://github.com/Azure/BatchLabs/issues/1085)
 * Gallery tab still has "Market" breadcrumb & title [\#1076](https://github.com/Azure/BatchLabs/issues/1076)
 
 # 0.13.1
