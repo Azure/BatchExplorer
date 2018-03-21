@@ -1,7 +1,7 @@
 {
   "ignoreFiles": [
     "**/*.md",
-    "**/*.html",
+    "**/*.html"
   ],
   "rules": {
     "indentation": 4,
