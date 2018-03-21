@@ -57,6 +57,7 @@ export class VmSizeDecorator {
 }
 
 import "./vm-size-picker.scss";
+import { LoadingStatus } from "@batch-flask/ui/loading";
 
 // tslint:disable:no-forward-ref
 @Component({
@@ -75,6 +76,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
 
     public pickedSize: string;
 
+    public loadingStatus: LoadingStatus = LoadingStatus.Loading;
     public categoryNames: string[];
     public categories: StringMap<VmSizeDecorator[]>;
     public prices: OSPricing = null;
@@ -110,6 +112,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
             } else {
                 sizes = this.vmSizeService.cloudServiceSizes;
             }
+            this.loadingStatus = LoadingStatus.Loading;
             this._sizeSub = sizes.subscribe(x => {
                 this._vmSizes = x;
                 this._categorizeSizes();
@@ -174,6 +177,8 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     }
 
     private _categorizeSizes() {
+        if (!this._vmSizes) { return; }
+        this.loadingStatus = LoadingStatus.Ready;
         let remainingSizes = this._vmSizes.toArray();
         const categories = {};
         for (const category of Object.keys(this._categories)) {
