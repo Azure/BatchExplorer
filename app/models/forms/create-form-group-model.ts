@@ -1,6 +1,10 @@
 import { FileGroupCreateDto } from "app/models/dtos";
 import { Constants } from "app/utils";
 
+export interface FileOrDirectoryModel {
+    path: string;
+}
+
 export interface FileGroupOptionsModel {
     prefix?: string;
     flatten: boolean;
@@ -9,7 +13,7 @@ export interface FileGroupOptionsModel {
 
 export interface CreateFileGroupModel {
     name: string;
-    folder: string;
+    paths: FileOrDirectoryModel[];
     includeSubDirectories: boolean;
     accessPolicy: string;
     options: FileGroupOptionsModel;
@@ -18,7 +22,7 @@ export interface CreateFileGroupModel {
 export function createFileGroupFormToJsonData(formData: CreateFileGroupModel): any {
     const data: any = {
         name: formData.name,
-        folder: formData.folder,
+        paths: formData.paths,
         includeSubDirectories: formData.includeSubDirectories,
         accessPolicy: formData.accessPolicy,
         options: formData.options,
@@ -33,7 +37,7 @@ export function fileGroupToFormModel(fileGroup: FileGroupCreateDto): CreateFileG
         name: fileGroup.name.startsWith(Constants.ncjFileGroupPrefix)
             ? fileGroup.name.substr(Constants.ncjFileGroupPrefix.length, fileGroup.name.length)
             : fileGroup.name,
-        folder: fileGroup.folder,
+        paths: fileGroup.paths,
         includeSubDirectories: fileGroup.includeSubDirectories,
         accessPolicy: fileGroup.accessPolicy,
         options: fileGroup.options,

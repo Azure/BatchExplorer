@@ -19,7 +19,6 @@
             <bl-bool-property label="Inter-node communication" [value]="pool.enableInterNodeCommunication"></bl-bool-property>
             <bl-text-property label="Last modified" [value]="decorator.lastModified"></bl-text-property>
             <bl-text-property label="Max tasks per node" [value]="decorator.maxTasksPerNode"></bl-text-property>
-            <!--<bl-text-property label="Resize error" [value]="decorator"></bl-text-property>-->
             <bl-text-property label="Resize timeout" [value]="decorator.resizeTimeout"></bl-text-property>
             <bl-text-property label="Task scheduling policy" [value]="decorator.taskSchedulingPolicy.nodeFillType"></bl-text-property>
             <bl-text-property label="Url" [value]="decorator.url"></bl-text-property>
@@ -42,14 +41,15 @@
             <div collapsed-preview>
                 <span>{{decorator.poolOs}}</span>
             </div>
-
-            <bl-text-property label="Publisher" [value]="decorator.virtualMachineConfiguration.imageReference.publisher"></bl-text-property>
-            <bl-text-property label="Offer" [value]="decorator.virtualMachineConfiguration.imageReference.offer"></bl-text-property>
-            <bl-text-property label="Sku" [value]="decorator.virtualMachineConfiguration.imageReference.sku"></bl-text-property>
-            <bl-text-property label="Version" [value]="decorator.virtualMachineConfiguration.imageReference.version"></bl-text-property>
+            <ng-container *ngIf="!pool.virtualMachineConfiguration.imageReference.virtualMachineImageId">
+                <bl-text-property label="Publisher" [value]="decorator.virtualMachineConfiguration.imageReference.publisher"></bl-text-property>
+                <bl-text-property label="Offer" [value]="decorator.virtualMachineConfiguration.imageReference.offer"></bl-text-property>
+                <bl-text-property label="Sku" [value]="decorator.virtualMachineConfiguration.imageReference.sku"></bl-text-property>
+                <bl-text-property label="Version" [value]="decorator.virtualMachineConfiguration.imageReference.version"></bl-text-property>
+            </ng-container>
             <bl-text-property label="Virtual machine image id" [value]="decorator.virtualMachineConfiguration.imageReference.virtualMachineImageId"></bl-text-property>
             <bl-text-property label="Node agent sku id" [value]="decorator.virtualMachineConfiguration.nodeAgentSKUId"></bl-text-property>
-            <bl-text-property *ngIf="decorator.virtualMachineConfiguration.windowsConfiguration" label="Enable automatic updates" [value]="decorator.virtualMachineConfiguration.windowsConfiguration.enableAutomaticUpdates"></bl-text-property>
+            <bl-text-property *ngIf="pool.virtualMachineConfiguration.windowsConfiguration" label="Enable automatic updates" [value]="decorator.virtualMachineConfiguration.windowsConfiguration.enableAutomaticUpdates"></bl-text-property>
             <bl-text-property *ngIf="containerConfiguration" label="Container type" [value]="containerConfiguration.type"></bl-text-property>
             <bl-text-property *ngIf="containerConfiguration" label="Container images" [value]="containerConfiguration.containerImageNames"></bl-text-property>
             <bl-table-property *ngIf="containerConfiguration?.containerRegistries?.length > 0" label="Container registries">

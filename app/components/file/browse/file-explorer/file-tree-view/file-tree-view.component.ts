@@ -38,6 +38,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     @Input() public autoExpand = false;
     @Input() public canDropExternalFiles = false;
     @Input() public canDeleteFiles = false;
+
     @Output() public navigate = new EventEmitter<string>();
     @Output() public dropFiles = new EventEmitter<FileDropEvent>();
     @Output() public deleteFiles = new EventEmitter<FileDeleteEvent>();

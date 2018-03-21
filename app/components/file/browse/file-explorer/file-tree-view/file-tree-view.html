@@ -15,10 +15,10 @@
     </bl-clickable>
 </div>
 <bl-focus-section *ngIf="expanded"
-        class="tree-view-content"
-        (focus)="setFocus(true)"
-        (blur)="setFocus(false)"
-        (keypress)="handleKeyboardNavigation($event)">
+    class="tree-view-content"
+    (focus)="setFocus(true)"
+    (blur)="setFocus(false)"
+    (keypress)="handleKeyboardNavigation($event)">
 
     <div *ngIf="fileNavigator.error" class="tree-view-error">{{fileNavigator.error.message}}</div>
     <div class="tree-rows-container"
