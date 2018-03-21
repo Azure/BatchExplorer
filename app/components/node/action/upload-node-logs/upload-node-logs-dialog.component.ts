@@ -105,7 +105,7 @@ export class UploadNodeLogsDialogComponent {
                         `are being uploaded to container ${container}`);
                 }
             });
-        });
+        }, () => null);
         return obs;
     }
 

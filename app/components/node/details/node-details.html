@@ -10,7 +10,7 @@
                 <bl-delete-button [action]="delete"></bl-delete-button>
                 <bl-button color="light" [action]="reboot" title="Reboot node" icon="fa fa-power-off"></bl-button>
                 <bl-edit-button [action]="editStartTask" title="Edit start task"></bl-edit-button>
-                <bl-button color="light" [action]="uploadNodeLogs" title="Upload batch logs" [disabled]="pool.cloudServiceConfiguration">
+                <bl-button color="light" [action]="uploadNodeLogs" title="Upload batch logs" [disabled]="!pool.cloudServiceConfiguration">
                     <span class="upload-node-logs fa-stacked">
                         <i class="fa fa-upload fa-stack-1x"></i>
                         <i class="fa fa-bug fa-stack-1x"></i>
