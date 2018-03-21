@@ -1,3 +1,68 @@
+# 0.14.0
+[All items](https://github.com/Azure/BatchLabs/milestone/16?closed=1)
+
+### feature:
+
+* Add MS and NCS_V3 sizes to vm size picker. [\#1191](https://github.com/Azure/BatchLabs/issues/1191)
+* Allow to pick custom user accounts when adding a task [\#1188](https://github.com/Azure/BatchLabs/issues/1188)
+* Hide persisted files explorer when no container found [\#1185](https://github.com/Azure/BatchLabs/issues/1185)
+* Drag and Drop support for local NCJ templates. [\#1179](https://github.com/Azure/BatchLabs/issues/1179)
+* Dedicated page for account monitoring metrics [\#1149](https://github.com/Azure/BatchLabs/issues/1149)
+* Upload node logs [\#1148](https://github.com/Azure/BatchLabs/issues/1148)
+* Show app insights per node [\#1144](https://github.com/Azure/BatchLabs/issues/1144)
+* Ability to delete a batch account [\#1133](https://github.com/Azure/BatchLabs/issues/1133)
+* Handle multiple folder uploads for a single file group [\#1129](https://github.com/Azure/BatchLabs/issues/1129)
+* File explorer right click download only works for containers [\#1120](https://github.com/Azure/BatchLabs/issues/1120)
+* Support non-public Azure clouds [\#1116](https://github.com/Azure/BatchLabs/issues/1116)
+* Make list and table use virtual scroll [\#1100](https://github.com/Azure/BatchLabs/issues/1100)
+* Give an option to request more quota  [\#1097](https://github.com/Azure/BatchLabs/issues/1097)
+* File explorer keyboard navigation [\#1062](https://github.com/Azure/BatchLabs/issues/1062)
+* Show quotas on respective pages [\#1048](https://github.com/Azure/BatchLabs/issues/1048)
+* Ability to create a batch account [\#1022](https://github.com/Azure/BatchLabs/issues/1022)
+* VNet support [\#1018](https://github.com/Azure/BatchLabs/issues/1018)
+* Job schedule support [\#1008](https://github.com/Azure/BatchLabs/issues/1008)
+* Create Blender plugin to test BL Custom Protocol [\#953](https://github.com/Azure/BatchLabs/issues/953)
+* Support command line parameters to support custom workflow [\#856](https://github.com/Azure/BatchLabs/issues/856)
+* More finely grained upload progress for file groups. [\#707](https://github.com/Azure/BatchLabs/issues/707)
+* Support for adding custom image to pools [\#434](https://github.com/Azure/BatchLabs/issues/434)
+
+### bug:
+
+* Batch account with no autostorage add pool doesn't show user accounts and start task picker [\#1190](https://github.com/Azure/BatchLabs/issues/1190)
+* Getting a 400 error when trying to load files from Node.  [\#1181](https://github.com/Azure/BatchLabs/issues/1181)
+* NCJ Local templates seem to have stopped working [\#1171](https://github.com/Azure/BatchLabs/issues/1171)
+* Data not being disposed correctly when switching accounts [\#1169](https://github.com/Azure/BatchLabs/issues/1169)
+* Account details not disposing of the data [\#1167](https://github.com/Azure/BatchLabs/issues/1167)
+* Pool heatmap is not updating [\#1162](https://github.com/Azure/BatchLabs/issues/1162)
+* Clicking on the account details before done loading redirect to app packages [\#1157](https://github.com/Azure/BatchLabs/issues/1157)
+* Clicking on the task filter from job details crash [\#1155](https://github.com/Azure/BatchLabs/issues/1155)
+* Application license picker validation bug [\#1153](https://github.com/Azure/BatchLabs/issues/1153)
+* Table formatting on account overview incorrect [\#1136](https://github.com/Azure/BatchLabs/issues/1136)
+* Issue with list loading and changedetection [\#1131](https://github.com/Azure/BatchLabs/issues/1131)
+* Deleting folder from file group deletes every file in file group. [\#1126](https://github.com/Azure/BatchLabs/issues/1126)
+* Refresh button change detection issue [\#1122](https://github.com/Azure/BatchLabs/issues/1122)
+* Data details(slow) change detection not triggering correctly [\#1119](https://github.com/Azure/BatchLabs/issues/1119)
+* File too large to preview UI messed up [\#1113](https://github.com/Azure/BatchLabs/issues/1113)
+* Update existing file-group not working [\#1111](https://github.com/Azure/BatchLabs/issues/1111)
+* Heatmap change detection issue [\#1095](https://github.com/Azure/BatchLabs/issues/1095)
+* Error message after updating [\#1083](https://github.com/Azure/BatchLabs/issues/1083)
+* Should disable "add a pool button" before vmSize is initialized [\#985](https://github.com/Azure/BatchLabs/issues/985)
+
+### other:
+
+* Do not show the pool os information is using custom image [\#1192](https://github.com/Azure/BatchLabs/issues/1192)
+* Task advanced filter is not applying [\#1158](https://github.com/Azure/BatchLabs/issues/1158)
+* Pool cpu usage individual cpu is confusing [\#1145](https://github.com/Azure/BatchLabs/issues/1145)
+* Remove all import from "electron" [\#1140](https://github.com/Azure/BatchLabs/issues/1140)
+* Account charts are a bit confusing [\#1138](https://github.com/Azure/BatchLabs/issues/1138)
+* Complete making @batch-flask independent [\#1109](https://github.com/Azure/BatchLabs/issues/1109)
+* Move logger to @batch-flask package [\#1108](https://github.com/Azure/BatchLabs/issues/1108)
+* Create a new @batch-flask folder to simulate a package [\#1106](https://github.com/Azure/BatchLabs/issues/1106)
+* Update EULA, license and thirdpartynotices [\#1105](https://github.com/Azure/BatchLabs/issues/1105)
+* Redesign table component [\#1101](https://github.com/Azure/BatchLabs/issues/1101)
+* Connect to Node - always says creds valid for 24 hours on node [\#1085](https://github.com/Azure/BatchLabs/issues/1085)
+* Gallery tab still has "Market" breadcrumb & title [\#1076](https://github.com/Azure/BatchLabs/issues/1076)
+
 # 0.13.1
 
 Hot fixes:
