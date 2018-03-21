@@ -79,6 +79,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
                 this.poolService.get(jobData.poolInfo.poolId).cascade((pool) => {
                     const poolData = pool.toJS();
                     this.virtualMachineConfiguration = poolData.virtualMachineConfiguration;
+                    this.userAccounts = poolData.userAccounts;
                 });
             }
         });
