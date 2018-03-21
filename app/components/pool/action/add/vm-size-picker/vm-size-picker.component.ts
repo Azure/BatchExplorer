@@ -4,6 +4,7 @@ import {
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+import { LoadingStatus } from "@batch-flask/ui";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
@@ -12,6 +13,8 @@ import { PoolOsSources } from "app/models/forms";
 import { PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
 import { StringUtils, exists, prettyBytes } from "app/utils";
+
+import "./vm-size-picker.scss";
 
 const categoriesDisplayName = {
     standard: "General purpose",
@@ -55,9 +58,6 @@ export class VmSizeDecorator {
         return vmSize.replace(/_/g, " ");
     }
 }
-
-import "./vm-size-picker.scss";
-import { LoadingStatus } from "@batch-flask/ui/loading";
 
 // tslint:disable:no-forward-ref
 @Component({
