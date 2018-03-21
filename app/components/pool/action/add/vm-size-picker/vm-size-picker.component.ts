@@ -4,6 +4,7 @@ import {
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+import { LoadingStatus } from "@batch-flask/ui";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
@@ -12,6 +13,8 @@ import { PoolOsSources } from "app/models/forms";
 import { PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
 import { StringUtils, exists, prettyBytes } from "app/utils";
+
+import "./vm-size-picker.scss";
 
 const categoriesDisplayName = {
     standard: "General purpose",
@@ -56,8 +59,6 @@ export class VmSizeDecorator {
     }
 }
 
-import "./vm-size-picker.scss";
-
 // tslint:disable:no-forward-ref
 @Component({
     selector: "bl-vm-size-picker",
@@ -75,6 +76,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
 
     public pickedSize: string;
 
+    public loadingStatus: LoadingStatus = LoadingStatus.Loading;
     public categoryNames: string[];
     public categories: StringMap<VmSizeDecorator[]>;
     public prices: OSPricing = null;
@@ -110,6 +112,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
             } else {
                 sizes = this.vmSizeService.cloudServiceSizes;
             }
+            this.loadingStatus = LoadingStatus.Loading;
             this._sizeSub = sizes.subscribe(x => {
                 this._vmSizes = x;
                 this._categorizeSizes();
@@ -174,6 +177,8 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     }
 
     private _categorizeSizes() {
+        if (!this._vmSizes) { return; }
+        this.loadingStatus = LoadingStatus.Ready;
         let remainingSizes = this._vmSizes.toArray();
         const categories = {};
         for (const category of Object.keys(this._categories)) {
