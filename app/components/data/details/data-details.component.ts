@@ -75,7 +75,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         sidebarRef.component.setValue(new FileGroupCreateDto({
             name: this.container.name,
             includeSubDirectories: true,
-            folder: null,
+            paths: [],
         }));
 
         sidebarRef.afterCompletion.subscribe(() => {

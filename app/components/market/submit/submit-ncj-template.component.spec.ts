@@ -11,7 +11,9 @@ import { Observable } from "rxjs/Observable";
 
 import { MaterialModule } from "@batch-flask/core";
 import { DialogService } from "@batch-flask/ui/dialogs";
+import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
+
 import { FileGroupPickerComponent } from "app/components/data/shared";
 import { CloudFilePickerComponent } from "app/components/data/shared/cloud-file-picker";
 import { FileGroupSasComponent } from "app/components/data/shared/file-group-sas";
@@ -86,6 +88,7 @@ describe("SubmitNcjTemplateComponent", () => {
     let component: SubmitNcjTemplateComponent;
     let de: DebugElement;
 
+    let listProxy: MockListView<any, any>;
     let activatedRouteSpy: any;
     let templateServiceSpy: any;
     let ncjSubmitServiceSpy: any;
@@ -95,7 +98,7 @@ describe("SubmitNcjTemplateComponent", () => {
     let vmSizeServiceSpy: any;
     let sidebarSpy: any;
     let dialogSpy: any;
-    let listProxy: MockListView<any, any>;
+    let notificationServiceSpy: any;
 
     const blendFile = "myscene.blend";
     const queryParameters = {
@@ -158,6 +161,11 @@ describe("SubmitNcjTemplateComponent", () => {
             open: jasmine.createSpy("open"),
         };
 
+        notificationServiceSpy = {
+            success: jasmine.createSpy("success"),
+            error: jasmine.createSpy("error"),
+        };
+
         TestBed.configureTestingModule({
             imports: [RouterTestingModule, ReactiveFormsModule, FormsModule, MaterialModule, NoopAnimationsModule],
             declarations: [NoItemMockComponent, SubmitNcjTemplateComponent, FileGroupSasComponent,
@@ -174,6 +182,7 @@ describe("SubmitNcjTemplateComponent", () => {
                 { provide: SidebarManager, useValue: sidebarSpy },
                 { provide: PoolService, useValue: poolServiceSpy },
                 { provide: VmSizeService, useValue: vmSizeServiceSpy },
+                { provide: NotificationService, useValue: notificationServiceSpy },
             ],
 
             schemas: [NO_ERRORS_SCHEMA],

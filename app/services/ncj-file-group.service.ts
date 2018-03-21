@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
-import { FileGroupCreateDto } from "app/models/dtos";
+import { FileGroupOptionsDto } from "app/models/dtos";
 import { PythonRpcService } from "./python-rpc/python-rpc.service";
 
 /**
@@ -18,17 +18,20 @@ export class NcjFileGroupService {
      * Calls the Batch CLI via Python to create a file-group in the Batch account's
      * linked storage account.
      */
-    public createFileGroup(fileGroup: FileGroupCreateDto): Observable<any> {
+    public createOrUpdateFileGroup(
+        fileGroupName: string,
+        fileOrFolderPath: string,
+        options: FileGroupOptionsDto,
+        includeSubDirectories: boolean): Observable<any> {
 
         /**
-         * TODO: This method needs a callback for updating the UI with the status of the upload
-         * progress. Anna was working on changing the file.upload callback parameter to include the
-         * filename in order for this to happen.
+         * NOTE: Have tweaked the progress callback to return percantage of any large file over 64MB
+         * as per storage client. Would still like to have a throughput fugure in here also.
          */
         const observable = this.pythonRpcService.callWithAuth("create-file-group", [
-            fileGroup.name,
-            fileGroup.folder,
-            { ...fileGroup.options, recursive: fileGroup.includeSubDirectories },
+            fileGroupName,
+            fileOrFolderPath,
+            { ...options, recursive: includeSubDirectories },
         ]).catch((error) => {
             return Observable.throw(ServerError.fromPython(error));
         });
