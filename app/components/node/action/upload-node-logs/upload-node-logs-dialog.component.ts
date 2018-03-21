@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/
 import { MatDialogRef } from "@angular/material";
 import { autobind } from "@batch-flask/core";
 import { BackgroundTaskService, NotificationService } from "@batch-flask/ui";
-import { NodeService, StorageService, AccountService } from "app/services";
+import { AccountService, NodeService, StorageService } from "app/services";
 import { CloudPathUtils, StorageUtils } from "app/utils";
 import * as moment from "moment";
 
@@ -63,7 +63,6 @@ export class UploadNodeLogsDialogComponent {
 
         this.form.valueChanges.distinctUntilChanged().subscribe((value) => {
             const diff = moment.duration(moment(value.endTime).diff(value.startTime));
-            console.log("As days", diff.asDays(), diff.asMinutes(), value.endTime, value.startTime);
             this.warningTimeRange = diff.asDays() > 1;
             this.changeDetector.markForCheck();
         });
@@ -102,9 +101,10 @@ export class UploadNodeLogsDialogComponent {
                     this._watchUpload(container, result.virtualDirectoryName, result.numberOfFilesUploaded);
                 } else {
                     this.notificationService.info("Uploading node logs",
-                        `Azure batch node agent logs are being uploaded to container ${container}`)
+                        `Azure batch node agent  ${result.numberOfFilesUploaded} logs files ` +
+                        `are being uploaded to container ${container}`);
                 }
-            })
+            });
         });
         return obs;
     }

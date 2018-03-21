@@ -123,7 +123,6 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         if (!value) {
             return;
         }
-        console.log("PARse date", value);
         const datetime = moment(value);
         this.selectedDate.setValue(datetime.toDate());
         this.selectedTime.patchValue({
