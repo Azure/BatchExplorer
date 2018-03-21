@@ -1,6 +1,17 @@
-<bl-complex-form [submit]="submit" [containerRef]="containerRef" [multiUse]="multiUse" [actionName]="actionName" [actionColor]="actionColor"
-    [actionName]="actionName" [cancelText]="cancelText" [size]="size" [stickyFooter]="stickyFooter" [formGroup]="formGroup" (done)="done.emit()">
-    <bl-form-page main-form-page [title]="title" [subtitle]="subtitle">
+<bl-complex-form
+    [submit]="submit"
+    [containerRef]="containerRef"
+    [multiUse]="multiUse"
+    [actionName]="actionName"
+    [actionColor]="actionColor"
+    [actionName]="actionName"
+    [cancelText]="cancelText"
+    [size]="size"
+    [stickyFooter]="stickyFooter"
+    [formGroup]="formGroup"
+    (done)="done.emit()">
+
+    <bl-form-page main-form-page [title]="title" [subtitle]="subtitle" [formGroup]="formGroup">
         <bl-form-section>
             <ng-content></ng-content>
         </bl-form-section>

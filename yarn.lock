@@ -891,9 +891,9 @@ axios@^0.15.3:
   dependencies:
     follow-redirects "1.0.0"
 
-"azure-batch-js@git://github.com/amarzavery/azure-batch-ts#fae8b77267b013711be52c1ff5efba7c5eefa092", "azure-batch@git://github.com/amarzavery/azure-batch-ts#fae8b77267b013711be52c1ff5efba7c5eefa092":
+"azure-batch@git://github.com/amarzavery/azure-batch-ts#0fd31d16d4f5cdc1b2b1aa84dc8561f271c392a4":
   version "0.1.0"
-  resolved "git://github.com/amarzavery/azure-batch-ts#fae8b77267b013711be52c1ff5efba7c5eefa092"
+  resolved "git://github.com/amarzavery/azure-batch-ts#0fd31d16d4f5cdc1b2b1aa84dc8561f271c392a4"
   dependencies:
     ms-rest-azure-js "^0.2.0"
 

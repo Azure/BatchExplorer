@@ -31,6 +31,10 @@ ol ul {
     color: map-get($danger, 500);
 }
 
+.warning, .warn {
+    color: $warn-color;
+}
+
 .highlight {
     color: $primary-color;
 }

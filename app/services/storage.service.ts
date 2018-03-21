@@ -12,6 +12,7 @@ import {
     DataCache,
     EntityView,
     ListOptionsAttributes,
+    ListResponse,
     ListView,
     StorageEntityGetter,
     StorageListGetter,
@@ -149,6 +150,13 @@ export class StorageService {
         });
         view.params = { container };
         return view;
+    }
+
+    public listBlobs(
+        container: string,
+        options: ListBlobOptions = {},
+        forceNew = false): Observable<ListResponse<Blob>> {
+        return this._blobListGetter.fetch({ container }, options, forceNew);
     }
 
     /**

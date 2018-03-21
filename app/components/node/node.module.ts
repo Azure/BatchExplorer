@@ -10,6 +10,7 @@ import {
 } from "app/components/node/details";
 import { NodeHomeComponent } from "app/components/node/home";
 import { PoolGraphsModule } from "app/components/pool/graphs";
+import { NodeActionModule } from "./action";
 
 const components = [
     NodeConfigurationComponent, NodeDefaultComponent, NodeDetailsComponent, NodeHomeComponent,
@@ -17,7 +18,7 @@ const components = [
 ];
 
 const modules = [
-    FileBrowseModule, NodeBrowseModule, NodeConnectModule,
+    FileBrowseModule, NodeBrowseModule, NodeConnectModule, NodeActionModule,
 ];
 
 @NgModule({
