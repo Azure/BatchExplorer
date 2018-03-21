@@ -394,7 +394,7 @@ describe("ParameterInputComponent", () => {
             testComponent.paramControl.setValue(newInput);
             fixture.detectChanges();
             fileGroupComponent = fileGroupEl.componentInstance;
-            expect(fileGroupComponent.value.value).toBe(newInput);
+            expect(fileGroupComponent.value.value).toBe(`fgrp-${newInput}`);
         });
     });
 

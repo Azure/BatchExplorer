@@ -18,6 +18,7 @@ bl-local-template-browser {
 
     .template-picker {
         margin-bottom: 10px;
+
         > input {
             display: none;
         }
@@ -33,6 +34,7 @@ bl-local-template-browser {
             color: $alto;
             border: 3px dashed $alto;
             text-align: center;
+
             > .main {
                 font-size: 32px;
             }
@@ -54,6 +56,37 @@ bl-local-template-browser {
                 color: map-get($danger, 300);
                 border: 3px solid map-get($danger, 300);
             }
+        }
+
+        .error {
+            margin-top: 10px;
+        }
+    }
+
+    .drop-overlay {
+        top: 60px;
+        left: 50px;
+        right: 50px;
+
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        min-width: 300px;
+        height: 200px;
+        position: absolute;
+        background-color: white;
+        border: 2px dashed $alto;
+        align-items: center;
+        justify-content: center;
+        color: $alto;
+
+        > .fa-upload {
+            font-size: 36px;
+            margin-right: 15px;
+        }
+
+        > .message {
+            font-size: 20px;
         }
     }
 }

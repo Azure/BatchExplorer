@@ -1,9 +1,11 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { MatCheckboxChange } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 
 import { ServerError, autobind } from "@batch-flask/core";
+import { NotificationService } from "@batch-flask/ui/notifications";
 import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, NcjTemplateMode } from "app/models";
 import { NcjSubmitService, NcjTemplateService } from "app/services";
 import { exists, log } from "app/utils";
@@ -46,10 +48,12 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     private _parameterTypeMap = {};
     private _queryParameters: {};
     private _loaded = false;
+    private _blockRedirection = false;
 
     constructor(
         private formBuilder: FormBuilder,
         private activatedRoute: ActivatedRoute,
+        private notificationService: NotificationService,
         private router: Router,
         private templateService: NcjTemplateService,
         private ncjSubmitService: NcjSubmitService) {
@@ -84,10 +88,12 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
                 this.modeState = this.poolTemplate ? NcjTemplateMode.NewPool : NcjTemplateMode.ExistingPoolAndJob;
             }
 
-            this._queryParameters = {};
-            this._parameterTypeMap = {};
-            this._processParameters();
-            this._createForms();
+            if (!this._loaded) {
+                this._queryParameters = {};
+                this._parameterTypeMap = {};
+                this._processParameters();
+                this._createForms();
+            }
         }
     }
 
@@ -117,6 +123,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         if (this.isFormValid()) {
             return "Click to submit form";
         }
+
         return "Form is not valid";
     }
 
@@ -124,6 +131,14 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         return (this.modeState === NcjTemplateMode.NewPoolAndJob && this.jobParams.valid && this.poolParams.valid) ||
             (this.modeState === NcjTemplateMode.ExistingPoolAndJob && this.jobParams.valid && this.pickedPool.valid) ||
             (this.modeState === NcjTemplateMode.NewPool && this.poolParams.valid);
+    }
+
+    public trackParameter(index, param: NcjParameterWrapper) {
+        return param.id;
+    }
+
+    public blockRedirectionCheckChanged(event: MatCheckboxChange) {
+        this._blockRedirection = event.checked;
     }
 
     @autobind()
@@ -148,10 +163,6 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             log.error("Couldn't find how to submit this template.", { modeState: this.modeState });
             return Observable.of(null);
         }
-    }
-
-    public trackParameter(index, param: NcjParameterWrapper) {
-        return param.id;
     }
 
     @autobind()
@@ -240,12 +251,13 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
 
     private _handleControlChangeEvents(formGroup, key) {
         // Listen to control value change events and update the route parameters to match
-        this._controlChanges.push(formGroup[key].valueChanges.subscribe((change) => {
+        // tslint:disable-next-line:max-line-length
+        this._controlChanges.push(formGroup[key].valueChanges.debounceTime(400).distinctUntilChanged().subscribe((change) => {
             if (this._parameterTypeMap[key] === NcjParameterExtendedType.fileGroup &&
-                !change.startsWith(Constants.ncjFileGroupPrefix)) {
+                Boolean(change) && !change.startsWith(Constants.ncjFileGroupPrefix)) {
 
                 // Quick-Fix until we modify the CLI to finally sort out file group prefixes
-                change = Constants.ncjFileGroupPrefix + change;
+                change = `${Constants.ncjFileGroupPrefix}${change}`;
             }
 
             // Set the parameters on the route so when page reloads we keep the existing parameters
@@ -312,18 +324,32 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     private _redirectToJob(id) {
-        if (id) {
-            this.router.navigate(["/jobs", id]);
+        if (!this._blockRedirection) {
+            if (id) {
+                this.router.navigate(["/jobs", id]);
+            } else {
+                this.router.navigate(["/jobs"]);
+            }
         } else {
-            this.router.navigate(["/jobs"]);
+            this._notifySuccess("Create Job", id);
         }
     }
 
     private _redirectToPool(id) {
-        if (id) {
-            this.router.navigate(["/pools", id]);
+        if (!this._blockRedirection) {
+            if (id) {
+                this.router.navigate(["/pools", id]);
+            } else {
+                this.router.navigate(["/pools"]);
+            }
         } else {
-            this.router.navigate(["/pools"]);
+            this._notifySuccess("Create Pool", id);
         }
+    }
+
+    private _notifySuccess(type, id) {
+        // If we don't want to redirect, I still want to know that the job/pool was submitted.
+        const message = `${type} with ID: '${id}' was successfully submitted to the service.`;
+        this.notificationService.success(type, message);
     }
 }

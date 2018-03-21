@@ -160,7 +160,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         sidebarRef.component.setValue(new FileGroupCreateDto({
             name: container.name,
             includeSubDirectories: true,
-            folder: null,
+            paths: [],
         }));
 
         sidebarRef.afterCompletion.subscribe(() => {

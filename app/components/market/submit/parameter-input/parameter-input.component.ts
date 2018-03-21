@@ -21,7 +21,9 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
 
     @Input() public parameter: NcjParameterWrapper;
     @Input() public parameterValues: StringMap<any>;
+
     public parameterValue = new FormControl();
+
     private _propagateChange: (value: any) => void = null;
     private _subs: Subscription[] = [];
 
@@ -50,6 +52,13 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
     }
 
     public writeValue(value: any) {
+        // persisted value will not have the file group prefix. need to add it
+        // to fix validation error for recent templates.
+        if (this.parameter.type === NcjParameterExtendedType.fileGroup &&
+            Boolean(value) && !value.startsWith(Constants.ncjFileGroupPrefix)) {
+            value = this.getContainerFromFileGroup(value);
+        }
+
         this.parameterValue.setValue(value);
     }
 
@@ -73,6 +82,7 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
                 const maxValue = String(error.max.max);
                 messageText = `Should be less than or equal to ${maxValue}`;
             }
+
             return {
                 validFormInput: {
                     valid: false,
@@ -105,6 +115,7 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
                 validatorGroup.push(Validators.max(parameterTemplate.maxValue));
             }
         }
+
         if (parameterTemplate.type === NcjParameterRawType.string) {
             if (parameterTemplate.minLength) {
                 validatorGroup.push(Validators.minLength(parameterTemplate.minLength));
@@ -113,6 +124,7 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
                 validatorGroup.push(Validators.maxLength(parameterTemplate.maxLength));
             }
         }
+
         this.parameterValue.setValidators(Validators.compose(validatorGroup));
     }
 }
