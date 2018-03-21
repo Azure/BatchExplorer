@@ -41,6 +41,7 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     public fileExplorerConfig: FileExplorerConfig = {};
 
     private _persistedSourceName: string = "Persisted output";
+    private _noPersistedOutputsCode: string = "NoPersistedOutput";
 
     constructor(private fileService: FileService, private storageService: StorageService) { }
 
@@ -101,15 +102,19 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
             const taskOutputPrefix = `${this.task.id}`;
             const taskOutputNavigator = this.storageService.navigateContainerBlobs(container, taskOutputPrefix, {
                 onError: (error) => {
-                    // failed to load any persisted outputs so remove the source.
-                    const index = this.workspace.sources.findIndex((source: FileSource) => {
-                        return source.name === this._persistedSourceName;
-                    });
-                    if (index > -1) {
-                        this.workspace.sources.splice(index, 1);
+                    const serverError = this._processBlobError(error);
+                    if (serverError && serverError.code === this._noPersistedOutputsCode) {
+                        // no container exists for the job so it didn't use conventions library.
+                        // remove the source so the user doesn't see it at all.
+                        const index = this.workspace.sources.findIndex((source: FileSource) => {
+                            return source.name === this._persistedSourceName;
+                        });
+                        if (index > -1) {
+                            this.workspace.sources.splice(index, 1);
+                        }
                     }
 
-                    return this._processBlobError(error);
+                    return serverError;
                 },
             });
             taskOutputNavigator.init();
@@ -146,10 +151,10 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     }
 
     private _processBlobError(error: ServerError): ServerError {
-        if (error.status === HttpCode.NotFound && error.code === "ContainerNotFound") {
+        if (error && error.status === HttpCode.NotFound && error.code === "ContainerNotFound") {
             return new ServerError({
                 status: 404,
-                code: "NoPersistedOutput",
+                code: this._noPersistedOutputsCode,
                 message: this._fileConventionErrorMessage(),
                 original: error.original,
             });
