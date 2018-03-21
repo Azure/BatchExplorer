@@ -8,82 +8,202 @@
     <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/style.css">
     <link rel="stylesheet" href="assets/outdatedbrowser/outdatedbrowser.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="icon" href="assets/font-awesome/ico/favicon-flask.ico" sizes="16x16">
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <script src="index.js"></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
 </head>
 
 <body>
-    <section class="header">
-        <h1 class="title">BatchLabs</h1>
-        <h2 class="subtitle">A client tool to help create, debug and monitor Azure Batch Applications</h2>
-        <div class="btn" id="batch-labs-version" title="Version">-</div>
-        <a href="https://github.com/Azure/BatchLabs" class="btn">View on GitHub</a>
-    </section>
-    <img src="assets/images/job-home.png" class="demo-image overlaping-image">
-    <div class="content">
-        <a href="https://github.com/Azure/BatchLabs/releases">
-            <h2 class="download-title">Downloads</h2>
-        </a>
+    <nav class="navbar navbar-dark" style="background-color:#333333">
+        <span class="navbar-brand mb-0 h1"> <i class="fa fa-flask"></i> Batch Labs</span>
+    </nav>
+    <div class="navbar navbar-light" style="display: block; background-color:#e3e3e3">
+        <div class="text-center">Version <span id="batch-labs-version">0.13.1 (Beta)</span> is now available! Find more details below.</div>
+    </div>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-5">
+                <div style="margin-top:14px;">
+                    <h1 class="text-center">Batch Labs</h1>
+                    <p class="text-center">Debug and monitor your Azure Batch applications</p>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-5 col-lg-12 text-center">
+                            <a
+                                class="btn btn-link" 
+                                id="primary-download-btn">
+                                Download
+                            </a>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-7 col-lg-12 text-center">
+                            <a class="btn btn-success btn-link" 
+                                style="background-color:gray !important; border-color: gray !important;"
+                                href="https://github.com/Azure/BatchLabs">
+                                View on GitHub
+                            </a>
+                        </div>
+                    </div>
+                    <p class="text-center" style="font-size: small; padding-top:8px; color:grey">
+                        By using Batch Labs, you agree to its <a href="EULA.html" >license</a>
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <img src="assets/images/job-home.png" class="demo-image">
+            </div>
+        </div>
+    </div>
+    <div class="download-content">
         <div class="downloads">
             <div class="os-download">
                 <div class="type">
                     <i class="fa fa-windows"></i>
-                    <div class="label">Windows</div>
                 </div>
-                <a class="option" id="download-windows-installer">
-                    Installer
+                <a
+                    class="btn btn-success btn-link os-download-btn" 
+                    id="download-windows-installer-btn">
+                    Windows
                 </a>
-                <a class="option" id="download-windows-zip">
-                    Zip
-                </a>
+                <div class="alternate-downloads">
+                    <span><a href="#" id="download-windows-installer">msi</a> | <a href="#" id="download-windows-zip">zip</a></span>
+                </div>
             </div>
 
             <div class="os-download">
                 <div class="type">
                     <i class="fa fa-apple"></i>
-                    <div class="label">OSX</div>
                 </div>
-                <a class="option" id="download-osx-dmg">
-                    Dmg
+                <a 
+                    class="btn btn-success btn-link btn-link os-download-btn"
+                    id="download-osx-dmg-btn">
+                        OSX
                 </a>
-                <a class="option" id="download-osx-zip">
-                    Zip
-                </a>
+                <div class="alternate-downloads">
+                    <span><a href="#" id="download-osx-dmg">dmg</a> | <a href="#" id="download-osx-zip">zip</a></span>
+                </div>
+                    
             </div>
 
             <div class="os-download">
                 <div class="type">
                     <i class="fa fa-linux"></i>
-                    <div class="label">Linux</div>
                 </div>
-                <a class="option" id="download-linux-deb">
-                    Deb
+                <a class="btn btn-success btn-link btn-link os-download-btn" 
+                    id="download-linux-deb-btn">
+                        Linux
                 </a>
-                <a class="option" id="download-linux-rpm">
-                    Rpm
-                </a>
-                <a class="option" id="download-linux-appimage">
-                    AppImage
-                </a>
+                <div class="alternate-downloads">
+                    <span><a href="#" id="download-linux-deb">deb</a> 
+                        | <a href="#" id="download-linux-rpm">rpm</a> 
+                        | <a href="#" id="download-linux-appimage">AppImage</a></span>
+                </div>
             </div>
         </div>
-
-        <div>
-            <h2 class="download-title">Pool heatmap</h2>
-
-            <img src="assets/images/pool-home.png" class="demo-image">
-        </div>
-
-        <div>
-            <h2 class="download-title">Find anomalies in your job</h2>
-            <img src="assets/images/job-running-tasks-graph.png" class="demo-image">
+    </div>
+    <div class="swimlane">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <a href="assets/images/dashboard.png" target="_blank">
+                        <img src="assets/images/dashboard.png" class="screenshot">
+                    </a>
+                </div>
+                <div class="col-sm-6 offset-sm-2">
+                    <h2>Account overviews</h2>
+                    <p>Manage your accounts, view high level statistics, quotas and account properties at a glance. 
+                        Use the dashboard for high level management or to quickly drill into any features offered by the Azure Batch service.</p>
+                </div>
+            </div>
         </div>
     </div>
+
+    <div class="swimlane dark">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h2>Pool views</h2>
+                    <p>See what the nodes in your pool are doing at any given time with with a real-time heat map. 
+                        Also included are out-of-the box metrics and quick drill-downs to node properties and file explorers.</p>
+                </div>
+                <div class="col-sm-4 offset-sm-2">
+                    <a href="assets/images/pool-home.png" target="_blank">
+                        <img src="assets/images/pool-home.png" class="screenshot">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="swimlane">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <a href="assets/images/job-home.png" target="_blank">
+                        <img src="assets/images/job-home.png" class="screenshot">
+                    </a>
+                </div>
+                <div class="col-sm-6 offset-sm-2">
+                    <h2>Job mangament</h2>
+                    <p>Quickly track the progress of jobs, view the size of the queue and job throughput and highlight errors. 
+                        The jobs view is a great place to view the state of progress of work of your tasks.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="swimlane dark">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h2>Task performance</h2>
+                    <p>Use graphing tools to understand task runtime distribution to find outliers, hidden issue or performance bottlenecks.</p>
+                </div>
+                <div class="col-sm-4 offset-sm-2">
+                    <a href="assets/images/job-running-tasks-graph.png" target="_blank">
+                        <img src="assets/images/job-running-tasks-graph.png" class="screenshot">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                    <div class="left col-md-8">
+                            <ul class="links">
+                                <li>
+                                    <span class="message">Hello from Seattle.</span>
+                                </li>
+                                <li>
+                                    <a 
+                                        class="github-button" 
+                                        href="https://github.com/Azure/BatchLabs" 
+                                        data-show-count="true"
+                                        data-icon="octicon-star"
+                                        aria-label="Star Azure/BatchLabs on GitHub">Star
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                <div class="right col-md-4">
+                        <ul class="links">
+                            <li><a id="footer-issues-link" href="https://github.com/Azure/BatchLabs/issues">Issues</a></li>
+                            <li><a id="footer-license-link" href="EULA.html">License</a></li>
+                        </ul>
+                    </div>
+            </div>
+        </div>
+    </footer>
+
     <div id="outdated">
         <h6>Your browser is out-of-date!</h6>
-        <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+        <p>Update your browser to view this website correctly. 
+            <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update my browser now </a>
+        </p>
         <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
     </div>
     <script src="assets/outdatedbrowser/outdatedbrowser.js"></script>

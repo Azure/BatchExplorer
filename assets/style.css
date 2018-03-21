@@ -39,6 +39,18 @@ a {
     opacity: 0.7;
 }
 
+.jumbotron {
+    margin-bottom: 0px !important;
+    background-color: white !important;
+    border-radius: 0px !important;
+    padding: 1em 5% !important;
+}
+
+.jumbotron .btn {
+    border-radius: 0;
+    height: 48px;
+}
+
 .header .btn {
     display: inline-block;
     margin-bottom: 1rem;
@@ -68,30 +80,43 @@ a {
     color: #2e6083;
 }
 
-.demo-image {
-    display: block;
-    width: 800px;
-    margin: 15px auto;
-    box-shadow:  1px 1px 20px 0 rgba(0, 0, 0, 0.2);
+.btn-link {
+    border-radius: 0 !important;
+    background-color: #28a745 !important;
+    color: white !important;
+    display: inline-grid !important;
+    align-items: center;
+    min-width: 160px;
+    max-width: 320px;
+    width: 100%;
+    margin: 2px;
 }
 
-.demo-image.overlaping-image {
-    margin-top: -200px;
+.os-download-btn {
+    min-width: 180px;
+    height: 60px;
+}
+
+.demo-image {
+    display: block;
+    width: 100%;
+    margin: 15px auto;
+    box-shadow:  1px 1px 20px 0 rgba(0, 0, 0, 0.2);
 }
 
 .downloads {
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    margin: 2rem;
+    background-color: #333333;
+    padding: 1em;
 }
 
 .os-download {
-    margin: 0 50px;
-    width: 160px;
+    margin: 0 40px;
+    width: 200px;
     text-align: center;
     color: #5b5b5b;
-    background: white;
 }
 
 .os-download .type {
@@ -100,6 +125,7 @@ a {
 
 .os-download .type .fa {
     font-size: 6rem;
+    color: white;
 }
 
 .os-download .type > .label {
@@ -107,14 +133,66 @@ a {
     font-size: 2rem;
 }
 
-.os-download .option {
-    display: block;
-    border-top: 1px solid #e5e5e5;
-    cursor: pointer;
-    font-size: 1.1rem;
-    color: #5b5b5b;
+.os-download .type > .label {
+    margin-top: 1rem;
+    font-size: 2rem;
+}
+
+.os-download .alternate-downloads a{
+    color:lightgray;
+}
+
+.os-download .alternate-downloads {
+    color:grey;
+}
+
+.swimlane {
+    padding: 6rem 0 6rem;
+    min-height: 30rem;
+    position: relative;
+
+    /* font-family: "Segoe UI","Helvetica Neue","Helvetica",Arial,sans-serif; */
+}
+
+.swimlane h2 {
+    color:#333333;
+    margin-bottom: 1.5rem;
+}
+
+.swimlane p {
+    line-height: 2.5rem;
+    color:gray;
+    /* font-size: 1.8rem; */
+}
+
+.swimlane .screenshot {
+    height: 380px;
+}
+
+.dark {
+    background-color: #e5e5e5;
 }
 
 .os-download .option:hover {
     background: #e5e5e5;
+}
+
+.footer {
+    padding: 2em;
+    background-color: #333333;
+}
+
+footer .links li {
+    display: inline-block;
+    color: white;
+    vertical-align: top;
+}
+
+footer .links li a {
+    color: white;
+    font-size: small;
+}
+
+footer .links li:not(:last-child) {
+    padding-right: 20px;
 }
