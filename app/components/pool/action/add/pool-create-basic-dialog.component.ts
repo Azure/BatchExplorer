@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
 
@@ -9,7 +9,7 @@ import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { NodeFillType, Pool } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
 import { CreatePoolModel, PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
-import { PoolService, PricingService, VmSizeService } from "app/services";
+import { AccountService, PoolService, PricingService, VmSizeService } from "app/services";
 import { Constants, NumberUtils } from "app/utils";
 
 @Component({
@@ -20,7 +20,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public osSource: PoolOsSources = PoolOsSources.IaaS;
     public osType: "linux" | "windows" = "linux";
     public NodeFillType = NodeFillType;
-    public hasLinkedStorage: boolean = true;
+    public hasLinkedStorage: boolean = false;
     public estimatedCost: string = "-";
     public complexFormConfig: ComplexFormConfig;
     public fileUri = "create.pool.batch.json";
@@ -28,20 +28,25 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
     private _osControl: FormControl;
     private _renderingSkuSelected: boolean = false;
-    private _sub: Subscription;
+    private _subs: Subscription[] = [];
     private _lastFormValue: CreatePoolModel;
 
     constructor(
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<PoolCreateBasicDialogComponent>,
         private poolService: PoolService,
-        vmSizeService: VmSizeService,
+        private accountService: AccountService,
         private pricingService: PricingService,
+        vmSizeService: VmSizeService,
+        changeDetector: ChangeDetectorRef,
         private notificationService: NotificationService) {
         super(PoolCreateDto);
         this._setComplexFormConfig();
 
-        this.hasLinkedStorage = true;
+        this._subs.push(this.accountService.currentAccount.subscribe((account) => {
+            this.hasLinkedStorage = account.hasArmAutoStorage();
+            changeDetector.markForCheck();
+        }));
         this._osControl = this.formBuilder.control({}, Validators.required);
 
         this.form = formBuilder.group({
@@ -66,7 +71,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             subnetId: [null],
         });
 
-        this._sub = this._osControl.valueChanges.subscribe((value) => {
+        this._subs.push(this._osControl.valueChanges.subscribe((value) => {
             this.osSource = value.source;
             if (value.source === PoolOsSources.PaaS) {
                 this._renderingSkuSelected = false;
@@ -100,7 +105,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             if (value.cloudServiceConfiguration) {
                 this.armNetworkOnly = false;
             }
-        });
+        }));
 
         this.form.valueChanges.subscribe((value) => {
             if (!this._lastFormValue
@@ -115,7 +120,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     }
 
     public ngOnDestroy() {
-        this._sub.unsubscribe();
+        this._subs.forEach(x => x.unsubscribe());
     }
 
     @autobind()
@@ -139,10 +144,6 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
     public formToDto(data: any): PoolCreateDto {
         return createPoolToData(data);
-    }
-
-    public handleHasLinkedStorage(hasLinkedStorage) {
-        this.hasLinkedStorage = hasLinkedStorage;
     }
 
     public get startTask() {
