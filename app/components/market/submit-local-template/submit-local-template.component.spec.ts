@@ -19,7 +19,7 @@ describe("SubmitLocalTemplateComponent", () => {
     let activatedRouteSpy: any;
 
     const queryParameters = {
-        templateFile: "C:\job.json",
+        templateFile: "job.json",
     };
 
     beforeEach(() => {
@@ -63,7 +63,7 @@ describe("SubmitLocalTemplateComponent", () => {
     });
 
     it("page title should be correct", () => {
-        expect(component.templateFile).toBe("C:\job.json");
+        expect(component.templateFile).toBe("job.json");
         expect(component.title).toBe("Run template at job.json");
     });
 });
