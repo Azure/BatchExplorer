@@ -48,6 +48,7 @@
 * Error message after updating [\#1083](https://github.com/Azure/BatchLabs/issues/1083)
 * Should disable "add a pool button" before vmSize is initialized [\#985](https://github.com/Azure/BatchLabs/issues/985)
 * Task advanced filter is not applying [\#1158](https://github.com/Azure/BatchLabs/issues/1158)
+* Fix tool tip for account credentials dialog and show ARM resource ID for Account  [\#1201](https://github.com/Azure/BatchLabs/issues/1201)
 
 ### Usability:
 
