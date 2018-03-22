@@ -1,4 +1,8 @@
 {
+  "ignoreFiles": [
+    "**/*.md",
+    "**/*.html"
+  ],
   "rules": {
     "indentation": 4,
     "color-hex-case": "lower",
