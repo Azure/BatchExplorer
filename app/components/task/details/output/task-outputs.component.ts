@@ -5,8 +5,9 @@ import {
     FileExplorerConfig, FileExplorerWorkspace, FileNavigatorEntry, FileSource,
 } from "app/components/file/browse/file-explorer";
 import { Task, TaskState } from "app/models";
-import { FileService, StorageService } from "app/services";
+import { FileService } from "app/services";
 import { FileLoader } from "app/services/file";
+import { AutoStorageService, StorageBlobService } from "app/services/storage";
 import { ComponentUtils, StorageUtils } from "app/utils";
 import "./task-outputs.scss";
 
@@ -43,7 +44,10 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     private _persistedSourceName: string = "Persisted output";
     private _noPersistedOutputsCode: string = "NoPersistedOutput";
 
-    constructor(private fileService: FileService, private storageService: StorageService) { }
+    constructor(
+        private fileService: FileService,
+        private autoStorageService: AutoStorageService,
+        private storageService: StorageBlobService) { }
 
     public ngOnChanges(changes) {
         let updateNavigator = false;
@@ -92,41 +96,43 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
         if (this.isTaskQueued) {
             return;
         }
+        this.autoStorageService.get().subscribe((storageAccountId) => {
+            StorageUtils.getSafeContainerName(this.jobId).then((container) => {
+                this._clearFileNavigator();
+                const nodeNavigator = this.fileService.navigateTaskFile(this.jobId, this.task.id, {
+                    onError: (error) => this._processTaskFilesError(error),
+                });
+                nodeNavigator.init();
+                const taskOutputPrefix = `${this.task.id}`;
+                const taskOutputNavigator = this.storageService.navigate(storageAccountId,
+                    container, taskOutputPrefix, {
+                        onError: (error) => {
+                            const serverError = this._processBlobError(error);
+                            if (serverError && serverError.code === this._noPersistedOutputsCode) {
+                                // no container exists for the job so it didn't use conventions library.
+                                // remove the source so the user doesn't see it at all.
+                                const index = this.workspace.sources.findIndex((source: FileSource) => {
+                                    return source.name === this._persistedSourceName;
+                                });
+                                if (index > -1) {
+                                    this.workspace.sources.splice(index, 1);
+                                }
+                            }
 
-        StorageUtils.getSafeContainerName(this.jobId).then((container) => {
-            this._clearFileNavigator();
-            const nodeNavigator = this.fileService.navigateTaskFile(this.jobId, this.task.id, {
-                onError: (error) => this._processTaskFilesError(error),
+                            return serverError;
+                        },
+                    });
+                taskOutputNavigator.init();
+
+                this.workspace = new FileExplorerWorkspace([{
+                    name: "Node files",
+                    navigator: nodeNavigator,
+                    openedFiles: ["stdout.txt", "stderr.txt"],
+                }, {
+                    name: this._persistedSourceName,
+                    navigator: taskOutputNavigator,
+                }]);
             });
-            nodeNavigator.init();
-            const taskOutputPrefix = `${this.task.id}`;
-            const taskOutputNavigator = this.storageService.navigateContainerBlobs(container, taskOutputPrefix, {
-                onError: (error) => {
-                    const serverError = this._processBlobError(error);
-                    if (serverError && serverError.code === this._noPersistedOutputsCode) {
-                        // no container exists for the job so it didn't use conventions library.
-                        // remove the source so the user doesn't see it at all.
-                        const index = this.workspace.sources.findIndex((source: FileSource) => {
-                            return source.name === this._persistedSourceName;
-                        });
-                        if (index > -1) {
-                            this.workspace.sources.splice(index, 1);
-                        }
-                    }
-
-                    return serverError;
-                },
-            });
-            taskOutputNavigator.init();
-
-            this.workspace = new FileExplorerWorkspace([{
-                name: "Node files",
-                navigator: nodeNavigator,
-                openedFiles: ["stdout.txt", "stderr.txt"],
-            }, {
-                name: this._persistedSourceName,
-                navigator: taskOutputNavigator,
-            }]);
         });
     }
 
