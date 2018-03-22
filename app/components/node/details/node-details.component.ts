@@ -9,7 +9,10 @@ import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Node, Pool } from "app/models";
 import { FileService, NodeParams, NodeService, PoolParams, PoolService } from "app/services";
 import { EntityView } from "app/services/core";
+import { UploadNodeLogsDialogComponent } from "../action";
 import { NodeConnectComponent } from "../connect";
+
+import "./node-details.scss";
 
 @Component({
     selector: "bl-node-details",
@@ -121,4 +124,12 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
         ref.component.pool = this.pool;
         ref.component.fromNode = this.nodeId;
     }
+
+    @autobind()
+    public uploadNodeLogs() {
+        const ref = this.dialog.open(UploadNodeLogsDialogComponent);
+        ref.componentInstance.pool = this.pool;
+        ref.componentInstance.node = this.node;
+    }
+
 }

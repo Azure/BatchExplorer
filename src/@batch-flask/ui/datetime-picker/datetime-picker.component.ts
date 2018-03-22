@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor,
+    FormBuilder,
     FormControl,
+    FormGroup,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
@@ -39,28 +41,33 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     @Input() public label: string;
     @Input() public timePicker: boolean = true;
     public timeOptions: TimeSelectionOption[];
-    public selectedDate: FormControl;
-    public selectedTime: string;
+    public selectedDate = new FormControl();
+    public selectedTime: FormGroup;
     public currentTimeZone: string;
 
     private _propagateChange: (value: string) => void = null;
     private _datetime: string;
     private _date: moment.Moment;
-    private _sub: Subscription;
+    private _subs: Subscription[] = [];
 
-    constructor(private changeDetector: ChangeDetectorRef) {
+    constructor(private changeDetector: ChangeDetectorRef, formBuilder: FormBuilder) {
         this.timeOptions = this._buildTimeOptions();
-        this.selectedDate = new FormControl();
+        this.selectedTime = formBuilder.group({
+            hour: 0,
+            minute: 0,
+        });
         const zoneMatch = getTimezoneRegex.exec(new Date().toString());
         const timeZoneName = Array.isArray(zoneMatch) ? zoneMatch[0] : "";
         this.currentTimeZone = `${moment().format("Z")} ${timeZoneName}`;
-        this._sub = this.selectedDate.valueChanges.subscribe((value: any) => {
+
+        this._subs.push(this.selectedDate.valueChanges.subscribe((value: any) => {
             this._date = moment(value);
-            if (!this.selectedTime) {
-                this.selectedTime = this.timeOptions[0].value;
-            }
             this._setDateTime();
-        });
+        }));
+
+        this._subs.push(this.selectedTime.valueChanges.subscribe((value: any) => {
+            this._setDateTime();
+        }));
     }
 
     public onTimeChange(event) {
@@ -68,9 +75,7 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     }
 
     public ngOnDestroy(): void {
-        if (this._sub) {
-            this._sub.unsubscribe();
-        }
+        this._subs.forEach(x => x.unsubscribe());
     }
 
     public writeValue(value: string): void {
@@ -108,10 +113,9 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
     }
 
     private _setTime() {
-        const time: moment.Moment = moment(this.selectedTime, "HH:mm");
         this._date.set({
-            hour: time.get("hour"),
-            minute: time.get("minute"),
+            hour: this.selectedTime.value.hour,
+            minute: this.selectedTime.value.minute,
         });
     }
 
@@ -121,7 +125,10 @@ export class DatetimePickerComponent implements ControlValueAccessor, OnDestroy 
         }
         const datetime = moment(value);
         this.selectedDate.setValue(datetime.toDate());
-        this.selectedTime = datetime.format("HH:mm");
+        this.selectedTime.patchValue({
+            hour: datetime.hour(),
+            minute: datetime.minute(),
+        });
         this.changeDetector.markForCheck();
     }
 

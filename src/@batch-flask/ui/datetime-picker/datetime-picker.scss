@@ -1,3 +1,5 @@
+@import "app/styles/variables";
+
 bl-datetime-picker {
     > .grow {
         align-items: center;
@@ -15,7 +17,23 @@ bl-datetime-picker {
         flex-direction: column;
         justify-content: center;
     }
+
+    .time-picker {
+        display: flex;
+        align-items: center;
+
+        > .time-separator {
+            margin-right: 5px;
+            margin-left: 5px;
+        }
+        > .time-entry {
+            width: 40px;
+            height: 40px;
+            flex: 0 0 40px;
+        }
+    }
     .timezone {
         margin-left: 34%;
+        color: $secondary-text;
     }
 }

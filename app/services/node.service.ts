@@ -203,6 +203,12 @@ export class NodeService extends ServiceBase {
         });
     }
 
+    public uploadLogs(poolId: string, nodeId: string, params: any): Observable<any> {
+        return this.callBatchClient((client) => client.node.uploadLogs(poolId, nodeId, params), (error) => {
+            log.error("Error uploading logs for node: " + nodeId, {...error});
+        });
+    }
+
     public listNodeAgentSkus(options: ListOptionsAttributes = { pageSize: 1000 }): ListView<NodeAgentSku, {}> {
         return new ListView({
             cache: (params) => this._nodeAgentSkusCache,

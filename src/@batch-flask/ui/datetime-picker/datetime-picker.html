@@ -9,12 +9,18 @@
             <mat-datepicker #datePicker></mat-datepicker>
         </mat-form-field>
     </div>
-    <div *ngIf="timePicker" class="gcol">
-        <mat-form-field *ngIf="isDatePicked">
-            <mat-select color="primary" [(ngModel)]="selectedTime" (ngModelChange)="onTimeChange()" placeholder="Choose a time" [disabled]="timeDisabled">
-                <mat-option *ngFor="let time of timeOptions; trackBy: trackByFn"[value]="time.value">{{time.label}}</mat-option>
-            </mat-select>
-        </mat-form-field>
+    <div *ngIf="timePicker" class="gcol time-picker" [formGroup]="selectedTime">
+        <div class="hour-picker time-entry">
+            <mat-form-field>
+                <input matInput placeholder="hh" formControlName="hour" type="number">
+            </mat-form-field>
+        </div>
+        <div class="time-separator">:</div>
+        <div class="hour-picker time-entry">
+            <mat-form-field>
+                <input matInput placeholder="mm" formControlName="minute" type="number">
+            </mat-form-field>
+        </div>
     </div>
 </div>
 <div class="timezone">Current timezone: {{currentTimeZone}}</div>

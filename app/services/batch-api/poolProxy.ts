@@ -82,6 +82,6 @@ export class PoolProxy {
     }
 
     public evaluateAutoScale(poolId: string, formula: string, options?: any): Promise<any> {
-        return this.client.pool.evaluateAutoScale(poolId, formula, wrapOptions(options));
+        return this.client.pool.evaluateAutoScale(poolId, { autoScaleFormula: formula }, wrapOptions(options));
     }
 }
