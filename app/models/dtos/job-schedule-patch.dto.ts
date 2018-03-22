@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "app/core";
+import { Dto, DtoAttr } from "@batch-flask/core";
 import { MetaDataDto } from "app/models/dtos";
 import { JobCreateDto } from "./job-create.dto";
 import { ScheduleDto } from "./schedule.dto";

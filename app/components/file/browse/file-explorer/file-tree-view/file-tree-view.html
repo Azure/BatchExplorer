@@ -14,7 +14,12 @@
         <i class="fa fa-compress collapse-all action" title="Collapse all"></i>
     </bl-clickable>
 </div>
-<div *ngIf="expanded" class="tree-view-content">
+<bl-focus-section *ngIf="expanded"
+    class="tree-view-content"
+    (focus)="setFocus(true)"
+    (blur)="setFocus(false)"
+    (keypress)="handleKeyboardNavigation($event)">
+
     <div *ngIf="fileNavigator.error" class="tree-view-error">{{fileNavigator.error.message}}</div>
     <div class="tree-rows-container"
         [class.drop-target]="dropTargetPath === ''"
@@ -23,28 +28,17 @@
         (dragover)="handleDragHover($event)"
         (drop)="handleDropOnRow($event)">
 
-        <div *ngFor="let treeRow of treeRows, trackBy: treeRowTrackBy"
-            class="tree-row"
-            [style.padding-left]="((treeRow.indent + 1) * 12) + 'px'"
-            [title]="treeRow.path"
-            [class.active]="active && treeRow.path === currentPath"
-            [class.drop-target]="treeRow.path.startsWith(dropTargetPath)"
-            (click)="handleClick(treeRow)"
+        <bl-file-tree-view-row *ngFor="let treeRow of treeRows; let  i = index; trackBy: treeRowTrackBy"
+            [treeRow]="treeRow"
+            [active]="active && treeRow.path === currentPath"
+            [dropHover]="treeRow.path.startsWith(dropTargetPath)"
+            [focused]="isFocused && focusedIndex === i"
+            (click)="activateRow(treeRow)"
+            (toggleExpanded)="toggleExpanded(treeRow)"
             (contextmenu)="showContextMenu(treeRow)"
             (dragenter)="dragEnterRow($event, treeRow)"
             (dragleave)="dragLeaveRow($event, treeRow)"
             (drop)="handleDropOnRow($event, treeRow)">
-
-            <span class="caret" (click)="handleCaretClick(treeRow, $event)">
-                <i class="fa" [class.fa-caret-down]="treeRow.expanded" [class.fa-caret-right]="!treeRow.expanded" *ngIf="treeRow.isDirectory"></i>
-            </span>
-            <span class="file-icon">
-                <i class="fa"
-                    [class.fa-folder]="treeRow.isDirectory && !treeRow.expanded"
-                    [class.fa-folder-open]="treeRow.isDirectory &&treeRow.expanded"
-                    [class.fa-file]="!treeRow.isDirectory"></i>
-            </span>
-            <span class="label">{{treeRow.name}}</span>
-        </div>
+        </bl-file-tree-view-row>
     </div>
-</div>
+</bl-focus-section>

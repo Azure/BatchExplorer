@@ -4,12 +4,12 @@ import { AutoScaleRunError } from "azure-batch/typings/lib/models";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { DialogService } from "app/components/base/dialogs";
-import { EditorConfig } from "app/components/base/editor";
+import { DialogService } from "@batch-flask/ui/dialogs";
+import { EditorConfig } from "@batch-flask/ui/editor";
+import { log } from "@batch-flask/utils";
 import { AutoscaleFormula, Pool } from "app/models";
 import { AutoscaleFormulaService, PoolService } from "app/services";
 import { PredefinedFormulaService } from "app/services/predefined-formula.service";
-import { log } from "app/utils";
 import "./autoscale-formula-picker.scss";
 
 @Component({

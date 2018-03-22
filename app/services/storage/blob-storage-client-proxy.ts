@@ -6,7 +6,7 @@ export interface ListBlobOptions {
     /**
      * Filter for the path.(Relative to the prefix if given)
      */
-    startswith?: string;
+    folder?: string;
 
     /**
      * If it should list all files or 1 directory deep.
@@ -50,8 +50,7 @@ export class BlobStorageClientProxy {
         continuationToken?: any): Promise<BlobStorageResult> {
 
         // we want to keep the filter and prefix separate for mapping files in the response.
-        const prefix = options.startswith;
-
+        const prefix = options.folder;
         const storageOptions: StorageRequestOptions = {
             delimiter: options.recursive ? null : "/",
         };

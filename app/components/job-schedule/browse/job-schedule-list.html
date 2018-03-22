@@ -1,34 +1,35 @@
-<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
-<bl-quick-list *ngIf="quickList">
-    <bl-quick-list-item *ngFor="let jobSchedule of data.items | async; trackBy: trackByFn" [link]="['/jobschedules/', jobSchedule.id]" [key]="jobSchedule.id" [contextmenu]="contextmenu(jobSchedule)">
-        <bl-quick-list-item-status [status]="jobScheduleStatus(jobSchedule)" [tooltip]="jobScheduleStatusText(jobSchedule)">
-        </bl-quick-list-item-status>
-        <div bl-quick-list-item-title>{{jobSchedule.id}}</div>
-        <div bl-quick-list-item-field>
-            {{jobSchedule.state}}
-            <bl-tags [tags]="jobSchedule.tags" [maxTags]="3"></bl-tags>
-        </div>
-    </bl-quick-list-item>
-</bl-quick-list>
+<bl-focus-section>
+    <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
+        <bl-quick-list-item *ngFor="let jobSchedule of jobSchedules; trackBy: trackByFn" [link]="['/jobschedules/', jobSchedule.id]" [key]="jobSchedule.id" [contextmenu]="contextmenu(jobSchedule)">
+            <bl-quick-list-item-status [status]="jobScheduleStatus(jobSchedule)" [tooltip]="jobScheduleStatusText(jobSchedule)">
+            </bl-quick-list-item-status>
+            <div bl-quick-list-item-title>{{jobSchedule.id}}</div>
+            <div bl-quick-list-item-field>
+                {{jobSchedule.state}}
+                <bl-tags [tags]="jobSchedule.tags" [maxTags]="3"></bl-tags>
+            </div>
+        </bl-quick-list-item>
+    </bl-quick-list>
 
-<bl-table *ngIf="!quickList">
-    <bl-thead>
-        <bl-column>Id</bl-column>
-        <bl-column>State</bl-column>
-        <bl-column>Pool</bl-column>
-    </bl-thead>
+    <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
+        <bl-thead>
+            <bl-column>Id</bl-column>
+            <bl-column>State</bl-column>
+            <bl-column>Pool</bl-column>
+        </bl-thead>
 
-    <bl-row *ngFor="let jobSchedule of data.items | async; trackBy: trackByFn" [link]="['/jobschedules/', jobSchedule.id]" [key]="jobSchedule.id" [contextmenu]="contextmenu(jobSchedule)">
-        <bl-cell>{{jobSchedule.id}}</bl-cell>
-        <bl-cell>{{jobSchedule.state}}</bl-cell>
-        <bl-cell>{{jobSchedule.poolInfo?.poolId}}</bl-cell>
-    </bl-row>
-</bl-table>
+        <bl-row *ngFor="let jobSchedule of jobSchedules; trackBy: trackByFn" [link]="['/jobschedules/', jobSchedule.id]" [key]="jobSchedule.id" [contextmenu]="contextmenu(jobSchedule)">
+            <bl-cell>{{jobSchedule.id}}</bl-cell>
+            <bl-cell>{{jobSchedule.state}}</bl-cell>
+            <bl-cell>{{jobSchedule.poolInfo?.poolId}}</bl-cell>
+        </bl-row>
+    </bl-table>
+</bl-focus-section>
 
-<bl-no-item [itemCount]="(data.items | async).size" [filter]="filter" [status]="status | async">
+<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>
+
+<bl-no-item [itemCount]="jobSchedules.size" [filter]="filter" [status]="status">
     <i icon class="fa fa-calendar"></i>
     <span no-filter>No job schedules</span>
     <span with-filter>No job schedules match this filter</span>
 </bl-no-item>
-
-<bl-loading [status]="status | async"></bl-loading>

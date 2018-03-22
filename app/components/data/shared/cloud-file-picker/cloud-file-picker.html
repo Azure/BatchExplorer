@@ -1,5 +1,8 @@
 <mat-form-field>
     <input type="text" matInput [formControl]="value" [placeholder]="label">
+    <mat-hint class="warning" *ngIf="warning">
+        The file does not seem to exist in the selected file group. Click the 'Select file' button and find the file location manually.
+    </mat-hint>
     <mat-hint *ngIf="hint" align="end">
         {{hint}}
     </mat-hint>

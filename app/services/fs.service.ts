@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { FSWatcher } from "chokidar";
 
+import { BatchLabsService } from "app/services/batch-labs.service";
 import { CommonFolders, FileSystem } from "client/core";
-import { ElectronRemote } from "./electron/remote.service";
 
 /**
  * Service to handle saving files to the client FileSystem
@@ -12,8 +12,8 @@ export class FileSystemService {
     public commonFolders: CommonFolders;
     private _fs: FileSystem;
 
-    constructor(remote: ElectronRemote) {
-        this._fs = remote.getFileSystem();
+    constructor(batchLabs: BatchLabsService) {
+        this._fs = batchLabs.getFileSystem();
         this.commonFolders = this._fs.commonFolders;
     }
 
@@ -48,8 +48,8 @@ export class FileSystemService {
         return this._fs.readFile(path);
     }
 
-    public async readdir(path: string): Promise<string[]> {
-        return this._fs.readdir(path);
+    public async readdir(path: string, recursive = true): Promise<string[]> {
+        return this._fs.readdir(path, recursive);
     }
 
     public download(source: string, dest: string): Promise<string> {

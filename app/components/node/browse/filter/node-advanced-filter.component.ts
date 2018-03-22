@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 
-import { AdvancedFilter, StatePickerControl } from "app/components/base/advanced-filter";
+import { Filter } from "@batch-flask/core";
+import { AdvancedFilter, StatePickerControl } from "@batch-flask/ui/advanced-filter";
 import { NodeState } from "app/models";
-import { Filter } from "app/utils/filter-builder";
 
 @Component({
     selector: "bl-node-advanced-filter",

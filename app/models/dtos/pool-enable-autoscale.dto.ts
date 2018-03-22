@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "app/core";
+import { Dto, DtoAttr } from "@batch-flask/core";
 
 export class PoolEnableAutoScaleDto extends Dto<PoolEnableAutoScaleDto> {
     @DtoAttr()

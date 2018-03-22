@@ -2,8 +2,9 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
+import { NavigableRecord, PinnableEntity, PinnedEntityType } from "@batch-flask/core";
 import {
-    BatchApplication, BlobContainer, Job, JobSchedule, NavigableRecord, PinnableEntity, PinnedEntityType, Pool,
+    BatchApplication, BlobContainer, Job, JobSchedule, Pool,
 } from "app/models";
 import { AccountService } from "./account.service";
 import { LocalFileStorage } from "./local-file-storage.service";

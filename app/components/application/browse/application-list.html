@@ -1,37 +1,37 @@
-<bl-quick-list *ngIf="quickList">
-    <bl-quick-list-item *ngFor="let application of displayedApplications;trackBy: trackByFn" [link]="['/applications/', application.id]"
-        [key]="application.id" [contextmenu]="contextmenu(application)">
-        <bl-quick-list-item-status [status]="appStatus(application)">
-        </bl-quick-list-item-status>
+<bl-focus-section>
+    <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
+        <bl-quick-list-item *ngFor="let application of displayedApplications;trackBy: trackByFn" [link]="['/applications/', application.id]"
+            [key]="application.id" [contextmenu]="contextmenu(application)">
+            <bl-quick-list-item-status [status]="appStatus(application)">
+            </bl-quick-list-item-status>
 
-        <div bl-quick-list-item-title>{{application.id}}</div>
-        <p bl-quick-list-item-field>{{application.packages?.size}} packages</p>
-        <div bl-quick-list-item-preview>
-            <bl-application-preview [application]="application"></bl-application-preview>
-        </div>
-    </bl-quick-list-item>
-</bl-quick-list>
+            <div bl-quick-list-item-title>{{application.id}}</div>
+            <p bl-quick-list-item-field>{{application.packages?.size}} packages</p>
+            <div bl-quick-list-item-preview>
+                <bl-application-preview [application]="application"></bl-application-preview>
+            </div>
+        </bl-quick-list-item>
+    </bl-quick-list>
 
-<bl-table *ngIf="!quickList">
-    <bl-thead>
-        <bl-column>Id</bl-column>
-        <bl-column>Packages</bl-column>
-        <bl-column>Default Version</bl-column>
-        <bl-column>Allow Updates</bl-column>
-    </bl-thead>
-    <bl-row *ngFor="let application of displayedApplications;trackBy: trackByFn" [link]="['/applications/', application.id]"
-        [key]="application.id" [contextmenu]="contextmenu(application)">
-        <bl-cell>{{application.id}}</bl-cell>
-        <bl-cell>{{application.packages?.size}}</bl-cell>
-        <bl-cell>{{application.defaultVersion}}</bl-cell>
-        <bl-cell>{{application.allowUpdates}}</bl-cell>
-    </bl-row>
-</bl-table>
+    <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
+        <bl-thead>
+            <bl-column>Id</bl-column>
+            <bl-column>Packages</bl-column>
+            <bl-column>Default Version</bl-column>
+            <bl-column>Allow Updates</bl-column>
+        </bl-thead>
+        <bl-row *ngFor="let application of displayedApplications;trackBy: trackByFn" [link]="['/applications/', application.id]"
+            [key]="application.id" [contextmenu]="contextmenu(application)">
+            <bl-cell>{{application.id}}</bl-cell>
+            <bl-cell>{{application.packages?.size}}</bl-cell>
+            <bl-cell>{{application.defaultVersion}}</bl-cell>
+            <bl-cell>{{application.allowUpdates}}</bl-cell>
+        </bl-row>
+    </bl-table>
+</bl-focus-section>
 
-<bl-no-item [itemCount]="displayedApplications.size" [filter]="filter" [status]="status | async">
+<bl-no-item [itemCount]="displayedApplications.size" [filter]="filter" [status]="status">
     <i icon class="fa fa-file-archive-o small"></i>
     <span no-filter>No applications</span>
     <span with-filter>Current filter returned no applications</span>
 </bl-no-item>
-
-<bl-loading [status]="status | async"></bl-loading>

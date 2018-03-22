@@ -1,1 +1,1 @@
-export * from "./logger-proxy";
+export * from "./loggers";

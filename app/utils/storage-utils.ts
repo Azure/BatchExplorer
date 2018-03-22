@@ -1,6 +1,19 @@
 import { SharedKeyUtils } from "./shared-key-utils";
 
 export class StorageUtils {
+    public static containerUrlRegex = /https?:\/\/(.*)\.blob\.core\.windows\.net\/(.*)\?.*/;
+
+    public static getContainerFromUrl(url: string) {
+        const match = this.containerUrlRegex.exec(url);
+
+        if (!match) { return null; }
+
+        return {
+            account: match[1],
+            container: match[2],
+        };
+    }
+
     /**
      * The job output container name is formed according to the following rules:
      *  - Normalize the job ID to lower case. (Due to the restricted set of letters permitted in IDs, there

@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "app/core";
+import { Model, Prop, Record } from "@batch-flask/core";
 import { ContainerConfiguration } from "./container-setup";
 import { ImageReference, ImageReferenceAttributes } from "./image-reference";
 import { PoolOSDisk, PoolOSDiskAttributes } from "./pool-os-disk";

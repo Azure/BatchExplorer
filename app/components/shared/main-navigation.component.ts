@@ -1,14 +1,18 @@
 import { Component, NgZone, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { ElectronRemote, ElectronShell } from "@batch-flask/ui";
+import { OS } from "@batch-flask/utils";
 import { AppUpdater } from "electron-updater";
 import * as path from "path";
 
 import {
     ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService,
-} from "app/components/base/context-menu";
-import { NotificationService } from "app/components/base/notifications";
-import { AccountService, AdalService, ElectronRemote, ElectronShell, FileSystemService } from "app/services";
-import { Constants, OS } from "app/utils";
+} from "@batch-flask/ui/context-menu";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import {
+    AccountService, AdalService, BatchLabsService, FileSystemService,
+} from "app/services";
+
 import "./main-navigation.scss";
 
 @Component({
@@ -27,7 +31,8 @@ export class MainNavigationComponent implements OnInit {
 
     constructor(
         accountService: AccountService,
-        private adalService: AdalService,
+        adalService: AdalService,
+        private batchLabs: BatchLabsService,
         private shell: ElectronShell,
         private remote: ElectronRemote,
         private contextMenuService: ContextMenuService,
@@ -35,7 +40,7 @@ export class MainNavigationComponent implements OnInit {
         private notificationService: NotificationService,
         private fs: FileSystemService,
         private router: Router) {
-        this._autoUpdater = remote.getBatchLabsApp().autoUpdater;
+        this._autoUpdater = batchLabs.autoUpdater;
 
         accountService.currentAccountId.subscribe((accountId) => {
             if (accountId) {
@@ -108,7 +113,7 @@ export class MainNavigationComponent implements OnInit {
     }
 
     private _openThirdPartyNotices() {
-        this.shell.openItem(path.join(Constants.Client.resourcesFolder, "ThirdPartyNotices.txt"));
+        this.shell.openItem(path.join(this.batchLabs.resourcesFolder, "ThirdPartyNotices.txt"));
     }
 
     private _openLogFolder() {
@@ -124,7 +129,7 @@ export class MainNavigationComponent implements OnInit {
             type: "info",
             title: "BatchLabs",
             message: [
-                `Version: ${Constants.Client.version}`,
+                `Version: ${this.batchLabs.version}`,
                 `Batch labs is licensed under MIT`,
                 `Some icons are under Creative Commons Attribution-ShareAlike 3.0 Unported`,
             ].join("\n"),
@@ -132,12 +137,12 @@ export class MainNavigationComponent implements OnInit {
     }
 
     private _logout() {
-        this.adalService.logout();
+        this.batchLabs.logoutAndLogin();
     }
 
     private _checkForUpdates(showNotification = true) {
         this._showNotification = showNotification;
-        this.remote.getBatchLabsApp().checkForUpdates();
+        this.batchLabs.autoUpdater.checkForUpdates();
     }
 
     private _update() {

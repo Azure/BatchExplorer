@@ -1,10 +1,9 @@
 import { Injectable, NgZone } from "@angular/core";
-import * as path from "path";
 import { AsyncSubject, Observable, Subject } from "rxjs";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
-import { BlobContainer, File, ServerError } from "app/models";
-import { FileSystemService } from "app/services";
+import { HttpCode, ServerError } from "@batch-flask/core";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { BlobContainer, File } from "app/models";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { CloudPathUtils, log } from "app/utils";
 import { BlobService, createBlobServiceWithSas } from "azure-storage";
@@ -13,12 +12,14 @@ import {
     DataCache,
     EntityView,
     ListOptionsAttributes,
+    ListResponse,
     ListView,
     StorageEntityGetter,
     StorageListGetter,
     TargetedDataCache,
 } from "./core";
 import { FileLoadOptions, FileLoader, FileNavigator, FileSource } from "./file";
+import { FileSystemService } from "./fs.service";
 import { BlobStorageClientProxy, ListBlobOptions } from "./storage";
 import { StorageClientService } from "./storage-client.service";
 
@@ -50,16 +51,22 @@ export interface NavigateBlobsOptions {
      */
     onError?: (error: ServerError) => ServerError;
 }
+
+export interface FileUpload {
+    localPath: string;
+    remotePath: string;
+}
+
 // List of error we don't want to log for storage requests
 const storageIgnoredErrors = [
-    Constants.HttpCode.NotFound,
-    Constants.HttpCode.Conflict,
+    HttpCode.NotFound,
+    HttpCode.Conflict,
 ];
 
 export interface BulkUploadStatus {
     uploaded: number;
     total: number;
-    current: string;
+    current: FileUpload;
 }
 
 // Regex to extract the host, container and blob from a sasUrl
@@ -145,6 +152,13 @@ export class StorageService {
         return view;
     }
 
+    public listBlobs(
+        container: string,
+        options: ListBlobOptions = {},
+        forceNew = false): Observable<ListResponse<Blob>> {
+        return this._blobListGetter.fetch({ container }, options, forceNew);
+    }
+
     /**
      * Create a blob files naviagotor to be used in a tree view.
      * @param container Azure storage container id
@@ -155,12 +169,8 @@ export class StorageService {
         return new FileNavigator({
             cache: this.getBlobFileCache({ container: container }),
             basePath: prefix,
-            loadPath: (folder) => {
-                return this.blobListView(container, {
-                    recursive: false,
-                    startswith: folder,
-                });
-            },
+            params: { container },
+            getter: this._blobListGetter,
             getFile: (filename: string) => this.getBlobContent(container, filename),
             onError: options.onError,
         });
@@ -416,7 +426,7 @@ export class StorageService {
      * @param files List of absolute path to the files to upload
      * @param remotePath Optional path on the blob where to put the files.
      */
-    public uploadFiles(container: string, files: string[], remotePath?: string): Observable<BulkUploadStatus> {
+    public uploadFiles(container: string, files: FileUpload[], remotePath?: string): Observable<BulkUploadStatus> {
         const total = files.length;
         return Observable.from(files).concatMap((file, index) => {
             const status: BulkUploadStatus = {
@@ -424,9 +434,8 @@ export class StorageService {
                 total,
                 current: file,
             };
-            const filename = path.basename(file);
-            const blob = remotePath ? CloudPathUtils.join(remotePath, filename) : filename;
-            const uploadObs = this.uploadFile(container, file, blob).map(x => ({
+            const blob = remotePath ? CloudPathUtils.join(remotePath, file.remotePath) : file.remotePath;
+            const uploadObs = this.uploadFile(container, file.localPath, blob).map(x => ({
                 uploaded: index + 1,
                 total,
                 current: file,

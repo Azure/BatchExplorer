@@ -1,6 +1,7 @@
-import { BatchLabsApplication } from "client/core";
-import { SplashScreen } from "client/splash-screen";
 import { BehaviorSubject, Subscription } from "rxjs";
+
+import { SplashScreen } from "client/splash-screen";
+import { BatchLabsApplication } from "./batchlabs-application";
 
 interface InitializerTask {
     message: string;
@@ -14,10 +15,13 @@ export class BatchLabsInitializer {
     private _tasks = new BehaviorSubject<Map<string, InitializerTask>>(new Map());
     constructor(batchLabsApplication: BatchLabsApplication) {
         this.splashScreen = new SplashScreen(batchLabsApplication);
-        this.splashScreen.create();
         this._sub = this._tasks.subscribe(() => {
             this._updateSplashScreen();
         });
+    }
+
+    public init() {
+        this.splashScreen.create();
     }
 
     public show() {
@@ -27,6 +31,11 @@ export class BatchLabsInitializer {
     public hide() {
         this.splashScreen.hide();
     }
+
+    public get isLogin() {
+        return this._tasks.value.has("login");
+    }
+
     public setTaskStatus(key: string, message: string, importance = 1) {
         const tasks = this._tasks.value;
         tasks.set(key, { message, importance });
@@ -39,6 +48,14 @@ export class BatchLabsInitializer {
         this._tasks.next(tasks);
     }
 
+    public completeLogin() {
+        this.completeTask("login");
+    }
+
+    public setLoginStatus(status: string) {
+        this.setTaskStatus("login", status, 10);
+    }
+
     public complete() {
         this._sub.unsubscribe();
         this.splashScreen.destroy();
@@ -46,7 +63,12 @@ export class BatchLabsInitializer {
 
     private _updateSplashScreen() {
         const message = this._getMostImportantTask();
-        this.splashScreen.updateMessage(message);
+        if (message) {
+            this.splashScreen.show();
+            this.splashScreen.updateMessage(message);
+        } else {
+            this.splashScreen.destroy();
+        }
     }
 
     private _getMostImportantTask() {

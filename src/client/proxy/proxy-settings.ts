@@ -4,9 +4,9 @@ import {
 } from "get-proxy-settings";
 import * as globalTunnel from "global-tunnel-ng";
 
+import { log } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core";
 import { LocalStorage } from "client/core/local-storage";
-import { logger } from "client/logger";
 import { Constants } from "common";
 import { BehaviorSubject } from "rxjs";
 
@@ -26,7 +26,7 @@ export class ProxySettingsManager {
             try {
                 await this._loadProxySettings();
             } catch (e) {
-                logger.error("Failed to load proxy settings", e);
+                log.error("Failed to load proxy settings", e);
             }
         }
         this._applyProxySettings(this._settings.value);
@@ -89,7 +89,7 @@ export class ProxySettingsManager {
                 this._settings.next(settings);
             }
         } catch (e) {
-            logger.error("Error loading proxy settings. Ignoring", e);
+            log.error("Error loading proxy settings. Ignoring", e);
             await this.storage.removeItem(Constants.localStorageKey.proxySettings);
         }
     }

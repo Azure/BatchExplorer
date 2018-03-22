@@ -1,7 +1,7 @@
 // tslint:disable: object-literal-sort-keys
 import { Routes } from "@angular/router";
 
-import { NavigationGuard } from "app/components/base/guards";
+import { NavigationGuard } from "app/components/common/guards";
 import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
 import { ChooseActionComponent } from "app/components/market/application-action";
 import { LocalTemplateBrowserComponent } from "app/components/market/local-template-browser";
@@ -12,6 +12,7 @@ import { PoolStandaloneGraphsComponent } from "app/components/pool/graphs/standa
 import { SettingsComponent } from "app/components/settings";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
+import { AccountMonitoringHomeComponent } from "./components/account/monitoring";
 import { ApplicationDefaultComponent, ApplicationDetailsComponent } from "./components/application/details";
 import { ApplicationHomeComponent } from "./components/application/home/application-home.component";
 import { DataDefaultComponent, DataDetailsComponent } from "./components/data/details";
@@ -38,6 +39,7 @@ export const routes: Routes = [
         children: [
             { path: "", component: AccountDefaultComponent }, // accounts/
             { path: ":id", component: AccountDetailsComponent }, // accounts/{account.id}
+            { path: ":id/monitor", component: AccountMonitoringHomeComponent }, // accounts/{account.id}
         ],
     },
     {

@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { commonModules } from "app/common";
 
-import { BaseModule } from "app/components/base";
+import { BaseModule } from "@batch-flask/ui";
 import { TaskBaseModule } from "app/components/task/base";
 import {
     JobCreateBasicDialogComponent,
@@ -10,15 +10,18 @@ import {
     JobReleaseTaskPickerComponent,
     PoolPickerComponent,
 } from "./add";
+import { AddTaskButtonComponent } from "./add-task";
 import { DeleteJobDialogComponent } from "./delete/delete-job-dialog.component";
-import { DisableJobDialogComponent } from "./disable/disable-job-dialog.component";
-import { EnableJobDialogComponent } from "./enable/enable-job-dialog.component";
-import { TerminateJobDialogComponent } from "./terminate/terminate-job-dialog.component";
+import { DisableJobButtonComponent, DisableJobDialogComponent } from "./disable";
+import { EnableJobButtonComponent, EnableJobDialogComponent } from "./enable";
+import { TerminateButtonComponent, TerminateJobDialogComponent } from "./terminate";
 
 const components = [
     JobCreateBasicDialogComponent, JobManagerTaskPickerComponent, PoolPickerComponent,
     JobPreparationTaskPickerComponent, JobReleaseTaskPickerComponent, DeleteJobDialogComponent,
     DisableJobDialogComponent, EnableJobDialogComponent, TerminateJobDialogComponent,
+    AddTaskButtonComponent, DisableJobButtonComponent, EnableJobButtonComponent,
+    TerminateButtonComponent,
 ];
 
 @NgModule({

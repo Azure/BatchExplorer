@@ -1,53 +1,43 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { Router } from "@angular/router";
-import { autobind } from "app/core";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
-import { LoadingStatus } from "app/components/base/loading";
-import { QuickListItemStatus } from "app/components/base/quick-list";
-import { ListOrTableBase } from "app/components/base/selectable-list";
+import { Filter, autobind } from "@batch-flask/core";
+import { ListBaseComponent } from "@batch-flask/core/list";
+import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
+import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
-import { Filter } from "app/utils/filter-builder";
-import { SidebarManager } from "../../base/sidebar";
 import { ApplicationEditDialogComponent, DeleteApplicationDialogComponent } from "../action";
 
 @Component({
     selector: "bl-application-list",
     templateUrl: "application-list.html",
+    providers: [{
+        provide: ListBaseComponent,
+        useExisting: forwardRef(() => ApplicationListComponent),
+    }],
 })
-export class ApplicationListComponent extends ListOrTableBase implements OnInit, OnDestroy {
-    public status: Observable<LoadingStatus>;
+export class ApplicationListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public data: ListView<BatchApplication, ApplicationListParams>;
     public applications: List<BatchApplication>;
     public displayedApplications: List<BatchApplication>;
 
-    @Input()
-    public quickList: boolean;
-
-    @Input()
-    public set filter(filter: Filter) {
-        this._filter = filter;
-        this._filterApplications();
-    }
-    public get filter(): Filter { return this._filter; }
-
     private _baseOptions = { maxresults: 50 };
     private _subs: Subscription[] = [];
-    private _filter: Filter;
 
     constructor(
         router: Router,
+        changeDetector: ChangeDetectorRef,
         protected dialog: MatDialog,
         private applicationService: ApplicationService,
         private pinnedEntityService: PinnedEntityService,
         private sidebarManager: SidebarManager) {
-
-        super();
+        super(changeDetector);
 
         this.data = this.applicationService.listView(this._baseOptions);
         this._subs.push(this.data.items.subscribe((applications) => {
@@ -55,7 +45,10 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
             this._filterApplications();
         }));
 
-        this.status = this.data.status;
+        this.data.status.subscribe((status) => {
+            this.status = status;
+        });
+
         this._subs.push(applicationService.onApplicationAdded.subscribe((applicationId) => {
             this.data.loadNewItem(applicationService.get(applicationId));
         }));
@@ -75,6 +68,10 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
         return this.data.refresh();
     }
 
+    public handleFilter(filter: Filter) {
+        this._filterApplications();
+    }
+
     public appStatus(application: BatchApplication): QuickListItemStatus {
         return application.allowUpdates
             ? QuickListItemStatus.lightaccent
@@ -87,7 +84,7 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
             : "Application is locked";
     }
 
-    public onScrollToBottom(x) {
+    public onScrollToBottom() {
         this.data.fetchNext();
     }
 
@@ -115,8 +112,8 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
 
     private _filterApplications() {
         let text: string = null;
-        if (this._filter && this._filter.properties.length > 0) {
-            text = (this._filter.properties[0] as any).value;
+        if (this.filter && this.filter.properties.length > 0) {
+            text = (this.filter.properties[0] as any).value;
             text = text && text.toLowerCase();
         }
 

@@ -1,5 +1,5 @@
 <bl-loading [status]="data.newDataStatus | async">
-    <div *ngIf="application">
+    <div *ngIf="application" class="fit-details-container">
         <bl-summary-card>
             <div summaryTitle>{{decorator.id}}</div>
             <div summarySubtitle>
@@ -29,7 +29,7 @@
                 </bl-tab>
                 <bl-tab key="properties">
                     <bl-tab-label>Properties</bl-tab-label>
-                    <bl-application-properties [application]="application"></bl-application-properties>
+                    <bl-application-configuration [application]="application"></bl-application-configuration>
                 </bl-tab>
             </bl-tab-group>
         </bl-card>

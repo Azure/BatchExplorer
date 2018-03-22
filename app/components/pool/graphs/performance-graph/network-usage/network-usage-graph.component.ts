@@ -1,5 +1,5 @@
 import { Component, OnChanges } from "@angular/core";
-import { BatchUsageMetrics, PerformanceGraphComponent } from "../performance-graph.component";
+import { PerformanceGraphComponent } from "../performance-graph.component";
 
 import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
 import { NumberUtils } from "app/utils";
@@ -10,7 +10,6 @@ import { NumberUtils } from "app/utils";
 })
 export class NetworkUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
     public unit = "Bps";
-    public metric = BatchUsageMetrics.cpu;
 
     public netReadUsages: PerformanceMetric[] = [];
     public netWriteUsages: PerformanceMetric[] = [];

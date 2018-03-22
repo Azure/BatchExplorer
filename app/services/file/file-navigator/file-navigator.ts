@@ -1,14 +1,15 @@
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable, Subscription } from "rxjs";
 
-import { LoadingStatus } from "app/components/base/loading";
-import { File, ServerError } from "app/models";
-import { DataCache, ListView } from "app/services/core";
+import { ServerError } from "@batch-flask/core";
+import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
+import { File } from "app/models";
+import { DataCache, ListGetter } from "app/services/core";
 import { FileLoader } from "app/services/file";
-import { CloudPathUtils, ObjectUtils } from "app/utils";
+import { CloudPathUtils } from "app/utils";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 
-export interface FileNavigatorConfig {
+export interface FileNavigatorConfig<TParams = any> {
     /**
      *  Method that return the cache given the params.
      * This allow the use of targeted data cache which depends on some params.
@@ -23,11 +24,14 @@ export interface FileNavigatorConfig {
     basePath?: string;
 
     /**
-     * Callback to be called everytime it loads a new folder.
-     * @param folder: Folder that needs to be loaded. If root. will be null.
-     * @returns  a new RxListProxy
+     * Params to pass to the getter
      */
-    loadPath: (folder: string) => ListView<File, any>;
+    params: TParams;
+
+    /**
+     * List getter that is used to load the data
+     */
+    getter: ListGetter<File, TParams>;
 
     /**
      * Callback called when navigating to a file.
@@ -48,7 +52,7 @@ export interface FileNavigatorConfig {
  * Generic navigator class for a file explorer.
  * This can be extended for a node, task or blob file list
  */
-export class FileNavigator {
+export class FileNavigator<TParams = any> {
     public loadingStatus = LoadingStatus.Ready;
     public basePath: string;
     public tree: Observable<FileTreeStructure>;
@@ -56,17 +60,18 @@ export class FileNavigator {
     public error: ServerError;
 
     private _tree = new BehaviorSubject<FileTreeStructure>(null);
-    private _loadPath: (folder: string) => ListView<File, any>;
+    private _getter: ListGetter<File, TParams>;
+    private _params: TParams;
     private _cache: DataCache<File>;
     private _fileDeletedSub: Subscription;
 
-    private _proxies: StringMap<ListView<File, any>> = {};
     private _getFileLoader: (filename: string) => FileLoader;
     private _onError: (error: ServerError) => ServerError;
 
-    constructor(config: FileNavigatorConfig) {
+    constructor(config: FileNavigatorConfig<TParams>) {
         this.basePath = config.basePath || "";
-        this._loadPath = config.loadPath;
+        this._getter = config.getter;
+        this._params = config.params;
         this._getFileLoader = config.getFile;
         this._onError = config.onError;
         this._tree.next(new FileTreeStructure(this.basePath));
@@ -94,6 +99,10 @@ export class FileNavigator {
         return this.getNode(path).cascade((node) => {
             return this._loadFilesInPath(path);
         }).shareReplay(1);
+    }
+
+    public listAllFiles(path: string = ""): Observable<List<File>> {
+        return this._loadPath(path, true);
     }
 
     /**
@@ -138,9 +147,6 @@ export class FileNavigator {
         if (this._fileDeletedSub) {
             this._fileDeletedSub.unsubscribe();
         }
-        for (const proxy of ObjectUtils.values(this._proxies)) {
-            proxy.dispose();
-        }
     }
 
     public isDirectory(path: string): Observable<boolean> {
@@ -154,14 +160,23 @@ export class FileNavigator {
         this._tree.next(tree);
     }
 
+    /**
+     * Given a path will return all the files underneath
+     * @param path Path to the folder to load
+     * @param recursive If it should list sub folders content too(Default: false)
+     */
+    private _loadPath(path: string, recursive = false): Observable<List<File>> {
+        return this._getter.fetchAll(this._params, {
+            recursive,
+            folder: path,
+        });
+    }
+
     private _checkIfDirectory(node: FileTreeNode): Observable<boolean> {
         if (!node.isUnknown) { return Observable.of(node.isDirectory); }
-        const proxy = this._loadPath(this._getFolderToLoad(node.path, false));
-        const obs = proxy.refresh().flatMap(() => proxy.items.first()).shareReplay(1);
         const subject = new AsyncSubject<boolean>();
-        obs.first().subscribe({
+        this._loadPath(this._getFolderToLoad(node.path, false)).subscribe({
             next: (files: List<File>) => {
-                proxy.dispose();
                 if (files.size === 0) { return false; }
                 const file = files.first();
                 this._tree.value.addFiles(files);
@@ -169,7 +184,6 @@ export class FileNavigator {
                 subject.complete();
             },
             error: (e) => (error) => {
-                proxy.dispose();
                 subject.error(error);
             },
         });
@@ -178,13 +192,8 @@ export class FileNavigator {
 
     private _loadFilesInPath(path: string): Observable<FileTreeNode> {
         this.loadingStatus = LoadingStatus.Loading;
-        if (!this._proxies[path]) {
-            this._proxies[path] = this._loadPath(this._getFolderToLoad(path));
-        }
-
-        const proxy = this._proxies[path];
         const output = new AsyncSubject<FileTreeNode>();
-        proxy.refreshAll().flatMap(() => proxy.items.first()).share().subscribe({
+        this._loadPath(this._getFolderToLoad(path)).subscribe({
             next: (files: List<File>) => {
                 this.loadingStatus = LoadingStatus.Ready;
 

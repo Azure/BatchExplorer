@@ -3,11 +3,11 @@ import { Injectable } from "@angular/core";
 import { Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response } from "@angular/http";
 import { Observable } from "rxjs";
 
-import { ServerError } from "app/models";
+import { AccessToken, RetryableHttpCode, ServerError } from "@batch-flask/core";
 import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
+import { BatchLabsService } from "app/services/batch-labs.service";
 import { Constants } from "app/utils";
-import { AccessToken } from "client/core/aad/access-token";
 
 function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
     const options = original || new RequestOptions();
@@ -19,12 +19,21 @@ function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?
     return options;
 }
 
-const appInsightsResource = Constants.ResourceUrl.appInsights;
-const baseUrl = Constants.ServiceUrl.appInsights;
-
 @Injectable()
 export class AppInsightsApiService {
-    constructor(private http: Http, private adal: AdalService, private accountService: AccountService) {
+    constructor(
+        private http: Http,
+        private adal: AdalService,
+        private accountService: AccountService,
+        private batchLabs: BatchLabsService) {
+    }
+
+    public get resourceUrl() {
+        return this.batchLabs.azureEnvironment.appInsights;
+    }
+
+    public get baseUrl() {
+        return this.batchLabs.azureEnvironment.appInsights + "v1/";
     }
 
     public request(
@@ -32,7 +41,7 @@ export class AppInsightsApiService {
         options: RequestOptionsArgs): Observable<Response> {
 
         return this.accountService.currentAccount.take(1)
-            .flatMap((account) => this.adal.accessTokenData(account.subscription.tenantId, appInsightsResource))
+            .flatMap((account) => this.adal.accessTokenData(account.subscription.tenantId, this.resourceUrl))
             .flatMap((accessToken) => {
                 options = this._setupRequestOptions(uri, options, accessToken);
                 return this.http.request(this._computeUrl(uri), options)
@@ -80,7 +89,7 @@ export class AppInsightsApiService {
         if (/^https?:\/\//i.test(uri)) {
             return uri;
         } else {
-            return Location.joinWithSlash(baseUrl, uri);
+            return Location.joinWithSlash(this.baseUrl, uri);
         }
     }
 
@@ -88,7 +97,7 @@ export class AppInsightsApiService {
         const retryRange = Observable.range(0, Constants.badHttpCodeMaxRetryCount + 1);
         return attempts
             .switchMap((x: any) => {
-                if (Constants.RetryableHttpCode.has(x.status)) {
+                if (RetryableHttpCode.has(x.status)) {
                     return Observable.of(x);
                 }
                 return Observable.throw(x);

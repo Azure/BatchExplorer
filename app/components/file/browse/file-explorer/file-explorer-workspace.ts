@@ -136,6 +136,7 @@ export class FileExplorerWorkspace {
 
     public dispose() {
         this.sources.forEach(x => x.navigator.dispose());
+        this.sources  = [];
     }
 
     private _getSource(source?: FileSource) {

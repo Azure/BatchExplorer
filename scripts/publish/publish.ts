@@ -145,7 +145,7 @@ async function createIssueIfNot(millestoneId, version) {
 
 async function createPullrequestIfNot(version, releaseBranch, issue) {
     const title = `Prepare for release ${version}`;
-    const body = `fix #${issue.id}`;
+    const body = `fix #${issue.number}`;
     const prs = await listPullRequests(repoName, releaseBranch);
     let pr = prs[0];
     if (pr) {

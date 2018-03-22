@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "app/core";
+import { Dto, DtoAttr } from "@batch-flask/core";
 import { ContainerConfiguration } from "./container-setup.dto";
 
 export class VirtualMachineConfiguration extends Dto<VirtualMachineConfiguration> {

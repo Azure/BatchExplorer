@@ -9,6 +9,8 @@ import {
     NodeErrorDisplayComponent, StartTaskErrorDisplayComponent,
 } from "app/components/node/details";
 import { NodeHomeComponent } from "app/components/node/home";
+import { PoolGraphsModule } from "app/components/pool/graphs";
+import { NodeActionModule } from "./action";
 
 const components = [
     NodeConfigurationComponent, NodeDefaultComponent, NodeDetailsComponent, NodeHomeComponent,
@@ -16,13 +18,13 @@ const components = [
 ];
 
 const modules = [
-    FileBrowseModule, NodeBrowseModule, NodeConnectModule, ...commonModules,
+    FileBrowseModule, NodeBrowseModule, NodeConnectModule, NodeActionModule,
 ];
 
 @NgModule({
     declarations: components,
     exports: [...modules, ...components],
-    imports: [...modules],
+    imports: [...modules, ...commonModules, PoolGraphsModule] ,
     entryComponents: [
     ],
 })

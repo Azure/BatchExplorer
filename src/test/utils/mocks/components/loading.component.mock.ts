@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 
-import { LoadingStatus } from "app/components/base/loading";
+import { LoadingStatus } from "@batch-flask/ui/loading";
 
 @Component({
     selector: "bl-loading",

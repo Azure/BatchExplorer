@@ -1,8 +1,8 @@
-import { LoadingStatus } from "app/components/base/loading";
 import { List, OrderedSet } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { log } from "app/utils";
+import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
+import { log } from "@batch-flask/utils";
 import { GenericView, GenericViewConfig } from "./generic-view";
 import { ListGetter, ListResponse } from "./list-getter";
 import { ContinuationToken, ListOptions, ListOptionsAttributes } from "./list-options";
@@ -61,7 +61,7 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
             this._itemKeys.next(OrderedSet<string>(this._itemKeys.value.filter((key) => key !== deletedKey)));
         });
 
-        this._cacheCleared.subscribe((deletedKey) => {
+        this._cacheCleared.subscribe(() => {
             this._itemKeys.next(OrderedSet<string>([]));
             this._handleChanges();
             this._hasMore.next(true);
@@ -74,10 +74,12 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         return super.startPoll(interval);
     }
 
-    public updateParams(params: TParams) {
-        this.params = params;
+    public set params(params: TParams) {
+        super.params = params;
         this._handleChanges();
+        this._hasMore.next(true);
     }
+    public get params() { return super.params; }
 
     public setOptions(options: ListOptionsAttributes, clearItems = true) {
         super.setOptions(new ListOptions(options));

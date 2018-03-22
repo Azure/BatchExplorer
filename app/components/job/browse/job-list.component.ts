@@ -1,22 +1,21 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "app/core";
 import { Observable, Subscription } from "rxjs";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
-import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
-import { LoadingStatus } from "app/components/base/loading";
-import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
-import { ListOrTableBase } from "app/components/base/selectable-list";
-import { TableComponent } from "app/components/base/table";
+import { Filter, autobind } from "@batch-flask/core";
+import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
+import { LoadingStatus } from "@batch-flask/ui/loading";
+import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { Job, JobState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
 import { JobListParams, JobService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { Filter } from "app/utils/filter-builder";
+import { List } from "immutable";
 import {
     DeleteJobAction,
     DeleteJobDialogComponent,
@@ -28,55 +27,42 @@ import {
 @Component({
     selector: "bl-job-list",
     templateUrl: "job-list.html",
+    providers: [{
+        provide: ListBaseComponent,
+        useExisting: forwardRef(() => JobListComponent),
+    }],
 })
-export class JobListComponent extends ListOrTableBase implements OnInit, OnDestroy {
+export class JobListComponent extends ListBaseComponent implements OnInit, OnDestroy {
+    public jobs: List<Job> = List([]);
     public LoadingStatus = LoadingStatus;
 
-    public status: Observable<LoadingStatus>;
     public data: ListView<Job, JobListParams>;
     public searchQuery = new FormControl();
 
-    @ViewChild(QuickListComponent)
-    public list: QuickListComponent;
-
-    @ViewChild(TableComponent)
-    public table: TableComponent;
-
-    @Input()
-    public quickList: boolean;
-
-    @Input()
-    public set filter(filter: Filter) {
-        this._filter = filter;
-
-        if (filter.isEmpty()) {
-            this.data.setOptions({ ...this._baseOptions });
-        } else {
-            this.data.setOptions({ ...this._baseOptions, filter: filter.toOData() });
-        }
-
-        this.data.fetchNext();
-    }
-    public get filter(): Filter { return this._filter; }
-
-    private _filter: Filter;
-
     // todo: ask tim about setting difference select options for list and details.
-    private _baseOptions = {  };
+    private _baseOptions = {};
     private _onJobAddedSub: Subscription;
 
     constructor(
         router: Router,
-        dialog: MatDialog,
+        private dialog: MatDialog,
         activatedRoute: ActivatedRoute,
+        changeDetector: ChangeDetectorRef,
         private jobService: JobService,
         private pinnedEntityService: PinnedEntityService,
         private taskManager: BackgroundTaskService) {
-        super(dialog);
+        super(changeDetector);
         this.data = this.jobService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
+        this.data.items.subscribe((jobs) => {
+            this.jobs = jobs;
+            this.changeDetector.markForCheck();
+        });
 
-        this.status = this.data.status;
+        this.data.status.subscribe((status) => {
+            this.status = status;
+        });
+
         this._onJobAddedSub = jobService.onJobAdded.subscribe((jobId) => {
             this.data.loadNewItem(jobService.get(jobId));
         });
@@ -87,12 +73,23 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
     }
 
     public ngOnDestroy() {
+        this.data.dispose();
         this._onJobAddedSub.unsubscribe();
     }
 
     @autobind()
     public refresh(): Observable<any> {
         return this.data.refresh();
+    }
+
+    public handleFilter(filter: Filter) {
+        if (filter.isEmpty()) {
+            this.data.setOptions({ ...this._baseOptions });
+        } else {
+            this.data.setOptions({ ...this._baseOptions, filter: filter.toOData() });
+        }
+
+        this.data.fetchNext();
     }
 
     public jobStatus(job: Job): QuickListItemStatus {
@@ -129,13 +126,13 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
         }
     }
 
-    public onScrollToBottom(x) {
+    public onScrollToBottom() {
         this.data.fetchNext();
     }
 
-    public deleteSelected() {
+    public deleteSelection(selection: ListSelection) {
         this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteJobAction(this.jobService, this.selectedItems);
+            const task = new DeleteJobAction(this.jobService, [...this.selection.keys]);
             task.start(backgroundTask);
             return task.waitingDone;
         });

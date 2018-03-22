@@ -3,16 +3,18 @@ import { app, dialog, ipcMain, session } from "electron";
 import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
-import { BlIpcMain } from "client/core";
+import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
+import { log } from "@batch-flask/utils";
+import { BlIpcMain } from "client/core/bl-ipc-main";
 import { localStorage } from "client/core/local-storage";
+import { setMenu } from "client/menu";
 import { ProxySettingsManager } from "client/proxy";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
-import { BatchLabsLink, Constants } from "common";
+import { BatchLabsLink, Constants, Deferred } from "common";
 import { IpcEvent } from "common/constants";
 import { ProxyCredentials } from "get-proxy-settings";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants as ClientConstants } from "../client-constants";
-import { logger } from "../logger";
 import { MainWindow, WindowState } from "../main-window";
 import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
@@ -37,20 +39,31 @@ export class BatchLabsApplication {
     public aadService = new AADService(this);
     public state: Observable<BatchLabsState>;
     public proxySettings = new ProxySettingsManager(this, localStorage);
+
+    public get azureEnvironment(): AzureEnvironment { return this._azureEnvironment.value; }
+    public azureEnvironmentObs: Observable<AzureEnvironment>;
+
+    private _azureEnvironment = new BehaviorSubject(AzureEnvironment.Azure);
     private _state = new BehaviorSubject<BatchLabsState>(BatchLabsState.Loading);
+    private _initializer = new BatchLabsInitializer(this);
 
     constructor(public autoUpdater: AppUpdater) {
         this.state = this._state.asObservable();
         BlIpcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {
             return this.aadService.accessTokenData(tenantId, resource);
         });
+        BlIpcMain.on(IpcEvent.logoutAndLogin, () => {
+            return this.logoutAndLogin();
+        });
+        this.azureEnvironmentObs = this._azureEnvironment.asObservable();
+        this._loadAzureEnviornment();
     }
 
     public async init() {
         BlIpcMain.init();
         await this.aadService.init();
         this._registerProtocol();
-        this.setupProcessEvents();
+        this._setupProcessEvents();
         await this.proxySettings.init();
     }
 
@@ -58,99 +71,71 @@ export class BatchLabsApplication {
      * Start the app by showing the splash screen
      */
     public async start() {
-        const initializer = new BatchLabsInitializer(this);
+        setMenu(this);
+        const appReady = new Deferred();
+        const loggedIn = new Deferred();
         this.pythonServer.start();
+        this._initializer.init();
 
         this._setCommonHeaders();
-        initializer.setTaskStatus("login", "Login to azure active directory", 10);
-        const loggedIn = this.aadService.login().then(() => {
-            initializer.completeTask("login");
-        });
-        initializer.setTaskStatus("window", "Loading application");
+        this.aadService.login();
+        this._initializer.setTaskStatus("window", "Loading application");
         const window = this.openFromArguments(process.argv);
-        const subs = [];
-        subs.push(window.state.subscribe((state) => {
+        const windowSub = window.state.subscribe((state) => {
             switch (state) {
                 case WindowState.Loading:
-                    initializer.setTaskStatus("window", "Loading application");
+                    this._initializer.setTaskStatus("window", "Loading application");
                     break;
                 case WindowState.Initializing:
-                    initializer.setTaskStatus("window", "Initializing application");
+                    this._initializer.setTaskStatus("window", "Initializing application");
                     break;
                 case WindowState.FailedLoad:
-                    initializer.setTaskStatus("window",
+                    this._initializer.setTaskStatus("window",
                         "Fail to load! Make sure you built the app or are running the dev-server.");
                     break;
                 case WindowState.Ready:
-                    initializer.completeTask("window");
-
+                    this._initializer.completeTask("window");
+                    windowSub.unsubscribe();
+                    appReady.resolve();
             }
-        }));
-        subs.push(this.aadService.userAuthorization.state.subscribe((state) => {
+        });
+        const authSub = this.aadService.authenticationState.subscribe((state) => {
             switch (state) {
-                case AuthenticationState.Authenticated:
-                    initializer.show();
+                case AuthenticationState.None:
+                    this._initializer.setLoginStatus("Login to azure active directory");
                     break;
                 case AuthenticationState.UserInput:
-                    initializer.hide();
+                    this._initializer.setLoginStatus("Prompting for user input");
                     break;
-                default:
+                case AuthenticationState.Authenticated:
+                    this._initializer.completeLogin();
+                    authSub.unsubscribe();
+                    loggedIn.resolve();
                     break;
 
             }
-        }));
-        await Promise.all([loggedIn, window.appReady]);
-        subs.forEach(x => x.unsubscribe());
+        });
+        await Promise.all([appReady.promise, loggedIn.promise]);
         window.show();
-        initializer.complete();
     }
 
-    public setupProcessEvents() {
-        ipcMain.on("reload", () => {
-            // Destroy window and error window if applicable
-            this.windows.closeAll();
-            this.recoverWindow.destroy();
-            this.authenticationWindow.destroy();
-
-            // Show splash screen
-            this.start();
-        });
-
-        app.on("activate", () => {
-            // On macOS it's common to re-create a window in the app when the
-            // dock icon is clicked and there are no other windows open.
-            if (this.windows.size === 0) {
-                this.start();
-            }
-        });
-
-        ipcMain.once("exit", () => {
-            process.exit(1);
-        });
-
-        process.on("uncaughtException" as any, (error: Error) => {
-            logger.error("There was a uncaught exception", error);
-            this.recoverWindow.createWithError(error.message);
-        });
-        process.on("unhandledRejection", r => {
-            logger.error("Unhandled promise error:", r);
-        });
-        app.on("window-all-closed", () => {
-            // Required or electron will close when closing last open window before next one open
-        });
-
-        app.on("login", async (event, webContents, request, authInfo, callback) => {
-            event.preventDefault();
-            try {
-                const { username, password } = await this.proxySettings.credentials();
-                callback(username, password);
-            } catch (e) {
-                logger.error("Unable to retrieve credentials for proxy settings", e);
-                this.quit();
-            }
-        });
+    /**
+     * Update the current azure environemnt.
+     * Warning: This will log the user out and redirect him the the loging page.
+     */
+    public async updateAzureEnvironment(env: AzureEnvironment) {
+        await this.aadService.logout();
+        localStorage.setItem(Constants.localStorageKey.azureEnvironment, env.id);
+        this._azureEnvironment.next(env);
+        await this.aadService.login();
+        this.windows.openNewWindow();
     }
 
+    public async logoutAndLogin() {
+        await this.aadService.logout();
+        await this.aadService.login();
+        this.windows.openNewWindow();
+    }
     /**
      * Open a new link in the ms-batchlabs format
      * If the link provide a session id which already exists it will change the window with that session id.
@@ -216,15 +201,74 @@ export class BatchLabsApplication {
         return proxyCredentials.credentials;
     }
 
+    public get rootPath() {
+        return ClientConstants.root;
+    }
+
+    public get resourcesFolder() {
+        return ClientConstants.resourcesFolder;
+    }
+
+    public get version() {
+        return app.getVersion();
+    }
+
+    private _setupProcessEvents() {
+        ipcMain.on("reload", () => {
+            // Destroy window and error window if applicable
+            this.windows.closeAll();
+            this.recoverWindow.destroy();
+            this.authenticationWindow.destroy();
+
+            // Show splash screen
+            this.start();
+        });
+
+        app.on("activate", () => {
+            // On macOS it's common to re-create a window in the app when the
+            // dock icon is clicked and there are no other windows open.
+            if (this.windows.size === 0) {
+                this.start();
+            }
+        });
+
+        ipcMain.once("exit", () => {
+            process.exit(1);
+        });
+
+        process.on("uncaughtException" as any, (error: Error) => {
+            log.error("There was a uncaught exception", error);
+            this.recoverWindow.createWithError(error.message);
+        });
+
+        process.on("unhandledRejection", r => {
+            log.error("Unhandled promise error:", r);
+        });
+        app.on("window-all-closed", () => {
+            // Required or electron will close when closing last open window before next one open
+        });
+
+        app.on("login", async (event, webContents, request, authInfo, callback) => {
+            event.preventDefault();
+            try {
+                const { username, password } = await this.proxySettings.credentials();
+                callback(username, password);
+            } catch (e) {
+                log.error("Unable to retrieve credentials for proxy settings", e);
+                this.quit();
+            }
+        });
+    }
+
     private _registerProtocol() {
         if (ClientConstants.isDev) {
             return;
         }
 
         if (app.setAsDefaultProtocolClient(Constants.customProtocolName)) {
-            logger.info(`Registered ${Constants.customProtocolName}:// as a protocol for batchlabs`);
+            log.info(`Registered ${Constants.customProtocolName}:// as a protocol for batchlabs`);
         } else {
-            logger.error(`Failed to register ${Constants.customProtocolName}:// as a protocol for batchlabs`);
+            log.error(`Failed to register ${Constants.customProtocolName}:// as a protocol for batchlabs`);
         }
     }
 
@@ -238,5 +282,12 @@ export class BatchLabsApplication {
             details.requestHeaders["User-Agent"] = userAgent;
             callback({ cancel: false, requestHeaders: details.requestHeaders });
         });
+    }
+
+    private async _loadAzureEnviornment() {
+        const initialEnv = await localStorage.getItem(Constants.localStorageKey.azureEnvironment);
+        if (initialEnv in SupportedEnvironments) {
+            this._azureEnvironment.next(SupportedEnvironments[initialEnv]);
+        }
     }
 }

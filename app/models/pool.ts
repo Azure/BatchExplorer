@@ -1,11 +1,10 @@
 import { List } from "immutable";
 import { Duration } from "moment";
 
-import { ListProp, Model, Prop, Record } from "app/core";
+import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
 import { ModelUtils, PoolUtils } from "app/utils";
 import { CloudServiceConfiguration } from "./cloud-service-configuration";
 import { Metadata, MetadataAttributes } from "./metadata";
-import { NavigableRecord } from "./navigable-record";
 import { NetworkConfiguration } from "./network-configuration";
 import { ResizeError } from "./resize-error";
 import { StartTask, StartTaskAttributes } from "./start-task";

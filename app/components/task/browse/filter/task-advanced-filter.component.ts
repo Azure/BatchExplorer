@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 
-import { AdvancedFilter, ListFilterControl, StatePickerControl } from "app/components/base/advanced-filter";
+import { Filter } from "@batch-flask/core";
+import { AdvancedFilter, ListFilterControl, StatePickerControl } from "@batch-flask/ui/advanced-filter";
 import { TaskState } from "app/models";
-import { Filter } from "app/utils/filter-builder";
 import { ODataFields } from "common/constants";
 
 @Component({
@@ -10,8 +10,7 @@ import { ODataFields } from "common/constants";
     templateUrl: "task-advanced-filter.html",
 })
 export class TaskAdvancedFilterComponent {
-    @Output()
-    public filterChange = new EventEmitter<Filter>();
+    @Output() public change = new EventEmitter<Filter>();
 
     public advancedFilter: AdvancedFilter;
 
@@ -27,7 +26,7 @@ export class TaskAdvancedFilterComponent {
         });
 
         this.advancedFilter.filterChange.subscribe((filter: Filter) => {
-            this.filterChange.emit(filter);
+            this.change.emit(filter);
         });
     }
 }

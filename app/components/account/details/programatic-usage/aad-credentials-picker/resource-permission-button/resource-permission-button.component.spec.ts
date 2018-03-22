@@ -1,13 +1,15 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { ButtonComponent } from "app/components/base/buttons";
-import { MaterialModule } from "app/core";
+import { MaterialModule } from "@batch-flask/core";
+import { ButtonComponent } from "@batch-flask/ui/buttons";
+import { PermissionService } from "@batch-flask/ui/permission";
 import { RoleAssignment, RoleDefinition } from "app/models";
-import { AuthorizationHttpService, ResourceAccessService } from "app/services";
+import { ResourceAccessService } from "app/services";
 import { click } from "test/utils/helpers";
 import { ResourcePermissionButtonComponent } from "./resource-permission-button.component";
 
@@ -37,7 +39,7 @@ class TestComponent {
     public principalId = null;
 }
 
-describe("ResourcePermissionButtonComponenent", () => {
+describe("ResourcePermissionButtonComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: ResourcePermissionButtonComponent;
@@ -53,10 +55,10 @@ describe("ResourcePermissionButtonComponenent", () => {
             listRoleDefinitions: () => Observable.of([contributorRole, readerRole, customRole]),
         };
         TestBed.configureTestingModule({
-            imports: [MaterialModule],
+            imports: [MaterialModule, NoopAnimationsModule],
             declarations: [ButtonComponent, ResourcePermissionButtonComponent, TestComponent],
             providers: [
-                { provide: AuthorizationHttpService, useValue: null },
+                { provide: PermissionService, useValue: null },
                 { provide: ResourceAccessService, useValue: resourceAccessServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],

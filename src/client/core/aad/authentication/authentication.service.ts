@@ -1,7 +1,8 @@
-import { BatchLabsApplication } from "client/core//batchlabs-application";
-import { Deferred } from "common";
-import { SecureUtils } from "common/utils";
 import { BehaviorSubject, Observable } from "rxjs";
+
+import { SecureUtils } from "@batch-flask/utils";
+import { BatchLabsApplication } from "client/core/batchlabs-application";
+import { Deferred } from "common";
 import { AADConfig } from "../aad-config";
 import * as AdalConstants from "../adal-constants";
 
@@ -35,6 +36,10 @@ export enum AuthenticationState {
     Authenticated,
 }
 
+export class LogoutError extends Error {
+
+}
+
 /**
  * This will open a new window at the /authorize endpoint to get the user
  */
@@ -45,6 +50,7 @@ export class AuthenticationService {
     private _authorizeQueue: AuthorizeQueueItem[] = [];
     private _currentAuthorization: AuthorizeQueueItem = null;
     private _state = new BehaviorSubject(AuthenticationState.None);
+    private _logoutDeferred: Deferred<void>;
 
     constructor(private app: BatchLabsApplication, private config: AADConfig) {
         this.state = this._state.asObservable();
@@ -71,6 +77,9 @@ export class AuthenticationService {
      */
     public async authorizeTrySilentFirst(tenantId: string): Promise<AuthorizeResult> {
         return this.authorize(tenantId, true).catch((error) => {
+            if (error instanceof LogoutError) {
+                throw error;
+            }
             return this.authorize(tenantId, false);
         });
     }
@@ -78,15 +87,27 @@ export class AuthenticationService {
     /**
      * Log the user out
      */
-    public logout() {
+    public async logout() {
         this._waitingForAuth = true;
-        const url = AdalConstants.logoutUrl(this.config.tenant);
+
+        if (this._logoutDeferred) {
+            return this._logoutDeferred.promise;
+        }
+
+        const url = AdalConstants.logoutUrl(this.app.azureEnvironment.aadUrl, this.config.tenant);
         const authWindow = this.app.authenticationWindow;
         authWindow.create();
-
-        authWindow.loadURL(url);
         this._setupEvents();
-        authWindow.show();
+        if (this._currentAuthorization) {
+            this._currentAuthorization.deferred.reject(new LogoutError());
+        }
+        this._currentAuthorization = null;
+        this._authorizeQueue.forEach(x => x.deferred.reject(new LogoutError()));
+        this._authorizeQueue = [];
+        authWindow.clearCookies();
+        authWindow.loadURL(url);
+        const deferred = this._logoutDeferred = new Deferred();
+        return deferred.promise;
     }
 
     private _authorizeNext() {
@@ -118,13 +139,13 @@ export class AuthenticationService {
             scope: "user_impersonation+openid",
             nonce: SecureUtils.uuid(),
             state: SecureUtils.uuid(),
-            resource: "https://management.core.windows.net/",
+            resource: this.app.azureEnvironment.armUrl,
         };
 
         if (silent) {
             params.prompt = AuthorizePromptType.none;
         }
-        return AdalConstants.authorizeUrl(tenantId, params);
+        return AdalConstants.authorizeUrl(this.app.azureEnvironment.aadUrl, tenantId, params);
     }
 
     /**
@@ -133,6 +154,17 @@ export class AuthenticationService {
     private _setupEvents() {
         const authWindow = this.app.authenticationWindow;
         authWindow.onRedirect(newUrl => this._handleCallback(newUrl));
+        authWindow.onNavigate(newUrl => this._handleNavigate(newUrl));
+    }
+
+    private _handleNavigate(url: string) {
+        if (this._logoutDeferred && url.endsWith("oauth2/logout")) {
+            this._closeWindow();
+            this._waitingForAuth = false;
+            const deferred = this._logoutDeferred;
+            this._logoutDeferred = null;
+            deferred.resolve();
+        }
     }
 
     /**

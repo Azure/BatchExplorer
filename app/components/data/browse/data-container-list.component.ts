@@ -1,22 +1,22 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "app/core";
 import { Observable, Subscription } from "rxjs";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
-import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
-import { LoadingStatus } from "app/components/base/loading";
-import { QuickListItemStatus } from "app/components/base/quick-list";
-import { ListOrTableBase } from "app/components/base/selectable-list";
-import { SidebarManager } from "app/components/base/sidebar";
+import { Filter, autobind } from "@batch-flask/core";
+import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
+import { LoadingStatus } from "@batch-flask/ui/loading";
+import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { BlobContainer, LeaseStatus } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { ListContainerParams, PinnedEntityService, StorageService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { Filter } from "app/utils/filter-builder";
 import { Constants } from "common";
+import { List } from "immutable";
 import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
 const defaultListOptions = {
@@ -25,46 +25,51 @@ const defaultListOptions = {
 @Component({
     selector: "bl-data-container-list",
     templateUrl: "data-container-list.html",
+    providers: [{
+        provide: ListBaseComponent,
+        useExisting: forwardRef(() => DataContainerListComponent),
+    }],
 })
-export class DataContainerListComponent extends ListOrTableBase implements OnInit, OnDestroy {
-    public status: Observable<LoadingStatus>;
+export class DataContainerListComponent extends ListBaseComponent implements OnInit, OnDestroy {
+    public containers: List<BlobContainer>;
     public data: ListView<BlobContainer, ListContainerParams>;
     public hasAutoStorage: boolean;
 
-    @Input() public quickList: boolean;
-
-    @Input() public set filter(filter: Filter) {
-        this._filter = filter;
-        this._setContainerFilter(this._filter);
-    }
-    public get filter(): Filter { return this._filter; }
-
     private _autoStorageSub: Subscription;
     private _onGroupAddedSub: Subscription;
-    private _filter: Filter;
 
     constructor(
         router: Router,
-        dialog: MatDialog,
+        changeDetector: ChangeDetectorRef,
         activatedRoute: ActivatedRoute,
+        private dialog: MatDialog,
         private sidebarManager: SidebarManager,
         private taskManager: BackgroundTaskService,
         private pinnedEntityService: PinnedEntityService,
         private storageService: StorageService) {
 
-        super(dialog);
+        super(changeDetector);
         this.data = this.storageService.containerListView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
+
+        this.data.items.subscribe((containers) => {
+            this.containers = containers;
+            this.changeDetector.markForCheck();
+        });
 
         this.hasAutoStorage = false;
         this._autoStorageSub = storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
             this.hasAutoStorage = hasAutoStorage;
             if (!hasAutoStorage) {
-                this.status = Observable.of(LoadingStatus.Ready);
+                this.status = LoadingStatus.Ready;
+                changeDetector.markForCheck();
             }
         });
 
-        this.status = this.data.status;
+        this.data.status.subscribe((status) => {
+            this.status = status;
+        });
+
         this._onGroupAddedSub = this.storageService.onContainerAdded.subscribe((fileGroupId: string) => {
             this.data.loadNewItem(storageService.getContainerOnce(fileGroupId));
         });
@@ -89,6 +94,19 @@ export class DataContainerListComponent extends ListOrTableBase implements OnIni
         return Observable.of(null);
     }
 
+    public handleFilter(filter: Filter) {
+        if (filter.isEmpty()) {
+            this.data.setOptions({ ...defaultListOptions });
+        } else {
+            const filterText = (filter as any).value;
+            this.data.setOptions({ ...defaultListOptions, filter: filterText && filterText.toLowerCase() });
+        }
+
+        if (this.hasAutoStorage) {
+            this.data.fetchNext();
+        }
+    }
+
     public containerStatus(container: BlobContainer): QuickListItemStatus {
         switch (container.lease && container.lease.status) {
             case LeaseStatus.locked:
@@ -98,15 +116,15 @@ export class DataContainerListComponent extends ListOrTableBase implements OnIni
         }
     }
 
-    public onScrollToBottom(x) {
+    public onScrollToBottom() {
         if (this.hasAutoStorage) {
             this.data.fetchNext();
         }
     }
 
-    public deleteSelected() {
+    public deleteSelection(selection: ListSelection) {
         this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteContainerAction(this.storageService, this.selectedItems);
+            const task = new DeleteContainerAction(this.storageService, [...selection.keys]);
             task.start(backgroundTask);
 
             return task.waitingDone;
@@ -128,19 +146,6 @@ export class DataContainerListComponent extends ListOrTableBase implements OnIni
         return fileGroup.id;
     }
 
-    private _setContainerFilter(filter: Filter) {
-        if (filter.isEmpty()) {
-            this.data.setOptions({ ...defaultListOptions });
-        } else {
-            const filterText = (this._filter as any).value;
-            this.data.setOptions({ ...defaultListOptions, filter: filterText && filterText.toLowerCase() });
-        }
-
-        if (this.hasAutoStorage) {
-            this.data.fetchNext();
-        }
-    }
-
     private _deleteFileGroup(container: BlobContainer) {
         const dialogRef = this.dialog.open(DeleteContainerDialogComponent);
         dialogRef.componentInstance.id = container.id;
@@ -155,7 +160,7 @@ export class DataContainerListComponent extends ListOrTableBase implements OnIni
         sidebarRef.component.setValue(new FileGroupCreateDto({
             name: container.name,
             includeSubDirectories: true,
-            folder: null,
+            paths: [],
         }));
 
         sidebarRef.afterCompletion.subscribe(() => {

@@ -1,7 +1,7 @@
 /**
  * Information about the compute node on which a task ran.
  */
-import { Model, Prop, Record } from "app/core";
+import { Model, Prop, Record } from "@batch-flask/core";
 
 export interface ComputeNodeInformationAttributes {
     affinityId: string;

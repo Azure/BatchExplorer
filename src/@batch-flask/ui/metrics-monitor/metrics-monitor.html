@@ -1,0 +1,12 @@
+<bl-vtab-group class="content">
+    <bl-vtab *ngFor="let graph of graphs;trackBy: trackMetric">
+        <div tabLabel>
+            <ng-template [ngTemplateOutlet]="graph.preview"></ng-template>
+        </div>
+        <ng-template [ngTemplateOutlet]="graph.chart"></ng-template>
+    </bl-vtab>
+
+    <div blVtabFooter>
+        <ng-content select="[blMetricsMonitorConfig]"></ng-content>
+    </div>
+</bl-vtab-group>

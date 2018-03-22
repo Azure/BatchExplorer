@@ -5,9 +5,10 @@ import { BehaviorSubject, Observable } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
-import { NotificationService } from "app/components/base/notifications";
+import { NotificationService } from "@batch-flask/ui/notifications";
 import { FileSystemService } from "app/services/fs.service";
-import { Constants, log } from "app/utils";
+import { log } from "app/utils";
+import { BatchLabsService } from "../batch-labs.service";
 import { Theme } from "./theme.model";
 
 /**
@@ -21,13 +22,18 @@ export class ThemeService {
     private _watcher: FSWatcher;
     private _themesLoadPath: string[];
 
-    constructor(private fs: FileSystemService, private notificationService: NotificationService, private zone: NgZone) {
+    constructor(
+        private fs: FileSystemService,
+        private notificationService: NotificationService,
+        private zone: NgZone,
+        batchLabs: BatchLabsService) {
         this.currentTheme = this._currentTheme.filter(x => x !== null);
         this.currentTheme.subscribe((theme) => {
             this._applyTheme(theme);
         });
+
         this._themesLoadPath = [
-            path.join(Constants.Client.resourcesFolder, "data", "themes"),
+            path.join(batchLabs.resourcesFolder, "data", "themes"),
             path.join(fs.commonFolders.userData, "themes"),
         ];
     }

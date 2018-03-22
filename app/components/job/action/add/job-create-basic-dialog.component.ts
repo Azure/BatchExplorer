@@ -1,13 +1,14 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { ComplexFormConfig } from "app/components/base/form";
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
-import { RangeValidator } from "app/components/base/validation";
-import { DynamicForm, autobind } from "app/core";
-import { AllTasksCompleteAction, Job, TaskFailureAction, VirtualMachineConfiguration } from "app/models";
+import { DynamicForm, autobind } from "@batch-flask/core";
+import { ComplexFormConfig } from "@batch-flask/ui/form";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
+import { RangeValidator } from "@batch-flask/ui/validation";
+import { AllTasksCompleteAction, Job, TaskFailureAction, UserAccount, VirtualMachineConfiguration } from "app/models";
 import { JobCreateDto } from "app/models/dtos";
 import { createJobFormToJsonData, jobToFormModel } from "app/models/forms";
 import { JobService, PoolService } from "app/services";
@@ -20,6 +21,7 @@ import "./job-create-basic-dialog.scss";
     templateUrl: "job-create-basic-dialog.html",
 })
 export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto> {
+    public userAccounts: List<UserAccount>;
     public AllTasksCompleteAction = AllTasksCompleteAction;
     public TaskFailureAction = TaskFailureAction;
     public complexFormConfig: ComplexFormConfig;
@@ -99,6 +101,8 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
                 } else {
                     this.containerSettingsRequired = true;
                 }
+
+                this.userAccounts = pool.userAccounts;
             });
     }
 

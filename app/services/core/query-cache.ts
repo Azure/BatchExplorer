@@ -1,7 +1,8 @@
 import { OrderedSet } from "immutable";
 import * as moment from "moment";
 
-import { Constants, ObjectUtils } from "app/utils";
+import { ObjectUtils } from "@batch-flask/utils";
+import { Constants } from "common";
 import { ContinuationToken } from "./data/list-options";
 
 const noQueryKey = "no-query";

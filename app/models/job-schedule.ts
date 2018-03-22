@@ -1,6 +1,6 @@
 import { List } from "immutable";
 
-import { ListProp, Model, Prop, Record } from "app/core";
+import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
 import { ModelUtils } from "app/utils";
 import { Job } from "./job";
 import {
@@ -8,7 +8,6 @@ import {
 } from "./job-schedule-execution-information";
 import { JobScheduleStats } from "./job-schedule-stats";
 import { Metadata, MetadataAttributes } from "./metadata";
-import { NavigableRecord } from "./navigable-record";
 import { Schedule } from "./schedule";
 
 export interface JobScheduleAttributes {

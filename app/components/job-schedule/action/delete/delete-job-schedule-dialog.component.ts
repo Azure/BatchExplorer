@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
+import { autobind } from "@batch-flask/core";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { DeleteJobScheduleAction } from "app/components/job-schedule/action";
-import { autobind } from "app/core";
 import { JobScheduleService } from "app/services";
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
-import { autobind } from "app/core";
+import { autobind } from "@batch-flask/core";
 
 import { JobService } from "app/services";
 

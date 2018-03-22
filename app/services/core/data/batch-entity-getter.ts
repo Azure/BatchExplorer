@@ -1,10 +1,10 @@
 import { Type } from "@angular/core";
 
-import { ServerError } from "app/models";
-import { BatchClientService } from "app/services";
+import { ServerError } from "@batch-flask/core";
 import { BatchClientProxy } from "app/services/batch-api";
-import { EntityGetter, EntityGetterConfig } from "app/services/core/data/entity-getter";
+import { BatchClientService } from "app/services/batch-client.service";
 import { Observable } from "rxjs";
+import { EntityGetter, EntityGetterConfig } from "./entity-getter";
 
 export interface BatchEntityGetterConfig<TEntity, TParams> extends EntityGetterConfig<TEntity, TParams> {
     /**

@@ -8,8 +8,8 @@ import {
     NotificationLevel,
     NotificationModule,
     NotificationService,
-} from "app/components/base/notifications";
-import { AuthorizationHttpService } from "app/services";
+} from "@batch-flask/ui/notifications";
+import { PermissionService } from "@batch-flask/ui/permission";
 
 @Component({
     template: `<bl-notification-container></bl-notification-container>`,
@@ -30,7 +30,7 @@ describe("Notification", () => {
             imports: [NotificationModule],
             declarations: [FakeAppComponent],
             providers: [
-                { provide: AuthorizationHttpService, useValue: null },
+                { provide: PermissionService, useValue: null },
             ],
         });
         notificationService = TestBed.get(NotificationService);

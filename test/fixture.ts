@@ -1,8 +1,9 @@
 import { Type } from "@angular/core";
 import * as moment from "moment";
 
+import { PinnedEntityType } from "@batch-flask/core";
 import { AccountResource, ApplicationPackage, BatchApplication, File, Job, Node, PackageState,
-     PinnedEntityType, Pool, Subscription, SubtaskInformation, Task,
+     Pool, Subscription, SubtaskInformation, Task,
 } from "app/models";
 
 export class FixtureFactory<TEntity> {

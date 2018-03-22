@@ -2,9 +2,14 @@
   "extends": "tslint:recommended",
   "defaultSeverity": "error",
   "rulesDirectory": [
-    "node_modules/codelyzer"
+    "node_modules/codelyzer",
+    "scripts/tslint"
   ],
   "rules": {
+    // Custom rules
+    "forbidden-imports": [true, {}],
+    "no-parent-imports": [true, {}],
+
     // TSLint override
     "no-this-assignment": [true, {"allow-destructuring": true}],
     "no-duplicate-imports": true,
@@ -61,7 +66,7 @@
     "no-attribute-parameter-decorator": true,
     "no-input-rename": true,
     "no-output-rename": true,
-    "no-forward-ref": true,
+    "no-forward-ref": false,
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
     "pipe-naming": [false, "camelCase", "bl"],

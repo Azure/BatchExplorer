@@ -2,7 +2,7 @@
 
 This is a documentation to help create models which are DataStructure that maps entities returned by apis.
 
-All models should be immmutable using the record api defined in `app/core`.
+All models should be immmutable using the record api defined in `@batch-flask/core`.
 
 Note: Before writting a model double check this is the best option:
 * Models should be for containg data returned from remote APIs.
@@ -53,7 +53,7 @@ You need to do the following for the class:
 - For default values just set the value in the class body `@Prop public a: string = "abc"`
 
 ```typescript
-import { ListProp, Model, Prop, Record } from "app/core";
+import { ListProp, Model, Prop, Record } from "@batch-flask/core";
 import { Bar, BarAttributes } from "./bar"
 
 @Model()

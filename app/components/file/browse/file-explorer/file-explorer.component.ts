@@ -1,8 +1,10 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output,
+} from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { LoadingStatus } from "app/components/base/loading";
-import { SplitPaneConfig } from "app/components/base/split-pane";
+import { LoadingStatus } from "@batch-flask/ui/loading";
+import { SplitPaneConfig } from "@batch-flask/ui/split-pane";
 import { CurrentNode, FileExplorerWorkspace, FileSource, OpenedFile } from "app/components/file/browse/file-explorer";
 import { FileNavigator, FileTreeNode } from "app/services/file";
 import "./file-explorer.scss";
@@ -74,6 +76,7 @@ const fileExplorerDefaultConfig: FileExplorerConfig = {
 @Component({
     selector: "bl-file-explorer",
     templateUrl: "file-explorer.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileExplorerComponent implements OnChanges, OnDestroy {
     @Input() public set data(data: FileExplorerWorkspace | FileNavigator) {
@@ -104,7 +107,7 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     private _workspaceSubs: Subscription[] = [];
     private _config: FileExplorerConfig = fileExplorerDefaultConfig;
 
-    constructor() {
+    constructor(private changeDetector: ChangeDetectorRef) {
         this._updateSplitPanelConfig();
     }
 
@@ -164,10 +167,12 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
         this._clearWorkspaceSubs();
         this._workspaceSubs.push(this.workspace.currentSource.subscribe((source) => {
             this.currentSource = source;
+            this.changeDetector.markForCheck();
         }));
 
         this._workspaceSubs.push(this.workspace.currentNode.subscribe((node) => {
             this.currentNode = { ...node, treeNode: new FileTreeNode(node.treeNode) };
+            this.changeDetector.markForCheck();
         }));
     }
 
@@ -187,5 +192,6 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
             },
             initialDividerPosition: 250,
         };
+        this.changeDetector.markForCheck();
     }
 }

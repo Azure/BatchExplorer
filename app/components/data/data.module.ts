@@ -5,6 +5,7 @@ import {
     DeleteContainerDialogComponent,
     FileGroupCreateFormComponent,
     FileGroupOptionsPickerComponent,
+    FileOrDirectoryPickerComponent,
 } from "app/components/data/action";
 import { DataSharedModule } from "app/components/data/shared";
 import { FileBrowseModule } from "app/components/file/browse";
@@ -15,7 +16,6 @@ import {
     DataContainerFilesComponent,
     DataDefaultComponent,
     DataDetailsComponent,
-    DownloadFileGroupDialogComponent,
 } from "./details";
 import { DataHomeComponent } from "./home";
 
@@ -23,7 +23,7 @@ const components = [
     DataContainerConfigurationComponent, DataContainerFilesComponent, DataHomeComponent,
     DataDefaultComponent, DataDetailsComponent, FileGroupCreateFormComponent, DeleteContainerDialogComponent,
     DataContainerListComponent, FileGroupOptionsPickerComponent, FileGroupPreviewComponent,
-    DownloadFileGroupDialogComponent,
+    FileOrDirectoryPickerComponent,
 ];
 
 @NgModule({
@@ -33,7 +33,6 @@ const components = [
     entryComponents: [
         DeleteContainerDialogComponent,
         FileGroupCreateFormComponent,
-        DownloadFileGroupDialogComponent,
     ],
 })
 export class DataModule {

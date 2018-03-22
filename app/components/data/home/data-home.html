@@ -1,12 +1,11 @@
 <bl-storage-error-display [noClassic]="true"></bl-storage-error-display>
 
-<bl-list-and-show-layout #layout (listScrolledToBottom)="fileGroupList.onScrollToBottom()" (filterChange)="quickSearchFilterChanged($event)"
-    [list]="fileGroupList" *ngIf="storageService.hasArmAutoStorage | async">
-    <div bl-list-title>
+<bl-browse-layout #layout [config]="layoutConfig">
+    <div blBrowseLayoutTitle>
         Storage containers
     </div>
-    <div bl-list-buttons>
-        <bl-button type="plain" icon="fa fa-plus spin-hover" color="light" title="Add a file group" [matMenuTriggerFor]="addFileGroupMenu"
+    <div blBrowseLayoutButtons>
+            <bl-button type="plain" icon="fa fa-plus spin-hover" color="light" title="Add a file group" [matMenuTriggerFor]="addFileGroupMenu"
             [disabled]="!hasAutoStorage" [@.disabled]="true">
         </bl-button>
         <mat-menu #addFileGroupMenu="matMenu" [@.disabled]="true">
@@ -16,20 +15,13 @@
         </mat-menu>
     </div>
     <div pre-quicksearch>
-        <div class="blselect">
-            <select placeholder="Container Type" [formControl]="containerTypePrefix">
-                <option *ngFor="let type of containerTypes;trackBy: trackType" [value]="type.prefix">
-                    {{type.name}}
-                </option>
-            </select>
+            <div class="blselect">
+                <select placeholder="Container Type" [formControl]="containerTypePrefix">
+                    <option *ngFor="let type of containerTypes;trackBy: trackType" [value]="type.prefix">
+                        {{type.name}}
+                    </option>
+                </select>
+            </div>
         </div>
-    </div>
-    <div bl-list-content>
-        <bl-focus-section>
-            <bl-data-container-list #fileGroupList [filter]="filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-data-container-list>
-        </bl-focus-section>
-    </div>
-    <div bl-show-content>
-        <router-outlet></router-outlet>
-    </div>
-</bl-list-and-show-layout>
+    <bl-data-container-list blBrowseLayoutList [filter]="filter"></bl-data-container-list>
+</bl-browse-layout>

@@ -1,10 +1,11 @@
 import { BrowserWindow, app, ipcMain } from "electron";
 
+import { log } from "@batch-flask/utils";
 import { BehaviorSubject } from "rxjs";
 import { Observable } from "rxjs/Observable";
 import { Constants } from "../client-constants";
 import { BatchLabsApplication, FileSystem, GenericWindow, LocalFileStorage } from "../core";
-import { logger, renderLogger } from "../logger";
+import { renderLogger } from "../logger";
 
 // Webpack dev server url when using HOT=1
 const devServerUrl = Constants.urls.main.dev;
@@ -29,6 +30,11 @@ export enum WindowState {
 export class MainWindow extends GenericWindow {
     public appReady: Promise<void>;
     public state: Observable<WindowState>;
+
+    public get webContents() {
+        return this._window.webContents;
+    }
+
     private _state = new BehaviorSubject<WindowState>(WindowState.Closed);
     private _resolveAppReady: () => void;
 
@@ -95,7 +101,7 @@ export class MainWindow extends GenericWindow {
                     BrowserWindow.addDevToolsExtension(require("devtron").path);
                 }
             } catch (error) {
-                logger.error("Error adding devtron", error);
+                log.error("Error adding devtron", error);
             }
 
         }
@@ -105,29 +111,29 @@ export class MainWindow extends GenericWindow {
 
     private _setupEvents(window: Electron.BrowserWindow) {
         window.webContents.on("crashed", (event: Electron.Event, killed: boolean) => {
-            logger.error("There was a crash", event, killed);
+            log.error("There was a crash", { event, killed });
             this.batchLabsApp.recoverWindow.createWithError(event.returnValue);
         });
 
         ipcMain.once("app-ready", (event) => {
-            if (event.sender.id === window.webContents.id) {
+            if (this._window && event.sender.id === this._window.webContents.id) {
                 this._resolveAppReady();
             }
         });
 
         ipcMain.once("initializing", (event) => {
-            if (event.sender.id === window.webContents.id) {
+            if (this._window &&  event.sender.id === this._window.webContents.id) {
                 this._state.next(WindowState.Initializing);
             }
         });
 
         window.webContents.on("did-fail-load", (error) => {
             this._state.next(WindowState.FailedLoad);
-            logger.error("Fail to load", error);
+            log.error("Fail to load", error);
         });
 
         window.on("unresponsive", (error: Error) => {
-            logger.error("There was a crash", error);
+            log.error("There was a crash", error);
             this.batchLabsApp.recoverWindow.createWithError(error.message);
         });
     }
