@@ -1,0 +1,12 @@
+<bl-browse-layout #layout [keyField]="keyField" [config]="config">
+    <div blBrowseLayoutTitle>
+        Certificate
+    </div>
+    <div blBrowseLayoutButtons>
+        <bl-button color="light" type="plain" icon="fa fa-plus spin-hover" title="Add a certificate" [action]="addCertificate" permission="write">
+        </bl-button>
+    </div>
+    <bl-certificate-list blBrowseLayoutList></bl-certificate-list>
+    <bl-certificate-advanced-filter blBrowseLayoutAdvancedFilter (change)="layout.advancedFilterChanged($event)">
+    </bl-certificate-advanced-filter>
+</bl-browse-layout>

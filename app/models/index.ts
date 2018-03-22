@@ -14,6 +14,7 @@ export * from "./auto-user";
 export * from "./autoscale-formula";
 export * from "./batch-quotas";
 export * from "./blob-container";
+export * from "./certificate";
 export * from "./certificate-reference";
 export * from "./cloud-service-configuration";
 export * from "./compute-node-error";

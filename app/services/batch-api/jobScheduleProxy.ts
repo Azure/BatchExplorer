@@ -63,7 +63,7 @@ export class JobScheduleProxy {
      * @param options: Optional Parameters.
      */
     public list(options?: BatchServiceModels.JobScheduleListOptions) {
-        return new ListProxy(this.client.jobSchedule, null, wrapOptions({ jobListOptions: options }));
+        return new ListProxy(this.client.jobSchedule, null, wrapOptions({ jobScheduleListOptions: options }));
     }
 
     /**

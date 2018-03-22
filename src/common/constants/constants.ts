@@ -39,6 +39,7 @@ export const forms = {
             id: /^[\w\_-]+$/i,
             appVersion: /^[a-zA-Z0-9_-][a-zA-Z0-9_.-]*$/i,
             appFilename: /\.zip$/i,
+            certificateFileName: /(\.pfx|\.cer)$/i,
             fileGroup: /^[a-z0-9]([a-z0-9]|-(?!-|\z))*$/,
             batchAccount: /^[0-9a-z]*$/,
         },
