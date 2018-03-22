@@ -36,7 +36,6 @@ export class DataContainerListComponent extends ListBaseComponent implements OnC
     public data: ListView<BlobContainer, ListContainerParams>;
     public hasAutoStorage: boolean;
 
-    private _autoStorageSub: Subscription;
     private _onGroupAddedSub: Subscription;
 
     constructor(
@@ -69,16 +68,15 @@ export class DataContainerListComponent extends ListBaseComponent implements OnC
 
     public ngOnChanges(changes) {
         if (changes.storageAccountId) {
+            console.log("Storage accoutnid,", this.storageAccountId);
             this.data.params = { storageAccountId: this.storageAccountId };
             this.data.fetchNext();
-
         }
     }
 
     public ngOnDestroy() {
         this.data.dispose();
         this._onGroupAddedSub.unsubscribe();
-        this._autoStorageSub.unsubscribe();
     }
 
     @autobind()

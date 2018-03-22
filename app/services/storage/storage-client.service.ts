@@ -5,6 +5,7 @@ import { ServerError } from "@batch-flask/core";
 import {  StorageKeys } from "app/models";
 import { AccountService } from "app/services/account.service";
 import { BatchLabsService } from "app/services/batch-labs.service";
+import { ArmResourceUtils } from "app/utils";
 import { StorageAccountKeysService } from "./storage-account-keys.service";
 import {  StorageClientProxyFactory } from "./storage-client-proxy-factory";
 
@@ -65,9 +66,9 @@ export class StorageClientService {
     }
 
     public getFor(storageAccountId: string): Observable<any> {
-        return this.storageKeysService.getFor(storageAccountId).flatMap((keys) => {
+        return this.storageKeysService.getFor(storageAccountId).map((keys) => {
             return this._storageClientFactory.getBlobServiceForSharedKey({
-                account: storageAccountId,
+                account: ArmResourceUtils.getAccountNameFromResourceId(storageAccountId),
                 key: keys.primaryKey,
                 endpoint: this.batchLabs.azureEnvironment.storageEndpoint,
             });

@@ -1,17 +1,18 @@
-import { Component, OnDestroy, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MatMenuTrigger } from "@angular/material";
 import { Filter, FilterBuilder, Property, autobind } from "@batch-flask/core";
 import { BrowseLayoutComponent, BrowseLayoutConfig } from "@batch-flask/ui/browse-layout";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { Observable, Subscription } from "rxjs";
+import { Observable } from "rxjs";
 
 import { BlobContainer } from "app/models";
 import { AutoStorageService, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 import { FileGroupCreateFormComponent } from "../action";
 
+import { ActivatedRoute, Router } from "@angular/router";
 import "./data-home.scss";
 
 const containerTypes = [
@@ -29,7 +30,11 @@ const containerTypes = [
     selector: "bl-data-home",
     templateUrl: "data-home.html",
 })
-export class DataHomeComponent implements OnDestroy {
+export class DataHomeComponent implements OnInit {
+    public static breadcrumb({ id }, { tab }) {
+        return { name: "Storage containers" };
+    }
+
     @ViewChild(MatMenuTrigger) public trigger: MatMenuTrigger;
 
     @ViewChild("layout")
@@ -45,24 +50,29 @@ export class DataHomeComponent implements OnDestroy {
     public layoutConfig: BrowseLayoutConfig = {
         mergeFilter: this._mergeFilter.bind(this),
     };
-    private _autoStorageSub: Subscription;
 
     constructor(
+        private router: Router,
+        private activeRoute: ActivatedRoute,
         private storageContainerService: StorageContainerService,
-        autoStorageService: AutoStorageService,
+        private autoStorageService: AutoStorageService,
         private sidebarManager: SidebarManager,
         private dialogService: DialogService) {
 
-        autoStorageService.get().subscribe((storageAccountId) => {
-            this.storageAccountId = storageAccountId;
-        });
         this.containerTypePrefix.valueChanges.subscribe((prefix) => {
             this.layout.advancedFilterChanged(FilterBuilder.prop("id").startswith(prefix));
         });
     }
 
-    public ngOnDestroy() {
-        this._autoStorageSub.unsubscribe();
+    public ngOnInit() {
+        this.activeRoute.params.subscribe((params) => {
+            this.storageAccountId = params["storageAccountId"];
+            if (!this.storageAccountId) {
+                this.autoStorageService.get().subscribe((storageAccountId) => {
+                    this.router.navigate(["/data", storageAccountId, "containers"]);
+                });
+            }
+        });
     }
 
     @autobind()
