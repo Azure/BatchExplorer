@@ -1,17 +1,17 @@
 import { Component, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
+import { MatMenuTrigger } from "@angular/material";
+import { Filter, FilterBuilder, Property, autobind } from "@batch-flask/core";
+import { BrowseLayoutComponent, BrowseLayoutConfig } from "@batch-flask/ui/browse-layout";
+import { DialogService } from "@batch-flask/ui/dialogs";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Observable, Subscription } from "rxjs";
 
-import { Filter, FilterBuilder, Property, autobind } from "@batch-flask/core";
-import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { StorageService } from "app/services";
+import { BlobContainer } from "app/models";
+import { AutoStorageService, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 import { FileGroupCreateFormComponent } from "../action";
 
-import { MatMenuTrigger } from "@angular/material";
-import { BrowseLayoutComponent, BrowseLayoutConfig } from "@batch-flask/ui/browse-layout";
-import { DialogService } from "@batch-flask/ui/dialogs";
-import { BlobContainer } from "app/models";
 import "./data-home.scss";
 
 const containerTypes = [
@@ -40,6 +40,7 @@ export class DataHomeComponent implements OnDestroy {
     public filter: Filter = FilterBuilder.none();
     public hasAutoStorage = true;
     public containerTypePrefix = new FormControl("");
+    public storageAccountId: string;
 
     public layoutConfig: BrowseLayoutConfig = {
         mergeFilter: this._mergeFilter.bind(this),
@@ -47,16 +48,16 @@ export class DataHomeComponent implements OnDestroy {
     private _autoStorageSub: Subscription;
 
     constructor(
+        private storageContainerService: StorageContainerService,
+        autoStorageService: AutoStorageService,
         private sidebarManager: SidebarManager,
-        private dialogService: DialogService,
-        public storageService: StorageService) {
+        private dialogService: DialogService) {
 
+        autoStorageService.get().subscribe((storageAccountId) => {
+            this.storageAccountId = storageAccountId;
+        });
         this.containerTypePrefix.valueChanges.subscribe((prefix) => {
             this.layout.advancedFilterChanged(FilterBuilder.prop("id").startswith(prefix));
-        });
-
-        this._autoStorageSub = this.storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
-            this.hasAutoStorage = hasAutoStorage;
         });
     }
 
@@ -139,10 +140,10 @@ export class DataHomeComponent implements OnDestroy {
     private _createEmptyContainer(name: string, fileGroup = false) {
         const prefix = fileGroup ? Constants.ncjFileGroupPrefix : "";
         const container = `${prefix}${name}`;
-        const obs = this.storageService.createContainer(container);
+        const obs = this.storageContainerService.create(this.storageAccountId, container);
         obs.subscribe({
             next: () => {
-                this.storageService.onContainerAdded.next(container);
+                this.storageContainerService.onContainerAdded.next(container);
             },
             error: () => null,
         });
@@ -158,7 +159,7 @@ export class DataHomeComponent implements OnDestroy {
         return (control: FormControl) => {
             const containerName = `${prefix}${control.value}`;
             return Observable.of(null).debounceTime(500)
-                .flatMap(() => this.storageService.getContainerOnce(containerName))
+                .flatMap(() => this.storageContainerService.get(this.storageAccountId, containerName))
                 .map((container: BlobContainer) => {
                     return {
                         duplicateContainer: {

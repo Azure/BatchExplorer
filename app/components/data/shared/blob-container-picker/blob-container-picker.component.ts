@@ -10,8 +10,10 @@ import * as moment from "moment";
 import { Subscription } from "rxjs";
 
 import { BlobContainer } from "app/models";
-import { ListContainerParams, StorageService } from "app/services";
 import { ListView } from "app/services/core";
+import {
+    AutoStorageService, ListContainerParams, StorageContainerService,
+} from "app/services/storage";
 import "./blob-container-picker.scss";
 
 export enum BlobContainerPickerOutput {
@@ -51,9 +53,15 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnIni
     private _propagateChange: (value: any[]) => void = null;
     private _subscriptions: Subscription[] = [];
 
-    constructor(private storageService: StorageService, private changeDetector: ChangeDetectorRef) {
+    constructor(
+        private storageContainerService: StorageContainerService,
+        private autoStorageService: AutoStorageService,
+        private changeDetector: ChangeDetectorRef) {
 
-        this.containersData = this.storageService.containerListView();
+        this.containersData = this.storageContainerService.listView();
+        autoStorageService.get().subscribe((storageAccountId) => {
+            this.containersData.params = { storageAccountId };
+        });
         this.containersData.items.subscribe((containers) => {
             this.containers = containers;
             changeDetector.markForCheck();
@@ -66,7 +74,7 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnIni
                     && this.output === BlobContainerPickerOutput.SasUrl
                     && !this._isSasUrl()
                     && this.containers.map(x => x.name).includes(value)
-                    ) {
+                ) {
                     this._createSasUrl(value).subscribe((url) => {
                         this.container.setValue(url);
                     });
@@ -131,6 +139,8 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnIni
             },
         };
 
-        return this.storageService.generateSharedAccessContainerUrl(container, accessPolicy);
+        return this.autoStorageService.get().flatMap((storageAccountId) => {
+            return this.storageContainerService.generateSharedAccessUrl(storageAccountId, container, accessPolicy);
+        });
     }
 }

@@ -127,6 +127,31 @@ export class StorageContainerService {
     }
 
     /**
+     * Marks the specified container for deletion if it exists. The container and any blobs contained
+     * within it are later deleted during garbage collection.
+     */
+    public delete(storageAccountId: string, container: string, options: any = {}): Observable<any> {
+        const observable = this._callStorageClient(storageAccountId,
+            (client) => client.deleteContainer(container, options));
+        observable.subscribe({
+            error: (error) => {
+                log.error("Error deleting container: " + container, Object.assign({}, error));
+            },
+        });
+
+        return observable;
+    }
+
+    // TODO-TIM move this to file group service
+    /**
+     * Return the container name from a file group name
+     * @param fileGroupName Name of the file group
+     */
+    public fileGroupContainer(fileGroupName: string) {
+        return `${Constants.ncjFileGroupPrefix}${fileGroupName}`;
+    }
+
+    /**
      * Helper function to call an action on the storage client library. Will handle converting
      * any Storage error to a ServerError.
      * @param promise Promise returned by the batch client

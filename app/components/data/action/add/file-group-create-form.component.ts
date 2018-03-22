@@ -1,17 +1,15 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { MatCheckboxChange } from "@angular/material";
-import { Observable } from "rxjs";
-
 import { DynamicForm, autobind } from "@batch-flask/core";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
-import { NotificationService } from "@batch-flask/ui/notifications";
-import { SidebarRef } from "@batch-flask/ui/sidebar";
+import { BackgroundTaskService, NotificationService, SidebarRef } from "@batch-flask/ui";
+import { Observable } from "rxjs";
 
 import { BlobContainer } from "app/models";
 import { FileGroupCreateDto, FileOrDirectoryDto } from "app/models/dtos";
 import { CreateFileGroupModel, createFileGroupFormToJsonData, fileGroupToFormModel } from "app/models/forms";
-import { FileSystemService, NcjFileGroupService, StorageService } from "app/services";
+import { FileSystemService, NcjFileGroupService } from "app/services";
+import { AutoStorageService, StorageContainerService } from "app/services/storage";
 import { Constants, log } from "app/utils";
 
 import "./file-group-create-form.scss";
@@ -48,7 +46,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         private fs: FileSystemService,
         private notificationService: NotificationService,
         private backgroundTaskService: BackgroundTaskService,
-        private storageService: StorageService) {
+        private autoStorageService: AutoStorageService,
+        private storageContainerService: StorageContainerService) {
         super(FileGroupCreateDto);
 
         this._pathsControl = formBuilder.control([], Validators.required);
@@ -59,7 +58,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                 Validators.pattern(Constants.forms.validation.regex.fileGroup),
             ], [
                     this._validateFileGroupName.bind(this),
-            ]],
+                ]],
             paths: this._pathsControl,
             includeSubDirectories: [true],
             options: [null, []],
@@ -114,10 +113,12 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
 
     private _createEmptyFileGroup(name: string) {
         const container = `${Constants.ncjFileGroupPrefix}${name}`;
-        const obs = this.storageService.createContainer(container);
+        const obs = this.autoStorageService.get().flatMap((storageAccountId) => {
+            return this.storageContainerService.create(storageAccountId, container);
+        }).share();
         obs.subscribe({
             next: () => {
-                this.storageService.onContainerAdded.next(container);
+                this.storageContainerService.onContainerAdded.next(container);
             },
             error: () => null,
         });
@@ -143,40 +144,40 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                         formData.includeSubDirectories);
 
                     createObs.subscribe({
-                            next: (data) => {
-                                Object.assign(lastData, data);
-                                // check partial to see if we are uploading a large file in chunks.
-                                if (data.partial) {
-                                    // tslint:disable-next-line:max-line-length
-                                    task.name.next(`Syncing large file: ${data.partial}%, completed (${lastData.pathCounter - 1}/${lastData.pathsExpected}) paths`);
-                                } else {
-                                    task.name.next(`${message}, (${data.uploaded}/${data.total}) files.`);
-                                }
+                        next: (data) => {
+                            Object.assign(lastData, data);
+                            // check partial to see if we are uploading a large file in chunks.
+                            if (data.partial) {
+                                // tslint:disable-next-line:max-line-length
+                                task.name.next(`Syncing large file: ${data.partial}%, completed (${lastData.pathCounter - 1}/${lastData.pathsExpected}) paths`);
+                            } else {
+                                task.name.next(`${message}, (${data.uploaded}/${data.total}) files.`);
+                            }
 
-                                task.progress.next(data.uploaded / data.total * 100);
-                            },
-                            complete: () => {
-                                // path has finished processing.
-                                if (lastData.pathCounter < lastData.pathsExpected) {
-                                    lastData.pathCounter++;
-                                }
+                            task.progress.next(data.uploaded / data.total * 100);
+                        },
+                        complete: () => {
+                            // path has finished processing.
+                            if (lastData.pathCounter < lastData.pathsExpected) {
+                                lastData.pathCounter++;
+                            }
 
-                                lastData.actual += lastData.uploaded;
-                                lastData.expected += lastData.total;
-                                message = msgFormat.format(lastData.pathCounter, lastData.pathsExpected, trimmedName);
-                                task.name.next(`${message}, (${lastData.uploaded}/${lastData.total}) files`);
-                            },
-                            error: (error) => {
-                                log.error("Failed to create or modify file group", error);
-                                lastData.failed++;
-                            },
-                        });
+                            lastData.actual += lastData.uploaded;
+                            lastData.expected += lastData.total;
+                            message = msgFormat.format(lastData.pathCounter, lastData.pathsExpected, trimmedName);
+                            task.name.next(`${message}, (${lastData.uploaded}/${lastData.total}) files`);
+                        },
+                        error: (error) => {
+                            log.error("Failed to create or modify file group", error);
+                            lastData.failed++;
+                        },
+                    });
 
                     return createObs;
                 }).finally(() => {
                     task.progress.next(100);
-                    const fileGroupName = this.storageService.fileGroupContainer(formData.name);
-                    this.storageService.onContainerAdded.next(fileGroupName);
+                    const fileGroupName = this.storageContainerService.fileGroupContainer(formData.name);
+                    this.storageContainerService.onContainerAdded.next(fileGroupName);
                     this.notificationService.success(
                         "Create file group",
                         `${lastData.actual} files were successfully uploaded to the file group`,
@@ -223,8 +224,9 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
      */
     private _validateFileGroupName(control: FormControl) {
         const containerName = `${Constants.ncjFileGroupPrefix}${control.value}`;
-        return Observable.of(null).debounceTime(500)
-            .flatMap(() => this.storageService.getContainerOnce(containerName))
+        return Observable.of(null).debounceTime(500)""
+            .flatMap(() => this.autoStorageService.get())
+            .flatMap(storageAccountId => this.storageContainerService.get(storageAccountId, containerName))
             .map((container: BlobContainer) => {
                 this.groupExists = true;
             }).catch(() => {

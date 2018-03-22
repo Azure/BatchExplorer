@@ -279,22 +279,6 @@ export class StorageBlobService {
         });
     }
 
-    /**
-     * Marks the specified container for deletion if it exists. The container and any blobs contained
-     * within it are later deleted during garbage collection.
-     */
-    public deleteContainer(storageAccountId: string, container: string, options: any = {}): Observable<any> {
-        const observable = this._callStorageClient(storageAccountId,
-            (client) => client.deleteContainer(container, options));
-        observable.subscribe({
-            error: (error) => {
-                log.error("Error deleting container: " + container, Object.assign({}, error));
-            },
-        });
-
-        return observable;
-    }
-
     public generateSharedAccessBlobUrl(
         storageAccountId: string,
         container: string, blob: string,
@@ -402,14 +386,6 @@ export class StorageBlobService {
      */
     public clearCurrentStorageKeys(): void {
         this.storageClient.clearCurrentStorageKeys();
-    }
-
-    /**
-     * Return the container name from a file group name
-     * @param fileGroupName Name of the file group
-     */
-    public fileGroupContainer(fileGroupName: string) {
-        return `${Constants.ncjFileGroupPrefix}${fileGroupName}`;
     }
 
     /**
