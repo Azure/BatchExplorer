@@ -6,8 +6,12 @@ import { Observable, Subscription } from "rxjs";
 
 import { ServerError, autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
+
+import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, NcjTemplateMode } from "app/models";
-import { NcjSubmitService, NcjTemplateService } from "app/services";
+import { FileGroupCreateDto, FileOrDirectoryDto } from "app/models/dtos";
+import { NcjSubmitService, NcjTemplateService, StorageService } from "app/services";
 import { exists, log } from "app/utils";
 import { Constants } from "common";
 import { NcjParameterExtendedType, NcjParameterWrapper } from "./market-application.model";
@@ -41,10 +45,11 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     public poolParams: FormGroup;
     public jobParametersWrapper: NcjParameterWrapper[];
     public poolParametersWrapper: NcjParameterWrapper[];
-
     public error: ServerError;
-    private _controlChanges: Subscription[] = [];
+
     private _routeParametersSub: Subscription;
+    private _controlChanges: Subscription[] = [];
+    private _autoPoolParam = Constants.KnownQueryParameters.useAutoPool;
     private _parameterTypeMap = {};
     private _queryParameters: {};
     private _loaded = false;
@@ -56,7 +61,9 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         private notificationService: NotificationService,
         private router: Router,
         private templateService: NcjTemplateService,
-        private ncjSubmitService: NcjSubmitService) {
+        private ncjSubmitService: NcjSubmitService,
+        private sidebarManager: SidebarManager,
+        private storageService: StorageService) {
 
         this.form = new FormGroup({});
     }
@@ -64,13 +71,20 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     public ngOnInit() {
         this._routeParametersSub = this.activatedRoute.queryParams.subscribe((params: any) => {
             this._queryParameters = Object.assign({}, params);
-            const autoPoolParameter = Constants.KnownQueryParameters.useAutoPool;
-            if (this._queryParameters[autoPoolParameter]) {
-                const modeAutoSelect = Boolean(parseInt(this._queryParameters[autoPoolParameter], 10))
+            if (this._queryParameters[this._autoPoolParam]) {
+                const modeAutoSelect = Boolean(parseInt(this._queryParameters[this._autoPoolParam], 10))
                     ? NcjTemplateMode.NewPoolAndJob
                     : NcjTemplateMode.ExistingPoolAndJob;
 
                 this.pickMode(modeAutoSelect);
+            }
+
+            if (true && !this._loaded) {
+                this._syncFileGroup("bob-the-builder", [
+                    "D:\Azure\assets\multi-sources\path1",
+                    "D:\Azure\assets\multi-sources\path2",
+                    "D:\Azure\assets\multi-sources\robot1.jpg",
+                ]);
             }
 
             if (!this._loaded) {
@@ -186,6 +200,25 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         this._saveTemplateAsRecent();
         return this.ncjSubmitService.createPool(this.poolTemplate, this.poolParams.value)
             .cascade((data) => this._redirectToPool(data.id));
+    }
+
+    private _syncFileGroup(fileGroup: string, paths: string[]) {
+        console.log("_syncFileGroup called");
+        const sidebarRef = this.sidebarManager.open("sync-file-group", FileGroupCreateFormComponent);
+        sidebarRef.afterCompletion.subscribe(() => {
+            // this.value.setValue(sidebar.component.getCurrentValue().name);
+        });
+
+        // todo: trim fgrp from group if exists
+        sidebarRef.component.setValue(new FileGroupCreateDto({
+            name: fileGroup,
+            paths: paths.map((path) => new FileOrDirectoryDto({ path: path })),
+            includeSubDirectories: true,
+        }));
+
+        sidebarRef.afterCompletion.subscribe(() => {
+            this.storageService.onContainerUpdated.next();
+        });
     }
 
     private _processParameters() {
