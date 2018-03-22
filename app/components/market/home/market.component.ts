@@ -5,7 +5,8 @@ import { Subscription } from "rxjs";
 
 import { autobind } from "@batch-flask/core";
 import { Application } from "app/models";
-import { NcjTemplateService, StorageService } from "app/services";
+import { NcjTemplateService } from "app/services";
+import { AutoStorageService } from "app/services/storage";
 import "./market.scss";
 
 @Component({
@@ -24,7 +25,7 @@ export class MarketComponent implements OnInit, OnDestroy {
 
     private _subs: Subscription[] = [];
 
-    constructor(public storageService: StorageService, private templateService: NcjTemplateService) {
+    constructor(public autoStorageService: AutoStorageService, private templateService: NcjTemplateService) {
         this._subs.push(this.quicksearch.valueChanges.subscribe((query) => {
             this.query = query;
             this._filterApplications();

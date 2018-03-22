@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from "@angular/core";
-import { AsyncSubject, Observable, Subject } from "rxjs";
+import { AsyncSubject, Observable } from "rxjs";
 
 import { HttpCode, ServerError } from "@batch-flask/core";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
@@ -67,12 +67,6 @@ const storageBlobUrlRegex = /^(https:\/\/[\w\._\-]+)\/([\w\-_]+)\/([\w\-_.]+)\?(
 
 @Injectable()
 export class StorageBlobService {
-    /**
-     * Triggered only when a file group is added through this app.
-     * Used to notify the list of a new item
-     */
-    public onContainerAdded = new Subject<string>();
-    public onContainerUpdated = new Subject();
     public maxBlobPageSize: number = 100; // 500 slows down the UI too much.
     public maxContainerPageSize: number = 50;
 
@@ -145,7 +139,7 @@ export class StorageBlobService {
             basePath: prefix,
             params: { storageAccountId, container },
             getter: this._blobListGetter,
-            getFile: (filename: string) => this.getBlobContent(container, filename),
+            getFile: (filename: string) => this.getBlobContent(storageAccountId, container, filename),
             onError: options.onError,
         });
     }
@@ -175,7 +169,12 @@ export class StorageBlobService {
      * @param blobName - Name of the blob, not including prefix
      * @param blobPrefix - Optional prefix of the blob, i.e. {container}/{blobPrefix}+{blobName}
      */
-    public getBlobContent(container: string, blobName: string, blobPrefix?: string): FileLoader {
+    public getBlobContent(
+        storageAccountId: string,
+        container: string,
+        blobName: string,
+        blobPrefix?: string): FileLoader {
+
         return new FileLoader({
             filename: blobName,
             source: FileSource.blob,
@@ -185,13 +184,13 @@ export class StorageBlobService {
                 return this.get(container, blobName, blobPrefix);
             },
             content: (options: FileLoadOptions) => {
-                return this._callStorageClient((client) => {
+                return this._callStorageClient(storageAccountId, (client) => {
                     const pathToBlob = `${blobPrefix || ""}${blobName}`;
                     return client.getBlobContent(container, pathToBlob, options);
                 });
             },
             download: (dest: string) => {
-                return this._callStorageClient((client) => {
+                return this._callStorageClient(storageAccountId, (client) => {
                     const pathToBlob = `${blobPrefix || ""}${blobName}`;
                     return client.getBlobToLocalFile(container, pathToBlob, dest);
                 });
@@ -206,10 +205,14 @@ export class StorageBlobService {
      * @param fileName - The local path to the file to be downloaded.
      * @param options - Optional parameters, rangeStart & rangeEnd for partial contents
      */
-    public saveBlobToFile(container: string, blobName: string, fileName: string, options: any = {})
+    public saveBlobToFile(
+        storageAccountId: string,
+        container: string,
+        blobName: string,
+        fileName: string, options: any = {})
         : Observable<BlobContentResult> {
 
-        return this._callStorageClient((client) => {
+        return this._callStorageClient(storageAccountId, (client) => {
             return client.getBlobToLocalFile(container, blobName, fileName, options);
         });
     }
@@ -227,7 +230,7 @@ export class StorageBlobService {
         blob: string,
         options: any = {}): Observable<any> {
 
-        return this._callStorageClient((client) => {
+        return this._callStorageClient(storageAccountId, (client) => {
             return client.deleteBlobIfExists(container, blob, options).then((result) => {
                 const blobCache = this.getBlobFileCache({ storageAccountId, container: container });
                 if (result && blobCache) {
@@ -280,8 +283,9 @@ export class StorageBlobService {
      * Marks the specified container for deletion if it exists. The container and any blobs contained
      * within it are later deleted during garbage collection.
      */
-    public deleteContainer(container: string, options: any = {}): Observable<any> {
-        const observable = this._callStorageClient((client) => client.deleteContainer(container, options));
+    public deleteContainer(storageAccountId: string, container: string, options: any = {}): Observable<any> {
+        const observable = this._callStorageClient(storageAccountId,
+            (client) => client.deleteContainer(container, options));
         observable.subscribe({
             error: (error) => {
                 log.error("Error deleting container: " + container, Object.assign({}, error));
@@ -291,27 +295,12 @@ export class StorageBlobService {
         return observable;
     }
 
-    public createContainer(containerName: string): Observable<any> {
-        return this._callStorageClient((client) => {
-            return client.createContainer(containerName);
-        }, (error) => {
-            log.error(`Error creating container: ${containerName}`, { ...error });
-        });
-    }
-
-    public createContainerIfNotExists(containerName: string): Observable<any> {
-        return this._callStorageClient((client) => {
-            return client.createContainerIfNotExists(containerName);
-        }, (error) => {
-            log.error(`Error creating container: ${containerName}`, { ...error });
-        });
-    }
-
     public generateSharedAccessBlobUrl(
+        storageAccountId: string,
         container: string, blob: string,
         sharedAccessPolicy: SharedAccessPolicy): Observable<string> {
 
-        return this._callStorageClient((client) => {
+        return this._callStorageClient(storageAccountId, (client) => {
             const sasToken = client.generateSharedAccessSignature(container, blob, sharedAccessPolicy);
             return Promise.resolve(client.getUrl(container, blob, sasToken));
         }, (error) => {
@@ -347,10 +336,16 @@ export class StorageBlobService {
      * @param file Absolute path to the local file
      * @param remotePath Blob name
      */
-    public uploadFile(container: string, file: string, remotePath: string): Observable<BlobService.BlobResult> {
-        return this._callStorageClient((client) => client.uploadFile(container, file, remotePath), (error) => {
-            log.error(`Error upload file ${file} to container ${container}`, error);
-        });
+    public uploadFile(
+        storageAccountId: string,
+        container: string,
+        file: string,
+        remotePath: string): Observable<BlobService.BlobResult> {
+
+        return this._callStorageClient(storageAccountId,
+            (client) => client.uploadFile(container, file, remotePath), (error) => {
+                log.error(`Error upload file ${file} to container ${container}`, error);
+            });
     }
 
     /**
@@ -365,7 +360,12 @@ export class StorageBlobService {
      * @param files List of absolute path to the files to upload
      * @param remotePath Optional path on the blob where to put the files.
      */
-    public uploadFiles(container: string, files: FileUpload[], remotePath?: string): Observable<BulkUploadStatus> {
+    public uploadFiles(
+        storageAccountId: string,
+        container: string,
+        files: FileUpload[],
+        remotePath?: string): Observable<BulkUploadStatus> {
+
         const total = files.length;
         return Observable.from(files).concatMap((file, index) => {
             const status: BulkUploadStatus = {
@@ -374,7 +374,7 @@ export class StorageBlobService {
                 current: file,
             };
             const blob = remotePath ? CloudPathUtils.join(remotePath, file.remotePath) : file.remotePath;
-            const uploadObs = this.uploadFile(container, file.localPath, blob).map(x => ({
+            const uploadObs = this.uploadFile(storageAccountId, container, file.localPath, blob).map(x => ({
                 uploaded: index + 1,
                 total,
                 current: file,
@@ -419,10 +419,11 @@ export class StorageBlobService {
      * @param  errorCallback Optional error callback if want to log
      */
     private _callStorageClient<T>(
+        storageAccountId: string,
         promise: (client: BlobStorageClientProxy) => Promise<any>,
         errorCallback?: (error: any) => void): Observable<T> {
 
-        return this.storageClient.getAutoStorage().take(1).flatMap((client) => {
+        return this.storageClient.getFor(storageAccountId).take(1).flatMap((client) => {
             return Observable.fromPromise<T>(promise(client)).catch((err) => {
                 const serverError = ServerError.fromStorage(err);
                 if (errorCallback) {

@@ -1,12 +1,11 @@
 import { Injectable, NgZone } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 
 import { HttpCode, ServerError } from "@batch-flask/core";
 import { BlobContainer } from "app/models";
 import {
     DataCache,
     EntityView,
-    ListOptionsAttributes,
     ListView,
     StorageEntityGetter,
     StorageListGetter,
@@ -36,6 +35,13 @@ const storageIgnoredErrors = [
 
 @Injectable()
 export class StorageContainerService {
+    /**
+     * Triggered only when a file group is added through this app.
+     * Used to notify the list of a new item
+     */
+    public onContainerAdded = new Subject<string>();
+    public onContainerUpdated = new Subject();
+
     private _containerGetter: StorageEntityGetter<BlobContainer, GetContainerParams>;
     private _containerListGetter: StorageListGetter<BlobContainer, ListContainerParams>;
     private _containerCache = new DataCache<BlobContainer>();
@@ -71,16 +77,13 @@ export class StorageContainerService {
         return this._containerGetter.fetch({ storageAccountId, id: container });
     }
 
-    public listView(storageAccountId: string, prefix?: string, options: ListOptionsAttributes = {})
+    public listView()
         : ListView<BlobContainer, ListContainerParams> {
 
         const view = new ListView({
             cache: () => this._containerCache,
             getter: this._containerListGetter,
-            initialOptions: options,
         });
-
-        view.params = { storageAccountId, prefix };
         return view;
     }
 
@@ -95,7 +98,7 @@ export class StorageContainerService {
         });
     }
 
-    public generateSharedAccessContainerUrl(
+    public generateSharedAccessUrl(
         storageAccountId: string,
         container: string,
         sharedAccessPolicy: SharedAccessPolicy): Observable<string> {
@@ -104,6 +107,22 @@ export class StorageContainerService {
             return Promise.resolve(client.getUrl(container, null, sasToken));
         }, (error) => {
             log.error(`Error generating container SAS: ${container}`, { ...error });
+        });
+    }
+
+    public create(storageAccountId: string, containerName: string): Observable<any> {
+        return this._callStorageClient(storageAccountId, (client) => {
+            return client.createContainer(containerName);
+        }, (error) => {
+            log.error(`Error creating container: ${containerName}`, { ...error });
+        });
+    }
+
+    public createIfNotExists(storageAccountId: string, containerName: string): Observable<any> {
+        return this._callStorageClient(storageAccountId, (client) => {
+            return client.createContainerIfNotExists(containerName);
+        }, (error) => {
+            log.error(`Error creating container: ${containerName}`, { ...error });
         });
     }
 

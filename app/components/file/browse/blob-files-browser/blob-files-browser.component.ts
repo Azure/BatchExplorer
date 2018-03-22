@@ -4,8 +4,8 @@ import { Observable } from "rxjs";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { FileDeleteEvent, FileDropEvent, FileExplorerConfig } from "app/components/file/browse/file-explorer";
 import { File } from "app/models";
-import { StorageService } from "app/services";
 import { FileNavigator } from "app/services/file";
+import { StorageBlobService } from "app/services/storage";
 import { FileUrlUtils } from "app/utils";
 
 @Component({
@@ -23,7 +23,7 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
 
     public fileNavigator: FileNavigator;
 
-    constructor(private storageService: StorageService, private dialogService: DialogService) { }
+    constructor(private storageBlobService: StorageBlobService, private dialogService: DialogService) { }
 
     public refresh() {
         this.fileNavigator.refresh();
@@ -33,7 +33,8 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
         this._clearFileNavigator();
 
         if (inputs.container || inputs.jobId) {
-            this.fileNavigator = this.storageService.navigateContainerBlobs(this.container);
+            // TODO handle here.
+            this.fileNavigator = this.storageBlobService.navigate("", this.container);
             this.fileNavigator.init();
         }
 
@@ -72,7 +73,8 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
             description: description,
             yes: () => {
                 const listParams = { recursive: true, folder: path };
-                const data = this.storageService.blobListView(this.container, listParams);
+                // TODO-TIM null storage account id
+                const data = this.storageBlobService.listView(null, this.container, listParams);
                 const obs = data.fetchAll().flatMap(() => data.items.take(1)).shareReplay(1);
                 obs.subscribe((items) => {
                     data.dispose();
