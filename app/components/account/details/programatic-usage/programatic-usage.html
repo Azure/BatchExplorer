@@ -1,6 +1,6 @@
 <div class="header">
     <h1>
-        Credentials and code samples for this batch account
+        Credentials and code samples for this Batch account
     </h1>
 
     <div class="credential-type-picker">
@@ -16,6 +16,7 @@
         <bl-property-list *ngIf="pickedCredentialType === CredentialType.SharedKey">
             <bl-property-group label="Account credentials {{loading ? '(Loading ...)' : ''}}" class="wide">
                 <bl-text-property label="Name" [value]="account?.name"></bl-text-property>
+                <bl-text-property label="Resource ID" [value]="account?.id"></bl-text-property>
                 <bl-text-property label="Url" [value]="account?.properties.accountEndpoint"></bl-text-property>
                 <bl-text-property label="Primary key" [value]="sharedKeys?.primary"></bl-text-property>
                 <bl-text-property label="Secondary key" [value]="sharedKeys?.secondary"></bl-text-property>
