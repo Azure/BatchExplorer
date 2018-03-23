@@ -87,7 +87,6 @@ export class CertificatePickerComponent implements OnChanges, ControlValueAccess
         });
 
         this._sub = this.form.valueChanges.subscribe((value: any) => {
-            console.log("sub", value);
             if (this._propagateChange) {
                 this._propagateChange(value);
             }
@@ -96,7 +95,6 @@ export class CertificatePickerComponent implements OnChanges, ControlValueAccess
 
     public ngOnChanges(inputs) {
         if (inputs.osType) {
-            console.log("ngOnChange");
             this._setOptionalForm();
         }
     }
@@ -106,7 +104,6 @@ export class CertificatePickerComponent implements OnChanges, ControlValueAccess
 
     }
     public writeValue(value: CertificateReference) {
-        console.log("write", value);
         if (value) {
             this.form.patchValue(value);
         } else {
