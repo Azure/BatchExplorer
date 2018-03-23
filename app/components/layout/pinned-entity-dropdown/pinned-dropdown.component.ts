@@ -60,8 +60,8 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
                 return "Batch pool";
             case PinnedEntityType.Certificate:
                 return "Batch certificate";
-            case PinnedEntityType.FileGroup:
-                return "File group";
+            case PinnedEntityType.StorageContainer:
+                return "Storage container";
             default:
                 return "unknown";
         }
@@ -79,7 +79,7 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
                 return "fa-database";
             case PinnedEntityType.Certificate:
                 return "fa-certificate";
-            case PinnedEntityType.FileGroup:
+            case PinnedEntityType.StorageContainer:
                 return "fa-cloud-upload";
             default:
                 return "fa-question";

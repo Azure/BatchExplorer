@@ -15,7 +15,7 @@ pinnedTypeMap.set(PinnedEntityType.Pool, Pool);
 pinnedTypeMap.set(PinnedEntityType.Job, Job);
 pinnedTypeMap.set(PinnedEntityType.JobSchedule, JobSchedule);
 pinnedTypeMap.set(PinnedEntityType.Certificate, Certificate);
-pinnedTypeMap.set(PinnedEntityType.FileGroup, BlobContainer);
+pinnedTypeMap.set(PinnedEntityType.StorageContainer, BlobContainer);
 
 @Injectable()
 export class PinnedEntityService {
