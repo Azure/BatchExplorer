@@ -37,6 +37,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     public description: string = "Upload files into a managed storage container that you can use " +
         "for resource files in your jobs and tasks";
     public createEmptyGroup: boolean = false;
+    public showCreateEmptyChk: boolean = true;
     public modifyExisting: boolean = false;
 
     private _pathsControl: FormControl;
@@ -93,12 +94,24 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     }
 
     public dtoToForm(fileGroup: FileGroupCreateDto): CreateFileGroupModel {
-        this.title = "Add more files to file group";
-        this.description = "Add more files to an already existing file group. " +
-            "Any files that exist already will be updated 'only' if they have changed.";
-        this.form.controls.name.disable();
-        this.modifyExisting = true;
+        this.showCreateEmptyChk = false;
+        if (fileGroup.name) {
+            const container = this.storageService.addFileGroupPrefix(fileGroup.name);
+            this.storageService.getContainerOnce(container)
+            .map((container: BlobContainer) => {
+                this.title = "Add more files to file group";
+                this.description = "Add more files to an already existing file group. " +
+                    "Any files that exist already will be updated 'only' if they have changed.";
+                this.form.controls.name.disable();
+                this.modifyExisting = true;
+            }).catch(() => {
+                this.form.controls.name.enable();
+                this.modifyExisting = false;
+                return Observable.of(null);
+            });
+        }
 
+        console.log("dtoToForm: ", fileGroup);
         return fileGroupToFormModel(fileGroup);
     }
 
@@ -113,7 +126,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     }
 
     private _createEmptyFileGroup(name: string) {
-        const container = `${Constants.ncjFileGroupPrefix}${name}`;
+        const container = this.storageService.addFileGroupPrefix(name);
         const obs = this.storageService.createContainer(container);
         obs.subscribe({
             next: () => {
@@ -175,7 +188,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                     return createObs;
                 }).finally(() => {
                     task.progress.next(100);
-                    const fileGroupName = this.storageService.fileGroupContainer(formData.name);
+                    const fileGroupName = this.storageService.addFileGroupPrefix(formData.name);
                     this.storageService.onContainerAdded.next(fileGroupName);
                     this.notificationService.success(
                         "Create file group",
@@ -222,7 +235,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
      * the existing group and not creating a new one.
      */
     private _validateFileGroupName(control: FormControl) {
-        const containerName = `${Constants.ncjFileGroupPrefix}${control.value}`;
+        const containerName = this.storageService.addFileGroupPrefix(control.value);
         return Observable.of(null).debounceTime(500)
             .flatMap(() => this.storageService.getContainerOnce(containerName))
             .map((container: BlobContainer) => {

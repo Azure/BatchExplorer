@@ -49,7 +49,6 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
 
     private _routeParametersSub: Subscription;
     private _controlChanges: Subscription[] = [];
-    private _autoPoolParam = Constants.KnownQueryParameters.useAutoPool;
     private _parameterTypeMap = {};
     private _queryParameters: {};
     private _loaded = false;
@@ -69,26 +68,22 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public ngOnInit() {
+        const autoPoolParam = Constants.KnownQueryParameters.useAutoPool;
         this._routeParametersSub = this.activatedRoute.queryParams.subscribe((params: any) => {
             this._queryParameters = Object.assign({}, params);
-            if (this._queryParameters[this._autoPoolParam]) {
-                const modeAutoSelect = Boolean(parseInt(this._queryParameters[this._autoPoolParam], 10))
+            console.log("queryParams.subscribe :: ", this._queryParameters);
+
+            if (this._queryParameters[autoPoolParam]) {
+                const modeAutoSelect = Boolean(parseInt(this._queryParameters[autoPoolParam], 10))
                     ? NcjTemplateMode.NewPoolAndJob
                     : NcjTemplateMode.ExistingPoolAndJob;
 
                 this.pickMode(modeAutoSelect);
             }
 
-            if (true && !this._loaded) {
-                this._syncFileGroup("bob-the-builder", [
-                    "D:\Azure\assets\multi-sources\path1",
-                    "D:\Azure\assets\multi-sources\path2",
-                    "D:\Azure\assets\multi-sources\robot1.jpg",
-                ]);
-            }
-
             if (!this._loaded) {
-                // Subscribe is fired every time a value changes now so don't want to re-apply
+                // subscribe is fired every time a value changes now so don't want to re-apply
+                this._checkForAssetsToSync();
                 this._applyinitialData();
                 this._loaded = true;
             }
@@ -202,22 +197,38 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             .cascade((data) => this._redirectToPool(data.id));
     }
 
-    private _syncFileGroup(fileGroup: string, paths: string[]) {
-        console.log("_syncFileGroup called");
-        const sidebarRef = this.sidebarManager.open("sync-file-group", FileGroupCreateFormComponent);
-        sidebarRef.afterCompletion.subscribe(() => {
-            // this.value.setValue(sidebar.component.getCurrentValue().name);
-        });
+    private _checkForAssetsToSync() {
+        const assets = this._queryParameters[Constants.KnownQueryParameters.assetPaths];
+        const container = this._queryParameters[Constants.KnownQueryParameters.assetContainer];
+        if (assets && container) {
+            // we only want to do this if we have a container name and asset list
+            // TODO: think about this, we may want to even if there is no container and
+            //       just leave the user to enter one.
+            this._syncFileGroup(container, assets.split(","));
+        }
+    }
 
-        // todo: trim fgrp from group if exists
+    private _syncFileGroup(container: string, paths: string[]) {
+        console.log("_syncFileGroup called with: ", container, paths);
+        const sidebarRef = this.sidebarManager.open("sync-file-group", FileGroupCreateFormComponent);
+
         sidebarRef.component.setValue(new FileGroupCreateDto({
-            name: fileGroup,
+            name: this.storageService.removeFileGroupPrefix(container),
             paths: paths.map((path) => new FileOrDirectoryDto({ path: path })),
             includeSubDirectories: true,
         }));
 
         sidebarRef.afterCompletion.subscribe(() => {
             this.storageService.onContainerUpdated.next();
+            const fileGroupName = sidebarRef.component.getCurrentValue().name;
+            console.log("sidebarRef.afterCompletion: ", fileGroupName);
+
+            if (fileGroupName && this._queryParameters[Constants.KnownQueryParameters.assetParamName]) {
+                // we know what the control is called so update it with the new value
+                const parameterName = this._queryParameters[Constants.KnownQueryParameters.assetParamName];
+                const fileGroupContainer = this.storageService.addFileGroupPrefix(fileGroupName);
+                (this.form.controls.job as FormGroup).controls[parameterName].setValue(fileGroupContainer);
+            }
         });
     }
 
@@ -286,11 +297,9 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         // Listen to control value change events and update the route parameters to match
         // tslint:disable-next-line:max-line-length
         this._controlChanges.push(formGroup[key].valueChanges.debounceTime(400).distinctUntilChanged().subscribe((change) => {
-            if (this._parameterTypeMap[key] === NcjParameterExtendedType.fileGroup &&
-                Boolean(change) && !change.startsWith(Constants.ncjFileGroupPrefix)) {
-
+            if (this._parameterTypeMap[key] === NcjParameterExtendedType.fileGroup && Boolean(change)) {
                 // Quick-Fix until we modify the CLI to finally sort out file group prefixes
-                change = `${Constants.ncjFileGroupPrefix}${change}`;
+                change = this.storageService.addFileGroupPrefix(change);
             }
 
             // Set the parameters on the route so when page reloads we keep the existing parameters

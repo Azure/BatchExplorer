@@ -155,7 +155,23 @@ export class BatchLabsApplication {
 
     public openFromArguments(argv: string[]): MainWindow {
         if (ClientConstants.isDev) {
-            return this.windows.openNewWindow(null, false);
+            // return this.windows.openNewWindow(null, false);
+            const route = "route/market/blender/actions/render-movie-linux/submit";
+            const assets = "D:\\Azure\\assets\\multi-sources\\monster.blend"
+                + ",D:\\Azure\\assets\\multi-sources\\path1"
+                + ",D:\\Azure\\assets\\multi-sources\\path2";
+
+            const params = "auto-pool=0"
+                + "&blendFile=monster.blend"
+                + "&frameStart=10"
+                + "&frameEnd=150"
+                + "&inputData=fgrp-monster"
+                + "&asset-param-name=inputData"
+                + "&asset-container=monster"
+                + `&asset-paths=${assets}`
+                + "";
+
+            return this.windows.openNewWindow(`ms-batchlabs://${route}?${params}`, false);
         }
         const program = commander
             .version(app.getVersion())

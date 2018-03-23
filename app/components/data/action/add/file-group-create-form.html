@@ -11,7 +11,7 @@
             </div>
             <p *ngIf="groupExists" class="exists">This file group already exists, any selected files will be added to this existing group</p>
             <div class="form-element">
-                <mat-checkbox *ngIf="!modifyExisting" (change)="createEmptyCheckChanged($event)" color="primary">Create an empty file group</mat-checkbox>
+                <mat-checkbox *ngIf="showCreateEmptyChk" (change)="createEmptyCheckChanged($event)" color="primary">Create an empty file group</mat-checkbox>
             </div>
         </bl-form-section>
 

@@ -198,5 +198,8 @@ export const ListPageSizes = {
 };
 
 export const KnownQueryParameters = {
-    useAutoPool: "useAutoPool",
+    useAutoPool: "auto-pool",
+    assetParamName: "asset-param-name",
+    assetContainer: "asset-container",
+    assetPaths: "asset-paths",
 };
