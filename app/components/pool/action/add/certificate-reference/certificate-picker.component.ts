@@ -7,10 +7,10 @@ import {
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
+import { autobind } from "@batch-flask/core";
 import { Certificate } from "app/models";
 import { defaultThumbprintAlgorithm } from "app/services";
 
-import { autobind } from "@batch-flask/core";
 import "./certificate-picker.scss";
 
 export enum CertificateVisibility {
@@ -61,12 +61,10 @@ const defaultVisibility = [
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CertificatePickerComponent implements OnChanges, ControlValueAccessor, Validator, OnDestroy {
-    public form: FormGroup;
-
     @Input() public osType: "linux" | "windows";
     @Input() public certificates: Certificate[] = [];
     @Input() public currentCertificates: Certificate[] = [];
-
+    public form: FormGroup;
     public linuxStoreLocationMessage = `For Linux compute nodes, the certificates are stored in a `
         + `directory inside the task working directory and an environment variable  AZ_BATCH_CERTIFICATES_DIR `
         + `is supplied to the task to query for this location. For certificates with visibility of "remoteUser", `
@@ -101,8 +99,8 @@ export class CertificatePickerComponent implements OnChanges, ControlValueAccess
 
     public ngOnDestroy() {
         this._sub.unsubscribe();
-
     }
+
     public writeValue(value: CertificateReference) {
         if (value) {
             this.form.patchValue(value);

@@ -10,7 +10,7 @@
         </mat-form-field>
         <bl-error controlName="thumbprint" code="required">Thumbprint is a required field</bl-error>
         <bl-error controlName="thumbprint" code="duplicateValue">
-            Duplicate thumbprint was found: form.controls.thumbprint.errors.duplicateValue.value
+            Duplicate thumbprint was found: {{ form.controls.thumbprint.errors?.duplicateValue?.value }}
         </bl-error>
     </div>
     <div class="form-element" *ngIf="isWindows">
