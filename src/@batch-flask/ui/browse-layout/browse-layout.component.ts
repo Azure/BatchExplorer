@@ -161,6 +161,8 @@ export class BrowseLayoutComponent implements AfterContentInit {
     }
 
     public updateActiveItem(key: string) {
+        console.log("Updated activated item??/");
+        this.toggleFilter(false);
         this._activeItemKey = key;
         if (this.listDirective) {
             this.listDirective.component.activeItem = key;
