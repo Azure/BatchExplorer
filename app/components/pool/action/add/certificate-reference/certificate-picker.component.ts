@@ -1,4 +1,7 @@
-import { Component, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component,
+    Input, OnChanges, OnDestroy, forwardRef,
+} from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator, Validators,
 } from "@angular/forms";
@@ -47,7 +50,6 @@ const defaultVisibility = [
     CertificateVisibility.RemoteUser,
 ];
 
-// tslint:disable:trackBy-function
 @Component({
     selector: "bl-certificate-picker",
     templateUrl: "certificate-picker.html",
@@ -56,6 +58,7 @@ const defaultVisibility = [
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => CertificatePickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => CertificatePickerComponent), multi: true },
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CertificatePickerComponent implements OnChanges, ControlValueAccessor, Validator, OnDestroy {
     public form: FormGroup;
@@ -73,7 +76,8 @@ export class CertificatePickerComponent implements OnChanges, ControlValueAccess
     private _propagateChange: (value: CertificateReference) => void = null;
     private _sub: Subscription;
 
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: FormBuilder,
+                private changeDetector: ChangeDetectorRef) {
         this.form = formBuilder.group({
             thumbprint: ["", Validators.required],
             thumbprintAlgorithm: [defaultThumbprintAlgorithm],
@@ -83,6 +87,7 @@ export class CertificatePickerComponent implements OnChanges, ControlValueAccess
         });
 
         this._sub = this.form.valueChanges.subscribe((value: any) => {
+            console.log("sub", value);
             if (this._propagateChange) {
                 this._propagateChange(value);
             }
@@ -91,6 +96,7 @@ export class CertificatePickerComponent implements OnChanges, ControlValueAccess
 
     public ngOnChanges(inputs) {
         if (inputs.osType) {
+            console.log("ngOnChange");
             this._setOptionalForm();
         }
     }
@@ -100,6 +106,7 @@ export class CertificatePickerComponent implements OnChanges, ControlValueAccess
 
     }
     public writeValue(value: CertificateReference) {
+        console.log("write", value);
         if (value) {
             this.form.patchValue(value);
         } else {
@@ -113,6 +120,7 @@ export class CertificatePickerComponent implements OnChanges, ControlValueAccess
             this._setOptionalForm();
         }
         this._setThumbprintValidator(value);
+        this.changeDetector.markForCheck();
     }
 
     public registerOnChange(fn) {
@@ -188,7 +196,7 @@ export class CertificatePickerComponent implements OnChanges, ControlValueAccess
         let validators = [];
         let storeNameValue = null;
         let storeLocationValue = null;
-        if (this.osType === "windows") {
+        if (this.isWindows) {
             validators = [Validators.required];
             storeNameValue = CommonStoreName.My;
             storeLocationValue = CertificateStoreLocation.CurrentUser;

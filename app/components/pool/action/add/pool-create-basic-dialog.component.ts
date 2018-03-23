@@ -151,6 +151,14 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         return createPoolToData(data);
     }
 
+    public trimThumbprint(thumbprint: string) {
+        if (!thumbprint) {
+            return null;
+        }
+        const length = 15;
+        return thumbprint.length > length ? thumbprint.substring(0, length) + "..." : thumbprint;
+    }
+
     public get startTask() {
         return this.form.controls.startTask.value;
     }

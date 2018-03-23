@@ -142,7 +142,7 @@
                 #certificatesPicker addTitle="Add a certificate">
                 <ng-template blFormPickerItem let-value>
                     <div title>
-                        {{value?.thumbprint}}
+                        {{ trimThumbprint(value?.thumbprint) }}
                     </div>
                     <div subtitle class="unaccent">
                         {{value?.thumbprintAlgorithm}}
