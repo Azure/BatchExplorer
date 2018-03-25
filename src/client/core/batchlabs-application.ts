@@ -157,11 +157,16 @@ export class BatchLabsApplication {
         if (ClientConstants.isDev) {
             // return this.windows.openNewWindow(null, false);
             const route = "route/market/blender/actions/render-movie-linux/submit";
+            const account = "/subscriptions/21dd4ed1-9ce5-4633-b202-a27b157920dc/resourceGroups/"
+                + "ascobierg/providers/Microsoft.Batch/batchAccounts/andrew1973";
+
             const assets = "D:\\Azure\\assets\\multi-sources\\monster.blend"
                 + ",D:\\Azure\\assets\\multi-sources\\path1"
                 + ",D:\\Azure\\assets\\multi-sources\\path2";
 
-            const params = "auto-pool=0"
+            const params = `sessionId=${Date.now()}`
+                + `&accountId=${account}`
+                + "&auto-pool=0"
                 + "&blendFile=monster.blend"
                 + "&frameStart=10"
                 + "&frameEnd=150"
