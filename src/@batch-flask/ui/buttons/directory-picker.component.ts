@@ -14,6 +14,9 @@ export class DirectoryPickerComponent {
     @Output()
     public onChange = new EventEmitter<string>();
 
+    @Output()
+    public eventChange = new EventEmitter<Event>();
+
     @ViewChild("picker")
     private _picker: ElementRef;
 
@@ -31,6 +34,9 @@ export class DirectoryPickerComponent {
             targetPath = files[0].path;
         }
 
+        if (this.canPickFile) {
+            this.eventChange.emit(event);
+        }
         this.onChange.emit(targetPath);
     }
 }

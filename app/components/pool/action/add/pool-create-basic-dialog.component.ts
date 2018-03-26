@@ -6,10 +6,10 @@ import { DynamicForm, autobind } from "@batch-flask/core";
 import { ComplexFormConfig } from "@batch-flask/ui/form";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
-import { NodeFillType, Pool } from "app/models";
+import { Certificate, NodeFillType, Pool } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
 import { CreatePoolModel, PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
-import { AccountService, PoolService, PricingService, VmSizeService } from "app/services";
+import { AccountService, CertificateService, PoolService, PricingService, VmSizeService } from "app/services";
 import { Constants, NumberUtils } from "app/utils";
 
 @Component({
@@ -25,6 +25,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public complexFormConfig: ComplexFormConfig;
     public fileUri = "create.pool.batch.json";
     public armNetworkOnly = true;
+    public certificates: Certificate[] = [];
 
     private _osControl: FormControl;
     private _renderingSkuSelected: boolean = false;
@@ -36,6 +37,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         public sidebarRef: SidebarRef<PoolCreateBasicDialogComponent>,
         private poolService: PoolService,
         private accountService: AccountService,
+        private certificateService: CertificateService,
         private pricingService: PricingService,
         vmSizeService: VmSizeService,
         changeDetector: ChangeDetectorRef,
@@ -69,6 +71,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             appPackages: [[]],
             inboundNATPools: [[]],
             subnetId: [null],
+            certificateReferences: [[]],
         });
 
         this._subs.push(this._osControl.valueChanges.subscribe((value) => {
@@ -117,6 +120,8 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             }
             this._lastFormValue = value;
         });
+
+        this._setCertificates();
     }
 
     public ngOnDestroy() {
@@ -144,6 +149,14 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
     public formToDto(data: any): PoolCreateDto {
         return createPoolToData(data);
+    }
+
+    public trimThumbprint(thumbprint: string) {
+        if (!thumbprint) {
+            return null;
+        }
+        const length = 15;
+        return thumbprint.length > length ? thumbprint.substring(0, length) + "..." : thumbprint;
     }
 
     public get startTask() {
@@ -182,5 +195,11 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
                 fromDto: (value) => this.dtoToForm(value),
             },
         };
+    }
+
+    private _setCertificates() {
+        this._subs.push(this.certificateService.listAll().subscribe(certificates => {
+            this.certificates = certificates.toArray();
+        }));
     }
 }

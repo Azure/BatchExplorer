@@ -15,6 +15,7 @@ import { UserAccountModule } from "./user-account";
 import {
     AppLicensePickerComponent,
     AutoscaleFormulaPickerComponent,
+    CertificatePickerComponent,
     ContaienrImagesPickerComponent,
     ContainerConfigurationComponent,
     ContainerRegistryPickerComponent,
@@ -29,7 +30,7 @@ import {
 } from "app/components/pool/action";
 
 const components = [
-    AppLicensePickerComponent, AutoscaleFormulaPickerComponent,
+    AppLicensePickerComponent, AutoscaleFormulaPickerComponent, CertificatePickerComponent,
     ContainerConfigurationComponent, ContaienrImagesPickerComponent, ContainerRegistryPickerComponent,
     DeletePoolDialogComponent, LicenseEulaDialogComponent, OsOfferTileComponent, PoolAdvancedFilterComponent,
     PoolCreateBasicDialogComponent, PoolHomeComponent, PoolListComponent, PoolOsPickerComponent,

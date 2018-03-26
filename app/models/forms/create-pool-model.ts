@@ -1,6 +1,6 @@
 import * as moment from "moment";
 
-import { InboundNATPool, NodeFillType } from "app/models";
+import { CertificateReference, InboundNATPool, NodeFillType } from "app/models";
 import { ContainerRegistry, PoolCreateDto, UserAccountDto } from "app/models/dtos";
 
 export enum PoolOsSources {
@@ -58,6 +58,7 @@ export interface CreatePoolModel {
     appPackages: PackageReferenceModel[];
     inboundNATPools: InboundNATPool[];
     subnetId: string;
+    certificateReferences: CertificateReference[];
 }
 
 export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
@@ -116,6 +117,10 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
             ...data.networkConfiguration,
         };
     }
+
+    if (output.certificateReferences) {
+        data.certificateReferences = output.certificateReferences;
+    }
     return new PoolCreateDto(data);
 }
 
@@ -152,5 +157,6 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         inboundNATPools: pool.networkConfiguration && pool.networkConfiguration.endpointConfiguration ?
             pool.networkConfiguration.endpointConfiguration.inboundNATPools : [],
         subnetId: pool.networkConfiguration && pool.networkConfiguration.subnetId,
+        certificateReferences: pool.certificateReferences || [],
     };
 }

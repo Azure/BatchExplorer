@@ -83,7 +83,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
         if (!resourceGroup) {
             return false;
         }
-        const isNewResourceGroup = (typeof resourceGroup === "string" && this._containsResourceGroup(resourceGroup));
+        const isNewResourceGroup = (typeof resourceGroup === "string" && !this._containsResourceGroup(resourceGroup));
         this.changeDetector.markForCheck();
         return isNewResourceGroup;
     }

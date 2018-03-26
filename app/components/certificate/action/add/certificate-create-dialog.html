@@ -2,7 +2,10 @@
     <bl-form-page main-form-page title="Create certificate" [formGroup]="form">
         <bl-form-section title="Certificate" subtitle="Select a certificate (pfx or cer) to upload">
             <div class="form-element">
-                <input type="file" (change)="fileSelected($event)" />
+                <p>{{ form.controls.certificate.value }}</p>
+                <bl-directory-picker (eventChange)="fileSelected($event)" [canPickFile]="true">
+                    <i class="fa fa-upload" aria-hidden="true"></i>&nbsp;&nbsp;Select a certificate
+                </bl-directory-picker>
                 <bl-error controlName="certificate" code="required">Please select a valid certificate file</bl-error>
                 <bl-error controlName="certificate" code="pattern">Certificate need to be valid CER or PFX files only</bl-error>
             </div>
