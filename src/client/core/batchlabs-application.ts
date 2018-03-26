@@ -160,19 +160,16 @@ export class BatchLabsApplication {
             const account = "/subscriptions/21dd4ed1-9ce5-4633-b202-a27b157920dc/resourceGroups/"
                 + "ascobierg/providers/Microsoft.Batch/batchAccounts/andrew1973";
 
-            const assets = "D:\\Azure\\assets\\multi-sources\\monster.blend"
-                + ",D:\\Azure\\assets\\multi-sources\\path1"
-                + ",D:\\Azure\\assets\\multi-sources\\path2";
+            const assets = "D:\\Azure\\assets\\multi-sources\\monster.blend";
 
             const params = `sessionId=${Date.now()}`
                 + `&accountId=${account}`
-                + "&auto-pool=0"
                 + "&blendFile=monster.blend"
-                + "&frameStart=10"
-                + "&frameEnd=150"
-                + "&inputData=fgrp-monster"
-                + "&asset-param-name=inputData"
-                + "&asset-container=monster"
+                + "&frameStart=1"
+                + "&frameEnd=1"
+                + "&auto-pool=0"
+                + "&input-parameter=inputData"
+                + "&asset-container=blender-monster-inputs"
                 + `&asset-paths=${assets}`
                 + "";
 

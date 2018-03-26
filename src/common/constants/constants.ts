@@ -33,7 +33,7 @@ export const forms = {
             displayName: 1024,
             applicationName: 64,
             version: 64,
-            fileGroup: 63,
+            fileGroup: 55,
         },
         regex: {
             id: /^[\w\_-]+$/i,
@@ -199,7 +199,7 @@ export const ListPageSizes = {
 
 export const KnownQueryParameters = {
     useAutoPool: "auto-pool",
-    assetParamName: "asset-param-name",
+    inputParameter: "input-parameter",
     assetContainer: "asset-container",
     assetPaths: "asset-paths",
 };

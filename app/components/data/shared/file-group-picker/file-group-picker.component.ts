@@ -94,7 +94,8 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         if (!event.source.value && event.isUserInput) {
             const sidebar = this.sidebarManager.open("Add a new file group", FileGroupCreateFormComponent);
             sidebar.afterCompletion.subscribe(() => {
-                this.value.setValue(sidebar.component.getCurrentValue().name);
+                const newFileGroupName = sidebar.component.getCurrentValue().name;
+                this.value.setValue(this.storageService.addFileGroupPrefix(newFileGroupName));
             });
         }
     }

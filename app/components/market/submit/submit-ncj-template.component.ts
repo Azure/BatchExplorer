@@ -71,8 +71,6 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         const autoPoolParam = Constants.KnownQueryParameters.useAutoPool;
         this._routeParametersSub = this.activatedRoute.queryParams.subscribe((params: any) => {
             this._queryParameters = Object.assign({}, params);
-            console.log("queryParams.subscribe :: ", this._queryParameters);
-
             if (this._queryParameters[autoPoolParam]) {
                 const modeAutoSelect = Boolean(parseInt(this._queryParameters[autoPoolParam], 10))
                     ? NcjTemplateMode.NewPoolAndJob
@@ -209,7 +207,6 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     private _syncFileGroup(container: string, paths: string[]) {
-        console.log("_syncFileGroup called with: ", container, paths);
         const sidebarRef = this.sidebarManager.open("sync-file-group", FileGroupCreateFormComponent);
 
         sidebarRef.component.setValue(new FileGroupCreateDto({
@@ -221,11 +218,10 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         sidebarRef.afterCompletion.subscribe(() => {
             this.storageService.onContainerUpdated.next();
             const fileGroupName = sidebarRef.component.getCurrentValue().name;
-            console.log("sidebarRef.afterCompletion: ", fileGroupName);
 
-            if (fileGroupName && this._queryParameters[Constants.KnownQueryParameters.assetParamName]) {
+            if (fileGroupName && this._queryParameters[Constants.KnownQueryParameters.inputParameter]) {
                 // we know what the control is called so update it with the new value
-                const parameterName = this._queryParameters[Constants.KnownQueryParameters.assetParamName];
+                const parameterName = this._queryParameters[Constants.KnownQueryParameters.inputParameter];
                 const fileGroupContainer = this.storageService.addFileGroupPrefix(fileGroupName);
                 (this.form.controls.job as FormGroup).controls[parameterName].setValue(fileGroupContainer);
             }
