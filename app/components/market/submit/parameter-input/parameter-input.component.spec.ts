@@ -17,6 +17,8 @@ import { FileGroupSasComponent } from "app/components/data/shared/file-group-sas
 import { NcjParameterExtendedType, NcjParameterWrapper, ParameterInputComponent } from "app/components/market/submit";
 import { BatchApplication, NcjParameterRawType } from "app/models";
 import { StorageService } from "app/services";
+import { Constants } from "app/utils";
+
 import * as Fixtures from "test/fixture";
 import { updateInput } from "test/utils/helpers";
 import { MockListView } from "test/utils/mocks";
@@ -79,6 +81,9 @@ describe("ParameterInputComponent", () => {
             generateSharedAccessContainerUrl: (containerId, accessPolicy) => {
                 return Observable.of(`https://${containerId}.com?sastoken`);
             },
+            addFileGroupPrefix: jasmine.createSpy("addFileGroupPrefix").and.callFake((fgName) => {
+                return `${Constants.ncjFileGroupPrefix}${fgName}`;
+            }),
         };
 
         sidebarSpy = {
