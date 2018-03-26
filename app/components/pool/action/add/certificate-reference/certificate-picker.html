@@ -1,0 +1,50 @@
+<div [formGroup]="form">
+    <div class="form-element">
+        <mat-form-field>
+            <mat-select formControlName="thumbprint" color="primary" placeholder="Certificate thumbprint">
+                <mat-option
+                    *ngFor="let certificate of certificates;trackBy: trackByCertificate"
+                    [value]="certificate.thumbprint">{{certificate.thumbprint}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <bl-error controlName="thumbprint" code="required">Thumbprint is a required field</bl-error>
+        <bl-error controlName="thumbprint" code="duplicateValue">
+            Duplicate thumbprint was found: {{ form.controls.thumbprint.errors?.duplicateValue?.value }}
+        </bl-error>
+    </div>
+    <div class="form-element" *ngIf="isWindows">
+        <mat-form-field>
+            <input matInput [matAutocomplete]="auto" formControlName="storeName" placeholder="Store name" />
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let storeName of commonStoreNames;trackBy: trackByIndex"
+                    [value]="storeName">{{storeName}}</mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <bl-error controlName="storeName" code="required">StoreName is a required field</bl-error>
+    </div>
+    <div class="form-element" *ngIf="isWindows">
+        <mat-form-field>
+            <mat-select formControlName="storeLocation" color="primary" placeholder="Store location">
+                <mat-option *ngFor="let location of storeLocations;trackBy: trackByIndex" [value]="location">{{location}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <bl-error controlName="storeLocation" code="required">StoreLocation is a required field</bl-error>
+    </div>
+    <div class="form-element">
+        <mat-form-field>
+            <mat-select formControlName="visibility" color="primary" placeholder="Visibility" multiple>
+                <mat-option *ngFor="let visibility of visibilities;trackBy: trackByIndex" [value]="visibility">{{visibility}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <bl-error controlName="visibility" code="required">Visibility is a required field</bl-error>
+    </div>
+    <div class="form-element">
+        <h5>Thumbprint algorithm</h5>
+        <p>{{ form.controls.thumbprintAlgorithm.value }}</p>
+    </div>
+    <div class="form-element" *ngIf="!isWindows">
+        <h5>Store location</h5>
+        <p>{{ linuxStoreLocationMessage }}</p>
+    </div>
+</div>
