@@ -12,26 +12,52 @@ bl-select {
         outline: none;
     }
 
-    > .select-button {
-        display: flex;
+    > .select-button-container {
         height: $button-height;
-        line-height: $button-height;
         background-color: $athensGrey;
-        cursor: pointer;
-        vertical-align: middle;
         border: 1px solid $border-color;
 
-        > .label {
-            flex: 1;
-            min-width: 20px;
-            padding: 0 5px;
+        > .select-button {
+            display: flex;
+            line-height: $button-height;
+            cursor: pointer;
+            vertical-align: middle;
+            width: 100%;
+
+            &:focus {
+                outline: none;
+            }
+
+            > .label {
+                flex: 1;
+                min-width: 20px;
+                padding: 0 5px;
+            }
+
+            > .caret {
+                flex-shrink: 0;
+                flex-basis: 20px;
+                text-align: center;
+                color: $secondary-text;
+            }
         }
 
-        > .caret {
-            flex-shrink: 0;
-            flex-basis: 20px;
-            text-align: center;
+        > input.select-filter {
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 100%;
+            display: block;
+            outline: none;
+            height: $button-height;
+            padding: 0 5px;
+            z-index: 50;
+            border: 1px solid $border-color;
             color: $secondary-text;
+
+            &:focus {
+                border-bottom: 2px solid $primary-color;
+            }
         }
     }
 
@@ -50,6 +76,10 @@ bl-select {
             &:hover {
                 background: $primary-color-light;
             }
+        }
+
+        > .no-option {
+            text-align: center;
         }
     }
 }

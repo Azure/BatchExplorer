@@ -10,6 +10,11 @@ import "./option.scss";
 export class SelectOptionComponent {
     @Input() public value: string;
 
+    /**
+     * What is searchable
+     */
+    @Input() public searchableText: string;
+
     @ViewChild(TemplateRef)
     public template: TemplateRef<any>;
 

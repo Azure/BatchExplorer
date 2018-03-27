@@ -34,6 +34,8 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
 
     public selected = new Set<any>();
     public showOptions = false;
+    public filter: string = "";
+    public displayedOptions: SelectOptionComponent[];
 
     private _propagateChange: (value: any) => void;
     private _optionsMap: Map<any, SelectOptionComponent>;
@@ -79,6 +81,21 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         this.changeDetector.markForCheck();
     }
 
+    public selectOption(option: SelectOptionComponent) {
+        if (this.multiple) {
+
+        } else {
+            this.selected = new Set([option.value]);
+            this.showOptions = false;
+            this.changeDetector.markForCheck();
+        }
+    }
+
+    public filterChanged(filter: string) {
+        this.filter = filter;
+        this._computeDisplayedOptions();
+    }
+
     private _computeOptions() {
         const optionsMap = new Map();
         this.options.forEach((option) => {
@@ -86,7 +103,17 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         });
 
         this._optionsMap = optionsMap;
-        console.log("Got options?", this._optionsMap);
+        this._computeDisplayedOptions();
+    }
+
+    private _computeDisplayedOptions() {
+        const options = [];
+        this.options.forEach((option) => {
+            if (!this.filter || option.searchableText.toLowerCase().contains(this.filter.toLowerCase())) {
+                options.push(option);
+            }
+        });
+        this.displayedOptions = options;
         this.changeDetector.markForCheck();
     }
 }

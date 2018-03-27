@@ -136,7 +136,7 @@ bl-browse-layout {
         padding-top: 0;
     }
 
-    input {
+    > input {
         flex: 1 0 auto;
         padding: 5px;
         color: $emperor-grey;
