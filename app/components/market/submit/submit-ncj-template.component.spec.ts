@@ -216,7 +216,9 @@ describe("SubmitNcjTemplateComponent", () => {
     describe("Change query parameter to not use autopool", () => {
         beforeEach(() => {
             queryParameters["auto-pool"] = "1";
-            activatedRouteSpy.queryParams.next(queryParameters);
+            fixture = TestBed.createComponent(TestComponent);
+            de = fixture.debugElement.query(By.css("bl-submit-ncj-template"));
+            component = de.componentInstance;
             fixture.detectChanges();
         });
 
