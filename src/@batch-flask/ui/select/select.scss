@@ -63,18 +63,56 @@ bl-select {
 
     > .dropdown {
         position: absolute;
-        background-color: $athensGrey;
-        width: 100%;
+        background-color: white;
+        min-width: 100%;
         z-index: 100;
         border: 1px solid $border-color;
         border-top: none;
         max-height: 50vh;
+        overflow-y: auto;
 
         > .option {
             cursor: pointer;
+            padding: 3px 5px;
+            height: 24px;
+            line-height: 18px;
+            display: flex;
+            align-items: center;
 
             &:hover {
+                background: $whitesmoke-darker;
+            }
+
+            &.active {
+                background: $whitesmoke-darker;
+            }
+
+            &.focused {
+                color: white;
                 background: $primary-color-light;
+            }
+
+            > .checkbox {
+                border: 1px solid $border-color;
+                width: 16px;
+                height: 16px;
+                padding: 1px;
+                display: inline-block;
+                position: relative;
+                margin-right: 5px;
+
+                > .fa-check {
+                    display: block;
+                    color: $secondary-text;
+                    font-size: 12px;
+                }
+            }
+
+            > .option-content {
+                min-width: 20px;
+                word-wrap: none;
+                white-space: nowrap;
+                text-overflow: ellipsis;
             }
         }
 

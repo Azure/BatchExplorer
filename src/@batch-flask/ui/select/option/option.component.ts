@@ -13,12 +13,5 @@ export class SelectOptionComponent {
     /**
      * What is searchable
      */
-    @Input() public searchableText: string;
-
-    @ViewChild(TemplateRef)
-    public template: TemplateRef<any>;
-
-    constructor(private changeDetector: ChangeDetectorRef) {
-
-    }
+    @Input() public label: string;
 }
