@@ -68,19 +68,11 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public ngOnInit() {
-        const autoPoolParam = Constants.KnownQueryParameters.useAutoPool;
         this._routeParametersSub = this.activatedRoute.queryParams.subscribe((params: any) => {
             this._queryParameters = Object.assign({}, params);
-            if (this._queryParameters[autoPoolParam]) {
-                const modeAutoSelect = Boolean(parseInt(this._queryParameters[autoPoolParam], 10))
-                    ? NcjTemplateMode.NewPoolAndJob
-                    : NcjTemplateMode.ExistingPoolAndJob;
-
-                this.pickMode(modeAutoSelect);
-            }
-
             if (!this._loaded) {
                 // subscribe is fired every time a value changes now so don't want to re-apply
+                this._checkForAutoPoolParam();
                 this._checkForAssetsToSync();
                 this._applyinitialData();
                 this._loaded = true;
@@ -193,6 +185,17 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         this._saveTemplateAsRecent();
         return this.ncjSubmitService.createPool(this.poolTemplate, this.poolParams.value)
             .cascade((data) => this._redirectToPool(data.id));
+    }
+
+    private _checkForAutoPoolParam() {
+        const autoPoolParam = Constants.KnownQueryParameters.useAutoPool;
+        if (this._queryParameters[autoPoolParam]) {
+            const modeAutoSelect = Boolean(parseInt(this._queryParameters[autoPoolParam], 10))
+                ? NcjTemplateMode.NewPoolAndJob
+                : NcjTemplateMode.ExistingPoolAndJob;
+
+            this.pickMode(modeAutoSelect);
+        }
     }
 
     private _checkForAssetsToSync() {

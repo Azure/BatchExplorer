@@ -118,7 +118,6 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                     this.title = "Add more files to file group";
                     this.description = "Add more files to an already existing file group. " +
                         "Any files that exist already will be updated 'only' if they have changed.";
-                    this.form.controls.name.disable();
                     this.modifyExisting = true;
                 },
                 error: () => {
