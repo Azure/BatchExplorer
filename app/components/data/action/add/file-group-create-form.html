@@ -9,7 +9,7 @@
                 <bl-error controlName="name" code="maxlength">The file group name has a maximum length of 64 characters</bl-error>
                 <bl-error controlName="name" code="pattern">The file group name can contain any combination of lowercase alphanumeric characters including single hyphens</bl-error>
             </div>
-            <p *ngIf="groupExists" class="exists">This file group already exists, any selected files will be added to this existing group</p>
+            <p *ngIf="groupExists" class="exists">This file group already exists. Any new files will be added to this existing group, existing files will be uploaded only if they have been modified.</p>
             <div class="form-element">
                 <mat-checkbox *ngIf="showCreateEmptyChk" (change)="createEmptyCheckChanged($event)" color="primary">Create an empty file group</mat-checkbox>
             </div>
