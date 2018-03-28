@@ -34,8 +34,9 @@ interface DataTotals {
 export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, FileGroupCreateDto> implements OnDestroy {
     public groupExists: boolean;
     public title: string = "Create file group";
-    public description: string = "Upload files into a managed storage container that you can use " +
-        "for resource files in your jobs and tasks";
+    public description: string = "Upload files into a managed storage container that is used to supply " +
+        "resource files for your jobs and tasks. File groups require a 'fgrp-' prefix which is added " +
+        "automatically on creation.";
     public createEmptyGroup: boolean = false;
     public showCreateEmptyChk: boolean = true;
     public modifyExisting: boolean = false;

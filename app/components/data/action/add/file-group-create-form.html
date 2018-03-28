@@ -3,7 +3,7 @@
         <bl-form-section title="General info" subtitle="Basic information about the file group">
             <div class="form-element">
                 <mat-form-field>
-                    <input matInput formControlName="name" placeholder="File group name">
+                    <input matInput formControlName="name" placeholder="File group name (automatically prefixed with fgrp-)">
                 </mat-form-field>
                 <bl-error controlName="name" code="required">The file group name is a required field</bl-error>
                 <bl-error controlName="name" code="maxlength">The file group name has a maximum length of 64 characters</bl-error>
