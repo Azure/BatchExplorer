@@ -1,13 +1,16 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { MatCheckboxChange } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 
 import { ServerError, autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
+
+import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, NcjTemplateMode } from "app/models";
-import { NcjSubmitService, NcjTemplateService } from "app/services";
+import { FileGroupCreateDto, FileOrDirectoryDto } from "app/models/dtos";
+import { NcjSubmitService, NcjTemplateService, StorageService } from "app/services";
 import { exists, log } from "app/utils";
 import { Constants } from "common";
 import { NcjParameterExtendedType, NcjParameterWrapper } from "./market-application.model";
@@ -41,14 +44,13 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     public poolParams: FormGroup;
     public jobParametersWrapper: NcjParameterWrapper[];
     public poolParametersWrapper: NcjParameterWrapper[];
-
     public error: ServerError;
-    private _controlChanges: Subscription[] = [];
+
     private _routeParametersSub: Subscription;
+    private _controlChanges: Subscription[] = [];
     private _parameterTypeMap = {};
     private _queryParameters: {};
     private _loaded = false;
-    private _blockRedirection = false;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -56,7 +58,9 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         private notificationService: NotificationService,
         private router: Router,
         private templateService: NcjTemplateService,
-        private ncjSubmitService: NcjSubmitService) {
+        private ncjSubmitService: NcjSubmitService,
+        private sidebarManager: SidebarManager,
+        private storageService: StorageService) {
 
         this.form = new FormGroup({});
     }
@@ -64,17 +68,10 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     public ngOnInit() {
         this._routeParametersSub = this.activatedRoute.queryParams.subscribe((params: any) => {
             this._queryParameters = Object.assign({}, params);
-            const autoPoolParameter = Constants.KnownQueryParameters.useAutoPool;
-            if (this._queryParameters[autoPoolParameter]) {
-                const modeAutoSelect = Boolean(parseInt(this._queryParameters[autoPoolParameter], 10))
-                    ? NcjTemplateMode.NewPoolAndJob
-                    : NcjTemplateMode.ExistingPoolAndJob;
-
-                this.pickMode(modeAutoSelect);
-            }
-
             if (!this._loaded) {
-                // Subscribe is fired every time a value changes now so don't want to re-apply
+                // subscribe is fired every time a value changes now so don't want to re-apply
+                this._checkForAutoPoolParam();
+                this._checkForAssetsToSync();
                 this._applyinitialData();
                 this._loaded = true;
             }
@@ -137,10 +134,6 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         return param.id;
     }
 
-    public blockRedirectionCheckChanged(event: MatCheckboxChange) {
-        this._blockRedirection = event.checked;
-    }
-
     @autobind()
     public submit() {
         this.error = null;
@@ -185,7 +178,61 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     private _createPool() {
         this._saveTemplateAsRecent();
         return this.ncjSubmitService.createPool(this.poolTemplate, this.poolParams.value)
-            .cascade((data) => this._redirectToPool(data.id));
+            .cascade((data) => {
+                if (this.jobTemplate) {
+                    // Dave wants it to never redirect to pool in this context when we also have a job template.
+                    const message = `Create Pool with ID: '${data.id}' was successfully submitted to the service.`;
+                    this.notificationService.success("Create Pool", message, { autoDismiss: 5000 });
+                    this.pickMode(NcjTemplateMode.ExistingPoolAndJob);
+                    this.pickedPool.setValue({ poolId: data.id });
+                } else {
+                    this._redirectToPool(data.id);
+                }
+            });
+    }
+
+    private _checkForAutoPoolParam() {
+        const autoPoolParam = Constants.KnownQueryParameters.useAutoPool;
+        if (this._queryParameters[autoPoolParam]) {
+            const modeAutoSelect = Boolean(parseInt(this._queryParameters[autoPoolParam], 10))
+                ? NcjTemplateMode.NewPoolAndJob
+                : NcjTemplateMode.ExistingPoolAndJob;
+
+            this.pickMode(modeAutoSelect);
+        }
+    }
+
+    private _checkForAssetsToSync() {
+        const assets = this._queryParameters[Constants.KnownQueryParameters.assetPaths];
+        const container = this._queryParameters[Constants.KnownQueryParameters.assetContainer];
+        if (assets && container) {
+            // we only want to do this if we have a container name and asset list
+            // TODO: think about this, we may want to even if there is no container and
+            //       just leave the user to enter one.
+            this._syncFileGroup(container, assets.split(","));
+        }
+    }
+
+    private _syncFileGroup(container: string, paths: string[]) {
+        const sidebarRef = this.sidebarManager.open("sync-file-group", FileGroupCreateFormComponent);
+
+        sidebarRef.component.setValue(new FileGroupCreateDto({
+            name: this.storageService.removeFileGroupPrefix(container),
+            paths: paths.map((path) => new FileOrDirectoryDto({ path: path })),
+            includeSubDirectories: true,
+        }));
+
+        sidebarRef.afterCompletion.subscribe(() => {
+            this.storageService.onContainerUpdated.next();
+            const fileGroupName = sidebarRef.component.getCurrentValue().name;
+
+            if (fileGroupName && this._queryParameters[Constants.KnownQueryParameters.inputParameter]) {
+                // we know what the control is called so update it with the new value
+                const parameterName = this._queryParameters[Constants.KnownQueryParameters.inputParameter];
+                const fileGroupContainer = this.storageService.addFileGroupPrefix(fileGroupName);
+                (this.form.controls.job as FormGroup).controls[parameterName].setValue(fileGroupContainer);
+            }
+        });
     }
 
     private _processParameters() {
@@ -253,11 +300,9 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         // Listen to control value change events and update the route parameters to match
         // tslint:disable-next-line:max-line-length
         this._controlChanges.push(formGroup[key].valueChanges.debounceTime(400).distinctUntilChanged().subscribe((change) => {
-            if (this._parameterTypeMap[key] === NcjParameterExtendedType.fileGroup &&
-                Boolean(change) && !change.startsWith(Constants.ncjFileGroupPrefix)) {
-
+            if (this._parameterTypeMap[key] === NcjParameterExtendedType.fileGroup && Boolean(change)) {
                 // Quick-Fix until we modify the CLI to finally sort out file group prefixes
-                change = `${Constants.ncjFileGroupPrefix}${change}`;
+                change = this.storageService.addFileGroupPrefix(change);
             }
 
             // Set the parameters on the route so when page reloads we keep the existing parameters
@@ -324,32 +369,18 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     private _redirectToJob(id) {
-        if (!this._blockRedirection) {
-            if (id) {
-                this.router.navigate(["/jobs", id]);
-            } else {
-                this.router.navigate(["/jobs"]);
-            }
+        if (id) {
+            this.router.navigate(["/jobs", id]);
         } else {
-            this._notifySuccess("Create Job", id);
+            this.router.navigate(["/jobs"]);
         }
     }
 
     private _redirectToPool(id) {
-        if (!this._blockRedirection) {
-            if (id) {
-                this.router.navigate(["/pools", id]);
-            } else {
-                this.router.navigate(["/pools"]);
-            }
+        if (id) {
+            this.router.navigate(["/pools", id]);
         } else {
-            this._notifySuccess("Create Pool", id);
+            this.router.navigate(["/pools"]);
         }
-    }
-
-    private _notifySuccess(type, id) {
-        // If we don't want to redirect, I still want to know that the job/pool was submitted.
-        const message = `${type} with ID: '${id}' was successfully submitted to the service.`;
-        this.notificationService.success(type, message);
     }
 }
