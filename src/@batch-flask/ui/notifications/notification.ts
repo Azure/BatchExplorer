@@ -16,7 +16,7 @@ export interface NotificationConfig {
     /**
      * Time(in milliseconds) it take for the notification to disapear automatically.
      * This is independent from the persist setting.
-     * @default 3500ms
+     * @default 3000ms
      */
     autoDismiss?: number;
     /**

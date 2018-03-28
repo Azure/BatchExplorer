@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { MatCheckboxChange } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 
@@ -52,7 +51,6 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     private _parameterTypeMap = {};
     private _queryParameters: {};
     private _loaded = false;
-    private _blockRedirection = false;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -136,10 +134,6 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         return param.id;
     }
 
-    public blockRedirectionCheckChanged(event: MatCheckboxChange) {
-        this._blockRedirection = event.checked;
-    }
-
     @autobind()
     public submit() {
         this.error = null;
@@ -184,7 +178,17 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     private _createPool() {
         this._saveTemplateAsRecent();
         return this.ncjSubmitService.createPool(this.poolTemplate, this.poolParams.value)
-            .cascade((data) => this._redirectToPool(data.id));
+            .cascade((data) => {
+                if (this.jobTemplate) {
+                    // Dave wants it to never redirect to pool in this context when we also have a job template.
+                    const message = `Create Pool with ID: '${data.id}' was successfully submitted to the service.`;
+                    this.notificationService.success("Create Pool", message, { autoDismiss: 5000 });
+                    this.pickMode(NcjTemplateMode.ExistingPoolAndJob);
+                    this.pickedPool.setValue({ poolId: data.id });
+                } else {
+                    this._redirectToPool(data.id);
+                }
+            });
     }
 
     private _checkForAutoPoolParam() {
@@ -365,32 +369,18 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     private _redirectToJob(id) {
-        if (!this._blockRedirection) {
-            if (id) {
-                this.router.navigate(["/jobs", id]);
-            } else {
-                this.router.navigate(["/jobs"]);
-            }
+        if (id) {
+            this.router.navigate(["/jobs", id]);
         } else {
-            this._notifySuccess("Create Job", id);
+            this.router.navigate(["/jobs"]);
         }
     }
 
     private _redirectToPool(id) {
-        if (!this._blockRedirection) {
-            if (id) {
-                this.router.navigate(["/pools", id]);
-            } else {
-                this.router.navigate(["/pools"]);
-            }
+        if (id) {
+            this.router.navigate(["/pools", id]);
         } else {
-            this._notifySuccess("Create Pool", id);
+            this.router.navigate(["/pools"]);
         }
-    }
-
-    private _notifySuccess(type, id) {
-        // If we don't want to redirect, I still want to know that the job/pool was submitted.
-        const message = `${type} with ID: '${id}' was successfully submitted to the service.`;
-        this.notificationService.success(type, message);
     }
 }
