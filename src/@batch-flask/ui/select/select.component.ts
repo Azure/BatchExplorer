@@ -116,7 +116,12 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         return this.selected.size > 0;
     }
 
+    public get hasMultipleSelected() {
+        return this.selected.size > 1;
+    }
+
     public get firstSelection() {
+        console.log("First?", this.hasValueSelected, [...this.selected]);
         return this._optionsMap.get([...this.selected].first());
     }
 
