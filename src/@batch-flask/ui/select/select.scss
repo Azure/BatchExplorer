@@ -79,7 +79,7 @@ bl-select {
             display: flex;
             align-items: center;
 
-            &:hover {
+            &:hover:not(.disabled) {
                 background: $whitesmoke-darker;
             }
 
@@ -90,6 +90,12 @@ bl-select {
             &.focused {
                 color: white;
                 background: $primary-color-light;
+            }
+
+            &.disabled {
+                color: $altoGray;
+                cursor: default;
+                // background-color: $concreteGray;
             }
 
             > .checkbox {

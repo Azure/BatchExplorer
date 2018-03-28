@@ -75,7 +75,6 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
     @HostListener("document:click", ["$event"])
     public onClick(event: Event) {
         if (this.showOptions && !this.elementRef.nativeElement.contains(event.target)) {
-            console.log("Target", event.target);
             this.showOptions = false;
             this.changeDetector.markForCheck();
         }
@@ -84,17 +83,16 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
     @HostListener("keydown", ["$event"])
     public handleKeyboardNavigation(event: KeyboardEvent) {
         if (this.displayedOptions.length === 0) { return; }
-
-        let index = this.displayedOptions.findIndex(x => x.value === this.focusedOption);
-        const lastIndex = index;
-        const option = this.displayedOptions[index];
+        let direction = null;
+        const lastIndex = this.displayedOptions.findIndex(x => x.value === this.focusedOption);
+        const option = this.displayedOptions[lastIndex];
         switch (event.code) {
             case "ArrowDown": // Move focus down
-                index++;
+                direction = 1;
                 event.preventDefault();
                 break;
             case "ArrowUp":   // Move focus up
-                index--;
+                direction = -1;
                 event.preventDefault();
                 break;
             case "Enter":
@@ -107,8 +105,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
                 return;
             default:
         }
-        index = (index + this.displayedOptions.length) % this.displayedOptions.length;
-        this.focusedOption = this.displayedOptions[index].value;
+        const index = this._moveFocusInDirection(lastIndex, direction);
         this.changeDetector.markForCheck();
         if (lastIndex !== index) {
             this.scrollToIndex(index);
@@ -159,7 +156,6 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
 
     public notifyChanges() {
         if (this._propagateChange) {
-            console.log("Changes", [...this.selected]);
             this._propagateChange([...this.selected]);
         }
     }
@@ -228,4 +224,25 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         }
         this.changeDetector.markForCheck();
     }
+
+    /**
+     * Move the focus
+     * @param index Current index
+     * @param direction
+     */
+    private _moveFocusInDirection(index: number, direction: 1 | -1 | null) {
+        if (!direction) { return index; }
+        let option;
+        do {
+            index = this._wrapIndex(index + direction);
+            option = this.displayedOptions[index];
+            this.focusedOption = option.value;
+        } while (option.disabled);
+        return index;
+    }
+
+    private _wrapIndex(index: number): number {
+        return (index + this.displayedOptions.length) % this.displayedOptions.length;
+    }
+
 }

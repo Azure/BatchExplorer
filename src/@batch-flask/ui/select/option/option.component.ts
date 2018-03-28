@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import "./option.scss";
 
@@ -14,4 +14,6 @@ export class SelectOptionComponent {
      * What is searchable
      */
     @Input() public label: string;
+
+    @Input() public disabled: boolean;
 }
