@@ -1,20 +1,20 @@
 <div class="select-button-container" tabindex="0">
    <bl-clickable class="select-button"  (do)="toggleDropdown()">
         <div class="label">
-                <ng-container *ngIf="!hasValueSelected">{{placeholder}}</ng-container>
-                <ng-container *ngIf="hasValueSelected">
-                    <ng-container *ngIf="hasMultipleSelected">
-                        {{selected.size}} selected
-                    </ng-container>
-                    <ng-container *ngIf="!hasMultipleSelected">
-                        <!-- <ng-template [ngTemplateOutlet]="firstSelection?.template"></ng-template> -->
-                    </ng-container>
+            <ng-container *ngIf="!hasValueSelected">{{placeholder}}</ng-container>
+            <ng-container *ngIf="hasValueSelected">
+                <ng-container *ngIf="hasMultipleSelected">
+                    {{selected.size}} selected
                 </ng-container>
-            </div>
-            <div class="caret">
-                <i class="fa fa-caret-down" *ngIf="!expanded"></i>
-                <i class="fa fa-caret-up" *ngIf="expanded"></i>
-            </div>
+                <ng-container *ngIf="!hasMultipleSelected">
+                    <!-- <ng-template [ngTemplateOutlet]="firstSelection?.template"></ng-template> -->
+                </ng-container>
+            </ng-container>
+        </div>
+        <div class="caret">
+            <i class="fa fa-caret-down" *ngIf="!showOptions"></i>
+            <i class="fa fa-caret-up" *ngIf="showOptions"></i>
+        </div>
    </bl-clickable>
    <ng-container *ngIf="showOptions && filterable">
        <input class="select-filter" #filterInput [ngModel]="filter" (ngModelChange)="filterChanged($event)" placeholder="Filter items...">
