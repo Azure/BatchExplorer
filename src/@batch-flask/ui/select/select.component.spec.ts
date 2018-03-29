@@ -5,6 +5,7 @@ import { By } from "@angular/platform-browser";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ClickableComponent } from "@batch-flask/ui/buttons/clickable";
 import { PermissionService } from "@batch-flask/ui/permission";
+import { click } from "test/utils/helpers";
 import { SelectOptionComponent } from "./option";
 import { SelectComponent } from "./select.component";
 
@@ -24,7 +25,6 @@ const baseOptions = [
                 *ngFor="let option of options"
                 [value]="option.value"
                 [label]="option.label"
-                [multiple]="multiple"
                 [disabled]="option.disabled">
 
             </bl-option>
@@ -34,6 +34,8 @@ const baseOptions = [
 class TestComponent {
     public options: any[] = baseOptions;
     public value = null;
+    public filterable = false;
+    public multiple = false;
 }
 
 fdescribe("SelectComponent", () => {
@@ -41,6 +43,7 @@ fdescribe("SelectComponent", () => {
     let testComponent: TestComponent;
     let component: SelectComponent;
     let de: DebugElement;
+    let selectButtonEl: DebugElement;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -53,12 +56,12 @@ fdescribe("SelectComponent", () => {
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-select"));
+        selectButtonEl = de.query(By.css(".select-button"));
         component = de.componentInstance;
         fixture.detectChanges();
     });
 
     it("Should show placeholder when no value", () => {
-        console.log("De.", de.nativeElement);
         expect(de.nativeElement.textContent).toContain("Myselect");
     });
 
@@ -69,6 +72,8 @@ fdescribe("SelectComponent", () => {
     });
 
     it("list all options when clicking on button", () => {
-
+        click(selectButtonEl);
+        const options = de.queryAll(By.css(".option"));
+        expect(options.length).toBe(5);
     });
 });

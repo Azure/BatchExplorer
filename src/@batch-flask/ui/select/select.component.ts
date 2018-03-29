@@ -59,7 +59,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         if (this.multiple) {
             this.selected = new Set(value);
         } else {
-            this.selected = new Set([value]);
+                this.selected = new Set(value ? [value] : []);
         }
         this.changeDetector.markForCheck();
     }
