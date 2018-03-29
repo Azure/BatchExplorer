@@ -41,9 +41,14 @@ export class PatchJobScheduleComponent extends JobScheduleCreateBasicDialogCompo
                 this.notificationService.success("Job schedule updated!",
                     `Job schedule '${this.jobScheduleId}' was updated successfully!`);
             },
-            error: () => null,
+            error: (response: Response) => {
+                this.notificationService.error(
+                    "Job schedule update failed",
+                    response.toString(),
+                );
+            },
         });
 
-        return Observable.of({});
+        return obs;
     }
 }

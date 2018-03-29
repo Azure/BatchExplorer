@@ -70,7 +70,12 @@ export class JobScheduleCreateBasicDialogComponent extends DynamicForm<JobSchedu
                 this.notificationService.success("Job schedule added!",
                     `Job schedule '${id}' was created successfully!`);
             },
-            error: () => null,
+            error: (response: Response) => {
+                this.notificationService.error(
+                    "Job schedule creation failed",
+                    response.toString(),
+                );
+            },
         });
 
         return obs;
