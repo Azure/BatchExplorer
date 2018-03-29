@@ -61,7 +61,6 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         } else {
             this.selected = new Set(value ? [value] : []);
         }
-        console.log("Got new value", value, [...this.selected]);
         this.changeDetector.markForCheck();
     }
 
