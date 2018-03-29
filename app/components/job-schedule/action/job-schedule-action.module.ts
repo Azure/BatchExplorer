@@ -5,6 +5,7 @@ import { commonModules } from "app/common";
 import { JobActionModule } from "app/components/job/action";
 import { JobScheduleCreateBasicDialogComponent } from "./add/job-schedule-create-basic-dialog.component";
 import { JobScheduleJobSpecificationComponent } from "./add/job-schedule-job-specification.component";
+import { PatchJobScheduleComponent } from "./add/patch-job-schedule-form.component";
 import { DeleteJobScheduleDialogComponent } from "./delete/delete-job-schedule-dialog.component";
 import { DisableJobScheduleDialogComponent } from "./disable/disable-job-schedule-dialog.component";
 import { EnableJobScheduleDialogComponent } from "./enable/enable-job-schedule-dialog.component";
@@ -13,6 +14,7 @@ import { TerminateJobScheduleDialogComponent } from "./terminate/terminate-job-s
 const components = [
     JobScheduleCreateBasicDialogComponent, DeleteJobScheduleDialogComponent, DisableJobScheduleDialogComponent,
     EnableJobScheduleDialogComponent, TerminateJobScheduleDialogComponent, JobScheduleJobSpecificationComponent,
+    PatchJobScheduleComponent,
 ];
 
 @NgModule({
@@ -21,7 +23,7 @@ const components = [
     imports: [...commonModules, JobActionModule, BaseModule],
     entryComponents: [
         JobScheduleCreateBasicDialogComponent, DeleteJobScheduleDialogComponent, DisableJobScheduleDialogComponent,
-        EnableJobScheduleDialogComponent, TerminateJobScheduleDialogComponent,
+        EnableJobScheduleDialogComponent, TerminateJobScheduleDialogComponent, PatchJobScheduleComponent,
     ],
 })
 export class JobScheduleActionModule {
