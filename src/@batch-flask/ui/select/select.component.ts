@@ -59,8 +59,9 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         if (this.multiple) {
             this.selected = new Set(value);
         } else {
-                this.selected = new Set(value ? [value] : []);
+            this.selected = new Set(value ? [value] : []);
         }
+        console.log("Got new value", value, [...this.selected]);
         this.changeDetector.markForCheck();
     }
 
@@ -121,7 +122,6 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
     }
 
     public get firstSelection() {
-        console.log("First?", this.hasValueSelected, [...this.selected]);
         return this._optionsMap.get([...this.selected].first());
     }
 
@@ -161,7 +161,11 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
 
     public notifyChanges() {
         if (this._propagateChange) {
-            this._propagateChange([...this.selected]);
+            if (this.multiple) {
+                this._propagateChange([...this.selected]);
+            } else {
+                this._propagateChange([...this.selected].first());
+            }
         }
     }
 
