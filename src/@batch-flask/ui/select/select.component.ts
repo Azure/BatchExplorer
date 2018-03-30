@@ -139,6 +139,9 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
 
     public handleClickOption(event: Event, option: SelectOptionComponent) {
         event.stopPropagation();
+        if (option.disabled) {
+            return;
+        }
         this.selectOption(option);
     }
 

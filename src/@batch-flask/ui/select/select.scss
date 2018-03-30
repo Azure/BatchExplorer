@@ -32,6 +32,9 @@ bl-select {
                 flex: 1;
                 min-width: 20px;
                 padding: 0 5px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             > .caret {
@@ -80,7 +83,12 @@ bl-select {
             align-items: center;
 
             &:hover:not(.disabled) {
-                background: $whitesmoke-darker;
+                &.focused {
+                    background: $primary-color;
+                }
+                &:not(.focused) {
+                    background: $whitesmoke-darker;
+                }
             }
 
             &.active {

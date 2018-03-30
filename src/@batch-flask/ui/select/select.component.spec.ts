@@ -104,6 +104,19 @@ describe("SelectComponent", () => {
         expect(de.query(By.css(".dropdown"))).toBeFalsy();
     });
 
+    it("clicking on disabled options should not do anything", () => {
+        click(selectButtonEl);
+        fixture.detectChanges();
+
+        const options = de.queryAll(By.css(".option"));
+        click(options[3]);
+        fixture.detectChanges();
+
+        expect(testComponent.value).toBe(null);
+
+        expect(de.query(By.css(".dropdown"))).not.toBeFalsy();
+    });
+
     describe("when select allows multiple values", () => {
         beforeEach(() => {
             testComponent.value = [];
