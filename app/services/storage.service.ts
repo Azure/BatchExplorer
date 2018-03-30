@@ -469,8 +469,29 @@ export class StorageService {
      * Return the container name from a file group name
      * @param fileGroupName Name of the file group
      */
-    public fileGroupContainer(fileGroupName: string) {
-        return `${Constants.ncjFileGroupPrefix}${fileGroupName}`;
+    public addFileGroupPrefix(fileGroupName: string) {
+        return !this.isFileGroup(fileGroupName)
+            ? `${Constants.ncjFileGroupPrefix}${fileGroupName}`
+            : fileGroupName;
+    }
+
+    /**
+     * Return the file group name sans prefix from a container name that possibly
+     * includes the file group prefix. Ignore if has no prefix.
+     * @param containerName Name of the container including prefix
+     */
+    public removeFileGroupPrefix(containerName: string) {
+        return this.isFileGroup(containerName)
+            ? containerName.replace(Constants.ncjFileGroupPrefix, "")
+            : containerName;
+    }
+
+    /**
+     * Returns true if the file group starts with the correct prefix
+     * @param fileGroup Name of the name to test
+     */
+    public isFileGroup(fileGroup: string) {
+        return fileGroup && fileGroup.startsWith(Constants.ncjFileGroupPrefix);
     }
 
     /**

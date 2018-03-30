@@ -1,7 +1,7 @@
-import { Component } from "@angular/core";
+import { Component, OnDestroy } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { MatCheckboxChange } from "@angular/material";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import { DynamicForm, autobind } from "@batch-flask/core";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
@@ -31,14 +31,17 @@ interface DataTotals {
     selector: "bl-file-group-create-form",
     templateUrl: "file-group-create-form.html",
 })
-export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, FileGroupCreateDto> {
+export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, FileGroupCreateDto> implements OnDestroy {
     public groupExists: boolean;
     public title: string = "Create file group";
-    public description: string = "Upload files into a managed storage container that you can use " +
-        "for resource files in your jobs and tasks";
+    public description: string = "Upload files into a managed storage container that is used to supply " +
+        "resource files for your jobs and tasks. File groups require a 'fgrp-' prefix which is added " +
+        "automatically on creation.";
     public createEmptyGroup: boolean = false;
+    public showCreateEmptyChk: boolean = true;
     public modifyExisting: boolean = false;
 
+    private _subscription: Subscription;
     private _pathsControl: FormControl;
 
     constructor(
@@ -57,14 +60,28 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                 Validators.required,
                 Validators.maxLength(Constants.forms.validation.maxLength.fileGroup),
                 Validators.pattern(Constants.forms.validation.regex.fileGroup),
-            ], [
-                    this._validateFileGroupName.bind(this),
             ]],
             paths: this._pathsControl,
             includeSubDirectories: [true],
             options: [null, []],
             accessPolicy: ["private"],
         });
+
+        this._subscription = this.form.controls.name.valueChanges.distinctUntilChanged().debounceTime(400)
+            .subscribe((groupName) => {
+                if (!groupName) { return; }
+
+                const prefixedName = this.storageService.addFileGroupPrefix(groupName);
+                const container = storageService.getContainerOnce(prefixedName);
+                container.subscribe({
+                    next: (container: BlobContainer) => this.groupExists = true ,
+                    error: () => this.groupExists = false ,
+                });
+            });
+    }
+
+    public ngOnDestroy() {
+        this._subscription.unsubscribe();
     }
 
     @autobind()
@@ -93,11 +110,23 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     }
 
     public dtoToForm(fileGroup: FileGroupCreateDto): CreateFileGroupModel {
-        this.title = "Add more files to file group";
-        this.description = "Add more files to an already existing file group. " +
-            "Any files that exist already will be updated 'only' if they have changed.";
-        this.form.controls.name.disable();
-        this.modifyExisting = true;
+        this.showCreateEmptyChk = false;
+        if (fileGroup.name) {
+            const prefixedName = this.storageService.addFileGroupPrefix(fileGroup.name);
+            const container = this.storageService.getContainerOnce(prefixedName);
+            container.subscribe({
+                next: (container: BlobContainer) => {
+                    this.title = "Add more files to file group";
+                    this.description = "Add more files to an already existing file group. " +
+                        "Any files that exist already will be updated 'only' if they have changed.";
+                    this.modifyExisting = true;
+                },
+                error: () => {
+                    this.form.controls.name.enable();
+                    this.modifyExisting = false;
+                },
+            });
+        }
 
         return fileGroupToFormModel(fileGroup);
     }
@@ -113,7 +142,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     }
 
     private _createEmptyFileGroup(name: string) {
-        const container = `${Constants.ncjFileGroupPrefix}${name}`;
+        const container = this.storageService.addFileGroupPrefix(name);
         const obs = this.storageService.createContainer(container);
         obs.subscribe({
             next: () => {
@@ -175,7 +204,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                     return createObs;
                 }).finally(() => {
                     task.progress.next(100);
-                    const fileGroupName = this.storageService.fileGroupContainer(formData.name);
+                    const fileGroupName = this.storageService.addFileGroupPrefix(formData.name);
                     this.storageService.onContainerAdded.next(fileGroupName);
                     this.notificationService.success(
                         "Create file group",
@@ -214,23 +243,6 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         }
 
         return result;
-    }
-
-    /**
-     * Async validator to check if a given file-group exists.
-     * If it does exist then we inform the user that they will be modifying
-     * the existing group and not creating a new one.
-     */
-    private _validateFileGroupName(control: FormControl) {
-        const containerName = `${Constants.ncjFileGroupPrefix}${control.value}`;
-        return Observable.of(null).debounceTime(500)
-            .flatMap(() => this.storageService.getContainerOnce(containerName))
-            .map((container: BlobContainer) => {
-                this.groupExists = true;
-            }).catch(() => {
-                this.groupExists = false;
-                return Observable.of(null);
-            });
     }
 
     private _sanitizeFileGroupName(fileGroupName: string) {
