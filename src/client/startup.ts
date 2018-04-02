@@ -1,7 +1,6 @@
 
 import { app, protocol } from "electron";
 import { autoUpdater } from "electron-updater";
-import * as path from "path";
 
 import { log } from "@batch-flask/utils";
 import { localStorage } from "client/core/local-storage";
@@ -9,12 +8,13 @@ import { Constants } from "./client-constants";
 import { BatchLabsApplication, listenToSelectCertifcateEvent } from "./core";
 
 function initAutoUpdate() {
-    if (Constants.isDev) {
-        autoUpdater.updateConfigPath = path.join(Constants.root, "dev-app-update.yml");
-    }
+    // if (Constants.isDev) {
+    //     autoUpdater.updateConfigPath = path.join(Constants.root, "dev-app-update.yml");
+    // }
     autoUpdater.allowPrerelease = true;
     autoUpdater.autoDownload = true;
     autoUpdater.logger = log;
+    autoUpdater.setFeedURL("https://batchlabsdist.blob.core.windows.net/releases");
 }
 
 function setupSingleInstance(batchLabsApp: BatchLabsApplication) {
