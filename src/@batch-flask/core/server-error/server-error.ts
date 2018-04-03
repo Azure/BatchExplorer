@@ -45,6 +45,7 @@ function parseMessage(fullMessage: string) {
     if (!fullMessage) {
         return { message: null, requestId: null, timestamp: null };
     }
+
     const lines = fullMessage.split("\n");
     const message = lines[0];
     const requestId = parseRequestIdFromLine(lines[1]);
@@ -63,11 +64,13 @@ export class ServerError {
     public static fromBatch(error: BatchError) {
         const { message, requestId, timestamp } = parseMessage(error.message && error.message.value);
 
+        // when the error message returned is not of type ErrorMessage, it will more often
+        // than not be a string.
         return new ServerError({
             status: error.statusCode,
             code: error.code,
             details: error.body && error.body.values,
-            message,
+            message: message || error.message as string,
             requestId,
             timestamp,
             original: error,
