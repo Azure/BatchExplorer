@@ -1,0 +1,137 @@
+@import "app/styles/variables";
+
+bl-select {
+    $button-height: 26px;
+    min-width: 100px;
+    display: block;
+    color: $secondary-text;
+    border: none;
+    position: relative;
+
+    &:active, &:focus {
+        outline: none;
+    }
+
+    > .select-button-container {
+        height: $button-height;
+        background-color: $athensGrey;
+        border: 1px solid $border-color;
+
+        > .select-button {
+            display: flex;
+            line-height: $button-height;
+            cursor: pointer;
+            vertical-align: middle;
+            width: 100%;
+
+            &:focus {
+                outline: none;
+            }
+
+            > .label {
+                flex: 1;
+                min-width: 20px;
+                padding: 0 5px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            > .caret {
+                flex-shrink: 0;
+                flex-basis: 20px;
+                text-align: center;
+                color: $secondary-text;
+            }
+        }
+
+        > input.select-filter {
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 100%;
+            display: block;
+            outline: none;
+            height: $button-height;
+            padding: 0 5px;
+            z-index: 50;
+            border: 1px solid $border-color;
+            color: $secondary-text;
+
+            &:focus {
+                border-bottom: 2px solid $primary-color;
+            }
+        }
+    }
+
+    > .dropdown {
+        position: absolute;
+        background-color: white;
+        min-width: 100%;
+        z-index: 100;
+        border: 1px solid $border-color;
+        border-top: none;
+        max-height: 50vh;
+        overflow-y: auto;
+
+        > .option {
+            cursor: pointer;
+            padding: 3px 5px;
+            height: 24px;
+            line-height: 18px;
+            display: flex;
+            align-items: center;
+
+            &:hover:not(.disabled) {
+                &.focused {
+                    background: $primary-color;
+                }
+                &:not(.focused) {
+                    background: $whitesmoke-darker;
+                }
+            }
+
+            &.active {
+                background: $whitesmoke-darker;
+            }
+
+            &.focused {
+                color: white;
+                background: $primary-color-light;
+            }
+
+            &.disabled {
+                color: $altoGray;
+                cursor: default;
+                // background-color: $concreteGray;
+            }
+
+            > .checkbox {
+                border: 1px solid $border-color;
+                width: 16px;
+                height: 16px;
+                padding: 1px;
+                display: inline-block;
+                position: relative;
+                margin-right: 5px;
+
+                > .fa-check {
+                    display: block;
+                    color: $secondary-text;
+                    font-size: 12px;
+                }
+            }
+
+            > .option-content {
+                min-width: 20px;
+                word-wrap: none;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
+
+        > .no-option {
+            text-align: center;
+        }
+    }
+}
