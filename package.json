@@ -146,6 +146,7 @@
     "hammerjs": "^2.0.8",
     "immutable": "^3.8.2",
     "inflection": "^1.10.0",
+    "load-json-file": "^4.0.0",
     "mkdirp": "^0.5.1",
     "moment": "^2.20.1",
     "moment-duration-format": "^2.0.1",
