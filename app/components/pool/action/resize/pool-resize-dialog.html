@@ -1,6 +1,15 @@
-<bl-simple-form [submit]="submit" [containerRef]="sidebarRef" [formGroup]="scale" [multiUse]="false" title="Resize your pool"
-    cancelText="Close" subtitle="You can manually resize the number of nodes in the pool">
-    <form *ngIf="pool">
-        <bl-pool-scale-picker [formControl]="scale" [pool]="pool"> </bl-pool-scale-picker>
-    </form>
-</bl-simple-form>
+<bl-complex-form [formGroup]="scale" [submit]="submit" [containerRef]="sidebarRef" [multiUse]="false" cancelText="Close">
+    <bl-form-page *ngIf="pool" main-form-page title="Resize your pool" [formGroup]="form">
+        <bl-form-section title="Scale" subtitle="Resize the number of nodes in the pool using a fix number or an auto scaling forumla.">
+            <div class="form-element">
+                <bl-pool-scale-picker [formControl]="scale" [pool]="pool"></bl-pool-scale-picker>
+            </div>
+        </bl-form-section>
+
+        <bl-form-section title="Current task action" subtitle="Specify the termination behavior of currently running tasks and compute nodes when decreasing the size of the pool.">
+            <div class="form-element">
+                <bl-deallocation-option-picker [formControl]="taskAction"></bl-deallocation-option-picker>
+            </div>
+        </bl-form-section>
+    </bl-form-page>
+</bl-complex-form>

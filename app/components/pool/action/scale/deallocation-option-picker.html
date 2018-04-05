@@ -1,0 +1,11 @@
+<div [formGroup]="form" class="deallocation-option-picker">
+    <mat-button-toggle-group formControlName="nodeDeallocationOption">
+        <mat-button-toggle value="requeue">Requeue</mat-button-toggle>
+        <mat-button-toggle value="terminate">Terminate</mat-button-toggle>
+        <mat-button-toggle value="taskcompletion">Task completion</mat-button-toggle>
+        <mat-button-toggle value="retaineddata">Retained data</mat-button-toggle>
+    </mat-button-toggle-group>
+    <bl-banner type="notice" height="expand">
+        <div message *ngIf="nodeActionInfo">{{nodeActionInfo}}</div>
+    </bl-banner>
+</div>
