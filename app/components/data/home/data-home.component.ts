@@ -69,7 +69,7 @@ export class DataHomeComponent implements OnInit {
             this.storageAccountId = params["storageAccountId"];
             if (!this.storageAccountId) {
                 this.autoStorageService.get().subscribe((storageAccountId) => {
-                    this.router.navigate(["/data", storageAccountId, "containers"]);
+                    this._navigateToStorageAccount(storageAccountId);
                 });
             }
         });
@@ -112,7 +112,7 @@ export class DataHomeComponent implements OnInit {
     }
 
     public updateStorageAccountId(storageAccountId: string) {
-        this.storageAccountId = storageAccountId;
+        this._navigateToStorageAccount(storageAccountId);
     }
 
     public trackType(index, type) {
@@ -182,5 +182,9 @@ export class DataHomeComponent implements OnInit {
                     };
                 }).catch(() => Observable.of(null));
         };
+    }
+
+    private _navigateToStorageAccount(storageAccountId: string) {
+        this.router.navigate(["/data", storageAccountId, "containers"]);
     }
 }
