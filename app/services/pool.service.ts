@@ -119,9 +119,13 @@ export class PoolService extends ServiceBase {
     }
 
     public resize(poolId: string, target: PoolResizeDto, options: any = {}) {
-        return this.callBatchClient((client) => client.pool.resize(poolId, target.toJS(), options), (error) => {
-            log.error("Error resizing pool: " + poolId, Object.assign({}, error));
-        });
+        console.log("RESIZING POOLL ", poolId);
+        console.log("WITH ", target, options);
+        // return this.callBatchClient((client) => client.pool.resize(poolId, target.toJS(), options), (error) => {
+        //     log.error("Error resizing pool: " + poolId, Object.assign({}, error));
+        // });
+
+        return Observable.of(true);
     }
 
     public patch(poolId: string, attributes: PoolPatchDto, options: any = {}) {

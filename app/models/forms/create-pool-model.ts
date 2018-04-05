@@ -29,13 +29,6 @@ export interface PoolOSPickerModel {
     };
 }
 
-export enum NodeDeallocationOption {
-    Requeue = "requeue",
-    Terminate = "terminate",
-    TaskCompletion = "taskcompletion",
-    RetainedData = "retaineddata",
-}
-
 export interface PoolScaleModel {
     enableAutoScale: boolean;
     autoScaleFormula: string;

@@ -3,7 +3,7 @@ import { autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/ui";
 
 import { NameValuePair, Pool, ResizeError, ResizeErrorCode } from "app/models";
-import { PoolResizeDto } from "app/models/dtos";
+import { NodeDeallocationOption, PoolResizeDto } from "app/models/dtos";
 import { AccountService, PoolService } from "app/services";
 import { ExternalLinks } from "common/constants";
 
@@ -34,6 +34,7 @@ export class PoolErrorDisplayComponent {
     @autobind()
     public fixStopResizeError() {
         const obs = this.poolService.resize(this.pool.id, new PoolResizeDto({
+            nodeDeallocationOption: NodeDeallocationOption.requeue,
             targetDedicatedNodes: this.pool.targetDedicatedNodes,
             targetLowPriorityNodes: this.pool.targetLowPriorityNodes,
         }));

@@ -4,7 +4,7 @@ import {
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
-import { NodeDeallocationOption } from "app/models/forms";
+import { NodeDeallocationOption } from "app/models/dtos";
 
 import "./deallocation-option-picker.scss";
 
@@ -19,6 +19,7 @@ import "./deallocation-option-picker.scss";
 })
 export class DeallocationOptionPickerComponent implements OnDestroy, ControlValueAccessor {
     public form: FormGroup;
+    public NodeDeallocationOption = NodeDeallocationOption;
     public nodeActionInfo: string;
 
     private _propagateChange: (value: any) => void;
@@ -26,7 +27,7 @@ export class DeallocationOptionPickerComponent implements OnDestroy, ControlValu
 
     constructor(formBuilder: FormBuilder) {
         this.form = formBuilder.group({
-            nodeDeallocationOption: NodeDeallocationOption.Requeue.toString(),
+            nodeDeallocationOption: NodeDeallocationOption.requeue,
         });
 
         this._sub = this.form.valueChanges.distinctUntilChanged().subscribe((value: any) => {
@@ -70,20 +71,20 @@ export class DeallocationOptionPickerComponent implements OnDestroy, ControlValu
 
     private _setCurrentOption(option: string) {
         switch (option) {
-            case "requeue":
+            case NodeDeallocationOption.requeue:
                 this.nodeActionInfo = "Terminate running task processes and requeue the tasks. The tasks " +
                     "will run again when a node is available. Remove nodes as soon as tasks have been terminated.";
                 break;
-            case NodeDeallocationOption.Terminate:
+            case NodeDeallocationOption.terminate:
                 this.nodeActionInfo = "Allow currently running tasks to complete, then wait for all task data " +
                     "retention periods to expire. Schedule no new tasks while waiting. Remove nodes when all task " +
                     "retention periods have expired.";
                 break;
-            case "taskcompletion":
+            case NodeDeallocationOption.taskcompletion:
                 this.nodeActionInfo = "Allow currently running tasks to complete. Schedule no new tasks while " +
                     "waiting. Remove nodes when all tasks have completed.";
                 break;
-            case "retaineddata":
+            case NodeDeallocationOption.retaineddata:
                 this.nodeActionInfo = "Terminate running tasks. The tasks will be completed with failureInfo " +
                     "indicating that they were terminated, and will not run again. Remove nodes as soon as tasks " +
                     "have been terminated.";

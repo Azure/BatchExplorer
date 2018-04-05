@@ -7,8 +7,8 @@ import { Observable } from "rxjs";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Pool } from "app/models";
-import { PoolEnableAutoScaleDto, PoolResizeDto } from "app/models/dtos";
-import { NodeDeallocationOption, PoolScaleModel } from "app/models/forms";
+import { NodeDeallocationOption, PoolEnableAutoScaleDto, PoolResizeDto } from "app/models/dtos";
+import { PoolScaleModel } from "app/models/forms";
 import { PoolService } from "app/services";
 
 @Component({
@@ -49,7 +49,7 @@ export class PoolResizeDialogComponent {
         });
 
         this.taskAction = this.formBuilder.control({
-            nodeDeallocationOption: NodeDeallocationOption.Requeue.toString(),
+            nodeDeallocationOption: NodeDeallocationOption.requeue,
         });
 
         this.form = this.formBuilder.group({
@@ -60,33 +60,35 @@ export class PoolResizeDialogComponent {
 
     @autobind()
     public submit() {
-        const id = this.pool.id;
         const value: PoolScaleModel = this.scale.value;
         console.log("rescale scale value: ", value);
-        console.log("nodeDeallocationOption value: ", this.taskAction.value);
-        // let obs;
-        // if (value.enableAutoScale) {
-        //     obs = this._enableAutoScale(value);
-        // } else {
-        //     const targetDedicatedNodes = value.targetDedicatedNodes;
-        //     const targetLowPriorityNodes = value.targetLowPriorityNodes;
-        //     obs = this._disableAutoScale()
-        //         .flatMap(() => this.poolService.resize(id, new PoolResizeDto({
-        //             targetDedicatedNodes, targetLowPriorityNodes,
-        //         })));
-        // }
+        console.log("nodeDeallocationOption value: ", this.taskAction.value.nodeDeallocationOption);
 
-        // const finalObs = obs.flatMap(() => this.poolService.get(this.pool.id)).share();
-        // finalObs.subscribe({
-        //     next: (pool) => {
-        //         this.notificationService.success("Pool resize started!",
-        //             `Pool '${id}' will resize to ${pool.targetNodes} nodes!`);
-        //     },
-        //     error: () => null,
-        // });
+        let obs;
+        if (value.enableAutoScale) {
+            obs = this._enableAutoScale(value);
+        } else {
+            const targetDedicatedNodes = value.targetDedicatedNodes;
+            const targetLowPriorityNodes = value.targetLowPriorityNodes;
+            obs = this._disableAutoScale()
+                .flatMap(() => this.poolService.resize(this.pool.id, new PoolResizeDto({
+                    nodeDeallocationOption: this.taskAction.value.nodeDeallocationOption,
+                    resizeTimeout: moment.duration(value.resizeTimeout, "minutes") as any,
+                    targetDedicatedNodes: targetDedicatedNodes,
+                    targetLowPriorityNodes: targetLowPriorityNodes,
+                })));
+        }
 
-        // return finalObs;
-        return Observable.of(true);
+        const finalObs = obs.flatMap(() => this.poolService.get(this.pool.id)).share();
+        finalObs.subscribe({
+            next: (pool) => {
+                this.notificationService.success("Pool resize started!",
+                    `Pool '${this.pool.id}' will resize to ${pool.targetNodes} nodes!`);
+            },
+            error: () => null,
+        });
+
+        return finalObs;
     }
 
     private _enableAutoScale(value: PoolScaleModel) {
@@ -94,6 +96,7 @@ export class PoolResizeDialogComponent {
             autoScaleFormula: value.autoScaleFormula,
             autoScaleEvaluationInterval: moment.duration(value.autoScaleEvaluationInterval, "minutes") as any,
         });
+
         return this.poolService.enableAutoScale(this.pool.id, dto);
     }
 
