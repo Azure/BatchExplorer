@@ -60,11 +60,8 @@ export class PoolResizeDialogComponent {
 
     @autobind()
     public submit() {
-        const value: PoolScaleModel = this.scale.value;
-        console.log("rescale scale value: ", value);
-        console.log("nodeDeallocationOption value: ", this.taskAction.value.nodeDeallocationOption);
-
         let obs;
+        const value: PoolScaleModel = this.scale.value;
         if (value.enableAutoScale) {
             obs = this._enableAutoScale(value);
         } else {
