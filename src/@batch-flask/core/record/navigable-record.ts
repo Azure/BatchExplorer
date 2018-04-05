@@ -1,9 +1,10 @@
 export enum PinnedEntityType {
-    Application,
-    Job,
-    JobSchedule,
-    Pool,
-    FileGroup,
+    Application = "Application",
+    Job = "Job",
+    JobSchedule = "JobSchedule",
+    Pool = "Pool",
+    Certificate = "Certificate",
+    StorageContainer = "StorageContainer",
 }
 
 export interface PinnableEntity {

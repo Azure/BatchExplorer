@@ -142,15 +142,6 @@ export class StorageContainerService {
         return observable;
     }
 
-    // TODO-TIM move this to file group service
-    /**
-     * Return the container name from a file group name
-     * @param fileGroupName Name of the file group
-     */
-    public fileGroupContainer(fileGroupName: string) {
-        return `${Constants.ncjFileGroupPrefix}${fileGroupName}`;
-    }
-
     /**
      * Helper function to call an action on the storage client library. Will handle converting
      * any Storage error to a ServerError.

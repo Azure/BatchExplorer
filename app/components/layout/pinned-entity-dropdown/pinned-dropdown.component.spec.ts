@@ -67,7 +67,7 @@ describe("PinnedDropDownComponent", () => {
             expect(component.entityType(createPin(PinnedEntityType.Application))).toBe("Batch application");
             expect(component.entityType(createPin(PinnedEntityType.Job))).toBe("Batch job");
             expect(component.entityType(createPin(PinnedEntityType.Pool))).toBe("Batch pool");
-            expect(component.entityType(createPin(PinnedEntityType.FileGroup))).toBe("File group");
+            expect(component.entityType(createPin(PinnedEntityType.StorageContainer))).toBe("Storage container");
             expect(component.entityType(createPin(null))).toBe("unknown");
         });
 
@@ -75,7 +75,7 @@ describe("PinnedDropDownComponent", () => {
             expect(component.entityIcon(createPin(PinnedEntityType.Application))).toBe("fa-file-archive-o");
             expect(component.entityIcon(createPin(PinnedEntityType.Job))).toBe("fa-tasks");
             expect(component.entityIcon(createPin(PinnedEntityType.Pool))).toBe("fa-database");
-            expect(component.entityIcon(createPin(PinnedEntityType.FileGroup))).toBe("fa-cloud-upload");
+            expect(component.entityIcon(createPin(PinnedEntityType.StorageContainer))).toBe("fa-cloud-upload");
             expect(component.entityIcon(createPin(null))).toBe("fa-question");
         });
     });

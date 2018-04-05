@@ -6,7 +6,7 @@
         <label for="templateInput">
             <div class="main">
                 <div *ngIf="pickedTemplateFile">{{pickedTemplateFile.name}}</div>
-                <div *ngIf="!pickedTemplateFile">Pick a template</div>
+                <div *ngIf="!pickedTemplateFile">Click to select, or drag and drop a JSON template here</div>
             </div>
             <div [ngSwitch]="templateType" *ngIf="templateType" class="subtitle">
                 <div *ngSwitchCase="NcjTemplateType.job">This is a Job template</div>

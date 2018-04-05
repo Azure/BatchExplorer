@@ -5,7 +5,7 @@
         Storage containers
     </div>
     <div blBrowseLayoutButtons>
-            <bl-button type="plain" icon="fa fa-plus spin-hover" color="light" title="Add a file group" [matMenuTriggerFor]="addFileGroupMenu"
+        <bl-button type="plain" icon="fa fa-plus spin-hover" color="light" title="Add a file group" [matMenuTriggerFor]="addFileGroupMenu"
             [disabled]="!hasAutoStorage" [@.disabled]="true">
         </bl-button>
         <mat-menu #addFileGroupMenu="matMenu" [@.disabled]="true">
@@ -16,11 +16,10 @@
     </div>
     <div pre-quicksearch>
             <div class="blselect">
-                <select placeholder="Container Type" [formControl]="containerTypePrefix">
-                    <option *ngFor="let type of containerTypes;trackBy: trackType" [value]="type.prefix">
-                        {{type.name}}
-                    </option>
-                </select>
+                <bl-select placeholder="Container Type" [formControl]="containerTypePrefix">
+                    <bl-option *ngFor="let type of containerTypes;trackBy: trackType" [value]="type.prefix" [label]="type.name">
+                    </bl-option>
+                </bl-select>
             </div>
         </div>
     <bl-data-container-list blBrowseLayoutList [storageAccountId]="storageAccountId" [filter]="filter"></bl-data-container-list>

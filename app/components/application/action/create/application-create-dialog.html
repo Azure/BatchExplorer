@@ -21,7 +21,10 @@
         </bl-form-section>
         <bl-form-section title="Package" subtitle="Select a package for upload">
             <div class="form-element">
-                <input type="file" (change)="fileSelected($event)" />
+                <p>{{ form.controls.package.value }}</p>
+                <bl-directory-picker (eventChange)="fileSelected($event)" [canPickFile]="true">
+                    <i class="fa fa-upload" aria-hidden="true"></i>&nbsp;&nbsp;Select a package
+                </bl-directory-picker>
                 <bl-error controlName="package" code="required">Please select a valid application package file</bl-error>
                 <bl-error controlName="package" code="pattern">Application packages need to be valid ZIP files only</bl-error>
                 <div *ngIf="hasValidFile()" class="input-summary">

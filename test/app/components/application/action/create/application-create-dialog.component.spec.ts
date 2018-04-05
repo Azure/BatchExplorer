@@ -141,7 +141,7 @@ describe("ApplicationCreateDialogComponent ", () => {
 
     describe("Package File", () => {
         it("control is initialized", () => {
-            const input = debugElement.query(By.css("input[type=file]")).nativeElement;
+            const input = debugElement.query(By.css("bl-directory-picker")).nativeElement;
             expect(input).toBeDefined();
         });
 

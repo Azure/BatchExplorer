@@ -136,7 +136,7 @@ bl-browse-layout {
         padding-top: 0;
     }
 
-    input {
+    > input {
         flex: 1 0 auto;
         padding: 5px;
         color: $emperor-grey;
@@ -167,17 +167,8 @@ bl-browse-layout {
         }
     }
 
-    select {
-        height: 26px;
-        color: $emperor-grey;
-        border: none;
-        border-radius: 3px;
+    bl-select {
         margin-right: 10px;
-        background-color: $athensGrey;
-        appearance: none;
-        &:active, &:focus {
-            outline: none;
-        }
     }
 }
 

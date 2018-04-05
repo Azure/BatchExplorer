@@ -17,6 +17,7 @@ import { MainNavigationComponent } from "app/components/shared/main-navigation.c
 import { BaseModule } from "@batch-flask/ui";
 import { AccountModule } from "app/components/account/account.module";
 import { ApplicationModule } from "app/components/application/application.module";
+import { CertificateModule } from "app/components/certificate/certificate.module";
 import { DataModule } from "app/components/data/data.module";
 import { FileModule } from "app/components/file/file.module";
 import { JobScheduleModule } from "app/components/job-schedule/job-schedule.module";
@@ -53,6 +54,7 @@ import {
     BatchClientService,
     BatchLabsService,
     CacheDataService,
+    CertificateService,
     CommandService,
     ComputeService,
     FileService,
@@ -88,7 +90,7 @@ import {
 } from "./services";
 
 const modules = [
-    AccountModule, ApplicationModule, DataModule,
+    AccountModule, ApplicationModule, CertificateModule, DataModule,
     FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
     SettingsModule, TaskModule, MarketModule, LayoutModule,
     MiscModule,
@@ -133,6 +135,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         BatchClientService,
         BatchLabsService,
         CacheDataService,
+        CertificateService,
         CommandService,
         CommonModule,
         ComputeService,

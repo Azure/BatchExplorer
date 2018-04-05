@@ -33,7 +33,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     public fileGroupsData: ListView<BlobContainer, ListContainerParams>;
     public warning = false;
 
-    private _propagateChange: (value: any[]) => void = null;
+    private _propagateChange: (value: any) => void = null;
     private _subscriptions: Subscription[] = [];
     private _loading: boolean = true;
 
@@ -68,7 +68,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         this._subscriptions.push(this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
             this._checkValid(value);
             if (this._propagateChange) {
-                this._propagateChange(value && value.replace(Constants.ncjFileGroupPrefix, ""));
+                this._propagateChange(value && this.storageService.removeFileGroupPrefix(value));
             }
         }));
     }
@@ -106,7 +106,8 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         if (!event.source.value && event.isUserInput) {
             const sidebar = this.sidebarManager.open("Add a new file group", FileGroupCreateFormComponent);
             sidebar.afterCompletion.subscribe(() => {
-                this.value.setValue(sidebar.component.getCurrentValue().name);
+                const newFileGroupName = sidebar.component.getCurrentValue().name;
+                this.value.setValue(this.storageService.addFileGroupPrefix(newFileGroupName));
             });
         }
     }

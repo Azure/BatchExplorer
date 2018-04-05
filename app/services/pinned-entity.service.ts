@@ -4,7 +4,7 @@ import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { NavigableRecord, PinnableEntity, PinnedEntityType } from "@batch-flask/core";
 import {
-    BatchApplication, BlobContainer, Job, JobSchedule, Pool,
+    BatchApplication, BlobContainer, Certificate, Job, JobSchedule, Pool,
 } from "app/models";
 import { AccountService } from "./account.service";
 import { LocalFileStorage } from "./local-file-storage.service";
@@ -14,7 +14,8 @@ pinnedTypeMap.set(PinnedEntityType.Application, BatchApplication);
 pinnedTypeMap.set(PinnedEntityType.Pool, Pool);
 pinnedTypeMap.set(PinnedEntityType.Job, Job);
 pinnedTypeMap.set(PinnedEntityType.JobSchedule, JobSchedule);
-pinnedTypeMap.set(PinnedEntityType.FileGroup, BlobContainer);
+pinnedTypeMap.set(PinnedEntityType.Certificate, Certificate);
+pinnedTypeMap.set(PinnedEntityType.StorageContainer, BlobContainer);
 
 @Injectable()
 export class PinnedEntityService {

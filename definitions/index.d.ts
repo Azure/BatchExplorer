@@ -35,6 +35,3 @@ type AttrOf<T> = {
 };
 
 type ComponentSize = "small" | "normal" | "large";
-
-declare var TextDecoder: any;
-

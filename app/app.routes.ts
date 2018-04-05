@@ -15,6 +15,8 @@ import { AccountHomeComponent } from "./components/account/home/account-home.com
 import { AccountMonitoringHomeComponent } from "./components/account/monitoring";
 import { ApplicationDefaultComponent, ApplicationDetailsComponent } from "./components/application/details";
 import { ApplicationHomeComponent } from "./components/application/home/application-home.component";
+import { CertificateDefaultComponent, CertificateDetailsComponent } from "./components/certificate/details";
+import { CertificateHomeComponent } from "./components/certificate/home/certificate-home.component";
 import { DataDefaultComponent, DataDetailsComponent } from "./components/data/details";
 import { DataHomeComponent } from "./components/data/home/data-home.component";
 import { JobScheduleDefaultComponent, JobScheduleDetailsComponent } from "./components/job-schedule/details";
@@ -71,6 +73,15 @@ export const routes: Routes = [
         children: [
             { path: "", component: PoolDefaultComponent }, // pools/
             { path: ":id", component: PoolDetailsComponent }, // pools/{pool.id}
+        ],
+    },
+    {
+        path: "certificates",
+        canActivate: [NavigationGuard],
+        component: CertificateHomeComponent,
+        children: [
+            { path: "", component: CertificateDefaultComponent }, // certificates/
+            { path: ":thumbprint", component: CertificateDetailsComponent }, // certificate/{certificate.thumbprint}
         ],
     },
     {
