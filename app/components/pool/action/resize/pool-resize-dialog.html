@@ -1,6 +1,6 @@
 <bl-complex-form [formGroup]="scale" [submit]="submit" [containerRef]="sidebarRef" [multiUse]="false" cancelText="Close">
     <bl-form-page *ngIf="pool" main-form-page title="Resize your pool" [formGroup]="form">
-        <bl-form-section title="Scale" subtitle="Resize the number of nodes in the pool using a fix number or an auto scaling forumla.">
+        <bl-form-section title="Scale" subtitle="Resize the number of nodes in the pool using a fixed number or an auto scaling forumla.">
             <div class="form-element">
                 <bl-pool-scale-picker [formControl]="scale" [pool]="pool"></bl-pool-scale-picker>
             </div>
