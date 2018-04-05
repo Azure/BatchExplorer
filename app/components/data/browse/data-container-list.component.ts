@@ -34,7 +34,6 @@ export class DataContainerListComponent extends ListBaseComponent implements OnC
 
     public containers: List<BlobContainer>;
     public data: ListView<BlobContainer, ListContainerParams>;
-    public hasAutoStorage: boolean;
 
     private _onGroupAddedSub: Subscription;
 
@@ -80,7 +79,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnC
 
     @autobind()
     public refresh(): Observable<any> {
-        if (this.hasAutoStorage) {
+        if (this.storageAccountId) {
             return this.data.refresh();
         }
 
@@ -95,7 +94,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnC
             this.data.setOptions({ ...defaultListOptions, filter: filterText && filterText.toLowerCase() });
         }
 
-        if (this.hasAutoStorage) {
+        if (this.storageAccountId) {
             this.data.fetchNext();
         }
     }
@@ -110,7 +109,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnC
     }
 
     public onScrollToBottom() {
-        if (this.hasAutoStorage) {
+        if (this.storageAccountId) {
             this.data.fetchNext();
         }
     }

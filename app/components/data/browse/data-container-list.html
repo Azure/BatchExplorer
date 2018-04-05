@@ -1,4 +1,4 @@
-<bl-focus-section>
+<bl-focus-section *ngIf="storageAccountId">
     <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
         <bl-quick-list-item *ngFor="let container of containers;trackBy: trackFileGroup" [link]="['/data/', storageAccountId, 'containers', container.id]"
             [key]="container.id" [contextmenu]="contextmenu(container)">
@@ -34,3 +34,6 @@
     <span no-filter>No file groups</span>
     <span with-filter>No file groups match this filter</span>
 </bl-no-item>
+<div *ngIf="!storageAccountId">
+    No storage account picked
+</div>
