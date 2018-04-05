@@ -80,6 +80,11 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         }
     }
 
+    public clickSelectButton(event: Event) {
+        this.toggleDropdown();
+        event.stopPropagation();
+    }
+
     @HostListener("keydown", ["$event"])
     public handleKeyboardNavigation(event: KeyboardEvent) {
         if (this.displayedOptions.length === 0) { return; }
