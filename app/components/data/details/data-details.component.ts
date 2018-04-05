@@ -62,6 +62,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
             this.containerId = params["id"];
             this.storageAccountId = params["storageAccountId"];
+            console.log("Listen to params", this.storageAccountId);
             this.data.params = { storageAccountId: this.storageAccountId, id: this.containerId };
             this.data.fetch();
             this.changeDetector.markForCheck();

@@ -116,7 +116,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         MaterialModule,
         ReactiveFormsModule,
         HttpModule,
-        RouterModule.forRoot(routes, { useHash: true }),
+        RouterModule.forRoot(routes, { useHash: true, paramsInheritanceStrategy: "always" }),
         BaseModule,
         HttpClientModule,
         ...modules,

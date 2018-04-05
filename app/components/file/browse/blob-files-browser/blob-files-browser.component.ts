@@ -13,6 +13,7 @@ import { FileUrlUtils } from "app/utils";
     templateUrl: "blob-files-browser.html",
 })
 export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
+    @Input() public storageAccountId: string;
     @Input() public container: string;
     @Input() public fileExplorerConfig: FileExplorerConfig = {};
     @Input() public activeFile: string;
@@ -32,9 +33,9 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
     public ngOnChanges(inputs) {
         this._clearFileNavigator();
 
-        if (inputs.container || inputs.jobId) {
+        if (inputs.storageAccountId || inputs.container) {
             // TODO handle here.
-            this.fileNavigator = this.storageBlobService.navigate("", this.container);
+            this.fileNavigator = this.storageBlobService.navigate(this.storageAccountId, this.container);
             this.fileNavigator.init();
         }
 
