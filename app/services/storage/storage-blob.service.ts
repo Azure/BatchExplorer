@@ -181,7 +181,7 @@ export class StorageBlobService {
             groupId: blobPrefix,
             fs: this.fs,
             properties: () => {
-                return this.get(container, blobName, blobPrefix);
+                return this.get(storageAccountId, container, blobName, blobPrefix);
             },
             content: (options: FileLoadOptions) => {
                 return this._callStorageClient(storageAccountId, (client) => {

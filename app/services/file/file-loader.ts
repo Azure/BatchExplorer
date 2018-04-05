@@ -87,6 +87,7 @@ export class FileLoader {
      * @param forceNew If set to false it will use the last value loaded
      */
     public getProperties(forceNew = false): Observable<File> {
+        console.log("Get propers");
         if (!forceNew && this._cachedProperties) {
             return Observable.of(this._cachedProperties);
         }

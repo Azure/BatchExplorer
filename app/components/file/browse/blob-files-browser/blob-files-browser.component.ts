@@ -32,7 +32,6 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
 
     public ngOnChanges(inputs) {
         this._clearFileNavigator();
-
         if (inputs.storageAccountId || inputs.container) {
             // TODO handle here.
             this.fileNavigator = this.storageBlobService.navigate(this.storageAccountId, this.container);
