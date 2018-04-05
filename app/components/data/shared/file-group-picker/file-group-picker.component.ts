@@ -48,8 +48,10 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         this.autoStorageService.get().subscribe((storageAccountId) => {
             this.fileGroupsData.params = {
                 storageAccountId,
-                prefix: Constants.ncjFileGroupPrefix,
             };
+            this.fileGroupsData.setOptions({
+                filter: Constants.ncjFileGroupPrefix,
+            });
         });
 
         this.fileGroupsData.items.subscribe((fileGroups) => {

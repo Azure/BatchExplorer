@@ -7,10 +7,10 @@ import { List } from "immutable";
 import { Observable } from "rxjs";
 
 import { TableCellComponent } from "@batch-flask/ui/table";
-import { StorageAccountPickerComponent } from "app/components/account/base/storage-account-picker";
 import { AccountResource, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
 import { LoadingMockComponent, TableMockComponent } from "test/utils/mocks/components";
+import { AutoStorageAccountPickerComponent } from "./auto-storage-account-picker.component";
 
 const account = new AccountResource({
     id: "acc-1", location: "westus",
@@ -19,7 +19,8 @@ const account = new AccountResource({
 
 @Component({
     template: `
-        <bl-storage-account-picker [account]="account" [(ngModel)]="storageAccountId"></bl-storage-account-picker>
+        <bl-auto-storage-account-picker [account]="account" [(ngModel)]="storageAccountId">
+        </bl-auto-storage-account-picker>
     `,
 })
 class TestComponent {
@@ -30,7 +31,7 @@ class TestComponent {
 describe("StorageAccountPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: StorageAccountPickerComponent;
+    let component: AutoStorageAccountPickerComponent;
     let de: DebugElement;
     let storageServiceSpy;
     let preferedTable: DebugElement;
@@ -49,7 +50,7 @@ describe("StorageAccountPickerComponent", () => {
         TestBed.configureTestingModule({
             imports: [RouterTestingModule, FormsModule],
             declarations: [
-                StorageAccountPickerComponent, TableMockComponent, TableCellComponent,
+                AutoStorageAccountPickerComponent, TableMockComponent, TableCellComponent,
                 LoadingMockComponent, TestComponent,
             ],
             providers: [

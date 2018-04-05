@@ -1,6 +1,6 @@
 <bl-simple-form [submit]="submit" [containerRef]="sidebarRef" [formGroup]="storageAccountId" [multiUse]="false" title="Update the storage account"
     cancelText="Close" subtitle="Pick a storage account that will be assigned with this batch account.">
     <form *ngIf="account">
-        <bl-storage-account-picker [formControl]="storageAccountId" [account]="account"></bl-storage-account-picker>
+        <bl-auto-storage-account-picker [formControl]="storageAccountId" [account]="account"></bl-auto-storage-account-picker>
     </form>
 </bl-simple-form>

@@ -16,10 +16,9 @@
     </div>
     <div pre-quicksearch>
             <div class="blselect">
-                <bl-select placeholder="Container Type" [formControl]="containerTypePrefix">
-                    <bl-option *ngFor="let type of containerTypes;trackBy: trackType" [value]="type.prefix" [label]="type.name">
-                    </bl-option>
-                </bl-select>
+                <bl-storage-account-picker [ngModel]="storageAccountId" (ngModelChange)="updateStorageAccountId($event)">
+
+                </bl-storage-account-picker>
             </div>
         </div>
     <bl-data-container-list blBrowseLayoutList [storageAccountId]="storageAccountId" [filter]="filter"></bl-data-container-list>

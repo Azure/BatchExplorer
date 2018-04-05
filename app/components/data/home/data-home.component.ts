@@ -111,6 +111,10 @@ export class DataHomeComponent implements OnInit {
         this._updateFilter();
     }
 
+    public updateStorageAccountId(storageAccountId: string) {
+        this.storageAccountId = storageAccountId;
+    }
+
     public trackType(index, type) {
         return type.prefix;
     }
