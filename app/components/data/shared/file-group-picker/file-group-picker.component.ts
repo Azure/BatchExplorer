@@ -13,6 +13,7 @@ import { ListView } from "app/services/core";
 import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 
+import { NcjFileGroupService } from "app/services";
 import "./file-group-picker.scss";
 
 // tslint:disable:no-forward-ref
@@ -38,6 +39,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     private _loading: boolean = true;
 
     constructor(
+        private fileGroupService: NcjFileGroupService,
         private autoStorageService: AutoStorageService,
         private storageContainerService: StorageContainerService,
         private sidebarManager: SidebarManager) {
@@ -68,7 +70,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         this._subscriptions.push(this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
             this._checkValid(value);
             if (this._propagateChange) {
-                this._propagateChange(value && this.storageService.removeFileGroupPrefix(value));
+                this._propagateChange(value && this.fileGroupService.removeFileGroupPrefix(value));
             }
         }));
     }
@@ -107,7 +109,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
             const sidebar = this.sidebarManager.open("Add a new file group", FileGroupCreateFormComponent);
             sidebar.afterCompletion.subscribe(() => {
                 const newFileGroupName = sidebar.component.getCurrentValue().name;
-                this.value.setValue(this.storageService.addFileGroupPrefix(newFileGroupName));
+                this.value.setValue(this.fileGroupService.addFileGroupPrefix(newFileGroupName));
             });
         }
     }

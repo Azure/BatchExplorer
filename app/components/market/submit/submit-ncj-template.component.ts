@@ -10,7 +10,8 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, NcjTemplateMode } from "app/models";
 import { FileGroupCreateDto, FileOrDirectoryDto } from "app/models/dtos";
-import { NcjSubmitService, NcjTemplateService, StorageService } from "app/services";
+import { NcjFileGroupService, NcjSubmitService, NcjTemplateService } from "app/services";
+import { StorageContainerService } from "app/services/storage";
 import { exists, log } from "app/utils";
 import { Constants } from "common";
 import { NcjParameterExtendedType, NcjParameterWrapper } from "./market-application.model";
@@ -60,7 +61,8 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         private templateService: NcjTemplateService,
         private ncjSubmitService: NcjSubmitService,
         private sidebarManager: SidebarManager,
-        private storageService: StorageService) {
+        private fileGroupService: NcjFileGroupService,
+        private storageService: StorageContainerService) {
 
         this.form = new FormGroup({});
     }
@@ -217,7 +219,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         const sidebarRef = this.sidebarManager.open("sync-file-group", FileGroupCreateFormComponent);
 
         sidebarRef.component.setValue(new FileGroupCreateDto({
-            name: this.storageService.removeFileGroupPrefix(container),
+            name: this.fileGroupService.removeFileGroupPrefix(container),
             paths: paths.map((path) => new FileOrDirectoryDto({ path: path })),
             includeSubDirectories: true,
         }));
@@ -229,7 +231,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             if (fileGroupName && this._queryParameters[Constants.KnownQueryParameters.inputParameter]) {
                 // we know what the control is called so update it with the new value
                 const parameterName = this._queryParameters[Constants.KnownQueryParameters.inputParameter];
-                const fileGroupContainer = this.storageService.addFileGroupPrefix(fileGroupName);
+                const fileGroupContainer = this.fileGroupService.addFileGroupPrefix(fileGroupName);
                 (this.form.controls.job as FormGroup).controls[parameterName].setValue(fileGroupContainer);
             }
         });
@@ -302,7 +304,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         this._controlChanges.push(formGroup[key].valueChanges.debounceTime(400).distinctUntilChanged().subscribe((change) => {
             if (this._parameterTypeMap[key] === NcjParameterExtendedType.fileGroup && Boolean(change)) {
                 // Quick-Fix until we modify the CLI to finally sort out file group prefixes
-                change = this.storageService.addFileGroupPrefix(change);
+                change = this.fileGroupService.addFileGroupPrefix(change);
             }
 
             // Set the parameters on the route so when page reloads we keep the existing parameters
