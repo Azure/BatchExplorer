@@ -57,7 +57,6 @@ export class StorageContainerService {
         this._containerListGetter = new StorageListGetter(BlobContainer, this.storageClient, {
             cache: () => this._containerCache,
             getData: (client, params, options, continuationToken) => {
-                console.log("List more", options, options.filter);
                 return client.listContainersWithPrefix(
                     options && options.filter,
                     continuationToken,

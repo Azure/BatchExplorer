@@ -60,7 +60,6 @@ export class DataHomeComponent implements OnInit {
         private dialogService: DialogService) {
 
         this.containerTypePrefix.valueChanges.subscribe((prefix) => {
-            console.log("Prefix chagned??", prefix);
             this.layout.advancedFilterChanged(FilterBuilder.prop("id").startswith(prefix));
         });
     }
