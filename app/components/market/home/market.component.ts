@@ -14,7 +14,7 @@ import "./market.scss";
 })
 export class MarketComponent implements OnInit, OnDestroy {
     public static breadcrumb() {
-        return { name: "Market" };
+        return { name: "Gallery" };
     }
 
     public query: string = "";
