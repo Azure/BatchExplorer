@@ -76,18 +76,18 @@ export class DeallocationOptionPickerComponent implements OnDestroy, ControlValu
                     "will run again when a node is available. Remove nodes as soon as tasks have been terminated.";
                 break;
             case NodeDeallocationOption.terminate:
-                this.nodeActionInfo = "Allow currently running tasks to complete, then wait for all task data " +
-                    "retention periods to expire. Schedule no new tasks while waiting. Remove nodes when all task " +
-                    "retention periods have expired.";
+                this.nodeActionInfo = "Terminate running tasks. The tasks will be completed with failureInfo " +
+                    "indicating that they were terminated, and will not run again. Remove nodes as soon as tasks " +
+                    "have been terminated.";
                 break;
             case NodeDeallocationOption.taskcompletion:
                 this.nodeActionInfo = "Allow currently running tasks to complete. Schedule no new tasks while " +
                     "waiting. Remove nodes when all tasks have completed.";
                 break;
             case NodeDeallocationOption.retaineddata:
-                this.nodeActionInfo = "Terminate running tasks. The tasks will be completed with failureInfo " +
-                    "indicating that they were terminated, and will not run again. Remove nodes as soon as tasks " +
-                    "have been terminated.";
+                this.nodeActionInfo = "Allow currently running tasks to complete, then wait for all task data " +
+                    "retention periods to expire. Schedule no new tasks while waiting. Remove nodes when all task " +
+                    "retention periods have expired.";
                 break;
             default:
                 this.nodeActionInfo = "";
