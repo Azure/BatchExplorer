@@ -27,7 +27,7 @@ export class NodeConnectComponent implements OnInit {
     public hasIp = false;
 
     /**
-     * Base content for the rdp file(IP adress).
+     * Base content for the rdp file(IP Address).
      * This is either downloaded from the api on CloudService nodes or generated from the ip/port on VMs nodes
      */
     public rdpContent: string;
