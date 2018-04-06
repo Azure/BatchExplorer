@@ -286,7 +286,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             }
 
             templateFormGroup[key] = new FormControl(defaultValue, validator);
-            if (template.parameters[key].metadata.advancedType) {
+            if (template.parameters[key].metadata && template.parameters[key].metadata.advancedType) {
                 // Store the advanced data type as we need it for change events from file-groups
                 this._parameterTypeMap[key] = template.parameters[key].metadata.advancedType;
             }
