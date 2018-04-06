@@ -40,7 +40,9 @@ import { MiscModule } from "app/components/misc";
 import { PollService } from "app/services/core";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 import { AADGraphHttpService, MsGraphHttpService } from "app/services/ms-graph/core";
-import { AutoStorageService, StorageAccountKeysService, StorageBlobService, StorageClientService, StorageContainerService } from "app/services/storage";
+import {
+    AutoStorageService, StorageAccountKeysService, StorageBlobService, StorageClientService, StorageContainerService,
+} from "app/services/storage";
 import {
     AccountService,
     AdalService,

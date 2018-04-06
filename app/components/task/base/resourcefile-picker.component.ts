@@ -163,20 +163,22 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
         const blobName = CloudPathUtils.join("resource-files", this._folderId, root, filename);
         this.uploadingFiles.push(nodeFilePath);
         const obs = this.autoStorageService.get().flatMap((storageAccountId) => {
-            return this.storageBlobService.uploadFile(storageAccountId, this._containerId, filePath, blobName).flatMap((result) => {
-                this.uploadingFiles = this.uploadingFiles.filter(x => x !== nodeFilePath);
-                this.changeDetector.detectChanges();
-                const sas: SharedAccessPolicy = {
-                    AccessPolicy: {
-                        Permissions: BlobUtilities.SharedAccessPermissions.READ,
-                        Start: new Date(),
-                        Expiry: moment().add(1, "week").toDate(),
-                    },
-                };
-                return this.storageBlobService.generateSharedAccessBlobUrl(storageAccountId, this._containerId, blobName, sas).do((url) => {
-                    this._addResourceFile(url, nodeFilePath);
+            return this.storageBlobService.uploadFile(storageAccountId, this._containerId,
+                filePath, blobName).flatMap((result) => {
+                    this.uploadingFiles = this.uploadingFiles.filter(x => x !== nodeFilePath);
+                    this.changeDetector.detectChanges();
+                    const sas: SharedAccessPolicy = {
+                        AccessPolicy: {
+                            Permissions: BlobUtilities.SharedAccessPermissions.READ,
+                            Start: new Date(),
+                            Expiry: moment().add(1, "week").toDate(),
+                        },
+                    };
+                    return this.storageBlobService.generateSharedAccessBlobUrl(storageAccountId, this._containerId,
+                        blobName, sas).do((url) => {
+                            this._addResourceFile(url, nodeFilePath);
+                        });
                 });
-            });
         }).share();
         this.upload.emit({ filename: nodeFilePath, done: obs });
         obs.subscribe();
