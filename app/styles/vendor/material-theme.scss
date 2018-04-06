@@ -82,7 +82,6 @@ mat-tab-group:not(.form-tabs) {
     }
 }
 
-
 mat-icon.mat-icon {
     width: auto;
     height: auto;
@@ -164,5 +163,29 @@ mat-select.small {
     .mat-select-value-text {
         font-size: 13px;
         line-height: 20px;
+    }
+}
+
+mat-button-toggle-group {
+    box-shadow: unset !important;
+    border-radius: unset !important;
+
+    .mat-button-toggle {
+        color: $primary-color;
+        border: 1px solid $primary-color;
+        border-right: none;
+
+        &.mat-button-toggle-checked {
+            background-color: $primary-color;
+            color: white;
+        }
+
+        .mat-button-toggle-label-content {
+            line-height: 30px;
+        }
+
+        &:last-child {
+            border: 1px solid $primary-color;
+        }
     }
 }
