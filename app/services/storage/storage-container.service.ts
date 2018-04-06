@@ -25,7 +25,6 @@ export interface ListContainerParams {
     storageAccountId: string;
 }
 
-// TODO-TIM check that
 // List of error we don't want to log for storage requests
 const storageIgnoredErrors = [
     HttpCode.NotFound,
@@ -57,6 +56,7 @@ export class StorageContainerService {
         this._containerListGetter = new StorageListGetter(BlobContainer, this.storageClient, {
             cache: () => this._containerCache,
             getData: (client, params, options, continuationToken) => {
+                console.log("list with filter", options && options.filter);
                 return client.listContainersWithPrefix(
                     options && options.filter,
                     continuationToken,
@@ -75,9 +75,7 @@ export class StorageContainerService {
         return this._containerGetter.fetch({ storageAccountId, id: container });
     }
 
-    public listView()
-        : ListView<BlobContainer, ListContainerParams> {
-
+    public listView(): ListView<BlobContainer, ListContainerParams> {
         const view = new ListView({
             cache: () => this._containerCache,
             getter: this._containerListGetter,

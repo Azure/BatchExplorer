@@ -31,6 +31,7 @@ const containerTypes = [
     templateUrl: "data-home.html",
 })
 export class DataHomeComponent implements OnInit {
+
     public static breadcrumb({ id }, { tab }) {
         return { name: "Storage containers" };
     }
@@ -40,6 +41,7 @@ export class DataHomeComponent implements OnInit {
     @ViewChild("layout")
     public layout: BrowseLayoutComponent;
 
+    public fileGroupsId = "file-groups";
     public containerTypes = containerTypes;
     public quickSearchQuery: string = "";
     public filter: Filter = FilterBuilder.none();
@@ -67,6 +69,16 @@ export class DataHomeComponent implements OnInit {
     public ngOnInit() {
         this.activeRoute.params.subscribe((params) => {
             this.storageAccountId = params["storageAccountId"];
+            console.log("new accid", this.storageAccountId);
+            if (this.storageAccountId === this.fileGroupsId) {
+                this.storageAccountId = null;
+                this.autoStorageService.get().subscribe((storageAccountId) => {
+                    this.storageAccountId = storageAccountId;
+                    this.containerTypePrefix.setValue(Constants.ncjFileGroupPrefix);
+                });
+            } else {
+                this.containerTypePrefix.setValue("");
+            }
             if (!this.storageAccountId) {
                 this.autoStorageService.get().subscribe((storageAccountId) => {
                     this._navigateToStorageAccount(storageAccountId);
@@ -134,6 +146,7 @@ export class DataHomeComponent implements OnInit {
         const prefix = this._getFilterValue(advanced);
         const search = this._getFilterValue(quickSearch);
         const query = prefix + search;
+        console.log("MErge ", query, "|", prefix, "|", search);
         if (query === "") {
             return FilterBuilder.none();
         } else {

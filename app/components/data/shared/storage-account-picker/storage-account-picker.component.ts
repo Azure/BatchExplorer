@@ -1,5 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import {
+    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component,
+    ContentChildren, OnDestroy, OnInit, QueryList, forwardRef,
+} from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { SelectOptionComponent } from "@batch-flask/ui";
 import { AccountService, StorageAccountService } from "app/services";
 import { List } from "immutable";
 
@@ -13,18 +17,20 @@ import "./storage-account-picker.scss";
     templateUrl: "storage-account-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
-        // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => StorageAccountPickerComponent), multi: true },
     ],
 })
-export class StorageAccountPickerComponent implements OnInit, OnDestroy, ControlValueAccessor {
+export class StorageAccountPickerComponent implements OnInit, AfterContentInit, OnDestroy, ControlValueAccessor {
+    @ContentChildren(SelectOptionComponent)
+    public additionalOptions: QueryList<SelectOptionComponent>;
+
     public autoStorageAccountId: string;
     public loading: boolean = true;
     public storageAccounts: List<StorageAccount> = List([]);
     public pickedStorageAccountId: string;
     private _propagateChange: (value: string) => void;
     private _sub: Subscription;
-    private _storageAccounts: List<StorageAccount>  = List([]);
+    private _storageAccounts: List<StorageAccount> = List([]);
 
     constructor(
         private autoStorageService: AutoStorageService,
@@ -45,6 +51,12 @@ export class StorageAccountPickerComponent implements OnInit, OnDestroy, Control
                 this.loading = false;
                 this._updateStorageAccounts();
             });
+        });
+    }
+
+    public ngAfterContentInit() {
+        this.additionalOptions.changes.subscribe(() => {
+            this.changeDetector.markForCheck();
         });
     }
 
@@ -74,6 +86,10 @@ export class StorageAccountPickerComponent implements OnInit, OnDestroy, Control
 
     public trackStorageAccount(index, storageAccount: StorageAccount) {
         return storageAccount.id;
+    }
+
+    public trackOption(index, option: SelectOptionComponent) {
+        return option.value;
     }
 
     private _updateStorageAccounts() {
