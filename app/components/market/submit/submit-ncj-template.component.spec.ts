@@ -20,7 +20,8 @@ import { FileGroupSasComponent } from "app/components/data/shared/file-group-sas
 import { PoolPickerComponent } from "app/components/job/action/add";
 import { ParameterInputComponent, SubmitNcjTemplateComponent } from "app/components/market/submit";
 import { NcjJobTemplate, NcjParameterRawType, NcjPoolTemplate, NcjTemplateMode, Pool } from "app/models";
-import { NcjSubmitService, NcjTemplateService, PoolService, StorageService, VmSizeService } from "app/services";
+import { NcjSubmitService, NcjTemplateService, PoolService, VmSizeService } from "app/services";
+import {StorageContainerService} from "app/services/storage";
 import { Constants } from "app/utils";
 
 import * as Fixtures from "test/fixture";
@@ -95,7 +96,7 @@ describe("SubmitNcjTemplateComponent", () => {
     let templateServiceSpy: any;
     let ncjSubmitServiceSpy: any;
     let routerSpy: any;
-    let storageServiceSpy: any;
+    let storageContainerServiceSpy: any;
     let poolServiceSpy: any;
     let vmSizeServiceSpy: any;
     let sidebarSpy: any;
@@ -150,7 +151,7 @@ describe("SubmitNcjTemplateComponent", () => {
             }),
         };
 
-        storageServiceSpy = {
+        storageContainerServiceSpy = {
             onContainerAdded: new Subject(),
             containerListView: () => listProxy,
             addFileGroupPrefix: jasmine.createSpy("addFileGroupPrefix").and.callFake((fgName) => {
@@ -182,7 +183,7 @@ describe("SubmitNcjTemplateComponent", () => {
                 { provide: Router, useValue: routerSpy },
                 { provide: NcjTemplateService, useValue: templateServiceSpy },
                 { provide: NcjSubmitService, useValue: ncjSubmitServiceSpy },
-                { provide: StorageService, useValue: storageServiceSpy },
+                { provide: StorageContainerService, useValue: storageContainerServiceSpy },
                 { provide: DialogService, useValue: dialogSpy },
                 { provide: SidebarManager, useValue: sidebarSpy },
                 { provide: PoolService, useValue: poolServiceSpy },

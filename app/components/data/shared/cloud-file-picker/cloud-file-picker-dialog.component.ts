@@ -6,7 +6,7 @@ import { AsyncSubject, Observable } from "rxjs";
 import { FileExplorerConfig, FileExplorerSelectable } from "app/components/file/browse/file-explorer";
 import { BlobContainer } from "app/models";
 import { EntityView } from "app/services/core";
-import { AutoStorageService, GetContainerParams, StorageContainerService } from "app/services/storage";
+import { GetContainerParams, StorageContainerService } from "app/services/storage";
 import "./cloud-file-picker-dialog.scss";
 
 @Component({

@@ -6,9 +6,10 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { FileSource } from "app/components/file/browse/file-explorer";
 import { TaskOutputsComponent } from "app/components/task/details/output";
 import { File, Task, TaskState } from "app/models";
-import { FileService, ListBlobParams, NavigateBlobsOptions, StorageService } from "app/services";
+import { FileService } from "app/services";
 import { DataCache } from "app/services/core";
 import { FileNavigator } from "app/services/file";
+import { AutoStorageService, ListBlobParams, NavigateBlobsOptions, StorageBlobService } from "app/services/storage";
 import { StorageUtils } from "app/utils";
 import * as Fixtures from "test/fixture";
 import { MockStorageListGetter } from "test/utils/mocks";
@@ -90,7 +91,8 @@ describe("TaskOutputsComponent", () => {
             ],
             providers: [
                 { provide: FileService, useValue: fileServiceSpy },
-                { provide: StorageService, useValue: storageServiceSpy },
+                { provide: StorageBlobService, useValue: storageServiceSpy },
+                { provide: AutoStorageService, useValue: {} },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
