@@ -160,7 +160,6 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
     public closeDropdown() {
         this.showOptions = false;
         setTimeout(() => {
-            console.log("Select", this._selectButtonEl);
             this._selectButtonEl.nativeElement.focus();
         });
 

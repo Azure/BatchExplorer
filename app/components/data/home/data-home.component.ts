@@ -153,7 +153,6 @@ export class DataHomeComponent implements OnInit {
         const prefix = this._getFilterValue(advanced);
         const search = this._getFilterValue(quickSearch);
         const query = prefix + search;
-        console.log("MErge ", query, "|", prefix, "|", search);
         if (query === "") {
             return FilterBuilder.none();
         } else {
