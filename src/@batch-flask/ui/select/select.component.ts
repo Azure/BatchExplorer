@@ -38,6 +38,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
     public displayedOptions: SelectOptionComponent[];
     public focusedOption: any = null;
 
+    @ViewChild("selectButton", { read: ElementRef }) private _selectButtonEl: ElementRef;
     @ViewChild("filterInput") private _filterInputEl: ElementRef;
     @ViewChild("dropdown") private _dropdownEl: ElementRef;
 
@@ -80,6 +81,11 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         }
     }
 
+    public clickSelectButton(event: Event) {
+        this.toggleDropdown();
+        event.stopPropagation();
+    }
+
     @HostListener("keydown", ["$event"])
     public handleKeyboardNavigation(event: KeyboardEvent) {
         if (this.displayedOptions.length === 0) { return; }
@@ -88,11 +94,17 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         const option = this.displayedOptions[lastIndex];
         switch (event.code) {
             case "ArrowDown": // Move focus down
-                direction = 1;
+                if (this.showOptions) {
+                    direction = 1;
+                } else {
+                    this.openDropdown();
+                }
                 event.preventDefault();
                 break;
             case "ArrowUp":   // Move focus up
-                direction = -1;
+                if (this.showOptions) {
+                    direction = -1;
+                }
                 event.preventDefault();
                 break;
             case "Enter":
@@ -100,7 +112,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
                 event.preventDefault();
                 return;
             case "Escape":
-                this.showOptions = false;
+                this.closeDropdown();
                 this.changeDetector.markForCheck();
                 return;
             default:
@@ -125,8 +137,16 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
     }
 
     public toggleDropdown() {
-        this.showOptions = !this.showOptions;
-        if (this.showOptions && this.filterable) {
+        if (this.showOptions) {
+            this.closeDropdown();
+        } else {
+            this.openDropdown();
+        }
+    }
+
+    public openDropdown() {
+        this.showOptions = true;
+        if (this.filterable) {
             if (!this.focusedOption) {
                 this.focusFirstOption();
             }
@@ -134,6 +154,15 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
                 this._filterInputEl.nativeElement.focus();
             });
         }
+        this.changeDetector.markForCheck();
+    }
+
+    public closeDropdown() {
+        this.showOptions = false;
+        setTimeout(() => {
+            this._selectButtonEl.nativeElement.focus();
+        });
+
         this.changeDetector.markForCheck();
     }
 

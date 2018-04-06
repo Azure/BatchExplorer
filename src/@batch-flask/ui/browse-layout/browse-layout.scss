@@ -127,6 +127,10 @@ bl-browse-layout {
     align-items: center;
     justify-content: center;
 
+    > .pre-quicksearch {
+        min-width: 10px;
+    }
+
     .mat-form-field-infix {
         width: auto;
     }

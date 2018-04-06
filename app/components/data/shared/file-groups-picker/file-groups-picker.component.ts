@@ -6,8 +6,8 @@ import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { BlobContainer } from "app/models";
-import { ListContainerParams, StorageService } from "app/services";
 import { ListView } from "app/services/core";
+import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 
 // tslint:disable:no-forward-ref
@@ -32,9 +32,19 @@ export class FileGroupsPickerComponent implements ControlValueAccessor, OnInit, 
 
     constructor(
         private formBuilder: FormBuilder,
-        private storageService: StorageService) {
+        private autoStorageService: AutoStorageService,
+        private storageContainerService: StorageContainerService) {
 
-        this.data = this.storageService.containerListView(Constants.ncjFileGroupPrefix);
+        this.data = this.storageContainerService.listView();
+        this.autoStorageService.get().subscribe((storageAccountId) => {
+            this.data.params = {
+                storageAccountId,
+            };
+            this.data.setOptions({
+                filter: Constants.ncjFileGroupPrefix,
+            });
+        });
+
         this._subscriptions.push(this.data.items.subscribe((fileGroupContainers) => {
             this.groups = List(fileGroupContainers.map((container) => container.name));
         }));

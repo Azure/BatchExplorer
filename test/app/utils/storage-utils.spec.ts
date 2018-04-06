@@ -11,7 +11,7 @@ describe("StorageUtils", () => {
 
     it("Throws error if no jobId supplied", (done) => {
         StorageUtils.getSafeContainerName(null).catch((error) => {
-            expect(error).toEqual("No jobId supplied to getSafeContainerName(jobId: string)");
+            expect(error.message).toEqual("No jobId supplied to getSafeContainerName(jobId: string)");
             done();
         });
     });

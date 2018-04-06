@@ -57,7 +57,7 @@
         <bl-form-section title="Storage account" subtitle="Pick a storage account that will be assigned with this batch account.">
             <span *ngIf="!account">Please specify subscription and location before picking a storage account.</span>
             <div class="form-element" *ngIf="account">
-                <bl-storage-account-picker formControlName="storageAccountId" [account]="account"></bl-storage-account-picker>
+                <bl-auto-storage-account-picker formControlName="storageAccountId" [account]="account"></bl-auto-storage-account-picker>
             </div>
         </bl-form-section>
     </bl-form-page>

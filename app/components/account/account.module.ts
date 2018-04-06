@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
-import { StorageAccountPickerComponent } from "app/components/account/base/storage-account-picker";
+import { AutoStorageAccountPickerComponent } from "app/components/account/base/auto-storage-account-picker";
 import { PoolBaseModule } from "app/components/pool/base";
 import { BatchAccountCreateComponent } from "./action/add";
 import { DeleteAccountDialogComponent } from "./action/delete/delete-account-dialog.component";
@@ -17,7 +17,7 @@ import { AccountMonitoringModule } from "./monitoring";
 const components = [
     AccountDefaultComponent, AccountDetailsComponent, AccountHomeComponent,
     BatchAccountCreateComponent, DeleteAccountDialogComponent, StorageAccountCardComponent,
-    EditStorageAccountFormComponent, StorageAccountPickerComponent, AccountQuotasCardComponent,
+    EditStorageAccountFormComponent, AutoStorageAccountPickerComponent, AccountQuotasCardComponent,
 ];
 
 const modules = [

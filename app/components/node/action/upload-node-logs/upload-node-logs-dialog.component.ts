@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
 import { autobind } from "@batch-flask/core";
 import { BackgroundTaskService, NotificationService } from "@batch-flask/ui";
-import { AccountService, NodeService, StorageService } from "app/services";
-import { CloudPathUtils, StorageUtils } from "app/utils";
 import * as moment from "moment";
-
-import { Node, Pool } from "app/models";
-
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
 import { AsyncSubject, Observable } from "rxjs";
+
+import { Router } from "@angular/router";
+import { Node, Pool } from "app/models";
+import { AccountService, NodeService } from "app/services";
+import { AutoStorageService, StorageBlobService } from "app/services/storage";
+import { CloudPathUtils, StorageUtils } from "app/utils";
 import "./upload-node-logs-dialog.scss";
 
 enum TimeRangePreset {
@@ -50,7 +50,8 @@ export class UploadNodeLogsDialogComponent {
         private backgroundTaskService: BackgroundTaskService,
         private nodeService: NodeService,
         private accountService: AccountService,
-        private storageService: StorageService,
+        private autoStorageService: AutoStorageService,
+        private storageBlobService: StorageBlobService,
         private notificationService: NotificationService,
         private router: Router,
         formBuilder: FormBuilder,
@@ -113,8 +114,9 @@ export class UploadNodeLogsDialogComponent {
         this.backgroundTaskService.startTask("Node logs uploading", (task) => {
             const done = new AsyncSubject();
             const sub = Observable.interval(5000)
-                .flatMap(() => {
-                    return this.storageService.listBlobs(container, {
+                .flatMap(() => this.autoStorageService.get())
+                .flatMap((storageAccountId) => {
+                    return this.storageBlobService.list(storageAccountId, container, {
                         folder: CloudPathUtils.asBaseDirectory(folder),
                     }, true);
                 })

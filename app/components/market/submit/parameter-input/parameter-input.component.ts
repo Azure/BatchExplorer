@@ -3,7 +3,7 @@ import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Va
 import { Subscription } from "rxjs";
 
 import { NcjParameterRawType } from "app/models";
-import { StorageService } from "app/services";
+import { NcjFileGroupService } from "app/services";
 import { NcjParameterExtendedType, NcjParameterWrapper } from "../market-application.model";
 import "./parameter-input.scss";
 
@@ -27,7 +27,7 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
     private _propagateChange: (value: any) => void = null;
     private _subs: Subscription[] = [];
 
-    constructor(private storageService: StorageService) {
+    constructor(private fileGroupService: NcjFileGroupService) {
         this._subs.push(this.parameterValue.valueChanges.distinctUntilChanged()
             .subscribe((query: string) => {
                 if (this._propagateChange) {
@@ -44,7 +44,7 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
     }
 
     public getContainerFromFileGroup(fileGroup: string) {
-        return this.storageService.addFileGroupPrefix(fileGroup);
+        return this.fileGroupService.addFileGroupPrefix(fileGroup);
     }
 
     public ngOnDestroy(): void {

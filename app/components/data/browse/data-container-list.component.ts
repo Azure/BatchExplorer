@@ -1,22 +1,21 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Observable, Subscription } from "rxjs";
-
 import { Filter, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
-import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
-import { LoadingStatus } from "@batch-flask/ui/loading";
-import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
-import { SidebarManager } from "@batch-flask/ui/sidebar";
+import {
+    BackgroundTaskService, ContextMenu, ContextMenuItem, QuickListItemStatus, SidebarManager,
+} from "@batch-flask/ui";
+import { List } from "immutable";
+import { Observable, Subscription } from "rxjs";
+
 import { BlobContainer, LeaseStatus } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
-import { ListContainerParams, PinnedEntityService, StorageService } from "app/services";
+import { PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
+import { ListContainerParams, StorageContainerService } from "app/services/storage";
 import { ComponentUtils } from "app/utils";
 import { Constants } from "common";
-import { List } from "immutable";
 import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
 const defaultListOptions = {
@@ -30,12 +29,12 @@ const defaultListOptions = {
         useExisting: forwardRef(() => DataContainerListComponent),
     }],
 })
-export class DataContainerListComponent extends ListBaseComponent implements OnInit, OnDestroy {
+export class DataContainerListComponent extends ListBaseComponent implements OnChanges, OnDestroy {
+    @Input() public storageAccountId: string;
+
     public containers: List<BlobContainer>;
     public data: ListView<BlobContainer, ListContainerParams>;
-    public hasAutoStorage: boolean;
 
-    private _autoStorageSub: Subscription;
     private _onGroupAddedSub: Subscription;
 
     constructor(
@@ -46,10 +45,10 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         private sidebarManager: SidebarManager,
         private taskManager: BackgroundTaskService,
         private pinnedEntityService: PinnedEntityService,
-        private storageService: StorageService) {
+        private storageContainerService: StorageContainerService) {
 
         super(changeDetector);
-        this.data = this.storageService.containerListView();
+        this.data = this.storageContainerService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 
         this.data.items.subscribe((containers) => {
@@ -57,37 +56,30 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
             this.changeDetector.markForCheck();
         });
 
-        this.hasAutoStorage = false;
-        this._autoStorageSub = storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
-            this.hasAutoStorage = hasAutoStorage;
-            if (!hasAutoStorage) {
-                this.status = LoadingStatus.Ready;
-                changeDetector.markForCheck();
-            }
-        });
-
         this.data.status.subscribe((status) => {
             this.status = status;
         });
 
-        this._onGroupAddedSub = this.storageService.onContainerAdded.subscribe((fileGroupId: string) => {
-            this.data.loadNewItem(storageService.getContainerOnce(fileGroupId));
+        this._onGroupAddedSub = this.storageContainerService.onContainerAdded.subscribe((fileGroupId: string) => {
+            this.data.loadNewItem(storageContainerService.get(this.storageAccountId, fileGroupId));
         });
     }
 
-    public ngOnInit() {
-        this.data.fetchNext();
+    public ngOnChanges(changes) {
+        if (changes.storageAccountId && this.storageAccountId) {
+            this.data.params = { storageAccountId: this.storageAccountId };
+            this.data.fetchNext();
+        }
     }
 
     public ngOnDestroy() {
         this.data.dispose();
         this._onGroupAddedSub.unsubscribe();
-        this._autoStorageSub.unsubscribe();
     }
 
     @autobind()
     public refresh(): Observable<any> {
-        if (this.hasAutoStorage) {
+        if (this.storageAccountId) {
             return this.data.refresh();
         }
 
@@ -102,7 +94,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
             this.data.setOptions({ ...defaultListOptions, filter: filterText && filterText.toLowerCase() });
         }
 
-        if (this.hasAutoStorage) {
+        if (this.storageAccountId) {
             this.data.fetchNext();
         }
     }
@@ -117,14 +109,15 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
     }
 
     public onScrollToBottom() {
-        if (this.hasAutoStorage) {
+        if (this.storageAccountId) {
             this.data.fetchNext();
         }
     }
 
     public deleteSelection(selection: ListSelection) {
         this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteContainerAction(this.storageService, [...selection.keys]);
+            const task = new DeleteContainerAction(this.storageContainerService, this.storageAccountId,
+                [...selection.keys]);
             task.start(backgroundTask);
 
             return task.waitingDone;
@@ -151,7 +144,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         dialogRef.componentInstance.id = container.id;
         dialogRef.componentInstance.name = container.name;
         dialogRef.afterClosed().subscribe((obj) => {
-            this.storageService.getContainerOnce(container.id);
+            this.storageContainerService.get(this.storageAccountId, container.id);
         });
     }
 
@@ -164,7 +157,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         }));
 
         sidebarRef.afterCompletion.subscribe(() => {
-            this.storageService.onContainerUpdated.next();
+            this.storageContainerService.onContainerUpdated.next();
         });
     }
 

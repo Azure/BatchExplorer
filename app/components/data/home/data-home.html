@@ -16,11 +16,11 @@
     </div>
     <div pre-quicksearch>
             <div class="blselect">
-                <bl-select placeholder="Container Type" [formControl]="containerTypePrefix">
-                    <bl-option *ngFor="let type of containerTypes;trackBy: trackType" [value]="type.prefix" [label]="type.name">
-                    </bl-option>
-                </bl-select>
+                <bl-storage-account-picker [ngModel]="dataSource" (ngModelChange)="updateDataSource($event)">
+                    <bl-option [value]="fileGroupsId" label="File groups"></bl-option>
+                    <bl-option value="-" label="--------------------" [disabled]="true"></bl-option>
+                </bl-storage-account-picker>
             </div>
         </div>
-    <bl-data-container-list blBrowseLayoutList [filter]="filter"></bl-data-container-list>
+    <bl-data-container-list blBrowseLayoutList [storageAccountId]="storageAccountId" [filter]="filter"></bl-data-container-list>
 </bl-browse-layout>

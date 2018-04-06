@@ -120,6 +120,10 @@ export const routes: Routes = [
     },
     {
         path: "data",
+        component: DataHomeComponent,
+    },
+    {
+        path: "data/:storageAccountId/containers",
         canActivate: [NavigationGuard],
         component: DataHomeComponent,
         children: [

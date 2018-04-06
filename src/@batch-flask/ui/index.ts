@@ -5,3 +5,6 @@ export * from "./notifications";
 export * from "./loading";
 export * from "./select";
 export * from "./batchui.module";
+export * from "./quick-list";
+export * from "./context-menu";
+export * from "./sidebar";

@@ -6,18 +6,18 @@ import { LoadingStatus } from "@batch-flask/ui/loading";
 import { AccountResource, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
 
-import "./storage-account-picker.scss";
+import "./auto-storage-account-picker.scss";
 
 @Component({
-    selector: "bl-storage-account-picker",
-    templateUrl: "storage-account-picker.html",
+    selector: "bl-auto-storage-account-picker",
+    templateUrl: "auto-storage-account-picker.html",
     providers: [
         // tslint:disable:no-forward-ref
-        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => StorageAccountPickerComponent), multi: true },
-        { provide: NG_VALIDATORS, useExisting: forwardRef(() => StorageAccountPickerComponent), multi: true },
+        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AutoStorageAccountPickerComponent), multi: true },
+        { provide: NG_VALIDATORS, useExisting: forwardRef(() => AutoStorageAccountPickerComponent), multi: true },
     ],
 })
-export class StorageAccountPickerComponent implements OnInit, ControlValueAccessor {
+export class AutoStorageAccountPickerComponent implements OnInit, ControlValueAccessor {
     public noSelectionKey = "-1";
 
     @Input()

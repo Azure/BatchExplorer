@@ -3,14 +3,20 @@ import { Observable } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
-import { StorageClientService } from "app/services/storage-client.service";
+import { StorageClientService } from "app/services/storage/storage-client.service";
 import { ContinuationToken } from "./list-options";
 
-export interface StorageListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
+export interface StorageBaseParams {
+    storageAccountId: string;
+}
+
+export interface StorageListConfig<TEntity, TParams extends StorageBaseParams>
+    extends ListGetterConfig<TEntity, TParams> {
+
     getData: (client: any, params: TParams, options: any, token: any) => any;
 }
 
-export class StorageListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams> {
+export class StorageListGetter<TEntity, TParams extends StorageBaseParams> extends ListGetter<TEntity, TParams> {
     private _getData: (client: any, params: TParams, options: any, token: any) => any;
 
     constructor(
@@ -47,7 +53,7 @@ export class StorageListGetter<TEntity, TParams> extends ListGetter<TEntity, TPa
     }
 
     private _clientProxy(params, options, nextLink) {
-        return this.storageClient.get().map((client) => {
+        return this.storageClient.getFor(params.storageAccountId).map((client) => {
             return this._getData(client, params, options, nextLink);
         }).share();
     }
