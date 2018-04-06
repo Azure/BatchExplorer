@@ -21,7 +21,7 @@ export class NodeConfigurationComponent implements OnChanges {
     public get node() { return this._node; }
 
     public decorator: NodeDecorator;
-    public externalIpAdress;
+    public externalIpAddress;
 
     private _node: Node;
 
@@ -30,17 +30,17 @@ export class NodeConfigurationComponent implements OnChanges {
     public ngOnChanges(inputs) {
         if (inputs.node && inputs.pool) {
             if (PoolUtils.isIaas(this.pool)) {
-                this.externalIpAdress = "Loading...";
+                this.externalIpAddress = "Loading...";
                 this.nodeService.getRemoteLoginSettings(this.pool.id, this.node.id).subscribe({
                     next: (settings) => {
-                        this.externalIpAdress = settings.ip;
+                        this.externalIpAddress = settings.ip;
                     },
                     error: (error) => {
-                        this.externalIpAdress = "Error occured retrieving public ip";
+                        this.externalIpAddress = "Error occured retrieving public IP Address";
                     },
                 });
             } else {
-                this.externalIpAdress = null;
+                this.externalIpAddress = null;
             }
         }
     }
