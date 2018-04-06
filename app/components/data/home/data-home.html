@@ -16,7 +16,7 @@
     </div>
     <div pre-quicksearch>
             <div class="blselect">
-                <bl-storage-account-picker [ngModel]="storageAccountId" (ngModelChange)="updateStorageAccountId($event)">
+                <bl-storage-account-picker [ngModel]="dataSource" (ngModelChange)="updateDataSource($event)">
                     <bl-option [value]="fileGroupsId" label="File groups"></bl-option>
                 </bl-storage-account-picker>
             </div>

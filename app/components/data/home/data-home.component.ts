@@ -49,6 +49,11 @@ export class DataHomeComponent implements OnInit {
     public containerTypePrefix = new FormControl("");
     public storageAccountId: string;
 
+    /**
+     * Can either be a storage account id or file-groups
+     */
+    public dataSource: string | "file-groups";
+
     public layoutConfig: BrowseLayoutConfig = {
         mergeFilter: this._mergeFilter.bind(this),
     };
@@ -68,21 +73,24 @@ export class DataHomeComponent implements OnInit {
 
     public ngOnInit() {
         this.activeRoute.params.subscribe((params) => {
-            this.storageAccountId = params["storageAccountId"];
-            console.log("new accid", this.storageAccountId);
-            if (this.storageAccountId === this.fileGroupsId) {
-                this.storageAccountId = null;
-                this.autoStorageService.get().subscribe((storageAccountId) => {
-                    this.storageAccountId = storageAccountId;
-                    this.containerTypePrefix.setValue(Constants.ncjFileGroupPrefix);
-                });
-            } else {
-                this.containerTypePrefix.setValue("");
-            }
-            if (!this.storageAccountId) {
+            this.dataSource = params["storageAccountId"]
+                || localStorage.getItem(Constants.localStorageKey.lastStorageAccount);
+            console.log("new source", this.dataSource);
+            if (!this.dataSource) {
                 this.autoStorageService.get().subscribe((storageAccountId) => {
                     this._navigateToStorageAccount(storageAccountId);
                 });
+            } else {
+                localStorage.setItem(Constants.localStorageKey.lastStorageAccount, this.dataSource);
+                if (this.dataSource === this.fileGroupsId) {
+                    this.autoStorageService.get().subscribe((storageAccountId) => {
+                        this.storageAccountId = storageAccountId;
+                        this.containerTypePrefix.setValue(Constants.ncjFileGroupPrefix);
+                    });
+                } else {
+                    this.storageAccountId = this.dataSource;
+                    this.containerTypePrefix.setValue("");
+                }
             }
         });
     }
@@ -123,7 +131,7 @@ export class DataHomeComponent implements OnInit {
         this._updateFilter();
     }
 
-    public updateStorageAccountId(storageAccountId: string) {
+    public updateDataSource(storageAccountId: string) {
         this._navigateToStorageAccount(storageAccountId);
     }
 

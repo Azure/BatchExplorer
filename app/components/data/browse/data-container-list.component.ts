@@ -66,7 +66,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnC
     }
 
     public ngOnChanges(changes) {
-        if (changes.storageAccountId) {
+        if (changes.storageAccountId && this.storageAccountId) {
             this.data.params = { storageAccountId: this.storageAccountId };
             this.data.fetchNext();
         }

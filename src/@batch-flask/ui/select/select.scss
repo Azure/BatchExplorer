@@ -2,6 +2,8 @@
 
 bl-select {
     $button-height: 26px;
+    $dropdown-zindex: 100;
+
     min-width: 100px;
     display: block;
     color: $secondary-text;
@@ -54,7 +56,7 @@ bl-select {
             outline: none;
             height: $button-height;
             padding: 0 5px;
-            z-index: 50;
+            z-index: $dropdown-zindex + 10;
             border: 1px solid $border-color;
             color: $secondary-text;
 
@@ -68,9 +70,9 @@ bl-select {
         position: absolute;
         background-color: white;
         min-width: 100%;
-        z-index: 100;
+        z-index: $dropdown-zindex;
         border: 1px solid $border-color;
-        border-top: none;
+        margin-top: -1px;
         max-height: 50vh;
         overflow-y: auto;
 

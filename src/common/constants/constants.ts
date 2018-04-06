@@ -95,6 +95,11 @@ export const localStorageKey = {
      * Save the latest azure environemnt used
      */
     azureEnvironment: "azure_environment",
+
+    /**
+     * Last selected storage account
+     */
+    lastStorageAccount: "last_storage_account",
 };
 
 export const ApiVersion = {
