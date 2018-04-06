@@ -60,7 +60,7 @@ describe("StorageAccountPickerComponent", () => {
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
-        de = fixture.debugElement.query(By.css("bl-storage-account-picker"));
+        de = fixture.debugElement.query(By.css("bl-auto-storage-account-picker"));
         component = de.componentInstance;
         fixture.detectChanges();
 

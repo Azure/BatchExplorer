@@ -89,7 +89,7 @@ describe("TaskOutputsComponent", () => {
         autoStorageServiceSpy = {
             get: () => Observable.of("storage-acc-1"),
         };
-        404;
+
         TestBed.configureTestingModule({
             imports: [RouterTestingModule],
             declarations: [
@@ -154,15 +154,11 @@ describe("TaskOutputsComponent", () => {
         expect(component.workspace.sources.length).toBe(2);
     }));
 
-    fit("when storage call returns 404 we remove the workspace source", fakeAsync(() => {
+    it("when storage call returns 404 we remove the workspace source", fakeAsync(() => {
         testComponent.jobId = "no-container";
         testComponent.task = new Task({ id: "task-1", state: TaskState.running });
         fixture.detectChanges();
-        console.log("Tick 1");
         tick();
-        console.log("Tick 2");
-        tick();
-        console.log("Tick 3");
 
         fixture.detectChanges();
         expect(component.workspace.sources.length).toBe(1);
