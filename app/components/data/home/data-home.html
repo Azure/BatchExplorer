@@ -18,6 +18,7 @@
             <div class="blselect">
                 <bl-storage-account-picker [ngModel]="dataSource" (ngModelChange)="updateDataSource($event)">
                     <bl-option [value]="fileGroupsId" label="File groups"></bl-option>
+                    <bl-option value="-" label="--------------------" [disabled]="true"></bl-option>
                 </bl-storage-account-picker>
             </div>
         </div>

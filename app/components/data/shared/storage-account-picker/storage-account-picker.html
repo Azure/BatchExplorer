@@ -1,7 +1,8 @@
 <bl-select [filterable]="true" placeholder="Storage account" [ngModel]="pickedStorageAccountId" (ngModelChange)="pickStorageAccountId($event)">
     <bl-option *ngFor="let option of additionalOptions;trackOption"
         [value]="option.value"
-        [label]="option.label">
+        [label]="option.label"
+        [disabled]="option.disabled">
     </bl-option>
     <bl-option *ngFor="let storageAccount of storageAccounts;trackBy: trackStorageAccount"
         [value]="storageAccount.id"

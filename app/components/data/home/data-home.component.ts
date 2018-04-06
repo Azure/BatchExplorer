@@ -75,7 +75,6 @@ export class DataHomeComponent implements OnInit {
         this.activeRoute.params.subscribe((params) => {
             this.dataSource = params["storageAccountId"]
                 || localStorage.getItem(Constants.localStorageKey.lastStorageAccount);
-            console.log("new source", this.dataSource);
             if (!this.dataSource) {
                 this.autoStorageService.get().subscribe((storageAccountId) => {
                     this._navigateToStorageAccount(storageAccountId);

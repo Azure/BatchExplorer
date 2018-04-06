@@ -10,10 +10,6 @@ bl-select {
     border: none;
     position: relative;
 
-    &:active, &:focus {
-        outline: none;
-    }
-
     > .select-button-container {
         height: $button-height;
         background-color: $athensGrey;
@@ -25,10 +21,6 @@ bl-select {
             cursor: pointer;
             vertical-align: middle;
             width: 100%;
-
-            &:focus {
-                outline: none;
-            }
 
             > .label {
                 flex: 1;
