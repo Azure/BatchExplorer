@@ -20,11 +20,11 @@ import "./storage-account-picker.scss";
 export class StorageAccountPickerComponent implements OnInit, OnDestroy, ControlValueAccessor {
     public autoStorageAccountId: string;
     public loading: boolean = true;
-    public storageAccounts: List<StorageAccount>;
+    public storageAccounts: List<StorageAccount> = List([]);
     public pickedStorageAccountId: string;
     private _propagateChange: (value: string) => void;
     private _sub: Subscription;
-    private _storageAccounts: List<StorageAccount>;
+    private _storageAccounts: List<StorageAccount>  = List([]);
 
     constructor(
         private autoStorageService: AutoStorageService,
@@ -33,7 +33,7 @@ export class StorageAccountPickerComponent implements OnInit, OnDestroy, Control
         private changeDetector: ChangeDetectorRef) {
 
         this._sub = this.autoStorageService.storageAccountId.subscribe((id) => {
-            this.autoStorageAccountId = id;
+            this.autoStorageAccountId = id && id.toLowerCase();
             this._updateStorageAccounts();
         });
     }
