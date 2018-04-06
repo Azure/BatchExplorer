@@ -11,7 +11,6 @@ import { AutoStorageService } from "app/services/storage/auto-storage.service";
 import { CloudFilePickerDialogComponent } from "./cloud-file-picker-dialog.component";
 import "./cloud-file-picker.scss";
 
-// tslint:disable:no-forward-ref
 @Component({
     selector: "bl-cloud-file-picker",
     templateUrl: "cloud-file-picker.html",
@@ -77,17 +76,20 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges
 
     @autobind()
     public openFilePickerDialog() {
-        const ref = this.dialog.open(CloudFilePickerDialogComponent);
-        const component = ref.componentInstance;
-        component.containerId = this.containerId;
-        component.pickedFile = this.value.value;
-        component.done.subscribe((save) => {
-            if (save) {
-                this.value.setValue(component.pickedFile);
-            }
+        const obs = this.autoStorageService.get();
+        obs.subscribe((storageAccountId) => {
+            const ref = this.dialog.open(CloudFilePickerDialogComponent);
+            const component = ref.componentInstance;
+            component.storageAccountId = storageAccountId;
+            component.containerId = this.containerId;
+            component.pickedFile = this.value.value;
+            component.done.subscribe((save) => {
+                if (save) {
+                    this.value.setValue(component.pickedFile);
+                }
+            });
         });
-
-        return component.done;
+        return obs;
     }
 
     private _checkValid(value: string) {
