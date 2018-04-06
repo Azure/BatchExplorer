@@ -11,6 +11,7 @@ import { DataCache } from "app/services/core";
 import { FileNavigator } from "app/services/file";
 import { AutoStorageService, ListBlobParams, NavigateBlobsOptions, StorageBlobService } from "app/services/storage";
 import { StorageUtils } from "app/utils";
+import { Observable } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { MockStorageListGetter } from "test/utils/mocks";
 
@@ -32,6 +33,7 @@ describe("TaskOutputsComponent", () => {
     let storageServiceSpy: any;
     let mockBlobGetter: any;
     let cache: DataCache<File>;
+    let autoStorageServiceSpy;
 
     beforeEach(() => {
         cache = new DataCache<File>("url");
@@ -70,20 +72,24 @@ describe("TaskOutputsComponent", () => {
         };
 
         storageServiceSpy = {
-            navigateContainerBlobs: jasmine
+            navigate: jasmine
                 .createSpy("navigateContainerBlobs")
-                .and.callFake((container: string, prefix: string, options: NavigateBlobsOptions) => {
-                return new FileNavigator({
-                    cache: null,
-                    basePath: prefix,
-                    params: { container },
-                    getter: mockBlobGetter,
-                    getFile: (filename: string) => null,
-                    onError: options.onError,
-                });
-            }),
+                .and.callFake((storageAccountId, container: string, prefix: string, options: NavigateBlobsOptions) => {
+                    return new FileNavigator({
+                        cache: null,
+                        basePath: prefix,
+                        params: { storageAccountId, container },
+                        getter: mockBlobGetter,
+                        getFile: (filename: string) => null,
+                        onError: options.onError,
+                    });
+                }),
         };
 
+        autoStorageServiceSpy = {
+            get: () => Observable.of("storage-acc-1"),
+        };
+        404;
         TestBed.configureTestingModule({
             imports: [RouterTestingModule],
             declarations: [
@@ -92,7 +98,7 @@ describe("TaskOutputsComponent", () => {
             providers: [
                 { provide: FileService, useValue: fileServiceSpy },
                 { provide: StorageBlobService, useValue: storageServiceSpy },
-                { provide: AutoStorageService, useValue: {} },
+                { provide: AutoStorageService, useValue: autoStorageServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -111,7 +117,7 @@ describe("TaskOutputsComponent", () => {
         expect(de.query(By.css("bl-file-explorer"))).toBeFalsy();
         expect(de.query(By.css(".task-queued"))).not.toBeFalsy();
         expect(fileServiceSpy.navigateTaskFile).not.toHaveBeenCalled();
-        expect(storageServiceSpy.navigateContainerBlobs).not.toHaveBeenCalled();
+        expect(storageServiceSpy.navigate).not.toHaveBeenCalled();
     });
 
     it("when task is preparing it should not start loading anything", () => {
@@ -121,7 +127,7 @@ describe("TaskOutputsComponent", () => {
         expect(de.query(By.css("bl-file-explorer"))).toBeFalsy();
         expect(de.query(By.css(".task-queued"))).not.toBeFalsy();
         expect(fileServiceSpy.navigateTaskFile).not.toHaveBeenCalled();
-        expect(storageServiceSpy.navigateContainerBlobs).not.toHaveBeenCalled();
+        expect(storageServiceSpy.navigate).not.toHaveBeenCalled();
     });
 
     it("when task is running it should show the navigation", fakeAsync(() => {
@@ -135,8 +141,8 @@ describe("TaskOutputsComponent", () => {
 
         expect(fileServiceSpy.navigateTaskFile).toHaveBeenCalledOnce();
         expect(fileServiceSpy.navigateTaskFile).toHaveBeenCalledWith("job-1", "task-1", jasmine.anything());
-        expect(storageServiceSpy.navigateContainerBlobs).toHaveBeenCalledOnce();
-        expect(storageServiceSpy.navigateContainerBlobs).toHaveBeenCalledWith("job-1", "task-1", jasmine.anything());
+        expect(storageServiceSpy.navigate).toHaveBeenCalledOnce();
+        expect(storageServiceSpy.navigate).toHaveBeenCalledWith("storage-acc-1", "job-1", "task-1", jasmine.anything());
     }));
 
     it("running task should have 2 workspace sources", fakeAsync(() => {
@@ -148,11 +154,15 @@ describe("TaskOutputsComponent", () => {
         expect(component.workspace.sources.length).toBe(2);
     }));
 
-    it("when storage call returns 404 we remove the workspace source", fakeAsync(() => {
+    fit("when storage call returns 404 we remove the workspace source", fakeAsync(() => {
         testComponent.jobId = "no-container";
         testComponent.task = new Task({ id: "task-1", state: TaskState.running });
         fixture.detectChanges();
+        console.log("Tick 1");
         tick();
+        console.log("Tick 2");
+        tick();
+        console.log("Tick 3");
 
         fixture.detectChanges();
         expect(component.workspace.sources.length).toBe(1);

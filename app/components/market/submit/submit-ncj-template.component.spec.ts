@@ -20,8 +20,8 @@ import { FileGroupSasComponent } from "app/components/data/shared/file-group-sas
 import { PoolPickerComponent } from "app/components/job/action/add";
 import { ParameterInputComponent, SubmitNcjTemplateComponent } from "app/components/market/submit";
 import { NcjJobTemplate, NcjParameterRawType, NcjPoolTemplate, NcjTemplateMode, Pool } from "app/models";
-import { NcjSubmitService, NcjTemplateService, PoolService, VmSizeService } from "app/services";
-import {StorageContainerService} from "app/services/storage";
+import { NcjFileGroupService, NcjSubmitService, NcjTemplateService, PoolService, VmSizeService } from "app/services";
+import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { Constants } from "app/utils";
 
 import * as Fixtures from "test/fixture";
@@ -102,6 +102,9 @@ describe("SubmitNcjTemplateComponent", () => {
     let sidebarSpy: any;
     let dialogSpy: any;
     let notificationServiceSpy: any;
+    let autoStorageServiceSpy;
+    let storageBlobServiceSpy;
+    let fileGroupServiceSpy;
 
     const blendFile = "myscene.blend";
     const queryParameters = {
@@ -122,7 +125,7 @@ describe("SubmitNcjTemplateComponent", () => {
         };
 
         poolServiceSpy = {
-            listView:  () => listProxy,
+            listView: () => listProxy,
         };
 
         vmSizeServiceSpy = {
@@ -151,12 +154,11 @@ describe("SubmitNcjTemplateComponent", () => {
             }),
         };
 
+        storageBlobServiceSpy = {};
+
         storageContainerServiceSpy = {
             onContainerAdded: new Subject(),
-            containerListView: () => listProxy,
-            addFileGroupPrefix: jasmine.createSpy("addFileGroupPrefix").and.callFake((fgName) => {
-                return `${Constants.ncjFileGroupPrefix}${fgName}`;
-            }),
+            listView: () => listProxy,
         };
 
         dialogSpy = {
@@ -172,6 +174,15 @@ describe("SubmitNcjTemplateComponent", () => {
             error: jasmine.createSpy("error"),
         };
 
+        autoStorageServiceSpy = {
+            get: () => Observable.of("storage-acc-1"),
+        };
+
+        fileGroupServiceSpy = {
+            addFileGroupPrefix: jasmine.createSpy("addFileGroupPrefix").and.callFake((fgName) => {
+                return `${Constants.ncjFileGroupPrefix}${fgName}`;
+            }),
+        };
         TestBed.configureTestingModule({
             imports: [RouterTestingModule, ReactiveFormsModule, FormsModule, MaterialModule, NoopAnimationsModule],
             declarations: [NoItemMockComponent, SubmitNcjTemplateComponent, FileGroupSasComponent,
@@ -188,6 +199,9 @@ describe("SubmitNcjTemplateComponent", () => {
                 { provide: SidebarManager, useValue: sidebarSpy },
                 { provide: PoolService, useValue: poolServiceSpy },
                 { provide: VmSizeService, useValue: vmSizeServiceSpy },
+                { provide: NcjFileGroupService, useValue: fileGroupServiceSpy },
+                { provide: AutoStorageService, useValue: autoStorageServiceSpy },
+                { provide: StorageBlobService, useValue: storageBlobServiceSpy },
                 { provide: NotificationService, useValue: notificationServiceSpy },
             ],
 

@@ -7,7 +7,7 @@ import { By } from "@angular/platform-browser";
 import { EditableTableColumnComponent, EditableTableComponent } from "@batch-flask/ui/form/editable-table";
 import { ResourcefilePickerComponent } from "app/components/task/base";
 import { FileSystemService, SettingsService } from "app/services";
-import { AutoStorageService, StorageBlobService } from "app/services/storage";
+import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { Observable } from "rxjs";
 import { F } from "test/utils";
 
@@ -27,20 +27,28 @@ describe("ResourcefilePickerComponent", () => {
     let storageBlobServiceSpy;
     let fsSpy;
     let settingsServiceSpy;
+    let autoStorageServiceSpy;
+    let storageContainerServiceSpy;
 
     beforeEach(() => {
         storageBlobServiceSpy = {
-            createContainerIfNotExists: jasmine.createSpy("createContainerIfNotExists")
-                .and.returnValue(Observable.of(null)),
             uploadFile: jasmine.createSpy("uploadFile")
                 .and.returnValue(Observable.of(null)),
             generateSharedAccessBlobUrl: jasmine.createSpy("uploadFile")
-                .and.callFake(x => Observable.of(`${x}?key=abc`)),
+                .and.callFake((a, b) => Observable.of(`${a}.${b}?key=abc`)),
+        };
+
+        autoStorageServiceSpy = {
+            get: () => Observable.of("storage-acc-1"),
         };
         fsSpy = {
             lstat: () => Promise.resolve({
                 isFile: () => true,
             }),
+        };
+        storageContainerServiceSpy = {
+            createIfNotExists: jasmine.createSpy("createIfNotExists")
+                .and.returnValue(Observable.of(null)),
         };
         settingsServiceSpy = {
             settings: {
@@ -52,8 +60,9 @@ describe("ResourcefilePickerComponent", () => {
             declarations: [ResourcefilePickerComponent, TestComponent,
                 EditableTableComponent, EditableTableColumnComponent],
             providers: [
+                { provide: StorageContainerService, useValue: storageContainerServiceSpy },
                 { provide: StorageBlobService, useValue: storageBlobServiceSpy },
-                { provide: AutoStorageService, useValue: storageBlobServiceSpy },
+                { provide: AutoStorageService, useValue: autoStorageServiceSpy },
                 { provide: FileSystemService, useValue: fsSpy },
                 { provide: SettingsService, useValue: settingsServiceSpy },
             ],
@@ -129,7 +138,7 @@ describe("ResourcefilePickerComponent", () => {
                 fixture.detectChanges();
                 expect(component.files.value.length).toBe(1);
                 expect(component.files.value.first()).toEqual({
-                    blobSource: "test-custom-container?key=abc",
+                    blobSource: "storage-acc-1.test-custom-container?key=abc",
                     filePath: "file1.txt",
                 });
                 done();
@@ -160,23 +169,25 @@ describe("ResourcefilePickerComponent", () => {
 
         it("should upload list of files", F(async () => {
             await component.uploadFiles(["some/path/file1.txt", "some/other/file2.txt"]);
-            expect(storageBlobServiceSpy.createContainerIfNotExists).toHaveBeenCalledOnce();
-            expect(storageBlobServiceSpy.createContainerIfNotExists).toHaveBeenCalledWith("test-custom-container");
+            expect(storageContainerServiceSpy.createIfNotExists).toHaveBeenCalledOnce();
+            expect(storageContainerServiceSpy.createIfNotExists).toHaveBeenCalledWith("storage-acc-1",
+                "test-custom-container");
             expect(storageBlobServiceSpy.uploadFile).toHaveBeenCalledTimes(2);
-            expect(storageBlobServiceSpy.uploadFile).toHaveBeenCalledWith("test-custom-container",
+            expect(storageBlobServiceSpy.uploadFile).toHaveBeenCalledWith("storage-acc-1", "test-custom-container",
                 "some/path/file1.txt", `${uploadFolder}/file1.txt`);
-            expect(storageBlobServiceSpy.uploadFile).toHaveBeenCalledWith("test-custom-container",
+            expect(storageBlobServiceSpy.uploadFile).toHaveBeenCalledWith("storage-acc-1", "test-custom-container",
                 "some/other/file2.txt", `${uploadFolder}/file2.txt`);
         }));
 
         it("should upload list of files when root is defined", F(async () => {
             await component.uploadFiles(["some/path/file1.txt", "some/other/file2.txt"], "custom/path");
-            expect(storageBlobServiceSpy.createContainerIfNotExists).toHaveBeenCalledOnce();
-            expect(storageBlobServiceSpy.createContainerIfNotExists).toHaveBeenCalledWith("test-custom-container");
+            expect(storageContainerServiceSpy.createIfNotExists).toHaveBeenCalledOnce();
+            expect(storageContainerServiceSpy.createIfNotExists).toHaveBeenCalledWith("storage-acc-1",
+                "test-custom-container");
             expect(storageBlobServiceSpy.uploadFile).toHaveBeenCalledTimes(2);
-            expect(storageBlobServiceSpy.uploadFile).toHaveBeenCalledWith("test-custom-container",
+            expect(storageBlobServiceSpy.uploadFile).toHaveBeenCalledWith("storage-acc-1", "test-custom-container",
                 "some/path/file1.txt", `${uploadFolder}/custom/path/file1.txt`);
-            expect(storageBlobServiceSpy.uploadFile).toHaveBeenCalledWith("test-custom-container",
+            expect(storageBlobServiceSpy.uploadFile).toHaveBeenCalledWith("storage-acc-1", "test-custom-container",
                 "some/other/file2.txt", `${uploadFolder}/custom/path/file2.txt`);
         }));
     });
