@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DebugElement, ViewChildren, DoCheck } from "@angular/core";
+import { ChangeDetectorRef, Component, DebugElement, DoCheck, ViewChildren } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
