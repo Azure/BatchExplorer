@@ -1,7 +1,8 @@
 import {
-    AfterViewInit, Component, ContentChildren, Inject, QueryList, forwardRef,
+    AfterContentInit, Component, ContentChildren, Inject, Input, QueryList, forwardRef,
 } from "@angular/core";
 
+import { BehaviorSubject, Observable } from "rxjs";
 import { TableColumnComponent } from "../table-column";
 import { TableComponent } from "../table.component";
 
@@ -9,19 +10,29 @@ import { TableComponent } from "../table.component";
     selector: "bl-thead",
     templateUrl: "table-head.html",
 })
-export class TableHeadComponent implements AfterViewInit {
+export class TableHeadComponent implements AfterContentInit {
+    @Input() public show = true;
+
     @ContentChildren(TableColumnComponent)
     public items: QueryList<TableColumnComponent>;
 
+    public dimensions: Observable<number[]>;
+
     private _columnIndexMap: StringMap<number>;
+    private _dimensions = new BehaviorSubject([]);
 
     // tslint:disable-next-line:no-forward-ref
-    constructor( @Inject(forwardRef(() => TableComponent)) public table: TableComponent) { }
-    public ngAfterViewInit() {
+    constructor(@Inject(forwardRef(() => TableComponent)) public table: TableComponent) {
+        this.dimensions = this._dimensions.asObservable();
+    }
+
+    public ngAfterContentInit() {
         this.items.changes.subscribe(() => {
             this._updateColumnIndexMap();
+            this.updateDimensions();
         });
         this._updateColumnIndexMap();
+        this.updateDimensions();
     }
 
     public getColumnIndex(column: TableColumnComponent) {
@@ -31,6 +42,15 @@ export class TableHeadComponent implements AfterViewInit {
         return this._columnIndexMap[column.id];
     }
 
+    public updateDimensions() {
+        if (!this.items) { return; }
+        const dimensions = [];
+        this.items.forEach((column, index) => {
+            dimensions[index] = column.width;
+        });
+        this._dimensions.next(dimensions);
+    }
+
     private _updateColumnIndexMap() {
         const map = {};
         this.items.forEach((column, index) => {
@@ -38,4 +58,5 @@ export class TableHeadComponent implements AfterViewInit {
         });
         this._columnIndexMap = map;
     }
+
 }
