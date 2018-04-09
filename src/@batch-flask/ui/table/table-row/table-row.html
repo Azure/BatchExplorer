@@ -1,6 +1,6 @@
 <ng-template>
     <div *ngFor="let cell of cells;trackBy: trackCell;let index = index"
-        class="bl-table-cell"
+        class="bl-table-cell {{cell.class}}"
         [class.fixed-size]="dimensions[index]"
         [style.flex-basis]="dimensions[index] + 'px'">
 

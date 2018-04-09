@@ -1,5 +1,5 @@
 import {
-    AfterContentInit, Component, ContentChildren, Inject, QueryList, forwardRef, Input,
+    AfterContentInit, Component, ContentChildren, Inject, Input, QueryList, forwardRef,
 } from "@angular/core";
 
 import { BehaviorSubject, Observable } from "rxjs";

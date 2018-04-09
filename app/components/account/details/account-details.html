@@ -53,7 +53,7 @@
                                 </bl-thead>
                                 <bl-row *ngFor="let job of (jobData.items | async);trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id">
                                     <bl-cell [value]="job.id"></bl-cell>
-                                    <bl-cell class="text-right" style="color:steelblue;" [value]="job.state"></bl-cell>
+                                    <bl-cell class="text-right" [value]="job.state"></bl-cell>
                                 </bl-row>
                             </bl-table>
                         </bl-loading>
@@ -85,10 +85,10 @@
                                 </bl-thead>
                                 <bl-row *ngFor="let pool of (poolData.items | async);trackBy: trackByFn" [link]="['/pools/', pool.id]" [key]="pool.id">
                                     <bl-cell [value]="pool.id"></bl-cell>
-                                    <bl-cell class="fixed-size">
+                                    <bl-cell>
                                         <i aria-hidden="true" class="fa fa-{{pool.osIconName()}}"></i>
                                     </bl-cell>
-                                    <bl-cell class="fixed-size text-right">
+                                    <bl-cell class="text-right">
                                         <bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>
                                     </bl-cell>
                                 </bl-row>
