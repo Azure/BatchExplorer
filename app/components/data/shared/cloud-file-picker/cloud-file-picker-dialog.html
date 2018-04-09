@@ -1,6 +1,11 @@
 <bl-simple-form [submit]="submit" (done)="close()" [containerRef]="dialogRef" [multiUse]="false" actionName="Pick">
     <div *ngIf="container">
-        <bl-blob-files-browser #blobList [storageAccountId]="storageAccountId" [container]="container.id" [fileExplorerConfig]="fileExplorerConfig" [activeFile]="pickedFile"
+        <bl-blob-files-browser #blobList
+            [storageAccountId]="storageAccountId"
+            [container]="container.id"
+            [fileExplorerConfig]="fileExplorerConfig"
+            [activeFile]="pickedFile"
+            [suffixFilter]="suffixFilter"
             (activeFileChange)="updatePickedFile($event)">
         </bl-blob-files-browser>
     </div>

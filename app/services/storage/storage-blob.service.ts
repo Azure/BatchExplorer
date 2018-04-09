@@ -43,6 +43,12 @@ export interface NavigateBlobsOptions {
      * You can that way ignore the error or modify it.
      */
     onError?: (error: ServerError) => ServerError;
+
+    /**
+     * Optional blob suffix filter.
+     */
+    suffixFilter?: string;
+    fetchAll?: boolean;
 }
 
 export interface FileUpload {
@@ -141,6 +147,8 @@ export class StorageBlobService {
             getter: this._blobListGetter,
             getFile: (filename: string) => this.getBlobContent(storageAccountId, container, filename),
             onError: options.onError,
+            suffixFilter: options.suffixFilter,
+            fetchAll: options.fetchAll,
         });
     }
 

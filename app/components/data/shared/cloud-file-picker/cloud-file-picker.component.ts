@@ -28,6 +28,12 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges
      */
     @Input() public containerId: string;
 
+    /**
+     * Passed in if we want to client side filter the results to only show
+     * files that end with this suffix.
+     */
+    @Input() public suffixFilter: string;
+
     public value = new FormControl();
     public warning = false;
 
@@ -82,6 +88,7 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges
             const component = ref.componentInstance;
             component.storageAccountId = storageAccountId;
             component.containerId = this.containerId;
+            component.suffixFilter = this.suffixFilter;
             component.pickedFile = this.value.value;
             component.done.subscribe((save) => {
                 if (save) {

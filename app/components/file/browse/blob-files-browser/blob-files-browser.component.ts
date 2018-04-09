@@ -17,6 +17,7 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
     @Input() public container: string;
     @Input() public fileExplorerConfig: FileExplorerConfig = {};
     @Input() public activeFile: string;
+    @Input() public suffixFilter: string;
     @Input() public upload: (event: FileDropEvent) => Observable<any>;
     @Input() public delete: (files: File[]) => Observable<any>;
 
@@ -34,7 +35,11 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
         this._clearFileNavigator();
         if (inputs.storageAccountId || inputs.container) {
             // TODO handle here.
-            this.fileNavigator = this.storageBlobService.navigate(this.storageAccountId, this.container);
+            const options = {
+                suffixFilter: this.suffixFilter,
+                fetchAll: true,
+            };
+            this.fileNavigator = this.storageBlobService.navigate(this.storageAccountId, this.container, null, options);
             this.fileNavigator.init();
         }
 

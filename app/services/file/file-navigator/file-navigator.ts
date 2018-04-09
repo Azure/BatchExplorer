@@ -47,6 +47,16 @@ export interface FileNavigatorConfig<TParams = any> {
      */
     onError?: (error: ServerError) => ServerError;
 
+    /**
+     * Optional suffix filter that will client side match files/blobs that end with
+     * this filter.
+     */
+    suffixFilter?: string;
+
+    /**
+     * Optional flag to tell the navigator to fetch all items.
+     */
+    fetchAll?: boolean;
 }
 /**
  * Generic navigator class for a file explorer.
@@ -64,6 +74,8 @@ export class FileNavigator<TParams = any> {
     private _params: TParams;
     private _cache: DataCache<File>;
     private _fileDeletedSub: Subscription;
+    private _suffixFilter: string;
+    private _fetchAll: boolean;
 
     private _getFileLoader: (filename: string) => FileLoader;
     private _onError: (error: ServerError) => ServerError;
@@ -77,6 +89,8 @@ export class FileNavigator<TParams = any> {
         this._tree.next(new FileTreeStructure(this.basePath));
         this.tree = this._tree.asObservable();
         this._cache = config.cache;
+        this._suffixFilter = config.suffixFilter;
+        this._fetchAll = config.fetchAll;
     }
 
     /**
@@ -167,8 +181,15 @@ export class FileNavigator<TParams = any> {
      */
     private _loadPath(path: string, recursive = false): Observable<List<File>> {
         return this._getter.fetchAll(this._params, {
-            recursive,
+            recursive: recursive || this._fetchAll,
             folder: path,
+        }).flatMap((files) => {
+            if (!this._suffixFilter) {
+                return Observable.of(files);
+            }
+
+            const filtered = files.filter((file) => file.name.endsWith(this._suffixFilter));
+            return Observable.of(List(filtered));
         });
     }
 
