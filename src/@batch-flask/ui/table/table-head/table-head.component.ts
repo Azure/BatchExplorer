@@ -1,5 +1,5 @@
 import {
-    AfterContentInit, Component, ContentChildren, Inject, QueryList, forwardRef,
+    AfterContentInit, Component, ContentChildren, Inject, QueryList, forwardRef, Input,
 } from "@angular/core";
 
 import { BehaviorSubject, Observable } from "rxjs";
@@ -11,6 +11,8 @@ import { TableComponent } from "../table.component";
     templateUrl: "table-head.html",
 })
 export class TableHeadComponent implements AfterContentInit {
+    @Input() public show = true;
+
     @ContentChildren(TableColumnComponent)
     public items: QueryList<TableColumnComponent>;
 

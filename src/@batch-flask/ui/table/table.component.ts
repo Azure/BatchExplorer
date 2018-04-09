@@ -59,7 +59,7 @@ export class TableComponent extends AbstractListBase {
     public dropTargetRowKey: string = null;
 
     public get dimensions(): Observable<number[]> {
-        return this.head.dimensions;
+        return this.head ? this.head.dimensions : Observable.of([]);
     }
 
     protected _config: TableConfig = tableDefaultConfig;
