@@ -2,7 +2,7 @@ import {
     AfterContentInit, Component, ContentChildren, Inject, QueryList, forwardRef,
 } from "@angular/core";
 
-import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { TableColumnComponent } from "../table-column";
 import { TableComponent } from "../table.component";
 
