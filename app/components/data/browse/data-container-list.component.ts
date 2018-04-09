@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, OnChanges,OnInit,  OnDestroy, forwardRef } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, autobind } from "@batch-flask/core";
@@ -29,18 +29,19 @@ const defaultListOptions = {
         useExisting: forwardRef(() => DataContainerListComponent),
     }],
 })
-export class DataContainerListComponent extends ListBaseComponent implements OnChanges, OnDestroy {
+export class DataContainerListComponent extends ListBaseComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public storageAccountId: string;
 
     public containers: List<BlobContainer>;
     public data: ListView<BlobContainer, ListContainerParams>;
+    public dataSource: string;
 
     private _onGroupAddedSub: Subscription;
 
     constructor(
         router: Router,
         changeDetector: ChangeDetectorRef,
-        activatedRoute: ActivatedRoute,
+        private activeRoute: ActivatedRoute,
         private dialog: MatDialog,
         private sidebarManager: SidebarManager,
         private taskManager: BackgroundTaskService,
@@ -49,7 +50,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnC
 
         super(changeDetector);
         this.data = this.storageContainerService.listView();
-        ComponentUtils.setActiveItem(activatedRoute, this.data);
+        ComponentUtils.setActiveItem(activeRoute, this.data);
 
         this.data.items.subscribe((containers) => {
             this.containers = containers;
@@ -62,6 +63,13 @@ export class DataContainerListComponent extends ListBaseComponent implements OnC
 
         this._onGroupAddedSub = this.storageContainerService.onContainerAdded.subscribe((fileGroupId: string) => {
             this.data.loadNewItem(storageContainerService.get(this.storageAccountId, fileGroupId));
+        });
+    }
+
+    public ngOnInit() {
+        this.activeRoute.params.subscribe((params) => {
+            this.dataSource = params["dataSource"];
+            this.changeDetector.markForCheck();
         });
     }
 

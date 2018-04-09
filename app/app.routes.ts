@@ -123,7 +123,7 @@ export const routes: Routes = [
         component: DataHomeComponent,
     },
     {
-        path: "data/:storageAccountId/containers",
+        path: "data/:dataSource/containers",
         canActivate: [NavigationGuard],
         component: DataHomeComponent,
         children: [

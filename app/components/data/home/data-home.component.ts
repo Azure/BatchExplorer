@@ -73,7 +73,7 @@ export class DataHomeComponent implements OnInit {
 
     public ngOnInit() {
         this.activeRoute.params.subscribe((params) => {
-            this.dataSource = params["storageAccountId"]
+            this.dataSource = params["dataSource"]
                 || localStorage.getItem(Constants.localStorageKey.lastStorageAccount);
             if (!this.dataSource) {
                 this.autoStorageService.get().subscribe((storageAccountId) => {
@@ -81,15 +81,15 @@ export class DataHomeComponent implements OnInit {
                 });
             } else {
                 localStorage.setItem(Constants.localStorageKey.lastStorageAccount, this.dataSource);
-                if (this.dataSource === this.fileGroupsId) {
-                    this.autoStorageService.get().subscribe((storageAccountId) => {
+                this.autoStorageService.getStorageAccountIdFromDataSource(this.dataSource)
+                    .subscribe((storageAccountId) => {
                         this.storageAccountId = storageAccountId;
-                        this.containerTypePrefix.setValue(Constants.ncjFileGroupPrefix);
+                        if (this.dataSource === this.fileGroupsId) {
+                            this.containerTypePrefix.setValue(Constants.ncjFileGroupPrefix);
+                        } else {
+                            this.containerTypePrefix.setValue("");
+                        }
                     });
-                } else {
-                    this.storageAccountId = this.dataSource;
-                    this.containerTypePrefix.setValue("");
-                }
             }
         });
     }
