@@ -1,5 +1,4 @@
 import {
-    AfterViewInit,
     Component,
     ElementRef,
     Input,
@@ -17,7 +16,7 @@ import "./loading.scss";
     selector: "bl-loading",
     templateUrl: "loading.html",
 })
-export class LoadingComponent implements AfterViewInit {
+export class LoadingComponent {
     @ViewChild("ref")
     public loadingContent: ElementRef;
 
@@ -40,8 +39,8 @@ export class LoadingComponent implements AfterViewInit {
         this._updateDisplayStatus();
     }
 
-    @Input()
-    public error: ServerError;
+    @Input() public error: ServerError;
+    @Input() public relative: boolean = false;
 
     public get status() {
         return this._status;
@@ -49,7 +48,6 @@ export class LoadingComponent implements AfterViewInit {
 
     public statuses = DisplayStatus;
     public displayStatus = new BehaviorSubject<DisplayStatus>(DisplayStatus.Loading);
-    public isRelative: boolean = true;
 
     private _status = LoadingStatus.Loading;
     private _parentDisplayStatus = DisplayStatus.Ready;
@@ -63,11 +61,6 @@ export class LoadingComponent implements AfterViewInit {
                 this._updateDisplayStatus();
             });
         }
-    }
-
-    public ngAfterViewInit() {
-        // Timeout for negating "Expression has changed after it was checked" error
-        setTimeout(() => this.isRelative = this.loadingContent.nativeElement.children.length === 0);
     }
 
     private _updateDisplayStatus() {

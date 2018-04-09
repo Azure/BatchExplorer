@@ -10,7 +10,9 @@ import { BlobContainer } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { EntityView } from "app/services/core";
-import { GetContainerParams, StorageBlobService, StorageContainerService } from "app/services/storage";
+import {
+    AutoStorageService, GetContainerParams, StorageBlobService, StorageContainerService,
+} from "app/services/storage";
 import { DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
 @Component({
@@ -42,6 +44,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         private router: Router,
         private sidebarManager: SidebarManager,
         private storageContainerService: StorageContainerService,
+        private autoStorageService: AutoStorageService,
         private storageBlobService: StorageBlobService) {
 
         this.data = this.storageContainerService.view();
@@ -61,10 +64,13 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
             this.containerId = params["id"];
-            this.storageAccountId = params["storageAccountId"];
-            this.data.params = { storageAccountId: this.storageAccountId, id: this.containerId };
-            this.data.fetch();
-            this.changeDetector.markForCheck();
+            this.autoStorageService.getStorageAccountIdFromDataSource(params["dataSource"])
+                .subscribe((storageAccountId) => {
+                    this.storageAccountId = storageAccountId;
+                    this.data.params = { storageAccountId: this.storageAccountId, id: this.containerId };
+                    this.data.fetch();
+                    this.changeDetector.markForCheck();
+                });
         });
     }
 

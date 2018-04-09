@@ -136,6 +136,15 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         return this._optionsMap.get([...this.selected].first());
     }
 
+    public get title() {
+        if (this.hasValueSelected) {
+            const values = [...this.selected].map(x => this._optionsMap.get(x)).map(x => x && x.label).join(", ");
+            return `${this.placeholder}: ${values}`;
+        } else {
+            return this.placeholder;
+        }
+    }
+
     public toggleDropdown() {
         if (this.showOptions) {
             this.closeDropdown();
