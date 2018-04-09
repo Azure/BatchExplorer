@@ -37,7 +37,7 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
             // TODO handle here.
             const options = {
                 suffixFilter: this.suffixFilter,
-                fetchAll: true,
+                fetchAll: false,
             };
             this.fileNavigator = this.storageBlobService.navigate(this.storageAccountId, this.container, null, options);
             this.fileNavigator.init();

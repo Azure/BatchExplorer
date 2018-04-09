@@ -188,7 +188,7 @@ export class FileNavigator<TParams = any> {
                 return Observable.of(files);
             }
 
-            const filtered = files.filter((file) => file.name.endsWith(this._suffixFilter));
+            const filtered = files.filter((file) => file.isDirectory || file.name.endsWith(this._suffixFilter));
             return Observable.of(List(filtered));
         });
     }
