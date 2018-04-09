@@ -83,12 +83,12 @@ export class DataHomeComponent implements OnInit {
                 localStorage.setItem(Constants.localStorageKey.lastStorageAccount, this.dataSource);
                 this.autoStorageService.getStorageAccountIdFromDataSource(this.dataSource)
                     .subscribe((storageAccountId) => {
-                        this.storageAccountId = storageAccountId;
                         if (this.dataSource === this.fileGroupsId) {
                             this.containerTypePrefix.setValue(Constants.ncjFileGroupPrefix);
                         } else {
                             this.containerTypePrefix.setValue("");
                         }
+                        this.storageAccountId = storageAccountId;
                     });
             }
         });
@@ -153,6 +153,7 @@ export class DataHomeComponent implements OnInit {
         const prefix = this._getFilterValue(advanced);
         const search = this._getFilterValue(quickSearch);
         const query = prefix + search;
+        console.log("MErge??", query, prefix, search);
         if (query === "") {
             return FilterBuilder.none();
         } else {

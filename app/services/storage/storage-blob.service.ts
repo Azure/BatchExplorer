@@ -71,7 +71,7 @@ export class StorageBlobService {
     public maxContainerPageSize: number = 50;
 
     private _blobListCache = new TargetedDataCache<ListBlobParams, File>({
-        key: ({ container }) => container,
+        key: ({ storageAccountId, container }) => `${storageAccountId}/${container}`,
     }, "name");
 
     private _blobGetter: StorageEntityGetter<File, BlobFileParams>;

@@ -1,5 +1,5 @@
 import {
-    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input,
+    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input, OnChanges, OnInit,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
@@ -38,7 +38,7 @@ const defaultConfig: BrowseLayoutConfig = {
     templateUrl: "browse-layout.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BrowseLayoutComponent implements AfterContentInit {
+export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChanges {
     /**
      * Field for the quicksearch.
      * @default id.
@@ -69,14 +69,6 @@ export class BrowseLayoutComponent implements AfterContentInit {
     private _selectionChangeSub: Subscription;
 
     constructor(activeRoute: ActivatedRoute, private changeDetector: ChangeDetectorRef, private dialog: MatDialog) {
-        this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
-            if (query === "") {
-                this.quickFilter = FilterBuilder.none();
-            } else {
-                this.quickFilter = FilterBuilder.prop(this.config.quickSearchField).startswith(query.clearWhitespace());
-            }
-            this._updateFilter();
-        });
 
         activeRoute.queryParams.subscribe((params: any) => {
             if (params.filter) {
@@ -96,6 +88,23 @@ export class BrowseLayoutComponent implements AfterContentInit {
                 this.updateActiveItem(null);
             }
         });
+    }
+
+    public ngOnInit() {
+        this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
+            if (query === "") {
+                this.quickFilter = FilterBuilder.none();
+            } else {
+                this.quickFilter = FilterBuilder.prop(this.config.quickSearchField).startswith(query.clearWhitespace());
+            }
+            this._updateFilter();
+        });
+    }
+
+    public ngOnChanges(changes) {
+        if (changes.config) {
+            this._updateFilter();
+        }
     }
 
     public ngAfterContentInit() {

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnChanges,OnInit,  OnDestroy, forwardRef } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy,  OnInit, forwardRef } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, autobind } from "@batch-flask/core";
@@ -99,8 +99,10 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
             this.data.setOptions({ ...defaultListOptions });
         } else {
             const filterText = (filter as any).value;
+            console.log("Hand fot here", filterText);
             this.data.setOptions({ ...defaultListOptions, filter: filterText && filterText.toLowerCase() });
         }
+        console.warn("new filter", filter, this.storageAccountId, this.data.options.filter);
 
         if (this.storageAccountId) {
             this.data.fetchNext();

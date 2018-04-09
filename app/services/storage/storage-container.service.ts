@@ -4,11 +4,11 @@ import { Observable, Subject } from "rxjs";
 import { HttpCode, ServerError } from "@batch-flask/core";
 import { BlobContainer } from "app/models";
 import {
-    DataCache,
     EntityView,
     ListView,
     StorageEntityGetter,
     StorageListGetter,
+    TargetedDataCache,
 } from "app/services/core";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { log } from "app/utils";
@@ -42,19 +42,21 @@ export class StorageContainerService {
 
     private _containerGetter: StorageEntityGetter<BlobContainer, GetContainerParams>;
     private _containerListGetter: StorageListGetter<BlobContainer, ListContainerParams>;
-    private _containerCache = new DataCache<BlobContainer>();
+    private _containerCache = new TargetedDataCache<ListContainerParams, BlobContainer>({
+        key: ({ storageAccountId }) => storageAccountId,
+    }, "name");
 
     constructor(
         private storageClient: StorageClientService,
         private zone: NgZone) {
 
         this._containerGetter = new StorageEntityGetter(BlobContainer, this.storageClient, {
-            cache: () => this._containerCache,
+            cache: params => this._containerCache.getCache(params),
             getFn: (client, params: GetContainerParams) =>
                 client.getContainerProperties(params.id),
         });
         this._containerListGetter = new StorageListGetter(BlobContainer, this.storageClient, {
-            cache: () => this._containerCache,
+            cache: params => this._containerCache.getCache(params),
             getData: (client, params, options, continuationToken) => {
                 return client.listContainersWithPrefix(
                     options && options.filter,
@@ -76,7 +78,7 @@ export class StorageContainerService {
 
     public listView(): ListView<BlobContainer, ListContainerParams> {
         const view = new ListView({
-            cache: () => this._containerCache,
+            cache: params => this._containerCache.getCache(params),
             getter: this._containerListGetter,
         });
         return view;
@@ -87,7 +89,7 @@ export class StorageContainerService {
      */
     public view(): EntityView<BlobContainer, GetContainerParams> {
         return new EntityView({
-            cache: () => this._containerCache,
+            cache: params => this._containerCache.getCache(params),
             getter: this._containerGetter,
             poll: Constants.PollRate.entity,
         });
