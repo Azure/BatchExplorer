@@ -1,6 +1,6 @@
 import {
-    AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, Inject,
-    OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, forwardRef,
+    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren,
+    Inject, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, forwardRef,
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -28,26 +28,28 @@ export class TableRowComponent extends AbstractListItemBase implements AfterCont
     public get routerLinkActiveClass() {
         return this.link ? "selected" : null;
     }
-    private _dimensions: number[] = [];
+    public dimensions: number[] = [];
     private _sub: Subscription;
 
     // tslint:disable:no-forward-ref
     constructor(
         @Inject(forwardRef(() => TableComponent)) public table: TableComponent,
         router: Router,
+        private changeDetector: ChangeDetectorRef,
         contextmenuService: ContextMenuService,
         breadcrumbService: BreadcrumbService) {
         super(table, router, contextmenuService, breadcrumbService);
 
         this._sub = this.table.dimensions.subscribe((dimensions) => {
-            this._dimensions = dimensions;
-            this._applyDimensions();
+            this.dimensions = dimensions;
+            this.changeDetector.markForCheck();
         });
     }
 
     public ngAfterContentInit() {
         this.cells.changes.subscribe(() => {
             this._updateData();
+            this.changeDetector.markForCheck();
         });
         this._updateData();
     }
@@ -56,19 +58,15 @@ export class TableRowComponent extends AbstractListItemBase implements AfterCont
         this._sub.unsubscribe();
     }
 
+    public trackCell(index: number, cell: TableCellComponent) {
+        return index;
+    }
+
     private _updateData() {
         const map = {};
         this.cells.forEach((cell, index) => {
             map[index] = cell.value;
         });
         this.data = map;
-        this._applyDimensions();
-    }
-
-    private _applyDimensions() {
-        if (!this.cells) { return; }
-        this.cells.forEach((cell, index) => {
-            cell.width = this._dimensions[index];
-        });
     }
 }

@@ -1,8 +1,6 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, TemplateRef, ViewChild,
 } from "@angular/core";
-
-import { TableColumnComponent } from "../table-column";
 
 @Component({
     selector: "bl-cell",
@@ -10,6 +8,7 @@ import { TableColumnComponent } from "../table-column";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableCellComponent {
+
     /**
      * Specify the value here if its different from the content
      */
@@ -19,6 +18,9 @@ export class TableCellComponent {
         this._width = width;
         this.changeDetector.markForCheck();
     }
+
+    @ViewChild(TemplateRef)
+    public content: TemplateRef<any>;
 
     @HostBinding("class.fixed-size")
     public get fixedSize() {

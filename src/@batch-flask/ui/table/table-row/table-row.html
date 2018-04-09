@@ -1,3 +1,9 @@
 <ng-template>
-    <ng-content></ng-content>
+    <div *ngFor="let cell of cells;trackBy: trackCell;let index = index"
+        class="bl-table-cell"
+        [class.fixed-size]="dimensions[index]"
+        [style.flex-basis]="dimensions[index] + 'px'">
+
+        <ng-template [ngTemplateOutlet]="cell.content"></ng-template>
+    </div>
 </ng-template>
