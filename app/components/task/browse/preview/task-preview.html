@@ -1,16 +1,20 @@
 <div [ngSwitch]="task.state">
-	<div *ngSwitchCase="taskStates.running">
-		<i class="fa fa-clock-o" aria-hidden="true"></i>
+    <div *ngSwitchCase="taskStates.running">
+        <i class="fa fa-clock-o" aria-hidden="true"></i>
         <bl-timespan [startTime]="startTime"></bl-timespan>
+    </div>
 
-	</div>
+    <div *ngSwitchCase="taskStates.completed" [matTooltip]="exitCodeMessage">
+        <div class="running-time">
+            <bl-timespan [startTime]="startTime" [endTime]="endTime"></bl-timespan>
+        </div>
+        <div [class.success]="exitCode === 0" [class.failure]="exitCode !== 0">
+            <span>{{exitCode}}</span>
+            <i class="fa fa-check-square-o" aria-hidden="true"></i>
+        </div>
+    </div>
 
-	<div *ngSwitchCase="taskStates.completed" [class.success]="exitCode === 0" [class.failure]="exitCode !== 0" [matTooltip]="exitCodeMessage">
-		<span>{{exitCode}}</span>
-        <i class="fa fa-check-square-o" aria-hidden="true"></i>
-	</div>
-
-	<div *ngSwitchDefault matTooltip="Task is waiting to start">
-		<i class="fa fa-hourglass-half" aria-hidden="true"></i>
-	</div>
+    <div *ngSwitchDefault matTooltip="Task is waiting to start">
+        <i class="fa fa-hourglass-half" aria-hidden="true"></i>
+    </div>
 </div>
