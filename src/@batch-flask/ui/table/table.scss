@@ -87,10 +87,9 @@ bl-table {
         }
     }
 
-    bl-cell,
+    .bl-table-cell,
     bl-column {
         vertical-align: middle;
-        text-align: left;
         padding: 0 5px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -145,7 +144,7 @@ bl-table {
         }
     }
 
-    bl-cell {
+    .bl-table-cell {
         font-size: 13px;
         position: relative;
         white-space: nowrap;

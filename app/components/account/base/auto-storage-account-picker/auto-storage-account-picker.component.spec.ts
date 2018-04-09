@@ -6,10 +6,9 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { TableCellComponent } from "@batch-flask/ui/table";
 import { AccountResource, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
-import { LoadingMockComponent, TableMockComponent } from "test/utils/mocks/components";
+import { LoadingMockComponent, TableCellMockComponent, TableMockComponent } from "test/utils/mocks/components";
 import { AutoStorageAccountPickerComponent } from "./auto-storage-account-picker.component";
 
 const account = new AccountResource({
@@ -28,7 +27,7 @@ class TestComponent {
     public account = account;
 }
 
-describe("StorageAccountPickerComponent", () => {
+describe("AutoStorageAccountPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: AutoStorageAccountPickerComponent;
@@ -50,7 +49,7 @@ describe("StorageAccountPickerComponent", () => {
         TestBed.configureTestingModule({
             imports: [RouterTestingModule, FormsModule],
             declarations: [
-                AutoStorageAccountPickerComponent, TableMockComponent, TableCellComponent,
+                AutoStorageAccountPickerComponent, TableMockComponent, TableCellMockComponent,
                 LoadingMockComponent, TestComponent,
             ],
             providers: [

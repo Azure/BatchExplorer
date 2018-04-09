@@ -1,5 +1,5 @@
 <div class="table-head" [class.no-scroll]="!showScrollShadow">
-  <ng-content select="bl-thead"></ng-content>
+  <ng-content select="bl-thead" *ngIf="head && head.show"></ng-content>
 </div>
 <div class="table-body">
     <div class="scroll-shadow" *ngIf="showScrollShadow"></div>
