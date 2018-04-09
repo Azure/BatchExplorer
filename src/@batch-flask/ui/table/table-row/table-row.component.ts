@@ -1,8 +1,9 @@
 import {
-    AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, Inject, OnInit,
-    QueryList, TemplateRef, ViewChild, forwardRef,
+    AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, Inject,
+    OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, forwardRef,
 } from "@angular/core";
 import { Router } from "@angular/router";
+import { Subscription } from "rxjs";
 
 import { AbstractListItemBase } from "@batch-flask/ui/abstract-list";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
@@ -15,7 +16,7 @@ import { TableComponent } from "../table.component";
     templateUrl: "table-row.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableRowComponent extends AbstractListItemBase implements AfterViewInit, OnInit {
+export class TableRowComponent extends AbstractListItemBase implements AfterContentInit, OnInit, OnDestroy {
     @ViewChild(TemplateRef)
     public content: TemplateRef<any>;
 
@@ -23,9 +24,12 @@ export class TableRowComponent extends AbstractListItemBase implements AfterView
     public cells: QueryList<TableCellComponent>;
 
     public data: { [key: number]: any } = {};
+
     public get routerLinkActiveClass() {
         return this.link ? "selected" : null;
     }
+    private _dimensions: number[] = [];
+    private _sub: Subscription;
 
     // tslint:disable:no-forward-ref
     constructor(
@@ -34,13 +38,22 @@ export class TableRowComponent extends AbstractListItemBase implements AfterView
         contextmenuService: ContextMenuService,
         breadcrumbService: BreadcrumbService) {
         super(table, router, contextmenuService, breadcrumbService);
+
+        this._sub = this.table.dimensions.subscribe((dimensions) => {
+            this._dimensions = dimensions;
+            this._applyDimensions();
+        });
     }
 
-    public ngAfterViewInit() {
+    public ngAfterContentInit() {
         this.cells.changes.subscribe(() => {
             this._updateData();
         });
         this._updateData();
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 
     private _updateData() {
@@ -49,5 +62,13 @@ export class TableRowComponent extends AbstractListItemBase implements AfterView
             map[index] = cell.value;
         });
         this.data = map;
+        this._applyDimensions();
+    }
+
+    private _applyDimensions() {
+        if (!this.cells) { return; }
+        this.cells.forEach((cell, index) => {
+            cell.width = this._dimensions[index];
+        });
     }
 }

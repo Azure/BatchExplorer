@@ -2,6 +2,7 @@ import {
     ChangeDetectorRef, Component, ContentChild, ContentChildren, EventEmitter,
     HostBinding, HostListener, Input, Optional, Output, QueryList,
 } from "@angular/core";
+import { Observable } from "rxjs";
 
 import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import { DragUtils, log } from "@batch-flask/utils";
@@ -56,6 +57,10 @@ export class TableComponent extends AbstractListBase {
         return this.config.activable;
     }
     public dropTargetRowKey: string = null;
+
+    public get dimensions(): Observable<number[]> {
+        return this.head.dimensions;
+    }
 
     protected _config: TableConfig = tableDefaultConfig;
     private _sortingColumn: TableColumnComponent;
