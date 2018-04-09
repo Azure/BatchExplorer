@@ -1,4 +1,4 @@
-<bl-banner *ngIf="loadingError" type="error" >
+<bl-banner *ngIf="loadingError" type="error">
     <div code>{{ loadingError.code }}</div>
     <div message [title]="loadingError.message">{{ loadingError.message }}</div>
 </bl-banner>
@@ -13,9 +13,10 @@
             </div>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                <bl-button [action]="showKeys" color="light" title="Credentials and code samples" tooltipPosition="above"><i class="fa fa-key"></i></bl-button>
-                <bl-delete-button [action]="deleteBatchAccount"
-                    [enabled]="accountState !== accountProvisioningState.Creating && accountState !== accountProvisioningState.Deleting"></bl-delete-button>
+                <bl-button [action]="showKeys" color="light" title="Credentials and code samples" tooltipPosition="above">
+                    <i class="fa fa-key"></i>
+                </bl-button>
+                <bl-delete-button [action]="deleteBatchAccount" [enabled]="accountState !== accountProvisioningState.Creating && accountState !== accountProvisioningState.Deleting"></bl-delete-button>
             </bl-button-group>
             <div summaryTile>
                 <bl-account-quotas-card [account]="account"></bl-account-quotas-card>
@@ -46,9 +47,13 @@
                                 </p>
                             </bl-no-item>
                             <bl-table class="dashboard">
+                                <bl-thead [show]="false">
+                                    <bl-column></bl-column>
+                                    <bl-column [defaultWidth]="75"></bl-column>
+                                </bl-thead>
                                 <bl-row *ngFor="let job of (jobData.items | async);trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id">
                                     <bl-cell [value]="job.id"></bl-cell>
-                                    <bl-cell class="fixed-size text-right" style="color:steelblue; flex-basis:75px;" [value]="job.state"></bl-cell>
+                                    <bl-cell class="text-right" [value]="job.state"></bl-cell>
                                 </bl-row>
                             </bl-table>
                         </bl-loading>
@@ -73,12 +78,17 @@
                                 </p>
                             </bl-no-item>
                             <bl-table class="dashboard">
+                                <bl-thead [show]="false">
+                                    <bl-column></bl-column>
+                                    <bl-column [defaultWidth]="30"></bl-column>
+                                    <bl-column [defaultWidth]="60"></bl-column>
+                                </bl-thead>
                                 <bl-row *ngFor="let pool of (poolData.items | async);trackBy: trackByFn" [link]="['/pools/', pool.id]" [key]="pool.id">
                                     <bl-cell [value]="pool.id"></bl-cell>
-                                    <bl-cell class="fixed-size" style="flex-basis:30px;">
+                                    <bl-cell>
                                         <i aria-hidden="true" class="fa fa-{{pool.osIconName()}}"></i>
                                     </bl-cell>
-                                    <bl-cell class="fixed-size text-right" style="flex-basis:60px;">
+                                    <bl-cell class="text-right">
                                         <bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>
                                     </bl-cell>
                                 </bl-row>
@@ -108,7 +118,8 @@
                                 </p>
                             </bl-no-item>
                             <bl-table class="dashboard">
-                                <bl-row *ngFor="let app of (applicationData.items | async).slice(0, 10);trackBy: trackByFn" [link]="['/applications/', app.id]" [key]="app.id">
+                                <bl-row *ngFor="let app of (applicationData.items | async).slice(0, 10);trackBy: trackByFn" [link]="['/applications/', app.id]"
+                                    [key]="app.id">
                                     <bl-cell>{{app.id}}</bl-cell>
                                 </bl-row>
                             </bl-table>

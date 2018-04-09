@@ -3,6 +3,8 @@ import { Observable } from "rxjs";
 
 import { AccountService } from "app/services/account.service";
 
+export type StorageDataSource = string | "file-groups";
+
 @Injectable()
 export class AutoStorageService {
     public storageAccountId: Observable<string>;
@@ -25,5 +27,14 @@ export class AutoStorageService {
 
     public get(): Observable<string> {
         return this.storageAccountId.take(1);
+    }
+
+    public getStorageAccountIdFromDataSource(dataSource: StorageDataSource): Observable<string> {
+        if (!dataSource) { return Observable.of(dataSource); }
+        if (dataSource === "file-groups") {
+            return this.get();
+        } else {
+            return Observable.of(dataSource);
+        }
     }
 }

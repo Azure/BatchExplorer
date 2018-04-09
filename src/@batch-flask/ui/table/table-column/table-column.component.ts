@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, Component, HostBinding, HostListener, Inject, Input, forwardRef,
+    ChangeDetectionStrategy, Component, HostBinding, HostListener, Inject, Input, OnChanges, forwardRef,
 } from "@angular/core";
 
 import { SecureUtils } from "@batch-flask/utils";
@@ -22,8 +22,10 @@ export enum SortDirection {
     changeDetection: ChangeDetectionStrategy.OnPush,
 
 })
-export class TableColumnComponent {
+export class TableColumnComponent implements OnChanges {
     public SortDirection = SortDirection;
+
+    @Input() public defaultWidth: number = null;
 
     @HostBinding("class.sortable")
     @Input()
@@ -32,13 +34,34 @@ export class TableColumnComponent {
     @HostBinding("class.sorting")
     public isSorting: boolean = false;
 
+    /**
+     * Current column width
+     */
+    public width = null;
+
     public sortDirection = SortDirection.Asc;
 
     public id: string;
 
-    // tslint:disable-next-line:no-forward-ref
-    constructor( @Inject(forwardRef(() => TableComponent)) private _table: TableComponent) {
+    @HostBinding("class.fixed-size")
+    public get fixedSize() {
+        return this.width !== null;
+    }
+
+    @HostBinding("style.flex-basis")
+    public get flexBasis() {
+        return this.width && `${this.width}px`;
+    }
+
+    constructor(@Inject(forwardRef(() => TableComponent)) private _table: TableComponent) {
         this.id = SecureUtils.uuid();
+    }
+
+    public ngOnChanges(changes) {
+        if (changes.defaultWidth) {
+            this.width = this.defaultWidth;
+            this._table.head.updateDimensions();
+        }
     }
 
     @HostListener("click")

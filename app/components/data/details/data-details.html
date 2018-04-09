@@ -1,4 +1,4 @@
-<bl-loading [status]="data.newDataStatus | async">
+<bl-loading [status]="data.newDataStatus | async" [error]="data.error | async">
     <div *ngIf="container" class="fit-details-container">
         <bl-summary-card>
             <div summaryTitle>{{container?.name}}</div>

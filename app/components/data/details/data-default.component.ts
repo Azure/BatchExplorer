@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { ArmResourceUtils } from "app/utils";
 @Component({
     selector: "bl-application-default",
     template: `
@@ -10,7 +11,11 @@ import { Component } from "@angular/core";
 })
 
 export class DataDefaultComponent {
-    public static breadcrumb() {
-        return { name: "File groups" };
+    public static breadcrumb(params) {
+        if (params["dataSource"] === "file-groups") {
+            return { name: "File groups" };
+        }
+        const name = ArmResourceUtils.getAccountNameFromResourceId(params["dataSource"]);
+        return { name };
     }
 }

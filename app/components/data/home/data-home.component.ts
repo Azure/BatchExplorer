@@ -73,23 +73,27 @@ export class DataHomeComponent implements OnInit {
 
     public ngOnInit() {
         this.activeRoute.params.subscribe((params) => {
-            this.dataSource = params["storageAccountId"]
-                || localStorage.getItem(Constants.localStorageKey.lastStorageAccount);
+            this.dataSource = params["dataSource"];
+            if (!this.dataSource && localStorage.getItem(Constants.localStorageKey.lastStorageAccount)) {
+                this.dataSource = localStorage.getItem(Constants.localStorageKey.lastStorageAccount);
+                this._navigateToStorageAccount(this.dataSource);
+            }
+
             if (!this.dataSource) {
                 this.autoStorageService.get().subscribe((storageAccountId) => {
                     this._navigateToStorageAccount(storageAccountId);
                 });
             } else {
                 localStorage.setItem(Constants.localStorageKey.lastStorageAccount, this.dataSource);
-                if (this.dataSource === this.fileGroupsId) {
-                    this.autoStorageService.get().subscribe((storageAccountId) => {
+                this.autoStorageService.getStorageAccountIdFromDataSource(this.dataSource)
+                    .subscribe((storageAccountId) => {
+                        if (this.dataSource === this.fileGroupsId) {
+                            this.containerTypePrefix.setValue(Constants.ncjFileGroupPrefix);
+                        } else {
+                            this.containerTypePrefix.setValue("");
+                        }
                         this.storageAccountId = storageAccountId;
-                        this.containerTypePrefix.setValue(Constants.ncjFileGroupPrefix);
                     });
-                } else {
-                    this.storageAccountId = this.dataSource;
-                    this.containerTypePrefix.setValue("");
-                }
             }
         });
     }

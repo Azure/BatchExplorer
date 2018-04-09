@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import {
-    BackgroundTaskService, ContextMenu, ContextMenuItem, QuickListItemStatus, SidebarManager,
+    BackgroundTaskService, ContextMenu, ContextMenuItem, LoadingStatus, QuickListItemStatus, SidebarManager,
 } from "@batch-flask/ui";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
@@ -29,18 +29,21 @@ const defaultListOptions = {
         useExisting: forwardRef(() => DataContainerListComponent),
     }],
 })
-export class DataContainerListComponent extends ListBaseComponent implements OnChanges, OnDestroy {
+export class DataContainerListComponent extends ListBaseComponent implements OnInit, OnChanges, OnDestroy {
+    public LoadingStatus = LoadingStatus;
+
     @Input() public storageAccountId: string;
 
     public containers: List<BlobContainer>;
     public data: ListView<BlobContainer, ListContainerParams>;
+    public dataSource: string;
 
     private _onGroupAddedSub: Subscription;
 
     constructor(
         router: Router,
         changeDetector: ChangeDetectorRef,
-        activatedRoute: ActivatedRoute,
+        private activeRoute: ActivatedRoute,
         private dialog: MatDialog,
         private sidebarManager: SidebarManager,
         private taskManager: BackgroundTaskService,
@@ -49,7 +52,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnC
 
         super(changeDetector);
         this.data = this.storageContainerService.listView();
-        ComponentUtils.setActiveItem(activatedRoute, this.data);
+        ComponentUtils.setActiveItem(activeRoute, this.data);
 
         this.data.items.subscribe((containers) => {
             this.containers = containers;
@@ -65,6 +68,13 @@ export class DataContainerListComponent extends ListBaseComponent implements OnC
         });
     }
 
+    public ngOnInit() {
+        this.activeRoute.params.subscribe((params) => {
+            this.dataSource = params["dataSource"];
+            this.changeDetector.markForCheck();
+        });
+    }
+
     public ngOnChanges(changes) {
         if (changes.storageAccountId && this.storageAccountId) {
             this.data.params = { storageAccountId: this.storageAccountId };
@@ -75,6 +85,10 @@ export class DataContainerListComponent extends ListBaseComponent implements OnC
     public ngOnDestroy() {
         this.data.dispose();
         this._onGroupAddedSub.unsubscribe();
+    }
+
+    public get entityType() {
+        return this.dataSource === "file-groups" ? "File groups" : "Storage containers";
     }
 
     @autobind()
