@@ -17,12 +17,10 @@
         </mat-menu>
     </div>
     <div pre-quicksearch>
-            <div class="blselect">
-                <bl-storage-account-picker [ngModel]="dataSource" (ngModelChange)="updateDataSource($event)">
-                    <bl-option [value]="fileGroupsId" label="File groups"></bl-option>
-                    <bl-option value="-" label="--------------------" [disabled]="true"></bl-option>
-                </bl-storage-account-picker>
-            </div>
-        </div>
+        <bl-storage-account-picker [ngModel]="dataSource" (ngModelChange)="updateDataSource($event)">
+            <bl-option [value]="fileGroupsId" label="File groups"></bl-option>
+            <bl-option value="-" label="--------------------" [disabled]="true"></bl-option>
+        </bl-storage-account-picker>
+    </div>
     <bl-data-container-list blBrowseLayoutList [storageAccountId]="storageAccountId" [filter]="filter"></bl-data-container-list>
 </bl-browse-layout>
