@@ -29,10 +29,11 @@
         </bl-row>
     </bl-table>
 </bl-focus-section>
+<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>
 <bl-no-item [itemCount]="containers.size" [filter]="filter" [status]="status">
     <i icon class="fa fa-cloud-upload small"></i>
-    <span no-filter>No file groups</span>
-    <span with-filter>No file groups match this filter</span>
+    <span no-filter>No {{entityType}}</span>
+    <span with-filter>No {{entityType}} match this filter</span>
 </bl-no-item>
 <div *ngIf="!storageAccountId">
     No storage account picked

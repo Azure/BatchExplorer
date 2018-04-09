@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy,  OnInit, forwardRef } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import {
-    BackgroundTaskService, ContextMenu, ContextMenuItem, QuickListItemStatus, SidebarManager,
+    BackgroundTaskService, ContextMenu, ContextMenuItem, LoadingStatus, QuickListItemStatus, SidebarManager,
 } from "@batch-flask/ui";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
@@ -30,6 +30,8 @@ const defaultListOptions = {
     }],
 })
 export class DataContainerListComponent extends ListBaseComponent implements OnInit, OnChanges, OnDestroy {
+    public LoadingStatus = LoadingStatus;
+
     @Input() public storageAccountId: string;
 
     public containers: List<BlobContainer>;
@@ -83,6 +85,10 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
     public ngOnDestroy() {
         this.data.dispose();
         this._onGroupAddedSub.unsubscribe();
+    }
+
+    public get entityType() {
+        return this.dataSource === "file-groups" ? "File groups" : "Storage containers";
     }
 
     @autobind()
