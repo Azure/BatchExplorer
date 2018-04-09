@@ -12,6 +12,9 @@ import { ArmResourceUtils } from "app/utils";
 
 export class DataDefaultComponent {
     public static breadcrumb(params) {
+        if (params["dataSource"] === "file-groups") {
+            return { name: "File groups" };
+        }
         const name = ArmResourceUtils.getAccountNameFromResourceId(params["dataSource"]);
         return { name };
     }
