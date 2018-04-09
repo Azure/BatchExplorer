@@ -99,10 +99,8 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
             this.data.setOptions({ ...defaultListOptions });
         } else {
             const filterText = (filter as any).value;
-            console.log("Hand fot here", filterText);
             this.data.setOptions({ ...defaultListOptions, filter: filterText && filterText.toLowerCase() });
         }
-        console.warn("new filter", filter, this.storageAccountId, this.data.options.filter);
 
         if (this.storageAccountId) {
             this.data.fetchNext();

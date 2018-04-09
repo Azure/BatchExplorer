@@ -73,8 +73,12 @@ export class DataHomeComponent implements OnInit {
 
     public ngOnInit() {
         this.activeRoute.params.subscribe((params) => {
-            this.dataSource = params["dataSource"]
-                || localStorage.getItem(Constants.localStorageKey.lastStorageAccount);
+            this.dataSource = params["dataSource"];
+            if (!this.dataSource && localStorage.getItem(Constants.localStorageKey.lastStorageAccount)) {
+                this.dataSource = localStorage.getItem(Constants.localStorageKey.lastStorageAccount);
+                this._navigateToStorageAccount(this.dataSource);
+            }
+
             if (!this.dataSource) {
                 this.autoStorageService.get().subscribe((storageAccountId) => {
                     this._navigateToStorageAccount(storageAccountId);
@@ -153,7 +157,6 @@ export class DataHomeComponent implements OnInit {
         const prefix = this._getFilterValue(advanced);
         const search = this._getFilterValue(quickSearch);
         const query = prefix + search;
-        console.log("MErge??", query, prefix, search);
         if (query === "") {
             return FilterBuilder.none();
         } else {
