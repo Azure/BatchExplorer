@@ -1,3 +1,8 @@
+# 0.14.1
+
+### Hot fixes
+* Selecting an item when the filter is open would not close the filter [\#1207](https://github.com/Azure/BatchLabs/issues/1207)
+
 # 0.14.0
 [All items](https://github.com/Azure/BatchLabs/milestone/16?closed=1)
 

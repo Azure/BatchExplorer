@@ -8,8 +8,8 @@ import * as moment from "moment";
 import { Subscription } from "rxjs";
 
 import { BlobContainer } from "app/models";
-import { ListContainerParams, StorageService } from "app/services";
 import { ListView } from "app/services/core";
+import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 
 import "./file-group-sas.scss";
@@ -40,8 +40,18 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
     private _propagateChange: (value: any[]) => void = null;
     private _subscriptions: Subscription[] = [];
 
-    constructor(private storageService: StorageService) {
-        this.fileGroupsData = this.storageService.containerListView(Constants.ncjFileGroupPrefix);
+    constructor(private autoStorageService: AutoStorageService,
+                private storageContainerService: StorageContainerService) {
+
+        this.fileGroupsData = this.storageContainerService.listView();
+        this.autoStorageService.get().subscribe((storageAccountId) => {
+            this.fileGroupsData.params = {
+                storageAccountId,
+            };
+            this.fileGroupsData.setOptions({
+                filter: Constants.ncjFileGroupPrefix,
+            });
+        });
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;
         });
@@ -104,8 +114,11 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
             },
         };
 
-        this.storageService.generateSharedAccessContainerUrl(this.containerId, accessPolicy).subscribe((value) => {
-            this.value.setValue(value);
+        this.autoStorageService.get().subscribe((storageAccountId) => {
+            this.storageContainerService.generateSharedAccessUrl(storageAccountId,
+                this.containerId, accessPolicy).subscribe((value) => {
+                    this.value.setValue(value);
+                });
         });
     }
 

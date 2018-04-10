@@ -20,7 +20,7 @@
             <bl-column>Default Version</bl-column>
             <bl-column>Allow Updates</bl-column>
         </bl-thead>
-        <bl-row *ngFor="let application of displayedApplications;trackBy: trackByFn" [link]="['/applications/', application.id]"
+        <bl-row *ngFor="let application of displayedApplications;trackBy: trackByFn" [link]="['/applications', application.id]"
             [key]="application.id" [contextmenu]="contextmenu(application)">
             <bl-cell>{{application.id}}</bl-cell>
             <bl-cell>{{application.packages?.size}}</bl-cell>
@@ -29,6 +29,7 @@
         </bl-row>
     </bl-table>
 </bl-focus-section>
+<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>
 
 <bl-no-item [itemCount]="displayedApplications.size" [filter]="filter" [status]="status">
     <i icon class="fa fa-file-archive-o small"></i>

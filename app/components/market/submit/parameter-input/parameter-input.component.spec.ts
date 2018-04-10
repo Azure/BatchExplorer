@@ -16,7 +16,10 @@ import { CloudFilePickerComponent } from "app/components/data/shared/cloud-file-
 import { FileGroupSasComponent } from "app/components/data/shared/file-group-sas";
 import { NcjParameterExtendedType, NcjParameterWrapper, ParameterInputComponent } from "app/components/market/submit";
 import { BatchApplication, NcjParameterRawType } from "app/models";
-import { StorageService } from "app/services";
+import { NcjFileGroupService } from "app/services";
+import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
+import { Constants } from "app/utils";
+
 import * as Fixtures from "test/fixture";
 import { updateInput } from "test/utils/helpers";
 import { MockListView } from "test/utils/mocks";
@@ -55,8 +58,11 @@ describe("ParameterInputComponent", () => {
     let testComponent: TestComponent;
     let component: ParameterInputComponent;
     let de: DebugElement;
-    let storageServiceSpy: any;
+    let fileGroupServiceSpy: any;
+    let autoStorageServiceSpy: any;
+    let storageContainerSpy: any;
     let dialogServiceSpy: any;
+    let storageBlobServiceSpy: any;
     let sidebarSpy: any;
     let listProxy: MockListView<BatchApplication, any>;
 
@@ -72,13 +78,25 @@ describe("ParameterInputComponent", () => {
             open: jasmine.createSpy("open"),
         };
 
-        storageServiceSpy = {
+        storageContainerSpy = {
             listView: () => listProxy,
             onContainerAdded: new Subject(),
-            containerListView: () => listProxy,
-            generateSharedAccessContainerUrl: (containerId, accessPolicy) => {
+            generateSharedAccessUrl: (containerId, accessPolicy) => {
                 return Observable.of(`https://${containerId}.com?sastoken`);
             },
+        };
+
+        storageBlobServiceSpy = {
+
+        };
+        fileGroupServiceSpy = {
+            addFileGroupPrefix: jasmine.createSpy("addFileGroupPrefix").and.callFake((fgName) => {
+                return `${Constants.ncjFileGroupPrefix}${fgName}`;
+            }),
+        };
+
+        autoStorageServiceSpy = {
+            get: () => Observable.of("storage-acc-1"),
         };
 
         sidebarSpy = {
@@ -90,7 +108,10 @@ describe("ParameterInputComponent", () => {
             declarations: [NoItemMockComponent, ParameterInputComponent, FileGroupSasComponent,
                 TestComponent, FileGroupPickerComponent, CloudFilePickerComponent],
             providers: [
-                { provide: StorageService, useValue: storageServiceSpy },
+                { provide: NcjFileGroupService, useValue: fileGroupServiceSpy },
+                { provide: StorageContainerService, useValue: storageContainerSpy },
+                { provide: StorageBlobService, useValue: storageBlobServiceSpy },
+                { provide: AutoStorageService, useValue: autoStorageServiceSpy },
                 { provide: DialogService, useValue: dialogServiceSpy },
                 { provide: SidebarManager, useValue: sidebarSpy },
             ],
@@ -476,7 +497,7 @@ describe("ParameterInputComponent", () => {
         it("generates sas token", () => {
             fileInputComponent.generateSasToken();
             fixture.detectChanges();
-            expect(fileInputComponent.value.value).toBe(`https://${containerIdValue}.com?sastoken`);
+            expect(fileInputComponent.value.value).toBe(`https://storage-acc-1.com?sastoken`);
         });
 
         it("auto-generates token when inputs change", () => {
@@ -489,7 +510,7 @@ describe("ParameterInputComponent", () => {
                 },
             });
             fixture.detectChanges();
-            expect(fileInputComponent.value.value).toBe(`https://${fileInputComponent.containerId}.com?sastoken`);
+            expect(fileInputComponent.value.value).toBe(`https://storage-acc-1.com?sastoken`);
         });
     });
 });

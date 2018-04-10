@@ -33,7 +33,7 @@ export const forms = {
             displayName: 1024,
             applicationName: 64,
             version: 64,
-            fileGroup: 63,
+            fileGroup: 55,
         },
         regex: {
             id: /^[\w\_-]+$/i,
@@ -95,6 +95,11 @@ export const localStorageKey = {
      * Save the latest azure environemnt used
      */
     azureEnvironment: "azure_environment",
+
+    /**
+     * Last selected storage account
+     */
+    lastStorageAccount: "last_storage_account",
 };
 
 export const ApiVersion = {
@@ -198,5 +203,8 @@ export const ListPageSizes = {
 };
 
 export const KnownQueryParameters = {
-    useAutoPool: "useAutoPool",
+    useAutoPool: "auto-pool",
+    inputParameter: "input-parameter",
+    assetContainer: "asset-container",
+    assetPaths: "asset-paths",
 };

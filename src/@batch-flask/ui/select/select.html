@@ -1,0 +1,42 @@
+<div class="select-button-container" tabindex="0">
+   <bl-clickable #selectButton class="select-button" (do)="clickSelectButton($event)" [title]="title">
+        <div class="label">
+            <ng-container *ngIf="!hasValueSelected">{{placeholder}}</ng-container>
+            <ng-container *ngIf="hasValueSelected">
+                <ng-container *ngIf="hasMultipleSelected">
+                    {{selected.size}} selected
+                </ng-container>
+                <ng-container *ngIf="!hasMultipleSelected">
+                    {{firstSelection ? firstSelection.label : ""}}
+                </ng-container>
+            </ng-container>
+        </div>
+        <div class="caret">
+            <i class="fa fa-caret-down" *ngIf="!showOptions"></i>
+            <i class="fa fa-caret-up" *ngIf="showOptions"></i>
+        </div>
+   </bl-clickable>
+   <ng-container *ngIf="showOptions && filterable">
+       <input class="select-filter" #filterInput [ngModel]="filter" (ngModelChange)="filterChanged($event)" placeholder="Filter items...">
+   </ng-container>
+</div>
+<div #dropdown class="dropdown" *ngIf="showOptions">
+    <div class="option" *ngFor="let option of displayedOptions;trackBy: trackOption"
+        (click)="handleClickOption($event, option)"
+        [class.focused]="focusedOption === option.value"
+        [class.disabled]="option.disabled">
+
+        <div class="checkbox" *ngIf="multiple">
+            <i class="fa fa-check" *ngIf="selected.has(option.value)"></i>
+        </div>
+        <div class="option-content">
+            {{option.label}}
+        </div>
+    </div>
+    <div class="no-option" *ngIf="displayedOptions.length === 0 && filter">
+        No match
+    </div>
+    <div class="no-option" *ngIf="displayedOptions.length === 0 && !filter">
+        No options available
+    </div>
+</div>

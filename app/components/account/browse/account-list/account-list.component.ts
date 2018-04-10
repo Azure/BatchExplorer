@@ -75,7 +75,11 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
         if (this.isAccountFavorite(accountId)) {
             this.accountService.unFavoriteAccount(accountId);
         } else {
-            this.accountService.favoriteAccount(accountId);
+            this.accountService.favoriteAccount(accountId).subscribe({
+                complete: () => {
+                    this.changeDetector.markForCheck();
+                },
+            });
         }
     }
 

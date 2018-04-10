@@ -1,41 +1,34 @@
 import { Injectable, NgZone } from "@angular/core";
-import { AsyncSubject, Observable, Subject } from "rxjs";
+import { AsyncSubject, Observable } from "rxjs";
 
 import { HttpCode, ServerError } from "@batch-flask/core";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { BlobContainer, File } from "app/models";
-import { SharedAccessPolicy } from "app/services/storage/models";
-import { CloudPathUtils, log } from "app/utils";
-import { BlobService, createBlobServiceWithSas } from "azure-storage";
-import { Constants } from "common";
 import {
     DataCache,
     EntityView,
-    ListOptionsAttributes,
     ListResponse,
     ListView,
     StorageEntityGetter,
     StorageListGetter,
     TargetedDataCache,
-} from "./core";
-import { FileLoadOptions, FileLoader, FileNavigator, FileSource } from "./file";
-import { FileSystemService } from "./fs.service";
-import { BlobStorageClientProxy, ListBlobOptions } from "./storage";
+} from "app/services/core";
+import { FileLoadOptions, FileLoader, FileNavigator, FileSource } from "app/services/file";
+import { FileSystemService } from "app/services/fs.service";
+import { SharedAccessPolicy } from "app/services/storage/models";
+import { CloudPathUtils, log } from "app/utils";
+import { BlobService, createBlobServiceWithSas } from "azure-storage";
+import { Constants } from "common";
+import { BlobStorageClientProxy, ListBlobOptions } from "./blob-storage-client-proxy";
 import { StorageClientService } from "./storage-client.service";
 
 export interface ListBlobParams {
+    storageAccountId: string;
     container?: string;
 }
 
-export interface GetContainerParams {
-    id: string;
-}
-
-export interface ListContainerParams {
-    prefix?: string;
-}
-
 export interface BlobFileParams extends ListBlobParams {
+    storageAccountId: string;
     blobPrefix?: string;
     blobName?: string;
 }
@@ -73,24 +66,16 @@ export interface BulkUploadStatus {
 const storageBlobUrlRegex = /^(https:\/\/[\w\._\-]+)\/([\w\-_]+)\/([\w\-_.]+)\?(.*)$/i;
 
 @Injectable()
-export class StorageService {
-    /**
-     * Triggered only when a file group is added through this app.
-     * Used to notify the list of a new item
-     */
-    public onContainerAdded = new Subject<string>();
-    public onContainerUpdated = new Subject();
+export class StorageBlobService {
     public maxBlobPageSize: number = 100; // 500 slows down the UI too much.
     public maxContainerPageSize: number = 50;
 
-    private _containerCache = new DataCache<BlobContainer>();
     private _blobListCache = new TargetedDataCache<ListBlobParams, File>({
-        key: ({ container }) => container,
+        key: ({ storageAccountId, container }) => `${storageAccountId}/${container}`,
     }, "name");
 
-    private _containerGetter: StorageEntityGetter<BlobContainer, GetContainerParams>;
     private _blobGetter: StorageEntityGetter<File, BlobFileParams>;
-    private _containerListGetter: StorageListGetter<BlobContainer, ListContainerParams>;
+
     private _blobListGetter: StorageListGetter<File, ListBlobParams>;
 
     constructor(
@@ -99,28 +84,10 @@ export class StorageService {
         private fs: FileSystemService,
         private zone: NgZone) {
 
-        this._containerGetter = new StorageEntityGetter(BlobContainer, this.storageClient, {
-            cache: () => this._containerCache,
-            getFn: (client, params: GetContainerParams) =>
-                client.getContainerProperties(params.id),
-        });
-
         this._blobGetter = new StorageEntityGetter(File, this.storageClient, {
             cache: (params) => this.getBlobFileCache(params),
             getFn: (client, params: BlobFileParams) =>
                 client.getBlobProperties(params.container, params.blobName, params.blobPrefix),
-        });
-
-        this._containerListGetter = new StorageListGetter(BlobContainer, this.storageClient, {
-            cache: () => this._containerCache,
-            getData: (client, params, options, continuationToken) => {
-                return client.listContainersWithPrefix(
-                    params && params.prefix,
-                    options && options.filter,
-                    continuationToken,
-                    { maxResults: options && options.maxResults });
-            },
-            logIgnoreError: storageIgnoredErrors,
         });
 
         this._blobListGetter = new StorageListGetter(File, this.storageClient, {
@@ -140,7 +107,7 @@ export class StorageService {
         return this._blobListCache.getCache(params);
     }
 
-    public blobListView(container: string, options: ListBlobOptions = {})
+    public listView(storageAccountId: string, container: string, options: ListBlobOptions = {})
         : ListView<File, ListBlobParams> {
 
         const view = new ListView({
@@ -148,15 +115,16 @@ export class StorageService {
             getter: this._blobListGetter,
             initialOptions: options,
         });
-        view.params = { container };
+        view.params = { storageAccountId, container };
         return view;
     }
 
-    public listBlobs(
+    public list(
+        storageAccountId: string,
         container: string,
         options: ListBlobOptions = {},
         forceNew = false): Observable<ListResponse<Blob>> {
-        return this._blobListGetter.fetch({ container }, options, forceNew);
+        return this._blobListGetter.fetch({ storageAccountId, container }, options, forceNew);
     }
 
     /**
@@ -165,13 +133,13 @@ export class StorageService {
      * @param prefix Prefix to make the root of the tree
      * @param options List options
      */
-    public navigateContainerBlobs(container: string, prefix?: string, options: NavigateBlobsOptions = {}) {
+    public navigate(storageAccountId, container: string, prefix?: string, options: NavigateBlobsOptions = {}) {
         return new FileNavigator({
-            cache: this.getBlobFileCache({ container: container }),
+            cache: this.getBlobFileCache({ storageAccountId, container: container }),
             basePath: prefix,
-            params: { container },
+            params: { storageAccountId, container },
             getter: this._blobListGetter,
-            getFile: (filename: string) => this.getBlobContent(container, filename),
+            getFile: (filename: string) => this.getBlobContent(storageAccountId, container, filename),
             onError: options.onError,
         });
     }
@@ -183,8 +151,8 @@ export class StorageService {
      * @param blobName - Name of the blob, not including prefix
      * @param blobPrefix - Optional prefix of the blob, i.e. {container}/{blobPrefix}+{blobName}
      */
-    public getBlobPropertiesOnce(container: string, blobName: string, blobPrefix?: string): Observable<File> {
-        return this._blobGetter.fetch({ container, blobName, blobPrefix });
+    public get(storageAccountId: string, container: string, blobName: string, blobPrefix?: string): Observable<File> {
+        return this._blobGetter.fetch({ storageAccountId, container, blobName, blobPrefix });
     }
 
     public blobView(): EntityView<File, BlobFileParams> {
@@ -201,23 +169,28 @@ export class StorageService {
      * @param blobName - Name of the blob, not including prefix
      * @param blobPrefix - Optional prefix of the blob, i.e. {container}/{blobPrefix}+{blobName}
      */
-    public getBlobContent(container: string, blobName: string, blobPrefix?: string): FileLoader {
+    public getBlobContent(
+        storageAccountId: string,
+        container: string,
+        blobName: string,
+        blobPrefix?: string): FileLoader {
+
         return new FileLoader({
             filename: blobName,
             source: FileSource.blob,
             groupId: blobPrefix,
             fs: this.fs,
             properties: () => {
-                return this.getBlobPropertiesOnce(container, blobName, blobPrefix);
+                return this.get(storageAccountId, container, blobName, blobPrefix);
             },
             content: (options: FileLoadOptions) => {
-                return this._callStorageClient((client) => {
+                return this._callStorageClient(storageAccountId, (client) => {
                     const pathToBlob = `${blobPrefix || ""}${blobName}`;
                     return client.getBlobContent(container, pathToBlob, options);
                 });
             },
             download: (dest: string) => {
-                return this._callStorageClient((client) => {
+                return this._callStorageClient(storageAccountId, (client) => {
                     const pathToBlob = `${blobPrefix || ""}${blobName}`;
                     return client.getBlobToLocalFile(container, pathToBlob, dest);
                 });
@@ -232,10 +205,14 @@ export class StorageService {
      * @param fileName - The local path to the file to be downloaded.
      * @param options - Optional parameters, rangeStart & rangeEnd for partial contents
      */
-    public saveBlobToFile(container: string, blobName: string, fileName: string, options: any = {})
+    public saveBlobToFile(
+        storageAccountId: string,
+        container: string,
+        blobName: string,
+        fileName: string, options: any = {})
         : Observable<BlobContentResult> {
 
-        return this._callStorageClient((client) => {
+        return this._callStorageClient(storageAccountId, (client) => {
             return client.getBlobToLocalFile(container, blobName, fileName, options);
         });
     }
@@ -247,10 +224,15 @@ export class StorageService {
      * @param blobName - Fully prefixed blob path: "1001/$TaskOutput/myblob.txt"
      * @param options - Optional parameters
      */
-    public deleteBlobIfExists(container: string, blob: string, options: any = {}): Observable<any> {
-        return this._callStorageClient((client) => {
+    public deleteBlobIfExists(
+        storageAccountId: string,
+        container: string,
+        blob: string,
+        options: any = {}): Observable<any> {
+
+        return this._callStorageClient(storageAccountId, (client) => {
             return client.deleteBlobIfExists(container, blob, options).then((result) => {
-                const blobCache = this.getBlobFileCache({ container: container });
+                const blobCache = this.getBlobFileCache({ storageAccountId, container: container });
                 if (result && blobCache) {
                     // cache key is file.name (the name of the blob excluding the container)
                     blobCache.deleteItemByKey(blob);
@@ -265,7 +247,11 @@ export class StorageService {
      * @param files - Files to delete
      * @param options - Optional parameters
      */
-    public deleteFilesFromContainer(container: BlobContainer, files: File[], options: any = {}) {
+    public deleteFilesFromContainer(
+        storageAccountId: string,
+        container: BlobContainer,
+        files: File[],
+        options: any = {}) {
         const fileCount = files.length;
         const taskTitle = `Delete ${fileCount} files from ${container.name}`;
 
@@ -274,7 +260,7 @@ export class StorageService {
             const observable = Observable.interval(100).take(fileCount);
             observable.subscribe({
                 next: (i) => {
-                    return this.deleteBlobIfExists(container.id, files[i].name).subscribe({
+                    return this.deleteBlobIfExists(storageAccountId, container.id, files[i].name).subscribe({
                         next: () => {
                             task.name.next(`${taskTitle} (${i + 1}/${fileCount})`);
                             task.progress.next((i + 1) / fileCount * 100);
@@ -293,86 +279,12 @@ export class StorageService {
         });
     }
 
-    /**
-     * Get a particular container from the linked storage account
-     * @param container - Name of the blob container
-     * @param options - Optional parameters for the request
-     */
-    public getContainerOnce(container: string, options: any = {}): Observable<BlobContainer> {
-        return this._containerGetter.fetch({ id: container });
-    }
-
-    public containerListView(prefix?: string, options: ListOptionsAttributes = {})
-        : ListView<BlobContainer, ListContainerParams> {
-
-        const view = new ListView({
-            cache: () => this._containerCache,
-            getter: this._containerListGetter,
-            initialOptions: options,
-        });
-
-        view.params = { prefix };
-        return view;
-    }
-
-    /**
-     * Create an entity view for a container
-     */
-    public containerView(): EntityView<BlobContainer, GetContainerParams> {
-        return new EntityView({
-            cache: () => this._containerCache,
-            getter: this._containerGetter,
-            poll: Constants.PollRate.entity,
-        });
-    }
-
-    /**
-     * Marks the specified container for deletion if it exists. The container and any blobs contained
-     * within it are later deleted during garbage collection.
-     */
-    public deleteContainer(container: string, options: any = {}): Observable<any> {
-        const observable = this._callStorageClient((client) => client.deleteContainer(container, options));
-        observable.subscribe({
-            error: (error) => {
-                log.error("Error deleting container: " + container, Object.assign({}, error));
-            },
-        });
-
-        return observable;
-    }
-
-    public createContainer(containerName: string): Observable<any> {
-        return this._callStorageClient((client) => {
-            return client.createContainer(containerName);
-        }, (error) => {
-            log.error(`Error creating container: ${containerName}`, { ...error });
-        });
-    }
-
-    public createContainerIfNotExists(containerName: string): Observable<any> {
-        return this._callStorageClient((client) => {
-            return client.createContainerIfNotExists(containerName);
-        }, (error) => {
-            log.error(`Error creating container: ${containerName}`, { ...error });
-        });
-    }
-
-    public generateSharedAccessContainerUrl(container: string, sharedAccessPolicy: SharedAccessPolicy)
-        : Observable<string> {
-        return this._callStorageClient((client) => {
-            const sasToken = client.generateSharedAccessSignature(container, null, sharedAccessPolicy);
-            return Promise.resolve(client.getUrl(container, null, sasToken));
-        }, (error) => {
-            // TODO-Andrew: test that errors are caught
-            log.error(`Error generating container SAS: ${container}`, { ...error });
-        });
-    }
-
     public generateSharedAccessBlobUrl(
+        storageAccountId: string,
         container: string, blob: string,
         sharedAccessPolicy: SharedAccessPolicy): Observable<string> {
 
-        return this._callStorageClient((client) => {
+        return this._callStorageClient(storageAccountId, (client) => {
             const sasToken = client.generateSharedAccessSignature(container, blob, sharedAccessPolicy);
             return Promise.resolve(client.getUrl(container, blob, sasToken));
         }, (error) => {
@@ -408,10 +320,16 @@ export class StorageService {
      * @param file Absolute path to the local file
      * @param remotePath Blob name
      */
-    public uploadFile(container: string, file: string, remotePath: string): Observable<BlobService.BlobResult> {
-        return this._callStorageClient((client) => client.uploadFile(container, file, remotePath), (error) => {
-            log.error(`Error upload file ${file} to container ${container}`, error);
-        });
+    public uploadFile(
+        storageAccountId: string,
+        container: string,
+        file: string,
+        remotePath: string): Observable<BlobService.BlobResult> {
+
+        return this._callStorageClient(storageAccountId,
+            (client) => client.uploadFile(container, file, remotePath), (error) => {
+                log.error(`Error upload file ${file} to container ${container}`, error);
+            });
     }
 
     /**
@@ -426,7 +344,12 @@ export class StorageService {
      * @param files List of absolute path to the files to upload
      * @param remotePath Optional path on the blob where to put the files.
      */
-    public uploadFiles(container: string, files: FileUpload[], remotePath?: string): Observable<BulkUploadStatus> {
+    public uploadFiles(
+        storageAccountId: string,
+        container: string,
+        files: FileUpload[],
+        remotePath?: string): Observable<BulkUploadStatus> {
+
         const total = files.length;
         return Observable.from(files).concatMap((file, index) => {
             const status: BulkUploadStatus = {
@@ -435,7 +358,7 @@ export class StorageService {
                 current: file,
             };
             const blob = remotePath ? CloudPathUtils.join(remotePath, file.remotePath) : file.remotePath;
-            const uploadObs = this.uploadFile(container, file.localPath, blob).map(x => ({
+            const uploadObs = this.uploadFile(storageAccountId, container, file.localPath, blob).map(x => ({
                 uploaded: index + 1,
                 total,
                 current: file,
@@ -466,24 +389,17 @@ export class StorageService {
     }
 
     /**
-     * Return the container name from a file group name
-     * @param fileGroupName Name of the file group
-     */
-    public fileGroupContainer(fileGroupName: string) {
-        return `${Constants.ncjFileGroupPrefix}${fileGroupName}`;
-    }
-
-    /**
      * Helper function to call an action on the storage client library. Will handle converting
      * any Storage error to a ServerError.
      * @param promise Promise returned by the batch client
      * @param  errorCallback Optional error callback if want to log
      */
     private _callStorageClient<T>(
+        storageAccountId: string,
         promise: (client: BlobStorageClientProxy) => Promise<any>,
         errorCallback?: (error: any) => void): Observable<T> {
 
-        return this.storageClient.get().take(1).flatMap((client) => {
+        return this.storageClient.getFor(storageAccountId).take(1).flatMap((client) => {
             return Observable.fromPromise<T>(promise(client)).catch((err) => {
                 const serverError = ServerError.fromStorage(err);
                 if (errorCallback) {

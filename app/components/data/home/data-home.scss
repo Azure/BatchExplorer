@@ -4,4 +4,8 @@ bl-data-home {
     display: block;
     width: 100%;
     height: $contentview-height;
+
+    .pre-quicksearch {
+        width: 200px;
+    }
 }

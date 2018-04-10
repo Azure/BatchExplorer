@@ -7,13 +7,14 @@
         </bl-button>
     </div>
     <div pre-quicksearch>
-        <mat-form-field>
-            <mat-select multiple placeholder="Subscriptions" [formControl]="subscriptionIds">
-                <mat-option *ngFor="let subscription of subscriptionService.subscriptions | async;trackBy: trackByFn" [value]="subscription.subscriptionId">
-                    {{subscription.displayName}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+        <bl-select [multiple]="true" placeholder="Subscriptions" [formControl]="subscriptionIds" [filterable]="true">
+            <bl-option *ngFor="let subscription of subscriptionService.subscriptions | async;trackBy: trackByFn;let index = index"
+                [value]="subscription.subscriptionId"
+                [label]="subscription.displayName"
+                [disabled]="index === 2">
+                {{subscription.displayName}}
+            </bl-option>
+        </bl-select>
     </div>
     <bl-account-list blBrowseLayoutList></bl-account-list>
 </bl-browse-layout>
