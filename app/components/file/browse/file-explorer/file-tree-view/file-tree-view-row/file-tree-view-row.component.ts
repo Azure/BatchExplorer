@@ -26,7 +26,16 @@ export class FileTreeViewRowComponent {
 
     @HostBinding("attr.title")
     public get title() {
-        return this.treeRow.path;
+        if (this.treeRow.virtual) {
+            return `${this.treeRow.path} (Virtual)`;
+        } else {
+            return this.treeRow.path;
+        }
+    }
+
+    @HostBinding("class.virtual")
+    public get virtual() {
+        return this.treeRow.virtual;
     }
 
     public handleCaretClick(event: MouseEvent) {
