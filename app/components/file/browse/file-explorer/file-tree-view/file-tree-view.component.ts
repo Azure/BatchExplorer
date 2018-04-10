@@ -137,6 +137,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
         if (treeRow.isDirectory) {
             items.push(new ContextMenuItem("Refresh", () => this.refresh(treeRow.path)));
+            items.push(new ContextMenuItem("New folder", () => this.newVirtualFolder(treeRow.path)));
         }
 
         if (this.canDeleteFiles) {
@@ -291,6 +292,10 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     public handleDragHover(event: DragEvent) {
         DragUtils.allowDrop(event, this.canDropExternalFiles);
+    }
+
+    public newVirtualFolder(path: string) {
+        this.fileNavigator.addVirtualFolder(`${path}/foo`);
     }
 
     private _buildTreeRows(tree) {

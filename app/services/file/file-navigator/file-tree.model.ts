@@ -155,6 +155,10 @@ export class FileTreeStructure {
         return this.directories[parentPath];
     }
 
+    public addVirtualFolder(path: string) {
+        this._checkDirInTree(path);
+    }
+
     private _checkDirInTree(directory: string) {
         const directories = this.directories;
         if (this.directories[directory]) {
