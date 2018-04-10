@@ -1,4 +1,5 @@
 import inspect
+import traceback
 from jsonrpc.error import JsonRpcMethodNotFoundError, JsonRpcInvalidParamsError, JsonRpcError
 import azure.batch_extensions.errors as batch_ext_error
 import azure.batch.models.batch_error as batch_error
@@ -63,6 +64,7 @@ class BatchLabsApp:
                     'paramDescription': e.parameter_description,
                 })
             except TypeError as e:
+                print(traceback.format_exc())
                 raise JsonRpcInvalidParamsError(str(e), e.args)
         else:
             raise JsonRpcMethodNotFoundError(name)
