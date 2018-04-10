@@ -6,6 +6,7 @@ import { Observable, Subscription } from "rxjs";
 
 import { Filter, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/core/list";
+import { LoadingStatus } from "@batch-flask/ui";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
@@ -13,6 +14,8 @@ import { BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
 import { ApplicationEditDialogComponent, DeleteApplicationDialogComponent } from "../action";
+
+import "./application-list.scss";
 
 @Component({
     selector: "bl-application-list",
@@ -23,6 +26,8 @@ import { ApplicationEditDialogComponent, DeleteApplicationDialogComponent } from
     }],
 })
 export class ApplicationListComponent extends ListBaseComponent implements OnInit, OnDestroy {
+    public LoadingStatus = LoadingStatus;
+
     public data: ListView<BatchApplication, ApplicationListParams>;
     public applications: List<BatchApplication>;
     public displayedApplications: List<BatchApplication>;

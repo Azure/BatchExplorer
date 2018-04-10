@@ -41,6 +41,9 @@ import { PollService } from "app/services/core";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 import { AADGraphHttpService, MsGraphHttpService } from "app/services/ms-graph/core";
 import {
+    AutoStorageService, StorageAccountKeysService, StorageBlobService, StorageClientService, StorageContainerService,
+} from "app/services/storage";
+import {
     AccountService,
     AdalService,
     AppInsightsApiService,
@@ -82,8 +85,6 @@ import {
     SSHKeyService,
     SettingsService,
     StorageAccountService,
-    StorageClientService,
-    StorageService,
     SubscriptionService,
     TaskService,
     ThemeService,
@@ -117,7 +118,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         MaterialModule,
         ReactiveFormsModule,
         HttpModule,
-        RouterModule.forRoot(routes, { useHash: true }),
+        RouterModule.forRoot(routes, { useHash: true, paramsInheritanceStrategy: "always" }),
         BaseModule,
         HttpClientModule,
         ...modules,
@@ -164,9 +165,12 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         PythonRpcService,
         ResourceAccessService,
         SettingsService,
+        AutoStorageService,
         StorageAccountService,
         StorageClientService,
-        StorageService,
+        StorageAccountKeysService,
+        StorageContainerService,
+        StorageBlobService,
         SSHKeyService,
         SubscriptionService,
         TaskService,

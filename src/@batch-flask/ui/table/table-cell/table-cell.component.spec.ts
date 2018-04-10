@@ -1,19 +1,29 @@
-import { Component, DebugElement } from "@angular/core";
+import { ChangeDetectorRef, Component, DebugElement, DoCheck, ViewChildren } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
 import { TableCellComponent } from "./table-cell.component";
 
+// tslint:disable:trackBy-function
 @Component({
     template: `
         <bl-cell value="ValueNoContent"></bl-cell>
         <bl-cell>ContentNoValue</bl-cell>
         <bl-cell value="HiddenValue">ContentAndValue</bl-cell>
-        <bl-cell [value]="DymamicValue"></bl-cell>
+        <bl-cell [value]="dymamicValue"></bl-cell>
+
+        <div class="cell" *ngFor="let cell of cells">
+            <ng-template [ngTemplateOutlet]="cell.content"></ng-template>
+        </div>
     `,
 })
-class TestComponent {
-    public get DymamicValue() {
+class TestComponent implements DoCheck {
+    @ViewChildren(TableCellComponent) public cells;
+
+    constructor(private changeDetector: ChangeDetectorRef) { }
+    // tslint:disable-next-line:use-life-cycle-interface
+    public ngDoCheck(): void { this.changeDetector.detectChanges(); }
+    public get dymamicValue() {
         return "I am a dynamic value";
     }
 }
@@ -28,8 +38,8 @@ describe("TableCellComponent", () => {
             declarations: [TableCellComponent, TestComponent],
         });
         fixture = TestBed.createComponent(TestComponent);
-        cells = fixture.debugElement.queryAll(By.css("bl-cell"));
         fixture.detectChanges();
+        cells = fixture.debugElement.queryAll(By.css(".cell"));
     });
 
     it("should show value if no content", () => {

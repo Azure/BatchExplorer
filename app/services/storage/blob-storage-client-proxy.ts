@@ -208,15 +208,12 @@ export class BlobStorageClientProxy {
      * @param {StorageRequestOptions} options - Optional request parameters
      */
     public listContainersWithPrefix(
-        prefix: string,
-        filter: string,
+        startswith: string,
         continuationToken?: any,
         options?: StorageRequestOptions): Promise<BlobStorageResult> {
 
-        prefix = prefix || "";
-        const prefixAndFilter = filter ? prefix + filter : prefix;
         return new Promise((resolve, reject) => {
-            this.client.listContainersSegmentedWithPrefix(prefixAndFilter, continuationToken, options,
+            this.client.listContainersSegmentedWithPrefix(startswith, continuationToken, options,
                 (error, result, response) => {
                     if (error) {
                         reject(error);

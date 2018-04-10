@@ -5,8 +5,8 @@ import { AsyncSubject, Observable } from "rxjs";
 
 import { FileExplorerConfig, FileExplorerSelectable } from "app/components/file/browse/file-explorer";
 import { BlobContainer } from "app/models";
-import { GetContainerParams, StorageService } from "app/services";
 import { EntityView } from "app/services/core";
+import { GetContainerParams, StorageContainerService } from "app/services/storage";
 import "./cloud-file-picker-dialog.scss";
 
 @Component({
@@ -27,20 +27,26 @@ export class CloudFilePickerDialogComponent {
 
     private _saved = false;
 
+    public set storageAccountId(storageAccountId: string) {
+        this._storageAccountId = storageAccountId;
+        this._updateData();
+    }
+    public get storageAccountId() { return this._storageAccountId; }
+
     public set containerId(containerId: string) {
         this._containerId = containerId;
-        this.data.params = { id: containerId };
-        this.data.fetch();
+        this._updateData();
     }
     public get containerId() { return this._containerId; }
 
+    private _storageAccountId: string;
     private _containerId: string;
 
     constructor(
-        private storageService: StorageService,
+        private storageContainerService: StorageContainerService,
         public dialogRef: MatDialogRef<CloudFilePickerDialogComponent>) {
 
-        this.data = this.storageService.containerView();
+        this.data = this.storageContainerService.view();
         this.data.item.subscribe((container) => {
             this.container = container;
         });
@@ -63,5 +69,12 @@ export class CloudFilePickerDialogComponent {
     public close() {
         this.done.next(this._saved);
         this.done.complete();
+    }
+
+    private _updateData() {
+        if (this.storageAccountId && this.containerId) {
+            this.data.params = { storageAccountId: this.storageAccountId, id: this.containerId };
+            this.data.fetch();
+        }
     }
 }

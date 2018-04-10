@@ -10,7 +10,8 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, NcjTemplateMode } from "app/models";
 import { FileGroupCreateDto, FileOrDirectoryDto } from "app/models/dtos";
-import { NcjSubmitService, NcjTemplateService, StorageService } from "app/services";
+import { NcjFileGroupService, NcjSubmitService, NcjTemplateService } from "app/services";
+import { StorageContainerService } from "app/services/storage";
 import { exists, log } from "app/utils";
 import { Constants } from "common";
 import { NcjParameterExtendedType, NcjParameterWrapper } from "./market-application.model";
@@ -60,7 +61,8 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         private templateService: NcjTemplateService,
         private ncjSubmitService: NcjSubmitService,
         private sidebarManager: SidebarManager,
-        private storageService: StorageService) {
+        private fileGroupService: NcjFileGroupService,
+        private storageService: StorageContainerService) {
 
         this.form = new FormGroup({});
     }
@@ -104,12 +106,17 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public get showPoolPicker(): boolean {
-        return this.modeState === NcjTemplateMode.ExistingPoolAndJob;
+        return this.modeState === NcjTemplateMode.ExistingPoolAndJob && !this.jobTemplateIsAutoPool;
     }
 
     public get showJobForm(): boolean {
         return this.modeState === NcjTemplateMode.NewPoolAndJob
             || this.modeState === NcjTemplateMode.ExistingPoolAndJob;
+    }
+
+    public get jobTemplateIsAutoPool() {
+        return Boolean(this.jobTemplate.job.properties.poolInfo
+            && this.jobTemplate.job.properties.poolInfo.autoPoolSpecification);
     }
 
     public pickMode(mode: NcjTemplateMode) {
@@ -125,9 +132,14 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public isFormValid() {
-        return (this.modeState === NcjTemplateMode.NewPoolAndJob && this.jobParams.valid && this.poolParams.valid) ||
-            (this.modeState === NcjTemplateMode.ExistingPoolAndJob && this.jobParams.valid && this.pickedPool.valid) ||
-            (this.modeState === NcjTemplateMode.NewPool && this.poolParams.valid);
+        switch (this.modeState) {
+            case NcjTemplateMode.NewPoolAndJob:
+                return this.jobParams.valid && this.poolParams.valid;
+            case NcjTemplateMode.ExistingPoolAndJob:
+                return this.jobParams.valid && (this.jobTemplateIsAutoPool || this.pickedPool.valid);
+            case NcjTemplateMode.NewPool:
+                return this.poolParams.valid;
+        }
     }
 
     public trackParameter(index, param: NcjParameterWrapper) {
@@ -168,7 +180,9 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     @autobind()
     private _createJob() {
         const jobTemplate = { ...this.jobTemplate };
-        jobTemplate.job.properties.poolInfo = this.pickedPool.value;
+        if (!this.jobTemplateIsAutoPool) {
+            jobTemplate.job.properties.poolInfo = this.pickedPool.value;
+        }
         this._saveTemplateAsRecent();
         return this.ncjSubmitService.submitJob(jobTemplate, this.jobParams.value)
             .cascade((data) => this._redirectToJob(data.properties.id));
@@ -217,7 +231,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         const sidebarRef = this.sidebarManager.open("sync-file-group", FileGroupCreateFormComponent);
 
         sidebarRef.component.setValue(new FileGroupCreateDto({
-            name: this.storageService.removeFileGroupPrefix(container),
+            name: this.fileGroupService.removeFileGroupPrefix(container),
             paths: paths.map((path) => new FileOrDirectoryDto({ path: path })),
             includeSubDirectories: true,
         }));
@@ -229,7 +243,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             if (fileGroupName && this._queryParameters[Constants.KnownQueryParameters.inputParameter]) {
                 // we know what the control is called so update it with the new value
                 const parameterName = this._queryParameters[Constants.KnownQueryParameters.inputParameter];
-                const fileGroupContainer = this.storageService.addFileGroupPrefix(fileGroupName);
+                const fileGroupContainer = this.fileGroupService.addFileGroupPrefix(fileGroupName);
                 (this.form.controls.job as FormGroup).controls[parameterName].setValue(fileGroupContainer);
             }
         });
@@ -244,7 +258,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
 
         if (this.jobTemplate) {
             // Remove the poolId param as we are writting it manually
-            if (this.jobTemplate.parameters.poolId) {
+            if (!this.jobTemplateIsAutoPool && this.jobTemplate.parameters.poolId) {
                 delete this.jobTemplate.parameters.poolId;
             }
 
@@ -284,7 +298,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             }
 
             templateFormGroup[key] = new FormControl(defaultValue, validator);
-            if (template.parameters[key].metadata.advancedType) {
+            if (template.parameters[key].metadata && template.parameters[key].metadata.advancedType) {
                 // Store the advanced data type as we need it for change events from file-groups
                 this._parameterTypeMap[key] = template.parameters[key].metadata.advancedType;
             }
@@ -302,7 +316,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         this._controlChanges.push(formGroup[key].valueChanges.debounceTime(400).distinctUntilChanged().subscribe((change) => {
             if (this._parameterTypeMap[key] === NcjParameterExtendedType.fileGroup && Boolean(change)) {
                 // Quick-Fix until we modify the CLI to finally sort out file group prefixes
-                change = this.storageService.addFileGroupPrefix(change);
+                change = this.fileGroupService.addFileGroupPrefix(change);
             }
 
             // Set the parameters on the route so when page reloads we keep the existing parameters

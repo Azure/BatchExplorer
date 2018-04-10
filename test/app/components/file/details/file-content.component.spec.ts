@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 
 import { FileContentComponent } from "app/components/file/details";
 import { File } from "app/models";
-import { FileService, StorageService } from "app/services";
+import { FileService } from "app/services";
 import { click } from "test/utils/helpers";
 import { MockSettingsService } from "test/utils/mocks";
 
@@ -23,11 +23,9 @@ describe("FileContentComponent", () => {
     let testComponent: TestComponent;
     let de: DebugElement;
 
-    let storageServiceSpy;
     let fileServiceSpy;
 
     beforeEach(() => {
-        storageServiceSpy = {};
         fileServiceSpy = {
             fileFromNode: (pool, node, filename) => ({
                 properties: () => Observable.of(new File()),
@@ -40,7 +38,6 @@ describe("FileContentComponent", () => {
             declarations: [FileContentComponent, TestComponent],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
-                { provide: StorageService, useValue: storageServiceSpy },
                 { provide: FileService, useValue: fileServiceSpy },
                 MockSettingsService.asProvider(),
             ],

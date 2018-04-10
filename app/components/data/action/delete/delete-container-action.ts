@@ -3,25 +3,26 @@ import { BehaviorSubject } from "rxjs";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { WaitForDeletePoller } from "app/components/core/pollers";
 import { BlobContainer } from "app/models";
-import { StorageService } from "app/services";
 import { LongRunningDeleteAction } from "app/services/core";
+import { StorageContainerService } from "app/services/storage";
 
 export class DeleteContainerAction extends LongRunningDeleteAction {
     constructor(
-        private storageService: StorageService,
+        private storageContainerService: StorageContainerService,
+        private storageAccountId: string,
         containerIds: string[]) {
 
         super("Container", containerIds);
     }
 
     public deleteAction(id: string) {
-        return this.storageService.deleteContainer(id);
+        return this.storageContainerService.delete(this.storageAccountId, id);
     }
 
     protected waitForDelete(id: string, taskManager?: BackgroundTaskService) {
-        this.storageService.getContainerOnce(id).subscribe({
+        this.storageContainerService.get(this.storageAccountId, id).subscribe({
             next: (container: BlobContainer) => {
-                const task = new WaitForDeletePoller(() => this.storageService.getContainerOnce(id));
+                const task = new WaitForDeletePoller(() => this.storageContainerService.get(this.storageAccountId, id));
                 if (taskManager) {
                     const message = `Deleting container: ${id}`;
                     taskManager.startTask(message, (bTask) => {

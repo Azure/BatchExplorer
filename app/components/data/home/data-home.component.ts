@@ -1,17 +1,18 @@
-import { Component, OnDestroy, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
-import { Observable, Subscription } from "rxjs";
-
+import { MatMenuTrigger } from "@angular/material";
 import { Filter, FilterBuilder, Property, autobind } from "@batch-flask/core";
+import { BrowseLayoutComponent, BrowseLayoutConfig } from "@batch-flask/ui/browse-layout";
+import { DialogService } from "@batch-flask/ui/dialogs";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { StorageService } from "app/services";
+import { Observable } from "rxjs";
+
+import { BlobContainer } from "app/models";
+import { AutoStorageService, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 import { FileGroupCreateFormComponent } from "../action";
 
-import { MatMenuTrigger } from "@angular/material";
-import { BrowseLayoutComponent, BrowseLayoutConfig } from "@batch-flask/ui/browse-layout";
-import { DialogService } from "@batch-flask/ui/dialogs";
-import { BlobContainer } from "app/models";
+import { ActivatedRoute, Router } from "@angular/router";
 import "./data-home.scss";
 
 const containerTypes = [
@@ -29,39 +30,72 @@ const containerTypes = [
     selector: "bl-data-home",
     templateUrl: "data-home.html",
 })
-export class DataHomeComponent implements OnDestroy {
+export class DataHomeComponent implements OnInit {
+
+    public static breadcrumb({ id }, { tab }) {
+        return { name: "Storage containers" };
+    }
+
     @ViewChild(MatMenuTrigger) public trigger: MatMenuTrigger;
 
     @ViewChild("layout")
     public layout: BrowseLayoutComponent;
 
+    public fileGroupsId = "file-groups";
     public containerTypes = containerTypes;
     public quickSearchQuery: string = "";
     public filter: Filter = FilterBuilder.none();
     public hasAutoStorage = true;
     public containerTypePrefix = new FormControl("");
+    public storageAccountId: string;
+
+    /**
+     * Can either be a storage account id or file-groups
+     */
+    public dataSource: string | "file-groups";
 
     public layoutConfig: BrowseLayoutConfig = {
         mergeFilter: this._mergeFilter.bind(this),
     };
-    private _autoStorageSub: Subscription;
 
     constructor(
+        private router: Router,
+        private activeRoute: ActivatedRoute,
+        private storageContainerService: StorageContainerService,
+        private autoStorageService: AutoStorageService,
         private sidebarManager: SidebarManager,
-        private dialogService: DialogService,
-        public storageService: StorageService) {
+        private dialogService: DialogService) {
 
         this.containerTypePrefix.valueChanges.subscribe((prefix) => {
             this.layout.advancedFilterChanged(FilterBuilder.prop("id").startswith(prefix));
         });
-
-        this._autoStorageSub = this.storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
-            this.hasAutoStorage = hasAutoStorage;
-        });
     }
 
-    public ngOnDestroy() {
-        this._autoStorageSub.unsubscribe();
+    public ngOnInit() {
+        this.activeRoute.params.subscribe((params) => {
+            this.dataSource = params["dataSource"];
+            if (!this.dataSource && localStorage.getItem(Constants.localStorageKey.lastStorageAccount)) {
+                this.dataSource = localStorage.getItem(Constants.localStorageKey.lastStorageAccount);
+                this._navigateToStorageAccount(this.dataSource);
+            }
+
+            if (!this.dataSource) {
+                this.autoStorageService.get().subscribe((storageAccountId) => {
+                    this._navigateToStorageAccount(storageAccountId);
+                });
+            } else {
+                localStorage.setItem(Constants.localStorageKey.lastStorageAccount, this.dataSource);
+                this.autoStorageService.getStorageAccountIdFromDataSource(this.dataSource)
+                    .subscribe((storageAccountId) => {
+                        if (this.dataSource === this.fileGroupsId) {
+                            this.containerTypePrefix.setValue(Constants.ncjFileGroupPrefix);
+                        } else {
+                            this.containerTypePrefix.setValue("");
+                        }
+                        this.storageAccountId = storageAccountId;
+                    });
+            }
+        });
     }
 
     @autobind()
@@ -98,6 +132,10 @@ export class DataHomeComponent implements OnDestroy {
 
     public advancedFilterChanged(filter: Filter) {
         this._updateFilter();
+    }
+
+    public updateDataSource(storageAccountId: string) {
+        this._navigateToStorageAccount(storageAccountId);
     }
 
     public trackType(index, type) {
@@ -139,10 +177,10 @@ export class DataHomeComponent implements OnDestroy {
     private _createEmptyContainer(name: string, fileGroup = false) {
         const prefix = fileGroup ? Constants.ncjFileGroupPrefix : "";
         const container = `${prefix}${name}`;
-        const obs = this.storageService.createContainer(container);
+        const obs = this.storageContainerService.create(this.storageAccountId, container);
         obs.subscribe({
             next: () => {
-                this.storageService.onContainerAdded.next(container);
+                this.storageContainerService.onContainerAdded.next(container);
             },
             error: () => null,
         });
@@ -158,7 +196,7 @@ export class DataHomeComponent implements OnDestroy {
         return (control: FormControl) => {
             const containerName = `${prefix}${control.value}`;
             return Observable.of(null).debounceTime(500)
-                .flatMap(() => this.storageService.getContainerOnce(containerName))
+                .flatMap(() => this.storageContainerService.get(this.storageAccountId, containerName))
                 .map((container: BlobContainer) => {
                     return {
                         duplicateContainer: {
@@ -167,5 +205,9 @@ export class DataHomeComponent implements OnDestroy {
                     };
                 }).catch(() => Observable.of(null));
         };
+    }
+
+    private _navigateToStorageAccount(storageAccountId: string) {
+        this.router.navigate(["/data", storageAccountId, "containers"]);
     }
 }

@@ -11,7 +11,8 @@ import { BlobUtilities } from "azure-storage";
 import * as moment from "moment";
 
 import { SecureUtils, UrlUtils } from "@batch-flask/utils";
-import { FileSystemService, SettingsService, StorageService } from "app/services";
+import { FileSystemService, SettingsService } from "app/services";
+import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import "./resourcefile-picker.scss";
 
@@ -49,7 +50,9 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
 
     constructor(
         private formBuilder: FormBuilder,
-        private storageService: StorageService,
+        private autoStorageService: AutoStorageService,
+        private storageBlobService: StorageBlobService,
+        private storageContainerService: StorageContainerService,
         private fs: FileSystemService,
         private settingsService: SettingsService,
         private changeDetector: ChangeDetectorRef) {
@@ -128,7 +131,8 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
      * @returns async when the all  file upload started
      */
     public async uploadFiles(files: string[], root = "") {
-        await this.storageService.createContainerIfNotExists(this._containerId).toPromise();
+        const storageAccountId = await this.autoStorageService.get().toPromise();
+        await this.storageContainerService.createIfNotExists(storageAccountId, this._containerId).toPromise();
         for (const file of files) {
             await this._uploadPath(file, root);
         }
@@ -158,20 +162,23 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
         const nodeFilePath = CloudPathUtils.join(root, filename);
         const blobName = CloudPathUtils.join("resource-files", this._folderId, root, filename);
         this.uploadingFiles.push(nodeFilePath);
-
-        const obs = this.storageService.uploadFile(this._containerId, filePath, blobName).flatMap((result) => {
-            this.uploadingFiles = this.uploadingFiles.filter(x => x !== nodeFilePath);
-            this.changeDetector.detectChanges();
-            const sas: SharedAccessPolicy = {
-                AccessPolicy: {
-                    Permissions: BlobUtilities.SharedAccessPermissions.READ,
-                    Start: new Date(),
-                    Expiry: moment().add(1, "week").toDate(),
-                },
-            };
-            return this.storageService.generateSharedAccessBlobUrl(this._containerId, blobName, sas).do((url) => {
-                this._addResourceFile(url, nodeFilePath);
-            });
+        const obs = this.autoStorageService.get().flatMap((storageAccountId) => {
+            return this.storageBlobService.uploadFile(storageAccountId, this._containerId,
+                filePath, blobName).flatMap((result) => {
+                    this.uploadingFiles = this.uploadingFiles.filter(x => x !== nodeFilePath);
+                    this.changeDetector.detectChanges();
+                    const sas: SharedAccessPolicy = {
+                        AccessPolicy: {
+                            Permissions: BlobUtilities.SharedAccessPermissions.READ,
+                            Start: new Date(),
+                            Expiry: moment().add(1, "week").toDate(),
+                        },
+                    };
+                    return this.storageBlobService.generateSharedAccessBlobUrl(storageAccountId, this._containerId,
+                        blobName, sas).do((url) => {
+                            this._addResourceFile(url, nodeFilePath);
+                        });
+                });
         }).share();
         this.upload.emit({ filename: nodeFilePath, done: obs });
         obs.subscribe();

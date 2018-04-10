@@ -75,7 +75,6 @@ export class AppComponent implements OnInit {
         registerIcons(matIconRegistry, sanitizer);
 
         this.route.queryParams.subscribe(({ fullscreen }) => {
-            // console.log("Query params?", fullscreen);
             this.fullscreen = Boolean(fullscreen);
         });
         permissionService.setUserPermissionProvider(() => {

@@ -8,11 +8,13 @@ import { StorageErrorDisplayComponent } from "./errors";
 import { FileGroupPickerComponent } from "./file-group-picker";
 import { FileGroupSasComponent } from "./file-group-sas";
 import { FileGroupsPickerComponent } from "./file-groups-picker";
+import { StorageAccountPickerComponent } from "./storage-account-picker";
 
 const components = [
     FileGroupPickerComponent, FileGroupSasComponent, FileGroupsPickerComponent,
     CloudFilePickerComponent, CloudFilePickerDialogComponent,
     StorageErrorDisplayComponent, BlobContainerPickerComponent,
+    StorageAccountPickerComponent,
 ];
 
 @NgModule({
