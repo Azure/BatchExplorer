@@ -18,6 +18,8 @@ import { ComponentUtils } from "app/utils";
 import { Constants } from "common";
 import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
+import "./data-container-list.scss";
+
 const defaultListOptions = {
     pageSize: Constants.ListPageSizes.default,
 };
