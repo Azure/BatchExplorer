@@ -18,6 +18,8 @@ import { ComponentUtils } from "app/utils";
 import { Constants } from "common";
 import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
+import "./data-container-list.scss";
+
 const defaultListOptions = {
     pageSize: Constants.ListPageSizes.default,
 };
@@ -77,6 +79,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
 
     public ngOnChanges(changes) {
         if (changes.storageAccountId && this.storageAccountId) {
+            this.containers = List([]);
             this.data.params = { storageAccountId: this.storageAccountId };
             this.data.fetchNext();
         }

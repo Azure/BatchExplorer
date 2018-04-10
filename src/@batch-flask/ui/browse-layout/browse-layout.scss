@@ -76,6 +76,7 @@ bl-browse-layout {
                 .bl-list-content {
                     flex: 1;
                     min-height: 100px;
+                    overflow-y: auto;
                     position: relative;
                 }
             }
@@ -90,6 +91,18 @@ bl-browse-layout {
                 overflow-y: hidden;
 
                 &:hover {
+                    overflow-y: auto;
+                }
+            }
+
+            [blbrowselayoutlist] {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+
+                > .list {
+                    flex: 1 1 auto;
+                    min-height: 100px;
                     overflow-y: auto;
                 }
             }
