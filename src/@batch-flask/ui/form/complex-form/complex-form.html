@@ -36,4 +36,6 @@
     [error]="error"
     [(showError)]="showError"
     (showJsonEditorChanges)="toggleJsonEditor($event)">
+
+    <ng-content blFormSummary select="[blFormSummary]"></ng-content>
 </bl-form-footer>
