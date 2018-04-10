@@ -1,12 +1,28 @@
 import {
     AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, ContentChildren, ElementRef, HostListener, Input, QueryList, ViewChild, forwardRef,
+    Component, ComponentRef, ContentChildren, ElementRef, HostListener, Injector, Input, QueryList, ViewChild, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 import { SelectOptionComponent } from "./option";
 
+import { Overlay } from "@angular/cdk/overlay";
+import { ComponentPortal } from "@angular/cdk/portal";
+import { SelectDropdownComponent } from "@batch-flask/ui/select/select-dropdown";
 import "./select.scss";
+
+/** Custom injector type specifically for instantiating components with a dialog. */
+export class SelectInjector implements Injector {
+    constructor(private select: SelectComponent, private parentInjector: Injector) { }
+
+    public get(token: any, notFoundValue?: any): any {
+        if (token === SelectComponent) {
+            return this.select;
+        }
+
+        return this.parentInjector.get(token, notFoundValue);
+    }
+}
 
 @Component({
     selector: "bl-select",
@@ -33,19 +49,37 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
     public options: QueryList<SelectOptionComponent>;
 
     public selected = new Set<any>();
-    public showOptions = false;
     public filter: string = "";
-    public displayedOptions: SelectOptionComponent[];
-    public focusedOption: any = null;
+    public set displayedOptions(displayedOptions: SelectOptionComponent[]) {
+        this._displayedOptions = displayedOptions;
+        if (this._dropdownRef) { this._dropdownRef.instance.displayedOptions = displayedOptions; }
+    }
+    public get displayedOptions() { return this._displayedOptions; }
+    public set focusedOption(option: any) {
+        this._focusedOption = option;
+        if (this._dropdownRef) { this._dropdownRef.instance.focusedOption = option; }
+    }
+    public get focusedOption() { return this._focusedOption; }
+
+    private _dropdownRef: ComponentRef<SelectDropdownComponent>;
+    private _displayedOptions: SelectOptionComponent[];
+    private _focusedOption: any = null;
 
     @ViewChild("selectButton", { read: ElementRef }) private _selectButtonEl: ElementRef;
     @ViewChild("filterInput") private _filterInputEl: ElementRef;
-    @ViewChild("dropdown") private _dropdownEl: ElementRef;
+
+    public get showOptions() {
+        return Boolean(this._dropdownRef);
+    }
 
     private _propagateChange: (value: any) => void;
     private _optionsMap: Map<any, SelectOptionComponent>;
 
-    constructor(private changeDetector: ChangeDetectorRef, private elementRef: ElementRef) {
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private elementRef: ElementRef,
+        private overlay: Overlay,
+        private injector: Injector) {
 
     }
 
@@ -76,7 +110,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
     @HostListener("document:click", ["$event"])
     public onClick(event: Event) {
         if (this.showOptions && !this.elementRef.nativeElement.contains(event.target)) {
-            this.showOptions = false;
+            this._dropdownRef.destroy();
             this.changeDetector.markForCheck();
         }
     }
@@ -119,8 +153,8 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         }
         const index = this._moveFocusInDirection(lastIndex, direction);
         this.changeDetector.markForCheck();
-        if (lastIndex !== index) {
-            this.scrollToIndex(index);
+        if (lastIndex !== index && this._dropdownRef) {
+            this._dropdownRef.instance.scrollToIndex(index);
         }
     }
 
@@ -154,33 +188,37 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
     }
 
     public openDropdown() {
-        this.showOptions = true;
-        if (this.filterable) {
-            if (!this.focusedOption) {
-                this.focusFirstOption();
-            }
-            setTimeout(() => {
-                this._filterInputEl.nativeElement.focus();
-            });
+        const positionStrategy = this.overlay.position().connectedTo(this.elementRef,
+            { originX: "start", originY: "bottom" },
+            { overlayX: "start", overlayY: "top" });
+
+        const overlayRef = this.overlay.create({
+            positionStrategy,
+            scrollStrategy: this.overlay.scrollStrategies.close(),
+        });
+        const injector = new SelectInjector(this, this.injector);
+        const portal = new ComponentPortal(SelectDropdownComponent, null, injector);
+        const ref = this._dropdownRef = overlayRef.attach(portal);
+        ref.instance.displayedOptions = this.displayedOptions;
+
+        if (!this.focusedOption) {
+            this.focusFirstOption();
         }
+        setTimeout(() => {
+            this._filterInputEl.nativeElement.focus();
+        });
         this.changeDetector.markForCheck();
     }
 
     public closeDropdown() {
-        this.showOptions = false;
+        if (this._dropdownRef) {
+            this._dropdownRef.destroy();
+        }
         setTimeout(() => {
             this._selectButtonEl.nativeElement.focus();
         });
 
         this.changeDetector.markForCheck();
-    }
-
-    public handleClickOption(event: Event, option: SelectOptionComponent) {
-        event.stopPropagation();
-        if (option.disabled) {
-            return;
-        }
-        this.selectOption(option);
     }
 
     public selectOption(option: SelectOptionComponent) {
@@ -193,7 +231,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
             }
         } else {
             this.selected = new Set([option.value]);
-            this.showOptions = false;
+            this.closeDropdown();
         }
         this.notifyChanges();
         this.changeDetector.markForCheck();
@@ -224,21 +262,6 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
 
     public trackOption(index, option: SelectOptionComponent) {
         return option.value;
-    }
-
-    /**
-     * Scroll to the option at the given index
-     * @param index Index of the option
-     */
-    public scrollToIndex(index: number) {
-        const el: HTMLElement = this._dropdownEl.nativeElement;
-        const height = el.getBoundingClientRect().height;
-        const current = el.scrollTop;
-        const scrollTopMin = (index + 1) * 24 - height;
-        const scrollTopMax = (index - 1) * 24;
-
-        const scrollTop = Math.min(Math.max(scrollTopMin, current), scrollTopMax);
-        el.scrollTop = Math.max(scrollTop, 0);
     }
 
     private _computeOptions() {

@@ -1,0 +1,16 @@
+<div class="option" *ngFor="let option of displayedOptions;trackBy: trackOption" (click)="handleClickOption($event, option)"
+    [class.focused]="focusedOption === option.value" [class.disabled]="option.disabled">
+
+    <div class="checkbox" *ngIf="multiple">
+        <i class="fa fa-check" *ngIf="selected.has(option.value)"></i>
+    </div>
+    <div class="option-content">
+        {{option.label}}
+    </div>
+</div>
+<div class="no-option" *ngIf="displayedOptions.length === 0 && filter">
+    No match
+</div>
+<div class="no-option" *ngIf="displayedOptions.length === 0 && !filter">
+    No options available
+</div>
