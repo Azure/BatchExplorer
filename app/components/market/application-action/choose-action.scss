@@ -25,31 +25,39 @@ bl-choose-action {
         padding: 0;
         margin: 10px;
         display: flex;
+        align-items: stretch;
         cursor: pointer;
 
-        &:hover {
-            background: $whitesmoke-darker;
-        }
+        > .action-link {
+            display: flex;
+            &:hover {
+                background: $whitesmoke-darker;
+            }
 
-        > .name {
-            border-right: 1px solid $border-color;
-            padding: 10px;
-            width: 200px;
-        }
+            > .name {
+                border-right: 1px solid $border-color;
+                padding: 10px;
+                width: 200px;
+            }
 
-        > .description {
-            flex: 1;
-            padding: 10px;
-            border-right: 1px solid $border-color;
+            > .description {
+                flex: 1;
+                padding: 10px;
+                border-right: 1px solid $border-color;
+            }
         }
 
         > .view-on-github {
             color: $secondary-text;
             font-size: 20px;
-            padding: 10px;
-            text-align: center;
-            vertical-align: middle;
-            align-self: center;
+            flex: 0 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            &:hover {
+                background: $whitesmoke-darker;
+            }
         }
     }
 
