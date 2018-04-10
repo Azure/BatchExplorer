@@ -45,9 +45,13 @@ export interface NavigateBlobsOptions {
     onError?: (error: ServerError) => ServerError;
 
     /**
-     * Optional blob suffix filter.
+     * Optional blob name wildcard filter.
      */
-    suffixFilter?: string;
+    wildcards?: string;
+
+    /**
+     * Tell the navigator to fetch all files.
+     */
     fetchAll?: boolean;
 }
 
@@ -147,7 +151,7 @@ export class StorageBlobService {
             getter: this._blobListGetter,
             getFile: (filename: string) => this.getBlobContent(storageAccountId, container, filename),
             onError: options.onError,
-            suffixFilter: options.suffixFilter,
+            wildcards: options.wildcards,
             fetchAll: options.fetchAll,
         });
     }

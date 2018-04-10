@@ -48,10 +48,10 @@ export interface FileNavigatorConfig<TParams = any> {
     onError?: (error: ServerError) => ServerError;
 
     /**
-     * Optional suffix filter that will client side match files/blobs that end with
+     * Optional wildcard filter that will client side match files/blobs that end with
      * this filter.
      */
-    suffixFilter?: string;
+    wildcards?: string;
 
     /**
      * Optional flag to tell the navigator to fetch all items.
@@ -74,7 +74,7 @@ export class FileNavigator<TParams = any> {
     private _params: TParams;
     private _cache: DataCache<File>;
     private _fileDeletedSub: Subscription;
-    private _suffixFilter: string;
+    private _wildcards: string;
     private _fetchAll: boolean;
 
     private _getFileLoader: (filename: string) => FileLoader;
@@ -89,7 +89,7 @@ export class FileNavigator<TParams = any> {
         this._tree.next(new FileTreeStructure(this.basePath));
         this.tree = this._tree.asObservable();
         this._cache = config.cache;
-        this._suffixFilter = config.suffixFilter;
+        this._wildcards = config.wildcards;
         this._fetchAll = config.fetchAll;
     }
 
@@ -184,11 +184,12 @@ export class FileNavigator<TParams = any> {
             recursive: recursive || this._fetchAll,
             folder: path,
         }).flatMap((files) => {
-            if (!this._suffixFilter) {
+            if (!this._wildcards) {
                 return Observable.of(files);
             }
 
-            const filtered = files.filter((file) => file.isDirectory || file.name.endsWith(this._suffixFilter));
+            // TODO [ANDREW] - sort this to work with wildcards
+            const filtered = files.filter((file) => file.isDirectory || file.name.endsWith(this._wildcards));
             return Observable.of(List(filtered));
         });
     }

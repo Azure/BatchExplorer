@@ -9,6 +9,7 @@ import { DialogService } from "@batch-flask/ui/dialogs";
 import { StorageBlobService } from "app/services/storage";
 import { AutoStorageService } from "app/services/storage/auto-storage.service";
 import { CloudFilePickerDialogComponent } from "./cloud-file-picker-dialog.component";
+
 import "./cloud-file-picker.scss";
 
 @Component({
@@ -29,10 +30,9 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges
     @Input() public containerId: string;
 
     /**
-     * Passed in if we want to client side filter the results to only show
-     * files that end with this suffix.
+     * Passed in if we want the client to filter the results that match the wildcards.
      */
-    @Input() public suffixFilter: string;
+    @Input() public wildcards: string;
 
     public value = new FormControl();
     public warning = false;
@@ -88,7 +88,7 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges
             const component = ref.componentInstance;
             component.storageAccountId = storageAccountId;
             component.containerId = this.containerId;
-            component.suffixFilter = this.suffixFilter;
+            component.wildcards = this.wildcards;
             component.pickedFile = this.value.value;
             component.done.subscribe((save) => {
                 if (save) {

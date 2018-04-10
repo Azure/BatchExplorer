@@ -5,11 +5,10 @@
             [container]="container.id"
             [fileExplorerConfig]="fileExplorerConfig"
             [activeFile]="pickedFile"
-            [suffixFilter]="suffixFilter"
+            [wildcards]="wildcards"
             (activeFileChange)="updatePickedFile($event)">
         </bl-blob-files-browser>
     </div>
-
     <div *ngIf="containerError" class="container-error">
         Error loading container '{{containerId}}' make sure it exists.
     </div>

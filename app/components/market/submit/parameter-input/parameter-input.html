@@ -16,7 +16,7 @@
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.fileInFileGroup">
         <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(parameterValues[parameter.dependsOn])" [formControl]="parameterValue"
-            [label]="parameter.name" class="form-element" [hint]="parameter.description" [suffixFilter]="parameter.suffixFilter">
+            [label]="parameter.name" class="form-element" [hint]="parameter.description" [wildcards]="parameter.wildcards">
         </bl-cloud-file-picker>
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.dropDown">

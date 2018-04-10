@@ -18,8 +18,8 @@ export class CloudFilePickerDialogComponent {
     public data: EntityView<BlobContainer, GetContainerParams>;
     public done = new AsyncSubject();
     public pickedFile: string = null;
-    public suffixFilter: string = null;
     public containerError: ServerError;
+    public wildcards: string = null;
 
     public fileExplorerConfig: FileExplorerConfig = {
         showTreeView: false,
