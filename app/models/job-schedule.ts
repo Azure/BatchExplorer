@@ -2,7 +2,7 @@ import { List } from "immutable";
 
 import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
 import { ModelUtils } from "app/utils";
-import { Job } from "./job";
+import { Job, JobAttributes } from "./job";
 import {
     JobScheduleExecutionInformation, JobScheduleExecutionInformationAttributes,
 } from "./job-schedule-execution-information";
@@ -24,7 +24,7 @@ export interface JobScheduleAttributes {
     metadata: MetadataAttributes[];
     executionInfo: Partial<JobScheduleExecutionInformationAttributes>;
     stats: JobScheduleStats;
-    jobSpecification: Job;
+    jobSpecification: JobAttributes;
     schedule: Schedule;
 }
 /**
@@ -45,7 +45,7 @@ export class JobSchedule extends Record<JobScheduleAttributes> implements Naviga
     @ListProp(Metadata) public metadata: List<Metadata> = List([]);
     @Prop() public executionInfo: JobScheduleExecutionInformation;
     @Prop() public stats: JobScheduleStats;
-    @Prop() public jobSpecification: any;
+    @Prop() public jobSpecification: Job;
     @Prop() public schedule: Schedule;
 
     /**
