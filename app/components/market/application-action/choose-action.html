@@ -9,6 +9,9 @@
             <bl-card *ngFor="let action of actions;trackBy: trackAction" class="action" [routerLink]="['/market', applicationId, 'actions', action.id, 'submit']">
                 <div class="name">{{action.name}}</div>
                 <div class="description">{{action.description}}</div>
+                <div class="view-on-github" (click)="viewOnGithub($event, action)" matTooltip="View template on github">
+                    <i class="fa fa-external-link"></i>
+                </div>
             </bl-card>
         </div>
 
