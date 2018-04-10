@@ -85,7 +85,7 @@ class TestComponent {
     };
 }
 
-fdescribe("SubmitNcjTemplateComponent", () => {
+describe("SubmitNcjTemplateComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: SubmitNcjTemplateComponent;
