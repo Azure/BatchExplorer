@@ -1,16 +1,18 @@
-import { Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { TaskState } from "app/models";
 
-@Component({
-    selector: "bl-task-preview",
-    templateUrl: "task-preview.html",
-})
+import "./task-preview.scss";
 
 /**
  * Display preview information about a task.
  * Handles both task and subTask
  */
+@Component({
+    selector: "bl-task-preview",
+    templateUrl: "task-preview.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
 export class TaskPreviewComponent {
     public elapsedTime = "";
     public taskStates = TaskState;
@@ -25,7 +27,7 @@ export class TaskPreviewComponent {
 
     public get exitCodeMessage() {
         const code = this.task.executionInfo ? this.task.executionInfo.exitCode : this.task.exitCode;
-        if (code === undefined) {
+        if (code === undefined || code === null) {
             return `Task completed with no exit code`;
         } else {
             return `Task completed with exit code ${code}`;
@@ -34,5 +36,9 @@ export class TaskPreviewComponent {
 
     public get startTime() {
         return this.task.startTime || this.task.executionInfo.startTime;
+    }
+
+    public get endTime() {
+        return this.task.endTime || this.task.executionInfo.endTime;
     }
 }
