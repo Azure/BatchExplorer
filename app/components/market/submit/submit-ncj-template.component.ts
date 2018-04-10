@@ -115,7 +115,8 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public get jobTemplateIsAutoPool() {
-        return Boolean(this.jobTemplate.job.properties.poolInfo.autoPoolSpecification);
+        return Boolean(this.jobTemplate.job.properties.poolInfo
+            && this.jobTemplate.job.properties.poolInfo.autoPoolSpecification);
     }
 
     public pickMode(mode: NcjTemplateMode) {
