@@ -154,6 +154,16 @@ export class FileNavigator<TParams = any> {
         return this._checkIfDirectory(node);
     }
 
+    /**
+     * Add a folder to the navigator that is only visible from the UI until some files get added to it
+     * @param path Path to the folder
+     */
+    public addVirtualFolder(path: string) {
+        const tree = this._tree.value;
+        tree.addVirtualFolder(path);
+        this._tree.next(tree);
+    }
+
     private _removeFile(key: string) {
         const tree = this._tree.value;
         tree.deleteNode(key);
