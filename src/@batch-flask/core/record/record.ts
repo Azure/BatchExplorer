@@ -30,7 +30,7 @@ export class Record<TInput> {
     }
 
     public toJS(): any {
-        return Object.assign({}, this._defaultValues, this._toJS());
+        return { ...this._defaultValues, ... this._toJS() };
     }
 
     public merge(other: Partial<TInput>): this {
