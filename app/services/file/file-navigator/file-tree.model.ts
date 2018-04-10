@@ -13,6 +13,7 @@ export interface FileTreeNodeParams {
     contentLength?: number;
     lastModified?: Date;
     isUnknown?: boolean;
+    virtual?: boolean;
 }
 
 export class FileTreeNode {
@@ -28,6 +29,7 @@ export class FileTreeNode {
      */
     public contentLength: number;
     public lastModified: Date;
+    public virtual: boolean;
 
     constructor(params: FileTreeNodeParams) {
         this.path = params.path;
@@ -38,6 +40,7 @@ export class FileTreeNode {
         this.lastModified = params.lastModified;
         this.isUnknown = params.isUnknown || false;
         this.name = this._computeName();
+        this.virtual = params.virtual || false;
     }
 
     public clone() {
@@ -156,21 +159,32 @@ export class FileTreeStructure {
     }
 
     public addVirtualFolder(path: string) {
-        this._checkDirInTree(path);
+        this._checkDirInTree(path, true);
     }
 
-    private _checkDirInTree(directory: string) {
+    /**
+     *
+     * @param directory Ensure the given directory exist in the path
+     * @param virtual If the dictory doesn't exists it will be flagged as virtual if this is true.
+     *                If this is false and the directory exisist but is virtual it will be changed to non virtual
+     */
+    private _checkDirInTree(directory: string, virtual = false) {
         const directories = this.directories;
         if (this.directories[directory]) {
             this.directories[directory].loadingStatus = LoadingStatus.Ready;
-            return;
+            if (!virtual && this.directories[directory].virtual) {
+                this.directories[directory].virtual = false;
+            } else {
+                return;
+            }
+        } else {
+            directories[directory] = generateDir(directory, virtual);
         }
-        directories[directory] = generateDir(directory);
 
         const parent = CloudPathUtils.dirname(directory);
 
         if (directory !== parent) {
-            this._checkDirInTree(parent);
+            this._checkDirInTree(parent, virtual);
             directories[parent].children.set(directory, directories[directory]);
         }
     }

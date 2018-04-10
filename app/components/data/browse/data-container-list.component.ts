@@ -126,7 +126,6 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
     }
 
     public onScrollToBottom() {
-        console.log("Scrolled to bottomm");
         if (this.storageAccountId) {
             this.data.fetchNext();
         }

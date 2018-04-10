@@ -27,6 +27,10 @@ bl-file-tree-view-row {
         background: $whitesmoke-darker;
     }
 
+    &.virtual {
+        opacity: 0.6;
+    }
+
     > .file-icon {
         > .fa-folder, > .fa-folder-open {
             color: $folder-icon-color;
