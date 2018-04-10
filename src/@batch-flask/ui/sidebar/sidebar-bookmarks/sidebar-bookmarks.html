@@ -4,8 +4,12 @@
         <span class="count" *ngIf="references.length > 0">{{references.length}}</span>
     </div>
     <div bl-dropdown-content class="bookmarks-container">
-        <div class="dropdown-item bookmark" *ngFor="let reference of references;trackBy: trackReference" (click)="selectBookmark(reference)">
-            <span>{{reference.id}}</span>
+        <div *ngFor="let reference of references;trackBy: trackReference"
+            class="dropdown-item bookmark"
+            (click)="selectBookmark(reference)"
+            (mouseup)="handleMouseUp($event, reference)">
+
+            <span>{{referenceTitle(reference)}}</span>
             <i class="fa fa-times" (click)="destroyBookmark(reference)"></i>
         </div>
 
