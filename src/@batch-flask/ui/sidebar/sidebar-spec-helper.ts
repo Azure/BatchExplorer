@@ -49,7 +49,7 @@ export class AppTestComponent implements AfterViewInit {
 export function setupSidebarTest() {
     TestBed.configureTestingModule({
         declarations: [FakeComponent, AppTestComponent],
-        imports: [SidebarModule.forRoot(), MaterialModule, NoopAnimationsModule],
+        imports: [SidebarModule, MaterialModule, NoopAnimationsModule],
     });
 
     TestBed.overrideModule(BrowserDynamicTestingModule, {
