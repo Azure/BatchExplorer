@@ -71,7 +71,7 @@ export class NcjFileGroupService {
      * @param fileGroupName Name of the file group
      */
     public addFileGroupPrefix(fileGroupName: string) {
-        return !this.isFileGroup(fileGroupName)
+        return fileGroupName && !this.isFileGroup(fileGroupName)
             ? `${Constants.ncjFileGroupPrefix}${fileGroupName}`
             : fileGroupName;
     }
