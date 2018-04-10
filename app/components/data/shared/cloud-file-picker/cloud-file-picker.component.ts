@@ -96,6 +96,7 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges
                 }
             });
         });
+
         return obs;
     }
 

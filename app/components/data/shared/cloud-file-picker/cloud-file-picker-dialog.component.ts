@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MatDialogRef } from "@angular/material";
+import { MatCheckboxChange, MatDialogRef } from "@angular/material";
 import { ServerError, autobind } from "@batch-flask/core";
 import { AsyncSubject, Observable } from "rxjs";
 
@@ -20,13 +20,12 @@ export class CloudFilePickerDialogComponent {
     public pickedFile: string = null;
     public containerError: ServerError;
     public wildcards: string = null;
+    public recursiveFetch: boolean = false;
 
     public fileExplorerConfig: FileExplorerConfig = {
         showTreeView: false,
         selectable: FileExplorerSelectable.file,
     };
-
-    private _saved = false;
 
     public set storageAccountId(storageAccountId: string) {
         this._storageAccountId = storageAccountId;
@@ -40,6 +39,7 @@ export class CloudFilePickerDialogComponent {
     }
     public get containerId() { return this._containerId; }
 
+    private _saved = false;
     private _storageAccountId: string;
     private _containerId: string;
 
@@ -65,6 +65,15 @@ export class CloudFilePickerDialogComponent {
     public submit() {
         this._saved = true;
         return Observable.of(null);
+    }
+
+    @autobind()
+    public applyFilter() {
+        console.log("apply filter: ", this.recursiveFetch, this.wildcards);
+    }
+
+    public fetchAllCheckChanged(event: MatCheckboxChange) {
+        this.recursiveFetch = event.checked;
     }
 
     public close() {

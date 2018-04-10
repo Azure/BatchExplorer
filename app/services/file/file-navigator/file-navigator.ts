@@ -6,7 +6,7 @@ import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { File } from "app/models";
 import { DataCache, ListGetter } from "app/services/core";
 import { FileLoader } from "app/services/file";
-import { CloudPathUtils } from "app/utils";
+import { CloudPathUtils, StringUtils } from "app/utils";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 
 export interface FileNavigatorConfig<TParams = any> {
@@ -189,9 +189,24 @@ export class FileNavigator<TParams = any> {
             }
 
             // TODO [ANDREW] - sort this to work with wildcards
-            const filtered = files.filter((file) => file.isDirectory || file.name.endsWith(this._wildcards));
+            console.log("filtering files with: ", this._wildcards);
+            const filtered = files.filter((file) => file.isDirectory || this._checkWildcardMatch(file.name));
             return Observable.of(List(filtered));
         });
+    }
+
+    // TODO :: FIX THIS TOMORROW ...
+    private _checkWildcardMatch(filename: string): boolean {
+        const result = this._wildcards.split(",").some(wildcard => {
+            console.log(`matching: ${filename} with: ${wildcard}`);
+            if (!StringUtils.matchWildcard(filename, wildcard, false)) {
+                console.log("returing false");
+                return false;
+            }
+        });
+
+        console.log("returing true with: ", result);
+        return true;
     }
 
     private _checkIfDirectory(node: FileTreeNode): Observable<boolean> {

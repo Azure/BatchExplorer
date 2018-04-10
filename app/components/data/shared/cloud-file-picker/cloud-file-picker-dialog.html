@@ -6,6 +6,7 @@
             [fileExplorerConfig]="fileExplorerConfig"
             [activeFile]="pickedFile"
             [wildcards]="wildcards"
+            [recursiveFetch]="recursiveFetch"
             (activeFileChange)="updatePickedFile($event)">
         </bl-blob-files-browser>
     </div>
@@ -13,7 +14,17 @@
         Error loading container '{{containerId}}' make sure it exists.
     </div>
     <div blFormSummary>
-        <div *ngIf="pickedFile">Picked file: {{pickedFile}}</div>
-        <div *ngIf="!pickedFile">No file picked</div>
+        <div class="file-filter">
+            <mat-checkbox color="primary" (change)="fetchAllCheckChanged($event)" title="Fetch all files recursively"></mat-checkbox>
+            <bl-select placeholder="Filter">
+                <bl-option [value]="null" label="All files"></bl-option>
+                <bl-option value=".blend" label="Blend files"></bl-option>
+            </bl-select>
+            <bl-button color="primary" type="plain" [action]="applyFilter" icon="fa fa-play fa-2x" title="Apply filter"></bl-button>
+        </div>
+        <div class="picked-file-text">
+            <div *ngIf="pickedFile">Picked file: {{pickedFile}}</div>
+            <div *ngIf="!pickedFile">No file picked</div>
+        </div>
     </div>
 </bl-simple-form>

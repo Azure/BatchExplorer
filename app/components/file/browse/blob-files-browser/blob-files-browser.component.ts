@@ -18,6 +18,7 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
     @Input() public fileExplorerConfig: FileExplorerConfig = {};
     @Input() public activeFile: string;
     @Input() public wildcards: string;
+    @Input() public recursiveFetch: boolean = false;
     @Input() public upload: (event: FileDropEvent) => Observable<any>;
     @Input() public delete: (files: File[]) => Observable<any>;
 
@@ -25,7 +26,10 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
 
     public fileNavigator: FileNavigator;
 
-    constructor(private storageBlobService: StorageBlobService, private dialogService: DialogService) { }
+    constructor(
+        private storageBlobService: StorageBlobService,
+        private dialogService: DialogService) {
+    }
 
     public refresh() {
         this.fileNavigator.refresh();
@@ -37,7 +41,7 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
             // TODO handle here.
             const options = {
                 wildcards: this.wildcards,
-                fetchAll: false,
+                fetchAll: this.recursiveFetch,
             };
             this.fileNavigator = this.storageBlobService.navigate(this.storageAccountId, this.container, null, options);
             this.fileNavigator.init();

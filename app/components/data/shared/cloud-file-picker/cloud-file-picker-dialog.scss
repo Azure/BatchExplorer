@@ -1,7 +1,35 @@
 bl-cloud-file-picker-dialog {
     display: block;
+    overflow: visible;
 
     bl-simple-form .content {
         padding: 0 !important;
+    }
+
+    bl-form-footer {
+        div.file-filter {
+            display: inline-block;
+
+            mat-checkbox {
+                margin-left: 5px;
+                position: relative;
+                top: -2px;
+            }
+
+            bl-select {
+                width: 150px;
+                display: inline-block;
+                margin-left: 5px;
+            }
+
+            bl-button {
+                margin-left: 5px;
+            }
+        }
+
+        div.picked-file-text {
+            display: inline-block;
+            margin-left: 20px;
+        }
     }
 }
