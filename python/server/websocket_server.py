@@ -1,4 +1,5 @@
 import asyncio
+import traceback
 import websockets
 from jsonrpc import JsonRpcRequest, JsonRpcResponse, error
 from .response_stream import ResponseStream
@@ -69,6 +70,7 @@ class WebsocketConnection:
             await self.send_response(response)
         except Exception as e:
             print("Error", type(e), e.args)
+            print(traceback.format_exc())
             response = JsonRpcResponse(
                 request=request,
                 error=error.JsonRpcError(500, "Server internal error", str(e)),

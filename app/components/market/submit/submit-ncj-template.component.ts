@@ -106,12 +106,17 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public get showPoolPicker(): boolean {
-        return this.modeState === NcjTemplateMode.ExistingPoolAndJob;
+        return this.modeState === NcjTemplateMode.ExistingPoolAndJob && !this.jobTemplateIsAutoPool;
     }
 
     public get showJobForm(): boolean {
         return this.modeState === NcjTemplateMode.NewPoolAndJob
             || this.modeState === NcjTemplateMode.ExistingPoolAndJob;
+    }
+
+    public get jobTemplateIsAutoPool() {
+        return Boolean(this.jobTemplate.job.properties.poolInfo
+            && this.jobTemplate.job.properties.poolInfo.autoPoolSpecification);
     }
 
     public pickMode(mode: NcjTemplateMode) {
@@ -127,9 +132,14 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public isFormValid() {
-        return (this.modeState === NcjTemplateMode.NewPoolAndJob && this.jobParams.valid && this.poolParams.valid) ||
-            (this.modeState === NcjTemplateMode.ExistingPoolAndJob && this.jobParams.valid && this.pickedPool.valid) ||
-            (this.modeState === NcjTemplateMode.NewPool && this.poolParams.valid);
+        switch (this.modeState) {
+            case NcjTemplateMode.NewPoolAndJob:
+                return this.jobParams.valid && this.poolParams.valid;
+            case NcjTemplateMode.ExistingPoolAndJob:
+                return this.jobParams.valid && (this.jobTemplateIsAutoPool || this.pickedPool.valid);
+            case NcjTemplateMode.NewPool:
+                return this.poolParams.valid;
+        }
     }
 
     public trackParameter(index, param: NcjParameterWrapper) {
@@ -170,7 +180,9 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     @autobind()
     private _createJob() {
         const jobTemplate = { ...this.jobTemplate };
-        jobTemplate.job.properties.poolInfo = this.pickedPool.value;
+        if (!this.jobTemplateIsAutoPool) {
+            jobTemplate.job.properties.poolInfo = this.pickedPool.value;
+        }
         this._saveTemplateAsRecent();
         return this.ncjSubmitService.submitJob(jobTemplate, this.jobParams.value)
             .cascade((data) => this._redirectToJob(data.properties.id));
@@ -246,7 +258,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
 
         if (this.jobTemplate) {
             // Remove the poolId param as we are writting it manually
-            if (this.jobTemplate.parameters.poolId) {
+            if (!this.jobTemplateIsAutoPool && this.jobTemplate.parameters.poolId) {
                 delete this.jobTemplate.parameters.poolId;
             }
 
