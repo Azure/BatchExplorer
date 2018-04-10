@@ -79,6 +79,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
 
     public ngOnChanges(changes) {
         if (changes.storageAccountId && this.storageAccountId) {
+            this.containers = List([]);
             this.data.params = { storageAccountId: this.storageAccountId };
             this.data.fetchNext();
         }
