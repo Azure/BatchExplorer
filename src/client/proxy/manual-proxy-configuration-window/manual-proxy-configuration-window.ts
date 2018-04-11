@@ -28,8 +28,8 @@ export class ManualProxyConfigurationWindow extends GenericWindow {
             show: false,
             center: true,
         });
-        if (this.currentSettings) {
-            const setting = this.currentSettings.http;
+        if (this.currentSettings && (this.currentSettings.http || this.currentSettings.https)) {
+            const setting = this.currentSettings.http || this.currentSettings.https;
             (window as any).currentSettings = {
                 url: `${setting.protocol}://${setting.host}`,
                 port: setting.port,

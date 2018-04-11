@@ -136,7 +136,16 @@ export class ProxySettingsManager {
         const value = this._settings.value;
         if (!value) { return; }
         if (!value.settings) {
-            await this.storage.removeItem(Constants.localStorageKey.proxySettings);
+            if (value.manual) {
+                const str = JSON.stringify({
+                    http: null,
+                    https: null,
+                    manual: value.manual,
+                });
+                await this.storage.setItem(Constants.localStorageKey.proxySettings, str);
+            } else {
+                await this.storage.removeItem(Constants.localStorageKey.proxySettings);
+            }
         } else {
             const { http, https } = value.settings;
             const str = JSON.stringify({
