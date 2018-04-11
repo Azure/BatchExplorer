@@ -9,10 +9,10 @@
     const initial = remote.getCurrentWindow().currentSettings;
 
     document.addEventListener('DOMContentLoaded', function () {
-        const urlEl = document.getElementById("url");
-        const portEl = document.getElementById("port");
-        const usernameEl = document.getElementById("username");
-        const passwordEl = document.getElementById("password");
+        window.urlEl = document.getElementById("url");
+        window.portEl = document.getElementById("port");
+        window.usernameEl = document.getElementById("username");
+        window.passwordEl = document.getElementById("password");
 
         if (initial) {
             urlEl.value = initial.url || "";
@@ -22,22 +22,29 @@
         }
     });
 
+    function clearConfig() {
+        urlEl.value = "";
+        portEl.value = "";
+        usernameEl.value = "";
+        passwordEl.value = "";
+    }
+
     function submit() {
-        const urlEl = document.getElementById("url");
-        const portEl = document.getElementById("port");
-        const usernameEl = document.getElementById("username");
-        const passwordEl = document.getElementById("password");
         ipcRenderer.send('proxy-configuration-submitted', {
-            url: urlEl.value,
-            port: portEl.value,
-            username: usernameEl.value,
-            password: passwordEl.value,
+            url: window.urlEl.value,
+            port: window.portEl.value,
+            username: window.usernameEl.value,
+            password: window.passwordEl.value,
         });
     }
 </script>
 
 <body>
     <h1>Enter proxy configuration for BatchLabs</h1>
+    <div class="subtitle">
+        Leave blank for no proxy configuration
+        <button class="clear" onclick="clearConfig()">Clear</button>
+    </div>
     <div class="form-element">
         <label>Url</label>
         <input id="url">

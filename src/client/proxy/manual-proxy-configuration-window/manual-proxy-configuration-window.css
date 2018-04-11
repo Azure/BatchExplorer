@@ -42,3 +42,13 @@ button:hover {
     background: #3d85c6;
     color: white;
 }
+
+
+.clear {
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+.subtitle {
+    display: flex;
+}
