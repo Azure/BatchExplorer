@@ -7,9 +7,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 import { SelectOptionComponent } from "./option";
 
-import { Overlay, OverlayRef } from "@angular/cdk/overlay";
+import { Overlay, OverlayConfig, OverlayRef } from "@angular/cdk/overlay";
 import { ComponentPortal } from "@angular/cdk/portal";
 import { SelectDropdownComponent } from "@batch-flask/ui/select/select-dropdown";
+import { Subscription } from "rxjs";
 import "./select.scss";
 
 /** Custom injector type specifically for instantiating components with a dialog. */
@@ -66,6 +67,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
     private _displayedOptions: SelectOptionComponent[];
     private _focusedOption: any = null;
     private _overlayRef: OverlayRef;
+    private _backDropClickSub: Subscription;
 
     @ViewChild("selectButton", { read: ElementRef }) private _selectButtonEl: ElementRef;
     @ViewChild("filterInput") private _filterInputEl: ElementRef;
@@ -95,6 +97,10 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
     public ngOnDestroy() {
         if (this._overlayRef) {
             this._overlayRef.dispose();
+        }
+
+        if (this._backDropClickSub) {
+            this._backDropClickSub.unsubscribe();
         }
     }
 
@@ -157,6 +163,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
                 event.preventDefault();
                 return;
             case "Escape":
+                event.stopPropagation();
                 this.closeDropdown();
                 this.changeDetector.markForCheck();
                 return;
@@ -203,10 +210,15 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
             { originX: "start", originY: "bottom" },
             { overlayX: "start", overlayY: "top" });
 
-        this._overlayRef = this.overlay.create({
+        this._overlayRef = this.overlay.create(new OverlayConfig({
             positionStrategy,
-            scrollStrategy: this.overlay.scrollStrategies.close(),
+            scrollStrategy: this.overlay.scrollStrategies.reposition(),
             minWidth: this.elementRef.nativeElement.getBoundingClientRect().width,
+            hasBackdrop: true,
+            backdropClass: "cdk-overlay-transparent-backdrop",
+        }));
+        this._backDropClickSub = this._overlayRef.backdropClick().subscribe(() => {
+            this.closeDropdown();
         });
         const injector = new SelectInjector(this, this.injector);
         const portal = new ComponentPortal(SelectDropdownComponent, null, injector);
@@ -216,6 +228,11 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
         ref.onDestroy(() => {
             this._dropdownRef = null;
             this._overlayRef = null;
+
+            if (this._backDropClickSub) {
+                this._backDropClickSub.unsubscribe();
+                this._backDropClickSub = null;
+            }
         });
 
         if (!this.focusedOption) {
