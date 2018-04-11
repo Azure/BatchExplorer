@@ -1,0 +1,44 @@
+body {
+    background: #f5f5f5;
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1 {
+    font-size: 16px;
+}
+
+.form-element {
+    margin-bottom: 5px;
+}
+
+.form-element > label {
+    width: 200px;
+    display: inline-block;
+}
+
+.form-element > input {
+    padding: 5px;
+    outline: none;
+    border: none;
+    width: 260px;
+    border-bottom: 2px solid transparent;
+}
+
+.form-element > input:focus {
+    border-bottom: 2px solid #3d85c6;
+}
+
+button {
+    display: block;
+    border: none;
+    text-align: center;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin: auto;
+    width: 60px;
+}
+
+button:hover {
+    background: #3d85c6;
+    color: white;
+}

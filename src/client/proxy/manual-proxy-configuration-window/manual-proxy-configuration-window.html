@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="./manual-proxy-configuration-window.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+    const { ipcRenderer } = require("electron");
+    function submit() {
+        const ipEl = document.getElementById("ip");
+        const portEl = document.getElementById("port");
+        const usernameEl = document.getElementById("username");
+        const passwordEl = document.getElementById("password");
+        ipcRenderer.
+        ipcRenderer.send('proxy-configuration-submitted', {
+            ip: ipEl.value,
+            port: portEl.value,
+            username: usernameEl.value,
+            password: passwordEl.value,
+        });
+    }
+</script>
+
+<body>
+    <h1>Enter proxy configuration for BatchLabs</h1>
+    <div class="form-element">
+        <label>Server ip</label>
+        <input id="ip">
+    </div>
+    <div class="form-element">
+        <label>Server port</label>
+        <input id="port">
+    </div>
+    <div class="form-element">
+        <label>Username</label>
+        <input id="username">
+    </div>
+    <div class="form-element">
+        <label>Password</label>
+        <input id="password">
+    </div>
+    <br>
+    <button onclick="submit()">Save</button>
+</body>
+</html>

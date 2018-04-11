@@ -1,26 +1,27 @@
-import { Deferred } from "common";
 import { BrowserWindow, app, ipcMain } from "electron";
-import { ProxyCredentials } from "get-proxy-settings";
-import { Constants } from "../client-constants";
-import { BatchLabsApplication, UniqueWindow } from "../core";
-const urls = Constants.urls.proxyCredentials;
+import { ProxySetting, ProxySettings } from "get-proxy-settings";
+
+import { Constants } from "client/client-constants";
+import { BatchLabsApplication, UniqueWindow } from "client/core";
+import { Deferred } from "common";
+const urls = Constants.urls.manualProxyConfiguration;
 const url = process.env.HOT ? urls.dev : urls.prod;
 
-export class ProxyCredentialsWindow extends UniqueWindow {
-    public credentials: Promise<ProxyCredentials>;
-    private _deferred: Deferred<ProxyCredentials>;
+export class ManualProxyConfigurationWindow extends UniqueWindow {
+    public settings: Promise<ProxySettings>;
+    private _deferred: Deferred<ProxySettings>;
 
     constructor(batchLabsApplication: BatchLabsApplication) {
         super(batchLabsApplication);
         this._deferred = new Deferred();
-        this.credentials = this._deferred.promise;
+        this.settings = this._deferred.promise;
     }
 
     protected createWindow() {
         const window = new BrowserWindow({
             title: app.getName(),
-            height: 340,
-            width: 340,
+            height: 400,
+            width: 500,
             icon: Constants.urls.icon,
             resizable: false,
             titleBarStyle: "hidden",
@@ -36,12 +37,12 @@ export class ProxyCredentialsWindow extends UniqueWindow {
     }
 
     private _setupEvents(window: BrowserWindow) {
-        ipcMain.once("proxy-credentials-submitted", (event, { username, password }) => {
+        ipcMain.once("proxy-configuration-submitted", (event, { host, port, username, password }) => {
             this.hide();
-            this._deferred.resolve({ username, password });
-            // setTimeoutapp(() => {
+            const setting = new ProxySetting(`${host}:${port}`);
+            setting.credentials = { username, password };
+            this._deferred.resolve({ http: setting, https: setting });
             this.close();
-            // }, 1000);
         });
         window.on("close", () => {
             if (!this._deferred.hasCompleted) {

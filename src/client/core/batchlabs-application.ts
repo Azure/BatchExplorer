@@ -9,10 +9,11 @@ import { BlIpcMain } from "client/core/bl-ipc-main";
 import { localStorage } from "client/core/local-storage";
 import { setMenu } from "client/menu";
 import { ProxySettingsManager } from "client/proxy";
+import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-configuration-window";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { BatchLabsLink, Constants, Deferred } from "common";
 import { IpcEvent } from "common/constants";
-import { ProxyCredentials } from "get-proxy-settings";
+import { ProxyCredentials, ProxySettings } from "get-proxy-settings";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants as ClientConstants } from "../client-constants";
 import { MainWindow, WindowState } from "../main-window";
@@ -199,6 +200,12 @@ export class BatchLabsApplication {
         const proxyCredentials = new ProxyCredentialsWindow(this);
         proxyCredentials.create();
         return proxyCredentials.credentials;
+    }
+
+    public askUserForProxyConfiguration(): Promise<ProxySettings> {
+        const proxyCredentials = new ManualProxyConfigurationWindow(this);
+        proxyCredentials.create();
+        return proxyCredentials.settings;
     }
 
     public get rootPath() {
