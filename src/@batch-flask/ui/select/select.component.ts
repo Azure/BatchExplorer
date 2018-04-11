@@ -1,7 +1,7 @@
 import {
     AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
     Component, ComponentRef, ContentChildren, ElementRef, HostListener,
-    Injector, Input, QueryList, ViewChild, forwardRef,
+    Injector, Input, OnDestroy, QueryList, ViewChild, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
@@ -33,7 +33,7 @@ export class SelectInjector implements Injector {
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SelectComponent), multi: true },
     ],
 })
-export class SelectComponent implements ControlValueAccessor, AfterContentInit {
+export class SelectComponent implements ControlValueAccessor, AfterContentInit, OnDestroy {
     @Input() public placeholder = "";
 
     /**
@@ -92,11 +92,20 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         });
     }
 
+    public ngOnDestroy() {
+        if (this._overlayRef) {
+            this._overlayRef.dispose();
+        }
+    }
+
     public writeValue(value: any): void {
         if (this.multiple) {
             this.selected = new Set(value);
         } else {
             this.selected = new Set(value ? [value] : []);
+        }
+        if (!this.focusedOption) {
+            this.focusedOption = value;
         }
         this.changeDetector.markForCheck();
     }
@@ -197,11 +206,17 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         this._overlayRef = this.overlay.create({
             positionStrategy,
             scrollStrategy: this.overlay.scrollStrategies.close(),
+            minWidth: this.elementRef.nativeElement.getBoundingClientRect().width,
         });
         const injector = new SelectInjector(this, this.injector);
         const portal = new ComponentPortal(SelectDropdownComponent, null, injector);
         const ref = this._dropdownRef = this._overlayRef.attach(portal);
         ref.instance.displayedOptions = this.displayedOptions;
+        ref.instance.focusedOption = this.focusedOption;
+        ref.onDestroy(() => {
+            this._dropdownRef = null;
+            this._overlayRef = null;
+        });
 
         if (!this.focusedOption) {
             this.focusFirstOption();
