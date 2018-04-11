@@ -60,7 +60,6 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
             this.selected = new Set(value);
         } else {
             this.selected = new Set(value ? [value] : []);
-            this.focusedOption = value;
         }
         this.changeDetector.markForCheck();
     }

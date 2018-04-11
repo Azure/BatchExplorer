@@ -15,7 +15,7 @@
     </div>
     <div blFormSummary>
         <div class="file-filter" *ngIf="optionFilters">
-            <mat-checkbox color="primary" (change)="fetchAllCheckChanged($event)" title="Fetch all files recursively. Note, could have a performance impact."></mat-checkbox>
+            <mat-checkbox color="primary" (change)="fetchAllCheckChanged($event)" title="Fetch all files from the container"></mat-checkbox>
             <bl-select placeholder="Filter" [ngModel]="pickedFilter" (ngModelChange)="pickSelectedFilter($event)">
                 <bl-option *ngFor="let filter of optionFilters;trackBy:trackFilterOption"
                     [label]="filter.label"
@@ -27,5 +27,6 @@
             <div *ngIf="pickedFile">Picked file: {{pickedFile}}</div>
             <div *ngIf="!pickedFile">No file picked</div>
         </div>
+        <div class="note" *ngIf="optionFilters">Checkbox will fetch all files in one operation. Note, this could have a performance impact.</div>
     </div>
 </bl-simple-form>
