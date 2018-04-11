@@ -19,7 +19,7 @@ function getEditMenu(app: BatchLabsApplication): MenuItemConstructorOptions {
             {
                 label: "Configure Proxy",
                 click: () => {
-                    app.askUserForProxyConfiguration();
+                    app.proxySettings.configureManualy();
                 },
             },
         ],

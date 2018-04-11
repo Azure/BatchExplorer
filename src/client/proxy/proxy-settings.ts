@@ -10,13 +10,18 @@ import { LocalStorage } from "client/core/local-storage";
 import { Constants } from "common";
 import { BehaviorSubject } from "rxjs";
 
+export interface ProxySettingConfiguration {
+    settings: ProxySettings;
+    manual: boolean;
+}
+
 // @ts-ignore
 function allowInsecureRequest() {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 }
 
 export class ProxySettingsManager {
-    private _settings = new BehaviorSubject(undefined);
+    private _settings = new BehaviorSubject<ProxySettingConfiguration>(undefined);
     constructor(private batchLabsApp: BatchLabsApplication, private storage: LocalStorage) {
     }
 
@@ -29,11 +34,22 @@ export class ProxySettingsManager {
                 log.error("Failed to load proxy settings", e);
             }
         }
-        this._applyProxySettings(this._settings.value);
+        this._applyProxySettings(this._settings.value.settings);
     }
 
     public get settings(): Promise<ProxySettings> {
-        return this._settings.filter(x => x !== undefined).take(1).toPromise();
+        return this._settings.filter(x => x !== undefined).take(1).map(x => x.settings).toPromise();
+    }
+
+    public async configureManualy(): Promise<ProxySettings> {
+        const config = this._settings.value;
+        const settings = await this.batchLabsApp.askUserForProxyConfiguration(config && config.settings);
+        this._settings.next({
+            settings,
+            manual: true,
+        });
+        await this._saveProxySettings();
+        return settings;
     }
 
     public async credentials(): Promise<ProxyCredentials> {
@@ -45,7 +61,10 @@ export class ProxySettingsManager {
     private async _loadProxySettings() {
         let settings = await getProxySettings();
         settings = await this._validateProxySettings(settings);
-        this._settings.next(settings);
+        this._settings.next({
+            settings,
+            manual: false,
+        });
         await this._saveProxySettings();
     }
 
@@ -79,14 +98,20 @@ export class ProxySettingsManager {
         try {
             const str = await this.storage.getItem(Constants.localStorageKey.proxySettings);
             if (!str) { return; }
-            const { http, https } = JSON.parse(str);
+            const { http, https, manual } = JSON.parse(str);
             const settings = {
                 http: http && new ProxySetting(http),
                 https: https && new ProxySetting(https),
             };
-            const valid = await this._validateProxySettings(settings, false);
+            let valid = true;
+            if (!manual) {
+                valid = await this._validateProxySettings(settings, false);
+            }
             if (valid) {
-                this._settings.next(settings);
+                this._settings.next({
+                    settings,
+                    manual,
+                });
             }
         } catch (e) {
             log.error("Error loading proxy settings. Ignoring", e);
@@ -110,18 +135,19 @@ export class ProxySettingsManager {
     private async _saveProxySettings() {
         const value = this._settings.value;
         if (!value) { return; }
-        const { http, https } = value;
+        const { http, https } = value.settings;
         const str = JSON.stringify({
             http: http && http.toString(),
             https: https && https.toString(),
+            manual: value.manual,
         });
         await this.storage.setItem(Constants.localStorageKey.proxySettings, str);
     }
 
     private get _currentCredentials() {
         if (!this._settings.value) { return null; }
-        const { http, https } = this._settings.value;
+        const { settings } = this._settings.value;
 
-        return https.credentials || http.credentials;
+        return settings.https.credentials || settings.http.credentials;
     }
 }

@@ -5,15 +5,30 @@
     <link href="./manual-proxy-configuration-window.css" rel="stylesheet" type="text/css">
 </head>
 <script>
-    const { ipcRenderer } = require("electron");
-    function submit() {
-        const ipEl = document.getElementById("ip");
+    const { ipcRenderer, remote } = require("electron");
+    const initial = remote.getCurrentWindow().currentSettings;
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const urlEl = document.getElementById("url");
         const portEl = document.getElementById("port");
         const usernameEl = document.getElementById("username");
         const passwordEl = document.getElementById("password");
-        ipcRenderer.
+
+        if (initial) {
+            urlEl.value = initial.url || "";
+            portEl.value = initial.port || "";
+            usernameEl.value = initial.username || "";
+            passwordEl.value = initial.password || "";
+        }
+    });
+
+    function submit() {
+        const urlEl = document.getElementById("url");
+        const portEl = document.getElementById("port");
+        const usernameEl = document.getElementById("username");
+        const passwordEl = document.getElementById("password");
         ipcRenderer.send('proxy-configuration-submitted', {
-            ip: ipEl.value,
+            url: urlEl.value,
             port: portEl.value,
             username: usernameEl.value,
             password: passwordEl.value,
@@ -24,11 +39,11 @@
 <body>
     <h1>Enter proxy configuration for BatchLabs</h1>
     <div class="form-element">
-        <label>Server ip</label>
-        <input id="ip">
+        <label>Url</label>
+        <input id="url">
     </div>
     <div class="form-element">
-        <label>Server port</label>
+        <label>Port</label>
         <input id="port">
     </div>
     <div class="form-element">
@@ -42,4 +57,5 @@
     <br>
     <button onclick="submit()">Save</button>
 </body>
+
 </html>

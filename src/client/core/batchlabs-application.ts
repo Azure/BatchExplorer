@@ -202,8 +202,8 @@ export class BatchLabsApplication {
         return proxyCredentials.credentials;
     }
 
-    public askUserForProxyConfiguration(): Promise<ProxySettings> {
-        const proxyCredentials = new ManualProxyConfigurationWindow(this);
+    public askUserForProxyConfiguration(current?: ProxySettings): Promise<ProxySettings> {
+        const proxyCredentials = new ManualProxyConfigurationWindow(this, current);
         proxyCredentials.create();
         return proxyCredentials.settings;
     }
