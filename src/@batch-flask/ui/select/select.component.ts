@@ -7,7 +7,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 import { SelectOptionComponent } from "./option";
 
-import { Overlay, OverlayConfig, OverlayRef } from "@angular/cdk/overlay";
+import { ConnectionPositionPair, Overlay, OverlayConfig, OverlayRef } from "@angular/cdk/overlay";
 import { ComponentPortal } from "@angular/cdk/portal";
 import { SelectDropdownComponent } from "@batch-flask/ui/select/select-dropdown";
 import { Subscription } from "rxjs";
@@ -206,17 +206,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
     }
 
     public openDropdown() {
-        const positionStrategy = this.overlay.position().connectedTo(this.elementRef,
-            { originX: "start", originY: "bottom" },
-            { overlayX: "start", overlayY: "top" });
-
-        this._overlayRef = this.overlay.create(new OverlayConfig({
-            positionStrategy,
-            scrollStrategy: this.overlay.scrollStrategies.reposition(),
-            minWidth: this.elementRef.nativeElement.getBoundingClientRect().width,
-            hasBackdrop: true,
-            backdropClass: "cdk-overlay-transparent-backdrop",
-        }));
+        this._overlayRef = this._createOverlay();
         this._backDropClickSub = this._overlayRef.backdropClick().subscribe(() => {
             this.closeDropdown();
         });
@@ -355,4 +345,38 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
         return (index + this.displayedOptions.length) % this.displayedOptions.length;
     }
 
+    private _createOverlay(): OverlayRef {
+        const dimensions = this.elementRef.nativeElement.getBoundingClientRect();
+        const positions: ConnectionPositionPair[] = [
+            {
+                originX: "start",
+                originY: "top",
+                overlayX: "start",
+                overlayY: "top",
+                offsetX: 0,
+                offsetY: dimensions.height,
+            },
+            {
+                originX: "start",
+                originY: "bottom",
+                overlayX: "start",
+                overlayY: "bottom",
+                offsetX: 0,
+                offsetY: -dimensions.height,
+            },
+        ];
+
+        const positionStrategy = this.overlay.position().connectedTo(this.elementRef,
+            { originX: "start", originY: "top" },
+            { overlayX: "start", overlayY: "bottom" });
+        positionStrategy.withPositions(positions);
+
+        return this.overlay.create(new OverlayConfig({
+            positionStrategy,
+            scrollStrategy: this.overlay.scrollStrategies.block(),
+            minWidth: dimensions.width,
+            hasBackdrop: true,
+            backdropClass: "cdk-overlay-transparent-backdrop",
+        }));
+    }
 }
