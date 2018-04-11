@@ -1,12 +1,13 @@
 import {
     AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, ComponentRef, ContentChildren, ElementRef, HostListener, Injector, Input, QueryList, ViewChild, forwardRef,
+    Component, ComponentRef, ContentChildren, ElementRef, HostListener,
+    Injector, Input, QueryList, ViewChild, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 import { SelectOptionComponent } from "./option";
 
-import { Overlay } from "@angular/cdk/overlay";
+import { Overlay, OverlayRef } from "@angular/cdk/overlay";
 import { ComponentPortal } from "@angular/cdk/portal";
 import { SelectDropdownComponent } from "@batch-flask/ui/select/select-dropdown";
 import "./select.scss";
@@ -64,6 +65,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
     private _dropdownRef: ComponentRef<SelectDropdownComponent>;
     private _displayedOptions: SelectOptionComponent[];
     private _focusedOption: any = null;
+    private _overlayRef: OverlayRef;
 
     @ViewChild("selectButton", { read: ElementRef }) private _selectButtonEl: ElementRef;
     @ViewChild("filterInput") private _filterInputEl: ElementRef;
@@ -192,13 +194,13 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
             { originX: "start", originY: "bottom" },
             { overlayX: "start", overlayY: "top" });
 
-        const overlayRef = this.overlay.create({
+        this._overlayRef = this.overlay.create({
             positionStrategy,
             scrollStrategy: this.overlay.scrollStrategies.close(),
         });
         const injector = new SelectInjector(this, this.injector);
         const portal = new ComponentPortal(SelectDropdownComponent, null, injector);
-        const ref = this._dropdownRef = overlayRef.attach(portal);
+        const ref = this._dropdownRef = this._overlayRef.attach(portal);
         ref.instance.displayedOptions = this.displayedOptions;
 
         if (!this.focusedOption) {
@@ -211,8 +213,10 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
     }
 
     public closeDropdown() {
-        if (this._dropdownRef) {
-            this._dropdownRef.destroy();
+        if (this._overlayRef) {
+            this._overlayRef.dispose();
+            this._overlayRef = null;
+            this._dropdownRef = null;
         }
         setTimeout(() => {
             this._selectButtonEl.nativeElement.focus();

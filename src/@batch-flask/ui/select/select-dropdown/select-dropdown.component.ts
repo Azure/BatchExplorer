@@ -28,8 +28,18 @@ export class SelectDropdownComponent {
     public get focusedOption() {
         return this._focusedOption;
     }
+
+    public set multiple(multiple: boolean) {
+        this._multiple = multiple;
+        this.changeDetector.markForCheck();
+    }
+
+    public get multiple() {
+        return this._multiple;
+    }
     private _displayedOptions: SelectOptionComponent[] = [];
     private _focusedOption: any;
+    private _multiple: any;
 
     constructor(
         @Inject(forwardRef(() => SelectComponent)) private select: SelectComponent,
