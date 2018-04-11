@@ -64,7 +64,7 @@ export class CloudFilePickerDialogComponent implements OnInit {
             this.pickedFilter = this.wildcards;
             this.optionFilters = [
                 { label: "All Files", value: "" },
-                { label: `Wildcards (${this.wildcards})`, value: this.wildcards },
+                { label: `(${this.wildcards}) files`, value: this.wildcards },
             ];
         }
     }

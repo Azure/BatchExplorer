@@ -5,8 +5,8 @@
             [container]="container.id"
             [fileExplorerConfig]="fileExplorerConfig"
             [activeFile]="pickedFile"
-            [filenameWildcards]="pickedFilter"
-            [recursiveFetch]="recursiveFetch"
+            [filter]="pickedFilter"
+            [fetchAll]="recursiveFetch"
             (activeFileChange)="updatePickedFile($event)">
         </bl-blob-files-browser>
     </div>
