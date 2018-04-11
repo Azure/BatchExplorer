@@ -350,19 +350,19 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
         const positions: ConnectionPositionPair[] = [
             {
                 originX: "start",
-                originY: "top",
+                originY: "bottom",
                 overlayX: "start",
                 overlayY: "top",
                 offsetX: 0,
-                offsetY: dimensions.height,
+                offsetY: 0,
             },
             {
                 originX: "start",
-                originY: "bottom",
+                originY: "top",
                 overlayX: "start",
                 overlayY: "bottom",
                 offsetX: 0,
-                offsetY: -dimensions.height,
+                offsetY: 0,
             },
         ];
 
@@ -370,6 +370,12 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
             { originX: "start", originY: "top" },
             { overlayX: "start", overlayY: "bottom" });
         positionStrategy.withPositions(positions);
+        positionStrategy.onPositionChange.subscribe((x) => {
+            if (this._dropdownRef) {
+                this._dropdownRef.instance.above = x.connectionPair.overlayY === "bottom";
+            }
+            console.log("Pair??", x.connectionPair.overlayY);
+        }, () => null, () => console.log("Completed change??"));
 
         return this.overlay.create(new OverlayConfig({
             positionStrategy,

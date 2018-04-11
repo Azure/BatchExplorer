@@ -1,4 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, forwardRef } from "@angular/core";
+import { OverlayRef } from "@angular/cdk/overlay";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef,
+    HostBinding, Inject, forwardRef,
+} from "@angular/core";
 import { SelectOptionComponent } from "@batch-flask/ui/select/option";
 
 import { SelectComponent } from "../select.component";
@@ -10,6 +14,8 @@ import "./select-dropdown.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectDropdownComponent {
+    @HostBinding("class.pos-above")
+    public above = false;
 
     public set displayedOptions(options: SelectOptionComponent[]) {
         this._displayedOptions = options;
@@ -45,7 +51,6 @@ export class SelectDropdownComponent {
         @Inject(forwardRef(() => SelectComponent)) private select: SelectComponent,
         private elementRef: ElementRef,
         private changeDetector: ChangeDetectorRef) {
-
     }
     /**
      * Scroll to the option at the given index
