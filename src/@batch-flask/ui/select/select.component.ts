@@ -46,7 +46,6 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
     private _optionsMap: Map<any, SelectOptionComponent>;
 
     constructor(private changeDetector: ChangeDetectorRef, private elementRef: ElementRef) {
-
     }
 
     public ngAfterContentInit() {
@@ -61,6 +60,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
             this.selected = new Set(value);
         } else {
             this.selected = new Set(value ? [value] : []);
+            this.focusedOption = value;
         }
         this.changeDetector.markForCheck();
     }
@@ -195,6 +195,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
             this.selected = new Set([option.value]);
             this.showOptions = false;
         }
+
         this.notifyChanges();
         this.changeDetector.markForCheck();
     }
@@ -293,5 +294,4 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
     private _wrapIndex(index: number): number {
         return (index + this.displayedOptions.length) % this.displayedOptions.length;
     }
-
 }

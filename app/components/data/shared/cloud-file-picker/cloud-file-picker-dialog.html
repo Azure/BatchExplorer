@@ -5,7 +5,7 @@
             [container]="container.id"
             [fileExplorerConfig]="fileExplorerConfig"
             [activeFile]="pickedFile"
-            [wildcards]="wildcards"
+            [filenameWildcards]="pickedFilter"
             [recursiveFetch]="recursiveFetch"
             (activeFileChange)="updatePickedFile($event)">
         </bl-blob-files-browser>
@@ -14,13 +14,14 @@
         Error loading container '{{containerId}}' make sure it exists.
     </div>
     <div blFormSummary>
-        <div class="file-filter">
-            <mat-checkbox color="primary" (change)="fetchAllCheckChanged($event)" title="Fetch all files recursively"></mat-checkbox>
-            <bl-select placeholder="Filter">
-                <bl-option [value]="null" label="All files"></bl-option>
-                <bl-option value=".blend" label="Blend files"></bl-option>
+        <div class="file-filter" *ngIf="optionFilters">
+            <mat-checkbox color="primary" (change)="fetchAllCheckChanged($event)" title="Fetch all files recursively. Note, could have a performance impact."></mat-checkbox>
+            <bl-select placeholder="Filter" [ngModel]="pickedFilter" (ngModelChange)="pickSelectedFilter($event)">
+                <bl-option *ngFor="let filter of optionFilters;trackBy:trackFilterOption"
+                    [label]="filter.label"
+                    [value]="filter.value">
+                </bl-option>
             </bl-select>
-            <bl-button color="primary" type="plain" [action]="applyFilter" icon="fa fa-play fa-2x" title="Apply filter"></bl-button>
         </div>
         <div class="picked-file-text">
             <div *ngIf="pickedFile">Picked file: {{pickedFile}}</div>

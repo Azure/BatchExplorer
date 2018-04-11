@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { MatCheckboxChange, MatDialogRef } from "@angular/material";
 import { ServerError, autobind } from "@batch-flask/core";
 import { AsyncSubject, Observable } from "rxjs";
@@ -13,14 +13,16 @@ import "./cloud-file-picker-dialog.scss";
     selector: "bl-cloud-file-picker-dialog",
     templateUrl: "cloud-file-picker-dialog.html",
 })
-export class CloudFilePickerDialogComponent {
+export class CloudFilePickerDialogComponent implements OnInit {
     public container: BlobContainer;
     public data: EntityView<BlobContainer, GetContainerParams>;
     public done = new AsyncSubject();
     public pickedFile: string = null;
     public containerError: ServerError;
     public wildcards: string = null;
+    public pickedFilter: string = null;
     public recursiveFetch: boolean = false;
+    public optionFilters: any[];
 
     public fileExplorerConfig: FileExplorerConfig = {
         showTreeView: false,
@@ -57,8 +59,14 @@ export class CloudFilePickerDialogComponent {
         });
     }
 
-    public updatePickedFile(file: string) {
-        this.pickedFile = file;
+    public ngOnInit() {
+        if (this.wildcards) {
+            this.pickedFilter = this.wildcards;
+            this.optionFilters = [
+                { label: "All Files", value: "" },
+                { label: `Wildcards (${this.wildcards})`, value: this.wildcards },
+            ];
+        }
     }
 
     @autobind()
@@ -67,9 +75,16 @@ export class CloudFilePickerDialogComponent {
         return Observable.of(null);
     }
 
-    @autobind()
-    public applyFilter() {
-        console.log("apply filter: ", this.recursiveFetch, this.wildcards);
+    public trackFilterOption(index, option: any) {
+        return option.value;
+    }
+
+    public updatePickedFile(file: string) {
+        this.pickedFile = file;
+    }
+
+    public pickSelectedFilter(filter: string) {
+        this.pickedFilter = filter;
     }
 
     public fetchAllCheckChanged(event: MatCheckboxChange) {

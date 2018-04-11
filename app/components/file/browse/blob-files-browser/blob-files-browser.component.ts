@@ -17,7 +17,7 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
     @Input() public container: string;
     @Input() public fileExplorerConfig: FileExplorerConfig = {};
     @Input() public activeFile: string;
-    @Input() public wildcards: string;
+    @Input() public filenameWildcards: string;
     @Input() public recursiveFetch: boolean = false;
     @Input() public upload: (event: FileDropEvent) => Observable<any>;
     @Input() public delete: (files: File[]) => Observable<any>;
@@ -37,10 +37,10 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
 
     public ngOnChanges(inputs) {
         this._clearFileNavigator();
-        if (inputs.storageAccountId || inputs.container) {
-            // TODO handle here.
+        if (inputs.storageAccountId || inputs.container || inputs.filenameWildcards || inputs.recursiveFetch) {
+            // TODO: [Tim] - handle here (unsure what this comment was about so leaving it here)
             const options = {
-                wildcards: this.wildcards,
+                wildcards: this.filenameWildcards,
                 fetchAll: this.recursiveFetch,
             };
             this.fileNavigator = this.storageBlobService.navigate(this.storageAccountId, this.container, null, options);

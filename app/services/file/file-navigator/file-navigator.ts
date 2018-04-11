@@ -66,7 +66,6 @@ export class FileNavigator<TParams = any> {
     public loadingStatus = LoadingStatus.Ready;
     public basePath: string;
     public tree: Observable<FileTreeStructure>;
-
     public error: ServerError;
 
     private _tree = new BehaviorSubject<FileTreeStructure>(null);
@@ -157,15 +156,15 @@ export class FileNavigator<TParams = any> {
         return Observable.of(node);
     }
 
+    public isDirectory(path: string): Observable<boolean> {
+        const node = this._tree.value.getNode(path);
+        return this._checkIfDirectory(node);
+    }
+
     public dispose() {
         if (this._fileDeletedSub) {
             this._fileDeletedSub.unsubscribe();
         }
-    }
-
-    public isDirectory(path: string): Observable<boolean> {
-        const node = this._tree.value.getNode(path);
-        return this._checkIfDirectory(node);
     }
 
     private _removeFile(key: string) {
@@ -188,25 +187,17 @@ export class FileNavigator<TParams = any> {
                 return Observable.of(files);
             }
 
-            // TODO [ANDREW] - sort this to work with wildcards
-            console.log("filtering files with: ", this._wildcards);
             const filtered = files.filter((file) => file.isDirectory || this._checkWildcardMatch(file.name));
             return Observable.of(List(filtered));
         });
     }
 
-    // TODO :: FIX THIS TOMORROW ...
     private _checkWildcardMatch(filename: string): boolean {
-        const result = this._wildcards.split(",").some(wildcard => {
-            console.log(`matching: ${filename} with: ${wildcard}`);
-            if (!StringUtils.matchWildcard(filename, wildcard, false)) {
-                console.log("returing false");
-                return false;
-            }
+        const result = this._wildcards.split(",").find(wildcard => {
+            return StringUtils.matchWildcard(filename, wildcard, false);
         });
 
-        console.log("returing true with: ", result);
-        return true;
+        return Boolean(result);
     }
 
     private _checkIfDirectory(node: FileTreeNode): Observable<boolean> {
