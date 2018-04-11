@@ -206,9 +206,11 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         if (!this.focusedOption) {
             this.focusFirstOption();
         }
-        setTimeout(() => {
-            this._filterInputEl.nativeElement.focus();
-        });
+        if (this.filterable) {
+            setTimeout(() => {
+                this._filterInputEl.nativeElement.focus();
+            });
+        }
         this.changeDetector.markForCheck();
     }
 
