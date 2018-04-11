@@ -49,6 +49,7 @@ export class ProxySettingsManager {
             manual: true,
         });
         await this._saveProxySettings();
+        this.batchLabsApp.restart();
         return settings;
     }
 

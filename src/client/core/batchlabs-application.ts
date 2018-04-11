@@ -196,6 +196,11 @@ export class BatchLabsApplication {
         return autoUpdater.checkForUpdates();
     }
 
+    public restart() {
+        app.relaunch();
+        app.exit();
+    }
+
     public askUserForProxyCredentials(): Promise<ProxyCredentials> {
         const proxyCredentials = new ProxyCredentialsWindow(this);
         proxyCredentials.create();
