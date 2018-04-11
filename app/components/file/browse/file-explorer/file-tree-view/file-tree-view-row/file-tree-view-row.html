@@ -2,7 +2,9 @@
     <i class="fa" [class.fa-caret-down]="treeRow.expanded" [class.fa-caret-right]="!treeRow.expanded" *ngIf="treeRow.isDirectory"></i>
 </span>
 <span class="file-icon">
-    <i class="fa" [class.fa-folder]="treeRow.isDirectory && !treeRow.expanded" [class.fa-folder-open]="treeRow.isDirectory &&treeRow.expanded"
+    <i class="fa"
+        [class.fa-folder]="treeRow.isDirectory && !treeRow.expanded"
+        [class.fa-folder-open]="treeRow.isDirectory &&treeRow.expanded"
         [class.fa-file]="!treeRow.isDirectory"></i>
 </span>
 <span class="label">{{treeRow.name}}</span>

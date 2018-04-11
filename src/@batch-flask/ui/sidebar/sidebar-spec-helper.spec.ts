@@ -5,7 +5,9 @@ import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/t
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
 import { MaterialModule } from "@batch-flask/core";
-import { SidebarContentComponent, SidebarManager, SidebarModule } from "@batch-flask/ui/sidebar";
+import { SidebarContentComponent } from "./sidebar-content";
+import { SidebarManager } from "./sidebar-manager";
+import { SidebarModule } from "./sidebar.module";
 
 @Component({
     template: "<h1>{{text}}</h1>",
@@ -49,7 +51,7 @@ export class AppTestComponent implements AfterViewInit {
 export function setupSidebarTest() {
     TestBed.configureTestingModule({
         declarations: [FakeComponent, AppTestComponent],
-        imports: [SidebarModule.forRoot(), MaterialModule, NoopAnimationsModule],
+        imports: [SidebarModule, MaterialModule, NoopAnimationsModule],
     });
 
     TestBed.overrideModule(BrowserDynamicTestingModule, {

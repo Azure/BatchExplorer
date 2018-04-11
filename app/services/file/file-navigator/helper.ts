@@ -83,10 +83,11 @@ function checkDirInTree(directories: StringMap<FileTreeNode>, directory: string)
     }
 }
 
-export function generateDir(dirname): FileTreeNode {
+export function generateDir(dirname, virtual = false): FileTreeNode {
     return new FileTreeNode({
         path: dirname,
         isDirectory: true,
         loadingStatus: LoadingStatus.Ready,
+        virtual,
     });
 }
