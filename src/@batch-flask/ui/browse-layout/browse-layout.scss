@@ -161,8 +161,7 @@ bl-browse-layout {
         font-size: 1.1em;
         height: 26px;
 
-        background-color: $athensGrey;
-        border: none;
+        border: 1px solid $border-color;
 
         &:focus {
             outline: none;

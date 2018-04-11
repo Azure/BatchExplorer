@@ -299,9 +299,9 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
         const options = [];
         let focusedOptionIncluded = false;
         this.options.forEach((option) => {
+            const label = option.label && option.label.toLowerCase();
             if (!this.filter
-                || option.value.toLowerCase().contains(this.filter.toLowerCase())
-                || option.label.toLowerCase().contains(this.filter.toLowerCase())) {
+                || label.contains(this.filter.toLowerCase())) {
                 options.push(option);
 
                 if (option.value === this.focusedOption) {
