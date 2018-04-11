@@ -12,8 +12,9 @@ bl-select {
 
     > .select-button-container {
         height: $button-height;
-        background-color: white;
-        border: 1px solid $border-color;
+        background-color: $input-background-color;
+        border: 1px solid $input-border-color;
+        color: $input-text-color;
 
         > .select-button {
             display: flex;
@@ -49,11 +50,15 @@ bl-select {
             height: $button-height;
             padding: 0 5px;
             z-index: $dropdown-zindex + 10;
-            border: 1px solid $border-color;
-            color: $secondary-text;
+            border: 1px solid $input-border-color;
+            color: $input-text-color;
 
             &:focus {
-                border-bottom: 2px solid $primary-color;
+                border-bottom: 2px solid $input-focus-border-color;
+            }
+
+            &::placeholder {
+                color: $input-placeholder-color;
             }
         }
     }
