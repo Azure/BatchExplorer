@@ -135,13 +135,17 @@ export class ProxySettingsManager {
     private async _saveProxySettings() {
         const value = this._settings.value;
         if (!value) { return; }
-        const { http, https } = value.settings;
-        const str = JSON.stringify({
-            http: http && http.toString(),
-            https: https && https.toString(),
-            manual: value.manual,
-        });
-        await this.storage.setItem(Constants.localStorageKey.proxySettings, str);
+        if (!value.settings) {
+            await this.storage.removeItem(Constants.localStorageKey.proxySettings);
+        } else {
+            const { http, https } = value.settings;
+            const str = JSON.stringify({
+                http: http && http.toString(),
+                https: https && https.toString(),
+                manual: value.manual,
+            });
+            await this.storage.setItem(Constants.localStorageKey.proxySettings, str);
+        }
     }
 
     private get _currentCredentials() {
