@@ -215,6 +215,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
         const ref = this._dropdownRef = this._overlayRef.attach(portal);
         ref.instance.displayedOptions = this.displayedOptions;
         ref.instance.focusedOption = this.focusedOption;
+        ref.instance.multiple = this.multiple;
         ref.onDestroy(() => {
             this._dropdownRef = null;
             this._overlayRef = null;

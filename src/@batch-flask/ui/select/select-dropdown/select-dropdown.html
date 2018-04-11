@@ -2,7 +2,7 @@
     [class.focused]="focusedOption === option.value" [class.disabled]="option.disabled">
 
     <div class="checkbox" *ngIf="multiple">
-        <i class="fa fa-check" *ngIf="selected.has(option.value)"></i>
+        <i class="fa fa-check" *ngIf="select.selected.has(option.value)"></i>
     </div>
     <div class="option-content">
         {{option.label}}
