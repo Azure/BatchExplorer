@@ -1,4 +1,3 @@
-import { OverlayRef } from "@angular/cdk/overlay";
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef,
     HostBinding, Inject, forwardRef,

@@ -374,8 +374,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
             if (this._dropdownRef) {
                 this._dropdownRef.instance.above = x.connectionPair.overlayY === "bottom";
             }
-            console.log("Pair??", x.connectionPair.overlayY);
-        }, () => null, () => console.log("Completed change??"));
+        });
 
         return this.overlay.create(new OverlayConfig({
             positionStrategy,
