@@ -27,6 +27,10 @@ export abstract class DynamicForm<TEntity, TDto extends Dto<TDto>> {
         this.form.patchValue(this.dtoToForm(value));
     }
 
+    /**
+     * Disable form controls by given path
+     * @param path path to form control, passing string array for nested form controls
+     */
     public disable(path: string | string[]) {
         const control = FormUtils.getControl(this.form, path);
         control.disable();
