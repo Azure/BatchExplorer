@@ -289,10 +289,6 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
         this.changeDetector.markForCheck();
     }
 
-    public trackOption(index, option: SelectOptionComponent) {
-        return option.value;
-    }
-
     private _computeOptions() {
         const optionsMap = new Map();
         this.options.forEach((option) => {

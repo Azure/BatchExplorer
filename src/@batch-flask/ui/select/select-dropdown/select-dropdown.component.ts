@@ -73,4 +73,8 @@ export class SelectDropdownComponent {
         }
         this.select.selectOption(option);
     }
+
+    public trackOption(index, option: SelectOptionComponent) {
+        return option.value;
+    }
 }
