@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { AppUpdater, UpdateCheckResult, UpdateInfo } from "electron-updater";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
 import { ElectronRemote } from "./remote.service";
@@ -13,7 +13,7 @@ export enum UpdateStatus {
 }
 
 @Injectable()
-export class AutoUpdateService {
+export class AutoUpdateService implements OnDestroy {
     /**
      * Will be set to true if there is an update available
      */
@@ -26,6 +26,7 @@ export class AutoUpdateService {
     public updateInfo: UpdateInfo = null;
     private _status = new BehaviorSubject(UpdateStatus.Checking);
     private _autoUpdater: AppUpdater;
+    private _settingsSub: Subscription;
 
     constructor(batchFlaskSettings: BatchFlaskSettingsService, remote: ElectronRemote) {
         this._autoUpdater = remote.getCurrentWindow().autoUpdater;
@@ -53,9 +54,13 @@ export class AutoUpdateService {
             this._status.next(UpdateStatus.NotAvailable);
         });
 
-        batchFlaskSettings.settingsObs.subscribe((settings) => {
+        this._settingsSub = batchFlaskSettings.settingsObs.subscribe((settings) => {
             this._autoUpdater.autoInstallOnAppQuit = Boolean(settings.autoUpdateOnQuit);
         });
+    }
+
+    public ngOnDestroy() {
+        this._settingsSub.unsubscribe();
     }
 
     public async checkForUpdates(): Promise<UpdateCheckResult | null> {
