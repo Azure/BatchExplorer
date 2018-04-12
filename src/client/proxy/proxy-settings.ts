@@ -104,6 +104,11 @@ export class ProxySettingsManager {
                 http: http && new ProxySetting(http),
                 https: https && new ProxySetting(https),
             };
+            log.debug("Loaded proxy settings", {
+                manual,
+                http: this._safePrintProxySetting(settings.http),
+                https: this._safePrintProxySetting(settings.https),
+            });
             let valid = true;
             if (!manual) {
                 valid = await this._validateProxySettings(settings, false);
@@ -124,13 +129,23 @@ export class ProxySettingsManager {
         if (!settings) { return; }
         if (settings.http) {
             process.env.HTTP_PROXY = settings.http.toString();
+            log.info("Setting HTTP proxy settings", this._safePrintProxySetting(settings.http));
         }
         if (settings.https) {
             process.env.HTTPS_PROXY = settings.https.toString();
+            log.info("Setting HTTPS proxy settings", this._safePrintProxySetting(settings.https));
         }
         // Uncomment to debug with fiddler
         // allowInsecureRequest();
         globalTunnel.initialize();
+    }
+
+    private _safePrintProxySetting(setting: ProxySetting) {
+        if (setting.credentials) {
+            return `${setting.protocol}://xxxx:yyyyy@${setting.host}:${setting.port}`;
+        } else {
+            return `${setting.protocol}://${setting.host}:${setting.port}`;
+        }
     }
 
     private async _saveProxySettings() {
