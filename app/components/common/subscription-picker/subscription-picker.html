@@ -1,9 +1,7 @@
-<mat-form-field>
-    <mat-select [formControl]="subscription" placeholder="Subscription">
-        <mat-option
-            *ngFor="let subscription of subscriptionList;trackBy: trackBySubscriptionId"
-            [value]="subscription">
-            {{subscription.displayName}}
-        </mat-option>
-    </mat-select>
-</mat-form-field>
+<bl-select [formControl]="subscription" placeholder="Subscription" [filterable]="true">
+    <bl-option
+        *ngFor="let subscription of subscriptionList;trackBy: trackBySubscriptionId"
+        [value]="subscription"
+        [label]="subscription.displayName">
+    </bl-option>
+</bl-select>
