@@ -16,6 +16,10 @@ export class BatchFlaskSettingsService {
     public get settings() { return this._settings.value; }
     private _settings = new BehaviorSubject<BatchFlaskSettings>(defaultSettings);
 
+    constructor() {
+        this.settingsObs = this._settings.asObservable();
+    }
+
     public updateSettings(settings: BatchFlaskSettings) {
         this._settings.next({ ...defaultSettings, ...settings });
     }
