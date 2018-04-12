@@ -13,6 +13,7 @@ import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
+import { SidebarManager } from "@batch-flask/ui/sidebar/sidebar-manager";
 import { JobSchedule, JobScheduleState } from "app/models";
 import { JobScheduleListParams, JobScheduleService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
@@ -22,6 +23,7 @@ import {
     DeleteJobScheduleDialogComponent,
     DisableJobScheduleDialogComponent,
     EnableJobScheduleDialogComponent,
+    PatchJobScheduleComponent,
     TerminateJobScheduleDialogComponent,
 } from "../action";
 
@@ -48,6 +50,7 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
         router: Router,
         activatedRoute: ActivatedRoute,
         changeDetector: ChangeDetectorRef,
+        private sidebarManager: SidebarManager,
         private dialog: MatDialog,
         private jobScheduleService: JobScheduleService,
         private pinnedEntityService: PinnedEntityService,
@@ -127,6 +130,11 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
         const isCompleted = jobSchedule.state === JobScheduleState.completed;
         const isDisabled = jobSchedule.state === JobScheduleState.disabled;
         return new ContextMenu([
+            new ContextMenuItem({
+                label: "Edit",
+                click: () => this.editJobSchedule(jobSchedule),
+                enabled: !isCompleted,
+            }),
             new ContextMenuItem({ label: "Delete", click: () => this.deleteJobSchedule(jobSchedule) }),
             new ContextMenuItem({
                 label: "Terminate",
@@ -156,6 +164,13 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
             task.start(backgroundTask);
             return task.waitingDone;
         });
+    }
+
+    public editJobSchedule(jobSchedule: JobSchedule) {
+        const ref = this.sidebarManager
+            .open(`edit-job-schedule-${jobSchedule.id}`, PatchJobScheduleComponent);
+        ref.component.jobScheduleId = jobSchedule.id;
+        ref.component.setValueFromEntity(jobSchedule);
     }
 
     public deleteJobSchedule(jobSchedule: JobSchedule) {
