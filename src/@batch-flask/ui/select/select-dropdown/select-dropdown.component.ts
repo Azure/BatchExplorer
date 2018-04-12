@@ -47,7 +47,7 @@ export class SelectDropdownComponent {
     private _multiple: any;
 
     constructor(
-        @Inject(forwardRef(() => SelectComponent)) private select: SelectComponent,
+        @Inject(forwardRef(() => SelectComponent)) public select: SelectComponent,
         private elementRef: ElementRef,
         private changeDetector: ChangeDetectorRef) {
     }
