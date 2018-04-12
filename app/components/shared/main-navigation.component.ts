@@ -28,7 +28,6 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
     public currentUserName: string = "";
     public updateStatus: UpdateStatus;
 
-    private _autoUpdater: AppUpdater;
     private _updateSub: Subscription;
 
     constructor(
@@ -146,7 +145,7 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
         if (OS.isWindows()) {
             setImmediate(() => {
                 this.remote.electronApp.removeAllListeners("window-all-closed");
-                this._autoUpdater.quitAndInstall();
+                this.autoUpdateService.quitAndInstall();
                 this.remote.getCurrentWindow().close();
             });
         } else {

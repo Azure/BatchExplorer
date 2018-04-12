@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { AppUpdater, UpdateCheckResult, UpdateInfo } from "electron-updater";
 import { BehaviorSubject, Observable } from "rxjs";
 
+import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
 import { ElectronRemote } from "./remote.service";
 
 export enum UpdateStatus {
@@ -26,7 +27,7 @@ export class AutoUpdateService {
     private _status = new BehaviorSubject(UpdateStatus.Checking);
     private _autoUpdater: AppUpdater;
 
-    constructor(remote: ElectronRemote) {
+    constructor(batchFlaskSettings: BatchFlaskSettingsService, remote: ElectronRemote) {
         this._autoUpdater = remote.getCurrentWindow().autoUpdater;
         this.status = this._status.asObservable();
         this.updateReady = this._status.map(x => x === UpdateStatus.Ready);
@@ -36,13 +37,11 @@ export class AutoUpdateService {
         });
 
         this._autoUpdater.on("update-available", (info) => {
-            console.log("Update available??", info);
             this._status.next(UpdateStatus.Downloading);
             this.updateInfo = info;
         });
 
         this._autoUpdater.on("download-progress", (progress) => {
-            console.log("Download progress");
             this._status.next(UpdateStatus.Ready);
         });
 
@@ -51,8 +50,11 @@ export class AutoUpdateService {
         });
 
         this._autoUpdater.on("update-not-available", (info) => {
-            console.log("uidpate not availkable??", info);
             this._status.next(UpdateStatus.NotAvailable);
+        });
+
+        batchFlaskSettings.settingsObs.subscribe((settings) => {
+            this._autoUpdater.autoInstallOnAppQuit = Boolean(settings.autoUpdateOnQuit);
         });
     }
 
@@ -63,5 +65,9 @@ export class AutoUpdateService {
 
     public quitAndInstall() {
         return this._autoUpdater.quitAndInstall();
+    }
+
+    public set autoInstallOnAppQuit(value: boolean) {
+        this._autoUpdater.autoInstallOnAppQuit = value;
     }
 }

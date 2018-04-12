@@ -1,18 +1,22 @@
 import { Injectable } from "@angular/core";
+import { BehaviorSubject, Observable } from "rxjs";
 import { BatchFlaskSettings, EntityConfigurationView } from "./batch-flask-settings.model";
 
 const defaultSettings: BatchFlaskSettings = {
     entityConfiguration: {
         defaultView: EntityConfigurationView.pretty,
     },
+    autoUpdateOnQuit: true,
 };
 
 @Injectable()
 export class BatchFlaskSettingsService {
-    public get settings() { return this._settings; }
-    private _settings: BatchFlaskSettings = defaultSettings;
+    public settingsObs: Observable<BatchFlaskSettings>;
+
+    public get settings() { return this._settings.value; }
+    private _settings = new BehaviorSubject<BatchFlaskSettings>(defaultSettings);
 
     public updateSettings(settings: BatchFlaskSettings) {
-        this._settings = { ...defaultSettings, ...settings };
+        this._settings.next({ ...defaultSettings, ...settings });
     }
 }
