@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { Observable } from "rxjs";
 
@@ -12,17 +12,26 @@ import { JobScheduleCreateBasicDialogComponent } from "./job-schedule-create-bas
 @Component({
     selector: "bl-patch-job-schedule-form",
     templateUrl: "job-schedule-create-basic-dialog.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PatchJobScheduleComponent extends JobScheduleCreateBasicDialogComponent {
-    public jobScheduleId: string;
+    private _jobScheduleId: string;
+    public get jobScheduleId() {
+        return this._jobScheduleId;
+    }
+    public set jobScheduleId(jobScheduleId: string) {
+        this._jobScheduleId = jobScheduleId;
+        this.title = `Edit job schedule ${jobScheduleId}`;
+        this.changeDetector.detectChanges();
+    }
 
     constructor(
         formBuilder: FormBuilder,
         sidebarRef: SidebarRef<JobScheduleCreateBasicDialogComponent>,
         jobScheduleService: JobScheduleService,
-        notificationService: NotificationService) {
+        notificationService: NotificationService,
+        private changeDetector: ChangeDetectorRef) {
         super(formBuilder, sidebarRef, jobScheduleService, notificationService);
-
         this.title = "Edit job schedule";
         this.disable("id");
         this.disable("displayName");
