@@ -1,11 +1,10 @@
 
 import { AccessToken } from "@batch-flask/core";
-import { log } from "@batch-flask/utils";
+import { fetch, log } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core/batchlabs-application";
 import { localStorage } from "client/core/local-storage";
 import { Constants } from "common";
 import { Deferred } from "common/deferred";
-import fetch from "node-fetch";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
 import {
