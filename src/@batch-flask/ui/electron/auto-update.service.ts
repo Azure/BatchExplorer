@@ -36,20 +36,32 @@ export class AutoUpdateService {
         });
 
         this._autoUpdater.on("update-available", (info) => {
+            console.log("Update available??", info);
             this._status.next(UpdateStatus.Downloading);
             this.updateInfo = info;
         });
 
+        this._autoUpdater.on("download-progress", (progress) => {
+            console.log("Download progress");
+            this._status.next(UpdateStatus.Ready);
+        });
+
         this._autoUpdater.on("update-downloaded", (info) => {
-            this._status.next(UpdateStatus.Downloading);
+            this._status.next(UpdateStatus.Ready);
         });
 
         this._autoUpdater.on("update-not-available", (info) => {
+            console.log("uidpate not availkable??", info);
             this._status.next(UpdateStatus.NotAvailable);
         });
     }
 
-    public checkForUpdate(): Observable<UpdateCheckResult> {
-        return Observable.fromPromise(this._autoUpdater.checkForUpdates());
+    public async checkForUpdates(): Promise<UpdateCheckResult | null> {
+        const info = await this._autoUpdater.checkForUpdates();
+        return this._status.value === UpdateStatus.Ready ? info : null;
+    }
+
+    public quitAndInstall() {
+        return this._autoUpdater.quitAndInstall();
     }
 }

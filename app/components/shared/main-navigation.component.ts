@@ -21,6 +21,7 @@ import "./main-navigation.scss";
     templateUrl: "main-navigation.html",
 })
 export class MainNavigationComponent implements OnInit, OnDestroy {
+    public UpdateStatus = UpdateStatus;
 
     public selectedId: string;
     public selectedAccountAlias: string = "";
@@ -59,21 +60,9 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
             }
         });
 
-        // this._autoUpdater.on("update-available", (info) => {
-        //     this.update = info;
-
-        //     this._notify("Update available", `Update ${info.version} is now available.`, {
-        //         action: () => this._update(),
-        //     });
-        // });
-
-        // this._autoUpdater.on("update-not-available", (info) => {
-        //     this.update = null;
-        //     this._notify("There are no updates currently available.", `You  have the latest BatchLabs version.`);
-        // });
-
         this._updateSub = this.autoUpdateService.status.subscribe((status) => {
             this.updateStatus = status;
+            console.log("Status?", status);
             this.changeDetector.markForCheck();
         });
     }
@@ -141,8 +130,9 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
     }
 
     private async _checkForUpdates(showNotification = true) {
-        const result = await this.batchLabs.autoUpdater.checkForUpdates();
-        if (result.updateInfo) {
+        const result = await this.autoUpdateService.checkForUpdates();
+        if (!showNotification) { return; }
+        if (result) {
             this._notify("Update available", `Update ${result.updateInfo.version} is now available.`, {
                 action: () => this._update(),
             });
