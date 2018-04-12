@@ -62,7 +62,9 @@ export class ManualProxyConfigurationWindow extends GenericWindow {
         this.hide();
         if (url && port) {
             const setting = new ProxySetting(`${url}:${port}`);
-            setting.credentials = { username, password };
+            if (username) {
+                setting.credentials = { username, password };
+            }
             this._deferred.resolve({ http: setting, https: setting });
         } else {
             this._deferred.resolve(null);
