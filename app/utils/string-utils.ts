@@ -8,7 +8,7 @@ export class StringUtils {
      */
     public static matchWildcard(str: string, wildcard: string, caseSensitive = true) {
         const flags = caseSensitive ? undefined : "i";
-        return new RegExp(`^${wildcard.replace("*", ".*")}$`, flags).test(str);
+        return new RegExp(`^${wildcard.replace(/\*/g, ".*")}$`, flags).test(str);
     }
 
     /**
