@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from "@angula
 import { Router } from "@angular/router";
 import { AutoUpdateService, ElectronRemote, ElectronShell, UpdateStatus } from "@batch-flask/ui";
 import { OS } from "@batch-flask/utils";
-import { AppUpdater } from "electron-updater";
 import * as path from "path";
 
 import {
@@ -61,7 +60,6 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
 
         this._updateSub = this.autoUpdateService.status.subscribe((status) => {
             this.updateStatus = status;
-            console.log("Status?", status);
             this.changeDetector.markForCheck();
         });
     }

@@ -16,5 +16,5 @@
   "storage.default-upload-container": "batchlabs-input",
 
   // If the app should automatically update when quiting
-  "auto-update-on-quit": true,
+  "auto-update-on-quit": true
 }
