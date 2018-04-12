@@ -50,6 +50,10 @@ bl-quota-display {
             .mat-progress-bar-buffer {
                 background-color: transparent;
             }
+
+            .mat-progress-bar-background {
+                display: none;
+            }
         }
     }
 

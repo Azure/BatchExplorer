@@ -62,7 +62,20 @@ export class EntityColor extends ThemeElement<EntityColorDefinition> {
     constructor(def: EntityColorDefinition) {
         super(def);
         this.hoverText = this.hoverText || def.text;
-        this.hoverBackground = this.hoverBackground  || def.background;
+        this.hoverBackground = this.hoverBackground || def.background;
+    }
+}
+
+export class InputColor extends ThemeElement<EntityColorDefinition> {
+    @CssColor() public text: string;
+    @CssColor() public background: string;
+    @CssColor() public placeholder: string;
+    @CssColor() public border: string;
+    @CssColor("focus-border") public focusBorder: string;
+
+    constructor(def) {
+        super(def);
+        this.focusBorder = this.focusBorder || this.border;
     }
 }
 
@@ -109,6 +122,7 @@ export class Theme extends ThemeElement<ThemeDefinition> {
     @CssColor("file-explorer") public fileExplorer: FileExplorerColors;
     @CssColor() public button: ButtonColors;
     @CssColor() public monitorChart: MonitorChartColor;
+    @CssColor() public input: InputColor;
 }
 
 function multiply(rgb1, rgb2) {

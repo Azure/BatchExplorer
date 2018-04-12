@@ -88,4 +88,12 @@ export interface ThemeDefinition {
         "start-task-failed-node-count": string;
         "rebooting-node-count": string;
     };
+
+    input: {
+        text: string;
+        background: string;
+        placehold: string;
+        border: string;
+        focusBorder: string;
+    };
 }

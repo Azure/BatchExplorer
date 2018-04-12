@@ -34,15 +34,14 @@
             </div>
             <div class="form-element" *ngIf="selectedSubscription">
                 <ng-container *ngIf="locations.length">
-                    <mat-form-field>
-                        <mat-select formControlName="location" placeholder="Location">
-                            <mat-option
-                                *ngFor="let location of locations;trackBy: trackByLocation"
-                                [value]="location">
-                                {{location.displayName}} ({{location.name}})
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <bl-select formControlName="location" placeholder="Location" [filterable]="true">
+                        <bl-option
+                            *ngFor="let location of locations;trackBy: trackByLocation"
+                            [value]="location"
+                            label="{{location.displayName}} ({{location.name}})">
+
+                        </bl-option>
+                    </bl-select>
                     <bl-error controlName="location" code="required">Location is a required field</bl-error>
                     <bl-error controlName="location" code="quotaReached">
                         You've already reached your quota {{form.controls.location.errors?.quotaReached?.used}} out of {{form.controls.location.errors?.quotaReached?.quota}} accounts

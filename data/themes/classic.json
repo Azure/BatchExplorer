@@ -49,5 +49,12 @@
     "running-node-count": "#388e3c",
     "start-task-failed-node-count": "#aa3939",
     "rebooting-node-count": "#ff755c"
+  },
+  "input": {
+    "border": "#d5d5d5",
+    "focusBorder": "var(--color-primary)",
+    "placeholder": "#d5d5d5",
+    "text": "var(--color-primary-text)",
+    "background": "#fff"
   }
 }
