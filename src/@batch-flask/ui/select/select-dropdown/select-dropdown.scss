@@ -1,0 +1,76 @@
+@import "app/styles/variables";
+
+bl-select-dropdown {
+    display: block;
+    background-color: white;
+    min-width: 100%;
+    z-index: 100;
+    max-height: 50vh;
+    overflow-y: auto;
+
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+
+    &.pos-above {
+        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 2px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px -2px rgba(0, 0, 0, 0.12);
+    }
+
+    > .option {
+        cursor: pointer;
+        padding: 3px 5px;
+        height: 24px;
+        line-height: 18px;
+        display: flex;
+        align-items: center;
+
+        &:hover:not(.disabled) {
+            &.focused {
+                background: $primary-color;
+            }
+            &:not(.focused) {
+                background: $whitesmoke-darker;
+            }
+        }
+
+        &.active {
+            background: $whitesmoke-darker;
+        }
+
+        &.focused {
+            color: white;
+            background: $primary-color-light;
+        }
+
+        &.disabled {
+            color: $altoGray;
+            cursor: default;
+            // background-color: $concreteGray;
+        }
+
+        > .checkbox {
+            border: 1px solid $border-color;
+            width: 16px;
+            height: 16px;
+            padding: 1px;
+            display: inline-block;
+            position: relative;
+            margin-right: 5px;
+
+            > .fa-check {
+                display: block;
+                color: $secondary-text;
+                font-size: 12px;
+            }
+        }
+
+        > .option-content {
+            min-width: 20px;
+            word-wrap: none;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+
+    > .no-option {
+        text-align: center;
+    }
+}

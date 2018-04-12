@@ -1,12 +1,30 @@
 import {
     AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, ContentChildren, ElementRef, HostListener, Input, QueryList, ViewChild, forwardRef,
+    Component, ComponentRef, ContentChildren, ElementRef, HostListener,
+    Injector, Input, OnDestroy, QueryList, ViewChild, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 import { SelectOptionComponent } from "./option";
 
+import { ConnectionPositionPair, Overlay, OverlayConfig, OverlayRef } from "@angular/cdk/overlay";
+import { ComponentPortal } from "@angular/cdk/portal";
+import { SelectDropdownComponent } from "@batch-flask/ui/select/select-dropdown";
+import { Subscription } from "rxjs";
 import "./select.scss";
+
+/** Custom injector type specifically for instantiating components with a dialog. */
+export class SelectInjector implements Injector {
+    constructor(private select: SelectComponent, private parentInjector: Injector) { }
+
+    public get(token: any, notFoundValue?: any): any {
+        if (token === SelectComponent) {
+            return this.select;
+        }
+
+        return this.parentInjector.get(token, notFoundValue);
+    }
+}
 
 @Component({
     selector: "bl-select",
@@ -16,7 +34,7 @@ import "./select.scss";
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SelectComponent), multi: true },
     ],
 })
-export class SelectComponent implements ControlValueAccessor, AfterContentInit {
+export class SelectComponent implements ControlValueAccessor, AfterContentInit, OnDestroy {
     @Input() public placeholder = "";
 
     /**
@@ -33,19 +51,39 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
     public options: QueryList<SelectOptionComponent>;
 
     public selected = new Set<any>();
-    public showOptions = false;
     public filter: string = "";
-    public displayedOptions: SelectOptionComponent[];
-    public focusedOption: any = null;
+    public set displayedOptions(displayedOptions: SelectOptionComponent[]) {
+        this._displayedOptions = displayedOptions;
+        if (this._dropdownRef) { this._dropdownRef.instance.displayedOptions = displayedOptions; }
+    }
+    public get displayedOptions() { return this._displayedOptions; }
+    public set focusedOption(option: any) {
+        this._focusedOption = option;
+        if (this._dropdownRef) { this._dropdownRef.instance.focusedOption = option; }
+    }
+    public get focusedOption() { return this._focusedOption; }
+
+    private _dropdownRef: ComponentRef<SelectDropdownComponent>;
+    private _displayedOptions: SelectOptionComponent[];
+    private _focusedOption: any = null;
+    private _overlayRef: OverlayRef;
+    private _backDropClickSub: Subscription;
 
     @ViewChild("selectButton", { read: ElementRef }) private _selectButtonEl: ElementRef;
     @ViewChild("filterInput") private _filterInputEl: ElementRef;
-    @ViewChild("dropdown") private _dropdownEl: ElementRef;
+
+    public get showOptions() {
+        return Boolean(this._dropdownRef);
+    }
 
     private _propagateChange: (value: any) => void;
     private _optionsMap: Map<any, SelectOptionComponent>;
 
-    constructor(private changeDetector: ChangeDetectorRef, private elementRef: ElementRef) {
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private elementRef: ElementRef,
+        private overlay: Overlay,
+        private injector: Injector) {
     }
 
     public ngAfterContentInit() {
@@ -55,11 +93,24 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         });
     }
 
+    public ngOnDestroy() {
+        if (this._overlayRef) {
+            this._overlayRef.dispose();
+        }
+
+        if (this._backDropClickSub) {
+            this._backDropClickSub.unsubscribe();
+        }
+    }
+
     public writeValue(value: any): void {
         if (this.multiple) {
             this.selected = new Set(value);
         } else {
             this.selected = new Set(value ? [value] : []);
+        }
+        if (!this.focusedOption) {
+            this.focusedOption = value;
         }
         this.changeDetector.markForCheck();
     }
@@ -75,7 +126,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
     @HostListener("document:click", ["$event"])
     public onClick(event: Event) {
         if (this.showOptions && !this.elementRef.nativeElement.contains(event.target)) {
-            this.showOptions = false;
+            this._dropdownRef.destroy();
             this.changeDetector.markForCheck();
         }
     }
@@ -111,6 +162,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
                 event.preventDefault();
                 return;
             case "Escape":
+                event.stopPropagation();
                 this.closeDropdown();
                 this.changeDetector.markForCheck();
                 return;
@@ -118,8 +170,8 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         }
         const index = this._moveFocusInDirection(lastIndex, direction);
         this.changeDetector.markForCheck();
-        if (lastIndex !== index) {
-            this.scrollToIndex(index);
+        if (lastIndex !== index && this._dropdownRef) {
+            this._dropdownRef.instance.scrollToIndex(index);
         }
     }
 
@@ -153,11 +205,30 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
     }
 
     public openDropdown() {
-        this.showOptions = true;
-        if (this.filterable) {
-            if (!this.focusedOption) {
-                this.focusFirstOption();
+        this._overlayRef = this._createOverlay();
+        this._backDropClickSub = this._overlayRef.backdropClick().subscribe(() => {
+            this.closeDropdown();
+        });
+        const injector = new SelectInjector(this, this.injector);
+        const portal = new ComponentPortal(SelectDropdownComponent, null, injector);
+        const ref = this._dropdownRef = this._overlayRef.attach(portal);
+        ref.instance.displayedOptions = this.displayedOptions;
+        ref.instance.focusedOption = this.focusedOption;
+        ref.instance.multiple = this.multiple;
+        ref.onDestroy(() => {
+            this._dropdownRef = null;
+            this._overlayRef = null;
+
+            if (this._backDropClickSub) {
+                this._backDropClickSub.unsubscribe();
+                this._backDropClickSub = null;
             }
+        });
+
+        if (!this.focusedOption) {
+            this.focusFirstOption();
+        }
+        if (this.filterable) {
             setTimeout(() => {
                 this._filterInputEl.nativeElement.focus();
             });
@@ -166,20 +237,16 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
     }
 
     public closeDropdown() {
-        this.showOptions = false;
+        if (this._overlayRef) {
+            this._overlayRef.dispose();
+            this._overlayRef = null;
+            this._dropdownRef = null;
+        }
         setTimeout(() => {
             this._selectButtonEl.nativeElement.focus();
         });
 
         this.changeDetector.markForCheck();
-    }
-
-    public handleClickOption(event: Event, option: SelectOptionComponent) {
-        event.stopPropagation();
-        if (option.disabled) {
-            return;
-        }
-        this.selectOption(option);
     }
 
     public selectOption(option: SelectOptionComponent) {
@@ -192,7 +259,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
             }
         } else {
             this.selected = new Set([option.value]);
-            this.showOptions = false;
+            this.closeDropdown();
         }
 
         this.notifyChanges();
@@ -222,25 +289,6 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         this.changeDetector.markForCheck();
     }
 
-    public trackOption(index, option: SelectOptionComponent) {
-        return option.value;
-    }
-
-    /**
-     * Scroll to the option at the given index
-     * @param index Index of the option
-     */
-    public scrollToIndex(index: number) {
-        const el: HTMLElement = this._dropdownEl.nativeElement;
-        const height = el.getBoundingClientRect().height;
-        const current = el.scrollTop;
-        const scrollTopMin = (index + 1) * 24 - height;
-        const scrollTopMax = (index - 1) * 24;
-
-        const scrollTop = Math.min(Math.max(scrollTopMin, current), scrollTopMax);
-        el.scrollTop = Math.max(scrollTop, 0);
-    }
-
     private _computeOptions() {
         const optionsMap = new Map();
         this.options.forEach((option) => {
@@ -255,9 +303,9 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
         const options = [];
         let focusedOptionIncluded = false;
         this.options.forEach((option) => {
+            const label = option.label && option.label.toLowerCase();
             if (!this.filter
-                || option.value.toLowerCase().contains(this.filter.toLowerCase())
-                || option.label.toLowerCase().contains(this.filter.toLowerCase())) {
+                || label.contains(this.filter.toLowerCase())) {
                 options.push(option);
 
                 if (option.value === this.focusedOption) {
@@ -292,5 +340,45 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit {
 
     private _wrapIndex(index: number): number {
         return (index + this.displayedOptions.length) % this.displayedOptions.length;
+    }
+
+    private _createOverlay(): OverlayRef {
+        const dimensions = this.elementRef.nativeElement.getBoundingClientRect();
+        const positions: ConnectionPositionPair[] = [
+            {
+                originX: "start",
+                originY: "bottom",
+                overlayX: "start",
+                overlayY: "top",
+                offsetX: 0,
+                offsetY: 0,
+            },
+            {
+                originX: "start",
+                originY: "top",
+                overlayX: "start",
+                overlayY: "bottom",
+                offsetX: 0,
+                offsetY: 0,
+            },
+        ];
+
+        const positionStrategy = this.overlay.position().connectedTo(this.elementRef,
+            { originX: "start", originY: "top" },
+            { overlayX: "start", overlayY: "bottom" });
+        positionStrategy.withPositions(positions);
+        positionStrategy.onPositionChange.subscribe((x) => {
+            if (this._dropdownRef) {
+                this._dropdownRef.instance.above = x.connectionPair.overlayY === "bottom";
+            }
+        });
+
+        return this.overlay.create(new OverlayConfig({
+            positionStrategy,
+            scrollStrategy: this.overlay.scrollStrategies.block(),
+            minWidth: dimensions.width,
+            hasBackdrop: true,
+            backdropClass: "cdk-overlay-transparent-backdrop",
+        }));
     }
 }
