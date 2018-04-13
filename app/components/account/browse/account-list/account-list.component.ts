@@ -4,7 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { Filter, FilterMatcher, Operator, autobind } from "@batch-flask/core";
+import { Filter, FilterMatcher, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";

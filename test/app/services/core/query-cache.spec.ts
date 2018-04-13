@@ -1,3 +1,4 @@
+import { Filter, FilterBuilder } from "@batch-flask/core";
 import { ContinuationToken, ListOptions, QueryCache } from "app/services/core";
 import { OrderedSet } from "immutable";
 
@@ -9,8 +10,8 @@ class FakeClientProxy {
     }
 }
 
-function createToken(filter: string): ContinuationToken {
-    return { params: {}, options: new ListOptions({ filter: filter }), nextLink: null };
+function createToken(filter: Filter): ContinuationToken {
+    return { params: {}, options: new ListOptions({ filter }), nextLink: null };
 }
 
 describe("QueryCache", () => {
@@ -21,7 +22,7 @@ describe("QueryCache", () => {
         clientProxy = new FakeClientProxy();
         cache = new QueryCache();
         cache.cacheQuery(OrderedSet(["a", "b", "c"]), createToken(undefined));
-        cache.cacheQuery(OrderedSet(["a"]), createToken("id eq a"));
+        cache.cacheQuery(OrderedSet(["a"]), createToken(FilterBuilder.prop("id").eq("a")));
 
     });
 
@@ -33,7 +34,7 @@ describe("QueryCache", () => {
     });
 
     it("Caching a new query should remove the oldest execluding the no-query", () => {
-        cache.cacheQuery(OrderedSet(["b"]), createToken("id eq b"));
+        cache.cacheQuery(OrderedSet(["b"]), createToken(FilterBuilder.prop("id").eq("b")));
 
         expect(cache.getKeys(undefined)).not.toBe(null, "Should not have removed the undefined query");
         expect(cache.getKeys("id eq b")).not.toBe(null, "The new query should have been added");

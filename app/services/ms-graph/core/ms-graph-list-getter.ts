@@ -43,7 +43,7 @@ export class MsGraphListGetter<TEntity, TParams> extends ListGetter<TEntity, TPa
     private _requestOptions(options: ListOptions): HttpRequestOptions {
         let params = new HttpParams();
         if (options.filter) {
-            params = params.set("$filter", options.filter);
+            params = params.set("$filter", options.filter.toOData());
         }
 
         if (options.select) {
