@@ -14,5 +14,6 @@ export async function fetch(url: string, options: RequestInit = {}) {
     } else {
         log.info("Calling node fetch without HTTP_PROXY");
     }
+
     return nodeFetch(url, instanceOptions);
 }

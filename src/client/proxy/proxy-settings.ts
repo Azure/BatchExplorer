@@ -136,17 +136,17 @@ export class ProxySettingsManager {
             log.info("Setting HTTPS proxy settings", this._safePrintProxySetting(settings.https));
         }
         // Uncomment to debug with fiddler
-        // allowInsecureRequest();
-        globalTunnel.initialize();
+        allowInsecureRequest();
+        // globalTunnel.initialize();
         // TODO-TIM remove
-        if (settings.http) {
-            process.env.HTTP_PROXY = settings.http.toString();
-            log.info("Setting HTTP proxy settings", this._safePrintProxySetting(settings.http));
-        }
-        if (settings.https) {
-            process.env.HTTPS_PROXY = settings.https.toString();
-            log.info("Setting HTTPS proxy settings", this._safePrintProxySetting(settings.https));
-        }
+        // if (settings.http) {
+        //     process.env.HTTP_PROXY = settings.http.toString();
+        //     log.info("Setting HTTP proxy settings", this._safePrintProxySetting(settings.http));
+        // }
+        // if (settings.https) {
+        //     process.env.HTTPS_PROXY = settings.https.toString();
+        //     log.info("Setting HTTPS proxy settings", this._safePrintProxySetting(settings.https));
+        // }
     }
 
     private _safePrintProxySetting(setting: ProxySetting) {
