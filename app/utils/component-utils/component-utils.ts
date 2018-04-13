@@ -41,4 +41,8 @@ export class ComponentUtils {
             view.setFixedKeys([]);
         });
     }
+
+    public coerceBooleanProperty(value: boolean | undefined | null): boolean {
+        return value != null && `${value}` !== "false";
+    }
 }

@@ -1,0 +1,12 @@
+
+
+<div class="label-container">
+    <label class="bl-form-field-label"
+        [attr.for]="control.id"
+        [attr.aria-owns]="control.id">
+        {{control.placeholder}}
+    </label>
+</div>
+<div class="input-container">
+    <ng-content></ng-content>
+</div>
