@@ -105,7 +105,9 @@ export class JobService extends ServiceBase {
     }
 
     public disable(jobId: string, disableTasks: string, options: any = {}): Observable<{}> {
-        return this.callBatchClient((client) => client.job.disable(jobId, disableTasks, options));
+        return this.callBatchClient((client) => client.job.disable(jobId, {
+            disableTasks: disableTasks,
+        }, options));
     }
 
     public enable(jobId: string, options: any = {}): Observable<{}> {

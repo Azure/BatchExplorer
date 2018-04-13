@@ -31,7 +31,7 @@ const components = [
     imports: [...commonModules, TaskBaseModule, BaseModule],
     entryComponents: [
         JobCreateBasicDialogComponent, DeleteJobDialogComponent, DisableJobDialogComponent,
-        EnableJobDialogComponent, TerminateJobDialogComponent,
+        EnableJobDialogComponent, TerminateJobDialogComponent, PatchJobComponent,
     ],
 })
 export class JobActionModule {

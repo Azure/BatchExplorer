@@ -28,6 +28,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
     public constraintsGroup: FormGroup;
     public showJobReleaseTask: boolean;
     public title = "Create job";
+    public subtitle = null;
     public fileUri = "create.job.batch.json";
     public virtualMachineConfiguration: VirtualMachineConfiguration = null;
     public containerSettingsRequired: boolean = true;
@@ -144,6 +145,16 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
 
     public get jobReleaseTask() {
         return this.form.controls.jobReleaseTask.value;
+    }
+
+    public get showJobConfiguration() {
+        return !this.form.controls.jobManagerTask.disabled
+         || !this.form.controls.jobPreparationTask.disabled
+         || !this.form.controls.jobReleaseTask.disabled;
+    }
+
+    public get showPoolPicker() {
+        return !this.form.controls.poolInfo.disabled;
     }
 
     public resetJobPreparationTask() {

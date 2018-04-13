@@ -1,5 +1,5 @@
 <bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [config]="complexFormConfig" [fileUri]="fileUri">
-    <bl-form-page main-form-page [title]="title" [formGroup]="form">
+    <bl-form-page main-form-page [title]="title" [subtitle]="subtitle" [formGroup]="form">
         <bl-form-section title="General info" subtitle="Basic information about the job">
             <div class="form-element">
                 <mat-form-field>
@@ -16,13 +16,13 @@
                 <bl-error controlName="displayName" code="maxlength">Display name has a maximum length of 1024 characters</bl-error>
             </div>
         </bl-form-section>
-        <bl-form-section title="Pool selection" subtitle="Choose where the job should be running">
+        <bl-form-section *ngIf="showPoolPicker" title="Pool selection" subtitle="Choose where the job should be running">
             <div class="form-element">
                 <bl-pool-picker formControlName="poolInfo"></bl-pool-picker>
                 <bl-error controlName="poolInfo" code="required">You must select a pool for this job to run on</bl-error>
             </div>
         </bl-form-section>
-        <bl-form-section title="Job configuration task" subtitle="Specify job manager task, job preparation task and job release task. A job release task cannot be specified without a job preparation task.">
+        <bl-form-section *ngIf="showJobConfiguration" title="Job configuration task" subtitle="Specify job manager task, job preparation task and job release task. A job release task cannot be specified without a job preparation task.">
             <bl-form-picker formControlName="jobManagerTask" #jobManagerTaskPicker>
                 <div no-value-title>Job manager task</div>
                 <div value-title>{{jobManagerTask?.id}}</div>

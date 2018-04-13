@@ -95,12 +95,12 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     }
 
     @autobind()
-    public editJobSchedule() {
+    public editJob() {
         const ref = this.sidebarManager
             .open(`edit-job-schedule-${this.jobId}`, PatchJobComponent);
         ref.component.jobId = this.jobId;
+        ref.component.checkJobStateForPoolPicker(this.job.state);
         ref.component.setValueFromEntity(this.job);
-        console.log(this.job);
     }
 
     @autobind()
