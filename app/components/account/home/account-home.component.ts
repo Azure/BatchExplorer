@@ -3,7 +3,7 @@ import { FormControl } from "@angular/forms";
 import { Set } from "immutable";
 
 import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
-import { BrowseLayoutComponent } from "@batch-flask/ui/browse-layout";
+import { BrowseLayoutComponent, BrowseLayoutConfig } from "@batch-flask/ui/browse-layout";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Subscription } from "app/models";
 import { SubscriptionService } from "app/services";
@@ -14,6 +14,9 @@ import { BatchAccountCreateComponent } from "../action/add";
     templateUrl: "account-home.html",
 })
 export class AccountHomeComponent implements OnInit, OnDestroy {
+    public layoutConfig: BrowseLayoutConfig = {
+        quickSearchField: "name",
+    };
 
     @ViewChild("layout")
     public layout: BrowseLayoutComponent;
