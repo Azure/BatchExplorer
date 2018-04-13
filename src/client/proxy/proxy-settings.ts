@@ -136,7 +136,7 @@ export class ProxySettingsManager {
             log.info("Setting HTTPS proxy settings", this._safePrintProxySetting(settings.https));
         }
         // Uncomment to debug with fiddler
-        allowInsecureRequest();
+        // allowInsecureRequest();
         // globalTunnel.initialize();
         // TODO-TIM remove
         // if (settings.http) {
