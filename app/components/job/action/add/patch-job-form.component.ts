@@ -45,9 +45,11 @@ export class PatchJobComponent extends JobCreateBasicDialogComponent {
 
     @autobind()
     public submit(data: JobCreateDto): Observable<any> {
+        const poolInfo = (data.poolInfo.poolId || data.poolInfo.autoPoolSpecification)
+            ? data.poolInfo : null;
         const patchData = new JobPatchDto({
             constraints: data.constraints,
-            poolInfo: data.poolInfo,
+            poolInfo: poolInfo,
             priority: data.priority,
             onAllTasksComplete: data.onAllTasksComplete,
             metadata: data.metadata,
@@ -58,19 +60,22 @@ export class PatchJobComponent extends JobCreateBasicDialogComponent {
                 this.notificationService.success("Job updated!",
                     `Job '${this.jobId}' was updated successfully!`);
             },
-            error: (response: Response) => {
+            error: (response: any) => {
+                const detailReason = Array.isArray(response.details)
+                    && response.details.find(detail => detail.key === "Reason");
                 this.notificationService.error(
                     "Job update failed",
-                    response.toString(),
+                    `${response.message}. ` +
+                    `${detailReason ? detailReason.value : ""}`,
                 );
             },
         });
-        return Observable.of(null);
+        return obs;
     }
 
     public checkJobStateForPoolPicker(jobState: JobState) {
         if (jobState !== JobState.disabled) {
-            this.subtitle = "Pool infomation can only be modified when job is in disabled state";
+            this.subtitle = "Job's pool infomation can only be modified when job is in disabled state";
             this.disable("poolInfo");
         }
     }
