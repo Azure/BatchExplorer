@@ -53,13 +53,12 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
                         if (!item && prependKeys.has(x)) {
                             return new this._getter.type({ [this.cache.uniqueField]: x });
                         }
-                        const matcher = new FilterMatcher<TEntity>();
-                        if (this._options.filter && prependKeys.has(x)) {
-                            if (!matcher.test(this._options.filter, item)) {
-                                (item as any)._notFiltered = true;
-                            }
-                        }
                         return item;
+                    }).filter((item) => {
+                        const matcher = new FilterMatcher<TEntity>();
+                        if (this._options.filter && prependKeys.has(item[this.cache.uniqueField])) {
+                            return matcher.test(this._options.filter, item);
+                        }
                     }));
                 });
             }).switch().distinctUntilChanged((a, b) => a.equals(b)).takeUntil(this.isDisposed);

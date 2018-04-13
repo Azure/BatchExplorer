@@ -3,7 +3,6 @@
         <bl-quick-list-item *ngFor="let job of jobs; trackBy: trackByFn"
             [link]="['/jobs/', job.id]"
             [key]="job.id"
-            [conceal]="job._notFiltered"
             [contextmenu]="contextmenu(job)">
             <bl-quick-list-item-status [status]="jobStatus(job)" [tooltip]="jobStatusText(job)">
             </bl-quick-list-item-status>
@@ -26,7 +25,7 @@
             <bl-column>Pool</bl-column>
         </bl-thead>
 
-        <bl-row *ngFor="let job of jobs; trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id" [contextmenu]="contextmenu(job)" [conceal]="job._notFiltered">
+        <bl-row *ngFor="let job of jobs; trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id" [contextmenu]="contextmenu(job)">
             <bl-cell>{{job.id}}</bl-cell>
             <bl-cell>{{job.state}}</bl-cell>
             <bl-cell>{{job.poolInfo?.poolId}}</bl-cell>
