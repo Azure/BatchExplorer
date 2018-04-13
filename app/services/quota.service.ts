@@ -39,6 +39,9 @@ export class QuotaService implements OnDestroy {
                 vmSizes.forEach(vmSize => this.vmSizeCores[vmSize.id] = vmSize.numberOfCores);
             }
         }));
+        this._subs.push(accountService.currentAccount.subscribe(account => {
+            this.updateUsages();
+        }));
 
         this.quotas = this.accountService.currentAccount.flatMap((account) => {
             return this._computeQuotas(account);
