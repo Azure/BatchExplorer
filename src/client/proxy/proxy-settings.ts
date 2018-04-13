@@ -2,7 +2,6 @@ import {
     ProxyAuthenticationRequiredError, ProxyCredentials, ProxyInvalidCredentialsError, ProxySetting, ProxySettings,
     getProxySettings, validateProxySetting,
 } from "get-proxy-settings";
-import * as globalTunnel from "global-tunnel-ng";
 
 import { log } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core";
