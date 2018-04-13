@@ -84,7 +84,6 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
         private elementRef: ElementRef,
         private overlay: Overlay,
         private injector: Injector) {
-
     }
 
     public ngAfterContentInit() {
@@ -262,6 +261,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
             this.selected = new Set([option.value]);
             this.closeDropdown();
         }
+
         this.notifyChanges();
         this.changeDetector.markForCheck();
     }
