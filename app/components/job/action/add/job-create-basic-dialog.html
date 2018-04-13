@@ -1,5 +1,5 @@
 <bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [config]="complexFormConfig" [fileUri]="fileUri">
-    <bl-form-page main-form-page title="Create job" [formGroup]="form">
+    <bl-form-page main-form-page [title]="title" [formGroup]="form">
         <bl-form-section title="General info" subtitle="Basic information about the job">
             <div class="form-element">
                 <mat-form-field>

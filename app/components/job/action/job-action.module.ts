@@ -8,6 +8,7 @@ import {
     JobManagerTaskPickerComponent,
     JobPreparationTaskPickerComponent,
     JobReleaseTaskPickerComponent,
+    PatchJobComponent,
     PoolPickerComponent,
 } from "./add";
 import { AddTaskButtonComponent } from "./add-task";
@@ -18,10 +19,10 @@ import { TerminateButtonComponent, TerminateJobDialogComponent } from "./termina
 
 const components = [
     JobCreateBasicDialogComponent, JobManagerTaskPickerComponent, PoolPickerComponent,
-    JobPreparationTaskPickerComponent, JobReleaseTaskPickerComponent, DeleteJobDialogComponent,
-    DisableJobDialogComponent, EnableJobDialogComponent, TerminateJobDialogComponent,
-    AddTaskButtonComponent, DisableJobButtonComponent, EnableJobButtonComponent,
-    TerminateButtonComponent,
+    PatchJobComponent, JobPreparationTaskPickerComponent, JobReleaseTaskPickerComponent,
+    DeleteJobDialogComponent, DisableJobDialogComponent, EnableJobDialogComponent,
+    TerminateJobDialogComponent, AddTaskButtonComponent, DisableJobButtonComponent,
+    EnableJobButtonComponent, TerminateButtonComponent,
 ];
 
 @NgModule({

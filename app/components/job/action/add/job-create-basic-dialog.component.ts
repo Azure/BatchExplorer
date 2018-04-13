@@ -27,16 +27,17 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
     public complexFormConfig: ComplexFormConfig;
     public constraintsGroup: FormGroup;
     public showJobReleaseTask: boolean;
+    public title = "Create job";
     public fileUri = "create.job.batch.json";
     public virtualMachineConfiguration: VirtualMachineConfiguration = null;
     public containerSettingsRequired: boolean = true;
 
     constructor(
-        private formBuilder: FormBuilder,
+        public formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<JobCreateBasicDialogComponent>,
-        private jobService: JobService,
+        public jobService: JobService,
         poolService: PoolService,
-        private notificationService: NotificationService) {
+        public notificationService: NotificationService) {
         super(JobCreateDto);
         this._setComplexFormConfig();
 

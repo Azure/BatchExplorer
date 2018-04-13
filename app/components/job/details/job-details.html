@@ -9,6 +9,9 @@
             <bl-tags summaryTags [tags]="job.tags" [editable]="job.editable" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                <bl-button [action]="editJob" color="light" title="Edit job" [disabled]="job.state === JobState.completed">
+                    <i class="fa fa-edit"></i>
+                </bl-button>
                 <bl-add-task-button title="Add task" [job]="job" [action]="addTask"></bl-add-task-button>
                 <bl-terminate-button [entity]="job" [action]="terminateJob"></bl-terminate-button>
                 <bl-delete-button [action]="deleteJob" [enabled]="job.state !== JobState.deleting && job.state !== JobState.terminating"></bl-delete-button>

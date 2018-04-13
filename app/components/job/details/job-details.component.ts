@@ -17,6 +17,7 @@ import {
     DisableJobDialogComponent,
     EnableJobDialogComponent,
     JobCreateBasicDialogComponent,
+    PatchJobComponent,
     TerminateJobDialogComponent,
 } from "../action";
 
@@ -91,6 +92,15 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public refresh() {
         return this.data.refresh();
+    }
+
+    @autobind()
+    public editJobSchedule() {
+        const ref = this.sidebarManager
+            .open(`edit-job-schedule-${this.jobId}`, PatchJobComponent);
+        ref.component.jobId = this.jobId;
+        ref.component.setValueFromEntity(this.job);
+        console.log(this.job);
     }
 
     @autobind()
