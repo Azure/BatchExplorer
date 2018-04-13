@@ -59,6 +59,7 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
                         if (this._options.filter && prependKeys.has(item[this.cache.uniqueField])) {
                             return matcher.test(this._options.filter, item);
                         }
+                        return true;
                     }));
                 });
             }).switch().distinctUntilChanged((a, b) => a.equals(b)).takeUntil(this.isDisposed);
