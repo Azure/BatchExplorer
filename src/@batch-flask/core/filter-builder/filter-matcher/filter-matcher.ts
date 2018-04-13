@@ -1,7 +1,7 @@
-import { Connector } from "./connector";
-import { Filter } from "./filter";
-import { Operator } from "./operator";
-import { Property } from "./property";
+import { Connector } from "../connector";
+import { Filter } from "../filter";
+import { Operator } from "../operator";
+import { Property } from "../property";
 
 export type MatchingFunction<T> = (item: T, value: any, operator: Operator) => boolean;
 
@@ -32,7 +32,10 @@ export class FilterMatcher<T> {
         if (!value) { return true; }
         if (typeof value === "string") {
             return this.testString(property.operator, value, property.value);
-        } else {
+        } else if (typeof value === "number") {
+            return this.testNumber(property.operator, value, property.value);
+
+        } else if (value instanceof Date) {
             // TODO-TIM
             return true;
         }
@@ -58,6 +61,30 @@ export class FilterMatcher<T> {
                 return true;
         }
     }
+
+    public testNumber(operator: Operator, value: number, test: number) {
+        switch (operator) {
+            case Operator.equal:
+                return value === test;
+            case Operator.notEqual:
+                return value !== test;
+            case Operator.greaterOrEqual:
+                return value >= test;
+            case Operator.greaterThan:
+                return value > test;
+            case Operator.lessOrEqual:
+                return value <= test;
+            case Operator.lessThan:
+                return value < test;
+            default:
+                return true;
+        }
+    }
+
+    public testDate(operator: Operator, value: Date, test: Date) {
+        return this.testNumber(operator, value.getTime(), test.getTime());
+    }
+
     public getPropertyValue(property: Property, item: T) {
         const path = property.name.split("/");
         let value = item;

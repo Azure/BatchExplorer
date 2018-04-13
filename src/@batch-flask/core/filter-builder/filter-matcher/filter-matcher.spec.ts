@@ -1,13 +1,6 @@
-import { FilterBuilder, FilterMatcher, Operator } from "@batch-flask/core/filter-builder";
+import { FilterBuilder, FilterMatcher } from "@batch-flask/core/filter-builder";
 
-const matcher = new FilterMatcher({
-    id: (item: any, value: any, operator: Operator) => {
-        return item.id === value;
-    },
-    name: (item: any, value: any, operator: Operator) => {
-        return item.name === value;
-    },
-});
+const matcher = new FilterMatcher();
 
 describe("FilterMatcher", () => {
     it("should match simple property", () => {
