@@ -4,7 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { Filter, FilterMatcher, Operator, autobind } from "@batch-flask/core";
+import { Filter, FilterMatcher, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
@@ -114,14 +114,7 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
     }
 
     private _updateDisplayedAccounts() {
-        const matcher = new FilterMatcher<AccountResource>({
-            id: (item: AccountResource, value: any, operator: Operator) => {
-                return value === "" || item.name.toLowerCase().startsWith(value.toLowerCase());
-            },
-            subscriptionId: (item: AccountResource, value: any, operator: Operator) => {
-                return value === "" || item.subscription.subscriptionId === value;
-            },
-        });
+        const matcher = new FilterMatcher<AccountResource>();
 
         this.displayedAccounts = List<AccountResource>(this.accounts.filter((x) => {
             return matcher.test(this.filter, x);

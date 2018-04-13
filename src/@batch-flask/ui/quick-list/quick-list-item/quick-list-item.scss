@@ -22,6 +22,10 @@
         background-color: map-get($primary, 200);
     }
 
+    &.conceal {
+        opacity: 0.3;
+    }
+
     &:hover:not(.selected) {
         background-color: $altoGray;
     }

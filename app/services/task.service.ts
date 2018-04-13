@@ -91,7 +91,7 @@ export class TaskService extends ServiceBase {
     }
 
     public countTasks(jobId: string, state: TaskState): Observable<number> {
-        const filter = FilterBuilder.prop("state").eq(state).toOData();
+        const filter = FilterBuilder.prop("state").eq(state);
         return this.listAll(jobId, { filter, select: "id,state" }).map(tasks => tasks.size).share();
     }
 
@@ -151,7 +151,7 @@ export class TaskService extends ServiceBase {
      */
     public getMultiple(jobId: string, taskIds: string[], properties?: string): Observable<List<Task>> {
         const options: TaskListOptions = {
-            filter: FilterBuilder.or(...taskIds.map(id => FilterBuilder.prop("id").eq(id))).toOData(),
+            filter: FilterBuilder.or(...taskIds.map(id => FilterBuilder.prop("id").eq(id))),
             pageSize: taskIds.length,
         };
 

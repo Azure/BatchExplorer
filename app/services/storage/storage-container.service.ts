@@ -59,7 +59,7 @@ export class StorageContainerService {
             cache: params => this._containerCache.getCache(params),
             getData: (client, params, options, continuationToken) => {
                 return client.listContainersWithPrefix(
-                    options && options.filter,
+                    options && options.prefix,
                     continuationToken,
                     { maxResults: options && options.maxResults });
             },

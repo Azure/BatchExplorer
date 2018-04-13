@@ -169,7 +169,7 @@ export class NodeService extends ServiceBase {
                 pageSize: 1000,
             };
             if (states) {
-                options.filter = FilterBuilder.or(...states.map(x => FilterBuilder.prop("state").eq(x))).toOData();
+                options.filter = FilterBuilder.or(...states.map(x => FilterBuilder.prop("state").eq(x)));
             }
             bTask.progress.next(1);
             return this.listAll(poolId, options).cascade((nodes) => {

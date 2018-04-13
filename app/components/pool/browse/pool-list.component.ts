@@ -86,7 +86,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         if (filter.isEmpty()) {
             this.data.setOptions({});
         } else {
-            this.data.setOptions({ filter: filter.toOData() });
+            this.data.setOptions({ filter: filter });
         }
 
         this.data.fetchNext();
