@@ -1,0 +1,44 @@
+@import "app/styles/variables";
+
+bl-form-field {
+    display: inline-block;
+    width: 100%;
+
+    .label-container {
+        display: block;
+    }
+
+    .input-container {
+        width: 100%;
+        display: block;
+
+        input[blInput] {
+            display: inline-block;
+            width: 100%;
+        }
+    }
+
+    .bl-form-field-label {
+
+    }
+}
+
+
+input[blInput] {
+    height: 26px;
+    background-color: $input-background-color;
+    border: 1px solid $input-border-color;
+    color: $input-text-color;
+    outline: none;
+    padding: 0 5px;
+
+    &:focus {
+        border-bottom: 2px solid $input-focus-border-color;
+    }
+    &::placeholder {
+        color: transparent;
+        // Remove the transition to prevent the placeholder
+        // from overlapping when the label comes back down.
+        transition: none;
+    }
+}
