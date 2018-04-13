@@ -11,6 +11,7 @@ import {
     Directive,
     DoCheck,
     ElementRef,
+    HostBinding,
     HostListener,
     Inject,
     Input,
@@ -21,9 +22,9 @@ import {
     Optional,
     Self,
 } from "@angular/core";
-import { FormGroupDirective, NgControl, NgForm } from "@angular/forms";
+import { FormControl, FormGroupDirective, NgControl, NgForm } from "@angular/forms";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
-import { Subject } from "rxjs";
+import { Subject, Subscription } from "rxjs";
 
 // Invalid input type. You should use the corresponding component for those
 const INPUT_INVALID_TYPES = [
@@ -46,6 +47,8 @@ let nextUniqueId = 0;
     providers: [{ provide: FormFieldControl, useExisting: InputDirective }],
 })
 export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestroy, DoCheck {
+    @HostBinding("class.bl-invalid")
+    public invalid: boolean;
 
     /** The aria-describedby attribute on the input for improved a11y. */
     public _ariaDescribedby: string;
@@ -163,12 +166,13 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     protected _previousNativeValue: any;
     private _readonly = false;
     private _inputValueAccessor: { value: any };
+    private _controlStatusSub: Subscription;
 
     constructor(
         protected _elementRef: ElementRef,
         @Optional() @Self() public ngControl: NgControl,
-        @Optional() _parentForm: NgForm,
-        @Optional() _parentFormGroup: FormGroupDirective,
+        @Optional() private _parentForm: NgForm,
+        @Optional() private _parentFormGroup: FormGroupDirective,
         ngZone: NgZone) {
         // If no input value accessor was explicitly specified, use the element as the input value
         // accessor.
@@ -178,6 +182,10 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
 
         // Force setter to be called in case id was not specified.
         this.id = this.id;
+        console.log("Control", ngControl);
+        this._controlStatusSub = ngControl.control.statusChanges.subscribe(() => {
+            this._computeErrorState();
+        });
     }
 
     public ngOnChanges() {
@@ -185,6 +193,7 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     }
 
     public ngOnDestroy() {
+        this._controlStatusSub.unsubscribe();
         this.stateChanges.complete();
     }
 
@@ -271,4 +280,13 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
         return this._elementRef.nativeElement.nodeName.toLowerCase() === "textarea";
     }
 
+    private _computeErrorState() {
+        const parent = this._parentFormGroup || this._parentForm;
+        const control = this.ngControl ? this.ngControl.control as FormControl : null;
+        this.invalid = this._isInErrorState(control, parent);
+    }
+
+    private _isInErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+        return !!(control && control.invalid && (control.touched || (form && form.submitted)));
+    }
 }

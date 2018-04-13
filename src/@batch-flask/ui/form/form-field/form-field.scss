@@ -41,4 +41,8 @@ input[blInput] {
         // from overlapping when the label comes back down.
         transition: none;
     }
+
+    &.invalid {
+        border: 1px solid $danger-color;
+    }
 }
