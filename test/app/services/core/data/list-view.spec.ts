@@ -2,7 +2,7 @@ import { BasicEntityGetter, BasicListGetter, DataCache, ListView } from "app/ser
 import { List, OrderedSet } from "immutable";
 import { Observable } from "rxjs";
 
-import { ServerError } from "@batch-flask/core";
+import { FilterBuilder, ServerError } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { FakeModel } from "./fake-model";
 
@@ -40,6 +40,12 @@ function getData(params, options, nextLink) {
     }
 }
 
+const filters = {
+    filter1: FilterBuilder.prop("id").eq("filter1"),
+    filter2: FilterBuilder.prop("id").eq("filter2"),
+    badFilter: FilterBuilder.prop("id").eq("bad-filter"),
+};
+
 describe("ListView", () => {
     let getter: BasicListGetter<FakeModel, {}>;
     let cache: DataCache<FakeModel>;
@@ -54,7 +60,7 @@ describe("ListView", () => {
     beforeEach(() => {
         cache = new DataCache<FakeModel>();
         dataSpy = jasmine.createSpy("supplyDataSpy").and.callFake((params, options, nextLink) => {
-            if (options && options.filter === "bad-filter") {
+            if (options && options.filter === filters.badFilter) {
                 return Observable.fromPromise(Promise.reject(new ServerError({
                     status: 409,
                     message: "Conflict on the resource",
@@ -161,7 +167,7 @@ describe("ListView", () => {
             expect(items.toJS()).toEqual(firstPage);
             expect(dataSpy).toHaveBeenCalledTimes(1);
 
-            view.setOptions({ filter: "filter2" });
+            view.setOptions({ filter: filters.filter2 });
             view.fetchNext().subscribe(() => {
                 expect(dataSpy).toHaveBeenCalledTimes(2);
                 expect(items.toJS()).toEqual(filteredData, "Should have updated to the new data");
@@ -172,7 +178,7 @@ describe("ListView", () => {
     });
 
     it("should return hasMore false if there is only 1 page of data after first fetch", (done) => {
-        view.setOptions({ filter: "filter2" });
+        view.setOptions({ filter: filters.filter2 });
         view.fetchNext().subscribe(() => {
             expect(items.toJS()).toEqual(filteredData);
             expect(hasMore).toBe(false);
@@ -238,7 +244,7 @@ describe("ListView", () => {
     describe("when there is keys in the cachedKeys", () => {
         beforeEach((done) => {
             // This should set the query cache
-            view.setOptions({ filter: "filter2" });
+            view.setOptions({ filter: filters.filter2 });
             view.fetchNext().subscribe(() => done());
         });
 
@@ -252,7 +258,7 @@ describe("ListView", () => {
     describe("when first call returns an error", () => {
         let thrownError: ServerError;
         beforeEach((done) => {
-            view.setOptions({ filter: "bad-filter" });
+            view.setOptions({ filter: filters.badFilter });
             view.fetchNext().subscribe(
                 () => done(),
                 (e) => { thrownError = e; done(); },
@@ -298,7 +304,7 @@ describe("ListView", () => {
         });
 
         it("should fix the error if changing filter to a valid one", (done) => {
-            view.setOptions({ filter: "filter1" });
+            view.setOptions({ filter: filters.filter1 });
             view.fetchNext().subscribe({
                 next: () => {
                     expect(dataSpy).toHaveBeenCalledTimes(2);

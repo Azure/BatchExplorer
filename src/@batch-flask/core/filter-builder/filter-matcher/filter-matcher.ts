@@ -34,9 +34,9 @@ export class FilterMatcher<T> {
             return this.testString(property.operator, value, property.value);
         } else if (typeof value === "number") {
             return this.testNumber(property.operator, value, property.value);
-
         } else if (value instanceof Date) {
-            // TODO-TIM
+            return this.testDate(property.operator, value, property.value);
+        } else {
             return true;
         }
     }
@@ -47,14 +47,6 @@ export class FilterMatcher<T> {
                 return value === test;
             case Operator.notEqual:
                 return value !== test;
-            case Operator.greaterOrEqual:
-                return value >= test;
-            case Operator.greaterThan:
-                return value > test;
-            case Operator.lessOrEqual:
-                return value <= test;
-            case Operator.lessThan:
-                return value < test;
             case Operator.startswith:
                 return value.startsWith(test);
             default:
