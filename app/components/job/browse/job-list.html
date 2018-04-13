@@ -26,7 +26,7 @@
             <bl-column>Pool</bl-column>
         </bl-thead>
 
-        <bl-row *ngFor="let job of jobs; trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id" [contextmenu]="contextmenu(job)">
+        <bl-row *ngFor="let job of jobs; trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id" [contextmenu]="contextmenu(job)" [conceal]="job._notFiltered">
             <bl-cell>{{job.id}}</bl-cell>
             <bl-cell>{{job.state}}</bl-cell>
             <bl-cell>{{job.poolInfo?.poolId}}</bl-cell>
