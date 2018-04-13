@@ -8,6 +8,7 @@
             (click)="item.handleClick($event)"
             (contextmenu)="item.openContextMenu($event)"
             [class.selected]="item.selected"
+            [class.conceal]="item.conceal"
             [class.focused]="listFocused && item.key === (focusedItem | async)"
             [class.drop-target]="item.key === dropTargetRowKey"
             (dragenter)="dragEnter(item, $event)"

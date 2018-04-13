@@ -75,12 +75,43 @@ bl-app-nav {
         position: absolute;
         top: 5px;
         right: 10px;
-        background: map-get($danger, 400);
         border-radius: 50%;
         width: 20px;
         height: 20px;
         line-height: 20px;
         text-align: center;
         vertical-align: middle;
+
+        &.checking {
+            background-color: $primary-color;
+            .fa {
+                margin-top: 3px;
+            }
+        }
+
+        &.downloading {
+            background-color: $primary-color;
+            > .fa {
+                margin-top: 3px;
+                animation: flashOpacity 1.5s ease-in-out infinite;
+            }
+        }
+
+        &.ready {
+            background-color: $danger-color;
+        }
+    }
+}
+
+
+@keyframes flashOpacity {
+    0% {
+        opacity:1;
+    }
+    50% {
+        opacity:0.2;
+    }
+    100% {
+        opacity:1;
     }
 }

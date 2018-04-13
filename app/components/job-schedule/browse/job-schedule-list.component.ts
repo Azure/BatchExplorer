@@ -92,7 +92,7 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
         if (filter.isEmpty()) {
             this.data.setOptions({ ...this._baseOptions });
         } else {
-            this.data.setOptions({ ...this._baseOptions, filter: filter.toOData() });
+            this.data.setOptions({ ...this._baseOptions, filter: filter });
         }
 
         this.data.fetchNext();

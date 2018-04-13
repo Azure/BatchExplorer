@@ -86,7 +86,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         if (filter.isEmpty()) {
             this.data.setOptions({ ...this._baseOptions });
         } else {
-            this.data.setOptions({ ...this._baseOptions, filter: filter.toOData() });
+            this.data.setOptions({ ...this._baseOptions, filter });
         }
 
         this.data.fetchNext();

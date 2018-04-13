@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { Filter, FilterMatcher, Operator, autobind } from "@batch-flask/core";
+import { Filter, FilterMatcher, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
@@ -163,14 +163,7 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
     }
 
     private _updateDisplayedCertificates() {
-        const matcher = new FilterMatcher<Certificate>({
-            thumbprint: (item: Certificate, value: any, operator: Operator) => {
-                return value === "" || item.thumbprint.toLowerCase().startsWith(value.toLowerCase());
-            },
-            state: (item: Certificate, value: any, operator: Operator) => {
-                return value === "" || item.state === value;
-            },
-        });
+        const matcher = new FilterMatcher<Certificate>();
         this.displayedCertificates = List<Certificate>(this.certificates.filter((x) => {
             return matcher.test(this.filter, x);
         }));

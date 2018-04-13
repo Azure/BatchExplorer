@@ -21,7 +21,7 @@ export class QueryCache {
     private _cache: { [key: string]: CachedKeyList } = {};
 
     public cacheQuery(keys: OrderedSet<string>, token: ContinuationToken) {
-        const key = this._cacheKey(token.options.filter, token.options.select);
+        const key = this._cacheKey(token.options.filter && token.options.filter.toOData(), token.options.select);
         this._cache[key] = new CachedKeyList(keys, token);
         this.cleanCache();
     }

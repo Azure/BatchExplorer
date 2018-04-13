@@ -1,3 +1,4 @@
+import { Filter } from "@batch-flask/core";
 import { OptionsBase, ProxyOptions } from "./proxy-options";
 
 export interface ContinuationToken {
@@ -21,7 +22,7 @@ export interface ListOptionsAttributes extends OptionsBase {
     /**
      *
      */
-    filter?: string;
+    filter?: Filter;
 
     /**
      * Other options
@@ -32,7 +33,7 @@ export interface ListOptionsAttributes extends OptionsBase {
 export class ListOptions extends ProxyOptions {
     public pageSize: number;
     public maxItems: number;
-    public filter: string;
+    public filter: Filter;
 
     public original: ListOptionsAttributes;
 

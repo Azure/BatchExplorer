@@ -102,7 +102,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
     private _computeOptions(query: string = null) {
         const options: ListOptionsAttributes = { maxItems: 20 };
         if (query) {
-            options.filter = FilterBuilder.prop("id").startswith(query.clearWhitespace()).toOData();
+            options.filter = FilterBuilder.prop("id").startswith(query.clearWhitespace());
         }
         return options;
     }

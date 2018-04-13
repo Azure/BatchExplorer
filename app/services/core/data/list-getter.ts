@@ -121,7 +121,7 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
             return null;
         }
 
-        const cachedList = cache.queryCache.getKeys(options.filter, options.select);
+        const cachedList = cache.queryCache.getKeys(options.filter && options.filter.toOData(), options.select);
 
         if (!cachedList) {
             return null;
