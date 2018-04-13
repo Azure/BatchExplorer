@@ -27,7 +27,7 @@ describe("QueryCache", () => {
     });
 
     it("Should get the added queries", () => {
-        const cacheList = cache.getKeys("id eq a");
+        const cacheList = cache.getKeys("id eq 'a'");
 
         expect(cacheList).not.toBe(clientProxy as any);
         expect(cacheList.keys).toEqualImmutable(OrderedSet(["a"]));

@@ -23,8 +23,14 @@ const filteredData = [
     { id: "4", state: "completed", name: "Fake4" },
 ];
 
+const filters = {
+    filter1: FilterBuilder.prop("id").eq("filter1"),
+    filter2: FilterBuilder.prop("id").eq("filter2"),
+    badFilter: FilterBuilder.prop("id").eq("bad-filter"),
+};
+
 function getData(params, options, nextLink) {
-    if (options && options.filter === "filter2") {
+    if (options && options.filter === filters.filter2) {
         return {
             data: filteredData,
         };
@@ -39,12 +45,6 @@ function getData(params, options, nextLink) {
         };
     }
 }
-
-const filters = {
-    filter1: FilterBuilder.prop("id").eq("filter1"),
-    filter2: FilterBuilder.prop("id").eq("filter2"),
-    badFilter: FilterBuilder.prop("id").eq("bad-filter"),
-};
 
 describe("ListView", () => {
     let getter: BasicListGetter<FakeModel, {}>;
@@ -249,7 +249,7 @@ describe("ListView", () => {
         });
 
         it("should have set the query cache", () => {
-            const queryCache = cache.queryCache.getKeys("filter2");
+            const queryCache = cache.queryCache.getKeys(filters.filter2.toOData());
             expect(queryCache).not.toBeFalsy();
             expect(queryCache.keys).toEqualImmutable(OrderedSet(["1", "3", "4"]));
         });
