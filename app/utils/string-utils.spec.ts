@@ -33,5 +33,13 @@ describe("StringUtils", () => {
             expect(StringUtils.matchWildcard("FooBar", wildcard)).toBe(true);
             expect(StringUtils.matchWildcard("FooSomethingBarWrong", wildcard)).toBe(false);
         });
+
+        it("should match a wildcard surrounded by *", () => {
+            const wildcard = "*Ba*";
+            expect(StringUtils.matchWildcard("FooWhatBar", wildcard)).toBe(true);
+            expect(StringUtils.matchWildcard("foowhatbar", wildcard, false)).toBe(true);
+            expect(StringUtils.matchWildcard("FooBar", wildcard)).toBe(true);
+            expect(StringUtils.matchWildcard("FooSomethingWrong", wildcard)).toBe(false);
+        });
     });
 });

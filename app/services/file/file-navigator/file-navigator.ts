@@ -6,7 +6,7 @@ import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { File } from "app/models";
 import { DataCache, ListGetter } from "app/services/core";
 import { FileLoader } from "app/services/file";
-import { CloudPathUtils } from "app/utils";
+import { CloudPathUtils, StringUtils } from "app/utils";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 
 export interface FileNavigatorConfig<TParams = any> {
@@ -47,6 +47,16 @@ export interface FileNavigatorConfig<TParams = any> {
      */
     onError?: (error: ServerError) => ServerError;
 
+    /**
+     * Optional wildcard filter that will client side match files/blobs that end with
+     * this filter.
+     */
+    wildcards?: string;
+
+    /**
+     * Optional flag to tell the navigator to fetch all items.
+     */
+    fetchAll?: boolean;
 }
 /**
  * Generic navigator class for a file explorer.
@@ -56,7 +66,6 @@ export class FileNavigator<TParams = any> {
     public loadingStatus = LoadingStatus.Ready;
     public basePath: string;
     public tree: Observable<FileTreeStructure>;
-
     public error: ServerError;
 
     private _tree = new BehaviorSubject<FileTreeStructure>(null);
@@ -64,6 +73,8 @@ export class FileNavigator<TParams = any> {
     private _params: TParams;
     private _cache: DataCache<File>;
     private _fileDeletedSub: Subscription;
+    private _wildcards: string;
+    private _fetchAll: boolean;
 
     private _getFileLoader: (filename: string) => FileLoader;
     private _onError: (error: ServerError) => ServerError;
@@ -77,6 +88,8 @@ export class FileNavigator<TParams = any> {
         this._tree.next(new FileTreeStructure(this.basePath));
         this.tree = this._tree.asObservable();
         this._cache = config.cache;
+        this._wildcards = config.wildcards;
+        this._fetchAll = config.fetchAll;
     }
 
     /**
@@ -143,12 +156,6 @@ export class FileNavigator<TParams = any> {
         return Observable.of(node);
     }
 
-    public dispose() {
-        if (this._fileDeletedSub) {
-            this._fileDeletedSub.unsubscribe();
-        }
-    }
-
     public isDirectory(path: string): Observable<boolean> {
         const node = this._tree.value.getNode(path);
         return this._checkIfDirectory(node);
@@ -164,6 +171,12 @@ export class FileNavigator<TParams = any> {
         this._tree.next(tree);
     }
 
+    public dispose() {
+        if (this._fileDeletedSub) {
+            this._fileDeletedSub.unsubscribe();
+        }
+    }
+
     private _removeFile(key: string) {
         const tree = this._tree.value;
         tree.deleteNode(key);
@@ -177,9 +190,24 @@ export class FileNavigator<TParams = any> {
      */
     private _loadPath(path: string, recursive = false): Observable<List<File>> {
         return this._getter.fetchAll(this._params, {
-            recursive,
+            recursive: recursive || this._fetchAll,
             folder: path,
+        }).flatMap((files) => {
+            if (!this._wildcards) {
+                return Observable.of(files);
+            }
+
+            const filtered = files.filter((file) => file.isDirectory || this._checkWildcardMatch(file.name));
+            return Observable.of(List(filtered));
         });
+    }
+
+    private _checkWildcardMatch(filename: string): boolean {
+        const result = this._wildcards.split(",").find(wildcard => {
+            return StringUtils.matchWildcard(filename, wildcard, false);
+        });
+
+        return Boolean(result);
     }
 
     private _checkIfDirectory(node: FileTreeNode): Observable<boolean> {

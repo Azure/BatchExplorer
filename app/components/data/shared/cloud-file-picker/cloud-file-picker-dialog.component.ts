@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import { MatDialogRef } from "@angular/material";
+import { Component, OnInit } from "@angular/core";
+import { MatCheckboxChange, MatDialogRef } from "@angular/material";
 import { ServerError, autobind } from "@batch-flask/core";
 import { AsyncSubject, Observable } from "rxjs";
 
@@ -13,19 +13,21 @@ import "./cloud-file-picker-dialog.scss";
     selector: "bl-cloud-file-picker-dialog",
     templateUrl: "cloud-file-picker-dialog.html",
 })
-export class CloudFilePickerDialogComponent {
+export class CloudFilePickerDialogComponent implements OnInit {
     public container: BlobContainer;
     public data: EntityView<BlobContainer, GetContainerParams>;
     public done = new AsyncSubject();
     public pickedFile: string = null;
     public containerError: ServerError;
+    public wildcards: string = null;
+    public pickedFilter: string = null;
+    public recursiveFetch: boolean = false;
+    public optionFilters: any[];
 
     public fileExplorerConfig: FileExplorerConfig = {
         showTreeView: false,
         selectable: FileExplorerSelectable.file,
     };
-
-    private _saved = false;
 
     public set storageAccountId(storageAccountId: string) {
         this._storageAccountId = storageAccountId;
@@ -39,6 +41,7 @@ export class CloudFilePickerDialogComponent {
     }
     public get containerId() { return this._containerId; }
 
+    private _saved = false;
     private _storageAccountId: string;
     private _containerId: string;
 
@@ -56,14 +59,36 @@ export class CloudFilePickerDialogComponent {
         });
     }
 
-    public updatePickedFile(file: string) {
-        this.pickedFile = file;
+    public ngOnInit() {
+        if (this.wildcards) {
+            this.pickedFilter = this.wildcards;
+            this.optionFilters = [
+                { label: "All Files", value: "" },
+                { label: `(${this.wildcards}) files`, value: this.wildcards },
+            ];
+        }
     }
 
     @autobind()
     public submit() {
         this._saved = true;
         return Observable.of(null);
+    }
+
+    public trackFilterOption(index, option: any) {
+        return option.value;
+    }
+
+    public updatePickedFile(file: string) {
+        this.pickedFile = file;
+    }
+
+    public pickSelectedFilter(filter: string) {
+        this.pickedFilter = filter;
+    }
+
+    public fetchAllCheckChanged(event: MatCheckboxChange) {
+        this.recursiveFetch = event.checked;
     }
 
     public close() {

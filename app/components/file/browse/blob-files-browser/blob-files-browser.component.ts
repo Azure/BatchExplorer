@@ -17,6 +17,8 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
     @Input() public container: string;
     @Input() public fileExplorerConfig: FileExplorerConfig = {};
     @Input() public activeFile: string;
+    @Input() public filter: string;
+    @Input() public fetchAll: boolean = false;
     @Input() public upload: (event: FileDropEvent) => Observable<any>;
     @Input() public delete: (files: File[]) => Observable<any>;
 
@@ -24,7 +26,10 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
 
     public fileNavigator: FileNavigator;
 
-    constructor(private storageBlobService: StorageBlobService, private dialogService: DialogService) { }
+    constructor(
+        private storageBlobService: StorageBlobService,
+        private dialogService: DialogService) {
+    }
 
     public refresh() {
         this.fileNavigator.refresh();
@@ -32,9 +37,13 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
 
     public ngOnChanges(inputs) {
         this._clearFileNavigator();
-        if (inputs.storageAccountId || inputs.container) {
-            // TODO handle here.
-            this.fileNavigator = this.storageBlobService.navigate(this.storageAccountId, this.container);
+        if (inputs.storageAccountId || inputs.container || inputs.filter || inputs.fetchAll) {
+            // TODO: [Tim] - handle here (unsure what this comment was about so leaving it here)
+            const options = {
+                wildcards: this.filter,
+                fetchAll: this.fetchAll,
+            };
+            this.fileNavigator = this.storageBlobService.navigate(this.storageAccountId, this.container, null, options);
             this.fileNavigator.init();
         }
 

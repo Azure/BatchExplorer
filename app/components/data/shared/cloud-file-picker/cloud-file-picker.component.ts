@@ -9,6 +9,7 @@ import { DialogService } from "@batch-flask/ui/dialogs";
 import { StorageBlobService } from "app/services/storage";
 import { AutoStorageService } from "app/services/storage/auto-storage.service";
 import { CloudFilePickerDialogComponent } from "./cloud-file-picker-dialog.component";
+
 import "./cloud-file-picker.scss";
 
 @Component({
@@ -27,6 +28,11 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges
      * Name of the file group from which to pick a file.
      */
     @Input() public containerId: string;
+
+    /**
+     * Passed in if we want the client to filter the results that match the wildcards.
+     */
+    @Input() public wildcards: string;
 
     public value = new FormControl();
     public warning = false;
@@ -82,6 +88,7 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges
             const component = ref.componentInstance;
             component.storageAccountId = storageAccountId;
             component.containerId = this.containerId;
+            component.wildcards = this.wildcards;
             component.pickedFile = this.value.value;
             component.done.subscribe((save) => {
                 if (save) {
@@ -89,6 +96,7 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges
                 }
             });
         });
+
         return obs;
     }
 
