@@ -46,7 +46,7 @@ export class JobHookTaskBrowserComponent implements OnDestroy, OnChanges {
         });
 
         this._sub = this.onlyFailedControl.valueChanges.subscribe((onlyFailed) => {
-            const filter = FilterBuilder.prop("jobPreparationTaskExecutionInfo/exitCode").ne(0).toOData();
+            const filter = FilterBuilder.prop("jobPreparationTaskExecutionInfo/exitCode").ne(0);
             this.data.patchOptions({
                 filter: filter,
             });

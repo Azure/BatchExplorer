@@ -114,14 +114,7 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
     }
 
     private _updateDisplayedAccounts() {
-        const matcher = new FilterMatcher<AccountResource>({
-            id: (item: AccountResource, value: any, operator: Operator) => {
-                return value === "" || item.name.toLowerCase().startsWith(value.toLowerCase());
-            },
-            subscriptionId: (item: AccountResource, value: any, operator: Operator) => {
-                return value === "" || item.subscription.subscriptionId === value;
-            },
-        });
+        const matcher = new FilterMatcher<AccountResource>();
 
         this.displayedAccounts = List<AccountResource>(this.accounts.filter((x) => {
             return matcher.test(this.filter, x);

@@ -53,7 +53,7 @@ export class AllJobGraphsComponent implements OnInit, OnDestroy {
 
         const obs = this.jobService.listAll({
             select: "id,executionInfo,stats",
-            filter: this._buildFilter().toOData(),
+            filter: this._buildFilter(),
             pageSize: 1000,
         });
         obs.subscribe((jobs) => {

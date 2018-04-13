@@ -1,6 +1,7 @@
 import { List, OrderedSet } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
+import { FilterMatcher } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { log } from "@batch-flask/utils";
 import { GenericView, GenericViewConfig } from "./generic-view";
@@ -39,6 +40,7 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
             this._prepend.distinctUntilChanged())
             .map(([itemKeys, prependKeys]) => {
                 prependKeys = prependKeys.filter(x => !itemKeys.has(x)) as any;
+
                 const allKeys = prependKeys.concat(itemKeys.toJS());
 
                 return this.cache.items.map((items) => {
@@ -50,6 +52,12 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
                         const item = items.get(x);
                         if (!item && prependKeys.has(x)) {
                             return new this._getter.type({ [this.cache.uniqueField]: x });
+                        }
+                        const matcher = new FilterMatcher<TEntity>();
+                        if (this._options.filter && prependKeys.has(x)) {
+                            if (!matcher.test(this._options.filter, item)) {
+                                (item as any)._notFiltered = true;
+                            }
                         }
                         return item;
                     }));
