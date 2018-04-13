@@ -48,7 +48,7 @@ export class FilterMatcher<T> {
             case Operator.notEqual:
                 return value !== test;
             case Operator.startswith:
-                return value.startsWith(test);
+                return value.toLowerCase().startsWith(test.toLowerCase());
             default:
                 return true;
         }

@@ -50,6 +50,6 @@ describe("QueryCache", () => {
     it("delete item from query cache should remove from every query", () => {
         cache.deleteItemKey("a");
         expect(cache.getKeys(undefined).keys).toEqualImmutable(OrderedSet(["b", "c"]));
-        expect(cache.getKeys("id eq a").keys).toEqualImmutable(OrderedSet([]));
+        expect(cache.getKeys("id eq 'a'").keys).toEqualImmutable(OrderedSet([]));
     });
 });
