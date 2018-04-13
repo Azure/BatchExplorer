@@ -27,6 +27,10 @@ export class BatchListGetter<TEntity, TParams> extends ListGetter<TEntity, TPara
     }
 
     protected list(params: TParams, options: any): Observable<any> {
+        options = { ...options };
+        if (options.filter) {
+            options.filter = options.filter.toOData();
+        }
         return this.batchClient.get().flatMap((proxy) => {
             return Observable.fromPromise(this._list(proxy.client, params, options));
         }).map(x => this._processBatchResponse(x)).catch((error) => {

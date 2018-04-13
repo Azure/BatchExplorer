@@ -93,7 +93,7 @@ describe("AccountListComponent", () => {
     });
 
     it("should filter by name", () => {
-        component.filter = FilterBuilder.and(FilterBuilder.prop("id").startswith("zoO"));
+        component.filter = FilterBuilder.and(FilterBuilder.prop("name").startswith("zoO"));
         fixture.detectChanges();
         accountsElList = de.queryAll(By.css("bl-quick-list-item"));
 
@@ -115,7 +115,7 @@ describe("AccountListComponent", () => {
 
     it("should filter by subscription and by name", () => {
         component.filter = FilterBuilder.and(
-            FilterBuilder.prop("id").startswith("Acc"),
+            FilterBuilder.prop("name").startswith("Acc"),
             FilterBuilder.prop("subscriptionId").eq("sub-1"),
         );
         fixture.detectChanges();

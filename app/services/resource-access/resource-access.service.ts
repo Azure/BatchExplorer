@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 
+import { FilterBuilder } from "@batch-flask/core";
 import { SecureUtils } from "@batch-flask/utils";
 import { RoleAssignment, RoleDefinition } from "app/models";
 import { ArmListGetter, TargetedDataCache } from "app/services/core";
@@ -57,7 +58,9 @@ export class ResourceAccessService {
     }
 
     public getRoleByName(scope: string, name: string): Observable<RoleDefinition> {
-        return this._rolesListGetter.fetch({ scope }, { filter: `roleName eq '${name}'` }, true).map(x => {
+        return this._rolesListGetter.fetch({ scope }, {
+            filter: FilterBuilder.prop("roleName").eq(name),
+        }, true).map(x => {
             return x.items.first();
         });
     }
@@ -68,7 +71,8 @@ export class ResourceAccessService {
      * @param principalId Principal id(User or Service Principal)
      */
     public getRoleAssignmentFor(resourceId: string, principalId: string): Observable<RoleAssignment> {
-        const filter = `principalId eq '${principalId}'`;
+        const filter = FilterBuilder.prop("principalId").eq(principalId);
+
         return this._rolesAssignmentListGetter.fetch({ resourceId }, { filter }, true)
             .map(x => x.items.first()).share();
     }

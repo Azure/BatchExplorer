@@ -41,7 +41,7 @@ export class FileGroupsPickerComponent implements ControlValueAccessor, OnInit, 
                 storageAccountId,
             };
             this.data.setOptions({
-                filter: Constants.ncjFileGroupPrefix,
+                prefix: Constants.ncjFileGroupPrefix,
             });
         });
 

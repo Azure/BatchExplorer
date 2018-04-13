@@ -77,7 +77,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
             this._updateTaskCount();
             const obs = this.taskService.listAll(this.jobId, {
                 select: "id,executionInfo,nodeInfo",
-                filter: FilterBuilder.prop("state").eq(TaskState.completed).toOData(),
+                filter: FilterBuilder.prop("state").eq(TaskState.completed),
                 pageSize: 1000,
             }, (x) => {
                 this.taskLoadedProgress = x;

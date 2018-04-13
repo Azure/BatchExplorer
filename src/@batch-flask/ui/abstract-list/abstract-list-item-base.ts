@@ -13,14 +13,14 @@ import { AbstractListBase } from "./abstract-list-base";
  * 1. Inject the component inheriting SelectableListBase in the construtor using @Inject and forwardRef
  */
 export class AbstractListItemBase implements OnDestroy, OnInit {
-    @Input()
-    public contextmenu: ContextMenu;
+    @Input() public contextmenu: ContextMenu;
 
     /**
      * Unique key to give to the list used for knowing if the item is selected
      */
-    @Input()
-    public key: string;
+    @Input() public key: string;
+
+    @Input() public conceal: boolean = false;
 
     @Input()
     public set link(routerLink: any) {
