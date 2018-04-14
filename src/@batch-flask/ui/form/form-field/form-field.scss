@@ -32,6 +32,10 @@ input[blInput] {
     outline: none;
     padding: 0 5px;
 
+    &.ng-invalid.ng-touched {
+        border: 1px solid $danger-color;
+    }
+
     &:focus {
         border-bottom: 2px solid $input-focus-border-color;
     }
@@ -42,7 +46,4 @@ input[blInput] {
         transition: none;
     }
 
-    &.invalid {
-        border: 1px solid $danger-color;
-    }
 }

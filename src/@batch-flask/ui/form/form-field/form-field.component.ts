@@ -13,7 +13,6 @@ export class FormFieldComponent implements AfterContentInit {
     @ContentChild(FormFieldControl) public control: FormFieldControl<any>;
 
     constructor(private changeDetector: ChangeDetectorRef) {
-
     }
 
     public ngAfterContentInit() {

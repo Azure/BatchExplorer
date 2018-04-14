@@ -13,12 +13,10 @@ import {
     ElementRef,
     HostBinding,
     HostListener,
-    Inject,
     Input,
     NgZone,
     OnChanges,
     OnDestroy,
-    OnInit,
     Optional,
     Self,
 } from "@angular/core";
@@ -166,7 +164,6 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     protected _previousNativeValue: any;
     private _readonly = false;
     private _inputValueAccessor: { value: any };
-    private _controlStatusSub: Subscription;
 
     constructor(
         protected _elementRef: ElementRef,
@@ -182,10 +179,6 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
 
         // Force setter to be called in case id was not specified.
         this.id = this.id;
-        console.log("Control", ngControl);
-        this._controlStatusSub = ngControl.control.statusChanges.subscribe(() => {
-            this._computeErrorState();
-        });
     }
 
     public ngOnChanges() {
@@ -193,12 +186,12 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     }
 
     public ngOnDestroy() {
-        this._controlStatusSub.unsubscribe();
         this.stateChanges.complete();
     }
 
     public ngDoCheck() {
         if (this.ngControl) {
+            this._computeErrorState();
             // We need to re-evaluate this on every change detection cycle, because there are some
             // error triggers that we can't subscribe to (e.g. parent form submissions). This means
             // that whatever logic is in here has to be super lean or we risk destroying the performance.
