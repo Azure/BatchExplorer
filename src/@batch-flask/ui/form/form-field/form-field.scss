@@ -1,28 +1,20 @@
 @import "app/styles/variables";
-
 bl-form-field {
     display: inline-block;
     width: 100%;
-
     .label-container {
         display: block;
     }
-
     .input-container {
         width: 100%;
         display: block;
-
         input[blInput] {
             display: inline-block;
             width: 100%;
         }
     }
-
-    .bl-form-field-label {
-
-    }
+    .bl-form-field-label {}
 }
-
 
 input[blInput] {
     height: 26px;
@@ -32,18 +24,21 @@ input[blInput] {
     outline: none;
     padding: 0 5px;
 
-    &.ng-invalid.ng-touched {
-        border: 1px solid $danger-color;
-    }
-
     &:focus {
         border-bottom: 2px solid $input-focus-border-color;
     }
+
+    &.ng-invalid.ng-touched,
+    &.ng-invalid.ng-dirty {
+        border: 1px solid $danger-color;
+        &:focus {
+            border-bottom: 2px solid $input-focus-border-color;
+        }
+    }
+
     &::placeholder {
-        color: transparent;
-        // Remove the transition to prevent the placeholder
+        color: transparent; // Remove the transition to prevent the placeholder
         // from overlapping when the label comes back down.
         transition: none;
     }
-
 }
