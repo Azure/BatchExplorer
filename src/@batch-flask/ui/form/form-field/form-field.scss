@@ -7,10 +7,22 @@ bl-form-field {
     }
     .input-container {
         width: 100%;
-        display: block;
+        display: flex;
         input[blInput] {
             display: inline-block;
             width: 100%;
+            flex: 1;
+            min-width: 0;
+        }
+
+        > .input-prefix, > .input-suffix {
+            background: $input-border-color;
+            border: 1px solid $input-border-color;
+            height: 26px;
+            padding: 0 5px;
+            line-height: 26px;
+            vertical-align: middle;
+            color: $secondary-text;
         }
     }
     .bl-form-field-label {}

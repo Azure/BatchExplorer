@@ -8,5 +8,11 @@
     </label>
 </div>
 <div class="input-container">
+    <div class="input-prefix" *ngIf="prefix.length > 0">
+        <ng-content select="[blFormFieldPrefix]"></ng-content>
+    </div>
     <ng-content></ng-content>
+    <div class="input-suffix"  *ngIf="suffix.length > 0">
+        <ng-content select="[blFormFieldSuffix]"></ng-content>
+    </div>
 </div>

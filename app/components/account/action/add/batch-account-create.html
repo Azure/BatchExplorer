@@ -4,7 +4,7 @@
             <div class="form-element">
                 <bl-form-field>
                     <input blInput formControlName="name" placeholder="Account name" />
-                    <mat-hint align="end" *ngIf="selectedLocation">{{accountUrlSuffix}}</mat-hint>
+                    <div blFormFieldSuffix *ngIf="selectedLocation">{{accountUrlSuffix}}</div>
                 </bl-form-field>
                 <bl-error controlName="name" code="required">Account name is a required field</bl-error>
                 <bl-error controlName="name" code="minLength">Account name has a minimum length of 3 characters</bl-error>

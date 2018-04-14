@@ -22,7 +22,7 @@ import {
 } from "@angular/core";
 import { FormControl, FormGroupDirective, NgControl, NgForm } from "@angular/forms";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
-import { Subject, Subscription } from "rxjs";
+import { Subject } from "rxjs";
 
 // Invalid input type. You should use the corresponding component for those
 const INPUT_INVALID_TYPES = [

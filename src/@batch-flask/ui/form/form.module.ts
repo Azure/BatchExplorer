@@ -11,7 +11,7 @@ import { FormFooterComponent } from "./complex-form/footer";
 import { EditableTableColumnComponent, EditableTableComponent } from "./editable-table";
 import { ExpandingTextareaComponent } from "./expanding-textarea";
 import { FormErrorComponent } from "./form-error";
-import { FormFieldComponent } from "./form-field";
+import { FormFieldComponent, FormFieldPrefixDirective, FormFieldSuffixDirective } from "./form-field";
 import { FormJsonEditorComponent } from "./form-json-editor";
 import { FormPageComponent } from "./form-page";
 import { FormMultiPickerComponent, FormPickerComponent, FormPickerItemTemplateDirective } from "./form-picker";
@@ -47,6 +47,8 @@ const components = [
     FormFooterComponent,
     InputDirective,
     FormFieldComponent,
+    FormFieldPrefixDirective,
+    FormFieldSuffixDirective,
 ];
 
 @NgModule({
