@@ -58,8 +58,12 @@ export class StorageContainerService {
         this._containerListGetter = new StorageListGetter(BlobContainer, this.storageClient, {
             cache: params => this._containerCache.getCache(params),
             getData: (client, params, options, continuationToken) => {
+                let prefix = null;
+                if (options && options.filter) {
+                    prefix = options.filter.value;
+                }
                 return client.listContainersWithPrefix(
-                    options && options.prefix,
+                    prefix,
                     continuationToken,
                     { maxResults: options && options.maxResults });
             },

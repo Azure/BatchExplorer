@@ -58,7 +58,7 @@ export class FormErrorComponent implements OnChanges, OnDestroy {
     }
 
     public get hasError() {
-        return this._hasError && this._control.touched;
+        return this._hasError && (this._control.touched || this._control.dirty);
     }
 
     /**
