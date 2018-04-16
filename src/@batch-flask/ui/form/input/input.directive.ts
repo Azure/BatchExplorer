@@ -1,12 +1,3 @@
-/**
- * @license
- * Copyright Google LLC All Rights Reserved.
- *
- * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
- */
-
-import { coerceBooleanProperty } from "@angular/cdk/coercion";
 import {
     Directive,
     DoCheck,
@@ -22,6 +13,7 @@ import {
 } from "@angular/core";
 import { FormControl, FormGroupDirective, NgControl, NgForm } from "@angular/forms";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
+import { ComponentUtils } from "app/utils";
 import { Subject } from "rxjs";
 
 // Invalid input type. You should use the corresponding component for those
@@ -39,7 +31,6 @@ const INPUT_INVALID_TYPES = [
 
 let nextUniqueId = 0;
 
-/** Directive that allows a native input to work inside a `MatFormField`. */
 @Directive({
     selector: `input[blInput], textarea[blInput]`,
     providers: [{ provide: FormFieldControl, useExisting: InputDirective }],
@@ -49,36 +40,12 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     public invalid: boolean;
 
     /** The aria-describedby attribute on the input for improved a11y. */
-    public _ariaDescribedby: string;
+    @HostBinding("attr.aria-describedby")
+    public ariaDescribedby: string;
 
-    /**
-     * Implemented as part of MatFormFieldControl.
-     * @docs-private
-     */
-    public focused: boolean = false;
+    public readonly stateChanges = new Subject<void>();
+    public readonly controlType: string = "bl-input";
 
-    /**
-     * Implemented as part of MatFormFieldControl.
-     * @docs-private
-     */
-    public readonly stateChanges: Subject<void> = new Subject<void>();
-
-    /**
-     * Implemented as part of MatFormFieldControl.
-     * @docs-private
-     */
-    public controlType: string = "mat-input";
-
-    /**
-     * Implemented as part of MatFormFieldControl.
-     * @docs-private
-     */
-    public autofilled = false;
-
-    /**
-     * Implemented as part of MatFormFieldControl.
-     * @docs-private
-     */
     @Input()
     public get disabled(): boolean {
         if (this.ngControl && this.ngControl.disabled !== null) {
@@ -87,33 +54,18 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
         return this._disabled;
     }
     public set disabled(value: boolean) {
-        this._disabled = coerceBooleanProperty(value);
-
-        // Browsers may not fire the blur event if the input is disabled too quickly.
-        // Reset from here to ensure that the element doesn't become stuck.
-        if (this.focused) {
-            this.focused = false;
-            this.stateChanges.next();
-        }
+        this._disabled = ComponentUtils.coerceBooleanProperty(value);
     }
 
-    /**
-     * Implemented as part of MatFormFieldControl.
-     * @docs-private
-     */
     @Input()
     get id(): string { return this._id; }
     set id(value: string) { this._id = value || this._uid; }
 
     @Input() public placeholder: string;
 
-    /**
-     * Implemented as part of MatFormFieldControl.
-     * @docs-private
-     */
     @Input()
     public get required(): boolean { return this._required; }
-    public set required(value: boolean) { this._required = coerceBooleanProperty(value); }
+    public set required(value: boolean) { this._required = ComponentUtils.coerceBooleanProperty(value); }
 
     /** Input type of the element. */
     @Input()
@@ -130,10 +82,6 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
         }
     }
 
-    /**
-     * Implemented as part of MatFormFieldControl.
-     * @docs-private
-     */
     @Input()
     public get value(): string { return this._inputValueAccessor.value; }
     public set value(value: string) {
@@ -146,7 +94,7 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     /** Whether the element is readonly. */
     @Input()
     public get readonly(): boolean { return this._readonly; }
-    public set readonly(value: boolean) { this._readonly = coerceBooleanProperty(value); }
+    public set readonly(value: boolean) { this._readonly = ComponentUtils.coerceBooleanProperty(value); }
 
     protected _required = false;
     protected _type = "text";
@@ -160,7 +108,7 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     ];
     protected _disabled = false;
     protected _id: string;
-    protected _uid = `mat-input-${nextUniqueId++}`;
+    protected _uid = `bl-input-${nextUniqueId++}`;
     protected _previousNativeValue: any;
     private _readonly = false;
     private _inputValueAccessor: { value: any };
@@ -206,14 +154,6 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     /** Focuses the input. */
     public focus(): void { this._elementRef.nativeElement.focus(); }
 
-    /** Callback for the cases where the focused state of the input changes. */
-    public _focusChanged(isFocused: boolean) {
-        if (isFocused !== this.focused && !this.readonly) {
-            this.focused = isFocused;
-            this.stateChanges.next();
-        }
-    }
-
     @HostListener("input")
     public _onInput() {
         // This is a noop function and is used to let Angular know whenever the value changes.
@@ -225,13 +165,8 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
         // FormsModule or ReactiveFormsModule, because Angular forms also listens to input events.
     }
 
-    public get empty(): boolean {
-        return !this._isNeverEmpty() && !this._elementRef.nativeElement.value && !this._isBadInput() &&
-            !this.autofilled;
-    }
-
     public setDescribedByIds(ids: string[]) {
-        this._ariaDescribedby = ids.join(" ");
+        this.ariaDescribedby = ids.join(" ");
     }
 
     public onContainerClick() {

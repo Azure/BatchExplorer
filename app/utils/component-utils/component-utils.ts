@@ -42,7 +42,7 @@ export class ComponentUtils {
         });
     }
 
-    public coerceBooleanProperty(value: boolean | undefined | null): boolean {
+    public static coerceBooleanProperty(value: boolean | undefined | null): boolean {
         return value != null && `${value}` !== "false";
     }
 }

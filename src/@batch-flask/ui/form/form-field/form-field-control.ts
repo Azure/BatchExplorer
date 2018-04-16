@@ -25,30 +25,11 @@ export abstract class FormFieldControl<T> {
     /** Gets the NgControl for this control. */
     public readonly ngControl: NgControl | null;
 
-    /** Whether the control is focused. */
-    public readonly focused: boolean;
-
-    /** Whether the control is empty. */
-    public readonly empty: boolean;
-
     /** Whether the control is required. */
     public readonly required: boolean;
 
     /** Whether the control is disabled. */
     public readonly disabled: boolean;
-
-    /**
-     * An optional name for the control type that can be used to distinguish `mat-form-field` elements
-     * based on their control type. The form field will add a class,
-     * `mat-form-field-type-{{controlType}}` to its root element.
-     */
-    public readonly controlType?: string;
-
-    /**
-     * Whether the input is currently in an autofilled state. If property is not present on the
-     * control it is assumed to be false.
-     */
-    public readonly autofilled?: boolean;
 
     /** Sets the list of element IDs that currently describe this control. */
     public abstract setDescribedByIds(ids: string[]): void;
