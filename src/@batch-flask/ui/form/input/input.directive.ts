@@ -17,6 +17,8 @@ import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import { ComponentUtils } from "app/utils";
 import { Subject } from "rxjs";
 
+import "./input.scss";
+
 // Invalid input type. You should use the corresponding component for those
 const INPUT_INVALID_TYPES = [
     "button",

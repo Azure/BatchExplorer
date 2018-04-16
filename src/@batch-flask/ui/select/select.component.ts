@@ -48,6 +48,7 @@ let nextUniqueId = 0;
     selector: "bl-select",
     templateUrl: "select.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [{ provide: FormFieldControl, useExisting: SelectComponent }],
 })
 export class SelectComponent implements FormFieldControl<any>, ControlValueAccessor, AfterContentInit, OnDestroy {
     @Input() public placeholder = "";
@@ -126,6 +127,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
     public set value(value: any | any[]) {
         if (value !== this.value) {
+            console.log("From here");
             this.writeValue(value);
             this.stateChanges.next();
         }
@@ -166,7 +168,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
 
     public writeValue(value: any): void {
-        if (this.multiple) {
+        if (Array.isArray(value)) {
             this.selected = new Set(value);
         } else {
             this.selected = new Set(value ? [value] : []);
