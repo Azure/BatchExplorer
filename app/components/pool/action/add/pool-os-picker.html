@@ -52,16 +52,16 @@
                 <tbody>
                     <tr>
                         <td>
-                            <mat-select [formControl]="customImage">
-                                <mat-option *ngFor="let image of customImages;trackBy: trackResource"
-                                    [value]="image.id">{{ image.name }}</mat-option>
-                            </mat-select>
+                            <bl-select [formControl]="customImage">
+                                <bl-option *ngFor="let image of customImages;trackBy: trackResource"
+                                    [value]="image.id" [label]="image.name"></bl-option>
+                            </bl-select>
                         </td>
                         <td>
-                            <mat-select [formControl]="nodeAgentSku">
-                                <mat-option *ngFor="let nodeAgent of nodeAgentSkus;trackBy: trackNodeAgentSku"
-                                    [value]="nodeAgent.id">{{ nodeAgent.id }}</mat-option>
-                            </mat-select>
+                            <bl-select [formControl]="nodeAgentSku">
+                                <bl-option *ngFor="let nodeAgent of nodeAgentSkus;trackBy: trackNodeAgentSku"
+                                    [value]="nodeAgent.id" [label]="nodeAgent.id"></bl-option>
+                            </bl-select>
                         </td>
                     </tr>
                 </tbody>

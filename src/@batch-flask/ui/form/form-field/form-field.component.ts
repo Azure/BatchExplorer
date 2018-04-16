@@ -24,7 +24,7 @@ export class FormFieldComponent implements AfterContentInit {
 
     public ngAfterContentInit() {
         if (!this.control) {
-            throw new Error("bl-form-field is expecting an control under. This can either be a blInput.");
+            throw new Error("bl-form-field is expecting an control under. This can either be a blInput, bl-select.");
         }
         this.prefix.changes.subscribe(() => this.changeDetector.markForCheck());
         this.suffix.changes.subscribe(() => this.changeDetector.markForCheck());
