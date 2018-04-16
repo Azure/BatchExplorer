@@ -18,14 +18,14 @@
                 <bl-error controlName="subscription" code="required">Subscription is a required field</bl-error>
             </div>
             <div class="form-element" *ngIf="selectedSubscription">
-                <mat-form-field>
-                    <input matInput [matAutocomplete]="auto" formControlName="resourceGroup" placeholder="Resource group" />
+                <bl-form-field>
+                    <input blInput [matAutocomplete]="auto" formControlName="resourceGroup" placeholder="Resource group" />
                     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayResourceGroup">
                         <mat-option *ngFor="let resourceGroup of resourceGroups;trackBy: trackByResourceGroup" [value]="resourceGroup">
                             {{resourceGroup.name}} ({{resourceGroup.location}})
                         </mat-option>
                     </mat-autocomplete>
-                </mat-form-field>
+                </bl-form-field>
                 <bl-error controlName="resourceGroup" code="required">Resource group is a required field</bl-error>
                 <bl-error controlName="resourceGroup" code="noPermission">You don't have permission to create a batch account under this resource group</bl-error>
                 <bl-error controlName="resourceGroup" code="serverError">{{ form.controls.resourceGroup.errors?.serverError }}</bl-error>
