@@ -5,6 +5,7 @@ import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
 import { EditorModule } from "@batch-flask/ui/editor";
+import { SelectModule } from "@batch-flask/ui/select";
 import { ButtonsModule } from "../buttons";
 import { ComplexFormComponent } from "./complex-form";
 import { FormFooterComponent } from "./complex-form/footer";
@@ -60,6 +61,7 @@ const components = [
         FormsModule,
         MaterialModule,
         ReactiveFormsModule,
+        SelectModule,
         RouterModule,
         EditorModule,
         ...modules,
