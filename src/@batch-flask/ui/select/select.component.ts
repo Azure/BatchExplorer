@@ -185,14 +185,6 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         // nothing yet
     }
 
-    @HostListener("document:click", ["$event"])
-    public onDocumentClick(event: Event) {
-        if (this.showOptions && !this.elementRef.nativeElement.contains(event.target)) {
-            this._dropdownRef.destroy();
-            this.changeDetector.markForCheck();
-        }
-    }
-
     public clickSelectButton(event: Event) {
         this.toggleDropdown();
         event.stopPropagation();
