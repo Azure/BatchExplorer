@@ -127,7 +127,6 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
     public set value(value: any | any[]) {
         if (value !== this.value) {
-            console.log("From here");
             this.writeValue(value);
             this.stateChanges.next();
         }

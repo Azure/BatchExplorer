@@ -27,6 +27,6 @@ function flagMethod(target, key: string, descriptor: TypedPropertyDescriptor<boo
     });
 }
 
-function coerceBooleanProperty(value: boolean | undefined | null): boolean {
+export function coerceBooleanProperty(value: boolean | undefined | null): boolean {
     return value != null && `${value}` !== "false";
 }

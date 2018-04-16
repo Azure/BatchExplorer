@@ -12,9 +12,8 @@ import {
     Self,
 } from "@angular/core";
 import { FormControl, FormGroupDirective, NgControl, NgForm } from "@angular/forms";
-import { FlagInput } from "@batch-flask/core";
+import { FlagInput, coerceBooleanProperty } from "@batch-flask/core";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
-import { ComponentUtils } from "app/utils";
 import { Subject } from "rxjs";
 
 import "./input.scss";
@@ -57,7 +56,7 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
         return this._disabled;
     }
     public set disabled(value: boolean) {
-        this._disabled = ComponentUtils.coerceBooleanProperty(value);
+        this._disabled = coerceBooleanProperty(value);
     }
 
     @Input()
