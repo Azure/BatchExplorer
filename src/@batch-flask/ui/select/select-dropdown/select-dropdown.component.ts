@@ -76,7 +76,7 @@ export class SelectDropdownComponent {
         if (option.disabled) {
             return;
         }
-        if(option.value === unselectAllOptionId) {
+        if (option.value === unselectAllOptionId) {
             this.select.unselectAll();
             return;
         }
