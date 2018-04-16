@@ -12,6 +12,7 @@ import {
     Self,
 } from "@angular/core";
 import { FormControl, FormGroupDirective, NgControl, NgForm } from "@angular/forms";
+import { FlagInput } from "@batch-flask/core";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import { ComponentUtils } from "app/utils";
 import { Subject } from "rxjs";
@@ -63,9 +64,7 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
 
     @Input() public placeholder: string;
 
-    @Input()
-    public get required(): boolean { return this._required; }
-    public set required(value: boolean) { this._required = ComponentUtils.coerceBooleanProperty(value); }
+    @Input() @FlagInput() public required = false;
 
     /** Input type of the element. */
     @Input()
@@ -92,11 +91,8 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     }
 
     /** Whether the element is readonly. */
-    @Input()
-    public get readonly(): boolean { return this._readonly; }
-    public set readonly(value: boolean) { this._readonly = ComponentUtils.coerceBooleanProperty(value); }
+    @Input() @FlagInput() public readonly = false;
 
-    protected _required = false;
     protected _type = "text";
     protected _neverEmptyInputTypes = [
         "date",
@@ -110,7 +106,6 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     protected _id: string;
     protected _uid = `bl-input-${nextUniqueId++}`;
     protected _previousNativeValue: any;
-    private _readonly = false;
     private _inputValueAccessor: { value: any };
 
     constructor(
