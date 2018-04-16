@@ -3,7 +3,7 @@ import {
     getProxySettings, validateProxySetting,
 } from "get-proxy-settings";
 
-import { log } from "@batch-flask/utils";
+import { fetch, log } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core";
 import { LocalStorage } from "client/core/local-storage";
 import { Constants } from "common";
@@ -134,18 +134,26 @@ export class ProxySettingsManager {
             process.env.HTTPS_PROXY = settings.https.toString();
             log.info("Setting HTTPS proxy settings", this._safePrintProxySetting(settings.https));
         }
-        // Uncomment to debug with fiddler
         // allowInsecureRequest();
-        // globalTunnel.initialize();
-        // TODO-TIM remove
-        // if (settings.http) {
-        //     process.env.HTTP_PROXY = settings.http.toString();
-        //     log.info("Setting HTTP proxy settings", this._safePrintProxySetting(settings.http));
-        // }
-        // if (settings.https) {
-        //     process.env.HTTPS_PROXY = settings.https.toString();
-        //     log.info("Setting HTTPS proxy settings", this._safePrintProxySetting(settings.https));
-        // }
+
+        await this._testUserAgent("BatchLabs/0.14.0");
+        await this._testUserAgent("Mozilla/5.0");
+        await this._testUserAgent("Mozilla/5.0 BatchLabs/0.14.0");
+    }
+    // TODO-TIM remove
+    private async _testUserAgent(agent: string) {
+        log.info(`Testing user agent: ${agent}`);
+
+        try {
+            const response = await fetch("https://google.com", {
+                headers: {
+                    "User-Agent": agent,
+                },
+            });
+            log.info(`Agent ${agent} got through`, response.status, response.statusText);
+        } catch (e) {
+            log.error(`Agent ${agent} failed`, e);
+        }
     }
 
     private _safePrintProxySetting(setting: ProxySetting) {

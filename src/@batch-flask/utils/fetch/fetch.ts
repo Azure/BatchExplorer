@@ -19,9 +19,13 @@ export async function fetch(url: string, options: RequestInit = {}) {
         options.headers = new Headers();
     }
     if (options.headers instanceof Headers) {
-        options.headers.set("User-Agent", "Mozilla/5.0");
+        if (!options.headers.has("User-Agent")) {
+            options.headers.set("User-Agent", "Mozilla/5.0");
+        }
     } else {
-        options.headers["User-Agent"] = "Mozilla/5.0";
+        if (!("User-Agent" in options.headers)) {
+            options.headers["User-Agent"] = "Mozilla/5.0";
+        }
     }
 
     const response = await nodeFetch(url, instanceOptions);
