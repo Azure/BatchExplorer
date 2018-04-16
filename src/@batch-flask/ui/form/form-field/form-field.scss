@@ -31,6 +31,10 @@ bl-form-field {
         min-width: 0;
     }
 
+    textarea[blInput] {
+        width: 100%;
+    }
+
     bl-select {
         width: 100%;
     }
