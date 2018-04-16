@@ -5,6 +5,7 @@ import { MatOption, MatSelect } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
+import { PermissionService, SelectModule } from "@batch-flask/ui";
 import { Subject } from "rxjs";
 import { Observable } from "rxjs/Observable";
 
@@ -104,7 +105,10 @@ describe("ParameterInputComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, ReactiveFormsModule, FormsModule, MaterialModule, NoopAnimationsModule],
+            imports: [
+                RouterTestingModule, ReactiveFormsModule, FormsModule,
+                MaterialModule, SelectModule, NoopAnimationsModule,
+            ],
             declarations: [NoItemMockComponent, ParameterInputComponent, FileGroupSasComponent,
                 TestComponent, FileGroupPickerComponent, CloudFilePickerComponent],
             providers: [
@@ -114,6 +118,7 @@ describe("ParameterInputComponent", () => {
                 { provide: AutoStorageService, useValue: autoStorageServiceSpy },
                 { provide: DialogService, useValue: dialogServiceSpy },
                 { provide: SidebarManager, useValue: sidebarSpy },
+                { provide: PermissionService, useValue: {} },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

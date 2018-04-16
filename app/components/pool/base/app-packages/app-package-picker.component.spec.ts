@@ -4,6 +4,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule, ServerError } from "@batch-flask/core";
+import { PermissionService, SelectModule } from "@batch-flask/ui";
 import { List } from "immutable";
 
 import { AppPackagePickerComponent } from "app/components/pool/base";
@@ -54,11 +55,12 @@ describe("AppPackagePickerComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [FormsModule, MaterialModule, NoopAnimationsModule, ReactiveFormsModule],
+            imports: [FormsModule, MaterialModule, NoopAnimationsModule, ReactiveFormsModule, SelectModule],
             declarations: [AppPackagePickerComponent, TestComponent],
             providers: [
                 { provide: ApplicationService, useValue: applicationServiceSpy },
                 { provide: FormBuilder, useValue: new FormBuilder() },
+                { provide: PermissionService, useValue: {} },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

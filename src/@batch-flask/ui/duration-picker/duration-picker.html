@@ -15,7 +15,7 @@
     </div>
     <div *ngIf="!allowUnlimited || !unlimited" class="gcol unit-picker">
         <bl-form-field>
-            <bl-select [(ngModel)]="unit" (ngModelChange)="onUnitChange()" placeholder="Unit">
+            <bl-select [ngModel]="unit" (ngModelChange)="onUnitChange()" placeholder="Unit">
                 <bl-option [value]="ConstraintsUnit.days" label="Days"></bl-option>
                 <bl-option [value]="ConstraintsUnit.hours" label="Hours"></bl-option>
                 <bl-option [value]="ConstraintsUnit.minutes" label="Minutes"></bl-option>

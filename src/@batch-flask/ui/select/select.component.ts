@@ -135,7 +135,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     private _optionsMap: Map<any, SelectOptionComponent>;
 
     constructor(
-        @Optional() @Self() public ngControl: NgControl,
+        @Self() @Optional() public ngControl: NgControl,
         private changeDetector: ChangeDetectorRef,
         private elementRef: ElementRef,
         private overlay: Overlay,
