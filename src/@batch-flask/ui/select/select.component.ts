@@ -328,6 +328,12 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         this.changeDetector.markForCheck();
     }
 
+    public unselectAll() {
+        this.selected.clear();
+        this.notifyChanges();
+        this.changeDetector.markForCheck();
+    }
+
     public notifyChanges() {
         if (this._propagateChange) {
             this._propagateChange(this.value);

@@ -7,6 +7,8 @@ import { SelectOptionComponent } from "@batch-flask/ui/select/option";
 import { SelectComponent } from "../select.component";
 import "./select-dropdown.scss";
 
+const unselectAllOptionId = "_bl-select-option-unselect-all";
+
 @Component({
     selector: "bl-select-dropdown",
     templateUrl: "select-dropdown.html",
@@ -18,6 +20,7 @@ export class SelectDropdownComponent {
 
     public set displayedOptions(options: SelectOptionComponent[]) {
         this._displayedOptions = options;
+        this._computeOptions();
         this.changeDetector.markForCheck();
     }
 
@@ -36,12 +39,14 @@ export class SelectDropdownComponent {
 
     public set multiple(multiple: boolean) {
         this._multiple = multiple;
-        this.changeDetector.markForCheck();
+        this._computeOptions();
     }
 
     public get multiple() {
         return this._multiple;
     }
+
+    public rows: any;
     private _displayedOptions: SelectOptionComponent[] = [];
     private _focusedOption: any;
     private _multiple: any;
@@ -71,10 +76,23 @@ export class SelectDropdownComponent {
         if (option.disabled) {
             return;
         }
+        if(option.value === unselectAllOptionId) {
+            this.select.unselectAll();
+            return;
+        }
         this.select.selectOption(option);
     }
 
     public trackOption(index, option: SelectOptionComponent) {
         return option.value;
+    }
+
+    private _computeOptions() {
+        let fixedOptions = [];
+        if (this.multiple) {
+            fixedOptions = [{ value: unselectAllOptionId, label: "Unselect all", cssClass: "unselect-all-option" }];
+        }
+        this.rows = fixedOptions.concat(this._displayedOptions);
+        this.changeDetector.markForCheck();
     }
 }
