@@ -119,13 +119,6 @@ mat-dialog-container.mat-dialog-container {
     max-height: 80vh;
 }
 
-.mat-select-content, .mat-menu-content {
-    > .mat-option, > .mat-menu-item {
-        height: 24px !important;
-        line-height: 24px !important;
-    }
-}
-
 .mat-form-field-underline {
     background-color: rgba(0, 0, 0, 0.2);
 }
@@ -141,28 +134,12 @@ mat-form-field.bl-textarea {
     }
 }
 
-.mat-select-placeholder {
-    margin-top: 6px;
-}
-
 .mat-autocomplete-panel {
     max-width : 30vw;
 
     .mat-option {
         height: 32px;
         line-height: 32px;
-    }
-}
-
-// Smaller select
-mat-select.small {
-    .mat-select-trigger {
-        height: 20px;
-    }
-
-    .mat-select-value-text {
-        font-size: 13px;
-        line-height: 20px;
     }
 }
 

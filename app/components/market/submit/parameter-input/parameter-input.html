@@ -20,12 +20,12 @@
         </bl-cloud-file-picker>
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.dropDown">
-        <mat-form-field>
-            <mat-select [formControl]="parameterValue" [placeholder]="parameter.name">
-                <mat-hint align="end"> {{ parameter.description }} </mat-hint>
-                <mat-option *ngFor="let opt of parameter.allowedValues;trackBy: trackOption" [value]="opt"> {{ opt }} </mat-option>
-            </mat-select>
-        </mat-form-field>
+        <bl-form-field>
+            <bl-select [formControl]="parameterValue" [placeholder]="parameter.name">
+                <bl-option *ngFor="let opt of parameter.allowedValues;trackBy: trackOption" [value]="opt" [label]="opt"></bl-option>
+            </bl-select>
+        </bl-form-field>
+        <mat-hint align="end"> {{ parameter.description }} </mat-hint>
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.int">
         <mat-form-field class="form-element">

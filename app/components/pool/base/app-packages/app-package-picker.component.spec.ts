@@ -127,8 +127,8 @@ describe("AppPackagePickerComponent", () => {
             component.addNewItem();
             fixture.detectChanges();
 
-            applcationInput = debugElement.query(By.css("mat-select[formControlName=applicationId]"));
-            versionInput = debugElement.query(By.css("mat-select[formControlName=version]"));
+            applcationInput = debugElement.query(By.css("bl-select[formControlName=applicationId]"));
+            versionInput = debugElement.query(By.css("bl-select[formControlName=version]"));
         });
 
         it("application and version inputs are visible", () => {

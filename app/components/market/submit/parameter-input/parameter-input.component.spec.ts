@@ -365,7 +365,7 @@ describe("ParameterInputComponent", () => {
             });
             testComponent.paramControl.setValue(initialInput);
             fixture.detectChanges();
-            selectEl = de.query(By.css("mat-select"));
+            selectEl = de.query(By.css("bl-select"));
             expect(selectEl).not.toBeFalsy();
             selectComponent = selectEl.componentInstance;
         });
