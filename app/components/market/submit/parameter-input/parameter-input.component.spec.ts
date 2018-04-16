@@ -4,7 +4,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
-import { PermissionService, SelectModule, SelectOptionComponent, SelectComponent } from "@batch-flask/ui";
+import { PermissionService, SelectComponent, SelectModule } from "@batch-flask/ui";
 import { Subject } from "rxjs";
 import { Observable } from "rxjs/Observable";
 
