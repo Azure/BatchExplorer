@@ -1,11 +1,10 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatOption, MatSelect } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
-import { PermissionService, SelectModule } from "@batch-flask/ui";
+import { PermissionService, SelectModule, SelectOptionComponent, SelectComponent } from "@batch-flask/ui";
 import { Subject } from "rxjs";
 import { Observable } from "rxjs/Observable";
 
@@ -355,7 +354,7 @@ describe("ParameterInputComponent", () => {
 
     describe("dropdown parameter type", () => {
         let selectEl: DebugElement;
-        let selectComponent: MatSelect;
+        let selectComponent: SelectComponent;
         const initialInput = "a";
         const newInput = "b";
 
@@ -386,7 +385,7 @@ describe("ParameterInputComponent", () => {
         it("should select new input", () => {
             testComponent.paramControl.setValue(newInput);
             fixture.detectChanges();
-            expect((selectComponent.selected as MatOption).value).toBe(newInput);
+            expect(selectComponent.value).toBe(newInput);
         });
     });
 
