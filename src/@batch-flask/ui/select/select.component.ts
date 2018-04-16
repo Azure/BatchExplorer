@@ -22,10 +22,9 @@ import { SelectOptionComponent } from "./option";
 
 import { ConnectionPositionPair, Overlay, OverlayConfig, OverlayRef } from "@angular/cdk/overlay";
 import { ComponentPortal } from "@angular/cdk/portal";
-import { FlagInput } from "@batch-flask/core";
+import { FlagInput, coerceBooleanProperty } from "@batch-flask/core";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import { SelectDropdownComponent } from "@batch-flask/ui/select/select-dropdown";
-import { ComponentUtils } from "app/utils";
 import { Subject, Subscription } from "rxjs";
 import "./select.scss";
 
@@ -77,7 +76,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         return this._disabled;
     }
     public set disabled(value: boolean) {
-        this._disabled = ComponentUtils.coerceBooleanProperty(value);
+        this._disabled = coerceBooleanProperty(value);
     }
 
     @HostBinding("attr.aria-describedby")
