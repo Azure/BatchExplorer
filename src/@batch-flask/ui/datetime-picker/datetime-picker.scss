@@ -36,4 +36,10 @@ bl-datetime-picker {
         margin-left: 34%;
         color: $secondary-text;
     }
+
+    .mat-datepicker-toggle .mat-icon-button {
+        width: 16px;
+        height: 26px;
+        line-height: 16px;
+    }
 }

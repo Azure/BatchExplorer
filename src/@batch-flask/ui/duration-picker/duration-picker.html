@@ -9,18 +9,18 @@
     </div>
     <div *ngIf="allowUnlimited && unlimited" class="gcol duration-unlimited">Unlimited</div>
     <div *ngIf="!allowUnlimited || !unlimited" class="gcol value">
-        <mat-form-field>
-            <input matInput [(ngModel)]="value" (ngModelChange)="onTimeChange()" placeholder="Time" type="number">
-        </mat-form-field>
+        <bl-form-field>
+            <input blInput [(ngModel)]="value" (ngModelChange)="onTimeChange()" placeholder="Time" type="number">
+        </bl-form-field>
     </div>
     <div *ngIf="!allowUnlimited || !unlimited" class="gcol unit-picker">
-        <mat-form-field>
-            <mat-select color="primary" [(ngModel)]="unit" (ngModelChange)="onUnitChange()" placeholder="Unit">
-                <mat-option [value]="ConstraintsUnit.days">Days</mat-option>
-                <mat-option [value]="ConstraintsUnit.hours">Hours</mat-option>
-                <mat-option [value]="ConstraintsUnit.minutes">Minutes</mat-option>
-                <mat-option [value]="ConstraintsUnit.seconds">Seconds</mat-option>
-            </mat-select>
-        </mat-form-field>
+        <bl-form-field>
+            <bl-select [(ngModel)]="unit" (ngModelChange)="onUnitChange()" placeholder="Unit">
+                <bl-option [value]="ConstraintsUnit.days" label="Days"></bl-option>
+                <bl-option [value]="ConstraintsUnit.hours" label="Hours"></bl-option>
+                <bl-option [value]="ConstraintsUnit.minutes" label="Minutes"></bl-option>
+                <bl-option [value]="ConstraintsUnit.seconds" label="Seconds"></bl-option>
+            </bl-select>
+        </bl-form-field>
     </div>
 </div>
