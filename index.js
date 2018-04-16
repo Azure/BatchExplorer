@@ -2,36 +2,36 @@ const githubAccessToken = "dbf50a23223f537679de24de2ccff0e6fc9e14cd";
 const labsRepo = "Azure/BatchLabs";
 
 let downloadLinkEls;
-let downloadLinks;
+let downloadLinks = {};
 let versionEl;
 
-function getGithub(uri) {
-    const url = `https://api.github.com${uri}`;
-    return fetch(url, {
-        headers: {
-            Authorization: `token ${githubAccessToken}`,
-        }
-    }).then((res) => res.json());
-}
+const feedUrl = "https://batchlabsdist.blob.core.windows.net/releases";
 
-function listRelease() {
-    return getGithub(`/repos/${labsRepo}/releases`);
-}
-
-function getLatestRelease() {
-    return listRelease().then((releases) => {
-        return releases[0];
+function getLatest(source) {
+    const url = `${feedUrl}/${source}`;
+    return fetch(url).then((res) => {
+        return res.text();
+    }).then(content => {
+        return jsyaml.load(content);
     });
 }
 
+function getWindowsLatest() {
+    return getLatest("latest.yml").then(x => {
+        return x.version;
+    });
+}
 
-function getAsset(assets, endsWith) {
-    for (const asset of assets) {
-        if (asset.name.endsWith(endsWith)) {
-            return asset.browser_download_url;
-        }
-    }
-    return null;
+function getMacLatest() {
+    return getLatest("latest-mac.yml").then(x => {
+        return x.version;
+    });
+}
+
+function getLinuxLatest() {
+    return getLatest("latest-linux.yml").then(x => {
+        return x.version;
+    });
 }
 
 function updateDownloadLinks() {
@@ -41,9 +41,9 @@ function updateDownloadLinks() {
 
     // TODO: figure out what OS the user is running and pick the right default
     document.getElementById("primary-download-btn").href = downloadLinks["windowsInstaller"]
-    
+
     document.getElementById("download-windows-installer-btn").href = downloadLinks["windowsInstaller"]
-    document.getElementById("download-osx-dmg-btn").href = downloadLinks["osxDmg"]
+    document.getElementById("download-osx-app-btn").href = downloadLinks["osxApp"]
     document.getElementById("download-linux-deb-btn").href = downloadLinks["linuxDeb"]
 }
 
@@ -53,28 +53,33 @@ document.addEventListener("DOMContentLoaded", (event) => {
     downloadLinkEls = {
         windowsInstaller: document.getElementById("download-windows-installer"),
         windowsZip: document.getElementById("download-windows-zip"),
-        osxDmg: document.getElementById("download-osx-dmg"),
+        osxApp: document.getElementById("download-osx-app"),
         osxZip: document.getElementById("download-osx-zip"),
         linuxDeb: document.getElementById("download-linux-deb"),
         linuxRpm: document.getElementById("download-linux-rpm"),
         linuxAppimage: document.getElementById("download-linux-appimage"),
     }
 
-    getLatestRelease().then((release) => {
-        const suffix = release.prerelease ? " (Beta)" : "";
-        versionEl.textContent = release.name + suffix;
-
-        downloadLinks = {
-            windowsInstaller: getAsset(release.assets, ".exe"),
-            windowsZip: getAsset(release.assets, "win.zip"),
-            osxDmg: getAsset(release.assets, ".dmg"),
-            osxZip: getAsset(release.assets, "mac.zip"),
-            linuxDeb: getAsset(release.assets, ".deb"),
-            linuxRpm: getAsset(release.assets, ".rpm"),
-            linuxAppimage: getAsset(release.assets, ".AppImage"),
-        }
-
+    getWindowsLatest().then((version) => {
+        versionEl.textContent = version;
+        downloadLinks["windowsInstaller"] = `${feedUrl}/${version}/BatchLabs Setup.exe`
+        downloadLinks["windowsZip"] = `${feedUrl}/${version}/BatchLabs-win.zip`
         updateDownloadLinks()
-    })
+    });
+
+    getLinuxLatest().then((version) => {
+        versionEl.textContent = version;
+        downloadLinks["linuxDeb"] = `${feedUrl}/${version}/BatchLabs.deb`;
+        downloadLinks["linuxRpm"] = `${feedUrl}/${version}/BatchLabs.rpm`;
+        downloadLinks["linuxAppimage"] = `${feedUrl}/${version}/BatchLabs.AppImage`;
+        updateDownloadLinks()
+    });
+
+    getMacLatest().then((version) => {
+        versionEl.textContent = version;
+        downloadLinks["osxApp"] = `${feedUrl}/${version}/BatchLabs.app`;
+        downloadLinks["osxZip"] = `${feedUrl}/${version}/BatchLabs-osx.zip`;
+        updateDownloadLinks()
+    });
 
 });
