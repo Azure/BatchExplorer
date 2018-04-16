@@ -18,11 +18,11 @@ export function FlagInput(): any {
 function flagMethod(target, key: string, descriptor: TypedPropertyDescriptor<boolean>) {
     Object.defineProperty(target, key, {
         configurable: true,
-        get: () => {
-            return target[`_${key}`];
+        get: function () {
+            return this[`_${key}`];
         },
-        set: (value) => {
-            target[`_${key}`] = coerceBooleanProperty(value);
+        set: function (value) {
+            this[`_${key}`] = coerceBooleanProperty(value);
         },
     });
 }

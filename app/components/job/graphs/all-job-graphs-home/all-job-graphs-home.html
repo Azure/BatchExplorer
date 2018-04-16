@@ -8,13 +8,13 @@
     <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
 
     <div class="filters">
-        <mat-form-field>
-            <mat-select placeholder="Time range" [formControl]="selectedTimeRange">
-                <mat-option [value]="TimeRange.hour">Last hour</mat-option>
-                <mat-option [value]="TimeRange.day">Last 24 hours</mat-option>
-                <mat-option [value]="TimeRange.week">Last week</mat-option>
-            </mat-select>
-        </mat-form-field>
+        <bl-form-field>
+            <bl-select placeholder="Time range" [formControl]="selectedTimeRange">
+                <bl-option [value]="TimeRange.hour" label="Last hour"></bl-option>
+                <bl-option [value]="TimeRange.day"label="Last 24 hours"></bl-option>
+                <bl-option [value]="TimeRange.week"label="Last week"></bl-option>
+            </bl-select>
+        </bl-form-field>
     </div>
 </div>
 <div *ngIf="jobs" class="graph-content">
