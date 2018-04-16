@@ -44,7 +44,7 @@ export class StorageContainerService {
     private _containerListGetter: StorageListGetter<BlobContainer, ListContainerParams>;
     private _containerCache = new TargetedDataCache<ListContainerParams, BlobContainer>({
         key: ({ storageAccountId }) => storageAccountId,
-    }, "name");
+    }, "id");
 
     constructor(
         private storageClient: StorageClientService,

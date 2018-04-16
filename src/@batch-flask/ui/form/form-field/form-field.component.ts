@@ -1,4 +1,7 @@
-import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, QueryList } from "@angular/core";
+import {
+    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
+    Component, ContentChild, ContentChildren, QueryList,
+} from "@angular/core";
 
 import { FormFieldControl } from "./form-field-control";
 import { FormFieldPrefixDirective, FormFieldSuffixDirective } from "./form-field.directive";
