@@ -101,7 +101,7 @@ mat-radio-button {
     }
 }
 
-.mat-form-field {
+.bl-form-field {
     width: auto;
 }
 
@@ -119,11 +119,11 @@ mat-dialog-container.mat-dialog-container {
     max-height: 80vh;
 }
 
-.mat-form-field-underline {
+.bl-form-field-underline {
     background-color: rgba(0, 0, 0, 0.2);
 }
 
-mat-form-field.bl-textarea {
+bl-form-field.bl-textarea {
     .mat-input-wrapper {
         background: #f5f5f5;
     }

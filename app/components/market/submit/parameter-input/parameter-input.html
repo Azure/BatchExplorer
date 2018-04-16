@@ -1,9 +1,9 @@
 <div [ngSwitch]="parameter.type">
     <div *ngSwitchCase="NcjParameterExtendedType.string">
-        <mat-form-field class="form-element">
-            <input matInput type="text" [formControl]="parameterValue" [placeholder]="parameter.name">
+        <bl-form-field class="form-element">
+            <input blInput  type="text" [formControl]="parameterValue" [placeholder]="parameter.name">
             <mat-hint align="end"> {{ parameter.description }} </mat-hint>
-        </mat-form-field>
+        </bl-form-field>
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.fileGroup">
         <bl-file-group-picker [formControl]="parameterValue" [label]="parameter.name" class="form-element" [hint]="parameter.description">
@@ -28,15 +28,15 @@
         <mat-hint align="end"> {{ parameter.description }} </mat-hint>
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.int">
-        <mat-form-field class="form-element">
-            <input matInput type="number" [formControl]="parameterValue" [placeholder]="parameter.name">
+        <bl-form-field class="form-element">
+            <input blInput  type="number" [formControl]="parameterValue" [placeholder]="parameter.name">
             <mat-hint align="end"> {{ parameter.description }} </mat-hint>
-        </mat-form-field>
+        </bl-form-field>
     </div>
     <div *ngSwitchDefault>
-        <mat-form-field class="form-element">
-            <input matInput type="text" [formControl]="parameterValue" [placeholder]="parameter.name">
+        <bl-form-field class="form-element">
+            <input blInput  type="text" [formControl]="parameterValue" [placeholder]="parameter.name">
             <mat-hint align="end"> {{ parameter.description }} </mat-hint>
-        </mat-form-field>
+        </bl-form-field>
     </div>
 </div>

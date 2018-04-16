@@ -35,7 +35,7 @@ bl-editable-table, .editable-table {
             width: 26px;
         }
 
-        input, .mat-form-field {
+        input, .bl-form-field {
             width: 100%;
             border: none;
             outline: none;
@@ -49,7 +49,7 @@ bl-editable-table, .editable-table {
             }
         }
 
-        .mat-form-field > .mat-input-wrapper {
+        .bl-form-field > .mat-input-wrapper {
             padding: 0;
 
             .mat-input-infix {
