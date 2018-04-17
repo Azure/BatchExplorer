@@ -3,11 +3,11 @@
 # NOTE - YAML requires a space after the colon. Ex: "batchaccountname: mybatchaccount"
 
 service_principal:
-    tenant_id: {1}
-    client_id: {2}
-    credential: {0}
-    batch_account_resource_id: {0}
-    storage_account_resource_id:
+    tenant_id: {tenantId}
+    client_id: {clientId}
+    credential: {secret}
+    batch_account_resource_id: {batchAccountId}
+    storage_account_resource_id: {storageAccountId}
 
 # Configuration for private docker repositories. If using public containers you do not need to provide authentification
 docker:

@@ -66,10 +66,14 @@ export class ProgramingSampleComponent implements OnChanges {
         }
         if (this.credentialType === CredentialType.AAD) {
             const cred = this.aadCredentials || {} as any;
-            this.content = template.format(this.accountUrl,
-                cred.tenantId,
-                cred.clientId,
-                cred.secret);
+            this.content = template.format({
+                accountUrl: this.accountUrl,
+                tenantId: cred.tenantId,
+                clientId: cred.clientId,
+                secret: cred.secret,
+                batchAccountId: this.account.id,
+                storageAccountId: this.account.autoStorage && this.account.autoStorage.storageAccountId,
+            });
         } else {
             this.content = template.format(this.accountName, this.accountUrl, this.key);
         }
