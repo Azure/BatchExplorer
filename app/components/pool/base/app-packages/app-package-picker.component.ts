@@ -2,7 +2,6 @@ import { Component, EventEmitter, OnDestroy, Output, forwardRef } from "@angular
 import {
     ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
-import { MatSelectChange } from "@angular/material";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
