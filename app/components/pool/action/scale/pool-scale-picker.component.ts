@@ -6,6 +6,8 @@ import { Subscription } from "rxjs";
 
 import { Pool } from "app/models";
 
+import "./pool-scale-picker.scss";
+
 @Component({
     selector: "bl-pool-scale-picker",
     templateUrl: "pool-scale-picker.html",

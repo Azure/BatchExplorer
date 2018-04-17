@@ -1,15 +1,15 @@
 <bl-form-field>
     <input type="text" blInput [matAutocomplete]="auto" [formControl]="container" [placeholder]="label">
+    <bl-hint class="danger" *ngIf="warning">
+        This container doesn't exists.
+    </bl-hint>
+    <bl-hint *ngIf="loading">
+        Loading containers.
+    </bl-hint>
+    <bl-hint *ngIf="hint" align="end">
+        {{hint}}
+    </bl-hint>
 </bl-form-field>
-<mat-hint class="danger" *ngIf="warning">
-    This container doesn't exists.
-</mat-hint>
-<mat-hint *ngIf="loading">
-    Loading containers.
-</mat-hint>
-<mat-hint *ngIf="hint" align="end">
-    {{hint}}
-</mat-hint>
 
 <mat-autocomplete #auto="matAutocomplete">
     <mat-option [disabled]="true" *ngIf="loading">
