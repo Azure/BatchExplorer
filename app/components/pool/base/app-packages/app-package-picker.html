@@ -12,8 +12,6 @@
                 <td style="width: 45%">
                     <bl-form-field>
                         <bl-select formControlName="applicationId" (change)="applicationSelected($event, i)">
-                            <!-- TODO: toLowerCase() is for a bug in the API, it should be case preserving, but it's not -->
-                            <!-- TODO: Material seems to do case sensitive matching, which i also think is a bug -->
                             <bl-option *ngFor="let application of applications;trackBy: trackApplication" [value]="application.id.toLowerCase()" [label]="application.id"></bl-option>
                         </bl-select>
                     </bl-form-field>
