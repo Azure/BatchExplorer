@@ -4,6 +4,7 @@ export const sampleTemplates = {
         python: require("raw-loader!./shared-key/python.py.template"),
         csharp: require("raw-loader!./shared-key/csharp.cs.template"),
         nodejs: require("raw-loader!./shared-key/node.js.template"),
+        doAzureParallel: require("raw-loader!./shared-key/doAzureParallel.json.template"),
     },
     aad: {
         python: require("raw-loader!./aad/python.py.template"),
@@ -18,6 +19,7 @@ export const samplesLink = {
     csharp: "https://github.com/Azure/azure-batch-samples/tree/master/CSharp",
     nodejs: "https://github.com/Azure/azure-batch-samples/tree/master/Node.js",
     aztk: "https://github.com/Azure/aztk",
+    doAzureParallel: "https://github.com/Azure/doAzureParallel",
 };
 
 export const prerequisites = {

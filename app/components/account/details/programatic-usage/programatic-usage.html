@@ -21,12 +21,19 @@
 
         </div>
         <bl-property-list *ngIf="pickedCredentialType === CredentialType.SharedKey">
-            <bl-property-group label="Account credentials {{loading ? '(Loading ...)' : ''}}" class="wide">
-                <bl-text-property label="Name" [value]="account?.name"></bl-text-property>
-                <bl-text-property label="Resource ID" [value]="account?.id"></bl-text-property>
-                <bl-text-property label="Url" [value]="account?.properties.accountEndpoint"></bl-text-property>
-                <bl-text-property label="Primary key" [value]="sharedKeys?.primary"></bl-text-property>
-                <bl-text-property label="Secondary key" [value]="sharedKeys?.secondary"></bl-text-property>
+            <bl-property-group label="Batch account credentials {{loading ? '(Loading ...)' : ''}}" class="wide">
+                <bl-text-property label="Name" [value]="sharedKeyCredentials?.batchAccount?.resource.name"></bl-text-property>
+                <bl-text-property label="Resource ID" [value]="sharedKeyCredentials?.batchAccount?.resource.id"></bl-text-property>
+                <bl-text-property label="Url" [value]="sharedKeyCredentials?.batchAccount?.resource.properties.accountEndpoint"></bl-text-property>
+                <bl-text-property label="Primary key" [value]="sharedKeyCredentials?.batchAccount?.primary"></bl-text-property>
+                <bl-text-property label="Secondary key" [value]="sharedKeyCredentials?.batchAccount?.secondary"></bl-text-property>
+            </bl-property-group>
+            <bl-property-group label="Auto storage account credentials {{loading ? '(Loading ...)' : ''}}" class="wide">
+                <bl-text-property label="Name" [value]="sharedKeyCredentials?.storageAccount?.resource.name"></bl-text-property>
+                <bl-text-property label="Resource ID" [value]="sharedKeyCredentials?.storageAccount?.resource.id"></bl-text-property>
+                <bl-text-property label="Url" [value]="sharedKeyCredentials?.storageAccount?.resource.properties.accountEndpoint"></bl-text-property>
+                <bl-text-property label="Primary key" [value]="sharedKeyCredentials?.storageAccount?.primary"></bl-text-property>
+                <bl-text-property label="Secondary key" [value]="sharedKeyCredentials?.storageAccount?.resource.secondary"></bl-text-property>
             </bl-property-group>
         </bl-property-list>
         <bl-aad-credentials-picker [account]="account" (credentialsChange)="updateAADCredentials($event)" [hidden]="pickedCredentialType !== CredentialType.AAD"></bl-aad-credentials-picker>
@@ -38,7 +45,7 @@
         <bl-programing-sample target="python"
             [account]="account"
             [credentialType]="pickedCredentialType"
-            [sharedKeys]="sharedKeys"
+            [sharedKeyCredentials]="sharedKeyCredentials"
             [aadCredentials]="aadCredentials"></bl-programing-sample>
     </bl-vtab>
     <bl-vtab id="csharp">
@@ -48,7 +55,7 @@
         <bl-programing-sample target="csharp"
             [account]="account"
             [credentialType]="pickedCredentialType"
-            [sharedKeys]="sharedKeys"
+            [sharedKeyCredentials]="sharedKeyCredentials"
             [aadCredentials]="aadCredentials"></bl-programing-sample>
     </bl-vtab>
 
@@ -59,7 +66,7 @@
         <bl-programing-sample target="nodejs"
             [account]="account"
             [credentialType]="pickedCredentialType"
-            [sharedKeys]="sharedKeys"
+            [sharedKeyCredentials]="sharedKeyCredentials"
             [aadCredentials]="aadCredentials"></bl-programing-sample>
     </bl-vtab>
     <bl-vtab id="aztk">
@@ -69,7 +76,17 @@
         <bl-programing-sample target="aztk"
             [account]="account"
             [credentialType]="pickedCredentialType"
-            [sharedKeys]="sharedKeys"
+            [sharedKeyCredentials]="sharedKeyCredentials"
+            [aadCredentials]="aadCredentials"></bl-programing-sample>
+    </bl-vtab>
+    <bl-vtab id="doAzureParallel">
+        <div tabLabel>
+            doAzureParallel
+        </div>
+        <bl-programing-sample target="doAzureParallel"
+            [account]="account"
+            [credentialType]="pickedCredentialType"
+            [sharedKeyCredentials]="sharedKeyCredentials"
             [aadCredentials]="aadCredentials"></bl-programing-sample>
     </bl-vtab>
 </bl-vtab-group>

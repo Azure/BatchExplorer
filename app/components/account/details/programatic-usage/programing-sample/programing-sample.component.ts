@@ -4,6 +4,7 @@ import { prerequisites, sampleTemplates } from "./samples";
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { AADCredential, CredentialType } from "app/components/account/details/programatic-usage";
 import { AccountKeys, AccountResource } from "app/models";
+import { SharedKeyCredentials } from "../shared-key-credentials.model";
 import "./programing-sample.scss";
 
 export enum SampleTarget {
@@ -26,9 +27,10 @@ const engineLanguages = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProgramingSampleComponent implements OnChanges {
+    public CredentialType = CredentialType;
     @Input() public target: SampleTarget;
     @Input() public account: AccountResource;
-    @Input() public sharedKeys: AccountKeys;
+    @Input() public sharedKeyCredentials: SharedKeyCredentials;
     @Input() public aadCredentials: AADCredential;
     @Input() public credentialType: CredentialType;
 
@@ -46,17 +48,9 @@ export class ProgramingSampleComponent implements OnChanges {
         return item;
     }
 
-    private get accountName() {
-        return this.account && this.account.name || "";
-    }
-
     private get accountUrl() {
         const url = this.account && this.account.properties.accountEndpoint;
         return url ? `https://${url}` : "";
-    }
-
-    private get key() {
-        return this.sharedKeys && this.sharedKeys.primary || "";
     }
 
     private _updateContent() {
@@ -75,8 +69,24 @@ export class ProgramingSampleComponent implements OnChanges {
                 storageAccountId: this.account && this.account.autoStorage && this.account.autoStorage.storageAccountId,
             });
         } else {
-            this.content = template.format(this.accountName, this.accountUrl, this.key);
+            this.content = template.format(this._getSharedKeyParams());
         }
+    }
+
+    private _getSharedKeyParams() {
+        if (!this.sharedKeyCredentials) { return {}; }
+        const { batchAccount, storageAccount } = this.sharedKeyCredentials;
+        const params: any = {};
+        if (batchAccount) {
+            params.batchAccountUrl = this.accountUrl;
+            params.batchAccountName = batchAccount.resource.name;
+            params.batchAccountKey = batchAccount.primary;
+        }
+        if (storageAccount) {
+            params.storageAccountName = storageAccount.resource.name;
+            params.storageAccountKey = storageAccount.primary;
+        }
+        return params;
     }
 
     private _getTemplate() {
