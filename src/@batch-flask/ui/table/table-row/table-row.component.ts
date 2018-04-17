@@ -31,7 +31,6 @@ export class TableRowComponent extends AbstractListItemBase implements AfterCont
     public dimensions: number[] = [];
     private _sub: Subscription;
 
-    // tslint:disable:no-forward-ref
     constructor(
         @Inject(forwardRef(() => TableComponent)) public table: TableComponent,
         router: Router,
@@ -42,6 +41,7 @@ export class TableRowComponent extends AbstractListItemBase implements AfterCont
 
         this._sub = this.table.dimensions.subscribe((dimensions) => {
             this.dimensions = dimensions;
+            // console.log("Dimensions are?", this.dimensions);
             this.changeDetector.markForCheck();
         });
     }
@@ -52,6 +52,7 @@ export class TableRowComponent extends AbstractListItemBase implements AfterCont
             this.changeDetector.markForCheck();
         });
         this._updateData();
+        // this.changeDetector.markForCheck();
     }
 
     public ngOnDestroy() {

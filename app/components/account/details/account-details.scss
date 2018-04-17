@@ -52,6 +52,11 @@ bl-account-details {
             cursor: pointer;
         }
 
+        bl-getting-started-card {
+            grid-row: span 2;
+            grid-column: span 2;
+        }
+
         > .node-states {
             grid-column: span 3;
         }
