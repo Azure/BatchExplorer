@@ -48,7 +48,6 @@ export class StorageAccountKeysService {
                 keyJson.primaryKey = responseJson.keys[0] ? responseJson.keys[0].value : null;
                 keyJson.secondaryKey = responseJson.keys[1] ? responseJson.keys[1].value : null;
             }
-            console.log("skeys", keyJson);
             return new StorageKeys(keyJson);
         }
     }
