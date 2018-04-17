@@ -6,6 +6,7 @@ import { AADCredential, CredentialType } from "app/components/account/details/pr
 import { AccountKeys, AccountResource } from "app/models";
 import { SharedKeyCredentials } from "../shared-key-credentials.model";
 import "./programing-sample.scss";
+import { BatchLabsService } from "app/services";
 
 export enum SampleTarget {
     python = "python",
@@ -37,6 +38,8 @@ export class ProgramingSampleComponent implements OnChanges {
     public prerequisites: string[];
     public content: string;
     public editorConfig: EditorConfig;
+
+    constructor(private batchLabs: BatchLabsService) {}
 
     public ngOnChanges(changes) {
         this._updateContent();
@@ -85,6 +88,7 @@ export class ProgramingSampleComponent implements OnChanges {
         if (storageAccount) {
             params.storageAccountName = storageAccount.resource.name;
             params.storageAccountKey = storageAccount.primary;
+            params.storageAccountSuffix =this.batchLabs.azureEnvironment.storageEndpoint;
         }
         return params;
     }
