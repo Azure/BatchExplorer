@@ -3,10 +3,10 @@ import { prerequisites, sampleTemplates } from "./samples";
 
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { AADCredential, CredentialType } from "app/components/account/details/programatic-usage";
-import { AccountKeys, AccountResource } from "app/models";
+import { AccountResource } from "app/models";
+import { BatchLabsService } from "app/services";
 import { SharedKeyCredentials } from "../shared-key-credentials.model";
 import "./programing-sample.scss";
-import { BatchLabsService } from "app/services";
 
 export enum SampleTarget {
     python = "python",
@@ -88,7 +88,7 @@ export class ProgramingSampleComponent implements OnChanges {
         if (storageAccount) {
             params.storageAccountName = storageAccount.resource.name;
             params.storageAccountKey = storageAccount.primary;
-            params.storageAccountSuffix =this.batchLabs.azureEnvironment.storageEndpoint;
+            params.storageAccountSuffix = this.batchLabs.azureEnvironment.storageEndpoint;
         }
         return params;
     }
