@@ -9,3 +9,4 @@ export * from "./quick-list";
 export * from "./context-menu";
 export * from "./sidebar";
 export * from "./permission";
+export * from "./vtabs";

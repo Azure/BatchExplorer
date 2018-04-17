@@ -8,8 +8,8 @@
         <bl-button type="wide" (do)="pickCredentialType(CredentialType.AAD)" [disabled]="pickedCredentialType === CredentialType.AAD">Azure AD</bl-button>
     </div>
 </div>
-<bl-vtab-group class="content">
-    <bl-vtab>
+<bl-vtab-group #tabs class="content">
+    <bl-vtab id="credentials">
         <div tabLabel>
             Credentials
         </div>
@@ -24,7 +24,7 @@
         </bl-property-list>
         <bl-aad-credentials-picker [account]="account" (credentialsChange)="updateAADCredentials($event)" [hidden]="pickedCredentialType !== CredentialType.AAD"></bl-aad-credentials-picker>
     </bl-vtab>
-    <bl-vtab>
+    <bl-vtab id="python">
         <div tabLabel>
             Python
         </div>
@@ -34,7 +34,7 @@
             [sharedKeys]="sharedKeys"
             [aadCredentials]="aadCredentials"></bl-programing-sample>
     </bl-vtab>
-    <bl-vtab>
+    <bl-vtab id="csharp">
         <div tabLabel>
             C#
         </div>
@@ -45,7 +45,7 @@
             [aadCredentials]="aadCredentials"></bl-programing-sample>
     </bl-vtab>
 
-    <bl-vtab>
+    <bl-vtab id="nodejs">
         <div tabLabel>
             Node.js
         </div>

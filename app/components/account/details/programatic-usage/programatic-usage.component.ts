@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from "@angular/core";
+import { VTabGroupComponent } from "@batch-flask/ui";
 import { AccountKeys, AccountResource } from "app/models";
 import { AccountService } from "app/services";
 
 import "./programatic-usage.scss";
 
 export enum CredentialType {
-    SharedKey,
-    AAD,
+    SharedKey = "shared-key",
+    AAD = "aad",
 }
 
 export interface AADCredential {
@@ -21,6 +22,7 @@ export interface AADCredential {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProgramaticUsageComponent {
+    @ViewChild("tabs") public tabs: VTabGroupComponent;
     public CredentialType = CredentialType;
     public account: AccountResource;
     public sharedKeys: AccountKeys;
@@ -48,6 +50,10 @@ export class ProgramaticUsageComponent {
     public pickCredentialType(type: CredentialType) {
         this.pickedCredentialType = type;
         this.changeDetector.markForCheck();
+    }
+
+    public pickType(type: string) {
+        this.tabs.selectTab(type);
     }
 
     public updateAADCredentials(cred: AADCredential) {

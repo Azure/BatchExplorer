@@ -28,8 +28,15 @@ export class VTabGroupComponent implements AfterContentInit {
         this.changeDetector.markForCheck();
     }
 
-    public selectTab(tab: VTabComponent) {
-        this.currentTab = tab;
+    public selectTab(tab: VTabComponent | string) {
+        if (tab instanceof VTabComponent) {
+            this.currentTab = tab;
+        } else {
+            const matching = this.tabs.find(x => x.id === tab);
+            if (matching) {
+                this.currentTab = matching;
+            }
+        }
         this.changeDetector.markForCheck();
     }
 
