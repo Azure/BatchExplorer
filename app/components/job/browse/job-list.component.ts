@@ -10,6 +10,7 @@ import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, JobState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
 import { JobListParams, JobService, PinnedEntityService } from "app/services";
@@ -21,6 +22,7 @@ import {
     DeleteJobDialogComponent,
     DisableJobDialogComponent,
     EnableJobDialogComponent,
+    PatchJobComponent,
     TerminateJobDialogComponent,
 } from "../action";
 
@@ -48,6 +50,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         private dialog: MatDialog,
         activatedRoute: ActivatedRoute,
         changeDetector: ChangeDetectorRef,
+        private sidebarManager: SidebarManager,
         private jobService: JobService,
         private pinnedEntityService: PinnedEntityService,
         private taskManager: BackgroundTaskService) {
@@ -130,6 +133,14 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         this.data.fetchNext();
     }
 
+    public editJob(job: Job) {
+        const ref = this.sidebarManager
+            .open(`edit-job-${job.id}`, PatchJobComponent);
+        ref.component.jobId = job.id;
+        ref.component.checkJobStateForPoolPicker(job.state);
+        ref.component.setValueFromEntity(job);
+    }
+
     public deleteSelection(selection: ListSelection) {
         this.taskManager.startTask("", (backgroundTask) => {
             const task = new DeleteJobAction(this.jobService, [...this.selection.keys]);
@@ -174,6 +185,11 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         const isCompleted = job.state === JobState.completed;
         const isDisabled = job.state === JobState.disabled;
         return new ContextMenu([
+            new ContextMenuItem({
+                label: "Edit",
+                click: () => this.editJob(job),
+                enabled: !isCompleted,
+            }),
             new ContextMenuItem({ label: "Delete", click: () => this.deleteJob(job) }),
             new ContextMenuItem({ label: "Terminate", click: () => this.terminateJob(job), enabled: !isCompleted }),
             new ContextMenuItem({

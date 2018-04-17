@@ -50,10 +50,13 @@ export class PatchJobScheduleComponent extends JobScheduleCreateBasicDialogCompo
                 this.notificationService.success("Job schedule updated!",
                     `Job schedule '${this.jobScheduleId}' was updated successfully!`);
             },
-            error: (response: Response) => {
+            error: (response: any) => {
+                const detailReason = Array.isArray(response.details)
+                && response.details.find(detail => detail.key === "Reason");
                 this.notificationService.error(
                     "Job schedule update failed",
-                    response.toString(),
+                    `${response.message}. ` +
+                    `${detailReason ? detailReason.value : ""}`,
                 );
             },
         });
