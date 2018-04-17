@@ -107,8 +107,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         if (filter.isEmpty()) {
             this.data.setOptions({ ...defaultListOptions });
         } else {
-            const filterText = (filter as any).value;
-            this.data.setOptions({ ...defaultListOptions, filter: filterText && filterText.toLowerCase() });
+            this.data.setOptions({ ...defaultListOptions, filter });
         }
 
         if (this.storageAccountId) {

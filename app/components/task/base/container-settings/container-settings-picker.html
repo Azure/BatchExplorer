@@ -1,8 +1,8 @@
 <div [formGroup]="containerSettings">
     <div class="form-element">
-        <mat-form-field>
-            <input matInput [matAutocomplete]="auto" formControlName="imageName" placeholder="Image name" type="text">
-        </mat-form-field>
+        <bl-form-field>
+            <input blInput [matAutocomplete]="auto" formControlName="imageName" placeholder="Image name" type="text">
+        </bl-form-field>
         <mat-autocomplete #auto="matAutocomplete" >
             <mat-option *ngFor="let image of containerConfiguration?.containerImageNames;trackBy: trackImage" [value]="image">
                 {{ image }}
@@ -11,9 +11,9 @@
         <bl-error controlName="imageName" code="required">Image name is a required field</bl-error>
     </div>
     <div class="form-element">
-        <mat-form-field>
-            <input matInput formControlName="containerRunOptions" placeholder="Container run option" type="text">
-        </mat-form-field>
+        <bl-form-field>
+            <input blInput formControlName="containerRunOptions" placeholder="Container run option" type="text">
+        </bl-form-field>
     </div>
     <div class="form-element">
         <bl-registry-picker formControlName="registry"></bl-registry-picker>

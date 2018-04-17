@@ -16,41 +16,63 @@ config.devtool = "inline-source-map";
 config.plugins = [
     defineEnv(ENV),
 ];
-config.module.rules = config.module.rules = [{
+config.module.rules = config.module.rules = [
+    {
         test: /\.ts$/,
-        loaders: ["awesome-typescript-loader", "angular2-template-loader"],
+        use: [
+            {
+                loader: "awesome-typescript-loader",
+                query: {
+                    /**
+                     * Use inline sourcemaps for "karma-remap-coverage" reporter
+                     */
+                    sourceMap: false,
+                    inlineSourceMap: true,
+                    compilerOptions: {
+
+                        /**
+                         * Remove TypeScript helpers to be injected
+                         * below by DefinePlugin
+                         */
+                        removeComments: true
+
+                    }
+                },
+            },
+            "angular2-template-loader",
+        ],
         exclude: [/node_modules/],
     },
     ...commonRules,
 ].concat(
     [{
-            test: /\.scss$/,
-            loader: "style-loader!css-loader!sass-loader",
-        },
-        {
-            test: /node_modules.*\.css$/,
-            loader: "style-loader!css-loader",
-        },
-        /**
-         * Instruments JS files with Istanbul for subsequent code coverage reporting.
-         * Instrument only testing sources.
-         *
-         * See: https://github.com/deepsweet/istanbul-instrumenter-loader
-         */
-        {
-            enforce: "post",
-            test: /\.(js|ts)$/,
-            loader: "istanbul-instrumenter-loader",
-            include: [
-                helpers.root("app"),
-                helpers.root("src"),
-            ],
-            exclude: [
-                helpers.root("src/test"),
-                /\.(e2e|spec)\.ts$/,
-                /node_modules/
-            ]
-        }
+        test: /\.scss$/,
+        loader: "style-loader!css-loader!sass-loader",
+    },
+    {
+        test: /node_modules.*\.css$/,
+        loader: "style-loader!css-loader",
+    },
+    /**
+     * Instruments JS files with Istanbul for subsequent code coverage reporting.
+     * Instrument only testing sources.
+     *
+     * See: https://github.com/deepsweet/istanbul-instrumenter-loader
+     */
+    {
+        enforce: "post",
+        test: /\.(js|ts)$/,
+        loader: "istanbul-instrumenter-loader",
+        include: [
+            helpers.root("app"),
+            helpers.root("src"),
+        ],
+        exclude: [
+            helpers.root("src/test"),
+            /\.(e2e|spec)\.ts$/,
+            /node_modules/
+        ]
+    }
     ]
 );
 

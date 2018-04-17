@@ -8,3 +8,4 @@ export * from "./batchui.module";
 export * from "./quick-list";
 export * from "./context-menu";
 export * from "./sidebar";
+export * from "./permission";

@@ -1,4 +1,4 @@
-<div class="option" *ngFor="let option of displayedOptions;trackBy: trackOption" (click)="handleClickOption($event, option)"
+<div class="option {{option.cssClass}}" *ngFor="let option of rows;trackBy: trackOption" (click)="handleClickOption($event, option)"
     [class.focused]="focusedOption === option.value" [class.disabled]="option.disabled">
 
     <div class="checkbox" *ngIf="multiple">

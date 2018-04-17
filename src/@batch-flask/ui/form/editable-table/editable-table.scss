@@ -35,7 +35,7 @@ bl-editable-table, .editable-table {
             width: 26px;
         }
 
-        input, .mat-form-field {
+        input, .bl-form-field {
             width: 100%;
             border: none;
             outline: none;
@@ -49,7 +49,7 @@ bl-editable-table, .editable-table {
             }
         }
 
-        .mat-form-field > .mat-input-wrapper {
+        .bl-form-field > .mat-input-wrapper {
             padding: 0;
 
             .mat-input-infix {
@@ -67,32 +67,9 @@ bl-editable-table, .editable-table {
             font-size: 12px;
         }
 
-        mat-select {
-            // "input" controls are Arial.
-            font-family: Arial;
-            padding-top: 0;
-
-            .mat-select-placeholder {
-                margin-top: 0;
-            }
-
-            .mat-select-content {
-                padding: 2px;
-            }
-
-            .mat-select-value {
-                padding-left: 5px;
-                font-size: 12px;
-                vertical-align: middle;
-            }
-
-            .mat-select-trigger {
-                height: 24px;
-                padding: 0 5px;
-            }
-
-            .mat-select-underline {
-                height: 0;
+        bl-select {
+            .select-button-container {
+                border: none;
             }
         }
 

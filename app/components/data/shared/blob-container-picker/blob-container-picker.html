@@ -1,15 +1,15 @@
-<mat-form-field>
-    <input type="text" matInput [matAutocomplete]="auto" [formControl]="container" [placeholder]="label">
-    <mat-hint class="danger" *ngIf="warning">
-        This container doesn't exists.
-    </mat-hint>
-    <mat-hint *ngIf="loading">
-        Loading containers.
-    </mat-hint>
-    <mat-hint *ngIf="hint" align="end">
-        {{hint}}
-    </mat-hint>
-</mat-form-field>
+<bl-form-field>
+    <input type="text" blInput [matAutocomplete]="auto" [formControl]="container" [placeholder]="label">
+</bl-form-field>
+<mat-hint class="danger" *ngIf="warning">
+    This container doesn't exists.
+</mat-hint>
+<mat-hint *ngIf="loading">
+    Loading containers.
+</mat-hint>
+<mat-hint *ngIf="hint" align="end">
+    {{hint}}
+</mat-hint>
 
 <mat-autocomplete #auto="matAutocomplete">
     <mat-option [disabled]="true" *ngIf="loading">
@@ -18,5 +18,4 @@
     <mat-option *ngFor="let container of containers;trackBy: trackContainer" [value]="container.name">
         {{ container.name }}
     </mat-option>
-
 </mat-autocomplete>

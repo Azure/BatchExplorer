@@ -53,7 +53,8 @@
         "text": {"$ref": "#/definitions/color"},
         "background": {"$ref": "#/definitions/color"},
         "placeholder": {"$ref": "#/definitions/color"},
-        "border": {"type": "string"}
+        "border": {"$ref": "#/definitions/color"},
+        "focus-border": {"$ref": "#/definitions/color"},
       }
     }
   }

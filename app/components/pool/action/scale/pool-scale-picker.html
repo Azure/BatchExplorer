@@ -3,20 +3,20 @@
         <mat-tab label="Fixed">
             <div class="grow">
                 <div class="gcol">
-                    <mat-form-field class="form-element">
-                        <input matInput formControlName="targetDedicatedNodes" placeholder="Dedicated nodes" type="number" min="0" />
-                    </mat-form-field>
+                    <bl-form-field class="form-element">
+                        <input blInput formControlName="targetDedicatedNodes" placeholder="Dedicated nodes" type="number" min="0" />
+                    </bl-form-field>
                 </div>
                 <div class="gcol">
-                    <mat-form-field class="form-element">
-                        <input matInput formControlName="targetLowPriorityNodes" placeholder="Low priority nodes" type="number" min="0" />
-                    </mat-form-field>
+                    <bl-form-field class="form-element">
+                        <input blInput formControlName="targetLowPriorityNodes" placeholder="Low priority nodes" type="number" min="0" />
+                    </bl-form-field>
                 </div>
                 <div class="gcol">
-                    <mat-form-field class="form-element">
-                        <input matInput formControlName="resizeTimeout" placeholder="Resize timeout" type="number" min="0" />
-                        <mat-hint align="end">in minutes</mat-hint>
-                    </mat-form-field>
+                    <bl-form-field class="form-element">
+                        <input blInput formControlName="resizeTimeout" placeholder="Resize timeout" type="number" min="0" />
+                        <div blFormFieldSuffix>minutes</div>
+                    </bl-form-field>
                 </div>
             </div>
             <bl-error controlName="targetDedicatedNodes" code="required">Target dedicated is a required field</bl-error>
@@ -25,10 +25,10 @@
         <mat-tab label="Auto Scale">
             <bl-autoscale-formula-picker formControlName="autoScaleFormula" [pool]="pool"></bl-autoscale-formula-picker>
             <bl-error controlName="autoScaleFormula" code="required">Auto scale formula is a required field</bl-error>
-            <mat-form-field>
-                <input matInput formControlName="autoScaleEvaluationInterval" placeholder="Evaluation interval(In minutes)" type="number"
-                />
-            </mat-form-field>
+            <bl-form-field>
+                <input blInput formControlName="autoScaleEvaluationInterval" placeholder="Evaluation interval" type="number" />
+                <div blFormFieldSuffix>minutes</div>
+            </bl-form-field>
         </mat-tab>
     </mat-tab-group>
 </div>

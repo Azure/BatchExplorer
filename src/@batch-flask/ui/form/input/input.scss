@@ -1,0 +1,37 @@
+@import "app/styles/variables";
+
+input[blInput], textarea[blInput] {
+    background-color: $input-background-color;
+    border: 1px solid $input-border-color;
+    color: $input-text-color;
+    outline: none;
+    font: inherit;
+
+    &:focus {
+        border-bottom: 2px solid $input-focus-border-color;
+    }
+
+    &.ng-invalid.ng-touched,
+    &.ng-invalid.ng-dirty {
+        border: 1px solid $danger-color;
+        &:focus {
+            border-bottom: 2px solid $input-focus-border-color;
+        }
+    }
+
+    &::placeholder {
+        color: transparent; // Remove the transition to prevent the placeholder
+        // from overlapping when the label comes back down.
+        transition: none;
+    }
+}
+
+input[blInput] {
+    height: 26px;
+    padding: 0 5px;
+}
+
+textarea[blInput] {
+    min-height: 26px;
+    resize: none;
+}

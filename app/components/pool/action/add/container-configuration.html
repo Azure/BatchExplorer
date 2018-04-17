@@ -1,10 +1,10 @@
 <div [formGroup]="form">
     <div class="form-element">
-        <mat-form-field>
-            <mat-select formControlName="type" color="primary" placeholder="Container type" required>
-                <mat-option [value]="ContainerType.Docker">Docker</mat-option>
-            </mat-select>
-        </mat-form-field>
+        <bl-form-field>
+            <bl-select formControlName="type" color="primary" placeholder="Container type" required>
+                <bl-option [value]="ContainerType.Docker" label="Docker"></bl-option>
+            </bl-select>
+        </bl-form-field>
     </div>
     <div class="form-element">
         <div class="form-left">

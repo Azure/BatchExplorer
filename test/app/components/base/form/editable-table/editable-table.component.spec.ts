@@ -1,8 +1,8 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
-import { MatSelectModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
+import { SelectModule } from "@batch-flask/ui/select";
 
 import { EditableTableColumnComponent, EditableTableComponent } from "@batch-flask/ui/form/editable-table";
 import { click, updateInput } from "test/utils/helpers";
@@ -26,7 +26,7 @@ describe("EditableTableComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, MatSelectModule],
+            imports: [ReactiveFormsModule, SelectModule],
             declarations: [EditableTableComponent, EditableTableColumnComponent, TestComponent],
         });
         fixture = TestBed.createComponent(TestComponent);

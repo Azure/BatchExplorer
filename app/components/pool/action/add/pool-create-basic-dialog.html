@@ -3,10 +3,10 @@
         <bl-form-section title="General info" subtitle="Basic information about the pool">
             <div class="grow">
                 <div class="gcol">
-                    <mat-form-field class="form-element">
-                        <input matInput #idInput formControlName="id" placeholder="Id" maxlength="64">
-                        <mat-hint align="end">{{idInput.value.length}} / 64</mat-hint>
-                    </mat-form-field>
+                    <bl-form-field class="form-element">
+                        <input blInput #idInput formControlName="id" placeholder="Id" maxlength="64">
+                    </bl-form-field>
+                    <mat-hint align="end">{{idInput.value.length}} / 64</mat-hint>
 
                     <bl-error controlName="id" code="required">Id is a required field</bl-error>
                     <bl-error controlName="id" code="maxlength">Id has a maximum length of 64 characters</bl-error>
@@ -14,16 +14,16 @@
                 </div>
 
                 <div class="gcol">
-                    <mat-form-field class="form-element">
-                        <input matInput formControlName="displayName" placeholder="Display name">
-                    </mat-form-field>
+                    <bl-form-field class="form-element">
+                        <input blInput formControlName="displayName" placeholder="Display name">
+                    </bl-form-field>
                 </div>
             </div>
             <div class="grow">
                 <div class="gcol">
-                    <mat-form-field>
-                        <input matInput type="number" formControlName="maxTasksPerNode" placeholder="Max task per node">
-                    </mat-form-field>
+                    <bl-form-field>
+                        <input blInput type="number" formControlName="maxTasksPerNode" placeholder="Max task per node">
+                    </bl-form-field>
                 </div>
                 <div class="gcol">
                     <mat-slide-toggle formControlName="enableInterNodeCommunication" color="primary">
@@ -32,12 +32,12 @@
                 </div>
             </div>
             <div class="form-element">
-                <mat-form-field>
-                    <mat-select formControlName="taskSchedulingPolicy" color="primary" placeholder="Task scheduling policy">
-                        <mat-option [value]="NodeFillType.pack">Pack</mat-option>
-                        <mat-option [value]="NodeFillType.spread">Spread</mat-option>
-                    </mat-select>
-                </mat-form-field>
+                <bl-form-field>
+                    <bl-select formControlName="taskSchedulingPolicy" color="primary" placeholder="Task scheduling policy">
+                        <bl-option [value]="NodeFillType.pack" label="Pack"></bl-option>
+                        <bl-option [value]="NodeFillType.spread" label="Spread"></bl-option>
+                    </bl-select>
+                </bl-form-field>
             </div>
         </bl-form-section>
 
