@@ -3,6 +3,7 @@ import {
 } from "@angular/core";
 
 import { VTabComponent } from "./vtab.component";
+import { log } from "@batch-flask/utils";
 
 @Component({
     selector: "bl-vtab-group",
@@ -35,6 +36,8 @@ export class VTabGroupComponent implements AfterContentInit {
             const matching = this.tabs.find(x => x.id === tab);
             if (matching) {
                 this.currentTab = matching;
+            } else {
+                log.error(`Cannot open tab ${tab}. There is no tab with that id.`);
             }
         }
         this.changeDetector.markForCheck();

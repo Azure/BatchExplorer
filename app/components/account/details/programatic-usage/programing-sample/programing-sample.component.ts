@@ -6,14 +6,18 @@ import { AADCredential, CredentialType } from "app/components/account/details/pr
 import { AccountKeys, AccountResource } from "app/models";
 import "./programing-sample.scss";
 
-export enum SampleLanguage {
+export enum SampleTarget {
     python = "python",
     csharp = "csharp",
     nodejs = "nodejs",
+    aztk = "aztk",
+    doAzureParallel = "doAzureParallel",
 }
 
 const engineLanguages = {
     nodejs: "javascript",
+    aztk: "yaml",
+    doAzureParallel: "json",
 };
 
 @Component({
@@ -22,7 +26,7 @@ const engineLanguages = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProgramingSampleComponent implements OnChanges {
-    @Input() public language: SampleLanguage;
+    @Input() public target: SampleTarget;
     @Input() public account: AccountResource;
     @Input() public sharedKeys: AccountKeys;
     @Input() public aadCredentials: AADCredential;
@@ -73,22 +77,22 @@ export class ProgramingSampleComponent implements OnChanges {
 
     private _getTemplate() {
         if (this.credentialType === CredentialType.AAD) {
-            return sampleTemplates.aad[this.language];
+            return sampleTemplates.aad[this.target];
         } else {
-            return sampleTemplates.sharedKey[this.language];
+            return sampleTemplates.sharedKey[this.target];
         }
     }
 
     private _updatePrerequisites() {
         if (this.credentialType === CredentialType.AAD) {
-            this.prerequisites = prerequisites.aad[this.language];
+            this.prerequisites = prerequisites.aad[this.target];
         } else {
-            this.prerequisites = prerequisites.sharedKey[this.language];
+            this.prerequisites = prerequisites.sharedKey[this.target];
         }
     }
 
     private _updateConfig() {
-        let language = this.language;
+        let language = this.target;
         if (language in engineLanguages) {
             language = engineLanguages[language];
         }

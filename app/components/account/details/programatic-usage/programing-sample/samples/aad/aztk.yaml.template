@@ -1,0 +1,21 @@
+# For instructions on creating a Batch and Storage account, see
+# Getting Started (https://github.com/Azure/aztk/blob/master/docs/00-getting-started.md)
+# NOTE - YAML requires a space after the colon. Ex: "batchaccountname: mybatchaccount"
+
+service_principal:
+    tenant_id: {1}
+    client_id: {2}
+    credential: {0}
+    batch_account_resource_id: {0}
+    storage_account_resource_id:
+
+# Configuration for private docker repositories. If using public containers you do not need to provide authentification
+docker:
+    # username:
+    # password:
+    # endpoint:
+
+default:
+    # SSH keys used to create a user and connect to a server.
+    # The public key can either be the public key itself (ssh-rsa ...) or the path to the ssh key.
+    # ssh_pub_key: ~/.ssh/id_rsa.pub

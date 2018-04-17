@@ -9,6 +9,7 @@ export const sampleTemplates = {
         python: require("raw-loader!./aad/python.py.template"),
         csharp: require("raw-loader!./aad/csharp.cs.template"),
         nodejs: require("raw-loader!./aad/node.js.template"),
+        aztk: require("raw-loader!./aad/aztk.yaml.template"),
     },
 };
 
@@ -16,6 +17,7 @@ export const samplesLink = {
     python: "https://github.com/Azure/azure-batch-samples/tree/master/Python",
     csharp: "https://github.com/Azure/azure-batch-samples/tree/master/CSharp",
     nodejs: "https://github.com/Azure/azure-batch-samples/tree/master/Node.js",
+    aztk: "https://github.com/Azure/aztk",
 };
 
 export const prerequisites = {
