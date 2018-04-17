@@ -111,7 +111,7 @@ describe("AppPackagePickerComponent", () => {
         });
 
         it("picking application sets package version map", () => {
-            component.applicationSelected({ value: "banana", source: null }, 0);
+            component.applicationSelected("banana", 0);
             expect(component.packageMap.length).toEqual(1);
             expect(component.packageMap[0].size).toEqual(2);
 

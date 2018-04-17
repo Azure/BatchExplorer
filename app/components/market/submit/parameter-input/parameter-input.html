@@ -2,7 +2,7 @@
     <div *ngSwitchCase="NcjParameterExtendedType.string">
         <bl-form-field class="form-element">
             <input blInput  type="text" [formControl]="parameterValue" [placeholder]="parameter.name">
-            <mat-hint align="end"> {{ parameter.description }} </mat-hint>
+            <bl-hint align="end"> {{ parameter.description }} </bl-hint>
         </bl-form-field>
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.fileGroup">
@@ -24,19 +24,19 @@
             <bl-select [formControl]="parameterValue" [placeholder]="parameter.name">
                 <bl-option *ngFor="let opt of parameter.allowedValues;trackBy: trackOption" [value]="opt" [label]="opt"></bl-option>
             </bl-select>
+            <bl-hint align="end"> {{ parameter.description }} </bl-hint>
         </bl-form-field>
-        <mat-hint align="end"> {{ parameter.description }} </mat-hint>
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.int">
         <bl-form-field class="form-element">
             <input blInput  type="number" [formControl]="parameterValue" [placeholder]="parameter.name">
-            <mat-hint align="end"> {{ parameter.description }} </mat-hint>
+            <bl-hint align="end"> {{ parameter.description }} </bl-hint>
         </bl-form-field>
     </div>
     <div *ngSwitchDefault>
         <bl-form-field class="form-element">
             <input blInput  type="text" [formControl]="parameterValue" [placeholder]="parameter.name">
-            <mat-hint align="end"> {{ parameter.description }} </mat-hint>
+            <bl-hint align="end"> {{ parameter.description }} </bl-hint>
         </bl-form-field>
     </div>
 </div>
