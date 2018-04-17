@@ -44,7 +44,6 @@ if (!String.prototype.format) {
             args = params;
         }
         return this.replace(/{([a-zA-Z0-9_.-]+)}/g, (match, i) => {
-            console.log("Match??", args, match, i, args[i]);
             return typeof args[i] !== "undefined" ? args[i] : match;
         });
     };

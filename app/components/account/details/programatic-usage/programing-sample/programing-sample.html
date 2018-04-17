@@ -1,4 +1,7 @@
 <div class="description">
+    <div *ngIf="!aadCredentials" class="aad-needs-setup-creds">
+        <i class="fa fa-warning"></i>You haven't picked an aad application yet. The sample below will not have all the information filled.
+    </div>
     <bl-property-group label="" class="wide" class="prerequisites">
         <bl-table-property label="Prerequisites" *ngIf="prerequisites">
             <bl-table-property-row *ngFor="let prerequisite of prerequisites;trackBy: trackPrerequisite">

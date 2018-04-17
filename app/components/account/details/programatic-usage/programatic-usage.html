@@ -11,7 +11,14 @@
 <bl-vtab-group #tabs class="content">
     <bl-vtab id="credentials">
         <div tabLabel>
-            Credentials
+            <div>
+                Credentials
+            </div>
+            <div *ngIf="pickedCredentialType === CredentialType.AAD && !aadCredentials" class="aad-needs-setup-creds"
+                matTooltip="Pick an application and generate a key to have the templates filled with the correct informations">
+                <i class="fa fa-warning"></i>Setup
+            </div>
+
         </div>
         <bl-property-list *ngIf="pickedCredentialType === CredentialType.SharedKey">
             <bl-property-group label="Account credentials {{loading ? '(Loading ...)' : ''}}" class="wide">

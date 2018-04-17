@@ -71,8 +71,8 @@ export class ProgramingSampleComponent implements OnChanges {
                 tenantId: cred.tenantId,
                 clientId: cred.clientId,
                 secret: cred.secret,
-                batchAccountId: this.account.id,
-                storageAccountId: this.account.autoStorage && this.account.autoStorage.storageAccountId,
+                batchAccountId: this.account && this.account.id,
+                storageAccountId: this.account && this.account.autoStorage && this.account.autoStorage.storageAccountId,
             });
         } else {
             this.content = template.format(this.accountName, this.accountUrl, this.key);

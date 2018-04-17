@@ -26,4 +26,13 @@ bl-programatic-usage {
     > .content {
         height: calc(100% - #{$header-height});
     }
+
+    .aad-needs-setup-creds {
+        color: $warn-color;
+        text-align: center;
+        .fa {
+            color: $warn-color;
+            margin-right: 5px;
+        }
+    }
 }
