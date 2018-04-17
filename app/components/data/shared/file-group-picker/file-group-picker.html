@@ -1,11 +1,11 @@
 <bl-form-field>
     <input type="text" blInput  [matAutocomplete]="auto" [formControl]="value" [placeholder]="label">
-    <mat-hint class="warning" *ngIf="warning">
+    <bl-hint class="warning" *ngIf="warning">
         This file group doesn't seem to exist. If you just created it, it will validate when the file group has finished uploading.
-    </mat-hint>
-    <mat-hint *ngIf="hint" align="end">
+    </bl-hint>
+    <bl-hint *ngIf="hint" align="end">
         {{hint}}
-    </mat-hint>
+    </bl-hint>
 </bl-form-field>
 
 <mat-autocomplete #auto="matAutocomplete">
