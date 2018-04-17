@@ -1,5 +1,5 @@
 <div class="description">
-    <div *ngIf="pickedCredentialType === CredentialType.AAD && !aadCredentials" class="aad-needs-setup-creds">
+    <div *ngIf="credentialType === CredentialType.AAD && !aadCredentials" class="aad-needs-setup-creds">
         <i class="fa fa-warning"></i>You haven't picked an aad application yet. The sample below will not have all the information filled.
     </div>
     <bl-property-group label="" class="wide" class="prerequisites">
