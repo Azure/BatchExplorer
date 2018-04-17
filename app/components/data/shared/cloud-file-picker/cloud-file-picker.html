@@ -1,10 +1,10 @@
 <bl-form-field>
     <input type="text" blInput [formControl]="value" [placeholder]="label">
-    <bl-button blFormFieldSuffix [action]="openFilePickerDialog" [disabled]="!containerId" title="Select file"><i class="fa fa-file"></i></bl-button>
+    <bl-hint class="warning" *ngIf="warning">
+        The file does not seem to exist in the selected file group. Click the 'Select file' button and find the file location manually.
+    </bl-hint>
+    <bl-hint *ngIf="hint" align="end">
+        {{hint}}
+    </bl-hint>
 </bl-form-field>
-<mat-hint class="warning" *ngIf="warning">
-    The file does not seem to exist in the selected file group. Click the 'Select file' button and find the file location manually.
-</mat-hint>
-<mat-hint *ngIf="hint" align="end">
-    {{hint}}
-</mat-hint>
+<bl-button type="round" [action]="openFilePickerDialog" [disabled]="!containerId" title="Select file"><i class="fa fa-file"></i></bl-button>

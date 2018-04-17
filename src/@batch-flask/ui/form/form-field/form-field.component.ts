@@ -3,6 +3,8 @@ import {
     Component, ContentChild, ContentChildren, QueryList,
 } from "@angular/core";
 
+import { FormErrorComponent } from "@batch-flask/ui/form/form-error";
+import { HintComponent } from "@batch-flask/ui/form/hint";
 import { FormFieldControl } from "./form-field-control";
 import { FormFieldPrefixDirective, FormFieldSuffixDirective } from "./form-field.directive";
 
@@ -16,6 +18,8 @@ import "./form-field.scss";
 export class FormFieldComponent implements AfterContentInit {
     @ContentChildren(FormFieldPrefixDirective) public prefix: QueryList<FormFieldPrefixDirective>;
     @ContentChildren(FormFieldSuffixDirective) public suffix: QueryList<FormFieldSuffixDirective>;
+    @ContentChildren(HintComponent) public hints: QueryList<HintComponent>;
+    @ContentChildren(FormErrorComponent) public errors: QueryList<FormErrorComponent>;
 
     @ContentChild(FormFieldControl) public control: FormFieldControl<any>;
 
@@ -28,5 +32,7 @@ export class FormFieldComponent implements AfterContentInit {
         }
         this.prefix.changes.subscribe(() => this.changeDetector.markForCheck());
         this.suffix.changes.subscribe(() => this.changeDetector.markForCheck());
+        this.hints.changes.subscribe(() => this.changeDetector.markForCheck());
+        this.errors.changes.subscribe(() => this.changeDetector.markForCheck());
     }
 }
