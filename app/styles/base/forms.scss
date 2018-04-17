@@ -126,11 +126,11 @@ fieldset {
             margin-bottom: 5px;
         }
 
-        mat-form-field {
+        bl-form-field {
             width: 100%;
         }
 
-        mat-form-field.ng-invalid.ng-touched {
+        bl-form-field.ng-invalid.ng-touched {
             label {
                 color: $validation-error-color;
 

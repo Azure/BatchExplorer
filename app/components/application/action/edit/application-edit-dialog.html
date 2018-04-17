@@ -2,19 +2,19 @@
     <bl-form-page main-form-page [title]="title" [subtitle]="description" [formGroup]="form">
         <bl-form-section title="General info" subtitle="Basic information about the application">
             <div class="form-element pad-top">
-                <mat-form-field>
-                    <input matInput formControlName="displayName" placeholder="Display name">
-                </mat-form-field>
+                <bl-form-field>
+                    <input blInput formControlName="displayName" placeholder="Display name">
+                </bl-form-field>
                 <bl-error controlName="displayName" code="maxlength">Display name has a maximum length of 1024 characters</bl-error>
             </div>
 
             <div class="form-element">
-                <mat-form-field>
-                    <mat-select formControlName="defaultVersion" placeholder="Default version">
-                        <mat-option value="">No default version</mat-option>
-                        <mat-option *ngFor="let package of packages;trackBy: trackByFn" value="{{package.version}}">{{package.version}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
+                <bl-form-field>
+                    <bl-select formControlName="defaultVersion" placeholder="Default version">
+                        <bl-option value="" label="No default version"></bl-option>
+                        <bl-option *ngFor="let package of packages;trackBy: trackByFn" value="{{package.version}}" [label]="package.version"></bl-option>
+                    </bl-select>
+                </bl-form-field>
             </div>
             <div class="form-element pad-top">
                 <h5>Allow updates</h5>

@@ -44,7 +44,7 @@ export class StorageContainerService {
     private _containerListGetter: StorageListGetter<BlobContainer, ListContainerParams>;
     private _containerCache = new TargetedDataCache<ListContainerParams, BlobContainer>({
         key: ({ storageAccountId }) => storageAccountId,
-    }, "name");
+    }, "id");
 
     constructor(
         private storageClient: StorageClientService,
@@ -58,8 +58,12 @@ export class StorageContainerService {
         this._containerListGetter = new StorageListGetter(BlobContainer, this.storageClient, {
             cache: params => this._containerCache.getCache(params),
             getData: (client, params, options, continuationToken) => {
+                let prefix = null;
+                if (options && options.filter) {
+                    prefix = options.filter.value;
+                }
                 return client.listContainersWithPrefix(
-                    options && options.prefix,
+                    prefix,
                     continuationToken,
                     { maxResults: options && options.maxResults });
             },

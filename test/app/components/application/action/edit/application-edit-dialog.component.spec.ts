@@ -89,7 +89,7 @@ describe("ApplicationEditDialogComponent ", () => {
 
     describe("default version", () => {
         it("control is initialized", () => {
-            const input = debugElement.query(By.css("mat-select[formControlName=defaultVersion]")).nativeElement;
+            const input = debugElement.query(By.css("bl-select[formControlName=defaultVersion]")).nativeElement;
             expect(input).toBeDefined();
         });
 

@@ -1,10 +1,10 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatOption, MatSelect } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
+import { PermissionService, SelectComponent, SelectModule } from "@batch-flask/ui";
 import { Subject } from "rxjs";
 import { Observable } from "rxjs/Observable";
 
@@ -104,7 +104,10 @@ describe("ParameterInputComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, ReactiveFormsModule, FormsModule, MaterialModule, NoopAnimationsModule],
+            imports: [
+                RouterTestingModule, ReactiveFormsModule, FormsModule,
+                MaterialModule, SelectModule, NoopAnimationsModule,
+            ],
             declarations: [NoItemMockComponent, ParameterInputComponent, FileGroupSasComponent,
                 TestComponent, FileGroupPickerComponent, CloudFilePickerComponent],
             providers: [
@@ -114,6 +117,7 @@ describe("ParameterInputComponent", () => {
                 { provide: AutoStorageService, useValue: autoStorageServiceSpy },
                 { provide: DialogService, useValue: dialogServiceSpy },
                 { provide: SidebarManager, useValue: sidebarSpy },
+                { provide: PermissionService, useValue: {} },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -350,7 +354,7 @@ describe("ParameterInputComponent", () => {
 
     describe("dropdown parameter type", () => {
         let selectEl: DebugElement;
-        let selectComponent: MatSelect;
+        let selectComponent: SelectComponent;
         const initialInput = "a";
         const newInput = "b";
 
@@ -365,7 +369,7 @@ describe("ParameterInputComponent", () => {
             });
             testComponent.paramControl.setValue(initialInput);
             fixture.detectChanges();
-            selectEl = de.query(By.css("mat-select"));
+            selectEl = de.query(By.css("bl-select"));
             expect(selectEl).not.toBeFalsy();
             selectComponent = selectEl.componentInstance;
         });
@@ -381,7 +385,7 @@ describe("ParameterInputComponent", () => {
         it("should select new input", () => {
             testComponent.paramControl.setValue(newInput);
             fixture.detectChanges();
-            expect((selectComponent.selected as MatOption).value).toBe(newInput);
+            expect(selectComponent.value).toBe(newInput);
         });
     });
 

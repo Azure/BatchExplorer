@@ -8,9 +8,9 @@
             <div class="no-tags" *ngIf="tags.size === 0">{{noTagsMessage}}</div>
         </div>
         <form (submit)="triggerSave()" [hidden]="!isEditing">
-            <mat-form-field >
-                <input #editInput matInput placeholder="Tags(Comma separated)" [(ngModel)]="tagEditString" [ngModelOptions]="{standalone: true}">
-            </mat-form-field>
+            <bl-form-field>
+                <input blInput #editInput placeholder="Tags(Comma separated)" [(ngModel)]="tagEditString" [ngModelOptions]="{standalone: true}">
+            </bl-form-field>
         </form>
     </div>
     <div class="tags-control" *ngIf="editable">

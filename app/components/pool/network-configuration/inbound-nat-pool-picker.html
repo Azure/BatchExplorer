@@ -1,9 +1,9 @@
 <div [formGroup]="form">
     <div class="grow">
         <div class="gcol">
-            <mat-form-field class="form-element">
-                <input matInput formControlName="name" placeholder="Name of endpoint">
-            </mat-form-field>
+            <bl-form-field class="form-element">
+                <input blInput formControlName="name" placeholder="Name of endpoint">
+            </bl-form-field>
             <bl-error controlName="name" code="required">Name of endpoint is a required field</bl-error>
             <bl-error controlName="name" code="duplicateValue">Name of endpoint must be unique</bl-error>
             <bl-error controlName="name" code="invalidValue">
@@ -11,35 +11,35 @@
             </bl-error>
         </div>
         <div class="gcol">
-            <mat-form-field class="form-element">
-                <mat-select formControlName="protocol" color="primary" placeholder="Protocol" required>
-                    <mat-option [value]="InboundEndpointProtocol.TCP">TCP</mat-option>
-                    <mat-option [value]="InboundEndpointProtocol.UDP">UDP</mat-option>
-                </mat-select>
-            </mat-form-field>
+            <bl-form-field class="form-element">
+                <bl-select formControlName="protocol" color="primary" placeholder="Protocol" required>
+                    <bl-option [value]="InboundEndpointProtocol.TCP" label="TCP"></bl-option>
+                    <bl-option [value]="InboundEndpointProtocol.UDP" label="UDP"></bl-option>
+                </bl-select>
+            </bl-form-field>
         </div>
     </div>
     <div class="grow">
         <div class="gcol">
-            <mat-form-field class="form-element">
-                <input matInput type="number" formControlName="frontendPortRangeStart" placeholder="Frontend port start">
-            </mat-form-field>
+            <bl-form-field class="form-element">
+                <input blInput type="number" formControlName="frontendPortRangeStart" placeholder="Frontend port start">
+            </bl-form-field>
             <bl-error controlName="frontendPortRangeStart" code="required">Frontend port start is a required field</bl-error>
             <bl-error controlName="frontendPortRangeStart" code="invalidRange">Frontend port must be between {{EndpointHelper.MININUM_PORT}} and {{EndpointHelper.MAXIMUM_FRONTEND_PORT}}</bl-error>
             <bl-error controlName="frontendPortRangeStart" code="reservedPort">Ports from {{EndpointHelper.MINIMUM_RESERVED_FRONTEND_PORT}} to {{EndpointHelper.MAXIMUM_RESERVED_FRONTEND_PORT}} are reserved by the Batch service</bl-error>
         </div>
         <div class="gcol">
-            <mat-form-field class="form-element">
-                <input matInput type="number" formControlName="frontendPortRangeEnd" placeholder="Frontend port end">
-            </mat-form-field>
+            <bl-form-field class="form-element">
+                <input blInput type="number" formControlName="frontendPortRangeEnd" placeholder="Frontend port end">
+            </bl-form-field>
             <bl-error controlName="frontendPortRangeEnd" code="required">Frontend port end is a required field</bl-error>
             <bl-error controlName="frontendPortRangeEnd" code="invalidRange">Frontend port must be between {{EndpointHelper.MININUM_PORT}} and {{EndpointHelper.MAXIMUM_FRONTEND_PORT}}</bl-error>
             <bl-error controlName="frontendPortRangeEnd" code="reservedPort">Ports from {{EndpointHelper.MINIMUM_RESERVED_FRONTEND_PORT}} to {{EndpointHelper.MAXIMUM_RESERVED_FRONTEND_PORT}} are reserved by the Batch service</bl-error>
         </div>
         <div class="gcol">
-            <mat-form-field class="form-element">
-                <input matInput type="number" formControlName="backendPort" placeholder="Backend port">
-            </mat-form-field>
+            <bl-form-field class="form-element">
+                <input blInput type="number" formControlName="backendPort" placeholder="Backend port">
+            </bl-form-field>
             <bl-error controlName="backendPort" code="required">Backend port is a required field</bl-error>
             <bl-error controlName="backendPort" code="duplicateValue">Backend port must be unique</bl-error>
             <bl-error controlName="backendPort" code="invalidRange">Backend port must be between {{EndpointHelper.MININUM_PORT}} and {{EndpointHelper.MAXIMUM_BACKEND_PORT}}</bl-error>

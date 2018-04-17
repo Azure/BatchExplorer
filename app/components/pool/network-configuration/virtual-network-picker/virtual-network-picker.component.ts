@@ -11,6 +11,8 @@ import { autobind } from "@batch-flask/core";
 import { AccountService, NetworkConfigurationService, Subnet, VirtualNetwork } from "app/services";
 import { ArmResourceUtils } from "app/utils";
 
+import "./virtual-network-picker.scss";
+
 @Component({
     selector: "bl-virtual-network-picker",
     templateUrl: "virtual-network-picker.html",
@@ -36,9 +38,11 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
     private _armVnets: VirtualNetwork[] = [];
     private _classicVnets: VirtualNetwork[] = [];
 
-    constructor(private changeDetector: ChangeDetectorRef,
-                private accountService: AccountService,
-                private networkService: NetworkConfigurationService) {
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private accountService: AccountService,
+        private networkService: NetworkConfigurationService) {
+
         this._subs.push(this.subnetControl.valueChanges.subscribe((subnetId: string) => {
             if (this._propagateChange) {
                 this._propagateChange(subnetId);

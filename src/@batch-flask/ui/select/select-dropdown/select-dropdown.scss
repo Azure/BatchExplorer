@@ -70,6 +70,14 @@ bl-select-dropdown {
         }
     }
 
+    > .unselect-all-option {
+        justify-content: center;
+        color: $secondary-text;
+        border-bottom: 1px solid $border-color;
+        > .checkbox {
+            display: none;
+        }
+    }
     > .no-option {
         text-align: center;
     }

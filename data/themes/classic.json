@@ -52,7 +52,7 @@
   },
   "input": {
     "border": "#d5d5d5",
-    "focusBorder": "var(--color-primary)",
+    "focus-border": "var(--color-primary)",
     "placeholder": "#d5d5d5",
     "text": "var(--color-primary-text)",
     "background": "#fff"

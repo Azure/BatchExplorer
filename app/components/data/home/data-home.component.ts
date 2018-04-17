@@ -15,17 +15,6 @@ import { FileGroupCreateFormComponent } from "../action";
 import { ActivatedRoute, Router } from "@angular/router";
 import "./data-home.scss";
 
-const containerTypes = [
-    {
-        name: "All",
-        prefix: "",
-    },
-    {
-        name: "File groups",
-        prefix: Constants.ncjFileGroupPrefix,
-    },
-];
-
 @Component({
     selector: "bl-data-home",
     templateUrl: "data-home.html",
@@ -42,7 +31,6 @@ export class DataHomeComponent implements OnInit {
     public layout: BrowseLayoutComponent;
 
     public fileGroupsId = "file-groups";
-    public containerTypes = containerTypes;
     public quickSearchQuery: string = "";
     public filter: Filter = FilterBuilder.none();
     public hasAutoStorage = true;

@@ -1,8 +1,9 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatSelectModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
+import { SelectModule } from "@batch-flask/ui";
+import { PermissionService } from "@batch-flask/ui/permission";
 
 import { EditableTableColumnComponent, EditableTableComponent } from "@batch-flask/ui/form/editable-table";
 import { ResourcefilePickerComponent } from "app/components/task/base";
@@ -56,7 +57,7 @@ describe("ResourcefilePickerComponent", () => {
             },
         };
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule, MatSelectModule],
+            imports: [FormsModule, ReactiveFormsModule, SelectModule],
             declarations: [ResourcefilePickerComponent, TestComponent,
                 EditableTableComponent, EditableTableColumnComponent],
             providers: [
@@ -65,6 +66,7 @@ describe("ResourcefilePickerComponent", () => {
                 { provide: AutoStorageService, useValue: autoStorageServiceSpy },
                 { provide: FileSystemService, useValue: fsSpy },
                 { provide: SettingsService, useValue: settingsServiceSpy },
+                { provide: PermissionService, useValue: {} },
             ],
         });
         fixture = TestBed.createComponent(TestComponent);
