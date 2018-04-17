@@ -1,6 +1,6 @@
 <div class="description">
     <div *ngIf="credentialType === CredentialType.AAD && !aadCredentials" class="aad-needs-setup-creds">
-        <i class="fa fa-warning"></i>You haven't picked an aad application yet. The sample below will not have all the information filled.
+        <i class="fa fa-warning"></i>You haven't picked an Azure AD application yet. The sample below will not have all the information filled.
     </div>
     <bl-property-group label="" class="wide" class="prerequisites">
         <bl-table-property label="Prerequisites" *ngIf="prerequisites">
