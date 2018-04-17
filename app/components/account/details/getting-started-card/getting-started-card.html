@@ -1,37 +1,37 @@
 <bl-card>
-    <div class="header">
-        <h2>Getting started</h2>
-    </div>
     <div class="content">
-        <bl-table>
-            <bl-thead [show]="false">
-                <bl-column></bl-column>
-                <bl-column [defaultWidth]="50"></bl-column>
-                <bl-column [defaultWidth]="80"></bl-column>
-            </bl-thead>
-            <bl-row key="credentials">
-                <bl-cell>Get credentials</bl-cell>
-                <bl-cell><bl-clickable>AAD</bl-clickable></bl-cell>
-                <bl-cell><bl-clickable>Shared key</bl-clickable></bl-cell>
-            </bl-row>
-            <bl-row key="python">
-                <bl-cell>Sample for python</bl-cell>
-                <bl-cell><bl-clickable>AAD</bl-clickable></bl-cell>
-                <bl-cell><bl-clickable>Shared key</bl-clickable></bl-cell>
-            </bl-row>
-            <bl-row key="csharp">
-                <bl-cell>Sample for C#</bl-cell>
-                <bl-cell><bl-clickable>AAD</bl-clickable></bl-cell>
-                <bl-cell><bl-clickable>Shared key</bl-clickable></bl-cell>
-            </bl-row>
-            <bl-row key="aztk">
-                <bl-cell>Get AZTK secrets.yaml</bl-cell>
-                <bl-cell><bl-clickable>AAD</bl-clickable></bl-cell>
-                <bl-cell></bl-cell>
-            </bl-row>
-        </bl-table>
+        <div class="getting-started-item"   >
+            <div class="icon"><i class="fa fa-key"></i></div>
+            <div class="label">Get credentials</div>
+            <div class="aad-link"><bl-clickable>Azure AD</bl-clickable></div>
+            <div class="shared-key-link"><bl-clickable>Shared key</bl-clickable></div>
+        </div>
+        <div class="getting-started-item">
+            <div class="icon"><i class="fa fa-code"></i></div>
+            <div class="label">Sample for python</div>
+            <div class="aad-link"><bl-clickable>Azure AD</bl-clickable></div>
+            <div class="shared-key-link"><bl-clickable>Shared key</bl-clickable></div>
+        </div>
+        <div class="getting-started-item">
+            <div class="icon"><i class="fa fa-code"></i></div>
+            <div class="label">Sample for C#</div>
+            <div class="aad-link"><bl-clickable>Azure AD</bl-clickable></div>
+            <div class="shared-key-link"><bl-clickable>Shared key</bl-clickable></div>
+        </div>
+        <bl-clickable class="getting-started-item" (click)="gotoAztkDoc()">
+            <div class="icon"><i class="fa fa-code"></i></div>
+            <div class="label">Get AZTK secrets.yaml</div>
+            <div class="aad-link"><bl-clickable>Azure AD</bl-clickable></div>
+            <div class="shared-key-link"></div>
+        </bl-clickable>
+        <bl-clickable class="getting-started-item"(do)="gotoDoAzureParallelDoc()">
+            <div class="icon"><i class="fa fa-code"></i></div>
+            <div class="label">Get doAzureParallel secrets.json</div>
+            <div class="aad-link"></div>
+            <div class="shared-key-link"><bl-clickable>Shared key</bl-clickable></div>
+        </bl-clickable>
 
-        <!-- <bl-clickable class="getting-started-item">Get AAD credentials</bl-clickable>
+        <!-- <bl-clickable class="getting-started-item">Get Azure AD credentials</bl-clickable>
         <bl-clickable class="getting-started-item">Get shared key credentials</bl-clickable>
         <bl-clickable class="getting-started-item">Sample for python</bl-clickable>
         <bl-clickable class="getting-started-item">Sample for C#</bl-clickable>

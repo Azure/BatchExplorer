@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ElectronShell } from "@batch-flask/ui";
 
 import "./getting-started-card.scss";
 
@@ -8,7 +9,15 @@ import "./getting-started-card.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GettingStartedCardComponent {
-    constructor() {
+    constructor(private shell: ElectronShell) {
 
+    }
+
+    public gotoAztkDoc() {
+        this.shell.openExternal("https://github.com/Azure/aztk")
+    }
+
+    public gotoDoAzureParallelDoc() {
+        this.shell.openExternal("https://github.com/Azure/doAzureParallel")
     }
 }

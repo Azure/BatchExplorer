@@ -16,10 +16,32 @@ bl-getting-started-card {
     }
 
     .getting-started-item {
-        display: block;
+        display: flex;
+        align-items: center;
         color: $secondary-text;
         padding: 3px;
         border-bottom: 1px solid $border-color;
+        height: 32px;
+
+        > .icon {
+            flex-shrink: 0;
+            flex-basis: 16px;
+            padding: 5px;
+        }
+
+        > .label {
+            flex: 1;
+        }
+
+        > .aad-link {
+            flex-shrink: 0;
+            flex-basis: 80px;
+        }
+
+        .shared-key-link {
+            flex-shrink: 0;
+            flex-basis: 80px;
+        }
     }
 
     .content {
