@@ -17,6 +17,7 @@ import { FormJsonEditorComponent } from "./form-json-editor";
 import { FormPageComponent } from "./form-page";
 import { FormMultiPickerComponent, FormPickerComponent, FormPickerItemTemplateDirective } from "./form-picker";
 import { FormSectionComponent } from "./form-section";
+import { HintComponent } from "./hint";
 import { InputDirective } from "./input";
 import { KeyValuePickerComponent } from "./key-value-picker";
 import { ServerErrorComponent } from "./server-error";
@@ -48,6 +49,7 @@ const components = [
     FormFooterComponent,
     InputDirective,
     FormFieldComponent,
+    HintComponent,
     FormFieldPrefixDirective,
     FormFieldSuffixDirective,
 ];

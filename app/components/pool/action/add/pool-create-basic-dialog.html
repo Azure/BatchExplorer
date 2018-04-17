@@ -5,14 +5,14 @@
                 <div class="gcol">
                     <bl-form-field class="form-element">
                         <input blInput #idInput formControlName="id" placeholder="Id" maxlength="64">
+
+                        <bl-hint align="end">{{idInput.value.length}} / 64</bl-hint>
+
+                        <bl-error controlName="id" code="required">Id is a required field</bl-error>
+                        <bl-error controlName="id" code="maxlength">Id has a maximum length of 64 characters</bl-error>
+                        <bl-error controlName="id" code="pattern">Id can contain any combination of alphanumeric characters including hyphens and underscores.</bl-error>
                     </bl-form-field>
-                    <mat-hint align="end">{{idInput.value.length}} / 64</mat-hint>
-
-                    <bl-error controlName="id" code="required">Id is a required field</bl-error>
-                    <bl-error controlName="id" code="maxlength">Id has a maximum length of 64 characters</bl-error>
-                    <bl-error controlName="id" code="pattern">Id can contain any combination of alphanumeric characters including hyphens and underscores.</bl-error>
                 </div>
-
                 <div class="gcol">
                     <bl-form-field class="form-element">
                         <input blInput formControlName="displayName" placeholder="Display name">
