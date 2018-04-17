@@ -2,8 +2,8 @@ import {
     AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, QueryList,
 } from "@angular/core";
 
-import { VTabComponent } from "./vtab.component";
 import { log } from "@batch-flask/utils";
+import { VTabComponent } from "./vtab.component";
 
 @Component({
     selector: "bl-vtab-group",
