@@ -48,6 +48,7 @@ export const prerequisites = {
         ],
         aztk: [
             `pip install aztk`,
+            `aztk spark init`,
         ],
     },
 };
