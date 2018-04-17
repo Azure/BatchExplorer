@@ -6,12 +6,14 @@ import {
     ComponentRef,
     ContentChildren,
     ElementRef,
+    EventEmitter,
     HostBinding,
     HostListener,
     Injector,
     Input,
     OnDestroy,
     Optional,
+    Output,
     QueryList,
     Self,
     ViewChild,
@@ -78,6 +80,8 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     public set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value);
     }
+
+    @Output() public change = new EventEmitter<any | any[]>();
 
     @HostBinding("attr.aria-describedby")
     public ariaDescribedby: string;
@@ -330,6 +334,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         if (this._propagateChange) {
             this._propagateChange(this.value);
         }
+        this.change.emit(this.value);
     }
 
     public filterChanged(filter: string) {
