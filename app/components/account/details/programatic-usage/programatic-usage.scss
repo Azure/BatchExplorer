@@ -19,7 +19,14 @@ bl-programatic-usage {
         }
 
         > .credential-type-picker {
-            flex-basis: 200px;
+            flex-basis: 250px;
+            padding: 0 10px;
+            color: $secondary-text;
+            display: flex;
+            align-items: center;
+            bl-select {
+                margin-left: 5px;
+            }
         }
     }
 

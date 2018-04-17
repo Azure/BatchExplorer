@@ -4,8 +4,11 @@
     </h1>
 
     <div class="credential-type-picker">
-        <bl-button type="wide" (do)="pickCredentialType(CredentialType.SharedKey)" [disabled]="pickedCredentialType === CredentialType.SharedKey">Shared key</bl-button>
-        <bl-button type="wide" (do)="pickCredentialType(CredentialType.AAD)" [disabled]="pickedCredentialType === CredentialType.AAD">Azure AD</bl-button>
+        Authentication type:
+        <bl-select [ngModel]="pickedCredentialType" (ngModelChange)="pickCredentialType($event)">
+            <bl-option [value]="CredentialType.SharedKey" label="Shared key"></bl-option>
+            <bl-option [value]="CredentialType.AAD" label="Azure AD"></bl-option>
+        </bl-select>
     </div>
 </div>
 <bl-vtab-group #tabs class="content">
