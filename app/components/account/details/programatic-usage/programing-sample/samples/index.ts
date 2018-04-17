@@ -11,6 +11,7 @@ export const sampleTemplates = {
         csharp: require("raw-loader!./aad/csharp.cs.template"),
         nodejs: require("raw-loader!./aad/node.js.template"),
         aztk: require("raw-loader!./aad/aztk.yaml.template"),
+        doAzureParallel: require("raw-loader!./aad/doAzureParallel.json.template"),
     },
 };
 
