@@ -1,7 +1,7 @@
 <bl-entity-configuration [value]="jobSchedule">
     <bl-property-list>
         <bl-property-group label="General" class="wide">
-            <bl-text-property label="Id" [value]="decorator.id"></bl-text-property>
+            <bl-text-property label="ID" [value]="decorator.id"></bl-text-property>
             <bl-text-property label="Display name" [value]="decorator.displayName"></bl-text-property>
             <bl-text-property label="State" [value]="decorator.state"></bl-text-property>
             <bl-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bl-text-property>
@@ -22,8 +22,8 @@
             </div>
             <bl-text-property label="Next run time" [value]="executionInfo.nextRunTime"></bl-text-property>
             <bl-text-property label="End time" [value]="executionInfo.endTime"></bl-text-property>
-            <bl-link-property *ngIf="executionInfo.recentJob?.id" label="Most recent job id" [value]="executionInfo.recentJob?.id" [link]="['/jobs/', executionInfo.recentJob?.id]"></bl-link-property>
-            <bl-text-property *ngIf="executionInfo.recentJob?.url" label="Most recent job url" [value]="executionInfo.recentJob?.url"></bl-text-property>
+            <bl-link-property *ngIf="executionInfo.recentJob?.id" label="Most recent job ID" [value]="executionInfo.recentJob?.id" [link]="['/jobs/', executionInfo.recentJob?.id]"></bl-link-property>
+            <bl-text-property *ngIf="executionInfo.recentJob?.url" label="Most recent job URL" [value]="executionInfo.recentJob?.url"></bl-text-property>
         </bl-property-group>
 
         <bl-property-group *ngIf="jobSchedule.schedule" label="Schedule" class="wide" [collapsed]="true">

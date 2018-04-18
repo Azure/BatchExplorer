@@ -1,7 +1,7 @@
 <bl-entity-configuration [value]="task">
     <bl-property-list>
         <bl-property-group label="General" class="wide">
-            <bl-text-property label="Id" [value]="decorator.id"></bl-text-property>
+            <bl-text-property label="ID" [value]="decorator.id"></bl-text-property>
             <bl-text-property label="Display name" [value]="decorator.displayName"></bl-text-property>
             <bl-text-property label="Command line" [value]="decorator.commandLine" [wrap]="true"></bl-text-property>
             <bl-text-property label="State" [value]="decorator.state"></bl-text-property>
@@ -98,7 +98,7 @@
             <bl-text-property label="Last retry time" [value]="executionInfo.lastRetryTime" *ngIf="executionInfo.retryCount > 0"></bl-text-property>
             <bl-text-property label="Requeue count" [value]="executionInfo.requeueCount"></bl-text-property>
             <bl-text-property label="Last requeue time" [value]="executionInfo.lastRequeueTime" *ngIf="executionInfo.requeueCount > 0"></bl-text-property>
-            <bl-text-property label="Container Id" [value]="executionInfo.containerInfo.containerId" *ngIf="executionInfo.containerInfo?.containerId"></bl-text-property>
+            <bl-text-property label="Container ID" [value]="executionInfo.containerInfo.containerId" *ngIf="executionInfo.containerInfo?.containerId"></bl-text-property>
             <bl-text-property label="Container state" [value]="executionInfo.containerInfo.state" *ngIf="executionInfo.containerInfo?.state"></bl-text-property>
             <bl-text-property label="Container error" [value]="executionInfo.containerInfo.error" *ngIf="executionInfo.containerInfo?.error"></bl-text-property>
         </bl-property-group>

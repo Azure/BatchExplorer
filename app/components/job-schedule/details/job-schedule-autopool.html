@@ -1,10 +1,10 @@
 <bl-entity-configuration *ngIf="decorator" [value]="pool">
     <bl-property-list>
         <bl-property-group label="General" class="wide">
-            <bl-text-property label="Auto pool id prefix" [value]="properties.autoPoolIdPrefix"></bl-text-property>
+            <bl-text-property label="Auto-pool ID prefix" [value]="properties.autoPoolIdPrefix"></bl-text-property>
             <bl-bool-property label="Keep alive" [value]="properties.keepAlive" yesNo="true"></bl-bool-property>
             <bl-text-property label="Pool lifetime option" [value]="properties.poolLifetimeOption"></bl-text-property>
-            <bl-text-property label="VM size" [value]="decorator.vmSize"></bl-text-property>
+            <bl-text-property label="Node size" [value]="decorator.vmSize"></bl-text-property>
             <bl-text-property label="Target dedicated" [value]="decorator.targetDedicatedNodes"></bl-text-property>
             <bl-text-property label="Target low priority" [value]="decorator.targetLowPriorityNodes"></bl-text-property>
             <bl-text-property label="Display name" [value]="decorator.displayName"></bl-text-property>
@@ -16,7 +16,7 @@
             <bl-text-property label="Max tasks per node" [value]="decorator.maxTasksPerNode"></bl-text-property>
             <bl-text-property label="Resize timeout" [value]="decorator.resizeTimeout"></bl-text-property>
             <bl-text-property label="Task scheduling policy" [value]="decorator.taskSchedulingPolicy.nodeFillType"></bl-text-property>
-            <bl-text-property label="Url" [value]="decorator.url"></bl-text-property>
+            <bl-text-property label="URL" [value]="decorator.url"></bl-text-property>
             <bl-text-property label="User accounts" [value]="decorator.userAccounts" *ngIf="decorator.userAccounts"></bl-text-property>
             <bl-text-property label="Application licenses" [value]="decorator.applicationLicenses" *ngIf="decorator.applicationLicenses"></bl-text-property>
             <bl-text-property label="Network subnet" [value]="decorator.networkSubnetId" *ngIf="decorator.networkSubnetId"></bl-text-property>
@@ -37,9 +37,9 @@
             </div>
             <bl-text-property label="Publisher" [value]="decorator.virtualMachineConfiguration.imageReference.publisher"></bl-text-property>
             <bl-text-property label="Offer" [value]="decorator.virtualMachineConfiguration.imageReference.offer"></bl-text-property>
-            <bl-text-property label="Sku" [value]="decorator.virtualMachineConfiguration.imageReference.sku"></bl-text-property>
+            <bl-text-property label="SKU" [value]="decorator.virtualMachineConfiguration.imageReference.sku"></bl-text-property>
             <bl-text-property label="Version" [value]="decorator.virtualMachineConfiguration.imageReference.version"></bl-text-property>
-            <bl-text-property label="Node agent sku id" [value]="decorator.virtualMachineConfiguration.nodeAgentSKUId"></bl-text-property>
+            <bl-text-property label="Node agent SKU ID" [value]="decorator.virtualMachineConfiguration.nodeAgentSKUId"></bl-text-property>
             <bl-text-property *ngIf="decorator.virtualMachineConfiguration.windowsConfiguration" label="Enable automatic updates" [value]="decorator.virtualMachineConfiguration.windowsConfiguration.enableAutomaticUpdates"></bl-text-property>
             <bl-text-property *ngIf="containerConfiguration" label="Container type" [value]="containerConfiguration.type"></bl-text-property>
             <bl-text-property *ngIf="containerConfiguration" label="Container images" [value]="containerConfiguration.containerImageNames"></bl-text-property>
