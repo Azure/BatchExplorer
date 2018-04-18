@@ -24,6 +24,10 @@ input[blInput], textarea[blInput] {
         // from overlapping when the label comes back down.
         transition: none;
     }
+
+    &[disabled] {
+        background-color: $input-disabled-background-color;
+    }
 }
 
 input[blInput] {
