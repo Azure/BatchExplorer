@@ -1,7 +1,7 @@
 <bl-entity-configuration *ngIf="decorator" [value]="pool">
     <bl-property-list>
         <bl-property-group label="General" class="wide">
-            <bl-text-property label="Auto-pool ID prefix" [value]="properties.autoPoolIdPrefix"></bl-text-property>
+            <bl-text-property label="Auto pool ID prefix" [value]="properties.autoPoolIdPrefix"></bl-text-property>
             <bl-bool-property label="Keep alive" [value]="properties.keepAlive" yesNo="true"></bl-bool-property>
             <bl-text-property label="Pool lifetime option" [value]="properties.poolLifetimeOption"></bl-text-property>
             <bl-text-property label="Node size" [value]="decorator.vmSize"></bl-text-property>

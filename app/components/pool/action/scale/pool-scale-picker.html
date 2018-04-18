@@ -22,7 +22,7 @@
             <bl-error controlName="targetDedicatedNodes" code="required">Target dedicated is a required field</bl-error>
             <bl-error controlName="targetLowPriorityNodes" code="required">Target low priority is a required field</bl-error>
         </mat-tab>
-        <mat-tab label="Auto Scale">
+        <mat-tab label="Autoscale">
             <bl-autoscale-formula-picker formControlName="autoScaleFormula" [pool]="pool"></bl-autoscale-formula-picker>
             <bl-error controlName="autoScaleFormula" code="required">Auto scale formula is a required field</bl-error>
             <bl-form-field>
