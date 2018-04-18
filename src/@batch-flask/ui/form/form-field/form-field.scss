@@ -21,6 +21,10 @@ bl-form-field {
         }
     }
     .bl-form-field-label {}
+
+    &.bl-disabled {
+        opacity: 0.5;
+    }
 }
 
 bl-form-field {
