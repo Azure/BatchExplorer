@@ -72,10 +72,12 @@ export class InputColor extends ThemeElement<EntityColorDefinition> {
     @CssColor() public placeholder: string;
     @CssColor() public border: string;
     @CssColor("focus-border") public focusBorder: string;
+    @CssColor("disabled-background") public disabledBackground: string;
 
     constructor(def) {
         super(def);
         this.focusBorder = this.focusBorder || this.border;
+        this.disabledBackground = this.disabledBackground || this.background;
     }
 }
 

@@ -1,6 +1,6 @@
 import {
     AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, ContentChild, ContentChildren, QueryList,
+    Component, ContentChild, ContentChildren, HostBinding, QueryList,
 } from "@angular/core";
 
 import { FormErrorComponent } from "@batch-flask/ui/form/form-error";
@@ -22,6 +22,11 @@ export class FormFieldComponent implements AfterContentInit {
     @ContentChildren(FormErrorComponent) public errors: QueryList<FormErrorComponent>;
 
     @ContentChild(FormFieldControl) public control: FormFieldControl<any>;
+
+    @HostBinding("class.bl-disabled")
+    public get disabled() {
+        return this.control.disabled;
+    }
 
     constructor(private changeDetector: ChangeDetectorRef) {
     }
