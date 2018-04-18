@@ -11,6 +11,8 @@ import "./getting-started-card.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GettingStartedCardComponent {
+    public CredentialType = CredentialType;
+
     @Input() public accountId: string;
 
     constructor(private shell: ElectronShell, private dialogService: DialogService) {

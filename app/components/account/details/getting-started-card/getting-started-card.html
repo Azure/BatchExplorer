@@ -3,32 +3,32 @@
         <div class="getting-started-item"   >
             <div class="icon"><i class="fa fa-key"></i></div>
             <div class="label">Get credentials</div>
-            <div class="aad-link"><bl-clickable (do)="openPage('credentials', 'aad')">Azure AD</bl-clickable></div>
-            <div class="shared-key-link"><bl-clickable (do)="openPage('credentials', 'shared-key')">Shared key</bl-clickable></div>
+            <div class="aad-link"><bl-clickable (do)="openPage('credentials', CredentialType.AAD)">Azure AD</bl-clickable></div>
+            <div class="shared-key-link"><bl-clickable (do)="openPage('credentials', CredentialType.SharedKey)">Shared key</bl-clickable></div>
         </div>
         <div class="getting-started-item">
             <div class="icon"><i class="fa fa-code"></i></div>
             <div class="label">Sample for python</div>
-            <div class="aad-link"><bl-clickable (do)="openPage('python', 'aad')">Azure AD</bl-clickable></div>
-            <div class="shared-key-link"><bl-clickable (do)="openPage('python', 'shared-key')">Shared key</bl-clickable></div>
+            <div class="aad-link"><bl-clickable (do)="openPage('python', CredentialType.AAD)">Azure AD</bl-clickable></div>
+            <div class="shared-key-link"><bl-clickable (do)="openPage('python', CredentialType.SharedKey)">Shared key</bl-clickable></div>
         </div>
         <div class="getting-started-item">
             <div class="icon"><i class="fa fa-code"></i></div>
             <div class="label">Sample for C#</div>
-            <div class="aad-link"><bl-clickable (do)="openPage('csharp', 'aad')">Azure AD</bl-clickable></div>
-            <div class="shared-key-link"><bl-clickable (do)="openPage('csharp', 'shared-key')">Shared key</bl-clickable></div>
+            <div class="aad-link"><bl-clickable (do)="openPage('csharp', CredentialType.AAD)">Azure AD</bl-clickable></div>
+            <div class="shared-key-link"><bl-clickable (do)="openPage('csharp', CredentialType.SharedKey)">Shared key</bl-clickable></div>
         </div>
         <bl-clickable class="getting-started-item" (click)="gotoAztkDoc()">
             <div class="icon"><i class="fa fa-code"></i></div>
             <div class="label">Get AZTK secrets.yaml</div>
-            <div class="aad-link"><bl-clickable (do)="openPage('aztk', 'aad')">Azure AD</bl-clickable></div>
+            <div class="aad-link"><bl-clickable (do)="openPage('aztk', CredentialType.AAD)">Azure AD</bl-clickable></div>
             <div class="shared-key-link"></div>
         </bl-clickable>
         <bl-clickable class="getting-started-item"(do)="gotoDoAzureParallelDoc()">
             <div class="icon"><i class="fa fa-code"></i></div>
             <div class="label">Get doAzureParallel secrets.json</div>
-            <div class="aad-link"><bl-clickable (do)="openPage('doAzureParallel', 'aad')">Azure AD</bl-clickable></div>
-            <div class="shared-key-link"><bl-clickable (do)="openPage('doAzureParallel', 'shared-key')">Shared key</bl-clickable></div>
+            <div class="aad-link"><bl-clickable (do)="openPage('doAzureParallel', CredentialType.AAD)">Azure AD</bl-clickable></div>
+            <div class="shared-key-link"><bl-clickable (do)="openPage('doAzureParallel', CredentialType.SharedKey)">Shared key</bl-clickable></div>
         </bl-clickable>
     </div>
 </bl-card>
