@@ -1,8 +1,8 @@
 import {
-    ChangeDetectorRef, Component, ContentChild, ContentChildren, EventEmitter,
-    HostBinding, HostListener, Input, Optional, Output, QueryList,
+    AfterContentInit, ChangeDetectorRef, Component, ContentChild, ContentChildren,
+    EventEmitter, HostBinding, HostListener, Input, OnDestroy, Optional, Output, QueryList,
 } from "@angular/core";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import { DragUtils, log } from "@batch-flask/utils";
@@ -42,7 +42,7 @@ export interface DropEvent {
     selector: "bl-table",
     templateUrl: "table.html",
 })
-export class TableComponent extends AbstractListBase {
+export class TableComponent extends AbstractListBase implements AfterContentInit, OnDestroy {
     @Input() public set config(config: TableConfig) {
         this._config = { ...tableDefaultConfig, ...config };
     }
@@ -58,18 +58,30 @@ export class TableComponent extends AbstractListBase {
     }
     public dropTargetRowKey: string = null;
 
-    public get dimensions(): Observable<number[]> {
-        return this.head ? this.head.dimensions : Observable.of([]);
-    }
+    public dimensions: Observable<number[]>;
 
     protected _config: TableConfig = tableDefaultConfig;
     private _sortingColumn: TableColumnComponent;
+    private _dimensions = new BehaviorSubject([]);
 
     /**
      * To enable keyboard navigation in the list it must be inside a focus section
      */
     constructor(changeDetection: ChangeDetectorRef, @Optional() focusSection?: FocusSectionComponent) {
         super(changeDetection, focusSection);
+        this.dimensions = this._dimensions.asObservable();
+    }
+
+    public ngAfterContentInit() {
+        super.ngAfterContentInit();
+        if (this.head) {
+            this.head.dimensions.subscribe((dimensions) => this._dimensions.next(dimensions));
+        }
+        this.changeDetector.markForCheck();
+    }
+
+    public ngOnDestroy() {
+        this._dimensions.complete();
     }
 
     @HostListener("dragover", ["$event"])

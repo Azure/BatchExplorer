@@ -52,6 +52,11 @@ bl-account-details {
             cursor: pointer;
         }
 
+        bl-getting-started-card {
+            grid-row: span 2;
+            grid-column: span 2;
+        }
+
         > .node-states {
             grid-column: span 3;
         }
@@ -61,5 +66,13 @@ bl-account-details {
         bl-cell {
             padding: 0 5px;
         }
+    }
+
+    bl-getting-started-card {
+        width: 400px;
+    }
+
+    .section-title {
+        padding: 10px;
     }
 }

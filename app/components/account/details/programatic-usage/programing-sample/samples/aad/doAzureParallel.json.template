@@ -1,0 +1,15 @@
+{
+    "servicePrincipal": {
+        "tenantId": "{tenantId}",
+        "clientId": "{clientId}",
+        "credential": "{secret}",
+        "batchAccountResourceId": "{batchAccountId}",
+        "storageAccountResourceId": "{storageAccountId}"
+    },
+    "githubAuthenticationToken": "",
+    "dockerAuthentication": {
+        "username": "",
+        "password": "",
+        "registry": ""
+    }
+}

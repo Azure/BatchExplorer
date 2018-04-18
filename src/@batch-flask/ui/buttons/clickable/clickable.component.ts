@@ -61,6 +61,7 @@ export class ClickableComponent implements OnChanges, OnDestroy {
 
     @HostListener("click", ["$event"])
     public handleClick(event: Event) {
+        event.stopPropagation();
         this.handleAction(event);
     }
 

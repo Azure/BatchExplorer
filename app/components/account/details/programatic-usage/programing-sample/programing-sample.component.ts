@@ -3,17 +3,23 @@ import { prerequisites, sampleTemplates } from "./samples";
 
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { AADCredential, CredentialType } from "app/components/account/details/programatic-usage";
-import { AccountKeys, AccountResource } from "app/models";
+import { AccountResource } from "app/models";
+import { BatchLabsService } from "app/services";
+import { SharedKeyCredentials } from "../shared-key-credentials.model";
 import "./programing-sample.scss";
 
-export enum SampleLanguage {
+export enum SampleTarget {
     python = "python",
     csharp = "csharp",
     nodejs = "nodejs",
+    aztk = "aztk",
+    doAzureParallel = "doAzureParallel",
 }
 
 const engineLanguages = {
     nodejs: "javascript",
+    aztk: "yaml",
+    doAzureParallel: "json",
 };
 
 @Component({
@@ -22,15 +28,18 @@ const engineLanguages = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProgramingSampleComponent implements OnChanges {
-    @Input() public language: SampleLanguage;
+    public CredentialType = CredentialType;
+    @Input() public target: SampleTarget;
     @Input() public account: AccountResource;
-    @Input() public sharedKeys: AccountKeys;
+    @Input() public sharedKeyCredentials: SharedKeyCredentials;
     @Input() public aadCredentials: AADCredential;
     @Input() public credentialType: CredentialType;
 
     public prerequisites: string[];
     public content: string;
     public editorConfig: EditorConfig;
+
+    constructor(private batchLabs: BatchLabsService) {}
 
     public ngOnChanges(changes) {
         this._updateContent();
@@ -42,17 +51,9 @@ export class ProgramingSampleComponent implements OnChanges {
         return item;
     }
 
-    private get accountName() {
-        return this.account && this.account.name || "";
-    }
-
     private get accountUrl() {
         const url = this.account && this.account.properties.accountEndpoint;
         return url ? `https://${url}` : "";
-    }
-
-    private get key() {
-        return this.sharedKeys && this.sharedKeys.primary || "";
     }
 
     private _updateContent() {
@@ -62,33 +63,54 @@ export class ProgramingSampleComponent implements OnChanges {
         }
         if (this.credentialType === CredentialType.AAD) {
             const cred = this.aadCredentials || {} as any;
-            this.content = template.format(this.accountUrl,
-                cred.tenantId,
-                cred.clientId,
-                cred.secret);
+            this.content = template.format({
+                accountUrl: this.accountUrl,
+                tenantId: cred.tenantId,
+                clientId: cred.clientId,
+                secret: cred.secret,
+                batchAccountId: this.account && this.account.id,
+                storageAccountId: this.account && this.account.autoStorage && this.account.autoStorage.storageAccountId,
+            });
         } else {
-            this.content = template.format(this.accountName, this.accountUrl, this.key);
+            this.content = template.format(this._getSharedKeyParams());
         }
+    }
+
+    private _getSharedKeyParams() {
+        if (!this.sharedKeyCredentials) { return {}; }
+        const { batchAccount, storageAccount } = this.sharedKeyCredentials;
+        const params: any = {};
+        if (batchAccount) {
+            params.batchAccountUrl = this.accountUrl;
+            params.batchAccountName = batchAccount.resource.name;
+            params.batchAccountKey = batchAccount.primary;
+        }
+        if (storageAccount) {
+            params.storageAccountName = storageAccount.resource.name;
+            params.storageAccountKey = storageAccount.primary;
+            params.storageAccountSuffix = this.batchLabs.azureEnvironment.storageEndpoint;
+        }
+        return params;
     }
 
     private _getTemplate() {
         if (this.credentialType === CredentialType.AAD) {
-            return sampleTemplates.aad[this.language];
+            return sampleTemplates.aad[this.target];
         } else {
-            return sampleTemplates.sharedKey[this.language];
+            return sampleTemplates.sharedKey[this.target];
         }
     }
 
     private _updatePrerequisites() {
         if (this.credentialType === CredentialType.AAD) {
-            this.prerequisites = prerequisites.aad[this.language];
+            this.prerequisites = prerequisites.aad[this.target];
         } else {
-            this.prerequisites = prerequisites.sharedKey[this.language];
+            this.prerequisites = prerequisites.sharedKey[this.target];
         }
     }
 
     private _updateConfig() {
-        let language = this.language;
+        let language = this.target;
         if (language in engineLanguages) {
             language = engineLanguages[language];
         }

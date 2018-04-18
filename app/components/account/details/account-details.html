@@ -26,12 +26,14 @@
                 </bl-storage-account-card>
             </div>
         </bl-summary-card>
+        <h1 class="section-title">Monitoring</h1>
         <div class="monitor-charts">
             <bl-monitor-chart chartType="coreCount" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
             <bl-monitor-chart chartType="failedTask" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
             <bl-monitor-chart chartType="taskStates" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
             <bl-monitor-chart class="node-states" chartType="nodeStates" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
         </div>
+        <h1 class="section-title">Resources</h1>
         <div class="account-cards">
             <bl-card class="account-card">
                 <div class="title">
@@ -131,6 +133,10 @@
                 </div>
             </bl-card>
             <span style="width:100%; display:inline-block;"></span>
+        </div>
+        <h1 class="section-title">Getting started with Azure Batch</h1>
+        <div>
+            <bl-getting-started-card [accountId]="accountId"></bl-getting-started-card>
         </div>
     </div>
 </bl-loading>

@@ -9,6 +9,10 @@ describe("String extensions", () => {
         it("Should format string correctly with multiple arguments", () => {
             expect("{0}:{1}".format("key", "val")).toEqual("key:val");
         });
+
+        it("Should format string with key value", () => {
+            expect("{foo}:{bar}".format({ foo: "key", other: "some", bar: "val" })).toEqual("key:val");
+        });
     });
 
     describe("string.padStart", () => {

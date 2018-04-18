@@ -9,11 +9,11 @@ namespace Microsoft.Azure.Batch.Samples.HelloWorld
 
     public class AccountSettings
     {
-        public const string BatchAccountUrl = "{0}";
+        public const string BatchAccountUrl = "{accountUrl}";
         public const string BatchResourceUri = "https://batch.core.windows.net/";
-        public const string AuthorityUri = "https://login.microsoftonline.com/{1}";
-        public const string ClientId = "{2}";
-        public const string Secret = "{3}";
+        public const string AuthorityUri = "https://login.microsoftonline.com/{clientId}";
+        public const string ClientId = "{clientId}";
+        public const string Secret = "{secret}";
     }
 
 
