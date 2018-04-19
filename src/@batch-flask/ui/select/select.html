@@ -1,5 +1,5 @@
 <div class="select-button-container">
-   <bl-clickable #selectButton class="select-button" (do)="clickSelectButton($event)" [title]="title">
+   <bl-clickable #selectButton class="select-button" (do)="clickSelectButton($event)" [title]="title" [disabled]="disabled">
         <div class="label">
             <ng-container *ngIf="!hasValueSelected">{{placeholder}}</ng-container>
             <ng-container *ngIf="hasValueSelected">

@@ -71,6 +71,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     @Input() @FlagInput() public required = false;
 
     @Input()
+    @HostBinding("class.bl-disabled")
     public get disabled(): boolean {
         if (this.ngControl && this.ngControl.disabled !== null) {
             return this.ngControl.disabled;
@@ -190,13 +191,14 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
 
     public clickSelectButton(event: Event) {
+        if (this.disabled) { return; }
         this.toggleDropdown();
         event.stopPropagation();
     }
 
     @HostListener("keydown", ["$event"])
     public handleKeyboardNavigation(event: KeyboardEvent) {
-        if (this.displayedOptions.length === 0) { return; }
+        if (this.displayedOptions.length === 0 || this.disabled) { return; }
         let direction = null;
         const lastIndex = this.displayedOptions.findIndex(x => x.value === this.focusedOption);
         const option = this.displayedOptions[lastIndex];
