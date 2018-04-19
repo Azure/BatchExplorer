@@ -1,4 +1,4 @@
-<bl-focus-section *ngIf="displayedAccounts.size > 0">
+<bl-focus-section>
     <bl-quick-list [status]="loadingStatus" [(activeItem)]="activeItem" [(selection)]="selection">
         <bl-quick-list-item *ngFor="let account of displayedAccounts;trackBy: trackByFn" [link]="['/accounts', account.id]"
             [key]="account.id" [contextmenu]="contextmenu(account)">
