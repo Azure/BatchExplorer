@@ -70,6 +70,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
             this._navigatorSubs.push(this.fileNavigator.tree.subscribe((tree) => {
                 this._tree = tree;
+                console.log("New tree???", tree);
                 this._buildTreeRows(tree);
             }));
         }
@@ -332,6 +333,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
                 virtual: child.virtual,
             });
             if (expanded) {
+                console.log("Get child for", child.path, child.children.size);
                 if (child.children.size > 0) {
                     for (const row of this._getTreeRowsForNode(child, indent + 1)) {
                         rows.push(row);

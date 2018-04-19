@@ -288,9 +288,8 @@ export class FileNavigator<TParams = any> {
         this._loadPath(this._getFolderToLoad(path)).subscribe({
             next: (files: List<File>) => {
                 this.loadingStatus = LoadingStatus.Ready;
-
                 const tree = this._tree.value;
-                tree.addFiles(files);
+                tree.setFilesAt(path, files);
                 const node = tree.getNode(path);
                 node.markAsLoaded();
                 this._tree.next(tree);

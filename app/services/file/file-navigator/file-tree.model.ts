@@ -51,6 +51,10 @@ export class FileTreeNode {
         return this.children.values();
     }
 
+    public markAsLoading() {
+        this.loadingStatus = LoadingStatus.Loading;
+    }
+
     public markAsLoaded() {
         this.loadingStatus = LoadingStatus.Ready;
     }
@@ -87,7 +91,9 @@ export class FileTreeStructure {
             this._checkDirInTree(folder);
 
             if (file.isDirectory) {
-                if (!directories[node.path]) {
+                if (directories[node.path]) {
+                    directories[folder].children.set(node.path, directories[node.path]);
+                } else {
                     directories[node.path] = node;
                     directories[folder].children.set(node.path, node);
                 }
@@ -99,6 +105,24 @@ export class FileTreeStructure {
         for (const dir of Object.keys(directories)) {
             directories[dir].children = sortTreeNodes(directories[dir].children);
         }
+    }
+
+    /**
+     * Set the files under the given folder.
+     * This means it will remove any files presently in the tree directly under that folder
+     * that are not in the list provided
+     * @param folder Folder where those files belongs
+     * @param files List of files under that folder
+     */
+    public setFilesAt(folder: string, files: List<File>) {
+        folder = CloudPathUtils.normalize(folder);
+        this._checkDirInTree(folder);
+        const directories = this.directories;
+        const rootDir = directories[folder];
+        console.log("--------------------------Set files at ", folder, rootDir.path, rootDir.children.size, files.size);
+        rootDir.children.clear();
+        this.addFiles(files);
+        console.log("--------------------------CAlled set files at ", folder, rootDir.name, rootDir.children.size, files.size);
     }
 
     public getNode(nodePath: string) {
