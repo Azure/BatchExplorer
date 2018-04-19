@@ -1,7 +1,10 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { AccountService } from "app/services";
+import { SidebarManager } from "@batch-flask/ui";
 import { Subscription } from "rxjs";
+
+import { AccountService } from "app/services";
+import { BatchAccountCreateComponent } from "../action/add";
 
 @Component({
     selector: "bl-account-details-home",
@@ -9,6 +12,10 @@ import { Subscription } from "rxjs";
         <div class="no-entity-home">
             <i class="fa fa-user"></i>
             <p>Please select an account from the list</p>
+
+            <bl-button type="wide" class="add-account-btn" (do)="addBatchAccount()">
+                Create a new batch account
+            </bl-button>
         </div>
     `,
 })
@@ -22,6 +29,7 @@ export class AccountDefaultComponent implements OnInit, OnDestroy {
 
     constructor(
         private accountService: AccountService,
+        private sidebarManager: SidebarManager,
         private router: Router) {
     }
 
@@ -37,5 +45,9 @@ export class AccountDefaultComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy(): void {
         this.accountChangeSubscription.unsubscribe();
+    }
+
+    public addBatchAccount() {
+        this.sidebarManager.open("add-batch-account", BatchAccountCreateComponent);
     }
 }
