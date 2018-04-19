@@ -10,6 +10,12 @@ bl-select {
     border: none;
     position: relative;
 
+    &.bl-disabled {
+        > .select-button-container {
+            background-color: $input-disabled-background-color;
+        }
+    }
+
     > .select-button-container {
         height: $button-height;
         background-color: $input-background-color;
