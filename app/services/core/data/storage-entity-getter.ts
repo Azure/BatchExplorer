@@ -6,16 +6,21 @@ import { EntityGetter, EntityGetterConfig } from "app/services/core/data/entity-
 import { StorageClientService } from "app/services/storage/storage-client.service";
 import { StorageBaseParams } from "./storage-list-getter";
 
+export interface StorageGetResponse {
+    data: any;
+}
+
 export interface StorageEntityGetterConfig<TEntity, TParams extends StorageBaseParams>
     extends EntityGetterConfig<TEntity, TParams> {
 
     /**
      * Get function(usually call the client proxy)
      */
-    getFn: (client: any, params: TParams) => Promise<any>;
+    getFn: (client: any, params: TParams) => Promise<StorageGetResponse>;
 }
+
 export class StorageEntityGetter<TEntity, TParams extends StorageBaseParams> extends EntityGetter<TEntity, TParams> {
-    private _getMethod: (client: any, params: TParams) => Promise<any>;
+    private _getMethod: (client: any, params: TParams) => Promise<StorageGetResponse>;
 
     constructor(
         type: Type<TEntity>,

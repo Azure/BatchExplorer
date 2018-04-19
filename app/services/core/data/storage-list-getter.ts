@@ -10,14 +10,19 @@ export interface StorageBaseParams {
     storageAccountId: string;
 }
 
+export interface StorageListResponse {
+    data: any[];
+    continuationToken?: string;
+}
+
 export interface StorageListConfig<TEntity, TParams extends StorageBaseParams>
     extends ListGetterConfig<TEntity, TParams> {
 
-    getData: (client: any, params: TParams, options: any, token: any) => any;
+    getData: (client: any, params: TParams, options: any, token: any) => Promise<StorageListResponse>;
 }
 
 export class StorageListGetter<TEntity, TParams extends StorageBaseParams> extends ListGetter<TEntity, TParams> {
-    private _getData: (client: any, params: TParams, options: any, token: any) => any;
+    private _getData: (client: any, params: TParams, options: any, token: any) => Promise<StorageListResponse>;
 
     constructor(
         type: Type<TEntity>,
