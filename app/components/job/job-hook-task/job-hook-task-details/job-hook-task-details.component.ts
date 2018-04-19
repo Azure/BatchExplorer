@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from "@angular/core";
+import { Component, Input, OnChanges } from "@angular/core";
 
 import { FileExplorerConfig } from "app/components/file/browse/file-explorer";
 import { JobHookTask, Node } from "app/models";
