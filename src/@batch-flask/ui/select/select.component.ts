@@ -197,8 +197,25 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
 
     @HostListener("keydown", ["$event"])
-    public handleKeyboardNavigation(event: KeyboardEvent) {
-        if (this.displayedOptions.length === 0 || this.disabled) { return; }
+    public handleKeyDown(event: KeyboardEvent) {
+        if (this.disabled) { return; }
+        this.showOptions ? this._handleKeydownOpen(event) : this._handleKeyDownClosed(event);
+    }
+
+    private _handleKeyDownClosed(event: KeyboardEvent) {
+        const keyCode = event.code;
+        const isArrowKey = keyCode === "ArrowDown" || keyCode === "ArrowUp" ||
+            keyCode === "ArrowLeft" || keyCode === "ArrowRight";
+        const isOpenKey = keyCode === "Enter" || keyCode === "Space";
+        // Open the select on ALT + arrow key to match the native <select>
+        if (isOpenKey || ((this.multiple || event.altKey) && isArrowKey)) {
+            event.preventDefault(); // prevents the page from scrolling down when pressing space
+            this.openDropdown();
+        }
+    }
+
+    private _handleKeydownOpen(event: KeyboardEvent) {
+        if (this.displayedOptions.length === 0) { return; }
         let direction = null;
         const lastIndex = this.displayedOptions.findIndex(x => x.value === this.focusedOption);
         const option = this.displayedOptions[lastIndex];
@@ -216,6 +233,13 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
                     direction = -1;
                 }
                 event.preventDefault();
+                break;
+            case "Space":
+                if (!this.filterable) {
+                    this.selectOption(option);
+                    event.preventDefault();
+                    return;
+                }
                 break;
             case "Enter":
                 this.selectOption(option);
@@ -311,6 +335,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
 
     public selectOption(option: SelectOptionComponent) {
         this.focusedOption = option.value;
+        console.log("Select option", option);
         if (this.multiple) {
             if (this.selected.has(option.value)) {
                 this.selected.delete(option.value);
