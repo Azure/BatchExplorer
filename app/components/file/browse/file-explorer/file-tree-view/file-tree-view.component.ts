@@ -70,7 +70,6 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
             this._navigatorSubs.push(this.fileNavigator.tree.subscribe((tree) => {
                 this._tree = tree;
-                console.log("New tree???", tree);
                 this._buildTreeRows(tree);
             }));
         }
