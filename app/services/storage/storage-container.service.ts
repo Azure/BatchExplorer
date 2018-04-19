@@ -52,20 +52,26 @@ export class StorageContainerService {
 
         this._containerGetter = new StorageEntityGetter(BlobContainer, this.storageClient, {
             cache: params => this._containerCache.getCache(params),
-            getFn: (client, params: GetContainerParams) =>
-                client.getContainerProperties(params.id),
+            getFn: async (client, params: GetContainerParams) => {
+                const response = await client.getContainerProperties(params.id);
+                response.data.storageAccountId = params.storageAccountId;
+                return response;
+            },
         });
         this._containerListGetter = new StorageListGetter(BlobContainer, this.storageClient, {
             cache: params => this._containerCache.getCache(params),
-            getData: (client, params, options, continuationToken) => {
+            getData: async (client, params, options, continuationToken) => {
                 let prefix = null;
                 if (options && options.filter) {
                     prefix = options.filter.value;
                 }
-                return client.listContainersWithPrefix(
+                const response = await client.listContainersWithPrefix(
                     prefix,
                     continuationToken,
                     { maxResults: options && options.maxResults });
+
+                response.data.map(x => x.storageAccountId = params.storageAccountId);
+                return response;
             },
             logIgnoreError: storageIgnoredErrors,
         });

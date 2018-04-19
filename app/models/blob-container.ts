@@ -27,9 +27,15 @@ export class BlobContainer extends Record<BlobContainerAttributes> implements Na
     @Prop() public lastModified: Date;
     @Prop() public lease: ContainerLease;
     @Prop() public url: string;
+    @Prop() public storageAccountId: string;
 
     public get routerLink(): string[] {
-        return ["/data", this.id];
+        if (this.isFileGroup) {
+            return ["/data/file-groups/containers", this.id];
+        } else {
+            return ["/data", this.storageAccountId, "containers", this.id];
+
+        }
     }
 
     public get isFileGroup() {
