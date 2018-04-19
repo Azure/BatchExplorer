@@ -78,6 +78,7 @@ export class FileTreeStructure {
         this.root = new FileTreeNode({
             path: "",
             isDirectory: true,
+            loadingStatus: LoadingStatus.Ready,
         });
         this.directories[""] = this.root;
     }
@@ -119,10 +120,8 @@ export class FileTreeStructure {
         this._checkDirInTree(folder);
         const directories = this.directories;
         const rootDir = directories[folder];
-        console.log("--------------------------Set files at ", folder, rootDir.path, rootDir.children.size, files.size);
         rootDir.children.clear();
         this.addFiles(files);
-        console.log("--------------------------CAlled set files at ", folder, rootDir.name, rootDir.children.size, files.size);
     }
 
     public getNode(nodePath: string) {
@@ -143,6 +142,7 @@ export class FileTreeStructure {
                 loadingStatus: LoadingStatus.Loading,
                 isDirectory: true,
                 isUnknown: true,
+                virtual: true,
             });
         }
     }

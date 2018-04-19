@@ -52,6 +52,7 @@ export function fileToTreeNode(file: File, basePath: string = ""): FileTreeNode 
     return new FileTreeNode({
         path: relativePath,
         isDirectory: file.isDirectory,
+        loadingStatus: LoadingStatus.Ready,
         contentLength: !file.isDirectory && file.properties.contentLength,
         lastModified: file.properties && file.properties.lastModified,
     });
