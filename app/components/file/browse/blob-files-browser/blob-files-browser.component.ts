@@ -2,11 +2,9 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@a
 import { Observable } from "rxjs";
 
 import { DialogService } from "@batch-flask/ui/dialogs";
-import { FileDeleteEvent, FileDropEvent, FileExplorerConfig } from "app/components/file/browse/file-explorer";
-import { File } from "app/models";
+import { FileDropEvent, FileExplorerConfig } from "app/components/file/browse/file-explorer";
 import { FileNavigator } from "app/services/file";
 import { StorageBlobService } from "app/services/storage";
-import { FileUrlUtils } from "app/utils";
 
 @Component({
     selector: "bl-blob-files-browser",
