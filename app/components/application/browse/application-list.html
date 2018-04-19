@@ -15,10 +15,10 @@
 
     <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
         <bl-thead>
-            <bl-column>Id</bl-column>
+            <bl-column>ID</bl-column>
             <bl-column>Packages</bl-column>
-            <bl-column>Default Version</bl-column>
-            <bl-column>Allow Updates</bl-column>
+            <bl-column>Default version</bl-column>
+            <bl-column>Allow updates</bl-column>
         </bl-thead>
         <bl-row *ngFor="let application of displayedApplications;trackBy: trackByFn" [link]="['/applications', application.id]"
             [key]="application.id" [contextmenu]="contextmenu(application)">
