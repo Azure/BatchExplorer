@@ -284,13 +284,18 @@ export class FileNavigator<TParams = any> {
 
     private _loadFilesInPath(path: string): Observable<FileTreeNode> {
         this.loadingStatus = LoadingStatus.Loading;
+        const tree = this._tree.value;
+        const node = tree.getNode(path);
+        if (node.loadingStatus === LoadingStatus.Loading && !node.virtual) {
+            return Observable.of(null);
+        }
+        node.markAsLoading();
         const output = new AsyncSubject<FileTreeNode>();
         this._loadPath(this._getFolderToLoad(path)).subscribe({
             next: (files: List<File>) => {
                 this.loadingStatus = LoadingStatus.Ready;
-
                 const tree = this._tree.value;
-                tree.addFiles(files);
+                tree.setFilesAt(path, files);
                 const node = tree.getNode(path);
                 node.markAsLoaded();
                 this._tree.next(tree);
