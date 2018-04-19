@@ -2,8 +2,7 @@ import { Injectable, NgZone } from "@angular/core";
 import { AsyncSubject, Observable } from "rxjs";
 
 import { HttpCode, ServerError } from "@batch-flask/core";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
-import { BlobContainer, File } from "app/models";
+import { File } from "app/models";
 import {
     DataCache,
     EntityView,
@@ -90,7 +89,6 @@ export class StorageBlobService {
 
     constructor(
         private storageClient: StorageClientService,
-        private backgroundTaskService: BackgroundTaskService,
         private fs: FileSystemService,
         private zone: NgZone) {
 
@@ -150,6 +148,7 @@ export class StorageBlobService {
             params: { storageAccountId, container },
             getter: this._blobListGetter,
             getFile: (filename: string) => this.getBlobContent(storageAccountId, container, filename),
+            delete: (filename: string) => this.deleteBlobIfExists(storageAccountId, container, filename),
             onError: options.onError,
             wildcards: options.wildcards,
             fetchAll: options.fetchAll,
@@ -250,44 +249,6 @@ export class StorageBlobService {
                     blobCache.deleteItemByKey(blob);
                 }
             });
-        });
-    }
-
-    /**
-     * Delete the list of files from the container in storage
-     * @param container - Instance of the container
-     * @param files - Files to delete
-     * @param options - Optional parameters
-     */
-    public deleteFilesFromContainer(
-        storageAccountId: string,
-        container: BlobContainer,
-        files: File[],
-        options: any = {}) {
-        const fileCount = files.length;
-        const taskTitle = `Delete ${fileCount} files from ${container.name}`;
-
-        return this.backgroundTaskService.startTask(taskTitle, (task) => {
-            // NOTE: slight pause in-between deletes to ease load on storage account
-            const observable = Observable.interval(100).take(fileCount);
-            observable.subscribe({
-                next: (i) => {
-                    return this.deleteBlobIfExists(storageAccountId, container.id, files[i].name).subscribe({
-                        next: () => {
-                            task.name.next(`${taskTitle} (${i + 1}/${fileCount})`);
-                            task.progress.next((i + 1) / fileCount * 100);
-                        },
-                        error: (error) => {
-                            log.error("Failed to delete blob", error);
-                        },
-                    });
-                },
-                complete: () => {
-                    task.progress.next(100);
-                },
-            });
-
-            return observable;
         });
     }
 

@@ -50,7 +50,7 @@ export class SimpleFormComponent {
      * Needs to return an observable that will have a {ServerError} if failing.
      */
     @Input()
-    public submit: () => Observable<any>;
+    public submit: () => Observable<any> | null;
 
     @Input()
     public cancelText = "Cancel";

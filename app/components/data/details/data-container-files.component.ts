@@ -8,7 +8,7 @@ import { NotificationService } from "@batch-flask/ui/notifications";
 import { log } from "@batch-flask/utils";
 import { BlobFilesBrowserComponent } from "app/components/file/browse";
 import { FileDropEvent } from "app/components/file/browse/file-explorer";
-import { BlobContainer, File } from "app/models";
+import { BlobContainer } from "app/models";
 import { FileSystemService } from "app/services";
 import { StorageBlobService, StorageContainerService } from "app/services/storage";
 import { CloudPathUtils } from "app/utils";
@@ -74,19 +74,6 @@ export class DataContainerFilesComponent implements OnDestroy {
             });
         }).shareReplay(1);
 
-    }
-
-    @autobind()
-    public handleFileDelete(files: File[]) {
-        const obs = this.storageBlobService.deleteFilesFromContainer(this.storageAccountId, this.container, files);
-        obs.subscribe({
-            complete: () => {
-                // tslint:disable-next-line:max-line-length
-                const message = `The files were successfully removed from the file group: ${this.container.name}`;
-                this.notificationService.success("Removed files from group", message);
-            },
-        });
-        return obs;
     }
 
     private async _getFilesToUpload(files: any[]) {

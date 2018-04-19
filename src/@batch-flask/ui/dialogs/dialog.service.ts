@@ -8,7 +8,7 @@ import { PromptDialogComponent } from "./prompt";
 
 export interface ConfirmOptions {
     description?: string;
-    yes: () => Observable<any>;
+    yes: () => Observable<any> | null;
 }
 
 export interface ValidatorMessage {
