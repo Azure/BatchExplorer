@@ -38,7 +38,6 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     @Input() public name: string;
     @Input() public autoExpand = false;
     @Input() public canDropExternalFiles = false;
-    @Input() public canDeleteFiles = false;
 
     @Output() public navigate = new EventEmitter<string>();
     @Output() public dropFiles = new EventEmitter<FileDropEvent>();
@@ -143,10 +142,11 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
             }
         }
 
-        if (this.canDeleteFiles) {
+        if (this.fileNavigator.canDeleteFile) {
             items.push(new ContextMenuItem("Delete", () => this.deleteFiles.emit({
                 path: treeRow.path,
                 isDirectory: treeRow.isDirectory,
+                navigator: this.fileNavigator,
             })));
         }
 

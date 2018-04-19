@@ -7,7 +7,6 @@
             [name]="source.name"
             [autoExpand]="autoExpand"
             [canDropExternalFiles]="config.canDropExternalFiles"
-            [canDeleteFiles]="config.canDeleteFiles"
             (navigate)="navigateTo($event, source)"
             (dropFiles)="handleDrop($event)"
             (deleteFiles)="handleDelete($event)">

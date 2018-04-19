@@ -20,7 +20,6 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
     @Input() public filter: string;
     @Input() public fetchAll: boolean = false;
     @Input() public upload: (event: FileDropEvent) => Observable<any>;
-    @Input() public delete: (files: File[]) => Observable<any>;
 
     @Output() public activeFileChange = new EventEmitter<string>();
 
@@ -50,7 +49,6 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
         if (inputs.upload) {
             this.fileExplorerConfig = {
                 canDropExternalFiles: Boolean(this.upload),
-                canDeleteFiles: Boolean(this.delete),
             };
         }
     }
@@ -69,33 +67,6 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
                 });
 
                 return Observable.of(null);
-            },
-        });
-    }
-
-    public handleDeleteEvent(event: FileDeleteEvent) {
-        const { path } = event;
-        const description = event.isDirectory
-            ? `All files will be deleted from the folder: ${path}`
-            : `The file '${FileUrlUtils.getFileName(path)}' will be deleted.`;
-        this.dialogService.confirm(`Delete files`, {
-            description: description,
-            yes: () => {
-                const listParams = { recursive: true, folder: path };
-                // TODO-TIM null storage account id
-                const data = this.storageBlobService.listView(null, this.container, listParams);
-                const obs = data.fetchAll().flatMap(() => data.items.take(1)).shareReplay(1);
-                obs.subscribe((items) => {
-                    data.dispose();
-                    // subscribe delete observable and refresh file tree explorer after completion
-                    this.delete(items.toArray()).subscribe({
-                        complete: () => {
-                            this.fileNavigator.refresh(event.path);
-                        },
-                    });
-                });
-
-                return obs;
             },
         });
     }

@@ -150,6 +150,7 @@ export class StorageBlobService {
             params: { storageAccountId, container },
             getter: this._blobListGetter,
             getFile: (filename: string) => this.getBlobContent(storageAccountId, container, filename),
+            delete: (filename: string) => this.deleteBlobIfExists(storageAccountId, container, filename),
             onError: options.onError,
             wildcards: options.wildcards,
             fetchAll: options.fetchAll,

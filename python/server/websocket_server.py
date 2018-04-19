@@ -1,6 +1,7 @@
 import asyncio
 import traceback
 import websockets
+import logging
 from jsonrpc import JsonRpcRequest, JsonRpcResponse, error
 from .response_stream import ResponseStream
 from .app import app
@@ -48,6 +49,8 @@ class WebsocketConnection:
                     error=parse_error,
                 )
                 await self.send_response(response)
+            except websockets.exceptions.ConnectionClosed:
+                logging.info("Websocket connection closed.")
             else:
                 await self.process_request(request)
 

@@ -62,7 +62,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
      * Will pass the built dto if using json forms
      * Needs to return an observable that will have a {ServerError} if failing.
      */
-    @Input() public submit: (dto?: Dto<any>) => Observable<any>;
+    @Input() public submit: (dto?: Dto<any>) => Observable<any> | null;
     @Input() public asyncTasks: Observable<AsyncTask[]>;
 
     @Input() @HostBinding("class") public size: FormSize = "large";
@@ -117,7 +117,12 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
         }
         this.loading = true;
         const obs = ready.flatMap(() => {
-            return this.submit(this.getCurrentDto());
+            const submitResult = this.submit(this.getCurrentDto());
+            if(submitResult === null) {
+                return Observable.of(null);
+            } else {
+                return submitResult;
+            }
         }).shareReplay(1);
         obs.subscribe({
             next: () => {
