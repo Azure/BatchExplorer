@@ -1,4 +1,7 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input,
+    OnChanges, OnDestroy, OnInit, forwardRef,
+} from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, autobind } from "@batch-flask/core";
@@ -30,6 +33,7 @@ const defaultListOptions = {
         provide: ListBaseComponent,
         useExisting: forwardRef(() => DataContainerListComponent),
     }],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataContainerListComponent extends ListBaseComponent implements OnInit, OnChanges, OnDestroy {
     public LoadingStatus = LoadingStatus;
@@ -63,6 +67,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
 
         this.data.status.subscribe((status) => {
             this.status = status;
+            this.changeDetector.markForCheck();
         });
 
         this._onGroupAddedSub = this.storageContainerService.onContainerAdded.subscribe((fileGroupId: string) => {
