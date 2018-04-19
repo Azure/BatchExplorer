@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnChanges, OnInit } from "@angular/core";
 
 import { FileExplorerConfig } from "app/components/file/browse/file-explorer";
 import { JobHookTask, Node } from "app/models";
@@ -10,7 +10,7 @@ import "./job-hook-task-details.scss";
     selector: "bl-job-hook-task-details",
     templateUrl: "job-hook-task-details.html",
 })
-export class JobHookTaskDetailsComponent implements OnInit {
+export class JobHookTaskDetailsComponent implements OnChanges {
     @Input() public task: JobHookTask;
     @Input() public type: string = "preparationTask";
     public node: Node;
@@ -29,15 +29,22 @@ export class JobHookTaskDetailsComponent implements OnInit {
         });
     }
 
-    public ngOnInit() {
-        this._nodeData.fetch().subscribe({
-            next: () => {
-                this.loading = false;
-            },
-            error: () => {
-                this.loading = false;
-            },
-        });
+    public ngOnChanges(changes) {
+        if (changes.task) {
+            this._nodeData.params = {
+                poolId: this.task.poolId,
+                id: this.task.nodeId,
+            };
+            this._nodeData.fetch().subscribe({
+                next: () => {
+                    this.loading = false;
+                },
+                error: () => {
+                    this.loading = false;
+                },
+            });
+        }
+
     }
 
     public get currentFolder() {
