@@ -13,7 +13,9 @@ import { BatchAccountCreateComponent } from "../action/add";
             <i class="fa fa-user"></i>
             <p>Please select an account from the list</p>
 
-            <bl-button type="wide" class="add-account-btn" (do)="addBatchAccount()">Create a new batch account</bl-button>
+            <bl-button type="wide" class="add-account-btn" (do)="addBatchAccount()">
+                Create a new batch account
+            </bl-button>
         </div>
     `,
 })
