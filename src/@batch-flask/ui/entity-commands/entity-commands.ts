@@ -91,11 +91,11 @@ export abstract class EntityCommands<TEntity extends ActionableEntity> {
         return new ContextMenu(menuItems);
     }
 
-    public executeCommand(command: EntityCommand<TEntity>, entity) {
+    public executeCommand(command: EntityCommand<TEntity>, entity: TEntity) {
         if (command.confirm) {
             if (command.confirm instanceof Function) {
-                command.confirm([entity]).subscribe(() => {
-                    this._executeCommand(command, entity);
+                command.confirm([entity]).subscribe((options) => {
+                    this._executeCommand(command, entity, options);
                 });
             } else {
                 const label = command.label(entity);
@@ -115,8 +115,8 @@ export abstract class EntityCommands<TEntity extends ActionableEntity> {
     public executeCommands(command: EntityCommand<TEntity>, entities: TEntity[]) {
         if (command.confirm) {
             if (command.confirm instanceof Function) {
-                command.confirm(entities).subscribe(() => {
-                    this._executeCommands(command, entities);
+                command.confirm(entities).subscribe((options) => {
+                    this._executeCommands(command, entities, options);
                 });
             } else {
                 const type = inflection.pluralize(this._typeName.toLowerCase());
@@ -135,9 +135,9 @@ export abstract class EntityCommands<TEntity extends ActionableEntity> {
         }
     }
 
-    private _executeCommand(command: EntityCommand<TEntity>, entity) {
+    private _executeCommand(command: EntityCommand<TEntity>, entity: TEntity, options?: any) {
         const label = command.label(entity);
-        command.execute(entity).subscribe({
+        command.execute(entity, options).subscribe({
             next: () => {
                 this.notificationService.success(`${label} was successfull.`, `${entity.id}`);
                 this._get((entity as any).id).subscribe({
@@ -151,14 +151,14 @@ export abstract class EntityCommands<TEntity extends ActionableEntity> {
         });
     }
 
-    private _executeCommands(command: EntityCommand<TEntity>, entities: any[]) {
+    private _executeCommands(command: EntityCommand<TEntity>, entities: TEntity[], options?: any) {
         const label = command.label(entities[0]);
         const enabledEntities = entities.filter(x => command.enabled(x));
         this.backgroundTaskService.startTask("", (task) => {
             const obs = Observable.from(enabledEntities)
                 .concatMap((entity, index) => {
                     task.name.next(`${label} (${index + 1}/${entities.length})`);
-                    return command.execute(entity).map(x => ({ entity, index }));
+                    return command.execute(entity, options).map(x => ({ entity, index }));
                 }).share();
 
             obs.subscribe({

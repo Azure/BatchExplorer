@@ -3,7 +3,7 @@ import { Observable } from "rxjs";
 
 export interface EntityCommandAttributes<TEntity> {
     label: ((entity: TEntity) => string) | string;
-    action: (entity: TEntity) => Observable<any> | void;
+    action: (entity: TEntity, option?: any) => Observable<any> | void;
     enabled?: (entity: TEntity) => boolean;
     multiple?: boolean;
     confirm?: ((entities: TEntity[]) => Observable<any>) | boolean;
@@ -17,7 +17,7 @@ export class EntityCommand<TEntity> {
     public enabled: (entity: TEntity) => boolean;
     public confirm: ((entities: TEntity[]) => Observable<any>) | boolean;
 
-    private _action: (entity: TEntity) => Observable<any> | void;
+    private _action: (entity: TEntity, option?: any) => Observable<any> | void;
     private _label: ((entity: TEntity) => string) | string;
 
     constructor(attributes: EntityCommandAttributes<TEntity>) {
@@ -25,15 +25,15 @@ export class EntityCommand<TEntity> {
         this._action = attributes.action;
         this.multiple = exists(attributes.multiple) ? attributes.multiple : true;
         this.enabled = attributes.enabled || (() => true);
-        this.confirm = exists(attributes.confirm) ? attributes.multiple : true;
+        this.confirm = exists(attributes.confirm) ? attributes.confirm : true;
     }
 
     public label(entity: TEntity) {
         return this._label instanceof Function ? this._label(entity) : this._label;
     }
 
-    public execute(entity: TEntity): Observable<any> {
-        const obs = this._action(entity);
+    public execute(entity: TEntity, option: any): Observable<any> {
+        const obs = this._action(entity, option);
         if (!obs) {
             return Observable.of(null);
         }

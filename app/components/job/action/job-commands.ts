@@ -5,6 +5,7 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, JobState } from "app/models";
 import { JobService, PinnedEntityService } from "app/services";
 import { PatchJobComponent } from "./add";
+import { DisableJobCommand } from "./disable";
 import { TerminateJobCommand } from "./terminate";
 
 @Injectable()
@@ -59,12 +60,7 @@ export class JobCommands extends EntityCommands<Job> {
                 action: (job: Job) => this.jobService.enable(job.id),
                 enabled: (job) => job.state === JobState.disabled,
             }),
-            new EntityCommand<Job>({
-                label: "Disable",
-                // TODO-TIM handle options??
-                action: (job: Job) => this.jobService.disable(job.id, "requeue"),
-                enabled: (job) => job.state !== JobState.disabled && job.state !== JobState.completed,
-            }),
+            new DisableJobCommand(this.jobService, this.dialogService),
             new EntityCommand<Job>({
                 label: (job: Job) => {
                     return this.pinnedEntityService.isFavorite(job) ? "Unpin favorite" : "Pin to favorites";

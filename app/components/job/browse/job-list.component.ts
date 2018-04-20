@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 
@@ -19,12 +18,8 @@ import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
 import {
     DeleteJobAction,
-    DeleteJobDialogComponent,
-    DisableJobDialogComponent,
-    EnableJobDialogComponent,
     JobCommands,
     PatchJobComponent,
-    TerminateJobDialogComponent,
 } from "../action";
 
 @Component({
@@ -50,7 +45,6 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
 
     constructor(
         router: Router,
-        private dialog: MatDialog,
         activatedRoute: ActivatedRoute,
         changeDetector: ChangeDetectorRef,
         injectorFactory: InjectorFactory,
@@ -155,38 +149,6 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
             return task.waitingDone;
         });
         // this.jobService.deleteJobs([...this.selection.keys])
-    }
-
-    public deleteJob(job: Job) {
-        const dialogRef = this.dialog.open(DeleteJobDialogComponent);
-        dialogRef.componentInstance.jobId = job.id;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.jobService.get(job.id);
-        });
-    }
-
-    public terminateJob(job: Job) {
-        const dialogRef = this.dialog.open(TerminateJobDialogComponent);
-        dialogRef.componentInstance.jobId = job.id;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.jobService.get(job.id);
-        });
-    }
-
-    public disableJob(job: Job) {
-        const dialogRef = this.dialog.open(DisableJobDialogComponent);
-        dialogRef.componentInstance.jobId = job.id;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.jobService.get(job.id);
-        });
-    }
-
-    public enableJob(job: Job) {
-        const dialogRef = this.dialog.open(EnableJobDialogComponent);
-        dialogRef.componentInstance.jobId = job.id;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.jobService.get(job.id);
-        });
     }
 
     public trackByFn(index: number, job: Job) {

@@ -1,37 +1,51 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ChangeDetectorRef } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
 import { autobind } from "@batch-flask/core";
 
-import { JobService } from "app/services";
+import { ConfirmationDialog } from "@batch-flask/ui";
+import { Job } from "app/models";
 
 @Component({
     selector: "bl-disable-job-dialog",
     templateUrl: "disable-job-dialog.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DisableJobDialogComponent {
-    public jobId: string;
+export class DisableJobDialogComponent extends ConfirmationDialog<string> {
+    public set jobs(jobs: Job[]) {
+        this._jobs = jobs;
+        this.changeDetector.markForCheck();
+    }
     public actionDescription: string = "";
 
     public set taskAction(action: string) {
         this.onChange(action);
         this._taskAction = action;
+        this.changeDetector.markForCheck();
     }
     public get taskAction() { return this._taskAction; }
 
     private _taskAction: string = "requeue";
+    private _jobs: Job[] = [];
 
-    constructor(
-        public dialogRef: MatDialogRef<DisableJobDialogComponent>,
-        private jobService: JobService) {
+    constructor(public dialogRef: MatDialogRef<DisableJobDialogComponent>, private changeDetector: ChangeDetectorRef) {
+        super();
 
-        this.onChange(this.taskAction);
         this.taskAction = "requeue";
     }
 
     @autobind()
     public ok() {
-        const options: any = {};
-        return this.jobService.disable(this.jobId, this.taskAction, options);
+        this.markAsConfirmed(this.taskAction);
+    }
+
+    public get title() {
+        const size = this._jobs.length;
+        if (size > 1) {
+            return `Are you sure you want to terminate ${size} jobs`;
+        } else {
+            const job = this._jobs.first();
+            return `Are you sure you want to terminate job ${job && job.id}`;
+        }
     }
 
     public onChange(action) {
