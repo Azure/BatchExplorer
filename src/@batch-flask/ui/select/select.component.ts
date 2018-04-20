@@ -197,42 +197,9 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
 
     @HostListener("keydown", ["$event"])
-    public handleKeyboardNavigation(event: KeyboardEvent) {
-        if (this.displayedOptions.length === 0 || this.disabled) { return; }
-        let direction = null;
-        const lastIndex = this.displayedOptions.findIndex(x => x.value === this.focusedOption);
-        const option = this.displayedOptions[lastIndex];
-        switch (event.code) {
-            case "ArrowDown": // Move focus down
-                if (this.showOptions) {
-                    direction = 1;
-                } else {
-                    this.openDropdown();
-                }
-                event.preventDefault();
-                break;
-            case "ArrowUp":   // Move focus up
-                if (this.showOptions) {
-                    direction = -1;
-                }
-                event.preventDefault();
-                break;
-            case "Enter":
-                this.selectOption(option);
-                event.preventDefault();
-                return;
-            case "Escape":
-                event.stopPropagation();
-                this.closeDropdown();
-                this.changeDetector.markForCheck();
-                return;
-            default:
-        }
-        const index = this._moveFocusInDirection(lastIndex, direction);
-        this.changeDetector.markForCheck();
-        if (lastIndex !== index && this._dropdownRef) {
-            this._dropdownRef.instance.scrollToIndex(index);
-        }
+    public handleKeyDown(event: KeyboardEvent) {
+        if (this.disabled) { return; }
+        this.showOptions ? this._handleKeydownOpen(event) : this._handleKeyDownClosed(event);
     }
 
     public get hasValueSelected() {
@@ -452,4 +419,62 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
             backdropClass: "cdk-overlay-transparent-backdrop",
         }));
     }
+
+    private _handleKeyDownClosed(event: KeyboardEvent) {
+        const keyCode = event.code;
+        const isArrowKey = keyCode === "ArrowDown" || keyCode === "ArrowUp" ||
+            keyCode === "ArrowLeft" || keyCode === "ArrowRight";
+        const isOpenKey = keyCode === "Enter" || keyCode === "Space";
+        // Open the select on ALT + arrow key to match the native <select>
+        if (isOpenKey || ((this.multiple || event.altKey) && isArrowKey)) {
+            event.preventDefault(); // prevents the page from scrolling down when pressing space
+            this.openDropdown();
+        }
+    }
+
+    private _handleKeydownOpen(event: KeyboardEvent) {
+        if (this.displayedOptions.length === 0) { return; }
+        let direction = null;
+        const lastIndex = this.displayedOptions.findIndex(x => x.value === this.focusedOption);
+        const option = this.displayedOptions[lastIndex];
+        switch (event.code) {
+            case "ArrowDown": // Move focus down
+                if (this.showOptions) {
+                    direction = 1;
+                } else {
+                    this.openDropdown();
+                }
+                event.preventDefault();
+                break;
+            case "ArrowUp":   // Move focus up
+                if (this.showOptions) {
+                    direction = -1;
+                }
+                event.preventDefault();
+                break;
+            case "Space":
+                if (!this.filterable) {
+                    this.selectOption(option);
+                    event.preventDefault();
+                    return;
+                }
+                break;
+            case "Enter":
+                this.selectOption(option);
+                event.preventDefault();
+                return;
+            case "Escape":
+                event.stopPropagation();
+                this.closeDropdown();
+                this.changeDetector.markForCheck();
+                return;
+            default:
+        }
+        const index = this._moveFocusInDirection(lastIndex, direction);
+        this.changeDetector.markForCheck();
+        if (lastIndex !== index && this._dropdownRef) {
+            this._dropdownRef.instance.scrollToIndex(index);
+        }
+    }
+
 }

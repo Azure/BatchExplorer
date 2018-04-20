@@ -1,4 +1,7 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild, forwardRef } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component,
+    Input, OnDestroy, OnInit, ViewChild, forwardRef,
+} from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 
 import { TaskListDisplayComponent } from "./display";
@@ -21,6 +24,7 @@ import { DeleteTaskAction } from "../action";
         provide: ListBaseComponent,
         useExisting: forwardRef(() => TaskListComponent),
     }],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
@@ -53,6 +57,7 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
 
         this.data.status.subscribe((status) => {
             this.status = status;
+            this.changeDetector.markForCheck();
         });
 
         this._onTaskAddedSub = taskService.onTaskAdded.subscribe((item: TaskParams) => {

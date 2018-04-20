@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -33,6 +33,7 @@ import {
         provide: ListBaseComponent,
         useExisting: forwardRef(() => JobListComponent),
     }],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JobListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public jobs: List<Job> = List([]);
@@ -64,6 +65,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
 
         this.data.status.subscribe((status) => {
             this.status = status;
+            this.changeDetector.markForCheck();
         });
 
         this._onJobAddedSub = jobService.onJobAdded.subscribe((jobId) => {
