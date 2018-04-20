@@ -1,3 +1,4 @@
+import { exists, nil } from "@batch-flask/utils";
 import { Observable } from "rxjs";
 
 export interface EntityCommandAttributes<TEntity> {
@@ -5,7 +6,7 @@ export interface EntityCommandAttributes<TEntity> {
     action: (entity: TEntity) => Observable<any> | void;
     enabled?: (entity: TEntity) => boolean;
     multiple?: boolean;
-    confirm?: boolean;
+    confirm?: ((entities: TEntity[]) => Observable<any>) | boolean;
 }
 
 /**
@@ -13,8 +14,8 @@ export interface EntityCommandAttributes<TEntity> {
  */
 export class EntityCommand<TEntity> {
     public multiple: boolean;
-    public confirm: boolean;
     public enabled: (entity: TEntity) => boolean;
+    public confirm: ((entities: TEntity[]) => Observable<any>) | boolean;
 
     private _action: (entity: TEntity) => Observable<any> | void;
     private _label: ((entity: TEntity) => string) | string;
@@ -22,9 +23,9 @@ export class EntityCommand<TEntity> {
     constructor(attributes: EntityCommandAttributes<TEntity>) {
         this._label = attributes.label;
         this._action = attributes.action;
-        this.multiple = attributes.multiple || true;
-        this.confirm = attributes.confirm || true;
+        this.multiple = exists(attributes.multiple) ? attributes.multiple : true;
         this.enabled = attributes.enabled || (() => true);
+        this.confirm = exists(attributes.confirm) ? attributes.multiple : true;
     }
 
     public label(entity: TEntity) {

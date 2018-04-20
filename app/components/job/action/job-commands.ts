@@ -5,12 +5,13 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, JobState } from "app/models";
 import { JobService, PinnedEntityService } from "app/services";
 import { PatchJobComponent } from "./add";
+import { TerminateJobCommand } from "./terminate";
 
 @Injectable()
 export class JobCommands extends EntityCommands<Job> {
     constructor(
         injector: Injector,
-        jobService: JobService,
+        private jobService: JobService,
         private pinnedEntityService: PinnedEntityService,
         private sidebarManager: SidebarManager) {
         super(
@@ -18,43 +19,9 @@ export class JobCommands extends EntityCommands<Job> {
             "Job",
             (jobId) => jobService.get(jobId),
             (jobId) => jobService.getFromCache(jobId),
-            [
-                new EntityCommand({
-                    label: "Edit",
-                    action: (job) => this.editJob(job),
-                    enabled: (job) => job.state !== JobState.completed,
-                    multiple: false,
-                    confirm: false,
-                }),
-                new EntityCommand({
-                    label: "Delete",
-                    action: (job: Job) => jobService.delete(job.id),
-                }),
-                new EntityCommand({
-                    label: "Terminate",
-                    action: (job: Job) => jobService.terminate(job.id),
-                    enabled: (job) => job.state !== JobState.completed,
-                }),
-                new EntityCommand({
-                    label: "Enable",
-                    action: (job: Job) => jobService.enable(job.id),
-                    enabled: (job) => job.state === JobState.disabled,
-                }),
-                new EntityCommand({
-                    label: "Disable",
-                    // TODO-TIM handle options??
-                    action: (job: Job) => jobService.disable(job.id, "requeue"),
-                    enabled: (job) => job.state !== JobState.disabled && job.state !== JobState.completed,
-                }),
-                new EntityCommand({
-                    label: (job: Job) => {
-                        return this.pinnedEntityService.isFavorite(job) ? "Unpin favorite" : "Pin to favorites";
-                    },
-                    action: (job: Job) => this._pinJob(job),
-                    confirm: false,
-                    multiple: false,
-                }),
-            ]);
+        );
+
+        this.commands = this._buildCommands();
     }
 
     public editJob(job: Job) {
@@ -71,5 +38,41 @@ export class JobCommands extends EntityCommands<Job> {
                 this.pinnedEntityService.unPinFavorite(job);
             }
         });
+    }
+
+    private _buildCommands() {
+        return [
+            new EntityCommand<Job>({
+                label: "Edit",
+                action: (job) => this.editJob(job),
+                enabled: (job) => job.state !== JobState.completed,
+                multiple: false,
+                confirm: false,
+            }),
+            new EntityCommand<Job>({
+                label: "Delete",
+                action: (job: Job) => this.jobService.delete(job.id),
+            }),
+            new TerminateJobCommand(this.jobService),
+            new EntityCommand<Job>({
+                label: "Enable",
+                action: (job: Job) => this.jobService.enable(job.id),
+                enabled: (job) => job.state === JobState.disabled,
+            }),
+            new EntityCommand<Job>({
+                label: "Disable",
+                // TODO-TIM handle options??
+                action: (job: Job) => this.jobService.disable(job.id, "requeue"),
+                enabled: (job) => job.state !== JobState.disabled && job.state !== JobState.completed,
+            }),
+            new EntityCommand<Job>({
+                label: (job: Job) => {
+                    return this.pinnedEntityService.isFavorite(job) ? "Unpin favorite" : "Pin to favorites";
+                },
+                action: (job: Job) => this._pinJob(job),
+                confirm: false,
+                multiple: false,
+            }),
+        ];
     }
 }

@@ -18,17 +18,18 @@ interface ActionableEntity {
 /**
  * Entity commands is a wrapper for all actions/commands available to an entity
  */
-export class EntityCommands<TEntity extends ActionableEntity> {
+export abstract class EntityCommands<TEntity extends ActionableEntity> {
     public dialogService: DialogService;
     public notificationService: NotificationService;
     public backgroundTaskService: BackgroundTaskService;
+
+    public commands: Array<EntityCommand<TEntity>>;
 
     constructor(
         injector: Injector,
         private _typeName: string,
         private _get: (id: string) => Observable<TEntity>,
-        private _getFromCache: (id: string) => Observable<TEntity>,
-        public commands: Array<EntityCommand<TEntity>>) {
+        private _getFromCache: (id: string) => Observable<TEntity>) {
         this.notificationService = injector.get(NotificationService);
         this.dialogService = injector.get(DialogService);
         this.backgroundTaskService = injector.get(BackgroundTaskService);
@@ -92,16 +93,20 @@ export class EntityCommands<TEntity extends ActionableEntity> {
 
     public executeCommand(command: EntityCommand<TEntity>, entity) {
         if (command.confirm) {
-            const label = command.label(entity);
-            const type = this._typeName.toLowerCase();
-            this.dialogService.confirm(`Are you sure your want to ${label.toLowerCase()} these ${type}`, {
-                description: `You are about to ${label.toLowerCase()} ${entity.id}`,
-                yes: () => {
-                    console.log("Yes??");
+            if (command.confirm instanceof Function) {
+                command.confirm([entity]).subscribe(() => {
                     this._executeCommand(command, entity);
-                    // return Observable.of("");
-                },
-            });
+                });
+            } else {
+                const label = command.label(entity);
+                const type = this._typeName.toLowerCase();
+                this.dialogService.confirm(`Are you sure your want to ${label.toLowerCase()} these ${type}`, {
+                    description: `You are about to ${label.toLowerCase()} ${entity.id}`,
+                    yes: () => {
+                        this._executeCommand(command, entity);
+                    },
+                });
+            }
         } else {
             this._executeCommand(command, entity);
         }
@@ -109,15 +114,21 @@ export class EntityCommands<TEntity extends ActionableEntity> {
 
     public executeCommands(command: EntityCommand<TEntity>, entities: TEntity[]) {
         if (command.confirm) {
-            const type = inflection.pluralize(this._typeName.toLowerCase());
-            const label = command.label(entities.first());
-            this.dialogService.confirm(
-                `Are you sure your want to ${label.toLowerCase()} those ${entities.length} ${type}`,
-                {
-                    yes: () => {
-                        this._executeCommands(command, entities);
-                    },
+            if (command.confirm instanceof Function) {
+                command.confirm(entities).subscribe(() => {
+                    this._executeCommands(command, entities);
                 });
+            } else {
+                const type = inflection.pluralize(this._typeName.toLowerCase());
+                const label = command.label(entities.first());
+                this.dialogService.confirm(
+                    `Are you sure your want to ${label.toLowerCase()} those ${entities.length} ${type}`,
+                    {
+                        yes: () => {
+                            this._executeCommands(command, entities);
+                        },
+                    });
+            }
         } else {
             this._executeCommands(command, entities);
 
