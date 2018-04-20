@@ -97,7 +97,9 @@ export class EntityCommands<TEntity extends ActionableEntity> {
             this.dialogService.confirm(`Are you sure your want to ${label.toLowerCase()} these ${type}`, {
                 description: `You are about to ${label.toLowerCase()} ${entity.id}`,
                 yes: () => {
+                    console.log("Yes??");
                     this._executeCommand(command, entity);
+                    // return Observable.of("");
                 },
             });
         } else {

@@ -118,7 +118,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
         this.loading = true;
         const obs = ready.flatMap(() => {
             const submitResult = this.submit(this.getCurrentDto());
-            if (submitResult === null) {
+            if (!submitResult) {
                 return Observable.of(null);
             } else {
                 return submitResult;
