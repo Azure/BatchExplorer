@@ -6,8 +6,8 @@ import { Observable, Subscription } from "rxjs";
 
 import { Filter, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
+import { InjectorFactory } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
-import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
@@ -22,6 +22,7 @@ import {
     DeleteJobDialogComponent,
     DisableJobDialogComponent,
     EnableJobDialogComponent,
+    JobCommands,
     PatchJobComponent,
     TerminateJobDialogComponent,
 } from "../action";
@@ -41,6 +42,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
 
     public data: ListView<Job, JobListParams>;
     public searchQuery = new FormControl();
+    public commands: JobCommands;
 
     // todo: ask tim about setting difference select options for list and details.
     private _baseOptions = {};
@@ -51,11 +53,14 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         private dialog: MatDialog,
         activatedRoute: ActivatedRoute,
         changeDetector: ChangeDetectorRef,
+        injectorFactory: InjectorFactory,
         private sidebarManager: SidebarManager,
         private jobService: JobService,
-        private pinnedEntityService: PinnedEntityService,
         private taskManager: BackgroundTaskService) {
         super(changeDetector);
+
+        this.commands = injectorFactory.create(JobCommands);
+
         this.data = this.jobService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
         this.data.items.subscribe((jobs) => {
@@ -149,6 +154,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
             task.start(backgroundTask);
             return task.waitingDone;
         });
+        // this.jobService.deleteJobs([...this.selection.keys])
     }
 
     public deleteJob(job: Job) {
@@ -183,43 +189,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         });
     }
 
-    public contextmenu(job: Job) {
-        const isCompleted = job.state === JobState.completed;
-        const isDisabled = job.state === JobState.disabled;
-        return new ContextMenu([
-            new ContextMenuItem({
-                label: "Edit",
-                click: () => this.editJob(job),
-                enabled: !isCompleted,
-            }),
-            new ContextMenuItem({ label: "Delete", click: () => this.deleteJob(job) }),
-            new ContextMenuItem({ label: "Terminate", click: () => this.terminateJob(job), enabled: !isCompleted }),
-            new ContextMenuItem({
-                label: "Enable",
-                click: () => this.enableJob(job),
-                enabled: !isCompleted && isDisabled,
-            }),
-            new ContextMenuItem({
-                label: "Disable",
-                click: () => this.disableJob(job),
-                enabled: !isCompleted && !isDisabled,
-            }),
-            new ContextMenuItem({
-                label: this.pinnedEntityService.isFavorite(job) ? "Unpin favorite" : "Pin to favorites",
-                click: () => this._pinJob(job),
-            }),
-        ]);
-    }
-
     public trackByFn(index: number, job: Job) {
         return job.id;
-    }
-
-    private _pinJob(job: Job) {
-        this.pinnedEntityService.pinFavorite(job).subscribe((result) => {
-            if (result) {
-                this.pinnedEntityService.unPinFavorite(job);
-            }
-        });
     }
 }

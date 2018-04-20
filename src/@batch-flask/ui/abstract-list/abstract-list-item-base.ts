@@ -55,7 +55,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     constructor(
         protected list: AbstractListBase,
         private router: Router,
-        private contextmenuService: ContextMenuService,
         private breadcrumbService: BreadcrumbService) {
 
         this.isFocused = this.list.focusedItem.map(x => x === this.key);
@@ -122,10 +121,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     }
 
     public openContextMenu() {
-        const menu = this.contextmenu;
-        if (menu) {
-            this.contextmenuService.openMenu(menu);
-        }
+        this.list.openContextMenu(this);
     }
 
     /**
