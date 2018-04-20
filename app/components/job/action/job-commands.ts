@@ -15,6 +15,7 @@ export class JobCommands extends EntityCommands<Job> {
         private sidebarManager: SidebarManager) {
         super(
             injector,
+            "Job",
             (jobId) => jobService.get(jobId),
             (jobId) => jobService.getFromCache(jobId),
             [
@@ -23,6 +24,7 @@ export class JobCommands extends EntityCommands<Job> {
                     action: (job) => this.editJob(job),
                     enabled: (job) => job.state !== JobState.completed,
                     multiple: false,
+                    confirm: false,
                 }),
                 new EntityCommand({
                     label: "Delete",
@@ -49,6 +51,8 @@ export class JobCommands extends EntityCommands<Job> {
                         return this.pinnedEntityService.isFavorite(job) ? "Unpin favorite" : "Pin to favorites";
                     },
                     action: (job: Job) => this._pinJob(job),
+                    confirm: false,
+                    multiple: false,
                 }),
             ]);
     }

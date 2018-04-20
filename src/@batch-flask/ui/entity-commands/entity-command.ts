@@ -3,8 +3,9 @@ import { Observable } from "rxjs";
 export interface EntityCommandAttributes<TEntity> {
     label: ((entity: TEntity) => string) | string;
     action: (entity: TEntity) => Observable<any> | void;
-    multiple?: boolean;
     enabled?: (entity: TEntity) => boolean;
+    multiple?: boolean;
+    confirm?: boolean;
 }
 
 /**
@@ -12,6 +13,7 @@ export interface EntityCommandAttributes<TEntity> {
  */
 export class EntityCommand<TEntity> {
     public multiple: boolean;
+    public confirm: boolean;
     public enabled: (entity: TEntity) => boolean;
 
     private _action: (entity: TEntity) => Observable<any> | void;
@@ -21,6 +23,7 @@ export class EntityCommand<TEntity> {
         this._label = attributes.label;
         this._action = attributes.action;
         this.multiple = attributes.multiple || true;
+        this.confirm = attributes.confirm || true;
         this.enabled = attributes.enabled || (() => true);
     }
 

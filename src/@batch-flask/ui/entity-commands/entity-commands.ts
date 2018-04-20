@@ -1,6 +1,7 @@
 import { Injector } from "@angular/core";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
+import * as inflection from "inflection";
 import { Observable } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
@@ -10,16 +11,21 @@ import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
 import { log } from "@batch-flask/utils";
 import { EntityCommand } from "./entity-command";
 
+interface ActionableEntity {
+    id: string;
+}
+
 /**
  * Entity commands is a wrapper for all actions/commands available to an entity
  */
-export class EntityCommands<TEntity> {
+export class EntityCommands<TEntity extends ActionableEntity> {
     public dialogService: DialogService;
     public notificationService: NotificationService;
     public backgroundTaskService: BackgroundTaskService;
 
     constructor(
         injector: Injector,
+        private _typeName: string,
         private _get: (id: string) => Observable<TEntity>,
         private _getFromCache: (id: string) => Observable<TEntity>,
         public commands: Array<EntityCommand<TEntity>>) {
@@ -62,7 +68,7 @@ export class EntityCommands<TEntity> {
             return new ContextMenuItem({
                 label: command.label(entity),
                 click: () => {
-                    this._executeCommand(command, entity);
+                    this.executeCommand(command, entity);
                 },
                 enabled: command.enabled(entity),
             });
@@ -70,15 +76,50 @@ export class EntityCommands<TEntity> {
     }
 
     public contextMenuFromEntities(entities: TEntity[]): ContextMenu {
-        return new ContextMenu(this.commands.map((command) => {
-            return new ContextMenuItem({
-                label: command.label(entities[0]),
-                click: () => {
-                    this._executeCommands(command, entities);
-                },
-                enabled: Boolean(entities.find(x => command.enabled(x))),
+        const menuItems = this.commands
+            .filter(x => x.multiple)
+            .map((command) => {
+                return new ContextMenuItem({
+                    label: command.label(entities[0]),
+                    click: () => {
+                        this.executeCommands(command, entities);
+                    },
+                    enabled: Boolean(entities.find(x => command.enabled(x))),
+                });
             });
-        }));
+        return new ContextMenu(menuItems);
+    }
+
+    public executeCommand(command: EntityCommand<TEntity>, entity) {
+        if (command.confirm) {
+            const label = command.label(entity);
+            const type = this._typeName.toLowerCase();
+            this.dialogService.confirm(`Are you sure your want to ${label.toLowerCase()} these ${type}`, {
+                description: `You are about to ${label.toLowerCase()} ${entity.id}`,
+                yes: () => {
+                    this._executeCommand(command, entity);
+                },
+            });
+        } else {
+            this._executeCommand(command, entity);
+        }
+    }
+
+    public executeCommands(command: EntityCommand<TEntity>, entities: TEntity[]) {
+        if (command.confirm) {
+            const type = inflection.pluralize(this._typeName.toLowerCase());
+            const label = command.label(entities.first());
+            this.dialogService.confirm(
+                `Are you sure your want to ${label.toLowerCase()} those ${entities.length} ${type}`,
+                {
+                    yes: () => {
+                        this._executeCommands(command, entities);
+                    },
+                });
+        } else {
+            this._executeCommands(command, entities);
+
+        }
     }
 
     private _executeCommand(command: EntityCommand<TEntity>, entity) {
