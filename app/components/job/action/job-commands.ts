@@ -1,5 +1,5 @@
-import { Injectable } from "@angular/core";
-import { EntityCommand, EntityCommands } from "@batch-flask/core";
+import { Injectable, Injector } from "@angular/core";
+import { EntityCommand, EntityCommands } from "@batch-flask/ui";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, JobState } from "app/models";
@@ -9,11 +9,13 @@ import { PatchJobComponent } from "./add";
 @Injectable()
 export class JobCommands extends EntityCommands<Job> {
     constructor(
+        injector: Injector,
         jobService: JobService,
         private pinnedEntityService: PinnedEntityService,
         private sidebarManager: SidebarManager) {
 
         super(
+            injector,
             (jobId) => jobService.get(jobId),
             (jobId) => jobService.getFromCache(jobId),
             [

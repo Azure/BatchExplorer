@@ -1,5 +1,6 @@
 import { Injectable, Injector, ReflectiveInjector, Type } from "@angular/core";
-import { EntityCommands } from "@batch-flask/core";
+
+import { EntityCommands } from "@batch-flask/ui/entity-commands";
 
 /**
  * Helper class to create a new instance of an object using dependency injection

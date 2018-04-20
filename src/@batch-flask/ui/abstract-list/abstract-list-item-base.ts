@@ -3,7 +3,6 @@ import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
-import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { log } from "@batch-flask/utils";
 import { ContextMenu } from "../context-menu";
 import { AbstractListBase } from "./abstract-list-base";

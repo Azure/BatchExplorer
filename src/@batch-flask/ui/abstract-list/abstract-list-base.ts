@@ -4,9 +4,9 @@ import {
 } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
-import { EntityCommands, autobind } from "@batch-flask/core";
+import { autobind } from "@batch-flask/core";
 import { ListSelection, SelectableList } from "@batch-flask/core/list";
-import { ContextMenuService } from "@batch-flask/ui/context-menu";
+import { ContextMenuService, EntityCommands } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { FocusSectionComponent } from "../focus-section";
 import { VirtualScrollComponent } from "../virtual-scroll";
