@@ -14,6 +14,11 @@
             [label]="parameter.name" class="form-element" [hint]="parameter.description">
         </bl-file-group-sas>
     </div>
+    <div *ngSwitchCase="NcjParameterExtendedType.fileGroupWriteSas">
+        <bl-file-group-sas [containerId]="getContainerFromFileGroup(parameterValues[parameter.dependsOn])" [formControl]="parameterValue"
+            [label]="parameter.name" class="form-element" [hint]="parameter.description" [allowWrite]="true">
+        </bl-file-group-sas>
+    </div>
     <div *ngSwitchCase="NcjParameterExtendedType.fileInFileGroup">
         <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(parameterValues[parameter.dependsOn])" [formControl]="parameterValue"
             [label]="parameter.name" class="form-element" [hint]="parameter.description" [wildcards]="parameter.wildcards">
