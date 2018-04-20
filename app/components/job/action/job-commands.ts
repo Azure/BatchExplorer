@@ -13,16 +13,11 @@ export class JobCommands extends EntityCommands<Job> {
         jobService: JobService,
         private pinnedEntityService: PinnedEntityService,
         private sidebarManager: SidebarManager) {
-
         super(
             injector,
             (jobId) => jobService.get(jobId),
             (jobId) => jobService.getFromCache(jobId),
             [
-                new EntityCommand({
-                    label: "Delete",
-                    action: (job: Job) => jobService.delete(job.id),
-                }),
                 new EntityCommand({
                     label: "Edit",
                     action: (job) => this.editJob(job),
@@ -50,7 +45,9 @@ export class JobCommands extends EntityCommands<Job> {
                     enabled: (job) => job.state !== JobState.disabled && job.state !== JobState.completed,
                 }),
                 new EntityCommand({
-                    label: (job: Job) => this.pinnedEntityService.isFavorite(job) ? "Unpin favorite" : "Pin to favorites",
+                    label: (job: Job) => {
+                        return this.pinnedEntityService.isFavorite(job) ? "Unpin favorite" : "Pin to favorites";
+                    },
                     action: (job: Job) => this._pinJob(job),
                 }),
             ]);

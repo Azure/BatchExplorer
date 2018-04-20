@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { ListSelection } from "@batch-flask/core/list/list-selection";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
 import { log } from "@batch-flask/utils";
 import { EntityCommand } from "./entity-command";
@@ -15,6 +16,7 @@ import { EntityCommand } from "./entity-command";
 export class EntityCommands<TEntity> {
     public dialogService: DialogService;
     public notificationService: NotificationService;
+    public backgroundTaskService: BackgroundTaskService;
 
     constructor(
         injector: Injector,
@@ -23,6 +25,7 @@ export class EntityCommands<TEntity> {
         public commands: Array<EntityCommand<TEntity>>) {
         this.notificationService = injector.get(NotificationService);
         this.dialogService = injector.get(DialogService);
+        this.backgroundTaskService = injector.get(BackgroundTaskService);
     }
 
     public contextMenuFromSelection(selection: ListSelection): Observable<ContextMenu> {
@@ -71,14 +74,14 @@ export class EntityCommands<TEntity> {
             return new ContextMenuItem({
                 label: command.label(entities[0]),
                 click: () => {
-                    // command.action(entities[0]);
+                    this._executeCommands(command, entities);
                 },
-                enabled: true,
+                enabled: Boolean(entities.find(x => command.enabled(x))),
             });
         }));
     }
 
-    private _executeCommand(command, entity) {
+    private _executeCommand(command: EntityCommand<TEntity>, entity) {
         const label = command.label(entity);
         command.execute(entity).subscribe({
             next: () => {
@@ -94,4 +97,32 @@ export class EntityCommands<TEntity> {
         });
     }
 
+    private _executeCommands(command: EntityCommand<TEntity>, entities: any[]) {
+        const label = command.label(entities[0]);
+        const enabledEntities = entities.filter(x => command.enabled(x));
+        this.backgroundTaskService.startTask("", (task) => {
+            const obs = Observable.from(enabledEntities)
+                .concatMap((entity, index) => {
+                    task.name.next(`${label} (${index + 1}/${entities.length})`);
+                    return command.execute(entity).map(x => ({ entity, index }));
+                }).share();
+
+            obs.subscribe({
+                next: ({ entity, index }) => {
+                    task.progress.next((index + 1) / entities.length * 100);
+                    this._get((entity as any).id).subscribe();
+                },
+                error: (e: ServerError) => {
+                    // this.notificationService.error(`${label} failed.`, `${entity.id} ${e.message}`);
+                    log.error(`Failed to execute command ${label}`, e);
+                },
+            });
+
+            return obs;
+        }).subscribe(() => {
+            this.notificationService.success(`${label} was successfull.`,
+                `${enabledEntities.length}/${entities.length}`);
+        });
+
+    }
 }
