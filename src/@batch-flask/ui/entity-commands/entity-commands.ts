@@ -23,7 +23,7 @@ export abstract class EntityCommands<TEntity extends ActionableEntity> {
     public notificationService: NotificationService;
     public backgroundTaskService: BackgroundTaskService;
 
-    public commands: Array<EntityCommand<TEntity>>;
+    public commands: Array<EntityCommand<TEntity | any>>;
 
     constructor(
         injector: Injector,
