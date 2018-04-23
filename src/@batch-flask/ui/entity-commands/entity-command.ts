@@ -1,5 +1,11 @@
-import { exists } from "@batch-flask/utils";
+import { exists, nil } from "@batch-flask/utils";
 import { Observable } from "rxjs";
+
+export enum EntityCommandNotify {
+    Always,
+    Never,
+    OnFailure,
+}
 
 export interface EntityCommandAttributes<TEntity, TOptions = void> {
     label: ((entity: TEntity) => string) | string;
@@ -7,12 +13,14 @@ export interface EntityCommandAttributes<TEntity, TOptions = void> {
     enabled?: (entity: TEntity) => boolean;
     multiple?: boolean;
     confirm?: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
+    notify?: EntityCommandNotify | boolean;
 }
 
 /**
  * Entity command is a commnad available to an entity
  */
 export class EntityCommand<TEntity, TOptions = void> {
+    public notify: EntityCommandNotify;
     public multiple: boolean;
     public enabled: (entity: TEntity) => boolean;
     public confirm: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
@@ -26,6 +34,13 @@ export class EntityCommand<TEntity, TOptions = void> {
         this.multiple = exists(attributes.multiple) ? attributes.multiple : true;
         this.enabled = attributes.enabled || (() => true);
         this.confirm = exists(attributes.confirm) ? attributes.confirm : true;
+        if (attributes.notify === true || nil(attributes.notify)) {
+            this.notify = EntityCommandNotify.Always;
+        } else if (attributes.notify === false) {
+            this.notify = EntityCommandNotify.Never;
+        } else {
+            this.notify = attributes.notify;
+        }
     }
 
     public label(entity: TEntity) {

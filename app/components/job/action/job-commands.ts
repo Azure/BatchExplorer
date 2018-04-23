@@ -49,6 +49,7 @@ export class JobCommands extends EntityCommands<Job> {
                 enabled: (job) => job.state !== JobState.completed,
                 multiple: false,
                 confirm: false,
+                notify: false,
             }),
             new EntityCommand<Job>({
                 label: "Delete",

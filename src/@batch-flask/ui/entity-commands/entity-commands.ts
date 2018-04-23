@@ -9,7 +9,7 @@ import { ListSelection } from "@batch-flask/core/list/list-selection";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
 import { log } from "@batch-flask/utils";
-import { EntityCommand } from "./entity-command";
+import { EntityCommand, EntityCommandNotify } from "./entity-command";
 
 interface ActionableEntity {
     id: string;
@@ -139,13 +139,13 @@ export abstract class EntityCommands<TEntity extends ActionableEntity> {
         const label = command.label(entity);
         command.execute(entity, options).subscribe({
             next: () => {
-                this.notificationService.success(`${label} was successfull.`, `${entity.id}`);
+                this._notifySuccess(command, `${label} was successfull.`, `${entity.id}`);
                 this._get((entity as any).id).subscribe({
                     error: () => null,
                 });
             },
             error: (e: ServerError) => {
-                this.notificationService.error(`${label} failed.`, `${entity.id} ${e.message}`);
+                this._notifyError(command, `${label} failed.`, `${entity.id} ${e.message}`);
                 log.error(`Failed to execute command ${label} for entity ${entity.id}`, e);
             },
         });
@@ -167,16 +167,26 @@ export abstract class EntityCommands<TEntity extends ActionableEntity> {
                     this._get((entity as any).id).subscribe();
                 },
                 error: (e: ServerError) => {
-                    // this.notificationService.error(`${label} failed.`, `${entity.id} ${e.message}`);
                     log.error(`Failed to execute command ${label}`, e);
                 },
             });
 
             return obs;
         }).subscribe(() => {
-            this.notificationService.success(`${label} was successfull.`,
+            this._notifySuccess(command, `${label} was successfull.`,
                 `${enabledEntities.length}/${entities.length}`);
         });
+    }
 
+    private _notifySuccess(command: EntityCommand<TEntity>, message: string, description: string) {
+        if (command.notify === EntityCommandNotify.Always) {
+            this.notificationService.success(message, description);
+        }
+    }
+
+    private _notifyError(command: EntityCommand<TEntity>, message: string, description: string) {
+        if (command.notify !== EntityCommandNotify.Never) {
+            this.notificationService.error(message, description);
+        }
     }
 }
