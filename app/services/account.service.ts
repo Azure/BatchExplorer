@@ -219,6 +219,10 @@ export class AccountService {
         return this._getter.fetch({ id: accountId });
     }
 
+    public getFromCache(accountId: string): Observable<AccountResource> {
+        return this._getter.fetch({ id: accountId }, { cached: true });
+    }
+
     public getNameFromAccountId(accountId: string): string {
         const regex = /batchAccounts\/(.*)/;
         const out = regex.exec(accountId);

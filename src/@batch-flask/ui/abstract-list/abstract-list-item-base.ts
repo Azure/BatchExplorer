@@ -4,7 +4,6 @@ import { Observable } from "rxjs";
 
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { log } from "@batch-flask/utils";
-import { ContextMenu } from "../context-menu";
 import { AbstractListBase } from "./abstract-list-base";
 
 /**
@@ -12,8 +11,6 @@ import { AbstractListBase } from "./abstract-list-base";
  * 1. Inject the component inheriting SelectableListBase in the construtor using @Inject and forwardRef
  */
 export class AbstractListItemBase implements OnDestroy, OnInit {
-    @Input() public contextmenu: ContextMenu;
-
     /**
      * Unique key to give to the list used for knowing if the item is selected
      */

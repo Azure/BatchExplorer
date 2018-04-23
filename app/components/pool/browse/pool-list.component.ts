@@ -1,7 +1,6 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
-import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
@@ -11,7 +10,6 @@ import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
-import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { TableConfig } from "@batch-flask/ui/table";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
@@ -45,8 +43,6 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         private poolService: PoolService,
         activatedRoute: ActivatedRoute,
         router: Router,
-        private dialog: MatDialog,
-        private sidebarManager: SidebarManager,
         changeDetector: ChangeDetectorRef,
         private taskManager: BackgroundTaskService,
         private pinnedEntityService: PinnedEntityService) {
@@ -118,13 +114,5 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
 
     public trackById(index, pool) {
         return pool.id;
-    }
-
-    public _pinPool(decorator: PoolDecorator) {
-        this.pinnedEntityService.pinFavorite(decorator.pool).subscribe((result) => {
-            if (result) {
-                this.pinnedEntityService.unPinFavorite(decorator.pool);
-            }
-        });
     }
 }
