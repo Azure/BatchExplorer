@@ -5,7 +5,7 @@ import { AccountResource } from "app/models";
 import { AccountService } from "app/services";
 
 @Injectable()
-export class AccountResourceCommands extends EntityCommands<AccountResource> {
+export class BatchAccountCommands extends EntityCommands<AccountResource> {
     public delete: EntityCommand<AccountResource, void>;
 
     constructor(

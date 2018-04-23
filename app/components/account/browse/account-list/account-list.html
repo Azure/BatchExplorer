@@ -1,7 +1,7 @@
 <bl-focus-section>
-    <bl-quick-list [status]="loadingStatus" [(activeItem)]="activeItem" [(selection)]="selection">
+    <bl-quick-list [status]="loadingStatus" [(activeItem)]="activeItem" [(selection)]="selection" [commands]="commands">
         <bl-quick-list-item *ngFor="let account of displayedAccounts;trackBy: trackByFn" [link]="['/accounts', account.id]"
-            [key]="account.id" [contextmenu]="contextmenu(account)">
+            [key]="account.id">
             <bl-quick-list-item-status [status]="accountStatus(account.id)">
             </bl-quick-list-item-status>
 

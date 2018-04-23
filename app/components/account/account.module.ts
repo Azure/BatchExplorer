@@ -4,6 +4,7 @@ import { commonModules } from "app/common";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
 import { AutoStorageAccountPickerComponent } from "app/components/account/base/auto-storage-account-picker";
 import { PoolBaseModule } from "app/components/pool/base";
+import { BatchAccountCommands } from "./action";
 import { BatchAccountCreateComponent } from "./action/add";
 import { DeleteAccountDialogComponent } from "./action/delete/delete-account-dialog.component";
 import { AccountBrowseModule } from "./browse";
@@ -33,6 +34,9 @@ const modules = [
         BatchAccountCreateComponent,
         DeleteAccountDialogComponent,
         EditStorageAccountFormComponent,
+    ],
+    providers: [
+        BatchAccountCommands,
     ],
 })
 export class AccountModule {

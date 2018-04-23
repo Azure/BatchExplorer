@@ -11,6 +11,7 @@ import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { BatchAccountCommands } from "app/components/account/action";
 import { AccountResource } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
 import { DeleteAccountDialogComponent, DeleteAccountTask } from "../../action/delete";
@@ -33,6 +34,7 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
     private _accountSub: Subscription;
 
     constructor(
+        public commands: BatchAccountCommands,
         private accountService: AccountService,
         private dialog: MatDialog,
         private taskManager: BackgroundTaskService,
