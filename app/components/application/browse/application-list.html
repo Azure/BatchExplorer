@@ -1,7 +1,7 @@
 <bl-focus-section>
     <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()"  [commands]="commands">
         <bl-quick-list-item *ngFor="let application of displayedApplications;trackBy: trackByFn" [link]="['/applications/', application.id]"
-            [key]="application.id" [contextmenu]="contextmenu(application)">
+            [key]="application.id">
             <bl-quick-list-item-status [status]="appStatus(application)">
             </bl-quick-list-item-status>
 
@@ -21,7 +21,7 @@
             <bl-column>Allow updates</bl-column>
         </bl-thead>
         <bl-row *ngFor="let application of displayedApplications;trackBy: trackByFn" [link]="['/applications', application.id]"
-            [key]="application.id" [contextmenu]="contextmenu(application)">
+            [key]="application.id">
             <bl-cell>{{application.id}}</bl-cell>
             <bl-cell>{{application.packages?.size}}</bl-cell>
             <bl-cell>{{application.defaultVersion}}</bl-cell>
