@@ -4,13 +4,15 @@ import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { Filter, FilterMatcher, Operator, autobind } from "@batch-flask/core";
+import { Filter, FilterMatcher, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
+import { InjectorFactory } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { BatchAccountCommands } from "app/components/account/action";
 import { AccountResource } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
 import { DeleteAccountDialogComponent, DeleteAccountTask } from "../../action/delete";
@@ -29,10 +31,12 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
     public accounts: List<AccountResource> = List([]);
     public displayedAccounts: List<AccountResource> = List([]);
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
+    public commands: BatchAccountCommands;
 
     private _accountSub: Subscription;
 
     constructor(
+        public injectorFactory: InjectorFactory,
         private accountService: AccountService,
         private dialog: MatDialog,
         private taskManager: BackgroundTaskService,
@@ -41,6 +45,7 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
         changeDetector: ChangeDetectorRef,
         subscriptionService: SubscriptionService) {
         super(changeDetector);
+        this.commands = injectorFactory.create(BatchAccountCommands);
         this._updateDisplayedAccounts();
 
         this.accountService.accountsLoaded.subscribe(() => {
@@ -114,14 +119,7 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
     }
 
     private _updateDisplayedAccounts() {
-        const matcher = new FilterMatcher<AccountResource>({
-            id: (item: AccountResource, value: any, operator: Operator) => {
-                return value === "" || item.name.toLowerCase().startsWith(value.toLowerCase());
-            },
-            subscriptionId: (item: AccountResource, value: any, operator: Operator) => {
-                return value === "" || item.subscription.subscriptionId === value;
-            },
-        });
+        const matcher = new FilterMatcher<AccountResource>();
 
         this.displayedAccounts = List<AccountResource>(this.accounts.filter((x) => {
             return matcher.test(this.filter, x);

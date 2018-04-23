@@ -1,19 +1,16 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
-import { MatDialog } from "@angular/material";
 import { Router } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { Filter, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/core/list";
-import { LoadingStatus } from "@batch-flask/ui";
-import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
+import { InjectorFactory, LoadingStatus } from "@batch-flask/ui";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
-import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { BatchApplication } from "app/models";
-import { ApplicationListParams, ApplicationService, PinnedEntityService } from "app/services";
+import { ApplicationListParams, ApplicationService } from "app/services";
 import { ListView } from "app/services/core";
-import { ApplicationEditDialogComponent, DeleteApplicationDialogComponent } from "../action";
+import { BatchApplicationCommands } from "../action";
 
 import "./application-list.scss";
 
@@ -31,6 +28,7 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
     public data: ListView<BatchApplication, ApplicationListParams>;
     public applications: List<BatchApplication>;
     public displayedApplications: List<BatchApplication>;
+    public commands: BatchApplicationCommands;
 
     private _baseOptions = { maxresults: 50 };
     private _subs: Subscription[] = [];
@@ -38,11 +36,11 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
     constructor(
         router: Router,
         changeDetector: ChangeDetectorRef,
-        protected dialog: MatDialog,
+        injectorFactory: InjectorFactory,
         private applicationService: ApplicationService,
-        private pinnedEntityService: PinnedEntityService,
-        private sidebarManager: SidebarManager) {
+        ) {
         super(changeDetector);
+        this.commands = injectorFactory.create(BatchApplicationCommands);
 
         this.data = this.applicationService.listView(this._baseOptions);
         this._subs.push(this.data.items.subscribe((applications) => {
@@ -93,24 +91,6 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
         this.data.fetchNext();
     }
 
-    public contextmenu(application: BatchApplication) {
-        return new ContextMenu([
-            new ContextMenuItem({
-                label: "Delete",
-                click: () => this._deleteApplication(application),
-                enabled: application.allowUpdates,
-            }),
-            new ContextMenuItem({
-                label: "Edit",
-                click: () => this._editApplication(application),
-            }),
-            new ContextMenuItem({
-                label: this.pinnedEntityService.isFavorite(application) ? "Unpin favorite" : "Pin to favorites",
-                click: () => this._pinApplication(application),
-            }),
-        ]);
-    }
-
     public trackByFn(index, application: BatchApplication) {
         return application.id;
     }
@@ -125,26 +105,5 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
         this.displayedApplications = List<BatchApplication>(this.applications.filter((app) => {
             return !text || app.id.toLowerCase().indexOf(text) !== -1;
         }));
-    }
-
-    private _editApplication(application: BatchApplication) {
-        const sidebarRef = this.sidebarManager.open("edit-application", ApplicationEditDialogComponent);
-        sidebarRef.component.setValue(application);
-        sidebarRef.afterCompletion.subscribe(() => {
-            this.refresh();
-        });
-    }
-
-    private _deleteApplication(application: BatchApplication) {
-        const dialogRef = this.dialog.open(DeleteApplicationDialogComponent);
-        dialogRef.componentInstance.applicationId = application.id;
-    }
-
-    private _pinApplication(application: BatchApplication) {
-        this.pinnedEntityService.pinFavorite(application).subscribe((result) => {
-            if (result) {
-                this.pinnedEntityService.unPinFavorite(application);
-            }
-        });
     }
 }

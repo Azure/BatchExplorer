@@ -155,7 +155,7 @@ describe("SelectComponent", () => {
             fixture.detectChanges();
             await fixture.whenStable();
             const checkbox = overlayContainerElement.querySelectorAll(".option .checkbox");
-            expect(checkbox.length).toBe(5);
+            expect(checkbox.length).toBe(6);
         }));
 
         it("checkbox should be ticked if selected", F(async () => {
@@ -175,13 +175,13 @@ describe("SelectComponent", () => {
             await fixture.whenStable();
 
             const options = overlayContainerElement.querySelectorAll(".option");
-            click(options[2]);
+            click(options[3]);
             fixture.detectChanges();
             expect(testComponent.value).toEqual(["opt-3"]);
 
             expect(overlayContainerElement.querySelector("bl-select-dropdown")).not.toBeFalsy();
 
-            click(options[4]);
+            click(options[5]);
             fixture.detectChanges();
             expect(testComponent.value).toEqual(["opt-3", "opt-5"]);
         }));

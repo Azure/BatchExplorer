@@ -1,16 +1,33 @@
 import {
-    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, ComponentRef, ContentChildren, ElementRef, HostListener,
-    Injector, Input, OnDestroy, QueryList, ViewChild, forwardRef,
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ComponentRef,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Injector,
+    Input,
+    OnDestroy,
+    Optional,
+    Output,
+    QueryList,
+    Self,
+    ViewChild,
 } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ControlValueAccessor, NgControl } from "@angular/forms";
 
 import { SelectOptionComponent } from "./option";
 
 import { ConnectionPositionPair, Overlay, OverlayConfig, OverlayRef } from "@angular/cdk/overlay";
 import { ComponentPortal } from "@angular/cdk/portal";
+import { FlagInput, coerceBooleanProperty } from "@batch-flask/core";
+import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import { SelectDropdownComponent } from "@batch-flask/ui/select/select-dropdown";
-import { Subscription } from "rxjs";
+import { Subject, Subscription } from "rxjs";
 import "./select.scss";
 
 /** Custom injector type specifically for instantiating components with a dialog. */
@@ -26,26 +43,49 @@ export class SelectInjector implements Injector {
     }
 }
 
+let nextUniqueId = 0;
+
 @Component({
     selector: "bl-select",
     templateUrl: "select.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SelectComponent), multi: true },
-    ],
+    providers: [{ provide: FormFieldControl, useExisting: SelectComponent }],
 })
-export class SelectComponent implements ControlValueAccessor, AfterContentInit, OnDestroy {
+export class SelectComponent implements FormFieldControl<any>, ControlValueAccessor, AfterContentInit, OnDestroy {
     @Input() public placeholder = "";
 
     /**
      * If the select accepts multiple values
      */
-    @Input() public multiple = false;
+    @Input() @FlagInput() public multiple = false;
 
     /**
      * If there select include a search box
      */
-    @Input() public filterable = false;
+    @Input() @FlagInput() public filterable = false;
+
+    @Input()
+    get id(): string { return this._id; }
+    set id(value: string) { this._id = value || this._uid; }
+
+    @Input() @FlagInput() public required = false;
+
+    @Input()
+    @HostBinding("class.bl-disabled")
+    public get disabled(): boolean {
+        if (this.ngControl && this.ngControl.disabled !== null) {
+            return this.ngControl.disabled;
+        }
+        return this._disabled;
+    }
+    public set disabled(value: boolean) {
+        this._disabled = coerceBooleanProperty(value);
+    }
+
+    @Output() public change = new EventEmitter<any | any[]>();
+
+    @HostBinding("attr.aria-describedby")
+    public ariaDescribedby: string;
 
     @ContentChildren(SelectOptionComponent)
     public options: QueryList<SelectOptionComponent>;
@@ -62,12 +102,17 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
         if (this._dropdownRef) { this._dropdownRef.instance.focusedOption = option; }
     }
     public get focusedOption() { return this._focusedOption; }
+    public readonly stateChanges = new Subject<void>();
+    public readonly controlType: string = "bl-select";
 
     private _dropdownRef: ComponentRef<SelectDropdownComponent>;
     private _displayedOptions: SelectOptionComponent[];
     private _focusedOption: any = null;
     private _overlayRef: OverlayRef;
     private _backDropClickSub: Subscription;
+    private _id: string;
+    private _uid = `bl-select-${nextUniqueId++}`;
+    private _disabled = false;
 
     @ViewChild("selectButton", { read: ElementRef }) private _selectButtonEl: ElementRef;
     @ViewChild("filterInput") private _filterInputEl: ElementRef;
@@ -76,14 +121,36 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
         return Boolean(this._dropdownRef);
     }
 
+    @Input()
+    public get value(): any | any[] {
+        if (this.multiple) {
+            return [...this.selected];
+        } else {
+            return [...this.selected].first();
+        }
+    }
+    public set value(value: any | any[]) {
+        if (value !== this.value) {
+            this.writeValue(value);
+            this.stateChanges.next();
+        }
+    }
+
     private _propagateChange: (value: any) => void;
     private _optionsMap: Map<any, SelectOptionComponent>;
 
     constructor(
+        @Self() @Optional() public ngControl: NgControl,
         private changeDetector: ChangeDetectorRef,
         private elementRef: ElementRef,
         private overlay: Overlay,
         private injector: Injector) {
+
+        if (this.ngControl) {
+            // Note: we provide the value accessor through here, instead of
+            // the `providers` to avoid running into a circular import.
+            this.ngControl.valueAccessor = this;
+        }
     }
 
     public ngAfterContentInit() {
@@ -104,7 +171,7 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
     }
 
     public writeValue(value: any): void {
-        if (this.multiple) {
+        if (Array.isArray(value)) {
             this.selected = new Set(value);
         } else {
             this.selected = new Set(value ? [value] : []);
@@ -123,56 +190,16 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
         // nothing yet
     }
 
-    @HostListener("document:click", ["$event"])
-    public onClick(event: Event) {
-        if (this.showOptions && !this.elementRef.nativeElement.contains(event.target)) {
-            this._dropdownRef.destroy();
-            this.changeDetector.markForCheck();
-        }
-    }
-
     public clickSelectButton(event: Event) {
+        if (this.disabled) { return; }
         this.toggleDropdown();
         event.stopPropagation();
     }
 
     @HostListener("keydown", ["$event"])
-    public handleKeyboardNavigation(event: KeyboardEvent) {
-        if (this.displayedOptions.length === 0) { return; }
-        let direction = null;
-        const lastIndex = this.displayedOptions.findIndex(x => x.value === this.focusedOption);
-        const option = this.displayedOptions[lastIndex];
-        switch (event.code) {
-            case "ArrowDown": // Move focus down
-                if (this.showOptions) {
-                    direction = 1;
-                } else {
-                    this.openDropdown();
-                }
-                event.preventDefault();
-                break;
-            case "ArrowUp":   // Move focus up
-                if (this.showOptions) {
-                    direction = -1;
-                }
-                event.preventDefault();
-                break;
-            case "Enter":
-                this.selectOption(option);
-                event.preventDefault();
-                return;
-            case "Escape":
-                event.stopPropagation();
-                this.closeDropdown();
-                this.changeDetector.markForCheck();
-                return;
-            default:
-        }
-        const index = this._moveFocusInDirection(lastIndex, direction);
-        this.changeDetector.markForCheck();
-        if (lastIndex !== index && this._dropdownRef) {
-            this._dropdownRef.instance.scrollToIndex(index);
-        }
+    public handleKeyDown(event: KeyboardEvent) {
+        if (this.disabled) { return; }
+        this.showOptions ? this._handleKeydownOpen(event) : this._handleKeyDownClosed(event);
     }
 
     public get hasValueSelected() {
@@ -266,14 +293,17 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
         this.changeDetector.markForCheck();
     }
 
+    public unselectAll() {
+        this.selected.clear();
+        this.notifyChanges();
+        this.changeDetector.markForCheck();
+    }
+
     public notifyChanges() {
         if (this._propagateChange) {
-            if (this.multiple) {
-                this._propagateChange([...this.selected]);
-            } else {
-                this._propagateChange([...this.selected].first());
-            }
+            this._propagateChange(this.value);
         }
+        this.change.emit(this.value);
     }
 
     public filterChanged(filter: string) {
@@ -287,6 +317,14 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
         }
         this.focusedOption = this.displayedOptions.first().value;
         this.changeDetector.markForCheck();
+    }
+
+    public setDescribedByIds(ids: string[]) {
+        this.ariaDescribedby = ids.join(" ");
+    }
+
+    public onContainerClick(event: Event) {
+        this.clickSelectButton(event);
     }
 
     private _computeOptions() {
@@ -381,4 +419,62 @@ export class SelectComponent implements ControlValueAccessor, AfterContentInit, 
             backdropClass: "cdk-overlay-transparent-backdrop",
         }));
     }
+
+    private _handleKeyDownClosed(event: KeyboardEvent) {
+        const keyCode = event.code;
+        const isArrowKey = keyCode === "ArrowDown" || keyCode === "ArrowUp" ||
+            keyCode === "ArrowLeft" || keyCode === "ArrowRight";
+        const isOpenKey = keyCode === "Enter" || keyCode === "Space";
+        // Open the select on ALT + arrow key to match the native <select>
+        if (isOpenKey || ((this.multiple || event.altKey) && isArrowKey)) {
+            event.preventDefault(); // prevents the page from scrolling down when pressing space
+            this.openDropdown();
+        }
+    }
+
+    private _handleKeydownOpen(event: KeyboardEvent) {
+        if (this.displayedOptions.length === 0) { return; }
+        let direction = null;
+        const lastIndex = this.displayedOptions.findIndex(x => x.value === this.focusedOption);
+        const option = this.displayedOptions[lastIndex];
+        switch (event.code) {
+            case "ArrowDown": // Move focus down
+                if (this.showOptions) {
+                    direction = 1;
+                } else {
+                    this.openDropdown();
+                }
+                event.preventDefault();
+                break;
+            case "ArrowUp":   // Move focus up
+                if (this.showOptions) {
+                    direction = -1;
+                }
+                event.preventDefault();
+                break;
+            case "Space":
+                if (!this.filterable) {
+                    this.selectOption(option);
+                    event.preventDefault();
+                    return;
+                }
+                break;
+            case "Enter":
+                this.selectOption(option);
+                event.preventDefault();
+                return;
+            case "Escape":
+                event.stopPropagation();
+                this.closeDropdown();
+                this.changeDetector.markForCheck();
+                return;
+            default:
+        }
+        const index = this._moveFocusInDirection(lastIndex, direction);
+        this.changeDetector.markForCheck();
+        if (lastIndex !== index && this._dropdownRef) {
+            this._dropdownRef.instance.scrollToIndex(index);
+        }
+    }
+
 }

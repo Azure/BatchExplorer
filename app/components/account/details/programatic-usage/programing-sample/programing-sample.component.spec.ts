@@ -5,7 +5,7 @@ import { By } from "@angular/platform-browser";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ClipboardService } from "@batch-flask/ui";
 import { PropertyListModule } from "@batch-flask/ui/property-list";
-import { AccountKeys } from "app/models";
+import { BatchLabsService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { MockEditorComponent } from "test/utils/mocks/components";
 import { ProgramingSampleComponent } from "./programing-sample.component";
@@ -13,12 +13,18 @@ import { ProgramingSampleComponent } from "./programing-sample.component";
 const account1 = Fixtures.account.create();
 @Component({
     template: `
-        <bl-programing-sample [language]="language" [sharedKeys]="keys" [account]="account">
+        <bl-programing-sample [target]="target" [sharedKeyCredentials]="sharedKeyCredentials" [account]="account">
         </bl-programing-sample>`,
 })
 class TestComponent {
-    public language = null;
-    public keys = new AccountKeys({ primary: "primary-key", secondary: "secondary-key" });
+    public target = null;
+    public sharedKeyCredentials = {
+        batchAccount: {
+            resource: account1,
+            primary: "primary-key",
+            secondary: "secondary-key",
+        },
+    };
     public account = account1;
 }
 
@@ -37,6 +43,7 @@ describe("ProgramingSampleComponent", () => {
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
                 { provide: ClipboardService, useValue: {} },
+                { provide: BatchLabsService, useValue: {} },
             ],
         });
         fixture = TestBed.createComponent(TestComponent);
@@ -50,7 +57,7 @@ describe("ProgramingSampleComponent", () => {
 
     describe("when language/engine is the same", () => {
         beforeEach(() => {
-            testComponent.language = "csharp";
+            testComponent.target = "csharp";
             fixture.detectChanges();
         });
 
@@ -73,7 +80,7 @@ describe("ProgramingSampleComponent", () => {
 
     describe("when language is engine(nodejs)", () => {
         beforeEach(() => {
-            testComponent.language = "nodejs";
+            testComponent.target = "nodejs";
             fixture.detectChanges();
         });
 

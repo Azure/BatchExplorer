@@ -1,4 +1,4 @@
-<bl-browse-layout #layout>
+<bl-browse-layout #layout [config]="layoutConfig">
     <div blBrowseLayoutTitle>
         Batch Accounts
     </div>
@@ -7,7 +7,7 @@
         </bl-button>
     </div>
     <div pre-quicksearch>
-        <bl-select [multiple]="true" placeholder="Subscriptions" [formControl]="subscriptionIds" [filterable]="true">
+        <bl-select placeholder="Subscriptions" [multiple]="true" [formControl]="subscriptionIds" [filterable]="true">
             <bl-option *ngFor="let subscription of subscriptionService.subscriptions | async;trackBy: trackByFn;let index = index"
                 [value]="subscription.subscriptionId"
                 [label]="subscription.displayName"

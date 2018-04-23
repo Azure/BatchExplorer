@@ -5,10 +5,10 @@
                 [title]="title"
                 actionName="Download">
     <div>
-        <mat-form-field class="form-element">
-            <textarea matInput placeholder="Pattern of files to include(1 per line)" [formControl]="patterns" matTextareaAutosize matAutosizeMaxRows="10"></textarea>
-            <mat-hint align="end">e.g. **/*.png for all png files recursively. subfolder/* for all files in subfolder</mat-hint>
-        </mat-form-field>
+        <bl-form-field class="form-element">
+            <textarea blInput placeholder="Pattern of files to include(1 per line)" [formControl]="patterns" matTextareaAutosize matAutosizeMaxRows="10"></textarea>
+            <bl-hint align="end">e.g. **/*.png for all png files recursively. subfolder/* for all files in subfolder</bl-hint>
+        </bl-form-field>
     </div>
     <div blFormSummary>
         <bl-directory-picker label="" (onChange)="downloadFolder.setValue($event)">

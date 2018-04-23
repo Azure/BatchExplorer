@@ -6,6 +6,8 @@ import { BehaviorSubject, Subscription } from "rxjs";
 
 import { autobind } from "@batch-flask/core";
 import { ListSelection, SelectableList } from "@batch-flask/core/list";
+import { ContextMenuService } from "@batch-flask/ui/context-menu";
+import { EntityCommands } from "@batch-flask/ui/entity-commands";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { FocusSectionComponent } from "../focus-section";
 import { VirtualScrollComponent } from "../virtual-scroll";
@@ -40,6 +42,7 @@ export const abstractListDefaultConfig: AbstractListBaseConfig = {
 export class AbstractListBase extends SelectableList implements AfterContentInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
     @Output() public scrollBottom = new EventEmitter();
+    @Input() public commands: EntityCommands<any>;
 
     @ContentChildren(AbstractListItemBase) public items: QueryList<AbstractListItemBase>;
 
@@ -83,6 +86,7 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
     private _subs: Subscription[] = [];
 
     constructor(
+        private contextmenuService: ContextMenuService,
         changeDetection: ChangeDetectorRef,
         focusSection: FocusSectionComponent) {
         super(changeDetection);
@@ -257,6 +261,23 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
 
     public trackItem(index, item) {
         return item.key;
+    }
+
+    public openContextMenu(target?: AbstractListItemBase) {
+        if (!this.commands) { return; }
+
+        let selection = this.selection;
+
+        // If we right clicked on an non selected item it will just make this the context menu selection
+        if (target && !selection.has(target.key)) {
+            selection = new ListSelection({ keys: [target.key] });
+        }
+
+        this.commands.contextMenuFromSelection(selection).subscribe((menu) => {
+            if (menu) {
+                this.contextmenuService.openMenu(menu);
+            }
+        });
     }
 
     /**

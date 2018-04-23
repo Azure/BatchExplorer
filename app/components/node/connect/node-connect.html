@@ -21,7 +21,7 @@
         <div *ngIf="hasIp && connectionSettings && credentials">
             <h3>Connection settings</h3>
             <bl-property-group>
-                <bl-text-property label="Ip" [value]="connectionSettings.ip"></bl-text-property>
+                <bl-text-property label="IP" [value]="connectionSettings.ip"></bl-text-property>
                 <bl-text-property label="Port" [value]="connectionSettings.port"></bl-text-property>
                 <bl-text-property *ngIf="!windows" label="SSH command" [value]="sshCommand"></bl-text-property>
             </bl-property-group>

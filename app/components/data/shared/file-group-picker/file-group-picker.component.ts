@@ -3,6 +3,7 @@ import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { MatOptionSelectionChange } from "@angular/material";
+import { FilterBuilder } from "@batch-flask/core";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
@@ -50,7 +51,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
                 storageAccountId,
             };
             this.fileGroupsData.setOptions({
-                filter: Constants.ncjFileGroupPrefix,
+                filter: FilterBuilder.prop("name").startswith(Constants.ncjFileGroupPrefix),
             });
         });
 

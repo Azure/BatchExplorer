@@ -44,7 +44,7 @@ export class StorageContainerService {
     private _containerListGetter: StorageListGetter<BlobContainer, ListContainerParams>;
     private _containerCache = new TargetedDataCache<ListContainerParams, BlobContainer>({
         key: ({ storageAccountId }) => storageAccountId,
-    }, "name");
+    }, "id");
 
     constructor(
         private storageClient: StorageClientService,
@@ -52,28 +52,48 @@ export class StorageContainerService {
 
         this._containerGetter = new StorageEntityGetter(BlobContainer, this.storageClient, {
             cache: params => this._containerCache.getCache(params),
-            getFn: (client, params: GetContainerParams) =>
-                client.getContainerProperties(params.id),
+            getFn: async (client, params: GetContainerParams) => {
+                const response = await client.getContainerProperties(params.id);
+                response.data.storageAccountId = params.storageAccountId;
+                return response;
+            },
         });
         this._containerListGetter = new StorageListGetter(BlobContainer, this.storageClient, {
             cache: params => this._containerCache.getCache(params),
-            getData: (client, params, options, continuationToken) => {
-                return client.listContainersWithPrefix(
-                    options && options.filter,
+            getData: async (client, params, options, continuationToken) => {
+                let prefix = null;
+                if (options && options.filter) {
+                    prefix = options.filter.value;
+                }
+                const response = await client.listContainersWithPrefix(
+                    prefix,
                     continuationToken,
                     { maxResults: options && options.maxResults });
+
+                response.data.map(x => x.storageAccountId = params.storageAccountId);
+                return response;
             },
             logIgnoreError: storageIgnoredErrors,
         });
     }
 
     /**
-     * Get a particular container from the linked storage account
+     * Get a particular container
+     * @param storageAccountId - Storage account id
      * @param container - Name of the blob container
      * @param options - Optional parameters for the request
      */
     public get(storageAccountId: string, container: string, options: any = {}): Observable<BlobContainer> {
         return this._containerGetter.fetch({ storageAccountId, id: container });
+    }
+
+    /**
+     * Get a particular container from the linked storage account
+     * @param storageAccountId - Storage account id
+     * @param container - Name of the blob container
+     */
+    public getFromCache(storageAccountId: string, container: string): Observable<BlobContainer> {
+        return this._containerGetter.fetch({ storageAccountId, id: container }, { cached: true });
     }
 
     public listView(): ListView<BlobContainer, ListContainerParams> {

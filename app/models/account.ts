@@ -81,4 +81,8 @@ export class AccountResource extends ArmRecord<BatchAccountAttributes> {
         return Boolean(this.autoStorage
             && !StorageUtils.isClassic(this.autoStorage.storageAccountId));
     }
+
+    public get subscriptionId(): string {
+        return this.subscription && this.subscription.subscriptionId;
+    }
 }

@@ -12,7 +12,7 @@ import "./confirmation-dialog.scss";
 export class ConfirmationDialogComponent {
     public title: string;
     public description: string;
-    public execute: () => Observable<any>;
+    public execute: () => Observable<any> | void;
 
     public response = new AsyncSubject<boolean>();
 

@@ -13,9 +13,9 @@
                 <td *ngFor="let column of columns;trackBy: trackColumn">
                     <ng-container [ngSwitch]="column.type">
                         <ng-container *ngSwitchCase="EditableTableColumnType.Select">
-                            <mat-select [formControlName]="column.name">
-                                <mat-option *ngFor="let item of column.options;trackBy: trackRows" [value]="item">{{ item }}</mat-option>
-                            </mat-select>
+                            <bl-select [formControlName]="column.name">
+                                <bl-option *ngFor="let item of column.options;trackBy: trackRows" [value]="item" [label]="item"></bl-option>
+                            </bl-select>
                         </ng-container>
                         <ng-container *ngSwitchDefault>
                             <input [formControlName]="column.name" [attr.type]="column.type">

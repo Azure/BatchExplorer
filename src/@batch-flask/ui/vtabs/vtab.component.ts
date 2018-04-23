@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from "@angular/core";
+import { Component, Input, TemplateRef, ViewChild } from "@angular/core";
 
 import "./vtab.scss";
 
@@ -7,11 +7,11 @@ import "./vtab.scss";
     templateUrl: "vtab.html",
 })
 export class VTabComponent {
+    @Input() public id: string;
+
     @ViewChild("label")
     public label: TemplateRef<any>;
 
     @ViewChild("content")
     public content: TemplateRef<any>;
-
-    public id: string;
 }

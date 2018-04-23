@@ -10,20 +10,18 @@
         <tbody>
             <tr *ngFor="let item of items.controls;trackBy: trackRow; let i=index; let isLast=last" [formGroupName]="i">
                 <td style="width: 45%">
-                    <mat-form-field>
-                        <mat-select formControlName="applicationId" (change)="applicationSelected($event, i)">
-                            <!-- TODO: toLowerCase() is for a bug in the API, it should be case preserving, but it's not -->
-                            <!-- TODO: Material seems to do case sensitive matching, which i also think is a bug -->
-                            <mat-option *ngFor="let application of applications;trackBy: trackApplication" [value]="application.id.toLowerCase()">{{ application.id }}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <bl-form-field>
+                        <bl-select formControlName="applicationId" (change)="applicationSelected($event, i)">
+                            <bl-option *ngFor="let application of applications;trackBy: trackApplication" [value]="application.id.toLowerCase()" [label]="application.id"></bl-option>
+                        </bl-select>
+                    </bl-form-field>
                 </td>
                 <td style="width: 45%">
-                    <mat-form-field>
-                        <mat-select formControlName="version">
-                            <mat-option *ngFor="let package of packageMap[i];trackBy: trackPackages" [value]="getPackageValue(package)">{{ package }}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <bl-form-field>
+                        <bl-select formControlName="version">
+                            <bl-option *ngFor="let package of packageMap[i];trackBy: trackPackages" [value]="getPackageValue(package)"  [label]="package"></bl-option>
+                        </bl-select>
+                    </bl-form-field>
                 </td>
                 <td class="action-column">
                     <button *ngIf="!isLast" class="delete-item-btn" (click)="deleteItem(i)">

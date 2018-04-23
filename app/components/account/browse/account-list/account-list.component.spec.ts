@@ -7,6 +7,7 @@ import { List } from "immutable";
 import { Observable } from "rxjs";
 
 import { FilterBuilder } from "@batch-flask/core";
+import { DialogService, InjectorFactory, NotificationService } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { AccountListComponent } from "app/components/account/browse";
@@ -65,6 +66,9 @@ describe("AccountListComponent", () => {
                 { provide: SubscriptionService, useValue: subscriptionService },
                 { provide: MatDialog, useValue: null },
                 { provide: BackgroundTaskService, useValue: null },
+                { provide: NotificationService, useValue: null },
+                { provide: DialogService, useValue: null },
+                InjectorFactory,
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -93,7 +97,7 @@ describe("AccountListComponent", () => {
     });
 
     it("should filter by name", () => {
-        component.filter = FilterBuilder.and(FilterBuilder.prop("id").startswith("zoO"));
+        component.filter = FilterBuilder.and(FilterBuilder.prop("name").startswith("zoO"));
         fixture.detectChanges();
         accountsElList = de.queryAll(By.css("bl-quick-list-item"));
 
@@ -115,7 +119,7 @@ describe("AccountListComponent", () => {
 
     it("should filter by subscription and by name", () => {
         component.filter = FilterBuilder.and(
-            FilterBuilder.prop("id").startswith("Acc"),
+            FilterBuilder.prop("name").startswith("Acc"),
             FilterBuilder.prop("subscriptionId").eq("sub-1"),
         );
         fixture.detectChanges();

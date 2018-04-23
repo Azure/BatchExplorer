@@ -1,5 +1,5 @@
 <div class="select-button-container">
-   <bl-clickable #selectButton class="select-button" (do)="clickSelectButton($event)" [title]="title">
+   <div #selectButton class="select-button" (click)="clickSelectButton($event)" [title]="title" [tabindex]="disabled ? -1 : 0">
         <div class="label">
             <ng-container *ngIf="!hasValueSelected">{{placeholder}}</ng-container>
             <ng-container *ngIf="hasValueSelected">
@@ -15,7 +15,7 @@
             <i class="fa fa-caret-down" *ngIf="!showOptions"></i>
             <i class="fa fa-caret-up" *ngIf="showOptions"></i>
         </div>
-   </bl-clickable>
+   </div>
    <ng-container *ngIf="showOptions && filterable">
        <input class="select-filter" #filterInput [ngModel]="filter" (ngModelChange)="filterChanged($event)" placeholder="Filter items...">
    </ng-container>

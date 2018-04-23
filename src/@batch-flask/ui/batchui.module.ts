@@ -26,6 +26,7 @@ import { FormModule } from "./form";
 import { GraphsModule } from "./graphs";
 import { IconComponent } from "./icon";
 import { InfoBoxModule } from "./info-box";
+import { InjectorFactoryModule } from "./injector-factory";
 import {
     DeleteSelectedItemsDialogComponent, EntityDetailsListComponent,
 } from "./list-and-show-layout";
@@ -84,6 +85,7 @@ const modules = [
     VirtualScrollModule,
     VTabsModule,
     ElectronModule,
+    InjectorFactoryModule,
 ];
 
 // Add subcomponnent not in a module here

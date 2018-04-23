@@ -2,6 +2,7 @@ import {
     AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, QueryList,
 } from "@angular/core";
 
+import { log } from "@batch-flask/utils";
 import { VTabComponent } from "./vtab.component";
 
 @Component({
@@ -28,8 +29,17 @@ export class VTabGroupComponent implements AfterContentInit {
         this.changeDetector.markForCheck();
     }
 
-    public selectTab(tab: VTabComponent) {
-        this.currentTab = tab;
+    public selectTab(tab: VTabComponent | string) {
+        if (tab instanceof VTabComponent) {
+            this.currentTab = tab;
+        } else {
+            const matching = this.tabs.find(x => x.id === tab);
+            if (matching) {
+                this.currentTab = matching;
+            } else {
+                log.error(`Cannot open tab ${tab}. There is no tab with that id.`);
+            }
+        }
         this.changeDetector.markForCheck();
     }
 

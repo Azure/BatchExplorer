@@ -2,20 +2,22 @@
 
 // todo: should probably share this CSS with file group sas
 bl-cloud-file-picker {
-    display: flex;
-    align-items: center;
-
-    mat-form-field {
+    bl-form-field {
         flex: 1;
 
         .warning {
             color: map-get($warn, 500);
         }
+        .input-container > .input-suffix {
+            border: none;
+            padding: 0;
+            line-height: 0;
+        }
     }
 
     bl-button {
-        margin-left: 5px;
-
+        height: 26px;
+        line-height: 26px;
         &.disabled[color] {
             cursor: not-allowed;
             background: map-get($primary, 50);
@@ -27,4 +29,6 @@ bl-cloud-file-picker {
             }
         }
     }
+
+
 }

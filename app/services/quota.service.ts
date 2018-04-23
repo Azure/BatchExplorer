@@ -7,7 +7,7 @@ import { List } from "immutable";
 import { AccountService } from "./account.service";
 import { ApplicationService } from "./application.service";
 import { ComputeService } from "./compute.service";
-import { JobService } from "./job-service";
+import { JobService } from "./job.service";
 import { PoolService } from "./pool.service";
 import { VmSizeService } from "./vm-size.service";
 
@@ -38,6 +38,9 @@ export class QuotaService implements OnDestroy {
             if (vmSizes) {
                 vmSizes.forEach(vmSize => this.vmSizeCores[vmSize.id] = vmSize.numberOfCores);
             }
+        }));
+        this._subs.push(accountService.currentAccount.subscribe(account => {
+            this.updateUsages();
         }));
 
         this.quotas = this.accountService.currentAccount.flatMap((account) => {
@@ -82,7 +85,7 @@ export class QuotaService implements OnDestroy {
 
     public updateJobUsage() {
         const obs = this.jobService.listAll({
-            filter: FilterBuilder.prop("state").eq(JobState.active).toOData(),
+            filter: FilterBuilder.prop("state").eq(JobState.active),
             select: "id",
         });
         obs.subscribe((jobs) => {

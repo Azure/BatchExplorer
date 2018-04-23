@@ -154,7 +154,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         return this.backgroundTaskService.startTask("Uploading files to file group", (task) => {
             const observable = Observable.fromPromise(this._getValidPaths(formData.paths)).flatMap((validPaths) => {
                 const lastData: DataTotals = this._initDataTotals(1, validPaths.length);
-                let message = msgFormat.format(lastData.pathCounter, lastData.pathsExpected, trimmedName);
+                let message = msgFormat.format(`${lastData.pathCounter}`, `${lastData.pathsExpected}`, trimmedName);
                 task.name.next(message);
 
                 return Observable.from(validPaths).flatMap((fileOrDirPath) => {
@@ -185,7 +185,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
 
                             lastData.actual += lastData.uploaded;
                             lastData.expected += lastData.total;
-                            message = msgFormat.format(lastData.pathCounter, lastData.pathsExpected, trimmedName);
+                            message = msgFormat.format(`${lastData.pathCounter}`, `${lastData.pathsExpected}`,
+                                trimmedName);
                             task.name.next(`${message}, (${lastData.uploaded}/${lastData.total}) files`);
                         },
                         error: (error) => {

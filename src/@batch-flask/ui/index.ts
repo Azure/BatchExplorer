@@ -1,5 +1,6 @@
 export * from "./electron";
 export * from "./background-task";
+export * from "./dialogs";
 export * from "./metrics-monitor";
 export * from "./notifications";
 export * from "./loading";
@@ -8,3 +9,7 @@ export * from "./batchui.module";
 export * from "./quick-list";
 export * from "./context-menu";
 export * from "./sidebar";
+export * from "./permission";
+export * from "./vtabs";
+export * from "./injector-factory";
+export * from "./entity-commands";

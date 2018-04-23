@@ -1,6 +1,12 @@
 <bl-focus-section>
-    <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
-        <bl-quick-list-item *ngFor="let pool of pools, trackBy: trackById" [link]="['/pools/', pool.id]" [key]="pool.id" [contextmenu]="contextmenu(pool)">
+    <bl-quick-list *ngIf="quicklist"
+        [status]="status"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        [commands]="commands"
+        (scrollBottom)="onScrollToBottom()">
+
+        <bl-quick-list-item *ngFor="let pool of pools, trackBy: trackById" [link]="['/pools/', pool.id]" [key]="pool.id">
             <bl-quick-list-item-status [status]="poolStatus(pool.original)" [tooltip]="poolStatusText(pool.original)">
             </bl-quick-list-item-status>
             <div bl-quick-list-item-title>{{pool.id}}</div>
@@ -15,12 +21,18 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quicklist" [config]="tableConfig" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
+    <bl-table *ngIf="!quicklist"
+        [config]="tableConfig"
+        [status]="status"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        [commands]="commands"
+        (scrollBottom)="onScrollToBottom()">
         <bl-thead>
-            <bl-column>Id</bl-column>
+            <bl-column>ID</bl-column>
             <bl-column>State</bl-column>
             <bl-column>Allocation state</bl-column>
-            <bl-column>VmSize</bl-column>
+            <bl-column>Node size</bl-column>
             <bl-column>Dedicated
                 <i class="fa fa-tv"></i>
             </bl-column>
@@ -28,7 +40,7 @@
                 <i class="fa fa-tv"></i>
             </bl-column>
         </bl-thead>
-        <bl-row *ngFor="let pool of pools, trackBy: trackById" [link]="['/pools/', pool.id]" [key]="pool.id" [contextmenu]="contextmenu(pool)">
+        <bl-row *ngFor="let pool of pools, trackBy: trackById" [link]="['/pools/', pool.id]" [key]="pool.id">
             <bl-cell>{{pool.id}}</bl-cell>
             <bl-cell>{{pool.state}}</bl-cell>
             <bl-cell>{{pool.allocationState}}</bl-cell>
@@ -43,5 +55,5 @@
 <bl-no-item [itemCount]="pools.size" [filter]="filter" [status]="status">
     <i icon class="fa fa-database small"></i>
     <span no-filter>No pools</span>
-    <span with-filter>No pool match this filter</span>
+    <span with-filter>No pools match this filter</span>
 </bl-no-item>

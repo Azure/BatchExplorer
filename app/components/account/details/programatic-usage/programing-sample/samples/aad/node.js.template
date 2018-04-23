@@ -1,10 +1,10 @@
 const { SharedKeyCredentials, ServiceClient } = require("azure-batch");
 const { loginWithServicePrincipalSecret } = require("ms-rest-azure");
 
-const accountUrl = "{0}";
-const tenantId = "{1}";
-const clientId = "{2}";
-const secret = "{3}";
+const accountUrl = "{accountUrl}";
+const tenantId = "{clientId}";
+const clientId = "{clientId}";
+const secret = "{secret}";
 
 async function run() {
     const credentials = await loginWithServicePrincipalSecret(clientId, secret, tenantId, { tokenAudience: "https://batch.core.windows.net/" });

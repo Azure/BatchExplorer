@@ -10,6 +10,12 @@ bl-select {
     border: none;
     position: relative;
 
+    &.bl-disabled {
+        > .select-button-container {
+            background-color: $input-disabled-background-color;
+        }
+    }
+
     > .select-button-container {
         height: $button-height;
         background-color: $input-background-color;
@@ -18,10 +24,16 @@ bl-select {
 
         > .select-button {
             display: flex;
+            height: $button-height;
             line-height: $button-height;
             cursor: pointer;
             vertical-align: middle;
             width: 100%;
+            outline: none;
+
+            &:focus {
+                border-bottom: 2px solid $input-focus-border-color;
+            }
 
             > .label {
                 flex: 1;

@@ -52,7 +52,7 @@ nav {
     right: 0;
     bottom: $footer-height;
     width: calc(100vw - #{$navigationbar-width});
-    height: calc(100vh - #{$content-top-position});
+    height: calc(100vh - #{$content-top-position + $footer-height});
     overflow: hidden;
 
     > #content-inner {

@@ -7,7 +7,6 @@ import { Subscription } from "rxjs";
 
 import { AbstractListItemBase } from "@batch-flask/ui/abstract-list";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
-import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { TableCellComponent } from "../table-cell";
 import { TableComponent } from "../table.component";
 
@@ -31,17 +30,16 @@ export class TableRowComponent extends AbstractListItemBase implements AfterCont
     public dimensions: number[] = [];
     private _sub: Subscription;
 
-    // tslint:disable:no-forward-ref
     constructor(
         @Inject(forwardRef(() => TableComponent)) public table: TableComponent,
         router: Router,
         private changeDetector: ChangeDetectorRef,
-        contextmenuService: ContextMenuService,
         breadcrumbService: BreadcrumbService) {
-        super(table, router, contextmenuService, breadcrumbService);
+        super(table, router, breadcrumbService);
 
         this._sub = this.table.dimensions.subscribe((dimensions) => {
             this.dimensions = dimensions;
+            // console.log("Dimensions are?", this.dimensions);
             this.changeDetector.markForCheck();
         });
     }
@@ -52,6 +50,7 @@ export class TableRowComponent extends AbstractListItemBase implements AfterCont
             this.changeDetector.markForCheck();
         });
         this._updateData();
+        // this.changeDetector.markForCheck();
     }
 
     public ngOnDestroy() {

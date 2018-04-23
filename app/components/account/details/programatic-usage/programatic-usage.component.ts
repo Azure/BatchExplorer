@@ -1,12 +1,15 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
-import { AccountKeys, AccountResource } from "app/models";
-import { AccountService } from "app/services";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from "@angular/core";
+import { VTabGroupComponent } from "@batch-flask/ui";
+import { AccountResource } from "app/models";
+import { AccountService, StorageAccountService } from "app/services";
+import { SharedKeyCredentials } from "./shared-key-credentials.model";
 
+import { StorageAccountKeysService } from "app/services/storage";
 import "./programatic-usage.scss";
 
 export enum CredentialType {
-    SharedKey,
-    AAD,
+    SharedKey = "shared-key",
+    AAD = "aad",
 }
 
 export interface AADCredential {
@@ -21,9 +24,10 @@ export interface AADCredential {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProgramaticUsageComponent {
+    @ViewChild("tabs") public tabs: VTabGroupComponent;
     public CredentialType = CredentialType;
     public account: AccountResource;
-    public sharedKeys: AccountKeys;
+    public sharedKeyCredentials: SharedKeyCredentials;
     public aadCredentials: AADCredential;
 
     public pickedCredentialType = CredentialType.SharedKey;
@@ -41,6 +45,8 @@ export class ProgramaticUsageComponent {
     private _accountId: string;
 
     constructor(
+        private storageAccountService: StorageAccountService,
+        private storageAccountKeysService: StorageAccountKeysService,
         private accountService: AccountService,
         private changeDetector: ChangeDetectorRef) {
     }
@@ -48,6 +54,10 @@ export class ProgramaticUsageComponent {
     public pickCredentialType(type: CredentialType) {
         this.pickedCredentialType = type;
         this.changeDetector.markForCheck();
+    }
+
+    public pickType(type: string) {
+        this.tabs.selectTab(type);
     }
 
     public updateAADCredentials(cred: AADCredential) {
@@ -58,11 +68,35 @@ export class ProgramaticUsageComponent {
         this.accountService.get(this.accountId).subscribe((account) => {
             this.account = account;
             this.changeDetector.markForCheck();
-        });
 
-        this.accountService.getAccountKeys(this.accountId).subscribe((keys) => {
-            this.sharedKeys = keys;
-            this.changeDetector.markForCheck();
+            this.accountService.getAccountKeys(this.accountId).subscribe((keys) => {
+                this.sharedKeyCredentials = {
+                    ...this.sharedKeyCredentials,
+                    batchAccount: {
+                        resource: this.account,
+                        primary: keys.primary,
+                        secondary: keys.secondary,
+                    },
+                };
+                this.changeDetector.markForCheck();
+            });
+
+            if (account.autoStorage) {
+                this.storageAccountService.get(account.autoStorage.storageAccountId).subscribe((storageAccount) => {
+                    this.storageAccountKeysService.getFor(account.autoStorage.storageAccountId).subscribe((keys) => {
+                        this.sharedKeyCredentials = {
+                            ...this.sharedKeyCredentials,
+                            storageAccount: {
+                                resource: storageAccount,
+                                primary: keys.primaryKey,
+                                secondary: keys.secondaryKey,
+                            },
+                        };
+                        this.changeDetector.markForCheck();
+                    });
+                });
+
+            }
         });
     }
 }

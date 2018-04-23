@@ -1,4 +1,4 @@
-<div *ngIf="task">
+<ng-container *ngIf="task">
     <div class="info">
         <span>Node:
             <a [routerLink]="['/pools', task.poolId, 'nodes', task.nodeId]">{{task.nodeId}}</a>
@@ -11,4 +11,4 @@
     <div *ngIf="!node && !loading" class="info-overlay node-unavailable">
         Node where this task ran doesn't exists anymore.
     </div>
-</div>
+</ng-container>

@@ -1,5 +1,5 @@
 import {
-    AfterContentInit, Component, ContentChildren, Inject, Input, QueryList, forwardRef,
+    AfterContentInit, Component, ContentChildren, Inject, Input, OnDestroy, QueryList, forwardRef,
 } from "@angular/core";
 
 import { BehaviorSubject, Observable } from "rxjs";
@@ -10,7 +10,7 @@ import { TableComponent } from "../table.component";
     selector: "bl-thead",
     templateUrl: "table-head.html",
 })
-export class TableHeadComponent implements AfterContentInit {
+export class TableHeadComponent implements AfterContentInit, OnDestroy {
     @Input() public show = true;
 
     @ContentChildren(TableColumnComponent)
@@ -33,6 +33,10 @@ export class TableHeadComponent implements AfterContentInit {
         });
         this._updateColumnIndexMap();
         this.updateDimensions();
+    }
+
+    public ngOnDestroy() {
+        // this._dimensions.complete();
     }
 
     public getColumnIndex(column: TableColumnComponent) {

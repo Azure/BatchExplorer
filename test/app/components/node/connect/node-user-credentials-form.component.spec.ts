@@ -3,6 +3,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
+import { SelectModule } from "@batch-flask/ui";
+import { PermissionService } from "@batch-flask/ui/permission";
 import * as moment from "moment";
 import { Observable } from "rxjs";
 
@@ -43,7 +45,7 @@ describe("NodeUserCredentialsForm", () => {
             keys: Observable.of([]),
         };
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule, MaterialModule, NoopAnimationsModule],
+            imports: [FormsModule, ReactiveFormsModule, MaterialModule, NoopAnimationsModule, SelectModule],
             declarations: [
                 NodeUserCredentialsFormComponent, TestComponent, SimpleFormMockComponent,
                 SSHKeyPickerComponent, DurationPickerComponent,
@@ -51,6 +53,7 @@ describe("NodeUserCredentialsForm", () => {
             providers: [
                 { provide: SSHKeyService, useValue: sshKeyService },
                 { provide: DialogService, useValue: {} },
+                { provide: PermissionService, useValue: {} },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

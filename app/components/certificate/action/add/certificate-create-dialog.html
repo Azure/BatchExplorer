@@ -12,9 +12,9 @@
         </bl-form-section>
         <bl-form-section *ngIf="showPassword" title="Password" subtitle="Type password for pfx certificate format">
             <div class="form-element">
-                <mat-form-field>
-                    <input matInput formControlName="password" placeholder="Password" type="password" />
-                </mat-form-field>
+                <bl-form-field>
+                    <input blInput formControlName="password" placeholder="Password" type="password" />
+                </bl-form-field>
                 <bl-error controlName="password" code="pfxPasswordRequired">Password is required if the certificate format is pfx</bl-error>
             </div>
         </bl-form-section>

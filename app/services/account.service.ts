@@ -130,6 +130,11 @@ export class AccountService {
             return;
         }
         this._currentAccountId.next(accountId);
+        // Clear last selected storage account
+        const lastSelectedAccount = localStorage.getItem(Constants.localStorageKey.lastStorageAccount);
+        if (lastSelectedAccount !== "file-groups") {
+            localStorage.removeItem(Constants.localStorageKey.lastStorageAccount);
+        }
         this.refresh();
     }
 
@@ -212,6 +217,10 @@ export class AccountService {
 
     public get(accountId: string): Observable<AccountResource> {
         return this._getter.fetch({ id: accountId });
+    }
+
+    public getFromCache(accountId: string): Observable<AccountResource> {
+        return this._getter.fetch({ id: accountId }, { cached: true });
     }
 
     public getNameFromAccountId(accountId: string): string {
@@ -330,7 +339,7 @@ export class AccountService {
             return Observable.of(null);
         }
         const uri = `subscriptions/${subscription.subscriptionId}/providers/${batchProvider}`
-                    + `/locations/${location}/checkNameAvailability`;
+            + `/locations/${location}/checkNameAvailability`;
         return this.azure.post(subscription, uri, {
             name: name,
             type: batchResourceProvider,
@@ -351,7 +360,7 @@ export class AccountService {
 
         // get current subscription account quota
         const quotaUri = `subscriptions/${subscription.subscriptionId}/providers/${batchProvider}`
-                    + `/locations/${location}/quotas`;
+            + `/locations/${location}/quotas`;
         const getQuotaObs = this.azure.get(subscription, quotaUri).map(response => {
             return response.json();
         });

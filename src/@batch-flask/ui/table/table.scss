@@ -74,6 +74,10 @@ bl-table {
             outline-offset: -2px;
         }
 
+        &.conceal {
+            opacity: 0.3;
+        }
+
         &.drop-target {
             background: $altoGray;
         }

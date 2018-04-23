@@ -1,12 +1,14 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output,
 } from "@angular/core";
+import { BackgroundTaskService, DialogService, LoadingStatus } from "@batch-flask/ui";
+import { SplitPaneConfig } from "@batch-flask/ui/split-pane";
+import { log } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
 
-import { LoadingStatus } from "@batch-flask/ui/loading";
-import { SplitPaneConfig } from "@batch-flask/ui/split-pane";
 import { CurrentNode, FileExplorerWorkspace, FileSource, OpenedFile } from "app/components/file/browse/file-explorer";
 import { FileNavigator, FileTreeNode } from "app/services/file";
+import { FileUrlUtils } from "app/utils";
 import "./file-explorer.scss";
 
 export interface FileNavigatorEntry {
@@ -22,6 +24,7 @@ export enum FileExplorerSelectable {
 }
 
 export interface FileDeleteEvent {
+    navigator: FileNavigator;
     path: string;
     isDirectory: boolean;
 }
@@ -51,12 +54,6 @@ export interface FileExplorerConfig {
     canDropExternalFiles?: boolean;
 
     /**
-     * If the explorer allows deleting external files
-     * @default false
-     */
-    canDeleteFiles?: boolean;
-
-    /**
      * If log file can be automatically refreshed(Tail)
      */
     tailable?: boolean;
@@ -66,7 +63,6 @@ const fileExplorerDefaultConfig: FileExplorerConfig = {
     showTreeView: true,
     selectable: FileExplorerSelectable.none,
     canDropExternalFiles: false,
-    canDeleteFiles: false,
     tailable: false,
 };
 
@@ -95,7 +91,6 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     public get config() { return this._config; }
     @Output() public activeFileChange = new EventEmitter<string>();
     @Output() public dropFiles = new EventEmitter<FileDropEvent>();
-    @Output() public deleteFiles = new EventEmitter<FileDeleteEvent>();
 
     public LoadingStatus = LoadingStatus;
     public currentSource: FileSource;
@@ -107,7 +102,10 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     private _workspaceSubs: Subscription[] = [];
     private _config: FileExplorerConfig = fileExplorerDefaultConfig;
 
-    constructor(private changeDetector: ChangeDetectorRef) {
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private backgroundTaskService: BackgroundTaskService,
+        private dialogService: DialogService) {
         this._updateSplitPanelConfig();
     }
 
@@ -151,16 +149,46 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
         this.dropFiles.emit(event);
     }
 
-    public handleDelete(event: FileDeleteEvent) {
-        this.deleteFiles.emit(event);
-    }
-
     public trackSource(index, source: FileSource) {
         return source.name;
     }
 
     public trackOpenedFile(index, file: OpenedFile) {
         return `${file.source.name}/${file.path}`;
+    }
+
+    public handleDelete(event: FileDeleteEvent) {
+        const { path } = event;
+        const description = event.isDirectory
+            ? `All files will be deleted from the folder: ${path}`
+            : `The file '${FileUrlUtils.getFileName(path)}' will be deleted.`;
+        this.dialogService.confirm(`Delete files`, {
+            description: description,
+            yes: () => {
+                if (event.isDirectory) {
+                    const taskTitle = `Deleting folder ${event.path}`;
+                    this.backgroundTaskService.startTask(taskTitle, (task) => {
+                        const obs = event.navigator.deleteFolder(event.path);
+                        obs.subscribe({
+                            next: (progress) => {
+                                task.name.next(`${taskTitle} (${progress.deleted + 1}/${progress.total})`);
+                                task.progress.next((progress.deleted + 1) / progress.total * 100);
+                            },
+                            error: (error) => {
+                                log.error("Failed to delete blob", error);
+                            },
+                            complete: () => {
+                                task.progress.next(100);
+                            },
+                        });
+                        return obs;
+                    });
+                    return null;
+                } else {
+                    return event.navigator.deleteFile(event.path);
+                }
+            },
+        });
     }
 
     private _updateWorkspaceEvents() {

@@ -9,6 +9,7 @@ import { Observable, Subscription } from "rxjs";
 
 import { Filter, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
+import { InjectorFactory } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
@@ -23,6 +24,7 @@ import {
     DeleteJobScheduleDialogComponent,
     DisableJobScheduleDialogComponent,
     EnableJobScheduleDialogComponent,
+    JobScheduleCommands,
     PatchJobScheduleComponent,
     TerminateJobScheduleDialogComponent,
 } from "../action";
@@ -37,6 +39,7 @@ import {
     }],
 })
 export class JobScheduleListComponent extends ListBaseComponent implements OnInit, OnDestroy {
+    public commands: JobScheduleCommands;
     public jobSchedules: List<JobSchedule>;
     public LoadingStatus = LoadingStatus;
 
@@ -50,12 +53,15 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
         router: Router,
         activatedRoute: ActivatedRoute,
         changeDetector: ChangeDetectorRef,
+        injectorFactory: InjectorFactory,
         private sidebarManager: SidebarManager,
         private dialog: MatDialog,
         private jobScheduleService: JobScheduleService,
         private pinnedEntityService: PinnedEntityService,
         private taskManager: BackgroundTaskService) {
         super(changeDetector);
+
+        this.commands = injectorFactory.create(JobScheduleCommands);
         this.data = this.jobScheduleService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
         this.data.items.subscribe((jobSchedules) => {
@@ -92,7 +98,7 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
         if (filter.isEmpty()) {
             this.data.setOptions({ ...this._baseOptions });
         } else {
-            this.data.setOptions({ ...this._baseOptions, filter: filter.toOData() });
+            this.data.setOptions({ ...this._baseOptions, filter: filter });
         }
 
         this.data.fetchNext();
