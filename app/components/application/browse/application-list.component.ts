@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
-import { MatDialog } from "@angular/material";
 import { Router } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
@@ -38,7 +37,6 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
         router: Router,
         changeDetector: ChangeDetectorRef,
         injectorFactory: InjectorFactory,
-        protected dialog: MatDialog,
         private applicationService: ApplicationService,
         ) {
         super(changeDetector);
