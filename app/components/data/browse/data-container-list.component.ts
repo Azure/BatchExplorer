@@ -16,7 +16,7 @@ import { ListView } from "app/services/core";
 import { ListContainerParams, StorageContainerService } from "app/services/storage";
 import { ComponentUtils } from "app/utils";
 import { Constants } from "common";
-import { BlobContainerCommands, DeleteContainerAction  } from "../action";
+import { BlobContainerCommands, DeleteContainerAction } from "../action";
 
 import "./data-container-list.scss";
 
@@ -83,6 +83,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         if (changes.storageAccountId && this.storageAccountId) {
             this.containers = List([]);
             this.data.params = { storageAccountId: this.storageAccountId };
+            this.commands.params = { storageAccountId: this.storageAccountId };
             this.data.fetchNext();
         }
     }
