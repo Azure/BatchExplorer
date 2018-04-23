@@ -45,13 +45,14 @@
   },
   "files": [
     "definitions/index.d.ts",
-    "node_modules/monaco-editor/monaco.d.ts"
+    "node_modules/monaco-editor/monaco.d.ts",
+    "test/utils/matchers/index.d.ts"
   ],
   // This is not actually used for building but to let the editor know what files use this config
   "include": [
     "app/**/*.ts",
     "src/**/*.ts",
-    "test/**/*.ts"
+    "test/**/*.ts",
   ],
   "awesomeTypescriptLoaderOptions": {
     "forkChecker": true,
