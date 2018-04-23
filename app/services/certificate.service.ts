@@ -94,6 +94,11 @@ export class CertificateService extends ServiceBase {
         return this._getter.fetch({ thumbprintAlgorithm: algorithm, thumbprint: thumbprint });
     }
 
+    public getFromCache(thumbprint: string, options: any = {}, thumbprintAlgorithm?: string): Observable<Certificate> {
+        const algorithm = thumbprintAlgorithm || defaultThumbprintAlgorithm;
+        return this._getter.fetch({ thumbprintAlgorithm: algorithm, thumbprint: thumbprint }, { cached: true });
+    }
+
     /**
      * Create an entity view for a certificate
      */
