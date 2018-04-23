@@ -1,11 +1,16 @@
 @import "app/styles/variables";
 
 bl-job-hook-task-browser {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
     .filters {
         display: flex;
     }
 
     .content {
+        flex: 1;
         display: flex;
         border-top: 1px solid #d5d5d5;
         height: 100%;
