@@ -17,10 +17,11 @@ export interface ActionableEntity {
 /**
  * Entity commands is a wrapper for all actions/commands available to an entity
  */
-export abstract class EntityCommands<TEntity extends ActionableEntity> {
+export abstract class EntityCommands<TEntity extends ActionableEntity, TParams = {}> {
     public dialogService: DialogService;
     public notificationService: NotificationService;
     public backgroundTaskService: BackgroundTaskService;
+    public params: TParams = {} as TParams;
 
     public commands: Array<EntityCommand<TEntity, any>>;
     private _injectorFactory: InjectorFactory;

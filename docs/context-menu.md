@@ -25,7 +25,7 @@ export class MyComponent {
 ```
 
 ## Context menu in quick list or table.
-
+TODO-TIM update this doc
 Table and quicklist support the context menu you just have to pass the menu as input to the quick list item/row.
 
 ```html

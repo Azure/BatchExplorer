@@ -1,5 +1,5 @@
 <bl-focus-section>
-    <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
+    <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()"  [commands]="commands">
         <bl-quick-list-item *ngFor="let jobSchedule of jobSchedules; trackBy: trackByFn" [link]="['/jobschedules/', jobSchedule.id]" [key]="jobSchedule.id" [contextmenu]="contextmenu(jobSchedule)">
             <bl-quick-list-item-status [status]="jobScheduleStatus(jobSchedule)" [tooltip]="jobScheduleStatusText(jobSchedule)">
             </bl-quick-list-item-status>
@@ -11,7 +11,7 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
+    <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()"  [commands]="commands">
         <bl-thead>
             <bl-column>ID</bl-column>
             <bl-column>State</bl-column>

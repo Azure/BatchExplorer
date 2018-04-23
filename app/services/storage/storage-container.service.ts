@@ -78,12 +78,22 @@ export class StorageContainerService {
     }
 
     /**
-     * Get a particular container from the linked storage account
+     * Get a particular container
+     * @param storageAccountId - Storage account id
      * @param container - Name of the blob container
      * @param options - Optional parameters for the request
      */
     public get(storageAccountId: string, container: string, options: any = {}): Observable<BlobContainer> {
         return this._containerGetter.fetch({ storageAccountId, id: container });
+    }
+
+    /**
+     * Get a particular container from the linked storage account
+     * @param storageAccountId - Storage account id
+     * @param container - Name of the blob container
+     */
+    public getFromCache(storageAccountId: string, container: string): Observable<BlobContainer> {
+        return this._containerGetter.fetch({ storageAccountId, id: container }, { cached: true });
     }
 
     public listView(): ListView<BlobContainer, ListContainerParams> {
