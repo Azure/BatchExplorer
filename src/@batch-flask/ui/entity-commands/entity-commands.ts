@@ -102,7 +102,9 @@ export abstract class EntityCommands<TEntity extends ActionableEntity, TParams =
         return command;
     }
 
-    protected simpleCommand(attrs: EntityCommandAttributes<TEntity>): EntityCommand<TEntity> {
+    protected simpleCommand<TOptions = void>(
+        attrs: EntityCommandAttributes<TEntity, TOptions>): EntityCommand<TEntity, TOptions> {
+
         const command = new EntityCommand(this.injector, attrs);
         command.definition = this;
         return command;

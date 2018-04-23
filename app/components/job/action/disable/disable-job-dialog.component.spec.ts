@@ -55,7 +55,7 @@ describe("DisableJobDialogComponent ", () => {
     });
 
     it("Should show title and job id", () => {
-        expect(debugElement.nativeElement.textContent).toContain("Disable job");
+        expect(debugElement.nativeElement.textContent).toContain("disable job");
         expect(debugElement.nativeElement.textContent).toContain("job-1");
     });
 

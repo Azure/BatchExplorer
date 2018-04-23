@@ -41,10 +41,10 @@ export class DisableJobDialogComponent extends ConfirmationDialog<string> {
     public get title() {
         const size = this._jobs.length;
         if (size > 1) {
-            return `Are you sure you want to terminate ${size} jobs`;
+            return `Are you sure you want to disable ${size} jobs`;
         } else {
             const job = this._jobs.first();
-            return `Are you sure you want to terminate job ${job && job.id}`;
+            return `Are you sure you want to disable job ${job && job.id}`;
         }
     }
 

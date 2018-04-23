@@ -18,9 +18,9 @@ export class DisableJobCommand extends EntityCommand<Job, string> {
     }
 
     @autobind()
-    public _confirmAndGetInfo(entities: Job[]) {
+    private _confirmAndGetInfo(entities: Job[]) {
         const dialogRef = this.dialog.open(DisableJobDialogComponent);
-
+        dialogRef.componentInstance.jobs = entities;
         return dialogRef.componentInstance.onSubmit;
     }
 }

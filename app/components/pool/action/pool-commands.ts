@@ -1,18 +1,21 @@
 import { Injectable, Injector } from "@angular/core";
-import { EntityCommand, EntityCommands, SidebarManager } from "@batch-flask/ui";
+import { DialogService, EntityCommand, EntityCommands, SidebarManager } from "@batch-flask/ui";
 
 import { Pool } from "app/models";
-import { PinnedEntityService, PoolService } from "app/services";
+import { JobService, PinnedEntityService, PoolService } from "app/services";
+import { DeletePoolDialogComponent, DeletePoolOutput } from "./delete";
 import { PoolResizeDialogComponent } from "./resize";
 
 @Injectable()
 export class PoolCommands extends EntityCommands<Pool> {
     public edit: EntityCommand<Pool, void>;
-    public delete: EntityCommand<Pool, void>;
+    public delete: EntityCommand<Pool, DeletePoolOutput>;
     public pin: EntityCommand<Pool, void>;
 
     constructor(
         injector: Injector,
+        private dialog: DialogService,
+        private jobService: JobService,
         private poolService: PoolService,
         private pinnedEntityService: PinnedEntityService,
         private sidebarManager: SidebarManager) {
@@ -40,9 +43,10 @@ export class PoolCommands extends EntityCommands<Pool> {
             confirm: false,
             notify: false,
         });
-        this.delete = this.simpleCommand({
+        this.delete = this.simpleCommand<DeletePoolOutput>({
             label: "Delete",
-            action: (pool: Pool) => this.poolService.delete(pool.id),
+            action: (pool: Pool, options) => this._deletePool(pool, options),
+            confirm: (entities) => this._confirmDeletePool(entities),
         });
 
         this.pin = this.simpleCommand({
@@ -75,5 +79,18 @@ export class PoolCommands extends EntityCommands<Pool> {
                 this.pinnedEntityService.unPinFavorite(pool);
             }
         });
+    }
+
+    private _confirmDeletePool(entities: Pool[]) {
+        const dialogRef = this.dialog.open(DeletePoolDialogComponent);
+        dialogRef.componentInstance.pools = entities;
+        return dialogRef.componentInstance.onSubmit;
+    }
+
+    private _deletePool(pool: Pool, { deleteJob }: DeletePoolOutput) {
+        if (deleteJob) {
+            this.jobService.delete(pool.id);
+        }
+        return this.poolService.delete(pool.id);
     }
 }
