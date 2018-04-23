@@ -8,7 +8,7 @@ import { PoolResizeDialogComponent } from "./resize";
 
 @Injectable()
 export class PoolCommands extends EntityCommands<Pool> {
-    public edit: EntityCommand<Pool, void>;
+    public resize: EntityCommand<Pool, void>;
     public delete: EntityCommand<Pool, DeletePoolOutput>;
     public pin: EntityCommand<Pool, void>;
 
@@ -36,7 +36,7 @@ export class PoolCommands extends EntityCommands<Pool> {
     }
 
     private _buildCommands() {
-        this.edit = this.simpleCommand({
+        this.resize = this.simpleCommand({
             label: "Resize",
             action: (pool) => this._resizePool(pool),
             multiple: false,
@@ -59,7 +59,7 @@ export class PoolCommands extends EntityCommands<Pool> {
         });
 
         this.commands = [
-            this.edit,
+            this.resize,
             this.delete,
             this.pin,
         ];
