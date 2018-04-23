@@ -9,7 +9,6 @@ import { Observable, Subscription } from "rxjs";
 import { Filter, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
-import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
@@ -19,7 +18,7 @@ import { PoolDecorator } from "app/models/decorators";
 import { PinnedEntityService, PoolListParams, PoolService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { DeletePoolDialogComponent, DeletePoolTask, PoolResizeDialogComponent } from "../action";
+import { DeletePoolTask, PoolCommands } from "../action";
 
 @Component({
     selector: "bl-pool-list",
@@ -42,6 +41,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     private _subs: Subscription[] = [];
 
     constructor(
+        public commands: PoolCommands,
         private poolService: PoolService,
         activatedRoute: ActivatedRoute,
         router: Router,
@@ -114,31 +114,6 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
             task.start(backgroundTask);
             return task.waitingDone;
         });
-    }
-
-    public deletePool(poolDecorator: PoolDecorator) {
-        const dialogRef = this.dialog.open(DeletePoolDialogComponent);
-        dialogRef.componentInstance.poolId = poolDecorator.id;
-    }
-
-    public resizePool(poolDecorator: PoolDecorator) {
-        const sidebarRef = this.sidebarManager.open("resize-pool", PoolResizeDialogComponent);
-        sidebarRef.component.pool = poolDecorator.pool;
-        this.sidebarManager.onClosed.subscribe(() => {
-            this.poolService.get(poolDecorator.id);
-        });
-    }
-
-    public contextmenu(decorator: PoolDecorator) {
-        return new ContextMenu([
-            new ContextMenuItem({ label: "Delete", click: () => this.deletePool(decorator) }),
-            new ContextMenuItem({ label: "Resize", click: () => this.resizePool(decorator) }),
-            new ContextMenuItem({
-                label: this.pinnedEntityService.isFavorite(decorator.pool) ? "Unpin favorite" : "Pin to favorites",
-                click: () => this._pinPool(decorator),
-                enabled: true,
-            }),
-        ]);
     }
 
     public trackById(index, pool) {

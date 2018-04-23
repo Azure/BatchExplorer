@@ -29,6 +29,7 @@ import {
     PoolScalePickerComponent,
     VmSizePickerComponent,
 } from "app/components/pool/action";
+import { PoolCommands } from "./action/pool-commands";
 
 const components = [
     AppLicensePickerComponent, AutoscaleFormulaPickerComponent, CertificatePickerComponent,
@@ -53,6 +54,9 @@ const modules = [
         LicenseEulaDialogComponent,
         PoolCreateBasicDialogComponent,
         PoolResizeDialogComponent,
+    ],
+    providers: [
+        PoolCommands,
     ],
 })
 export class PoolModule {
