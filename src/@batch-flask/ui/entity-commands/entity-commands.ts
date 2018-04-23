@@ -53,7 +53,6 @@ export abstract class EntityCommands<TEntity extends ActionableEntity> {
                 log.warn(`Entity with id ${id} was not loaded from the cache. Not displaying context menu.`);
                 return null;
             }
-            console.log("here 2");
             return this.contextMenuFromEntity(entity);
         });
     }
@@ -98,10 +97,13 @@ export abstract class EntityCommands<TEntity extends ActionableEntity> {
 
     protected command<T extends EntityCommand<TEntity, any>>(type: Type<T>): T {
         const command = this._injectorFactory.create(type);
+        command.definition = this;
         return command;
     }
 
     protected simpleCommand(attrs: EntityCommandAttributes<TEntity>): EntityCommand<TEntity> {
-        return new EntityCommand(this.injector, attrs);
+        const command = new EntityCommand(this.injector, attrs);
+        command.definition = this;
+        return command;
     }
 }

@@ -1,7 +1,6 @@
 import { Injectable, Injector } from "@angular/core";
-import { EntityCommand, EntityCommands } from "@batch-flask/ui";
+import { EntityCommand, EntityCommands, SidebarManager } from "@batch-flask/ui";
 
-import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Pool } from "app/models";
 import { PinnedEntityService, PoolService } from "app/services";
 import { PoolResizeDialogComponent } from "./resize";

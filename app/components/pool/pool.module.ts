@@ -23,13 +23,13 @@ import {
     DeletePoolDialogComponent,
     LicenseEulaDialogComponent,
     OsOfferTileComponent,
+    PoolCommands,
     PoolCreateBasicDialogComponent,
     PoolOsPickerComponent,
     PoolResizeDialogComponent,
     PoolScalePickerComponent,
     VmSizePickerComponent,
 } from "app/components/pool/action";
-import { PoolCommands } from "./action/pool-commands";
 
 const components = [
     AppLicensePickerComponent, AutoscaleFormulaPickerComponent, CertificatePickerComponent,
