@@ -1,17 +1,16 @@
-import { Injector } from "@angular/core";
+import { Injector, Type } from "@angular/core";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
-import * as inflection from "inflection";
 import { Observable } from "rxjs";
 
-import { ServerError } from "@batch-flask/core";
 import { ListSelection } from "@batch-flask/core/list/list-selection";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
+import { InjectorFactory } from "@batch-flask/ui/injector-factory";
 import { log } from "@batch-flask/utils";
-import { EntityCommand, EntityCommandNotify } from "./entity-command";
+import { EntityCommand, EntityCommandAttributes } from "./entity-command";
 
-interface ActionableEntity {
+export interface ActionableEntity {
     id: string;
 }
 
@@ -24,16 +23,17 @@ export abstract class EntityCommands<TEntity extends ActionableEntity> {
     public backgroundTaskService: BackgroundTaskService;
 
     public commands: Array<EntityCommand<TEntity, any>>;
+    private _injectorFactory: InjectorFactory;
 
-    constructor(
-        injector: Injector,
-        private _typeName: string,
-        private _get: (id: string) => Observable<TEntity>,
-        private _getFromCache: (id: string) => Observable<TEntity>) {
+    constructor(private injector: Injector, public typeName: string) {
+        this._injectorFactory = injector.get(InjectorFactory);
         this.notificationService = injector.get(NotificationService);
         this.dialogService = injector.get(DialogService);
         this.backgroundTaskService = injector.get(BackgroundTaskService);
     }
+
+    public abstract get(id: string): Observable<TEntity>;
+    public abstract getFromCache(id: string): Observable<TEntity>;
 
     public contextMenuFromSelection(selection: ListSelection): Observable<ContextMenu> {
         if (selection.hasMultiple()) {
@@ -48,7 +48,7 @@ export abstract class EntityCommands<TEntity extends ActionableEntity> {
             log.warn(`Cannot display context menu for as there is no ids provided`);
             return Observable.of(null);
         }
-        return this._getFromCache(id).map((entity) => {
+        return this.getFromCache(id).map((entity) => {
             if (!entity) {
                 log.warn(`Entity with id ${id} was not loaded from the cache. Not displaying context menu.`);
                 return null;
@@ -58,7 +58,7 @@ export abstract class EntityCommands<TEntity extends ActionableEntity> {
     }
 
     public contextMenuFromIds(ids: string[]): Observable<ContextMenu> {
-        const obs = ids.map(id => this._getFromCache(id));
+        const obs = ids.map(id => this.getFromCache(id));
         return Observable.forkJoin(obs).map((entities) => {
             return this.contextMenuFromEntities(entities);
         });
@@ -69,7 +69,7 @@ export abstract class EntityCommands<TEntity extends ActionableEntity> {
             return new ContextMenuItem({
                 label: command.label(entity),
                 click: () => {
-                    this.executeCommand(command, entity);
+                    command.execute(entity);
                 },
                 enabled: command.enabled(entity),
             });
@@ -87,7 +87,7 @@ export abstract class EntityCommands<TEntity extends ActionableEntity> {
                 return new ContextMenuItem({
                     label: `${label} (${matching})`,
                     click: () => {
-                        this.executeCommands(command, entities);
+                        command.executeMultiple(entities);
                     },
                     enabled,
                 });
@@ -95,102 +95,12 @@ export abstract class EntityCommands<TEntity extends ActionableEntity> {
         return new ContextMenu(menuItems);
     }
 
-    public executeCommand(command: EntityCommand<TEntity>, entity: TEntity) {
-        if (command.confirm) {
-            if (command.confirm instanceof Function) {
-                command.confirm([entity]).subscribe((options) => {
-                    this._executeCommand(command, entity, options);
-                });
-            } else {
-                const label = command.label(entity);
-                const type = this._typeName.toLowerCase();
-                this.dialogService.confirm(`Are you sure your want to ${label.toLowerCase()} these ${type}`, {
-                    description: `You are about to ${label.toLowerCase()} ${entity.id}`,
-                    yes: () => {
-                        this._executeCommand(command, entity);
-                    },
-                });
-            }
-        } else {
-            this._executeCommand(command, entity);
-        }
+    protected command<T extends EntityCommand<TEntity, any>>(type: Type<T>): T {
+        const command = this._injectorFactory.create(type);
+        return command;
     }
 
-    public executeCommands(command: EntityCommand<TEntity>, entities: TEntity[]) {
-        if (command.confirm) {
-            if (command.confirm instanceof Function) {
-                command.confirm(entities).subscribe((options) => {
-                    this._executeCommands(command, entities, options);
-                });
-            } else {
-                const type = inflection.pluralize(this._typeName.toLowerCase());
-                const label = command.label(entities.first());
-                this.dialogService.confirm(
-                    `Are you sure your want to ${label.toLowerCase()} those ${entities.length} ${type}`,
-                    {
-                        yes: () => {
-                            this._executeCommands(command, entities);
-                        },
-                    });
-            }
-        } else {
-            this._executeCommands(command, entities);
-
-        }
-    }
-
-    private _executeCommand(command: EntityCommand<TEntity>, entity: TEntity, options?: any) {
-        const label = command.label(entity);
-        command.execute(entity, options).subscribe({
-            next: () => {
-                this._notifySuccess(command, `${label} was successfull.`, `${entity.id}`);
-                this._get((entity as any).id).subscribe({
-                    error: () => null,
-                });
-            },
-            error: (e: ServerError) => {
-                this._notifyError(command, `${label} failed.`, `${entity.id} ${e.message}`);
-                log.error(`Failed to execute command ${label} for entity ${entity.id}`, e);
-            },
-        });
-    }
-
-    private _executeCommands(command: EntityCommand<TEntity>, entities: TEntity[], options?: any) {
-        const label = command.label(entities[0]);
-        const enabledEntities = entities.filter(x => command.enabled(x));
-        this.backgroundTaskService.startTask("", (task) => {
-            const obs = Observable.from(enabledEntities)
-                .concatMap((entity, index) => {
-                    task.name.next(`${label} (${index + 1}/${entities.length})`);
-                    return command.execute(entity, options).map(x => ({ entity, index }));
-                }).share();
-
-            obs.subscribe({
-                next: ({ entity, index }) => {
-                    task.progress.next((index + 1) / entities.length * 100);
-                    this._get((entity as any).id).subscribe();
-                },
-                error: (e: ServerError) => {
-                    log.error(`Failed to execute command ${label}`, e);
-                },
-            });
-
-            return obs;
-        }).subscribe(() => {
-            this._notifySuccess(command, `${label} was successfull.`,
-                `${enabledEntities.length}/${entities.length}`);
-        });
-    }
-
-    private _notifySuccess(command: EntityCommand<TEntity>, message: string, description: string) {
-        if (command.notify === EntityCommandNotify.Always) {
-            this.notificationService.success(message, description);
-        }
-    }
-
-    private _notifyError(command: EntityCommand<TEntity>, message: string, description: string) {
-        if (command.notify !== EntityCommandNotify.Never) {
-            this.notificationService.error(message, description);
-        }
+    protected simpleCommand(attrs: EntityCommandAttributes<TEntity>): EntityCommand<TEntity> {
+        return new EntityCommand(this.injector, attrs);
     }
 }

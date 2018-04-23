@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, Injector } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { DialogService, EntityCommand } from "@batch-flask/ui";
 
@@ -8,8 +8,8 @@ import { DisableJobDialogComponent } from "./disable-job-dialog.component";
 
 @Injectable()
 export class DisableJobCommand extends EntityCommand<Job, string> {
-    constructor(jobService: JobService, private dialog: DialogService) {
-        super({
+    constructor(injector: Injector, jobService: JobService, private dialog: DialogService) {
+        super(injector, {
             label: "Disable",
             action: (job: Job, option: string) => jobService.disable(job.id, option),
             enabled: (job) => job.state !== JobState.completed && job.state !== JobState.disabled,

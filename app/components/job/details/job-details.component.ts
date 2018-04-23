@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { MatDialog, MatDialogConfig } from "@angular/material";
+import { MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
@@ -9,19 +9,19 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { JobScheduleCreateBasicDialogComponent } from "app/components/job-schedule/action";
 import { Job, JobSchedule, JobState } from "app/models";
 import { JobDecorator } from "app/models/decorators";
-import {  FileSystemService, JobParams, JobService } from "app/services";
+import { FileSystemService, JobParams, JobService } from "app/services";
 import { EntityView } from "app/services/core";
 import { TaskCreateBasicDialogComponent } from "../../task/action";
 import {
     DeleteJobDialogComponent,
-    DisableJobDialogComponent,
     EnableJobDialogComponent,
+    JobCommands,
     JobCreateBasicDialogComponent,
     PatchJobComponent,
     TerminateJobDialogComponent,
 } from "../action";
 
-import { ElectronRemote } from "@batch-flask/ui";
+import { DialogService, ElectronRemote } from "@batch-flask/ui";
 import "./job-details.scss";
 
 @Component({
@@ -48,7 +48,8 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     private _paramsSubscriber: Subscription;
 
     constructor(
-        private dialog: MatDialog,
+        private jobCommands: JobCommands,
+        private dialog: DialogService,
         private activatedRoute: ActivatedRoute,
         private fs: FileSystemService,
         private remote: ElectronRemote,
@@ -128,12 +129,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public disableJob() {
-        const config = new MatDialogConfig();
-        const dialogRef = this.dialog.open(DisableJobDialogComponent, config);
-        dialogRef.componentInstance.jobId = this.job.id;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.refresh();
-        });
+        this.jobCommands.disable.execute(this.job);
     }
 
     @autobind()

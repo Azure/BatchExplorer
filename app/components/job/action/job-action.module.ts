@@ -15,6 +15,7 @@ import { AddTaskButtonComponent } from "./add-task";
 import { DeleteJobDialogComponent } from "./delete/delete-job-dialog.component";
 import { DisableJobButtonComponent, DisableJobDialogComponent } from "./disable";
 import { EnableJobButtonComponent, EnableJobDialogComponent } from "./enable";
+import { JobCommands } from "./job-commands";
 import { TerminateButtonComponent, TerminateJobDialogComponent } from "./terminate";
 
 const components = [
@@ -32,6 +33,9 @@ const components = [
     entryComponents: [
         JobCreateBasicDialogComponent, DeleteJobDialogComponent, DisableJobDialogComponent,
         EnableJobDialogComponent, TerminateJobDialogComponent, PatchJobComponent,
+    ],
+    providers: [
+        JobCommands,
     ],
 })
 export class JobActionModule {

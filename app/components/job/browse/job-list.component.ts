@@ -5,7 +5,6 @@ import { Observable, Subscription } from "rxjs";
 
 import { Filter, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { InjectorFactory } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
@@ -37,7 +36,6 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
 
     public data: ListView<Job, JobListParams>;
     public searchQuery = new FormControl();
-    public commands: JobCommands;
 
     // todo: ask tim about setting difference select options for list and details.
     private _baseOptions = {};
@@ -47,13 +45,11 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         router: Router,
         activatedRoute: ActivatedRoute,
         changeDetector: ChangeDetectorRef,
-        injectorFactory: InjectorFactory,
+        public commands: JobCommands,
         private sidebarManager: SidebarManager,
         private jobService: JobService,
         private taskManager: BackgroundTaskService) {
         super(changeDetector);
-
-        this.commands = injectorFactory.create(JobCommands);
 
         this.data = this.jobService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
