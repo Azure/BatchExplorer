@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
@@ -13,15 +12,12 @@ import { FileSystemService, JobParams, JobService } from "app/services";
 import { EntityView } from "app/services/core";
 import { TaskCreateBasicDialogComponent } from "../../task/action";
 import {
-    DeleteJobDialogComponent,
-    EnableJobDialogComponent,
     JobCommands,
     JobCreateBasicDialogComponent,
     PatchJobComponent,
-    TerminateJobDialogComponent,
 } from "../action";
 
-import { DialogService, ElectronRemote, InjectorFactory } from "@batch-flask/ui";
+import { ElectronRemote, InjectorFactory } from "@batch-flask/ui";
 import "./job-details.scss";
 
 @Component({
@@ -50,7 +46,6 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
     constructor(
         private injectorFactory: InjectorFactory,
-        private dialog: DialogService,
         private activatedRoute: ActivatedRoute,
         private fs: FileSystemService,
         private remote: ElectronRemote,

@@ -14,7 +14,7 @@ import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { TableConfig } from "@batch-flask/ui/table";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
-import { PinnedEntityService, PoolListParams, PoolService } from "app/services";
+import { PoolListParams, PoolService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
 import { DeletePoolTask, PoolCommands } from "../action";

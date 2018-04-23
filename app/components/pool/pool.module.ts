@@ -23,7 +23,6 @@ import {
     DeletePoolDialogComponent,
     LicenseEulaDialogComponent,
     OsOfferTileComponent,
-    PoolCommands,
     PoolCreateBasicDialogComponent,
     PoolOsPickerComponent,
     PoolResizeDialogComponent,
