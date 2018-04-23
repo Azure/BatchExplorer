@@ -35,7 +35,7 @@ export class JobCommands extends EntityCommands<Job> {
     }
 
     public getFromCache(jobId: string) {
-        return this.jobService.get(jobId);
+        return this.jobService.getFromCache(jobId);
     }
 
     private _pinJob(job: Job) {

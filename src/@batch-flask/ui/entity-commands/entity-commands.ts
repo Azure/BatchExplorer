@@ -53,6 +53,7 @@ export abstract class EntityCommands<TEntity extends ActionableEntity> {
                 log.warn(`Entity with id ${id} was not loaded from the cache. Not displaying context menu.`);
                 return null;
             }
+            console.log("here 2");
             return this.contextMenuFromEntity(entity);
         });
     }
