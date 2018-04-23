@@ -59,7 +59,8 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         });
         this.terminate = this.simpleCommand({
             label: "Terminate",
-            action: (jobSchedule: JobSchedule) => this.jobScheduleService.terminate(jobSchedule.id),
+            action: (jobSchedule) => this.jobScheduleService.terminate(jobSchedule.id),
+            enabled: (jobSchedule) => jobSchedule.state !== JobScheduleState.completed,
         });
         this.enable = this.simpleCommand({
             label: "Enable",
