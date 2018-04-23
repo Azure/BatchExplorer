@@ -80,12 +80,16 @@ export abstract class EntityCommands<TEntity extends ActionableEntity> {
         const menuItems = this.commands
             .filter(x => x.multiple)
             .map((command) => {
+                const label = command.label(entities[0]);
+                const matching = entities.filter(x => command.enabled(x)).length;
+                const enabled = matching > 0;
+
                 return new ContextMenuItem({
-                    label: command.label(entities[0]),
+                    label: `${label} (${matching})`,
                     click: () => {
                         this.executeCommands(command, entities);
                     },
-                    enabled: Boolean(entities.find(x => command.enabled(x))),
+                    enabled,
                 });
             });
         return new ContextMenu(menuItems);
