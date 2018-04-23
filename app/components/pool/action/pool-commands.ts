@@ -89,7 +89,7 @@ export class PoolCommands extends EntityCommands<Pool> {
 
     private _deletePool(pool: Pool, { deleteJob }: DeletePoolOutput) {
         if (deleteJob) {
-            this.jobService.delete(pool.id);
+            this.jobService.delete(pool.id).subscribe();
         }
         return this.poolService.delete(pool.id);
     }

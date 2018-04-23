@@ -4,7 +4,7 @@ import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { exists, log, nil } from "@batch-flask/utils";
-import inflection from "inflection";
+import * as inflection from "inflection";
 import { Observable } from "rxjs";
 
 import { ActionableEntity, EntityCommands } from "./entity-commands";
