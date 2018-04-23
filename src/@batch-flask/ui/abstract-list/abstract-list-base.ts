@@ -6,7 +6,8 @@ import { BehaviorSubject, Subscription } from "rxjs";
 
 import { autobind } from "@batch-flask/core";
 import { ListSelection, SelectableList } from "@batch-flask/core/list";
-import { ContextMenuService, EntityCommands } from "@batch-flask/ui";
+import { ContextMenuService } from "@batch-flask/ui/context-menu";
+import { EntityCommands } from "@batch-flask/ui/entity-commands";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { FocusSectionComponent } from "../focus-section";
 import { VirtualScrollComponent } from "../virtual-scroll";

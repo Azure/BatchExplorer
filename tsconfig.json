@@ -45,8 +45,7 @@
   },
   "files": [
     "definitions/index.d.ts",
-    "node_modules/monaco-editor/monaco.d.ts",
-    "test/utils/matchers/index.d.ts"
+    "node_modules/monaco-editor/monaco.d.ts"
   ],
   // This is not actually used for building but to let the editor know what files use this config
   "include": [
