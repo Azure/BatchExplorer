@@ -21,7 +21,7 @@ import {
     TerminateJobDialogComponent,
 } from "../action";
 
-import { DialogService, ElectronRemote } from "@batch-flask/ui";
+import { DialogService, ElectronRemote, InjectorFactory } from "@batch-flask/ui";
 import "./job-details.scss";
 
 @Component({
@@ -44,11 +44,12 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     public data: EntityView<Job, JobParams>;
     public JobState = JobState;
     public hasHookTask = false;
+    public jobCommands: JobCommands;
 
     private _paramsSubscriber: Subscription;
 
     constructor(
-        private jobCommands: JobCommands,
+        private injectorFactory: InjectorFactory,
         private dialog: DialogService,
         private activatedRoute: ActivatedRoute,
         private fs: FileSystemService,
@@ -56,6 +57,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         private sidebarManager: SidebarManager,
         private jobService: JobService,
         private router: Router) {
+        this.jobCommands = this.injectorFactory.create(JobCommands);
 
         this.data = this.jobService.view();
         this.data.item.subscribe((job) => {
@@ -112,19 +114,12 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public terminateJob() {
-        const config = new MatDialogConfig();
-        const dialogRef = this.dialog.open(TerminateJobDialogComponent, config);
-        dialogRef.componentInstance.jobId = this.job.id;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.refresh();
-        });
+        this.jobCommands.terminate.execute(this.job);
     }
 
     @autobind()
     public deleteJob() {
-        const config = new MatDialogConfig();
-        const dialogRef = this.dialog.open(DeleteJobDialogComponent, config);
-        dialogRef.componentInstance.jobId = this.job.id;
+        this.jobCommands.delete.execute(this.job);
     }
 
     @autobind()
@@ -149,12 +144,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public enableJob() {
-        const config = new MatDialogConfig();
-        const dialogRef = this.dialog.open(EnableJobDialogComponent, config);
-        dialogRef.componentInstance.jobId = this.job.id;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.refresh();
-        });
+        this.jobCommands.enable.execute(this.job);
     }
 
     @autobind()

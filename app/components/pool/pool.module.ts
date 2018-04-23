@@ -55,9 +55,6 @@ const modules = [
         PoolCreateBasicDialogComponent,
         PoolResizeDialogComponent,
     ],
-    providers: [
-        PoolCommands,
-    ],
 })
 export class PoolModule {
 }
