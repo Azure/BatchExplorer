@@ -25,22 +25,61 @@ export class MyComponent {
 ```
 
 ## Context menu in quick list or table.
-
 Table and quicklist support the context menu you just have to pass the menu as input to the quick list item/row.
 
+In the template
 ```html
-    <bl-quick-list>
-    <bl-quick-list-item *ngFor="let item of items" [contextmenu]="contextmenu(item)"></bl-quick-list-item>
+    <bl-quick-list [commands]="commands">
+        <bl-quick-list-item *ngFor="let item of items"></bl-quick-list-item>
     </bl-quick-list>
 ```
 
-
+In the model
 ```typescript
-    public contextmenu(item) {
-       new ContextMenu([
-            new ContextMenuItem("Delete", () => console.log("Delete", item)),
-            new ContextMenuItem("Terminate", () => console.log("Terminate", item)),
-            new ContextMenuItem({label: "Enable", click: () => console.log("Enable", item), enable: false}),
-        ]);
+    constructor(injectorFactory: InjectorFactory) {
+        this.commands = injectorFactory.create(JobCommands);
+    }
+```
+
+In `job-commands.ts`
+```ts
+    export class JobCommands {
+        public edit: EntityCommand<Job, void>;
+        public delete: EntityCommand<Job, void>;
+        public enable: EntityCommand<Job, void>;
+
+        constructor(private jobService: JobService) {
+            this.edit = this.simpleCommand({
+                label: "Edit",
+                action: (job) => this._editJob(job),
+                enabled: (job) => job.state !== JobState.completed,
+                multiple: false,
+                confirm: false,
+                notify: false,
+            });
+            this.delete = this.simpleCommand({
+                label: "Delete",
+                action: (job: Job) => this.jobService.delete(job.id),
+            });
+            this.enable = this.simpleCommand({
+                label: "Enable",
+                action: (job: Job) => this.jobService.enable(job.id),
+            });
+
+            this.commands = [
+                this.edit,
+                this.delete,
+                this.enable,
+            ]
+        }
+
+
+        public get(jobId: string) {
+            return this.jobService.get(jobId);
+        }
+
+        public getFromCache(jobId: string) {
+            return this.jobService.getFromCache(jobId);
+        }
     }
 ```

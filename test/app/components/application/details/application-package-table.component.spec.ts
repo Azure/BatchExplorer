@@ -14,6 +14,7 @@ import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 
+import { ContextMenuService } from "@batch-flask/ui";
 import {
     TableCellComponent, TableColumnComponent, TableComponent, TableHeadComponent,
 } from "@batch-flask/ui/table";
@@ -78,6 +79,7 @@ describe("ApplicationPackageTableComponent", () => {
                 { provide: MatDialog, useValue: null },
                 { provide: ApplicationService, useValue: applicationServiceSpy },
                 { provide: BackgroundTaskService, useValue: null },
+                { provide: ContextMenuService, useValue: null },
                 { provide: SidebarManager, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],

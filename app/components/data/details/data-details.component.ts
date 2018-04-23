@@ -29,7 +29,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     }
 
     public container: BlobContainer;
-    public storageAccountId: string; // TODO-TIM handle here
+    public storageAccountId: string;
     public containerId: string;
     public decorator: ApplicationDecorator;
     public data: EntityView<BlobContainer, GetContainerParams>;

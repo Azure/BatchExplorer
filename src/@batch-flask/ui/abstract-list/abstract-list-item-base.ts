@@ -3,9 +3,7 @@ import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
-import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { log } from "@batch-flask/utils";
-import { ContextMenu } from "../context-menu";
 import { AbstractListBase } from "./abstract-list-base";
 
 /**
@@ -13,8 +11,6 @@ import { AbstractListBase } from "./abstract-list-base";
  * 1. Inject the component inheriting SelectableListBase in the construtor using @Inject and forwardRef
  */
 export class AbstractListItemBase implements OnDestroy, OnInit {
-    @Input() public contextmenu: ContextMenu;
-
     /**
      * Unique key to give to the list used for knowing if the item is selected
      */
@@ -55,7 +51,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     constructor(
         protected list: AbstractListBase,
         private router: Router,
-        private contextmenuService: ContextMenuService,
         private breadcrumbService: BreadcrumbService) {
 
         this.isFocused = this.list.focusedItem.map(x => x === this.key);
@@ -122,10 +117,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     }
 
     public openContextMenu() {
-        const menu = this.contextmenu;
-        if (menu) {
-            this.contextmenuService.openMenu(menu);
-        }
+        this.list.openContextMenu(this);
     }
 
     /**

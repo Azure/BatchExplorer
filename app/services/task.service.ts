@@ -132,6 +132,10 @@ export class TaskService extends ServiceBase {
         return this._getter.fetch({ jobId, id: taskId });
     }
 
+    public getFromCache(jobId: string, taskId: string, options: any = {}): Observable<Task> {
+        return this._getter.fetch({ jobId, id: taskId }, { cached: true });
+    }
+
     /**
      * Create an entity view for a node
      */
@@ -162,7 +166,7 @@ export class TaskService extends ServiceBase {
         return this.listAll(jobId, options);
     }
 
-    public terminate(jobId: string, taskId: string, options: any): Observable<{}> {
+    public terminate(jobId: string, taskId: string, options: any = {}): Observable<{}> {
         return this.callBatchClient((client) => client.task.terminate(jobId, taskId, options));
     }
 

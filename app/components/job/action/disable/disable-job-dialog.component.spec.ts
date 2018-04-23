@@ -6,6 +6,7 @@ import { Observable } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { DisableJobDialogComponent } from "app/components/job/action";
+import { Job } from "app/models";
 import { JobService } from "app/services";
 import { InfoBoxMockComponent, ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 
@@ -48,13 +49,13 @@ describe("DisableJobDialogComponent ", () => {
 
         fixture = TestBed.createComponent(DisableJobDialogComponent);
         component = fixture.componentInstance;
-        component.jobId = "job-1";
+        component.jobs = [new Job({ id: "job-1" })];
         debugElement = fixture.debugElement;
         fixture.detectChanges();
     });
 
     it("Should show title and job id", () => {
-        expect(debugElement.nativeElement.textContent).toContain("Disable job");
+        expect(debugElement.nativeElement.textContent).toContain("disable job");
         expect(debugElement.nativeElement.textContent).toContain("job-1");
     });
 
@@ -76,37 +77,5 @@ describe("DisableJobDialogComponent ", () => {
         component.taskAction = "terminate";
         fixture.detectChanges();
         expect(description.textContent).toContain("Terminate running tasks. The tasks will not run again.");
-    });
-
-    it("Submit should call service and close the dialog", (done) => {
-        component.taskAction = "terminate";
-        fixture.detectChanges();
-
-        component.ok().subscribe(() => {
-            expect(jobServiceSpy.disable).toHaveBeenCalledTimes(1);
-            expect(jobServiceSpy.disable).toHaveBeenCalledWith("job-1", "terminate", {});
-
-            done();
-        });
-    });
-
-    it("Submit should call service and show error if fail", (done) => {
-        component.jobId = "bad-job-id";
-        fixture.detectChanges();
-
-        component.ok().subscribe({
-            next: () => {
-                fail("call should have failed");
-                done();
-            },
-            error: (error: ServerError) => {
-                expect(jobServiceSpy.disable).toHaveBeenCalledTimes(1);
-                expect(jobServiceSpy.disable).toHaveBeenCalledWith("bad-job-id", "requeue", {});
-
-                expect(error.message).toBe("Some random test error happened disabling job");
-
-                done();
-            },
-        });
     });
 });
