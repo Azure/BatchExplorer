@@ -1,9 +1,14 @@
 <bl-focus-section>
-    <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
+    <bl-quick-list *ngIf="quicklist"
+        [status]="status"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        [commands]="commands"
+        (scrollBottom)="onScrollToBottom()">
+
         <bl-quick-list-item *ngFor="let job of jobs; trackBy: trackByFn"
             [link]="['/jobs/', job.id]"
-            [key]="job.id"
-            [contextmenu]="contextmenu(job)">
+            [key]="job.id">
             <bl-quick-list-item-status [status]="jobStatus(job)" [tooltip]="jobStatusText(job)">
             </bl-quick-list-item-status>
 
@@ -18,14 +23,20 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()">
+    <bl-table *ngIf="!quicklist"
+        [status]="status"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        [commands]="commands"
+        (scrollBottom)="onScrollToBottom()">
+
         <bl-thead>
             <bl-column>ID</bl-column>
             <bl-column>State</bl-column>
             <bl-column>Pool</bl-column>
         </bl-thead>
 
-        <bl-row *ngFor="let job of jobs; trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id" [contextmenu]="contextmenu(job)">
+        <bl-row *ngFor="let job of jobs; trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id">
             <bl-cell>{{job.id}}</bl-cell>
             <bl-cell>{{job.state}}</bl-cell>
             <bl-cell>{{job.poolInfo?.poolId}}</bl-cell>

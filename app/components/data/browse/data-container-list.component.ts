@@ -2,24 +2,21 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input,
     OnChanges, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
-import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import {
-    BackgroundTaskService, ContextMenu, ContextMenuItem, LoadingStatus, QuickListItemStatus, SidebarManager,
+    BackgroundTaskService, InjectorFactory, LoadingStatus, QuickListItemStatus,
 } from "@batch-flask/ui";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { BlobContainer, LeaseStatus } from "app/models";
-import { FileGroupCreateDto } from "app/models/dtos";
-import { PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
 import { ListContainerParams, StorageContainerService } from "app/services/storage";
 import { ComponentUtils } from "app/utils";
 import { Constants } from "common";
-import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
+import { BlobContainerCommands, DeleteContainerAction } from "../action";
 
 import "./data-container-list.scss";
 
@@ -36,6 +33,7 @@ const defaultListOptions = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataContainerListComponent extends ListBaseComponent implements OnInit, OnChanges, OnDestroy {
+    public commands: BlobContainerCommands;
     public LoadingStatus = LoadingStatus;
 
     @Input() public storageAccountId: string;
@@ -49,14 +47,13 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
     constructor(
         router: Router,
         changeDetector: ChangeDetectorRef,
+        injectorFactory: InjectorFactory,
         private activeRoute: ActivatedRoute,
-        private dialog: MatDialog,
-        private sidebarManager: SidebarManager,
         private taskManager: BackgroundTaskService,
-        private pinnedEntityService: PinnedEntityService,
         private storageContainerService: StorageContainerService) {
 
         super(changeDetector);
+        this.commands = injectorFactory.create(BlobContainerCommands);
         this.data = this.storageContainerService.listView();
         ComponentUtils.setActiveItem(activeRoute, this.data);
 
@@ -86,6 +83,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         if (changes.storageAccountId && this.storageAccountId) {
             this.containers = List([]);
             this.data.params = { storageAccountId: this.storageAccountId };
+            this.commands.params = { storageAccountId: this.storageAccountId };
             this.data.fetchNext();
         }
     }
@@ -145,48 +143,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         });
     }
 
-    public contextmenu(container: BlobContainer) {
-        return new ContextMenu([
-            new ContextMenuItem({ label: "Delete", click: () => this._deleteFileGroup(container) }),
-            new ContextMenuItem({ label: "Add more files", click: () => this._manageFileGroup(container) }),
-            new ContextMenuItem({
-                label: this.pinnedEntityService.isFavorite(container) ? "Unpin favorite" : "Pin to favorites",
-                click: () => this._pinFileGroup(container),
-            }),
-        ]);
-    }
-
     public trackFileGroup(index, fileGroup: BlobContainer) {
         return fileGroup.id;
-    }
-
-    private _deleteFileGroup(container: BlobContainer) {
-        const dialogRef = this.dialog.open(DeleteContainerDialogComponent);
-        dialogRef.componentInstance.id = container.id;
-        dialogRef.componentInstance.name = container.name;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.storageContainerService.get(this.storageAccountId, container.id);
-        });
-    }
-
-    private _manageFileGroup(container: BlobContainer) {
-        const sidebarRef = this.sidebarManager.open("Maintain a file group", FileGroupCreateFormComponent);
-        sidebarRef.component.setValue(new FileGroupCreateDto({
-            name: container.name,
-            includeSubDirectories: true,
-            paths: [],
-        }));
-
-        sidebarRef.afterCompletion.subscribe(() => {
-            this.storageContainerService.onContainerUpdated.next();
-        });
-    }
-
-    private _pinFileGroup(container: BlobContainer) {
-        this.pinnedEntityService.pinFavorite(container).subscribe((result) => {
-            if (result) {
-                this.pinnedEntityService.unPinFavorite(container);
-            }
-        });
     }
 }

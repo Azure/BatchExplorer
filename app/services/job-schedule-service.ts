@@ -82,6 +82,10 @@ export class JobScheduleService extends ServiceBase {
         return this._getter.fetch({ id: jobScheduleId });
     }
 
+    public getFromCache(jobScheduleId: string, options: any = {}): Observable<JobSchedule> {
+        return this._getter.fetch({ id: jobScheduleId }, { cached: true });
+    }
+
     /**
      * Create an entity view for a job schedule
      */

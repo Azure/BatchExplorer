@@ -12,16 +12,15 @@ import {
     PoolPickerComponent,
 } from "./add";
 import { AddTaskButtonComponent } from "./add-task";
-import { DeleteJobDialogComponent } from "./delete/delete-job-dialog.component";
 import { DisableJobButtonComponent, DisableJobDialogComponent } from "./disable";
-import { EnableJobButtonComponent, EnableJobDialogComponent } from "./enable";
-import { TerminateButtonComponent, TerminateJobDialogComponent } from "./terminate";
+import { EnableJobButtonComponent } from "./enable";
+import { TerminateButtonComponent } from "./terminate";
 
 const components = [
     JobCreateBasicDialogComponent, JobManagerTaskPickerComponent, PoolPickerComponent,
     PatchJobComponent, JobPreparationTaskPickerComponent, JobReleaseTaskPickerComponent,
-    DeleteJobDialogComponent, DisableJobDialogComponent, EnableJobDialogComponent,
-    TerminateJobDialogComponent, AddTaskButtonComponent, DisableJobButtonComponent,
+    DisableJobDialogComponent,
+    AddTaskButtonComponent, DisableJobButtonComponent,
     EnableJobButtonComponent, TerminateButtonComponent,
 ];
 
@@ -30,8 +29,7 @@ const components = [
     exports: components,
     imports: [...commonModules, TaskBaseModule, BaseModule],
     entryComponents: [
-        JobCreateBasicDialogComponent, DeleteJobDialogComponent, DisableJobDialogComponent,
-        EnableJobDialogComponent, TerminateJobDialogComponent, PatchJobComponent,
+        JobCreateBasicDialogComponent, DisableJobDialogComponent, PatchJobComponent,
     ],
 })
 export class JobActionModule {

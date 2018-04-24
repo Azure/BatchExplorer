@@ -1,15 +1,16 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
-import { MatDialog } from "@angular/material";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef,
+    Component, EventEmitter, Input, OnChanges, Output,
+} from "@angular/core";
 import { List } from "immutable";
 
 import { ListBaseComponent } from "@batch-flask/core/list";
-import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
+import { InjectorFactory } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
-import { DeleteTaskDialogComponent, TerminateTaskDialogComponent } from "app/components/task/action";
+import { TaskCommands } from "app/components/task/action";
 import { Task, TaskState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
-import { TaskService } from "app/services";
 import { DateUtils } from "app/utils";
 
 @Component({
@@ -17,7 +18,7 @@ import { DateUtils } from "app/utils";
     templateUrl: "task-list-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskListDisplayComponent extends ListBaseComponent {
+export class TaskListDisplayComponent extends ListBaseComponent implements OnChanges {
     @Input() public jobId: string;
 
     @Input() public tasks: List<Task>;
@@ -26,10 +27,18 @@ export class TaskListDisplayComponent extends ListBaseComponent {
 
     @Output() public scrollBottom = new EventEmitter();
 
-    constructor(private taskService: TaskService, private dialog: MatDialog, changeDetector: ChangeDetectorRef) {
+    public commands: TaskCommands;
+
+    constructor(injectorFactory: InjectorFactory, changeDetector: ChangeDetectorRef) {
         super(changeDetector);
+        this.commands = injectorFactory.create(TaskCommands);
     }
 
+    public ngOnChanges(changes) {
+        if (changes.jobId) {
+            this.commands.params = { jobId: this.jobId };
+        }
+    }
     public taskStatus(task: Task): QuickListItemStatus {
         if (task.state === TaskState.completed && task.executionInfo.exitCode !== 0) {
             return QuickListItemStatus.warning;
@@ -46,32 +55,6 @@ export class TaskListDisplayComponent extends ListBaseComponent {
 
     public formatDate(date: Date) {
         return DateUtils.prettyDate(date, 7);
-    }
-
-    public deleteTask(task: Task) {
-        const dialogRef = this.dialog.open(DeleteTaskDialogComponent);
-        dialogRef.componentInstance.jobId = this.jobId;
-        dialogRef.componentInstance.taskId = task.id;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.taskService.get(this.jobId, task.id);
-        });
-    }
-
-    public terminateTask(task: Task) {
-        const dialogRef = this.dialog.open(TerminateTaskDialogComponent);
-        dialogRef.componentInstance.jobId = this.jobId;
-        dialogRef.componentInstance.taskId = task.id;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.taskService.get(this.jobId, task.id);
-        });
-    }
-
-    public contextmenu(task: Task) {
-        const isCompleted = task.state === TaskState.completed;
-        return new ContextMenu([
-            new ContextMenuItem({ label: "Delete", click: () => this.deleteTask(task) }),
-            new ContextMenuItem({ label: "Terminate", click: () => this.terminateTask(task), enabled: !isCompleted }),
-        ]);
     }
 
     public trackByFn(index, task: Task) {

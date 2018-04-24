@@ -4,6 +4,7 @@ import {
 } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 
+import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import { DragUtils, log } from "@batch-flask/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
@@ -67,8 +68,11 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     /**
      * To enable keyboard navigation in the list it must be inside a focus section
      */
-    constructor(changeDetection: ChangeDetectorRef, @Optional() focusSection?: FocusSectionComponent) {
-        super(changeDetection, focusSection);
+    constructor(
+        contextmenuService: ContextMenuService,
+        changeDetection: ChangeDetectorRef,
+        @Optional() focusSection?: FocusSectionComponent) {
+        super(contextmenuService, changeDetection, focusSection);
         this.dimensions = this._dimensions.asObservable();
     }
 

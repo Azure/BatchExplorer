@@ -2,23 +2,22 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { Filter, FilterMatcher, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
+import { InjectorFactory } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
-import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { Certificate, CertificateState } from "app/models";
-import { CertificateListParams, CertificateService, PinnedEntityService } from "app/services";
+import { CertificateListParams, CertificateService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
 import {
-    DeleteCertificateAction, DeleteCertificateDialogComponent, ReactivateCertificateDialogComponent,
+    CertificateCommands, DeleteCertificateAction,
 } from "../action";
 
 @Component({
@@ -31,6 +30,7 @@ import {
     }],
 })
 export class CertificateListComponent extends ListBaseComponent implements OnInit, OnDestroy {
+    public commands: CertificateCommands;
     public certificates: List<Certificate>;
     public displayedCertificates: List<Certificate> = List([]);
     public LoadingStatus = LoadingStatus;
@@ -43,12 +43,13 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
         router: Router,
         activatedRoute: ActivatedRoute,
         changeDetector: ChangeDetectorRef,
-        private dialog: MatDialog,
+        injectorFactory: InjectorFactory,
         private certificateService: CertificateService,
-        private pinnedEntityService: PinnedEntityService,
         private taskManager: BackgroundTaskService,
     ) {
         super(changeDetector);
+        this.commands = injectorFactory.create(CertificateCommands);
+
         this.data = this.certificateService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
         this.data.items.subscribe((certificates) => {
@@ -110,22 +111,6 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
         this.data.fetchNext();
     }
 
-    public contextmenu(certificate: Certificate) {
-        const deletefailed = certificate.state === CertificateState.deletefailed;
-        return new ContextMenu([
-            new ContextMenuItem({ label: "Delete", click: () => this.deleteCertificate(certificate) }),
-            new ContextMenuItem({
-                label: "Reactivate",
-                click: () => this.reactivateCertificate(certificate),
-                enabled: deletefailed,
-            }),
-            new ContextMenuItem({
-                label: this.pinnedEntityService.isFavorite(certificate) ? "Unpin favorite" : "Pin to favorites",
-                click: () => this._pinCertificate(certificate),
-            }),
-        ]);
-    }
-
     public deleteSelection(selection: ListSelection) {
         this.taskManager.startTask("", (backgroundTask) => {
             const task = new DeleteCertificateAction(this.certificateService, [...selection.keys]);
@@ -134,32 +119,8 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
         });
     }
 
-    public deleteCertificate(certificate: Certificate) {
-        const dialogRef = this.dialog.open(DeleteCertificateDialogComponent);
-        dialogRef.componentInstance.certificateThumbprint = certificate.thumbprint;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.certificateService.get(certificate.thumbprint);
-        });
-    }
-
-    public reactivateCertificate(certificate: Certificate) {
-        const dialogRef = this.dialog.open(ReactivateCertificateDialogComponent);
-        dialogRef.componentInstance.certificateThumbprint = certificate.thumbprint;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.certificateService.get(certificate.thumbprint);
-        });
-    }
-
     public trackByFn(index: number, certificate: Certificate) {
         return certificate.thumbprint;
-    }
-
-    private _pinCertificate(certificate: Certificate) {
-        this.pinnedEntityService.pinFavorite(certificate).subscribe((result) => {
-            if (result) {
-                this.pinnedEntityService.unPinFavorite(certificate);
-            }
-        });
     }
 
     private _updateDisplayedCertificates() {

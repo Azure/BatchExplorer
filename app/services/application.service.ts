@@ -88,6 +88,10 @@ export class ApplicationService extends ServiceBase {
         return this._getter.fetch({ id: applicationId });
     }
 
+    public getFromCache(applicationId: string, options: any = {}): Observable<BatchApplication> {
+        return this._getter.fetch({ id: applicationId }, { cached: true });
+    }
+
     /**
      * Create an entity view for a pool
      */

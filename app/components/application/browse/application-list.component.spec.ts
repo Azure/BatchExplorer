@@ -1,11 +1,11 @@
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Subject } from "rxjs";
 
 import { FilterBuilder } from "@batch-flask/core";
+import { DialogService, InjectorFactory, NotificationService } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationListComponent } from "app/components/application/browse";
@@ -45,11 +45,13 @@ describe("ApplicationListComponent", () => {
             imports: [RouterTestingModule],
             declarations: [ApplicationListComponent, NoItemMockComponent],
             providers: [
-                { provide: MatDialog, useValue: null },
+                { provide: DialogService, useValue: null },
+                { provide: NotificationService, useValue: null },
                 { provide: ApplicationService, useValue: applicationServiceSpy },
                 { provide: PinnedEntityService, useValue: pinServiceSpy },
                 { provide: BackgroundTaskService, useValue: null },
                 { provide: SidebarManager, useValue: null },
+                InjectorFactory,
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

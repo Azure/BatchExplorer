@@ -80,6 +80,10 @@ export class JobService extends ServiceBase {
         return this._getter.fetch({ id: jobId });
     }
 
+    public getFromCache(jobId: string): Observable<Job> {
+        return this._getter.fetch({ id: jobId }, { cached: true });
+    }
+
     /**
      * Create an entity view for a job
      */
