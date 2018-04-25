@@ -8,11 +8,7 @@ export async function fetch(url: string, options: RequestInit = {}) {
         ...options,
     };
     if (!options.agent && process.env.HTTP_PROXY) {
-        // TODO-TIM remove
-        log.info("Calling node fetch with HTTP_PROXY");
         instanceOptions.agent = new HttpsProxyAgent(process.env.HTTP_PROXY);
-    } else {
-        log.info("Calling node fetch without HTTP_PROXY");
     }
 
     if (!options.headers) {

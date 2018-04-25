@@ -254,10 +254,7 @@ export class AADService {
         const url = `${this.app.azureEnvironment.armUrl}tenants?api-version=${Constants.ApiVersion.arm}`;
         const response = await fetch(url, options);
         log.info("Listing tenants response", response.status, response.statusText);
-        const text = await response.text();
-        // TODO-TIM remove
-        log.debug("Content of list tenants", text);
-        const { value } = JSON.parse(text);
+        const { value }  = await response.json();
         return value.map(x => x.tenantId);
     }
 

@@ -142,7 +142,6 @@
     "extract-zip": "~1.6.6",
     "font-awesome": "^4.7.0",
     "get-proxy-settings": "~0.1.10",
-    "global-tunnel-ng": "~2.1.1",
     "hammerjs": "^2.0.8",
     "https-proxy-agent": "^2.2.1",
     "immutable": "^3.8.2",
