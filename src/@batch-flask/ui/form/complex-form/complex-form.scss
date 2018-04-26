@@ -43,6 +43,9 @@ bl-complex-form {
         .form-server-error {
             margin-top: 20px;
         }
+        > .content > .content-wrapper {
+            overflow-y: initial;
+        }
     }
 
     .header {
