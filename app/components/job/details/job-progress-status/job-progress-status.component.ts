@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { List } from "immutable";
 
 import { GaugeConfig } from "@batch-flask/ui/graphs/gauge";
@@ -12,6 +12,7 @@ import "./job-progress-status.scss";
 @Component({
     selector: "bl-job-progress-status",
     templateUrl: "job-progress-status.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JobProgressStatusComponent implements OnChanges, OnDestroy {
     @Input() public job: Job;
@@ -41,6 +42,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
         nodeService: NodeService,
         private jobService: JobService,
         pollService: PollService,
+        private changeDetectorRef: ChangeDetectorRef,
     ) {
         this.poolData = poolService.view();
         this.data = nodeService.listView({
@@ -52,7 +54,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
 
         this.poolData.item.subscribe((pool) => {
             this.pool = pool;
-            this.maxRunningTasks = pool ? pool.targetNodes * pool.maxTasksPerNode : 1;
+            this.maxRunningTasks = pool ? pool.currentNodes * pool.maxTasksPerNode : 1;
             this.updateGaugeOptions();
         });
 
@@ -62,7 +64,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
             }
             this.nodes = nodes;
             this.countRunningTasks();
-            this.updateGaugeOptions();
+            this.changeDetectorRef.markForCheck();
         });
 
         this._polls.push(this.data.startPoll(refreshRate));
@@ -115,6 +117,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
                 },
             },
         };
+        this.changeDetectorRef.markForCheck();
     }
 
     public updateShowAllPoolTasks(value: boolean) {
@@ -130,6 +133,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
             this.jobTaskCounts = x;
             this.countRunningTasks();
             this._computeProgress();
+            this.changeDetectorRef.markForCheck();
         });
         return obs;
     }
