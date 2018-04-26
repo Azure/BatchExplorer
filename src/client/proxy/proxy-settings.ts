@@ -3,7 +3,7 @@ import {
     getProxySettings, validateProxySetting,
 } from "get-proxy-settings";
 
-import { fetch, log } from "@batch-flask/utils";
+import { log } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core";
 import { LocalStorage } from "client/core/local-storage";
 import { Constants } from "common";
