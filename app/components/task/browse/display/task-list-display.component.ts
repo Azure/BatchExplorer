@@ -5,7 +5,6 @@ import {
 import { List } from "immutable";
 
 import { ListBaseComponent } from "@batch-flask/core/list";
-import { InjectorFactory } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { TaskCommands } from "app/components/task/action";
@@ -17,6 +16,7 @@ import { DateUtils } from "app/utils";
     selector: "bl-task-list-display",
     templateUrl: "task-list-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [TaskCommands],
 })
 export class TaskListDisplayComponent extends ListBaseComponent implements OnChanges {
     @Input() public jobId: string;
@@ -27,11 +27,8 @@ export class TaskListDisplayComponent extends ListBaseComponent implements OnCha
 
     @Output() public scrollBottom = new EventEmitter();
 
-    public commands: TaskCommands;
-
-    constructor(injectorFactory: InjectorFactory, changeDetector: ChangeDetectorRef) {
+    constructor(public commands: TaskCommands, changeDetector: ChangeDetectorRef) {
         super(changeDetector);
-        this.commands = injectorFactory.create(TaskCommands);
     }
 
     public ngOnChanges(changes) {

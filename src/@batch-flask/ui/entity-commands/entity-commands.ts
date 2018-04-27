@@ -6,7 +6,6 @@ import { Observable } from "rxjs";
 import { ListSelection } from "@batch-flask/core/list/list-selection";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
-import { InjectorFactory } from "@batch-flask/ui/injector-factory";
 import { log } from "@batch-flask/utils";
 import { EntityCommand, EntityCommandAttributes } from "./entity-command";
 
@@ -24,10 +23,8 @@ export abstract class EntityCommands<TEntity extends ActionableEntity, TParams =
     public params: TParams = {} as TParams;
 
     public commands: Array<EntityCommand<TEntity, any>>;
-    private _injectorFactory: InjectorFactory;
 
     constructor(private injector: Injector, public typeName: string) {
-        this._injectorFactory = injector.get(InjectorFactory);
         this.notificationService = injector.get(NotificationService);
         this.dialogService = injector.get(DialogService);
         this.backgroundTaskService = injector.get(BackgroundTaskService);
@@ -97,7 +94,7 @@ export abstract class EntityCommands<TEntity extends ActionableEntity, TParams =
     }
 
     protected command<T extends EntityCommand<TEntity, any>>(type: Type<T>): T {
-        const command = this._injectorFactory.create(type);
+        const command = this.injector.get(type);
         command.definition = this;
         return command;
     }

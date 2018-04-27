@@ -36,8 +36,7 @@ In the template
 
 In the model
 ```typescript
-    constructor(injectorFactory: InjectorFactory) {
-        this.commands = injectorFactory.create(JobCommands);
+    constructor(public commands: JobCommands) {
     }
 ```
 

@@ -9,7 +9,6 @@ import { Observable, Subscription } from "rxjs";
 
 import { Filter, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { InjectorFactory } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
@@ -33,13 +32,12 @@ import {
     selector: "bl-job-schedule-list",
     templateUrl: "job-schedule-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{
+    providers: [JobScheduleCommands, {
         provide: ListBaseComponent,
         useExisting: forwardRef(() => JobScheduleListComponent),
     }],
 })
 export class JobScheduleListComponent extends ListBaseComponent implements OnInit, OnDestroy {
-    public commands: JobScheduleCommands;
     public jobSchedules: List<JobSchedule>;
     public LoadingStatus = LoadingStatus;
 
@@ -53,7 +51,7 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
         router: Router,
         activatedRoute: ActivatedRoute,
         changeDetector: ChangeDetectorRef,
-        injectorFactory: InjectorFactory,
+        public commands: JobScheduleCommands,
         private sidebarManager: SidebarManager,
         private dialog: MatDialog,
         private jobScheduleService: JobScheduleService,
@@ -61,7 +59,6 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
         private taskManager: BackgroundTaskService) {
         super(changeDetector);
 
-        this.commands = injectorFactory.create(JobScheduleCommands);
         this.data = this.jobScheduleService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
         this.data.items.subscribe((jobSchedules) => {
