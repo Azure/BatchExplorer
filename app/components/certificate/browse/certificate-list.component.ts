@@ -8,7 +8,6 @@ import { Observable, Subscription } from "rxjs";
 
 import { Filter, FilterMatcher, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { InjectorFactory } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
@@ -24,13 +23,12 @@ import {
     selector: "bl-certificate-list",
     templateUrl: "certificate-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{
+    providers: [CertificateCommands, {
         provide: ListBaseComponent,
         useExisting: forwardRef(() => CertificateListComponent),
     }],
 })
 export class CertificateListComponent extends ListBaseComponent implements OnInit, OnDestroy {
-    public commands: CertificateCommands;
     public certificates: List<Certificate>;
     public displayedCertificates: List<Certificate> = List([]);
     public LoadingStatus = LoadingStatus;
@@ -43,12 +41,11 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
         router: Router,
         activatedRoute: ActivatedRoute,
         changeDetector: ChangeDetectorRef,
-        injectorFactory: InjectorFactory,
+        public commands: CertificateCommands,
         private certificateService: CertificateService,
         private taskManager: BackgroundTaskService,
     ) {
         super(changeDetector);
-        this.commands = injectorFactory.create(CertificateCommands);
 
         this.data = this.certificateService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);

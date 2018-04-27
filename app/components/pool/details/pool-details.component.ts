@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { ElectronRemote, InjectorFactory } from "@batch-flask/ui";
+import { ElectronRemote } from "@batch-flask/ui";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
@@ -19,6 +19,7 @@ import "./pool-details.scss";
 @Component({
     selector: "bl-pool-details",
     templateUrl: "pool-details.html",
+    providers: [PoolCommands],
 })
 export class PoolDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
@@ -39,13 +40,12 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     public get pool() { return this._pool; }
     public data: EntityView<Pool, PoolParams>;
     public estimatedCost = "-";
-    public commands: PoolCommands;
 
     private _paramsSubscriber: Subscription;
     private _pool: Pool;
 
     constructor(
-        injectorFactory: InjectorFactory,
+        public commands: PoolCommands,
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private batchLabs: BatchLabsService,
@@ -54,7 +54,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         private remote: ElectronRemote,
         private pricingService: PricingService,
         private poolService: PoolService) {
-        this.commands = injectorFactory.create(PoolCommands);
 
         this.data = this.poolService.view();
         this.data.item.subscribe((pool) => {

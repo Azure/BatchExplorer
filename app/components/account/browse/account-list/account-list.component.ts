@@ -6,7 +6,6 @@ import { Observable, Subscription } from "rxjs";
 
 import { Filter, FilterMatcher, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { InjectorFactory } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
@@ -20,10 +19,13 @@ import { DeleteAccountDialogComponent, DeleteAccountTask } from "../../action/de
 @Component({
     selector: "bl-account-list",
     templateUrl: "account-list.html",
-    providers: [{
-        provide: ListBaseComponent,
-        useExisting: forwardRef(() => AccountListComponent),
-    }],
+    providers: [
+        BatchAccountCommands,
+        {
+            provide: ListBaseComponent,
+            useExisting: forwardRef(() => AccountListComponent),
+        },
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountListComponent extends ListBaseComponent implements OnDestroy {
@@ -31,12 +33,11 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
     public accounts: List<AccountResource> = List([]);
     public displayedAccounts: List<AccountResource> = List([]);
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
-    public commands: BatchAccountCommands;
 
     private _accountSub: Subscription;
 
     constructor(
-        public injectorFactory: InjectorFactory,
+        public commands: BatchAccountCommands,
         private accountService: AccountService,
         private dialog: MatDialog,
         private taskManager: BackgroundTaskService,
@@ -45,7 +46,6 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
         changeDetector: ChangeDetectorRef,
         subscriptionService: SubscriptionService) {
         super(changeDetector);
-        this.commands = injectorFactory.create(BatchAccountCommands);
         this._updateDisplayedAccounts();
 
         this.accountService.accountsLoaded.subscribe(() => {
