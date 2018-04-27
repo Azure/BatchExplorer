@@ -113,7 +113,6 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
             }
         } else {
             this._executeMultiple(entities);
-
         }
     }
 
@@ -136,8 +135,8 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     private _executeMultiple(entities: TEntity[], options?: any) {
         const label = this.label(entities[0]);
         const enabledEntities = entities.filter(x => this.enabled(x));
-
-        this.backgroundTaskService.startTasks(label, enabledEntities.map((entity) => {
+        const type = inflection.pluralize(this.definition.typeName.toLowerCase());
+        this.backgroundTaskService.startTasks(`${label} ${type}`, enabledEntities.map((entity) => {
             return {
                 name: `${label} ${entity.id}`,
                 func: () => this.performAction(entity, options),

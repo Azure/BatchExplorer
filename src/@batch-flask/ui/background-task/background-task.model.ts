@@ -128,25 +128,4 @@ export class GroupedBackgroundTask extends BackgroundTask<GroupedBackgroundTaskR
             },
         });
     }
-
-    private _runNextTask(index = 0) {
-        const totalTask = this._tasks.length;
-
-        if (index === totalTask) {
-            this.end();
-            return;
-        }
-        const task = this._tasks[index];
-        const obs = task.func(null);
-        this.name.next(`${this._baseName} (${index + 1}/${totalTask})`);
-        obs.subscribe({
-            error: (error) => {
-                this.errored(error);
-            },
-            complete: () => {
-                this.progress.next((index + 1) / totalTask * 100);
-                this._runNextTask(index + 1);
-            },
-        });
-    }
 }
