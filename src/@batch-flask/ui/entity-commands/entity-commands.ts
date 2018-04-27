@@ -94,7 +94,7 @@ export abstract class EntityCommands<TEntity extends ActionableEntity, TParams =
     }
 
     protected command<T extends EntityCommand<TEntity, any>>(type: Type<T>): T {
-        const command = this.injector.get(type);
+        const command = new type(this.injector);
         command.definition = this;
         return command;
     }
