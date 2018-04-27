@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import {
-    BackgroundTaskService, InjectorFactory, LoadingStatus, QuickListItemStatus,
+    BackgroundTaskService, LoadingStatus, QuickListItemStatus,
 } from "@batch-flask/ui";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
@@ -26,14 +26,13 @@ const defaultListOptions = {
 @Component({
     selector: "bl-data-container-list",
     templateUrl: "data-container-list.html",
-    providers: [{
+    providers: [BlobContainerCommands, {
         provide: ListBaseComponent,
         useExisting: forwardRef(() => DataContainerListComponent),
     }],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataContainerListComponent extends ListBaseComponent implements OnInit, OnChanges, OnDestroy {
-    public commands: BlobContainerCommands;
     public LoadingStatus = LoadingStatus;
 
     @Input() public storageAccountId: string;
@@ -47,13 +46,12 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
     constructor(
         router: Router,
         changeDetector: ChangeDetectorRef,
-        injectorFactory: InjectorFactory,
+        public commands: BlobContainerCommands,
         private activeRoute: ActivatedRoute,
         private taskManager: BackgroundTaskService,
         private storageContainerService: StorageContainerService) {
 
         super(changeDetector);
-        this.commands = injectorFactory.create(BlobContainerCommands);
         this.data = this.storageContainerService.listView();
         ComponentUtils.setActiveItem(activeRoute, this.data);
 

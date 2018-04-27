@@ -5,7 +5,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { ContextMenuService, InjectorFactory } from "@batch-flask/ui";
+import { ContextMenuService } from "@batch-flask/ui";
 import {
     TableCellComponent, TableColumnComponent, TableComponent, TableHeadComponent,
 } from "@batch-flask/ui/table";
@@ -57,7 +57,6 @@ describe("TaskDependenciesComponent", () => {
             providers: [
                 { provide: TaskService, useValue: taskServiceSpy },
                 { provide: ContextMenuService, useValue: null },
-                InjectorFactory,
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
