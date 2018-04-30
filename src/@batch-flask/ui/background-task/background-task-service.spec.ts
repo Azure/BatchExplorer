@@ -9,7 +9,7 @@ import { BehaviorSubject, Subject } from "rxjs";
 import { BackgroundTask, BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { NotificationServiceMock } from "test/utils/mocks";
 
-describe("BackgroundTaskService ", () => {
+fdescribe("BackgroundTaskService ", () => {
     let taskManager: BackgroundTaskService;
     let runningTasks: List<BackgroundTask>;
     let notificationServiceSpy: NotificationServiceMock;
@@ -30,13 +30,13 @@ describe("BackgroundTaskService ", () => {
         expect(runningTasks.size).toBe(1);
         const task = runningTasks.first();
         let name;
-        let done = false;
+        const doneSpy = jasmine.createSpy();
         task.name.subscribe(x => name = x);
-        task.done.subscribe(x => done = x);
+        task.done.subscribe(doneSpy);
 
         expect(name).toEqual("task1");
         expect(task.progress.getValue()).toBe(-1, "Progress should start at -1(Indeterminate time)");
-        expect(done).toBe(false, "Task should not yet be completed");
+        expect(doneSpy).toHaveBeenCalledOnce("Task should not yet be completed");
 
         obs.complete();
         expect(done).toBe(true, "Task should now be marked as completed");
@@ -87,11 +87,11 @@ describe("BackgroundTaskService ", () => {
         let done = false;
         task.name.subscribe(x => name = x);
         task.done.subscribe(x => done = x);
-        expect(name).toEqual("Job: Task1 (1/2)");
+        expect(name).toEqual("Job (1/2)");
         expect(done).toBe(false);
 
         obs.task1.complete();
-        expect(name).toEqual("Job: Task2 (2/2)");
+        expect(name).toEqual("Job (2/2)");
         expect(spies.task1).toHaveBeenCalledTimes(1);
         expect(spies.task2).toHaveBeenCalledTimes(1);
 
