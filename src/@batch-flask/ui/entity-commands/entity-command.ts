@@ -113,7 +113,6 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
             }
         } else {
             this._executeMultiple(entities);
-
         }
     }
 
@@ -136,27 +135,15 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     private _executeMultiple(entities: TEntity[], options?: any) {
         const label = this.label(entities[0]);
         const enabledEntities = entities.filter(x => this.enabled(x));
-        this.backgroundTaskService.startTask("", (task) => {
-            const obs = Observable.from(enabledEntities)
-                .concatMap((entity, index) => {
-                    task.name.next(`${label} (${index + 1}/${entities.length})`);
-                    return this.performAction(entity, options).map(x => ({ entity, index }));
-                }).share();
-
-            obs.subscribe({
-                next: ({ entity, index }) => {
-                    task.progress.next((index + 1) / entities.length * 100);
-                    this.definition.get((entity as any).id).subscribe();
-                },
-                error: (e: ServerError) => {
-                    log.error(`Failed to execute command ${label}`, e);
-                },
-            });
-
-            return obs;
-        }).subscribe(() => {
+        const type = inflection.pluralize(this.definition.typeName.toLowerCase());
+        this.backgroundTaskService.startTasks(`${label} ${type}`, enabledEntities.map((entity) => {
+            return {
+                name: `${label} ${entity.id}`,
+                func: () => this.performAction(entity, options),
+            };
+        })).subscribe((result) => {
             this._notifySuccess(`${label} was successfull.`,
-                `${enabledEntities.length}/${entities.length}`);
+                `${result.succeeded}/${entities.length}`);
         });
     }
 

@@ -5,7 +5,8 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { log } from "@batch-flask/utils";
 import { NotificationService } from "../notifications";
 import {
-    BackgroundTask, GroupedBackgroundTask, NamedTaskFunction, SingleBackgroundTask, TaskFunction,
+    BackgroundTask, GroupedBackgroundTask, GroupedBackgroundTaskResult,
+    NamedTaskFunction, SingleBackgroundTask, TaskFunction,
 } from "./background-task.model";
 
 @Injectable()
@@ -25,7 +26,7 @@ export class BackgroundTaskService {
         return task.done;
     }
 
-    public startTasks(name, tasks: NamedTaskFunction[]): Observable<any> {
+    public startTasks(name, tasks: NamedTaskFunction[]): Observable<GroupedBackgroundTaskResult> {
         const task = new GroupedBackgroundTask(this, name, tasks);
         this._queueTask(task);
 

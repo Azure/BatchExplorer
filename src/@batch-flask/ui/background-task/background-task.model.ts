@@ -1,5 +1,6 @@
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
+import { log } from "@batch-flask/utils";
 import { BackgroundTaskService } from "./background-task.service";
 
 /**
@@ -12,7 +13,7 @@ export interface NamedTaskFunction {
     func: TaskFunction;
 }
 
-export abstract class BackgroundTask {
+export abstract class BackgroundTask<T = any> {
     /**
      * Delay the task will wait before notifying the managaer it has completed
      */
@@ -22,9 +23,9 @@ export abstract class BackgroundTask {
     public id: string;
     public progress = new BehaviorSubject<number>(-1);
     public name = new BehaviorSubject<string>("");
-    public done: Observable<boolean>;
+    public done: Observable<T>;
 
-    protected _done = new AsyncSubject<boolean>();
+    protected _done = new AsyncSubject<T>();
 
     constructor(protected taskManager: BackgroundTaskService) {
         this.done = this._done.asObservable();
@@ -39,8 +40,8 @@ export abstract class BackgroundTask {
         this._done.complete();
     }
 
-    protected end() {
-        this._done.next(true);
+    protected end(result?: T) {
+        this._done.next(result);
         this._done.complete();
         setTimeout(() => {
             this.taskManager.completeTask(this.id);
@@ -67,8 +68,22 @@ export class SingleBackgroundTask extends BackgroundTask {
     }
 }
 
-export class GroupedBackgroundTask extends BackgroundTask {
+export interface GroupedBackgroundTaskResult {
+    succeeded: number;
+    failed: number;
+    total: number;
+    errors: any[];
+}
+
+export class GroupedBackgroundTask extends BackgroundTask<GroupedBackgroundTaskResult> {
     public progress = new BehaviorSubject<number>(0);
+
+    private _current: GroupedBackgroundTaskResult = {
+        succeeded: 0,
+        failed: 0,
+        total: 0,
+        errors: [],
+    };
 
     constructor(
         taskManager: BackgroundTaskService,
@@ -79,27 +94,37 @@ export class GroupedBackgroundTask extends BackgroundTask {
     }
 
     public start() {
-        this._runNextTask();
-    }
-
-    private _runNextTask(index = 0) {
         const totalTask = this._tasks.length;
 
-        if (index === totalTask) {
-            this.end();
-            return;
-        }
-        const task = this._tasks[index];
-        this.progress.next((index + 0.2) / totalTask * 100);
-        const obs = task.func(null);
-        this.name.next(`${this._baseName}: ${task.name} (${index + 1}/${totalTask})`);
-        obs.subscribe({
-            error: (error) => {
-                this.errored(error);
-            },
-            complete: () => {
+        const obs = Observable.from(this._tasks)
+            .concatMap((task, index) => {
                 this.progress.next((index + 1) / totalTask * 100);
-                this._runNextTask(index + 1);
+                this.name.next(`${this._baseName} (${index + 1}/${totalTask})`);
+
+                const taskObs = task.func(null);
+
+                taskObs.subscribe({
+                    complete: () => {
+                        this._current.succeeded++;
+                        this._current.total++;
+                    },
+                    error: (e) => {
+                        this._current.failed++;
+                        this._current.total++;
+                        this._current.errors.push(e);
+                        log.error("Error completing task", e);
+                    },
+                });
+                return taskObs;
+            }).shareReplay(1);
+
+        obs.subscribe({
+            complete: () => {
+                if (this._current.failed === this._current.total) {
+                    this.errored(this._current);
+                } else {
+                    this.end(this._current);
+                }
             },
         });
     }

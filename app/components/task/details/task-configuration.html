@@ -12,6 +12,7 @@
             <bl-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bl-text-property>
             <bl-text-property label="Previous state transition time" [value]="decorator.previousStateTransitionTime"></bl-text-property>
             <bl-text-property label="Exit conditions" *ngIf="!task.exitConditions" value="None"></bl-text-property>
+            <bl-text-property label="Affinity id" *ngIf="task.affinityInfo" [value]="task.affinityInfo?.affinityId"></bl-text-property>
 
             <bl-table-property *ngIf="task.outputFiles.size > 0" label="Output files">
                 <bl-table-property-header>
