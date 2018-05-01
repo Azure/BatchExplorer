@@ -82,7 +82,7 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
         this._writingValue = true;
         this.items.controls = [];
 
-        if (value) {
+        if (Array.isArray(value) && value.length > 0) {
             for (const val of value) {
                 this.items.push(this.formBuilder.group(val));
             }

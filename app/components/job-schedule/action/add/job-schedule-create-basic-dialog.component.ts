@@ -49,6 +49,7 @@ export class JobScheduleCreateBasicDialogComponent extends DynamicForm<JobSchedu
             displayName: ["", Validators.maxLength(validation.maxLength.displayName)],
             schedule: this.scheduleGroup,
             jobSpecification: null,
+            metadata: [null],
         });
     }
 
