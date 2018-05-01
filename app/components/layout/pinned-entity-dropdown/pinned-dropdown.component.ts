@@ -58,8 +58,10 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
                 return "Batch job schedule";
             case PinnedEntityType.Pool:
                 return "Batch pool";
-            case PinnedEntityType.FileGroup:
-                return "File group";
+            case PinnedEntityType.Certificate:
+                return "Batch certificate";
+            case PinnedEntityType.StorageContainer:
+                return "Storage container";
             default:
                 return "unknown";
         }
@@ -75,7 +77,9 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
                 return "fa-calendar";
             case PinnedEntityType.Pool:
                 return "fa-database";
-            case PinnedEntityType.FileGroup:
+            case PinnedEntityType.Certificate:
+                return "fa-certificate";
+            case PinnedEntityType.StorageContainer:
                 return "fa-cloud-upload";
             default:
                 return "fa-question";

@@ -1,19 +1,19 @@
 <bl-entity-configuration [value]="node">
     <bl-property-list>
         <bl-property-group label="General" class="wide">
-            <bl-text-property label="Id" [value]="decorator.id"></bl-text-property>
-            <bl-text-property label="Url" [value]="decorator.url"></bl-text-property>
+            <bl-text-property label="ID" [value]="decorator.id"></bl-text-property>
+            <bl-text-property label="URL" [value]="decorator.url"></bl-text-property>
             <bl-text-property label="State" [value]="decorator.state"></bl-text-property>
             <bl-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bl-text-property>
             <bl-text-property label="Scheduling state" [value]="decorator.schedulingState"></bl-text-property>
-            <bl-text-property label="Vm Size" [value]="decorator.vmSize"></bl-text-property>
+            <bl-text-property label="Node size" [value]="decorator.vmSize"></bl-text-property>
             <bl-text-property label="Last boot time" [value]="decorator.lastBootTime"></bl-text-property>
             <bl-text-property label="Allocation time" [value]="decorator.allocationTime"></bl-text-property>
             <bl-text-property label="Running task count" [value]="decorator.runningTasksCount"></bl-text-property>
-            <bl-text-property label="Total task run" [value]="decorator.totalTasksRun"></bl-text-property>
-            <bl-text-property label="Total succeeded tasks count" [value]="decorator.totalTasksSucceeded"></bl-text-property>
-            <bl-text-property label="Internal Ip Adress" [value]="decorator.ipAddress"></bl-text-property>
-            <bl-text-property label="External Ip Adress" [value]="externalIpAdress" *ngIf="externalIpAdress"></bl-text-property>
+            <bl-text-property label="Total tasks run" [value]="decorator.totalTasksRun"></bl-text-property>
+            <bl-text-property label="Total succeeded task count" [value]="decorator.totalTasksSucceeded"></bl-text-property>
+            <bl-text-property label="Internal IP address" [value]="decorator.ipAddress"></bl-text-property>
+            <bl-text-property label="External IP address" [value]="externalIpAddress" *ngIf="externalIpAddress"></bl-text-property>
             <bl-bool-property label="Is dedicated" [value]="node.isDedicated" [yesNo]="true"></bl-bool-property>
         </bl-property-group>
 

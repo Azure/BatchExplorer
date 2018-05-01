@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
+import * as moment from "moment";
 
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
@@ -25,9 +26,10 @@ export class NodeConnectComponent implements OnInit {
     public windows = false;
     public linux = false;
     public hasIp = false;
+    public expireTime: string;
 
     /**
-     * Base content for the rdp file(IP adress).
+     * Base content for the rdp file(IP Address).
      * This is either downloaded from the api on CloudService nodes or generated from the ip/port on VMs nodes
      */
     public rdpContent: string;
@@ -76,6 +78,7 @@ export class NodeConnectComponent implements OnInit {
 
         return this.addOrUpdateUser(credentials).do(() => {
             this.credentialSource = CredentialSource.Generated;
+            this.expireTime = DateUtils.fullDateAndTime(moment().add(24, "hours").toDate());
         });
     }
 
@@ -83,6 +86,7 @@ export class NodeConnectComponent implements OnInit {
     public addOrUpdateUser(credentials) {
         return this.nodeUserService.addOrUpdateUser(this.pool.id, this.node.id, credentials).do(() => {
             this.credentials = credentials;
+            this.expireTime = DateUtils.fullDateAndTime(this.credentials.expiryTime);
         });
     }
 
@@ -122,9 +126,5 @@ export class NodeConnectComponent implements OnInit {
                 this.connectionSettings = connection;
             });
         }
-    }
-
-    public get expireTime() {
-        return this.credentials && DateUtils.fullDateAndTime(this.credentials.expiryTime);
     }
 }

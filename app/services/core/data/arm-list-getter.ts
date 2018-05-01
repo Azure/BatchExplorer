@@ -43,7 +43,7 @@ export class ArmListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams
     private _requestOptions(options: ListOptions): RequestOptions {
         const search = new URLSearchParams();
         if (options.filter) {
-            search.set("$filter", options.filter);
+            search.set("$filter", options.filter.toOData());
         }
 
         if (options.select) {

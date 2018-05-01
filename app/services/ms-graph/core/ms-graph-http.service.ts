@@ -26,7 +26,6 @@ export class MsGraphHttpService extends HttpService {
 
         super();
         this.adal.currentUser.subscribe(x => this._currentUser = x);
-        this.http.get("");
     }
 
     public request<T = any>(method: string, uri: string, options: any): Observable<T> {

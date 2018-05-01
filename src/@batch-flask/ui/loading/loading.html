@@ -1,5 +1,5 @@
 <ng-container [ngSwitch]="displayStatus | async">
-    <div *ngIf="(displayStatus | async) === statuses.Loading" class="loading-icon" [class.relative]="isRelative">
+    <div *ngIf="(displayStatus | async) === statuses.Loading" class="loading-icon" [class.relative]="relative">
         <div [class]="'spinner ' + size">
             <div class="double-bounce1"></div>
             <div class="double-bounce2"></div>

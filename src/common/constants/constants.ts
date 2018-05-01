@@ -33,12 +33,13 @@ export const forms = {
             displayName: 1024,
             applicationName: 64,
             version: 64,
-            fileGroup: 63,
+            fileGroup: 55,
         },
         regex: {
             id: /^[\w\_-]+$/i,
             appVersion: /^[a-zA-Z0-9_-][a-zA-Z0-9_.-]*$/i,
             appFilename: /\.zip$/i,
+            certificateFileName: /(\.pfx|\.cer)$/i,
             fileGroup: /^[a-z0-9]([a-z0-9]|-(?!-|\z))*$/,
             batchAccount: /^[0-9a-z]*$/,
         },
@@ -94,6 +95,11 @@ export const localStorageKey = {
      * Save the latest azure environemnt used
      */
     azureEnvironment: "azure_environment",
+
+    /**
+     * Last selected storage account
+     */
+    lastStorageAccount: "last_storage_account",
 };
 
 export const ApiVersion = {
@@ -197,5 +203,8 @@ export const ListPageSizes = {
 };
 
 export const KnownQueryParameters = {
-    useAutoPool: "useAutoPool",
+    useAutoPool: "auto-pool",
+    inputParameter: "input-parameter",
+    assetContainer: "asset-container",
+    assetPaths: "asset-paths",
 };

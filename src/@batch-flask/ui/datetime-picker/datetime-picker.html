@@ -3,23 +3,23 @@
         {{ label }}
     </div>
     <div class="gcol">
-        <mat-form-field>
-            <input matInput [matDatepicker]="datePicker" placeholder="Choose a date" [formControl]="selectedDate">
-            <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <bl-form-field>
+            <input blInput [matDatepicker]="datePicker" placeholder="Choose a date" [formControl]="selectedDate">
+            <mat-datepicker-toggle blFormFieldSuffix [for]="datePicker"></mat-datepicker-toggle>
             <mat-datepicker #datePicker></mat-datepicker>
-        </mat-form-field>
+        </bl-form-field>
     </div>
     <div *ngIf="timePicker" class="gcol time-picker" [formGroup]="selectedTime">
         <div class="hour-picker time-entry">
-            <mat-form-field>
-                <input matInput placeholder="hh" formControlName="hour" type="number">
-            </mat-form-field>
+            <bl-form-field>
+                <input blInput placeholder="hh" formControlName="hour" type="number">
+            </bl-form-field>
         </div>
         <div class="time-separator">:</div>
         <div class="hour-picker time-entry">
-            <mat-form-field>
-                <input matInput placeholder="mm" formControlName="minute" type="number">
-            </mat-form-field>
+            <bl-form-field>
+                <input blInput placeholder="mm" formControlName="minute" type="number">
+            </bl-form-field>
         </div>
     </div>
 </div>

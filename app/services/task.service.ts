@@ -91,7 +91,7 @@ export class TaskService extends ServiceBase {
     }
 
     public countTasks(jobId: string, state: TaskState): Observable<number> {
-        const filter = FilterBuilder.prop("state").eq(state).toOData();
+        const filter = FilterBuilder.prop("state").eq(state);
         return this.listAll(jobId, { filter, select: "id,state" }).map(tasks => tasks.size).share();
     }
 
@@ -132,6 +132,10 @@ export class TaskService extends ServiceBase {
         return this._getter.fetch({ jobId, id: taskId });
     }
 
+    public getFromCache(jobId: string, taskId: string, options: any = {}): Observable<Task> {
+        return this._getter.fetch({ jobId, id: taskId }, { cached: true });
+    }
+
     /**
      * Create an entity view for a node
      */
@@ -151,7 +155,7 @@ export class TaskService extends ServiceBase {
      */
     public getMultiple(jobId: string, taskIds: string[], properties?: string): Observable<List<Task>> {
         const options: TaskListOptions = {
-            filter: FilterBuilder.or(...taskIds.map(id => FilterBuilder.prop("id").eq(id))).toOData(),
+            filter: FilterBuilder.or(...taskIds.map(id => FilterBuilder.prop("id").eq(id))),
             pageSize: taskIds.length,
         };
 
@@ -162,7 +166,7 @@ export class TaskService extends ServiceBase {
         return this.listAll(jobId, options);
     }
 
-    public terminate(jobId: string, taskId: string, options: any): Observable<{}> {
+    public terminate(jobId: string, taskId: string, options: any = {}): Observable<{}> {
         return this.callBatchClient((client) => client.task.terminate(jobId, taskId, options));
     }
 

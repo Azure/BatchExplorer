@@ -70,6 +70,10 @@ export class ListSelection {
         return this.all || this.keys.size > 1;
     }
 
+    public first() {
+        return this.keys.values().next().value;
+    }
+
     public asJS() {
         return [...this.keys];
     }

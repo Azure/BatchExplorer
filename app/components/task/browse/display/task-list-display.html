@@ -1,7 +1,6 @@
 <bl-focus-section>
     <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="scrollBottom.emit()">
-        <bl-quick-list-item *ngFor="let task of tasks;trackBy: trackByFn" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id"
-            [contextmenu]="contextmenu(task)">
+        <bl-quick-list-item *ngFor="let task of tasks;trackBy: trackByFn" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id">
             <bl-quick-list-item-status [status]="taskStatus(task)" [tooltip]="taskStatusText(task)">
             </bl-quick-list-item-status>
 
@@ -15,7 +14,7 @@
 
     <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="scrollBottom.emit()">
         <bl-thead>
-            <bl-column style="width: 200px">Id</bl-column>
+            <bl-column style="width: 200px">ID</bl-column>
             <bl-column>State</bl-column>
             <bl-column>Created</bl-column>
             <bl-column>Started</bl-column>
@@ -23,7 +22,7 @@
             <bl-column>Exit code</bl-column>
         </bl-thead>
 
-        <bl-row *ngFor="let task of tasks;trackBy: trackByFn" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id" [contextmenu]="contextmenu(task)">
+        <bl-row *ngFor="let task of tasks;trackBy: trackByFn" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id">
             <bl-cell [value]="task.id"></bl-cell>
             <bl-cell [value]="task.state">
                 {{task.state}}
@@ -39,5 +38,5 @@
 <bl-no-item [itemCount]="tasks.size" [status]="status">
     <i icon class="fa fa-tasks"></i>
     <span no-filter>No tasks</span>
-    <span with-filter>No task match this filter</span>
+    <span with-filter>No tasks match this filter</span>
 </bl-no-item>

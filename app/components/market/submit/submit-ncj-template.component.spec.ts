@@ -20,7 +20,10 @@ import { FileGroupSasComponent } from "app/components/data/shared/file-group-sas
 import { PoolPickerComponent } from "app/components/job/action/add";
 import { ParameterInputComponent, SubmitNcjTemplateComponent } from "app/components/market/submit";
 import { NcjJobTemplate, NcjParameterRawType, NcjPoolTemplate, NcjTemplateMode, Pool } from "app/models";
-import { NcjSubmitService, NcjTemplateService, PoolService, StorageService, VmSizeService } from "app/services";
+import { NcjFileGroupService, NcjSubmitService, NcjTemplateService, PoolService, VmSizeService } from "app/services";
+import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
+import { Constants } from "app/utils";
+
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";
@@ -93,17 +96,20 @@ describe("SubmitNcjTemplateComponent", () => {
     let templateServiceSpy: any;
     let ncjSubmitServiceSpy: any;
     let routerSpy: any;
-    let storageServiceSpy: any;
+    let storageContainerServiceSpy: any;
     let poolServiceSpy: any;
     let vmSizeServiceSpy: any;
     let sidebarSpy: any;
     let dialogSpy: any;
     let notificationServiceSpy: any;
+    let autoStorageServiceSpy;
+    let storageBlobServiceSpy;
+    let fileGroupServiceSpy;
 
     const blendFile = "myscene.blend";
     const queryParameters = {
-        useAutoPool: "0",
-        blendFile: blendFile,
+        "auto-pool": "0",
+        "blendFile": blendFile,
     };
 
     beforeEach(() => {
@@ -119,7 +125,7 @@ describe("SubmitNcjTemplateComponent", () => {
         };
 
         poolServiceSpy = {
-            listView:  () => listProxy,
+            listView: () => listProxy,
         };
 
         vmSizeServiceSpy = {
@@ -148,9 +154,11 @@ describe("SubmitNcjTemplateComponent", () => {
             }),
         };
 
-        storageServiceSpy = {
+        storageBlobServiceSpy = {};
+
+        storageContainerServiceSpy = {
             onContainerAdded: new Subject(),
-            containerListView: () => listProxy,
+            listView: () => listProxy,
         };
 
         dialogSpy = {
@@ -166,6 +174,15 @@ describe("SubmitNcjTemplateComponent", () => {
             error: jasmine.createSpy("error"),
         };
 
+        autoStorageServiceSpy = {
+            get: () => Observable.of("storage-acc-1"),
+        };
+
+        fileGroupServiceSpy = {
+            addFileGroupPrefix: jasmine.createSpy("addFileGroupPrefix").and.callFake((fgName) => {
+                return `${Constants.ncjFileGroupPrefix}${fgName}`;
+            }),
+        };
         TestBed.configureTestingModule({
             imports: [RouterTestingModule, ReactiveFormsModule, FormsModule, MaterialModule, NoopAnimationsModule],
             declarations: [NoItemMockComponent, SubmitNcjTemplateComponent, FileGroupSasComponent,
@@ -177,11 +194,14 @@ describe("SubmitNcjTemplateComponent", () => {
                 { provide: Router, useValue: routerSpy },
                 { provide: NcjTemplateService, useValue: templateServiceSpy },
                 { provide: NcjSubmitService, useValue: ncjSubmitServiceSpy },
-                { provide: StorageService, useValue: storageServiceSpy },
+                { provide: StorageContainerService, useValue: storageContainerServiceSpy },
                 { provide: DialogService, useValue: dialogSpy },
                 { provide: SidebarManager, useValue: sidebarSpy },
                 { provide: PoolService, useValue: poolServiceSpy },
                 { provide: VmSizeService, useValue: vmSizeServiceSpy },
+                { provide: NcjFileGroupService, useValue: fileGroupServiceSpy },
+                { provide: AutoStorageService, useValue: autoStorageServiceSpy },
+                { provide: StorageBlobService, useValue: storageBlobServiceSpy },
                 { provide: NotificationService, useValue: notificationServiceSpy },
             ],
 
@@ -210,8 +230,10 @@ describe("SubmitNcjTemplateComponent", () => {
 
     describe("Change query parameter to not use autopool", () => {
         beforeEach(() => {
-            queryParameters.useAutoPool = "1";
-            activatedRouteSpy.queryParams.next(queryParameters);
+            queryParameters["auto-pool"] = "1";
+            fixture = TestBed.createComponent(TestComponent);
+            de = fixture.debugElement.query(By.css("bl-submit-ncj-template"));
+            component = de.componentInstance;
             fixture.detectChanges();
         });
 

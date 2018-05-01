@@ -1,0 +1,22 @@
+<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef">
+    <bl-form-page main-form-page title="Create certificate" [formGroup]="form">
+        <bl-form-section title="Certificate" subtitle="Select a certificate (pfx or cer) to upload">
+            <div class="form-element">
+                <p>{{ form.controls.certificate.value }}</p>
+                <bl-directory-picker (eventChange)="fileSelected($event)" [canPickFile]="true">
+                    <i class="fa fa-upload" aria-hidden="true"></i>&nbsp;&nbsp;Select a certificate
+                </bl-directory-picker>
+                <bl-error controlName="certificate" code="required">Please select a valid certificate file</bl-error>
+                <bl-error controlName="certificate" code="pattern">Certificate need to be valid CER or PFX files only</bl-error>
+            </div>
+        </bl-form-section>
+        <bl-form-section *ngIf="showPassword" title="Password" subtitle="Type password for pfx certificate format">
+            <div class="form-element">
+                <bl-form-field>
+                    <input blInput formControlName="password" placeholder="Password" type="password" />
+                </bl-form-field>
+                <bl-error controlName="password" code="pfxPasswordRequired">Password is required if the certificate format is pfx</bl-error>
+            </div>
+        </bl-form-section>
+    </bl-form-page>
+</bl-complex-form>

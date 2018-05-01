@@ -5,16 +5,20 @@ import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
 import { EditorModule } from "@batch-flask/ui/editor";
+import { SelectModule } from "@batch-flask/ui/select";
 import { ButtonsModule } from "../buttons";
 import { ComplexFormComponent } from "./complex-form";
 import { FormFooterComponent } from "./complex-form/footer";
 import { EditableTableColumnComponent, EditableTableComponent } from "./editable-table";
 import { ExpandingTextareaComponent } from "./expanding-textarea";
 import { FormErrorComponent } from "./form-error";
+import { FormFieldComponent, FormFieldPrefixDirective, FormFieldSuffixDirective } from "./form-field";
 import { FormJsonEditorComponent } from "./form-json-editor";
 import { FormPageComponent } from "./form-page";
 import { FormMultiPickerComponent, FormPickerComponent, FormPickerItemTemplateDirective } from "./form-picker";
 import { FormSectionComponent } from "./form-section";
+import { HintComponent } from "./hint";
+import { InputDirective } from "./input";
 import { KeyValuePickerComponent } from "./key-value-picker";
 import { ServerErrorComponent } from "./server-error";
 import { SimpleFormComponent } from "./simple-form";
@@ -43,6 +47,11 @@ const components = [
     SingleLineTextareaDirective,
     FormJsonEditorComponent,
     FormFooterComponent,
+    InputDirective,
+    FormFieldComponent,
+    HintComponent,
+    FormFieldPrefixDirective,
+    FormFieldSuffixDirective,
 ];
 
 @NgModule({
@@ -54,6 +63,7 @@ const components = [
         FormsModule,
         MaterialModule,
         ReactiveFormsModule,
+        SelectModule,
         RouterModule,
         EditorModule,
         ...modules,

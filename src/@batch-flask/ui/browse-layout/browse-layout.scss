@@ -76,6 +76,7 @@ bl-browse-layout {
                 .bl-list-content {
                     flex: 1;
                     min-height: 100px;
+                    overflow-y: auto;
                     position: relative;
                 }
             }
@@ -91,6 +92,19 @@ bl-browse-layout {
 
                 &:hover {
                     overflow-y: auto;
+                }
+            }
+
+            [blbrowselayoutlist] {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+
+                > .list {
+                    flex: 1 1 auto;
+                    min-height: 100px;
+                    overflow-y: hidden;
+                    height: 100%;
                 }
             }
         }
@@ -127,29 +141,26 @@ bl-browse-layout {
     align-items: center;
     justify-content: center;
 
-    .mat-form-field-infix {
+    > .pre-quicksearch {
+        min-width: 10px;
+    }
+
+    .bl-form-field-infix {
         width: auto;
     }
 
-
-    mat-select {
-        padding-top: 0;
-    }
-
-    input {
+    > input {
         flex: 1 0 auto;
         padding: 5px;
         color: $emperor-grey;
         font-size: 1.1em;
         height: 26px;
 
-        background-color: $athensGrey;
-        border: none;
+        border: 1px solid $border-color;
 
         &:focus {
             outline: none;
         }
-
     }
 
     .toggle-advanced-filter {
@@ -167,17 +178,8 @@ bl-browse-layout {
         }
     }
 
-    select {
-        height: 26px;
-        color: $emperor-grey;
-        border: none;
-        border-radius: 3px;
+    bl-select {
         margin-right: 10px;
-        background-color: $athensGrey;
-        appearance: none;
-        &:active, &:focus {
-            outline: none;
-        }
     }
 }
 

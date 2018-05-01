@@ -1,0 +1,9 @@
+@import "app/styles/variables";
+
+bl-hint {
+    color: $secondary-text;
+
+    &.bl-align-right {
+        float: right;
+    }
+}

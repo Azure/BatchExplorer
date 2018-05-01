@@ -1,4 +1,4 @@
-<div class="table-head" [class.no-scroll]="!showScrollShadow">
+<div class="table-head" [class.no-scroll]="!showScrollShadow"  *ngIf="head && head.show">
   <ng-content select="bl-thead"></ng-content>
 </div>
 <div class="table-body">
@@ -8,6 +8,7 @@
             (click)="item.handleClick($event)"
             (contextmenu)="item.openContextMenu($event)"
             [class.selected]="item.selected"
+            [class.conceal]="item.conceal"
             [class.focused]="listFocused && item.key === (focusedItem | async)"
             [class.drop-target]="item.key === dropTargetRowKey"
             (dragenter)="dragEnter(item, $event)"
@@ -20,7 +21,7 @@
             <ng-template [ngTemplateOutlet]="item.content"></ng-template>
         </div>
 
-        <bl-virtual-scroll-tail [height]="100" *ngIf="status === LoadingStatus.Loading">
+        <bl-virtual-scroll-tail [height]="120" *ngIf="status === LoadingStatus.Loading">
             <bl-loading [status]="status"></bl-loading>
         </bl-virtual-scroll-tail>
     </bl-virtual-scroll>

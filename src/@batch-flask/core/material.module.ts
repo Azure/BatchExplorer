@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import {
     MatAutocompleteModule,
     MatButtonModule,
+    MatButtonToggleModule,
     MatCheckboxModule,
     MatDatepickerModule,
     MatDialogModule,
@@ -22,6 +23,7 @@ import {
 
 const modules = [
     MatButtonModule,
+    MatButtonToggleModule,
     MatAutocompleteModule,
     MatCheckboxModule,
     MatProgressBarModule,

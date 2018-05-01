@@ -1,12 +1,4 @@
 bl-account-home {
-    [pre-quicksearch] {
-        margin-right: 10px;
-        > mat-select {
-            .mat-select-trigger {
-                height: 26px;
-            }
-        }
-    }
 }
 
 bl-account-list {

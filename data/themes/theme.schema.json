@@ -46,6 +46,17 @@
         "disabled-text": {"$ref": "#/definitions/color"},
         "disabled-bg": {"$ref": "#/definitions/color"}
       }
+    },
+    "input": {
+      "type": "object",
+      "properties": {
+        "text": {"$ref": "#/definitions/color"},
+        "background": {"$ref": "#/definitions/color"},
+        "placeholder": {"$ref": "#/definitions/color"},
+        "border": {"$ref": "#/definitions/color"},
+        "focus-border": {"$ref": "#/definitions/color"},
+        "disabled-background": {"$ref": "#/definitions/color"},
+      }
     }
   }
 }

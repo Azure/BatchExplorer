@@ -1,8 +1,14 @@
-<bl-simple-form [submit]="destroyPool" [containerRef]="dialogRef" actionColor="warn" actionName="Delete" [multiUse]="false" size="small" title="Delete pool">
+<bl-simple-form
+    [submit]="destroyPool"
+    [containerRef]="dialogRef"
+    actionColor="warn"
+    actionName="Delete"
+    [multiUse]="false"
+    size="small"
+    [title]="title"
+    [stickyFooter]="false">
+
     <div class="same-name" *ngIf="hasJobWithSameName">
-        <mat-checkbox color="primary" [(ngModel)]="deleteJob">There is a job with the same id as this pool would you like to delete it too?</mat-checkbox>
-    </div>
-    <div class="message">
-        <p>Are you sure you want to delete pool '{{poolId}}'? This is a non-reversible action.</p>
+        <mat-checkbox color="primary" [(ngModel)]="deleteJob">There is a job with the same ID as this pool would you like to delete it too?</mat-checkbox>
     </div>
 </bl-simple-form>

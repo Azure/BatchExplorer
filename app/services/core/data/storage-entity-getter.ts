@@ -1,18 +1,26 @@
 import { Type } from "@angular/core";
-
-import { ServerError } from "@batch-flask/core";
-import { StorageClientService } from "app/services//storage-client.service";
-import { EntityGetter, EntityGetterConfig } from "app/services/core/data/entity-getter";
 import { Observable } from "rxjs";
 
-export interface StorageEntityGetterConfig<TEntity, TParams> extends EntityGetterConfig<TEntity, TParams> {
+import { ServerError } from "@batch-flask/core";
+import { EntityGetter, EntityGetterConfig } from "app/services/core/data/entity-getter";
+import { StorageClientService } from "app/services/storage/storage-client.service";
+import { StorageBaseParams } from "./storage-list-getter";
+
+export interface StorageGetResponse {
+    data: any;
+}
+
+export interface StorageEntityGetterConfig<TEntity, TParams extends StorageBaseParams>
+    extends EntityGetterConfig<TEntity, TParams> {
+
     /**
      * Get function(usually call the client proxy)
      */
-    getFn: (client: any, params: TParams) => Promise<any>;
+    getFn: (client: any, params: TParams) => Promise<StorageGetResponse>;
 }
-export class StorageEntityGetter<TEntity, TParams> extends EntityGetter<TEntity, TParams> {
-    private _getMethod: (client: any, params: TParams) => Promise<any>;
+
+export class StorageEntityGetter<TEntity, TParams extends StorageBaseParams> extends EntityGetter<TEntity, TParams> {
+    private _getMethod: (client: any, params: TParams) => Promise<StorageGetResponse>;
 
     constructor(
         type: Type<TEntity>,
@@ -24,7 +32,7 @@ export class StorageEntityGetter<TEntity, TParams> extends EntityGetter<TEntity,
     }
 
     protected getData(params: TParams): Observable<any> {
-        return this.storageClient.get().flatMap((client) => {
+        return this.storageClient.getFor(params.storageAccountId).flatMap((client) => {
             return Observable.fromPromise(this._getMethod(client, params));
         }).map(x => x.data)
             .catch((error) => {

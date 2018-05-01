@@ -1,0 +1,22 @@
+<div class="select-button-container">
+   <div #selectButton class="select-button" (click)="clickSelectButton($event)" [title]="title" [tabindex]="disabled ? -1 : 0">
+        <div class="label">
+            <ng-container *ngIf="!hasValueSelected">{{placeholder}}</ng-container>
+            <ng-container *ngIf="hasValueSelected">
+                <ng-container *ngIf="hasMultipleSelected">
+                    {{selected.size}} selected
+                </ng-container>
+                <ng-container *ngIf="!hasMultipleSelected">
+                    {{firstSelection ? firstSelection.label : ""}}
+                </ng-container>
+            </ng-container>
+        </div>
+        <div class="caret">
+            <i class="fa fa-caret-down" *ngIf="!showOptions"></i>
+            <i class="fa fa-caret-up" *ngIf="showOptions"></i>
+        </div>
+   </div>
+   <ng-container *ngIf="showOptions && filterable">
+       <input class="select-filter" #filterInput [ngModel]="filter" (ngModelChange)="filterChanged($event)" placeholder="Filter items...">
+   </ng-container>
+</div>

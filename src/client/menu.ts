@@ -3,19 +3,28 @@ import { log } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core";
 import { BrowserWindow, Menu, MenuItemConstructorOptions, app } from "electron";
 
-const editMenu: MenuItemConstructorOptions = {
-    label: "Edit",
-    submenu: [
-        { role: "undo" },
-        { role: "redo" },
-        { type: "separator" },
-        { role: "cut" },
-        { role: "copy" },
-        { role: "paste" },
-        { role: "delete" },
-        { role: "selectall" },
-    ],
-};
+function getEditMenu(app: BatchLabsApplication): MenuItemConstructorOptions {
+    return {
+        label: "Edit",
+        submenu: [
+            { role: "undo" },
+            { role: "redo" },
+            { type: "separator" },
+            { role: "cut" },
+            { role: "copy" },
+            { role: "paste" },
+            { role: "delete" },
+            { role: "selectall" },
+            { type: "separator" },
+            {
+                label: "Configure Proxy",
+                click: () => {
+                    app.proxySettings.configureManualy();
+                },
+            },
+        ],
+    };
+}
 
 const viewMenu: MenuItemConstructorOptions = {
     label: "View",
@@ -142,7 +151,7 @@ function setupOSXSpecificMenu(template) {
 
 export function setMenu(app: BatchLabsApplication) {
     const template = [
-        editMenu,
+        getEditMenu(app),
         viewMenu,
         getWindowMenu(app),
         environmentMenu(app),

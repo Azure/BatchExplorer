@@ -217,8 +217,8 @@ describe("BatchAccountCreateComponent ", () => {
 
     describe("Subscription and resource group", () => {
         it("should initialized subscription list with subscriptions", () => {
-            const rg = debugElement.query(By.css("mat-select[formControlName=resourceGroup]"));
-            const loc = debugElement.query(By.css("mat-select[formControlName=location]"));
+            const rg = debugElement.query(By.css("bl-select[formControlName=resourceGroup]"));
+            const loc = debugElement.query(By.css("bl-select[formControlName=location]"));
             expect(rg).toBeNull();
             expect(loc).toBeNull();
         });
@@ -232,7 +232,7 @@ describe("BatchAccountCreateComponent ", () => {
             component.form.controls.subscription.setValue({ subscriptionId: "dummy-1", displayName: "sub-1" });
             fixture.detectChanges();
             const rgm = debugElement.query(By.css("input[formControlName=resourceGroup]"));
-            const loc = debugElement.query(By.css("mat-select[formControlName=location]"));
+            const loc = debugElement.query(By.css("bl-select[formControlName=location]"));
             expect(rgm).not.toBeNull();
             expect(loc).not.toBeNull();
         }));
@@ -249,12 +249,12 @@ describe("BatchAccountCreateComponent ", () => {
         it("should initialize location after selected subscription", () => {
             component.form.controls.subscription.setValue({ subscriptionId: "dummy-2", displayName: "sub-2" });
             fixture.detectChanges();
-            let loc = debugElement.query(By.css("mat-select[formControlName=location]"));
+            let loc = debugElement.query(By.css("bl-select[formControlName=location]"));
             expect(loc).not.toBeNull();
 
             component.form.controls.subscription.setValue({ subscriptionId: "dummy-3", displayName: "sub-3" });
             fixture.detectChanges();
-            loc = debugElement.query(By.css("mat-select[formControlName=location]"));
+            loc = debugElement.query(By.css("bl-select[formControlName=location]"));
             expect(loc).toBeNull();
         });
 

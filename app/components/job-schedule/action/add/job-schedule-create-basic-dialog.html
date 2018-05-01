@@ -1,18 +1,18 @@
 <bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [config]="complexFormConfig" [fileUri]="fileUri">
-    <bl-form-page main-form-page title="Create job schedule" [formGroup]="form">
+    <bl-form-page main-form-page [title]="title" [formGroup]="form">
         <bl-form-section title="General info" subtitle="Basic information about the job schedule">
             <div class="form-element">
-                <mat-form-field>
-                    <input matInput formControlName="id" placeholder="Id">
-                </mat-form-field>
-                <bl-error controlName="id" code="required">Id is a required field</bl-error>
-                <bl-error controlName="id" code="maxlength">Id has a maximum length of 64 characters</bl-error>
-                <bl-error controlName="id" code="pattern">Id can contain any combination of alphanumeric characters including hyphens and underscores</bl-error>
+                <bl-form-field>
+                    <input blInput formControlName="id" placeholder="ID">
+                </bl-form-field>
+                <bl-error controlName="id" code="required">ID is a required field</bl-error>
+                <bl-error controlName="id" code="maxlength">ID has a maximum length of 64 characters</bl-error>
+                <bl-error controlName="id" code="pattern">ID can contain any combination of alphanumeric characters including hyphens and underscores</bl-error>
             </div>
             <div class="form-element">
-                <mat-form-field>
-                    <input matInput formControlName="displayName" placeholder="Display name">
-                </mat-form-field>
+                <bl-form-field>
+                    <input blInput formControlName="displayName" placeholder="Display name">
+                </bl-form-field>
                 <bl-error controlName="displayName" code="maxlength">Display name has a maximum length of 1024 characters</bl-error>
             </div>
         </bl-form-section>

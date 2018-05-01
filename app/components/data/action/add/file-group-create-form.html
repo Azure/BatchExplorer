@@ -2,16 +2,17 @@
     <bl-form-page main-form-page [title]="title" [subtitle]="description" [formGroup]="form">
         <bl-form-section title="General info" subtitle="Basic information about the file group">
             <div class="form-element">
-                <mat-form-field>
-                    <input matInput formControlName="name" placeholder="File group name">
-                </mat-form-field>
+                <bl-form-field>
+                    <div blFormFieldPrefix>fgrp-</div>
+                    <input blInput formControlName="name" placeholder="File group name">
+                </bl-form-field>
                 <bl-error controlName="name" code="required">The file group name is a required field</bl-error>
                 <bl-error controlName="name" code="maxlength">The file group name has a maximum length of 64 characters</bl-error>
                 <bl-error controlName="name" code="pattern">The file group name can contain any combination of lowercase alphanumeric characters including single hyphens</bl-error>
             </div>
-            <p *ngIf="groupExists" class="exists">This file group already exists, any selected files will be added to this existing group</p>
+            <p *ngIf="groupExists" class="exists">This file group already exists. Any new files will be added to this existing group, existing files will be uploaded only if they have been modified.</p>
             <div class="form-element">
-                <mat-checkbox *ngIf="!modifyExisting" (change)="createEmptyCheckChanged($event)" color="primary">Create an empty file group</mat-checkbox>
+                <mat-checkbox *ngIf="showCreateEmptyChk" (change)="createEmptyCheckChanged($event)" color="primary">Create an empty file group</mat-checkbox>
             </div>
         </bl-form-section>
 

@@ -7,6 +7,7 @@ export * from "./object-utils";
 export * from "./os";
 export * from "./url-utils";
 export * from "./drag-utils";
+export * from "./fetch";
 
 import * as validators from "./validators";
 export const CustomValidators = validators;

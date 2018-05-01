@@ -11,11 +11,11 @@
 
     <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="scrollBottom.emit()">
         <bl-thead>
-            <bl-column style="width: 300px">Id</bl-column>
+            <bl-column style="width: 300px">ID</bl-column>
             <bl-column>State</bl-column>
-            <bl-column>Scheduling State</bl-column>
-            <bl-column>VmSize</bl-column>
-            <bl-column>Total task run</bl-column>
+            <bl-column>Scheduling state</bl-column>
+            <bl-column>Node size</bl-column>
+            <bl-column>Total tasks run</bl-column>
         </bl-thead>
         <bl-row *ngFor="let node of nodes;trackBy: trackNode" [link]="['/pools', poolId, 'nodes', node.id]" [key]="node.id">
             <bl-cell>{{node.id}}</bl-cell>
@@ -30,5 +30,5 @@
 <bl-no-item [itemCount]="nodes.size" [status]="status">
     <i icon class="fa fa-tv"></i>
     <span no-filter>No nodes</span>
-    <span with-filter>No node match this filter</span>
+    <span with-filter>No nodes match this filter</span>
 </bl-no-item>

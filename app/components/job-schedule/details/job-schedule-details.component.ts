@@ -16,6 +16,7 @@ import {
     DisableJobScheduleDialogComponent,
     EnableJobScheduleDialogComponent,
     JobScheduleCreateBasicDialogComponent,
+    PatchJobScheduleComponent,
     TerminateJobScheduleDialogComponent,
 } from "../action";
 
@@ -96,6 +97,14 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
     }
 
     @autobind()
+    public editJobSchedule() {
+        const ref = this.sidebarManager
+            .open(`edit-job-schedule-${this.jobSchedule.id}`, PatchJobScheduleComponent);
+        ref.component.jobScheduleId = this.jobSchedule.id;
+        ref.component.setValueFromEntity(this.jobSchedule);
+    }
+
+    @autobind()
     public deleteJobSchedule() {
         const config = new MatDialogConfig();
         const dialogRef = this.dialog.open(DeleteJobScheduleDialogComponent, config);
@@ -154,7 +163,7 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
         if (!this.jobSchedule.jobSpecification) {
             return null;
         }
-        return new Job(this.jobSchedule.jobSpecification);
+        return this.jobSchedule.jobSpecification;
     }
 
     public get autoPoolSpecification() {

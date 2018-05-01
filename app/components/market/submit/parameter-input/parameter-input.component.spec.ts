@@ -1,10 +1,10 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatOption, MatSelect } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
+import { PermissionService, SelectComponent, SelectModule } from "@batch-flask/ui";
 import { Subject } from "rxjs";
 import { Observable } from "rxjs/Observable";
 
@@ -16,7 +16,10 @@ import { CloudFilePickerComponent } from "app/components/data/shared/cloud-file-
 import { FileGroupSasComponent } from "app/components/data/shared/file-group-sas";
 import { NcjParameterExtendedType, NcjParameterWrapper, ParameterInputComponent } from "app/components/market/submit";
 import { BatchApplication, NcjParameterRawType } from "app/models";
-import { StorageService } from "app/services";
+import { NcjFileGroupService } from "app/services";
+import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
+import { Constants } from "app/utils";
+
 import * as Fixtures from "test/fixture";
 import { updateInput } from "test/utils/helpers";
 import { MockListView } from "test/utils/mocks";
@@ -55,8 +58,11 @@ describe("ParameterInputComponent", () => {
     let testComponent: TestComponent;
     let component: ParameterInputComponent;
     let de: DebugElement;
-    let storageServiceSpy: any;
+    let fileGroupServiceSpy: any;
+    let autoStorageServiceSpy: any;
+    let storageContainerSpy: any;
     let dialogServiceSpy: any;
+    let storageBlobServiceSpy: any;
     let sidebarSpy: any;
     let listProxy: MockListView<BatchApplication, any>;
 
@@ -72,13 +78,25 @@ describe("ParameterInputComponent", () => {
             open: jasmine.createSpy("open"),
         };
 
-        storageServiceSpy = {
+        storageContainerSpy = {
             listView: () => listProxy,
             onContainerAdded: new Subject(),
-            containerListView: () => listProxy,
-            generateSharedAccessContainerUrl: (containerId, accessPolicy) => {
+            generateSharedAccessUrl: (containerId, accessPolicy) => {
                 return Observable.of(`https://${containerId}.com?sastoken`);
             },
+        };
+
+        storageBlobServiceSpy = {
+
+        };
+        fileGroupServiceSpy = {
+            addFileGroupPrefix: jasmine.createSpy("addFileGroupPrefix").and.callFake((fgName) => {
+                return `${Constants.ncjFileGroupPrefix}${fgName}`;
+            }),
+        };
+
+        autoStorageServiceSpy = {
+            get: () => Observable.of("storage-acc-1"),
         };
 
         sidebarSpy = {
@@ -86,13 +104,20 @@ describe("ParameterInputComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, ReactiveFormsModule, FormsModule, MaterialModule, NoopAnimationsModule],
+            imports: [
+                RouterTestingModule, ReactiveFormsModule, FormsModule,
+                MaterialModule, SelectModule, NoopAnimationsModule,
+            ],
             declarations: [NoItemMockComponent, ParameterInputComponent, FileGroupSasComponent,
                 TestComponent, FileGroupPickerComponent, CloudFilePickerComponent],
             providers: [
-                { provide: StorageService, useValue: storageServiceSpy },
+                { provide: NcjFileGroupService, useValue: fileGroupServiceSpy },
+                { provide: StorageContainerService, useValue: storageContainerSpy },
+                { provide: StorageBlobService, useValue: storageBlobServiceSpy },
+                { provide: AutoStorageService, useValue: autoStorageServiceSpy },
                 { provide: DialogService, useValue: dialogServiceSpy },
                 { provide: SidebarManager, useValue: sidebarSpy },
+                { provide: PermissionService, useValue: {} },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -329,7 +354,7 @@ describe("ParameterInputComponent", () => {
 
     describe("dropdown parameter type", () => {
         let selectEl: DebugElement;
-        let selectComponent: MatSelect;
+        let selectComponent: SelectComponent;
         const initialInput = "a";
         const newInput = "b";
 
@@ -344,7 +369,7 @@ describe("ParameterInputComponent", () => {
             });
             testComponent.paramControl.setValue(initialInput);
             fixture.detectChanges();
-            selectEl = de.query(By.css("mat-select"));
+            selectEl = de.query(By.css("bl-select"));
             expect(selectEl).not.toBeFalsy();
             selectComponent = selectEl.componentInstance;
         });
@@ -360,7 +385,7 @@ describe("ParameterInputComponent", () => {
         it("should select new input", () => {
             testComponent.paramControl.setValue(newInput);
             fixture.detectChanges();
-            expect((selectComponent.selected as MatOption).value).toBe(newInput);
+            expect(selectComponent.value).toBe(newInput);
         });
     });
 
@@ -476,7 +501,7 @@ describe("ParameterInputComponent", () => {
         it("generates sas token", () => {
             fileInputComponent.generateSasToken();
             fixture.detectChanges();
-            expect(fileInputComponent.value.value).toBe(`https://${containerIdValue}.com?sastoken`);
+            expect(fileInputComponent.value.value).toBe(`https://storage-acc-1.com?sastoken`);
         });
 
         it("auto-generates token when inputs change", () => {
@@ -489,7 +514,7 @@ describe("ParameterInputComponent", () => {
                 },
             });
             fixture.detectChanges();
-            expect(fileInputComponent.value.value).toBe(`https://${fileInputComponent.containerId}.com?sastoken`);
+            expect(fileInputComponent.value.value).toBe(`https://storage-acc-1.com?sastoken`);
         });
     });
 });

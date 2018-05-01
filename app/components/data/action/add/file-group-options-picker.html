@@ -1,8 +1,8 @@
 <div [formGroup]="form">
     <div class="form-element">
-        <mat-form-field>
-            <input matInput formControlName="prefix" placeholder="Prefix" />
-        </mat-form-field>
+        <bl-form-field>
+            <input blInput formControlName="prefix" placeholder="Prefix" />
+        </bl-form-field>
         <bl-error controlName="prefix" code="pattern">Prefix can contain any combination of alphanumeric characters including hyphens and underscores</bl-error>
     </div>
     <div class="form-element">

@@ -1,7 +1,6 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
-import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
@@ -9,23 +8,21 @@ import { Observable, Subscription } from "rxjs";
 import { Filter, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
-import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
-import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { TableConfig } from "@batch-flask/ui/table";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
-import { PinnedEntityService, PoolListParams, PoolService } from "app/services";
+import { PoolListParams, PoolService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { DeletePoolDialogComponent, DeletePoolTask, PoolResizeDialogComponent } from "../action";
+import { DeletePoolTask, PoolCommands } from "../action";
 
 @Component({
     selector: "bl-pool-list",
     templateUrl: "pool-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{
+    providers: [PoolCommands, {
         provide: ListBaseComponent,
         useExisting: forwardRef(() => PoolListComponent),
     }],
@@ -45,12 +42,9 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         private poolService: PoolService,
         activatedRoute: ActivatedRoute,
         router: Router,
-        private dialog: MatDialog,
-        private sidebarManager: SidebarManager,
+        public commands: PoolCommands,
         changeDetector: ChangeDetectorRef,
-        private taskManager: BackgroundTaskService,
-        private pinnedEntityService: PinnedEntityService) {
-
+        private taskManager: BackgroundTaskService) {
         super(changeDetector);
         this.data = this.poolService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
@@ -86,7 +80,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         if (filter.isEmpty()) {
             this.data.setOptions({});
         } else {
-            this.data.setOptions({ filter: filter.toOData() });
+            this.data.setOptions({ filter: filter });
         }
 
         this.data.fetchNext();
@@ -116,40 +110,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         });
     }
 
-    public deletePool(poolDecorator: PoolDecorator) {
-        const dialogRef = this.dialog.open(DeletePoolDialogComponent);
-        dialogRef.componentInstance.poolId = poolDecorator.id;
-    }
-
-    public resizePool(poolDecorator: PoolDecorator) {
-        const sidebarRef = this.sidebarManager.open("resize-pool", PoolResizeDialogComponent);
-        sidebarRef.component.pool = poolDecorator.pool;
-        this.sidebarManager.onClosed.subscribe(() => {
-            this.poolService.get(poolDecorator.id);
-        });
-    }
-
-    public contextmenu(decorator: PoolDecorator) {
-        return new ContextMenu([
-            new ContextMenuItem({ label: "Delete", click: () => this.deletePool(decorator) }),
-            new ContextMenuItem({ label: "Resize", click: () => this.resizePool(decorator) }),
-            new ContextMenuItem({
-                label: this.pinnedEntityService.isFavorite(decorator.pool) ? "Unpin favorite" : "Pin to favorites",
-                click: () => this._pinPool(decorator),
-                enabled: true,
-            }),
-        ]);
-    }
-
     public trackById(index, pool) {
         return pool.id;
-    }
-
-    public _pinPool(decorator: PoolDecorator) {
-        this.pinnedEntityService.pinFavorite(decorator.pool).subscribe((result) => {
-            if (result) {
-                this.pinnedEntityService.unPinFavorite(decorator.pool);
-            }
-        });
     }
 }

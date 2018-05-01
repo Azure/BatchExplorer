@@ -6,11 +6,12 @@ import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs";
 
 import { DialogService } from "@batch-flask/ui/dialogs";
-import { StorageService } from "app/services";
+import { StorageBlobService } from "app/services/storage";
+import { AutoStorageService } from "app/services/storage/auto-storage.service";
 import { CloudFilePickerDialogComponent } from "./cloud-file-picker-dialog.component";
+
 import "./cloud-file-picker.scss";
 
-// tslint:disable:no-forward-ref
 @Component({
     selector: "bl-cloud-file-picker",
     templateUrl: "cloud-file-picker.html",
@@ -28,13 +29,22 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges
      */
     @Input() public containerId: string;
 
+    /**
+     * Passed in if we want the client to filter the results that match the wildcards.
+     */
+    @Input() public wildcards: string;
+
     public value = new FormControl();
     public warning = false;
 
     private _propagateChange: (value: any[]) => void = null;
     private _subscriptions: Subscription[] = [];
 
-    constructor(private storageService: StorageService, private dialog: DialogService) {
+    constructor(
+        private storageBlobService: StorageBlobService,
+        private autoStorageService: AutoStorageService,
+        private dialog: DialogService) {
+
         this._subscriptions.push(this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
             this._checkValid(value);
             if (this._propagateChange) {
@@ -72,17 +82,22 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges
 
     @autobind()
     public openFilePickerDialog() {
-        const ref = this.dialog.open(CloudFilePickerDialogComponent);
-        const component = ref.componentInstance;
-        component.containerId = this.containerId;
-        component.pickedFile = this.value.value;
-        component.done.subscribe((save) => {
-            if (save) {
-                this.value.setValue(component.pickedFile);
-            }
+        const obs = this.autoStorageService.get();
+        obs.subscribe((storageAccountId) => {
+            const ref = this.dialog.open(CloudFilePickerDialogComponent);
+            const component = ref.componentInstance;
+            component.storageAccountId = storageAccountId;
+            component.containerId = this.containerId;
+            component.wildcards = this.wildcards;
+            component.pickedFile = this.value.value;
+            component.done.subscribe((save) => {
+                if (save) {
+                    this.value.setValue(component.pickedFile);
+                }
+            });
         });
 
-        return component.done;
+        return obs;
     }
 
     private _checkValid(value: string) {
@@ -93,10 +108,12 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges
 
         // validate that the blob exists in the selected container
         // note: value includes prefix
-        this.storageService.getBlobPropertiesOnce(this.containerId, value).subscribe((blob) => {
-            this.warning = false;
-        }, (error) => {
-            this.warning = true;
+        this.autoStorageService.get().subscribe((storageAccountId) => {
+            this.storageBlobService.get(storageAccountId, this.containerId, value).subscribe((blob) => {
+                this.warning = false;
+            }, (error) => {
+                this.warning = true;
+            });
         });
     }
 }

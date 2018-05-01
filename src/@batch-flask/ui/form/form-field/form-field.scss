@@ -1,0 +1,45 @@
+@import "app/styles/variables";
+bl-form-field {
+    display: inline-block;
+    width: 100%;
+    .label-container {
+        display: block;
+    }
+    .input-container {
+        width: 100%;
+        display: flex;
+
+
+        > .input-prefix, > .input-suffix {
+            background: $input-border-color;
+            border: 1px solid $input-border-color;
+            height: 26px;
+            padding: 0 5px;
+            line-height: 26px;
+            vertical-align: middle;
+            color: $secondary-text;
+        }
+    }
+    .bl-form-field-label {}
+
+    &.bl-disabled {
+        opacity: 0.5;
+    }
+}
+
+bl-form-field {
+    input[blInput] {
+        display: inline-block;
+        width: 100%;
+        flex: 1;
+        min-width: 0;
+    }
+
+    textarea[blInput] {
+        width: 100%;
+    }
+
+    bl-select {
+        width: 100%;
+    }
+}

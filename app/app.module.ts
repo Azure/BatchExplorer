@@ -3,7 +3,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { ErrorHandler, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from "@angular/router";
 
 // application router
@@ -17,6 +17,7 @@ import { MainNavigationComponent } from "app/components/shared/main-navigation.c
 import { BaseModule } from "@batch-flask/ui";
 import { AccountModule } from "app/components/account/account.module";
 import { ApplicationModule } from "app/components/application/application.module";
+import { CertificateModule } from "app/components/certificate/certificate.module";
 import { DataModule } from "app/components/data/data.module";
 import { FileModule } from "app/components/file/file.module";
 import { JobScheduleModule } from "app/components/job-schedule/job-schedule.module";
@@ -40,6 +41,9 @@ import { PollService } from "app/services/core";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 import { AADGraphHttpService, MsGraphHttpService } from "app/services/ms-graph/core";
 import {
+    AutoStorageService, StorageAccountKeysService, StorageBlobService, StorageClientService, StorageContainerService,
+} from "app/services/storage";
+import {
     AccountService,
     AdalService,
     AppInsightsApiService,
@@ -52,6 +56,7 @@ import {
     BatchClientService,
     BatchLabsService,
     CacheDataService,
+    CertificateService,
     CommandService,
     ComputeService,
     FileService,
@@ -80,8 +85,6 @@ import {
     SSHKeyService,
     SettingsService,
     StorageAccountService,
-    StorageClientService,
-    StorageService,
     SubscriptionService,
     TaskService,
     ThemeService,
@@ -89,7 +92,7 @@ import {
 } from "./services";
 
 const modules = [
-    AccountModule, ApplicationModule, DataModule,
+    AccountModule, ApplicationModule, CertificateModule, DataModule,
     FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
     SettingsModule, TaskModule, MarketModule, LayoutModule,
     MiscModule,
@@ -109,13 +112,13 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         // imported in specific area modules
     ],
     imports: [
-        BrowserAnimationsModule,
+        NoopAnimationsModule,
         BrowserModule,
         FormsModule,
         MaterialModule,
         ReactiveFormsModule,
         HttpModule,
-        RouterModule.forRoot(routes, { useHash: true }),
+        RouterModule.forRoot(routes, { useHash: true, paramsInheritanceStrategy: "always" }),
         BaseModule,
         HttpClientModule,
         ...modules,
@@ -134,6 +137,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         BatchClientService,
         BatchLabsService,
         CacheDataService,
+        CertificateService,
         CommandService,
         CommonModule,
         ComputeService,
@@ -161,9 +165,12 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         PythonRpcService,
         ResourceAccessService,
         SettingsService,
+        AutoStorageService,
         StorageAccountService,
         StorageClientService,
-        StorageService,
+        StorageAccountKeysService,
+        StorageContainerService,
+        StorageBlobService,
         SSHKeyService,
         SubscriptionService,
         TaskService,

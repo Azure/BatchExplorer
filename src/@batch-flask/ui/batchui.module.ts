@@ -37,6 +37,7 @@ import { PropertyListModule } from "./property-list";
 import { QuickListModule } from "./quick-list";
 import { QuotasModule } from "./quotas";
 import { ScrollableModule } from "./scrollable";
+import { SelectModule } from "./select";
 import { SidebarModule } from "./sidebar";
 import { SimpleDialogComponent } from "./simple-dialog";
 import { SplitPaneModule } from "./split-pane";
@@ -77,6 +78,7 @@ const modules = [
     FormModule,
     QuotasModule,
     ScrollableModule,
+    SelectModule,
     SplitPaneModule,
     SummaryCardModule,
     VirtualScrollModule,

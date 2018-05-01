@@ -4,13 +4,14 @@ import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { Filter, FilterMatcher, Operator, autobind } from "@batch-flask/core";
+import { Filter, FilterMatcher, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { BatchAccountCommands } from "app/components/account/action";
 import { AccountResource } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
 import { DeleteAccountDialogComponent, DeleteAccountTask } from "../../action/delete";
@@ -18,10 +19,13 @@ import { DeleteAccountDialogComponent, DeleteAccountTask } from "../../action/de
 @Component({
     selector: "bl-account-list",
     templateUrl: "account-list.html",
-    providers: [{
-        provide: ListBaseComponent,
-        useExisting: forwardRef(() => AccountListComponent),
-    }],
+    providers: [
+        BatchAccountCommands,
+        {
+            provide: ListBaseComponent,
+            useExisting: forwardRef(() => AccountListComponent),
+        },
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountListComponent extends ListBaseComponent implements OnDestroy {
@@ -33,6 +37,7 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
     private _accountSub: Subscription;
 
     constructor(
+        public commands: BatchAccountCommands,
         private accountService: AccountService,
         private dialog: MatDialog,
         private taskManager: BackgroundTaskService,
@@ -75,7 +80,11 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
         if (this.isAccountFavorite(accountId)) {
             this.accountService.unFavoriteAccount(accountId);
         } else {
-            this.accountService.favoriteAccount(accountId);
+            this.accountService.favoriteAccount(accountId).subscribe({
+                complete: () => {
+                    this.changeDetector.markForCheck();
+                },
+            });
         }
     }
 
@@ -110,14 +119,7 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
     }
 
     private _updateDisplayedAccounts() {
-        const matcher = new FilterMatcher<AccountResource>({
-            id: (item: AccountResource, value: any, operator: Operator) => {
-                return value === "" || item.name.toLowerCase().startsWith(value.toLowerCase());
-            },
-            subscriptionId: (item: AccountResource, value: any, operator: Operator) => {
-                return value === "" || item.subscription.subscriptionId === value;
-            },
-        });
+        const matcher = new FilterMatcher<AccountResource>();
 
         this.displayedAccounts = List<AccountResource>(this.accounts.filter((x) => {
             return matcher.test(this.filter, x);

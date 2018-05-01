@@ -2,7 +2,6 @@ import { Component, EventEmitter, OnDestroy, Output, forwardRef } from "@angular
 import {
     ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
-import { MatSelectChange } from "@angular/material";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
@@ -29,8 +28,7 @@ interface PackageReference {
     ],
 })
 export class AppPackagePickerComponent implements ControlValueAccessor, Validator, OnDestroy {
-    @Output()
-    public hasLinkedStorage: EventEmitter<boolean> = new EventEmitter();
+    @Output() public hasLinkedStorage: EventEmitter<boolean> = new EventEmitter();
 
     public status: Observable<LoadingStatus>;
     public applications: List<BatchApplication> = List([]);
@@ -188,8 +186,8 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         this.packageMap.splice(index, 1);
     }
 
-    public applicationSelected(event: MatSelectChange, index: number) {
-        this._setPackageMap(event.value, index);
+    public applicationSelected(appId: string, index: number) {
+        this._setPackageMap(appId, index);
     }
 
     public getPackageValue(version: string) {

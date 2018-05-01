@@ -4,7 +4,7 @@
     </div>
     <div class="type-toggle">
         <div class="option" (click)="updateType(HookTaskType.preparationTask)" [class.active]="type === HookTaskType.preparationTask">
-            Preparation Tasks
+            Preparation tasks
         </div>
         <div class="option" (click)="updateType(HookTaskType.releaseTask)" [class.active]="type === HookTaskType.releaseTask" [class.disabled]="!hasReleaseTask">
             Release tasks
@@ -14,7 +14,7 @@
 <div class="content">
     <bl-table class="list" [activeItem]="pickedTaskId" (activeItemChange)="pickTask($event)">
         <bl-thead>
-            <bl-column>NodeId</bl-column>
+            <bl-column>Node ID</bl-column>
             <bl-column style="width: 45px">Status</bl-column>
             <bl-column style="width: 100px" *ngIf="!pickedTask">Started</bl-column>
             <bl-column style="width: 100px" *ngIf="!pickedTask">Completed</bl-column>

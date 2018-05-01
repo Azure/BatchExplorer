@@ -52,6 +52,7 @@ export function fileToTreeNode(file: File, basePath: string = ""): FileTreeNode 
     return new FileTreeNode({
         path: relativePath,
         isDirectory: file.isDirectory,
+        loadingStatus: LoadingStatus.Ready,
         contentLength: !file.isDirectory && file.properties.contentLength,
         lastModified: file.properties && file.properties.lastModified,
     });
@@ -83,10 +84,11 @@ function checkDirInTree(directories: StringMap<FileTreeNode>, directory: string)
     }
 }
 
-export function generateDir(dirname): FileTreeNode {
+export function generateDir(dirname, virtual = false): FileTreeNode {
     return new FileTreeNode({
         path: dirname,
         isDirectory: true,
         loadingStatus: LoadingStatus.Ready,
+        virtual,
     });
 }

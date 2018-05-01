@@ -84,6 +84,7 @@ export class MainWindow extends GenericWindow {
         anyWindow.windowHandler = this;
         anyWindow.logger = renderLogger;
         anyWindow.batchLabsApp = this.batchLabsApp;
+        anyWindow.autoUpdater = this.batchLabsApp.autoUpdater;
         anyWindow.authenticationWindow = this.batchLabsApp.authenticationWindow;
         anyWindow.fs = new FileSystem();
         anyWindow.localFileStorage = new LocalFileStorage();

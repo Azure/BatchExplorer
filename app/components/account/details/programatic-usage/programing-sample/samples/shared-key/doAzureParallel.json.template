@@ -1,0 +1,13 @@
+{
+  "batchAccount": {
+    "name": "{batchAccountName}",
+    "key": "{batchAccountKey}",
+    "url": "{batchAccountUrl}"
+  },
+  "storageAccount": {
+    "name": "{storageAccountName}",
+    "key": "{storageAccountKey}",
+    "endpointSuffix": "{storageAccountSuffix}"
+  },
+  "githubAuthenticationToken": {}
+}

@@ -87,6 +87,15 @@ export class PoolService extends ServiceBase {
     }
 
     /**
+     * Retrieve a pool from the cache
+     * @param id Id of the pool
+     * @param options Options
+     */
+    public getFromCache(id: string): Observable<Pool> {
+        return this._getter.fetch({ id }, { cached: true });
+    }
+
+    /**
      * Create an entity view for a pool
      */
     public view(): EntityView<Pool, PoolParams> {

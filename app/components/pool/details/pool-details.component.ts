@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
 import { ElectronRemote } from "@batch-flask/ui";
@@ -13,13 +12,14 @@ import { PoolDecorator } from "app/models/decorators";
 import { BatchLabsService, FileSystemService, PoolParams, PoolService, PricingService } from "app/services";
 import { EntityView } from "app/services/core/data";
 import { NumberUtils } from "app/utils";
-import { DeletePoolDialogComponent, PoolCreateBasicDialogComponent, PoolResizeDialogComponent } from "../action";
+import { PoolCommands, PoolCreateBasicDialogComponent } from "../action";
 
 import "./pool-details.scss";
 
 @Component({
     selector: "bl-pool-details",
     templateUrl: "pool-details.html",
+    providers: [PoolCommands],
 })
 export class PoolDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
@@ -45,9 +45,9 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     private _pool: Pool;
 
     constructor(
+        public commands: PoolCommands,
         private router: Router,
         private activatedRoute: ActivatedRoute,
-        private dialog: MatDialog,
         private batchLabs: BatchLabsService,
         private fs: FileSystemService,
         private sidebarManager: SidebarManager,
@@ -98,9 +98,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public deletePool() {
-        const config = new MatDialogConfig();
-        const dialogRef = this.dialog.open(DeletePoolDialogComponent, config);
-        dialogRef.componentInstance.poolId = this.poolId;
+        this.commands.delete.execute(this.pool);
     }
 
     @autobind()
@@ -111,11 +109,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public resizePool() {
-        const sidebarRef = this.sidebarManager.open(`resize-pool-${this.pool.id}`, PoolResizeDialogComponent);
-        sidebarRef.component.pool = this.pool;
-        this.sidebarManager.onClosed.subscribe(() => {
-            this.refreshPool();
-        });
+        this.commands.resize.execute(this.pool);
     }
 
     @autobind()

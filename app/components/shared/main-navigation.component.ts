@@ -1,8 +1,7 @@
-import { Component, NgZone, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { ElectronRemote, ElectronShell } from "@batch-flask/ui";
+import { AutoUpdateService, ElectronRemote, ElectronShell, UpdateStatus } from "@batch-flask/ui";
 import { OS } from "@batch-flask/utils";
-import { AppUpdater } from "electron-updater";
 import * as path from "path";
 
 import {
@@ -13,25 +12,28 @@ import {
     AccountService, AdalService, BatchLabsService, FileSystemService,
 } from "app/services";
 
+import { Subscription } from "rxjs";
 import "./main-navigation.scss";
 
 @Component({
     selector: "bl-app-nav",
     templateUrl: "main-navigation.html",
 })
-export class MainNavigationComponent implements OnInit {
+export class MainNavigationComponent implements OnInit, OnDestroy {
+    public UpdateStatus = UpdateStatus;
 
     public selectedId: string;
     public selectedAccountAlias: string = "";
     public currentUserName: string = "";
-    public update: any;
+    public updateStatus: UpdateStatus;
 
-    private _autoUpdater: AppUpdater;
-    private _showNotification = false;
+    private _updateSub: Subscription;
 
     constructor(
         accountService: AccountService,
         adalService: AdalService,
+        private changeDetector: ChangeDetectorRef,
+        private autoUpdateService: AutoUpdateService,
         private batchLabs: BatchLabsService,
         private shell: ElectronShell,
         private remote: ElectronRemote,
@@ -40,7 +42,6 @@ export class MainNavigationComponent implements OnInit {
         private notificationService: NotificationService,
         private fs: FileSystemService,
         private router: Router) {
-        this._autoUpdater = batchLabs.autoUpdater;
 
         accountService.currentAccountId.subscribe((accountId) => {
             if (accountId) {
@@ -57,17 +58,9 @@ export class MainNavigationComponent implements OnInit {
             }
         });
 
-        this._autoUpdater.on("update-available", (info) => {
-            this.update = info;
-
-            this._notify("Update available", `Update ${info.version} is now available.`, {
-                action: () => this._update(),
-            });
-        });
-
-        this._autoUpdater.on("update-not-available", (info) => {
-            this.update = null;
-            this._notify("There are no updates currently available.", `You  have the latest BatchLabs version.`);
+        this._updateSub = this.autoUpdateService.status.subscribe((status) => {
+            this.updateStatus = status;
+            this.changeDetector.markForCheck();
         });
     }
 
@@ -75,8 +68,8 @@ export class MainNavigationComponent implements OnInit {
         this._checkForUpdates(false);
     }
 
-    public get hasNewUpdate(): boolean {
-        return Boolean(this.update);
+    public ngOnDestroy() {
+        this._updateSub.unsubscribe();
     }
 
     public openSettingsContextMenu() {
@@ -93,14 +86,7 @@ export class MainNavigationComponent implements OnInit {
             new ContextMenuItem({ label: "Logout", click: () => this._logout() }),
         ];
 
-        if (this.update) {
-            items.unshift(new ContextMenuItem({
-                label: `Update to version ${this.update.version}`,
-                click: () => this._update(),
-            }));
-        } else {
-            items.unshift(new ContextMenuItem({ label: "Check for updates", click: () => this._checkForUpdates() }));
-        }
+        items.unshift(this._getAutoUpdateMenuItem());
         this.contextMenuService.openMenu(new ContextMenu(items));
     }
 
@@ -140,16 +126,24 @@ export class MainNavigationComponent implements OnInit {
         this.batchLabs.logoutAndLogin();
     }
 
-    private _checkForUpdates(showNotification = true) {
-        this._showNotification = showNotification;
-        this.batchLabs.autoUpdater.checkForUpdates();
+    private async _checkForUpdates(showNotification = true) {
+        const result = await this.autoUpdateService.checkForUpdates();
+        if (!showNotification) { return; }
+        if (result) {
+            this._notify("Update available", `Update ${result.updateInfo.version} is now available.`, {
+                action: () => this._update(),
+            });
+        } else {
+            this._notify("There are no updates currently available.", `You  have the latest BatchLabs version.`);
+        }
+
     }
 
     private _update() {
         if (OS.isWindows()) {
             setImmediate(() => {
                 this.remote.electronApp.removeAllListeners("window-all-closed");
-                this._autoUpdater.quitAndInstall();
+                this.autoUpdateService.quitAndInstall();
                 this.remote.getCurrentWindow().close();
             });
         } else {
@@ -159,10 +153,27 @@ export class MainNavigationComponent implements OnInit {
 
     private _notify(title: string, description: string, options: any = {}) {
         this.zone.run((() => {
-            if (this._showNotification) {
-                this.notificationService.info(title, description, options);
-            }
-            this._showNotification = false;
+            this.notificationService.info(title, description, options);
         }));
+    }
+
+    private _getAutoUpdateMenuItem() {
+        switch (this.updateStatus) {
+            case UpdateStatus.Checking:
+                return new ContextMenuItem({ label: "Checking for updates", enabled: false, click: () => null });
+            case UpdateStatus.Downloading:
+                return new ContextMenuItem({
+                    label: `Downloading update ${this.autoUpdateService.updateInfo.version}`,
+                    enabled: false, click: () => null,
+                });
+            case UpdateStatus.Ready:
+                return new ContextMenuItem({
+                    label: `Update to version ${this.autoUpdateService.updateInfo.version}`,
+                    click: () => this._update(),
+                });
+            default:
+                return new ContextMenuItem({ label: "Check for updates", click: () => this._checkForUpdates() });
+
+        }
     }
 }

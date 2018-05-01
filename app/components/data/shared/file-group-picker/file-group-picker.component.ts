@@ -3,16 +3,18 @@ import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { MatOptionSelectionChange } from "@angular/material";
+import { FilterBuilder } from "@batch-flask/core";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { BlobContainer } from "app/models";
-import { ListContainerParams, StorageService } from "app/services";
 import { ListView } from "app/services/core";
+import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 
+import { NcjFileGroupService } from "app/services";
 import "./file-group-picker.scss";
 
 // tslint:disable:no-forward-ref
@@ -33,30 +35,45 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     public fileGroupsData: ListView<BlobContainer, ListContainerParams>;
     public warning = false;
 
-    private _propagateChange: (value: any[]) => void = null;
+    private _propagateChange: (value: any) => void = null;
     private _subscriptions: Subscription[] = [];
     private _loading: boolean = true;
 
-    constructor(private storageService: StorageService, private sidebarManager: SidebarManager) {
+    constructor(
+        private fileGroupService: NcjFileGroupService,
+        private autoStorageService: AutoStorageService,
+        private storageContainerService: StorageContainerService,
+        private sidebarManager: SidebarManager) {
 
-        this.fileGroupsData = this.storageService.containerListView(Constants.ncjFileGroupPrefix);
+        this.fileGroupsData = this.storageContainerService.listView();
+        this.autoStorageService.get().subscribe((storageAccountId) => {
+            this.fileGroupsData.params = {
+                storageAccountId,
+            };
+            this.fileGroupsData.setOptions({
+                filter: FilterBuilder.prop("name").startswith(Constants.ncjFileGroupPrefix),
+            });
+        });
+
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;
         });
 
         // listen to file group add events
-        this._subscriptions.push(this.storageService.onContainerAdded.subscribe((fileGroupId: string) => {
-            const container = storageService.getContainerOnce(fileGroupId);
-            this.fileGroupsData.loadNewItem(container);
-            container.subscribe((blobContainer) => {
-                this._checkValid(blobContainer.name);
+        this._subscriptions.push(this.storageContainerService.onContainerAdded.subscribe((fileGroupId: string) => {
+            this.autoStorageService.get().subscribe((storageAccountId) => {
+                const container = storageContainerService.get(storageAccountId, fileGroupId);
+                this.fileGroupsData.loadNewItem(container);
+                container.subscribe((blobContainer) => {
+                    this._checkValid(blobContainer.name);
+                });
             });
         }));
 
         this._subscriptions.push(this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
             this._checkValid(value);
             if (this._propagateChange) {
-                this._propagateChange(value && value.replace(Constants.ncjFileGroupPrefix, ""));
+                this._propagateChange(value && this.fileGroupService.removeFileGroupPrefix(value));
             }
         }));
     }
@@ -94,7 +111,8 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         if (!event.source.value && event.isUserInput) {
             const sidebar = this.sidebarManager.open("Add a new file group", FileGroupCreateFormComponent);
             sidebar.afterCompletion.subscribe(() => {
-                this.value.setValue(sidebar.component.getCurrentValue().name);
+                const newFileGroupName = sidebar.component.getCurrentValue().name;
+                this.value.setValue(this.fileGroupService.addFileGroupPrefix(newFileGroupName));
             });
         }
     }

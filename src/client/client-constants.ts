@@ -28,6 +28,12 @@ function getPort(port = portrange): Promise<number> {
 // tslint:disable-next-line:no-var-requires
 const packageConfig = require(`${root}/package.json`);
 
+function clientUrl(path: string): { dev: string, prod: string } {
+    return {
+        dev: `file://${root}/src/client/${path}`,
+        prod: `file://${root}/build/client/${path}`,
+    };
+}
 const urls = {
     main: {
         dev: "http://localhost:3178/index.html",
@@ -37,10 +43,9 @@ const urls = {
         dev: `file://${root}/src/client/splash-screen/splash-screen.html`,
         prod: `file://${root}/build/client/splash-screen/splash-screen.html`,
     },
-    proxyCredentials: {
-        dev: `file://${root}/src/client/proxy/proxy-credentials.html`,
-        prod: `file://${root}/build/client/proxy/proxy-credentials.html`,
-    },
+    proxyCredentials: clientUrl("proxy/proxy-credentials/proxy-credentials.html"),
+    manualProxyConfiguration:
+        clientUrl("proxy/manual-proxy-configuration-window/manual-proxy-configuration-window.html"),
     recover: {
         dev: `file://${root}/src/client/recover-window/recover-window.html`,
         prod: `file://${root}/build/client/recover-window/recover-window.html`,

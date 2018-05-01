@@ -49,7 +49,7 @@ export class DownloadFolderComponent {
 
     public get title() {
         if (this.folder) {
-            return `Download directory: ${this.folder}`;
+            return `Download: ${this.folder}`;
         } else {
             return "Download all files";
         }

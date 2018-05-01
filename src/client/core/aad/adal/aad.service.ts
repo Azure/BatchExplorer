@@ -1,11 +1,10 @@
 
 import { AccessToken } from "@batch-flask/core";
-import { log } from "@batch-flask/utils";
+import { fetch, log } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core/batchlabs-application";
 import { localStorage } from "client/core/local-storage";
 import { Constants } from "common";
 import { Deferred } from "common/deferred";
-import fetch from "node-fetch";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
 import {
@@ -254,7 +253,8 @@ export class AADService {
         const options = { headers };
         const url = `${this.app.azureEnvironment.armUrl}tenants?api-version=${Constants.ApiVersion.arm}`;
         const response = await fetch(url, options);
-        const { value } = await response.json();
+        log.info("Listing tenants response", response.status, response.statusText);
+        const { value }  = await response.json();
         return value.map(x => x.tenantId);
     }
 

@@ -9,8 +9,10 @@ import { DownloadFolderComponent } from "app/components/common/download-folder-d
 import { BlobContainer } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
 import { FileGroupCreateDto } from "app/models/dtos";
-import { GetContainerParams, StorageService } from "app/services";
 import { EntityView } from "app/services/core";
+import {
+    AutoStorageService, GetContainerParams, StorageBlobService, StorageContainerService,
+} from "app/services/storage";
 import { DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
 @Component({
@@ -27,6 +29,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     }
 
     public container: BlobContainer;
+    public storageAccountId: string;
     public containerId: string;
     public decorator: ApplicationDecorator;
     public data: EntityView<BlobContainer, GetContainerParams>;
@@ -40,9 +43,11 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         private dialog: DialogService,
         private router: Router,
         private sidebarManager: SidebarManager,
-        private storageService: StorageService) {
+        private storageContainerService: StorageContainerService,
+        private autoStorageService: AutoStorageService,
+        private storageBlobService: StorageBlobService) {
 
-        this.data = this.storageService.containerView();
+        this.data = this.storageContainerService.view();
         this.data.item.subscribe((container) => {
             this.container = container;
             this.isFileGroup = container && container.isFileGroup;
@@ -59,9 +64,13 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
             this.containerId = params["id"];
-            this.data.params = { id: this.containerId };
-            this.data.fetch();
-            this.changeDetector.markForCheck();
+            this.autoStorageService.getStorageAccountIdFromDataSource(params["dataSource"])
+                .subscribe((storageAccountId) => {
+                    this.storageAccountId = storageAccountId;
+                    this.data.params = { storageAccountId: this.storageAccountId, id: this.containerId };
+                    this.data.fetch();
+                    this.changeDetector.markForCheck();
+                });
         });
     }
 
@@ -79,7 +88,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         }));
 
         sidebarRef.afterCompletion.subscribe(() => {
-            this.storageService.onContainerUpdated.next();
+            this.storageContainerService.onContainerUpdated.next();
         });
     }
 
@@ -98,7 +107,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public download() {
         const ref = this.dialog.open(DownloadFolderComponent);
-        ref.componentInstance.navigator = this.storageService.navigateContainerBlobs(this.containerId);
+        ref.componentInstance.navigator = this.storageBlobService.navigate(this.storageAccountId, this.containerId);
         ref.componentInstance.subfolder = this.containerId;
         ref.componentInstance.folder = "";
     }

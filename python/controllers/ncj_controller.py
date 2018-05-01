@@ -1,6 +1,5 @@
 import azure.batch.models.batch_error
 from server.app import app
-import logging
 from jsonrpc import JsonRpcRequest
 from jsonrpc.error import JsonRpcError
 

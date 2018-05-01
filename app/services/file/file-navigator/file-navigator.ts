@@ -1,13 +1,20 @@
+import { ServerError } from "@batch-flask/core";
+import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
+import { log } from "@batch-flask/utils";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable, Subscription } from "rxjs";
 
-import { ServerError } from "@batch-flask/core";
-import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { File } from "app/models";
 import { DataCache, ListGetter } from "app/services/core";
 import { FileLoader } from "app/services/file";
-import { CloudPathUtils } from "app/utils";
+import { CloudPathUtils, StringUtils } from "app/utils";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
+
+export interface DeleteProgress {
+    current: string;
+    deleted: number;
+    total: number;
+}
 
 export interface FileNavigatorConfig<TParams = any> {
     /**
@@ -41,12 +48,27 @@ export interface FileNavigatorConfig<TParams = any> {
     getFile: (filename: string) => FileLoader;
 
     /**
+     * Optional function to handle delete in the file navigator
+     */
+    delete?: (filename: string) => Observable<any>;
+
+    /**
      * Optional callback that gets called when an error is returned listing files.
      * You can that way ignore the error or modify it.
      * Return null to ignore error.
      */
     onError?: (error: ServerError) => ServerError;
 
+    /**
+     * Optional wildcard filter that will client side match files/blobs that end with
+     * this filter.
+     */
+    wildcards?: string;
+
+    /**
+     * Optional flag to tell the navigator to fetch all items.
+     */
+    fetchAll?: boolean;
 }
 /**
  * Generic navigator class for a file explorer.
@@ -56,14 +78,16 @@ export class FileNavigator<TParams = any> {
     public loadingStatus = LoadingStatus.Ready;
     public basePath: string;
     public tree: Observable<FileTreeStructure>;
-
     public error: ServerError;
 
     private _tree = new BehaviorSubject<FileTreeStructure>(null);
     private _getter: ListGetter<File, TParams>;
+    private _deleteFile: (filename: string) => Observable<any>;
     private _params: TParams;
     private _cache: DataCache<File>;
     private _fileDeletedSub: Subscription;
+    private _wildcards: string;
+    private _fetchAll: boolean;
 
     private _getFileLoader: (filename: string) => FileLoader;
     private _onError: (error: ServerError) => ServerError;
@@ -73,10 +97,20 @@ export class FileNavigator<TParams = any> {
         this._getter = config.getter;
         this._params = config.params;
         this._getFileLoader = config.getFile;
+        this._deleteFile = config.delete;
         this._onError = config.onError;
         this._tree.next(new FileTreeStructure(this.basePath));
         this.tree = this._tree.asObservable();
         this._cache = config.cache;
+        this._wildcards = config.wildcards;
+        this._fetchAll = config.fetchAll;
+    }
+
+    /**
+     * If this file navigator has delete file implemented
+     */
+    public get canDeleteFile(): boolean {
+        return Boolean(this._deleteFile);
     }
 
     /**
@@ -143,15 +177,58 @@ export class FileNavigator<TParams = any> {
         return Observable.of(node);
     }
 
+    public isDirectory(path: string): Observable<boolean> {
+        const node = this._tree.value.getNode(path);
+        return this._checkIfDirectory(node);
+    }
+
+    /**
+     * Add a folder to the navigator that is only visible from the UI until some files get added to it
+     * @param path Path to the folder
+     */
+    public addVirtualFolder(path: string) {
+        const tree = this._tree.value;
+        tree.addVirtualFolder(path);
+        this._tree.next(tree);
+    }
+
+    public deleteFile(filename: string): Observable<any> {
+        if (!this._deleteFile) {
+            log.error("Cannot delete file with this file navigator has delete is not implemented");
+            return;
+        }
+        return this._deleteFile(filename);
+    }
+
+    public deleteFiles(files: string[]): Observable<DeleteProgress> {
+        if (!this._deleteFile) {
+            log.error("Cannot delete file with this file navigator has delete is not implemented");
+            return;
+        }
+        return Observable.interval(100).take(files.length).flatMap((i) => {
+            return this._deleteFile(files[i]).map(() => {
+                this._removeFile(files[i]);
+                return { deleted: i, total: files.length, current: files[i] };
+            });
+        }).share();
+    }
+
+    public deleteFolder(folder: string): Observable<DeleteProgress> {
+        if (!this._deleteFile) {
+            log.error("Cannot delete file with this file navigator has delete is not implemented");
+            return;
+        }
+        return this.listAllFiles(folder).flatMap((files) => {
+            return this.deleteFiles(files.map(x => x.name).toArray());
+        }).do(() => {
+            this._removeFile(folder);
+        }).share();
+    }
+
     public dispose() {
         if (this._fileDeletedSub) {
             this._fileDeletedSub.unsubscribe();
         }
-    }
-
-    public isDirectory(path: string): Observable<boolean> {
-        const node = this._tree.value.getNode(path);
-        return this._checkIfDirectory(node);
     }
 
     private _removeFile(key: string) {
@@ -167,9 +244,24 @@ export class FileNavigator<TParams = any> {
      */
     private _loadPath(path: string, recursive = false): Observable<List<File>> {
         return this._getter.fetchAll(this._params, {
-            recursive,
+            recursive: recursive || this._fetchAll,
             folder: path,
+        }).flatMap((files) => {
+            if (!this._wildcards) {
+                return Observable.of(files);
+            }
+
+            const filtered = files.filter((file) => file.isDirectory || this._checkWildcardMatch(file.name));
+            return Observable.of(List(filtered));
         });
+    }
+
+    private _checkWildcardMatch(filename: string): boolean {
+        const result = this._wildcards.split(",").find(wildcard => {
+            return StringUtils.matchWildcard(filename, wildcard, false);
+        });
+
+        return Boolean(result);
     }
 
     private _checkIfDirectory(node: FileTreeNode): Observable<boolean> {
@@ -192,13 +284,18 @@ export class FileNavigator<TParams = any> {
 
     private _loadFilesInPath(path: string): Observable<FileTreeNode> {
         this.loadingStatus = LoadingStatus.Loading;
+        const tree = this._tree.value;
+        const node = tree.getNode(path);
+        if (node.loadingStatus === LoadingStatus.Loading && !node.virtual) {
+            return Observable.of(null);
+        }
+        node.markAsLoading();
         const output = new AsyncSubject<FileTreeNode>();
         this._loadPath(this._getFolderToLoad(path)).subscribe({
             next: (files: List<File>) => {
                 this.loadingStatus = LoadingStatus.Ready;
-
                 const tree = this._tree.value;
-                tree.addFiles(files);
+                tree.setFilesAt(path, files);
                 const node = tree.getNode(path);
                 node.markAsLoaded();
                 this._tree.next(tree);

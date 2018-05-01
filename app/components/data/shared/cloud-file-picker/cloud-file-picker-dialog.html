@@ -1,15 +1,32 @@
-<bl-simple-form [submit]="submit" (done)="close()" [containerRef]="dialogRef" [multiUse]="false">
+<bl-simple-form [submit]="submit" (done)="close()" [containerRef]="dialogRef" [multiUse]="false" actionName="Pick">
     <div *ngIf="container">
-        <bl-blob-files-browser #blobList [container]="container.id" [fileExplorerConfig]="fileExplorerConfig" [activeFile]="pickedFile"
+        <bl-blob-files-browser #blobList
+            [storageAccountId]="storageAccountId"
+            [container]="container.id"
+            [fileExplorerConfig]="fileExplorerConfig"
+            [activeFile]="pickedFile"
+            [filter]="pickedFilter"
+            [fetchAll]="recursiveFetch"
             (activeFileChange)="updatePickedFile($event)">
         </bl-blob-files-browser>
     </div>
-
     <div *ngIf="containerError" class="container-error">
         Error loading container '{{containerId}}' make sure it exists.
     </div>
     <div blFormSummary>
-        <div *ngIf="pickedFile">Picked file: {{pickedFile}}</div>
-        <div *ngIf="!pickedFile">No file picked</div>
+        <div class="file-filter" *ngIf="optionFilters">
+            <mat-checkbox color="primary" (change)="fetchAllCheckChanged($event)" title="Fetch all files from the container"></mat-checkbox>
+            <bl-select placeholder="Filter" [ngModel]="pickedFilter" (ngModelChange)="pickSelectedFilter($event)">
+                <bl-option *ngFor="let filter of optionFilters;trackBy:trackFilterOption"
+                    [label]="filter.label"
+                    [value]="filter.value">
+                </bl-option>
+            </bl-select>
+        </div>
+        <div class="picked-file-text">
+            <div *ngIf="pickedFile">Picked file: {{pickedFile}}</div>
+            <div *ngIf="!pickedFile">No file picked</div>
+        </div>
+        <div class="note" *ngIf="optionFilters">Checkbox will fetch all files in one operation which could have a performance impact.</div>
     </div>
 </bl-simple-form>

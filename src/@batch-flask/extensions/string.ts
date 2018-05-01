@@ -3,7 +3,8 @@ interface String {
     /**
      * Format a string
      */
-    format(...args);
+    format(args: StringMap<string>);
+    format(...args: string[]);
 
     /**
      * Remove the whitespace from the string
@@ -35,11 +36,23 @@ interface String {
 
 // First, checks if it isn't implemented yet.
 if (!String.prototype.format) {
-    String.prototype.format = function (this: string, ...args) {
-        return this.replace(/{(\d+)}/g, (match, i) => {
+    String.prototype.format = function (this: string, ...params) {
+        let args;
+        if (params.length === 1 && typeof params[0] !== "string") {
+            args = params[0];
+        } else {
+            args = params;
+        }
+        return this.replace(/{([a-zA-Z0-9_.-]+)}/g, (match, i) => {
             return typeof args[i] !== "undefined" ? args[i] : match;
         });
     };
+
+    // String.prototype.format = function (this: string, ...args) {
+    //     return this.replace(/{(\d+)}/g, (match, i) => {
+    //         return typeof args[i] !== "undefined" ? args[i] : match;
+    //     });
+    // };
 }
 
 if (!String.prototype.clearWhitespace) {

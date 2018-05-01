@@ -8,8 +8,9 @@ import { NotificationService } from "@batch-flask/ui/notifications";
 import { log } from "@batch-flask/utils";
 import { BlobFilesBrowserComponent } from "app/components/file/browse";
 import { FileDropEvent } from "app/components/file/browse/file-explorer";
-import { BlobContainer, File } from "app/models";
-import { FileSystemService, StorageService } from "app/services";
+import { BlobContainer } from "app/models";
+import { FileSystemService } from "app/services";
+import { StorageBlobService, StorageContainerService } from "app/services/storage";
 import { CloudPathUtils } from "app/utils";
 
 @Component({
@@ -21,17 +22,19 @@ export class DataContainerFilesComponent implements OnDestroy {
     @ViewChild("blobExplorer")
     public blobExplorer: BlobFilesBrowserComponent;
 
+    @Input() public storageAccountId: string;
     @Input() public container: BlobContainer;
 
     private _onGroupUpdatedSub: Subscription;
 
     constructor(
         private fs: FileSystemService,
-        private storageService: StorageService,
+        private storageContainerService: StorageContainerService,
+        private storageBlobService: StorageBlobService,
         private backgroundTaskService: BackgroundTaskService,
         private notificationService: NotificationService) {
 
-        this._onGroupUpdatedSub = this.storageService.onContainerAdded.subscribe(() => {
+        this._onGroupUpdatedSub = this.storageContainerService.onContainerAdded.subscribe(() => {
             this.blobExplorer.refresh();
         });
     }
@@ -46,7 +49,8 @@ export class DataContainerFilesComponent implements OnDestroy {
         return Observable.fromPromise(this._getFilesToUpload(event.files)).flatMap((files) => {
             const message = `Uploading ${files.length} files to ${container}`;
             return this.backgroundTaskService.startTask(message, (task) => {
-                const observable = this.storageService.uploadFiles(this.container.name, files, event.path);
+                const observable = this.storageBlobService.uploadFiles(this.storageAccountId,
+                    this.container.name, files, event.path);
                 let lastData;
                 observable.subscribe({
                     next: (data) => {
@@ -70,19 +74,6 @@ export class DataContainerFilesComponent implements OnDestroy {
             });
         }).shareReplay(1);
 
-    }
-
-    @autobind()
-    public handleFileDelete(files: File[]) {
-        const obs = this.storageService.deleteFilesFromContainer(this.container, files);
-        obs.subscribe({
-            complete: () => {
-                // tslint:disable-next-line:max-line-length
-                const message = `The files were successfully removed from the file group: ${this.container.name}`;
-                this.notificationService.success("Removed files from group", message);
-            },
-        });
-        return obs;
     }
 
     private async _getFilesToUpload(files: any[]) {

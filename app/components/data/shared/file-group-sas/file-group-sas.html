@@ -1,7 +1,7 @@
-<mat-form-field>
-    <input type="text" matInput [formControl]="value" [placeholder]="label">
-    <mat-hint *ngIf="hint" align="end">
+<bl-form-field>
+    <input type="text" blInput  [formControl]="value" [placeholder]="label">
+    <bl-hint *ngIf="hint" align="end">
         {{hint}}
-    </mat-hint>
-</mat-form-field>
+    </bl-hint>
+</bl-form-field>
 <bl-button type="round" [action]="generateSasToken" [disabled]="!containerId" title="Generate SAS"><i class="fa fa-refresh"></i></bl-button>

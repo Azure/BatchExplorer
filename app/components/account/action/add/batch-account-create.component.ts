@@ -26,6 +26,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
     public form: FormGroup;
     public resourceGroups: ResourceGroup[] = [];
     public locations: Location[] = [];
+    public title = "Create batch account";
 
     private _subs: Subscription[] = [];
     private _resourceGroupSub: Subscription;
@@ -83,7 +84,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
         if (!resourceGroup) {
             return false;
         }
-        const isNewResourceGroup = (typeof resourceGroup === "string" && this._containsResourceGroup(resourceGroup));
+        const isNewResourceGroup = (typeof resourceGroup === "string" && !this._containsResourceGroup(resourceGroup));
         this.changeDetector.markForCheck();
         return isNewResourceGroup;
     }
@@ -120,7 +121,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
                 const accountUri = this.accountService.getAccountId(subscription, resourceGroup, accountName);
                 // poll account every 1.5 sec to check whether it has been created
                 const sub = Observable.interval(1500)
-                    .flatMap(() =>  this.accountService.get(accountUri))
+                    .flatMap(() => this.accountService.get(accountUri))
                     .retry()
                     .subscribe(response => {
                         const message = `Batch account '${accountName}' was successfully created!`;
@@ -231,7 +232,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
 
     @autobind()
     private _availabilityValidator() {
-        return (control: FormControl): Observable<{[key: string]: any}> => {
+        return (control: FormControl): Observable<{ [key: string]: any }> => {
             const accountName = control.value;
             const subscription = this.form.controls.subscription.value;
             const location = this.form.controls.location.value;
@@ -258,7 +259,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
 
     @autobind()
     private _resourceGroupPermissionValidator() {
-        return (control: FormControl): Observable<{[key: string]: any}> => {
+        return (control: FormControl): Observable<{ [key: string]: any }> => {
             let resourceGroup = control.value;
             if (!resourceGroup) {
                 return Observable.of(null);
@@ -291,7 +292,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
 
     @autobind()
     private _accountQuotaValidator() {
-        return (control: FormControl): Observable<{[key: string]: any}> => {
+        return (control: FormControl): Observable<{ [key: string]: any }> => {
             const location = control.value;
             const subscription = this.form.controls.subscription.value;
             return this.accountService

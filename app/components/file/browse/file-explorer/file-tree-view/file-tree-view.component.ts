@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
     HostBinding, Input, OnChanges, OnDestroy, Output,
 } from "@angular/core";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FileNavigator, FileTreeNode, FileTreeStructure } from "app/services/file";
@@ -23,6 +23,7 @@ export interface TreeRow {
     isDirectory: boolean;
     indent: number;
     index: number;
+    virtual: boolean;
 }
 
 @Component({
@@ -37,7 +38,6 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     @Input() public name: string;
     @Input() public autoExpand = false;
     @Input() public canDropExternalFiles = false;
-    @Input() public canDeleteFiles = false;
 
     @Output() public navigate = new EventEmitter<string>();
     @Output() public dropFiles = new EventEmitter<FileDropEvent>();
@@ -137,12 +137,16 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
         if (treeRow.isDirectory) {
             items.push(new ContextMenuItem("Refresh", () => this.refresh(treeRow.path)));
+            if (this.canDropExternalFiles) {
+                items.push(new ContextMenuItem("New folder", () => this.newVirtualFolder(treeRow)));
+            }
         }
 
-        if (this.canDeleteFiles) {
+        if (this.fileNavigator.canDeleteFile) {
             items.push(new ContextMenuItem("Delete", () => this.deleteFiles.emit({
                 path: treeRow.path,
                 isDirectory: treeRow.isDirectory,
+                navigator: this.fileNavigator,
             })));
         }
 
@@ -293,6 +297,19 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         DragUtils.allowDrop(event, this.canDropExternalFiles);
     }
 
+    public newVirtualFolder(treeRow: TreeRow) {
+        this.dialog.prompt("Create a new folder?", {
+            description: `Folder will be created under ${treeRow.path}.`
+                + `Note this is a virtual folder and it will not exist until you drop files`,
+            prompt: (value: string) => {
+                this.expand(treeRow);
+                const path = treeRow ? treeRow.path : null;
+                this.fileNavigator.addVirtualFolder(CloudPathUtils.join(path, value));
+                return Observable.of(null);
+            },
+        });
+    }
+
     private _buildTreeRows(tree) {
         const root = tree.root;
         this.treeRows = this._getTreeRowsForNode(root);
@@ -312,6 +329,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
                 expanded,
                 isDirectory: child.isDirectory,
                 indent: indent,
+                virtual: child.virtual,
             });
             if (expanded) {
                 if (child.children.size > 0) {
