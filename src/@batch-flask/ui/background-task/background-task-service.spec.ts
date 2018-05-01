@@ -30,16 +30,16 @@ describe("BackgroundTaskService ", () => {
         expect(runningTasks.size).toBe(1);
         const task = runningTasks.first();
         let name;
-        let done = false;
+        const doneSpy = jasmine.createSpy("Task is completed");
         task.name.subscribe(x => name = x);
-        task.done.subscribe(x => done = x);
+        task.done.subscribe(doneSpy);
 
         expect(name).toEqual("task1");
         expect(task.progress.getValue()).toBe(-1, "Progress should start at -1(Indeterminate time)");
-        expect(done).toBe(false, "Task should not yet be completed");
+        expect(doneSpy).not.toHaveBeenCalled();
 
         obs.complete();
-        expect(done).toBe(true, "Task should now be marked as completed");
+        expect(doneSpy).toHaveBeenCalledOnce();
 
         // Should only get removed after a few seconds
         tick(BackgroundTask.completeDelay);
@@ -84,18 +84,23 @@ describe("BackgroundTaskService ", () => {
         expect(runningTasks.size).toBe(1);
         const task = runningTasks.first();
         let name;
-        let done = false;
+        let done = null;
         task.name.subscribe(x => name = x);
         task.done.subscribe(x => done = x);
-        expect(name).toEqual("Job: Task1 (1/2)");
-        expect(done).toBe(false);
+        expect(name).toEqual("Job (1/2)");
+        expect(done).toBe(null);
 
         obs.task1.complete();
-        expect(name).toEqual("Job: Task2 (2/2)");
+        expect(name).toEqual("Job (2/2)");
         expect(spies.task1).toHaveBeenCalledTimes(1);
         expect(spies.task2).toHaveBeenCalledTimes(1);
 
         obs.task2.complete();
-        expect(done).toBe(true);
+        expect(done).toEqual({
+            succeeded: 2,
+            failed: 0,
+            total: 2,
+            errors: [],
+        });
     });
 });

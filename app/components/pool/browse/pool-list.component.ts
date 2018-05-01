@@ -7,7 +7,6 @@ import { Observable, Subscription } from "rxjs";
 
 import { Filter, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { InjectorFactory } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
@@ -23,7 +22,7 @@ import { DeletePoolTask, PoolCommands } from "../action";
     selector: "bl-pool-list",
     templateUrl: "pool-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{
+    providers: [PoolCommands, {
         provide: ListBaseComponent,
         useExisting: forwardRef(() => PoolListComponent),
     }],
@@ -31,7 +30,6 @@ import { DeletePoolTask, PoolCommands } from "../action";
 export class PoolListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
     public data: ListView<Pool, PoolListParams>;
-    public commands: PoolCommands;
 
     public tableConfig: TableConfig = {
         showCheckbox: true,
@@ -44,11 +42,10 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         private poolService: PoolService,
         activatedRoute: ActivatedRoute,
         router: Router,
-        injectorFactory: InjectorFactory,
+        public commands: PoolCommands,
         changeDetector: ChangeDetectorRef,
         private taskManager: BackgroundTaskService) {
         super(changeDetector);
-        this.commands = injectorFactory.create(PoolCommands);
         this.data = this.poolService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 

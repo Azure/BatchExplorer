@@ -5,7 +5,7 @@ import { Observable, Subscription } from "rxjs";
 
 import { Filter, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/core/list";
-import { InjectorFactory, LoadingStatus } from "@batch-flask/ui";
+import { LoadingStatus } from "@batch-flask/ui";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService } from "app/services";
@@ -17,7 +17,7 @@ import "./application-list.scss";
 @Component({
     selector: "bl-application-list",
     templateUrl: "application-list.html",
-    providers: [{
+    providers: [BatchApplicationCommands, {
         provide: ListBaseComponent,
         useExisting: forwardRef(() => ApplicationListComponent),
     }],
@@ -28,7 +28,6 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
     public data: ListView<BatchApplication, ApplicationListParams>;
     public applications: List<BatchApplication>;
     public displayedApplications: List<BatchApplication>;
-    public commands: BatchApplicationCommands;
 
     private _baseOptions = { maxresults: 50 };
     private _subs: Subscription[] = [];
@@ -36,11 +35,10 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
     constructor(
         router: Router,
         changeDetector: ChangeDetectorRef,
-        injectorFactory: InjectorFactory,
+        public commands: BatchApplicationCommands,
         private applicationService: ApplicationService,
-        ) {
+    ) {
         super(changeDetector);
-        this.commands = injectorFactory.create(BatchApplicationCommands);
 
         this.data = this.applicationService.listView(this._baseOptions);
         this._subs.push(this.data.items.subscribe((applications) => {

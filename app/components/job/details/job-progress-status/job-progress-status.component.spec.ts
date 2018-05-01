@@ -34,7 +34,7 @@ describe("JobProgressStatusComponent", () => {
     beforeEach(() => {
         poolServiceSpy = {
             view: () => new MockEntityView<any, Pool>(Pool, {
-                item: new Pool({ id: "pool-1", maxTasksPerNode: 8, targetDedicatedNodes: 3 }),
+                item: new Pool({ id: "pool-1", maxTasksPerNode: 8, currentDedicatedNodes: 3 }),
             }),
         };
 

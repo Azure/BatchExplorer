@@ -17,12 +17,13 @@ import {
     PatchJobComponent,
 } from "../action";
 
-import { ElectronRemote, InjectorFactory } from "@batch-flask/ui";
+import { ElectronRemote } from "@batch-flask/ui";
 import "./job-details.scss";
 
 @Component({
     selector: "bl-job-details",
     templateUrl: "job-details.html",
+    providers: [JobCommands],
 })
 export class JobDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
@@ -40,19 +41,17 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     public data: EntityView<Job, JobParams>;
     public JobState = JobState;
     public hasHookTask = false;
-    public jobCommands: JobCommands;
 
     private _paramsSubscriber: Subscription;
 
     constructor(
-        private injectorFactory: InjectorFactory,
+        public jobCommands: JobCommands,
         private activatedRoute: ActivatedRoute,
         private fs: FileSystemService,
         private remote: ElectronRemote,
         private sidebarManager: SidebarManager,
         private jobService: JobService,
         private router: Router) {
-        this.jobCommands = this.injectorFactory.create(JobCommands);
 
         this.data = this.jobService.view();
         this.data.item.subscribe((job) => {

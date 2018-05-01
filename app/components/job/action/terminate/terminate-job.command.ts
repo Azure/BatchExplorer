@@ -6,7 +6,9 @@ import { JobService } from "app/services";
 
 @Injectable()
 export class TerminateJobCommand extends EntityCommand<Job> {
-    constructor(injector: Injector, jobService: JobService) {
+    constructor(injector: Injector) {
+        const jobService = injector.get(JobService);
+
         super(injector, {
             label: "Terminate",
             action: (job: Job) => jobService.terminate(job.id),
