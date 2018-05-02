@@ -15,6 +15,20 @@ export enum EntityCommandNotify {
     OnFailure,
 }
 
+export enum EntityCommandType {
+    Refresh,
+    Add,
+    AddTask,
+    Resize,
+    Clone,
+    Delete,
+    Edit,
+    Terminate,
+    Enable,
+    Disable,
+    Other,
+}
+
 export interface EntityCommandAttributes<TEntity extends ActionableEntity, TOptions = void> {
     label: ((entity: TEntity) => string) | string;
     action: (entity: TEntity, option?: TOptions) => Observable<any> | void;
@@ -22,6 +36,8 @@ export interface EntityCommandAttributes<TEntity extends ActionableEntity, TOpti
     multiple?: boolean;
     confirm?: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     notify?: EntityCommandNotify | boolean;
+    type?: EntityCommandType;
+    icon?: string;
 }
 
 /**
@@ -33,6 +49,8 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     public enabled: (entity: TEntity) => boolean;
     public confirm: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     public definition: EntityCommands<TEntity>;
+    public type: EntityCommandType;
+    public icon: string;
 
     private _action: (entity: TEntity, option?: TOptions) => Observable<any> | void;
     private _label: ((entity: TEntity) => string) | string;
@@ -52,6 +70,9 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         this.multiple = exists(attributes.multiple) ? attributes.multiple : true;
         this.enabled = attributes.enabled || (() => true);
         this.confirm = exists(attributes.confirm) ? attributes.confirm : true;
+        this.type = attributes.type;
+        this.icon = attributes.icon;
+
         if (attributes.notify === true || nil(attributes.notify)) {
             this.notify = EntityCommandNotify.Always;
         } else if (attributes.notify === false) {

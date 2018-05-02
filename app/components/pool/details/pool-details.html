@@ -1,4 +1,4 @@
-<bl-loading [status]="data.newDataStatus | async" [error]="data.error | async">
+"<bl-loading [status]="data.newDataStatus | async" [error]="data.error | async">
     <div *ngIf="pool && poolDecorator" class="fit-details-container">
         <bl-summary-card>
             <div summaryTitle>{{pool.id}}</div>
@@ -26,6 +26,7 @@
                 </div>
             </div>
         </bl-summary-card>
+        <bl-commands-list [commands]="commands" [entity]="pool"></bl-commands-list>
         <bl-pool-error-display [pool]="pool"></bl-pool-error-display>
         <bl-card class="details">
             <bl-tab-group>
@@ -52,3 +53,4 @@
         </bl-card>
     </div>
 </bl-loading>
+"
