@@ -201,6 +201,17 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
         return this._nodeAgentSkuMap.dockerOffers;
     }
 
+    public get hasCustomImage(): boolean {
+        return Boolean(this.nodeAgentSku.value && this.customImage.value);
+    }
+
+    public get displayContainerConfiguration(): boolean {
+        return this.showContainerConfiguration
+            && this.value.virtualMachineConfiguration
+            && this.value.virtualMachineConfiguration.imageReference
+            && !this.value.virtualMachineConfiguration.imageReference.virtualMachineImageId;
+    }
+
     /**
      * Function that determines whether this OS is active or not
      * Two conditions must be satisfied
@@ -314,7 +325,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
 
     @autobind()
     private _customImageOnChange() {
-        if (!this.nodeAgentSku.value || !this.customImage.value) {
+        if (!this.hasCustomImage) {
             return;
         }
         this.value = {
