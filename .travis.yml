@@ -57,6 +57,7 @@ install:
   - npm install -g codecov
   - npm install -g yarn
   - yarn install
+  - yarn --ignore-engines install
   - python3 --version
   - pip3 install -r python/requirements.txt
 
