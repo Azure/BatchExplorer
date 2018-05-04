@@ -1,4 +1,6 @@
 # 0.15.1
+* Enable browsing files of a offline node
+* Change offline node color
 * Allow custom image and docker container
 
 # 0.15.0
