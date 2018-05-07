@@ -69,6 +69,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
             jobReleaseTask: null,
             onAllTasksComplete: [AllTasksCompleteAction.noaction],
             onTaskFailure: [TaskFailureAction.noaction],
+            metadata: [null],
         });
 
         this.form.controls.jobPreparationTask.valueChanges.subscribe((value) => {

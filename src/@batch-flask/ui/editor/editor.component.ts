@@ -116,6 +116,9 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         const uri = this.config.uri as any;
         const model = uri ? monaco.editor.getModel(uri) : null;
         this._model = model || monaco.editor.createModel(this._value || "", this.config.language, uri);
+        // Inject this because initMonaco() function is invoked after writeValue()
+        // which causes reopen json editor with an incorrect value populated
+        this._model.setValue(this._value);
 
         this._editor = monaco.editor.create(myDiv, { ...this.config as any, model: this._model });
 

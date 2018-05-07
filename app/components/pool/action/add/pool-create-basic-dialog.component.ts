@@ -72,6 +72,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             inboundNATPools: [[]],
             subnetId: [null],
             certificateReferences: [[]],
+            metadata: [null],
         });
 
         this._subs.push(this._osControl.valueChanges.subscribe((value) => {
