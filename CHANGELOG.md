@@ -1,3 +1,8 @@
+# 0.15.1
+* Enable browsing files of a offline node
+* Change offline node color
+* Allow custom image and docker container
+
 # 0.15.0
 [All items](https://github.com/Azure/BatchLabs/milestone/17?closed=1)
 
