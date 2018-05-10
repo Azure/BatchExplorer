@@ -63,7 +63,9 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     get id(): string { return this._id; }
     set id(value: string) { this._id = value || this._uid; }
 
-    @Input() public placeholder: string;
+    @Input()
+    @HostBinding("attr.aria-label")
+    public placeholder: string;
 
     @Input() @FlagInput() public required = false;
 
@@ -126,6 +128,7 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     }
 
     public ngOnChanges() {
+        console.log("Change", this.placeholder);
         this.stateChanges.next();
     }
 

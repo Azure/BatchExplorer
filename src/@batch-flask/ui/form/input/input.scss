@@ -19,12 +19,6 @@ input[blInput], textarea[blInput] {
         }
     }
 
-    &::placeholder {
-        color: transparent; // Remove the transition to prevent the placeholder
-        // from overlapping when the label comes back down.
-        transition: none;
-    }
-
     &[disabled] {
         background-color: $input-disabled-background-color;
     }
