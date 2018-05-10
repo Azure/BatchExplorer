@@ -6,21 +6,23 @@ import { BatchApplication, Job } from "app/models";
 import { PinnedEntityService } from "app/services";
 import * as Fixtures from "test/fixture";
 
-let jsonDataFromFileService: any;
-function getSavedData(): PinnableEntity[] {
-    return jsonDataFromFileService;
-}
-
 describe("PinnedEntityService", () => {
     let pinService: PinnedEntityService;
-    let favourites: List<PinnableEntity> = List<PinnableEntity>();
-    const subscriptions: Subscription[] = [];
+    let favourites: List<PinnableEntity>;
+    let subscriptions: Subscription[];
     let localFileStorageSpy;
     let accountServiceSpy;
 
     let jsonFilename: string;
-
+    let jsonDataFromFileService: any;
+    function getSavedData(): PinnableEntity[] {
+        return jsonDataFromFileService;
+    }
     beforeEach(() => {
+        subscriptions = [];
+        favourites = List<PinnableEntity>();
+        jsonDataFromFileService = null;
+
         localFileStorageSpy = {
             get: jasmine.createSpy("get").and.returnValue(Observable.of(jsonDataFromFileService)),
             set: jasmine.createSpy("set").and.callFake((filename, jsonData) => {
@@ -40,7 +42,6 @@ describe("PinnedEntityService", () => {
             })),
         };
 
-        favourites.clear();
         pinService = new PinnedEntityService(localFileStorageSpy, accountServiceSpy);
         subscriptions.push(pinService.favorites.subscribe(pinned => favourites = pinned));
     });
@@ -63,11 +64,6 @@ describe("PinnedEntityService", () => {
             }));
         });
 
-        beforeAll(() => {
-            jsonDataFromFileService = null;
-            favourites.clear();
-        });
-
         it("saves to local storage", () => {
             expect(localFileStorageSpy.set).toHaveBeenCalledTimes(1);
             expect(jsonFilename).toEqual("myaccount.westus.batch.com.pinned");
@@ -80,10 +76,6 @@ describe("PinnedEntityService", () => {
             expect(savedData[0].id).toEqual("my-job-matt");
         });
 
-        it("won't insert multiple copies", () => {
-            expect(localFileStorageSpy.set).not.toHaveBeenCalled();
-        });
-
         it("fixes empty url", () => {
             pinService.pinFavorite(new BatchApplication({
                 id: "new-one",
@@ -91,7 +83,7 @@ describe("PinnedEntityService", () => {
             }));
 
             expect(favourites.size).toEqual(2);
-            expect(localFileStorageSpy.set).toHaveBeenCalledTimes(1);
+            expect(localFileStorageSpy.set).toHaveBeenCalledTimes(2);
 
             const savedData = getSavedData();
             expect(savedData.length).toEqual(2);
@@ -107,11 +99,6 @@ describe("PinnedEntityService", () => {
             });
 
             pinService.pinFavorite(favorite);
-        });
-
-        beforeAll(() => {
-            jsonDataFromFileService = null;
-            favourites.clear();
         });
 
         it("returns true if already saved", () => {
@@ -134,11 +121,6 @@ describe("PinnedEntityService", () => {
             });
 
             pinService.pinFavorite(favorite);
-        });
-
-        beforeAll(() => {
-            jsonDataFromFileService = null;
-            favourites.clear();
         });
 
         it("removes and saves if exists in list", () => {
