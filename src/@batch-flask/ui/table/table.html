@@ -32,12 +32,17 @@
 <div class="table-body">
     <div class="scroll-shadow" *ngIf="showScrollShadow"></div>
     <bl-virtual-scroll [items]="displayItems"  [childHeight]="28" (update)="updateViewPortItems($event)" (scroll)="handleScrollChange($event)">
-         <bl-row-render  *ngFor="let item of viewPortItems" [key]="item.id" [item]="item" [columns]="columnManager.columns">
-         </bl-row-render>
+        <bl-row-render  *ngFor="let item of viewPortItems"
+            [key]="item.id"
+            [item]="item"
+            [columns]="columnManager.columns"
+            [focused]="listFocused && item.id == (focusedItem | async)">
+        </bl-row-render>
 
         <bl-virtual-scroll-tail [height]="120" *ngIf="status === LoadingStatus.Loading">
             <bl-loading [status]="status"></bl-loading>
         </bl-virtual-scroll-tail>
     </bl-virtual-scroll>
 </div>
+
 

@@ -15,9 +15,6 @@ import "./quick-list-item.scss";
 })
 export class QuickListItemComponent extends AbstractListItemBase implements OnInit {
     @ViewChild(TemplateRef) public content;
-    public get routerLinkActiveClass() {
-        return this.link ? "selected" : null;
-    }
 
     // tslint:disable:no-forward-ref
     constructor(

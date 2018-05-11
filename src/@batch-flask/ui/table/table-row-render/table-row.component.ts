@@ -1,12 +1,10 @@
 import {
-    ChangeDetectionStrategy, Component, HostListener, Inject, Input, OnInit, forwardRef,
+    ChangeDetectionStrategy, Component, HostBinding, HostListener, Inject, Input, OnInit, forwardRef,
 } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { AbstractListItemBase } from "@batch-flask/ui/abstract-list";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
-import { TableCellComponent } from "../table-cell";
-import { TableColumnComponent } from "../table-column";
 import { TableColumnRef } from "../table-column-manager";
 import { TableComponent } from "../table.component";
 
@@ -16,9 +14,7 @@ import { TableComponent } from "../table.component";
     changeDetection: ChangeDetectionStrategy.OnPush,
     // tslint:disable-next-line:use-host-property-decorator
     host: {
-        "(contextmenu)": "item.openContextMenu($event)",
-        "[class.selected]": "item.selected",
-        "[class.focused]": "listFocused && key === (focusedItem | async)",
+        "(contextmenu)": "openContextMenu($event)",
         "[class.drop-target]": "key === dropTargetRowKey",
         "(dragenter)": "list.dragEnter(item, $event)",
         "(dragleave)": "list.dragLeave(item, $event)",
@@ -28,10 +24,9 @@ import { TableComponent } from "../table.component";
 export class TableRowRenderComponent extends AbstractListItemBase implements OnInit {
     @Input() public item: any;
     @Input() public columns: TableColumnRef[];
+    @Input() @HostBinding("class.focused") public focused: boolean;
+    @Input() @HostBinding("class.selected") public selected: boolean;
 
-    public get routerLinkActiveClass() {
-        return this.link ? "selected" : null;
-    }
     public dimensions: number[] = [];
 
     constructor(

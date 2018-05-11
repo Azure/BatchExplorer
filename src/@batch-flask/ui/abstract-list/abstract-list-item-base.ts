@@ -16,8 +16,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
      */
     @Input() public key: string;
 
-    @Input() public conceal: boolean = false;
-
     @Input()
     public set link(routerLink: any) {
         this._routerLink = routerLink;
