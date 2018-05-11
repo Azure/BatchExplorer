@@ -25,12 +25,16 @@ export class FileTableViewComponent implements OnChanges {
     @Output() public dropFiles = new EventEmitter<FileDropEvent>();
 
     public tableConfig: TableConfig;
-
+    public treeRows: FileTreeNode[] = [];
     public LoadingStatus = LoadingStatus;
 
-    public ngOnChanges(inputs) {
-        if (inputs.canDropExternalFiles) {
+    public ngOnChanges(changes) {
+        if (changes.canDropExternalFiles) {
             this._updateTableConfig();
+        }
+
+        if (changes.treeNode) {
+            this.treeRows = [...this.treeNode.walk()];
         }
     }
 

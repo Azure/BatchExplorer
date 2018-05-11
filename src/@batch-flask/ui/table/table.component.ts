@@ -53,7 +53,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
 
     @Output() public dropOnRow = new EventEmitter<DropEvent>();
 
-    @Input() public data: List<any> = List([]);
+    @Input() public data: List<any> | any[] = List([]);
 
     @ViewChild(TableHeadComponent) public head: TableHeadComponent;
     @ContentChildren(TableColumnComponent) public columnComponents: QueryList<TableColumnComponent>;
@@ -96,9 +96,18 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
 
     public ngOnChanges(changes) {
         if (changes.data) {
-            this.displayItems = this.data.toArray();
+            if (!this.data) {
+                this.displayItems = [];
+            } else if (this.data instanceof List) {
+                this.displayItems = (this.data as List<any>).toArray();
+            } else if (Array.isArray(this.data)) {
+                this.displayItems = this.data;
+            } else {
+                this.displayItems = [...this.data as any];
+            }
         }
     }
+
     public ngOnDestroy() {
         this._dimensions.complete();
     }

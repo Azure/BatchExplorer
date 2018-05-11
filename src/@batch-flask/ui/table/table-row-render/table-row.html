@@ -1,5 +1,5 @@
 <td class="checkbox-column" (click)="item.handleClick($event, false)" *ngIf="table.config.showCheckbox">
-    <mat-checkbox color="primary" (click)="$event.stopPropagation()" (change)="item.handleClick(null, false)" [checked]="item.selected"></mat-checkbox>
+    <mat-checkbox color="primary" (click)="$event.stopPropagation()" (change)="handleClick(null, false)" [checked]="item.selected"></mat-checkbox>
 </td>
 
 <div *ngFor="let column of columns;trackBy: trackColumn"
