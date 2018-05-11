@@ -60,10 +60,6 @@ export class TableColumnComponent implements OnChanges {
         this.id = SecureUtils.uuid();
     }
 
-    public ngAfterContentInit() {
-        console.log("Content", this.name, this.cell);
-    }
-
     public ngOnChanges(changes) {
         if (changes.defaultWidth) {
             this.width = this.defaultWidth;
@@ -80,7 +76,10 @@ export class TableColumnComponent implements OnChanges {
         return {
             name: this.name,
             width: this.width,
-            headerContent: this.header.content,
+            headerContent: this.header && this.header.content,
+            sortable: this.sortable,
+            isSorting: this.isSorting,
+            cellTemplate: this.cell,
         };
     }
 

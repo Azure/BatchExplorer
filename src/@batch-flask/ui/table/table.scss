@@ -9,7 +9,7 @@ bl-table {
     width: 100%;
     height: 100%;
 
-    bl-thead, .bl-table-row {
+    bl-thead, bl-row-render {
         display: flex;
         align-items: center;
     }
@@ -50,12 +50,12 @@ bl-table {
     }
 
     &.activable {
-        .bl-table-row {
+        bl-row-render {
             cursor: pointer;
         }
     }
 
-    .bl-table-row {
+    bl-row-render {
         &:not(:last-child) {
             border-bottom: 1px solid $athensGrey;
         }
@@ -92,7 +92,7 @@ bl-table {
     }
 
     .bl-table-cell,
-    bl-column {
+    .bl-table-column {
         vertical-align: middle;
         padding: 0 5px;
         overflow: hidden;

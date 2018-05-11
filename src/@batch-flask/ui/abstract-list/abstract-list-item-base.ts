@@ -88,7 +88,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
                 }
                 event.stopPropagation();
                 event.stopImmediatePropagation();
-                return false;
             }
         }
 

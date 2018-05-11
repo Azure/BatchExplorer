@@ -3,7 +3,10 @@ import { TemplateRef } from "@angular/core";
 export interface TableColumnRef {
     name: string;
     width: number;
+    sortable: boolean;
+    isSorting: boolean;
     headerContent: TemplateRef<any>;
+    cellTemplate: TemplateRef<any>;
 }
 
 export class TableColumnManager {
@@ -26,6 +29,7 @@ export class TableColumnManager {
 
     public updateColumn(ref: TableColumnRef) {
         this.columnMap.set(ref.name, ref);
+        this._computeColumns();
     }
 
     private _computeColumns() {

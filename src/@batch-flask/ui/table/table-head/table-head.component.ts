@@ -1,21 +1,22 @@
 import {
-    AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, ContentChildren, Inject, Input, OnDestroy, QueryList, forwardRef,
+    AfterViewInit, ChangeDetectionStrategy,
+    ChangeDetectorRef, Component, Inject, Input, OnDestroy, forwardRef,
 } from "@angular/core";
 
 import { BehaviorSubject, Observable } from "rxjs";
 import { TableColumnComponent } from "../table-column";
+import { TableColumnRef } from "../table-column-manager";
 import { TableComponent } from "../table.component";
 
 @Component({
     selector: "bl-thead",
     templateUrl: "table-head.html",
-    // changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableHeadComponent implements AfterViewInit, OnDestroy {
     @Input() public show: boolean; // TODO-TIM remove
 
-    @Input() public columns: TableColumnComponent[];
+    @Input() public columns: TableColumnRef[];
 
     public dimensions: Observable<number[]>;
 
@@ -30,9 +31,9 @@ export class TableHeadComponent implements AfterViewInit, OnDestroy {
     }
 
     public ngAfterViewInit() {
-        setTimeout(() => {
-            this.changeDetector.markForCheck();
-        });
+        // setTimeout(() => {
+        //     this.changeDetector.markForCheck();
+        // });
         // this.items.changes.subscribe(() => {
         //     this._updateColumnIndexMap();
         //     this.updateDimensions();
@@ -68,14 +69,6 @@ export class TableHeadComponent implements AfterViewInit, OnDestroy {
 
     public trackColumn(index, column) {
         return column.name;
-    }
-
-    private _updateColumnIndexMap() {
-        // const map = {};
-        // this.items.forEach((column, index) => {
-        //     map[column.id] = index;
-        // });
-        // this._columnIndexMap = map;
     }
 
 }

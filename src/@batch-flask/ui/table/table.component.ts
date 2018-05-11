@@ -1,5 +1,5 @@
 import {
-    AfterContentInit, ChangeDetectorRef, Component, ContentChild, ContentChildren,
+    AfterContentInit, ChangeDetectorRef, Component, ContentChildren,
     EventEmitter, HostBinding, HostListener, Input, OnChanges, OnDestroy, Optional, Output, QueryList, ViewChild,
 } from "@angular/core";
 import { List } from "immutable";
@@ -7,10 +7,10 @@ import { BehaviorSubject, Observable } from "rxjs";
 
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
-import { DragUtils, log } from "@batch-flask/utils";
+import { DragUtils } from "@batch-flask/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
 import { TableCellComponent } from "./table-cell";
-import { SortDirection, TableColumnComponent } from "./table-column";
+import { TableColumnComponent } from "./table-column";
 import { TableColumnManager } from "./table-column-manager";
 import { TableHeadComponent } from "./table-head";
 import { TableRowComponent } from "./table-row";

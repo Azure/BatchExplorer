@@ -1,6 +1,6 @@
 import {
-    AfterContentInit, ChangeDetectorRef, ContentChildren, EventEmitter,
-    HostBinding, Input, OnDestroy, Output, QueryList, ViewChild,
+    ChangeDetectorRef, EventEmitter,
+    Input, OnDestroy, Output, ViewChild,
 } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 

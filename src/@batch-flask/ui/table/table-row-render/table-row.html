@@ -1,23 +1,11 @@
-<div class="bl-table-row" *ngFor="let item of viewPortItems"
-    (click)="handleClick($event)"
-    (contextmenu)="item.openContextMenu($event)"
-    [class.selected]="item.selected"
-    [class.conceal]="item.conceal"
-    [class.focused]="listFocused && item.key === (focusedItem | async)"
-    [class.drop-target]="item.key === dropTargetRowKey"
-    (dragenter)="dragEnter(item, $event)"
-    (dragleave)="dragLeave(item, $event)"
-    (drop)="handleDropOnRow(item, $event)">
+<td class="checkbox-column" (click)="item.handleClick($event, false)" *ngIf="table.config.showCheckbox">
+    <mat-checkbox color="primary" (click)="$event.stopPropagation()" (change)="item.handleClick(null, false)" [checked]="item.selected"></mat-checkbox>
+</td>
 
-    <td class="checkbox-column" (click)="item.handleClick($event, false)" *ngIf="config.showCheckbox">
-        <mat-checkbox color="primary" (click)="$event.stopPropagation()" (change)="item.handleClick(null, false)" [checked]="item.selected"></mat-checkbox>
-    </td>
+<div *ngFor="let column of columns;trackBy: trackColumn"
+    class="bl-table-cell"
+    [class.fixed-size]="column.width"
+    [style.flex-basis]="column.width + 'px'">
 
-    <div *ngFor="let column of columns"
-        class="bl-table-cell"
-        [class.fixed-size]="column.width"
-        [style.flex-basis]="column.width + 'px'">
-
-        <ng-template [ngTemplateOutlet]="column.cell" [ngTemplateOutletContext]="{$implicit: item}"></ng-template>
-    </div>
+    <ng-template [ngTemplateOutlet]="column.cellTemplate" [ngTemplateOutletContext]="{$implicit: item}"></ng-template>
 </div>
