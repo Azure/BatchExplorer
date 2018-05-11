@@ -6,7 +6,7 @@
         [commands]="commands"
         (scrollBottom)="onScrollToBottom()">
 
-        <bl-quick-list-item *ngFor="let pool of pools, trackBy: trackById" [link]="['/pools/', pool.id]" [key]="pool.id">
+        <bl-quick-list-item *ngFor="let pool of pools, trackBy: trackById" [link]="pool.routerLink" [key]="pool.id">
             <bl-quick-list-item-status [status]="poolStatus(pool.original)" [tooltip]="poolStatusText(pool.original)">
             </bl-quick-list-item-status>
             <div bl-quick-list-item-title>{{pool.id}}</div>

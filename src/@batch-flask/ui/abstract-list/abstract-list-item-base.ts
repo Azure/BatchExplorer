@@ -17,14 +17,14 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
 
     public get id() { return this.key; }
 
-    @Input()
-    public set link(routerLink: any) {
+    @Input("link")
+    public set routerLink(routerLink: any) {
         this._routerLink = routerLink;
         if (routerLink) {
             this.urlTree = this.router.createUrlTree(routerLink);
         }
     }
-    public get link() { return this._routerLink; }
+    public get routerLink() { return this._routerLink; }
 
     public isFocused: Observable<boolean>;
 
