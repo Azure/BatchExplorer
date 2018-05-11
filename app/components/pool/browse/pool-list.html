@@ -21,29 +21,6 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <!-- <bl-table>
-        <bl-thead>
-            <bl-column>ID</bl-column>
-            <bl-column>State</bl-column>
-            <bl-column>Allocation state</bl-column>
-            <bl-column>Node size</bl-column>
-            <bl-column>Dedicated
-                <i class="fa fa-tv"></i>
-            </bl-column>
-            <bl-column>Low priority
-                <i class="fa fa-tv"></i>
-            </bl-column>
-        </bl-thead>
-        <bl-row *ngFor="let pool of pools, trackBy: trackById" [link]="['/pools/', pool.id]" [key]="pool.id">
-            <bl-cell>{{pool.id}}</bl-cell>
-            <bl-cell>{{pool.state}}</bl-cell>
-            <bl-cell>{{pool.allocationState}}</bl-cell>
-            <bl-cell>{{pool.vmSize}}</bl-cell>
-            <bl-cell [value]="pool.targetDedicatedNodes">{{pool.dedicatedNodes}}</bl-cell>
-            <bl-cell [value]="pool.targetLowPriorityNodes">{{pool.lowPriorityNodes}}</bl-cell>
-        </bl-row>
-    </bl-table> -->
-
     <bl-table *ngIf="!quicklist"
         [config]="tableConfig"
         [data]="pools"

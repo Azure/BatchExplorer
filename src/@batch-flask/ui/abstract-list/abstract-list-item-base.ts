@@ -2,7 +2,6 @@ import { Input, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 
-import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { log } from "@batch-flask/utils";
 import { AbstractListBase } from "./abstract-list-base";
 
@@ -16,6 +15,8 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
      */
     @Input() public key: string;
 
+    public get id() { return this.key; }
+
     @Input()
     public set link(routerLink: any) {
         this._routerLink = routerLink;
@@ -24,9 +25,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         }
     }
     public get link() { return this._routerLink; }
-
-    @Input()
-    public forceBreadcrumb = false;
 
     public isFocused: Observable<boolean>;
 
@@ -48,8 +46,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
      */
     constructor(
         protected list: AbstractListBase,
-        private router: Router,
-        private breadcrumbService: BreadcrumbService) {
+        private router: Router) {
 
         this.isFocused = this.list.focusedItem.map(x => x === this.key);
     }
@@ -65,68 +62,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         this.list = null;
     }
 
-    public handleClick(event: MouseEvent, activate = true) {
-        this.list.setFocusedItem(this.key);
-
-        if (event) {
-            const shiftKey = event.shiftKey;
-            const ctrlKey = event.ctrlKey || event.metaKey;
-            // Prevent the routerlink from being activated if we have shift or ctrl
-            if (shiftKey || ctrlKey) {
-                const focusedItem = this.list.focusedItem.value;
-                if (!focusedItem) {
-                    return;
-                }
-
-                if (shiftKey) {
-                    this.list.selectTo(this.key);
-                } else if (ctrlKey) {
-                    this.selected = !this.selected;
-                    this.list.onSelectedChange(this.key, this.selected);
-                }
-                event.stopPropagation();
-                event.stopImmediatePropagation();
-            }
-        }
-
-        if (activate) {
-            if (this.list.config.activable) {
-                // Means the user actually selected the item
-                this.activateItem(true);
-            } else {
-                const isSelected = this.selected;
-                this.list.clearSelection();
-                this.list.onSelectedChange(this.key, !isSelected);
-            }
-        } else {
-            this.list.toggleSelected(this.key, event);
-        }
-    }
-
-    /**
-     * Mark the item as active and trigger the router if applicable
-     * Will desactivate the current activate item
-     * @parm andFocus If we should also focus the item
-     */
-    public activateItem(andFocus = false) {
-        this.list.activeItem = this.key;
-        this._triggerRouter();
-    }
-
     public openContextMenu() {
         this.list.openContextMenu(this);
-    }
-
-    /**
-     * Just trigger the router the item will not be marked as active
-     */
-    private _triggerRouter() {
-        if (this.link) {
-            if (this.forceBreadcrumb) {
-                this.breadcrumbService.navigate(this.link);
-            } else {
-                this.router.navigate(this.link);
-            }
-        }
     }
 }

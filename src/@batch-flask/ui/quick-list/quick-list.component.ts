@@ -7,6 +7,8 @@ import { AbstractListBase } from "../abstract-list";
 import { FocusSectionComponent } from "../focus-section";
 import { QuickListItemComponent } from "./quick-list-item";
 
+import { Router } from "@angular/router";
+import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import "./quick-list.scss";
 
 @Component({
@@ -19,11 +21,12 @@ export class QuickListComponent extends AbstractListBase implements AfterContent
     public quickListItems: QueryList<QuickListItemComponent>;
 
     constructor(
-        @Optional() focusSection: FocusSectionComponent,
         contextMenuService: ContextMenuService,
-        changeDetection: ChangeDetectorRef) {
-
-        super(contextMenuService, changeDetection, focusSection);
+        router: Router,
+        breadcrumbService: BreadcrumbService,
+        changeDetector: ChangeDetectorRef,
+        @Optional() focusSection?: FocusSectionComponent) {
+        super(contextMenuService, router, breadcrumbService, changeDetector, focusSection);
     }
 
     public ngAfterContentInit() {

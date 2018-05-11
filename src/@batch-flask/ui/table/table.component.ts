@@ -15,6 +15,8 @@ import { TableColumnManager } from "./table-column-manager";
 import { TableHeadComponent } from "./table-head";
 import { TableRowComponent } from "./table-row";
 import "./table.scss";
+import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
+import { Router } from "@angular/router";
 
 export interface TableConfig extends AbstractListBaseConfig {
     /**
@@ -76,8 +78,10 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     constructor(
         contextmenuService: ContextMenuService,
         changeDetection: ChangeDetectorRef,
+        router: Router,
+        breadcrumbService: BreadcrumbService,
         @Optional() focusSection?: FocusSectionComponent) {
-        super(contextmenuService, changeDetection, focusSection);
+        super(contextmenuService, router, breadcrumbService, changeDetection, focusSection);
         this.dimensions = this._dimensions.asObservable();
     }
 

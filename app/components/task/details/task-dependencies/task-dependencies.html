@@ -1,10 +1,10 @@
-<bl-table *ngIf="dependencies.size > 0">
+<bl-table *ngIf="dependencies.size > 0" [forceBreadcrumb]="true">
     <bl-thead>
         <bl-column>Task ID</bl-column>
         <bl-column>State</bl-column>
         <bl-column>Depends on</bl-column>
     </bl-thead>
-    <bl-row *ngFor="let dependency of dependencies;trackBy: trackByFn" [key]="dependency.id" [link]="['/jobs', jobId, 'tasks', dependency.id]" [forceBreadcrumb]="true">
+    <bl-row *ngFor="let dependency of dependencies;trackBy: trackByFn" [key]="dependency.id" [link]="['/jobs', jobId, 'tasks', dependency.id]">
         <bl-cell>{{dependency.id}}</bl-cell>
         <bl-cell>
             <span *ngIf="!dependency.loading">{{dependency.state}}</span>
