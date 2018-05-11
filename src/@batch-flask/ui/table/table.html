@@ -1,31 +1,3 @@
-<!-- <div class="table-head" [class.no-scroll]="!showScrollShadow"  *ngIf="head && head.show">
-  <ng-content select="bl-thead"></ng-content>
-</div>
-<div class="table-body">
-    <div class="scroll-shadow" *ngIf="showScrollShadow"></div>
-    <bl-virtual-scroll [items]="displayItems"  [childHeight]="28" (update)="updateViewPortItems($event)" (scroll)="handleScrollChange($event)">
-        <div class="bl-table-row" *ngFor="let item of viewPortItems, trackBy: trackItem"
-            (click)="item.handleClick($event)"
-            (contextmenu)="item.openContextMenu($event)"
-            [class.selected]="item.selected"
-            [class.conceal]="item.conceal"
-            [class.focused]="listFocused && item.key === (focusedItem | async)"
-            [class.drop-target]="item.key === dropTargetRowKey"
-            (dragenter)="dragEnter(item, $event)"
-            (dragleave)="dragLeave(item, $event)"
-            (drop)="handleDropOnRow(item, $event)">
-
-            <td class="checkbox-column" (click)="item.handleClick($event, false)" *ngIf="config.showCheckbox">
-                <mat-checkbox color="primary" (click)="$event.stopPropagation()" (change)="item.handleClick(null, false)" [checked]="item.selected"></mat-checkbox>
-            </td>
-            <ng-template [ngTemplateOutlet]="item.content"></ng-template>
-        </div>
-
-        <bl-virtual-scroll-tail [height]="120" *ngIf="status === LoadingStatus.Loading">
-            <bl-loading [status]="status"></bl-loading>
-        </bl-virtual-scroll-tail>
-    </bl-virtual-scroll>
-</div> -->
 <div class="table-head">
     <bl-thead [columns]="columnManager.columns"></bl-thead>
 </div>
@@ -39,9 +11,9 @@
             [selected]="selection.has(item.id)"
             [focused]="listFocused && item.id == (focusedItem | async)"
             [class.drop-target]="item.id === dropTargetRowKey"
-            (dragenter)="list.dragEnter(item, $event)"
-            (dragleave)="list.dragLeave(item, $event)"
-            (drop)="list.handleDropOnRow(item, $event)">
+            (dragenter)="dragEnter(item, $event)"
+            (dragleave)="dragLeave(item, $event)"
+            (drop)="handleDropOnRow(item, $event)">
         </bl-row-render>
 
         <bl-virtual-scroll-tail [height]="120" *ngIf="status === LoadingStatus.Loading">

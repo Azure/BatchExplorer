@@ -5,6 +5,8 @@ import {
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
+import { Router } from "@angular/router";
+import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import { DragUtils } from "@batch-flask/utils";
@@ -13,10 +15,8 @@ import { TableCellComponent } from "./table-cell";
 import { TableColumnComponent } from "./table-column";
 import { TableColumnManager } from "./table-column-manager";
 import { TableHeadComponent } from "./table-head";
-import { TableRowComponent } from "./table-row";
+
 import "./table.scss";
-import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
-import { Router } from "@angular/router";
 
 export interface TableConfig extends AbstractListBaseConfig {
     /**
@@ -131,24 +131,24 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         this.changeDetector.markForCheck();
     }
 
-    public dragEnter(item: TableRowComponent, event: DragEvent) {
+    public dragEnter(item, event: DragEvent) {
         event.stopPropagation();
         if (!this.config.droppable) { return; }
         this.isDraging++;
-        this.dropTargetRowKey = item.key;
+        this.dropTargetRowKey = item.id;
     }
 
-    public dragLeave(item: TableRowComponent, event: DragEvent) {
+    public dragLeave(item, event: DragEvent) {
         event.stopPropagation();
 
         if (!this.config.droppable) { return; }
         this.isDraging--;
-        if (item.key === this.dropTargetRowKey && this.isDraging <= 0) {
+        if (item.id === this.dropTargetRowKey && this.isDraging <= 0) {
             this.dropTargetRowKey = null;
         }
     }
 
-    public handleDropOnRow(item: TableRowComponent, event: DragEvent) {
+    public handleDropOnRow(item, event: DragEvent) {
         event.stopPropagation();
         event.preventDefault();
         if (!this.config.droppable) { return; }
@@ -156,7 +156,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         this.dropTargetRowKey = null;
         this.isDraging = 0;
 
-        this.dropOnRow.emit({ key: item.key, data: event.dataTransfer });
+        this.dropOnRow.emit({ key: item.id, data: event.dataTransfer });
     }
 
     public sort(column: TableColumnComponent) {
