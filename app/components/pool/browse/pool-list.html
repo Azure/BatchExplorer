@@ -21,13 +21,7 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quicklist"
-        [config]="tableConfig"
-        [status]="status"
-        [(activeItem)]="activeItem"
-        [(selection)]="selection"
-        [commands]="commands"
-        (scrollBottom)="onScrollToBottom()">
+    <!-- <bl-table>
         <bl-thead>
             <bl-column>ID</bl-column>
             <bl-column>State</bl-column>
@@ -48,6 +42,46 @@
             <bl-cell [value]="pool.targetDedicatedNodes">{{pool.dedicatedNodes}}</bl-cell>
             <bl-cell [value]="pool.targetLowPriorityNodes">{{pool.lowPriorityNodes}}</bl-cell>
         </bl-row>
+    </bl-table> -->
+
+    <bl-table *ngIf="!quicklist"
+        [config]="tableConfig"
+        [data]="pools"
+        [status]="status"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        [commands]="commands"
+        (scrollBottom)="onScrollToBottom()">
+
+        <bl-column name="id">
+            <bl-column-header>ID</bl-column-header>
+            <div *blCellDef="let pool">{{pool.id}}</div>
+        </bl-column>
+
+        <bl-column name="state">
+            <bl-column-header>State</bl-column-header>
+            <div *blCellDef="let pool">{{pool.state}}</div>
+        </bl-column>
+
+        <bl-column name="allocationState">
+            <bl-column-header>Allocation state</bl-column-header>
+            <div *blCellDef="let pool">{{pool.allocationState}}</div>
+        </bl-column>
+
+        <bl-column name="vmSize">
+            <bl-column-header>Node size</bl-column-header>
+            <div *blCellDef="let pool">{{pool.vmSize}}</div>
+        </bl-column>
+
+        <bl-column name="targetDedicatedNodes">
+            <bl-column-header>Dedicated <i class="fa fa-tv"></i></bl-column-header>
+            <div *blCellDef="let pool">{{pool.targetDedicatedNodes}}</div>
+        </bl-column>
+
+        <bl-column name="targetLowPriorityNodes">
+            <bl-column-header>Low pri <i class="fa fa-tv"></i></bl-column-header>
+            <div *blCellDef="let pool">{{pool.targetLowPriorityNodes}}</div>
+        </bl-column>
     </bl-table>
 </bl-focus-section>
 <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>

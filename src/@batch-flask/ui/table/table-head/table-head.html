@@ -1,2 +1,10 @@
 <div class="checkbox-column" *ngIf="table.config.showCheckbox"></div>
-<ng-content></ng-content>
+<div *ngFor="let column of columns;trackBy: trackColumn"
+    class="column"
+    [class.fixed-size]="column.width"
+    [style.flex-basis]="column.width + 'px'">
+
+    <ng-container *ngIf="column.header?.content">
+        <ng-template [ngTemplateOutlet]="column.header.content"></ng-template>
+    </ng-container>
+</div>

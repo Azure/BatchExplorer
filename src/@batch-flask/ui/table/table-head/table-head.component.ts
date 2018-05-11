@@ -1,5 +1,6 @@
 import {
-    AfterContentInit, Component, ContentChildren, Inject, Input, OnDestroy, QueryList, forwardRef,
+    AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
+    Component, ContentChildren, Inject, Input, OnDestroy, QueryList, forwardRef,
 } from "@angular/core";
 
 import { BehaviorSubject, Observable } from "rxjs";
@@ -9,12 +10,12 @@ import { TableComponent } from "../table.component";
 @Component({
     selector: "bl-thead",
     templateUrl: "table-head.html",
+    // changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeadComponent implements AfterContentInit, OnDestroy {
-    @Input() public show = true;
+export class TableHeadComponent implements AfterViewInit, OnDestroy {
+    @Input() public show: boolean; // TODO-TIM remove
 
-    @ContentChildren(TableColumnComponent)
-    public items: QueryList<TableColumnComponent>;
+    @Input() public columns: TableColumnComponent[];
 
     public dimensions: Observable<number[]>;
 
@@ -22,17 +23,27 @@ export class TableHeadComponent implements AfterContentInit, OnDestroy {
     private _dimensions = new BehaviorSubject([]);
 
     // tslint:disable-next-line:no-forward-ref
-    constructor(@Inject(forwardRef(() => TableComponent)) public table: TableComponent) {
+    constructor(
+        @Inject(forwardRef(() => TableComponent)) public table: TableComponent,
+        private changeDetector: ChangeDetectorRef) {
         this.dimensions = this._dimensions.asObservable();
     }
 
-    public ngAfterContentInit() {
-        this.items.changes.subscribe(() => {
-            this._updateColumnIndexMap();
-            this.updateDimensions();
+    public ngAfterViewInit() {
+        setTimeout(() => {
+            this.changeDetector.markForCheck();
         });
-        this._updateColumnIndexMap();
-        this.updateDimensions();
+        // this.items.changes.subscribe(() => {
+        //     this._updateColumnIndexMap();
+        //     this.updateDimensions();
+        // });
+        // this._updateColumnIndexMap();
+        // this.updateDimensions();
+    }
+
+    public update() {
+        // this.changeDetector.detectChanges();
+        // this.changeDetector.markForCheck();
     }
 
     public ngOnDestroy() {
@@ -47,20 +58,24 @@ export class TableHeadComponent implements AfterContentInit, OnDestroy {
     }
 
     public updateDimensions() {
-        if (!this.items) { return; }
-        const dimensions = [];
-        this.items.forEach((column, index) => {
-            dimensions[index] = column.width;
-        });
-        this._dimensions.next(dimensions);
+        // if (!this.items) { return; }
+        // const dimensions = [];
+        // this.items.forEach((column, index) => {
+        //     dimensions[index] = column.width;
+        // });
+        // this._dimensions.next(dimensions);
+    }
+
+    public trackColumn(index, column) {
+        return column.name;
     }
 
     private _updateColumnIndexMap() {
-        const map = {};
-        this.items.forEach((column, index) => {
-            map[column.id] = index;
-        });
-        this._columnIndexMap = map;
+        // const map = {};
+        // this.items.forEach((column, index) => {
+        //     map[column.id] = index;
+        // });
+        // this._columnIndexMap = map;
     }
 
 }

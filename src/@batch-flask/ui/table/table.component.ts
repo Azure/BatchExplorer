@@ -1,7 +1,8 @@
 import {
     AfterContentInit, ChangeDetectorRef, Component, ContentChild, ContentChildren,
-    EventEmitter, HostBinding, HostListener, Input, OnDestroy, Optional, Output, QueryList,
+    EventEmitter, HostBinding, HostListener, Input, OnChanges, OnDestroy, Optional, Output, QueryList, ViewChild,
 } from "@angular/core";
+import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
@@ -10,6 +11,7 @@ import { DragUtils, log } from "@batch-flask/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
 import { TableCellComponent } from "./table-cell";
 import { SortDirection, TableColumnComponent } from "./table-column";
+import { TableColumnManager } from "./table-column-manager";
 import { TableHeadComponent } from "./table-head";
 import { TableRowComponent } from "./table-row";
 import "./table.scss";
@@ -43,7 +45,7 @@ export interface DropEvent {
     selector: "bl-table",
     templateUrl: "table.html",
 })
-export class TableComponent extends AbstractListBase implements AfterContentInit, OnDestroy {
+export class TableComponent extends AbstractListBase implements AfterContentInit, OnChanges, OnDestroy {
     @Input() public set config(config: TableConfig) {
         this._config = { ...tableDefaultConfig, ...config };
     }
@@ -51,8 +53,10 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
 
     @Output() public dropOnRow = new EventEmitter<DropEvent>();
 
-    @ContentChild(TableHeadComponent) public head: TableHeadComponent;
-    @ContentChildren(TableRowComponent) public items: QueryList<TableRowComponent>;
+    @Input() public data: List<any> = List([]);
+
+    @ViewChild(TableHeadComponent) public head: TableHeadComponent;
+    @ContentChildren(TableColumnComponent) public columnComponents: QueryList<TableColumnComponent>;
     @HostBinding("class.drag-hover") public isDraging = 0;
     @HostBinding("class.activable") public get activable() {
         return this.config.activable;
@@ -60,6 +64,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     public dropTargetRowKey: string = null;
 
     public dimensions: Observable<number[]>;
+    public columnManager = new TableColumnManager();
 
     protected _config: TableConfig = tableDefaultConfig;
     private _sortingColumn: TableColumnComponent;
@@ -77,13 +82,23 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     }
 
     public ngAfterContentInit() {
-        super.ngAfterContentInit();
-        if (this.head) {
-            this.head.dimensions.subscribe((dimensions) => this._dimensions.next(dimensions));
-        }
+        this.columnManager.columns = this.columnComponents.map(x => x.getRef());
+        this.columnComponents.changes.subscribe((columns) => {
+            this.columnManager.columns = this.columnComponents.map(x => x.getRef());
+            this.changeDetector.markForCheck();
+        });
+        // TODO-TIM compute dimensions
+        // if (this.head) {
+        //     this.head.dimensions.subscribe((dimensions) => this._dimensions.next(dimensions));
+        // }
         this.changeDetector.markForCheck();
     }
 
+    public ngOnChanges(changes) {
+        if (changes.data) {
+            this.displayItems = this.data.toArray();
+        }
+    }
     public ngOnDestroy() {
         this._dimensions.complete();
     }
@@ -91,6 +106,16 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     @HostListener("dragover", ["$event"])
     public handleDragHover(event: DragEvent) {
         DragUtils.allowDrop(event, this.config.droppable);
+    }
+
+    public updateColumns() {
+        this.columnManager.columns = this.columnComponents.map(x => x.getRef());
+        this.changeDetector.markForCheck();
+    }
+
+    public updateColumn(ref) {
+        this.columnManager.updateColumn(ref);
+        this.changeDetector.markForCheck();
     }
 
     public dragEnter(item: TableRowComponent, event: DragEvent) {
@@ -127,7 +152,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         }
         column.isSorting = true;
         this._sortingColumn = column;
-        this.displayItems = this.updateDisplayedItems();
+        // this.displayItems = this.updateDisplayedItems();
     }
 
     public cellTrackByFn(index, cell: TableCellComponent) {
@@ -135,32 +160,32 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     }
 
     protected updateDisplayedItems() {
-        const column = this._sortingColumn;
-        const rows = this.items.toArray();
-        if (!column) {
-            this.displayItems = rows;
-            return;
-        }
-        const index = this.head.getColumnIndex(column);
-        if (index === -1) {
-            log.error("Error column is not in the table", column);
-            return;
-        }
-        const sortedRows = rows.sort((a: TableRowComponent, b: TableRowComponent) => {
-            const aValue = a.data[index];
-            const bValue = b.data[index];
-            if (aValue < bValue) {
-                return -1;
-            } else if (aValue > bValue) {
-                return 1;
-            }
-            return 0;
-        });
+        // const column = this._sortingColumn;
+        // const rows = this.items.toArray();
+        // if (!column) {
+        //     this.displayItems = rows;
+        //     return;
+        // }
+        // const index = this.head.getColumnIndex(column);
+        // if (index === -1) {
+        //     log.error("Error column is not in the table", column);
+        //     return;
+        // }
+        // const sortedRows = rows.sort((a: TableRowComponent, b: TableRowComponent) => {
+        //     const aValue = a.data[index];
+        //     const bValue = b.data[index];
+        //     if (aValue < bValue) {
+        //         return -1;
+        //     } else if (aValue > bValue) {
+        //         return 1;
+        //     }
+        //     return 0;
+        // });
 
-        const desc = column.sortDirection === SortDirection.Desc;
-        if (desc) {
-            return sortedRows.reverse();
-        }
-        return sortedRows;
+        // const desc = column.sortDirection === SortDirection.Desc;
+        // if (desc) {
+        //     return sortedRows.reverse();
+        // }
+        // return sortedRows;
     }
 }

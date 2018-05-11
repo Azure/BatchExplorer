@@ -1,5 +1,7 @@
 bl-focus-section {
-    // display: block;
+    display: block;
+    height: 100%; // TODO-TIM check this
+
     &:focus {
         outline: none;
     }

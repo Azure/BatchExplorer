@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, Optional, QueryList,
+    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, Optional, QueryList,
 } from "@angular/core";
 
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
@@ -14,9 +14,9 @@ import "./quick-list.scss";
     templateUrl: "quick-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class QuickListComponent extends AbstractListBase {
+export class QuickListComponent extends AbstractListBase implements AfterContentInit {
     @ContentChildren(QuickListItemComponent)
-    public items: QueryList<QuickListItemComponent>;
+    public quickListItems: QueryList<QuickListItemComponent>;
 
     constructor(
         @Optional() focusSection: FocusSectionComponent,
@@ -24,5 +24,12 @@ export class QuickListComponent extends AbstractListBase {
         changeDetection: ChangeDetectorRef) {
 
         super(contextMenuService, changeDetection, focusSection);
+    }
+
+    public ngAfterContentInit() {
+        this.quickListItems.changes.subscribe(() => {
+            this.items = this.quickListItems.toArray();
+        });
+        this.items = this.quickListItems.toArray();
     }
 }

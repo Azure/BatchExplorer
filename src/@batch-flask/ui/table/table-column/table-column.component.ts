@@ -1,8 +1,12 @@
 import {
-    ChangeDetectionStrategy, Component, HostBinding, HostListener, Inject, Input, OnChanges, forwardRef,
+    ChangeDetectorRef, Component, ContentChild,
+    HostBinding, HostListener, Inject, Input, OnChanges, TemplateRef, forwardRef,
 } from "@angular/core";
 
 import { SecureUtils } from "@batch-flask/utils";
+import { TableCellDefDirective } from "../table-cell";
+import { TableColumnHeaderComponent } from "../table-column-header";
+import { TableColumnRef } from "../table-column-manager";
 import { TableComponent } from "../table.component";
 
 export enum SortDirection {
@@ -12,20 +16,17 @@ export enum SortDirection {
 
 @Component({
     selector: "bl-column",
-    template: `
-        <ng-content></ng-content>
-        <span *ngIf="sortable" class="sort-icon">
-            <span *ngIf="sortDirection === SortDirection.Asc" class="fa fa-arrow-up"></span>
-            <span *ngIf="sortDirection === SortDirection.Desc" class="fa fa-arrow-down"></span>
-        </span>
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-
+    template: ``,
+    // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableColumnComponent implements OnChanges {
     public SortDirection = SortDirection;
 
     @Input() public defaultWidth: number = null;
+    @Input() public name: string;
+
+    @ContentChild(TableColumnHeaderComponent) public header: TableColumnHeaderComponent;
+    @ContentChild(TableCellDefDirective, { read: TemplateRef }) public cell: TemplateRef<any>;
 
     @HostBinding("class.sortable")
     @Input()
@@ -53,15 +54,34 @@ export class TableColumnComponent implements OnChanges {
         return this.width && `${this.width}px`;
     }
 
-    constructor(@Inject(forwardRef(() => TableComponent)) private _table: TableComponent) {
+    constructor(
+        @Inject(forwardRef(() => TableComponent)) private _table: TableComponent,
+        private changeDetector: ChangeDetectorRef) {
         this.id = SecureUtils.uuid();
+    }
+
+    public ngAfterContentInit() {
+        console.log("Content", this.name, this.cell);
     }
 
     public ngOnChanges(changes) {
         if (changes.defaultWidth) {
             this.width = this.defaultWidth;
-            this._table.head.updateDimensions();
+            // this._table.head.updateDimensions();
         }
+    }
+
+    public update() {
+        this._table.updateColumn(this.getRef());
+        this.changeDetector.markForCheck();
+    }
+
+    public getRef(): TableColumnRef {
+        return {
+            name: this.name,
+            width: this.width,
+            headerContent: this.header.content,
+        };
     }
 
     @HostListener("click")

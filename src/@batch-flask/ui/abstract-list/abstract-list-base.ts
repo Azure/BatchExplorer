@@ -39,19 +39,23 @@ export const abstractListDefaultConfig: AbstractListBaseConfig = {
  * 1. Extend class
  * 2. Refefine items with @ContentChildren and the class that inherit SelectableListItemBase
  */
-export class AbstractListBase extends SelectableList implements AfterContentInit, OnDestroy {
+export class AbstractListBase extends SelectableList implements OnDestroy {
     public LoadingStatus = LoadingStatus;
     @Output() public scrollBottom = new EventEmitter();
     @Input() public commands: EntityCommands<any>;
 
-    @ContentChildren(AbstractListItemBase) public items: QueryList<AbstractListItemBase>;
+    public set items(items: any[]) {
+        this._items = items;
+        this._updateDisplayItems();
+    }
+    public get items() {return this._items; }
 
     @ViewChild(VirtualScrollComponent) public virtualScrollComponent: VirtualScrollComponent;
 
     /**
      * List of items to display(Which might be different from the full items list because of sorting and other)
      */
-    public displayItems: AbstractListItemBase[] = [];
+    public displayItems: any[] = [];
 
     /**
      * List of items that are currently being displayed with the virtual scroll
@@ -65,11 +69,12 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
 
     @Input() public status: LoadingStatus;
 
-    @HostBinding("style.display")
-    public get showComponent() {
-        const hide = this.displayItems.length === 0 && this.status === LoadingStatus.Ready;
-        return hide ? "none" : "block";
-    }
+    // TODO-TIM handle this
+    // @HostBinding("style.display")
+    // public get showComponent() {
+    //     const hide = this.displayItems.length === 0 && this.status === LoadingStatus.Ready;
+    //     return hide ? "none" : "block";
+    // }
 
     public set selection(selection: ListSelection) {
         super.selection = selection;
@@ -84,6 +89,7 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
     protected _config: AbstractListBaseConfig = abstractListDefaultConfig;
 
     private _subs: Subscription[] = [];
+    private _items: any[] = [];
 
     constructor(
         private contextmenuService: ContextMenuService,
@@ -96,13 +102,6 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
             this._subs.push(focusSection.onFocus.subscribe(this.onFocus));
             this._subs.push(focusSection.onBlur.subscribe(this.onBlur));
         }
-    }
-
-    public ngAfterContentInit() {
-        this._subs.push(this.items.changes.subscribe(() => {
-            this._updateDisplayItems();
-        }));
-        this._updateDisplayItems();
     }
 
     public ngOnDestroy() {
@@ -208,7 +207,7 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
             if (this.activeItem) {
                 this.focusedItem.next(this.activeItem);
             } else {
-                const first = this.items.first;
+                const first = this.items.first();
                 this.focusedItem.next(first && first.key);
             }
             this.changeDetector.markForCheck();
@@ -289,7 +288,7 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
         if (this.computeDisplayedItems) {
             this.displayItems = this.computeDisplayedItems();
         } else {
-            this.displayItems = this.items.toArray();
+            this.displayItems = this.items;
         }
         this._updateSelectedItems();
     }

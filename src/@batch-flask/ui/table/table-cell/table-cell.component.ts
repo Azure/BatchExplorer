@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, Component, Input, TemplateRef, ViewChild,
+    ChangeDetectionStrategy, Component, Input, TemplateRef, ViewChild, Directive,
 } from "@angular/core";
 
 @Component({
@@ -16,4 +16,10 @@ export class TableCellComponent {
 
     @ViewChild(TemplateRef)
     public content: TemplateRef<any>;
+}
+
+@Directive({
+    selector: "[blCellDef]",
+})
+export class TableCellDefDirective {
 }
