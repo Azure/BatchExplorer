@@ -7,16 +7,16 @@
         (scrollBottom)="onScrollToBottom()">
 
         <bl-quick-list-item *ngFor="let pool of pools, trackBy: trackById" [link]="pool.routerLink" [key]="pool.id">
-            <bl-quick-list-item-status [status]="poolStatus(pool.original)" [tooltip]="poolStatusText(pool.original)">
+            <bl-quick-list-item-status [status]="poolStatus(pool)" [tooltip]="poolStatusText(pool)">
             </bl-quick-list-item-status>
             <div bl-quick-list-item-title>{{pool.id}}</div>
             <div bl-quick-list-item-field>
                 {{pool.state}}
-                <bl-tags [tags]="pool?.original.tags" [maxTags]="3"></bl-tags>
+                <bl-tags [tags]="pool?.tags" [maxTags]="3"></bl-tags>
             </div>
 
             <div bl-quick-list-item-preview>
-                <bl-pool-nodes-preview [pool]="pool.original"></bl-pool-nodes-preview>
+                <bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>
             </div>
         </bl-quick-list-item>
     </bl-quick-list>
