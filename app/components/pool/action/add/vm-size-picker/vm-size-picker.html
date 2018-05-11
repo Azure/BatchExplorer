@@ -7,17 +7,17 @@
                         <bl-thead>
                             <bl-column [sortable]="true">Name</bl-column>
                             <bl-column [sortable]="true">Price per node (hourly)</bl-column>
-                            <bl-column style="width: 60px;" [sortable]="true">Cores</bl-column>
-                            <bl-column style="width: 60px;" [sortable]="true">RAM</bl-column>
-                            <bl-column style="width: 70px;" [sortable]="true">OS Disk</bl-column>
+                            <bl-column [defaultWidth]="60" [sortable]="true">Cores</bl-column>
+                            <bl-column [defaultWidth]="60" [sortable]="true">RAM</bl-column>
+                            <bl-column [defaultWidth]="70" [sortable]="true">OS Disk</bl-column>
                             <bl-column [sortable]="true">Resource/Temp Disk</bl-column>
                         </bl-thead>
                         <bl-row *ngFor="let size of categories[category];trackBy: trackVmSize" [key]="size.vmSize.id">
                             <bl-cell [value]="size.vmSize.name">{{size.title}}</bl-cell>
                             <bl-cell [value]="size.price">{{size.prettyPrice}}</bl-cell>
-                            <bl-cell style="width: 60px;" [value]="size.vmSize.numberOfCores"></bl-cell>
-                            <bl-cell style="width: 60px;" [value]="size.vmSize.memoryInMB">{{size.prettyRAM}}</bl-cell>
-                            <bl-cell style="width: 70px;" [value]="size.vmSize.osDiskSizeInMB">{{size.prettyOSDiskSize}}</bl-cell>
+                            <bl-cell [value]="size.vmSize.numberOfCores"></bl-cell>
+                            <bl-cell [value]="size.vmSize.memoryInMB">{{size.prettyRAM}}</bl-cell>
+                            <bl-cell [value]="size.vmSize.osDiskSizeInMB">{{size.prettyOSDiskSize}}</bl-cell>
                             <bl-cell [value]="size.vmSize.resourceDiskSizeInMB">{{size.prettyResourceDiskSize}}</bl-cell>
                         </bl-row>
                     </bl-table>

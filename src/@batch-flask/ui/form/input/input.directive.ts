@@ -49,6 +49,7 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     public readonly controlType: string = "bl-input";
 
     @Input()
+    @HostBinding("disabled")
     public get disabled(): boolean {
         if (this.ngControl && this.ngControl.disabled !== null) {
             return this.ngControl.disabled;
@@ -63,9 +64,12 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     get id(): string { return this._id; }
     set id(value: string) { this._id = value || this._uid; }
 
-    @Input() public placeholder: string;
+    @Input()
+    @HostBinding("attr.aria-label")
+    @HostBinding("attr.placeholder")
+    public placeholder: string;
 
-    @Input() @FlagInput() public required = false;
+    @Input() @FlagInput() @HostBinding("required") public required = false;
 
     /** Input type of the element. */
     @Input()

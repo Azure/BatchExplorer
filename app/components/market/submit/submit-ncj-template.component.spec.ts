@@ -107,12 +107,14 @@ describe("SubmitNcjTemplateComponent", () => {
     let fileGroupServiceSpy;
 
     const blendFile = "myscene.blend";
-    const queryParameters = {
-        "auto-pool": "0",
-        "blendFile": blendFile,
-    };
+    let queryParameters;
 
     beforeEach(() => {
+        queryParameters = {
+            "auto-pool": "0",
+            "blendFile": blendFile,
+        };
+
         listProxy = new MockListView(Pool, {
             cacheKey: "id",
             items: [

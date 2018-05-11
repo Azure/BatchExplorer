@@ -1,6 +1,6 @@
 import * as moment from "moment";
 
-import { JobCreateDto } from "app/models/dtos";
+import { JobCreateDto, MetaDataDto } from "app/models/dtos";
 
 export interface JobConstraintsModel {
     maxWallClockTime: moment.Duration;
@@ -23,7 +23,7 @@ export interface CreateJobModel {
     poolInfo?: PoolInfoModel;
     onAllTasksComplete: string;
     onTaskFailure: string;
-    metadata: any;
+    metadata: MetaDataDto[];
     usesTaskDependencies: boolean;
 }
 
@@ -44,6 +44,7 @@ export function createJobFormToJsonData(formData: CreateJobModel): JobCreateDto 
         jobReleaseTask: formData.jobReleaseTask,
         onAllTasksComplete: formData.onAllTasksComplete,
         onTaskFailure: formData.onTaskFailure,
+        metadata: formData.metadata,
     };
     return new JobCreateDto(data);
 }

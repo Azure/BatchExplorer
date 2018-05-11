@@ -111,10 +111,12 @@ describe("EntityView", () => {
     }));
 
     describe("When it return a 404 error", () => {
-        let item: FakeModel = null;
-        let deleted: string = null;
+        let item: FakeModel;
+        let deleted: string;
 
         beforeEach(() => {
+            item = null;
+            deleted = null;
             const responses = [
                 Observable.fromPromise(Promise.resolve(data[0])),
                 Observable.throw(new ServerError({ status: 404, message: "404 not found" } as any)),

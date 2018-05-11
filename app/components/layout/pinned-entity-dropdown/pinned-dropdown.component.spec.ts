@@ -26,12 +26,13 @@ describe("PinnedDropDownComponent", () => {
     let component: PinnedDropDownComponent;
     let debugElement;
 
-    const favorites: BehaviorSubject<List<NavigableRecord>> = new BehaviorSubject(List([]));
+    let favorites: BehaviorSubject<List<NavigableRecord>>;
     let accountServiceSpy;
     let pinServiceSpy;
     let dropDownButton;
 
     beforeEach(() => {
+        favorites = new BehaviorSubject(List([]));
         pinServiceSpy = {
             favorites: favorites.asObservable(),
         };
