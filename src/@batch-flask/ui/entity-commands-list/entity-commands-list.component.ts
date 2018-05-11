@@ -9,6 +9,7 @@ import { EntityCommands } from "../entity-commands";
             <bl-button
                 [action]="execute(command)"
                 [title]="command.label(entity)"
+                [permission]="command.permission"
                 color="light">
                     <i [class]="command.icon(entity)"></i>
             </bl-button>

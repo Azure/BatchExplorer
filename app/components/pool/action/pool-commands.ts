@@ -1,7 +1,7 @@
 import { Injectable, Injector } from "@angular/core";
 import {
     DialogService, ElectronRemote, EntityCommand,
-    EntityCommands, SidebarManager,
+    EntityCommands, Permission, SidebarManager,
 } from "@batch-flask/ui";
 import { Observable } from "rxjs/Observable";
 
@@ -34,7 +34,6 @@ export class PoolCommands extends EntityCommands<Pool> {
             injector,
             "Pool",
         );
-
         this._buildCommands();
     }
 
@@ -54,6 +53,7 @@ export class PoolCommands extends EntityCommands<Pool> {
             multiple: false,
             confirm: false,
             notify: false,
+            permission: Permission.Write,
         });
 
         this.resize = this.simpleCommand({
@@ -63,6 +63,7 @@ export class PoolCommands extends EntityCommands<Pool> {
             multiple: false,
             confirm: false,
             notify: false,
+            permission: Permission.Write,
         });
 
         this.clone = this.simpleCommand({
@@ -72,6 +73,7 @@ export class PoolCommands extends EntityCommands<Pool> {
             multiple: false,
             confirm: false,
             notify: false,
+            permission: Permission.Write,
         });
 
         this.delete = this.simpleCommand<DeletePoolOutput>({
@@ -79,6 +81,7 @@ export class PoolCommands extends EntityCommands<Pool> {
             icon: "fa fa-trash-o",
             action: (pool: Pool, options) => this._deletePool(pool, options),
             confirm: (entities) => this._confirmDeletePool(entities),
+            permission: Permission.Write,
         });
 
         this.exportAsJson = this.simpleCommand({

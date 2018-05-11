@@ -3,6 +3,7 @@ import { ServerError } from "@batch-flask/core";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
+import { Permission } from "@batch-flask/ui/permission";
 import { exists, log, nil } from "@batch-flask/utils";
 import * as inflection from "inflection";
 import { Observable } from "rxjs";
@@ -23,6 +24,7 @@ export interface EntityCommandAttributes<TEntity extends ActionableEntity, TOpti
     multiple?: boolean;
     confirm?: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     notify?: EntityCommandNotify | boolean;
+    permission?: Permission;
 }
 
 /**
@@ -34,6 +36,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     public enabled: (entity: TEntity) => boolean;
     public confirm: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     public definition: EntityCommands<TEntity>;
+    public permission?: Permission;
 
     private _action: (entity: TEntity, option?: TOptions) => Observable<any> | void;
     private _label: ((entity: TEntity) => string) | string;
@@ -55,6 +58,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         this.multiple = exists(attributes.multiple) ? attributes.multiple : true;
         this.enabled = attributes.enabled || (() => true);
         this.confirm = exists(attributes.confirm) ? attributes.confirm : true;
+        this.permission = attributes.permission;
 
         if (attributes.notify === true || nil(attributes.notify)) {
             this.notify = EntityCommandNotify.Always;
