@@ -3,7 +3,7 @@
         <div class="pre-quicksearch">
             <ng-content select="[pre-quicksearch]"></ng-content>
         </div>
-        <input [formControl]="searchQuery" placeholder="{{filterPlaceholder}}" />
+        <input blInput [formControl]="searchQuery" [placeholder]="filterPlaceholder + ' (Startwith)'"/>
         <bl-clickable class="toggle-advanced-filter" [routerLink]="baseLink" [queryParams]="{filter: true}" *ngIf="enableAdvancedFilter">
             <i class="fa fa-filter"></i>
         </bl-clickable>

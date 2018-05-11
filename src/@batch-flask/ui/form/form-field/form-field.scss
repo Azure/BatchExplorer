@@ -33,6 +33,13 @@ bl-form-field {
         width: 100%;
         flex: 1;
         min-width: 0;
+
+        &::placeholder {
+            color: transparent;
+            // Remove the transition to prevent the placeholder
+            // from overlapping when the label comes back down.
+            transition: none;
+        }
     }
 
     textarea[blInput] {
