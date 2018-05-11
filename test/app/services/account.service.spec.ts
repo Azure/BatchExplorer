@@ -15,6 +15,7 @@ describe("AccountService", () => {
     let storageSpy;
 
     beforeEach(() => {
+        currentAccount = undefined;
         subscriptionServiceSpy = {
             cache: new DataCache<any>(),
         };

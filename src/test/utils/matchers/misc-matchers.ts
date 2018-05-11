@@ -38,7 +38,7 @@ function toHaveBeenCalledOnce() {
     return {
         compare: (actual: any, expected) => {
             const count = actual.calls.count();
-            const name = actual.and.identity();
+            const name = actual.and.identity;
             return {
                 pass: actual.calls.count() === 1,
                 message: `Expected to spy ${name} to have been called once but was called ${count} times`,
