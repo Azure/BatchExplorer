@@ -1,7 +1,7 @@
 import { Injectable, Injector } from "@angular/core";
 import {
     DialogService, ElectronRemote, EntityCommand,
-    EntityCommandType, EntityCommands, SidebarManager,
+    EntityCommands, SidebarManager,
 } from "@batch-flask/ui";
 import { Observable } from "rxjs/Observable";
 
@@ -14,7 +14,6 @@ import { PoolResizeDialogComponent } from "./resize";
 
 @Injectable()
 export class PoolCommands extends EntityCommands<Pool> {
-    public refresh: EntityCommand<Pool, void>;
     public addJob: EntityCommand<Pool, void>;
     public resize: EntityCommand<Pool, void>;
     public clone: EntityCommand<Pool, void>;
@@ -39,26 +38,18 @@ export class PoolCommands extends EntityCommands<Pool> {
         this._buildCommands();
     }
 
-    public get(jobId: string) {
-        return this.poolService.get(jobId);
+    public get(poolId: string) {
+        return this.poolService.get(poolId);
     }
 
-    public getFromCache(jobId: string) {
-        return this.poolService.getFromCache(jobId);
+    public getFromCache(poolId: string) {
+        return this.poolService.getFromCache(poolId);
     }
 
     private _buildCommands() {
-        this.refresh = this.simpleCommand({
-            label: "Refresh",
-            action: (pool) => this._refreshPool(),
-            multiple: false,
-            confirm: false,
-            notify: false,
-            type: EntityCommandType.Refresh,
-        });
-
         this.addJob = this.simpleCommand({
             label: "Add job",
+            icon: "fa fa-plus",
             action: (pool) => this._addJob(pool),
             multiple: false,
             confirm: false,
@@ -67,6 +58,7 @@ export class PoolCommands extends EntityCommands<Pool> {
 
         this.resize = this.simpleCommand({
             label: "Resize",
+            icon: "fa fa-arrows-v",
             action: (pool) => this._resizePool(pool),
             multiple: false,
             confirm: false,
@@ -75,6 +67,7 @@ export class PoolCommands extends EntityCommands<Pool> {
 
         this.clone = this.simpleCommand({
             label: "Clone",
+            icon: "fa fa-clone",
             action: (pool) => this._clonePool(pool),
             multiple: false,
             confirm: false,
@@ -83,12 +76,14 @@ export class PoolCommands extends EntityCommands<Pool> {
 
         this.delete = this.simpleCommand<DeletePoolOutput>({
             label: "Delete",
+            icon: "fa fa-trash-o",
             action: (pool: Pool, options) => this._deletePool(pool, options),
             confirm: (entities) => this._confirmDeletePool(entities),
         });
 
         this.exportAsJson = this.simpleCommand({
             label: "Export as JSON",
+            icon: "fa fa-code",
             action: (pool) => this._exportAsJSON(pool),
             multiple: false,
             confirm: false,
@@ -99,31 +94,22 @@ export class PoolCommands extends EntityCommands<Pool> {
             label: (pool: Pool) => {
                 return this.pinnedEntityService.isFavorite(pool) ? "Unpin favorite" : "Pin to favorites";
             },
+            icon: (pool: Pool) => {
+                return this.pinnedEntityService.isFavorite(pool) ? "fa fa-chain-broken" : "fa fa-link";
+            },
             action: (pool: Pool) => this._pinPool(pool),
             confirm: false,
             multiple: false,
         });
-        const commonCommands = [
+
+        this.commands = [
             this.addJob,
             this.resize,
             this.clone,
             this.delete,
             this.exportAsJson,
-        ];
-
-        this.commands = [
-            ...commonCommands,
             this.pin,
         ];
-
-        this.buttonCommands = [
-            this.refresh,
-            ...commonCommands,
-        ];
-    }
-
-    private _refreshPool() {
-        return this.poolService.view().refresh();
     }
 
     private _addJob(pool: Pool) {

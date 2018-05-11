@@ -87,29 +87,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public refreshPool() {
-        return this.data.refresh();
-    }
-
-    @autobind()
-    public addJob() {
-        const createRef = this.sidebarManager.open("add-job", JobCreateBasicDialogComponent);
-        createRef.component.preSelectPool(this.pool.id);
-    }
-
-    @autobind()
-    public deletePool() {
-        this.commands.delete.execute(this.pool);
-    }
-
-    @autobind()
-    public clonePool() {
-        const ref = this.sidebarManager.open(`add-pool-${this.poolId}`, PoolCreateBasicDialogComponent);
-        ref.component.setValueFromEntity(this.pool);
-    }
-
-    @autobind()
-    public resizePool() {
-        this.commands.resize.execute(this.pool);
+        return this.commands.get(this.poolId);
     }
 
     @autobind()
@@ -117,20 +95,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         return this.poolService.updateTags(this.pool, newTags).flatMap(() => {
             return this.data.refresh();
         });
-    }
-
-    @autobind()
-    public exportAsJSON() {
-        const dialog = this.remote.dialog;
-        const localPath = dialog.showSaveDialog({
-            buttonLabel: "Export",
-            defaultPath: `${this.pool.id}.json`,
-        });
-
-        if (localPath) {
-            const content = JSON.stringify(this.pool._original, null, 2);
-            return Observable.fromPromise(this.fs.saveFile(localPath, content));
-        }
     }
 
     @autobind()

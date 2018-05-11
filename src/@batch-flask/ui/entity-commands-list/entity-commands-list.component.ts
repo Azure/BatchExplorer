@@ -1,29 +1,31 @@
 import { Component, Input } from "@angular/core";
-import { EntityCommand, EntityCommandType, EntityCommands } from "../entity-commands";
+import { EntityCommands } from "../entity-commands";
 
+// tslint:disable:trackBy-function
 @Component({
     selector: "bl-commands-list",
     template: `
-        <ng-container *ngFor="let command of buttonCommands;trackBy: trackByCommands">
-            <ng-container [ngSwitch]="command.type">
-                <ng-container *ngSwitchCase="EntityCommandType.Refresh">
-                    <bl-refresh-btn [refresh]="command.execute(entity)"></bl-refresh-btn>
-                </ng-container>
-            </ng-container>
+        <ng-container *ngFor="let command of buttonCommands">
+            <bl-button
+                [action]="execute(command)"
+                [title]="command.label(entity)"
+                color="light">
+                    <i [class]="command.icon(entity)"></i>
+            </bl-button>
         </ng-container>
     `,
 })
 export class EntityCommandsListComponent {
-    public EntityCommandType = EntityCommandType;
-
     @Input() public commands: EntityCommands<any>;
     @Input() public entity: any;
 
     public get buttonCommands() {
-        return this.commands && this.commands.buttonCommands;
+        return this.commands && this.commands.commands;
     }
 
-    public trackByCommands(index, command: EntityCommand<any, any>) {
-        return command.type;
+    public execute(command) {
+        return () => {
+            return command.performAction(this.entity);
+        };
     }
 }

@@ -12,11 +12,7 @@
             <bl-tags summaryTags [tags]="pool.tags" [editable]="true" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refreshPool"></bl-refresh-btn>
-                <bl-add-button title="Add job" [action]="addJob"></bl-add-button>
-                <bl-resize-button [action]="resizePool"></bl-resize-button>
-                <bl-clone-button [action]="clonePool"></bl-clone-button>
-                <bl-delete-button [action]="deletePool"></bl-delete-button>
-                <bl-button [action]="exportAsJSON" color="light" title="Export as JSON"><i class="fa fa-code"></i></bl-button>
+                <bl-commands-list [commands]="commands" [entity]="pool"></bl-commands-list>
             </bl-button-group>
             <div summaryRightContent>
                 <bl-pool-nodes-preview [pool]="pool" size="large"></bl-pool-nodes-preview>
@@ -26,7 +22,7 @@
                 </div>
             </div>
         </bl-summary-card>
-        <bl-commands-list [commands]="commands" [entity]="pool"></bl-commands-list>
+
         <bl-pool-error-display [pool]="pool"></bl-pool-error-display>
         <bl-card class="details">
             <bl-tab-group>

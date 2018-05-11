@@ -15,29 +15,14 @@ export enum EntityCommandNotify {
     OnFailure,
 }
 
-export enum EntityCommandType {
-    Refresh,
-    Add,
-    AddTask,
-    Resize,
-    Clone,
-    Delete,
-    Edit,
-    Terminate,
-    Enable,
-    Disable,
-    Other,
-}
-
 export interface EntityCommandAttributes<TEntity extends ActionableEntity, TOptions = void> {
     label: ((entity: TEntity) => string) | string;
+    icon?: ((entity: TEntity) => string) | string;
     action: (entity: TEntity, option?: TOptions) => Observable<any> | void;
     enabled?: (entity: TEntity) => boolean;
     multiple?: boolean;
     confirm?: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     notify?: EntityCommandNotify | boolean;
-    type?: EntityCommandType;
-    icon?: string;
 }
 
 /**
@@ -49,11 +34,10 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     public enabled: (entity: TEntity) => boolean;
     public confirm: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     public definition: EntityCommands<TEntity>;
-    public type: EntityCommandType;
-    public icon: string;
 
     private _action: (entity: TEntity, option?: TOptions) => Observable<any> | void;
     private _label: ((entity: TEntity) => string) | string;
+    private _icon: ((entity: TEntity) => string) | string;
 
     // Services
     private dialogService: DialogService;
@@ -66,12 +50,11 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         this.backgroundTaskService = injector.get(BackgroundTaskService);
 
         this._label = attributes.label;
+        this._icon = attributes.icon;
         this._action = attributes.action;
         this.multiple = exists(attributes.multiple) ? attributes.multiple : true;
         this.enabled = attributes.enabled || (() => true);
         this.confirm = exists(attributes.confirm) ? attributes.confirm : true;
-        this.type = attributes.type;
-        this.icon = attributes.icon;
 
         if (attributes.notify === true || nil(attributes.notify)) {
             this.notify = EntityCommandNotify.Always;
@@ -84,6 +67,10 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
 
     public label(entity: TEntity) {
         return this._label instanceof Function ? this._label(entity) : this._label;
+    }
+
+    public icon(entity: TEntity) {
+        return this._icon instanceof Function ? this._icon(entity) : this._icon;
     }
 
     public performAction(entity: TEntity, option: TOptions): Observable<any> {

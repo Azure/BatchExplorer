@@ -23,7 +23,6 @@ export abstract class EntityCommands<TEntity extends ActionableEntity, TParams =
     public params: TParams = {} as TParams;
 
     public commands: Array<EntityCommand<TEntity, any>>;
-    public buttonCommands: Array<EntityCommand<TEntity, any>>;
 
     constructor(private injector: Injector, public typeName: string) {
         this.notificationService = injector.get(NotificationService);
