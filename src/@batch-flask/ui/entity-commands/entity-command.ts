@@ -25,6 +25,7 @@ export interface EntityCommandAttributes<TEntity extends ActionableEntity, TOpti
     confirm?: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     notify?: EntityCommandNotify | boolean;
     permission?: Permission;
+    tooltipPosition?: string;
 }
 
 /**
@@ -36,7 +37,8 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     public enabled: (entity: TEntity) => boolean;
     public confirm: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     public definition: EntityCommands<TEntity>;
-    public permission?: Permission;
+    public permission: Permission;
+    public tooltipPosition: string;
 
     private _action: (entity: TEntity, option?: TOptions) => Observable<any> | void;
     private _label: ((entity: TEntity) => string) | string;
@@ -53,12 +55,13 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         this.backgroundTaskService = injector.get(BackgroundTaskService);
 
         this._label = attributes.label;
-        this._icon = attributes.icon;
+        this._icon = attributes.icon || "fa fa-question";
         this._action = attributes.action;
         this.multiple = exists(attributes.multiple) ? attributes.multiple : true;
         this.enabled = attributes.enabled || (() => true);
         this.confirm = exists(attributes.confirm) ? attributes.confirm : true;
         this.permission = attributes.permission;
+        this.tooltipPosition = attributes.tooltipPosition;
 
         if (attributes.notify === true || nil(attributes.notify)) {
             this.notify = EntityCommandNotify.Always;

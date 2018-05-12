@@ -1,18 +1,15 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { ElectronRemote } from "@batch-flask/ui";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
-import { BatchLabsService, FileSystemService, PoolParams, PoolService, PricingService } from "app/services";
+import { BatchLabsService, PoolParams, PoolService, PricingService } from "app/services";
 import { EntityView } from "app/services/core/data";
 import { NumberUtils } from "app/utils";
-import { PoolCommands, PoolCreateBasicDialogComponent } from "../action";
+import { PoolCommands } from "../action";
 
 import "./pool-details.scss";
 
@@ -49,9 +46,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private batchLabs: BatchLabsService,
-        private fs: FileSystemService,
-        private sidebarManager: SidebarManager,
-        private remote: ElectronRemote,
         private pricingService: PricingService,
         private poolService: PoolService) {
 
