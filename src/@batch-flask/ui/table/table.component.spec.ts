@@ -139,4 +139,16 @@ describe("TableComponent", () => {
             expect(rows[3].textContent).toContain("Size A");
         });
     });
+
+    fit("raise error if column doesn't have a name", () => {
+
+    });
+
+    fit("raise error if column doesn't have a UNIQUE name", () => {
+
+    });
+
+    fit("raise error if no cell definition", () => {
+
+    });
 });

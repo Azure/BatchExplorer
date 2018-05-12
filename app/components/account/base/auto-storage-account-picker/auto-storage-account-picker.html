@@ -1,49 +1,45 @@
 <bl-loading [status]="loadingStatus">
     <div *ngIf="loadingStatus">
-        <bl-table [activeItem]="pickedStorageAccountId?.toLowerCase()" (activeItemChange)="pickStorageAccount($event)">
-            <bl-row [key]="noSelectionKey">
-                <bl-cell>No storage account</bl-cell>
-                <bl-cell></bl-cell>
-                <bl-cell></bl-cell>
-            </bl-row>
-        </bl-table>
+        <bl-button type="wide" (do)="pickStorageAccount(noSelectionKey)">
+            Clear
+        </bl-button>
         <h3>Storage accounts in the same region as your batch account({{account.location}})</h3>
-        <bl-table *ngIf="preferedAccounts.size > 0" [activeItem]="pickedStorageAccountId?.toLowerCase()" (activeItemChange)="pickStorageAccount($event)"
-            class="prefered">
-            <bl-thead>
-                <bl-column [sortable]="true">Name</bl-column>
-                <bl-column [sortable]="true">Region</bl-column>
-                <bl-column [sortable]="false"></bl-column>
-            </bl-thead>
-            <bl-row *ngFor="let account of preferedAccounts; trackBy: trackByFn" [key]="account.id.toLowerCase()">
-                <bl-cell [value]="account.name"></bl-cell>
-                <bl-cell [value]="account.location"></bl-cell>
-                <bl-cell [value]="account.isClassic">{{account.isClassic ? "Classic" : ""}}</bl-cell>
-            </bl-row>
-        </bl-table>
+        <ng-template *ngIf="preferedAccounts.size > 0"
+            [ngTemplateOutlet]="accountTableTemplate"
+            [ngTemplateOutletContext]="{$implicit: preferedAccounts}"></ng-template>
         <div *ngIf="preferedAccounts.size === 0" class="no-prefered-account">
             You have no accounts in the same region!
         </div>
 
         <div *ngIf="otherAccounts.size > 0">
             <h3>Other regions</h3>
-            <bl-table [activeItem]="pickedStorageAccountId?.toLowerCase()" (activeItemChange)="pickStorageAccount($event)" class="others">
-                <bl-thead>
-                    <bl-column [sortable]="true">Name</bl-column>
-                    <bl-column [sortable]="true">Region</bl-column>
-                    <bl-column [sortable]="false"></bl-column>
-
-                </bl-thead>
-                <bl-row *ngFor="let account of otherAccounts; trackBy: trackByFn" [key]="account.id.toLowerCase()">
-                    <bl-cell [value]="account.name"></bl-cell>
-                    <bl-cell [value]="account.location"></bl-cell>
-                    <bl-cell [value]="account.isClassic">
-                        <span class="classic-warning" matTooltip="Classic storage accounts are not compatible with data and gallery" *ngIf="account.isClassic">
-                            <span class="fa fa-warning"></span> Classic
-                        </span>
-                    </bl-cell>
-                </bl-row>
-            </bl-table>
+            <ng-template *ngIf="otherAccounts.size > 0"
+                    [ngTemplateOutlet]="accountTableTemplate"
+                    [ngTemplateOutletContext]="{$implicit: otherAccounts}"></ng-template>
         </div>
     </div>
 </bl-loading>
+
+
+<ng-template #accountTableTemplate let-accounts>
+    <bl-table
+            [data]="accounts"
+            [activeItem]="pickedStorageAccountId?.toLowerCase()"
+            (activeItemChange)="pickStorageAccount($event)">
+            <bl-column [sortable]="true" name="name">
+                <bl-column-header>Name</bl-column-header>
+                <div *blCellDef="let account">{{account.name}}</div>
+            </bl-column>
+            <bl-column [sortable]="true" name="location">
+                <bl-column-header>Location</bl-column-header>
+                <div *blCellDef="let account">{{account.location}}</div>
+            </bl-column>
+            <bl-column [sortable]="false" name="isClassic">
+                <div *blCellDef="let account">
+                    <span class="classic-warning" matTooltip="Classic storage accounts are not compatible with data and gallery" *ngIf="account.isClassic">
+                        <span class="fa fa-warning"></span> Classic
+                    </span>
+                </div>
+            </bl-column>
+    </bl-table>
+</ng-template>
