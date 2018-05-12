@@ -9,17 +9,7 @@
             <bl-tags summaryTags [tags]="job.tags" [editable]="job.editable" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                <bl-button [action]="editJob" color="light" title="Edit job" [disabled]="job.state === JobState.completed">
-                    <i class="fa fa-edit"></i>
-                </bl-button>
-                <bl-add-task-button title="Add task" [job]="job" [action]="addTask"></bl-add-task-button>
-                <bl-terminate-button [entity]="job" [action]="terminateJob"></bl-terminate-button>
-                <bl-delete-button [action]="deleteJob" [enabled]="job.state !== JobState.deleting && job.state !== JobState.terminating"></bl-delete-button>
-                <bl-disable-button [job]="job" [action]="disableJob"></bl-disable-button>
-                <bl-enable-button [job]="job" [action]="enableJob"></bl-enable-button>
-                <bl-clone-button [action]="cloneJob"></bl-clone-button>
-                <bl-button [action]="createJobSchedule" color="light" title="Create job schedule for this job"><i class="fa fa-calendar"></i></bl-button>
-                <bl-button [action]="exportAsJSON" color="light" title="Export as JSON"><i class="fa fa-code"></i></bl-button>
+                <bl-commands-list [commands]="jobCommands" [entity]="job"></bl-commands-list>
             </bl-button-group>
             <div summaryTile>
                 <div class="job-graphs-link" [routerLink]="['/jobs', job.id, 'graphs']">

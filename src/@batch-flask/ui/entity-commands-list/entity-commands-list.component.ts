@@ -9,9 +9,11 @@ import { EntityCommands } from "../entity-commands";
             <bl-button
                 [action]="execute(command)"
                 [title]="command.label(entity)"
+                [disabled]="command.disabled(entity)"
                 [permission]="command.permission"
+                [tooltipPosition]="command.tooltipPosition"
                 color="light">
-                    <i [class]="command.icon(entity)"></i>
+                <i [class]="command.icon(entity)"></i>
             </bl-button>
         </ng-container>
     `,

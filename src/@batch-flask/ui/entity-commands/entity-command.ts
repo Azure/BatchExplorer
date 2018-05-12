@@ -61,7 +61,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         this.enabled = attributes.enabled || (() => true);
         this.confirm = exists(attributes.confirm) ? attributes.confirm : true;
         this.permission = attributes.permission;
-        this.tooltipPosition = attributes.tooltipPosition;
+        this.tooltipPosition = attributes.tooltipPosition || "above";
 
         if (attributes.notify === true || nil(attributes.notify)) {
             this.notify = EntityCommandNotify.Always;
@@ -78,6 +78,14 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
 
     public icon(entity: TEntity) {
         return this._icon instanceof Function ? this._icon(entity) : this._icon;
+    }
+
+    public disabled(entity: TEntity) {
+        return this.enabled instanceof Function ? !this.enabled(entity) : !this.enabled;
+    }
+
+    public setIcon(icon: ((entity: TEntity) => string) | string) {
+        this._icon = icon;
     }
 
     public performAction(entity: TEntity, option: TOptions): Observable<any> {
