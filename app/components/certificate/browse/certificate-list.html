@@ -19,15 +19,15 @@
         [commands]="commands">
 
         <bl-column name="algorithm">
-            <bl-column-header>Thumbprint algorithm</bl-column-header>
+            <bl-header-cell-def>Thumbprint algorithm</bl-header-cell-def>
             <div *blCellDef="let certificate">{{certificate.thumbprintAlgorithm}}</div>
         </bl-column>
         <bl-column name="thumbprint">
-            <bl-column-header>Thumbprint</bl-column-header>
+            <bl-header-cell-def>Thumbprint</bl-header-cell-def>
             <div *blCellDef="let certificate">{{certificate.thumbprint}}</div>
         </bl-column>
         <bl-column name="state">
-            <bl-column-header>State</bl-column-header>
+            <bl-header-cell-def>State</bl-header-cell-def>
             <div *blCellDef="let certificate">{{certificate.state}}</div>
         </bl-column>
         <bl-thead>

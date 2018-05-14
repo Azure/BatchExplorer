@@ -1,24 +1,24 @@
 import {
-    ChangeDetectorRef, Component, ContentChild,
-    HostBinding, HostListener, Inject, Input, OnChanges, TemplateRef, forwardRef,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild,
+    HostBinding, Inject, Input, OnChanges, TemplateRef, forwardRef,
 } from "@angular/core";
 
 import { SecureUtils } from "@batch-flask/utils";
 import { TableCellDefDirective } from "../table-cell";
-import { TableColumnHeaderComponent } from "../table-column-header";
 import { TableColumnRef } from "../table-column-manager";
+import { TableHeaderCellDefComponent } from "../table-header-cell-def";
 import { TableComponent } from "../table.component";
 
 @Component({
     selector: "bl-column",
     template: ``,
-    // changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableColumnComponent implements OnChanges {
     @Input() public defaultWidth: number = null;
     @Input() public name: string;
 
-    @ContentChild(TableColumnHeaderComponent) public header: TableColumnHeaderComponent;
+    @ContentChild(TableHeaderCellDefComponent) public header: TableHeaderCellDefComponent;
     @ContentChild(TableCellDefDirective, { read: TemplateRef }) public cell: TemplateRef<any>;
 
     @HostBinding("class.sortable")

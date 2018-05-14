@@ -20,32 +20,32 @@
         (scrollBottom)="scrollBottom.emit()">
 
         <bl-column name="id" [defaultWidth]="200">
-            <bl-column-header>ID</bl-column-header>
+            <bl-header-cell-def>ID</bl-header-cell-def>
             <div *blCellDef="let task">{{task.id}}</div>
         </bl-column>
 
         <bl-column name="state">
-            <bl-column-header>State</bl-column-header>
+            <bl-header-cell-def>State</bl-header-cell-def>
             <div *blCellDef="let task">{{task.state}}</div>
         </bl-column>
 
         <bl-column name="creationTime">
-            <bl-column-header>Created</bl-column-header>
+            <bl-header-cell-def>Created</bl-header-cell-def>
             <div *blCellDef="let task">{{formatDate(task.creationTime)}}</div>
         </bl-column>
 
         <bl-column name="startTime">
-            <bl-column-header>Started</bl-column-header>
+            <bl-header-cell-def>Started</bl-header-cell-def>
             <div *blCellDef="let task">{{formatDate(task.executionInfo?.startTime)}}</div>
         </bl-column>
 
         <bl-column name="endTime">
-            <bl-column-header>Completed</bl-column-header>
+            <bl-header-cell-def>Completed</bl-header-cell-def>
             <div *blCellDef="let task">{{formatDate(task.executionInfo?.endTime)}}</div>
         </bl-column>
 
         <bl-column name="exitCode">
-            <bl-column-header>Exit code</bl-column-header>
+            <bl-header-cell-def>Exit code</bl-header-cell-def>
             <div *blCellDef="let task">{{task.executionInfo?.exitCode}}</div>
         </bl-column>
     </bl-table>

@@ -1,5 +1,6 @@
 import {
-    AfterViewInit, ChangeDetectorRef, Component, Inject, OnDestroy, TemplateRef, ViewChild, forwardRef,
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject,
+    OnDestroy, TemplateRef, ViewChild, forwardRef,
 } from "@angular/core";
 
 import { Subscription } from "rxjs";
@@ -8,11 +9,11 @@ import { SortDirection } from "../table-column-manager";
 import { TableComponent } from "../table.component";
 
 @Component({
-    selector: "bl-column-header",
-    templateUrl: "table-column-header.html",
-    // changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: "bl-header-cell-def",
+    templateUrl: "table-header-cell-def.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableColumnHeaderComponent implements AfterViewInit, OnDestroy {
+export class TableHeaderCellDefComponent implements AfterViewInit, OnDestroy {
     public SortDirection = SortDirection;
 
     @ViewChild(TemplateRef) public content: TemplateRef<any>;

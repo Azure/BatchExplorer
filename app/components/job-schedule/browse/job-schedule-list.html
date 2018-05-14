@@ -20,17 +20,17 @@
         [commands]="commands">
 
         <bl-column name="id">
-            <bl-column-header>ID</bl-column-header>
+            <bl-header-cell-def>ID</bl-header-cell-def>
             <div *blCellDef="let jobSchedule">{{jobSchedule.id}}</div>
         </bl-column>
 
         <bl-column name="state">
-            <bl-column-header>State</bl-column-header>
+            <bl-header-cell-def>State</bl-header-cell-def>
             <div *blCellDef="let jobSchedule">{{jobSchedule.state}}</div>
         </bl-column>
 
         <bl-column name="pool">
-            <bl-column-header>Pool</bl-column-header>
+            <bl-header-cell-def>Pool</bl-header-cell-def>
             <div *blCellDef="let jobSchedule">{{jobSchedule.poolInfo?.poolId}}</div>
         </bl-column>
     </bl-table>

@@ -27,11 +27,11 @@
         [activeItem]="pickedStorageAccountId"
         (activeItemChange)="pickStorageAccount($event)">
         <bl-column [sortable]="true" name="name">
-            <bl-column-header>Name</bl-column-header>
+            <bl-header-cell-def>Name</bl-header-cell-def>
             <div *blCellDef="let account">{{account.name}}</div>
         </bl-column>
         <bl-column [sortable]="true" name="location">
-            <bl-column-header>Location</bl-column-header>
+            <bl-header-cell-def>Location</bl-header-cell-def>
             <div *blCellDef="let account">{{account.location}}</div>
         </bl-column>
         <bl-column [sortable]="false" name="isClassic">

@@ -22,22 +22,22 @@
         [commands]="commands">
 
         <bl-column name="name">
-            <bl-column-header>Name</bl-column-header>
+            <bl-header-cell-def>Name</bl-header-cell-def>
             <div *blCellDef="let container">{{container.name}}</div>
         </bl-column>
 
         <bl-column name="leaseState">
-            <bl-column-header>Lease state</bl-column-header>
+            <bl-header-cell-def>Lease state</bl-header-cell-def>
             <div *blCellDef="let container">{{container.lease?.state}}</div>
         </bl-column>
 
         <bl-column name="leaseStatus">
-            <bl-column-header>Lease status</bl-column-header>
+            <bl-header-cell-def>Lease status</bl-header-cell-def>
             <div *blCellDef="let container">{{container.lease?.status}}</div>
         </bl-column>
 
         <bl-column name="lastModified">
-            <bl-column-header>Last modified</bl-column-header>
+            <bl-header-cell-def>Last modified</bl-header-cell-def>
             <div *blCellDef="let container">{{container.lastModified}}</div>
         </bl-column>
     </bl-table>

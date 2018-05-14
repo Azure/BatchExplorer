@@ -9,8 +9,8 @@ import { LoadingModule } from "../loading";
 import { VirtualScrollModule } from "../virtual-scroll";
 import { TableCellComponent, TableCellDefDirective } from "./table-cell";
 import { TableColumnComponent } from "./table-column";
-import { TableColumnHeaderComponent } from "./table-column-header";
-import { TableHeadComponent } from "./table-head";
+import { TableHeadCellComponent, TableHeadComponent } from "./table-head";
+import { TableHeaderCellDefComponent } from "./table-header-cell-def";
 import { TableRowComponent } from "./table-row";
 import { TableRowRenderComponent } from "./table-row-render";
 import { TableComponent } from "./table.component";
@@ -19,10 +19,11 @@ const privateComponents = [TableRowRenderComponent];
 const publicComponents = [
     TableCellComponent,
     TableColumnComponent,
+    TableHeadCellComponent,
     TableComponent,
     TableHeadComponent,
     TableRowComponent,
-    TableColumnHeaderComponent,
+    TableHeaderCellDefComponent,
     TableCellDefDirective,
 ];
 
