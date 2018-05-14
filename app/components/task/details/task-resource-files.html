@@ -1,14 +1,16 @@
-<bl-table>
-    <bl-thead>
-        <bl-column>Blob source</bl-column>
-        <bl-column style="width: 400px">Local file path</bl-column>
-        <bl-column style="width: 100px">File mode</bl-column>
-    </bl-thead>
-    <bl-row *ngFor="let file of resourceFiles;trackBy: trackByFn" [key]="file.blobSource">
-        <bl-cell [value]="file.blobSource"></bl-cell>
-        <bl-cell [value]="file.filePath"></bl-cell>
-        <bl-cell [value]="file.fileMode"></bl-cell>
-    </bl-row>
+<bl-table [data]="resourceFiles">
+    <bl-column name="blobSource">
+        <bl-column-header>BlobSource</bl-column-header>
+        <div *blCellDef="let resourceFile">{{resourceFile.blobSource}}</div>
+    </bl-column>
+    <bl-column name="filePath" [defaultWidth]="400">
+        <bl-column-header>File path</bl-column-header>
+        <div *blCellDef="let resourceFile">{{resourceFile.filePath}}</div>
+    </bl-column>
+    <bl-column name="fileMode" [defaultWidth]="100">
+        <bl-column-header>File mode</bl-column-header>
+        <div *blCellDef="let resourceFile">{{resourceFile.fileMode}}</div>
+    </bl-column>
 </bl-table>
 <bl-no-item [itemCount]="resourceFiles.size">
     <i icon class="fa fa-file-text-o"></i>
