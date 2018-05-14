@@ -1,6 +1,9 @@
 import {
-    AfterViewInit, ChangeDetectionStrategy,
-    ChangeDetectorRef, Component, Inject, Input, forwardRef,
+    ChangeDetectionStrategy,
+    Component,
+    Inject,
+    Input,
+    forwardRef,
 } from "@angular/core";
 
 import { BehaviorSubject, Observable } from "rxjs";
@@ -13,9 +16,7 @@ import { TableComponent } from "../table.component";
     templateUrl: "table-head.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeadComponent implements AfterViewInit {
-    @Input() public show: boolean; // TODO-TIM remove
-
+export class TableHeadComponent {
     @Input() public columns: TableColumnRef[];
 
     public dimensions: Observable<number[]>;
@@ -23,17 +24,9 @@ export class TableHeadComponent implements AfterViewInit {
     private _columnIndexMap: StringMap<number>;
     private _dimensions = new BehaviorSubject([]);
 
-    // tslint:disable-next-line:no-forward-ref
     constructor(
-        @Inject(forwardRef(() => TableComponent)) public table: TableComponent,
-        private changeDetector: ChangeDetectorRef) {
+        @Inject(forwardRef(() => TableComponent)) public table: TableComponent) {
         this.dimensions = this._dimensions.asObservable();
-    }
-
-    public ngAfterViewInit() {
-    }
-
-    public update() {
     }
 
     public getColumnIndex(column: TableColumnComponent) {
@@ -41,15 +34,6 @@ export class TableHeadComponent implements AfterViewInit {
             return -1;
         }
         return this._columnIndexMap[column.id];
-    }
-
-    public updateDimensions() {
-        // if (!this.items) { return; }
-        // const dimensions = [];
-        // this.items.forEach((column, index) => {
-        //     dimensions[index] = column.width;
-        // });
-        // this._dimensions.next(dimensions);
     }
 
     public trackColumn(index, column) {

@@ -14,12 +14,12 @@
 <div class="content">
     <bl-table class="list" [data]="displayItems" [activeItem]="pickedTaskId" (activeItemChange)="pickTask($event)">
         <bl-column name="nodeId">
-            <bl-header-cell-def>Node ID</bl-header-cell-def>
+            <div *blHeadCellDef>Node ID</div>
             <div *blCellDef="let task">{{task.nodeId}}</div>
         </bl-column>
 
         <bl-column name="status" [defaultWidth]="50">
-            <bl-header-cell-def>Status</bl-header-cell-def>
+            <div *blHeadCellDef>Status</div>
             <div *blCellDef="let task">
                 <span *ngIf="task.status === 'running'" class="fa fa-spinner"></span>
                 <span *ngIf="task.status === 'success'" class="fa fa-check-circle"></span>
@@ -28,17 +28,17 @@
         </bl-column>
 
         <bl-column name="started" *ngIf="!pickedTask" [defaultWidth]="100">
-            <bl-header-cell-def>Started</bl-header-cell-def>
+            <div *blHeadCellDef>Started</div>
             <div *blCellDef="let task">{{task.startTime}}</div>
         </bl-column>
 
         <bl-column name="completed" *ngIf="!pickedTask" [defaultWidth]="100">
-            <bl-header-cell-def>Completed</bl-header-cell-def>
+            <div *blHeadCellDef>Completed</div>
             <div *blCellDef="let task">{{task.endTime}}</div>
         </bl-column>
 
         <bl-column name="exitCode" *ngIf="!pickedTask" [defaultWidth]="100">
-            <bl-header-cell-def>Exit code</bl-header-cell-def>
+            <div *blHeadCellDef>Exit code</div>
             <div *blCellDef="let task">{{task.exitCode}}</div>
         </bl-column>
     </bl-table>

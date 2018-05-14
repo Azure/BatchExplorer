@@ -22,22 +22,22 @@
         [commands]="commands">
 
         <bl-column name="id">
-            <bl-header-cell-def>ID</bl-header-cell-def>
+            <div *blHeadCellDef>ID</div>
             <div *blCellDef="let application">{{application.id}}</div>
         </bl-column>
 
         <bl-column name="packages">
-            <bl-header-cell-def>Packages</bl-header-cell-def>
+            <div *blHeadCellDef>Packages</div>
             <div *blCellDef="let application">{{application.packages?.size}}</div>
         </bl-column>
 
         <bl-column name="defaultVersion">
-            <bl-header-cell-def>Default version</bl-header-cell-def>
+            <div *blHeadCellDef>Default version</div>
             <div *blCellDef="let application">{{application.defaultVersion}}</div>
         </bl-column>
 
         <bl-column name="allowUpdates">
-            <bl-header-cell-def>Allow updates</bl-header-cell-def>
+            <div *blHeadCellDef>Allow updates</div>
             <div *blCellDef="let application">{{application.allowUpdates}}</div>
         </bl-column>
     </bl-table>

@@ -10,15 +10,15 @@
     </div>
     <bl-table [data]="apps" (activeItemChange)="pickApplication($event)" class="app-list apps-with-permission">
         <bl-column [sortable]="true" name="displayName">
-            <bl-header-cell-def>Application name</bl-header-cell-def>
+            <div *blHeadCellDef>Application name</div>
             <div *blCellDef="let app">{{app.displayName}}</div>
         </bl-column>
         <bl-column [sortable]="true" name="batchAccountPermission" [defaultWidth]="120">
-            <bl-header-cell-def>Batch acount</bl-header-cell-def>
+            <div *blHeadCellDef>Batch acount</div>
             <div *blCellDef="let app">{{getPermission(app.id)}}</div>
         </bl-column>
         <bl-column [sortable]="true" name="storageAccountPermission" [defaultWidth]="120">
-            <bl-header-cell-def>Storage account</bl-header-cell-def>
+            <div *blHeadCellDef>Storage account</div>
             <div *blCellDef="let app">{{getPermission(app.id)}}</div>
         </bl-column>
     </bl-table>

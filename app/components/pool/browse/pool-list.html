@@ -31,32 +31,32 @@
         (scrollBottom)="onScrollToBottom()">
 
         <bl-column name="id">
-            <bl-header-cell-def>ID</bl-header-cell-def>
+            <div *blHeadCellDef>ID</div>
             <div *blCellDef="let pool">{{pool.id}}</div>
         </bl-column>
 
         <bl-column name="state">
-            <bl-header-cell-def>State</bl-header-cell-def>
+            <div *blHeadCellDef>State</div>
             <div *blCellDef="let pool">{{pool.state}}</div>
         </bl-column>
 
         <bl-column name="allocationState">
-            <bl-header-cell-def>Allocation state</bl-header-cell-def>
+            <div *blHeadCellDef>Allocation state</div>
             <div *blCellDef="let pool">{{pool.allocationState}}</div>
         </bl-column>
 
         <bl-column name="vmSize">
-            <bl-header-cell-def>Node size</bl-header-cell-def>
+            <div *blHeadCellDef>Node size</div>
             <div *blCellDef="let pool">{{pool.vmSize}}</div>
         </bl-column>
 
         <bl-column name="targetDedicatedNodes">
-            <bl-header-cell-def>Dedicated <i class="fa fa-tv"></i></bl-header-cell-def>
+            <div *blHeadCellDef>Dedicated <i class="fa fa-tv"></i></div>
             <div *blCellDef="let pool">{{pool.targetDedicatedNodes}}</div>
         </bl-column>
 
         <bl-column name="targetLowPriorityNodes">
-            <bl-header-cell-def>Low pri <i class="fa fa-tv"></i></bl-header-cell-def>
+            <div *blHeadCellDef>Low pri <i class="fa fa-tv"></i></div>
             <div *blCellDef="let pool">{{pool.targetLowPriorityNodes}}</div>
         </bl-column>
     </bl-table>

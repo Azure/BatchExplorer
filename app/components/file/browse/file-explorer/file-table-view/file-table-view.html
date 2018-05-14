@@ -14,7 +14,7 @@
             <bl-focus-section>
                 <bl-table [data]="treeRows" (activeItemChange)="selectNode($event)" [config]="tableConfig" (dropOnRow)="handleDropOnRow($event)">
                     <bl-column name="name">
-                        <bl-header-cell-def>Name</bl-header-cell-def>
+                        <div *blHeadCellDef>Name</div>
                         <div *blCellDef="let treeNode">
                             <span class="icon">
                                 <i class="fa" [class.fa-folder]="treeNode.isDirectory" [class.fa-file]="!treeNode.isDirectory"></i>
@@ -23,11 +23,11 @@
                         </div>
                     </bl-column>
                     <bl-column name="contentLength" [defaultWidth]="80">
-                        <bl-header-cell-def>Size</bl-header-cell-def>
+                        <div *blHeadCellDef>Size</div>
                         <div *blCellDef="let treeNode">{{treeNode.isDirectory ? "" : prettyFileSize(treeNode.contentLength)}}</div>
                     </bl-column>
                     <bl-column name="lastModified" [defaultWidth]="155">
-                        <bl-header-cell-def>Last Modified</bl-header-cell-def>
+                        <div *blHeadCellDef>Last Modified</div>
                         <div *blCellDef="let treeNode">{{treeNode.isDirectory ? '' : prettyDate(treeNode.lastModified)}}</div>
                     </bl-column>
                 </bl-table>

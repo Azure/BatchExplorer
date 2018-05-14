@@ -5,32 +5,32 @@
                 <bl-focus-section>
                     <bl-table [data]="categories[category]" [activeItem]="pickedSize" (activeItemChange)="pickSize($event)" [config]="tableConfig">
                         <bl-column name="title" [sortable]="true">
-                            <bl-header-cell-def>Name</bl-header-cell-def>
+                            <div *blHeadCellDef>Name</div>
                             <div *blCellDef="let size">{{size.title}}</div>
                         </bl-column>
 
                         <bl-column name="price" [sortable]="true">
-                            <bl-header-cell-def>Price per node (hourly)</bl-header-cell-def>
+                            <div *blHeadCellDef>Price per node (hourly)</div>
                             <div *blCellDef="let size">{{size.prettyPrice}}</div>
                         </bl-column>
 
                         <bl-column name="cores" [sortable]="true" [defaultWidth]="60">
-                            <bl-header-cell-def>Cores</bl-header-cell-def>
+                            <div *blHeadCellDef>Cores</div>
                             <div *blCellDef="let size">{{size.vmSize.numberOfCores}}</div>
                         </bl-column>
 
                         <bl-column name="ram" [sortable]="true" [defaultWidth]="60">
-                            <bl-header-cell-def>Ram</bl-header-cell-def>
+                            <div *blHeadCellDef>Ram</div>
                             <div *blCellDef="let size">{{size.prettyRAM}}</div>
                         </bl-column>
 
                         <bl-column name="osdisk" [sortable]="true" [defaultWidth]="70">
-                            <bl-header-cell-def>OS Disk</bl-header-cell-def>
+                            <div *blHeadCellDef>OS Disk</div>
                             <div *blCellDef="let size">{{size.prettyOSDiskSize}}</div>
                         </bl-column>
 
                         <bl-column name="resourcedisk" [sortable]="true">
-                            <bl-header-cell-def>Resource/Temp disk</bl-header-cell-def>
+                            <div *blHeadCellDef>Resource/Temp disk</div>
                             <div *blCellDef="let size">{{size.prettyResourceDiskSize}}</div>
                         </bl-column>
                     </bl-table>

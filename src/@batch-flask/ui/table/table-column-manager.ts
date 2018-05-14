@@ -6,7 +6,7 @@ export interface TableColumnRef {
     width: number;
     sortable: boolean;
     isSorting: boolean;
-    headerContent: TemplateRef<any>;
+    headCellTemplate: TemplateRef<any>;
     cellTemplate: TemplateRef<any>;
 }
 

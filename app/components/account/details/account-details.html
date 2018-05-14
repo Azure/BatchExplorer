@@ -53,7 +53,7 @@
                                     <div *blCellDef="let job">{{job.id}}</div>
                                 </bl-column>
                                 <bl-column name="state" [defaultWidth]="75">
-                                    <bl-header-cell-def>State</bl-header-cell-def>
+                                    <div *blHeadCellDef>State</div>
                                     <div *blCellDef="let job">{{job.state}}</div>
                                 </bl-column>
                             </bl-table>
@@ -83,7 +83,7 @@
                                     <div *blCellDef="let pool">{{pool.id}}</div>
                                 </bl-column>
                                 <bl-column name="state" [defaultWidth]="30">
-                                    <bl-header-cell-def>State</bl-header-cell-def>
+                                    <div *blHeadCellDef>State</div>
                                     <div *blCellDef="let pool"><i aria-hidden="true" class="fa fa-{{pool.osIconName()}}"></i></div>
                                 </bl-column>
                                 <bl-column name="nodes" [defaultWidth]="60">

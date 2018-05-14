@@ -1,19 +1,19 @@
 <bl-focus-section *ngIf="displayedPackages.size > 0">
     <bl-table [(activeItem)]="activeItem" [(selection)]="selection" [data]="displayedPackages">
         <bl-column name="version">
-            <bl-header-cell-def>Version</bl-header-cell-def>
+            <div *blHeadCellDef>Version</div>
             <div *blCellDef="let package">{{package.version}}</div>
         </bl-column>
         <bl-column name="state">
-            <bl-header-cell-def>State</bl-header-cell-def>
+            <div *blHeadCellDef>State</div>
             <div *blCellDef="let package">{{package.version}}</div>
         </bl-column>
         <bl-column name="format">
-            <bl-header-cell-def>Format</bl-header-cell-def>
+            <div *blHeadCellDef>Format</div>
             <div *blCellDef="let package">{{package.format}}</div>
         </bl-column>
         <bl-column name="lastActivationTime">
-            <bl-header-cell-def>Last activation time</bl-header-cell-def>
+            <div *blHeadCellDef>Last activation time</div>
             <div *blCellDef="let package">{{formatDate(package.lastActivationTime)}}</div>
         </bl-column>
     </bl-table>

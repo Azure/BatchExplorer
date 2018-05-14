@@ -1,4 +1,4 @@
-<ng-template [ngTemplateOutlet]="column.headerContent"></ng-template>
+<ng-template [ngTemplateOutlet]="column.headCellTemplate"></ng-template>
 <span *ngIf="column.sortable" class="sort-icon">
     <span *ngIf="sortDirection === SortDirection.Asc" class="fa fa-arrow-up"></span>
     <span *ngIf="sortDirection === SortDirection.Desc" class="fa fa-arrow-down"></span>

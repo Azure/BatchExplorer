@@ -7,22 +7,23 @@ import { MaterialModule } from "@batch-flask/core";
 import { FocusSectionModule } from "../focus-section";
 import { LoadingModule } from "../loading";
 import { VirtualScrollModule } from "../virtual-scroll";
-import { TableCellComponent, TableCellDefDirective } from "./table-cell";
+import { TableCellDefDirective } from "./table-cell-def";
 import { TableColumnComponent } from "./table-column";
 import { TableHeadCellComponent, TableHeadComponent } from "./table-head";
-import { TableHeaderCellDefComponent } from "./table-header-cell-def";
-import { TableRowComponent } from "./table-row";
+import { TableHeadCellDefDirective } from "./table-head-cell-def";
 import { TableRowRenderComponent } from "./table-row-render";
 import { TableComponent } from "./table.component";
 
-const privateComponents = [TableRowRenderComponent, TableHeadCellComponent];
+const privateComponents = [
+    TableRowRenderComponent,
+    TableHeadCellComponent,
+    TableHeadComponent,
+];
+
 const publicComponents = [
-    TableCellComponent,
     TableColumnComponent,
     TableComponent,
-    TableHeadComponent,
-    TableRowComponent,
-    TableHeaderCellDefComponent,
+    TableHeadCellDefDirective,
     TableCellDefDirective,
 ];
 

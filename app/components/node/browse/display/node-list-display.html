@@ -17,27 +17,27 @@
         (scrollBottom)="scrollBottom.emit()">
 
         <bl-column name="id" [defaultWidth]="300">
-            <bl-header-cell-def>ID</bl-header-cell-def>
+            <div *blHeadCellDef>ID</div>
             <div *blCellDef="let node">{{node.id}}</div>
         </bl-column>
 
         <bl-column name="state">
-            <bl-header-cell-def>State</bl-header-cell-def>
+            <div *blHeadCellDef>State</div>
             <div *blCellDef="let node">{{node.state}}</div>
         </bl-column>
 
         <bl-column name="schedulingState">
-            <bl-header-cell-def>Scheduling state</bl-header-cell-def>
+            <div *blHeadCellDef>Scheduling state</div>
             <div *blCellDef="let node">{{node.schedulingState}}</div>
         </bl-column>
 
         <bl-column name="schedulingState">
-            <bl-header-cell-def>Scheduling state</bl-header-cell-def>
+            <div *blHeadCellDef>Scheduling state</div>
             <div *blCellDef="let node">{{node.schedulingState}}</div>
         </bl-column>
 
         <bl-column name="totalTasksRun">
-            <bl-header-cell-def>Total task run</bl-header-cell-def>
+            <div *blHeadCellDef>Total task run</div>
             <div *blCellDef="let node">{{node.totalTasksRun}}</div>
         </bl-column>
     </bl-table>

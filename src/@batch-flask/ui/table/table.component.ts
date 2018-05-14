@@ -12,7 +12,6 @@ import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import { DragUtils, log } from "@batch-flask/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
-import { TableCellComponent } from "./table-cell";
 import { TableColumnComponent } from "./table-column";
 import { SortDirection, SortingInfo, TableColumnManager, TableColumnRef } from "./table-column-manager";
 import { TableHeadComponent } from "./table-head";
@@ -172,10 +171,6 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     public sort(column: string, direction: SortDirection = SortDirection.Asc) {
         this.columnManager.sortBy(column, direction);
         this.updateDisplayedItems();
-    }
-
-    public cellTrackByFn(index, cell: TableCellComponent) {
-        return index;
     }
 
     protected updateDisplayedItems() {

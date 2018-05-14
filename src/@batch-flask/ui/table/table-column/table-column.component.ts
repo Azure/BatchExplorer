@@ -4,9 +4,9 @@ import {
 } from "@angular/core";
 
 import { SecureUtils } from "@batch-flask/utils";
-import { TableCellDefDirective } from "../table-cell";
+import { TableCellDefDirective } from "../table-cell-def";
 import { TableColumnRef } from "../table-column-manager";
-import { TableHeaderCellDefComponent } from "../table-header-cell-def";
+import { TableHeadCellDefDirective } from "../table-head-cell-def";
 import { TableComponent } from "../table.component";
 
 @Component({
@@ -18,7 +18,7 @@ export class TableColumnComponent implements OnChanges {
     @Input() public defaultWidth: number = null;
     @Input() public name: string;
 
-    @ContentChild(TableHeaderCellDefComponent) public header: TableHeaderCellDefComponent;
+    @ContentChild(TableHeadCellDefDirective, { read: TemplateRef }) public headCell: TemplateRef<any>;
     @ContentChild(TableCellDefDirective, { read: TemplateRef }) public cell: TemplateRef<any>;
 
     @HostBinding("class.sortable")
@@ -54,7 +54,6 @@ export class TableColumnComponent implements OnChanges {
     public ngOnChanges(changes) {
         if (changes.defaultWidth) {
             this.width = this.defaultWidth;
-            // this._table.head.updateDimensions();
         }
     }
 
@@ -67,7 +66,7 @@ export class TableColumnComponent implements OnChanges {
         return {
             name: this.name,
             width: this.width,
-            headerContent: this.header && this.header.content,
+            headCellTemplate: this.headCell,
             sortable: this.sortable,
             isSorting: this.isSorting,
             cellTemplate: this.cell,

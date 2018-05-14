@@ -19,17 +19,19 @@ const sizeD = { name: "Size D", numberOfCores: 2, resourceDiskSizeInMB: 4000 };
 // tslint:disable:trackBy-function
 @Component({
     template: `
-        <bl-table [(activeItem)]="pickedSize">
-            <bl-thead>
-                <bl-column>Name</bl-column>
-                <bl-column [sortable]="true">Cores</bl-column>
-                <bl-column [sortable]="true">RAM</bl-column>
-            </bl-thead>
-            <bl-row *ngFor="let size of sizes" [key]="size.name">
-                <bl-cell [value]="size.name"></bl-cell>
-                <bl-cell [value]="size.numberOfCores"></bl-cell>
-                <bl-cell [value]="size.resourceDiskSizeInMB">{{size.resourceDiskSizeInMB}}MB</bl-cell>
-            </bl-row>
+        <bl-table [data]="sizes" [(activeItem)]="pickedSize">
+            <bl-column name="name">
+                <div *blHeadCellRef>Name</div>
+                <div *blCellRef="let size">{{size.name}}</div>
+            </bl-column>
+            <bl-column name="cores" [sortable]="true">
+                <div *blHeadCellRef>Name</div>
+                <div *blCellRef="let size">{{size.numberOfCores}}</div>
+            </bl-column>
+            <bl-column name="resourceDiskSizeInMB" [sortable]="true">
+                <div *blHeadCellRef>Name</div>
+                <div *blCellRef="let size">{{size.resourceDiskSizeInMB}}MB</div>
+            </bl-column>
         </bl-table>
     `,
 })
@@ -38,7 +40,7 @@ class TestComponent {
     public picedSize: string;
 }
 
-describe("TableComponent", () => {
+fdescribe("TableComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;

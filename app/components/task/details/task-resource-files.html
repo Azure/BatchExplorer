@@ -1,14 +1,14 @@
 <bl-table [data]="resourceFiles">
     <bl-column name="blobSource">
-        <bl-header-cell-def>BlobSource</bl-header-cell-def>
+        <div *blHeadCellDef>BlobSource</div>
         <div *blCellDef="let resourceFile">{{resourceFile.blobSource}}</div>
     </bl-column>
     <bl-column name="filePath" [defaultWidth]="400">
-        <bl-header-cell-def>File path</bl-header-cell-def>
+        <div *blHeadCellDef>File path</div>
         <div *blCellDef="let resourceFile">{{resourceFile.filePath}}</div>
     </bl-column>
     <bl-column name="fileMode" [defaultWidth]="100">
-        <bl-header-cell-def>File mode</bl-header-cell-def>
+        <div *blHeadCellDef>File mode</div>
         <div *blCellDef="let resourceFile">{{resourceFile.fileMode}}</div>
     </bl-column>
 </bl-table>

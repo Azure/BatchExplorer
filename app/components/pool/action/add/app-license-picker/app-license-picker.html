@@ -1,15 +1,15 @@
 <bl-focus-section>
     <bl-table [data]="licenses" [config]="tableConfig" [selection]="pickedLicenses" (selectionChange)="updateSelection($event)">
         <bl-column name="description" [defaultWidth]="200">
-            <bl-header-cell-def>Software license name</bl-header-cell-def>
+            <div *blHeadCellDef>Software license name</div>
             <div *blCellDef="let license">{{license.description}}</div>
         </bl-column>
         <bl-column name="eula" [defaultWidth]="85">
-            <bl-header-cell-def>Software license name</bl-header-cell-def>
+            <div *blHeadCellDef>Software license name</div>
             <div *blCellDef="let license"><span class="link" (click)="viewEula(license)">EULA</span></div>
         </bl-column>
         <bl-column name="cost">
-            <bl-header-cell-def>Cost (in addition to VM)</bl-header-cell-def>
+            <div *blHeadCellDef>Cost (in addition to VM)</div>
             <div *blCellDef="let license">
                 <span>{{license.cost}}</span>
                 <span>{{license.id === "vray" ? "Limited preview" : "Charged while VM is running" }}</span>
