@@ -1,5 +1,10 @@
 <bl-focus-section>
-    <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="scrollBottom.emit()">
+    <bl-quick-list *ngIf="quicklist"
+        [status]="status"
+        [commands]="commands"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        (scrollBottom)="scrollBottom.emit()">
         <bl-quick-list-item *ngFor="let node of nodes;trackBy: trackNode" [link]="['/pools', poolId, 'nodes', node.id]" [key]="node.id">
             <bl-quick-list-item-status [status]="" [tooltip]="">
             </bl-quick-list-item-status>
@@ -9,7 +14,12 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="scrollBottom.emit()">
+    <bl-table *ngIf="!quicklist"
+        [status]="status"
+        [commands]="commands"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        (scrollBottom)="scrollBottom.emit()">
         <bl-thead>
             <bl-column style="width: 300px">ID</bl-column>
             <bl-column>State</bl-column>
