@@ -23,23 +23,23 @@
 
 <ng-template #accountTableTemplate let-accounts>
     <bl-table
-            [data]="accounts"
-            [activeItem]="pickedStorageAccountId?.toLowerCase()"
-            (activeItemChange)="pickStorageAccount($event)">
-            <bl-column [sortable]="true" name="name">
-                <bl-column-header>Name</bl-column-header>
-                <div *blCellDef="let account">{{account.name}}</div>
-            </bl-column>
-            <bl-column [sortable]="true" name="location">
-                <bl-column-header>Location</bl-column-header>
-                <div *blCellDef="let account">{{account.location}}</div>
-            </bl-column>
-            <bl-column [sortable]="false" name="isClassic">
-                <div *blCellDef="let account">
-                    <span class="classic-warning" matTooltip="Classic storage accounts are not compatible with data and gallery" *ngIf="account.isClassic">
-                        <span class="fa fa-warning"></span> Classic
-                    </span>
-                </div>
-            </bl-column>
+        [data]="accounts"
+        [activeItem]="pickedStorageAccountId"
+        (activeItemChange)="pickStorageAccount($event)">
+        <bl-column [sortable]="true" name="name">
+            <bl-column-header>Name</bl-column-header>
+            <div *blCellDef="let account">{{account.name}}</div>
+        </bl-column>
+        <bl-column [sortable]="true" name="location">
+            <bl-column-header>Location</bl-column-header>
+            <div *blCellDef="let account">{{account.location}}</div>
+        </bl-column>
+        <bl-column [sortable]="false" name="isClassic">
+            <div *blCellDef="let account">
+                <span class="classic-warning" matTooltip="Classic storage accounts are not compatible with data and gallery" *ngIf="account.isClassic">
+                    <span class="fa fa-warning"></span> Classic
+                </span>
+            </div>
+        </bl-column>
     </bl-table>
 </ng-template>

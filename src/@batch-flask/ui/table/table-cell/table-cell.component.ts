@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, Component, Input, TemplateRef, ViewChild, Directive,
+    ChangeDetectionStrategy, Component, Directive, Input, TemplateRef, ViewChild,
 } from "@angular/core";
 
 @Component({

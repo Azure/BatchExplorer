@@ -1,6 +1,6 @@
 import {
     AfterViewInit, ChangeDetectionStrategy,
-    ChangeDetectorRef, Component, Inject, Input, OnDestroy, forwardRef,
+    ChangeDetectorRef, Component, Inject, Input, forwardRef,
 } from "@angular/core";
 
 import { BehaviorSubject, Observable } from "rxjs";
@@ -13,7 +13,7 @@ import { TableComponent } from "../table.component";
     templateUrl: "table-head.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeadComponent implements AfterViewInit, OnDestroy {
+export class TableHeadComponent implements AfterViewInit {
     @Input() public show: boolean; // TODO-TIM remove
 
     @Input() public columns: TableColumnRef[];
@@ -31,24 +31,9 @@ export class TableHeadComponent implements AfterViewInit, OnDestroy {
     }
 
     public ngAfterViewInit() {
-        // setTimeout(() => {
-        //     this.changeDetector.markForCheck();
-        // });
-        // this.items.changes.subscribe(() => {
-        //     this._updateColumnIndexMap();
-        //     this.updateDimensions();
-        // });
-        // this._updateColumnIndexMap();
-        // this.updateDimensions();
     }
 
     public update() {
-        // this.changeDetector.detectChanges();
-        // this.changeDetector.markForCheck();
-    }
-
-    public ngOnDestroy() {
-        // this._dimensions.complete();
     }
 
     public getColumnIndex(column: TableColumnComponent) {

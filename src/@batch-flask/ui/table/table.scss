@@ -123,7 +123,7 @@ bl-table {
         }
     }
 
-    bl-column {
+    .bl-table-column {
         font-size: 0.9em;
         font-weight: bold;
         white-space: nowrap;
@@ -131,7 +131,7 @@ bl-table {
 
         &.sortable {
             cursor: pointer;
-            > .sort-icon {
+            .sort-icon {
                 color: $main-background;
             }
 

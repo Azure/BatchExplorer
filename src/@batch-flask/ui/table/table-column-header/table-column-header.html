@@ -1,7 +1,9 @@
 <ng-template>
-    <ng-content></ng-content>
-    <span *ngIf="sortable" class="sort-icon">
-        <span *ngIf="sortDirection === SortDirection.Asc" class="fa fa-arrow-up"></span>
-        <span *ngIf="sortDirection === SortDirection.Desc" class="fa fa-arrow-down"></span>
-    </span>
+    <div (click)="onClick($event)">
+        <ng-content></ng-content>
+        <span *ngIf="column.sortable" class="sort-icon">
+            <span *ngIf="sortDirection === SortDirection.Asc" class="fa fa-arrow-up"></span>
+            <span *ngIf="sortDirection === SortDirection.Desc" class="fa fa-arrow-down"></span>
+        </span>
+    </div>
 </ng-template>

@@ -9,19 +9,12 @@ import { TableColumnHeaderComponent } from "../table-column-header";
 import { TableColumnRef } from "../table-column-manager";
 import { TableComponent } from "../table.component";
 
-export enum SortDirection {
-    Asc,
-    Desc,
-}
-
 @Component({
     selector: "bl-column",
     template: ``,
     // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableColumnComponent implements OnChanges {
-    public SortDirection = SortDirection;
-
     @Input() public defaultWidth: number = null;
     @Input() public name: string;
 
@@ -39,8 +32,6 @@ export class TableColumnComponent implements OnChanges {
      * Current column width
      */
     public width = null;
-
-    public sortDirection = SortDirection.Asc;
 
     public id: string;
 
@@ -81,25 +72,5 @@ export class TableColumnComponent implements OnChanges {
             isSorting: this.isSorting,
             cellTemplate: this.cell,
         };
-    }
-
-    @HostListener("click")
-    public onClick() {
-        if (!this.sortable) {
-            return;
-        }
-
-        if (this.isSorting) {
-            this._invertOrder();
-        }
-        this._table.sort(this);
-    }
-
-    private _invertOrder() {
-        if (this.sortDirection) {
-            this.sortDirection = SortDirection.Asc;
-        } else {
-            this.sortDirection = SortDirection.Desc;
-        }
     }
 }

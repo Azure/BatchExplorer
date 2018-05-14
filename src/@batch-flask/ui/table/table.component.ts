@@ -3,17 +3,17 @@ import {
     EventEmitter, HostBinding, HostListener, Input, OnChanges, OnDestroy, Optional, Output, QueryList, ViewChild,
 } from "@angular/core";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { Router } from "@angular/router";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
-import { DragUtils } from "@batch-flask/utils";
+import { DragUtils, log } from "@batch-flask/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
 import { TableCellComponent } from "./table-cell";
 import { TableColumnComponent } from "./table-column";
-import { TableColumnManager } from "./table-column-manager";
+import { SortDirection, SortingInfo, TableColumnManager, TableColumnRef } from "./table-column-manager";
 import { TableHeadComponent } from "./table-head";
 
 import "./table.scss";
@@ -69,8 +69,9 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     public columnManager = new TableColumnManager();
 
     protected _config: TableConfig = tableDefaultConfig;
-    private _sortingColumn: TableColumnComponent;
+    private _sortingInfo: SortingInfo;
     private _dimensions = new BehaviorSubject([]);
+    private _sub: Subscription;
 
     /**
      * To enable keyboard navigation in the list it must be inside a focus section
@@ -95,24 +96,20 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         // if (this.head) {
         //     this.head.dimensions.subscribe((dimensions) => this._dimensions.next(dimensions));
         // }
+        this._sub = this.columnManager.sorting.subscribe((sortingInfo) => {
+            this._sortingInfo = sortingInfo;
+        });
         this.changeDetector.markForCheck();
     }
 
     public ngOnChanges(changes) {
         if (changes.data) {
-            if (!this.data) {
-                this.displayItems = [];
-            } else if (this.data instanceof List) {
-                this.displayItems = (this.data as List<any>).toArray();
-            } else if (Array.isArray(this.data)) {
-                this.displayItems = this.data;
-            } else {
-                this.displayItems = [...this.data as any];
-            }
+            this.updateDisplayedItems();
         }
     }
 
     public ngOnDestroy() {
+        this._sub.unsubscribe();
         this._dimensions.complete();
     }
 
@@ -159,13 +156,13 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         this.dropOnRow.emit({ key: item.id, data: event.dataTransfer });
     }
 
-    public sort(column: TableColumnComponent) {
-        if (this._sortingColumn) {
-            this._sortingColumn.isSorting = false;
-        }
-        column.isSorting = true;
-        this._sortingColumn = column;
-        // this.displayItems = this.updateDisplayedItems();
+    /**
+     * Sort the table by the column name
+     * @param column
+     */
+    public sort(column: string, direction: SortDirection = SortDirection.Asc) {
+        this.columnManager.sortBy(column, direction);
+        this.updateDisplayedItems();
     }
 
     public cellTrackByFn(index, cell: TableCellComponent) {
@@ -173,32 +170,53 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     }
 
     protected updateDisplayedItems() {
-        // const column = this._sortingColumn;
-        // const rows = this.items.toArray();
-        // if (!column) {
-        //     this.displayItems = rows;
-        //     return;
-        // }
-        // const index = this.head.getColumnIndex(column);
-        // if (index === -1) {
-        //     log.error("Error column is not in the table", column);
-        //     return;
-        // }
-        // const sortedRows = rows.sort((a: TableRowComponent, b: TableRowComponent) => {
-        //     const aValue = a.data[index];
-        //     const bValue = b.data[index];
-        //     if (aValue < bValue) {
-        //         return -1;
-        //     } else if (aValue > bValue) {
-        //         return 1;
-        //     }
-        //     return 0;
-        // });
+        this.displayItems = this.computeDisplayedItems();
+        this.changeDetector.markForCheck();
+    }
 
-        // const desc = column.sortDirection === SortDirection.Desc;
-        // if (desc) {
-        //     return sortedRows.reverse();
-        // }
-        // return sortedRows;
+    protected computeDisplayedItems() {
+        const sortingInfo = this._sortingInfo;
+        const items = this._getItems();
+        if (!sortingInfo) {
+            return items;
+        }
+        const column = this.columnManager.columnMap.get(sortingInfo.column);
+        if (!column) {
+            const keys = [...this.columnManager.columnMap.keys()];
+            log.error(`Cannot sort. There is no column with name ${column.name} in the list of columns ${keys}`);
+            return items;
+        }
+        return this._sortItems(items, column, sortingInfo.direction)
+    }
+
+    private _getItems() {
+        if (!this.data) {
+            return [];
+        } else if (this.data instanceof List) {
+            return (this.data as List<any>).toArray();
+        } else if (Array.isArray(this.data)) {
+            return this.data;
+        } else {
+            return [...this.data as any];
+        }
+    }
+
+    private _sortItems(items: any[], column: TableColumnRef, direction: SortDirection): any[] {
+        const sortedRows = items.sort((a, b) => {
+            const aValue = a[column.name];
+            const bValue = b[column.name];
+            if (aValue < bValue) {
+                return -1;
+            } else if (aValue > bValue) {
+                return 1;
+            }
+            return 0;
+        });
+
+        const desc = direction === SortDirection.Desc;
+        if (desc) {
+            return sortedRows.reverse();
+        }
+        return sortedRows;
     }
 }
