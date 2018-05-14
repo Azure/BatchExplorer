@@ -1,5 +1,5 @@
 import { Injectable, Injector } from "@angular/core";
-import { ElectronRemote, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
+import { COMMAND_LABEL_ICON, ElectronRemote, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
 
 import { Certificate, CertificateState } from "app/models";
 import { CertificateService, FileSystemService, PinnedEntityService } from "app/services";
@@ -36,8 +36,7 @@ export class CertificateCommands extends EntityCommands<Certificate> {
 
     private _buildCommands() {
         this.delete = this.simpleCommand({
-            label: "Delete",
-            icon: "fa fa-trash-o",
+            ...COMMAND_LABEL_ICON.Delete,
             action: (certificate: Certificate) => this.certificateService.delete(certificate.id),
             enabled: (certificate) => certificate.state !== CertificateState.deleting,
             permission: Permission.Write,
@@ -55,8 +54,7 @@ export class CertificateCommands extends EntityCommands<Certificate> {
         });
 
         this.exportAsJSON = this.simpleCommand({
-            label: "Export as JSON",
-            icon: "fa fa-code",
+            ...COMMAND_LABEL_ICON.ExportAsJSON,
             action: (certificate) => this._exportAsJSON(certificate),
             multiple: false,
             confirm: false,

@@ -1,7 +1,7 @@
 import { Injectable, Injector } from "@angular/core";
 import {
-    DialogService, ElectronRemote, EntityCommand,
-    EntityCommands, Permission, SidebarManager,
+    COMMAND_LABEL_ICON, DialogService, ElectronRemote,
+    EntityCommand, EntityCommands, Permission, SidebarManager,
 } from "@batch-flask/ui";
 import { Observable } from "rxjs/Observable";
 
@@ -47,8 +47,7 @@ export class PoolCommands extends EntityCommands<Pool> {
 
     private _buildCommands() {
         this.addJob = this.simpleCommand({
-            label: "Add job",
-            icon: "fa fa-plus",
+            ...COMMAND_LABEL_ICON.AddJob,
             action: (pool) => this._addJob(pool),
             multiple: false,
             confirm: false,
@@ -77,16 +76,14 @@ export class PoolCommands extends EntityCommands<Pool> {
         });
 
         this.delete = this.simpleCommand<DeletePoolOutput>({
-            label: "Delete",
-            icon: "fa fa-trash-o",
+            ...COMMAND_LABEL_ICON.Delete,
             action: (pool: Pool, options) => this._deletePool(pool, options),
             confirm: (entities) => this._confirmDeletePool(entities),
             permission: Permission.Write,
         });
 
         this.exportAsJSON = this.simpleCommand({
-            label: "Export as JSON",
-            icon: "fa fa-code",
+            ...COMMAND_LABEL_ICON.ExportAsJSON,
             action: (pool) => this._exportAsJSON(pool),
             multiple: false,
             confirm: false,

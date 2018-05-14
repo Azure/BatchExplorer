@@ -1,5 +1,5 @@
 import { Injectable, Injector } from "@angular/core";
-import { EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
+import { COMMAND_LABEL_ICON, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { BatchApplication } from "app/models";
@@ -37,8 +37,7 @@ export class BatchApplicationCommands extends EntityCommands<BatchApplication> {
 
     private _buildCommands() {
         this.add = this.simpleCommand({
-            label: "Add package",
-            icon: "fa fa-plus",
+            ...COMMAND_LABEL_ICON.AddApplication,
             action: (application) => this._addPackage(application),
             multiple: false,
             confirm: false,
@@ -57,8 +56,7 @@ export class BatchApplicationCommands extends EntityCommands<BatchApplication> {
         });
 
         this.delete = this.simpleCommand({
-            label: "Delete",
-            icon: "fa fa-trash-o",
+            ...COMMAND_LABEL_ICON.Delete,
             action: (application: BatchApplication) => this.applicationService.delete(application.id),
             permission: Permission.Write,
         });

@@ -58,30 +58,6 @@ export class AddButtonComponent extends BaseButton {
 }
 
 @Component({
-    selector: "bl-delete-button",
-    template: `
-        <bl-button color="light" [action]="action" [disabled]="!enabled" [title]="title"
-            icon="fa fa-trash-o" permission="write">
-        </bl-button>
-    `,
-})
-export class DeleteButtonComponent extends BaseButton {
-    @Input()
-    public set enabled(enabled: boolean) {
-        this._enabled = enabled;
-    }
-
-    @Input()
-    public title: string = "Delete";
-
-    private _enabled: boolean = true;
-
-    public get enabled() {
-        return this._enabled;
-    }
-}
-
-@Component({
     selector: "bl-clone-button",
     template: `
         <bl-button color="light" [action]="action" [title]="title" icon="fa fa-clone" permission="write">

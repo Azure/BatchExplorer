@@ -1,5 +1,5 @@
 import { Injectable, Injector } from "@angular/core";
-import { DialogService, EntityCommand, EntityCommands, Permission, SidebarManager } from "@batch-flask/ui";
+import { COMMAND_LABEL_ICON, DialogService, EntityCommand, EntityCommands, Permission, SidebarManager } from "@batch-flask/ui";
 
 import { DownloadFolderComponent } from "app/components/common/download-folder-dialog";
 import { BlobContainer } from "app/models";
@@ -45,15 +45,13 @@ export class BlobContainerCommands extends EntityCommands<BlobContainer, Storage
 
     private _buildCommands() {
         this.delete = this.simpleCommand({
-            label: "Delete",
-            icon: "fa fa-trash-o",
+            ...COMMAND_LABEL_ICON.Delete,
             action: (container: BlobContainer) => this._deleteFileGroup(container),
             permission: Permission.Write,
         });
 
         this.addMoreFiles = this.simpleCommand({
-            label: "Add more files to the file group",
-            icon: "fa fa-plus",
+            ...COMMAND_LABEL_ICON.AddFile,
             action: (container: BlobContainer) => this._addFilesToFileGroup(container),
             enabled: (container) => container.isFileGroup,
             multiple: false,

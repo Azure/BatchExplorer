@@ -1,5 +1,5 @@
 import { Injectable, Injector } from "@angular/core";
-import { ElectronRemote, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
+import { ElectronRemote, EntityCommand, EntityCommands, Permission, COMMAND_LABEL_ICON } from "@batch-flask/ui";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { JobSchedule, JobScheduleState } from "app/models";
@@ -62,8 +62,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         });
 
         this.delete = this.simpleCommand({
-            label: "Delete",
-            icon: "fa fa-trash-o",
+            ...COMMAND_LABEL_ICON.Delete,
             action: (jobSchedule: JobSchedule) => this.jobScheduleService.delete(jobSchedule.id),
             permission: Permission.Write,
         });
@@ -111,8 +110,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         });
 
         this.exportAsJSON = this.simpleCommand({
-            label: "Export as JSON",
-            icon: "fa fa-code",
+            ...COMMAND_LABEL_ICON.ExportAsJSON,
             action: (jobSchedule) => this._exportAsJSON(jobSchedule),
             multiple: false,
             confirm: false,

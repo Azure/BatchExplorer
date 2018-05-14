@@ -1,5 +1,5 @@
 import { Injectable, Injector } from "@angular/core";
-import { EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
+import { COMMAND_LABEL_ICON, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
 
 import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
 import { AccountProvisingState, AccountResource } from "app/models";
@@ -41,8 +41,7 @@ export class BatchAccountCommands extends EntityCommands<AccountResource> {
         });
 
         this.delete = this.simpleCommand({
-            label: "Delete",
-            icon: "fa fa-trash-o",
+            ...COMMAND_LABEL_ICON.Delete,
             action: (account: AccountResource) => this.accountService.deleteBatchAccount(account.id),
             enabled: (account: AccountResource) => {
                 const accountState = account && account.properties && account.properties.provisioningState;

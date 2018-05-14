@@ -1,6 +1,11 @@
 import { Component, Input } from "@angular/core";
+import {
+    Application, BlobContainer, Certificate, Job,
+    JobSchedule, Node, Pool,
+} from "app/models";
 import { EntityCommands } from "../entity-commands";
 
+export type CommandType = Pool | Job | JobSchedule | Certificate | BlobContainer | Application | Node;
 // tslint:disable:trackBy-function
 @Component({
     selector: "bl-commands-list",
@@ -19,8 +24,8 @@ import { EntityCommands } from "../entity-commands";
     `,
 })
 export class EntityCommandsListComponent {
-    @Input() public commands: EntityCommands<any>;
-    @Input() public entity: any;
+    @Input() public commands: EntityCommands<CommandType>;
+    @Input() public entity: CommandType;
 
     public get buttonCommands() {
         return this.commands && this.commands.commands;

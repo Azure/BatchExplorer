@@ -1,5 +1,5 @@
 import { Injectable, Injector } from "@angular/core";
-import { DialogService, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
+import { COMMAND_LABEL_ICON, DialogService, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
@@ -51,8 +51,7 @@ export class NodeCommands extends EntityCommands<Node> {
         });
 
         this.delete = this.simpleCommand({
-            label: "Delete",
-            icon: "fa fa-trash-o",
+            ...COMMAND_LABEL_ICON.Delete,
             action: (node: Node) => this._delete(node),
             permission: Permission.Write,
         });
