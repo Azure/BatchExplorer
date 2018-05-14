@@ -1,6 +1,7 @@
 import {
     AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component,
-    ContentChildren, EventEmitter, HostBinding, HostListener, Input, OnChanges, OnDestroy, Optional, Output, QueryList, ViewChild,
+    ContentChildren, EventEmitter, HostBinding, HostListener, Input,
+    OnChanges, OnDestroy, Optional, Output, QueryList, ViewChild,
 } from "@angular/core";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
