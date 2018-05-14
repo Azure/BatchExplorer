@@ -26,6 +26,7 @@ const categoriesDisplayName = {
 };
 
 export class VmSizeDecorator {
+    public id: string;
     public title: string;
     public prettyCores: string;
     public prettyRAM: string;
@@ -35,6 +36,7 @@ export class VmSizeDecorator {
     public prettyPrice: string;
 
     constructor(public vmSize: VmSize, prices: OSPricing) {
+        this.id = vmSize.id;
         this.title = this.prettyTitle(vmSize.name);
         this.prettyCores = this.prettyMb(vmSize.numberOfCores);
         this.prettyRAM = this.prettyMb(vmSize.memoryInMB);

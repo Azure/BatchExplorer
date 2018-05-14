@@ -3,23 +3,36 @@
         <mat-tab *ngFor="let category of categoryNames;trackBy: trackCategory" [label]="categoryLabelName(category)">
             <div class="vm-size-list">
                 <bl-focus-section>
-                    <bl-table [activeItem]="pickedSize" (activeItemChange)="pickSize($event)">
-                        <bl-thead>
-                            <bl-column [sortable]="true">Name</bl-column>
-                            <bl-column [sortable]="true">Price per node (hourly)</bl-column>
-                            <bl-column [defaultWidth]="60" [sortable]="true">Cores</bl-column>
-                            <bl-column [defaultWidth]="60" [sortable]="true">RAM</bl-column>
-                            <bl-column [defaultWidth]="70" [sortable]="true">OS Disk</bl-column>
-                            <bl-column [sortable]="true">Resource/Temp Disk</bl-column>
-                        </bl-thead>
-                        <bl-row *ngFor="let size of categories[category];trackBy: trackVmSize" [key]="size.vmSize.id">
-                            <bl-cell [value]="size.vmSize.name">{{size.title}}</bl-cell>
-                            <bl-cell [value]="size.price">{{size.prettyPrice}}</bl-cell>
-                            <bl-cell [value]="size.vmSize.numberOfCores"></bl-cell>
-                            <bl-cell [value]="size.vmSize.memoryInMB">{{size.prettyRAM}}</bl-cell>
-                            <bl-cell [value]="size.vmSize.osDiskSizeInMB">{{size.prettyOSDiskSize}}</bl-cell>
-                            <bl-cell [value]="size.vmSize.resourceDiskSizeInMB">{{size.prettyResourceDiskSize}}</bl-cell>
-                        </bl-row>
+                    <bl-table [data]="categories[category]" [activeItem]="pickedSize" (activeItemChange)="pickSize($event)">
+                        <bl-column name="title" [sortable]="true">
+                            <bl-column-header>Name</bl-column-header>
+                            <div *blCellDef="let size">{{size.title}}</div>
+                        </bl-column>
+
+                        <bl-column name="price" [sortable]="true">
+                            <bl-column-header>Price per node (hourly)</bl-column-header>
+                            <div *blCellDef="let size">{{size.prettyPrice}}</div>
+                        </bl-column>
+
+                        <bl-column name="cores" [sortable]="true" [defaultWidth]="60">
+                            <bl-column-header>Cores</bl-column-header>
+                            <div *blCellDef="let size">{{size.vmSize.numberOfCores}}</div>
+                        </bl-column>
+
+                        <bl-column name="ram" [sortable]="true" [defaultWidth]="60">
+                            <bl-column-header>Cores</bl-column-header>
+                            <div *blCellDef="let size">{{size.prettyRAM}}</div>
+                        </bl-column>
+
+                        <bl-column name="osdisk" [sortable]="true" [defaultWidth]="70">
+                            <bl-column-header>Cores</bl-column-header>
+                            <div *blCellDef="let size">{{size.prettyOSDiskSize}}</div>
+                        </bl-column>
+
+                        <bl-column name="resourcedisk" [sortable]="true">
+                            <bl-column-header>Resource/Temp disk</bl-column-header>
+                            <div *blCellDef="let size">{{size.prettyResourceDiskSize}}</div>
+                        </bl-column>
                     </bl-table>
                 </bl-focus-section>
             </div>
