@@ -13,20 +13,33 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()" [commands]="commands">
-        <bl-thead>
-            <bl-column>ID</bl-column>
-            <bl-column>Packages</bl-column>
-            <bl-column>Default version</bl-column>
-            <bl-column>Allow updates</bl-column>
-        </bl-thead>
-        <bl-row *ngFor="let application of displayedApplications;trackBy: trackByFn" [link]="['/applications', application.id]"
-            [key]="application.id">
-            <bl-cell>{{application.id}}</bl-cell>
-            <bl-cell>{{application.packages?.size}}</bl-cell>
-            <bl-cell>{{application.defaultVersion}}</bl-cell>
-            <bl-cell>{{application.allowUpdates}}</bl-cell>
-        </bl-row>
+    <bl-table *ngIf="!quicklist"
+        [status]="status"
+        [data]="displayedApplications"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        (scrollBottom)="onScrollToBottom()"
+        [commands]="commands">
+
+        <bl-column name="id">
+            <bl-column-header>ID</bl-column-header>
+            <div *blCellDef="let application">{{application.id}}</div>
+        </bl-column>
+
+        <bl-column name="packages">
+            <bl-column-header>Packages</bl-column-header>
+            <div *blCellDef="let application">{{application.packages?.size}}</div>
+        </bl-column>
+
+        <bl-column name="defaultVersion">
+            <bl-column-header>Default version</bl-column-header>
+            <div *blCellDef="let application">{{application.defaultVersion}}</div>
+        </bl-column>
+
+        <bl-column name="allowUpdates">
+            <bl-column-header>Allow updates</bl-column-header>
+            <div *blCellDef="let application">{{application.allowUpdates}}</div>
+        </bl-column>
     </bl-table>
 </bl-focus-section>
 <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>
