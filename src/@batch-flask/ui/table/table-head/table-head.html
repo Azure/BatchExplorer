@@ -1,6 +1,3 @@
 <div class="checkbox-column" *ngIf="table.config.showCheckbox"></div>
-<bl-table-head-cell *ngFor="let column of columns;trackBy: trackColumn"
-    [column]="column"
-    [class.fixed-size]="column.width"
-    [style.flex-basis]="column.width + 'px'">
+<bl-table-head-cell *ngFor="let column of columns;trackBy: trackColumn" [column]="column">
 </bl-table-head-cell>

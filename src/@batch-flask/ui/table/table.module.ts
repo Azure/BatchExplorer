@@ -15,11 +15,10 @@ import { TableRowComponent } from "./table-row";
 import { TableRowRenderComponent } from "./table-row-render";
 import { TableComponent } from "./table.component";
 
-const privateComponents = [TableRowRenderComponent];
+const privateComponents = [TableRowRenderComponent, TableHeadCellComponent];
 const publicComponents = [
     TableCellComponent,
     TableColumnComponent,
-    TableHeadCellComponent,
     TableComponent,
     TableHeadComponent,
     TableRowComponent,
