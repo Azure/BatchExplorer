@@ -1,0 +1,10 @@
+<td class="checkbox-cell" (click)="handleClick($event, false)" *ngIf="tableConfig.showCheckbox">
+    <mat-checkbox color="primary" (click)="$event.stopPropagation()" (change)="handleClick(null, false)" [checked]="item.selected"></mat-checkbox>
+</td>
+
+<div *ngFor="let column of columns;trackBy: trackColumn"
+    class="bl-table-cell"
+    [class.fixed-size]="column.width"
+    [style.flex-basis]="column.width + 'px'">
+    <ng-template [ngTemplateOutlet]="column.cellTemplate" [ngTemplateOutletContext]="{$implicit: item}"></ng-template>
+</div>
