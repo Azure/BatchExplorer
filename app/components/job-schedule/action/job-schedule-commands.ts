@@ -1,10 +1,11 @@
 import { Injectable, Injector } from "@angular/core";
-import { EntityCommand, EntityCommands } from "@batch-flask/ui";
+import { ElectronRemote, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { JobSchedule, JobScheduleState } from "app/models";
-import { JobScheduleService, PinnedEntityService } from "app/services";
-import { PatchJobScheduleComponent } from "./add";
+import { FileSystemService, JobScheduleService, PinnedEntityService } from "app/services";
+import { Observable } from "rxjs/Observable";
+import { JobScheduleCreateBasicDialogComponent, PatchJobScheduleComponent } from "./add";
 
 @Injectable()
 export class JobScheduleCommands extends EntityCommands<JobSchedule> {
@@ -13,10 +14,14 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
     public enable: EntityCommand<JobSchedule, void>;
     public terminate: EntityCommand<JobSchedule, void>;
     public disable: EntityCommand<JobSchedule, void>;
+    public clone: EntityCommand<JobSchedule, void>;
+    public exportAsJSON: EntityCommand<JobSchedule, void>;
     public pin: EntityCommand<JobSchedule, void>;
 
     constructor(
         injector: Injector,
+        private fs: FileSystemService,
+        private remote: ElectronRemote,
         private jobScheduleService: JobScheduleService,
         private pinnedEntityService: PinnedEntityService,
         private sidebarManager: SidebarManager) {
@@ -47,37 +52,79 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
     private _buildCommands() {
         this.edit = this.simpleCommand({
             label: "Edit",
+            icon: "fa fa-edit",
             action: (jobSchedule) => this._editJobSchedule(jobSchedule),
             enabled: (jobSchedule) => jobSchedule.state !== JobScheduleState.completed,
             multiple: false,
             confirm: false,
             notify: false,
+            permission: Permission.Write,
         });
+
         this.delete = this.simpleCommand({
             label: "Delete",
+            icon: "fa fa-trash-o",
             action: (jobSchedule: JobSchedule) => this.jobScheduleService.delete(jobSchedule.id),
+            permission: Permission.Write,
         });
+
         this.terminate = this.simpleCommand({
             label: "Terminate",
+            icon: "fa fa-stop",
             action: (jobSchedule) => this.jobScheduleService.terminate(jobSchedule.id),
             enabled: (jobSchedule) => jobSchedule.state !== JobScheduleState.completed,
+            permission: Permission.Write,
         });
+
         this.enable = this.simpleCommand({
             label: "Enable",
+            icon: "fa fa-play",
             action: (jobSchedule: JobSchedule) => this.jobScheduleService.enable(jobSchedule.id),
             enabled: (jobSchedule) => {
                 return jobSchedule.state !== JobScheduleState.disabled
                     && jobSchedule.state !== JobScheduleState.completed;
             },
+            visible: (jobSchedule) => {
+                return jobSchedule.state !== JobScheduleState.disabled
+                    && jobSchedule.state !== JobScheduleState.completed;
+            },
+            permission: Permission.Write,
         });
+
         this.disable = this.simpleCommand({
             label: "Disable",
+            icon: "fa fa-pause",
             action: (jobSchedule: JobSchedule) => this.jobScheduleService.disable(jobSchedule.id),
             enabled: (jobSchedule) => jobSchedule.state === JobScheduleState.disabled,
+            visible: (jobSchedule) => jobSchedule.state === JobScheduleState.disabled,
+            permission: Permission.Write,
         });
+
+        this.clone = this.simpleCommand({
+            label: "Clone",
+            icon: "fa fa-clone",
+            action: (jobSchedule) => this._cloneJobSchedule(jobSchedule),
+            multiple: false,
+            confirm: false,
+            notify: false,
+            permission: Permission.Write,
+        });
+
+        this.exportAsJSON = this.simpleCommand({
+            label: "Export as JSON",
+            icon: "fa fa-code",
+            action: (jobSchedule) => this._exportAsJSON(jobSchedule),
+            multiple: false,
+            confirm: false,
+            notify: false,
+        });
+
         this.pin = this.simpleCommand({
             label: (jobSchedule: JobSchedule) => {
                 return this.pinnedEntityService.isFavorite(jobSchedule) ? "Unpin favorite" : "Pin to favorites";
+            },
+            icon: (jobSchedule: JobSchedule) => {
+                return this.pinnedEntityService.isFavorite(jobSchedule) ? "fa fa-chain-broken" : "fa fa-link";
             },
             action: (jobSchedule: JobSchedule) => this._pinJobSchedule(jobSchedule),
             confirm: false,
@@ -90,6 +137,8 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
             this.terminate,
             this.enable,
             this.disable,
+            this.clone,
+            this.exportAsJSON,
             this.pin,
         ];
     }
@@ -99,5 +148,24 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
             .open(`edit-job-schedule-${jobSchedule.id}`, PatchJobScheduleComponent);
         ref.component.jobScheduleId = jobSchedule.id;
         ref.component.setValueFromEntity(jobSchedule);
+    }
+
+    private _cloneJobSchedule(jobSchedule: JobSchedule) {
+        const ref = this.sidebarManager.open(`add-job-schedule-${jobSchedule.id}`,
+        JobScheduleCreateBasicDialogComponent);
+        ref.component.setValueFromEntity(jobSchedule);
+    }
+
+    private _exportAsJSON(jobSchedule: JobSchedule) {
+        const dialog = this.remote.dialog;
+        const localPath = dialog.showSaveDialog({
+            buttonLabel: "Export",
+            defaultPath: `${jobSchedule.id}.json`,
+        });
+
+        if (localPath) {
+            const content = JSON.stringify(jobSchedule._original, null, 2);
+            return Observable.fromPromise(this.fs.saveFile(localPath, content));
+        }
     }
 }
