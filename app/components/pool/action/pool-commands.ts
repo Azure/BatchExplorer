@@ -18,7 +18,7 @@ export class PoolCommands extends EntityCommands<Pool> {
     public resize: EntityCommand<Pool, void>;
     public clone: EntityCommand<Pool, void>;
     public delete: EntityCommand<Pool, DeletePoolOutput>;
-    public exportAsJson: EntityCommand<Pool, void>;
+    public exportAsJSON: EntityCommand<Pool, void>;
     public pin: EntityCommand<Pool, void>;
 
     constructor(
@@ -84,7 +84,7 @@ export class PoolCommands extends EntityCommands<Pool> {
             permission: Permission.Write,
         });
 
-        this.exportAsJson = this.simpleCommand({
+        this.exportAsJSON = this.simpleCommand({
             label: "Export as JSON",
             icon: "fa fa-code",
             action: (pool) => this._exportAsJSON(pool),
@@ -110,7 +110,7 @@ export class PoolCommands extends EntityCommands<Pool> {
             this.resize,
             this.clone,
             this.delete,
-            this.exportAsJson,
+            this.exportAsJSON,
             this.pin,
         ];
     }

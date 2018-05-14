@@ -17,7 +17,7 @@ export class JobCommands extends EntityCommands<Job> {
     public addTask: EntityCommand<Job, void>;
     public clone: EntityCommand<Job, void>;
     public createJobSchedule: EntityCommand<Job, void>;
-    public exportAsJson: EntityCommand<Job, void>;
+    public exportAsJSON: EntityCommand<Job, void>;
     public delete: EntityCommand<Job, void>;
     public enable: EntityCommand<Job, void>;
     public disable: DisableJobCommand;
@@ -118,7 +118,7 @@ export class JobCommands extends EntityCommands<Job> {
             permission: Permission.Write,
         });
 
-        this.exportAsJson = this.simpleCommand({
+        this.exportAsJSON = this.simpleCommand({
             label: "Export as JSON",
             icon: "fa fa-code",
             action: (job) => this._exportAsJSON(job),
@@ -147,7 +147,7 @@ export class JobCommands extends EntityCommands<Job> {
             this.enable,
             this.disable,
             this.clone,
-            this.exportAsJson,
+            this.exportAsJSON,
             this.pin,
         ];
     }

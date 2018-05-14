@@ -9,7 +9,7 @@
             <bl-tags summaryTags [tags]="job.tags" [editable]="job.editable" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                <bl-commands-list [commands]="jobCommands" [entity]="job"></bl-commands-list>
+                <bl-commands-list [commands]="commands" [entity]="job"></bl-commands-list>
             </bl-button-group>
             <div summaryTile>
                 <div class="job-graphs-link" [routerLink]="['/jobs', job.id, 'graphs']">

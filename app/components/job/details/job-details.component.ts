@@ -36,7 +36,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     private _paramsSubscriber: Subscription;
 
     constructor(
-        public jobCommands: JobCommands,
+        public commands: JobCommands,
         private activatedRoute: ActivatedRoute,
         private jobService: JobService,
         private router: Router) {
