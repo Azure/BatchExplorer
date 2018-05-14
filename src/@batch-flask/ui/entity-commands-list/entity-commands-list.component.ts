@@ -6,7 +6,7 @@ import { EntityCommands } from "../entity-commands";
     selector: "bl-commands-list",
     template: `
         <ng-container *ngFor="let command of buttonCommands">
-            <bl-button
+            <bl-button *ngIf="command.isVisible(entity)"
                 [action]="execute(command)"
                 [title]="command.label(entity)"
                 [disabled]="command.disabled(entity)"
@@ -28,7 +28,7 @@ export class EntityCommandsListComponent {
 
     public execute(command) {
         return () => {
-            return command.performAction(this.entity);
+            return command.execute(this.entity);
         };
     }
 }

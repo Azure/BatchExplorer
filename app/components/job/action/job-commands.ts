@@ -57,7 +57,6 @@ export class JobCommands extends EntityCommands<Job> {
 
     private _buildCommands() {
         this.disable = this.command(DisableJobCommand);
-        this.disable.setIcon("fa fa-pause");
 
         this.edit = this.simpleCommand({
             label: "Edit",
@@ -99,13 +98,13 @@ export class JobCommands extends EntityCommands<Job> {
         });
 
         this.terminate = this.command(TerminateJobCommand);
-        this.terminate.setIcon("fa fa-stop");
 
         this.enable = this.simpleCommand({
             label: "Enable",
             icon: "fa fa-play",
             action: (job: Job) => this.jobService.enable(job.id),
             enabled: (job: Job) => job.state === JobState.disabled,
+            visible: (job: Job) => job.state === JobState.disabled,
             permission: Permission.Write,
         });
 

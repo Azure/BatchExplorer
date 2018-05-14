@@ -21,6 +21,7 @@ export interface EntityCommandAttributes<TEntity extends ActionableEntity, TOpti
     icon?: ((entity: TEntity) => string) | string;
     action: (entity: TEntity, option?: TOptions) => Observable<any> | void;
     enabled?: (entity: TEntity) => boolean;
+    visible?: (entity: TEntity) => boolean;
     multiple?: boolean;
     confirm?: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     notify?: EntityCommandNotify | boolean;
@@ -35,6 +36,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     public notify: EntityCommandNotify;
     public multiple: boolean;
     public enabled: (entity: TEntity) => boolean;
+    public visible: (entity: TEntity) => boolean;
     public confirm: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     public definition: EntityCommands<TEntity>;
     public permission: Permission;
@@ -59,10 +61,10 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         this._action = attributes.action;
         this.multiple = exists(attributes.multiple) ? attributes.multiple : true;
         this.enabled = attributes.enabled || (() => true);
+        this.visible = attributes.visible || (() => true);
         this.confirm = exists(attributes.confirm) ? attributes.confirm : true;
-        this.permission = attributes.permission;
+        this.permission = attributes.permission || Permission.Read;
         this.tooltipPosition = attributes.tooltipPosition || "above";
-
         if (attributes.notify === true || nil(attributes.notify)) {
             this.notify = EntityCommandNotify.Always;
         } else if (attributes.notify === false) {
@@ -84,8 +86,8 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         return this.enabled instanceof Function ? !this.enabled(entity) : !this.enabled;
     }
 
-    public setIcon(icon: ((entity: TEntity) => string) | string) {
-        this._icon = icon;
+    public isVisible(entity: TEntity) {
+        return this.visible instanceof Function ? this.visible(entity) : this.visible;
     }
 
     public performAction(entity: TEntity, option: TOptions): Observable<any> {

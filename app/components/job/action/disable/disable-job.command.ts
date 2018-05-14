@@ -1,6 +1,6 @@
 import { Injector } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import { DialogService, EntityCommand } from "@batch-flask/ui";
+import { DialogService, EntityCommand, Permission } from "@batch-flask/ui";
 
 import { Job, JobState } from "app/models";
 import { JobService } from "app/services";
@@ -14,9 +14,12 @@ export class DisableJobCommand extends EntityCommand<Job, string> {
 
         super(injector, {
             label: "Disable",
+            icon: "fa fa-pause",
             action: (job: Job, option: string) => jobService.disable(job.id, option),
             enabled: (job) => job.state !== JobState.completed && job.state !== JobState.disabled,
+            visible: (job) => job.state !== JobState.completed && job.state !== JobState.disabled,
             confirm: (x) => this._confirmAndGetInfo(x),
+            permission: Permission.Write,
         });
         this._dialog = injector.get(DialogService);
     }
