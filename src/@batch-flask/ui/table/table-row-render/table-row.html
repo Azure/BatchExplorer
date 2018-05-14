@@ -1,4 +1,4 @@
-<td class="checkbox-column" (click)="item.handleClick($event, false)" *ngIf="table.config.showCheckbox">
+<td class="checkbox-column" (click)="handleClick($event, false)" *ngIf="table.config.showCheckbox">
     <mat-checkbox color="primary" (click)="$event.stopPropagation()" (change)="handleClick(null, false)" [checked]="item.selected"></mat-checkbox>
 </td>
 

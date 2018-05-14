@@ -28,8 +28,8 @@ export class TableRowRenderComponent {
     }
 
     @HostListener("click", ["$event"])
-    public handleClick(event: MouseEvent) {
-        this.table.handleClick(event, this.item);
+    public handleClick(event: MouseEvent, activate = true) {
+        this.table.handleClick(event, this.item, activate);
     }
 
     @HostListener("contextmenu")

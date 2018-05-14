@@ -151,4 +151,12 @@ describe("TableComponent", () => {
     fit("raise error if no cell definition", () => {
 
     });
+
+    fit("raise error if no id on items", () => {
+
+    });
+
+    fit("click on checkbox add to the selection", () => {
+
+    });
 });

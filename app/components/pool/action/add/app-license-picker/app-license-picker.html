@@ -1,18 +1,20 @@
 <bl-focus-section>
-    <bl-table [config]="tableConfig" [selection]="pickedLicenses" (selectionChange)="updateSelection($event)">
-        <bl-thead>
-            <bl-column [defaultWidth]="200">Software license name</bl-column>
-            <bl-column [defaultWidth]="85">EULA</bl-column>
-            <bl-column>Cost (in addition to VM)</bl-column>
-        </bl-thead>
-        <bl-row *ngFor="let license of licenses, trackBy: trackByFn" [key]="license.id">
-            <bl-cell>{{license.description}}</bl-cell>
-            <bl-cell><span class="link" (click)="viewEula(license)">EULA</span></bl-cell>
-            <bl-cell>
+    <bl-table [data]="licenses" [config]="tableConfig" [selection]="pickedLicenses" (selectionChange)="updateSelection($event)">
+        <bl-column name="description" [defaultWidth]="200">
+            <bl-column-header>Software license name</bl-column-header>
+            <div *blCellDef="let license">{{license.description}}</div>
+        </bl-column>
+        <bl-column name="eula" [defaultWidth]="85">
+            <bl-column-header>Software license name</bl-column-header>
+            <div *blCellDef="let license"><span class="link" (click)="viewEula(license)">EULA</span></div>
+        </bl-column>
+        <bl-column name="cost">
+            <bl-column-header>Cost (in addition to VM)</bl-column-header>
+            <div *blCellDef="let license">
                 <span>{{license.cost}}</span>
                 <span>{{license.id === "vray" ? "Limited preview" : "Charged while VM is running" }}</span>
-            </bl-cell>
-        </bl-row>
+            </div>
+        </bl-column>
     </bl-table>
 </bl-focus-section>
 
