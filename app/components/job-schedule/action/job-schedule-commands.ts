@@ -1,5 +1,5 @@
 import { Injectable, Injector } from "@angular/core";
-import { ElectronRemote, EntityCommand, EntityCommands, Permission, COMMAND_LABEL_ICON } from "@batch-flask/ui";
+import { COMMAND_LABEL_ICON, ElectronRemote, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { JobSchedule, JobScheduleState } from "app/models";
@@ -51,8 +51,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
 
     private _buildCommands() {
         this.edit = this.simpleCommand({
-            label: "Edit",
-            icon: "fa fa-edit",
+            ...COMMAND_LABEL_ICON.Edit,
             action: (jobSchedule) => this._editJobSchedule(jobSchedule),
             enabled: (jobSchedule) => jobSchedule.state !== JobScheduleState.completed,
             multiple: false,
@@ -68,16 +67,14 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         });
 
         this.terminate = this.simpleCommand({
-            label: "Terminate",
-            icon: "fa fa-stop",
+            ...COMMAND_LABEL_ICON.Terminate,
             action: (jobSchedule) => this.jobScheduleService.terminate(jobSchedule.id),
             enabled: (jobSchedule) => jobSchedule.state !== JobScheduleState.completed,
             permission: Permission.Write,
         });
 
         this.enable = this.simpleCommand({
-            label: "Enable",
-            icon: "fa fa-play",
+            ...COMMAND_LABEL_ICON.Enable,
             action: (jobSchedule: JobSchedule) => this.jobScheduleService.enable(jobSchedule.id),
             enabled: (jobSchedule) => {
                 return jobSchedule.state !== JobScheduleState.disabled
@@ -91,8 +88,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         });
 
         this.disable = this.simpleCommand({
-            label: "Disable",
-            icon: "fa fa-pause",
+            ...COMMAND_LABEL_ICON.Disable,
             action: (jobSchedule: JobSchedule) => this.jobScheduleService.disable(jobSchedule.id),
             enabled: (jobSchedule) => jobSchedule.state === JobScheduleState.disabled,
             visible: (jobSchedule) => jobSchedule.state === JobScheduleState.disabled,
@@ -100,8 +96,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         });
 
         this.clone = this.simpleCommand({
-            label: "Clone",
-            icon: "fa fa-clone",
+            ...COMMAND_LABEL_ICON.Clone,
             action: (jobSchedule) => this._cloneJobSchedule(jobSchedule),
             multiple: false,
             confirm: false,
@@ -119,10 +114,12 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
 
         this.pin = this.simpleCommand({
             label: (jobSchedule: JobSchedule) => {
-                return this.pinnedEntityService.isFavorite(jobSchedule) ? "Unpin favorite" : "Pin to favorites";
+                return this.pinnedEntityService.isFavorite(jobSchedule)
+                    ? COMMAND_LABEL_ICON.UnpinFavoriteLabel : COMMAND_LABEL_ICON.PinFavoriteLabel;
             },
             icon: (jobSchedule: JobSchedule) => {
-                return this.pinnedEntityService.isFavorite(jobSchedule) ? "fa fa-chain-broken" : "fa fa-link";
+                return this.pinnedEntityService.isFavorite(jobSchedule)
+                    ? COMMAND_LABEL_ICON.UnpinFavoriteIcon : COMMAND_LABEL_ICON.PinFavoriteIcon;
             },
             action: (jobSchedule: JobSchedule) => this._pinJobSchedule(jobSchedule),
             confirm: false,

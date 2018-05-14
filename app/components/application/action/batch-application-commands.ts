@@ -46,7 +46,7 @@ export class BatchApplicationCommands extends EntityCommands<BatchApplication> {
         });
 
         this.edit = this.simpleCommand({
-            label: "Edit",
+            ...COMMAND_LABEL_ICON.Edit,
             icon: "fa fa-edit",
             action: (application) => this._editApplication(application),
             multiple: false,
@@ -63,10 +63,12 @@ export class BatchApplicationCommands extends EntityCommands<BatchApplication> {
 
         this.pin = this.simpleCommand({
             label: (application: BatchApplication) => {
-                return this.pinnedEntityService.isFavorite(application) ? "Unpin favorite" : "Pin to favorites";
+                return this.pinnedEntityService.isFavorite(application)
+                ? COMMAND_LABEL_ICON.UnpinFavoriteLabel : COMMAND_LABEL_ICON.PinFavoriteLabel;
             },
             icon: (application: BatchApplication) => {
-                return this.pinnedEntityService.isFavorite(application) ? "fa fa-chain-broken" : "fa fa-link";
+                return this.pinnedEntityService.isFavorite(application)
+                ? COMMAND_LABEL_ICON.UnpinFavoriteIcon : COMMAND_LABEL_ICON.PinFavoriteIcon;
             },
             action: (application: BatchApplication) => this._pinApplication(application),
             confirm: false,

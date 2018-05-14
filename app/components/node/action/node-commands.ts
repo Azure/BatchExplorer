@@ -64,8 +64,7 @@ export class NodeCommands extends EntityCommands<Node> {
         });
 
         this.editStartTask = this.simpleCommand({
-            label: "Edit start task",
-            icon: "fa fa-pencil-square-o",
+            ...COMMAND_LABEL_ICON.EditStartTask,
             action: (node) => this._editStartTask(node),
             multiple: false,
             confirm: false,

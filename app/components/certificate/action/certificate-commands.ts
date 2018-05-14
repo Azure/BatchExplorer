@@ -63,10 +63,12 @@ export class CertificateCommands extends EntityCommands<Certificate> {
 
         this.pin = this.simpleCommand({
             label: (certificate: Certificate) => {
-                return this.pinnedEntityService.isFavorite(certificate) ? "Unpin favorite" : "Pin to favorites";
+                return this.pinnedEntityService.isFavorite(certificate)
+                ? COMMAND_LABEL_ICON.UnpinFavoriteLabel : COMMAND_LABEL_ICON.PinFavoriteLabel;
             },
             icon: (certificate: Certificate) => {
-                return this.pinnedEntityService.isFavorite(certificate) ? "fa fa-chain-broken" : "fa fa-link";
+                return this.pinnedEntityService.isFavorite(certificate)
+                    ? COMMAND_LABEL_ICON.UnpinFavoriteIcon : COMMAND_LABEL_ICON.PinFavoriteIcon;
             },
             action: (certificate: Certificate) => this._pinCertificate(certificate),
             confirm: false,

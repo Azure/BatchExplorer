@@ -10,7 +10,6 @@ import {
     ClearListSelectionButtonComponent,
     CloneButtonComponent,
     DownloadButtonComponent,
-    EditButtonComponent,
     LoadingButtonComponent,
     ResizeButtonComponent,
 } from "./buttons.component";
@@ -26,7 +25,6 @@ const components = [
     CloneButtonComponent,
     DirectoryPickerComponent,
     DownloadButtonComponent,
-    EditButtonComponent,
     LoadingButtonComponent,
     ResizeButtonComponent,
     RefreshButtonComponent,

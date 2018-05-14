@@ -50,6 +50,7 @@ In `job-commands.ts`
         constructor(private jobService: JobService) {
             this.edit = this.simpleCommand({
                 label: "Edit",
+                icon: "fa fa-edit",
                 action: (job) => this._editJob(job),
                 enabled: (job) => job.state !== JobState.completed,
                 multiple: false,

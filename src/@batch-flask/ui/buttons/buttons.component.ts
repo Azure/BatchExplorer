@@ -98,20 +98,3 @@ export class DownloadButtonComponent extends BaseButton {
 })
 export class ResizeButtonComponent extends BaseButton {
 }
-
-@Component({
-    selector: "bl-edit-button",
-    template: `
-        <bl-button color="light"
-            [action]="action"
-            [title]="title"
-            icon="fa fa-pencil-square-o"
-            permission="write"
-            [disabled]="disabled">
-        </bl-button>
-    `,
-})
-export class EditButtonComponent extends BaseButton {
-    @Input()
-    public title: string = "Edit";
-}

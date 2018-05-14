@@ -59,8 +59,7 @@ export class JobCommands extends EntityCommands<Job> {
         this.disable = this.command(DisableJobCommand);
 
         this.edit = this.simpleCommand({
-            label: "Edit",
-            icon: "fa fa-edit",
+            ...COMMAND_LABEL_ICON.Edit,
             action: (job) => this._editJob(job),
             enabled: (job) => job.state !== JobState.completed,
             multiple: false,
@@ -82,8 +81,7 @@ export class JobCommands extends EntityCommands<Job> {
         });
 
         this.clone = this.simpleCommand({
-            label: "Clone",
-            icon: "fa fa-clone",
+            ...COMMAND_LABEL_ICON.Clone,
             action: (job) => this._cloneJob(job),
             multiple: false,
             confirm: false,
@@ -101,8 +99,7 @@ export class JobCommands extends EntityCommands<Job> {
         this.terminate = this.command(TerminateJobCommand);
 
         this.enable = this.simpleCommand({
-            label: "Enable",
-            icon: "fa fa-play",
+            ...COMMAND_LABEL_ICON.Enable,
             action: (job: Job) => this.jobService.enable(job.id),
             enabled: (job: Job) => job.state === JobState.disabled,
             visible: (job: Job) => job.state === JobState.disabled,
@@ -129,10 +126,12 @@ export class JobCommands extends EntityCommands<Job> {
 
         this.pin = this.simpleCommand({
             label: (job: Job) => {
-                return this.pinnedEntityService.isFavorite(job) ? "Unpin favorite" : "Pin to favorites";
+                return this.pinnedEntityService.isFavorite(job)
+                    ? COMMAND_LABEL_ICON.UnpinFavoriteLabel : COMMAND_LABEL_ICON.PinFavoriteLabel;
             },
             icon: (job: Job) => {
-                return this.pinnedEntityService.isFavorite(job) ? "fa fa-chain-broken" : "fa fa-link";
+                return this.pinnedEntityService.isFavorite(job)
+                    ? COMMAND_LABEL_ICON.UnpinFavoriteIcon : COMMAND_LABEL_ICON.PinFavoriteIcon;
             },
             action: (job: Job) => this._pinJob(job),
             confirm: false,

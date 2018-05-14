@@ -13,13 +13,11 @@ import {
 } from "./add";
 import { DisableJobButtonComponent, DisableJobDialogComponent } from "./disable";
 import { EnableJobButtonComponent } from "./enable";
-import { TerminateButtonComponent } from "./terminate";
 
 const components = [
     JobCreateBasicDialogComponent, JobManagerTaskPickerComponent, PoolPickerComponent,
     PatchJobComponent, JobPreparationTaskPickerComponent, JobReleaseTaskPickerComponent,
-    DisableJobDialogComponent, DisableJobButtonComponent,
-    EnableJobButtonComponent, TerminateButtonComponent,
+    DisableJobDialogComponent, DisableJobButtonComponent, EnableJobButtonComponent,
 ];
 
 @NgModule({

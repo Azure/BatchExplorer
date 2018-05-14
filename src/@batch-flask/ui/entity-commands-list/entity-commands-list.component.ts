@@ -1,11 +1,11 @@
 import { Component, Input } from "@angular/core";
 import {
     Application, BlobContainer, Certificate, Job,
-    JobSchedule, Node, Pool,
+    JobSchedule, Node, Pool, Task,
 } from "app/models";
 import { EntityCommands } from "../entity-commands";
 
-export type CommandType = Pool | Job | JobSchedule | Certificate | BlobContainer | Application | Node;
+export type CommandType = Pool | Job | JobSchedule | Certificate | BlobContainer | Application | Node | Task;
 // tslint:disable:trackBy-function
 @Component({
     selector: "bl-commands-list",

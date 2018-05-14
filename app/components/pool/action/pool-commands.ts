@@ -56,8 +56,7 @@ export class PoolCommands extends EntityCommands<Pool> {
         });
 
         this.resize = this.simpleCommand({
-            label: "Resize",
-            icon: "fa fa-arrows-v",
+            ...COMMAND_LABEL_ICON.Resize,
             action: (pool) => this._resizePool(pool),
             multiple: false,
             confirm: false,
@@ -66,8 +65,7 @@ export class PoolCommands extends EntityCommands<Pool> {
         });
 
         this.clone = this.simpleCommand({
-            label: "Clone",
-            icon: "fa fa-clone",
+            ...COMMAND_LABEL_ICON.Clone,
             action: (pool) => this._clonePool(pool),
             multiple: false,
             confirm: false,
@@ -92,10 +90,12 @@ export class PoolCommands extends EntityCommands<Pool> {
 
         this.pin = this.simpleCommand({
             label: (pool: Pool) => {
-                return this.pinnedEntityService.isFavorite(pool) ? "Unpin favorite" : "Pin to favorites";
+                return this.pinnedEntityService.isFavorite(pool)
+                    ? COMMAND_LABEL_ICON.UnpinFavoriteLabel : COMMAND_LABEL_ICON.PinFavoriteLabel;
             },
             icon: (pool: Pool) => {
-                return this.pinnedEntityService.isFavorite(pool) ? "fa fa-chain-broken" : "fa fa-link";
+                return this.pinnedEntityService.isFavorite(pool)
+                    ? COMMAND_LABEL_ICON.UnpinFavoriteIcon : COMMAND_LABEL_ICON.PinFavoriteIcon;
             },
             action: (pool: Pool) => this._pinPool(pool),
             confirm: false,
