@@ -3,7 +3,7 @@
         <mat-tab *ngFor="let category of categoryNames;trackBy: trackCategory" [label]="categoryLabelName(category)">
             <div class="vm-size-list">
                 <bl-focus-section>
-                    <bl-table [data]="categories[category]" [activeItem]="pickedSize" (activeItemChange)="pickSize($event)">
+                    <bl-table [data]="categories[category]" [activeItem]="pickedSize" (activeItemChange)="pickSize($event)" [config]="tableConfig">
                         <bl-column name="title" [sortable]="true">
                             <bl-header-cell-def>Name</bl-header-cell-def>
                             <div *blCellDef="let size">{{size.title}}</div>
@@ -20,12 +20,12 @@
                         </bl-column>
 
                         <bl-column name="ram" [sortable]="true" [defaultWidth]="60">
-                            <bl-header-cell-def>Cores</bl-header-cell-def>
+                            <bl-header-cell-def>Ram</bl-header-cell-def>
                             <div *blCellDef="let size">{{size.prettyRAM}}</div>
                         </bl-column>
 
                         <bl-column name="osdisk" [sortable]="true" [defaultWidth]="70">
-                            <bl-header-cell-def>Cores</bl-header-cell-def>
+                            <bl-header-cell-def>OS Disk</bl-header-cell-def>
                             <div *blCellDef="let size">{{size.prettyOSDiskSize}}</div>
                         </bl-column>
 

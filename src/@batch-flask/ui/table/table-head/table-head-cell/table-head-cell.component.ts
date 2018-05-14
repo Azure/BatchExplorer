@@ -34,6 +34,8 @@ export class TableHeadCellComponent implements OnDestroy {
     }
 
     public sortDirection: SortDirection;
+
+    @HostBinding("class.sorting")
     public isSorting: boolean = false;
 
     private _sub: Subscription;
@@ -44,7 +46,11 @@ export class TableHeadCellComponent implements OnDestroy {
 
         this._sub = table.columnManager.sorting.subscribe((sortingInfo) => {
             this.isSorting = sortingInfo && sortingInfo.column === this.column.name;
-            this.sortDirection = sortingInfo ? sortingInfo.direction : SortDirection.Asc;
+            if (this.isSorting) {
+                this.sortDirection = sortingInfo.direction;
+            } else {
+                this.sortDirection = SortDirection.Asc;
+            }
             this.changeDetector.markForCheck();
         });
     }

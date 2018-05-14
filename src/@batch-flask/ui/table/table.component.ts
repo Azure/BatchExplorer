@@ -1,6 +1,6 @@
 import {
-    AfterContentInit, ChangeDetectorRef, Component, ContentChildren,
-    EventEmitter, HostBinding, HostListener, Input, OnChanges, OnDestroy, Optional, Output, QueryList, ViewChild,
+    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component,
+    ContentChildren, EventEmitter, HostBinding, HostListener, Input, OnChanges, OnDestroy, Optional, Output, QueryList, ViewChild,
 } from "@angular/core";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
@@ -30,6 +30,13 @@ export interface TableConfig extends AbstractListBaseConfig {
      * @default false
      */
     droppable?: boolean;
+
+    /**
+     * If the column name don't map to a value of the object
+     * this allows you to return the path this column should map to.
+     * This is used for sorting.
+     */
+    values?: StringMap<(item: any) => any>;
 }
 
 export const tableDefaultConfig = {
@@ -46,6 +53,7 @@ export interface DropEvent {
 @Component({
     selector: "bl-table",
     templateUrl: "table.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableComponent extends AbstractListBase implements AfterContentInit, OnChanges, OnDestroy {
     @Input() public set config(config: TableConfig) {
@@ -186,7 +194,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
             log.error(`Cannot sort. There is no column with name ${column.name} in the list of columns ${keys}`);
             return items;
         }
-        return this._sortItems(items, column, sortingInfo.direction)
+        return this._sortItems(items, column, sortingInfo.direction);
     }
 
     private _getItems() {
@@ -202,9 +210,11 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     }
 
     private _sortItems(items: any[], column: TableColumnRef, direction: SortDirection): any[] {
-        const sortedRows = items.sort((a, b) => {
-            const aValue = a[column.name];
-            const bValue = b[column.name];
+        const getColumnValue = this._columnValueFn(column);
+
+        const sortedRows = [...items].sort((a, b) => {
+            const aValue = getColumnValue(a);
+            const bValue = getColumnValue(b);
             if (aValue < bValue) {
                 return -1;
             } else if (aValue > bValue) {
@@ -218,5 +228,13 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
             return sortedRows.reverse();
         }
         return sortedRows;
+    }
+
+    private _columnValueFn(column: TableColumnRef) {
+        if (this.config.values && column.name in this.config.values) {
+            return this.config.values[column.name];
+        } else {
+            return (item) => item[column.name];
+        }
     }
 }

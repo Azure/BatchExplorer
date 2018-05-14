@@ -14,6 +14,7 @@ import { PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
 import { StringUtils, exists, prettyBytes } from "app/utils";
 
+import { TableConfig } from "@batch-flask/ui/table";
 import "./vm-size-picker.scss";
 
 const categoriesDisplayName = {
@@ -82,6 +83,16 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     public categoryNames: string[];
     public categories: StringMap<VmSizeDecorator[]>;
     public prices: OSPricing = null;
+
+    public tableConfig: TableConfig = {
+        values: {
+            title: (size: VmSizeDecorator) => size.vmSize.name,
+            cores: (size: VmSizeDecorator) => size.vmSize.numberOfCores,
+            ram: (size: VmSizeDecorator) => size.vmSize.memoryInMB,
+            osDisk: (size: VmSizeDecorator) => size.vmSize.osDiskSizeInMB,
+            resourceDisk: (size: VmSizeDecorator) => size.vmSize.resourceDiskSizeInMB,
+        },
+    };
 
     private _propagateChange: (value: string) => void = null;
     private _categories: StringMap<string[]> = {};

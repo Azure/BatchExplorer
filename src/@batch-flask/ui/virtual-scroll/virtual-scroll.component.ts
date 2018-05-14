@@ -1,5 +1,6 @@
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     Component,
     ContentChild,
     ElementRef,
@@ -44,6 +45,7 @@ interface VirtualScrollDimensions {
 @Component({
     selector: "bl-virtual-scroll",
     templateUrl: "virtual-scroll.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 
