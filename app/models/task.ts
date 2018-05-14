@@ -18,6 +18,7 @@ import { UserIdentity } from "./user-identity";
 
 export interface TaskAttributes {
     id: string;
+    jobId: string;
     displayName: string;
     url: string;
     eTag: string;
@@ -48,6 +49,7 @@ export interface TaskAttributes {
 @Model()
 export class Task extends Record<TaskAttributes> {
     @Prop() public id: string;
+    @Prop() public jobId: string;
     @Prop() public displayName: string;
     @Prop() public url: string;
     @Prop() public eTag: string;
@@ -96,6 +98,10 @@ export class Task extends Record<TaskAttributes> {
      */
     public get preparationTaskFailed() {
         return this.state === TaskState.active && this.previousState === TaskState.preparing;
+    }
+
+    public get routerLink() {
+        return ["/jobs", this.jobId, "tasks", this.id];
     }
 }
 

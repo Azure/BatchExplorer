@@ -3,7 +3,7 @@ import { RequestOptions, URLSearchParams } from "@angular/http";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { AccountKeys, AccountResource, Subscription } from "app/models";
+import { AccountKeys, AccountResource, BatchAccountAttributes, Subscription } from "app/models";
 import { AccountPatchDto } from "app/models/dtos";
 import { ArmResourceUtils, log } from "app/utils";
 import { Constants } from "common";
@@ -403,7 +403,7 @@ export class AccountService {
         return this.storage.set(this._accountJsonFileName, accounts.toJS());
     }
 
-    private _getAccount(accountId: string): Observable<AccountResource> {
+    private _getAccount(accountId: string): Observable<BatchAccountAttributes> {
         return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(accountId))
             .flatMap((subscription) => {
                 return this.azure.get(subscription, accountId)
@@ -415,8 +415,8 @@ export class AccountService {
             .share();
     }
 
-    private _createAccount(subscription: Subscription, data: any): AccountResource {
-        return new AccountResource(Object.assign({}, data, { subscription }));
+    private _createAccount(subscription: Subscription, data: any): BatchAccountAttributes {
+        return { ...data, subscription };
     }
 
     private _markAccountsAsLoaded() {

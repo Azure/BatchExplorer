@@ -11,18 +11,28 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()"  [commands]="commands">
-        <bl-thead>
-            <bl-column>ID</bl-column>
-            <bl-column>State</bl-column>
-            <bl-column>Pool</bl-column>
-        </bl-thead>
+    <bl-table *ngIf="!quicklist"
+        [data]="jobSchedules"
+        [status]="status"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        (scrollBottom)="onScrollToBottom()"
+        [commands]="commands">
 
-        <bl-row *ngFor="let jobSchedule of jobSchedules; trackBy: trackByFn" [link]="['/jobschedules/', jobSchedule.id]" [key]="jobSchedule.id">
-            <bl-cell>{{jobSchedule.id}}</bl-cell>
-            <bl-cell>{{jobSchedule.state}}</bl-cell>
-            <bl-cell>{{jobSchedule.poolInfo?.poolId}}</bl-cell>
-        </bl-row>
+        <bl-column name="id">
+            <bl-column-header>ID</bl-column-header>
+            <div *blCellDef="let jobSchedule">{{jobSchedule.id}}</div>
+        </bl-column>
+
+        <bl-column name="state">
+            <bl-column-header>State</bl-column-header>
+            <div *blCellDef="let jobSchedule">{{jobSchedule.state}}</div>
+        </bl-column>
+
+        <bl-column name="pool">
+            <bl-column-header>Pool</bl-column-header>
+            <div *blCellDef="let jobSchedule">{{jobSchedule.poolInfo?.poolId}}</div>
+        </bl-column>
     </bl-table>
 </bl-focus-section>
 

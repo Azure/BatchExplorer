@@ -8,6 +8,7 @@ import { ComputeNodeError, ComputeNodeErrorAttributes } from "./compute-node-err
 
 export interface NodeAttributes {
     id: string;
+    poolId: string;
     url: string;
     state: NodeState;
     schedulingState: string;
@@ -33,6 +34,7 @@ export interface NodeAttributes {
 @Model()
 export class Node extends Record<NodeAttributes> {
     @Prop() public id: string;
+    @Prop() public poolId: string;
     @Prop() public url: string;
     @Prop() public state: NodeState;
     @Prop() public schedulingState: string;
@@ -51,6 +53,10 @@ export class Node extends Record<NodeAttributes> {
     @ListProp(NodeRecentTask) public recentTasks: List<NodeRecentTask> = List([]);
     @ListProp(CertificateReference) public certificateReferences: List<CertificateReference> = List([]);
     @ListProp(ComputeNodeError) public errors: List<ComputeNodeError> = List([]);
+
+    public get routerLink() {
+        return ["/pools", this.poolId, "nodes", this.id];
+    }
 }
 
 export enum NodeState {

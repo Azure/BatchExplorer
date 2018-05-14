@@ -24,23 +24,27 @@
     </bl-quick-list>
 
     <bl-table *ngIf="!quicklist"
+        [data]="jobs"
         [status]="status"
         [(activeItem)]="activeItem"
         [(selection)]="selection"
         [commands]="commands"
         (scrollBottom)="onScrollToBottom()">
 
-        <bl-thead>
-            <bl-column>ID</bl-column>
-            <bl-column>State</bl-column>
-            <bl-column>Pool</bl-column>
-        </bl-thead>
+        <bl-column name="id">
+            <bl-column-header>ID</bl-column-header>
+            <div *blCellDef="let job">{{job.id}}</div>
+        </bl-column>
 
-        <bl-row *ngFor="let job of jobs; trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id">
-            <bl-cell>{{job.id}}</bl-cell>
-            <bl-cell>{{job.state}}</bl-cell>
-            <bl-cell>{{job.poolInfo?.poolId}}</bl-cell>
-        </bl-row>
+        <bl-column name="state">
+            <bl-column-header>State</bl-column-header>
+            <div *blCellDef="let job">{{job.state}}</div>
+        </bl-column>
+
+        <bl-column name="pool">
+            <bl-column-header>Pool</bl-column-header>
+            <div *blCellDef="let job">{{job.poolInfo?.poolId}}</div>
+        </bl-column>
     </bl-table>
 </bl-focus-section>
 <bl-no-item [itemCount]="jobs.size" [filter]="filter" [status]="status">

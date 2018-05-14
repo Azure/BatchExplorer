@@ -91,7 +91,7 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
         isFirstPage: boolean): ListResponse<TEntity> {
 
         const { data, nextLink } = response;
-        const items = data.map(x => new this.type(x));
+        const items = data.map(x => new this.type({ ...params as any, ...x }));
         const keys = OrderedSet(cache.addItems(items, options.select));
         const token = {
             nextLink,

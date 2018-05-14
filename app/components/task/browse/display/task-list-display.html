@@ -12,27 +12,42 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="scrollBottom.emit()">
-        <bl-thead>
-            <bl-column style="width: 200px">ID</bl-column>
-            <bl-column>State</bl-column>
-            <bl-column>Created</bl-column>
-            <bl-column>Started</bl-column>
-            <bl-column>Completed</bl-column>
-            <bl-column>Exit code</bl-column>
-        </bl-thead>
+    <bl-table *ngIf="!quicklist"
+        [data]="tasks"
+        [status]="status"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        (scrollBottom)="scrollBottom.emit()">
 
-        <bl-row *ngFor="let task of tasks;trackBy: trackByFn" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id">
-            <bl-cell [value]="task.id"></bl-cell>
-            <bl-cell [value]="task.state">
-                {{task.state}}
-                <span class="danger" *ngIf="task.preparationTaskFailed">&nbsp;(Prep task failed)</span>
-            </bl-cell>
-            <bl-cell [value]="formatDate(task.creationTime)"></bl-cell>
-            <bl-cell [value]="formatDate(task.executionInfo?.startTime)"></bl-cell>
-            <bl-cell [value]="formatDate(task.executionInfo?.endTime)"></bl-cell>
-            <bl-cell [value]="task.executionInfo?.exitCode"></bl-cell>
-        </bl-row>
+        <bl-column name="id" [defaultWidth]="200">
+            <bl-column-header>ID</bl-column-header>
+            <div *blCellDef="let task">{{task.id}}</div>
+        </bl-column>
+
+        <bl-column name="state">
+            <bl-column-header>State</bl-column-header>
+            <div *blCellDef="let task">{{task.state}}</div>
+        </bl-column>
+
+        <bl-column name="creationTime">
+            <bl-column-header>Created</bl-column-header>
+            <div *blCellDef="let task">{{formatDate(task.creationTime)}}</div>
+        </bl-column>
+
+        <bl-column name="startTime">
+            <bl-column-header>Started</bl-column-header>
+            <div *blCellDef="let task">{{formatDate(task.executionInfo?.startTime)}}</div>
+        </bl-column>
+
+        <bl-column name="endTime">
+            <bl-column-header>Completed</bl-column-header>
+            <div *blCellDef="let task">{{formatDate(task.executionInfo?.endTime)}}</div>
+        </bl-column>
+
+        <bl-column name="exitCode">
+            <bl-column-header>Exit code</bl-column-header>
+            <div *blCellDef="let task">{{task.executionInfo?.exitCode}}</div>
+        </bl-column>
     </bl-table>
 </bl-focus-section>
 <bl-no-item [itemCount]="tasks.size" [status]="status">
