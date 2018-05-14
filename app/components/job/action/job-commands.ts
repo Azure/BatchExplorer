@@ -107,8 +107,7 @@ export class JobCommands extends EntityCommands<Job> {
         });
 
         this.createJobSchedule = this.simpleCommand({
-            label: "Create job schedule for this job",
-            icon: "fa fa-calendar",
+            ...COMMAND_LABEL_ICON.CreateJobScheduleForJobs,
             action: (job) => this._createJobSchedule(job),
             multiple: false,
             confirm: false,

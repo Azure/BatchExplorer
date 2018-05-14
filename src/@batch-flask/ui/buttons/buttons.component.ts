@@ -41,34 +41,6 @@ export class ClearListSelectionButtonComponent extends BaseButton {
     }
 }
 
-/**
- * Would be nice to be able to have an abstract base component that held the
- * button template and we just called super("Add", "fa-icon").
- */
-@Component({
-    selector: "bl-add-button",
-    template: `
-        <bl-button color="light" icon="fa fa-plus" [title]="title" [action]="action" permission="write">
-        </bl-button>
-    `,
-})
-export class AddButtonComponent extends BaseButton {
-    @Input()
-    public title: string = "Add";
-}
-
-@Component({
-    selector: "bl-clone-button",
-    template: `
-        <bl-button color="light" [action]="action" [title]="title" icon="fa fa-clone" permission="write">
-        </bl-button>
-    `,
-})
-export class CloneButtonComponent extends BaseButton {
-    @Input()
-    public title: string = "Clone";
-}
-
 @Component({
     selector: "bl-download-button",
     template: `
@@ -87,14 +59,4 @@ export class DownloadButtonComponent extends BaseButton {
     }
 
     private _enabled: boolean = true;
-}
-
-@Component({
-    selector: "bl-resize-button",
-    template: `
-        <bl-button color="light" [action]="action" title="Resize" icon="fa fa-arrows-v" permission="write">
-        </bl-button>
-    `,
-})
-export class ResizeButtonComponent extends BaseButton {
 }

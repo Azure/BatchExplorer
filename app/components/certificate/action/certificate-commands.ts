@@ -43,8 +43,7 @@ export class CertificateCommands extends EntityCommands<Certificate> {
         });
 
         this.reactivate = this.simpleCommand({
-            label: "Reactivate",
-            icon: "fa fa-undo",
+            ...COMMAND_LABEL_ICON.Reactivate,
             action: (certificate) => this.certificateService.cancelDelete(certificate.id),
             enabled: (certificate) => certificate.state === CertificateState.deletefailed,
             multiple: false,

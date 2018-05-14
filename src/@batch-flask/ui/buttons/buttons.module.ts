@@ -6,12 +6,9 @@ import { MaterialModule } from "@batch-flask/core";
 import { ButtonGroupComponent } from "./button-group.component";
 import { ButtonComponent } from "./button.component";
 import {
-    AddButtonComponent,
     ClearListSelectionButtonComponent,
-    CloneButtonComponent,
     DownloadButtonComponent,
     LoadingButtonComponent,
-    ResizeButtonComponent,
 } from "./buttons.component";
 import { ClickableComponent } from "./clickable";
 import { DirectoryPickerComponent } from "./directory-picker.component";
@@ -20,13 +17,10 @@ import { RefreshButtonComponent } from "./refresh-btn";
 const components = [
     ButtonComponent,
     ButtonGroupComponent,
-    AddButtonComponent,
     ClearListSelectionButtonComponent,
-    CloneButtonComponent,
     DirectoryPickerComponent,
     DownloadButtonComponent,
     LoadingButtonComponent,
-    ResizeButtonComponent,
     RefreshButtonComponent,
     ClickableComponent,
 ];

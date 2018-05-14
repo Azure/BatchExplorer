@@ -31,13 +31,11 @@ export class BatchAccountCommands extends EntityCommands<AccountResource> {
 
     private _buildCommands() {
         this.showKeys = this.simpleCommand({
-            label: "Credentials and code samples",
-            icon: "fa fa-key",
+            ...COMMAND_LABEL_ICON.Credentials,
             action: (account) => this._showKeys(account),
             multiple: false,
             confirm: false,
             notify: false,
-            tooltipPosition: "above",
         });
 
         this.delete = this.simpleCommand({

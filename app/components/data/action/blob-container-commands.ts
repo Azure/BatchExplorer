@@ -61,8 +61,7 @@ export class BlobContainerCommands extends EntityCommands<BlobContainer, Storage
         });
 
         this.download = this.simpleCommand({
-            label: "Download",
-            icon: "fa fa-download",
+            ...COMMAND_LABEL_ICON.Download,
             action: (container: BlobContainer) => this._download(container),
             multiple: false,
             confirm: false,

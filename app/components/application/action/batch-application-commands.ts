@@ -47,7 +47,6 @@ export class BatchApplicationCommands extends EntityCommands<BatchApplication> {
 
         this.edit = this.simpleCommand({
             ...COMMAND_LABEL_ICON.Edit,
-            icon: "fa fa-edit",
             action: (application) => this._editApplication(application),
             multiple: false,
             confirm: false,

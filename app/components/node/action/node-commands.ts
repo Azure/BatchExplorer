@@ -41,8 +41,7 @@ export class NodeCommands extends EntityCommands<Node> {
 
     private _buildCommands() {
         this.connect = this.simpleCommand({
-            label: "Connect to node",
-            icon: "fa fa-plug",
+            ...COMMAND_LABEL_ICON.ConnectToNode,
             action: (node) => this._connect(node),
             multiple: false,
             confirm: false,
@@ -57,8 +56,7 @@ export class NodeCommands extends EntityCommands<Node> {
         });
 
         this.reboot = this.simpleCommand({
-            label: "Reboot node",
-            icon: "fa fa-power-off",
+            ...COMMAND_LABEL_ICON.RebootNode,
             action: (node: Node) => this._reboot(node),
             permission: Permission.Write,
         });
