@@ -36,6 +36,9 @@ export class TableColumnManager {
         this.columnOrder = columns.map(x => x.name);
         this.columnMap.clear();
         for (const column of columns) {
+            if (this.columnMap.has(column.name)) {
+                throw new Error("bl-column name 'cores' must be unique");
+            }
             this.columnMap.set(column.name, column);
         }
         this._computeColumns();

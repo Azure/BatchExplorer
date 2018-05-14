@@ -1,6 +1,10 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild,
-    HostBinding, Inject, Input, OnChanges, TemplateRef, forwardRef,
+    AfterContentInit, ChangeDetectionStrategy,
+    ChangeDetectorRef, Component,
+    ContentChild, HostBinding,
+    Inject, Input, OnChanges,
+    OnInit, SimpleChanges, TemplateRef,
+    forwardRef,
 } from "@angular/core";
 
 import { SecureUtils } from "@batch-flask/utils";
@@ -14,7 +18,7 @@ import { TableComponent } from "../table.component";
     template: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableColumnComponent implements OnChanges {
+export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges {
     @Input() public defaultWidth: number = null;
     @Input() public name: string;
 
@@ -51,14 +55,25 @@ export class TableColumnComponent implements OnChanges {
         this.id = SecureUtils.uuid();
     }
 
-    public ngOnChanges(changes) {
+    public ngOnInit() {
+        this._validateName();
+    }
+
+    public ngAfterContentInit() {
+        this._validateCellDef();
+    }
+
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes.name) {
+            this._validateName();
+        }
         if (changes.defaultWidth) {
             this.width = this.defaultWidth;
         }
     }
 
     public update() {
-        this._table.updateColumn(this.getRef());
+        this._table.updateColumn(this.name, this.getRef());
         this.changeDetector.markForCheck();
     }
 
@@ -71,5 +86,18 @@ export class TableColumnComponent implements OnChanges {
             isSorting: this.isSorting,
             cellTemplate: this.cell,
         };
+    }
+
+    private _validateName() {
+        if (!this.name) {
+            throw new Error("bl-column must have a unique name but not was provided.");
+        }
+    }
+
+    private _validateCellDef() {
+        if (!this.cell) {
+            const example = `<div *blCellDef="let item">item.value</div>`;
+            throw new Error(`bl-column '${this.name}' must have a cell definition.Add '${example}'`);
+        }
     }
 }

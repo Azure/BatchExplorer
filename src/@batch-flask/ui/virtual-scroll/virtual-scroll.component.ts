@@ -142,7 +142,9 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
     }
 
     public ngOnDestroy() {
-        this._erd.uninstall(this.element.nativeElement);
+        if (this._erd) {
+            this._erd.uninstall(this.element.nativeElement);
+        }
         this._removeParentEventHandlers(this.parentScroll);
     }
 

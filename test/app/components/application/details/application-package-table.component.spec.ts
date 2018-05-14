@@ -16,7 +16,7 @@ import { NoItemMockComponent } from "test/utils/mocks/components";
 
 import { ContextMenuService } from "@batch-flask/ui";
 import {
-    TableCellComponent, TableColumnComponent, TableComponent, TableHeadComponent,
+     TableColumnComponent, TableComponent, TableHeadComponent,
 } from "@batch-flask/ui/table";
 
 const appWithPackagesId: string = "app-2";
@@ -72,7 +72,7 @@ describe("ApplicationPackageTableComponent", () => {
         TestBed.configureTestingModule({
             imports: [RouterTestingModule],
             declarations: [
-                ApplicationPackageTableComponent, NoItemMockComponent, TableComponent, TableCellComponent,
+                ApplicationPackageTableComponent, NoItemMockComponent, TableComponent,
                 TableColumnComponent, TableHeadComponent, TestComponent,
             ],
             providers: [

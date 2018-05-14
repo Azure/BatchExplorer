@@ -4,7 +4,7 @@ import {
     OnChanges, OnDestroy, Optional, Output, QueryList, ViewChild,
 } from "@angular/core";
 import { List } from "immutable";
-import { BehaviorSubject, Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 
 import { Router } from "@angular/router";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
@@ -73,12 +73,10 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     }
     public dropTargetRowKey: string = null;
 
-    public dimensions: Observable<number[]>;
     public columnManager = new TableColumnManager();
 
     protected _config: TableConfig = tableDefaultConfig;
     private _sortingInfo: SortingInfo;
-    private _dimensions = new BehaviorSubject([]);
     private _sub: Subscription;
 
     /**
@@ -91,7 +89,6 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         breadcrumbService: BreadcrumbService,
         @Optional() focusSection?: FocusSectionComponent) {
         super(contextmenuService, router, breadcrumbService, changeDetection, focusSection);
-        this.dimensions = this._dimensions.asObservable();
     }
 
     public ngAfterContentInit() {
@@ -100,10 +97,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
             this.columnManager.columns = this.columnComponents.map(x => x.getRef());
             this.changeDetector.markForCheck();
         });
-        // TODO-TIM compute dimensions
-        // if (this.head) {
-        //     this.head.dimensions.subscribe((dimensions) => this._dimensions.next(dimensions));
-        // }
+
         this._sub = this.columnManager.sorting.subscribe((sortingInfo) => {
             this._sortingInfo = sortingInfo;
         });
@@ -117,8 +111,9 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     }
 
     public ngOnDestroy() {
-        this._sub.unsubscribe();
-        this._dimensions.complete();
+        if (this._sub) {
+            this._sub.unsubscribe();
+        }
     }
 
     @HostListener("dragover", ["$event"])
@@ -131,7 +126,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         this.changeDetector.markForCheck();
     }
 
-    public updateColumn(ref) {
+    public updateColumn(name: string, ref) {
         this.columnManager.updateColumn(ref);
         this.changeDetector.markForCheck();
     }

@@ -7,7 +7,7 @@ import { Observable } from "rxjs";
 
 import { ContextMenuService } from "@batch-flask/ui";
 import {
-    TableCellComponent, TableColumnComponent, TableComponent, TableHeadComponent,
+    TableColumnComponent, TableComponent, TableHeadComponent,
 } from "@batch-flask/ui/table";
 import { Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
@@ -51,7 +51,7 @@ describe("TaskDependenciesComponent", () => {
         TestBed.configureTestingModule({
             imports: [RouterTestingModule],
             declarations: [
-                TestComponent, NoItemMockComponent, TableCellComponent, TableColumnComponent, TableComponent,
+                TestComponent, NoItemMockComponent, TableColumnComponent, TableComponent,
                 TableHeadComponent, TaskDependenciesComponent,
             ],
             providers: [
