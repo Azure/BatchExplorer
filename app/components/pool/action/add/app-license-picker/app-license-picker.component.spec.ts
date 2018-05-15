@@ -1,11 +1,13 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
-import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { MatCheckboxChange, MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
-
+import { RouterTestingModule } from "@angular/router/testing";
 import { MaterialModule } from "@batch-flask/core";
 import { ListSelection } from "@batch-flask/core/list";
+import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
+
 import { AppLicensePickerComponent } from "app/components/pool/action/add";
 import { ElectronTestingModule } from "test/utils/mocks";
 import { TableTestingModule } from "test/utils/mocks/components";
@@ -34,10 +36,11 @@ describe("AppLicensePickerComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [FormsModule, MaterialModule, TableTestingModule, ElectronTestingModule],
+            imports: [FormsModule, MaterialModule, TableTestingModule, ElectronTestingModule, RouterTestingModule],
             declarations: [AppLicensePickerComponent, TestComponent],
             providers: [
                 { provide: MatDialog, useValue: matDialogSpy },
+                { provide: BreadcrumbService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -75,22 +78,19 @@ describe("AppLicensePickerComponent", () => {
         expect(row4Columns[2].nativeElement.textContent).toContain("TBD");
     });
 
-    it("Should select license by checking checkbox", fakeAsync(() => {
+    it("Should select license by checking checkbox", () => {
         component.updateSelection(new ListSelection({ keys: ["maya"] }));
-        tick();
         fixture.detectChanges();
         expect(testComponent.appLicenses.length).toEqual(1);
         expect(testComponent.appLicenses[0]).toEqual("maya");
-    }));
+    });
 
-    it("Uncheck should not add the license", fakeAsync(() => {
+    it("Uncheck should not add the license", () => {
         component.updateSelection(new ListSelection({ keys: ["maya"] }));
-        tick();
         component.updateSelection(new ListSelection());
-        tick();
         fixture.detectChanges();
         expect(testComponent.appLicenses.length).toEqual(0);
-    }));
+    });
 
     describe("EULA", () => {
         it("Calling viewEula opens dialog", () => {
@@ -100,24 +100,21 @@ describe("AppLicensePickerComponent", () => {
     });
 
     describe("Validation", () => {
-        it("Validation passes if nothing selected", fakeAsync(() => {
+        it("Validation passes if nothing selected", () => {
             expect(component.validate(null)).toBeNull();
-        }));
+        });
 
-        it("Validation fails if license selected and checkbox not checked", fakeAsync(() => {
+        it("Validation fails if license selected and checkbox not checked", () => {
             component.updateSelection(new ListSelection({ keys: ["maya"] }));
-            tick();
             fixture.detectChanges();
             expect(component.validate(null)).toEqual({ required: true });
-        }));
+        });
 
-        it("Validation passes if license selected and checkbox checked", fakeAsync(() => {
+        it("Validation passes if license selected and checkbox checked", () => {
             component.updateSelection(new ListSelection({ keys: ["maya"] }));
-            tick();
             component.eulaCheck({ checked: true } as MatCheckboxChange);
-            tick();
             fixture.detectChanges();
             expect(component.validate(null)).toBeNull();
-        }));
+        });
     });
 });

@@ -87,6 +87,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     }
 
     public updateSelection(selection: ListSelection) {
+        if (this.pickedLicenses === selection) { return; }
         this.pickedLicenses = selection;
         this._emitChangeAndTouchedEvents();
     }
@@ -119,17 +120,13 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     private _emitChangeAndTouchedEvents() {
         this._fireChangeEvent();
         if (this._propagateTouched) {
-            setTimeout(() => {
-                this._propagateTouched(true);
-            });
+            this._propagateTouched(true);
         }
     }
 
     private _fireChangeEvent() {
         if (this._propagateChange) {
-            setTimeout(() => {
-                this._propagateChange([...this.pickedLicenses.keys]);
-            });
+            this._propagateChange([...this.pickedLicenses.keys]);
         }
     }
 }
