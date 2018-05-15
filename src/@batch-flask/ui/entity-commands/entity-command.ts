@@ -120,7 +120,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         const label = this.label(entity);
         this.performAction(entity, options).subscribe({
             next: () => {
-                this._notifySuccess(`${label} was successfull.`, `${entity.id}`);
+                this._notifySuccess(`${label} was successful.`, `${entity.id}`);
                 this.definition.get((entity as any).id).subscribe({
                     error: () => null,
                 });
@@ -142,7 +142,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
                 func: () => this.performAction(entity, options),
             };
         })).subscribe((result) => {
-            this._notifySuccess(`${label} was successfull.`,
+            this._notifySuccess(`${label} was successful.`,
                 `${result.succeeded}/${entities.length}`);
         });
     }
