@@ -1,8 +1,8 @@
+import { NgModule } from "@angular/core";
 import { ElectronRemote } from "@batch-flask/ui";
 import { AuthenticationWindow } from "client/core/aad/authentication";
 import { SplashScreen } from "client/splash-screen";
 import { MockAuthenticationWindow, MockBrowserWindow, MockSplashScreen } from "../windows";
-import { NgModule } from "@angular/core";
 
 export class MockElectronRemote extends ElectronRemote {
     public authenticationWindow: MockAuthenticationWindow;
