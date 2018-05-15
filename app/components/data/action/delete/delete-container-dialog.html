@@ -1,7 +1,15 @@
-<bl-simple-form [submit]="destroy" [containerRef]="dialogRef" actionColor="warn" actionName="Delete" [stickyFooter]="false" [multiUse]="false"
+<bl-simple-form [submit]="ok" [containerRef]="dialogRef" actionColor="warn" actionName="Delete" [stickyFooter]="false" [multiUse]="false"
     size="small" title="Delete file group">
     <div class="message">
-        <p>Do you want to permantly delete the file group: '<b>{{name}}</b>'?</p>
+        <p>Do you want to permantly delete file group(s):</p>
+        <table style="width: 100%; margin: 10px 0;">
+            <tr style="text-align: left;">
+                <th>Name</th>
+            </tr>
+            <tr *ngFor="let container of containers">
+                <td>{{container.name}}</td>
+            </tr>
+        </table>
         <p>
             Warning! Deleting the file group listed above is irreversible.
             The action you are about to take cannot be undone.

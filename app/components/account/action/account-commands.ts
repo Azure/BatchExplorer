@@ -9,7 +9,7 @@ import { DeleteAccountDialogComponent } from "./delete";
 @Injectable()
 export class BatchAccountCommands extends EntityCommands<AccountResource> {
     public showKeys: EntityCommand<AccountResource, void>;
-    public delete: EntityCommand<AccountResource, string[]>;
+    public delete: EntityCommand<AccountResource, void>;
 
     private _dialog: DialogService;
 
@@ -52,9 +52,7 @@ export class BatchAccountCommands extends EntityCommands<AccountResource> {
                 return accountState !== accountProvisioningState.Creating
                     && accountState !== accountProvisioningState.Deleting;
             },
-            confirm: (accounts) => {
-                return this._confirmAndGetInfo(accounts);
-            },
+            confirm: (accounts) => this._confirmDeletion(accounts),
             permission: Permission.Write,
         });
 
@@ -69,7 +67,7 @@ export class BatchAccountCommands extends EntityCommands<AccountResource> {
         ref.componentInstance.accountId = account.id;
     }
 
-    private _confirmAndGetInfo(entities: AccountResource[]) {
+    private _confirmDeletion(entities: AccountResource[]) {
         const dialogRef = this._dialog.open(DeleteAccountDialogComponent);
         dialogRef.componentInstance.accounts = entities;
         return dialogRef.componentInstance.onSubmit;

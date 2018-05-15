@@ -10,7 +10,7 @@ import { AccountResource } from "app/models";
     templateUrl: "delete-account-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DeleteAccountDialogComponent extends ConfirmationDialog<string[]> {
+export class DeleteAccountDialogComponent extends ConfirmationDialog<any> {
     public set accounts(accounts: AccountResource[]) {
         this._accounts = accounts;
         this.changeDetector.detectChanges();

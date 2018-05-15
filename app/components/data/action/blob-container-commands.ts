@@ -47,6 +47,7 @@ export class BlobContainerCommands extends EntityCommands<BlobContainer, Storage
         this.delete = this.simpleCommand({
             ...COMMAND_LABEL_ICON.Delete,
             action: (container: BlobContainer) => this._deleteFileGroup(container),
+            confirm: (containers) => this._confirmDeletion(containers),
             permission: Permission.Write,
         });
 
@@ -104,9 +105,7 @@ export class BlobContainerCommands extends EntityCommands<BlobContainer, Storage
     }
 
     private _deleteFileGroup(container: BlobContainer) {
-        const dialogRef = this.dialog.open(DeleteContainerDialogComponent);
-        dialogRef.componentInstance.id = container.id;
-        dialogRef.componentInstance.name = container.name;
+        return this.storageContainerService.delete(this.params.storageAccountId, container.id);
     }
 
     private _download(container: BlobContainer) {
@@ -122,5 +121,11 @@ export class BlobContainerCommands extends EntityCommands<BlobContainer, Storage
                 this.pinnedEntityService.unPinFavorite(container);
             }
         });
+    }
+
+    private _confirmDeletion(entities: BlobContainer[]) {
+        const dialogRef = this.dialog.open(DeleteContainerDialogComponent);
+        dialogRef.componentInstance.containers = entities;
+        return dialogRef.componentInstance.onSubmit;
     }
 }

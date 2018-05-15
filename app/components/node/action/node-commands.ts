@@ -90,12 +90,8 @@ export class NodeCommands extends EntityCommands<Node> {
     }
 
     private _delete(node: Node) {
-        this.dialog.confirm("Are you sure you want to delete this node?", {
-            yes: () => {
-                return this.nodeService.delete(this.pool.id, node.id)
-                    .cascade(() => this.nodeService.get(this.pool.id, node.id));
-            },
-        });
+        return this.nodeService.delete(this.pool.id, node.id)
+            .cascade(() => this.nodeService.get(this.pool.id, node.id));
     }
 
     private _editStartTask(node: Node) {

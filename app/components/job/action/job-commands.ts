@@ -145,6 +145,7 @@ export class JobCommands extends EntityCommands<Job> {
             this.enable,
             this.disable,
             this.clone,
+            this.createJobSchedule,
             this.exportAsJSON,
             this.pin,
         ];

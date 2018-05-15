@@ -76,13 +76,13 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         this.enable = this.simpleCommand({
             ...COMMAND_LABEL_ICON.Enable,
             action: (jobSchedule: JobSchedule) => this.jobScheduleService.enable(jobSchedule.id),
-            enabled: (jobSchedule) => {
-                return jobSchedule.state !== JobScheduleState.disabled
-                    && jobSchedule.state !== JobScheduleState.completed;
+            enabled: (jobSchedule: JobSchedule) => {
+                return jobSchedule.state === JobScheduleState.disabled
+                    || jobSchedule.state === JobScheduleState.completed;
             },
-            visible: (jobSchedule) => {
-                return jobSchedule.state !== JobScheduleState.disabled
-                    && jobSchedule.state !== JobScheduleState.completed;
+            visible: (jobSchedule: JobSchedule) => {
+                return jobSchedule.state === JobScheduleState.disabled
+                    || jobSchedule.state === JobScheduleState.completed;
             },
             permission: Permission.Write,
         });
@@ -90,8 +90,8 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         this.disable = this.simpleCommand({
             ...COMMAND_LABEL_ICON.Disable,
             action: (jobSchedule: JobSchedule) => this.jobScheduleService.disable(jobSchedule.id),
-            enabled: (jobSchedule) => jobSchedule.state === JobScheduleState.disabled,
-            visible: (jobSchedule) => jobSchedule.state === JobScheduleState.disabled,
+            enabled: (jobSchedule: JobSchedule) => jobSchedule.state !== JobScheduleState.disabled,
+            visible: (jobSchedule: JobSchedule) => jobSchedule.state !== JobScheduleState.disabled,
             permission: Permission.Write,
         });
 
