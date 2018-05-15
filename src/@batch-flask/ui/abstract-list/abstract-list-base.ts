@@ -277,7 +277,6 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             if (shiftKey) {
                 this.selectTo(item.id);
             } else if (ctrlKey) {
-                console.log("Toggle select", item.id, !this.selection.has(item.id));
                 this.onSelectedChange(item.id, !this.selection.has(item.id));
             }
             event.stopPropagation();
