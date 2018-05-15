@@ -8,13 +8,14 @@ import { TaskListDisplayComponent } from "./display";
 
 import { ActivatedRoute } from "@angular/router";
 import { Filter, autobind } from "@batch-flask/core";
-import { ListBaseComponent } from "@batch-flask/core/list";
+import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Task } from "app/models";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { TaskCommands } from "../action";
+import { DeleteTaskAction, TaskCommands } from "../action";
 
 @Component({
     selector: "bl-task-list",
@@ -49,7 +50,8 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
         public commands: TaskCommands,
         private taskService: TaskService,
         activatedRoute: ActivatedRoute,
-        private changeDetectorRef: ChangeDetectorRef) {
+        private changeDetectorRef: ChangeDetectorRef,
+        private taskManager: BackgroundTaskService) {
         super(changeDetectorRef);
         this.data = this.taskService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
@@ -94,5 +96,13 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
 
     public onScrollToBottom(): Observable<any> {
         return this.data.fetchNext();
+    }
+
+    public deleteSelection(selection: ListSelection) {
+        this.taskManager.startTask("", (backgroundTask) => {
+            const task = new DeleteTaskAction(this.taskService, this.jobId, [...selection.keys]);
+            task.start(backgroundTask);
+            return task.waitingDone;
+        });
     }
 }
