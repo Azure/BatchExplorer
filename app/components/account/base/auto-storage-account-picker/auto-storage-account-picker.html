@@ -4,14 +4,16 @@
             Clear
         </bl-button>
         <h3>Storage accounts in the same region as your batch account({{account.location}})</h3>
-        <ng-template *ngIf="preferedAccounts.size > 0"
-            [ngTemplateOutlet]="accountTableTemplate"
-            [ngTemplateOutletContext]="{$implicit: preferedAccounts}"></ng-template>
+        <div class="prefered">
+            <ng-template *ngIf="preferedAccounts.size > 0"
+                    [ngTemplateOutlet]="accountTableTemplate"
+                    [ngTemplateOutletContext]="{$implicit: preferedAccounts}"></ng-template>
+        </div>
         <div *ngIf="preferedAccounts.size === 0" class="no-prefered-account">
             You have no accounts in the same region!
         </div>
 
-        <div *ngIf="otherAccounts.size > 0">
+        <div *ngIf="otherAccounts.size > 0" class="others">
             <h3>Other regions</h3>
             <ng-template *ngIf="otherAccounts.size > 0"
                     [ngTemplateOutlet]="accountTableTemplate"
