@@ -228,8 +228,8 @@ describe("TableComponent", () => {
     template: `
         <bl-table [data]="sizes">
             <bl-column>
-                <div *blHeadCellRef>Name</div>
-                <div *blCellRef="let size">{{size.name}}</div>
+                <div *blHeadCellDef>Name</div>
+                <div *blCellDef="let size">{{size.name}}</div>
             </bl-column>
         </bl-table>
     `,
@@ -241,12 +241,12 @@ class MissingColumnName extends BaseTestComponent {
     template: `
         <bl-table [data]="sizes">
             <bl-column name="cores">
-                <div *blHeadCellRef>Cores</div>
-                <div *blCellRef="let size">{{size.name}}</div>
+                <div *blHeadCellDef>Cores</div>
+                <div *blCellDef="let size">{{size.name}}</div>
             </bl-column>
             <bl-column name="cores">
-                <div *blHeadCellRef>Display name</div>
-                <div *blCellRef="let size">{{size.displayName}}</div>
+                <div *blHeadCellDef>Display name</div>
+                <div *blCellDef="let size">{{size.displayName}}</div>
             </bl-column>
         </bl-table>
     `,
@@ -258,7 +258,7 @@ class DuplicateColumnName extends BaseTestComponent {
     template: `
         <bl-table [data]="sizes">
             <bl-column name="name">
-                <div *blHeadCellRef>Name</div>
+                <div *blHeadCellDef>Name</div>
             </bl-column>
         </bl-table>
     `,

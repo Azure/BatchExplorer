@@ -266,29 +266,24 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     }
 
     public handleClick(event: MouseEvent, item, activate = true) {
-        this.setFocusedItem(item);
+        this.setFocusedItem(item.id);
 
-        if (event) {
-            const shiftKey = event.shiftKey;
-            const ctrlKey = event.ctrlKey || event.metaKey;
-            // Prevent the routerlink from being activated if we have shift or ctrl
-            if (shiftKey || ctrlKey) {
-                const focusedItem = this.focusedItem.value;
-                if (!focusedItem) {
-                    return;
-                }
+        const shiftKey = event.shiftKey;
+        const ctrlKey = event.ctrlKey || event.metaKey;
+        // Prevent the routerlink from being activated if we have shift or ctrl
+        if (shiftKey || ctrlKey) {
+            const focusedItem = this.focusedItem.value;
+            if (!focusedItem) { return; }
 
-                if (shiftKey) {
-                    this.selectTo(item.id);
-                } else if (ctrlKey) {
-                    this.onSelectedChange(item.id, this.selection.has(item.id));
-                }
-                event.stopPropagation();
-                event.stopImmediatePropagation();
+            if (shiftKey) {
+                this.selectTo(item.id);
+            } else if (ctrlKey) {
+                console.log("Toggle select", item.id, !this.selection.has(item.id));
+                this.onSelectedChange(item.id, !this.selection.has(item.id));
             }
-        }
-
-        if (activate) {
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+        } else if (activate) {
             if (this.config.activable) {
                 // Means the user actually selected the item
                 this.activateItem(item);
