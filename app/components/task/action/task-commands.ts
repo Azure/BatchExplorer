@@ -48,6 +48,7 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
         this.delete = this.simpleCommand({
             ...COMMAND_LABEL_ICON.Delete,
             action: (task: Task) => this._deleteTask(task),
+            confirm: (tasks) => this._confirmDeletion(tasks),
             permission: Permission.Write,
         });
 
@@ -88,15 +89,20 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
         dialogRef.componentInstance.jobId = this.params.jobId;
         dialogRef.componentInstance.taskId = task.id;
         dialogRef.afterClosed().subscribe((obj) => {
-            // this.refresh();
+            this.get(task.id);
         });
     }
 
     private _deleteTask(task: Task) {
+        this.taskService.delete(this.params.jobId, task.id);
+    }
+
+    private _confirmDeletion(entities: Task[]) {
         const config = new MatDialogConfig();
         const dialogRef = this.dialog.open(DeleteTaskDialogComponent, config);
         dialogRef.componentInstance.jobId = this.params.jobId;
-        dialogRef.componentInstance.taskId = task.id;
+        dialogRef.componentInstance.tasks = entities;
+        return dialogRef.componentInstance.onSubmit;
     }
 
     private _cloneTask(task: Task) {

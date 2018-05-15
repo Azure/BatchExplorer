@@ -8,19 +8,18 @@ import { TaskListDisplayComponent } from "./display";
 
 import { ActivatedRoute } from "@angular/router";
 import { Filter, autobind } from "@batch-flask/core";
-import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { ListBaseComponent } from "@batch-flask/core/list";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Task } from "app/models";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { DeleteTaskAction } from "../action";
+import { TaskCommands } from "../action";
 
 @Component({
     selector: "bl-task-list",
     templateUrl: "task-list.html",
-    providers: [{
+    providers: [TaskCommands, {
         provide: ListBaseComponent,
         useExisting: forwardRef(() => TaskListComponent),
     }],
@@ -47,10 +46,10 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
     private _onTaskAddedSub: Subscription;
 
     constructor(
+        public commands: TaskCommands,
         private taskService: TaskService,
         activatedRoute: ActivatedRoute,
-        private changeDetectorRef: ChangeDetectorRef,
-        private taskManager: BackgroundTaskService) {
+        private changeDetectorRef: ChangeDetectorRef) {
         super(changeDetectorRef);
         this.data = this.taskService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
@@ -95,13 +94,5 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
 
     public onScrollToBottom(): Observable<any> {
         return this.data.fetchNext();
-    }
-
-    public deleteSelection(selection: ListSelection) {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteTaskAction(this.taskService, this.jobId, [...selection.keys]);
-            task.start(backgroundTask);
-            return task.waitingDone;
-        });
     }
 }

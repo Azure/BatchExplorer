@@ -1,5 +1,5 @@
 import { Injectable, Injector } from "@angular/core";
-import { COMMAND_LABEL_ICON, DialogService, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
+import { COMMAND_LABEL_ICON, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
@@ -22,7 +22,6 @@ export class NodeCommands extends EntityCommands<Node> {
     constructor(
         injector: Injector,
         private nodeService: NodeService,
-        private dialog: DialogService,
         private sidebarManager: SidebarManager) {
         super(
             injector,
