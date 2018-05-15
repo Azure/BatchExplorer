@@ -94,7 +94,7 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
     }
 
     private _deleteTask(task: Task) {
-        this.taskService.delete(this.params.jobId, task.id);
+        return this.taskService.delete(this.params.jobId, task.id);
     }
 
     private _confirmDeletion(entities: Task[]) {
