@@ -21,7 +21,7 @@ export class LocalFileStorage {
 
     /**
      * @param key Key where the data is store
-     * @returns Observable which will resolve the data contained in the file if successfull or reject if any error
+     * @returns Observable which will resolve the data contained in the file if successful or reject if any error
      */
     public get<T>(key: string): Observable<T> {
         return Observable.fromPromise(this.getAsync(key));
