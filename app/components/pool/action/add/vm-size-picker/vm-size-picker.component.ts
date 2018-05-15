@@ -62,7 +62,6 @@ export class VmSizeDecorator {
     }
 }
 
-// tslint:disable:no-forward-ref
 @Component({
     selector: "bl-vm-size-picker",
     templateUrl: "vm-size-picker.html",
@@ -161,11 +160,10 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     }
 
     public pickSize(size: string) {
+        if (size === this.pickedSize) { return; }
         this.pickedSize = size;
         if (this._propagateChange) {
-            setTimeout(() => {
-                this._propagateChange(size);
-            });
+            this._propagateChange(size);
         }
     }
 

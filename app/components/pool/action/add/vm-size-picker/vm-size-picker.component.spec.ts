@@ -8,6 +8,7 @@ import { Observable } from "rxjs";
 
 import { RouterTestingModule } from "@angular/router/testing";
 import { ElectronModule } from "@batch-flask/ui";
+import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { VmSizePickerComponent } from "app/components/pool/action/add";
 import { AccountResource, VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
@@ -23,7 +24,7 @@ class TestComponent {
     public osSource = PoolOsSources.IaaS;
 }
 
-fdescribe("VmSizePickerComponent", () => {
+describe("VmSizePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: VmSizePickerComponent;
@@ -72,6 +73,7 @@ fdescribe("VmSizePickerComponent", () => {
                 { provide: VmSizeService, useValue: vmSizeServiceSpy },
                 { provide: AccountService, useValue: accountServiceSpy },
                 { provide: PricingService, useValue: pricingServiceSpy },
+                { provide: BreadcrumbService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -100,20 +102,19 @@ fdescribe("VmSizePickerComponent", () => {
         expect(tab1Sizes[1].nativeElement.textContent).toContain("Standard A2");
         expect(tab1Sizes[2].nativeElement.textContent).toContain("Standard A3");
 
-        const tab2Sizes = tabs[1].queryAll(By.css("bl-table bl-row"));
+        const tab2Sizes = tabs[1].queryAll(By.css("bl-table bl-row-render"));
         expect(tab2Sizes.length).toBe(2, "Second tab should have 2 rows");
         expect(tab2Sizes[0].nativeElement.textContent).toContain("Standard C1");
         expect(tab2Sizes[1].nativeElement.textContent).toContain("Standard C2");
 
-        const tab3Sizes = tabs[2].queryAll(By.css("bl-table bl-row"));
+        const tab3Sizes = tabs[2].queryAll(By.css("bl-table bl-row-render"));
         expect(tab3Sizes.length).toBe(1, "Third tab should have 1 rows");
         expect(tab3Sizes[0].nativeElement.textContent).toContain("Standard O1");
     });
 
-    it("should select the size if click on it", fakeAsync(() => {
+    it("should select the size if click on it", () => {
         component.pickSize("Standard_A2");
-        tick();
         fixture.detectChanges();
         expect(testComponent.vmSize).toEqual("Standard_A2");
-    }));
+    });
 });
