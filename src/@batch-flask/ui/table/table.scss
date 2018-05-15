@@ -36,14 +36,27 @@ bl-table {
 
     .checkbox-cell {
         width: 30px;
-        padding: 5px;
+        height: $table-row-height;
+        padding: 4px 5px;
 
-        .mat-checkbox-frame {
-            border-color: $alto;
+        > .checkbox {
+            border: 1px solid $border-color;
+            width: 20px;
+            height: 20px;
+            padding: 1px;
+            display: inline-block;
+            position: relative;
+            margin-right: 5px;
+
+            > .fa-check {
+                display: block;
+                color: $secondary-text;
+                font-size: 16px;
+            }
         }
 
         &:hover {
-            .mat-checkbox-frame {
+            > .checkbox {
                 border-color: $primary-color;
             }
         }
@@ -66,6 +79,10 @@ bl-table {
 
             p {
                 color: $mineShaftGray;
+            }
+
+            .checkbox {
+                border-color: $secondary-text;
             }
         }
 
