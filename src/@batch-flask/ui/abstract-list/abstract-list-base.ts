@@ -1,6 +1,6 @@
 import {
     ChangeDetectorRef, EventEmitter,
-    Input, OnDestroy, Output, ViewChild,
+    HostBinding, Input, OnDestroy, Output, ViewChild,
 } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
@@ -72,12 +72,11 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     @Input() public status: LoadingStatus;
 
-    // TODO-TIM handle this
-    // @HostBinding("style.display")
-    // public get showComponent() {
-    //     const hide = this.displayItems.length === 0 && this.status === LoadingStatus.Ready;
-    //     return hide ? "none" : "block";
-    // }
+    @HostBinding("style.display")
+    public get showComponent() {
+        const hide = this.displayItems.length === 0 && this.status === LoadingStatus.Ready;
+        return hide ? "none" : "block";
+    }
 
     public set selection(selection: ListSelection) {
         super.selection = selection;
@@ -303,7 +302,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     public activateItem(item: any) {
         this.activeItem = item.id;
-        const link = item.routerLink || item.link; // TODO-TIM standarize
+        const link = item.routerLink;
         if (link) {
             if (this.forceBreadcrumb) {
                 this.breadcrumbService.navigate(link);
