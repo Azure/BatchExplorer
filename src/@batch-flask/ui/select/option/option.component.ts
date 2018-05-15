@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
+import { KeyNavigableListItem } from "@batch-flask/core";
 import "./option.scss";
 
 @Component({
@@ -7,7 +8,7 @@ import "./option.scss";
     templateUrl: "option.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectOptionComponent {
+export class SelectOptionComponent implements KeyNavigableListItem {
     @Input() public value: string;
 
     /**
