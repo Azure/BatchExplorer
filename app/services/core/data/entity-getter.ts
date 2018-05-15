@@ -50,7 +50,7 @@ export abstract class EntityGetter<TEntity, TParams> extends GenericGetter<TEnti
      * Create a new item of type TEntity and adds it to the cache
      */
     private _processItem(cache: DataCache<TEntity>, data: any, params: TParams, select?: string): TEntity {
-        const item = new this.type({...params as any, ...data});
+        const item = this._createItem(data, params);
         cache.addItem(item, select);
         return item;
     }

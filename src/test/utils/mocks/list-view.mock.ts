@@ -26,9 +26,11 @@ export class MockListView<TEntity, TParams> extends ListView<TEntity, TParams> {
             cache: () => cache,
             getter: new BasicListGetter(type, {
                 cache: () => cache,
-                supplyData: (params) => Observable.of({
-                    data: this._items(params),
-                }),
+                supplyData: (params) => {
+                    return Observable.of({
+                        data: this._getItems(params),
+                    });
+                },
             }),
         });
         if (config.items instanceof Function) {
@@ -36,5 +38,15 @@ export class MockListView<TEntity, TParams> extends ListView<TEntity, TParams> {
         } else {
             this._items = () => config.items as TEntity[];
         }
+    }
+
+    private _getItems(params) {
+        return this._items(params).map((item) => {
+            if ((item as any).toJS) {
+                return (item as any).toJS();
+            } else {
+                return item;
+            }
+        });
     }
 }

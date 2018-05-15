@@ -1,19 +1,23 @@
+
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
+import { LoadingModule } from "@batch-flask/ui";
 import { ContextMenuModule } from "@batch-flask/ui/context-menu";
-import { FocusSectionModule } from "../focus-section";
-import { LoadingModule } from "../loading";
-import { VirtualScrollModule } from "../virtual-scroll";
-import { TableCellDefDirective } from "./table-cell-def";
-import { TableColumnComponent } from "./table-column";
-import { TableHeadCellComponent, TableHeadComponent } from "./table-head";
-import { TableHeadCellDefDirective } from "./table-head-cell-def";
-import { TableRowRenderComponent } from "./table-row-render";
-import { TableComponent } from "./table.component";
+import { FocusSectionModule } from "@batch-flask/ui/focus-section";
+import {
+    TableCellDefDirective,
+    TableColumnComponent,
+    TableComponent,
+    TableHeadCellComponent,
+    TableHeadCellDefDirective,
+    TableHeadComponent,
+} from "@batch-flask/ui/table";
+import { TableRowRenderComponent } from "@batch-flask/ui/table/table-row-render";
+import { VirtualScrollMockModule } from "test/utils/mocks/components/virtual-scroll.component.mock";
 
 const privateComponents = [
     TableRowRenderComponent,
@@ -36,13 +40,15 @@ const publicComponents = [
         FormsModule,
         ReactiveFormsModule,
         MaterialModule,
-        VirtualScrollModule,
         LoadingModule,
         ContextMenuModule,
+
+        // Mock modules
+        VirtualScrollMockModule,
     ],
     exports: publicComponents,
     declarations: [...privateComponents, publicComponents],
     providers: [],
 })
-export class TableModule {
+export class TableTestingModule {
 }

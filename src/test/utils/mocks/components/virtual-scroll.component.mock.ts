@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, Output, NgModule } from "@angular/core";
 
 @Component({
     selector: "bl-virtual-scroll",
@@ -25,3 +25,17 @@ export class VirtualScrollTailMockComponent {
 }
 
 export const virtualScrollMockComponents = [VirtualScrollMockComponent, VirtualScrollTailMockComponent];
+
+@NgModule({
+    declarations: [
+        VirtualScrollMockComponent,
+        VirtualScrollTailMockComponent,
+    ],
+    exports: [
+        VirtualScrollMockComponent,
+        VirtualScrollTailMockComponent,
+    ]
+})
+export class VirtualScrollMockModule {
+
+}

@@ -6,13 +6,11 @@ import { List } from "immutable";
 import { Observable } from "rxjs";
 
 import { ContextMenuService } from "@batch-flask/ui";
-import {
-    TableColumnComponent, TableComponent, TableHeadComponent,
-} from "@batch-flask/ui/table";
+import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
 import * as Fixtures from "test/fixture";
-import { NoItemMockComponent } from "test/utils/mocks/components";
+import { NoItemMockComponent, TableTestingModule } from "test/utils/mocks/components";
 import { TaskDependenciesComponent } from "./task-dependencies.component";
 
 const taskMap: Map<string, Task> = new Map()
@@ -49,14 +47,14 @@ describe("TaskDependenciesComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
+            imports: [RouterTestingModule, TableTestingModule],
             declarations: [
-                TestComponent, NoItemMockComponent, TableColumnComponent, TableComponent,
-                TableHeadComponent, TaskDependenciesComponent,
+                TestComponent, NoItemMockComponent, TaskDependenciesComponent,
             ],
             providers: [
                 { provide: TaskService, useValue: taskServiceSpy },
                 { provide: ContextMenuService, useValue: null },
+                { provide: BreadcrumbService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

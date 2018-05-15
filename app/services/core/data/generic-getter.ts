@@ -48,4 +48,12 @@ export class GenericGetter<TEntity, TParams> {
         return error;
     }
 
+    protected _createItem(data: any, params: any): TEntity {
+        if (data instanceof this.type) {
+            return data;
+        } else {
+            return new this.type({ ...params as any, ...data });
+        }
+    }
+
 }

@@ -6,11 +6,14 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
+import { RouterTestingModule } from "@angular/router/testing";
+import { ElectronModule } from "@batch-flask/ui";
 import { VmSizePickerComponent } from "app/components/pool/action/add";
 import { AccountResource, VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
 import { AccountService, PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
+import { TableTestingModule } from "test/utils/mocks/components";
 
 @Component({
     template: `<bl-vm-size-picker [(ngModel)]="vmSize" [osSource]="osSource"></bl-vm-size-picker>`,
@@ -20,7 +23,7 @@ class TestComponent {
     public osSource = PoolOsSources.IaaS;
 }
 
-describe("VmSizePickerComponent", () => {
+fdescribe("VmSizePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: VmSizePickerComponent;
@@ -63,7 +66,7 @@ describe("VmSizePickerComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [FormsModule, NoopAnimationsModule],
+            imports: [FormsModule, TableTestingModule, NoopAnimationsModule, ElectronModule, RouterTestingModule],
             declarations: [VmSizePickerComponent, TestComponent],
             providers: [
                 { provide: VmSizeService, useValue: vmSizeServiceSpy },
@@ -91,7 +94,7 @@ describe("VmSizePickerComponent", () => {
         const tabs = de.queryAll(By.css("mat-tab"));
         expect(tabs.length).toBe(3);
 
-        const tab1Sizes = tabs[0].queryAll(By.css("bl-table bl-row"));
+        const tab1Sizes = tabs[0].queryAll(By.css("bl-table bl-row-render"));
         expect(tab1Sizes.length).toBe(3, "First tab should have 3 rows");
         expect(tab1Sizes[0].nativeElement.textContent).toContain("Standard A1");
         expect(tab1Sizes[1].nativeElement.textContent).toContain("Standard A2");
