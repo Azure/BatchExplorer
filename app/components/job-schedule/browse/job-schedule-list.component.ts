@@ -7,14 +7,15 @@ import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { Filter, autobind } from "@batch-flask/core";
-import { ListBaseComponent } from "@batch-flask/core/list";
+import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { JobSchedule, JobScheduleState } from "app/models";
 import { JobScheduleListParams, JobScheduleService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { JobScheduleCommands } from "../action";
+import { DeleteJobScheduleAction, JobScheduleCommands } from "../action";
 
 @Component({
     selector: "bl-job-schedule-list",
@@ -40,7 +41,8 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
         activatedRoute: ActivatedRoute,
         changeDetector: ChangeDetectorRef,
         public commands: JobScheduleCommands,
-        private jobScheduleService: JobScheduleService) {
+        private jobScheduleService: JobScheduleService,
+        private taskManager: BackgroundTaskService) {
         super(changeDetector);
 
         this.data = this.jobScheduleService.listView();
@@ -98,6 +100,14 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
             default:
                 return QuickListItemStatus.normal;
         }
+    }
+
+    public deleteSelection(selection: ListSelection) {
+        this.taskManager.startTask("", (backgroundTask) => {
+            const task = new DeleteJobScheduleAction(this.jobScheduleService, [...selection.keys]);
+            task.start(backgroundTask);
+            return task.waitingDone;
+        });
     }
 
     public jobScheduleStatusText(jobSchedule: JobSchedule): string {
