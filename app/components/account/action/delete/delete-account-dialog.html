@@ -1,8 +1,20 @@
-<bl-simple-form [submit]="destroyBatchAccount" [containerRef]="dialogRef" actionColor="warn" actionName="Delete" [multiUse]="false" size="small" title="Delete batch account">
+<bl-simple-form [submit]="ok" [containerRef]="dialogRef" actionColor="warn" actionName="Delete" [multiUse]="false" title="Delete batch account">
     <div class="message">
-        <p>Do you want to delete this batch account: '<b>{{accountName}}</b>'?</p>
+        <p>Do you want to delete batch account(s): </p>
+        <table style="width: 100%; margin: 10px 0;">
+            <tr style="text-align: left;">
+                <th>Subscription</th>
+                <th>Location</th>
+                <th>Name</th>
+            </tr>
+            <tr *ngFor="let account of accounts">
+                <td>{{account.subscription.subscriptionId}}</td>
+                <td>{{account.location}}</td>
+                <td>{{account.name}}</td>
+            </tr>
+        </table>
         <p style="word-wrap: break-word;">
-            Warning! Deleting batch account '{{accountId}}' is irreversible. The action you're about to take can't be undone. Clicking
+            Warning! Deleting batch account is irreversible. The action you're about to take can't be undone. Clicking
             OK will delete this batch account and any related resources permanently.
         </p>
     </div>

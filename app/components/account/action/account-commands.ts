@@ -1,14 +1,17 @@
 import { Injectable, Injector } from "@angular/core";
-import { COMMAND_LABEL_ICON, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
+import { COMMAND_LABEL_ICON, DialogService, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
 
 import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
 import { AccountProvisingState, AccountResource } from "app/models";
 import { AccountService } from "app/services";
+import { DeleteAccountDialogComponent } from "./delete";
 
 @Injectable()
 export class BatchAccountCommands extends EntityCommands<AccountResource> {
     public showKeys: EntityCommand<AccountResource, void>;
-    public delete: EntityCommand<AccountResource, void>;
+    public delete: EntityCommand<AccountResource, string[]>;
+
+    private _dialog: DialogService;
 
     constructor(
         injector: Injector,
@@ -17,7 +20,7 @@ export class BatchAccountCommands extends EntityCommands<AccountResource> {
             injector,
             "BatchAccount",
         );
-
+        this._dialog = injector.get(DialogService);
         this._buildCommands();
     }
 
@@ -40,12 +43,17 @@ export class BatchAccountCommands extends EntityCommands<AccountResource> {
 
         this.delete = this.simpleCommand({
             ...COMMAND_LABEL_ICON.Delete,
-            action: (account: AccountResource) => this.accountService.deleteBatchAccount(account.id),
+            action: (account: AccountResource) => {
+                this.accountService.deleteBatchAccount(account.id);
+            },
             enabled: (account: AccountResource) => {
                 const accountState = account && account.properties && account.properties.provisioningState;
                 const accountProvisioningState = AccountProvisingState;
                 return accountState !== accountProvisioningState.Creating
                     && accountState !== accountProvisioningState.Deleting;
+            },
+            confirm: (accounts) => {
+                return this._confirmAndGetInfo(accounts);
             },
             permission: Permission.Write,
         });
@@ -59,5 +67,11 @@ export class BatchAccountCommands extends EntityCommands<AccountResource> {
     private _showKeys(account: AccountResource) {
         const ref = this.dialogService.open(ProgramaticUsageComponent);
         ref.componentInstance.accountId = account.id;
+    }
+
+    private _confirmAndGetInfo(entities: AccountResource[]) {
+        const dialogRef = this._dialog.open(DeleteAccountDialogComponent);
+        dialogRef.componentInstance.accounts = entities;
+        return dialogRef.componentInstance.onSubmit;
     }
 }
