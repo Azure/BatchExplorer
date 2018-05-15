@@ -128,7 +128,9 @@ bl-table {
         font-weight: bold;
         white-space: nowrap;
         user-select: none;
-
+        > * {
+            display: inline;
+        }
         &.sortable {
             cursor: pointer;
             .sort-icon {

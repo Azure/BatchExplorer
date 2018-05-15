@@ -97,7 +97,7 @@ export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges
     private _validateCellDef() {
         if (!this.cell) {
             const example = `<div *blCellDef="let item">item.value</div>`;
-            throw new Error(`bl-column '${this.name}' must have a cell definition.Add '${example}'`);
+            throw new Error(`bl-column '${this.name}' must have a cell definition. Add '${example}'`);
         }
     }
 }

@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BrowserModule, By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 
+import { MaterialModule } from "@batch-flask/core";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import {
@@ -35,25 +36,29 @@ class BaseTestComponent {
     template: `
         <bl-table [data]="sizes" [(activeItem)]="pickedSize" [config]="tableConfig">
             <bl-column name="name">
-                <div *blHeadCellRef>Name</div>
-                <div *blCellRef="let size">{{size}}{{size.name}}</div>
+                <div *blHeadCellDef>Name</div>
+                <div *blCellDef="let size">{{size.name}}</div>
             </bl-column>
             <bl-column name="cores" [sortable]="true">
-                <div *blHeadCellRef>Name</div>
-                <div *blCellRef="let size">{{size.numberOfCores}}</div>
+                <div *blHeadCellDef>Cores</div>
+                <div *blCellDef="let size">{{size.numberOfCores}}</div>
             </bl-column>
             <bl-column name="resourceDiskSizeInMB" [sortable]="true">
-                <div *blHeadCellRef>Name</div>
-                <div *blCellRef="let size">{{size.resourceDiskSizeInMB}}MB</div>
+                <div *blHeadCellDef>Disk</div>
+                <div *blCellDef="let size">{{size.resourceDiskSizeInMB}}MB</div>
             </bl-column>
         </bl-table>
     `,
 })
 class TestComponent extends BaseTestComponent {
-
+    public tableConfig = {
+        values: {
+            cores: (size) => size.numberOfCores,
+        },
+    };
 }
 
-fdescribe("TableComponent", () => {
+describe("TableComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: BaseTestComponent;
     let de: DebugElement;
@@ -65,9 +70,8 @@ fdescribe("TableComponent", () => {
 
     function setup(component) {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, BrowserModule],
+            imports: [RouterTestingModule, BrowserModule, MaterialModule],
             declarations: [
-                component,
                 TableColumnComponent,
                 TableComponent,
                 TableHeadCellDefDirective,
@@ -76,6 +80,7 @@ fdescribe("TableComponent", () => {
                 TableHeadCellComponent,
                 TableHeadComponent,
                 ...virtualScrollMockComponents,
+                component,
             ],
             providers: [
                 { provide: ContextMenuService, useValue: null },
@@ -121,7 +126,7 @@ fdescribe("TableComponent", () => {
             expect(rows[3].textContent).toContain("Size D");
         });
 
-        it("should sort by number of cores", () => {
+        it("should sort by number of cores (Using values mapping in config)", () => {
             click(columns[1]); // Click on the core size column
             fixture.detectChanges();
 
@@ -169,9 +174,10 @@ fdescribe("TableComponent", () => {
         expect(() => setup(DuplicateColumnName)).toThrowError("bl-column name 'cores' must be unique");
     });
 
-    fit("raise error if no cell definition", () => {
+    it("raise error if no cell definition", () => {
         expect(() => setup(MissingCellDefinition))
-            .toThrowError(`bl-column must have a cell definition.Add <div *blCellDef="let item">item.value</div>`);
+            .toThrowError(`bl-column 'name' must have a cell definition. `
+                + `Add '<div *blCellDef="let item">item.value</div>'`);
     });
 
     describe("when showing checkboxes", () => {
