@@ -1,17 +1,22 @@
-<bl-table *ngIf="dependencies.size > 0">
-    <bl-thead>
-        <bl-column>Task ID</bl-column>
-        <bl-column>State</bl-column>
-        <bl-column>Depends on</bl-column>
-    </bl-thead>
-    <bl-row *ngFor="let dependency of dependencies;trackBy: trackByFn" [key]="dependency.id" [link]="['/jobs', jobId, 'tasks', dependency.id]" [forceBreadcrumb]="true">
-        <bl-cell>{{dependency.id}}</bl-cell>
-        <bl-cell>
+<bl-table *ngIf="dependencies.size > 0" [forceBreadcrumb]="true" [data]="dependencies">
+
+    <bl-column name="id">
+        <div *blHeadCellDef>Task ID</div>
+        <div *blCellDef="let dependency">{{dependency.id}}</div>
+    </bl-column>
+
+    <bl-column name="state">
+        <div *blHeadCellDef>State</div>
+        <div *blCellDef="let dependency">
             <span *ngIf="!dependency.loading">{{dependency.state}}</span>
             <i *ngIf="dependency.loading" class="fa fa-spinner fa-spin cell-spinner"></i>
-        </bl-cell>
-        <bl-cell>{{dependency.dependsOn}}</bl-cell>
-    </bl-row>
+        </div>
+    </bl-column>
+
+    <bl-column name="dependsOn">
+        <div *blHeadCellDef>Depends On</div>
+        <div *blCellDef="let dependency">{{dependency.dependsOn}}</div>
+    </bl-column>
 </bl-table>
 <bl-no-item [itemCount]="dependencies.size">
     <span no-filter>This task contains no dependent tasks</span>

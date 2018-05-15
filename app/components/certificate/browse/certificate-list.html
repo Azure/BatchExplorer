@@ -10,18 +10,26 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()"  [commands]="commands">
-        <bl-thead>
-            <bl-column>Thumbprint algorithm</bl-column>
-            <bl-column>Thumbprint</bl-column>
-            <bl-column>State</bl-column>
-        </bl-thead>
+    <bl-table *ngIf="!quicklist"
+        [data]="displayedCertificates"
+        [status]="status"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        (scrollBottom)="onScrollToBottom()"
+        [commands]="commands">
 
-        <bl-row *ngFor="let certificate of displayedCertificates; trackBy: trackByFn" [link]="['/certificates/', certificate.thumbprint]" [key]="certificate.thumbprint">
-            <bl-cell>{{certificate.thumbprintAlgorithm}}</bl-cell>
-            <bl-cell>{{certificate.thumbprint}}</bl-cell>
-            <bl-cell>{{certificate.state}}</bl-cell>
-        </bl-row>
+        <bl-column name="algorithm">
+            <div *blHeadCellDef>Thumbprint algorithm</div>
+            <div *blCellDef="let certificate">{{certificate.thumbprintAlgorithm}}</div>
+        </bl-column>
+        <bl-column name="thumbprint">
+            <div *blHeadCellDef>Thumbprint</div>
+            <div *blCellDef="let certificate">{{certificate.thumbprint}}</div>
+        </bl-column>
+        <bl-column name="state">
+            <div *blHeadCellDef>State</div>
+            <div *blCellDef="let certificate">{{certificate.state}}</div>
+        </bl-column>
     </bl-table>
 </bl-focus-section>
 

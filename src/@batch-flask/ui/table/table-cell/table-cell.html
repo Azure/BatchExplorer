@@ -1,5 +1,0 @@
-<ng-template>
-    <div *ngIf="value !== null && !content.hasChildNodes()" class="cell-value" title="{{value}}">{{value}}</div>
-    <!--Important do not split the span and ng-content on multiple lines or the content.textContent condition above will fail-->
-    <span #content><ng-content></ng-content></span>
-</ng-template>

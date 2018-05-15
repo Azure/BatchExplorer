@@ -1,3 +1,4 @@
+import { NgModule } from "@angular/core";
 import { ElectronRemote } from "@batch-flask/ui";
 import { AuthenticationWindow } from "client/core/aad/authentication";
 import { SplashScreen } from "client/splash-screen";
@@ -26,4 +27,13 @@ export class MockElectronRemote extends ElectronRemote {
     public getSplashScreen(): SplashScreen {
         return this.splashScreen as any;
     }
+}
+
+@NgModule({
+    providers: [
+        { provide: ElectronRemote, useClass: MockElectronRemote },
+    ],
+})
+export class ElectronTestingModule {
+
 }

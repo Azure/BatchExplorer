@@ -1,11 +1,13 @@
 import {
-    AfterContentInit, ChangeDetectorRef, ContentChildren, EventEmitter,
-    HostBinding, Input, OnDestroy, Output, QueryList, ViewChild,
+    ChangeDetectorRef, EventEmitter,
+    HostBinding, Input, OnDestroy, Output, ViewChild,
 } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
+import { Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
 import { ListSelection, SelectableList } from "@batch-flask/core/list";
+import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { EntityCommands } from "@batch-flask/ui/entity-commands";
 import { LoadingStatus } from "@batch-flask/ui/loading";
@@ -39,19 +41,24 @@ export const abstractListDefaultConfig: AbstractListBaseConfig = {
  * 1. Extend class
  * 2. Refefine items with @ContentChildren and the class that inherit SelectableListItemBase
  */
-export class AbstractListBase extends SelectableList implements AfterContentInit, OnDestroy {
+export class AbstractListBase extends SelectableList implements OnDestroy {
     public LoadingStatus = LoadingStatus;
     @Output() public scrollBottom = new EventEmitter();
     @Input() public commands: EntityCommands<any>;
+    @Input() public forceBreadcrumb = false;
 
-    @ContentChildren(AbstractListItemBase) public items: QueryList<AbstractListItemBase>;
+    public set items(items: any[]) {
+        this._items = items;
+        this._updateDisplayItems();
+    }
+    public get items() { return this._items; }
 
     @ViewChild(VirtualScrollComponent) public virtualScrollComponent: VirtualScrollComponent;
 
     /**
      * List of items to display(Which might be different from the full items list because of sorting and other)
      */
-    public displayItems: AbstractListItemBase[] = [];
+    public displayItems: any[] = [];
 
     /**
      * List of items that are currently being displayed with the virtual scroll
@@ -84,9 +91,12 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
     protected _config: AbstractListBaseConfig = abstractListDefaultConfig;
 
     private _subs: Subscription[] = [];
+    private _items: any[] = [];
 
     constructor(
         private contextmenuService: ContextMenuService,
+        private router: Router,
+        private breadcrumbService: BreadcrumbService,
         changeDetection: ChangeDetectorRef,
         focusSection: FocusSectionComponent) {
         super(changeDetection);
@@ -96,13 +106,6 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
             this._subs.push(focusSection.onFocus.subscribe(this.onFocus));
             this._subs.push(focusSection.onBlur.subscribe(this.onBlur));
         }
-    }
-
-    public ngAfterContentInit() {
-        this._subs.push(this.items.changes.subscribe(() => {
-            this._updateDisplayItems();
-        }));
-        this._updateDisplayItems();
     }
 
     public ngOnDestroy() {
@@ -187,13 +190,14 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
         const activeKey = this.activeItem;
         const selection = new ListSelection(this.selection);
         this.displayItems.some((item) => {
-            if (!foundStart && (item.key === activeKey || item.key === key)) {
+            const id = item.id || item.key;
+            if (!foundStart && (id === activeKey || id === key)) {
                 foundStart = true;
-                selection.add(item.key);
+                selection.add(id);
             } else if (foundStart) {
-                selection.add(item.key);
+                selection.add(id);
                 // Reached the end of the selection
-                if (item.key === activeKey || item.key === key) {
+                if (id === activeKey || id === key) {
                     return true;
                 }
             }
@@ -208,7 +212,7 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
             if (this.activeItem) {
                 this.focusedItem.next(this.activeItem);
             } else {
-                const first = this.items.first;
+                const first = this.items.first();
                 this.focusedItem.next(first && first.key);
             }
             this.changeDetector.markForCheck();
@@ -224,15 +228,16 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
 
     public setFocusedItem(key: string) {
         this.focusedItem.next(key);
+        this.changeDetector.markForCheck();
     }
 
     @autobind()
     public keyPressed(event: KeyboardEvent) {
-        const items: AbstractListItemBase[] = this.displayItems;
+        const items: any[] = this.displayItems;
         let index = 0;
         let currentItem;
         for (const item of items) {
-            if (item.key === this.focusedItem.value) {
+            if (item.id === this.focusedItem.value) {
                 currentItem = item;
                 break;
             }
@@ -249,28 +254,71 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
                 event.preventDefault();
                 break;
             case "Space":
-                currentItem.activateItem();
+                this.activateItem(currentItem);
                 event.preventDefault();
                 return;
             default:
         }
         index = (index + items.length) % items.length;
         const newItem = items[index];
-        this.focusedItem.next(newItem.key);
+        this.focusedItem.next(newItem.id);
+    }
+
+    public handleClick(event: MouseEvent, item, activate = true) {
+        this.setFocusedItem(item.id);
+
+        const shiftKey = event.shiftKey;
+        const ctrlKey = event.ctrlKey || event.metaKey;
+        // Prevent the routerlink from being activated if we have shift or ctrl
+        if (shiftKey || ctrlKey) {
+            const focusedItem = this.focusedItem.value;
+            if (!focusedItem) { return; }
+
+            if (shiftKey) {
+                this.selectTo(item.id);
+            } else if (ctrlKey) {
+                this.onSelectedChange(item.id, !this.selection.has(item.id));
+            }
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+        } else if (activate) {
+            if (this.config.activable) {
+                // Means the user actually selected the item
+                this.activateItem(item);
+            } else {
+                const isSelected = this.selection.has(item.id);
+                this.clearSelection();
+                this.onSelectedChange(item.id, !isSelected);
+            }
+        } else {
+            this.toggleSelected(item.id, event);
+        }
     }
 
     public trackItem(index, item) {
-        return item.key;
+        return item.id;
     }
 
-    public openContextMenu(target?: AbstractListItemBase) {
+    public activateItem(item: any) {
+        this.activeItem = item.id;
+        const link = item.routerLink;
+        if (link) {
+            if (this.forceBreadcrumb) {
+                this.breadcrumbService.navigate(link);
+            } else {
+                this.router.navigate(link);
+            }
+        }
+    }
+
+    public openContextMenu(target?: any) {
         if (!this.commands) { return; }
 
         let selection = this.selection;
 
         // If we right clicked on an non selected item it will just make this the context menu selection
-        if (target && !selection.has(target.key)) {
-            selection = new ListSelection({ keys: [target.key] });
+        if (target && !selection.has(target.id)) {
+            selection = new ListSelection({ keys: [target.id] });
         }
 
         this.commands.contextMenuFromSelection(selection).subscribe((menu) => {
@@ -289,7 +337,7 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
         if (this.computeDisplayedItems) {
             this.displayItems = this.computeDisplayedItems();
         } else {
-            this.displayItems = this.items.toArray();
+            this.displayItems = this.items;
         }
         this._updateSelectedItems();
     }
@@ -299,7 +347,7 @@ export class AbstractListBase extends SelectableList implements AfterContentInit
      */
     private _updateSelectedItems() {
         this.displayItems.forEach((item) => {
-            item.selected = Boolean(this.selection.has(item.key));
+            item.selected = Boolean(this.selection.has(item.id));
         });
         this.changeDetector.markForCheck();
     }

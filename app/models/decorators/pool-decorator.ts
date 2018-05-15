@@ -48,6 +48,10 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public startTask: StartTaskDecorator;
     public applicationLicenses: string;
 
+    public get routerLink() {
+        return this.pool.routerLink;
+    }
+
     constructor(public pool: Pool) {
         super(pool);
         this.displayName = this.stringField(pool.displayName);

@@ -42,7 +42,7 @@ export class AutoStorageAccountPickerComponent implements OnInit, ControlValueAc
     }
 
     public writeValue(value: string) {
-        this.pickedStorageAccountId = value || this.noSelectionKey;
+        this.pickedStorageAccountId = value ? value.toLowerCase() : this.noSelectionKey;
 
     }
 

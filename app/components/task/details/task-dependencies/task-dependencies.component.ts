@@ -81,6 +81,7 @@ export class TaskDependenciesComponent implements OnChanges {
                 } else {
                     dep.dependsOn = "No tasks";
                 }
+                dep.routerLink = ["/jobs", this.jobId, "tasks", id];
             }
 
             return dep;

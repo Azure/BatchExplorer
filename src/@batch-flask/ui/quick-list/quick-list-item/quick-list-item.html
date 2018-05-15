@@ -1,5 +1,5 @@
 <ng-template>
-    <div class="quick-list-item" (click)="handleClick($event)" (contextmenu)="openContextMenu()" [class.selected]="active || selected"
+    <div class="quick-list-item" (click)="list.handleClick($event, this)" (contextmenu)="openContextMenu()" [class.selected]="active || selected"
         [class.focused]="isFocused | async" [class.conceal]="conceal">
         <ng-content select="bl-quick-list-item-status"></ng-content>
         <div class="quick-list-details noselect">

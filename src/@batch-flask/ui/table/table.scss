@@ -5,11 +5,11 @@ bl-table {
     $table-heading-height: 34px;
     $table-row-height: 28px;
 
-
     display: block;
     width: 100%;
     height: 100%;
-    bl-thead, .bl-table-row {
+
+    bl-thead, bl-row-render {
         display: flex;
         align-items: center;
     }
@@ -22,7 +22,7 @@ bl-table {
         }
 
         &.no-scroll {
-            border-bottom: 2px solid $athensGrey;
+            border-bottom: 1px solid $athensGrey;
         }
     }
 
@@ -34,28 +34,42 @@ bl-table {
         }
     }
 
-    .checkbox-column {
+    .checkbox-cell {
         width: 30px;
-        padding: 5px;
+        height: $table-row-height;
+        padding: 4px 5px;
 
-        .mat-checkbox-frame {
-            border-color: $alto;
+        > .checkbox {
+            border: 1px solid $border-color;
+            width: 20px;
+            height: 20px;
+            padding: 1px;
+            display: inline-block;
+            position: relative;
+            margin-right: 5px;
+            cursor: pointer;
+
+            > .fa-check {
+                display: block;
+                color: $secondary-text;
+                font-size: 16px;
+            }
         }
 
         &:hover {
-            .mat-checkbox-frame {
+            > .checkbox {
                 border-color: $primary-color;
             }
         }
     }
 
     &.activable {
-        .bl-table-row {
+        bl-row-render {
             cursor: pointer;
         }
     }
 
-    .bl-table-row {
+    bl-row-render {
         &:not(:last-child) {
             border-bottom: 1px solid $athensGrey;
         }
@@ -66,6 +80,10 @@ bl-table {
 
             p {
                 color: $mineShaftGray;
+            }
+
+            .checkbox {
+                border-color: $secondary-text;
             }
         }
 
@@ -92,7 +110,7 @@ bl-table {
     }
 
     .bl-table-cell,
-    bl-column {
+    bl-table-head-cell {
         vertical-align: middle;
         padding: 0 5px;
         overflow: hidden;
@@ -123,15 +141,17 @@ bl-table {
         }
     }
 
-    bl-column {
+    bl-table-head-cell {
         font-size: 0.9em;
         font-weight: bold;
         white-space: nowrap;
         user-select: none;
-
+        > * {
+            display: inline;
+        }
         &.sortable {
             cursor: pointer;
-            > .sort-icon {
+            .sort-icon {
                 color: $main-background;
             }
 

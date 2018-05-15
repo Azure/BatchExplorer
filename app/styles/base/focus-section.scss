@@ -1,5 +1,6 @@
 bl-focus-section {
-    // display: block;
+    display: block;
+
     &:focus {
         outline: none;
     }
