@@ -181,7 +181,6 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
 
     public writeValue(value: any): void {
-        console.log("Value", value);
         if (Array.isArray(value)) {
             this.selected = new Set(value);
         } else {
