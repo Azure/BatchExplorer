@@ -1,5 +1,6 @@
 import {
-    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, OnDestroy, QueryList, forwardRef,
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
+    Component, ContentChildren, OnDestroy, QueryList, forwardRef,
 } from "@angular/core";
 import {
     ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
