@@ -30,7 +30,7 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
     }
     public get items() { return this._items; }
 
-    private _items: T[];
+    private _items: T[] = [];
     private _letterKeyStream = new Subject<string>();
     // Buffer for the letters that the user has pressed when the typeahead option is turned on.
     private _pressedLetters: string[] = [];
@@ -38,6 +38,14 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
     private _focusedItem: T = null;
     private _wrap = false;
     private _typeaheadSubscription = Subscription.EMPTY;
+
+    public get focusedItemIndex(): number {
+        return this._focusedItemIndex;
+    }
+
+    public get focusedItem(): T {
+        return this._focusedItem;
+    }
 
     public dispose() {
         this.change.complete();
@@ -116,7 +124,6 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
      */
     public onKeydown(event: KeyboardEvent): void {
         const keyCode = event.keyCode;
-        console.log("Key code", event.code, this.items);
         switch (keyCode) {
             case DOWN_ARROW:
                 this.focusNextItem();

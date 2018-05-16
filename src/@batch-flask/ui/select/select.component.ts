@@ -22,6 +22,7 @@ import { ControlValueAccessor, NgControl } from "@angular/forms";
 
 import { SelectOptionComponent } from "./option";
 
+import { DOWN_ARROW, END, ENTER, ESCAPE, HOME, SPACE, UP_ARROW } from "@angular/cdk/keycodes";
 import { ConnectionPositionPair, Overlay, OverlayConfig, OverlayRef } from "@angular/cdk/overlay";
 import { ComponentPortal } from "@angular/cdk/portal";
 import { FlagInput, ListKeyNavigator, coerceBooleanProperty } from "@batch-flask/core";
@@ -155,10 +156,10 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
             // the `providers` to avoid running into a circular import.
             this.ngControl.valueAccessor = this;
         }
+        this._initKeyNavigator();
     }
 
     public ngAfterContentInit() {
-        this._initKeyNavigator();
         this._computeOptions();
         this.options.changes.subscribe(() => {
             this._computeOptions();
@@ -180,13 +181,14 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
 
     public writeValue(value: any): void {
+        console.log("Value", value);
         if (Array.isArray(value)) {
             this.selected = new Set(value);
         } else {
             this.selected = new Set(value ? [value] : []);
         }
         if (!this.focusedOption) {
-            this.focusedOption = value;
+            this._keyNavigator.focusItem(this._getOptionByValue(value));
         }
         this.changeDetector.markForCheck();
     }
@@ -286,7 +288,8 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
 
     public selectOption(option: SelectOptionComponent) {
-        this.focusedOption = option;
+        this._keyNavigator.focusItem(option);
+
         if (this.multiple) {
             if (this.selected.has(option.value)) {
                 this.selected.delete(option.value);
@@ -321,11 +324,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
 
     public focusFirstOption() {
-        if (this.displayedOptions.length === 0) {
-            return;
-        }
-        this.focusedOption = this.displayedOptions.first();
-        this.changeDetector.markForCheck();
+        this._keyNavigator.focusFirstItem();
     }
 
     public setDescribedByIds(ids: string[]) {
@@ -355,7 +354,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
                 || label.contains(this.filter.toLowerCase())) {
                 options.push(option);
 
-                if (this.focusedOption && option.value === this.focusedOption.value) {
+                if (option === this.focusedOption) {
                     focusedOptionIncluded = true;
                 }
             }
@@ -363,30 +362,10 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         this.displayedOptions = options;
 
         // If the filter makes it that we don't see the currently focusesd option fallback to focussing the first item
-        if (!focusedOptionIncluded) {
+        if (!focusedOptionIncluded && this.showOptions && this.filterable && this.filter) {
             this.focusFirstOption();
         }
         this.changeDetector.markForCheck();
-    }
-
-    /**
-     * Move the focus
-     * @param index Current index
-     * @param direction
-     */
-    private _moveFocusInDirection(index: number, direction: 1 | -1 | null) {
-        if (!direction) { return index; }
-        let option;
-        do {
-            index = this._wrapIndex(index + direction);
-            option = this.displayedOptions[index];
-            this.focusedOption = option.value;
-        } while (option.disabled);
-        return index;
-    }
-
-    private _wrapIndex(index: number): number {
-        return (index + this.displayedOptions.length) % this.displayedOptions.length;
     }
 
     private _createOverlay(): OverlayRef {
@@ -445,47 +424,30 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
 
     private _handleKeydownOpen(event: KeyboardEvent) {
         if (this.displayedOptions.length === 0) { return; }
-        let direction = null;
-        const focusedValue = this._focusedOption && this._focusedOption.value;
-        const lastIndex = this.displayedOptions.findIndex(x => x.value === focusedValue);
-        const option = this.displayedOptions[lastIndex];
-        switch (event.code) {
-            case "ArrowDown": // Move focus down
-                if (this.showOptions) {
-                    direction = 1;
-                } else {
-                    this.openDropdown();
-                }
-                event.preventDefault();
-                break;
-            case "ArrowUp":   // Move focus up
-                if (this.showOptions) {
-                    direction = -1;
-                }
-                event.preventDefault();
-                break;
-            case "Space":
-                if (!this.filterable) {
-                    this.selectOption(option);
-                    event.preventDefault();
-                    return;
-                }
-                break;
-            case "Enter":
-                this.selectOption(option);
-                event.preventDefault();
-                return;
-            case "Escape":
-                event.stopPropagation();
-                this.closeDropdown();
-                this.changeDetector.markForCheck();
-                return;
-            default:
-        }
-        const index = this._moveFocusInDirection(lastIndex, direction);
-        this.changeDetector.markForCheck();
-        if (lastIndex !== index && this._dropdownRef) {
-            this._dropdownRef.instance.scrollToIndex(index);
+
+        const keyCode = event.keyCode;
+        const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
+
+        const navigator = this._keyNavigator;
+        if (keyCode === HOME || keyCode === END) {
+            event.preventDefault();
+            keyCode === HOME ? navigator.focusFirstItem() : navigator.focusLastItem();
+        } else if (isArrowKey && event.altKey || keyCode === ESCAPE) {
+            // Close the select on ALT + arrow key to match the native <select>
+            event.preventDefault();
+            this.closeDropdown();
+        } else if ((keyCode === ENTER || keyCode === SPACE) && navigator.focusedItem) {
+            event.preventDefault();
+            this.selectOption(navigator.focusedItem);
+        } else {
+            const previouslyFocusedIndex = navigator.focusedItemIndex;
+
+            navigator.onKeydown(event);
+
+            if (this.multiple && isArrowKey && event.shiftKey && navigator.focusedItem &&
+                navigator.focusedItemIndex !== previouslyFocusedIndex) {
+                this.selectOption(navigator.focusedItem);
+            }
         }
     }
 
@@ -517,4 +479,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         });
     }
 
+    private _getOptionByValue(value: any) {
+        return this.displayedOptions && this.displayedOptions.find(x => x.value === value);
+    }
 }
