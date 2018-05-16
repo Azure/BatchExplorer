@@ -191,21 +191,20 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
     private _focusByIndex(index: number, fallbackDelta: -1 | 1): void {
         const items = this._items;
 
-        index = this._wrapIndex(index);
-
-        if (!items[index]) {
-            return;
-        }
-
-        while (this._skipPredicateFn(items[index])) {
-            index += fallbackDelta;
+        // Check up to the length of the items(In case every item is disabled)
+        // tslint:disable-next-line:prefer-for-of
+        for (let i = 0; i < items.length; i++) {
             index = this._wrapIndex(index);
-
             if (!items[index]) {
                 return;
             }
+
+            if (!this._skipPredicateFn(items[index])) {
+                this.focusItem(index);
+                return;
+            }
+            index += fallbackDelta;
         }
-        this.focusItem(index);
     }
 
     /**

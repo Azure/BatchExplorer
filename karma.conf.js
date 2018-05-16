@@ -50,6 +50,9 @@ module.exports = function(config) {
         },
         client: {
             useIframe: false,
+            jasmine: {
+                random: false,
+            },
         },
         webpack: webpackConfig,
         webpackMiddleware: {

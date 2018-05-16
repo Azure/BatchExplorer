@@ -12,7 +12,7 @@ class FakeFocusable {
     public getLabel() { return this._label; }
 }
 
-fdescribe("List key navigator", () => {
+describe("List key navigator", () => {
     let fakeKeyEvents: {
         downArrow: KeyboardEvent,
         upArrow: KeyboardEvent,

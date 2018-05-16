@@ -321,7 +321,6 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
             }
             this.closeDropdown();
         }
-        console.log("Selected", [...this.selected]);
         this.notifyChanges();
         this.changeDetector.markForCheck();
     }
