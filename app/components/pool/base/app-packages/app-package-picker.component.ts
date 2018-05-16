@@ -174,7 +174,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         return null;
     }
 
-    public addNewItem(applicationId = "", version = "") {
+    public addNewItem(applicationId = null, version = null) {
         this.items.push(this.formBuilder.group({
             applicationId: [applicationId, []],
             version: [version, []],
@@ -209,7 +209,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     private _setPackageMap(applicationId: string, index: number) {
         // each table row needs it's own package list based on the selected application
         this.packageMap[index] = List(this._applicationMap[applicationId] || []);
-        if (this._propagateTouched) {
+        if (applicationId && this._propagateTouched) {
             this._propagateTouched(true);
         }
     }
