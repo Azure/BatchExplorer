@@ -122,7 +122,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     @ViewChild("selectButton", { read: ElementRef }) private _selectButtonEl: ElementRef;
     @ViewChild("filterInput") private _filterInputEl: ElementRef;
 
-    public get showOptions() {
+    public get dropdownOpen() {
         return Boolean(this._dropdownRef);
     }
 
@@ -186,7 +186,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         } else {
             this.selected = new Set(value ? [value] : []);
         }
-        if (!this.focusedOption) {
+        if (!this._keyNavigator.focusedItem) {
             this._keyNavigator.focusItem(this._getOptionByValue(value));
         }
         this.changeDetector.markForCheck();
@@ -209,7 +209,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     @HostListener("keydown", ["$event"])
     public handleKeyDown(event: KeyboardEvent) {
         if (this.disabled) { return; }
-        this.showOptions ? this._handleKeydownOpen(event) : this._handleKeyDownClosed(event);
+        this.dropdownOpen ? this._handleKeydownOpen(event) : this._handleKeyDownClosed(event);
     }
 
     public get hasValueSelected() {
@@ -234,7 +234,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
 
     public toggleDropdown() {
-        if (this.showOptions) {
+        if (this.dropdownOpen) {
             this.closeDropdown();
         } else {
             this.openDropdown();
@@ -242,6 +242,10 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
 
     public openDropdown() {
+        if (this.filterable) { // Disable type ahead as there is a search bar when filterable is enabled
+            this._keyNavigator.disableTypeAhead();
+        }
+
         this._overlayRef = this._createOverlay();
         this._backDropClickSub = this._overlayRef.backdropClick().subscribe(() => {
             this.closeDropdown();
@@ -274,6 +278,10 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
 
     public closeDropdown() {
+        if (!this.dropdownOpen) { return; }
+        if (this.filterable) {
+            this._keyNavigator.withTypeAhead(); // Reenable typeAhead as it was disabled when dropdown is open
+        }
         if (this._overlayRef) {
             this._overlayRef.dispose();
             this._overlayRef = null;
@@ -286,17 +294,23 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         this.changeDetector.markForCheck();
     }
 
-    public selectOption(option: SelectOptionComponent) {
+    public selectOption(option: SelectOptionComponent | null) {
         this._keyNavigator.focusItem(option);
 
         if (this.multiple) {
-            if (this.selected.has(option.value)) {
-                this.selected.delete(option.value);
-            } else {
-                this.selected.add(option.value);
+            if (option) {
+                if (this.selected.has(option.value)) {
+                    this.selected.delete(option.value);
+                } else {
+                    this.selected.add(option.value);
+                }
             }
         } else {
-            this.selected = new Set([option.value]);
+            if (option) {
+                this.selected = new Set([option.value]);
+            } else {
+                this.selected = new Set([]);
+            }
             this.closeDropdown();
         }
 
@@ -361,7 +375,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         this.displayedOptions = options;
 
         // If the filter makes it that we don't see the currently focusesd option fallback to focussing the first item
-        if (!focusedOptionIncluded && this.showOptions && this.filterable && this.filter) {
+        if (!focusedOptionIncluded && this.dropdownOpen && this.filterable && this.filter) {
             this.focusFirstOption();
         }
         this.changeDetector.markForCheck();
@@ -453,26 +467,16 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     /** Sets up a key manager to listen to keyboard events on the overlay panel. */
     private _initKeyNavigator() {
         this._keyNavigator = new ListKeyNavigator<SelectOptionComponent>()
-            .withWrap();
-        // .withTypeAhead()
-        // .withVerticalOrientation()
-        // .withHorizontalOrientation(this._isRtl() ? 'rtl' : 'ltr');
-
-        // this._keyNavigator.tabOut.pipe(takeUntil(this._destroy)).subscribe(() => {
-        //     // Restore focus to the trigger before closing. Ensures that the focus
-        //     // position won't be lost if the user got focus into the overlay.
-        //     this.focus();
-        //     this.close();
-        // });
+            .withWrap()
+            .withTypeAhead();
 
         this._keyNavigator.change.subscribe((index) => {
-            console.log("Cjange,", index);
-            const option = this.focusedOption = this.displayedOptions[index];
+            const option = this.focusedOption = this._keyNavigator.focusedItem;
             this.changeDetector.markForCheck();
 
-            if (this.showOptions) {
-                this._dropdownRef.instance.scrollToIndex(index);
-            } else if (!this.showOptions && !this.multiple) {
+            if (this.dropdownOpen) {
+                this._scrollToFocusedItem();
+            } else if (!this.dropdownOpen && !this.multiple) {
                 this.selectOption(option);
             }
         });
@@ -480,5 +484,9 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
 
     private _getOptionByValue(value: any) {
         return this.displayedOptions && this.displayedOptions.find(x => x.value === value);
+    }
+
+    private _scrollToFocusedItem() {
+        this._dropdownRef.instance.scrollToIndex(this._keyNavigator.focusedItemIndex);
     }
 }

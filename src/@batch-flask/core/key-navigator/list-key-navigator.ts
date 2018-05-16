@@ -15,8 +15,8 @@ export interface KeyNavigableListItem {
 }
 
 export class ListKeyNavigator<T extends KeyNavigableListItem> {
-    /** Stream that emits whenever the active item of the list manager changes. */
-    public change = new Subject<number>();
+    /** Stream that emits whenever the focused item of the list manager changes. */
+    public change = new Subject<T>();
 
     public set items(items: T[]) {
         this._items = items;
@@ -98,15 +98,19 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
         return this;
     }
 
+    public disableTypeAhead() {
+        this._typeaheadSubscription.unsubscribe();
+    }
+
     /**
      * Focus the item by index or by the actual item
      * @param item
      */
     public focusItem(item: number | T) {
-        const previousIndex = this._focusedItemIndex;
+        const previous = this._focusedItem;
         this.updateFocusedItem(item);
-        if (this._focusedItemIndex !== previousIndex) {
-            this.change.next(this._focusedItemIndex);
+        if (this._focusedItem !== previous) {
+            this.change.next(this._focusedItem);
         }
     }
 
@@ -197,7 +201,6 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
                 return;
             }
         }
-
         this.focusItem(index);
     }
 
