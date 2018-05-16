@@ -91,8 +91,8 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     @ContentChildren(SelectOptionComponent)
     public options: QueryList<SelectOptionComponent>;
 
-    public selected = new Set<any>();
     public filter: string = "";
+
     public set displayedOptions(displayedOptions: SelectOptionComponent[]) {
         this._displayedOptions = displayedOptions;
         if (this._dropdownRef) { this._dropdownRef.instance.displayedOptions = displayedOptions; }
@@ -106,6 +106,12 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
     public get focusedOption() { return this._focusedOption; }
 
+    public set selected(selection: Set<string>) {
+        this._selected = selection;
+        if (this._dropdownRef) { this._dropdownRef.instance.selected = selection; }
+    }
+    public get selected() { return this._selected; }
+
     public readonly stateChanges = new Subject<void>();
     public readonly controlType: string = "bl-select";
 
@@ -118,6 +124,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     private _uid = `bl-select-${nextUniqueId++}`;
     private _disabled = false;
     private _keyNavigator: ListKeyNavigator<SelectOptionComponent>;
+    private _selected: Set<string> = new Set<any>();
 
     @ViewChild("selectButton", { read: ElementRef }) private _selectButtonEl: ElementRef;
     @ViewChild("filterInput") private _filterInputEl: ElementRef;
@@ -255,6 +262,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         const ref = this._dropdownRef = this._overlayRef.attach(portal);
         ref.instance.displayedOptions = this.displayedOptions;
         ref.instance.focusedOption = this.focusedOption;
+        ref.instance.selected = this.selected;
         ref.instance.multiple = this.multiple;
         ref.onDestroy(() => {
             this._dropdownRef = null;
@@ -313,7 +321,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
             }
             this.closeDropdown();
         }
-
+        console.log("Selected", [...this.selected]);
         this.notifyChanges();
         this.changeDetector.markForCheck();
     }

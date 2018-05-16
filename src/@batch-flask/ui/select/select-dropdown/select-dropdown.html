@@ -2,10 +2,10 @@
     [class.focused]="focusedOption === option" [class.disabled]="option.disabled">
 
     <div class="checkbox" *ngIf="multiple">
-        <i class="fa fa-check" *ngIf="select.selected.has(option.value)"></i>
+        <i class="fa fa-check" *ngIf="selected.has(option.value)"></i>
     </div>
     <div class="option-content">
-        {{option.label}}
+        <ng-template [ngTemplateOutlet]="option.content"></ng-template>
     </div>
 </div>
 <div class="no-option" *ngIf="displayedOptions.length === 0 && select.filter">

@@ -11,7 +11,11 @@ import { debounceTime, filter, map, tap } from "rxjs/operators";
 
 export interface KeyNavigableListItem {
     disabled: boolean;
-    label: string;
+
+    /**
+     * Return the searchable label
+     */
+    getLabel: () => string;
 }
 
 export class ListKeyNavigator<T extends KeyNavigableListItem> {
@@ -85,7 +89,7 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
                 const item = items[index];
 
                 if (!this._skipPredicateFn(item) &&
-                    item.label.toUpperCase().trim().indexOf(inputString) === 0) {
+                    item.getLabel().toUpperCase().trim().indexOf(inputString) === 0) {
 
                     this.focusItem(index);
                     break;

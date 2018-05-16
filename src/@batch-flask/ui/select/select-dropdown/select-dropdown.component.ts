@@ -37,6 +37,15 @@ export class SelectDropdownComponent {
         return this._focusedOption;
     }
 
+    public set selected(selected: Set<string>) {
+        this._selected = selected;
+        this.changeDetector.markForCheck();
+    }
+
+    public get selected() {
+        return this._selected;
+    }
+
     public set multiple(multiple: boolean) {
         this._multiple = multiple;
         this._computeOptions();
@@ -50,6 +59,7 @@ export class SelectDropdownComponent {
     private _displayedOptions: SelectOptionComponent[] = [];
     private _focusedOption: any;
     private _multiple: any;
+    private _selected: Set<string> = new Set();
 
     constructor(
         @Inject(forwardRef(() => SelectComponent)) public select: SelectComponent,
