@@ -12,11 +12,11 @@
             </ng-container>
         </div>
         <div class="caret">
-            <i class="fa fa-caret-down" *ngIf="!showOptions"></i>
-            <i class="fa fa-caret-up" *ngIf="showOptions"></i>
+            <i class="fa fa-caret-down" *ngIf="!dropdownOpen"></i>
+            <i class="fa fa-caret-up" *ngIf="dropdownOpen"></i>
         </div>
    </div>
-   <ng-container *ngIf="showOptions && filterable">
+   <ng-container *ngIf="dropdownOpen && filterable">
        <input class="select-filter" #filterInput [ngModel]="filter" (ngModelChange)="filterChanged($event)" placeholder="Filter items...">
    </ng-container>
 </div>

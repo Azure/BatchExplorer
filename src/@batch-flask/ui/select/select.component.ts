@@ -22,9 +22,10 @@ import { ControlValueAccessor, NgControl } from "@angular/forms";
 
 import { SelectOptionComponent } from "./option";
 
+import { DOWN_ARROW, END, ENTER, ESCAPE, HOME, SPACE, UP_ARROW } from "@angular/cdk/keycodes";
 import { ConnectionPositionPair, Overlay, OverlayConfig, OverlayRef } from "@angular/cdk/overlay";
 import { ComponentPortal } from "@angular/cdk/portal";
-import { FlagInput, coerceBooleanProperty } from "@batch-flask/core";
+import { FlagInput, ListKeyNavigator, coerceBooleanProperty } from "@batch-flask/core";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import { SelectDropdownComponent } from "@batch-flask/ui/select/select-dropdown";
 import { Subject, Subscription } from "rxjs";
@@ -90,34 +91,45 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     @ContentChildren(SelectOptionComponent)
     public options: QueryList<SelectOptionComponent>;
 
-    public selected = new Set<any>();
     public filter: string = "";
+
     public set displayedOptions(displayedOptions: SelectOptionComponent[]) {
         this._displayedOptions = displayedOptions;
         if (this._dropdownRef) { this._dropdownRef.instance.displayedOptions = displayedOptions; }
+        this._keyNavigator.items = displayedOptions;
     }
     public get displayedOptions() { return this._displayedOptions; }
-    public set focusedOption(option: any) {
+
+    public set focusedOption(option: SelectOptionComponent) {
         this._focusedOption = option;
         if (this._dropdownRef) { this._dropdownRef.instance.focusedOption = option; }
     }
     public get focusedOption() { return this._focusedOption; }
+
+    public set selected(selection: Set<string>) {
+        this._selected = selection;
+        if (this._dropdownRef) { this._dropdownRef.instance.selected = selection; }
+    }
+    public get selected() { return this._selected; }
+
     public readonly stateChanges = new Subject<void>();
     public readonly controlType: string = "bl-select";
 
     private _dropdownRef: ComponentRef<SelectDropdownComponent>;
     private _displayedOptions: SelectOptionComponent[];
-    private _focusedOption: any = null;
+    private _focusedOption: SelectOptionComponent = null;
     private _overlayRef: OverlayRef;
     private _backDropClickSub: Subscription;
     private _id: string;
     private _uid = `bl-select-${nextUniqueId++}`;
     private _disabled = false;
+    private _keyNavigator: ListKeyNavigator<SelectOptionComponent>;
+    private _selected: Set<string> = new Set<any>();
 
     @ViewChild("selectButton", { read: ElementRef }) private _selectButtonEl: ElementRef;
     @ViewChild("filterInput") private _filterInputEl: ElementRef;
 
-    public get showOptions() {
+    public get dropdownOpen() {
         return Boolean(this._dropdownRef);
     }
 
@@ -151,6 +163,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
             // the `providers` to avoid running into a circular import.
             this.ngControl.valueAccessor = this;
         }
+        this._initKeyNavigator();
     }
 
     public ngAfterContentInit() {
@@ -168,6 +181,10 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         if (this._backDropClickSub) {
             this._backDropClickSub.unsubscribe();
         }
+
+        if (this._keyNavigator) {
+            this._keyNavigator.dispose();
+        }
     }
 
     public writeValue(value: any): void {
@@ -176,8 +193,8 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         } else {
             this.selected = new Set(value ? [value] : []);
         }
-        if (!this.focusedOption) {
-            this.focusedOption = value;
+        if (!this._keyNavigator.focusedItem) {
+            this._keyNavigator.focusItem(this._getOptionByValue(value));
         }
         this.changeDetector.markForCheck();
     }
@@ -199,7 +216,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     @HostListener("keydown", ["$event"])
     public handleKeyDown(event: KeyboardEvent) {
         if (this.disabled) { return; }
-        this.showOptions ? this._handleKeydownOpen(event) : this._handleKeyDownClosed(event);
+        this.dropdownOpen ? this._handleKeydownOpen(event) : this._handleKeyDownClosed(event);
     }
 
     public get hasValueSelected() {
@@ -224,7 +241,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
 
     public toggleDropdown() {
-        if (this.showOptions) {
+        if (this.dropdownOpen) {
             this.closeDropdown();
         } else {
             this.openDropdown();
@@ -232,6 +249,10 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
 
     public openDropdown() {
+        if (this.filterable) { // Disable type ahead as there is a search bar when filterable is enabled
+            this._keyNavigator.disableTypeAhead();
+        }
+
         this._overlayRef = this._createOverlay();
         this._backDropClickSub = this._overlayRef.backdropClick().subscribe(() => {
             this.closeDropdown();
@@ -241,6 +262,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         const ref = this._dropdownRef = this._overlayRef.attach(portal);
         ref.instance.displayedOptions = this.displayedOptions;
         ref.instance.focusedOption = this.focusedOption;
+        ref.instance.selected = this.selected;
         ref.instance.multiple = this.multiple;
         ref.onDestroy(() => {
             this._dropdownRef = null;
@@ -264,6 +286,10 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
 
     public closeDropdown() {
+        if (!this.dropdownOpen) { return; }
+        if (this.filterable) {
+            this._keyNavigator.withTypeAhead(); // Reenable typeAhead as it was disabled when dropdown is open
+        }
         if (this._overlayRef) {
             this._overlayRef.dispose();
             this._overlayRef = null;
@@ -276,19 +302,25 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         this.changeDetector.markForCheck();
     }
 
-    public selectOption(option: SelectOptionComponent) {
-        this.focusedOption = option.value;
+    public selectOption(option: SelectOptionComponent | null) {
+        this._keyNavigator.focusItem(option);
+
         if (this.multiple) {
-            if (this.selected.has(option.value)) {
-                this.selected.delete(option.value);
-            } else {
-                this.selected.add(option.value);
+            if (option) {
+                if (this.selected.has(option.value)) {
+                    this.selected.delete(option.value);
+                } else {
+                    this.selected.add(option.value);
+                }
             }
         } else {
-            this.selected = new Set([option.value]);
+            if (option) {
+                this.selected = new Set([option.value]);
+            } else {
+                this.selected = new Set([]);
+            }
             this.closeDropdown();
         }
-
         this.notifyChanges();
         this.changeDetector.markForCheck();
     }
@@ -312,11 +344,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
 
     public focusFirstOption() {
-        if (this.displayedOptions.length === 0) {
-            return;
-        }
-        this.focusedOption = this.displayedOptions.first().value;
-        this.changeDetector.markForCheck();
+        this._keyNavigator.focusFirstItem();
     }
 
     public setDescribedByIds(ids: string[]) {
@@ -346,7 +374,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
                 || label.contains(this.filter.toLowerCase())) {
                 options.push(option);
 
-                if (option.value === this.focusedOption) {
+                if (option === this.focusedOption) {
                     focusedOptionIncluded = true;
                 }
             }
@@ -354,30 +382,10 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         this.displayedOptions = options;
 
         // If the filter makes it that we don't see the currently focusesd option fallback to focussing the first item
-        if (!focusedOptionIncluded) {
+        if (!focusedOptionIncluded && this.dropdownOpen && this.filterable && this.filter) {
             this.focusFirstOption();
         }
         this.changeDetector.markForCheck();
-    }
-
-    /**
-     * Move the focus
-     * @param index Current index
-     * @param direction
-     */
-    private _moveFocusInDirection(index: number, direction: 1 | -1 | null) {
-        if (!direction) { return index; }
-        let option;
-        do {
-            index = this._wrapIndex(index + direction);
-            option = this.displayedOptions[index];
-            this.focusedOption = option.value;
-        } while (option.disabled);
-        return index;
-    }
-
-    private _wrapIndex(index: number): number {
-        return (index + this.displayedOptions.length) % this.displayedOptions.length;
     }
 
     private _createOverlay(): OverlayRef {
@@ -429,52 +437,63 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         if (isOpenKey || ((this.multiple || event.altKey) && isArrowKey)) {
             event.preventDefault(); // prevents the page from scrolling down when pressing space
             this.openDropdown();
+        } else {
+            this._keyNavigator.onKeydown(event);
         }
     }
 
     private _handleKeydownOpen(event: KeyboardEvent) {
         if (this.displayedOptions.length === 0) { return; }
-        let direction = null;
-        const lastIndex = this.displayedOptions.findIndex(x => x.value === this.focusedOption);
-        const option = this.displayedOptions[lastIndex];
-        switch (event.code) {
-            case "ArrowDown": // Move focus down
-                if (this.showOptions) {
-                    direction = 1;
-                } else {
-                    this.openDropdown();
-                }
-                event.preventDefault();
-                break;
-            case "ArrowUp":   // Move focus up
-                if (this.showOptions) {
-                    direction = -1;
-                }
-                event.preventDefault();
-                break;
-            case "Space":
-                if (!this.filterable) {
-                    this.selectOption(option);
-                    event.preventDefault();
-                    return;
-                }
-                break;
-            case "Enter":
-                this.selectOption(option);
-                event.preventDefault();
-                return;
-            case "Escape":
-                event.stopPropagation();
-                this.closeDropdown();
-                this.changeDetector.markForCheck();
-                return;
-            default:
-        }
-        const index = this._moveFocusInDirection(lastIndex, direction);
-        this.changeDetector.markForCheck();
-        if (lastIndex !== index && this._dropdownRef) {
-            this._dropdownRef.instance.scrollToIndex(index);
+
+        const keyCode = event.keyCode;
+        const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
+
+        const navigator = this._keyNavigator;
+        if (keyCode === HOME || keyCode === END) {
+            event.preventDefault();
+            keyCode === HOME ? navigator.focusFirstItem() : navigator.focusLastItem();
+        } else if (isArrowKey && event.altKey || keyCode === ESCAPE) {
+            // Close the select on ALT + arrow key to match the native <select>
+            event.preventDefault();
+            this.closeDropdown();
+        } else if ((keyCode === ENTER || keyCode === SPACE) && navigator.focusedItem) {
+            event.preventDefault();
+            this.selectOption(navigator.focusedItem);
+        } else {
+            const previouslyFocusedIndex = navigator.focusedItemIndex;
+
+            navigator.onKeydown(event);
+
+            if (this.multiple && isArrowKey && event.shiftKey && navigator.focusedItem &&
+                navigator.focusedItemIndex !== previouslyFocusedIndex) {
+                this.selectOption(navigator.focusedItem);
+            }
         }
     }
 
+    /** Sets up a key manager to listen to keyboard events on the overlay panel. */
+    private _initKeyNavigator() {
+        this._keyNavigator = new ListKeyNavigator<SelectOptionComponent>()
+            .withWrap()
+            .withTypeAhead();
+
+        this._keyNavigator.change.subscribe((index) => {
+            const option = this.focusedOption = this._keyNavigator.focusedItem;
+            this.changeDetector.markForCheck();
+
+            if (this.dropdownOpen) {
+                this._scrollToFocusedItem();
+            } else if (!this.dropdownOpen && !this.multiple) {
+                this.selectOption(option);
+            }
+        });
+    }
+
+    private _getOptionByValue(value: any) {
+        return this.displayedOptions && this.displayedOptions.find(x => x.value === value);
+    }
+
+    private _scrollToFocusedItem() {
+        this._dropdownRef.instance.scrollToIndex(this._keyNavigator.focusedItemIndex);
+    }
 }

@@ -8,10 +8,12 @@ module.exports = function(config) {
     config.set({
         basePath: ".",
         frameworks: ["jasmine"],
-        files: [{
-            pattern: "./test/app/spec-entry.js",
-            watched: false
-        }, ],
+        files: [
+            {
+                pattern: "./test/app/spec-entry.js",
+                watched: false
+            },
+        ],
 
         // proxied base paths
         proxies: {},
@@ -50,6 +52,9 @@ module.exports = function(config) {
         },
         client: {
             useIframe: false,
+            jasmine: {
+                random: false,
+            },
         },
         webpack: webpackConfig,
         webpackMiddleware: {
