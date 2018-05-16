@@ -150,7 +150,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         const tempMap: any = {};
         for (const reference of control.value) {
             // TODO: remove lowerCase when API is fixed.
-            const application = reference.applicationId.toLowerCase();
+            const application = reference.applicationId && reference.applicationId.toLowerCase();
             const key = `${application}-${reference.version}`;
             if (!Boolean(key in tempMap)) {
                 const version = !reference.version // this._defaultVersionValue

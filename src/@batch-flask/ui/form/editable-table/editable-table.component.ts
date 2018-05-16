@@ -1,5 +1,5 @@
 import {
-    AfterViewInit, Component, ContentChildren, OnDestroy, QueryList, forwardRef,
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, OnDestroy, QueryList, forwardRef,
 } from "@angular/core";
 import {
     ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
@@ -15,10 +15,10 @@ import "./editable-table.scss";
     selector: "bl-editable-table",
     templateUrl: "editable-table.html",
     providers: [
-        // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => EditableTableComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => EditableTableComponent), multi: true },
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditableTableComponent implements ControlValueAccessor, Validator, AfterViewInit, OnDestroy {
     @ContentChildren(EditableTableColumnComponent)
@@ -31,7 +31,7 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     private _sub: Subscription;
     private _writingValue = false;
 
-    constructor(private formBuilder: FormBuilder) {
+    constructor(private formBuilder: FormBuilder, private changeDetector: ChangeDetectorRef) {
         this.items = formBuilder.array([]);
         this.form = formBuilder.group({ items: this.items });
         this._sub = this.items.valueChanges.subscribe((files) => {
@@ -72,10 +72,12 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
             obj[column.name] = "";
         }
         this.items.push(this.formBuilder.group(obj));
+        this.changeDetector.markForCheck();
     }
 
     public deleteItem(index: number) {
         this.items.removeAt(index);
+        this.changeDetector.markForCheck();
     }
 
     public writeValue(value: any[]) {
