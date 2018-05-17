@@ -4,8 +4,11 @@ import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { SelectModule } from "@batch-flask/ui/select";
 
+import { ENTER } from "@batch-flask/core/keys";
+import { PermissionService } from "@batch-flask/ui";
+import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { EditableTableColumnComponent, EditableTableComponent } from "@batch-flask/ui/form/editable-table";
-import { click, updateInput } from "test/utils/helpers";
+import { click, createKeyboardEvent, updateInput } from "test/utils/helpers";
 
 @Component({
     template: `
@@ -26,20 +29,16 @@ describe("EditableTableComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, SelectModule],
+            imports: [ReactiveFormsModule, SelectModule, ButtonsModule],
             declarations: [EditableTableComponent, EditableTableColumnComponent, TestComponent],
+            providers: [
+                { provide: PermissionService, useValue: null },
+            ],
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-editable-table"));
         fixture.detectChanges();
-    });
-
-    beforeEach((done) => {
-        setTimeout(() => {
-            fixture.detectChanges();
-            done();
-        });
     });
 
     function expectRowValues(row: DebugElement, value1, value2) {
@@ -111,7 +110,7 @@ describe("EditableTableComponent", () => {
         fixture.detectChanges();
         const rows = de.queryAll(By.css("tbody tr"));
         expect(rows.length).toBe(4);
-        const deleteBtn = rows[1].query(By.css("button.delete-item-btn"));
+        const deleteBtn = rows[1].query(By.css(".delete-item-btn"));
         click(deleteBtn);
         fixture.detectChanges();
 
@@ -138,5 +137,28 @@ describe("EditableTableComponent", () => {
             { key: "newVal", value: "bar2" },
             { key: "foo3", value: "bar3" },
         ]);
+    });
+
+    it("pressing enter shouldn't remove a row", () => {
+        testComponent.items.setValue([
+            { key: "foo1", value: "bar1" },
+            { key: "foo2", value: "bar2" },
+            { key: "foo3", value: "bar3" },
+        ]);
+        fixture.detectChanges();
+        let rows = de.queryAll(By.css("tbody tr"));
+        expect(rows.length).toBe(4);
+
+        const row = rows[1];
+        const inputs = row.queryAll(By.css("input"));
+        const input = inputs[0].nativeElement;
+        input.focus();
+
+        const enterEvent = createKeyboardEvent("keypress", 13, input, ENTER);
+        input.dispatchEvent(enterEvent);
+
+        fixture.detectChanges();
+        rows = de.queryAll(By.css("tbody tr"));
+        expect(rows.length).toBe(4, "Should still have 4 rows");
     });
 });

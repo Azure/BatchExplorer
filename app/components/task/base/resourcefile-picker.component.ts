@@ -21,7 +21,6 @@ export interface UploadResourceFileEvent {
     done: Observable<any>;
 }
 
-// tslint:disable:no-forward-ref
 @Component({
     selector: "bl-resourcefile-picker",
     templateUrl: "resourcefile-picker.html",

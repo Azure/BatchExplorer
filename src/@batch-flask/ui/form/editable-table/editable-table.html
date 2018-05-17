@@ -23,7 +23,7 @@
                     </ng-container>
                 </td>
                 <td class="action-column">
-                    <button *ngIf="!isLast" class="delete-item-btn" (click)="deleteItem(i)"><i class="fa fa-times" ></i></button>
+                    <bl-clickable *ngIf="!isLast" class="delete-item-btn" (do)="deleteItem(i)"><i class="fa fa-times" ></i></bl-clickable>
                 </td>
             </tr>
         </tbody>
