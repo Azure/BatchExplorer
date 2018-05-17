@@ -179,6 +179,27 @@ bl-table {
             text-overflow: ellipsis;
         }
     }
+
+    bl-thead {
+        .column-separator {
+            display: block;
+            cursor: e-resize;
+            background: $border-color;
+            flex: 0 0 1px;
+            height: 100%;
+
+            > .column-separator-hitbox {
+                position: absolute;
+                width: 5px;
+                height: 100%;
+                z-index: 100;
+
+                &:hover {
+                    // background: red;
+                }
+            }
+        }
+    }
 }
 
 .cell-spinner {

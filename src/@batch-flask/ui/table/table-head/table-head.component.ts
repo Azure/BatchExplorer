@@ -40,4 +40,7 @@ export class TableHeadComponent {
         return column.name;
     }
 
+    public handleStartResize(column: TableColumnRef) {
+        console.log("Resizing");
+    }
 }
