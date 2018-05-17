@@ -12,7 +12,7 @@ export class StorageAccountKeysService {
 
     }
     public getFor(storageAccountId: string) {
-        if(!storageAccountId) {
+        if (!storageAccountId) {
             throw new Error(`Cannot get keys for storage account id ${storageAccountId}`);
         }
         if (this._cache.has(storageAccountId)) {
