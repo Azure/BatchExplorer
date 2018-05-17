@@ -12,6 +12,9 @@ export class StorageAccountKeysService {
 
     }
     public getFor(storageAccountId: string) {
+        if(!storageAccountId) {
+            throw new Error(`Cannot get keys for storage account id ${storageAccountId}`);
+        }
         if (this._cache.has(storageAccountId)) {
             return Observable.of(this._cache.get(storageAccountId));
         } else {

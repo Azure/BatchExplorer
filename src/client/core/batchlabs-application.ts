@@ -155,14 +155,17 @@ export class BatchLabsApplication {
     }
 
     public openFromArguments(argv: string[]): MainWindow {
-        if (ClientConstants.isDev) {
-            return this.windows.openNewWindow(null, false);
-        }
+        // TODO-TIM remove
+        argv = ["", "ms-batchlabs://route/market/3dsmax/actions/standard/submit?session=39a3570f-7cc9-4899-b0fc-93c5876e0db8&auto-pool=0&input-parameter=inputFilegroup&jobName=pipecatfx-fullmovie-v01-t10&frameStart=1&frameEnd=1&renderer=vray&sceneFile=PipecatFX_FullMovie_v01_t10.max&asset-container=pipecatfx-fullmovie-v01-t10&asset-paths=D%3A%5C_azure%5Crendering%5C3dsmax%5CNOV%5CPipecatFX_FullMovie%2Cc%3A%5Cprogram%20files%20%28x86%29%5Citoo%20software%5Cforest%20pack%20pro%5Cmaps%5Cpresets"];
+        // if (ClientConstants.isDev) {
+        //     return this.windows.openNewWindow(null, false);
+        // }
         const program = commander
             .version(app.getVersion())
             .option("--updated", "If the application was just updated")
             .parse(["", ...argv]);
         const arg = program.args[0];
+        console.log("Arg", arg);
         if (!arg) {
             return this.windows.openNewWindow(null, false);
         }
