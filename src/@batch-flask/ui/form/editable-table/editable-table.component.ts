@@ -1,6 +1,6 @@
 import {
     AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, ContentChildren, OnDestroy, QueryList, forwardRef,
+    Component, ContentChildren, HostListener, OnDestroy, QueryList, forwardRef,
 } from "@angular/core";
 import {
     ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
@@ -10,6 +10,7 @@ import { Subscription } from "rxjs";
 import { ObjectUtils } from "@batch-flask/utils";
 import { EditableTableColumnComponent, EditableTableColumnType } from "./editable-table-column.component";
 
+import { ENTER } from "@batch-flask/core/keys";
 import "./editable-table.scss";
 
 @Component({
@@ -59,6 +60,15 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
         this._sub.unsubscribe();
     }
 
+    @HostListener("keypress", ["$event"])
+    public handleKeydown(event: KeyboardEvent) {
+
+        if (event.key === ENTER) {
+            event.preventDefault();
+            this.addNewItem();
+        }
+    }
+
     public addNewItem() {
         const last = this.items.value.last();
         if (last && this._isEmpty(last)) {
@@ -77,6 +87,7 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     }
 
     public deleteItem(index: number) {
+        console.log("Delete item triggered");
         this.items.removeAt(index);
         this.changeDetector.markForCheck();
     }

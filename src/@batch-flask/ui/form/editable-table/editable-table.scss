@@ -77,22 +77,29 @@ bl-editable-table, .editable-table {
             width: 26px;
             height: 26px;
             background: none;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            border: 0;
             cursor: pointer;
-            outline: none;
+            display:  flex;
+            align-items: center;
+            justify-content: center;
 
             > .fa {
-                color: map-get($danger, 500);
+                color: $danger-color;
             }
 
             &:focus, &:hover {
-                background: map-get($danger, 500);
+                outline: none;
+                background: $danger-color;
                 > .fa {
                     color: $whitesmoke;
                 }
             }
 
             &:active {
-                background: map-get($danger, 800);
+                background: $danger-color;
                 > .fa {
                     color: $whitesmoke;
                 }

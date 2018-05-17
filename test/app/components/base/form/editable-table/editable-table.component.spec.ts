@@ -111,7 +111,7 @@ describe("EditableTableComponent", () => {
         fixture.detectChanges();
         const rows = de.queryAll(By.css("tbody tr"));
         expect(rows.length).toBe(4);
-        const deleteBtn = rows[1].query(By.css("button.delete-item-btn"));
+        const deleteBtn = rows[1].query(By.css(".delete-item-btn"));
         click(deleteBtn);
         fixture.detectChanges();
 
