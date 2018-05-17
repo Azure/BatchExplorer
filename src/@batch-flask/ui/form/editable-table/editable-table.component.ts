@@ -60,10 +60,8 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
 
     @HostListener("keypress", ["$event"])
     public handleKeydown(event: KeyboardEvent) {
-
         if (event.key === ENTER) {
             event.preventDefault();
-            this.addNewItem();
         }
     }
 

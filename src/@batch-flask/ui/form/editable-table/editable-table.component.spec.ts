@@ -154,7 +154,7 @@ describe("EditableTableComponent", () => {
         const input = inputs[0].nativeElement;
         input.focus();
 
-        const enterEvent = createKeyboardEvent("keydown", 13, input, ENTER);
+        const enterEvent = createKeyboardEvent("keypress", 13, input, ENTER);
         input.dispatchEvent(enterEvent);
 
         fixture.detectChanges();
