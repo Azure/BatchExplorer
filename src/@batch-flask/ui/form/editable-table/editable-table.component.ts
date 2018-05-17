@@ -1,5 +1,5 @@
 import {
-    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
+    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
     Component, ContentChildren, HostListener, OnDestroy, QueryList, forwardRef,
 } from "@angular/core";
 import {
@@ -22,7 +22,7 @@ import "./editable-table.scss";
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditableTableComponent implements ControlValueAccessor, Validator, AfterViewInit, OnDestroy {
+export class EditableTableComponent implements ControlValueAccessor, Validator, AfterContentInit, OnDestroy {
     @ContentChildren(EditableTableColumnComponent)
     public columns: QueryList<EditableTableColumnComponent>;
     public EditableTableColumnType = EditableTableColumnType;
@@ -37,9 +37,7 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
         this.items = formBuilder.array([]);
         this.form = formBuilder.group({ items: this.items });
         this._sub = this.items.valueChanges.subscribe((files) => {
-            if (this._writingValue) {
-                return;
-            }
+            if (this._writingValue) { return; }
             const lastFile = files[files.length - 1];
             if (lastFile && !this._isEmpty(lastFile)) {
                 this.addNewItem();
@@ -50,10 +48,10 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
         });
     }
 
-    public ngAfterViewInit() {
-        setTimeout(() => {
-            this.addNewItem();
-        });
+    public ngAfterContentInit() {
+        this._writingValue = true;
+        this.addNewItem();
+        this._writingValue = false;
     }
 
     public ngOnDestroy() {
@@ -87,7 +85,6 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     }
 
     public deleteItem(index: number) {
-        console.log("Delete item triggered");
         this.items.removeAt(index);
         this.changeDetector.markForCheck();
     }

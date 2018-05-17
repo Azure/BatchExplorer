@@ -5,6 +5,7 @@ import { By } from "@angular/platform-browser";
 import { SelectModule } from "@batch-flask/ui";
 import { PermissionService } from "@batch-flask/ui/permission";
 
+import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { EditableTableColumnComponent, EditableTableComponent } from "@batch-flask/ui/form/editable-table";
 import { ResourcefilePickerComponent } from "app/components/task/base";
 import { FileSystemService, SettingsService } from "app/services";
@@ -57,7 +58,7 @@ describe("ResourcefilePickerComponent", () => {
             },
         };
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule, SelectModule],
+            imports: [FormsModule, ReactiveFormsModule, SelectModule, ButtonsModule],
             declarations: [ResourcefilePickerComponent, TestComponent,
                 EditableTableComponent, EditableTableColumnComponent],
             providers: [
