@@ -4,4 +4,8 @@ bl-focus-section {
     &:focus {
         outline: none;
     }
+
+    // This is needed when used in the list
+    min-height: 0;
+    flex: 1;
 }

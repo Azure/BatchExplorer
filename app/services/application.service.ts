@@ -59,7 +59,7 @@ export class ApplicationService extends ServiceBase {
 
         this._listGetter = new ArmListGetter(BatchApplication, this.arm, {
             cache: () => this._cache,
-            uri: () => `${this._currentAccountId}/applications`,
+            uri: () => `${this._currentAccountId}/applications2`,
             logIgnoreError: applicationIgnoredErrors,
         });
     }
