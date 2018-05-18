@@ -29,6 +29,9 @@ export class ProxySettingsManager {
         if (!this._settings.value) {
             try {
                 await this._loadProxySettings();
+                if (!this._settings.value) {
+                    return;
+                }
             } catch (e) {
                 log.error("Failed to load proxy settings", e);
             }
