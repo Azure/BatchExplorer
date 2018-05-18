@@ -32,22 +32,7 @@ export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges
     @HostBinding("class.sorting")
     public isSorting: boolean = false;
 
-    /**
-     * Current column width
-     */
-    public width = null;
-
     public id: string;
-
-    @HostBinding("class.fixed-size")
-    public get fixedSize() {
-        return this.width !== null;
-    }
-
-    @HostBinding("style.flex-basis")
-    public get flexBasis() {
-        return this.width && `${this.width}px`;
-    }
 
     constructor(
         @Inject(forwardRef(() => TableComponent)) private _table: TableComponent,
@@ -68,7 +53,7 @@ export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges
             this._validateName();
         }
         if (changes.defaultWidth) {
-            this.width = this.defaultWidth;
+            // TODO-tim handle this
         }
     }
 
@@ -80,7 +65,7 @@ export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges
     public getRef(): TableColumnRef {
         return {
             name: this.name,
-            width: this.width,
+            defaultWidth: this.defaultWidth,
             headCellTemplate: this.headCell,
             sortable: this.sortable,
             isSorting: this.isSorting,

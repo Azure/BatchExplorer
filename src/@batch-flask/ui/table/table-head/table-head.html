@@ -1,9 +1,9 @@
 <div class="checkbox-cell" *ngIf="table.config.showCheckbox"></div>
 <ng-container *ngFor="let column of columns;trackBy: trackColumn; let isLast=last">
-    <bl-table-head-cell [column]="column">
+    <bl-table-head-cell [column]="column" #cell>
     </bl-table-head-cell>
     <div class="column-separator" *ngIf="!isLast">
-        <div class="column-separator-hitbox" (mousedown)="handleStartResize($column)" (dblclick)="resetColumnSize(column)">
+        <div class="column-separator-hitbox" (mousedown)="handleStartResize(column, cell)" (dblclick)="resetColumnSize(column)">
         </div>
     </div>
 </ng-container>
