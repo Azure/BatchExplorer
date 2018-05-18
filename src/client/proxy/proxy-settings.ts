@@ -29,14 +29,14 @@ export class ProxySettingsManager {
         if (!this._settings.value) {
             try {
                 await this._loadProxySettings();
-                if (!this._settings.value) {
-                    return;
-                }
             } catch (e) {
                 log.error("Failed to load proxy settings", e);
             }
         }
-        this._applyProxySettings(this._settings.value.settings);
+
+        if (this._settings.value) {
+            this._applyProxySettings(this._settings.value.settings);
+        }
     }
 
     public get settings(): Promise<ProxySettings> {
