@@ -72,4 +72,8 @@ export class TableHeadComponent {
         console.log("Move to ", columnWidth);
         this.table.columnManager.updateColumnWidth(column.name, columnWidth);
     }
+
+    public resetColumnWidth(column: TableColumnRef) {
+        this.table.columnManager.resetColumnWidth(column.name);
+    }
 }

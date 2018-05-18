@@ -29,9 +29,19 @@ export class TableHeadCellComponent implements OnInit, OnDestroy {
         return this.width;
     }
 
-    @HostBinding("style.flex-basis")
+    @HostBinding("style.flex-basis.px")
     public get flexBasis() {
-        return this.width + "px";
+        return this.width;
+    }
+
+    @HostBinding("style.min-width.px")
+    public get minWidth() {
+        return this.column.minWidth;
+    }
+
+    @HostBinding("style.max-width.px")
+    public get maxWidth() {
+        return this.column.maxWidth;
     }
 
     public sortDirection: SortDirection;

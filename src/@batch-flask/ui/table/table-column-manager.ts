@@ -4,8 +4,9 @@ import { BehaviorSubject, Observable, Subject } from "rxjs";
 export interface TableColumnRef {
     name: string;
     defaultWidth: number;
+    minWidth: number;
+    maxWidth: number;
     sortable: boolean;
-    isSorting: boolean;
     headCellTemplate: TemplateRef<any>;
     cellTemplate: TemplateRef<any>;
 }
@@ -61,6 +62,15 @@ export class TableColumnManager {
     }
 
     public updateColumnWidth(name: string, width: number) {
+        const column = this.columnMap.get(name);
+        if (!column) { return; }
+
+        if (width < column.minWidth) {
+            width = column.minWidth;
+        }
+        if (column.maxWidth && width > column.maxWidth) {
+            width = column.maxWidth;
+        }
         this._dimensions.set(name, width);
         this.dimensionsChange.next(true);
     }
@@ -75,6 +85,16 @@ export class TableColumnManager {
             result[column] = this.getColumnWidth(column);
         }
         return result;
+    }
+
+    public resetColumnWidth(name: string) {
+        this._dimensions.delete(name);
+        this.dimensionsChange.next(true);
+    }
+
+    public resetAllColumnWidth(name: string) {
+        this._dimensions.clear();
+        this.dimensionsChange.next(true);
     }
 
     public sortBy(column: string, direction: SortDirection = SortDirection.Asc) {

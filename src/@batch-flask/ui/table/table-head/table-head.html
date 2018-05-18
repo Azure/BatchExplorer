@@ -3,7 +3,7 @@
     <bl-table-head-cell [column]="column" #cell>
     </bl-table-head-cell>
     <div class="column-separator" *ngIf="!isLast">
-        <div class="column-separator-hitbox" (mousedown)="handleStartResize(column, cell)" (dblclick)="resetColumnSize(column)">
+        <div class="column-separator-hitbox" (mousedown)="handleStartResize(column, cell)" (dblclick)="resetColumnWidth(column)">
         </div>
     </div>
 </ng-container>

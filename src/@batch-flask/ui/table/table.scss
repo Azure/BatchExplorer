@@ -119,8 +119,7 @@ bl-table {
         word-wrap: break-word;
 
         &.fixed-size {
-            flex-grow:0;
-            flex-shrink:0;
+            flex-grow: 0;
         }
 
         &:first-child {

@@ -1,13 +1,12 @@
 import {
     AfterContentInit, ChangeDetectionStrategy,
     ChangeDetectorRef, Component,
-    ContentChild, HostBinding,
+    ContentChild,
     Inject, Input, OnChanges,
     OnInit, SimpleChanges, TemplateRef,
     forwardRef,
 } from "@angular/core";
 
-import { SecureUtils } from "@batch-flask/utils";
 import { TableCellDefDirective } from "../table-cell-def";
 import { TableColumnRef } from "../table-column-manager";
 import { TableHeadCellDefDirective } from "../table-head-cell-def";
@@ -20,24 +19,22 @@ import { TableComponent } from "../table.component";
 })
 export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges {
     @Input() public defaultWidth: number = null;
+    /**
+     * What should be the minimum width of the column
+     */
+    @Input() public minWidth: number = 30;
+    @Input() public maxWidth: number = null;
     @Input() public name: string;
 
     @ContentChild(TableHeadCellDefDirective, { read: TemplateRef }) public headCell: TemplateRef<any>;
     @ContentChild(TableCellDefDirective, { read: TemplateRef }) public cell: TemplateRef<any>;
 
-    @HostBinding("class.sortable")
     @Input()
     public sortable: boolean = false;
-
-    @HostBinding("class.sorting")
-    public isSorting: boolean = false;
-
-    public id: string;
 
     constructor(
         @Inject(forwardRef(() => TableComponent)) private _table: TableComponent,
         private changeDetector: ChangeDetectorRef) {
-        this.id = SecureUtils.uuid();
     }
 
     public ngOnInit() {
@@ -66,9 +63,10 @@ export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges
         return {
             name: this.name,
             defaultWidth: this.defaultWidth,
+            minWidth: this.minWidth,
+            maxWidth: this.maxWidth,
             headCellTemplate: this.headCell,
             sortable: this.sortable,
-            isSorting: this.isSorting,
             cellTemplate: this.cell,
         };
     }

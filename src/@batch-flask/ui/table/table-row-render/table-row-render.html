@@ -7,6 +7,8 @@
 <div *ngFor="let column of columns;trackBy: trackColumn"
     class="bl-table-cell"
     [class.fixed-size]="columnWidths[column.name]"
-    [style.flex-basis]="columnWidths[column.name] + 'px'">
+    [style.flex-basis.px]="columnWidths[column.name]"
+    [style.min-width.px]="column.minWidth"
+    [style.max-width.px]="column.maxWidth">
     <ng-template [ngTemplateOutlet]="column.cellTemplate" [ngTemplateOutletContext]="{$implicit: item}"></ng-template>
 </div>
