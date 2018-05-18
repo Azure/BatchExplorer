@@ -1,7 +1,6 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    ElementRef,
     HostListener,
     Inject,
     Input,
@@ -9,7 +8,6 @@ import {
 } from "@angular/core";
 
 import { BehaviorSubject, Observable } from "rxjs";
-import { TableColumnComponent } from "../table-column";
 import { TableColumnRef } from "../table-column-manager";
 import { TableComponent } from "../table.component";
 import { TableHeadCellComponent } from "./table-head-cell";
@@ -28,20 +26,12 @@ export class TableHeadComponent {
 
     public dimensions: Observable<number[]>;
 
-    private _columnIndexMap: StringMap<number>;
     private _dimensions = new BehaviorSubject([]);
     private _resizing: ResizeRef;
 
     constructor(
         @Inject(forwardRef(() => TableComponent)) public table: TableComponent) {
         this.dimensions = this._dimensions.asObservable();
-    }
-
-    public getColumnIndex(column: TableColumnComponent) {
-        if (!(column.id in this._columnIndexMap)) {
-            return -1;
-        }
-        return this._columnIndexMap[column.id];
     }
 
     public trackColumn(index, column) {
@@ -69,7 +59,6 @@ export class TableHeadComponent {
     }
 
     public updateColumnWidth(column: TableColumnRef, columnWidth: number) {
-        console.log("Move to ", columnWidth);
         this.table.columnManager.updateColumnWidth(column.name, columnWidth);
     }
 
