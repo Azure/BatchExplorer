@@ -124,11 +124,11 @@ bl-table {
         }
 
         &:first-child {
-            padding: 0 0 0 $padding-first-and-last;
+            padding: 0 5px 0 $padding-first-and-last;
         }
 
         &:last-child {
-            padding: 0 $padding-first-and-last 0 0;
+            padding: 0 $padding-first-and-last 0 5px;
         }
 
         // If only one cell
@@ -181,24 +181,39 @@ bl-table {
     }
 
     bl-thead {
+        position: relative;
         .column-separator {
+            opacity: 0;
             display: block;
             cursor: e-resize;
             background: $border-color;
             flex: 0 0 1px;
             height: 100%;
-
+            position: relative;
             > .column-separator-hitbox {
                 position: absolute;
                 width: 5px;
+                left: -2px;
                 height: 100%;
                 z-index: 100;
 
                 &:hover {
-                    // background: red;
+                }
+            }
+
+            &.resizing {
+                > .column-separator-hitbox {
+                    background: $border-color;
                 }
             }
         }
+
+        &:hover, &.resizing {
+            .column-separator {
+                opacity: 1;
+            }
+        }
+
     }
 }
 

@@ -1,6 +1,7 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    HostBinding,
     HostListener,
     Inject,
     Input,
@@ -24,10 +25,12 @@ interface ResizeRef {
 export class TableHeadComponent {
     @Input() public columns: TableColumnRef[];
 
+    @HostBinding("class.resizing")
+    public resizing: ResizeRef;
+
     public dimensions: Observable<number[]>;
 
     private _dimensions = new BehaviorSubject([]);
-    private _resizing: ResizeRef;
 
     constructor(
         @Inject(forwardRef(() => TableComponent)) public table: TableComponent) {
@@ -40,7 +43,7 @@ export class TableHeadComponent {
 
     public handleStartResize(column: TableColumnRef, headCell: TableHeadCellComponent) {
         const rect = headCell.elementRef.nativeElement.getBoundingClientRect();
-        this._resizing = {
+        this.resizing = {
             column,
             left: rect.left,
         };
@@ -48,14 +51,14 @@ export class TableHeadComponent {
 
     @HostListener("document:mousemove", ["$event"])
     public onMousemove(event: MouseEvent) {
-        if (this._resizing) {
-            this.updateColumnWidth(this._resizing.column, event.clientX - this._resizing.left);
+        if (this.resizing) {
+            this.updateColumnWidth(this.resizing.column, event.clientX - this.resizing.left);
         }
     }
 
     @HostListener("document:mouseup")
     public stopResizing() {
-        this._resizing = null;
+        this.resizing = null;
     }
 
     public updateColumnWidth(column: TableColumnRef, columnWidth: number) {
