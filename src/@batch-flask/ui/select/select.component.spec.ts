@@ -85,11 +85,10 @@ describe("SelectComponent", () => {
         expect(de.nativeElement.textContent).toContain("Myselect");
     });
 
-    it("Should show value when picked", async () => {
+    it("Should show value when picked", () => {
         testComponent.value.setValue("opt-3");
-        await fixture.whenStable();
         fixture.detectChanges();
-        expect(de.nativeElement.textContent).toContain("Myselect");
+        expect(de.nativeElement.textContent).toContain("Carrot");
     });
 
     it("list all options when clicking on button", F(async () => {
