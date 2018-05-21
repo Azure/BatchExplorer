@@ -28,7 +28,7 @@ export class StartTaskPickerComponent implements ControlValueAccessor {
             commandLine: ["", Validators.required],
             maxTaskRetryCount: [0],
             userIdentity: [null],
-            waitForSuccess: [false],
+            waitForSuccess: [true],
             resourceFiles: [[]],
             environmentSettings: [[]],
             containerSettings: [null],
