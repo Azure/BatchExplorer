@@ -46,9 +46,11 @@ export class TableHeadComponent {
         return column.name;
     }
 
-    public handleStartResize(column: TableColumnRef, separator: HTMLElement, index: number) {
+    public handleStartResize(event: MouseEvent, column: TableColumnRef, separator: HTMLElement, index: number) {
         if (!this.table.config.resizableColumn) { return; }
+        event.preventDefault();
         const rect = separator.getBoundingClientRect();
+        this._computeInitialWidths();
         const initialSizeLeft = this.table.columnManager.getColumnWidth(this.columns[index].name);
         const resizeRef: ResizeRef = {
             column,
@@ -56,12 +58,10 @@ export class TableHeadComponent {
             separatorPosition: rect.left,
             initialSizeLeft,
         };
-        this._computeInitialWidths();
 
         if (this.columns.length > index) {
             resizeRef.initialSizeRight = this.table.columnManager.getColumnWidth(this.columns[index + 1].name);
         }
-
         this.resizing = resizeRef;
     }
 
@@ -89,6 +89,7 @@ export class TableHeadComponent {
     }
 
     public resetAllColumnWidth() {
+        console.log("reset all?");
         this.table.columnManager.resetAllColumnWidth();
     }
 
