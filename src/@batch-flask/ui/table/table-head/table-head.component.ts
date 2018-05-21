@@ -42,6 +42,7 @@ export class TableHeadComponent {
     }
 
     public handleStartResize(column: TableColumnRef, headCell: TableHeadCellComponent) {
+        if (!this.table.config.resizableColumn) { return; }
         const rect = headCell.elementRef.nativeElement.getBoundingClientRect();
         this.resizing = {
             column,
@@ -58,7 +59,9 @@ export class TableHeadComponent {
 
     @HostListener("document:mouseup")
     public stopResizing() {
-        this.resizing = null;
+        if (this.resizing) {
+            this.resizing = null;
+        }
     }
 
     public updateColumnWidth(column: TableColumnRef, columnWidth: number) {
