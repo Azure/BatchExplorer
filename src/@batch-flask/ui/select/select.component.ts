@@ -124,7 +124,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     private _uid = `bl-select-${nextUniqueId++}`;
     private _disabled = false;
     private _keyNavigator: ListKeyNavigator<SelectOptionComponent>;
-    private _selected: Set<string> = new Set<any>();
+    private _selected: Set<any> = new Set<any>();
 
     @ViewChild("selectButton", { read: ElementRef }) private _selectButtonEl: ElementRef;
     @ViewChild("filterInput") private _filterInputEl: ElementRef;
@@ -194,7 +194,10 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
             this.selected = new Set(value ? [value] : []);
         }
         if (!this._keyNavigator.focusedItem) {
-            this._keyNavigator.focusItem(this._getOptionByValue(value));
+            const option = this._getOptionByValue(value);
+            if (option || !value) {
+                this._keyNavigator.focusItem(option);
+            }
         }
         this.changeDetector.markForCheck();
     }

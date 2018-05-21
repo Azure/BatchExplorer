@@ -142,6 +142,22 @@ describe("SelectComponent", () => {
         expect(overlayContainerElement.querySelector("bl-select-dropdown")).not.toBeFalsy();
     }));
 
+    fit("should show selected option when it is set with delay", () => {
+        // Remove options
+        testComponent.options = [];
+        fixture.detectChanges();
+
+        // Set value
+        testComponent.value = "opt-2";
+        fixture.detectChanges();
+
+        testComponent.options = baseOptions;
+        fixture.detectChanges();
+
+        expect(de.nativeElement.textContent).not.toContain("Myselect");
+        expect(de.nativeElement.textContent).toContain("Banana");
+    });
+
     describe("when select allows multiple values", () => {
         beforeEach(() => {
             testComponent.value = [];
