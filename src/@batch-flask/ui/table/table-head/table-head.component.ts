@@ -5,6 +5,8 @@ import {
     HostListener,
     Inject,
     Input,
+    QueryList,
+    ViewChildren,
     forwardRef,
 } from "@angular/core";
 
@@ -15,7 +17,10 @@ import { TableHeadCellComponent } from "./table-head-cell";
 
 interface ResizeRef {
     column: TableColumnRef;
-    left: number;
+    index: number;
+    separatorPosition: number;
+    initialSizeLeft: number;
+    initialSizeRight?: number;
 }
 @Component({
     selector: "bl-thead",
@@ -24,7 +29,7 @@ interface ResizeRef {
 })
 export class TableHeadComponent {
     @Input() public columns: TableColumnRef[];
-
+    @ViewChildren(TableHeadCellComponent) public cells: QueryList<TableHeadCellComponent>;
     @HostBinding("class.resizing")
     public resizing: ResizeRef;
 
@@ -41,19 +46,34 @@ export class TableHeadComponent {
         return column.name;
     }
 
-    public handleStartResize(column: TableColumnRef, headCell: TableHeadCellComponent) {
+    public handleStartResize(column: TableColumnRef, separator: HTMLElement, index: number) {
         if (!this.table.config.resizableColumn) { return; }
-        const rect = headCell.elementRef.nativeElement.getBoundingClientRect();
-        this.resizing = {
+        const rect = separator.getBoundingClientRect();
+        const initialSizeLeft = this.table.columnManager.getColumnWidth(this.columns[index].name);
+        const resizeRef: ResizeRef = {
             column,
-            left: rect.left,
+            index,
+            separatorPosition: rect.left,
+            initialSizeLeft,
         };
+        this._computeInitialWidths();
+
+        if (this.columns.length > index) {
+            resizeRef.initialSizeRight = this.table.columnManager.getColumnWidth(this.columns[index + 1].name);
+        }
+
+        this.resizing = resizeRef;
     }
 
     @HostListener("document:mousemove", ["$event"])
     public onMousemove(event: MouseEvent) {
-        if (this.resizing) {
-            this.updateColumnWidth(this.resizing.column, event.clientX - this.resizing.left);
+        if (!this.resizing) { return; }
+        const index = this.resizing.index;
+        const delta = event.clientX - this.resizing.separatorPosition;
+        this.updateColumnWidth(this.columns[index], this.resizing.initialSizeLeft + delta);
+
+        if (this.resizing.initialSizeRight && this.columns.length > index) {
+            this.updateColumnWidth(this.columns[index + 1], this.resizing.initialSizeRight - delta);
         }
     }
 
@@ -68,7 +88,19 @@ export class TableHeadComponent {
         this.table.columnManager.updateColumnWidth(column.name, columnWidth);
     }
 
-    public resetColumnWidth(column: TableColumnRef) {
-        this.table.columnManager.resetColumnWidth(column.name);
+    public resetAllColumnWidth() {
+        this.table.columnManager.resetAllColumnWidth();
+    }
+
+    /**
+     * Compute pixel width of each column before each resize in case some are still flex.
+     */
+    private _computeInitialWidths() {
+        const widths = {};
+        this.cells.forEach((cell) => {
+            const width = cell.elementRef.nativeElement.getBoundingClientRect().width;
+            widths[cell.column.name] = width;
+        });
+        this.table.columnManager.updateColumnsWidth(widths);
     }
 }

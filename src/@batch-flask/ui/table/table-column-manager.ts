@@ -62,16 +62,18 @@ export class TableColumnManager {
     }
 
     public updateColumnWidth(name: string, width: number) {
-        const column = this.columnMap.get(name);
-        if (!column) { return; }
+        this._setColumnWidth(name, width);
+        this.dimensionsChange.next(true);
+    }
 
-        if (width < column.minWidth) {
-            width = column.minWidth;
+    /**
+     * Batch update of column width to limit notifications
+     * @param widths Map of width
+     */
+    public updateColumnsWidth(widths: StringMap<number>) {
+        for (const name of Object.keys(widths)) {
+            this._setColumnWidth(name, widths[name]);
         }
-        if (column.maxWidth && width > column.maxWidth) {
-            width = column.maxWidth;
-        }
-        this._dimensions.set(name, width);
         this.dimensionsChange.next(true);
     }
 
@@ -92,7 +94,7 @@ export class TableColumnManager {
         this.dimensionsChange.next(true);
     }
 
-    public resetAllColumnWidth(name: string) {
+    public resetAllColumnWidth() {
         this._dimensions.clear();
         this.dimensionsChange.next(true);
     }
@@ -103,5 +105,18 @@ export class TableColumnManager {
 
     private _computeColumns() {
         this._columns = this.columnOrder.map(x => this.columnMap.get(x));
+    }
+
+    private _setColumnWidth(name: string, width: number) {
+        const column = this.columnMap.get(name);
+        if (!column) { return; }
+
+        if (width < column.minWidth) {
+            width = column.minWidth;
+        }
+        if (column.maxWidth && width > column.maxWidth) {
+            width = column.maxWidth;
+        }
+        this._dimensions.set(name, width);
     }
 }

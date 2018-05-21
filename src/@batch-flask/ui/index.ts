@@ -12,3 +12,4 @@ export * from "./sidebar";
 export * from "./permission";
 export * from "./vtabs";
 export * from "./entity-commands";
+export * from "./table";

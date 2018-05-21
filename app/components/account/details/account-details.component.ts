@@ -11,6 +11,7 @@ import {
 } from "app/services";
 import { EntityView, ListView } from "app/services/core";
 
+import { TableConfig } from "@batch-flask/ui";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
 import { DeleteAccountDialogComponent } from "../action/delete";
@@ -30,6 +31,10 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         }
         return { name: name, label: "Account" };
     }
+
+    public tableConfig: TableConfig = {
+        resizableColumn: false,
+    };
 
     public accountProvisioningState = AccountProvisingState;
     public account: AccountResource;
