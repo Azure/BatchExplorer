@@ -287,13 +287,13 @@ export class BatchLabsApplication {
     private _setCommonHeaders() {
         const requestFilter = { urls: ["https://*", "http://*"] };
         session.defaultSession.webRequest.onBeforeSendHeaders(requestFilter, (details, callback) => {
-            if (details.url.contains("batch.azure.com")) {
+            if (details.url.includes("batch.azure.com")) {
                 details.requestHeaders["Origin"] = "http://localhost";
                 details.requestHeaders["Cache-Control"] = "no-cache";
             }
 
             // Rate card api does some weird redirect which require removing the authorization header
-            if (details.url.contains("ratecard.blob.core.windows.net")) {
+            if (details.url.includes("ratecard.blob.core.windows.net")) {
                 delete details.requestHeaders.Authorization;
             }
 
