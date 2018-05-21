@@ -195,10 +195,11 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         }
         if (!this._keyNavigator.focusedItem) {
             const option = this._getOptionByValue(value);
-            if (option || !value) {
+            if (option) {
                 this._keyNavigator.focusItem(option);
             }
         }
+
         this.changeDetector.markForCheck();
     }
 

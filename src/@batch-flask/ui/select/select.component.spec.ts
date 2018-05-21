@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, inject } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
 import { OverlayContainer, OverlayModule } from "@angular/cdk/overlay";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/testing";
 import { ClickableComponent } from "@batch-flask/ui/buttons/clickable";
 import { PermissionService } from "@batch-flask/ui/permission";
@@ -24,7 +24,7 @@ const baseOptions = [
 // tslint:disable:trackBy-function
 @Component({
     template: `
-        <bl-select placeholder="Myselect" [(ngModel)]="value" [filterable]="filterable" [multiple]="multiple">
+        <bl-select placeholder="Myselect" [formControl]="value" [filterable]="filterable" [multiple]="multiple">
             <bl-option
                 *ngFor="let option of options"
                 [value]="option.value"
@@ -37,7 +37,7 @@ const baseOptions = [
 })
 class TestComponent {
     public options: any[] = baseOptions;
-    public value = null;
+    public value = new FormControl(null);
     public filterable = false;
     public multiple = false;
 }
@@ -85,8 +85,9 @@ describe("SelectComponent", () => {
         expect(de.nativeElement.textContent).toContain("Myselect");
     });
 
-    it("Should show value when picked", () => {
-        testComponent.value = "opt-3";
+    it("Should show value when picked", async () => {
+        testComponent.value.setValue("opt-3");
+        await fixture.whenStable();
         fixture.detectChanges();
         expect(de.nativeElement.textContent).toContain("Myselect");
     });
@@ -123,7 +124,7 @@ describe("SelectComponent", () => {
         click(options[2]);
         fixture.detectChanges();
 
-        expect(testComponent.value).toBe("opt-3");
+        expect(testComponent.value.value).toBe("opt-3");
 
         expect(overlayContainerElement.querySelector("bl-select-dropdown")).toBeFalsy();
     }));
@@ -137,19 +138,24 @@ describe("SelectComponent", () => {
         click(options[3]);
         fixture.detectChanges();
 
-        expect(testComponent.value).toBe(null);
+        expect(testComponent.value.value).toBe(null);
 
         expect(overlayContainerElement.querySelector("bl-select-dropdown")).not.toBeFalsy();
     }));
 
-    fit("should show selected option when it is set with delay", () => {
+    it("should show selected option when it is set with delay", async () => {
+        fixture = TestBed.createComponent(TestComponent);
+        testComponent = fixture.componentInstance;
+        de = fixture.debugElement.query(By.css("bl-select"));
+
         // Remove options
         testComponent.options = [];
-        fixture.detectChanges();
-
         // Set value
-        testComponent.value = "opt-2";
+        testComponent.value.setValue("opt-2");
         fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(de.nativeElement.textContent).not.toContain("Myselect");
 
         testComponent.options = baseOptions;
         fixture.detectChanges();
@@ -160,7 +166,7 @@ describe("SelectComponent", () => {
 
     describe("when select allows multiple values", () => {
         beforeEach(() => {
-            testComponent.value = [];
+            testComponent.value.setValue([]);
             testComponent.multiple = true;
             fixture.detectChanges();
         });
@@ -175,7 +181,7 @@ describe("SelectComponent", () => {
         }));
 
         it("checkbox should be ticked if selected", F(async () => {
-            testComponent.value = ["opt-2", "opt-5"];
+            testComponent.value.setValue(["opt-2", "opt-5"]);
             fixture.detectChanges();
             await fixture.whenStable();
 
@@ -193,13 +199,13 @@ describe("SelectComponent", () => {
             const options = overlayContainerElement.querySelectorAll(".option");
             click(options[3]);
             fixture.detectChanges();
-            expect(testComponent.value).toEqual(["opt-3"]);
+            expect(testComponent.value.value).toEqual(["opt-3"]);
 
             expect(overlayContainerElement.querySelector("bl-select-dropdown")).not.toBeFalsy();
 
             click(options[5]);
             fixture.detectChanges();
-            expect(testComponent.value).toEqual(["opt-3", "opt-5"]);
+            expect(testComponent.value.value).toEqual(["opt-3", "opt-5"]);
         }));
     });
 
@@ -225,7 +231,7 @@ describe("SelectComponent", () => {
             updateInput(inputEl, "ta");
             fixture.detectChanges();
 
-            const options =  overlayContainerElement.querySelectorAll(".option");
+            const options = overlayContainerElement.querySelectorAll(".option");
             expect(options.length).toBe(2);
             expect(options[0].textContent).toContain("Potato");
             expect(options[1].textContent).toContain("Pasta");
