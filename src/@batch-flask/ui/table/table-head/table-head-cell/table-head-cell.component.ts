@@ -1,6 +1,6 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding,
-    HostListener, Inject, Input, OnDestroy, forwardRef,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef,
+    HostBinding, HostListener, Inject, Input, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 
 import { SortDirection, TableColumnRef } from "@batch-flask/ui/table/table-column-manager";
@@ -13,10 +13,11 @@ import "./table-head-cell.scss";
     templateUrl: "table-head-cell.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeadCellComponent implements OnDestroy {
+export class TableHeadCellComponent implements OnInit, OnDestroy {
     public SortDirection = SortDirection;
 
     @Input() public column: TableColumnRef;
+    public width: number | null;
 
     @HostBinding("class.sortable")
     public get sortable() {
@@ -25,12 +26,22 @@ export class TableHeadCellComponent implements OnDestroy {
 
     @HostBinding("class.fixed-size")
     public get fixedSize() {
-        return this.column.width;
+        return this.width;
     }
 
-    @HostBinding("style.flex-basis")
+    @HostBinding("style.flex-basis.px")
     public get flexBasis() {
-        return this.column.width + "px";
+        return this.width;
+    }
+
+    @HostBinding("style.min-width.px")
+    public get minWidth() {
+        return this.column.minWidth;
+    }
+
+    @HostBinding("style.max-width.px")
+    public get maxWidth() {
+        return this.column.maxWidth;
     }
 
     public sortDirection: SortDirection;
@@ -38,13 +49,14 @@ export class TableHeadCellComponent implements OnDestroy {
     @HostBinding("class.sorting")
     public isSorting: boolean = false;
 
-    private _sub: Subscription;
+    private _subs: Subscription[] = [];
 
     constructor(
         @Inject(forwardRef(() => TableComponent)) public table: TableComponent,
+        public elementRef: ElementRef,
         private changeDetector: ChangeDetectorRef) {
 
-        this._sub = table.columnManager.sorting.subscribe((sortingInfo) => {
+        this._subs.push(table.columnManager.sorting.subscribe((sortingInfo) => {
             this.isSorting = sortingInfo && sortingInfo.column === this.column.name;
             if (this.isSorting) {
                 this.sortDirection = sortingInfo.direction;
@@ -52,11 +64,19 @@ export class TableHeadCellComponent implements OnDestroy {
                 this.sortDirection = SortDirection.Asc;
             }
             this.changeDetector.markForCheck();
-        });
+        }));
+    }
+
+    public ngOnInit() {
+        this.width = this.table.columnManager.getColumnWidth(this.column.name);
+        this._subs.push(this.table.columnManager.dimensionsChange.subscribe(() => {
+            this.width = this.table.columnManager.getColumnWidth(this.column.name);
+            this.changeDetector.markForCheck();
+        }));
     }
 
     public ngOnDestroy() {
-        this._sub.unsubscribe();
+        this._subs.forEach(x => x.unsubscribe());
     }
 
     @HostListener("click")

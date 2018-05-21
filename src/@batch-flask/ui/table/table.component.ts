@@ -37,12 +37,18 @@ export interface TableConfig extends AbstractListBaseConfig {
      * This is used for sorting.
      */
     values?: StringMap<(item: any) => any>;
+
+    /**
+     * If the table should allow column to be resized. Default true.
+     */
+    resizableColumn?: boolean;
 }
 
 export const tableDefaultConfig = {
     ...abstractListDefaultConfig,
     showCheckbox: false,
     droppable: false,
+    resizableColumn: true,
 };
 
 export interface DropEvent {

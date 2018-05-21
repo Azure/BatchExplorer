@@ -48,7 +48,7 @@
                                     <a href="#" routerLink="/jobs">here</a> to add one.
                                 </p>
                             </bl-no-item>
-                            <bl-table class="dashboard" [data]="jobData.items | async">
+                            <bl-table class="dashboard" [data]="jobData.items | async"  [config]="tableConfig">
                                 <bl-column name="id">
                                     <div *blCellDef="let job">{{job.id}}</div>
                                 </bl-column>
@@ -78,7 +78,7 @@
                                     <a href="#" routerLink="/pools">here</a> to add one.
                                 </p>
                             </bl-no-item>
-                            <bl-table class="dashboard" [data]="poolData.items | async">
+                            <bl-table class="dashboard" [data]="poolData.items | async" [config]="tableConfig">
                                 <bl-column name="id">
                                     <div *blCellDef="let pool">{{pool.id}}</div>
                                 </bl-column>
@@ -114,7 +114,7 @@
                                     <a href="#" routerLink="/applications">here</a> to add one.
                                 </p>
                             </bl-no-item>
-                            <bl-table class="dashboard" [data]="applicationData.items | async">
+                            <bl-table class="dashboard" [data]="applicationData.items | async"  [config]="tableConfig">
                                 <bl-column name="id">
                                     <div *blCellDef="let app">{{app.id}}</div>
                                 </bl-column>

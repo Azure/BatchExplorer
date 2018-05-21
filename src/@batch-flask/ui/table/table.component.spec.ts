@@ -16,7 +16,7 @@ import {
     TableHeadComponent,
 } from "@batch-flask/ui/table";
 import { TableRowRenderComponent } from "@batch-flask/ui/table/table-row-render";
-import { click } from "test/utils/helpers";
+import { click, dblclick, mousedown } from "test/utils/helpers";
 import { virtualScrollMockComponents } from "test/utils/mocks/components";
 
 const sizeA = { id: "size_a", name: "Size A", numberOfCores: 1, resourceDiskSizeInMB: 1000 };
@@ -34,7 +34,7 @@ class BaseTestComponent {
 }
 @Component({
     template: `
-        <bl-table [data]="sizes" [(activeItem)]="pickedSize" [config]="tableConfig">
+        <bl-table [data]="sizes" [(activeItem)]="pickedSize" [config]="tableConfig" style="width: 600px">
             <bl-column name="name">
                 <div *blHeadCellDef>Name</div>
                 <div *blCellDef="let size">{{size.name}}</div>
@@ -220,6 +220,78 @@ describe("TableComponent", () => {
             fixture.detectChanges();
             expect(rows[1].className).not.toContain("selected", "Should have unselected 2nd row");
             expect(rows[2].className).not.toContain("selected", "3rd row should stil be unselected");
+        });
+    });
+
+    describe("Resizing", () => {
+        let initialWidths: StringMap<number>;
+        let head: TableHeadComponent;
+        function getCellsWidth(): StringMap<number> {
+            const widths = {};
+            const cells = de.queryAll(By.css("bl-thead bl-table-head-cell"));
+
+            for (const cell of cells) {
+                const width = cell.nativeElement.getBoundingClientRect().width;
+                widths[cell.componentInstance.column.name] = width;
+            }
+            return widths;
+        }
+
+        beforeEach(async () => {
+            setup(TestComponent);
+            fixture.detectChanges();
+            head = de.query(By.directive(TableHeadComponent)).componentInstance;
+            initialWidths = getCellsWidth();
+        });
+
+        it("should have initial size", () => {
+            expect(initialWidths["name"]).toEqual(201); // Padding for first item adds 5px
+            expect(initialWidths["cores"]).toEqual(196);
+            expect(initialWidths["resourceDiskSizeInMB"]).toEqual(201); // Padding for last item adds 5px
+        });
+
+        it("should have one separator between each columns", () => {
+            const separators = de.queryAll(By.css("bl-thead .column-separator"));
+            expect(separators.length).toBe(2); // 3 columns - 1
+        });
+
+        it("shouldn't update the size when moving the mouse around", () => {
+            const event: MouseEvent = document.createEvent("MouseEvent");
+            head.onMousemove(event);
+            fixture.detectChanges();
+
+            const widths = getCellsWidth();
+
+            expect(widths["name"]).toEqual(initialWidths["name"]);
+            expect(widths["cores"]).toEqual(initialWidths["cores"]);
+            expect(widths["resourceDiskSizeInMB"]).toEqual(initialWidths["resourceDiskSizeInMB"]);
+        });
+
+        it("when clicking on a separator it should start resizing", () => {
+            const separators = de.queryAll(By.css("bl-thead .column-separator .column-separator-hitbox"));
+            mousedown(separators[0].nativeElement);
+            const initial = separators[0].nativeElement.getBoundingClientRect().left;
+            fixture.detectChanges();
+
+            const event: MouseEvent = new MouseEvent("mousemove", {
+                clientX: initial + 50,
+            });
+            head.onMousemove(event);
+            fixture.detectChanges();
+
+            let widths = getCellsWidth();
+            expect(widths["name"]).toEqual(249);
+            expect(widths["cores"]).toEqual(148);
+            expect(widths["resourceDiskSizeInMB"]).toEqual(initialWidths["resourceDiskSizeInMB"]);
+            head.stopResizing();
+
+            // Reset the width with dbl click
+            dblclick(separators[0]);
+            fixture.detectChanges();
+            widths = getCellsWidth();
+            expect(widths["name"]).toEqual(initialWidths["name"], "Should have reset 'name' column to initial size");
+            expect(widths["cores"]).toEqual(initialWidths["cores"], "Should have reset 'cores' column to initial size");
+            expect(widths["resourceDiskSizeInMB"]).toEqual(initialWidths["resourceDiskSizeInMB"], "Should reset");
         });
     });
 });

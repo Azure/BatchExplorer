@@ -6,8 +6,10 @@ bl-table {
     $table-row-height: 28px;
 
     display: block;
+    position: relative;
     width: 100%;
     height: 100%;
+    -webkit-user-drag: none;
 
     bl-thead, bl-row-render {
         display: flex;
@@ -119,16 +121,15 @@ bl-table {
         word-wrap: break-word;
 
         &.fixed-size {
-            flex-grow:0;
-            flex-shrink:0;
+            flex-grow: 0;
         }
 
         &:first-child {
-            padding: 0 0 0 $padding-first-and-last;
+            padding: 0 5px 0 $padding-first-and-last;
         }
 
         &:last-child {
-            padding: 0 $padding-first-and-last 0 0;
+            padding: 0 $padding-first-and-last 0 5px;
         }
 
         // If only one cell
@@ -146,6 +147,8 @@ bl-table {
         font-weight: bold;
         white-space: nowrap;
         user-select: none;
+
+
         > * {
             display: inline;
         }
@@ -178,6 +181,42 @@ bl-table {
             overflow: hidden;
             text-overflow: ellipsis;
         }
+    }
+
+    bl-thead {
+        position: relative;
+        .column-separator {
+            opacity: 0;
+            display: block;
+            cursor: e-resize;
+            background: $border-color;
+            flex: 0 0 1px;
+            height: 100%;
+            position: relative;
+            > .column-separator-hitbox {
+                position: absolute;
+                width: 5px;
+                left: -2px;
+                height: 100%;
+                z-index: 100;
+
+                &:hover {
+                }
+            }
+
+            &.resizing {
+                > .column-separator-hitbox {
+                    background: $border-color;
+                }
+            }
+        }
+
+        &:hover, &.resizing {
+            .column-separator {
+                opacity: 1;
+            }
+        }
+
     }
 }
 

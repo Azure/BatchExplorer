@@ -1,9 +1,17 @@
 import {
-    ChangeDetectionStrategy, Component, HostBinding, HostListener, Inject, Input, forwardRef,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    HostBinding,
+    HostListener,
+    Inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    forwardRef,
 } from "@angular/core";
-import { Router } from "@angular/router";
+import { Subscription } from "rxjs";
 
-import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { TableColumnRef } from "../table-column-manager";
 import { TableComponent, TableConfig } from "../table.component";
 
@@ -12,7 +20,7 @@ import { TableComponent, TableConfig } from "../table.component";
     templateUrl: "table-row-render.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableRowRenderComponent {
+export class TableRowRenderComponent implements OnInit, OnDestroy {
     @Input() public item: any;
     @Input() public columns: TableColumnRef[];
     @Input() public tableConfig: TableConfig;
@@ -20,11 +28,25 @@ export class TableRowRenderComponent {
     @Input() @HostBinding("class.selected") public selected: boolean;
 
     public dimensions: number[] = [];
+    public columnWidths: StringMap<number> = {};
+    private _sub: Subscription;
 
     constructor(
         @Inject(forwardRef(() => TableComponent)) public table: TableComponent,
-        router: Router,
-        breadcrumbService: BreadcrumbService) {
+        private changeDetector: ChangeDetectorRef) {
+
+    }
+
+    public ngOnInit() {
+        this.columnWidths = this.table.columnManager.getAllColumnWidth();
+        this._sub = this.table.columnManager.dimensionsChange.subscribe(() => {
+            this.columnWidths = this.table.columnManager.getAllColumnWidth();
+            this.changeDetector.markForCheck();
+        });
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 
     @HostListener("click", ["$event"])
