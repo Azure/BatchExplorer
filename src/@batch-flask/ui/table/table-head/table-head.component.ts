@@ -89,7 +89,6 @@ export class TableHeadComponent {
     }
 
     public resetAllColumnWidth() {
-        console.log("reset all?");
         this.table.columnManager.resetAllColumnWidth();
     }
 
