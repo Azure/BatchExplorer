@@ -73,10 +73,12 @@ export function rightClick(el: DebugElement | HTMLElement | Node) {
  * Simulate a mouseenter event
  */
 export function mouseenter(el: DebugElement | HTMLElement) {
+    const event = new MouseEvent("mouseleave", { cancelable: true });
+
     if (el instanceof HTMLElement) {
-        el.dispatchEvent(new Event("mouseenter"));
+        el.dispatchEvent(event);
     } else {
-        el.triggerEventHandler("mouseenter", {});
+        el.triggerEventHandler("mouseenter", event);
     }
 }
 

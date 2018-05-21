@@ -223,7 +223,7 @@ describe("TableComponent", () => {
         });
     });
 
-    fdescribe("Resizing", () => {
+    describe("Resizing", () => {
         let initialWidths: StringMap<number>;
         let head: TableHeadComponent;
         function getCellsWidth(): StringMap<number> {
