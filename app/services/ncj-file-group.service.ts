@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { ServerError } from "@batch-flask/core";
 import { Observable } from "rxjs";
 
 import { BlobContainer } from "app/models";

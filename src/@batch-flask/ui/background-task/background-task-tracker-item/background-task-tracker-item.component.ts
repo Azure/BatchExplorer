@@ -15,7 +15,6 @@ export class BackgroundTaskTrackerItemComponent implements OnChanges, OnDestroy 
 
     private _subs: Subscription[] = [];
     constructor(private changeDetector: ChangeDetectorRef) {
-
     }
 
     public ngOnChanges(changes) {
@@ -31,7 +30,7 @@ export class BackgroundTaskTrackerItemComponent implements OnChanges, OnDestroy 
     private _listenForProgress() {
         this._clearSubs();
 
-        if (this.task) { return; }
+        if (!this.task) { return; }
 
         this._subs.push(this.task.progress.subscribe((progress) => {
             this.progress = progress;
