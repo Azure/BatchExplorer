@@ -39,7 +39,7 @@ export class NcjFileGroupService {
             fileOrFolderPath,
             { ...options, recursive: includeSubDirectories },
         ]).catch((error) => {
-            return Observable.throw(ServerError.fromPython(error));
+            return Observable.throw(error);
         });
 
         return observable;
