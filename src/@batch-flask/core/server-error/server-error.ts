@@ -1,6 +1,7 @@
 import { Response } from "@angular/http";
 
 import { HttpErrorResponse } from "@angular/common/http";
+import { exists, log } from "@batch-flask/utils";
 import { BatchError } from "./batch-error";
 import { StorageError } from "./storage-error";
 
@@ -121,11 +122,23 @@ export class ServerError {
     public static fromPython(error) {
         const { message, requestId, timestamp } = parseMessage(error.message);
 
+        let details;
+        if (error.data) {
+            if (Array.isArray(error.data)) {
+                details = error.data;
+            } else if (typeof (error.data) === "string") {
+                details = [{ key: "Description", value: error.data }];
+            } else if (error.values) {
+                details = error.values;
+            } else {
+                log.error("Unknown Python server error format");
+            }
+        }
         return new ServerError({
             status: error.data && error.data.status,
             code: ServerError._mapPythonErrorCode(error.code),
             message: message,
-            details: error.data && error.data.values,
+            details,
             original: error,
             requestId,
             timestamp,
@@ -219,6 +232,6 @@ export class ServerError {
     }
 
     public toString() {
-        return `${this.status} - ${this.message}`;
+        return [this.status, this.message].filter(x => exists(x)).join(" - ");
     }
 }
