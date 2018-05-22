@@ -156,7 +156,6 @@ export class AppInsightsQueryService {
 
             for (const individualSegment of segment.segments) {
                 const disk = individualSegment["customDimensions/Disk"];
-                console.log("INdi", individualSegment, metricId);
                 const value = individualSegment[metricId].avg;
                 if (!(disk in usages)) {
                     usages[disk] = [];

@@ -54,7 +54,7 @@ export class PerformanceData {
     public observeMetric(name: BatchPerformanceMetricType): Observable<PerformanceMetric[]> {
         return this._metrics.map((metrics) => {
             return metrics[name] || [];
-        });
+        }).shareReplay(1);
     }
 
     public retrieveAppId() {

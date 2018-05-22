@@ -1,7 +1,7 @@
 <div *ngIf="interactive" class="disk-usage-header">
     Showing usage for
     <bl-select [ngModel]="currentDisk" (ngModelChange)="pickCurrentDisk($event)">
-        <bl-option *ngFor="let disk of availableDisks;trackBy: trackDisk" [value]="disk" [label]="disk"></bl-option>
+        <bl-option *ngFor="let disk of availableDisks;trackBy: trackDisk" [value]="disk.name" [label]="disk.label"></bl-option>
     </bl-select>
 </div>
 <div class="graph-container">

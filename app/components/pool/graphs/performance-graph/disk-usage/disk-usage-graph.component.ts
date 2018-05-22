@@ -3,7 +3,13 @@ import { PerformanceGraphComponent } from "../performance-graph.component";
 
 import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
 
+import { PoolUtils } from "app/utils";
 import "./disk-usage-graph.scss";
+
+interface Disk {
+    name: string;
+    label: string;
+}
 
 @Component({
     selector: "bl-disk-usage-graph",
@@ -13,7 +19,7 @@ import "./disk-usage-graph.scss";
 export class DiskUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
     public unit = "B";
     public currentDisk;
-    public availableDisks;
+    public availableDisks: Disk[] = [];
 
     public diskUsages: StringMap<PerformanceMetric[]> = {};
     public diskFree: StringMap<number> = {};
@@ -29,11 +35,12 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
             this._clearMetricSubs();
             this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.diskUsed).subscribe((data) => {
                 this.diskUsages = data as any;
+                this._updateMax();
                 this.updateData();
             }));
 
             this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.diskFree).subscribe((data) => {
-                this.availableDisks = Object.keys(data);
+                this._computeDisks(Object.keys(data));
                 const disk = Object.keys(data).first();
                 if (!disk) { return; }
                 const free = {};
@@ -43,13 +50,14 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
                         free[disk] = last.value;
                     }
                 }
-
-                if (!this.currentDisk) {
-                    this.currentDisk = this.availableDisks.first();
+                if (this.availableDisks.length > 0) {
+                    if (!this.currentDisk || !this.availableDisks.find(x => x.name === this.currentDisk)) {
+                        this.currentDisk = this._getDefaultDisk();
+                    }
                 }
+                this.diskFree = free;
                 this._updateMax();
                 this.updateData();
-                this.diskFree = free;
             }));
         }
     }
@@ -79,8 +87,8 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
         this.updateData();
     }
 
-    public trackDisk(index, disk: string) {
-        return disk;
+    public trackDisk(index, disk: Disk) {
+        return disk.name;
     }
 
     private _updateMax() {
@@ -97,6 +105,58 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
             return this.diskFree[this.currentDisk] + data.last().value;
         } else {
             return undefined;
+        }
+    }
+
+    private _computeDisks(disks: string[]) {
+        this.availableDisks = disks.map(x => {
+            return {
+                name: x,
+                label: this._labelForDisk(x),
+            };
+        });
+    }
+
+    private _labelForDisk(disk: string) {
+        const isCloudService = this.data.pool.cloudServiceConfiguration;
+        let type = "";
+
+        if (isCloudService) {
+            switch (disk) {
+                case "C:/":
+                    type = "(User disk)";
+                    break;
+                case "D:/":
+                    type = "(OS disk)";
+                    break;
+            }
+        } else {
+            switch (disk) {
+                case "C:/":
+                case "/":
+                    type = "(OS disk)";
+                    break;
+                case "D:/":
+                case "/mnt":
+                case "/mnt/resources":
+                    type = "(User disk)";
+                    break;
+            }
+        }
+
+        return `${disk} ${type}`;
+    }
+
+    // Show the user disk if possible
+    private _getDefaultDisk() {
+        const isCloudService = this.data.pool.cloudServiceConfiguration;
+        const isWindows = PoolUtils.isWindows(this.data.pool);
+        if (isCloudService) {
+            return "C:/";
+        } else if (isWindows) {
+            return "D:/";
+        } else if (this.availableDisks.length > 0) {
+            return this.availableDisks.first().name;
         }
     }
 }
