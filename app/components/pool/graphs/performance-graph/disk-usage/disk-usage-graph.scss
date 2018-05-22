@@ -18,7 +18,13 @@ bl-disk-usage-graph {
     > .graph-container {
         position: relative;
         min-height: 0;
-        height: calc(100% - #{$header-height});
+        height: 100%;
         flex: 1 0 auto;
+    }
+
+    &.interactive {
+        > .graph-container {
+            height: calc(100% - #{$header-height});
+        }
     }
 }
