@@ -18,6 +18,8 @@ const metrics: StringMap<Metric> = {
     memoryUsed: { metricId: "customMetrics/Memory used", segment: "cloud/roleInstance" },
     diskRead: { metricId: "customMetrics/Disk read" },
     diskWrite: { metricId: "customMetrics/Disk write" },
+    diskUsed: { metricId: "customMetrics/Disk usage" },
+    diskFree: { metricId: "customMetrics/Disk free" },
     networkRead: { metricId: "customMetrics/Network read" },
     networkWrite: { metricId: "customMetrics/Network write" },
 };

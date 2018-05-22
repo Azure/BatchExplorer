@@ -1,19 +1,17 @@
 import { Component, OnChanges } from "@angular/core";
-import {  PerformanceGraphComponent } from "../performance-graph.component";
+import { PerformanceGraphComponent } from "../performance-graph.component";
 
 import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
-import { NumberUtils } from "app/utils";
 
 @Component({
     selector: "bl-disk-usage-graph",
     templateUrl: "disk-usage-graph.html",
 })
 export class DiskUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
-    public unit = "Bps";
+    public unit = "B";
 
-    public diskReadUsages: PerformanceMetric[] = [];
-    public diskWriteUsages: PerformanceMetric[] = [];
-    public showOverallUsage = true;
+    public diskUsages: PerformanceMetric[] = [];
+    public _diskAvailable: number;
 
     constructor() {
         super();
@@ -24,16 +22,18 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
 
         if (changes.data) {
             this._clearMetricSubs();
-            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.diskRead).subscribe((data) => {
-                this.diskReadUsages = data;
-                this._updateStatus();
+            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.diskUsed).subscribe((data) => {
+                this.diskUsages = data;
                 this.updateData();
             }));
 
-            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.diskWrite).subscribe((data) => {
-                this.diskWriteUsages = data;
-                this._updateStatus();
-                this.updateData();
+            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.diskFree).subscribe((data) => {
+                const last = data.last();
+                if (last) {
+                    this._diskAvailable = last.value;
+                    this._updateMax();
+                    this.updateData();
+                }
             }));
         }
     }
@@ -42,7 +42,7 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
         this.datasets = [
             {
                 data: [
-                    ...this.diskReadUsages.map(x => {
+                    ...this.diskUsages.map(x => {
                         return {
                             x: x.time,
                             y: x.value,
@@ -51,36 +51,24 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
                 ],
                 fill: false,
                 borderWidth: 1,
-                label: "Disk read speed",
-            },
-            {
-                data: [
-                    ...this.diskWriteUsages.map(x => {
-                        return {
-                            x: x.time,
-                            y: x.value,
-                        };
-                    }),
-                ],
-                fill: false,
-                borderWidth: 1,
-                label: "Disk write speed",
             },
         ];
     }
 
-    public changeShowOverallUsage(newValue) {
-        this.showOverallUsage = newValue;
-        this.updateData();
+    private _updateMax() {
+        const max = this._computeDiskCapacity();
+        if (max !== this.max) {
+            this.max = max;
+            this.updateOptions();
+        }
     }
 
-    private _updateStatus() {
-        if (this.diskReadUsages.length > 0 && this.diskWriteUsages.length > 0) {
-            const read = NumberUtils.prettyMagnitude(this.diskReadUsages.last().value);
-            const write = NumberUtils.prettyMagnitude(this.diskWriteUsages.last().value);
-            this.status.next(`R: ${read}Bps, W: ${write}Bps`);
+    private _computeDiskCapacity() {
+        const data = this.diskUsages;
+        if (data && data.length > 0) {
+            return this._diskAvailable + data.last().value;
         } else {
-            this.status.next("- %");
+            return undefined;
         }
     }
 }

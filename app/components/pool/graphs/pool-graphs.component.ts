@@ -17,17 +17,6 @@ import { StateCounter } from "./heatmap";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import "./pool-graphs.scss";
 
-enum AvailableGraph {
-    Heatmap,
-    AvailableNodes,
-    RunningTasks,
-    Cpu,
-    Memory,
-    Network,
-    Disk,
-    EnableAppInsights,
-}
-
 const historyLength = {
     TenMinute: 10,
     OneHour: 60,
@@ -43,7 +32,6 @@ const appInsightsRefreshRate = 60 * 1000; // Every minute(Aggregation is minimum
     templateUrl: "pool-graphs.html",
 })
 export class PoolGraphsComponent implements OnChanges, OnDestroy {
-    public AvailableGraph = AvailableGraph;
     public historyLength = historyLength;
 
     @Input() public pool: Pool;

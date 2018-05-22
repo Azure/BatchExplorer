@@ -33,6 +33,8 @@ export interface BatchPerformanceMetrics {
     networkWrite: PerformanceMetric[];
     diskRead: PerformanceMetric[];
     diskWrite: PerformanceMetric[];
+    diskUsed: PerformanceMetric[];
+    diskFree: PerformanceMetric[];
 }
 
 export enum BatchPerformanceMetricType {
@@ -44,4 +46,6 @@ export enum BatchPerformanceMetricType {
     diskWrite = "diskWrite",
     networkRead = "networkRead",
     networkWrite = "networkWrite",
+    diskUsed = "diskUsed",
+    diskFree = "diskFree",
 }
