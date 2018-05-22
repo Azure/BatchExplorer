@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { ServerError } from "@batch-flask/core";
 import { Observable } from "rxjs";
 
 import { BlobContainer } from "app/models";
@@ -39,7 +38,7 @@ export class NcjFileGroupService {
             fileOrFolderPath,
             { ...options, recursive: includeSubDirectories },
         ]).catch((error) => {
-            return Observable.throw(ServerError.fromPython(error));
+            return Observable.throw(error);
         });
 
         return observable;
