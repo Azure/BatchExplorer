@@ -1,3 +1,8 @@
-<canvas blChart [datasets]="datasets" [options]="options" [chartType]="type">
-</canvas>
+<div *ngIf="interactive" class="disk-usage-header">
+    Showing usage for <span class="highlight">{{currentDisk}}</span>
+</div>
+<div class="graph-container">
+    <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type">
+    </canvas>
+</div>
 <div class="info-overlay" *ngIf="(data.loading | async) && interactive">Loading...</div>

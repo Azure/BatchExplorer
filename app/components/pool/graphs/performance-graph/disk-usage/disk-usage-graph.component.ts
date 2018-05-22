@@ -1,20 +1,24 @@
-import { Component, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges } from "@angular/core";
 import { PerformanceGraphComponent } from "../performance-graph.component";
 
 import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
 
+import "./disk-usage-graph.scss";
+
 @Component({
     selector: "bl-disk-usage-graph",
     templateUrl: "disk-usage-graph.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DiskUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
     public unit = "B";
+    public currentDisk;
 
-    public diskUsages: PerformanceMetric[] = [];
+    public diskUsages: StringMap<PerformanceMetric[]> = {};
     public _diskAvailable: number;
 
-    constructor() {
-        super();
+    constructor(changeDetector: ChangeDetectorRef) {
+        super(changeDetector);
     }
 
     public ngOnChanges(changes) {
@@ -23,14 +27,20 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
         if (changes.data) {
             this._clearMetricSubs();
             this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.diskUsed).subscribe((data) => {
-                this.diskUsages = data;
+                this.diskUsages = data as any;
                 this.updateData();
             }));
 
             this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.diskFree).subscribe((data) => {
-                const last = data.last();
+                console.log("Data here", data);
+                const disk = Object.keys(data).first();
+                if (!disk) { return; }
+
+                const last = data[disk].last();
                 if (last) {
+                    console.log("LAt", last);
                     this._diskAvailable = last.value;
+                    this.currentDisk = disk;
                     this._updateMax();
                     this.updateData();
                 }
@@ -39,10 +49,11 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
     }
 
     public updateData() {
+        const data = this.diskUsages[this.currentDisk] || [];
         this.datasets = [
             {
                 data: [
-                    ...this.diskUsages.map(x => {
+                    ...data.map(x => {
                         return {
                             x: x.time,
                             y: x.value,
@@ -53,6 +64,7 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
                 borderWidth: 1,
             },
         ];
+        this.changeDetector.markForCheck();
     }
 
     private _updateMax() {
@@ -64,8 +76,8 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
     }
 
     private _computeDiskCapacity() {
-        const data = this.diskUsages;
-        if (data && data.length > 0) {
+        const data = this.diskUsages[this.currentDisk];
+        if (data) {
             return this._diskAvailable + data.last().value;
         } else {
             return undefined;

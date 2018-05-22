@@ -1,4 +1,4 @@
-import { Component, OnChanges } from "@angular/core";
+import { ChangeDetectorRef, Component, OnChanges } from "@angular/core";
 import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
 import { NumberUtils } from "app/utils";
 import { PerformanceGraphComponent } from "../performance-graph.component";
@@ -15,8 +15,8 @@ export class MemoryUsageGraphComponent extends PerformanceGraphComponent impleme
     public showOverallUsage = true;
     private _memoryAvailable: number;
 
-    constructor() {
-        super();
+    constructor(changeDetector: ChangeDetectorRef) {
+        super(changeDetector);
     }
 
     public ngOnChanges(changes) {

@@ -1,4 +1,4 @@
-import { Component, OnChanges } from "@angular/core";
+import { ChangeDetectorRef, Component, OnChanges } from "@angular/core";
 import {  PerformanceGraphComponent } from "../performance-graph.component";
 
 import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
@@ -15,8 +15,8 @@ export class DiskIOGraphComponent extends PerformanceGraphComponent implements O
     public diskWriteUsages: PerformanceMetric[] = [];
     public showOverallUsage = true;
 
-    constructor() {
-        super();
+    constructor(changeDetector: ChangeDetectorRef) {
+        super(changeDetector);
     }
 
     public ngOnChanges(changes) {
