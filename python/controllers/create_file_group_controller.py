@@ -102,11 +102,10 @@ async def upload_files(
                 progress_callback=__uploadCallback)
 
         except ValueError as valueError:
-            logging.error("Failed to upload files to file group.", str(valueError))
+            logging.error("Failed to upload files to file group. %s", str(valueError))
             raise error.JsonRpcError(
                 code=JsonRpcErrorCodes.BATCH_CLIENT_ERROR,
-                message="Failed to upload files to file group",
-                data=str(valueError))
+                message=str(valueError))
 
     return dict(uploaded=uploaded_files, total=total_files)
 
