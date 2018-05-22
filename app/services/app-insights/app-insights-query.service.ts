@@ -18,6 +18,8 @@ const metrics: StringMap<Metric> = {
     memoryUsed: { metricId: "customMetrics/Memory used", segment: "cloud/roleInstance" },
     diskRead: { metricId: "customMetrics/Disk read" },
     diskWrite: { metricId: "customMetrics/Disk write" },
+    diskUsed: { metricId: "customMetrics/Disk usage", segment: "customDimensions/Disk" },
+    diskFree: { metricId: "customMetrics/Disk free", segment: "customDimensions/Disk" },
     networkRead: { metricId: "customMetrics/Network read" },
     networkWrite: { metricId: "customMetrics/Network write" },
 };
@@ -100,6 +102,10 @@ export class AppInsightsQueryService {
                 case BatchPerformanceMetricType.individualCpuUsage:
                     performances[id] = this._processIndividualCpuUsage(segments);
                     break;
+                case BatchPerformanceMetricType.diskFree:
+                case BatchPerformanceMetricType.diskUsed:
+                    performances[id] = this._processDiskUsage(id, segments);
+                    break;
                 case BatchPerformanceMetricType.memoryAvailable:
                 case BatchPerformanceMetricType.memoryUsed:
                     performances[id] = this._processMetricToSum(id, segments);
@@ -134,6 +140,27 @@ export class AppInsightsQueryService {
                 const individualSegment = individualSegments[i];
                 const value = individualSegment[this._getMetricId("individualCpuUsage")].avg;
                 usages[i].push({
+                    time,
+                    value,
+                });
+            }
+        }
+        return usages;
+    }
+
+    private _processDiskUsage(id: string, segments: any[]) {
+        const metricId = this._getMetricId(id);
+        const usages: any = {};
+        for (const segment of segments) {
+            const time = this._getDateAvg(new Date(segment.start), new Date(segment.end));
+
+            for (const individualSegment of segment.segments) {
+                const disk = individualSegment["customDimensions/Disk"];
+                const value = individualSegment[metricId].avg;
+                if (!(disk in usages)) {
+                    usages[disk] = [];
+                }
+                usages[disk].push({
                     time,
                     value,
                 });

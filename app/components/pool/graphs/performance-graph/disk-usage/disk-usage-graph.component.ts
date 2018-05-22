@@ -1,22 +1,31 @@
-import { Component, OnChanges } from "@angular/core";
-import {  PerformanceGraphComponent } from "../performance-graph.component";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges } from "@angular/core";
+import { PerformanceGraphComponent } from "../performance-graph.component";
 
 import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
-import { NumberUtils } from "app/utils";
+
+import { PoolUtils } from "app/utils";
+import "./disk-usage-graph.scss";
+
+interface Disk {
+    name: string;
+    label: string;
+}
 
 @Component({
     selector: "bl-disk-usage-graph",
     templateUrl: "disk-usage-graph.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DiskUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
-    public unit = "Bps";
+    public unit = "B";
+    public currentDisk;
+    public availableDisks: Disk[] = [];
 
-    public diskReadUsages: PerformanceMetric[] = [];
-    public diskWriteUsages: PerformanceMetric[] = [];
-    public showOverallUsage = true;
+    public diskUsages: StringMap<PerformanceMetric[]> = {};
+    public diskFree: StringMap<number> = {};
 
-    constructor() {
-        super();
+    constructor(changeDetector: ChangeDetectorRef) {
+        super(changeDetector);
     }
 
     public ngOnChanges(changes) {
@@ -24,25 +33,41 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
 
         if (changes.data) {
             this._clearMetricSubs();
-            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.diskRead).subscribe((data) => {
-                this.diskReadUsages = data;
-                this._updateStatus();
+            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.diskUsed).subscribe((data) => {
+                this.diskUsages = data as any;
+                this._updateMax();
                 this.updateData();
             }));
 
-            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.diskWrite).subscribe((data) => {
-                this.diskWriteUsages = data;
-                this._updateStatus();
+            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.diskFree).subscribe((data) => {
+                this._computeDisks(Object.keys(data));
+                const disk = Object.keys(data).first();
+                if (!disk) { return; }
+                const free = {};
+                for (const disk of Object.keys(data)) {
+                    const last = data[disk].last();
+                    if (last) {
+                        free[disk] = last.value;
+                    }
+                }
+                if (this.availableDisks.length > 0) {
+                    if (!this.currentDisk || !this.availableDisks.find(x => x.name === this.currentDisk)) {
+                        this.currentDisk = this._getDefaultDisk();
+                    }
+                }
+                this.diskFree = free;
+                this._updateMax();
                 this.updateData();
             }));
         }
     }
 
     public updateData() {
+        const data = this.diskUsages[this.currentDisk] || [];
         this.datasets = [
             {
                 data: [
-                    ...this.diskReadUsages.map(x => {
+                    ...data.map(x => {
                         return {
                             x: x.time,
                             y: x.value,
@@ -51,36 +76,87 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
                 ],
                 fill: false,
                 borderWidth: 1,
-                label: "Disk read speed",
-            },
-            {
-                data: [
-                    ...this.diskWriteUsages.map(x => {
-                        return {
-                            x: x.time,
-                            y: x.value,
-                        };
-                    }),
-                ],
-                fill: false,
-                borderWidth: 1,
-                label: "Disk write speed",
             },
         ];
+        this.changeDetector.markForCheck();
     }
 
-    public changeShowOverallUsage(newValue) {
-        this.showOverallUsage = newValue;
+    public pickCurrentDisk(disk: string) {
+        this.currentDisk = disk;
+        this._updateMax();
         this.updateData();
     }
 
-    private _updateStatus() {
-        if (this.diskReadUsages.length > 0 && this.diskWriteUsages.length > 0) {
-            const read = NumberUtils.prettyMagnitude(this.diskReadUsages.last().value);
-            const write = NumberUtils.prettyMagnitude(this.diskWriteUsages.last().value);
-            this.status.next(`R: ${read}Bps, W: ${write}Bps`);
+    public trackDisk(index, disk: Disk) {
+        return disk.name;
+    }
+
+    private _updateMax() {
+        const max = this._computeDiskCapacity();
+        if (max !== this.max) {
+            this.max = max;
+            this.updateOptions();
+        }
+    }
+
+    private _computeDiskCapacity() {
+        const data = this.diskUsages[this.currentDisk];
+        if (data) {
+            return this.diskFree[this.currentDisk] + data.last().value;
         } else {
-            this.status.next("- %");
+            return undefined;
+        }
+    }
+
+    private _computeDisks(disks: string[]) {
+        this.availableDisks = disks.map(x => {
+            return {
+                name: x,
+                label: this._labelForDisk(x),
+            };
+        });
+    }
+
+    private _labelForDisk(disk: string) {
+        const isCloudService = this.data.pool.cloudServiceConfiguration;
+        let type = "";
+
+        if (isCloudService) {
+            switch (disk) {
+                case "C:/":
+                    type = "(User disk)";
+                    break;
+                case "D:/":
+                    type = "(OS disk)";
+                    break;
+            }
+        } else {
+            switch (disk) {
+                case "C:/":
+                case "/":
+                    type = "(OS disk)";
+                    break;
+                case "D:/":
+                case "/mnt":
+                case "/mnt/resources":
+                    type = "(User disk)";
+                    break;
+            }
+        }
+
+        return `${disk} ${type}`;
+    }
+
+    // Show the user disk if possible
+    private _getDefaultDisk() {
+        const isCloudService = this.data.pool.cloudServiceConfiguration;
+        const isWindows = PoolUtils.isWindows(this.data.pool);
+        if (isCloudService) {
+            return "C:/";
+        } else if (isWindows) {
+            return "D:/";
+        } else if (this.availableDisks.length > 0) {
+            return this.availableDisks.first().name;
         }
     }
 }

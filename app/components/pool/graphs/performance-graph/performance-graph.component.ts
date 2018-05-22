@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, OnChanges } from "@angular/core";
+import { ChangeDetectorRef, Component, HostBinding, Input, OnChanges } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
 import { NumberUtils } from "app/utils";
@@ -17,7 +17,7 @@ export enum BatchUsageMetrics {
     templateUrl: "performance-graph.html",
 })
 export class PerformanceGraphComponent implements OnChanges {
-    @Input() public interactive: boolean = true;
+    @Input() @HostBinding("class.interactive") public interactive: boolean = true;
     @Input() public data: PerformanceData;
 
     @HostBinding("class.bl-performance-graph") public baseCssCls = true;
@@ -36,7 +36,7 @@ export class PerformanceGraphComponent implements OnChanges {
 
     protected _metricSubs: Subscription[] = [];
 
-    constructor() {
+    constructor(protected changeDetector: ChangeDetectorRef) {
         this.updateOptions();
     }
 
@@ -91,6 +91,7 @@ export class PerformanceGraphComponent implements OnChanges {
                 }],
             },
         };
+        this.changeDetector.markForCheck();
     }
 
     protected _clearMetricSubs() {

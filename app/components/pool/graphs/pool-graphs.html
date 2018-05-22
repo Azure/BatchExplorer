@@ -44,6 +44,12 @@
             <bl-memory-usage-graph blMonitorGraphChart [data]="performanceData" class="full-display"></bl-memory-usage-graph>
         </bl-metrics-monitor-metric>
         <bl-metrics-monitor-metric label="Disk IO">
+            <bl-disk-io-graph blMonitorGraphPreview #diskUsage [data]="performanceData" [interactive]="false"></bl-disk-io-graph>
+            <div blMetricsStatus>{{diskUsage.status | async}}</div>
+
+            <bl-disk-io-graph blMonitorGraphChart [data]="performanceData" class="full-display"></bl-disk-io-graph>
+        </bl-metrics-monitor-metric>
+        <bl-metrics-monitor-metric label="Disk usage">
             <bl-disk-usage-graph blMonitorGraphPreview #diskUsage [data]="performanceData" [interactive]="false"></bl-disk-usage-graph>
             <div blMetricsStatus>{{diskUsage.status | async}}</div>
 

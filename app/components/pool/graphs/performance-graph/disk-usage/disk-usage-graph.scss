@@ -1,0 +1,30 @@
+bl-disk-usage-graph {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 100%;
+    $header-height: 30px;
+
+    > .disk-usage-header {
+        padding: 5px 10px;
+        height: $header-height;
+
+        bl-select {
+            display: inline-block;
+            width: 200px;
+        }
+    }
+
+    > .graph-container {
+        position: relative;
+        min-height: 0;
+        height: 100%;
+        flex: 1 0 auto;
+    }
+
+    &.interactive {
+        > .graph-container {
+            height: calc(100% - #{$header-height});
+        }
+    }
+}
