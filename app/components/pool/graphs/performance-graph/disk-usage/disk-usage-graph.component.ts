@@ -13,9 +13,10 @@ import "./disk-usage-graph.scss";
 export class DiskUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
     public unit = "B";
     public currentDisk;
+    public availableDisks;
 
     public diskUsages: StringMap<PerformanceMetric[]> = {};
-    public _diskAvailable: number;
+    public diskFree: StringMap<number> = {};
 
     constructor(changeDetector: ChangeDetectorRef) {
         super(changeDetector);
@@ -32,18 +33,23 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
             }));
 
             this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.diskFree).subscribe((data) => {
-                console.log("Data here", data);
+                this.availableDisks = Object.keys(data);
                 const disk = Object.keys(data).first();
                 if (!disk) { return; }
-
-                const last = data[disk].last();
-                if (last) {
-                    console.log("LAt", last);
-                    this._diskAvailable = last.value;
-                    this.currentDisk = disk;
-                    this._updateMax();
-                    this.updateData();
+                const free = {};
+                for (const disk of Object.keys(data)) {
+                    const last = data[disk].last();
+                    if (last) {
+                        free[disk] = last.value;
+                    }
                 }
+
+                if (!this.currentDisk) {
+                    this.currentDisk = this.availableDisks.first();
+                }
+                this._updateMax();
+                this.updateData();
+                this.diskFree = free;
             }));
         }
     }
@@ -67,6 +73,16 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
         this.changeDetector.markForCheck();
     }
 
+    public pickCurrentDisk(disk: string) {
+        this.currentDisk = disk;
+        this._updateMax();
+        this.updateData();
+    }
+
+    public trackDisk(index, disk: string) {
+        return disk;
+    }
+
     private _updateMax() {
         const max = this._computeDiskCapacity();
         if (max !== this.max) {
@@ -78,7 +94,7 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
     private _computeDiskCapacity() {
         const data = this.diskUsages[this.currentDisk];
         if (data) {
-            return this._diskAvailable + data.last().value;
+            return this.diskFree[this.currentDisk] + data.last().value;
         } else {
             return undefined;
         }
