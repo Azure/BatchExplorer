@@ -73,6 +73,7 @@ export class AppInsightsQueryService {
                     interval,
                     timespan,
                     segment: metric.segment,
+                    top: 1000,
                 },
             };
         });
