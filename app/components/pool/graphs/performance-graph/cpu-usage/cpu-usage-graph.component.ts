@@ -1,7 +1,11 @@
 import { ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 import { PerformanceGraphComponent } from "../performance-graph.component";
 
-import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
+import {
+    BatchPerformanceMetricType,
+    NodesPerformanceMetric,
+    PerformanceMetric,
+} from "app/models/app-insights/metrics-result";
 import "./cpu-usage-graph.scss";
 
 @Component({
@@ -14,7 +18,7 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
     public max = 100;
     public unit = "%";
 
-    public cpuUsages: PerformanceMetric[] = [];
+    public cpuUsages: NodesPerformanceMetric = {};
     public individualCpuUsages: PerformanceMetric[][] = [];
     public cpuCount = 1;
     public showOverallUsage = true;
@@ -34,7 +38,7 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
                 this.cpuUsages = data;
                 this._updateStatus();
                 this.updateData();
-                this.lastCpuUsage = this.cpuUsages.last();
+                // this.lastCpuUsage = this.cpuUsages.last();
             }));
             this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.individualCpuUsage)
                 .subscribe((data) => {
@@ -67,27 +71,14 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
     }
 
     private _showOverallCpuUsage() {
-        this.datasets = [
-            {
-                data: [
-                    ...this.cpuUsages.map(x => {
-                        return {
-                            x: x.time,
-                            y: x.value,
-                        };
-                    }),
-                ],
-                fill: false,
-                borderWidth: 1,
-            },
-        ];
+        this.datasets = this._getDatasetsGroupedByNode(this.cpuUsages);
     }
 
     private _showIndiviualCpuUsage() {
-        if (this.cpuUsages.length === 0) {
-            this._showOverallCpuUsage();
-            return;
-        }
+        // if (this.cpuUsages.length === 0) {
+        //     this._showOverallCpuUsage();
+        //     return;
+        // }
 
         this.datasets = this.individualCpuUsages.map((usages, cpuN) => {
             return {

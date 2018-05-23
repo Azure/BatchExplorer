@@ -3,6 +3,7 @@ import {
     BatchPerformanceMetricType,
     NodesPerformanceMetric,
 } from "app/models/app-insights/metrics-result";
+import { NumberUtils } from "app/utils";
 import { Aggregation, PerformanceGraphComponent } from "../performance-graph.component";
 
 @Component({
@@ -10,7 +11,7 @@ import { Aggregation, PerformanceGraphComponent } from "../performance-graph.com
     templateUrl: "memory-usage-graph.html",
 })
 export class MemoryUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
-    public max = 100;
+    public max = null;
     public unit = "B";
 
     public memUsages: NodesPerformanceMetric = {};
@@ -64,24 +65,29 @@ export class MemoryUsageGraphComponent extends PerformanceGraphComponent impleme
     }
 
     private _updateStatus() {
-        // if (this._memoryAvailable && this.memUsages.length > 0) {
-        //     const used = this.memUsages.last().value;
-        //     const percent = (used / this.max * 100).toFixed(2);
-        //     const exponent = NumberUtils.magnitudeExponent(this.max);
-        //     const prettyTotal = NumberUtils.prettyMagnitude(this.max);
-        //     const prettyUsed = (used / Math.pow(1000, exponent)).toPrecision(3);
+        if (this.max) {
+            const total = this.max * Object.keys(this.memUsages).length;
+            let sum = 0;
+            for (const nodeId of Object.keys(this.memUsages)) {
+                const last = this.memUsages[nodeId].last();
+                if (last) {
+                    sum += last.value;
+                }
+            }
+            const percent = (sum / total * 100).toFixed(2);
+            const prettyTotal = NumberUtils.prettyMagnitude(total);
+            const exponent = NumberUtils.magnitudeExponent(total);
+            const prettyUsed = (sum / Math.pow(1000, exponent)).toPrecision(3);
 
-        //     this.status.next(`${prettyUsed}/${prettyTotal}B (${percent}%)`);
-        // } else {
-        //     this.status.next("- B");
-        // }
+            this.status.next(`${prettyUsed}/${prettyTotal}B (${percent}%)`);
+        }
     }
 
     private _computeTotalMemory() {
         const nodeId = Object.keys(this.memUsages).first();
         if (this.memUsages[nodeId] && this._memoryAvailable[nodeId]) {
             const lastUsage = this.memUsages[nodeId].last();
-            const lastAvailable = this.memUsages[nodeId].last();
+            const lastAvailable = this._memoryAvailable[nodeId].last();
             if (lastUsage && lastAvailable) {
                 return lastUsage.value + lastAvailable.value;
             } else {

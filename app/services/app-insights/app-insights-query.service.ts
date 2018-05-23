@@ -13,7 +13,7 @@ interface MetricDefinition {
 }
 
 const metrics: StringMap<MetricDefinition> = {
-    cpuUsage: { appInsightsMetricId: "customMetrics/Cpu usage" },
+    cpuUsage: { appInsightsMetricId: "customMetrics/Cpu usage", segment: "cloud/roleInstance" },
     individualCpuUsage: { appInsightsMetricId: "customMetrics/Cpu usage", segment: "customDimensions/[Cpu #]" },
     memoryAvailable: { appInsightsMetricId: "customMetrics/Memory available", segment: "cloud/roleInstance" },
     memoryUsed: { appInsightsMetricId: "customMetrics/Memory used", segment: "cloud/roleInstance" },
@@ -109,6 +109,7 @@ export class AppInsightsQueryService {
                     break;
                 case BatchPerformanceMetricType.memoryAvailable:
                 case BatchPerformanceMetricType.memoryUsed:
+                case BatchPerformanceMetricType.cpuUsage:
                     performances[id] = this._processSegmentedMetric(id, segments);
                     break;
                 default:

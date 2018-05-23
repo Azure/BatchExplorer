@@ -29,17 +29,19 @@ export interface PerformanceMetric {
  * Value of a metric separated by node. Map key are node ids.
  */
 export type NodesPerformanceMetric = StringMap<PerformanceMetric[]>;
+export type NodesDisksPerformanceMetric = StringMap<NodesPerformanceMetric>;
+export type NodesCpusPerformanceMetric = StringMap<NodesPerformanceMetric>;
 
 export interface BatchPerformanceMetrics {
-    cpuUsage: PerformanceMetric[];
+    cpuUsage: NodesCpusPerformanceMetric;
     individualCpuUsage: PerformanceMetric[][];
     memory: NodesPerformanceMetric;
     networkRead: PerformanceMetric[];
     networkWrite: PerformanceMetric[];
     diskRead: PerformanceMetric[];
     diskWrite: PerformanceMetric[];
-    diskUsed: PerformanceMetric[];
-    diskFree: PerformanceMetric[];
+    diskUsed: NodesDisksPerformanceMetric;
+    diskFree: NodesDisksPerformanceMetric;
 }
 
 export enum BatchPerformanceMetricType {
