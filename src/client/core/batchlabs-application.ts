@@ -155,10 +155,9 @@ export class BatchLabsApplication {
     }
 
     public openFromArguments(argv: string[]): MainWindow {
-        argv = ["", "ms-batchlabs://route/data?accountId=/subscriptions/21abd678-18c5-4660-9fdd-8c5ba6b6fe1f/resourcegroups/default-azurebatch-brazilsouth/providers/microsoft.batch/batchaccounts/prodtest1"];
-        // if (ClientConstants.isDev) {
-        //     return this.windows.openNewWindow(null, false);
-        // }
+        if (ClientConstants.isDev) {
+            return this.windows.openNewWindow(null, false);
+        }
         const program = commander
             .version(app.getVersion())
             .option("--updated", "If the application was just updated")
