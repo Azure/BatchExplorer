@@ -2,16 +2,9 @@ import { ChangeDetectorRef, Component, OnChanges } from "@angular/core";
 import {
     BatchPerformanceMetricType,
     NodesPerformanceMetric,
-    PerformanceMetric,
 } from "app/models/app-insights/metrics-result";
-import { NumberUtils } from "app/utils";
-import { PerformanceGraphComponent } from "../performance-graph.component";
+import { Aggregation, PerformanceGraphComponent } from "../performance-graph.component";
 
-enum Aggregation {
-    Sum = "sum",
-    Avg = "avg",
-    Each = "each",
-}
 @Component({
     selector: "bl-memory-usage-graph",
     templateUrl: "memory-usage-graph.html",
@@ -53,8 +46,7 @@ export class MemoryUsageGraphComponent extends PerformanceGraphComponent impleme
 
     public updateData() {
         if (this.aggregation === Aggregation.Each) {
-            this.datasets = this._getDataForEachNode();
-            console.log("Datasets here", this.datasets, this.memUsages);
+            this.datasets = this._getDatasetsGroupedByNode(this.memUsages);
         }
     }
 
@@ -98,19 +90,5 @@ export class MemoryUsageGraphComponent extends PerformanceGraphComponent impleme
         } else {
             return undefined;
         }
-    }
-
-    private _getDataForEachNode() {
-        return Object.keys(this.memUsages).map((nodeId) => {
-            const usages = this.memUsages[nodeId];
-            return {
-                data: [
-                    ...usages.map(x => this._dataPointFromMetric(x)),
-                ],
-                fill: false,
-                borderWidth: 1,
-                label: nodeId,
-            };
-        });
     }
 }

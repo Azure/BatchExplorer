@@ -2,7 +2,8 @@ import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { Node, Pool } from "app/models";
 import {
-    BatchPerformanceMetricType, BatchPerformanceMetrics, PerformanceMetric,
+    BatchPerformanceMetricType,
+    BatchPerformanceMetrics,
 } from "app/models/app-insights/metrics-result";
 import { AppInsightsQueryService } from "app/services";
 

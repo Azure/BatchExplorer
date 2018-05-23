@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, HostBinding, Input, OnChanges } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
-import { PerformanceMetric } from "app/models/app-insights/metrics-result";
+import { NodesPerformanceMetric, PerformanceMetric } from "app/models/app-insights/metrics-result";
 import { NumberUtils } from "app/utils";
 import { PerformanceData } from "./performance-data";
 import "./performance-graph.scss";
@@ -11,6 +11,12 @@ export enum BatchUsageMetrics {
     memory = "memory",
     disk = "disk",
     network = "network",
+}
+
+export enum Aggregation {
+    Sum = "sum",
+    Avg = "avg",
+    Each = "each",
 }
 
 @Component({
@@ -101,9 +107,25 @@ export class PerformanceGraphComponent implements OnChanges {
     }
 
     protected _getToolTip(tooltipItem: Chart.ChartTooltipItem) {
+        const dataset = this.datasets[tooltipItem.datasetIndex];
+        const label = dataset && dataset.label || "";
         return [
-            NumberUtils.prettyMagnitude(tooltipItem.yLabel as any, this.unit),
+            `${NumberUtils.prettyMagnitude(tooltipItem.yLabel as any, this.unit)} ${label}`,
         ];
+    }
+
+    protected _getDatasetsGroupedByNode(data: NodesPerformanceMetric) {
+        return Object.keys(data).map((nodeId) => {
+            const usages = data[nodeId];
+            return {
+                data: [
+                    ...usages.map(x => this._dataPointFromMetric(x)),
+                ],
+                fill: false,
+                borderWidth: 1,
+                label: nodeId,
+            };
+        });
     }
 
     protected _dataPointFromMetric(metric: PerformanceMetric) {

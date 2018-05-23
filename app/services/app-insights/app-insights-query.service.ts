@@ -19,8 +19,8 @@ const metrics: StringMap<MetricDefinition> = {
     memoryUsed: { appInsightsMetricId: "customMetrics/Memory used", segment: "cloud/roleInstance" },
     diskRead: { appInsightsMetricId: "customMetrics/Disk read" },
     diskWrite: { appInsightsMetricId: "customMetrics/Disk write" },
-    diskUsed: { appInsightsMetricId: "customMetrics/Disk usage", segment: "customDimensions/Disk" },
-    diskFree: { appInsightsMetricId: "customMetrics/Disk free", segment: "customDimensions/Disk" },
+    diskUsed: { appInsightsMetricId: "customMetrics/Disk usage", segment: "customDimensions/Disk,cloud/roleInstance" },
+    diskFree: { appInsightsMetricId: "customMetrics/Disk free", segment: "customDimensions/Disk,cloud/roleInstance" },
     networkRead: { appInsightsMetricId: "customMetrics/Network read" },
     networkWrite: { appInsightsMetricId: "customMetrics/Network write" },
 };
@@ -157,14 +157,21 @@ export class AppInsightsQueryService {
 
             for (const individualSegment of segment.segments) {
                 const disk = individualSegment["customDimensions/Disk"];
-                const value = individualSegment[metricId].avg;
                 if (!(disk in usages)) {
-                    usages[disk] = [];
+                    usages[disk] = {};
                 }
-                usages[disk].push({
-                    time,
-                    value,
-                });
+
+                for (const nodeSegment of individualSegment.segments) {
+                    const nodeId = nodeSegment["cloud/roleInstance"];
+                    const value = nodeSegment[metricId].avg;
+                    if (!(nodeId in usages[disk])) {
+                        usages[disk][nodeId] = [];
+                    }
+                    usages[disk][nodeId].push({
+                        time,
+                        value,
+                    });
+                }
             }
         }
         return usages;

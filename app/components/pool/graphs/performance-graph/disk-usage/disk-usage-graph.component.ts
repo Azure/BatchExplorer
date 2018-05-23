@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges } from "@angular/core";
-import { PerformanceGraphComponent } from "../performance-graph.component";
+import { Aggregation, PerformanceGraphComponent } from "../performance-graph.component";
 
 import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
 
@@ -20,9 +20,10 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
     public unit = "B";
     public currentDisk;
     public availableDisks: Disk[] = [];
-
-    public diskUsages: StringMap<PerformanceMetric[]> = {};
-    public diskFree: StringMap<number> = {};
+    public aggregation: Aggregation = Aggregation.Each;
+    public 5;
+    public diskUsages: StringMap<StringMap<PerformanceMetric[]>> = {};
+    public diskFree: StringMap<StringMap<PerformanceMetric[]>> = {};
 
     constructor(changeDetector: ChangeDetectorRef) {
         super(changeDetector);
@@ -43,19 +44,12 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
                 this._computeDisks(Object.keys(data));
                 const disk = Object.keys(data).first();
                 if (!disk) { return; }
-                const free = {};
-                for (const disk of Object.keys(data)) {
-                    const last = data[disk].last();
-                    if (last) {
-                        free[disk] = last.value;
-                    }
-                }
+                this.diskFree = data;
                 if (this.availableDisks.length > 0) {
                     if (!this.currentDisk || !this.availableDisks.find(x => x.name === this.currentDisk)) {
                         this.currentDisk = this._getDefaultDisk();
                     }
                 }
-                this.diskFree = free;
                 this._updateMax();
                 this.updateData();
             }));
@@ -63,21 +57,9 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
     }
 
     public updateData() {
-        const data = this.diskUsages[this.currentDisk] || [];
-        this.datasets = [
-            {
-                data: [
-                    ...data.map(x => {
-                        return {
-                            x: x.time,
-                            y: x.value,
-                        };
-                    }),
-                ],
-                fill: false,
-                borderWidth: 1,
-            },
-        ];
+        if (this.aggregation === Aggregation.Each) {
+            this.datasets = this._getDatasetsGroupedByNode(this.diskUsages[this.currentDisk] || {} as any);
+        }
         this.changeDetector.markForCheck();
     }
 
@@ -100,12 +82,15 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
     }
 
     private _computeDiskCapacity() {
-        const data = this.diskUsages[this.currentDisk];
-        if (data) {
-            return this.diskFree[this.currentDisk] + data.last().value;
-        } else {
-            return undefined;
+        const usages = this.diskUsages[this.currentDisk];
+        const free = this.diskFree[this.currentDisk];
+        if (usages && free) {
+            const nodeId = Object.keys(usages).first();
+            if (usages[nodeId] && free[nodeId]) {
+                return usages[nodeId].last().value + free[nodeId].last().value;
+            }
         }
+        return undefined;
     }
 
     private _computeDisks(disks: string[]) {
