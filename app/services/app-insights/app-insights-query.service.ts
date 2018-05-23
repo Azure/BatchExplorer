@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
 import { FilterBuilder } from "@batch-flask/core";
 import {
-    AppInsightsMetricBody, AppInsightsMetricSegment,
+    AppInsightsMetricBody,
     AppInsightsMetricsResult,
     BatchPerformanceMetricType,
-    BatchPerformanceMetrics, NodesPerformanceMetric,
+    BatchPerformanceMetrics,
 } from "app/models/app-insights";
 import { Observable } from "rxjs";
 import { AppInsightsApiService } from "./app-insights-api.service";
