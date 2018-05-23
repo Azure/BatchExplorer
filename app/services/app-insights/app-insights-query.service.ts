@@ -1,27 +1,28 @@
 import { Injectable } from "@angular/core";
 import { FilterBuilder } from "@batch-flask/core";
 import {
-    AppInsightsMetricSegment, AppInsightsMetricsResult, BatchPerformanceMetricType, BatchPerformanceMetrics,
+    AppInsightsMetricSegment, AppInsightsMetricsResult,
+    BatchPerformanceMetricType, BatchPerformanceMetrics, NodesPerformanceMetric,
 } from "app/models/app-insights/metrics-result";
 import { Observable } from "rxjs";
 import { AppInsightsApiService } from "./app-insights-api.service";
 
-interface Metric {
-    metricId: string;
+interface MetricDefinition {
+    appInsightsMetricId: string;
     segment?: string;
 }
 
-const metrics: StringMap<Metric> = {
-    cpuUsage: { metricId: "customMetrics/Cpu usage" },
-    individualCpuUsage: { metricId: "customMetrics/Cpu usage", segment: "customDimensions/[Cpu #]" },
-    memoryAvailable: { metricId: "customMetrics/Memory available", segment: "cloud/roleInstance" },
-    memoryUsed: { metricId: "customMetrics/Memory used", segment: "cloud/roleInstance" },
-    diskRead: { metricId: "customMetrics/Disk read" },
-    diskWrite: { metricId: "customMetrics/Disk write" },
-    diskUsed: { metricId: "customMetrics/Disk usage", segment: "customDimensions/Disk" },
-    diskFree: { metricId: "customMetrics/Disk free", segment: "customDimensions/Disk" },
-    networkRead: { metricId: "customMetrics/Network read" },
-    networkWrite: { metricId: "customMetrics/Network write" },
+const metrics: StringMap<MetricDefinition> = {
+    cpuUsage: { appInsightsMetricId: "customMetrics/Cpu usage" },
+    individualCpuUsage: { appInsightsMetricId: "customMetrics/Cpu usage", segment: "customDimensions/[Cpu #]" },
+    memoryAvailable: { appInsightsMetricId: "customMetrics/Memory available", segment: "cloud/roleInstance" },
+    memoryUsed: { appInsightsMetricId: "customMetrics/Memory used", segment: "cloud/roleInstance" },
+    diskRead: { appInsightsMetricId: "customMetrics/Disk read" },
+    diskWrite: { appInsightsMetricId: "customMetrics/Disk write" },
+    diskUsed: { appInsightsMetricId: "customMetrics/Disk usage", segment: "customDimensions/Disk" },
+    diskFree: { appInsightsMetricId: "customMetrics/Disk free", segment: "customDimensions/Disk" },
+    networkRead: { appInsightsMetricId: "customMetrics/Network read" },
+    networkWrite: { appInsightsMetricId: "customMetrics/Network write" },
 };
 @Injectable()
 export class AppInsightsQueryService {
@@ -68,7 +69,7 @@ export class AppInsightsQueryService {
                 id: id,
                 parameters: {
                     aggregation: "avg",
-                    metricId: metric.metricId,
+                    metricId: metric.appInsightsMetricId,
                     filter: this._buildFilter(poolId, nodeId).toOData(),
                     interval,
                     timespan,
@@ -108,7 +109,7 @@ export class AppInsightsQueryService {
                     break;
                 case BatchPerformanceMetricType.memoryAvailable:
                 case BatchPerformanceMetricType.memoryUsed:
-                    performances[id] = this._processMetricToSum(id, segments);
+                    performances[id] = this._processSegmentedMetric(id, segments);
                     break;
                 default:
                     performances[id] = this._processSimpleMetric(id, segments);
@@ -120,7 +121,7 @@ export class AppInsightsQueryService {
     private _processSimpleMetric(metricId: string, segments: AppInsightsMetricSegment[]) {
         return segments.map((segment) => {
             const time = this._getDateAvg(new Date(segment.start), new Date(segment.end));
-            const value = segment[this._getMetricId(metricId)].avg;
+            const value = segment[this._getAppInsightsMetricId(metricId)].avg;
             return {
                 time,
                 value,
@@ -138,7 +139,7 @@ export class AppInsightsQueryService {
             }
             for (let i = 0; i < individualSegments.length; i++) {
                 const individualSegment = individualSegments[i];
-                const value = individualSegment[this._getMetricId("individualCpuUsage")].avg;
+                const value = individualSegment[this._getAppInsightsMetricId("individualCpuUsage")].avg;
                 usages[i].push({
                     time,
                     value,
@@ -149,7 +150,7 @@ export class AppInsightsQueryService {
     }
 
     private _processDiskUsage(id: string, segments: any[]) {
-        const metricId = this._getMetricId(id);
+        const metricId = this._getAppInsightsMetricId(id);
         const usages: any = {};
         for (const segment of segments) {
             const time = this._getDateAvg(new Date(segment.start), new Date(segment.end));
@@ -169,21 +170,24 @@ export class AppInsightsQueryService {
         return usages;
     }
 
-    private _processMetricToSum(metricId: string, segments: AppInsightsMetricSegment[]) {
-        const usages = [];
+    private _processSegmentedMetric(metricId: string, segments: AppInsightsMetricSegment[]): NodesPerformanceMetric {
+        const metric = metrics[metricId];
+        const groupBy = metric.segment;
+        const usages: any = {};
         for (const segment of segments) {
             const time = this._getDateAvg(new Date(segment.start), new Date(segment.end));
-            const individualSegments = segment.segments;
-            let sum = 0;
-            for (const individualSegment of individualSegments) {
-                const value = individualSegment[this._getMetricId(metricId)].avg;
-                sum += value;
-            }
 
-            usages.push({
-                time,
-                value: sum,
-            });
+            for (const individualSegment of segment.segments) {
+                const disk = individualSegment[groupBy];
+                const value = individualSegment[metric.appInsightsMetricId].avg;
+                if (!(disk in usages)) {
+                    usages[disk] = [];
+                }
+                usages[disk].push({
+                    time,
+                    value,
+                });
+            }
         }
         return usages;
     }
@@ -192,7 +196,7 @@ export class AppInsightsQueryService {
         return new Date((end.getTime() + start.getTime()) / 2);
     }
 
-    private _getMetricId(id: string) {
-        return metrics[id].metricId;
+    private _getAppInsightsMetricId(id: string) {
+        return metrics[id].appInsightsMetricId;
     }
 }

@@ -25,10 +25,15 @@ export interface PerformanceMetric {
     value: number;
 }
 
+/**
+ * Value of a metric separated by node. Map key are node ids.
+ */
+export type NodesPerformanceMetric = StringMap<PerformanceMetric[]>;
+
 export interface BatchPerformanceMetrics {
     cpuUsage: PerformanceMetric[];
     individualCpuUsage: PerformanceMetric[][];
-    memory: PerformanceMetric[];
+    memory: NodesPerformanceMetric;
     networkRead: PerformanceMetric[];
     networkWrite: PerformanceMetric[];
     diskRead: PerformanceMetric[];

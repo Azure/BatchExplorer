@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, HostBinding, Input, OnChanges } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
+import { PerformanceMetric } from "app/models/app-insights/metrics-result";
 import { NumberUtils } from "app/utils";
 import { PerformanceData } from "./performance-data";
 import "./performance-graph.scss";
@@ -103,5 +104,12 @@ export class PerformanceGraphComponent implements OnChanges {
         return [
             NumberUtils.prettyMagnitude(tooltipItem.yLabel as any, this.unit),
         ];
+    }
+
+    protected _dataPointFromMetric(metric: PerformanceMetric) {
+        return {
+            x: metric.time,
+            y: metric.value,
+        };
     }
 }

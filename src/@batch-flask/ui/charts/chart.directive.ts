@@ -182,11 +182,6 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
                 });
         }
 
-        if (!datasets) {
-            throw new Error(`ng-charts configuration error,
-      data or datasets field are required to render char ${this.chartType}`);
-        }
-
         return datasets;
     }
 
