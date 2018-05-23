@@ -43,7 +43,7 @@ export class NetworkUsageGraphComponent extends PerformanceGraphComponent implem
     public updateData() {
         this.datasets = [
             ...this._getDatasetsGroupedByNode(this.netReadUsages, "rgb(178, 95, 7)", "Network download speed"),
-            ...this._getDatasetsGroupedByNode(this.netWriteUsages, "rgba(178, 95, 7, 0.5)", "Network upload speed"),
+            ...this._getDatasetsGroupedByNode(this.netWriteUsages, "rgba(178, 95, 7, 0.3)", "Network upload speed"),
         ];
     }
 

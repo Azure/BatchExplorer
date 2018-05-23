@@ -142,6 +142,9 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
     }
 
     private updateChartData(newDataValues: number[] | any[]): void {
+        if (newDataValues.length === 0) {
+            return;
+        }
         if (Array.isArray(newDataValues[0].data)) {
             this.chart.data.datasets.forEach((dataset: any, i: number) => {
                 dataset.data = newDataValues[i].data;

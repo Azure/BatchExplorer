@@ -41,7 +41,7 @@ export class DiskIOGraphComponent extends PerformanceGraphComponent implements O
     public updateData() {
         this.datasets = [
             ...this._getDatasetsGroupedByNode(this.diskReadUsages, "rgb(26, 130, 31)", "Disk read speed"),
-            ...this._getDatasetsGroupedByNode(this.diskWriteUsages, "rgba(26, 130, 31, 0.5)", "Disk write speed"),
+            ...this._getDatasetsGroupedByNode(this.diskWriteUsages, "rgba(26, 130, 31, 0.3)", "Disk write speed"),
         ];
     }
 
