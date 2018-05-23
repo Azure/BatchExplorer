@@ -65,10 +65,12 @@ export class StorageAccountPickerComponent implements OnInit, AfterContentInit, 
     }
 
     public pickStorageAccountId(storageAccountId: string) {
-        this.pickedStorageAccountId = storageAccountId;
-        this.changeDetector.markForCheck();
-        if (this._propagateChange) {
-            this._propagateChange(storageAccountId);
+        if (storageAccountId !== this.pickedStorageAccountId) {
+            this.pickedStorageAccountId = storageAccountId;
+            this.changeDetector.markForCheck();
+            if (this._propagateChange) {
+                this._propagateChange(storageAccountId);
+            }
         }
     }
 
