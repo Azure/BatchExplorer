@@ -11,10 +11,15 @@ export interface AppInsightsMetricBody {
     start: string;
     end: string;
     interval: string;
-    segments: AppInsightsMetricSegment[];
+    segments: AppInsightsMetricTimeSegment[];
 }
 
 export interface AppInsightsMetricSegment {
+    segments?: AppInsightsMetricSegment[];
+    [key: string]: any;
+}
+
+export interface AppInsightsMetricTimeSegment {
     start: string;
     end: string;
     [key: string]: any;

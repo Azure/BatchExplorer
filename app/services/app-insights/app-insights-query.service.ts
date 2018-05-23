@@ -1,16 +1,15 @@
 import { Injectable } from "@angular/core";
 import { FilterBuilder } from "@batch-flask/core";
 import {
-    AppInsightsMetricSegment, AppInsightsMetricsResult,
-    BatchPerformanceMetricType, BatchPerformanceMetrics, NodesPerformanceMetric,
-} from "app/models/app-insights/metrics-result";
+    AppInsightsMetricBody, AppInsightsMetricSegment,
+    AppInsightsMetricsResult,
+    BatchPerformanceMetricType,
+    BatchPerformanceMetrics, NodesPerformanceMetric,
+} from "app/models/app-insights";
 import { Observable } from "rxjs";
 import { AppInsightsApiService } from "./app-insights-api.service";
-
-interface MetricDefinition {
-    appInsightsMetricId: string;
-    segment?: string;
-}
+import { MetricDefinition } from "./metric-definition";
+import { AppInsightQueryResultProcessor } from "./query-result-processor";
 
 const metrics: StringMap<MetricDefinition> = {
     cpuUsage: { appInsightsMetricId: "customMetrics/Cpu usage", segment: "cloud/roleInstance" },
@@ -98,36 +97,17 @@ export class AppInsightsQueryService {
         const performances = {};
         for (const metricResult of data) {
             const id = metricResult.id;
+            const data = metricResult.body.value;
             const segments = metricResult.body.value.segments;
             switch (id) {
                 case BatchPerformanceMetricType.individualCpuUsage:
                     performances[id] = this._processIndividualCpuUsage(segments);
                     break;
-                case BatchPerformanceMetricType.diskFree:
-                case BatchPerformanceMetricType.diskUsed:
-                    performances[id] = this._processDiskUsage(id, segments);
-                    break;
-                case BatchPerformanceMetricType.memoryAvailable:
-                case BatchPerformanceMetricType.memoryUsed:
-                case BatchPerformanceMetricType.cpuUsage:
-                    performances[id] = this._processSegmentedMetric(id, segments);
-                    break;
                 default:
-                    performances[id] = this._processSimpleMetric(id, segments);
+                    performances[id] = this._processSegmentedMetric(id, data);
             }
         }
         return performances as BatchPerformanceMetrics;
-    }
-
-    private _processSimpleMetric(metricId: string, segments: AppInsightsMetricSegment[]) {
-        return segments.map((segment) => {
-            const time = this._getDateAvg(new Date(segment.start), new Date(segment.end));
-            const value = segment[this._getAppInsightsMetricId(metricId)].avg;
-            return {
-                time,
-                value,
-            };
-        });
     }
 
     private _processIndividualCpuUsage(segments) {
@@ -150,54 +130,10 @@ export class AppInsightsQueryService {
         return usages;
     }
 
-    private _processDiskUsage(id: string, segments: any[]) {
-        const metricId = this._getAppInsightsMetricId(id);
-        const usages: any = {};
-        for (const segment of segments) {
-            const time = this._getDateAvg(new Date(segment.start), new Date(segment.end));
-
-            for (const individualSegment of segment.segments) {
-                const disk = individualSegment["customDimensions/Disk"];
-                if (!(disk in usages)) {
-                    usages[disk] = {};
-                }
-
-                for (const nodeSegment of individualSegment.segments) {
-                    const nodeId = nodeSegment["cloud/roleInstance"];
-                    const value = nodeSegment[metricId].avg;
-                    if (!(nodeId in usages[disk])) {
-                        usages[disk][nodeId] = [];
-                    }
-                    usages[disk][nodeId].push({
-                        time,
-                        value,
-                    });
-                }
-            }
-        }
-        return usages;
-    }
-
-    private _processSegmentedMetric(metricId: string, segments: AppInsightsMetricSegment[]): NodesPerformanceMetric {
+    private _processSegmentedMetric<T>(metricId: string, segments: AppInsightsMetricBody): T {
         const metric = metrics[metricId];
-        const groupBy = metric.segment;
-        const usages: any = {};
-        for (const segment of segments) {
-            const time = this._getDateAvg(new Date(segment.start), new Date(segment.end));
-
-            for (const individualSegment of segment.segments) {
-                const disk = individualSegment[groupBy];
-                const value = individualSegment[metric.appInsightsMetricId].avg;
-                if (!(disk in usages)) {
-                    usages[disk] = [];
-                }
-                usages[disk].push({
-                    time,
-                    value,
-                });
-            }
-        }
-        return usages;
+        const processor = new AppInsightQueryResultProcessor(metric);
+        return processor.process(segments);
     }
 
     private _getDateAvg(start: Date, end: Date): Date {
