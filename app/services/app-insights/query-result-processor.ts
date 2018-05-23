@@ -13,9 +13,11 @@ export class AppInsightQueryResultProcessor {
     public process<T>(data: AppInsightsMetricBody): T {
         const hasGroups = this._groupBy.length > 0;
         const result = hasGroups ? {} : [];
+        console.log("Time segments count", this.metric.appInsightsMetricId, data.segments.length)
         for (const timeSegment of data.segments) {
             const time = this._getTime(timeSegment);
             if (hasGroups) {
+                console.log("Sub segments count", timeSegment.segments.length);
                 this._parseGroup(time, this._groupBy, timeSegment.segments, result);
             } else {
                 const value = timeSegment[this.metric.appInsightsMetricId].avg;
