@@ -114,16 +114,21 @@ export class PerformanceGraphComponent implements OnChanges {
         ];
     }
 
-    protected _getDatasetsGroupedByNode(data: NodesPerformanceMetric) {
+    protected _getDatasetsGroupedByNode(data: NodesPerformanceMetric, color?: string, label?: string) {
         return Object.keys(data).map((nodeId) => {
             const usages = data[nodeId];
+            let computedLabel = nodeId;
+            if (label) {
+                computedLabel = `${label} ${nodeId}`;
+            }
             return {
                 data: [
                     ...usages.map(x => this._dataPointFromMetric(x)),
                 ],
                 fill: false,
                 borderWidth: 1,
-                label: nodeId,
+                borderColor: color,
+                label: computedLabel,
             };
         });
     }

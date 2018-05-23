@@ -71,7 +71,7 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
     }
 
     private _showOverallCpuUsage() {
-        this.datasets = this._getDatasetsGroupedByNode(this.cpuUsages);
+        this.datasets = this._getDatasetsGroupedByNode(this.cpuUsages, "rgb(9, 94, 168)");
     }
 
     private _showIndiviualCpuUsage() {

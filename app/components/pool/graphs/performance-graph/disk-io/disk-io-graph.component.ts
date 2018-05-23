@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnChanges } from "@angular/core";
-import {  PerformanceGraphComponent } from "../performance-graph.component";
+import { PerformanceGraphComponent } from "../performance-graph.component";
 
-import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
+import { BatchPerformanceMetricType, NodesPerformanceMetric } from "app/models/app-insights/metrics-result";
 import { NumberUtils } from "app/utils";
 
 @Component({
@@ -11,8 +11,8 @@ import { NumberUtils } from "app/utils";
 export class DiskIOGraphComponent extends PerformanceGraphComponent implements OnChanges {
     public unit = "Bps";
 
-    public diskReadUsages: PerformanceMetric[] = [];
-    public diskWriteUsages: PerformanceMetric[] = [];
+    public diskReadUsages: NodesPerformanceMetric = {};
+    public diskWriteUsages: NodesPerformanceMetric = {};
     public showOverallUsage = true;
 
     constructor(changeDetector: ChangeDetectorRef) {
@@ -40,32 +40,8 @@ export class DiskIOGraphComponent extends PerformanceGraphComponent implements O
 
     public updateData() {
         this.datasets = [
-            {
-                data: [
-                    ...this.diskReadUsages.map(x => {
-                        return {
-                            x: x.time,
-                            y: x.value,
-                        };
-                    }),
-                ],
-                fill: false,
-                borderWidth: 1,
-                label: "Disk read speed",
-            },
-            {
-                data: [
-                    ...this.diskWriteUsages.map(x => {
-                        return {
-                            x: x.time,
-                            y: x.value,
-                        };
-                    }),
-                ],
-                fill: false,
-                borderWidth: 1,
-                label: "Disk write speed",
-            },
+            ...this._getDatasetsGroupedByNode(this.diskReadUsages, "rgb(26, 130, 31)", "Disk read speed"),
+            ...this._getDatasetsGroupedByNode(this.diskWriteUsages, "rgba(26, 130, 31, 0.5)", "Disk write speed"),
         ];
     }
 
@@ -75,12 +51,25 @@ export class DiskIOGraphComponent extends PerformanceGraphComponent implements O
     }
 
     private _updateStatus() {
-        if (this.diskReadUsages.length > 0 && this.diskWriteUsages.length > 0) {
-            const read = NumberUtils.prettyMagnitude(this.diskReadUsages.last().value);
-            const write = NumberUtils.prettyMagnitude(this.diskWriteUsages.last().value);
-            this.status.next(`R: ${read}Bps, W: ${write}Bps`);
+        const read = this._getLast(this.diskReadUsages);
+        const write = this._getLast(this.diskWriteUsages);
+        this.status.next(`R: ${read}Bps, W: ${write}Bps`);
+    }
+
+    private _getLast(data: NodesPerformanceMetric) {
+        let sum = 0;
+        const nodes = Object.keys(data);
+
+        if (nodes.length > 0) {
+            for (const nodeId of nodes) {
+                const last = data[nodeId].last();
+                if (last) {
+                    sum += last.value;
+                }
+            }
+            return NumberUtils.prettyMagnitude(sum / nodes.length);
         } else {
-            this.status.next("- %");
+            return `-`;
         }
     }
 }

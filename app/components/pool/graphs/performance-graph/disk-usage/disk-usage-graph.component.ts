@@ -58,7 +58,8 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
 
     public updateData() {
         if (this.aggregation === Aggregation.Each) {
-            this.datasets = this._getDatasetsGroupedByNode(this.diskUsages[this.currentDisk] || {} as any);
+            const data = this.diskUsages[this.currentDisk] || {} as any;
+            this.datasets = this._getDatasetsGroupedByNode(data, "rgb(103, 169, 10)");
         }
         this.changeDetector.markForCheck();
     }

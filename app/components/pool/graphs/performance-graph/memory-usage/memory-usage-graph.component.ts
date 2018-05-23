@@ -47,7 +47,7 @@ export class MemoryUsageGraphComponent extends PerformanceGraphComponent impleme
 
     public updateData() {
         if (this.aggregation === Aggregation.Each) {
-            this.datasets = this._getDatasetsGroupedByNode(this.memUsages);
+            this.datasets = this._getDatasetsGroupedByNode(this.memUsages, "rgb(137, 11, 170)");
         }
     }
 

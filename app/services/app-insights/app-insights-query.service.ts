@@ -16,12 +16,12 @@ const metrics: StringMap<MetricDefinition> = {
     individualCpuUsage: { appInsightsMetricId: "customMetrics/Cpu usage", segment: "customDimensions/[Cpu #]" },
     memoryAvailable: { appInsightsMetricId: "customMetrics/Memory available", segment: "cloud/roleInstance" },
     memoryUsed: { appInsightsMetricId: "customMetrics/Memory used", segment: "cloud/roleInstance" },
-    diskRead: { appInsightsMetricId: "customMetrics/Disk read" },
-    diskWrite: { appInsightsMetricId: "customMetrics/Disk write" },
+    diskRead: { appInsightsMetricId: "customMetrics/Disk read", segment: "cloud/roleInstance" },
+    diskWrite: { appInsightsMetricId: "customMetrics/Disk write", segment: "cloud/roleInstance" },
     diskUsed: { appInsightsMetricId: "customMetrics/Disk usage", segment: "customDimensions/Disk,cloud/roleInstance" },
     diskFree: { appInsightsMetricId: "customMetrics/Disk free", segment: "customDimensions/Disk,cloud/roleInstance" },
-    networkRead: { appInsightsMetricId: "customMetrics/Network read" },
-    networkWrite: { appInsightsMetricId: "customMetrics/Network write" },
+    networkRead: { appInsightsMetricId: "customMetrics/Network read", segment: "cloud/roleInstance" },
+    networkWrite: { appInsightsMetricId: "customMetrics/Network write", segment: "cloud/roleInstance" },
 };
 @Injectable()
 export class AppInsightsQueryService {
