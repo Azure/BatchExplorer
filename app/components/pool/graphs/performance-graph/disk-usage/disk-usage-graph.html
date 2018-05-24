@@ -5,7 +5,7 @@
     </bl-select>
 </div>
 <div class="graph-container">
-    <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type">
+    <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type" (elDblClick)="handleDblClick($event)">
     </canvas>
 </div>
 <div class="info-overlay" *ngIf="(data.loading | async) && interactive">Loading...</div>

@@ -43,12 +43,13 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
     @HostListener("click", ["$event"])
     public handleClick(event: MouseEvent) {
         const el = this.chart.getElementAtEvent(event)[0];
+
         if (el) {
             this.elClick.emit(el);
         }
     }
 
-    @HostListener("dblClick", ["$event"])
+    @HostListener("dblclick", ["$event"])
     public handleDblClick(event: MouseEvent) {
         const el = this.chart.getElementAtEvent(event)[0];
         if (el) {
@@ -58,6 +59,7 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
     @HostListener("contextmenu", ["$event"])
     public handleContextMenu(event: MouseEvent) {
         const el = this.chart.getElementAtEvent(event)[0];
+
         if (el) {
             this.elContextMenu.emit(el);
         }
@@ -142,6 +144,9 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
     }
 
     private updateChartData(newDataValues: number[] | any[]): void {
+        if (newDataValues.length === 0) {
+            return;
+        }
         if (Array.isArray(newDataValues[0].data)) {
             this.chart.data.datasets.forEach((dataset: any, i: number) => {
                 dataset.data = newDataValues[i].data;
@@ -173,18 +178,15 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
             datasets = (this.datasets || datasets)
                 .map((elm: number, index: number) => {
                     const newElm: any = Object.assign({}, elm);
-                    if (this.colors && this.colors.length) {
-                        Object.assign(newElm, this.colors[index]);
-                    } else {
-                        Object.assign(newElm, getColors(this.chartType, index, newElm.data.length));
+                    if (!newElm.borderColor) {
+                        if (this.colors && this.colors.length) {
+                            Object.assign(newElm, this.colors[index]);
+                        } else {
+                            Object.assign(newElm, getColors(this.chartType, index, newElm.data.length));
+                        }
                     }
                     return newElm;
                 });
-        }
-
-        if (!datasets) {
-            throw new Error(`ng-charts configuration error,
-      data or datasets field are required to render char ${this.chartType}`);
         }
 
         return datasets;

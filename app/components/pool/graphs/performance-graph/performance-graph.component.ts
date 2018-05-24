@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, HostBinding, Input, OnChanges } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
+import { Router } from "@angular/router";
+import { NodesPerformanceMetric, PerformanceMetric } from "app/models/app-insights/metrics-result";
 import { NumberUtils } from "app/utils";
 import { PerformanceData } from "./performance-data";
 import "./performance-graph.scss";
@@ -10,6 +12,12 @@ export enum BatchUsageMetrics {
     memory = "memory",
     disk = "disk",
     network = "network",
+}
+
+export enum Aggregation {
+    Sum = "sum",
+    Avg = "avg",
+    Each = "each",
 }
 
 @Component({
@@ -36,7 +44,7 @@ export class PerformanceGraphComponent implements OnChanges {
 
     protected _metricSubs: Subscription[] = [];
 
-    constructor(protected changeDetector: ChangeDetectorRef) {
+    constructor(protected router: Router, protected changeDetector: ChangeDetectorRef) {
         this.updateOptions();
     }
 
@@ -94,14 +102,52 @@ export class PerformanceGraphComponent implements OnChanges {
         this.changeDetector.markForCheck();
     }
 
+    public handleDblClick(element) {
+        if (!this.interactive) { return; }
+
+        const dataset: any = this.datasets[element._datasetIndex];
+        if (dataset && dataset.nodeId) {
+            this.router.navigate(["/pools", this.data.pool.id, "nodes", dataset.nodeId]);
+        }
+    }
+
     protected _clearMetricSubs() {
         this._metricSubs.forEach(x => x.unsubscribe());
         this._metricSubs = [];
     }
 
     protected _getToolTip(tooltipItem: Chart.ChartTooltipItem) {
+        const dataset = this.datasets[tooltipItem.datasetIndex];
+        const label = dataset && dataset.label || "";
         return [
-            NumberUtils.prettyMagnitude(tooltipItem.yLabel as any, this.unit),
+            `${NumberUtils.prettyMagnitude(tooltipItem.yLabel as any, this.unit)} ${label}`,
         ];
+    }
+
+    protected _getDatasetsGroupedByNode(data: NodesPerformanceMetric, color?: string, label?: string) {
+        return Object.keys(data).map((nodeId) => {
+            const usages = data[nodeId];
+            let computedLabel = nodeId;
+            if (label) {
+                computedLabel = `${label} ${nodeId}`;
+            }
+            return {
+                data: [
+                    ...usages.map(x => this._dataPointFromMetric(x)),
+                ],
+                fill: false,
+                borderWidth: 1,
+                borderColor: color,
+                label: computedLabel,
+                nodeId: nodeId,
+            };
+        });
+    }
+
+    protected _dataPointFromMetric(metric: PerformanceMetric) {
+        return {
+            x: metric.time,
+            y: metric.value,
+        };
     }
 }
