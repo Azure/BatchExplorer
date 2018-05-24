@@ -62,6 +62,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     private _config: EditorConfig;
     private _editor: monaco.editor.IStandaloneCodeEditor;
     private _model: monaco.editor.IModel;
+    private _modelChangeSub: monaco.IDisposable;
 
     @Input() public set value(v) {
         if (v !== this._value) {
@@ -101,6 +102,14 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         if (this._editor) {
             this._editor.dispose();
         }
+        if (this._modelChangeSub) {
+            this._modelChangeSub.dispose();
+        }
+        if (this._model) {
+            this._model.dispose();
+        }
+        this._model = null;
+        this._editor = null;
         this._resizeDetector.uninstall(this.elementRef.nativeElement);
     }
 
@@ -130,7 +139,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
                 this._editor.addCommand(binding.key, binding.action, "");
             }
         }
-        this._model.onDidChangeContent((e) => {
+        this._modelChangeSub = this._model.onDidChangeContent((e) => {
             this.updateValue(this._model.getValue());
         });
     }

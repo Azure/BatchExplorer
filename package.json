@@ -151,7 +151,7 @@
     "mkdirp": "^0.5.1",
     "moment": "^2.20.1",
     "moment-duration-format": "^2.0.1",
-    "monaco-editor": "~0.10.1",
+    "monaco-editor": "~0.13.1",
     "mousetrap": "^1.6.0",
     "ms-rest-js": "~0.2.3",
     "node-fetch": "~1.7.3",
