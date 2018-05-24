@@ -136,6 +136,7 @@
     "chokidar": "~2.0.0",
     "commander": "~2.13.0",
     "d3": "~4.12.2",
+    "decode-uri-component": "~0.2.0",
     "download": "~6.2.5",
     "electron-updater": "~2.21.0",
     "element-resize-detector": "^1.1.13",
