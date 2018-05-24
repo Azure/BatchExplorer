@@ -1,11 +1,13 @@
 import { ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
-import { PerformanceGraphComponent } from "../performance-graph.component";
+import { Router } from "@angular/router";
 
 import {
     BatchPerformanceMetricType,
     NodesPerformanceMetric,
     PerformanceMetric,
 } from "app/models/app-insights/metrics-result";
+import { PerformanceGraphComponent } from "../performance-graph.component";
+
 import "./cpu-usage-graph.scss";
 
 @Component({
@@ -25,8 +27,8 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
     public lastCpuUsage: PerformanceMetric;
     public lastIndividualCpuUsage: PerformanceMetric[];
 
-    constructor(changeDetector: ChangeDetectorRef) {
-        super(changeDetector);
+    constructor(router: Router, changeDetector: ChangeDetectorRef) {
+        super(router, changeDetector);
     }
 
     public ngOnChanges(changes) {

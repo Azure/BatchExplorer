@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, HostBinding, Input, OnChanges } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
+import { Router } from "@angular/router";
 import { NodesPerformanceMetric, PerformanceMetric } from "app/models/app-insights/metrics-result";
 import { NumberUtils } from "app/utils";
 import { PerformanceData } from "./performance-data";
@@ -43,7 +44,7 @@ export class PerformanceGraphComponent implements OnChanges {
 
     protected _metricSubs: Subscription[] = [];
 
-    constructor(protected changeDetector: ChangeDetectorRef) {
+    constructor(protected router: Router, protected changeDetector: ChangeDetectorRef) {
         this.updateOptions();
     }
 
@@ -101,6 +102,15 @@ export class PerformanceGraphComponent implements OnChanges {
         this.changeDetector.markForCheck();
     }
 
+    public handleDblClick(element) {
+        if (!this.interactive) { return; }
+
+        const dataset: any = this.datasets[element._datasetIndex];
+        if (dataset && dataset.nodeId) {
+            this.router.navigate(["/pools", this.data.pool.id, "nodes", dataset.nodeId]);
+        }
+    }
+
     protected _clearMetricSubs() {
         this._metricSubs.forEach(x => x.unsubscribe());
         this._metricSubs = [];
@@ -129,6 +139,7 @@ export class PerformanceGraphComponent implements OnChanges {
                 borderWidth: 1,
                 borderColor: color,
                 label: computedLabel,
+                nodeId: nodeId,
             };
         });
     }

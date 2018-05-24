@@ -43,12 +43,13 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
     @HostListener("click", ["$event"])
     public handleClick(event: MouseEvent) {
         const el = this.chart.getElementAtEvent(event)[0];
+
         if (el) {
             this.elClick.emit(el);
         }
     }
 
-    @HostListener("dblClick", ["$event"])
+    @HostListener("dblclick", ["$event"])
     public handleDblClick(event: MouseEvent) {
         const el = this.chart.getElementAtEvent(event)[0];
         if (el) {
@@ -58,6 +59,7 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
     @HostListener("contextmenu", ["$event"])
     public handleContextMenu(event: MouseEvent) {
         const el = this.chart.getElementAtEvent(event)[0];
+
         if (el) {
             this.elContextMenu.emit(el);
         }

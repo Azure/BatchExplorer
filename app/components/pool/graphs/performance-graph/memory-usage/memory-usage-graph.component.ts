@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnChanges } from "@angular/core";
+import { Router } from "@angular/router";
 import {
     BatchPerformanceMetricType,
     NodesPerformanceMetric,
@@ -19,8 +20,8 @@ export class MemoryUsageGraphComponent extends PerformanceGraphComponent impleme
     public aggregation: Aggregation = Aggregation.Each;
     private _memoryAvailable: NodesPerformanceMetric = {};
 
-    constructor(changeDetector: ChangeDetectorRef) {
-        super(changeDetector);
+    constructor(router: Router, changeDetector: ChangeDetectorRef) {
+        super(router, changeDetector);
     }
 
     public ngOnChanges(changes) {

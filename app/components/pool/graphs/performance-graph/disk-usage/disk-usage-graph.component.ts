@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges } from "@angular/core";
-import { Aggregation, PerformanceGraphComponent } from "../performance-graph.component";
+import { Router } from "@angular/router";
 
 import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
-
 import { PoolUtils } from "app/utils";
+import { Aggregation, PerformanceGraphComponent } from "../performance-graph.component";
+
 import "./disk-usage-graph.scss";
 
 interface Disk {
@@ -25,8 +26,8 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
     public diskUsages: StringMap<StringMap<PerformanceMetric[]>> = {};
     public diskFree: StringMap<StringMap<PerformanceMetric[]>> = {};
 
-    constructor(changeDetector: ChangeDetectorRef) {
-        super(changeDetector);
+    constructor(router: Router, changeDetector: ChangeDetectorRef) {
+        super(router, changeDetector);
     }
 
     public ngOnChanges(changes) {

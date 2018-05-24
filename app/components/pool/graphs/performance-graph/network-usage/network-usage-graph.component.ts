@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnChanges } from "@angular/core";
+import { Router } from "@angular/router";
 import { PerformanceGraphComponent } from "../performance-graph.component";
 
 import { BatchPerformanceMetricType, NodesPerformanceMetric } from "app/models/app-insights/metrics-result";
@@ -15,8 +16,8 @@ export class NetworkUsageGraphComponent extends PerformanceGraphComponent implem
     public netWriteUsages: NodesPerformanceMetric = {};
     public showOverallUsage = true;
 
-    constructor(changeDetector: ChangeDetectorRef) {
-        super(changeDetector);
+    constructor(router: Router, changeDetector: ChangeDetectorRef) {
+        super(router, changeDetector);
     }
 
     public ngOnChanges(changes) {

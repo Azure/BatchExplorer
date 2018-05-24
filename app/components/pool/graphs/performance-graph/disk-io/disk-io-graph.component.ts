@@ -1,8 +1,9 @@
 import { ChangeDetectorRef, Component, OnChanges } from "@angular/core";
-import { PerformanceGraphComponent } from "../performance-graph.component";
+import { Router } from "@angular/router";
 
 import { BatchPerformanceMetricType, NodesPerformanceMetric } from "app/models/app-insights/metrics-result";
 import { NumberUtils } from "app/utils";
+import { PerformanceGraphComponent } from "../performance-graph.component";
 
 @Component({
     selector: "bl-disk-io-graph",
@@ -15,8 +16,8 @@ export class DiskIOGraphComponent extends PerformanceGraphComponent implements O
     public diskWriteUsages: NodesPerformanceMetric = {};
     public showOverallUsage = true;
 
-    constructor(changeDetector: ChangeDetectorRef) {
-        super(changeDetector);
+    constructor(router: Router, changeDetector: ChangeDetectorRef) {
+        super(router, changeDetector);
     }
 
     public ngOnChanges(changes) {
