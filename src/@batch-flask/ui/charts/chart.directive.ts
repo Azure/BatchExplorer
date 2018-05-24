@@ -114,7 +114,7 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
 
         options.hover = options.hover || {};
         if (!options.hover.onHover) {
-            options.hover.onHover = (active: any[]) => {
+            options.hover.onHover = (event: MouseEvent, active: any[]) => {
                 if (active && !active.length) {
                     return;
                 }
