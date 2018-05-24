@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MatMenuTrigger } from "@angular/material";
 import { Filter, FilterBuilder, Property, autobind } from "@batch-flask/core";
@@ -18,6 +18,7 @@ import "./data-home.scss";
 @Component({
     selector: "bl-data-home",
     templateUrl: "data-home.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataHomeComponent implements OnInit {
 
@@ -52,6 +53,7 @@ export class DataHomeComponent implements OnInit {
         private storageContainerService: StorageContainerService,
         private autoStorageService: AutoStorageService,
         private sidebarManager: SidebarManager,
+        private changeDetector: ChangeDetectorRef,
         private dialogService: DialogService) {
 
         this.containerTypePrefix.valueChanges.subscribe((prefix) => {
@@ -81,6 +83,7 @@ export class DataHomeComponent implements OnInit {
                             this.containerTypePrefix.setValue("");
                         }
                         this.storageAccountId = storageAccountId;
+                        this.changeDetector.markForCheck();
                     });
             }
         });
@@ -123,7 +126,9 @@ export class DataHomeComponent implements OnInit {
     }
 
     public updateDataSource(storageAccountId: string) {
-        this._navigateToStorageAccount(storageAccountId);
+        if (storageAccountId) {
+            this._navigateToStorageAccount(storageAccountId);
+        }
     }
 
     public trackType(index, type) {
@@ -139,6 +144,7 @@ export class DataHomeComponent implements OnInit {
         } else {
             this.filter = FilterBuilder.prop("id").startswith(query);
         }
+        this.changeDetector.markForCheck();
     }
 
     private _mergeFilter(quickSearch: Filter, advanced: Filter) {
