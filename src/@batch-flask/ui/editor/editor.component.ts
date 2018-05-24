@@ -31,7 +31,6 @@ const defaultConfig = {
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            // tslint:disable-next-line:no-forward-ref
             useExisting: forwardRef(() => EditorComponent),
             multi: true,
         }],
