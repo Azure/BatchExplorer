@@ -14,7 +14,7 @@ sudo: false
 #       - bsdtar
 
 node_js:
-  - 9.6.1
+  - 10.2.1
 python:
   - "3.6"
 
@@ -34,8 +34,8 @@ matrix:
         - python3 --version
         - which python
         - npm config set python python2.7
-        - nvm install 9.6.1
-        - nvm use 9.6.1
+        - nvm install 10.2.1
+        - nvm use 10.2.1
 
     - language: node_js
       os: linux
