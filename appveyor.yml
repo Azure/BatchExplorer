@@ -43,3 +43,4 @@ artifacts:
     name: Batchlabs-windows-setup.exe
   - path: release\*win.zip
     name: Batchlabs-windows.zip
+    
