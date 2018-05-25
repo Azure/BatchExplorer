@@ -51,6 +51,7 @@ describe("FileOrDirectoryPickerComponent", () => {
         ]);
         fixture.detectChanges();
         tick();
+        fixture.detectChanges();
 
         expect(testComponent.paths.valid).toBe(true);
         expect(testComponent.paths.status).toBe("VALID");
@@ -64,12 +65,11 @@ describe("FileOrDirectoryPickerComponent", () => {
         ]);
         fixture.detectChanges();
         tick();
+        fixture.detectChanges();
 
         expect(testComponent.paths.valid).toBe(false);
         expect(testComponent.paths.status).toBe("INVALID");
-
-        expect(de.query(By.css(".danger")).nativeElement.textContent)
-            .toContain(`Path "/invalid" is not found on this computer.`);
+        expect(de.nativeElement.textContent).toContain(`Path "/invalid" is not found on this computer.`);
     }));
 
     it("Validate at least one invalid paths", fakeAsync(() => {
@@ -79,6 +79,7 @@ describe("FileOrDirectoryPickerComponent", () => {
         ]);
         fixture.detectChanges();
         tick();
+        fixture.detectChanges();
 
         expect(testComponent.paths.valid).toBe(false);
         expect(testComponent.paths.status).toBe("INVALID");
