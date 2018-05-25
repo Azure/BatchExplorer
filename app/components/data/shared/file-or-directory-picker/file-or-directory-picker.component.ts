@@ -13,9 +13,7 @@ import {
     FormBuilder,
     FormControl,
     NG_ASYNC_VALIDATORS,
-    NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
-    Validator,
 } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
 
