@@ -14,7 +14,7 @@ class TestComponent {
     public paths = new FormControl([]);
 }
 
-fdescribe("FileOrDirectoryPickerComponent", () => {
+describe("FileOrDirectoryPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
