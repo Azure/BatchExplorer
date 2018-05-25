@@ -1,5 +1,7 @@
 const webpackConfig = require("./config/webpack.config.test");
 
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true";
+
 // Only enable coverage if env is defined(So we don't enable it in watch mode as it duplicate logs)
 const coverageReporters = process.env.COVERAGE ? ["coverage", "remap-coverage"] : [];
 // Karma config for testing the code running the browser environemnt.
