@@ -50,6 +50,7 @@ async function startApplication(batchLabsApp: BatchLabsApplication) {
 }
 
 export async function startBatchLabs() {
+    process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
     localStorage.load();
     const batchLabsApp = new BatchLabsApplication(autoUpdater);
     setupSingleInstance(batchLabsApp);
