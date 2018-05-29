@@ -1,6 +1,10 @@
+import * as jschardet from "jschardet";
+
 const ZERO_BYTE_DETECTION_BUFFER_MAX_LEN = 512; // number of bytes to look at to decide about a file being binary or not
-const NO_GUESS_BUFFER_MAX_LEN = 512; 			// when not auto guessing the encoding, small number of bytes are enough
-const AUTO_GUESS_BUFFER_MAX_LEN = 512 * 8; 		// with auto guessing we want a lot more content to be read for guessing
+// const NO_GUESS_BUFFER_MAX_LEN = 512; 			// when not auto guessing the encoding, small number of bytes are enough
+// const AUTO_GUESS_BUFFER_MAX_LEN = 512 * 8; 		// with auto guessing we want a lot more content to be read for guessing
+const MINIMUM_THRESHOLD = 0.2;
+const IGNORE_ENCODINGS = ["ascii", "utf-8", "utf-16", "utf-32"];
 
 export enum Encoding {
     UTF8 = "utf-8",
@@ -27,7 +31,7 @@ export class EncodingUtils {
         return 0;
     }
 
-    public static detectEncodingFromBuffer({ buffer, bytesRead }, autoGuessEncoding?: boolean): EncodingResult {
+    public static detectEncodingFromBuffer({ buffer, bytesRead }, autoGuessEncoding: boolean = true): EncodingResult {
         let encoding = EncodingUtils.detectEncodingByBOMFromBuffer(buffer, bytesRead);
         // Detect 0 bytes to see if file is binary or UTF-16 LE/BE
         // unless we already know that this file has a UTF-16 encoding
@@ -79,19 +83,18 @@ export class EncodingUtils {
         }
 
         // Auto guess encoding if configured
-        // if (autoGuessEncoding && !seemsBinary && !encoding) {
-        //     return guessEncodingByBuffer(buffer.slice(0, bytesRead)).then(encoding => {
-        //         return {
-        //             seemsBinary: false,
-        //             encoding,
-        //         };
-        //     });
-        // }
+        if (autoGuessEncoding && !seemsBinary && !encoding) {
+            const encoding = EncodingUtils.guessEncodingByBuffer(buffer.slice(0, bytesRead));
+            return {
+                seemsBinary: false,
+                encoding,
+            };
+        }
 
         return { seemsBinary, encoding };
     }
 
-    public static detectEncodingByBOMFromBuffer(buffer: NodeBuffer, bytesRead: number): Encoding {
+    public static detectEncodingByBOMFromBuffer(buffer: any, bytesRead: number): Encoding {
         if (!buffer || bytesRead < 2) {
             return null;
         }
@@ -121,5 +124,24 @@ export class EncodingUtils {
         }
 
         return null;
+    }
+
+    public static guessEncodingByBuffer(buffer): Encoding {
+        jschardet.Constants.MINIMUM_THRESHOLD = MINIMUM_THRESHOLD;
+
+        const guessed = jschardet.detect(buffer);
+        if (!guessed || !guessed.encoding) {
+            return null;
+        }
+
+        const enc = guessed.encoding.toLowerCase();
+
+        // Ignore encodings that cannot guess correctly
+        // (http://chardet.readthedocs.io/en/latest/supported-encodings.html)
+        if (0 <= IGNORE_ENCODINGS.indexOf(enc)) {
+            return null;
+        }
+
+        return guessed.encoding;
     }
 }

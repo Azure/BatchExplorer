@@ -1,5 +1,6 @@
 import { BlobService } from "azure-storage";
 
+import { EncodingUtils } from "@batch-flask/utils";
 import { BlobStorageResult, SharedAccessPolicy, StorageRequestOptions } from "./models";
 
 export interface ListBlobOptions {
@@ -136,14 +137,36 @@ export class BlobStorageClientProxy {
      */
     public getBlobContent(container: string, blob: string, options?: StorageRequestOptions) {
         return new Promise((resolve, reject) => {
-            this.client.getBlobToText(container, blob, options, (error, text, blockBlob, response) => {
+            const chunks = [];
+            let encoding = null;
+            const stream = this.client.createReadStream(container, blob, options, (error, text, response) => {
                 if (error) {
                     reject(error);
-                } else {
-                    resolve({
-                        content: text,
-                    });
                 }
+            });
+            stream.on("data", (chunk) => {
+                chunks.push(chunk);
+                if (!encoding) {
+                    const result = EncodingUtils.detectEncodingFromBuffer({ buffer: chunk, bytesRead: chunk.length });
+                    if (result) {
+                        encoding = result.encoding;
+                    }
+                    console.log("Encoding result is", result);
+                }
+            });
+
+            stream.on("end", () => {
+                console.log("stream finish", chunks);
+                const buffer = Buffer.concat(chunks);
+                if (encoding) {
+                    console.log("Herere", new TextDecoder(encoding).decode(buffer));
+                    resolve({ content: new TextDecoder(encoding).decode(buffer) });
+                }
+                resolve({ content: buffer.toString() });
+            });
+
+            stream.on("error", (error) => {
+                reject(error);
             });
         });
     }
