@@ -131,18 +131,22 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     /**
      * Show context menu when right click on a folder or a file
      */
-    public showContextMenu(treeRow: TreeRow) {
-        const items = [];
-        items.push(new ContextMenuItem("Download", () => this.download(treeRow)));
+    public showContextMenu(event: Event, treeRow?: TreeRow) {
+        event.stopPropagation();
 
-        if (treeRow.isDirectory) {
-            items.push(new ContextMenuItem("Refresh", () => this.refresh(treeRow.path)));
+        const items = [];
+        if (treeRow) {
+            items.push(new ContextMenuItem("Download", () => this.download(treeRow)));
+        }
+
+        if (!treeRow || treeRow.isDirectory) {
+            items.push(new ContextMenuItem("Refresh", () => this.refresh(treeRow && treeRow.path)));
             if (this.canDropExternalFiles) {
                 items.push(new ContextMenuItem("New folder", () => this.newVirtualFolder(treeRow)));
             }
         }
 
-        if (this.fileNavigator.canDeleteFile) {
+        if (treeRow && this.fileNavigator.canDeleteFile) {
             items.push(new ContextMenuItem("Delete", () => this.deleteFiles.emit({
                 path: treeRow.path,
                 isDirectory: treeRow.isDirectory,
@@ -297,12 +301,15 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         DragUtils.allowDrop(event, this.canDropExternalFiles);
     }
 
-    public newVirtualFolder(treeRow: TreeRow) {
+    public newVirtualFolder(treeRow?: TreeRow) {
+        const displayPath = treeRow ? treeRow.path : "/";
         this.dialog.prompt("Create a new folder?", {
-            description: `Folder will be created under ${treeRow.path}.`
+            description: `Folder will be created under ${displayPath}.`
                 + `Note this is a virtual folder and it will not exist until you drop files`,
             prompt: (value: string) => {
-                this.expand(treeRow);
+                if (treeRow) {
+                    this.expand(treeRow);
+                }
                 const path = treeRow ? treeRow.path : null;
                 this.fileNavigator.addVirtualFolder(CloudPathUtils.join(path, value));
                 return Observable.of(null);
