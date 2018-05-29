@@ -65,6 +65,18 @@ describe("GaugeComponent", () => {
         expect(chart.attr("transform")).toBe("translate(75, 75)");
     });
 
+    it("should not overflow if value is more than max", () => {
+        testComponent.value = 150;
+        fixture.detectChanges();
+        expect(component.percent).toEqual(1);
+    });
+
+    it("should be less than 0 if value is less than min", () => {
+        testComponent.value = -10;
+        fixture.detectChanges();
+        expect(component.percent).toEqual(0);
+    });
+
     describe("Labels", () => {
         let minLabel;
         let maxLabel;
