@@ -117,20 +117,21 @@ export class FileProxy {
     private async _readContent(response: Response): Promise<string> {
         const reader = response.body.getReader();
 
-        let text = "";
+        const chunks = [];
         let result;
         while (true) {
             result = await reader.read();
+            console.log("Result", result);
             if (result.done) {
-                return text;
+                const buffer = Buffer.concat(chunks);
+                const { encoding } = await EncodingUtils.detectEncodingFromBuffer({
+                    buffer,
+                    bytesRead: buffer.length,
+                });
+                console.log("Result", encoding);
+                return new TextDecoder(encoding || "utf-8").decode(buffer);
             }
-            const mimeType = EncodingUtils.detectEncodingFromBuffer({
-                buffer: new Buffer(result.value.buffer),
-                bytesRead: result.value.length,
-            });
-            console.log("Result", result.value.buffer, result.value.length, mimeType);
-            const encoding = mimeType.encoding || "utf-8";
-            text += new TextDecoder(encoding).decode(result.value);
+            chunks.push(new Buffer(result.value.buffer));
         }
     }
 
