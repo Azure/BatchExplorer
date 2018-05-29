@@ -9,15 +9,13 @@ import { FileGroupPickerComponent } from "./file-group-picker";
 import { FileGroupSasComponent } from "./file-group-sas";
 import { FileGroupsPickerComponent } from "./file-groups-picker";
 import { FileOrDirectoryPickerComponent } from "./file-or-directory-picker";
+import { JobIdComponent } from "./job-id/job-id.component";
 import { StorageAccountPickerComponent } from "./storage-account-picker";
 
 const components = [
-    FileGroupPickerComponent, FileGroupSasComponent, FileGroupsPickerComponent,
-    CloudFilePickerComponent, CloudFilePickerDialogComponent,
-    StorageErrorDisplayComponent,
-    BlobContainerPickerComponent,
-    StorageAccountPickerComponent,
-    FileOrDirectoryPickerComponent,
+    BlobContainerPickerComponent, CloudFilePickerComponent, CloudFilePickerDialogComponent,
+    FileGroupPickerComponent, FileGroupSasComponent, FileGroupsPickerComponent, FileOrDirectoryPickerComponent,
+    JobIdComponent, StorageAccountPickerComponent, StorageErrorDisplayComponent,
 ];
 
 @NgModule({
