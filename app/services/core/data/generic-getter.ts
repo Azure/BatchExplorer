@@ -1,7 +1,7 @@
 import { Type } from "@angular/core";
 
-import { ServerError } from "app/models";
-import { Constants, exists, log } from "app/utils";
+import { HttpCode, ServerError } from "@batch-flask/core";
+import { exists, log } from "app/utils";
 import { DataCache } from "../data-cache";
 
 export interface GenericGetterConfig<TEntity, TParams> {
@@ -31,7 +31,7 @@ export class GenericGetter<TEntity, TParams> {
 
     constructor(public type: Type<TEntity>, protected config: GenericGetterConfig<TEntity, TParams>) {
         this.getCache = config.cache;
-        this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [Constants.HttpCode.NotFound];
+        this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [HttpCode.NotFound];
     }
 
     protected processError(error: ServerError) {
@@ -46,6 +46,14 @@ export class GenericGetter<TEntity, TParams> {
             return this.config.onError(error);
         }
         return error;
+    }
+
+    protected _createItem(data: any, params: any): TEntity {
+        if (data instanceof this.type) {
+            return data;
+        } else {
+            return new this.type({ ...params as any, ...data });
+        }
     }
 
 }

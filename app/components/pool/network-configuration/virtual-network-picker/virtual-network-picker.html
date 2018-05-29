@@ -1,0 +1,34 @@
+<div *ngIf="virtualNetworks && virtualNetworks.length > 0">
+    <table class="noselect" cellspacing="0" cellpadding="0">
+        <thead>
+            <tr>
+                <th>Virtual Network</th>
+                <th>Subnet</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <bl-select [formControl]="virtualNetworkControl">
+                        <bl-option *ngFor="let virtualNetwork of virtualNetworks;trackBy: trackVirtualNetwork" [value]="virtualNetwork.id" label="({{ virtualNetwork.category }}) {{ virtualNetwork.name }}">
+                        </bl-option>
+                    </bl-select>
+                </td>
+                <td>
+                    <bl-select [formControl]="subnetControl">
+                        <ng-container *ngIf="subnets">
+                            <bl-option *ngFor="let subnet of subnets;trackBy: trackSubnet" [value]="subnet.id" [label]="subnet.name">
+                            </bl-option>
+                        </ng-container>
+                    </bl-select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div>
+        Virtual network subnet which the compute nodes of the pool will join: {{ subnet }}
+    </div>
+</div>
+<div *ngIf="virtualNetworks && virtualNetworks.length === 0">
+    There are no virtual networks available under subscription '{{subscriptionId}}' and location '{{location}}'.
+</div>

@@ -44,11 +44,7 @@ export class PoolProxy {
      * @param options: Optional Parameters.
      */
     public resize(poolId: string, target: any, options?: any): Promise<any> {
-        let resizeBody: any = {};
-        resizeBody.targetDedicatedNodes = Number(target.targetDedicatedNodes);
-        resizeBody.targetLowPriorityNodes = Number(target.targetLowPriorityNodes);
-
-        return this.client.pool.resize(poolId, resizeBody, wrapOptions(options));
+        return this.client.pool.resize(poolId, target, wrapOptions(options));
     }
 
     public patch(poolId: string, attributes: any, options?: any): Promise<any> {
@@ -82,6 +78,6 @@ export class PoolProxy {
     }
 
     public evaluateAutoScale(poolId: string, formula: string, options?: any): Promise<any> {
-        return this.client.pool.evaluateAutoScale(poolId, formula, wrapOptions(options));
+        return this.client.pool.evaluateAutoScale(poolId, { autoScaleFormula: formula }, wrapOptions(options));
     }
 }

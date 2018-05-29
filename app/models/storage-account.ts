@@ -1,4 +1,4 @@
-import { ArmRecord, ArmRecordAttributes, Model, Prop, Record } from "app/core";
+import { ArmRecord, ArmRecordAttributes, Model, Prop, Record } from "@batch-flask/core";
 
 interface StorageAccountPropertiesAttributes {
     creationTime: Date;

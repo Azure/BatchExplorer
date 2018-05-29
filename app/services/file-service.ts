@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import * as path from "path";
 
-import { File, ServerError } from "app/models";
-import { Constants, exists } from "app/utils";
+import { HttpCode, ServerError } from "@batch-flask/core";
+import { exists } from "@batch-flask/utils";
+import { File } from "app/models";
 import { Observable } from "rxjs";
 import { BatchClientService } from "./batch-client.service";
 import {
@@ -18,7 +19,7 @@ export interface NodeFileListParams {
 }
 
 export interface NodeFileParams extends NodeFileListParams {
-    filename: string;
+    name: string;
 }
 
 export interface TaskFileListParams {
@@ -27,7 +28,7 @@ export interface TaskFileListParams {
 }
 
 export interface TaskFileParams extends TaskFileListParams {
-    filename: string;
+    name: string;
 }
 
 export interface FileContentResult {
@@ -48,8 +49,8 @@ export interface NaviagateTaskFileOptions {
 
 // List of error we don't want to log for files
 export const fileIgnoredErrors = [
-    Constants.HttpCode.NotFound,
-    Constants.HttpCode.Conflict,
+    HttpCode.NotFound,
+    HttpCode.Conflict,
 ];
 
 @Injectable()
@@ -57,10 +58,10 @@ export class FileService extends ServiceBase {
     private _basicProperties: string = "name, url";
     private _nodeFilecache = new TargetedDataCache<NodeFileListParams, File>({
         key: ({ poolId, nodeId }) => poolId + "/" + nodeId,
-    }, "url");
+    }, "name");
     private _taskFileCache = new TargetedDataCache<TaskFileListParams, File>({
         key: ({ jobId, taskId }) => jobId + "/" + taskId,
-    }, "url");
+    }, "name");
 
     private _taskFileGetter: BatchEntityGetter<File, TaskFileParams>;
     private _nodeFileGetter: BatchEntityGetter<File, NodeFileParams>;
@@ -72,14 +73,14 @@ export class FileService extends ServiceBase {
 
         this._taskFileGetter = new BatchEntityGetter(File, this.batchService, {
             cache: (params) => this.getTaskFileCache(params),
-            getFn: (client, { jobId, taskId, filename }) =>
-                client.file.getTaskFileProperties(jobId, taskId, filename),
+            getFn: (client, { jobId, taskId, name }) =>
+                client.file.getTaskFileProperties(jobId, taskId, name),
         });
 
         this._nodeFileGetter = new BatchEntityGetter(File, this.batchService, {
             cache: (params) => this.getNodeFileCache(params),
-            getFn: (client, { poolId, nodeId, filename }) =>
-                client.file.getComputeNodeFileProperties(poolId, nodeId, filename),
+            getFn: (client, { poolId, nodeId, name }) =>
+                client.file.getComputeNodeFileProperties(poolId, nodeId, name),
         });
 
         this._taskFileListGetter = new BatchListGetter(File, this.batchService, {
@@ -124,28 +125,6 @@ export class FileService extends ServiceBase {
         return this._taskFileCache.getCache(params);
     }
 
-    // public listFromComputeNode(
-    //     initialPoolId: string,
-    //     initialNodeId: string,
-    //     recursive = true,
-    //     initialOptions: any = {},
-    //     onError?: (error: ServerError) => boolean): RxListProxy<NodeFileListParams, File> {
-    //     return new RxBatchListProxy<NodeFileListParams, File>(File, this.batchService, {
-    //         cache: (params) => this.getNodeFileCache(params),
-    //         proxyConstructor: (client, params, options) => {
-    //             const batchOptions = { ...options };
-    //             if (options.folder) {
-    //                 batchOptions.filter = `startswith(name, '${options.folder}')`;
-    //             }
-    //             return client.file.listFromComputeNode(params.poolId, params.nodeId, recursive, batchOptions);
-    //         },
-    //         initialParams: { poolId: initialPoolId, nodeId: initialNodeId },
-    //         initialOptions,
-    //         logIgnoreError: fileIgnoredErrors,
-    //         onError: onError,
-    //     });
-    // }
-
     public listFromNodeView(poolId: string, nodeId: string, options: ListOptionsAttributes = {}) {
         const view = new ListView({
             cache: (params) => this.getNodeFileCache(params),
@@ -169,14 +148,16 @@ export class FileService extends ServiceBase {
     public navigateNodeFiles(poolId: string, nodeId: string, config: NaviagateNodeFileConfig = {}) {
         return new FileNavigator({
             basePath: config.basePath,
-            loadPath: (folder) => this.listFromNodeView(poolId, nodeId, { recursive: false, folder }),
+            params: { poolId, nodeId },
+            getter: this._nodeFileListGetter,
             getFile: (filename: string) => this.fileFromNode(poolId, nodeId, filename),
         });
     }
 
     public navigateTaskFile(jobId: string, taskId: string, options: NaviagateTaskFileOptions) {
         return new FileNavigator({
-            loadPath: (folder) => this.listFromTaskView(jobId, taskId, { recursive: false, folder }),
+            params: { jobId, taskId },
+            getter: this._taskFileListGetter,
             getFile: (filename: string) => this.fileFromTask(jobId, taskId, filename),
             onError: options.onError,
         });
@@ -211,9 +192,9 @@ export class FileService extends ServiceBase {
     public getFilePropertiesFromComputeNode(
         poolId: string,
         nodeId: string,
-        filename: string,
+        name: string,
         options: any = {}): Observable<File> {
-        return this._nodeFileGetter.fetch({ poolId, nodeId, filename });
+        return this._nodeFileGetter.fetch({ poolId, nodeId, name });
     }
 
     public fileFromTask(jobId: string, taskId: string, filename: string): FileLoader {
@@ -247,8 +228,8 @@ export class FileService extends ServiceBase {
     public getFilePropertiesFromTask(
         jobId: string,
         taskId: string,
-        filename: string,
+        name: string,
         options: any = {}): Observable<File> {
-        return this._taskFileGetter.fetch({ jobId, taskId, filename });
+        return this._taskFileGetter.fetch({ jobId, taskId, name });
     }
 }

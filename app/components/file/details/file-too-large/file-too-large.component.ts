@@ -1,7 +1,7 @@
-import { Component, Input } from "@angular/core";
-import { ElectronRemote, ElectronShell } from "app/services";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
+import { ElectronRemote, ElectronShell } from "@batch-flask/ui";
 
-import { NotificationService } from "app/components/base/notifications";
+import { NotificationService } from "@batch-flask/ui/notifications";
 import { File } from "app/models";
 import { FileLoader } from "app/services/file";
 import "./file-too-large.scss";
@@ -9,24 +9,25 @@ import "./file-too-large.scss";
 @Component({
     selector: "bl-file-too-large",
     templateUrl: "file-too-large.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileTooLargeComponent {
-    @Input()
-    public file: File;
+    @Input() public file: File;
 
-    @Input()
-    public fileLoader: FileLoader;
+    @Input() public fileLoader: FileLoader;
 
     public downloading = false;
 
     constructor(
         private shell: ElectronShell,
         private remote: ElectronRemote,
+        private changeDetector: ChangeDetectorRef,
         private notificationService: NotificationService,
     ) { }
 
     public download() {
         this.downloading = true;
+        this.changeDetector.markForCheck();
         const dialog = this.remote.dialog;
         const pathToFile = dialog.showSaveDialog({
             buttonLabel: "Download",
@@ -39,6 +40,7 @@ export class FileTooLargeComponent {
         }
         this.fileLoader.download(pathToFile).subscribe(() => {
             this.downloading = false;
+            this.changeDetector.markForCheck();
 
             this.shell.showItemInFolder(pathToFile);
             this.notificationService.success("Download complete!", `File was saved locally at ${pathToFile}`);
@@ -47,9 +49,12 @@ export class FileTooLargeComponent {
 
     public open() {
         this.downloading = true;
+        this.changeDetector.markForCheck();
 
         this.fileLoader.cache().subscribe((pathToFile) => {
             this.downloading = false;
+            this.changeDetector.markForCheck();
+
             this.shell.openItem(pathToFile);
         });
     }

@@ -1,0 +1,24 @@
+
+@import "app/styles/variables";
+
+bl-pinned-dropdown {
+    $ddl-width: 280px;
+
+    .fa {
+        font-size: 1.2em;
+        padding-right: 5px;
+
+        &.fa-tasks, &.fa-database, &.fa-file-archive-o, &.fa-question, &.fa-cloud-upload, &.fa-certificate, &.fa-calendar {
+            color: map-get($primary, 300);
+        }
+    }
+
+    .main {
+        width: calc(#{$ddl-width} - 65px);
+        padding-right: 4px;
+
+        .type {
+            font-size: 10px;
+        }
+    }
+}

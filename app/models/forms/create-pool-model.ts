@@ -1,7 +1,7 @@
 import * as moment from "moment";
 
-import { NodeFillType } from "app/models";
-import { ContainerRegistry, PoolCreateDto, UserAccountDto } from "app/models/dtos";
+import { CertificateReference, InboundNATPool, NodeFillType } from "app/models";
+import { ContainerRegistry, MetaDataDto, PoolCreateDto, UserAccountDto } from "app/models/dtos";
 
 export enum PoolOsSources {
     PaaS,
@@ -16,9 +16,10 @@ export interface PoolOSPickerModel {
     virtualMachineConfiguration: {
         nodeAgentSKUId: string,
         imageReference: {
-            publisher: string,
-            offer: string,
-            sku: string,
+            publisher?: string,
+            offer?: string,
+            sku?: string,
+            virtualMachineImageId?: string,
         },
         containerConfiguration?: {
             type: string,
@@ -55,11 +56,15 @@ export interface CreatePoolModel {
     taskSchedulingPolicy: NodeFillType;
     appLicenses: string[];
     appPackages: PackageReferenceModel[];
+    inboundNATPools: InboundNATPool[];
+    subnetId: string;
+    certificateReferences: CertificateReference[];
+    metadata: MetaDataDto[];
 }
 
 export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
     const outputScale: PoolScaleModel = output.scale || {} as any;
-    let data: any = {
+    const data: any = {
         id: output.id,
         displayName: output.displayName,
         vmSize: output.vmSize,
@@ -71,6 +76,7 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         },
         startTask: output.startTask,
         userAccounts: output.userAccounts,
+        metadata: output.metadata,
     };
 
     if (outputScale.enableAutoScale) {
@@ -97,6 +103,25 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
 
     if (output.appPackages && output.appPackages.length > 0) {
         data.applicationPackageReferences = output.appPackages;
+    }
+
+    if (output.inboundNATPools && output.inboundNATPools.length > 0) {
+        data.networkConfiguration = {
+            endpointConfiguration: {
+                inboundNATPools: output.inboundNATPools,
+            },
+        };
+    }
+
+    if (output.subnetId) {
+        data.networkConfiguration = {
+            subnetId: output.subnetId,
+            ...data.networkConfiguration,
+        };
+    }
+
+    if (output.certificateReferences) {
+        data.certificateReferences = output.certificateReferences;
     }
     return new PoolCreateDto(data);
 }
@@ -131,5 +156,10 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         userAccounts: pool.userAccounts || [],
         appLicenses: pool.applicationLicenses || [],
         appPackages: pool.applicationPackageReferences,
+        inboundNATPools: pool.networkConfiguration && pool.networkConfiguration.endpointConfiguration ?
+            pool.networkConfiguration.endpointConfiguration.inboundNATPools : [],
+        subnetId: pool.networkConfiguration && pool.networkConfiguration.subnetId,
+        certificateReferences: pool.certificateReferences || [],
+        metadata: pool.metadata,
     };
 }

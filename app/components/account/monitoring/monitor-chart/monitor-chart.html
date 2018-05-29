@@ -1,0 +1,37 @@
+<ng-container *ngIf="!preview">
+    <div class="header">
+        <h2>
+            {{ title }}
+            <bl-clickable (do)="openTimeFramePicker($event)" class="timeframe-picker">
+                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                <span>&nbsp;{{timeFrame}}</span>
+            </bl-clickable>
+        </h2>
+    </div>
+    <ng-container *ngIf="isChartReady">
+        <div class="chart-container">
+            <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type" [colors]="colors"></canvas>
+        </div>
+        <div class="legend">
+            <div class="legend-item" *ngFor="let dataset of datasets;trackBy: trackDataSet;let index=index">
+                <div class="value">
+                    {{total[index]}}
+                </div>
+                <div class="label" [style.color]="colors[index]?.backgroundColor">
+                    {{dataset.label}}
+                </div>
+            </div>
+        </div>
+        <div class="interval-label" *ngIf="interval">
+            Aggregated over {{interval.humanize()}} interval
+        </div>
+    </ng-container>
+    <div *ngIf="chartError">
+        There is an error occurred when loading this chart
+    </div>
+    <bl-loading [status]="loadingStatus"></bl-loading>
+</ng-container>
+
+<div class="monitor-chart-preview" *ngIf="isChartReady && preview">
+   <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type" [colors]="colors"></canvas>
+</div>

@@ -5,6 +5,7 @@ import { ExitOptions, Job, NameValuePair, Task } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
 import { JobAction, TaskFailureAction } from "app/models/job-action";
 
+// tslint:disable:trackBy-function
 @Component({
     selector: "bl-task-configuration",
     templateUrl: "task-configuration.html",

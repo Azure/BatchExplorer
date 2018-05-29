@@ -1,27 +1,31 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Set } from "immutable";
-import { Subscription } from "rxjs";
 
-import { ListAndShowLayoutComponent } from "app/components/base/list-and-show-layout";
+import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
+import { BrowseLayoutComponent, BrowseLayoutConfig } from "@batch-flask/ui/browse-layout";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { Subscription } from "app/models";
 import { SubscriptionService } from "app/services";
-import { Filter, FilterBuilder } from "app/utils/filter-builder";
+import { BatchAccountCreateComponent } from "../action/add";
 
 @Component({
     selector: "bl-account-home",
     templateUrl: "account-home.html",
 })
 export class AccountHomeComponent implements OnInit, OnDestroy {
+    public layoutConfig: BrowseLayoutConfig = {
+        quickSearchField: "name",
+    };
 
     @ViewChild("layout")
-    public layout: ListAndShowLayoutComponent;
+    public layout: BrowseLayoutComponent;
 
     public subscriptionIds = new FormControl();
 
-    private _subs: Subscription[] = [];
+    private _subs = [];
 
-    constructor(public subscriptionService: SubscriptionService) {
-
+    constructor(public subscriptionService: SubscriptionService, private sidebarManager: SidebarManager) {
     }
 
     public ngOnInit() {
@@ -38,6 +42,15 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._subs.forEach(x => x.unsubscribe());
+    }
+
+    public trackByFn(index, subscription: Subscription) {
+        return subscription.id;
+    }
+
+    @autobind()
+    public addBatchAccount() {
+        this.sidebarManager.open("add-batch-account", BatchAccountCreateComponent);
     }
 
     private _buildSubscriptionFilter(subscriptionIds: Set<string>): Filter {

@@ -1,0 +1,11 @@
+<bl-editable-table [formControl]="paths">
+    <bl-editable-table-column name="path" ng-readonly="true">File or directory path</bl-editable-table-column>
+</bl-editable-table>
+<div class="danger" *ngIf="invalidPath !== null">
+    Path "{{invalidPath}}" is not found on this computer.
+</div>
+<div class="help">{{dragMessage}}</div>
+<div *ngIf="isDraging" class="drop-overlay">
+    <i class="fa fa-upload"></i>
+    <span class="message">Drop files or folders here</span>
+</div>

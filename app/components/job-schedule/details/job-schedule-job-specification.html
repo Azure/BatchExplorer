@@ -1,0 +1,159 @@
+<bl-entity-configuration [value]="job">
+    <bl-property-list>
+        <bl-property-group label="General" class="wide">
+            <bl-text-property label="Display name" [value]="decorator.displayName"></bl-text-property>
+            <bl-link-property *ngIf="poolInfo?.poolId" label="Pool" [value]="poolInfo.poolId" [link]="['/pools/', poolInfo.poolId]"></bl-link-property>
+            <bl-text-property label="Priority" [value]="decorator.priority"></bl-text-property>
+            <bl-bool-property label="Task dependencies" [value]="decorator.usesTaskDependencies"></bl-bool-property>
+            <bl-text-property label="When all tasks complete" [value]="decorator.onAllTasksComplete"></bl-text-property>
+            <bl-text-property label="When a task fails" [value]="decorator.onTaskFailure"></bl-text-property>
+        </bl-property-group>
+
+        <bl-property-group label="Constraints" class="wide" [collapsed]="true">
+            <bl-text-property label="Max task retry count" [value]="constraints.maxTaskRetryCount"></bl-text-property>
+            <bl-text-property label="Max wall-clock time" [value]="constraints.maxWallClockTime"></bl-text-property>
+        </bl-property-group>
+
+        <bl-property-group label="Environment settings" class="wide" [collapsed]="true">
+            <div collapsed-preview>
+                <span>{{environmentSettings?.size}} environment settings</span>
+            </div>
+            <bl-text-property *ngFor="let setting of environmentSettings" label="{{setting.name}}" [value]="setting.value"></bl-text-property>
+            <bl-no-item [itemCount]="environmentSettings.size" [slimline]="true">
+                <span no-filter>This job contains no environment settings</span>
+            </bl-no-item>
+        </bl-property-group>
+
+        <bl-property-group *ngIf="job.jobManagerTask" label="Job manager task" class="wide" [collapsed]="true">
+            <div collapsed-preview></div>
+            <bl-text-property label="ID" [value]="managerTask.id"></bl-text-property>
+            <bl-text-property label="Display name" [value]="managerTask.displayName" *ngIf="managerTask.displayName"></bl-text-property>
+            <bl-text-property label="Command line" [value]="managerTask.commandLine" [wrap]="true"></bl-text-property>
+            <bl-text-property label="Max task retry count" [value]="managerTask.constraints.maxTaskRetryCount"></bl-text-property>
+            <bl-text-property label="Max wall-clock time" [value]="managerTask.constraints.maxWallClockTime"></bl-text-property>
+            <bl-text-property label="Retention time" [value]="managerTask.constraints.retentionTime"></bl-text-property>
+            <bl-bool-property label="Kill job on completion" [value]="managerTask.killJobOnCompletion" yesNo="true"></bl-bool-property>
+            <bl-bool-property label="Run elevated" [value]="managerTask.runElevated" yesNo="true"></bl-bool-property>
+            <bl-bool-property label="Run exclusive" [value]="managerTask.runExclusive" yesNo="true"></bl-bool-property>
+            <bl-table-property *ngIf="managerTask.applicationPackageReferences.length > 0" label="Package references">
+                <bl-table-property-header>
+                    <div tp-column>Application</div>
+                    <div tp-column>Version</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let package of managerTask.applicationPackageReferences">
+                    <bl-tp-cell [value]="package.applicationId"></bl-tp-cell>
+                    <bl-tp-cell [value]="package.version"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+            <bl-table-property *ngIf="managerTask.environmentSettings.length > 0" label="Environment settings">
+                <bl-table-property-header>
+                    <div tp-column>Key</div>
+                    <div tp-column>Value</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let setting of managerTask.environmentSettings">
+                    <bl-tp-cell [value]="setting.name"></bl-tp-cell>
+                    <bl-tp-cell [value]="setting.value"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+            <bl-table-property *ngIf="managerTask.resourceFiles.length > 0" label="Resource files">
+                <bl-table-property-header>
+                    <div tp-column>Blob source</div>
+                    <div tp-column>File path</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let file of managerTask.resourceFiles">
+                    <bl-tp-cell [value]="file.blobSource"></bl-tp-cell>
+                    <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+            <ng-container *ngIf="managerTask.containerSettings.propertyCount">
+                <bl-text-property label="Container image name" [value]="managerTask.containerSettings.imageName"></bl-text-property>
+                <bl-text-property label="Container run option" [value]="managerTask.containerSettings.containerRunOptions"></bl-text-property>
+                <bl-text-property label="Registry server" [value]="managerTask.containerSettings.registryServer"></bl-text-property>
+                <bl-text-property label="Registry username" [value]="managerTask.containerSettings.registryUsername"></bl-text-property>
+            </ng-container>
+        </bl-property-group>
+
+        <bl-property-group *ngIf="job.jobPreparationTask" label="Job preparation task" class="wide" [collapsed]="true">
+            <div collapsed-preview></div>
+            <bl-text-property label="ID" [value]="prepTask.id"></bl-text-property>
+            <bl-text-property label="Command line" [value]="prepTask.commandLine" [wrap]="true"></bl-text-property>
+            <bl-text-property label="Max task retry count" [value]="prepTask.constraints.maxTaskRetryCount"></bl-text-property>
+            <bl-text-property label="Max wall-clock time" [value]="prepTask.constraints.maxWallClockTime"></bl-text-property>
+            <bl-text-property label="Retention time" [value]="prepTask.constraints.retentionTime"></bl-text-property>
+            <bl-bool-property label="Wait for success" [value]="prepTask.waitForSuccess" yesNo="true"></bl-bool-property>
+            <bl-bool-property label="Run elevated" [value]="prepTask.runElevated" yesNo="true"></bl-bool-property>
+            <bl-bool-property label="Re-run on node reboot" [value]="prepTask.rerunOnNodeRebootAfterSuccess" yesNo="true"></bl-bool-property>
+            <bl-table-property *ngIf="prepTask.resourceFiles.length > 0" label="Resource files">
+                <bl-table-property-header>
+                    <div tp-column>Blob source</div>
+                    <div tp-column>File path</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let file of prepTask.resourceFiles">
+                    <bl-tp-cell [value]="file.blobSource"></bl-tp-cell>
+                    <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+            <bl-table-property *ngIf="prepTask.environmentSettings.length > 0" label="Environment settings">
+                <bl-table-property-header>
+                    <div tp-column>Key</div>
+                    <div tp-column>Value</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let setting of prepTask.environmentSettings">
+                    <bl-tp-cell [value]="setting.name"></bl-tp-cell>
+                    <bl-tp-cell [value]="setting.value"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+            <ng-container *ngIf="prepTask.containerSettings.propertyCount">
+                <bl-text-property label="Container image name" [value]="prepTask.containerSettings.imageName"></bl-text-property>
+                <bl-text-property label="Container run option" [value]="prepTask.containerSettings.containerRunOptions"></bl-text-property>
+                <bl-text-property label="Registry server" [value]="prepTask.containerSettings.registryServer"></bl-text-property>
+                <bl-text-property label="Registry username" [value]="prepTask.containerSettings.registryUsername"></bl-text-property>
+            </ng-container>
+        </bl-property-group>
+
+        <bl-property-group *ngIf="job.jobReleaseTask" label="Job release task" class="wide" [collapsed]="true">
+            <div collapsed-preview></div>
+            <bl-text-property label="ID" [value]="releaseTask.id"></bl-text-property>
+            <bl-text-property label="Command line" [value]="releaseTask.commandLine" [wrap]="true"></bl-text-property>
+            <bl-text-property label="Max wall-clock time" [value]="releaseTask.maxWallClockTime"></bl-text-property>
+            <bl-text-property label="Retention time" [value]="releaseTask.retentionTime"></bl-text-property>
+            <bl-bool-property label="Run elevated" [value]="releaseTask.runElevated" yesNo="true"></bl-bool-property>
+            <bl-table-property *ngIf="releaseTask.resourceFiles.length > 0" label="Resource files">
+                <bl-table-property-header>
+                    <div tp-column>Blob source</div>
+                    <div tp-column>File path</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let file of releaseTask.resourceFiles">
+                    <bl-tp-cell [value]="file.blobSource"></bl-tp-cell>
+                    <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+            <bl-table-property *ngIf="releaseTask.environmentSettings.length > 0" label="Environment settings">
+                <bl-table-property-header>
+                    <div tp-column>Key</div>
+                    <div tp-column>Value</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let setting of releaseTask.environmentSettings">
+                    <bl-tp-cell [value]="setting.name"></bl-tp-cell>
+                    <bl-tp-cell [value]="setting.value"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+            <ng-container *ngIf="releaseTask.containerSettings.propertyCount">
+                <bl-text-property label="Container image name" [value]="releaseTask.containerSettings.imageName"></bl-text-property>
+                <bl-text-property label="Container run option" [value]="releaseTask.containerSettings.containerRunOptions"></bl-text-property>
+                <bl-text-property label="Registry server" [value]="releaseTask.containerSettings.registryServer"></bl-text-property>
+                <bl-text-property label="Registry username" [value]="releaseTask.containerSettings.registryUsername"></bl-text-property>
+            </ng-container>
+        </bl-property-group>
+
+        <bl-property-group label="Metadata" class="wide" [collapsed]="true">
+            <div collapsed-preview>
+                <span>{{jobMetadata?.size}} meta items</span>
+            </div>
+            <bl-text-property *ngFor="let metaItem of jobMetadata" label="{{metaItem.name}}" [value]="metaItem.value"></bl-text-property>
+            <bl-no-item [itemCount]="jobMetadata.size" [slimline]="true">
+                <span no-filter>This job contains no metadata</span>
+            </bl-no-item>
+        </bl-property-group>
+    </bl-property-list>
+</bl-entity-configuration>

@@ -1,4 +1,9 @@
 import { FileGroupCreateDto } from "app/models/dtos";
+import { Constants } from "app/utils";
+
+export interface FileOrDirectoryModel {
+    path: string;
+}
 
 export interface FileGroupOptionsModel {
     prefix?: string;
@@ -8,16 +13,16 @@ export interface FileGroupOptionsModel {
 
 export interface CreateFileGroupModel {
     name: string;
-    folder: string;
+    paths: FileOrDirectoryModel[];
     includeSubDirectories: boolean;
     accessPolicy: string;
     options: FileGroupOptionsModel;
 }
 
 export function createFileGroupFormToJsonData(formData: CreateFileGroupModel): any {
-    let data: any = {
+    const data: any = {
         name: formData.name,
-        folder: formData.folder,
+        paths: formData.paths,
         includeSubDirectories: formData.includeSubDirectories,
         accessPolicy: formData.accessPolicy,
         options: formData.options,
@@ -28,8 +33,11 @@ export function createFileGroupFormToJsonData(formData: CreateFileGroupModel): a
 
 export function fileGroupToFormModel(fileGroup: FileGroupCreateDto): CreateFileGroupModel {
     return {
-        name: fileGroup.name,
-        folder: fileGroup.folder,
+        // we don't want the prefix on the group name when editing.
+        name: fileGroup.name.startsWith(Constants.ncjFileGroupPrefix)
+            ? fileGroup.name.substr(Constants.ncjFileGroupPrefix.length, fileGroup.name.length)
+            : fileGroup.name,
+        paths: fileGroup.paths,
         includeSubDirectories: fileGroup.includeSubDirectories,
         accessPolicy: fileGroup.accessPolicy,
         options: fileGroup.options,

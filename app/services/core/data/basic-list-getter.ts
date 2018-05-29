@@ -2,7 +2,7 @@ import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { ListGetter, ListGetterConfig } from "./list-getter";
-import { ListOptions } from "./list-options";
+import { ContinuationToken, ListOptions } from "./list-options";
 
 export interface BasicListGetterConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
     supplyData: (params: TParams, options: ListOptions, nextLink?: string)
@@ -25,7 +25,7 @@ export class BasicListGetter<TEntity, TParams> extends ListGetter<TEntity, TPara
         return this._supplyData(params, options);
     }
 
-    protected listNext(nextLink: string): Observable<any> {
-        return this._supplyData(null, null, nextLink);
+    protected listNext(token: ContinuationToken): Observable<any> {
+        return this._supplyData(null, null, token.nextLink);
     }
 }

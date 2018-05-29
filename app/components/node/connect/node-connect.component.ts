@@ -1,11 +1,12 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
+import * as moment from "moment";
 
-import { SidebarRef } from "app/components/base/sidebar";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
 import { AddNodeUserAttributes, NodeService, NodeUserService } from "app/services";
-import { PoolUtils, SecureUtils } from "app/utils";
+import { DateUtils, PoolUtils, SecureUtils } from "app/utils";
 import "./node-connect.scss";
 
 enum CredentialSource {
@@ -25,9 +26,10 @@ export class NodeConnectComponent implements OnInit {
     public windows = false;
     public linux = false;
     public hasIp = false;
+    public expireTime: string;
 
     /**
-     * Base content for the rdp file(IP adress).
+     * Base content for the rdp file(IP Address).
      * This is either downloaded from the api on CloudService nodes or generated from the ip/port on VMs nodes
      */
     public rdpContent: string;
@@ -57,9 +59,10 @@ export class NodeConnectComponent implements OnInit {
     public ngOnInit() {
         const data = this.nodeService.listNodeAgentSkus();
         data.fetchAll().subscribe(() => {
-            data.items.first().subscribe((agentSkus) => {
+            data.items.take(1).subscribe((agentSkus) => {
                 this.agentSkus = agentSkus;
                 this.windows = PoolUtils.isWindows(this.pool, agentSkus);
+                data.dispose();
             });
         });
         this._loadConnectionData();
@@ -75,6 +78,7 @@ export class NodeConnectComponent implements OnInit {
 
         return this.addOrUpdateUser(credentials).do(() => {
             this.credentialSource = CredentialSource.Generated;
+            this.expireTime = DateUtils.fullDateAndTime(moment().add(24, "hours").toDate());
         });
     }
 
@@ -82,6 +86,7 @@ export class NodeConnectComponent implements OnInit {
     public addOrUpdateUser(credentials) {
         return this.nodeUserService.addOrUpdateUser(this.pool.id, this.node.id, credentials).do(() => {
             this.credentials = credentials;
+            this.expireTime = DateUtils.fullDateAndTime(this.credentials.expiryTime);
         });
     }
 

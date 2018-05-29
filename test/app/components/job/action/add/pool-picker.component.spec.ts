@@ -22,9 +22,18 @@ const config = {
     nodeAgentId: "centos.batch",
 };
 
-const pool1 = new Pool({ id: "pool-1", targetDedicatedNodes: 3, virtualMachineConfiguration: config });
-const pool2 = new Pool({ id: "pool-2", targetDedicatedNodes: 1, virtualMachineConfiguration: config });
-const pool3 = new Pool({ id: "pool-3", targetDedicatedNodes: 19, virtualMachineConfiguration: config });
+const pool1 = new Pool({
+    id: "pool-1", vmSize: "standard_a2",
+    targetDedicatedNodes: 3, virtualMachineConfiguration: config,
+});
+const pool2 = new Pool({
+    id: "pool-2", vmSize: "standard_a2",
+    targetDedicatedNodes: 1, virtualMachineConfiguration: config,
+});
+const pool3 = new Pool({
+    id: "pool-3", vmSize: "standard_a2",
+    targetDedicatedNodes: 19, virtualMachineConfiguration: config,
+});
 
 describe("PoolPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;

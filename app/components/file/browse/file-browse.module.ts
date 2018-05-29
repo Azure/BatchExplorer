@@ -2,24 +2,21 @@ import { NgModule } from "@angular/core";
 import { commonModules } from "app/common";
 import { FileDetailsModule } from "app/components/file/details";
 import { BlobFilesBrowserComponent } from "./blob-files-browser";
-import { FileDirectoryFilter, FileListDisplayComponent } from "./display";
-import {
-    FileExplorerComponent, FileExplorerTabsComponent, FileTableViewComponent,
-    FileTreeViewComponent,
-} from "./file-explorer";
+import { FileExplorerModule } from "./file-explorer";
 
 import { NodeFileBrowseComponent } from "./node-file-browse.component";
 
 const components = [
-    FileDirectoryFilter, FileTreeViewComponent, FileListDisplayComponent,
     NodeFileBrowseComponent, BlobFilesBrowserComponent,
-    FileExplorerComponent, FileTableViewComponent, FileExplorerTabsComponent,
 ];
 
+const publicModules = [
+    FileExplorerModule,
+];
 @NgModule({
     declarations: components,
-    exports: components,
-    imports: [FileDetailsModule, ...commonModules],
+    exports: [...components, ...publicModules],
+    imports: [FileDetailsModule, ...publicModules, ...commonModules],
 })
 export class FileBrowseModule {
 

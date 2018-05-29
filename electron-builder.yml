@@ -15,6 +15,13 @@ extraResources:
     filter:
       - "**/*"
   - "ThirdPartyNotices.txt"
+  - "data"
+
+protocols:
+  - name: "BatchLabs protocol"
+    role: "Viewer"
+    schemes:
+     - ms-batchlabs
 
 # Mac OS configuration
 mac:
@@ -40,6 +47,7 @@ win:
 # Config for the windows installer
 nsis:
   oneClick: true
+  perMachine: true
 
 # Linux configuration
 linux:
@@ -54,5 +62,5 @@ directories:
   output: "release"
 
 publish:
-  provider: "github"
-  # releaseType: draft
+  provider: "generic"
+  url: "https://batchlabsdist.blob.core.windows.net/releases"

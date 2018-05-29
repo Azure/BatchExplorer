@@ -19,11 +19,5 @@ export function listenToSelectCertifcateEvent() {
         });
 
         callback(certificates[picked]);
-
-        let index = -1;
-
-        if (index >= 0) {
-            callback(certificates[index]);
-        }
     });
 }

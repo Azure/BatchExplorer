@@ -1,20 +1,19 @@
-import { Component, Input, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 import { List } from "immutable";
 
-import { LoadingStatus } from "app/components/base/loading";
-import { QuickListComponent } from "app/components/base/quick-list";
-import { ListOrTableBase } from "app/components/base/selectable-list";
-import { TableComponent } from "app/components/base/table";
+import { ListBaseComponent } from "@batch-flask/core/list";
+import { LoadingStatus } from "@batch-flask/ui/loading";
+import { QuickListComponent } from "@batch-flask/ui/quick-list";
+import { TableComponent } from "@batch-flask/ui/table";
 import { Node } from "app/models";
+
+import "./node-list-display.scss";
 
 @Component({
     selector: "bl-node-list-display",
     templateUrl: "node-list-display.html",
 })
-export class NodeListDisplayComponent extends ListOrTableBase {
-    @Input()
-    public quickList: boolean;
-
+export class NodeListDisplayComponent extends ListBaseComponent {
     @Input()
     public poolId: string;
 
@@ -27,14 +26,16 @@ export class NodeListDisplayComponent extends ListOrTableBase {
     @Input()
     public status: LoadingStatus;
 
+    @Output() public scrollBottom = new EventEmitter();
+
     @ViewChild(QuickListComponent)
     public list: QuickListComponent;
 
     @ViewChild(TableComponent)
     public table: TableComponent;
 
-    constructor() {
-        super();
+    constructor(changeDetector: ChangeDetectorRef) {
+        super(changeDetector);
     }
 
     public isErrorState(node: any) {
@@ -42,5 +43,9 @@ export class NodeListDisplayComponent extends ListOrTableBase {
             return true;
         }
         return false;
+    }
+
+    public trackNode(index, node: Node) {
+        return node.id;
     }
 }

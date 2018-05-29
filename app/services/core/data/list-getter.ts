@@ -2,9 +2,11 @@ import { Type } from "@angular/core";
 import { Iterable, List, OrderedSet } from "immutable";
 import { Observable } from "rxjs";
 
-import { DataCache } from "app/services/core";
+import { DataCache } from "app/services/core/data-cache";
 import { GenericGetter, GenericGetterConfig } from "./generic-getter";
 import { ContinuationToken, ListOptions, ListOptionsAttributes } from "./list-options";
+
+export type FetchAllProgressCallback = (count: number) => void;
 
 export interface ListResponse<TEntity> {
     items: List<TEntity>;
@@ -30,9 +32,14 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
         }
     }
 
-    public fetchAll(params: TParams, options?: ListOptionsAttributes | ListOptions): Observable<List<TEntity>> {
+    public fetchAll(
+        params: TParams,
+        options?: ListOptionsAttributes | ListOptions,
+        progress?: FetchAllProgressCallback): Observable<List<TEntity>> {
+
         return this._fetch(params, new ListOptions(options), true).flatMap(({ items, nextLink }) => {
-            return this._fetchRemaining(nextLink).map(remainingItems => List<TEntity>(items.concat(remainingItems)));
+            return this._fetchRemaining(nextLink, items.size, progress)
+                .map(remainingItems => List<TEntity>(items.concat(remainingItems)));
         }).share();
     }
 
@@ -42,7 +49,7 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
     }
 
     protected abstract list(params: TParams, options: ListOptionsAttributes): Observable<TEntity[]>;
-    protected abstract listNext(nextLink): Observable<TEntity[]>;
+    protected abstract listNext(token: ContinuationToken): Observable<TEntity[]>;
 
     private _fetch(params: TParams, options: ListOptions, forceNew = false): Observable<ListResponse<TEntity>> {
         const cache = this.getCache(params);
@@ -56,15 +63,23 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
 
     private _fetchNext(token: ContinuationToken): Observable<ListResponse<TEntity>> {
         const cache = this.getCache(token.params);
-        return this.listNext(token.nextLink).map(x => this._processItems(cache, x, token.params, token.options, false));
+        return this.listNext(token).map(x => this._processItems(cache, x, token.params, token.options, false));
     }
 
-    private _fetchRemaining(nextLink: ContinuationToken): Observable<Iterable<any, TEntity>> {
+    private _fetchRemaining(
+        nextLink: ContinuationToken,
+        currentCount: number,
+        progress?: FetchAllProgressCallback): Observable<Iterable<any, TEntity>> {
+        if (progress) {
+            progress(currentCount);
+        }
         if (!nextLink) {
             return Observable.of(List([]));
         }
         return this._fetchNext(nextLink).flatMap((response) => {
-            return this._fetchRemaining(response.nextLink).map(remainingItems => response.items.concat(remainingItems));
+            const newCount = currentCount + response.items.size;
+            return this._fetchRemaining(response.nextLink, newCount, progress)
+                .map(remainingItems => response.items.concat(remainingItems));
         }).share();
     }
 
@@ -76,7 +91,7 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
         isFirstPage: boolean): ListResponse<TEntity> {
 
         const { data, nextLink } = response;
-        const items = data.map(x => new this.type(x));
+        const items = data.map(x => this._createItem(x, params));
         const keys = OrderedSet(cache.addItems(items, options.select));
         const token = {
             nextLink,
@@ -106,7 +121,7 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
             return null;
         }
 
-        const cachedList = cache.queryCache.getKeys(options.filter, options.select);
+        const cachedList = cache.queryCache.getKeys(options.filter && options.filter.toOData(), options.select);
 
         if (!cachedList) {
             return null;

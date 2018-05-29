@@ -1,0 +1,18 @@
+@import "app/styles/variables";
+
+bl-text-property {
+    .clipboard {
+        font-size: 16px;
+        color: $genericGray;
+        cursor: pointer;
+        margin-left: 5px;
+
+        &:hover {
+            color: $dusty-grey;
+        }
+
+        &:active {
+            color: map-get($primary, 200);
+        }
+    }
+}

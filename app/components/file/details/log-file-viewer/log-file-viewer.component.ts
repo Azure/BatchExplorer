@@ -1,13 +1,14 @@
 import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild } from "@angular/core";
+import { HttpCode, ServerError } from "@batch-flask/core";
+import { log } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
 
-import { ScrollableComponent, ScrollableService } from "app/components/base/scrollable";
-import { File, ServerError } from "app/models";
+import { ScrollableComponent, ScrollableService } from "@batch-flask/ui/scrollable";
+import { File } from "app/models";
 import { TaskService } from "app/services";
 import { FileLoader } from "app/services/file";
-import { Constants, log } from "app/utils";
 
-import { EditorComponent, EditorConfig } from "app/components/base/editor";
+import { EditorComponent, EditorConfig } from "@batch-flask/ui/editor";
 import "./log-file-viewer.scss";
 
 const maxSize = 10000000; // 10MB
@@ -204,10 +205,10 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
         this.loading = false;
 
         clearInterval(this._refreshInterval);
-        if (e.status === Constants.HttpCode.NotFound) {
+        if (e.status === HttpCode.NotFound) {
             this.nodeNotFound = true;
             return;
-        } else if (e.status === Constants.HttpCode.Conflict) {
+        } else if (e.status === HttpCode.Conflict) {
             this.fileCleanupOperation = true;
             return;
         } else if (!e.status && e.message && e.message.startsWith("An incorrect number of bytes")) {

@@ -29,6 +29,8 @@ const defaultLicenses = {
     "mit": fs.readFileSync(path.join(defaultLicenseRoot, "mit.txt")).toString(),
     "bsd-2-clause": fs.readFileSync(path.join(defaultLicenseRoot, "bsd-2-clause.txt")).toString(),
     "(ofl-1.1 and mit)": fs.readFileSync(path.join(defaultLicenseRoot, "ofl-1.1-and-mit.txt")).toString(),
+    "apache-2.0": fs.readFileSync(path.join(defaultLicenseRoot, "apache-2.0.txt")).toString(),
+    "electron": fs.readFileSync(path.join(defaultLicenseRoot, "electron.txt")).toString(),
 };
 
 const additionalDependencies = [
@@ -59,6 +61,13 @@ const additionalDependencies = [
         url: "https://www.python.org/",
         repoUrl: "https://github.com/python/cpython",
         licenseType: "PSF",
+    },
+    {
+        name: "Electron",
+        version: "1.8.1",
+        url: "https://electronjs.org/",
+        repoUrl: "https://github.com/electron/electron",
+        licenseType: "electron",
     },
 ];
 
@@ -169,7 +178,7 @@ function run(options: ThirdPartyNoticeOptions = {}) {
     }).concat(additionalDependencies);
     console.log("Loading dependencies...");
 
-    let toc = dependencies.map((dependency, index) => {
+    const toc = dependencies.map((dependency, index) => {
         return `${index}. ${dependency.name}(${dependency.url}) - ${dependency.licenseType}`;
     });
     output.push(toc.join("\n"));
@@ -211,4 +220,4 @@ const options = commander
     .option("-c, --check", "Check the current third party notice file is valid.")
     .parse(process.argv);
 
-run(options);
+run(options as any);

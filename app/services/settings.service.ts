@@ -1,17 +1,18 @@
-import { Injectable, NgZone } from "@angular/core";
-import { BehaviorSubject, Observable } from "rxjs";
+import { Injectable, NgZone, OnDestroy } from "@angular/core";
+import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
+import { log } from "@batch-flask/utils";
 import { KeyBindings, Settings, defaultKeybindings } from "app/models";
-import { log } from "app/utils";
 import { LocalFileStorage } from "./local-file-storage.service";
 
 // tslint:disable-next-line:no-var-requires
 const defaultSettings = JSON.parse(stripJsonComments(require("app/components/settings/default-settings.json")));
 
 @Injectable()
-export class SettingsService {
+export class SettingsService implements OnDestroy {
     public settingsObs: Observable<Settings>;
     public keybindings: Observable<KeyBindings[]>;
 
@@ -25,11 +26,27 @@ export class SettingsService {
 
     private _filename = "settings";
     private _keybindingsFilename = "keybindings";
+    private _sub: Subscription;
 
-    constructor(private zone: NgZone, private storage: LocalFileStorage) {
+    constructor(
+        private zone: NgZone,
+        private storage: LocalFileStorage,
+        batchFlaskSettings: BatchFlaskSettingsService) {
         this.settingsObs = this._settingsSubject.filter(x => Boolean(x));
         this.keybindings = this._keybindings.filter(x => Boolean(x));
         this.hasSettingsLoaded = this._hasSettingsLoaded.asObservable();
+        this._sub = this.settingsObs.subscribe((settings) => {
+            batchFlaskSettings.updateSettings({
+                entityConfiguration: {
+                    defaultView: settings["configuration.default-view"],
+                },
+                autoUpdateOnQuit: settings["auto-update-on-quit"],
+            });
+        });
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 
     public init() {

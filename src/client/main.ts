@@ -1,84 +1,35 @@
-import { Menu, app, dialog, ipcMain, protocol } from "electron";
-import { autoUpdater } from "electron-updater";
+/**
+ * This file contains code that is initializing the app so the rest of the files run correctly.
+ *
+ * There is a few steps(IMPORTANT: those steps MUST be run in this exact order):
+ *   1. Add the src/ folder to the NODE_PATH to be able to do absolute import(Relative to src folder)
+ *   2. Update electron user data folder
+ *   3. Initialize the logger
+ *   4. Setup extension functions
+ *   5. Call startBatchLabs from startup.ts
+ */
+
+// 1. Add the src/ folder to the NODE_PATH to be able to do absolute import(Relative to src folder)
 import * as path from "path";
+import "./init";
+
+// 2. Update electron user data folder
+import { app } from "electron";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
-import { Constants } from "./client-constants";
-import { BatchLabsApplication, listenToSelectCertifcateEvent } from "./core";
-import { logger } from "./logger";
+// 3. Initialize the logger
+import { initLogger } from "client/logger";
+initLogger();
 
-if (Constants.isDev) {
-    autoUpdater.updateConfigPath = path.join(Constants.root, "dev-app-update.yml");
-}
-autoUpdater.allowPrerelease = true;
-autoUpdater.autoDownload = true;
-autoUpdater.logger = logger;
+// 4. Setup extension functions
+import "reflect-metadata";
 
-const batchLabsApp = new BatchLabsApplication(autoUpdater);
+import "@batch-flask/extensions";
 
-// Create the browser window.
-function startApplication() {
-    // This call needs to be done after electron app is ready.
-    protocol.registerStringProtocol("urn", (request, callback) => {
-        // Doesn't matter how the protocol is handled; error is fine
-        callback();
-    });
+// 5. Call startBatchLabs from startup.ts
+import { log } from "@batch-flask/utils";
+import { startBatchLabs } from "./startup";
 
-    // Uncomment to view why windows don't show up.
-    // batchLabsApp.debugCrash();
-    batchLabsApp.init();
-    batchLabsApp.start();
-
-    if (process.platform === "darwin") {
-        // Create our menu entries so that we can use MAC shortcuts
-        Menu.setApplicationMenu(Menu.buildFromTemplate([
-            {
-                label: "Application",
-                submenu: [
-                    { role: "hide" },
-                    { role: "hideothers" },
-                    { type: "separator" },
-                    { label: "Quit", accelerator: "Command+Q", click: () => app.quit() },
-                ],
-            },
-            {
-                label: "Edit",
-                submenu: [
-                    { role: "undo" },
-                    { role: "redo" },
-                    { type: "separator" },
-                    { role: "cut" },
-                    { role: "copy" },
-                    { role: "paste" },
-                    { role: "delete" },
-                    { role: "selectall" },
-                ],
-            },
-            {
-                label: "Window",
-                submenu: [
-                    { role: "minimize" },
-                ],
-            },
-        ]));
-    }
-}
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on("ready", startApplication);
-
-listenToSelectCertifcateEvent();
-
-process.on("exit", () => {
-    batchLabsApp.quit();
-});
-
-process.on("SIGINT", () => {
-    process.exit(-1);
-});
-
-process.on("SIGINT", () => {
-    process.exit(-2);
+startBatchLabs().catch((e) => {
+    log.error("Error starting batchlabs", e);
 });

@@ -3,6 +3,7 @@ import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Va
 import { Subscription } from "rxjs";
 
 import { NcjParameterRawType } from "app/models";
+import { NcjFileGroupService } from "app/services";
 import { NcjParameterExtendedType, NcjParameterWrapper } from "../market-application.model";
 import "./parameter-input.scss";
 
@@ -20,11 +21,13 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
 
     @Input() public parameter: NcjParameterWrapper;
     @Input() public parameterValues: StringMap<any>;
+
     public parameterValue = new FormControl();
+
     private _propagateChange: (value: any) => void = null;
     private _subs: Subscription[] = [];
 
-    constructor() {
+    constructor(private fileGroupService: NcjFileGroupService) {
         this._subs.push(this.parameterValue.valueChanges.distinctUntilChanged()
             .subscribe((query: string) => {
                 if (this._propagateChange) {
@@ -41,7 +44,7 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
     }
 
     public getContainerFromFileGroup(fileGroup: string) {
-        return fileGroup && `fgrp-${fileGroup}`;
+        return this.fileGroupService.addFileGroupPrefix(fileGroup);
     }
 
     public ngOnDestroy(): void {
@@ -49,6 +52,12 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
     }
 
     public writeValue(value: any) {
+        // persisted value will not have the file group prefix. need to add it to fix
+        // validation error for recent templates.
+        if (this.parameter.type === NcjParameterExtendedType.fileGroup && Boolean(value)) {
+            value = this.getContainerFromFileGroup(value);
+        }
+
         this.parameterValue.setValue(value);
     }
 
@@ -72,6 +81,7 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
                 const maxValue = String(error.max.max);
                 messageText = `Should be less than or equal to ${maxValue}`;
             }
+
             return {
                 validFormInput: {
                     valid: false,
@@ -89,6 +99,10 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
         // do not need
     }
 
+    public trackOption(index, option: string) {
+        return option;
+    }
+
     private _updateValidators() {
         const validatorGroup: any[] = [];
         const parameterTemplate = this.parameter.param;
@@ -100,6 +114,7 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
                 validatorGroup.push(Validators.max(parameterTemplate.maxValue));
             }
         }
+
         if (parameterTemplate.type === NcjParameterRawType.string) {
             if (parameterTemplate.minLength) {
                 validatorGroup.push(Validators.minLength(parameterTemplate.minLength));
@@ -108,6 +123,7 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
                 validatorGroup.push(Validators.maxLength(parameterTemplate.maxLength));
             }
         }
+
         this.parameterValue.setValidators(Validators.compose(validatorGroup));
     }
 }

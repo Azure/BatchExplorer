@@ -5,10 +5,10 @@ import { Response, ResponseOptions } from "@angular/http";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
+import { ServerError } from "@batch-flask/core";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { ApplicationEditDialogComponent } from "app/components/application/action";
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
-import { ServerError } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
@@ -89,7 +89,7 @@ describe("ApplicationEditDialogComponent ", () => {
 
     describe("default version", () => {
         it("control is initialized", () => {
-            const input = debugElement.query(By.css("mat-select[formControlName=defaultVersion]")).nativeElement;
+            const input = debugElement.query(By.css("bl-select[formControlName=defaultVersion]")).nativeElement;
             expect(input).toBeDefined();
         });
 

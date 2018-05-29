@@ -1,0 +1,25 @@
+<div class="app-lists">
+    <div class="heading">
+        <h2>Step 1: Pick the application you want to use</h2>
+    </div>
+    <div class="create-new">
+        <bl-button type="wide" color="primary" (do)="createApp.emit()">Create new</bl-button>
+    </div>
+    <div class="app-list-subtitle">
+        Listing below the applications you have permission to create secrets for.
+    </div>
+    <bl-table [data]="apps" (activeItemChange)="pickApplication($event)" class="app-list apps-with-permission">
+        <bl-column [sortable]="true" name="displayName">
+            <div *blHeadCellDef>Application name</div>
+            <div *blCellDef="let app">{{app.displayName}}</div>
+        </bl-column>
+        <bl-column [sortable]="true" name="batchAccountPermission" [defaultWidth]="120">
+            <div *blHeadCellDef>Batch acount</div>
+            <div *blCellDef="let app">{{getPermission(app.id)}}</div>
+        </bl-column>
+        <bl-column [sortable]="true" name="storageAccountPermission" [defaultWidth]="120">
+            <div *blHeadCellDef>Storage account</div>
+            <div *blCellDef="let app">{{getPermission(app.id)}}</div>
+        </bl-column>
+    </bl-table>
+</div>

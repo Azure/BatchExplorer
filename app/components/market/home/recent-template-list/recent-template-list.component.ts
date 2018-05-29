@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from "@angular/core";
-import { remote } from "electron";
+import { ElectronRemote } from "@batch-flask/ui";
 import { Subscription } from "rxjs";
 
 import { NcjTemplateMode } from "app/models";
@@ -15,7 +15,7 @@ export class RecentTemplateListComponent implements OnDestroy {
 
     private _subs: Subscription[] = [];
 
-    constructor(private templateService: NcjTemplateService) {
+    constructor(private templateService: NcjTemplateService, private remote: ElectronRemote) {
         this._subs.push(this.templateService.recentSubmission.subscribe((value) => {
             this.recentSubmissions = value;
         }));
@@ -27,7 +27,7 @@ export class RecentTemplateListComponent implements OnDestroy {
     }
 
     public createParameterFile(recent: RecentSubmission) {
-        const dialog = remote.dialog;
+        const dialog = this.remote.dialog;
         const localPath = dialog.showSaveDialog({
             buttonLabel: "Save",
             defaultPath: this._getParameterFileName(recent.mode),
@@ -47,6 +47,10 @@ export class RecentTemplateListComponent implements OnDestroy {
             case NcjTemplateMode.NewPoolAndJob:
                 return "Job with auto-pool";
         }
+    }
+
+    public trackTemplate(index, recent: RecentSubmission) {
+        return recent.id;
     }
 
     private _getParameterFileName(mode: NcjTemplateMode) {

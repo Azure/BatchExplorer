@@ -2,9 +2,14 @@
   "extends": "tslint:recommended",
   "defaultSeverity": "error",
   "rulesDirectory": [
-    "node_modules/codelyzer"
+    "node_modules/codelyzer",
+    "scripts/tslint"
   ],
   "rules": {
+    // Custom rules
+    "forbidden-imports": [true, {}],
+    "no-parent-imports": [true, {}],
+
     // TSLint override
     "no-this-assignment": [true, {"allow-destructuring": true}],
     "no-duplicate-imports": true,
@@ -36,7 +41,8 @@
         true,
         ["batchLabsApp", "debugCrash"], // Show a warning if the main window is being shown on start for debug purposes
         {"name": "fdescribe", "message": "Don't keep jasmine fit methods in the code."},
-        {"name": "fit", "message": "Don't keep jasmine fit methods in the code."}
+        {"name": "fit", "message": "Don't keep jasmine fit methods in the code."},
+        {"name": "allowInsecureRequest", "message": "This is only for development with proxy don't leave in the code"}
     ],
     "no-empty-interface":  false,
     "space-before-function-paren": [false],
@@ -46,8 +52,14 @@
     "no-duplicate-switch-case": true,
     "no-return-await": true,
     "ban-comma-operator": true,
+    "prefer-while": true,
+    "comment-format": [true, "check-space"],
+    // "no-dynamic-delete": true,
+    // "prefer-readonly": true,
 
     // Codelyzer rules(Angular2)
+    "contextual-life-cycle": true,
+    "decorator-not-allowed": true,
     "directive-selector": [true, "attribute", "bl", "camelCase"],
     "component-selector": [true, "element", "bl", "kebab-case"],
     "use-input-property-decorator": true,
@@ -56,17 +68,18 @@
     "no-attribute-parameter-decorator": true,
     "no-input-rename": true,
     "no-output-rename": true,
-    "no-forward-ref": true,
+    "no-forward-ref": false,
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
     "pipe-naming": [false, "camelCase", "bl"],
     "component-class-suffix": true,
     "directive-class-suffix": true,
     "import-destructuring-spacing": true,
-    "invoke-injectable": true,
     "no-shadowed-variable": false,
+    "trackBy-function": true,
+    "banana-in-box": true,
     // TODO enable
-    "prefer-const": false
+    "prefer-const": true
   },
   "jsRules": {
     "object-literal-sort-keys": false,

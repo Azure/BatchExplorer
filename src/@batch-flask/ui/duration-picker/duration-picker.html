@@ -1,0 +1,26 @@
+<div class="grow">
+    <div class="gcol label">
+        <div class="duration-label">
+            {{ label }}
+        </div>
+        <div *ngIf="allowUnlimited" class="duration-unlimited-toggle">
+            <mat-slide-toggle (change)="onToggle($event)" color="primary" [checked]="unlimited"></mat-slide-toggle>
+        </div>
+    </div>
+    <div *ngIf="allowUnlimited && unlimited" class="gcol duration-unlimited">Unlimited</div>
+    <div *ngIf="!allowUnlimited || !unlimited" class="gcol value">
+        <bl-form-field>
+            <input blInput [(ngModel)]="value" (ngModelChange)="onTimeChange()" placeholder="Time" type="number">
+        </bl-form-field>
+    </div>
+    <div *ngIf="!allowUnlimited || !unlimited" class="gcol unit-picker">
+        <bl-form-field>
+            <bl-select [ngModel]="unit" (ngModelChange)="onUnitChange()" placeholder="Unit">
+                <bl-option [value]="ConstraintsUnit.days" label="Days"></bl-option>
+                <bl-option [value]="ConstraintsUnit.hours" label="Hours"></bl-option>
+                <bl-option [value]="ConstraintsUnit.minutes" label="Minutes"></bl-option>
+                <bl-option [value]="ConstraintsUnit.seconds" label="Seconds"></bl-option>
+            </bl-select>
+        </bl-form-field>
+    </div>
+</div>

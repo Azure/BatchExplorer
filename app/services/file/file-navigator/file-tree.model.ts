@@ -1,6 +1,6 @@
 import { List } from "immutable";
 
-import { LoadingStatus } from "app/components/base/loading";
+import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { File } from "app/models";
 import { CloudPathUtils } from "app/utils";
 import { fileToTreeNode, generateDir, sortTreeNodes } from "./helper";
@@ -13,6 +13,7 @@ export interface FileTreeNodeParams {
     contentLength?: number;
     lastModified?: Date;
     isUnknown?: boolean;
+    virtual?: boolean;
 }
 
 export class FileTreeNode {
@@ -28,6 +29,11 @@ export class FileTreeNode {
      */
     public contentLength: number;
     public lastModified: Date;
+    public virtual: boolean;
+
+    public get id() {
+        return this.path;
+    }
 
     constructor(params: FileTreeNodeParams) {
         this.path = params.path;
@@ -38,6 +44,7 @@ export class FileTreeNode {
         this.lastModified = params.lastModified;
         this.isUnknown = params.isUnknown || false;
         this.name = this._computeName();
+        this.virtual = params.virtual || false;
     }
 
     public clone() {
@@ -46,6 +53,10 @@ export class FileTreeNode {
 
     public walk() {
         return this.children.values();
+    }
+
+    public markAsLoading() {
+        this.loadingStatus = LoadingStatus.Loading;
     }
 
     public markAsLoaded() {
@@ -71,20 +82,23 @@ export class FileTreeStructure {
         this.root = new FileTreeNode({
             path: "",
             isDirectory: true,
+            loadingStatus: LoadingStatus.Ready,
         });
         this.directories[""] = this.root;
     }
 
     public addFiles(files: List<File>) {
         const directories = this.directories;
-        for (let file of files.toArray()) {
+        for (const file of files.toArray()) {
             const node = fileToTreeNode(file, this.basePath);
 
             const folder = CloudPathUtils.dirname(node.path);
             this._checkDirInTree(folder);
 
             if (file.isDirectory) {
-                if (!directories[node.path]) {
+                if (directories[node.path]) {
+                    directories[folder].children.set(node.path, directories[node.path]);
+                } else {
                     directories[node.path] = node;
                     directories[folder].children.set(node.path, node);
                 }
@@ -93,9 +107,25 @@ export class FileTreeStructure {
             }
         }
 
-        for (let dir of Object.keys(directories)) {
+        for (const dir of Object.keys(directories)) {
             directories[dir].children = sortTreeNodes(directories[dir].children);
         }
+    }
+
+    /**
+     * Set the files under the given folder.
+     * This means it will remove any files presently in the tree directly under that folder
+     * that are not in the list provided
+     * @param folder Folder where those files belongs
+     * @param files List of files under that folder
+     */
+    public setFilesAt(folder: string, files: List<File>) {
+        folder = CloudPathUtils.normalize(folder);
+        this._checkDirInTree(folder);
+        const directories = this.directories;
+        const rootDir = directories[folder];
+        rootDir.children.clear();
+        this.addFiles(files);
     }
 
     public getNode(nodePath: string) {
@@ -116,6 +146,7 @@ export class FileTreeStructure {
                 loadingStatus: LoadingStatus.Loading,
                 isDirectory: true,
                 isUnknown: true,
+                virtual: true,
             });
         }
     }
@@ -155,18 +186,33 @@ export class FileTreeStructure {
         return this.directories[parentPath];
     }
 
-    private _checkDirInTree(directory: string) {
+    public addVirtualFolder(path: string) {
+        this._checkDirInTree(path, true);
+    }
+
+    /**
+     *
+     * @param directory Ensure the given directory exist in the path
+     * @param virtual If the dictory doesn't exists it will be flagged as virtual if this is true.
+     *                If this is false and the directory exisist but is virtual it will be changed to non virtual
+     */
+    private _checkDirInTree(directory: string, virtual = false) {
         const directories = this.directories;
         if (this.directories[directory]) {
             this.directories[directory].loadingStatus = LoadingStatus.Ready;
-            return;
+            if (!virtual && this.directories[directory].virtual) {
+                this.directories[directory].virtual = false;
+            } else {
+                return;
+            }
+        } else {
+            directories[directory] = generateDir(directory, virtual);
         }
-        directories[directory] = generateDir(directory);
 
         const parent = CloudPathUtils.dirname(directory);
 
         if (directory !== parent) {
-            this._checkDirInTree(parent);
+            this._checkDirInTree(parent, virtual);
             directories[parent].children.set(directory, directories[directory]);
         }
     }

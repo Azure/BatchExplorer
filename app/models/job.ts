@@ -1,6 +1,6 @@
 import { List } from "immutable";
 
-import { ListProp, Model, Prop, Record } from "app/core";
+import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
 import { ModelUtils } from "app/utils";
 import { AllTasksCompleteAction, TaskFailureAction } from "./job-action";
 import { JobConstraints } from "./job-constraints";
@@ -11,7 +11,6 @@ import { JobReleaseTask } from "./job-release-task";
 import { JobStats } from "./job-stats";
 import { Metadata, MetadataAttributes } from "./metadata";
 import { NameValuePair, NameValuePairAttributes } from "./name-value-pair";
-import { NavigableRecord } from "./navigable-record";
 
 export interface JobAttributes {
     id: string;

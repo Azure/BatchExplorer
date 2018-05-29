@@ -1,18 +1,19 @@
-import { Component, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output } from "@angular/core";
-import { Subscription } from "rxjs";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
+    HostBinding, Input, OnChanges, OnDestroy, Output,
+} from "@angular/core";
+import { Observable, Subscription } from "rxjs";
 
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FileNavigator, FileTreeNode, FileTreeStructure } from "app/services/file";
 import { CloudPathUtils, DragUtils } from "app/utils";
 import { FileDeleteEvent, FileDropEvent } from "../file-explorer.component";
 
-import { ActivatedRoute } from "@angular/router";
-import { DialogService } from "app/components/base/dialogs";
-import { NotificationService } from "app/components/base/notifications";
-import { DownloadFileGroupDialogComponent } from "app/components/data/details";
-import { ServerError } from "app/models";
-import { ElectronShell } from "app/services";
-import { remote } from "electron";
+import { ServerError } from "@batch-flask/core";
+import { ElectronRemote, ElectronShell } from "@batch-flask/ui";
+import { DialogService } from "@batch-flask/ui/dialogs";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { DownloadFolderComponent } from "app/components/common/download-folder-dialog";
 import "./file-tree-view.scss";
 
 export interface TreeRow {
@@ -21,48 +22,47 @@ export interface TreeRow {
     expanded: boolean;
     isDirectory: boolean;
     indent: number;
+    index: number;
+    virtual: boolean;
 }
 
 @Component({
     selector: "bl-file-tree-view",
     templateUrl: "file-tree-view.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
+export class FileTreeViewComponent implements OnChanges, OnDestroy {
     @Input() public fileNavigator: FileNavigator;
     @Input() public currentPath: string;
     @Input() public active: boolean = true;
     @Input() public name: string;
     @Input() public autoExpand = false;
     @Input() public canDropExternalFiles = false;
-    @Input() public canDeleteFiles = false;
+
     @Output() public navigate = new EventEmitter<string>();
     @Output() public dropFiles = new EventEmitter<FileDropEvent>();
     @Output() public deleteFiles = new EventEmitter<FileDeleteEvent>();
 
     @HostBinding("class.expanded") public expanded = true;
 
-    public expandedDirs: StringMap<boolean> = {};
+    public expandedDirs = new Set<string>();
     public treeRows: TreeRow[] = [];
     public refreshing: boolean;
     public isDraging = 0;
     public dropTargetPath: string = null;
-    public containerId: string;
+    public isFocused = false;
+    public focusedIndex: number = 0;
 
     private _tree: FileTreeStructure;
     private _navigatorSubs: Subscription[] = [];
-    private _paramsSubscriber: Subscription;
 
-    constructor(private activatedRoute: ActivatedRoute,
-                private dialog: DialogService,
-                private contextMenuService: ContextMenuService,
-                private shell: ElectronShell,
-                private notificationService: NotificationService) { }
-
-    public ngOnInit() {
-        this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
-            this.containerId = params["id"];
-        });
-    }
+    constructor(
+        private dialog: DialogService,
+        private contextMenuService: ContextMenuService,
+        private shell: ElectronShell,
+        private remote: ElectronRemote,
+        private changeDetector: ChangeDetectorRef,
+        private notificationService: NotificationService) { }
 
     public ngOnChanges(inputs) {
         if (inputs.fileNavigator) {
@@ -81,15 +81,51 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
 
     public ngOnDestroy() {
         this._clearNavigatorSubs();
-        this._paramsSubscriber.unsubscribe();
     }
 
-    public handleClick(treeRow: TreeRow) {
+    public activateRow(treeRow: TreeRow) {
         if (treeRow.isDirectory && !treeRow.expanded) {
             this.toggleExpanded(treeRow);
         }
+        this.focusedIndex = treeRow.index;
+        this.changeDetector.markForCheck();
 
         this.navigate.emit(treeRow.path);
+    }
+
+    public handleKeyboardNavigation(event) {
+        const curTreeRow = this.treeRows[this.focusedIndex];
+        switch (event.code) {
+            case "ArrowDown": // Move focus down
+                this.focusedIndex++;
+                event.preventDefault();
+                break;
+            case "ArrowUp":   // Move focus up
+                this.focusedIndex--;
+                event.preventDefault();
+                break;
+            case "ArrowRight": // Expand current row if applicable
+                this.expand(curTreeRow);
+                event.preventDefault();
+                break;
+            case "ArrowLeft": // Expand current row if applicable
+                this.collapse(curTreeRow);
+                event.preventDefault();
+                break;
+            case "Space":
+            case "Enter":
+                this.activateRow(curTreeRow);
+                event.preventDefault();
+                return;
+            default:
+        }
+        this.focusedIndex = (this.focusedIndex + this.treeRows.length) % this.treeRows.length;
+        this.changeDetector.markForCheck();
+    }
+
+    public setFocus(focus: boolean) {
+        this.isFocused = focus;
+        this.changeDetector.markForCheck();
     }
 
     /**
@@ -101,12 +137,16 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
 
         if (treeRow.isDirectory) {
             items.push(new ContextMenuItem("Refresh", () => this.refresh(treeRow.path)));
+            if (this.canDropExternalFiles) {
+                items.push(new ContextMenuItem("New folder", () => this.newVirtualFolder(treeRow)));
+            }
         }
 
-        if (this.canDeleteFiles) {
+        if (this.fileNavigator.canDeleteFile) {
             items.push(new ContextMenuItem("Delete", () => this.deleteFiles.emit({
                 path: treeRow.path,
                 isDirectory: treeRow.isDirectory,
+                navigator: this.fileNavigator,
             })));
         }
 
@@ -115,11 +155,17 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    public handleCaretClick(treeRow: TreeRow, event: MouseEvent) {
-        event.stopPropagation();
-        event.stopImmediatePropagation();
+    public expand(treeRow: TreeRow) {
+        if (this.expandedDirs.has(treeRow.path) || !treeRow.isDirectory) { return; }
+        this.expandedDirs.add(treeRow.path);
         this.fileNavigator.loadPath(treeRow.path);
-        this.toggleExpanded(treeRow);
+        this._buildTreeRows(this._tree);
+    }
+
+    public collapse(treeRow: TreeRow) {
+        if (!this.expandedDirs.has(treeRow.path) || !treeRow.isDirectory) { return; }
+        this.expandedDirs.delete(treeRow.path);
+        this._buildTreeRows(this._tree);
     }
 
     /**
@@ -127,14 +173,15 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
      * @returns boolean if the row is now expanded or not
      */
     public toggleExpanded(treeRow: TreeRow): boolean {
-        const isExpanded = this.expandedDirs[treeRow.path];
+        const isExpanded = this.expandedDirs.has(treeRow.path);
         if (isExpanded) {
-            this.expandedDirs[treeRow.path] = false;
+            this.expandedDirs.delete(treeRow.path);
         } else {
-            this.expandedDirs[treeRow.path] = true;
+            this.expandedDirs.add(treeRow.path);
+            this.fileNavigator.loadPath(treeRow.path);
         }
         this._buildTreeRows(this._tree);
-
+        this.changeDetector.markForCheck();
         return !isExpanded;
     }
 
@@ -147,7 +194,7 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
         for (let i = 0; i < segments.length; i++) {
 
             const pathToExpand = segments.slice(0, segments.length - i).join("/");
-            this.expandedDirs[pathToExpand] = true;
+            this.expandedDirs.add(pathToExpand);
         }
 
         if (this._tree) {
@@ -169,9 +216,7 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public collapseAll() {
-        for (let key of Object.keys(this.expandedDirs)) {
-            this.expandedDirs[key] = false;
-        }
+        this.expandedDirs.clear();
         this._buildTreeRows(this._tree);
     }
 
@@ -185,12 +230,12 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
      */
     public download(treeRow: TreeRow) {
         if (treeRow.isDirectory) {
-            const ref = this.dialog.open(DownloadFileGroupDialogComponent);
-            ref.componentInstance.containerId = this.containerId;
+            const ref = this.dialog.open(DownloadFolderComponent);
+            ref.componentInstance.navigator = this.fileNavigator;
             ref.componentInstance.subfolder = treeRow.name;
-            ref.componentInstance.pathPrefix = treeRow.path;
+            ref.componentInstance.folder = treeRow.path;
         } else {
-            const dialog = remote.dialog;
+            const dialog = this.remote.dialog;
             const localPath = dialog.showSaveDialog({
                 buttonLabel: "Download",
                 defaultPath: treeRow.name,
@@ -203,12 +248,15 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
 
     public refresh(path?: string) {
         this.refreshing = true;
+        this.changeDetector.markForCheck();
         this.fileNavigator.refresh(path).subscribe({
             next: () => {
                 this.refreshing = false;
+                this.changeDetector.markForCheck();
             },
             error: () => {
                 this.refreshing = false;
+                this.changeDetector.markForCheck();
             },
         });
     }
@@ -218,6 +266,7 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
         if (!this.canDropExternalFiles) { return; }
         this.isDraging++;
         this.dropTargetPath = this._getDropTarget(treeRow);
+        this.changeDetector.markForCheck();
     }
 
     public dragLeaveRow(event: DragEvent, treeRow?: TreeRow) {
@@ -228,6 +277,7 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
         if (this._getDropTarget(treeRow) === this.dropTargetPath && this.isDraging <= 0) {
             this.dropTargetPath = null;
         }
+        this.changeDetector.markForCheck();
     }
 
     public handleDropOnRow(event: DragEvent, treeRow?: TreeRow) {
@@ -240,40 +290,58 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
         this.dropTargetPath = null;
         this.isDraging = 0;
         this.dropFiles.emit({ path, files });
+        this.changeDetector.markForCheck();
     }
 
     public handleDragHover(event: DragEvent) {
         DragUtils.allowDrop(event, this.canDropExternalFiles);
     }
 
+    public newVirtualFolder(treeRow: TreeRow) {
+        this.dialog.prompt("Create a new folder?", {
+            description: `Folder will be created under ${treeRow.path}.`
+                + `Note this is a virtual folder and it will not exist until you drop files`,
+            prompt: (value: string) => {
+                this.expand(treeRow);
+                const path = treeRow ? treeRow.path : null;
+                this.fileNavigator.addVirtualFolder(CloudPathUtils.join(path, value));
+                return Observable.of(null);
+            },
+        });
+    }
+
     private _buildTreeRows(tree) {
         const root = tree.root;
         this.treeRows = this._getTreeRowsForNode(root);
+        this.changeDetector.markForCheck();
     }
 
     private _getTreeRowsForNode(node: FileTreeNode, indent = 0): TreeRow[] {
-        let rows = [];
-        for (let [_, child] of node.children) {
+        const rows = [];
+        for (const [_, child] of node.children) {
             if (this.autoExpand && !(child.path in this.expandedDirs)) {
-                this.expandedDirs[child.path] = true;
+                this.expandedDirs.add(child.path);
             }
-            const expanded = this.expandedDirs[child.path];
+            const expanded = this.expandedDirs.has(child.path);
             rows.push({
                 name: child.name,
                 path: child.path,
                 expanded,
                 isDirectory: child.isDirectory,
                 indent: indent,
+                virtual: child.virtual,
             });
             if (expanded) {
                 if (child.children.size > 0) {
-                    for (let row of this._getTreeRowsForNode(child, indent + 1)) {
+                    for (const row of this._getTreeRowsForNode(child, indent + 1)) {
                         rows.push(row);
                     }
                 }
             }
         }
-
+        for (const [index, row] of rows.entries()) {
+            row.index = index;
+        }
         return rows;
     }
 

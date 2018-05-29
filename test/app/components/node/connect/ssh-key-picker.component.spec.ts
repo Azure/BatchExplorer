@@ -5,8 +5,8 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 
-import { ButtonComponent } from "app/components/base/buttons";
-import { DialogService } from "app/components/base/dialogs";
+import { ButtonComponent } from "@batch-flask/ui/buttons";
+import { DialogService } from "@batch-flask/ui/dialogs";
 import { SSHKeyPickerComponent } from "app/components/node/connect";
 import { SSHPublicKey } from "app/models";
 import { SSHKeyService } from "app/services";

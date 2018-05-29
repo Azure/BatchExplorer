@@ -1,0 +1,62 @@
+{
+  "title": "JSON schema for coffeelint.json files",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": true,
+  "definitions": {
+    "color": {"type": "string", "format": "color"},
+    "entity-colors": {
+      "type": "object",
+      "properties": {
+        "text": {"$ref": "#/definitions/color"},
+        "background":{"$ref": "#/definitions/color"},
+        "hover-text": {"$ref": "#/definitions/color"},
+        "hover-background":{"$ref": "#/definitions/color"}
+      }
+    }
+  },
+  "properties": {
+    "primary": {"$ref": "#/definitions/color"},
+    "danger": {"$ref": "#/definitions/color"},
+    "warn": {"$ref": "#/definitions/color"},
+    "success": {"$ref": "#/definitions/color"},
+    "main-background": {"$ref": "#/definitions/color"},
+    "card-background": {"$ref": "#/definitions/color"},
+    "outline": {"$ref": "#/definitions/color"},
+    "text": {
+      "type": "object",
+      "properties": {
+        "primary": {"$ref": "#/definitions/color"},
+        "secondary": {"$ref": "#/definitions/color"}
+      }
+    },
+    "header": {"$ref": "#/definitions/entity-colors"},
+    "navigation": {"$ref": "#/definitions/entity-colors"},
+    "footer": {"$ref": "#/definitions/entity-colors"},
+    "breadcrumb": {"$ref": "#/definitions/entity-colors"},
+    "file-explorer": {
+      "type": "object",
+      "properties": {
+        "folder-icon": {"$ref": "#/definitions/color"}
+      }
+    },
+    "button": {
+      "type": "object",
+      "properties": {
+        "disabled-text": {"$ref": "#/definitions/color"},
+        "disabled-bg": {"$ref": "#/definitions/color"}
+      }
+    },
+    "input": {
+      "type": "object",
+      "properties": {
+        "text": {"$ref": "#/definitions/color"},
+        "background": {"$ref": "#/definitions/color"},
+        "placeholder": {"$ref": "#/definitions/color"},
+        "border": {"$ref": "#/definitions/color"},
+        "focus-border": {"$ref": "#/definitions/color"},
+        "disabled-background": {"$ref": "#/definitions/color"},
+      }
+    }
+  }
+}

@@ -1,17 +1,11 @@
-<bl-list-and-show-layout #layout (listScrolledToBottom)="applicationList.onScrollToBottom()" [list]="applicationList">
-    <div bl-list-title>
+<bl-browse-layout #layout>
+    <div blBrowseLayoutTitle>
         Application packages
     </div>
-    <div bl-list-buttons>
-        <bl-button type="plain" icon="fa fa-plus spin-hover" color="light" title="Add an application" [action]="addApplication">
+    <bl-inline-quota blBrowseLayoutQuotas include="applications"></bl-inline-quota>
+    <div blBrowseLayoutButtons>
+        <bl-button type="plain" icon="fa fa-plus spin-hover" color="light" title="Add an application" [action]="addApplication" permission="write">
         </bl-button>
     </div>
-    <div bl-list-content>
-        <bl-focus-section>
-            <bl-application-list #applicationList [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-application-list>
-        </bl-focus-section>
-    </div>
-    <div bl-show-content>
-        <router-outlet></router-outlet>
-    </div>
-</bl-list-and-show-layout>
+    <bl-application-list blBrowseLayoutList></bl-application-list>
+</bl-browse-layout>

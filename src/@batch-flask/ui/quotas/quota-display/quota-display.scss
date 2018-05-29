@@ -1,0 +1,73 @@
+@import "app/styles/variables";
+
+bl-quota-display {
+    height: 100%;
+    padding: 0;
+    vertical-align: top;
+    display: block;
+
+    > .details > .label {
+        color: $secondary-text;
+    }
+
+    > .details > .value {
+        color: $primary-text;
+    }
+
+    > .progress mat-progress-bar {
+        &.low-usage > .mat-progress-bar-fill:after {
+            background-color: $successText;
+        }
+        &.medium-usage > .mat-progress-bar-fill:after {
+            background-color: $warningText;
+        }
+        &.high-usage > .mat-progress-bar-fill:after {
+            background-color: $errorText;
+        }
+    }
+
+    &[type="normal"] {
+        > .details > .label {
+            font-size: 11px;
+            height: 35%;
+            margin: 3px 5px 0;
+        }
+
+        > .details > .value {
+            font-size: 15px;
+            color: map-get($primary, 500);
+            margin: 0 5px;
+
+            > .statistic {
+                margin-bottom: 2px;
+            }
+        }
+
+        > .progress mat-progress-bar {
+            height: 4px;
+            margin-top: 13px;
+
+            .mat-progress-bar-buffer {
+                background-color: transparent;
+            }
+
+            .mat-progress-bar-background {
+                display: none;
+            }
+        }
+    }
+
+    &[type="compact"] {
+        > .details {
+            display: flex;
+            > .label {
+                flex: 1;
+            }
+        }
+
+        > .progress mat-progress-bar {
+            height: 3px;
+            margin-top: 3px;
+        }
+    }
+}

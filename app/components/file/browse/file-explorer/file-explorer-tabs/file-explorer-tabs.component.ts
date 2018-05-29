@@ -1,8 +1,8 @@
 import { Component, HostListener, Input, OnChanges, OnDestroy } from "@angular/core";
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
+import { MouseButton } from "@batch-flask/core";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FileExplorerWorkspace, FileSource, OpenedFile } from "app/components/file/browse/file-explorer";
 import { FileLoader } from "app/services/file";
-import { Constants } from "app/utils";
 import * as path from "path";
 import { Subscription } from "rxjs/Rx";
 import "./file-explorer-tabs.scss";
@@ -42,10 +42,10 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
 
     @HostListener("mousedown", ["$event"])
     public disableClickDefaultActions(event) {
-        if (event.button === Constants.MouseButton.left) {
+        if (event.button === MouseButton.left) {
             event.preventDefault(); // Prevent focus on left click
         }
-        if (event.button === Constants.MouseButton.middle) {
+        if (event.button === MouseButton.middle) {
             event.preventDefault(); // Prevent scrolling on middle click
             event.stopPropagation();
             return;
@@ -54,9 +54,9 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
     }
 
     public handleMouseUp(event: MouseEvent, tab) {
-        if (event.button === Constants.MouseButton.middle) { // Middle click
+        if (event.button === MouseButton.middle) { // Middle click
             this.closeTab(tab, event);
-        } else if (event.button === Constants.MouseButton.right) {
+        } else if (event.button === MouseButton.right) {
             this.showContextMenu(tab);
         }
     }

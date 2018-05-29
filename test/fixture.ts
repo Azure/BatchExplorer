@@ -1,8 +1,9 @@
 import { Type } from "@angular/core";
 import * as moment from "moment";
 
+import { PinnedEntityType } from "@batch-flask/core";
 import { AccountResource, ApplicationPackage, BatchApplication, File, Job, Node, PackageState,
-     PinnedEntityType, Pool, Subscription, SubtaskInformation, Task,
+     Pool, Subscription, SubtaskInformation, Task,
 } from "app/models";
 
 export class FixtureFactory<TEntity> {
@@ -209,11 +210,12 @@ export const subscription = new FixtureFactory<Subscription>(Subscription, {
 });
 
 export const account = new FixtureFactory<AccountResource>(AccountResource, {
-    id: "account-id",
+    id: "account-1",
     name: "account-test",
     location: "westus",
     type: "BatchAccount",
     properties: {
+        accountEndpoint: "account-1.region.batch.azure.com",
         autoStorage: {
             storageAccountId: null,
             lastKeySync: null,

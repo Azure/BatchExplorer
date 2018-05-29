@@ -46,16 +46,8 @@ export class ContainerConfigurationComponent implements ControlValueAccessor {
         if (value) {
             this.form.patchValue(value);
         } else {
-            this.reset();
+            this.form.reset();
         }
-    }
-
-    public reset() {
-        this.form.reset({
-            type: null,
-            containerImageNames: [],
-            containerRegistries: [],
-        });
     }
 
     public registerOnChange(fn) {

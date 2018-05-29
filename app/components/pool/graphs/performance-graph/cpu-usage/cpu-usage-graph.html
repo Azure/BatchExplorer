@@ -1,14 +1,14 @@
 <div class="cpu-usage-container">
-    <div *ngIf="interactive && lastIndividualCpuUsage" class="details">
+    <div *ngIf="interactive && showIndividualCpu && lastIndividualCpuUsage" class="details">
         <mat-checkbox class="overall-toggle" [ngModel]="!separateCpuGraphs" (ngModelChange)="changeShowOverallUsage($event)" color="primary">Overall</mat-checkbox>
         <table class="individual-cpus">
-            <tr *ngFor="let usage of lastIndividualCpuUsage;let cpuN = index" class="individual-cpu">
+            <tr *ngFor="let usage of lastIndividualCpuUsage;trackBy: trackCpu;let cpuN = index" class="individual-cpu">
                 <td class="name">Cpu {{cpuN + 1}}</td>
                 <td class="value">{{usage.value}}%</td>
             </tr>
         </table>
     </div>
-    <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type">
+    <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type" (elDblClick)="handleDblClick($event)">
     </canvas>
     <div class="info-overlay" *ngIf="(data.loading | async) && interactive">Loading...</div>
 </div>

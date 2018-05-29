@@ -1,38 +1,56 @@
-<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
-<bl-quick-list *ngIf="quickList">
-    <bl-quick-list-item *ngFor="let job of data.items | async; trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id" [contextmenu]="contextmenu(job)">
-        <bl-quick-list-item-status [status]="jobStatus(job)" [tooltip]="jobStatusText(job)">
-        </bl-quick-list-item-status>
+<bl-focus-section>
+    <bl-quick-list *ngIf="quicklist"
+        [status]="status"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        [commands]="commands"
+        (scrollBottom)="onScrollToBottom()">
 
-        <div bl-quick-list-item-title>{{job.id}}</div>
-        <div bl-quick-list-item-field>
-            {{job.state}}
-            <bl-tags [tags]="job.tags" [maxTags]="3"></bl-tags>
-        </div>
-        <div bl-quick-list-item-preview>
-            <bl-job-stats-preview [job]="job"></bl-job-stats-preview>
-        </div>
-    </bl-quick-list-item>
-</bl-quick-list>
+        <bl-quick-list-item *ngFor="let job of jobs; trackBy: trackByFn"
+            [link]="['/jobs/', job.id]"
+            [key]="job.id">
+            <bl-quick-list-item-status [status]="jobStatus(job)" [tooltip]="jobStatusText(job)">
+            </bl-quick-list-item-status>
 
-<bl-table *ngIf="!quickList">
-    <bl-thead>
-        <bl-column>Id</bl-column>
-        <bl-column>State</bl-column>
-        <bl-column>Pool</bl-column>
-    </bl-thead>
+            <div bl-quick-list-item-title>{{job.id}}</div>
+            <div bl-quick-list-item-field>
+                {{job.state}}
+                <bl-tags [tags]="job.tags" [maxTags]="3"></bl-tags>
+            </div>
+            <div bl-quick-list-item-preview>
+                <bl-job-stats-preview [job]="job"></bl-job-stats-preview>
+            </div>
+        </bl-quick-list-item>
+    </bl-quick-list>
 
-    <bl-row *ngFor="let job of data.items | async; trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id" [contextmenu]="contextmenu(job)">
-        <bl-cell>{{job.id}}</bl-cell>
-        <bl-cell>{{job.state}}</bl-cell>
-        <bl-cell>{{job.poolInfo?.poolId}}</bl-cell>
-    </bl-row>
-</bl-table>
+    <bl-table *ngIf="!quicklist"
+        [data]="jobs"
+        [status]="status"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        [commands]="commands"
+        (scrollBottom)="onScrollToBottom()">
 
-<bl-no-item [itemCount]="(data.items | async).size" [filter]="filter" [status]="status | async">
+        <bl-column name="id">
+            <div *blHeadCellDef>ID</div>
+            <div *blCellDef="let job">{{job.id}}</div>
+        </bl-column>
+
+        <bl-column name="state">
+            <div *blHeadCellDef>State</div>
+            <div *blCellDef="let job">{{job.state}}</div>
+        </bl-column>
+
+        <bl-column name="pool">
+            <div *blHeadCellDef>Pool</div>
+            <div *blCellDef="let job">{{job.poolInfo?.poolId}}</div>
+        </bl-column>
+    </bl-table>
+</bl-focus-section>
+<bl-no-item [itemCount]="jobs.size" [filter]="filter" [status]="status">
     <i icon class="fa fa-tasks"></i>
     <span no-filter>No jobs</span>
     <span with-filter>No jobs match this filter</span>
 </bl-no-item>
 
-<bl-loading [status]="status | async"></bl-loading>
+<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>

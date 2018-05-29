@@ -1,0 +1,114 @@
+@import "app/styles/variables";
+
+bl-editable-table, .editable-table {
+    table {
+        margin-bottom: 15px;
+        border-collapse: collapse;
+        width: 100%;
+        table-layout: fixed;
+
+        thead {
+            text-align: left;
+            color: $genericGray;
+            font-size: 12px;
+            font-weight: 200;
+
+            th {
+                padding: 0 5px;
+            }
+        }
+
+        tr:last-child > td {
+            background: $whiteSmoke-darker;
+        }
+
+        td {
+            border: 1px solid $border-color;
+            padding: 0;
+            margin: 0;
+            height: 20px;
+            font-size: 12px;
+            line-height: 0;
+        }
+
+        td.action-column, th.action-column {
+            width: 26px;
+        }
+
+        input, .bl-form-field {
+            width: 100%;
+            border: none;
+            outline: none;
+            color: $mineshaft-grey;
+            border-bottom: 2px solid transparent;
+            background: transparent;
+
+            &:focus {
+                background: white;
+                border-bottom: 2px solid map-get($primary, 500);
+            }
+        }
+
+        .bl-form-field > .mat-input-wrapper {
+            padding: 0;
+
+            .mat-input-infix {
+                border-top: 0;
+                padding: 0;
+            }
+
+            .mat-input-underline {
+                display: none;
+            }
+        }
+
+        input {
+            padding: 5px;
+            font-size: 12px;
+        }
+
+        bl-select {
+            .select-button-container {
+                border: none;
+            }
+        }
+
+        .delete-item-btn {
+            width: 26px;
+            height: 26px;
+            background: none;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            cursor: pointer;
+            display:  flex;
+            align-items: center;
+            justify-content: center;
+
+            > .fa {
+                color: $danger-color;
+            }
+
+            &:focus, &:hover {
+                outline: none;
+                background: $danger-color;
+                > .fa {
+                    color: $whitesmoke;
+                }
+            }
+
+            &:active {
+                background: $danger-color;
+                > .fa {
+                    color: $whitesmoke;
+                }
+            }
+        }
+    }
+
+    .add-item-btn {
+        display: block;
+        margin: 10px auto;
+    }
+}

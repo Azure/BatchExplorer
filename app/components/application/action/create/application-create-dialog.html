@@ -2,18 +2,18 @@
     <bl-form-page main-form-page [title]="title" [subtitle]="description" [formGroup]="form">
         <bl-form-section title="General info" subtitle="Basic information about the application">
             <div class="form-element">
-                <mat-form-field>
-                    <input matInput formControlName="id" placeholder="Application identifier">
-                </mat-form-field>
+                <bl-form-field>
+                    <input blInput formControlName="id" placeholder="Application identifier">
+                </bl-form-field>
                 <bl-error controlName="id" code="required">The application identifier is a required field</bl-error>
                 <bl-error controlName="id" code="maxlength">Application identifier has a maximum length of 64 characters</bl-error>
                 <bl-error controlName="id" code="pattern">Application can contain any combination of alphanumeric characters including hyphens and underscores</bl-error>
             </div>
 
             <div class="form-element">
-                <mat-form-field>
-                    <input matInput formControlName="version" placeholder="Package version">
-                </mat-form-field>
+                <bl-form-field>
+                    <input blInput formControlName="version" placeholder="Package version">
+                </bl-form-field>
                 <bl-error controlName="version" code="required">The package version is a required field</bl-error>
                 <bl-error controlName="version" code="maxlength">Package version has a maximum length of 64 characters</bl-error>
                 <bl-error controlName="version" code="pattern">Package version can only be in the format: 1, 1.2, 1.2a, 1.200.1, beta, etc</bl-error>
@@ -21,7 +21,10 @@
         </bl-form-section>
         <bl-form-section title="Package" subtitle="Select a package for upload">
             <div class="form-element">
-                <input type="file" (change)="fileSelected($event)" />
+                <p>{{ form.controls.package.value }}</p>
+                <bl-directory-picker (eventChange)="fileSelected($event)" [canPickFile]="true">
+                    <i class="fa fa-upload" aria-hidden="true"></i>&nbsp;&nbsp;Select a package
+                </bl-directory-picker>
                 <bl-error controlName="package" code="required">Please select a valid application package file</bl-error>
                 <bl-error controlName="package" code="pattern">Application packages need to be valid ZIP files only</bl-error>
                 <div *ngIf="hasValidFile()" class="input-summary">

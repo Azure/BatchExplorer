@@ -2,14 +2,15 @@ import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
 import * as storage from "azure-storage";
-import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
+import { autobind } from "@batch-flask/core";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { BatchApplication } from "app/models";
 import { applicationToCreateFormModel } from "app/models/forms";
-import { ApplicationService, StorageService } from "app/services";
+import { ApplicationService } from "app/services";
+import { StorageBlobService } from "app/services/storage";
 import { Constants, log, prettyBytes } from "app/utils";
 
 @Component({
@@ -28,7 +29,7 @@ export class ApplicationCreateDialogComponent {
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<ApplicationCreateDialogComponent>,
         private applicationService: ApplicationService,
-        private storageService: StorageService,
+        private storageBlobService: StorageBlobService,
         private notificationService: NotificationService) {
 
         const validation = Constants.forms.validation;
@@ -123,6 +124,6 @@ export class ApplicationCreateDialogComponent {
         if (!this.hasValidFile()) {
             return Observable.throw("Valid file not selected");
         }
-        return this.storageService.uploadToSasUrl(sasUrl, file.path);
+        return this.storageBlobService.uploadToSasUrl(sasUrl, file.path);
     }
 }

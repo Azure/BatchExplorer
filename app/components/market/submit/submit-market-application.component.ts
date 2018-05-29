@@ -2,9 +2,9 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 
+import { log } from "@batch-flask/utils";
 import { NcjJobTemplate, NcjPoolTemplate, NcjTemplateMode } from "app/models";
 import { NcjTemplateService } from "app/services";
-import { log } from "app/utils";
 import "./submit-market-application.scss";
 
 @Component({

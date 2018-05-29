@@ -1,0 +1,42 @@
+<bl-focus-section>
+    <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()"  [commands]="commands">
+        <bl-quick-list-item *ngFor="let certificate of displayedCertificates; trackBy: trackByFn" [link]="['/certificates/', certificate.thumbprint]" [key]="certificate.thumbprint">
+            <bl-quick-list-item-status [status]="certificateStatus(certificate)" [tooltip]="certificateStatusText(certificate)">
+            </bl-quick-list-item-status>
+            <div bl-quick-list-item-title>{{certificate.thumbprint}}</div>
+            <div bl-quick-list-item-field>
+                {{certificate.state}}
+            </div>
+        </bl-quick-list-item>
+    </bl-quick-list>
+
+    <bl-table *ngIf="!quicklist"
+        [data]="displayedCertificates"
+        [status]="status"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        (scrollBottom)="onScrollToBottom()"
+        [commands]="commands">
+
+        <bl-column name="algorithm">
+            <div *blHeadCellDef>Thumbprint algorithm</div>
+            <div *blCellDef="let certificate">{{certificate.thumbprintAlgorithm}}</div>
+        </bl-column>
+        <bl-column name="thumbprint">
+            <div *blHeadCellDef>Thumbprint</div>
+            <div *blCellDef="let certificate">{{certificate.thumbprint}}</div>
+        </bl-column>
+        <bl-column name="state">
+            <div *blHeadCellDef>State</div>
+            <div *blCellDef="let certificate">{{certificate.state}}</div>
+        </bl-column>
+    </bl-table>
+</bl-focus-section>
+
+<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>
+
+<bl-no-item [itemCount]="displayedCertificates.size" [filter]="filter" [status]="status">
+    <i icon class="fa fa-certificate"></i>
+    <span no-filter>No certificates</span>
+    <span with-filter>No certificates match this filter</span>
+</bl-no-item>

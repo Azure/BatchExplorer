@@ -1,6 +1,6 @@
-import { Model, Prop, Record } from "app/core";
+import { Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
+import { Constants } from "common";
 import { ContainerLease, ContainerLeaseAttributes } from "./container-lease";
-import { NavigableRecord } from "./navigable-record";
 
 export interface BlobContainerAttributes {
     id: string;
@@ -27,8 +27,18 @@ export class BlobContainer extends Record<BlobContainerAttributes> implements Na
     @Prop() public lastModified: Date;
     @Prop() public lease: ContainerLease;
     @Prop() public url: string;
+    @Prop() public storageAccountId: string;
 
     public get routerLink(): string[] {
-        return ["/data", this.id];
+        if (this.isFileGroup) {
+            return ["/data/file-groups/containers", this.id];
+        } else {
+            return ["/data", this.storageAccountId, "containers", this.id];
+
+        }
+    }
+
+    public get isFileGroup() {
+        return this.id && this.id.startsWith(Constants.ncjFileGroupPrefix);
     }
 }

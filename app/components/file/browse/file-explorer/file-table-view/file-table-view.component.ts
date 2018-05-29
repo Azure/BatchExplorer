@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
+import * as moment from "moment";
 
-import { LoadingStatus } from "app/components/base/loading";
-import { DropEvent, TableConfig } from "app/components/base/table";
-import { ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
+import { LoadingStatus } from "@batch-flask/ui/loading";
+import { DropEvent, TableConfig } from "@batch-flask/ui/table";
 import { FileTreeNode } from "app/services/file";
-import { DateUtils, DragUtils, prettyBytes } from "app/utils";
+import { DragUtils, prettyBytes } from "app/utils";
 import { FileDropEvent } from "../file-explorer.component";
 import "./file-table-view.scss";
 
@@ -24,12 +25,16 @@ export class FileTableViewComponent implements OnChanges {
     @Output() public dropFiles = new EventEmitter<FileDropEvent>();
 
     public tableConfig: TableConfig;
-
+    public treeRows: FileTreeNode[] = [];
     public LoadingStatus = LoadingStatus;
 
-    public ngOnChanges(inputs) {
-        if (inputs.canDropExternalFiles) {
+    public ngOnChanges(changes) {
+        if (changes.canDropExternalFiles) {
             this._updateTableConfig();
+        }
+
+        if (changes.treeNode) {
+            this.treeRows = [...this.treeNode.walk()];
         }
     }
 
@@ -39,7 +44,7 @@ export class FileTableViewComponent implements OnChanges {
     }
 
     public prettyDate(date: Date) {
-        return DateUtils.customFormat(date, "MMM Do, YYYY, HH:mm:ss");
+        return moment(date).format("MMM Do, YYYY, HH:mm:ss");
     }
 
     public isErrorState(file: any) {
@@ -83,6 +88,10 @@ export class FileTableViewComponent implements OnChanges {
 
     public handleDragHover(event: DragEvent) {
         DragUtils.allowDrop(event, this.canDropExternalFiles);
+    }
+
+    public trackTreeNode(index, node: FileTreeNode) {
+        return node.path;
     }
 
     private _updateTableConfig() {

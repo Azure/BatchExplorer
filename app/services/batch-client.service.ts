@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
+import { ElectronRemote } from "@batch-flask/ui";
 import { Observable } from "rxjs";
 
-import { Constants } from "app/utils";
 import { AccountService } from "./account.service";
 import { AdalService } from "./adal";
 import { BatchClientProxy, BatchClientProxyFactory } from "./batch-api";
-import { ElectronRemote } from "./electron";
+import { BatchLabsService } from "./batch-labs.service";
 
 const factory = new BatchClientProxyFactory();
 
@@ -13,7 +13,12 @@ const factory = new BatchClientProxyFactory();
 export class BatchClientService {
     private _currentAccountId: string;
 
-    constructor(private adal: AdalService, private accountService: AccountService, remote: ElectronRemote) {
+    constructor(
+        private adal: AdalService,
+        private accountService: AccountService,
+        remote: ElectronRemote,
+        private batchLabs: BatchLabsService) {
+
         accountService.currentAccountId.subscribe((id) => {
             this._currentAccountId = id;
         });
@@ -24,7 +29,7 @@ export class BatchClientService {
             throw new Error("No account currently selected....");
         }
 
-        const resource = Constants.ResourceUrl.batch;
+        const resource = this.batchLabs.azureEnvironment.batchUrl;
         return this.currentAccount.flatMap((account) => {
             return this.adal.accessTokenFor(account.subscription.tenantId, resource).map((token) => {
                 const url = `https://${account.properties.accountEndpoint}`;

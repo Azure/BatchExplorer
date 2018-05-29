@@ -3,10 +3,10 @@ import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { ActivatedRoute, Router } from "@angular/router";
-import { MaterialModule } from "app/core";
+import { MaterialModule } from "@batch-flask/core";
 import { BehaviorSubject } from "rxjs";
 
-import { TabsModule } from "app/components/base/tabs";
+import { TabsModule } from "@batch-flask/ui/tabs";
 
 @Component({
     template: `
@@ -62,14 +62,13 @@ describe("Tabs", () => {
         expect(fixture.nativeElement.textContent).not.toContain("Content 2");
     });
 
-    it("changing the route should update the tab", async(() => {
+    it("changing the route should update the tab", async () => {
         activeRouteSpy.queryParams.next({ tab: "second" });
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(fixture.nativeElement.textContent).toContain("Content 2");
-            expect(routerSpy.navigate).not.toHaveBeenCalled();
-        });
-    }));
+        await fixture.whenStable();
+        expect(fixture.nativeElement.textContent).toContain("Content 2");
+        expect(routerSpy.navigate).not.toHaveBeenCalled();
+    });
 
     it("clicking on a tab label should update the route", async(() => {
         const labels = fixture.debugElement.queryAll(By.css(".mat-tab-label"));

@@ -5,7 +5,7 @@ import * as moment from "moment";
 import { Job } from "app/models";
 import { DateUtils } from "app/utils";
 
-import { autobind } from "core-decorators";
+import { autobind } from "@batch-flask/core";
 import "./jobs-running-time-graph.scss";
 
 @Component({

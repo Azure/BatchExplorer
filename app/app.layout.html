@@ -1,25 +1,32 @@
-<div id="container" [hidden]="!isAppReady">
-    <!--[class.no-userinteract]="!(hasAccount | async)" -->
-    <header>
-        <bl-header></bl-header>
-    </header>
-    <nav [class.no-userinteract]="!(hasAccount | async)" class="noselect">
-        <bl-app-nav></bl-app-nav>
-    </nav>
-    <section id="content">
-        <div id="content-inner">
-            <bl-notification-container class="tr"></bl-notification-container>
-            <mat-sidenav-container>
-                <mat-sidenav #rightSidebar align="end">
-                    <bl-sidebar-content #sidebarContent [sidebar]="rightSidebar"></bl-sidebar-content>
-                </mat-sidenav>
-                <div *ngIf="isAppReady">
+<ng-container *ngIf="isAppReady">
+    <div id="container" *ngIf="!fullscreen">
+        <header>
+            <bl-header></bl-header>
+        </header>
+        <nav class="noselect">
+            <bl-app-nav></bl-app-nav>
+        </nav>
+        <section id="content">
+            <div id="content-inner">
+                <bl-notification-container class="tr"></bl-notification-container>
+                <mat-sidenav-container>
+                    <mat-sidenav #rightSidebar align="end">
+                        <bl-sidebar-content #sidebarContent [sidebar]="rightSidebar"></bl-sidebar-content>
+                    </mat-sidenav>
                     <router-outlet></router-outlet>
-                </div>
-            </mat-sidenav-container>
-        </div>
-    </section>
-    <footer>
-        <bl-footer></bl-footer>
-    </footer>
-</div>
+                </mat-sidenav-container>
+            </div>
+        </section>
+        <footer>
+            <bl-footer></bl-footer>
+        </footer>
+    </div>
+    <div class="fullscreen" *ngIf="fullscreen">
+        <mat-sidenav-container>
+            <mat-sidenav #rightSidebar align="end">
+                <bl-sidebar-content #sidebarContent [sidebar]="rightSidebar"></bl-sidebar-content>
+            </mat-sidenav>
+            <router-outlet></router-outlet>
+        </mat-sidenav-container>
+    </div>
+</ng-container>

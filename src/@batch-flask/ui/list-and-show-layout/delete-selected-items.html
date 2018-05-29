@@ -1,0 +1,12 @@
+<bl-simple-form [submit]="destroyEntities" [containerRef]="dialogRef" [stickyFooter]="false" actionColor="warn" actionName="Delete"
+    [multiUse]="false" size="small" title="Delete {{ entityName || 'items' }}">
+    <div class="message">
+        <p>You are about to delete the selected items, including:</p>
+        <ul class="list-point">
+            <li *ngFor="let item of items;trackBy: trackByFn">
+                <span *ngIf="parentId" style="word-wrap:break-word;">{{ parentId }} - {{item}}</span>
+                <span *ngIf="!parentId" style="word-wrap:break-word;">{{item}}</span>
+            </li>
+        </ul>
+    </div>
+</bl-simple-form>

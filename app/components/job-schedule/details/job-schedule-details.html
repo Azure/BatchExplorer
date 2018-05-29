@@ -1,0 +1,39 @@
+<bl-loading [status]="data.newDataStatus | async">
+    <div *ngIf="jobSchedule" class="fit-details-container">
+        <bl-summary-card>
+            <div summaryTitle>{{decorator.id}}</div>
+            <div summarySubtitle>
+                <i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}
+            </div>
+            <bl-tags summaryTags [tags]="jobSchedule.tags" [editable]="jobSchedule.editable" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
+            <bl-button-group summaryActions>
+                <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                <bl-button [action]="editJobSchedule" color="light" title="Edit job schedule" [disabled]="jobSchedule.state === JobScheduleState.completed">
+                    <i class="fa fa-edit"></i>
+                </bl-button>
+                <bl-terminate-button [entity]="jobSchedule" [action]="terminateJobSchedule"></bl-terminate-button>
+                <bl-delete-button [action]="deleteJobSchedule" [enabled]="jobSchedule.state !== JobScheduleState.deleting && jobSchedule.state !== JobScheduleState.terminating"></bl-delete-button>
+                <bl-disable-button [job]="jobSchedule" [action]="disableJobSchedule"></bl-disable-button>
+                <bl-enable-button [job]="jobSchedule" [action]="enableJobSchedule"></bl-enable-button>
+                <bl-clone-button [action]="cloneJobSchedule"></bl-clone-button>
+                <bl-button [action]="exportAsJSON" color="light" title="Export as JSON"><i class="fa fa-code"></i></bl-button>
+            </bl-button-group>
+        </bl-summary-card>
+        <bl-card class="details">
+            <bl-tab-group>
+                <bl-tab key="configuration">
+                    <bl-tab-label>Configuration</bl-tab-label>
+                    <bl-job-schedule-configuration [jobSchedule]="jobSchedule"></bl-job-schedule-configuration>
+                </bl-tab>
+                <bl-tab key="jobSpecification" *ngIf="jobSpecification">
+                    <bl-tab-label>Job specification</bl-tab-label>
+                    <bl-job-schedule-job-specification [job]="jobSpecification"></bl-job-schedule-job-specification>
+                </bl-tab>
+                <bl-tab key="autoPoolSpecification" *ngIf="autoPoolSpecification">
+                    <bl-tab-label>Auto pool specification</bl-tab-label>
+                    <bl-job-schedule-autopool [properties]="autoPoolSpecification"></bl-job-schedule-autopool>
+                </bl-tab>
+            </bl-tab-group>
+        </bl-card>
+    </div>
+</bl-loading>

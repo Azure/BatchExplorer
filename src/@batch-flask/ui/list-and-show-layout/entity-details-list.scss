@@ -1,0 +1,38 @@
+bl-entity-details-list {
+    $header-height: 30px;
+    display: block;
+    position: relative;
+    height: 100%;
+    padding-top: 10px;
+
+    > .entity-details-list-header {
+        display: flex;
+        width: 100%;
+        height: $header-height;
+        align-items: center;
+
+        > .quicksearch {
+            flex: 1;
+        }
+
+        > .actions {
+            font-size: 16px;
+
+            bl-button {
+                height: 24px;
+                width: 24px;
+                line-height: 24px;
+            }
+        }
+    }
+
+    > .entity-details-list-content {
+        height:  calc(100% - #{$header-height});
+
+        .list {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}

@@ -21,13 +21,13 @@ export class JobProgressGraphComponent implements OnChanges {
     public colors: any[] = [
         {
             backgroundColor: "rgba(76, 175, 80, 0.4)",
-            pointBackgroundColor: "#4caf50", // End time colors(green)
-            pointBorderColor: "#4caf50",
+            pointBackgroundColor: "var(--accent-color)", // End time colors(green)
+            pointBorderColor: "var(--accent-color)",
         },
         {
             backgroundColor: "rgba(76, 175, 80, 0.4)",
-            pointBackgroundColor: "#4caf50", // End time colors(green)
-            pointBorderColor: "#4caf50",
+            pointBackgroundColor: "var(--accent-color)", // End time colors(green)
+            pointBorderColor: "(--accent-color)",
         },
     ];
 

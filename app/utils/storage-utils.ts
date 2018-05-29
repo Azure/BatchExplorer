@@ -1,6 +1,19 @@
 import { SharedKeyUtils } from "./shared-key-utils";
 
 export class StorageUtils {
+    public static containerUrlRegex = /https?:\/\/(.*)\.blob\.core\.windows\.net\/(.*)\?.*/;
+
+    public static getContainerFromUrl(url: string) {
+        const match = this.containerUrlRegex.exec(url);
+
+        if (!match) { return null; }
+
+        return {
+            account: match[1],
+            container: match[2],
+        };
+    }
+
     /**
      * The job output container name is formed according to the following rules:
      *  - Normalize the job ID to lower case. (Due to the restricted set of letters permitted in IDs, there
@@ -20,13 +33,13 @@ export class StorageUtils {
      * @param jobId: the job identifier
      * @returns { normalized container name for the job }
      */
-    public static getSafeContainerName(jobId: string): Promise<string> {
+    public static async getSafeContainerName(jobId: string): Promise<string> {
         if (!jobId) {
-            return Promise.reject("No jobId supplied to getSafeContainerName(jobId: string)");
+            throw new Error("No jobId supplied to getSafeContainerName(jobId: string)");
         }
 
-        return this._getUnprefixedSafeContainerName(jobId)
-            .then(containerName => this._jobPrefix + containerName);
+        const containerName = await this._getUnprefixedSafeContainerName(jobId);
+        return this._jobPrefix + containerName;
     }
 
     public static isClassic(storageAccountId: string): boolean {
@@ -43,61 +56,55 @@ export class StorageUtils {
     // Must be <= 63 - "job-".Length - 1 (hyphen before hash) - length of hash string (40 for SHA1)
     private static _maxJobIdLengthInMungedContainerName = 15;
 
-    private static _getUnprefixedSafeContainerName(jobId: string): Promise<string> {
+    private static async _getUnprefixedSafeContainerName(jobId: string): Promise<string> {
         /*
          * It's safe to do this early as job id's cannot differ only by case, so the lower case job id
          * is still a unique identifier
          */
         jobId = jobId.toLowerCase();
 
-        return new Promise<string>((resolve, reject) => {
-            // Check that jobId is of the correct length
-            if (jobId.length > this._maxUsableJobIdLength) {
-                return resolve(this._mungeToContainerName(jobId));
-            }
+        // Check that jobId is of the correct length
+        if (jobId.length > this._maxUsableJobIdLength) {
+            return this._mungeToContainerName(jobId);
+        }
 
-            // Check that jobId only contains valid characters and doesnt start with a '-'
-            if (!this._regexPermittedContainerNamePattern.test(jobId)) {
-                return resolve(this._mungeToContainerName(jobId));
-            }
+        // Check that jobId only contains valid characters and doesnt start with a '-'
+        if (!this._regexPermittedContainerNamePattern.test(jobId)) {
+            return this._mungeToContainerName(jobId);
+        }
 
-            // Check that jobId doesn't contain any sequence of "--", and that it doesn't end with a "-"
-            if (jobId.indexOf("--") !== -1 || jobId.charAt(jobId.length - 1) === this._singleDashChar) {
-                return resolve(this._mungeToContainerName(jobId));
-            }
+        // Check that jobId doesn't contain any sequence of "--", and that it doesn't end with a "-"
+        if (jobId.indexOf("--") !== -1 || jobId.charAt(jobId.length - 1) === this._singleDashChar) {
+            return this._mungeToContainerName(jobId);
+        }
 
-            return resolve(jobId);
-        });
+        return jobId;
     }
 
-    private static _mungeToContainerName(jobId: string): Promise<string> {
-        return this._getJobIdHash(jobId).then((hash: string) => {
-            let hashText = hash;
-            let safeString = jobId.replace(this._regexUnderscoresAndMultipleDashes, this._singleDashChar);
-            safeString = safeString.replace(this._regexTrimStartAndEnd, "");
+    private static async _mungeToContainerName(jobId: string): Promise<string> {
+        const hash = await this._getJobIdHash(jobId);
+        const hashText = hash;
+        let safeString = jobId.replace(this._regexUnderscoresAndMultipleDashes, this._singleDashChar);
+        safeString = safeString.replace(this._regexTrimStartAndEnd, "");
 
-            if (safeString.length > this._maxJobIdLengthInMungedContainerName) {
-                safeString = safeString.substr(0, this._maxJobIdLengthInMungedContainerName);
+        if (safeString.length > this._maxJobIdLengthInMungedContainerName) {
+            safeString = safeString.substr(0, this._maxJobIdLengthInMungedContainerName);
 
-                // do this again as truncation may have unleashed a trailing dash
-                safeString = safeString.trimEnd(this._singleDashChar);
-            } else if (safeString.length === 0) {
-                safeString = "job";
-            }
+            // do this again as truncation may have unleashed a trailing dash
+            safeString = safeString.trimEnd(this._singleDashChar);
+        } else if (safeString.length === 0) {
+            safeString = "job";
+        }
 
-            return safeString + "-" + hashText;
-        });
+        return safeString + "-" + hashText;
     }
 
-    private static _getJobIdHash(jobId: string): Promise<string> {
+    private static async _getJobIdHash(jobId: string): Promise<string> {
         const crypto = SharedKeyUtils.getSubtleCrypto();
         const jobIdBytes = SharedKeyUtils.toSupportedArray(jobId);
 
-        return new Promise<string>((resolve, reject) => {
-            return crypto.subtle.digest("SHA-1", jobIdBytes).then((hash) => {
-                resolve(this._hex(hash));
-            });
-        });
+        const hash = await crypto.subtle.digest("SHA-1", jobIdBytes);
+        return this._hex(hash);
     }
 
     private static _hex(buffer: any) {

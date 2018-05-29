@@ -122,6 +122,10 @@ export class UserIdentityComponent implements OnChanges, OnDestroy {
         this._sub.unsubscribe();
     }
 
+    public trackOption(index, option: UserOption) {
+        return index;
+    }
+
     private _getAccounts(): UserAccount[] {
         if (!this.userAccounts) {
             return [];

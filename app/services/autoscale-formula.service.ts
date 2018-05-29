@@ -46,7 +46,7 @@ export class AutoscaleFormulaService {
     }
 
     private _saveAutoscaleFormulas(formulas: List<AutoscaleFormula> = null): Observable<any> {
-        let sub = new AsyncSubject();
+        const sub = new AsyncSubject();
         formulas = formulas === null ? this._formulas.value : formulas;
         this.localFileStorage.set(filename, formulas.toJS()).subscribe({
             error: (error) => {

@@ -31,6 +31,14 @@ ol ul {
     color: map-get($danger, 500);
 }
 
+.warning, .warn {
+    color: $warn-color;
+}
+
+.highlight {
+    color: $primary-color;
+}
+
 .unaccent {
     color: $silver-grey;
 }
@@ -45,4 +53,24 @@ textarea {
     outline-style: solid;
     outline-offset: -1px;
     opacity: 1!important;
+}
+
+input.bl-input {
+    background-color: $athensGrey;
+    color: $emperor-grey;
+    margin-right: 5px;
+    border: none;
+    border-top: 2px solid transparent;
+    border-bottom: 2px solid transparent;
+    padding: 0 5px;
+    height: 26px;
+
+    &::-webkit-input-placeholder {
+        color: $dusty-grey;
+    }
+
+    &:active, &:focus {
+        outline: none;
+        border-bottom-color: $primary-color;
+    }
 }

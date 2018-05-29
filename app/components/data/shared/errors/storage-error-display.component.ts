@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs";
 
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
-import { SidebarManager } from "app/components/base/sidebar";
 import { AccountResource } from "app/models";
 import { AccountService } from "app/services";
 

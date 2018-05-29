@@ -7,7 +7,7 @@
     <div [other-fix]="rerunDifferent" fixMessage="Rerun with different attributes"></div>
     <div message>{{errorMessage}}</div>
     <div details *ngIf="failureInfo.details.size !== 0">
-        <div *ngFor="let entry of failureInfo.details">
+        <div *ngFor="let entry of failureInfo.details;trackBy: trackByFn">
             <div>{{entry.name}}: {{entry.value}}</div>
         </div>
     </div>

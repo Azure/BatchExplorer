@@ -1,52 +1,63 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
-import { autobind } from "core-decorators";
+import { autobind } from "@batch-flask/core";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
-import { Job } from "app/models";
-import { JobService, PoolService } from "app/services";
-import { DeletePoolTask } from "./delete-pool-task";
+import { ConfirmationDialog } from "@batch-flask/ui";
+import { Job, Pool } from "app/models";
+import { JobService } from "app/services";
+
+export interface DeletePoolOutput {
+    deleteJob: boolean;
+}
 
 @Component({
     selector: "bl-delete-pool-dialog",
     templateUrl: "delete-pool-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DeletePoolDialogComponent {
-    public set poolId(poolId: string) {
-        this._poolId = poolId;
-        this._checkForJob();
+export class DeletePoolDialogComponent extends ConfirmationDialog<DeletePoolOutput>  {
+    public set pools(pools: Pool[]) {
+        this._pools = pools;
+        this.hasJobWithSameName = false;
+        if (pools.length === 1) {
+            this._checkForJob();
+        }
         this.changeDetector.detectChanges();
     }
-    public get poolId() { return this._poolId; }
+    public get pools() { return this._pools; }
 
     public hasJobWithSameName = false;
     public deleteJob = false;
 
-    private _poolId: string;
+    private _pools: Pool[];
 
     constructor(
         public dialogRef: MatDialogRef<DeletePoolDialogComponent>,
-        private poolService: PoolService,
         private jobService: JobService,
-        private taskManager: BackgroundTaskService,
         private changeDetector: ChangeDetectorRef) {
+        super();
+    }
+
+    public get title() {
+        const size = this._pools.length;
+        if (size > 1) {
+            return `Are you sure you want to delete ${size} pools`;
+        } else {
+            const pool = this._pools.first();
+            return `Are you sure you want to delete ${pool && pool.id}`;
+        }
     }
 
     @autobind()
     public destroyPool() {
-        const task = new DeletePoolTask(this.poolService, [this.poolId]);
-        task.startAndWaitAsync(this.taskManager);
-        if (this.deleteJob) {
-            this.jobService.delete(this.poolId).subscribe();
-        }
-        return task.actionDone;
+        this.markAsConfirmed({ deleteJob: this.deleteJob });
     }
 
     private _checkForJob() {
-        this.jobService.get(this.poolId).subscribe({
+        const poolId = this.pools.first().id;
+        this.jobService.get(poolId).subscribe({
             next: (job: Job) => {
-                this.hasJobWithSameName = job.poolId === this.poolId;
+                this.hasJobWithSameName = job.poolId === poolId;
                 this.changeDetector.detectChanges();
             },
             error: () => {

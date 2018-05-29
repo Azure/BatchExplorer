@@ -1,0 +1,31 @@
+@import "app/styles/variables";
+
+bl-expanding-textarea {
+    $container-height: 48px;
+    $collapsed-height: 20px;
+    $expanded-height: 100px;
+
+    > .textarea-container {
+        height:  $container-height;
+
+
+        textarea {
+            position: relative;
+            width: 100%;
+            height: $collapsed-height;
+            resize: none;
+        }
+    }
+
+    &.expanded {
+        .mat-input-infix {
+            background-color: $main-background;
+            z-index: 1000;
+        }
+
+        textarea {
+            background-color: $main-background;
+            resize: vertical;
+        }
+    }
+}

@@ -1,24 +1,24 @@
-<bl-storage-error-display [noClassic]="true"></bl-storage-error-display>
-
-<bl-list-and-show-layout #layout (listScrolledToBottom)="fileGroupList.onScrollToBottom()" [list]="fileGroupList" *ngIf="storageService.hasArmAutoStorage | async">
-    <div bl-list-title>
-        File groups
+<bl-browse-layout #layout [config]="layoutConfig">
+    <div blBrowseLayoutTitle>
+        Storage containers
     </div>
-    <div bl-list-buttons>
+    <div blBrowseLayoutButtons>
         <bl-button type="plain" icon="fa fa-plus spin-hover" color="light" title="Add a file group" [matMenuTriggerFor]="addFileGroupMenu"
             [disabled]="!hasAutoStorage" [@.disabled]="true">
         </bl-button>
         <mat-menu #addFileGroupMenu="matMenu" [@.disabled]="true">
-            <button mat-menu-item (click)="openEmptyFileGroupForm()"> Empty file group </button>
-            <button mat-menu-item (click)="openFileGroupForm()"> From local folder </button>
+            <button mat-menu-item (click)="openEmptyContainerForm()"> Empty container </button>
+            <ng-container *ngIf="dataSource === fileGroupsId">
+                <button mat-menu-item (click)="openEmptyContainerForm(true)"> Empty file group </button>
+                <button mat-menu-item (click)="openFileGroupForm()"> From local folder(File group) </button>
+            </ng-container>
         </mat-menu>
     </div>
-    <div bl-list-content>
-        <bl-focus-section>
-            <bl-file-group-list #fileGroupList [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-file-group-list>
-        </bl-focus-section>
+    <div pre-quicksearch>
+        <bl-storage-account-picker [ngModel]="dataSource" (ngModelChange)="updateDataSource($event)">
+            <bl-option [value]="fileGroupsId" label="File groups"></bl-option>
+            <bl-option value="-" label="--------------------" [disabled]="true"></bl-option>
+        </bl-storage-account-picker>
     </div>
-    <div bl-show-content>
-        <router-outlet></router-outlet>
-    </div>
-</bl-list-and-show-layout>
+    <bl-data-container-list blBrowseLayoutList [storageAccountId]="storageAccountId"></bl-data-container-list>
+</bl-browse-layout>

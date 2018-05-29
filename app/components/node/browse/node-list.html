@@ -1,3 +1,10 @@
-<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
-<bl-node-list-display [poolId]="poolId" [nodes]="data.items | async" [status]="status" [quickList]="quickList"></bl-node-list-display>
-<bl-list-loading [manualLoading]="manualLoading" [data]="data"></bl-list-loading>
+<bl-node-list-display
+    [poolId]="poolId"
+    [nodes]="data.items | async"
+    [status]="status"
+    [quicklist]="quicklist"
+    [(activeItem)]="activeItem"
+    [(selection)]="selection"
+    (scrollBottom)="onScrollToBottom()">
+</bl-node-list-display>
+<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>

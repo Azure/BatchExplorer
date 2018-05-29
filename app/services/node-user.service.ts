@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { ServerError } from "app/models";
-import { log } from "app/utils";
+import { ServerError } from "@batch-flask/core";
+import { log } from "@batch-flask/utils";
 import { BatchClientService } from "./batch-client.service";
 import { ServiceBase } from "./service-base";
 
@@ -15,6 +15,7 @@ export interface UpdateNodeUserAttributes {
 export interface AddNodeUserAttributes extends UpdateNodeUserAttributes {
     name?: string;
     isAdmin?: boolean;
+    expiryTime?: Date;
 }
 
 @Injectable()

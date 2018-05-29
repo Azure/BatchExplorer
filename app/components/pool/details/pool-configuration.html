@@ -1,8 +1,8 @@
 <bl-entity-configuration *ngIf="decorator" [value]="pool">
     <bl-property-list>
         <bl-property-group label="General" class="wide">
-            <bl-text-property label="Id" [value]="decorator.id"></bl-text-property>
-            <bl-text-property label="VM size" [value]="decorator.vmSize"></bl-text-property>
+            <bl-text-property label="ID" [value]="decorator.id"></bl-text-property>
+            <bl-text-property label="Node size" [value]="decorator.vmSize"></bl-text-property>
             <bl-text-property label="Current dedicated" [value]="decorator.currentDedicatedNodes"></bl-text-property>
             <bl-text-property label="Target dedicated" [value]="decorator.targetDedicatedNodes"></bl-text-property>
             <bl-text-property label="Current low priority" [value]="decorator.currentLowPriorityNodes"></bl-text-property>
@@ -19,10 +19,9 @@
             <bl-bool-property label="Inter-node communication" [value]="pool.enableInterNodeCommunication"></bl-bool-property>
             <bl-text-property label="Last modified" [value]="decorator.lastModified"></bl-text-property>
             <bl-text-property label="Max tasks per node" [value]="decorator.maxTasksPerNode"></bl-text-property>
-            <!--<bl-text-property label="Resize error" [value]="decorator"></bl-text-property>-->
             <bl-text-property label="Resize timeout" [value]="decorator.resizeTimeout"></bl-text-property>
             <bl-text-property label="Task scheduling policy" [value]="decorator.taskSchedulingPolicy.nodeFillType"></bl-text-property>
-            <bl-text-property label="Url" [value]="decorator.url"></bl-text-property>
+            <bl-text-property label="URL" [value]="decorator.url"></bl-text-property>
             <bl-text-property label="User accounts" [value]="decorator.userAccounts" *ngIf="decorator.userAccounts"></bl-text-property>
             <bl-text-property label="Application licenses" [value]="decorator.applicationLicenses" *ngIf="decorator.applicationLicenses"></bl-text-property>
             <bl-text-property label="Network subnet" [value]="decorator.networkSubnetId" *ngIf="decorator.networkSubnetId"></bl-text-property>
@@ -42,13 +41,15 @@
             <div collapsed-preview>
                 <span>{{decorator.poolOs}}</span>
             </div>
-
-            <bl-text-property label="Publisher" [value]="decorator.virtualMachineConfiguration.imageReference.publisher"></bl-text-property>
-            <bl-text-property label="Offer" [value]="decorator.virtualMachineConfiguration.imageReference.offer"></bl-text-property>
-            <bl-text-property label="Sku" [value]="decorator.virtualMachineConfiguration.imageReference.sku"></bl-text-property>
-            <bl-text-property label="Version" [value]="decorator.virtualMachineConfiguration.imageReference.version"></bl-text-property>
-            <bl-text-property label="Node agent sku id" [value]="decorator.virtualMachineConfiguration.nodeAgentSKUId"></bl-text-property>
-            <bl-text-property *ngIf="decorator.virtualMachineConfiguration.windowsConfiguration" label="Enable automatic updates" [value]="decorator.virtualMachineConfiguration.windowsConfiguration.enableAutomaticUpdates"></bl-text-property>
+            <ng-container *ngIf="!pool.virtualMachineConfiguration.imageReference.virtualMachineImageId">
+                <bl-text-property label="Publisher" [value]="decorator.virtualMachineConfiguration.imageReference.publisher"></bl-text-property>
+                <bl-text-property label="Offer" [value]="decorator.virtualMachineConfiguration.imageReference.offer"></bl-text-property>
+                <bl-text-property label="SKU" [value]="decorator.virtualMachineConfiguration.imageReference.sku"></bl-text-property>
+                <bl-text-property label="Version" [value]="decorator.virtualMachineConfiguration.imageReference.version"></bl-text-property>
+            </ng-container>
+            <bl-text-property label="Virtual machine image ID" [value]="decorator.virtualMachineConfiguration.imageReference.virtualMachineImageId"></bl-text-property>
+            <bl-text-property label="Node agent SKU ID" [value]="decorator.virtualMachineConfiguration.nodeAgentSKUId"></bl-text-property>
+            <bl-text-property *ngIf="pool.virtualMachineConfiguration.windowsConfiguration" label="Enable automatic updates" [value]="decorator.virtualMachineConfiguration.windowsConfiguration.enableAutomaticUpdates"></bl-text-property>
             <bl-text-property *ngIf="containerConfiguration" label="Container type" [value]="containerConfiguration.type"></bl-text-property>
             <bl-text-property *ngIf="containerConfiguration" label="Container images" [value]="containerConfiguration.containerImageNames"></bl-text-property>
             <bl-table-property *ngIf="containerConfiguration?.containerRegistries?.length > 0" label="Container registries">
@@ -147,9 +148,38 @@
             <div collapsed-preview>
                 <span>{{metadata?.size}} meta items</span>
             </div>
-            <bl-text-property *ngFor="let metaItem of metadata" label="{{metaItem.name}}" [value]="metaItem.value"></bl-text-property>
+            <bl-text-property *ngFor="let metaItem of metadata" label="{{metaItem.name}}" [value]="metaItem.value" [wrap]="true"></bl-text-property>
             <bl-no-item [itemCount]="metadata.size" [slimline]="true">
                 <span no-filter>This pool contains no metadata</span>
+            </bl-no-item>
+        </bl-property-group>
+
+        <bl-property-group *ngIf="poolEndpointConfiguration" label="Pool endpoint configuration" class="wide" [collapsed]="true">
+            <div collapsed-preview>
+                <span>{{poolEndpointConfiguration?.length}} inbound NAT pools</span>
+            </div>
+            <ng-container *ngFor="let inboundNATPool of poolEndpointConfiguration">
+                <bl-text-property label="Name" [value]="inboundNATPool.name"></bl-text-property>
+                <bl-text-property label="Backend port" [value]="inboundNATPool.backendPort"></bl-text-property>
+                <bl-text-property label="Frontend port range" [value]="inboundNATPool.frontendPortRange"></bl-text-property>
+                <bl-text-property label="Protocol" [value]="inboundNATPool.protocol"></bl-text-property>
+                <bl-table-property *ngIf="inboundNATPool.networkSecurityRules?.length > 0" label="Network security rules">
+                    <bl-table-property-header>
+                        <div tp-column>Access</div>
+                        <div tp-column>Priority</div>
+                        <div tp-column>Source address prefix</div>
+                    </bl-table-property-header>
+                    <bl-table-property-row *ngFor="let securityRule of inboundNATPool.networkSecurityRules">
+                        <bl-tp-cell [value]="securityRule.access"></bl-tp-cell>
+                        <bl-tp-cell [value]="securityRule.priority"></bl-tp-cell>
+                        <bl-tp-cell [value]="securityRule.sourceAddressPrefix"></bl-tp-cell>
+                    </bl-table-property-row>
+                </bl-table-property>
+                <br />
+            </ng-container>
+
+            <bl-no-item [itemCount]="poolEndpointConfiguration.length" [slimline]="true">
+                <span no-filter>This pool contains no inbound NAT pools</span>
             </bl-no-item>
         </bl-property-group>
     </bl-property-list>

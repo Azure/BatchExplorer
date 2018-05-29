@@ -1,7 +1,7 @@
 import { fakeAsync, tick } from "@angular/core/testing";
 import { Observable } from "rxjs";
 
-import { ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
 import { BasicEntityGetter, DataCache, EntityView } from "app/services/core";
 import { EntityGetter } from "app/services/core/data/entity-getter";
 import { FakeModel, FakeParams } from "./fake-model";
@@ -111,10 +111,12 @@ describe("EntityView", () => {
     }));
 
     describe("When it return a 404 error", () => {
-        let item: FakeModel = null;
-        let deleted: string = null;
+        let item: FakeModel;
+        let deleted: string;
 
         beforeEach(() => {
+            item = null;
+            deleted = null;
             const responses = [
                 Observable.fromPromise(Promise.resolve(data[0])),
                 Observable.throw(new ServerError({ status: 404, message: "404 not found" } as any)),
@@ -126,6 +128,7 @@ describe("EntityView", () => {
                 supplyData: dataSpy,
             });
 
+            view.dispose();
             view = new EntityView({
                 cache: () => cache,
                 getter: getter,
@@ -138,7 +141,7 @@ describe("EntityView", () => {
                 cache: () => cache,
                 supplyData: () => Observable.throw(new ServerError({ status: 404, message: "404 not found" } as any)),
             });
-
+            view.dispose();
             view = new EntityView({
                 cache: () => cache,
                 getter: getter,
@@ -172,6 +175,7 @@ describe("EntityView", () => {
             tick();
 
             expect(deleted).toEqual("1");
+            otherView.dispose();
         }));
 
         it("should not send to deleted if loading a new item that doesn't exist", fakeAsync(() => {

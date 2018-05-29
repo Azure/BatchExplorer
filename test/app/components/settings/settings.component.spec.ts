@@ -3,11 +3,12 @@ import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, tick } from
 import { ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { MaterialModule } from "app/core";
+import { MaterialModule } from "@batch-flask/core";
 import { Observable } from "rxjs";
 
-import { ButtonComponent } from "app/components/base/buttons";
-import { EditorComponent } from "app/components/base/editor";
+import { ButtonComponent } from "@batch-flask/ui/buttons";
+import { EditorComponent } from "@batch-flask/ui/editor";
+import { PermissionService } from "@batch-flask/ui/permission";
 import { SettingsComponent } from "app/components/settings";
 import { SettingsService } from "app/services";
 import { click } from "test/utils/helpers";
@@ -51,6 +52,7 @@ describe("SettingsComponent", () => {
             imports: [ReactiveFormsModule, MaterialModule, NoopAnimationsModule],
             declarations: [SettingsComponent, TestComponent, ButtonComponent, MockEditorComponent],
             providers: [
+                { provide: PermissionService, useValue: null },
                 { provide: SettingsService, useValue: settingsServiceSpy },
             ],
         });

@@ -1,8 +1,8 @@
-import { LoadingStatus } from "app/components/base/loading";
-import { ServerError } from "app/models";
-import { PollObservable } from "app/services/core";
-import { HttpCode } from "app/utils/constants";
+import { HttpCode, ServerError } from "@batch-flask/core";
 import { BehaviorSubject, Observable } from "rxjs";
+
+import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
+import { PollObservable } from "app/services/core/poll-service";
 import { EntityGetter } from "./entity-getter";
 import { GenericView, GenericViewConfig } from "./generic-view";
 

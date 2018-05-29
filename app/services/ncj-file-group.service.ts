@@ -1,10 +1,12 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { ServerError } from "app/models";
-import { FileGroupCreateDto } from "app/models/dtos";
+import { BlobContainer } from "app/models";
+import { FileGroupOptionsDto } from "app/models/dtos";
+import { Constants } from "common";
 import { PythonRpcService } from "./python-rpc/python-rpc.service";
-import { StorageService } from "./storage.service";
+import { AutoStorageService } from "./storage/auto-storage.service";
+import { StorageContainerService } from "./storage/storage-container.service";
 
 /**
  * Service to handle file-group calls to the Python RPC service.
@@ -12,55 +14,83 @@ import { StorageService } from "./storage.service";
 @Injectable()
 export class NcjFileGroupService {
     constructor(
-        private storageService: StorageService,
+        private autoStorageService: AutoStorageService,
+        private storageContainerService: StorageContainerService,
         private pythonRpcService: PythonRpcService) {
     }
 
-    public createEmptyFileGroup(name: string): Observable<any> {
-        return this.storageService.createContainer(`${this.storageService.ncjFileGroupPrefix}${name}`);
-    }
-
     /**
      * Calls the Batch CLI via Python to create a file-group in the Batch account's
      * linked storage account.
      */
-    public createFileGroup(fileGroup: FileGroupCreateDto): Observable<any> {
+    public createOrUpdateFileGroup(
+        fileGroupName: string,
+        fileOrFolderPath: string,
+        options: FileGroupOptionsDto,
+        includeSubDirectories: boolean): Observable<any> {
 
         /**
-         * TODO: This method needs a callback for updating the UI with the status of the upload
-         * progress. Anna was working on changing the file.upload callback parameter to include the
-         * filename in order for this to happen.
+         * NOTE: Have tweaked the progress callback to return percantage of any large file over 64MB
+         * as per storage client. Would still like to have a throughput fugure in here also.
          */
         const observable = this.pythonRpcService.callWithAuth("create-file-group", [
-            fileGroup.name,
-            fileGroup.folder,
-            { ...fileGroup.options, recursive: fileGroup.includeSubDirectories },
+            fileGroupName,
+            fileOrFolderPath,
+            { ...options, recursive: includeSubDirectories },
         ]).catch((error) => {
-            return Observable.throw(ServerError.fromPython(error));
+            return Observable.throw(error);
         });
 
         return observable;
     }
 
     /**
-     * Calls the Batch CLI via Python to create a file-group in the Batch account's
-     * linked storage account.
+     * Create a new empty file group
+     * @param name Name of the file group(Without the fgrp- prefix)
      */
-    public addFilesToFileGroup(fileGroupName: string, files: string[], root: string = null): Observable<any> {
+    public create(name: string) {
+        const prefixedName = this.addFileGroupPrefix(name);
+        return this.autoStorageService.get().flatMap((storageAccountId) => {
+            return this.storageContainerService.create(storageAccountId, prefixedName);
+        }).share();
+    }
 
-        /**
-         * TODO: This method needs a callback for updating the UI with the status of the upload
-         * progress. Anna was working on changing the file.upload callback parameter to include the
-         * filename in order for this to happen.
-         */
-        const observable = this.pythonRpcService.callWithAuth("add-files-to-file-group", [
-            fileGroupName,
-            files,
-            root,
-        ]).catch((error) => {
-            return Observable.throw(ServerError.fromPython(error));
-        });
+    /**
+     * Return the container by file group name
+     * @param name name of the file group(Without the fgrp- prefix)
+     */
+    public get(name: string): Observable<BlobContainer> {
+        const prefixedName = this.addFileGroupPrefix(name);
+        return this.autoStorageService.get().flatMap((storageAccountId) => {
+            return this.storageContainerService.get(storageAccountId, prefixedName);
+        }).share();
+    }
+    /**
+     * Return the container name from a file group name
+     * @param fileGroupName Name of the file group
+     */
+    public addFileGroupPrefix(fileGroupName: string) {
+        return fileGroupName && !this.isFileGroup(fileGroupName)
+            ? `${Constants.ncjFileGroupPrefix}${fileGroupName}`
+            : fileGroupName;
+    }
 
-        return observable;
+    /**
+     * Return the file group name sans prefix from a container name that possibly
+     * includes the file group prefix. Ignore if has no prefix.
+     * @param containerName Name of the container including prefix
+     */
+    public removeFileGroupPrefix(containerName: string) {
+        return this.isFileGroup(containerName)
+            ? containerName.replace(Constants.ncjFileGroupPrefix, "")
+            : containerName;
+    }
+
+    /**
+     * Returns true if the file group starts with the correct prefix
+     * @param fileGroup Name of the name to test
+     */
+    public isFileGroup(fileGroup: string) {
+        return fileGroup && fileGroup.startsWith(Constants.ncjFileGroupPrefix);
     }
 }

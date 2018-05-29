@@ -1,4 +1,4 @@
-import { ListProp, Model, Prop, Record } from "app/core";
+import { ListProp, Model, Prop, Record } from "@batch-flask/core";
 import { List } from "immutable";
 
 @Model()
@@ -114,13 +114,13 @@ describe("Record", () => {
     });
 
     it("is a value type and equals other similar Records", () => {
-        let t1 = new SimpleTestRec({ a: 10 });
-        let t2 = new SimpleTestRec({ a: 10, b: 2 });
+        const t1 = new SimpleTestRec({ a: 10 });
+        const t2 = new SimpleTestRec({ a: 10, b: 2 });
         expect(t1.equals(t2));
     });
 
     it("skips unknown keys", () => {
-        let record = new SimpleTestRec({ a: 29, d: 12, u: 2 });
+        const record = new SimpleTestRec({ a: 29, d: 12, u: 2 });
 
         expect(record.a).toBe(29);
         expect(record.get("d")).toBeUndefined();
@@ -128,15 +128,15 @@ describe("Record", () => {
     });
 
     it("toJS() returns correct values", () => {
-        let a = new SimpleTestRec({ a: 29, b: 12, u: 2 });
+        const a = new SimpleTestRec({ a: 29, b: 12, u: 2 });
         expect(a.toJS()).toEqual({ id: null, a: 29, b: 12, c: null });
 
-        let b = new TestRec({ id: "id-1", nested: { name: "name-1", other: "invalid" }, nestedList: [{}] });
+        const b = new TestRec({ id: "id-1", nested: { name: "name-1", other: "invalid" }, nestedList: [{}] });
         expect(b.toJS()).toEqual({ id: "id-1", nested: { name: "name-1" }, nestedList: [{ name: "default-name" }] });
     });
 
     it("toJS() should return compelex type toJS recursively", () => {
-        let a = new TestRec({ id: "id-1", nested: { name: "name-1" }, nestedList: [{ name: "name-2" }] });
+        const a = new TestRec({ id: "id-1", nested: { name: "name-1" }, nestedList: [{ name: "name-2" }] });
 
         expect(a.toJS()).toEqual({ id: "id-1", nested: { name: "name-1" }, nestedList: [{ name: "name-2" }] });
     });

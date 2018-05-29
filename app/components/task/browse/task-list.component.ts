@@ -1,64 +1,47 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { autobind } from "core-decorators";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component,
+    Input, OnDestroy, OnInit, ViewChild, forwardRef,
+} from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 
 import { TaskListDisplayComponent } from "./display";
 
 import { ActivatedRoute } from "@angular/router";
-import { BackgroundTaskService } from "app/components/base/background-task";
-import { LoadingStatus } from "app/components/base/loading";
-import { SelectableList } from "app/components/base/selectable-list";
+import { Filter, autobind } from "@batch-flask/core";
+import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Task } from "app/models";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { Filter } from "app/utils/filter-builder";
 import { DeleteTaskAction } from "../action";
 
 @Component({
     selector: "bl-task-list",
     templateUrl: "task-list.html",
+    providers: [{
+        provide: ListBaseComponent,
+        useExisting: forwardRef(() => TaskListComponent),
+    }],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskListComponent extends SelectableList implements OnInit, OnDestroy {
+export class TaskListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
-    /**
-     * If set to true it will display the quick list view, if false will use the table view
-     */
-    @Input()
-    public quickList: boolean;
+    @Input() public manualLoading: boolean;
 
-    @Input()
-    public manualLoading: boolean;
-
-    @Input()
-    public set jobId(value: string) {
+    @Input() public set jobId(value: string) {
         this._jobId = (value && value.trim());
         this.refresh();
     }
     public get jobId() { return this._jobId; }
 
-    @Input()
-    public set filter(filter: Filter) {
-        this._filter = filter;
-
-        if (filter.isEmpty()) {
-            this.data.setOptions({ ...this._baseOptions });
-        } else {
-            this.data.setOptions({ ...this._baseOptions, filter: filter.toOData() });
-        }
-
-        this.data.fetchNext();
-    }
-    public get filter(): Filter { return this._filter; }
-
     @ViewChild(TaskListDisplayComponent)
     public list: TaskListDisplayComponent;
 
     public data: ListView<Task, TaskListParams>;
-    public status: Observable<LoadingStatus>;
 
-    private _filter: Filter;
     private _jobId: string;
     private _baseOptions = { pageSize: 25 };
     private _onTaskAddedSub: Subscription;
@@ -68,9 +51,14 @@ export class TaskListComponent extends SelectableList implements OnInit, OnDestr
         activatedRoute: ActivatedRoute,
         private changeDetectorRef: ChangeDetectorRef,
         private taskManager: BackgroundTaskService) {
-        super();
+        super(changeDetectorRef);
         this.data = this.taskService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
+
+        this.data.status.subscribe((status) => {
+            this.status = status;
+            this.changeDetector.markForCheck();
+        });
 
         this._onTaskAddedSub = taskService.onTaskAdded.subscribe((item: TaskParams) => {
             this.data.loadNewItem(taskService.get(item.jobId, item.id));
@@ -83,26 +71,35 @@ export class TaskListComponent extends SelectableList implements OnInit, OnDestr
 
     public ngOnDestroy() {
         this._onTaskAddedSub.unsubscribe();
+        this.data.dispose();
     }
 
     @autobind()
     public refresh(): Observable<any> {
         this.data.params = { jobId: this.jobId };
         this.data.setOptions(Object.assign({}, this._baseOptions));
-        this.status = this.data.status;
         this.changeDetectorRef.detectChanges();
 
         return this.data.fetchNext(true);
     }
 
-    @autobind()
-    public loadMore(): Observable<any> {
+    public handleFilter(filter: Filter) {
+        if (filter.isEmpty()) {
+            this.data.setOptions({ ...this._baseOptions });
+        } else {
+            this.data.setOptions({ ...this._baseOptions, filter: filter });
+        }
+
+        this.data.fetchNext();
+    }
+
+    public onScrollToBottom(): Observable<any> {
         return this.data.fetchNext();
     }
 
-    public deleteSelected() {
+    public deleteSelection(selection: ListSelection) {
         this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteTaskAction(this.taskService, this.jobId, this.selectedItems);
+            const task = new DeleteTaskAction(this.taskService, this.jobId, [...selection.keys]);
             task.start(backgroundTask);
             return task.waitingDone;
         });

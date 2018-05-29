@@ -40,18 +40,18 @@
       "hammerjs"
     ],
     "typeRoots": [
-      "./node_modules/@types"
+      "node_modules/@types"
     ]
   },
   "files": [
-    "./definitions/index.d.ts",
-    "./node_modules/monaco-editor/monaco.d.ts"
+    "definitions/index.d.ts",
+    "node_modules/monaco-editor/monaco.d.ts"
   ],
   // This is not actually used for building but to let the editor know what files use this config
   "include": [
-    "./client/**/*.ts",
-    "./app/**/*.ts",
-    "./test/**/*.ts"
+    "app/**/*.ts",
+    "src/**/*.ts",
+    "test/**/*.ts",
   ],
   "awesomeTypescriptLoaderOptions": {
     "forkChecker": true,

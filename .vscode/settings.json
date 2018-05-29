@@ -26,5 +26,6 @@
   "tslint.alwaysShowRuleFailuresAsWarnings": true,
   "stylelint.enable": true,
   "css.validate": false,
-  "scss.validate": false
+  "scss.validate": false,
+  "python.formatting.provider": "yapf"
 }

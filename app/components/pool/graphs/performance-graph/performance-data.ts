@@ -1,8 +1,9 @@
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { Pool } from "app/models";
+import { Node, Pool } from "app/models";
 import {
-    BatchPerformanceMetricType, BatchPerformanceMetrics, PerformanceMetric,
+    BatchPerformanceMetricType,
+    BatchPerformanceMetrics,
 } from "app/models/app-insights/metrics-result";
 import { AppInsightsQueryService } from "app/services";
 
@@ -12,6 +13,8 @@ export class PerformanceData {
         this.retrieveAppId();
     }
     public get pool() { return this._pool; }
+
+    public node: Node;
 
     public historySize: number = 10;
     public appId: string = null;
@@ -29,21 +32,30 @@ export class PerformanceData {
         if (!this.appId) {
             return;
         }
-        this.appInsightsQueryService.getPoolPerformance(this.appId, this.pool.id, this.historySize)
-            .subscribe((metrics) => {
-                this._metrics.next(metrics);
-                if (this._firstLoad) {
-                    this._firstLoad = false;
-                    this._loading.next(true);
-                    this._loading.complete();
-                }
-            });
+        let obs;
+
+        if (this.node) {
+            obs = this.appInsightsQueryService.getNodePerformance(
+                this.appId, this.pool.id,
+                this.node.id, this.historySize);
+        } else {
+            obs = this.appInsightsQueryService.getPoolPerformance(this.appId, this.pool.id, this.historySize);
+        }
+
+        obs.subscribe((metrics) => {
+            this._metrics.next(metrics);
+            if (this._firstLoad) {
+                this._firstLoad = false;
+                this._loading.next(true);
+                this._loading.complete();
+            }
+        });
     }
 
-    public observeMetric(name: BatchPerformanceMetricType): Observable<PerformanceMetric[]> {
+    public observeMetric<T = any>(name: BatchPerformanceMetricType): Observable<T> {
         return this._metrics.map((metrics) => {
             return metrics[name] || [];
-        });
+        }).shareReplay(1);
     }
 
     public retrieveAppId() {

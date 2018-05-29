@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "@batch-flask/core";
 
-import { SidebarManager } from "app/components/base/sidebar";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { RerunTaskFormComponent } from "app/components/task/action";
-import { FailureInfo, Task, TaskState } from "app/models";
+import { FailureInfo, NameValuePairAttributes, Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
 import { DateUtils, ObservableUtils } from "app/utils";
 
@@ -62,6 +62,10 @@ export class TaskErrorDisplayComponent implements OnChanges {
         const ref = this.sidebarManager.open("rerun-task", RerunTaskFormComponent);
         ref.component.jobId = this.jobId;
         ref.component.setValueFromEntity(this.task);
+    }
+
+    public trackByFn(index, detail: NameValuePairAttributes) {
+        return detail.name;
     }
 
     private _computeExitCodeMessage() {

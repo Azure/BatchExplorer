@@ -1,8 +1,8 @@
 // TODO :: Work in progress
-// import { autobind } from "core-decorators";
+// import { autobind } from "@batch-flask/core";
 // import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 // import { Pool } from "app/models";
 import { PoolService } from "app/services";
 import { LongRunningUploadAction } from "app/services/core";

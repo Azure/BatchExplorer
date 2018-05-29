@@ -7,7 +7,7 @@ import {
     Validators,
 } from "@angular/forms";
 
-import { RangeValidatorDirective } from "app/components/base/validation";
+import { RangeValidator } from "@batch-flask/ui/validation";
 import { UserAccount, VirtualMachineConfiguration } from "app/models";
 import { Constants } from "app/utils";
 import { List } from "immutable";
@@ -25,9 +25,11 @@ export class JobTaskBaseComponent implements ControlValueAccessor {
     constructor(formBuilder: FormBuilder, defaultValue: any, invalidResponse: any) {
         const validation = Constants.forms.validation;
         this.constraintsGroup = formBuilder.group({
+            maxWallClockTime: null,
+            retentionTime: null,
             maxTaskRetryCount: [
                 0,
-                new RangeValidatorDirective(validation.range.retry.min, validation.range.retry.max).validator,
+                new RangeValidator(validation.range.retry.min, validation.range.retry.max).validator,
             ],
         });
 

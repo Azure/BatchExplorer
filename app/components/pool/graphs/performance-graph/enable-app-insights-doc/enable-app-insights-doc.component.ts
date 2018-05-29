@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
+import { ElectronShell } from "@batch-flask/ui";
 
-import { ElectronShell } from "app/services";
 import "./enable-app-insights-doc.scss";
 
 @Component({

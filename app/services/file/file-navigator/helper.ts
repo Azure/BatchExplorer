@@ -1,7 +1,7 @@
 import { List } from "immutable";
 import * as path from "path";
 
-import { LoadingStatus } from "app/components/base/loading";
+import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { File } from "app/models";
 import { CloudPathUtils, StringUtils, prettyBytes } from "app/utils";
 import { FileTreeNode } from "./file-tree.model";
@@ -12,7 +12,7 @@ import { FileTreeNode } from "./file-tree.model";
 export function mapFilesToTree(files: List<File>, baseFolder: string = ""): FileTreeNode[] {
     const directories = {};
 
-    for (let file of files.toArray()) {
+    for (const file of files.toArray()) {
         const node = fileToTreeNode(file);
         const folder = path.dirname(file.name);
         const relativePath = CloudPathUtils.normalize(path.relative(baseFolder, folder));
@@ -29,7 +29,7 @@ export function mapFilesToTree(files: List<File>, baseFolder: string = ""): File
         }
     }
 
-    for (let dir of Object.keys(directories)) {
+    for (const dir of Object.keys(directories)) {
         directories[dir].children = sortTreeNodes(directories[dir].children);
     }
     const root = directories[""];
@@ -52,6 +52,7 @@ export function fileToTreeNode(file: File, basePath: string = ""): FileTreeNode 
     return new FileTreeNode({
         path: relativePath,
         isDirectory: file.isDirectory,
+        loadingStatus: LoadingStatus.Ready,
         contentLength: !file.isDirectory && file.properties.contentLength,
         lastModified: file.properties && file.properties.lastModified,
     });
@@ -83,10 +84,11 @@ function checkDirInTree(directories: StringMap<FileTreeNode>, directory: string)
     }
 }
 
-export function generateDir(dirname): FileTreeNode {
+export function generateDir(dirname, virtual = false): FileTreeNode {
     return new FileTreeNode({
         path: dirname,
         isDirectory: true,
         loadingStatus: LoadingStatus.Ready,
+        virtual,
     });
 }

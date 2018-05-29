@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "@batch-flask/core";
+import { ElectronShell } from "@batch-flask/ui";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { Application, ApplicationAction } from "app/models";
-import { ElectronShell, NcjTemplateService } from "app/services";
+import { NcjTemplateService } from "app/services";
 import "./choose-action.scss";
 
 @Component({
@@ -41,7 +42,16 @@ export class ChooseActionComponent implements OnInit, OnDestroy {
 
     @autobind()
     public openLink(link: string) {
-        this.electronShell.openExternal(link, {activate: true});
+        this.electronShell.openExternal(link, { activate: true });
+    }
+
+    public trackAction(index, action: ApplicationAction) {
+        return action.id;
+    }
+
+    public viewOnGithub(action: ApplicationAction) {
+        const link = `https://github.com/Azure/BatchLabs-data/tree/master/ncj/${this.application.id}/${action.id}`;
+        this.electronShell.openExternal(link);
     }
 
     private _updateActions() {

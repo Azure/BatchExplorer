@@ -1,33 +1,33 @@
-<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" actionName="Upload">
+<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [actionName]="modifyExisting ? 'Update' : 'Create' ">
     <bl-form-page main-form-page [title]="title" [subtitle]="description" [formGroup]="form">
         <bl-form-section title="General info" subtitle="Basic information about the file group">
             <div class="form-element">
-                <mat-form-field>
-                    <input matInput formControlName="name" placeholder="File group name">
-                </mat-form-field>
+                <bl-form-field>
+                    <div blFormFieldPrefix>fgrp-</div>
+                    <input blInput formControlName="name" placeholder="File group name">
+                </bl-form-field>
                 <bl-error controlName="name" code="required">The file group name is a required field</bl-error>
                 <bl-error controlName="name" code="maxlength">The file group name has a maximum length of 64 characters</bl-error>
                 <bl-error controlName="name" code="pattern">The file group name can contain any combination of lowercase alphanumeric characters including single hyphens</bl-error>
             </div>
-            <p *ngIf="groupExists"><b>This file group already exists, any selected files will be added to this existing group</b></p>
+            <p *ngIf="groupExists" class="exists">This file group already exists. Any new files will be added to this existing group, existing files will be uploaded only if they have been modified.</p>
+            <div class="form-element">
+                <mat-checkbox *ngIf="showCreateEmptyChk" (change)="createEmptyCheckChanged($event)" color="primary">Create an empty file group</mat-checkbox>
+            </div>
         </bl-form-section>
 
-        <bl-form-section title="Files" subtitle="Choose a directory containing the files you want to include in the file group">
+        <bl-form-section *ngIf="!createEmptyGroup" title="Files" subtitle="Drag and drop directories or files that you want to include in the file group">
             <div class="form-element">
-                <bl-directory-picker (onChange)="selectFolder($event)">Select directory</bl-directory-picker>
-                <bl-error controlName="folder" code="required">Please select a valid directory that contains your files</bl-error>
-                <div *ngIf="hasValidFolder()" class="input-summary">
-                    <h4>Selected folder details</h4>
-                    <p><b>{{ folder }}</b></p>
-                    <!-- todo: include warning if too many files in folder. if we can even know how many -->
-                </div>
+                <bl-file-or-directory-picker formControlName="paths" dragMessage="Drag and drop files or folders here or select items with the buttons below"></bl-file-or-directory-picker>
+                <bl-directory-picker (onChange)="selectFolder($event)">Select a folder</bl-directory-picker>
+                <bl-directory-picker (onChange)="selectFolder($event)" [canPickFile]="true">Select a file</bl-directory-picker>
             </div>
             <div class="form-element">
                 <mat-checkbox formControlName="includeSubDirectories" color="primary">Include sub directories</mat-checkbox>
             </div>
         </bl-form-section>
 
-        <bl-form-section title="File options" subtitle="How data should be laid out in storage">
+        <bl-form-section *ngIf="!createEmptyGroup" title="File options" subtitle="How data should be laid out in storage">
             <div class="form-element">
                 <bl-file-group-options-picker formControlName="options"></bl-file-group-options-picker>
             </div>

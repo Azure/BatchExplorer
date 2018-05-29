@@ -23,7 +23,7 @@ export class HistoryDataBase {
 
     public addPoint(value: number) {
         const time = new Date();
-        let history = this.history;
+        const history = this.history;
         // Remove the element if it is the same value
         if (this._areLast2SameAs(value)) {
             history.pop();

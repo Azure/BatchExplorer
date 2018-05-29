@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { autobind } from "core-decorators";
-import { shell } from "electron";
+import { autobind } from "@batch-flask/core";
+import { ElectronShell } from "@batch-flask/ui";
 
-import { Pool, ResizeErrorCode } from "app/models";
-import { PoolResizeDto } from "app/models/dtos";
+import { NameValuePair, Pool, ResizeError, ResizeErrorCode } from "app/models";
+import { NodeDeallocationOption, PoolResizeDto } from "app/models/dtos";
 import { AccountService, PoolService } from "app/services";
-import { ExternalLinks } from "app/utils/constants";
+import { ExternalLinks } from "common/constants";
 
 @Component({
     selector: "bl-pool-error-display",
@@ -15,10 +15,12 @@ import { ExternalLinks } from "app/utils/constants";
 export class PoolErrorDisplayComponent {
     public ResizeErrorCode = ResizeErrorCode;
 
-    @Input()
-    public pool: Pool;
+    @Input() public pool: Pool;
 
-    constructor(private poolService: PoolService, private accountService: AccountService) {
+    constructor(
+        private poolService: PoolService,
+        private accountService: AccountService,
+        private shell: ElectronShell) {
     }
 
     public get dedicatedQuota() {
@@ -32,6 +34,7 @@ export class PoolErrorDisplayComponent {
     @autobind()
     public fixStopResizeError() {
         const obs = this.poolService.resize(this.pool.id, new PoolResizeDto({
+            nodeDeallocationOption: NodeDeallocationOption.requeue,
             targetDedicatedNodes: this.pool.targetDedicatedNodes,
             targetLowPriorityNodes: this.pool.targetLowPriorityNodes,
         }));
@@ -43,10 +46,18 @@ export class PoolErrorDisplayComponent {
     }
 
     public increaseQuota() {
-        shell.openExternal(ExternalLinks.supportRequest);
+        this.shell.openExternal(ExternalLinks.supportRequest);
     }
 
     public refreshPool() {
         return this.poolService.get(this.pool.id);
+    }
+
+    public trackResizeError(index, error: ResizeError) {
+        return index;
+    }
+
+    public trackErrorValue(index, pair: NameValuePair) {
+        return pair.name;
     }
 }

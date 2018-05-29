@@ -4,7 +4,7 @@ import { Constants } from "app/utils";
 export class FileUrlUtils {
     public static parseRelativePath(fileUrl: string): FileType {
         const parts: string[] = fileUrl.split(Constants.FileUrlStrings.Separator);
-        let file: FileType = {} as any;
+        const file: FileType = {} as any;
         if (parts) {
             if (parts[3] === Constants.FileUrlStrings.Job) {
                 file.type = Constants.FileSourceTypes.Job;

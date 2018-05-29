@@ -5,6 +5,7 @@ import { BlobStorageClientProxy } from "./blob-storage-client-proxy";
 export interface StorageAccountSharedKeyOptions {
     account: string;
     key: string;
+    endpoint: string;
 }
 
 /**
@@ -19,10 +20,13 @@ export class StorageClientProxyFactory {
     public getBlobServiceForSharedKey(options: StorageAccountSharedKeyOptions) {
         if (!this._compareSharedKeyOptions(options)) {
             this._sharedKeyOptions = options;
-            const blobService = storage.createBlobService(
-                options.account,
-                options.key,
-            );
+            const connectionString = [
+                `DefaultEndpointsProtocol=https;`,
+                `AccountName=${options.account};`,
+                `AccountKey=${options.key};`,
+                `EndpointSuffix=${options.endpoint};`,
+            ].join("");
+            const blobService = storage.createBlobService(connectionString);
 
             this._blobSharedKeyClient = new BlobStorageClientProxy(blobService);
         }

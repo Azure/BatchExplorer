@@ -1,66 +1,45 @@
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
-import { autobind } from "core-decorators";
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
-import { LoadingStatus } from "app/components/base/loading";
-import { SelectableList } from "app/components/base/selectable-list";
+import { Filter, autobind } from "@batch-flask/core";
+import { ListBaseComponent } from "@batch-flask/core/list";
+import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Node } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { Filter } from "app/utils/filter-builder";
-import { NodeListDisplayComponent } from "./display";
 
 @Component({
     selector: "bl-node-list",
     templateUrl: "node-list.html",
+    providers: [{
+        provide: ListBaseComponent,
+        useExisting: forwardRef(() => NodeListComponent),
+    }],
 })
-export class NodeListComponent extends SelectableList implements OnInit {
+export class NodeListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
-    /**
-     * If set to true it will display the quick list view, if false will use the table view
-     */
-    @Input()
-    public quickList: boolean;
+    @Input() public manualLoading: boolean;
 
-    @Input()
-    public manualLoading: boolean;
-
-    @Input()
-    public set poolId(value: string) {
+    @Input() public set poolId(value: string) {
         this._poolId = (value && value.trim());
         this.refresh();
     }
     public get poolId() { return this._poolId; }
 
-    @Input()
-    public set filter(filter: Filter) {
-        this._filter = filter;
-
-        if (filter.isEmpty()) {
-            this.data.setOptions({});
-        } else {
-            this.data.setOptions({ filter: filter.toOData() });
-        }
-
-        this.data.fetchNext();
-    }
-    public get filter(): Filter { return this._filter; }
-
-    @ViewChild(NodeListDisplayComponent)
-    public list: NodeListDisplayComponent;
-
-    public status: Observable<LoadingStatus>;
     public data: ListView<Node, NodeListParams>;
 
-    private _filter: Filter;
     private _poolId: string;
 
-    constructor(private nodeService: NodeService, activatedRoute: ActivatedRoute) {
-        super();
+    constructor(private nodeService: NodeService, activatedRoute: ActivatedRoute, changeDetector: ChangeDetectorRef) {
+        super(changeDetector);
         this.data = this.nodeService.listView();
+
+        this.data.status.subscribe((status) => {
+            this.status = status;
+        });
         ComponentUtils.setActiveItem(activatedRoute, this.data);
     }
 
@@ -68,17 +47,29 @@ export class NodeListComponent extends SelectableList implements OnInit {
         this.data.fetchNext();
     }
 
+    public ngOnDestroy() {
+        this.data.dispose();
+    }
+
     @autobind()
     public refresh(): Observable<any> {
         this.data.params = { poolId: this.poolId };
-        this.status = this.data.status;
         this.data.setOptions({}); // This clears the previous list objects
 
         return this.data.fetchNext(true);
     }
 
-    @autobind()
-    public loadMore(): Observable<any> {
+    public handleFilter(filter: Filter) {
+        if (filter.isEmpty()) {
+            this.data.setOptions({});
+        } else {
+            this.data.setOptions({ filter });
+        }
+
+        this.data.fetchNext();
+    }
+
+    public onScrollToBottom(): Observable<any> {
         return this.data.fetchNext();
     }
 }

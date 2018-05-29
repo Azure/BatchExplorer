@@ -1,0 +1,45 @@
+<bl-focus-section>
+    <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()"  [commands]="commands">
+        <bl-quick-list-item *ngFor="let jobSchedule of jobSchedules; trackBy: trackByFn" [link]="['/jobschedules/', jobSchedule.id]" [key]="jobSchedule.id">
+            <bl-quick-list-item-status [status]="jobScheduleStatus(jobSchedule)" [tooltip]="jobScheduleStatusText(jobSchedule)">
+            </bl-quick-list-item-status>
+            <div bl-quick-list-item-title>{{jobSchedule.id}}</div>
+            <div bl-quick-list-item-field>
+                {{jobSchedule.state}}
+                <bl-tags [tags]="jobSchedule.tags" [maxTags]="3"></bl-tags>
+            </div>
+        </bl-quick-list-item>
+    </bl-quick-list>
+
+    <bl-table *ngIf="!quicklist"
+        [data]="jobSchedules"
+        [status]="status"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        (scrollBottom)="onScrollToBottom()"
+        [commands]="commands">
+
+        <bl-column name="id">
+            <div *blHeadCellDef>ID</div>
+            <div *blCellDef="let jobSchedule">{{jobSchedule.id}}</div>
+        </bl-column>
+
+        <bl-column name="state">
+            <div *blHeadCellDef>State</div>
+            <div *blCellDef="let jobSchedule">{{jobSchedule.state}}</div>
+        </bl-column>
+
+        <bl-column name="pool">
+            <div *blHeadCellDef>Pool</div>
+            <div *blCellDef="let jobSchedule">{{jobSchedule.poolInfo?.poolId}}</div>
+        </bl-column>
+    </bl-table>
+</bl-focus-section>
+
+<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>
+
+<bl-no-item [itemCount]="jobSchedules.size" [filter]="filter" [status]="status">
+    <i icon class="fa fa-calendar"></i>
+    <span no-filter>No job schedules</span>
+    <span with-filter>No job schedules match this filter</span>
+</bl-no-item>

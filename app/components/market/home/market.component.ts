@@ -3,9 +3,10 @@ import { FormControl } from "@angular/forms";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
+import { autobind } from "@batch-flask/core";
 import { Application } from "app/models";
-import { NcjTemplateService, StorageService } from "app/services";
-import { autobind } from "core-decorators";
+import { NcjTemplateService } from "app/services";
+import { AutoStorageService } from "app/services/storage";
 import "./market.scss";
 
 @Component({
@@ -14,7 +15,7 @@ import "./market.scss";
 })
 export class MarketComponent implements OnInit, OnDestroy {
     public static breadcrumb() {
-        return { name: "Market" };
+        return { name: "Gallery" };
     }
 
     public query: string = "";
@@ -24,7 +25,7 @@ export class MarketComponent implements OnInit, OnDestroy {
 
     private _subs: Subscription[] = [];
 
-    constructor(public storageService: StorageService, private templateService: NcjTemplateService) {
+    constructor(public autoStorageService: AutoStorageService, private templateService: NcjTemplateService) {
         this._subs.push(this.quicksearch.valueChanges.subscribe((query) => {
             this.query = query;
             this._filterApplications();
@@ -55,6 +56,10 @@ export class MarketComponent implements OnInit, OnDestroy {
         });
 
         return obs;
+    }
+
+    public trackApplication(index, action: Application) {
+        return action.id;
     }
 
     /**

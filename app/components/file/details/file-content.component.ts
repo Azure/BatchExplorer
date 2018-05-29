@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
 
+import { log } from "@batch-flask/utils";
 import { SettingsService } from "app/services";
 import { FileLoader } from "app/services/file";
-import { log } from "app/utils";
 import "./file-content.scss";
 
 enum FileType {
@@ -44,9 +44,9 @@ export class FileContentComponent implements OnChanges {
         }
 
         const name = filename.toLowerCase();
-        for (let type of Object.keys(this.fileTypes)) {
+        for (const type of Object.keys(this.fileTypes)) {
             const extensions = this.fileTypes[type];
-            for (let ext of extensions) {
+            for (const ext of extensions) {
                 if (name.endsWith(`.${ext}`)) {
                     this.fileType = type as any;
                     return;

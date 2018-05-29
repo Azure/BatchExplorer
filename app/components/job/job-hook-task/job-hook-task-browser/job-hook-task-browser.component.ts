@@ -3,11 +3,11 @@ import { FormControl } from "@angular/forms";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
+import { FilterBuilder } from "@batch-flask/core";
 import { Job, JobHookTask, JobHookTaskResult, JobHookTaskState } from "app/models";
 import { JobHookTaskListParams, JobHookTaskService } from "app/services";
 import { ListView } from "app/services/core";
 import { DateUtils } from "app/utils";
-import { FilterBuilder } from "app/utils/filter-builder";
 
 import "./job-hook-task-browser.scss";
 
@@ -46,7 +46,7 @@ export class JobHookTaskBrowserComponent implements OnDestroy, OnChanges {
         });
 
         this._sub = this.onlyFailedControl.valueChanges.subscribe((onlyFailed) => {
-            const filter = FilterBuilder.prop("jobPreparationTaskExecutionInfo/exitCode").ne(0).toOData();
+            const filter = FilterBuilder.prop("jobPreparationTaskExecutionInfo/exitCode").ne(0);
             this.data.patchOptions({
                 filter: filter,
             });
@@ -106,6 +106,10 @@ export class JobHookTaskBrowserComponent implements OnDestroy, OnChanges {
 
     public get hasReleaseTask() {
         return Boolean(this.job.jobReleaseTask);
+    }
+
+    public trackTask(index, task: any) {
+        return task.id;
     }
 
     private _computeDisplayItems() {

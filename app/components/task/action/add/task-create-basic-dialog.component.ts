@@ -1,14 +1,14 @@
 import { Component } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
 import { OnInit } from "@angular/core/src/metadata/lifecycle_hooks";
-import { ComplexFormConfig } from "app/components/base/form";
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
-import { RangeValidatorDirective } from "app/components/base/validation";
-import { DynamicForm } from "app/core";
+import { DynamicForm, autobind } from "@batch-flask/core";
+import { ComplexFormConfig } from "@batch-flask/ui/form";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
+import { RangeValidator } from "@batch-flask/ui/validation";
+import { UploadResourceFileEvent } from "app/components/task/base";
 import { Task, VirtualMachineConfiguration } from "app/models";
 import { TaskCreateDto } from "app/models/dtos";
 import { createTaskFormToJsonData, taskToFormModel } from "app/models/forms";
@@ -31,6 +31,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
     public actionName = "Add";
     public fileUri = "create.task.batch.json";
     public virtualMachineConfiguration: VirtualMachineConfiguration = null;
+    public userAccounts: any[] = [];
 
     constructor(
         private formBuilder: FormBuilder,
@@ -48,7 +49,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
             maxWallClockTime: null,
             maxTaskRetryCount: [
                 0,
-                new RangeValidatorDirective(validation.range.retry.min, validation.range.retry.max).validator,
+                new RangeValidator(validation.range.retry.min, validation.range.retry.max).validator,
             ],
             retentionTime: null,
         });
@@ -69,7 +70,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
             appPackages: [[]],
             containerSettings: [null],
         });
-        }
+    }
 
     public ngOnInit(): void {
         this.jobService.get(this.jobId).cascade((job) => {
@@ -78,6 +79,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
                 this.poolService.get(jobData.poolInfo.poolId).cascade((pool) => {
                     const poolData = pool.toJS();
                     this.virtualMachineConfiguration = poolData.virtualMachineConfiguration;
+                    this.userAccounts = poolData.userAccounts;
                 });
             }
         });
@@ -109,6 +111,10 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
 
     public handleHasLinkedStorage(hasLinkedStorage) {
         this.hasLinkedStorage = hasLinkedStorage;
+    }
+
+    public registerFileUpload(event: UploadResourceFileEvent) {
+        this.registerAsyncTask(`Uploading file ${event.filename}`, event.done);
     }
 
     private _setComplexFormConfig() {

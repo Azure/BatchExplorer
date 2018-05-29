@@ -19,6 +19,7 @@ bl-submit-ncj-template {
         background-color: #3e81b0;
 
     }
+
     .title {
         margin: 10px;
     }
@@ -27,10 +28,16 @@ bl-submit-ncj-template {
         position: fixed;
         right: 20px;
         bottom: 50px;
+        text-align: center;
 
         > bl-server-error {
             width: 300px;
             margin-bottom: 20px;
+        }
+
+        > mat-checkbox {
+            display: block;
+            margin-top: 15px;
         }
     }
 
@@ -60,7 +67,7 @@ bl-submit-ncj-template {
         }
 
         i.fa-check {
-            color: whitesmoke;
+            color: $whitesmoke;
         }
     }
 }

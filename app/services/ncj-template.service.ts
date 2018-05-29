@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { List } from "immutable";
+import * as loadJsonFile from "load-json-file";
 import * as path from "path";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
@@ -11,7 +12,8 @@ import {
     NcjTemplateMode,
     NcjTemplateType,
 } from "app/models";
-import { FileSystemService, LocalFileStorage } from "app/services";
+import { FileSystemService } from "app/services/fs.service";
+import { LocalFileStorage } from "app/services/local-file-storage.service";
 import { DateUtils, SecureUtils, log } from "app/utils";
 
 const branch = "master";
@@ -70,13 +72,12 @@ export class NcjTemplateService {
      */
     public get(uri: string): Observable<any> {
         return this._ready.flatMap(() => {
-            const promise = this.fs.readFile(this.getFullPath(uri)).then(data => {
-                try {
-                    return JSON.parse(data);
-                } catch (e) {
-                    log.error(`Error parsing template file ${uri}`);
-                }
+            const promise = loadJsonFile(this.getFullPath(uri)).then((json) => {
+                return json;
+            }).catch((error) => {
+                log.error(`File is not valid json: ${error.message}`);
             });
+
             return Observable.fromPromise(promise);
         }).share();
     }
@@ -143,13 +144,12 @@ export class NcjTemplateService {
     }
 
     public async loadLocalTemplateFile(path: string) {
-        const content = await this.fs.readFile(path);
-        let json;
-        try {
-            json = JSON.parse(content);
-        } catch (error) {
+        const json = await loadJsonFile(path).then((content) => {
+            return content;
+        }).catch((error) => {
             return Promise.reject(`File is not valid json: ${error.message}`);
-        }
+        });
+
         let templateType: NcjTemplateType;
         if (json.job) {
             templateType = NcjTemplateType.job;

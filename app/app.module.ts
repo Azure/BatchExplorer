@@ -3,7 +3,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { ErrorHandler, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from "@angular/router";
 
 // application router
@@ -12,14 +12,15 @@ import { routes } from "./app.routes";
 // components
 import { AppComponent } from "app/app.component";
 import { MainNavigationComponent } from "app/components/shared/main-navigation.component";
-import { AADUserDropdownComponent } from "app/components/user";
 
 // extenal modules
+import { BaseModule } from "@batch-flask/ui";
 import { AccountModule } from "app/components/account/account.module";
 import { ApplicationModule } from "app/components/application/application.module";
-import { BaseModule } from "app/components/base";
+import { CertificateModule } from "app/components/certificate/certificate.module";
 import { DataModule } from "app/components/data/data.module";
 import { FileModule } from "app/components/file/file.module";
+import { JobScheduleModule } from "app/components/job-schedule/job-schedule.module";
 import { JobModule } from "app/components/job/job.module";
 import { MarketModule } from "app/components/market/market.module";
 import { NodeModule } from "app/components/node/node.module";
@@ -32,9 +33,16 @@ import { BatchLabsErrorHandler } from "app/error-handler";
 
 // services
 import { HttpModule } from "@angular/http";
+import { MaterialModule } from "@batch-flask/core";
+import { CommonModule } from "app/components/common";
 import { LayoutModule } from "app/components/layout";
-import { MaterialModule } from "app/core";
+import { MiscModule } from "app/components/misc";
 import { PollService } from "app/services/core";
+import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
+import { AADGraphHttpService, MsGraphHttpService } from "app/services/ms-graph/core";
+import {
+    AutoStorageService, StorageAccountKeysService, StorageBlobService, StorageClientService, StorageContainerService,
+} from "app/services/storage";
 import {
     AccountService,
     AdalService,
@@ -42,25 +50,29 @@ import {
     AppInsightsQueryService,
     ApplicationService,
     ArmHttpService,
+    AuthorizationHttpService,
     AutoscaleFormulaService,
     AzureHttpService,
     BatchClientService,
+    BatchLabsService,
     CacheDataService,
+    CertificateService,
     CommandService,
     ComputeService,
-    ElectronRemote,
-    ElectronShell,
     FileService,
     FileSystemService,
     GithubDataService,
     HttpUploadService,
+    InsightsMetricsService,
     JobHookTaskService,
+    JobScheduleService,
     JobService,
     LocalFileStorage,
-    MonacoLoader,
+    NavigatorService,
     NcjFileGroupService,
     NcjSubmitService,
     NcjTemplateService,
+    NetworkConfigurationService,
     NodeService,
     NodeUserService,
     PinnedEntityService,
@@ -68,29 +80,31 @@ import {
     PredefinedFormulaService,
     PricingService,
     PythonRpcService,
+    QuotaService,
+    ResourceAccessService,
     SSHKeyService,
     SettingsService,
     StorageAccountService,
-    StorageClientService,
-    StorageService,
     SubscriptionService,
     TaskService,
+    ThemeService,
     VmSizeService,
-    commands,
 } from "./services";
 
 const modules = [
-    AccountModule, ApplicationModule, DataModule,
-    FileModule, JobModule, NodeModule, PoolModule,
+    AccountModule, ApplicationModule, CertificateModule, DataModule,
+    FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
     SettingsModule, TaskModule, MarketModule, LayoutModule,
+    MiscModule,
 ];
+
+const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHttpService, ServicePrincipalService];
 
 @NgModule({
     bootstrap: [
         AppComponent,
     ],
     declarations: [
-        AADUserDropdownComponent,
         AppComponent,
         MainNavigationComponent,
     ],
@@ -98,13 +112,13 @@ const modules = [
         // imported in specific area modules
     ],
     imports: [
-        BrowserAnimationsModule,
+        NoopAnimationsModule,
         BrowserModule,
         FormsModule,
         MaterialModule,
         ReactiveFormsModule,
         HttpModule,
-        RouterModule.forRoot(routes, { useHash: true }),
+        RouterModule.forRoot(routes, { useHash: true, paramsInheritanceStrategy: "always" }),
         BaseModule,
         HttpClientModule,
         ...modules,
@@ -119,42 +133,52 @@ const modules = [
         AutoscaleFormulaService,
         AzureHttpService,
         ArmHttpService,
+        AuthorizationHttpService,
         BatchClientService,
+        BatchLabsService,
         CacheDataService,
+        CertificateService,
         CommandService,
+        CommonModule,
         ComputeService,
-        ElectronRemote,
-        ElectronShell,
         FileService,
         FileSystemService,
         GithubDataService,
         HttpUploadService,
+        InsightsMetricsService,
         JobHookTaskService,
+        JobScheduleService,
         JobService,
         LocalFileStorage,
-        MonacoLoader,
+        NavigatorService,
         NcjFileGroupService,
         NcjSubmitService,
         NcjTemplateService,
+        NetworkConfigurationService,
         NodeService,
         NodeUserService,
         PinnedEntityService,
         PollService,
         PoolService,
         PricingService,
+        QuotaService,
         PythonRpcService,
+        ResourceAccessService,
         SettingsService,
+        AutoStorageService,
         StorageAccountService,
         StorageClientService,
-        StorageService,
+        StorageAccountKeysService,
+        StorageContainerService,
+        StorageBlobService,
         SSHKeyService,
         SubscriptionService,
         TaskService,
+        ThemeService,
         VmSizeService,
         PredefinedFormulaService,
+        ...graphApiServices,
         { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
-        ...commands,
     ],
 })
-
 export class AppModule { }

@@ -1,7 +1,8 @@
 import { OrderedSet } from "immutable";
 import * as moment from "moment";
 
-import { Constants, ObjectUtils } from "app/utils";
+import { ObjectUtils } from "@batch-flask/utils";
+import { Constants } from "common";
 import { ContinuationToken } from "./data/list-options";
 
 const noQueryKey = "no-query";
@@ -20,7 +21,7 @@ export class QueryCache {
     private _cache: { [key: string]: CachedKeyList } = {};
 
     public cacheQuery(keys: OrderedSet<string>, token: ContinuationToken) {
-        const key = this._cacheKey(token.options.filter, token.options.select);
+        const key = this._cacheKey(token.options.filter && token.options.filter.toOData(), token.options.select);
         this._cache[key] = new CachedKeyList(keys, token);
         this.cleanCache();
     }

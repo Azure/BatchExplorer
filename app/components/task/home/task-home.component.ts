@@ -1,15 +1,16 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs";
 
-import { SidebarManager } from "../../base/sidebar";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { TaskCreateBasicDialogComponent } from "../action";
 
 @Component({
     selector: "bl-task-home",
     templateUrl: "task-home.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskHomeComponent implements OnInit, OnDestroy {
     public quickSearchQuery = new FormControl();
@@ -21,12 +22,14 @@ export class TaskHomeComponent implements OnInit, OnDestroy {
     constructor(
         formBuilder: FormBuilder,
         private sidebarManager: SidebarManager,
+        private changeDetector: ChangeDetectorRef,
         private activatedRoute: ActivatedRoute) {
     }
 
     public ngOnInit() {
         this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
             this.jobId = params["jobId"];
+            this.changeDetector.markForCheck();
         });
     }
 

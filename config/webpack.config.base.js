@@ -4,11 +4,15 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CheckerPlugin = require("awesome-typescript-loader").CheckerPlugin;
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const ngcWebpack = require("ngc-webpack");
+const { commonRules } = require("./webpack.common");
 
 const isDevServer = helpers.isWebpackDevServer();
+const AOT = !isDevServer;
 const METADATA = {
     baseUrl: "/",
     isDevServer: isDevServer,
+    AOT,
 };
 
 const baseConfig = {
@@ -25,37 +29,26 @@ const baseConfig = {
     module: {
         rules: [
             {
-                test: /\.ts$/,
-                loaders: ["awesome-typescript-loader", "angular2-template-loader"],
-                exclude: [/node_modules/],
+                test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
+                use: ["@ngtools/webpack"],
+                exclude: [/\.spec\.ts/, /src\/test\//]
             },
-            {
-                test: /\.html$/,
-                loader: "raw-loader",
-                exclude: [/node_modules/, helpers.root("app/index.html")],
-            },
-            {
-                test: /\.json$/,
-                loader: "raw-loader",
-                exclude: [],
-            },
-            {
-                test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "file-loader",
-            },
-            {
-                test: /\.woff(2)?(\?v=\d+\.\d+\.\d+)?$/,
-                loader: "url-loader?limit=10000&mimetype=application/font-woff",
-            },
+            ...commonRules,
         ],
     },
     plugins: [
         new CheckerPlugin(),
-
+        new ngcWebpack.NgcWebpackPlugin({
+            skipCodeGeneration: !AOT,
+            tsConfigPath: "./tsconfig.browser.json",
+            mainPath: "./app/app.ts",              // will auto-detect the root NgModule.
+            sourceMap: true,
+        }),
         new CopyWebpackPlugin([
             { context: "src/client/splash-screen", from: "**/*", to: "client/splash-screen" },
+            { context: "src/client/proxy", from: "**/*", to: "client/proxy" },
             { context: "app/assets", from: "**/*", to: "assets" },
-            { from: "node_modules/monaco-editor/min/vs", to: "vendor/vs",  },
+            { from: "node_modules/monaco-editor/min/vs", to: "vendor/vs", },
         ]),
         new CommonsChunkPlugin({
             name: "polyfills",

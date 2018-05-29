@@ -1,7 +1,8 @@
-import { Model, Prop, Record } from "app/core";
+import { Model, Prop, Record } from "@batch-flask/core";
 
 export interface NetworkConfigurationAttributes {
     subnetId: string;
+    endpointConfiguration: any;
 }
 
 /**
@@ -10,4 +11,5 @@ export interface NetworkConfigurationAttributes {
 @Model()
 export class NetworkConfiguration extends Record<NetworkConfigurationAttributes> {
     @Prop() public subnetId: string;
+    @Prop() public endpointConfiguration: any;
 }

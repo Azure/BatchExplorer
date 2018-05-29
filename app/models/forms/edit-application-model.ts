@@ -7,7 +7,7 @@ export interface EditApplicationModel {
 }
 
 export function editApplicationFormToJsonData(formData: EditApplicationModel): any {
-    let data: any = {
+    const data: any = {
         displayName: formData.displayName,
         defaultVersion: formData.defaultVersion,
         allowUpdates: formData.allowUpdates,

@@ -1,0 +1,28 @@
+<div class="error-banner" *ngIf="error">
+    <div class="content">
+        <div class="main-content">
+            <div class="main-info">
+                <h4>{{error.code}}</h4>
+                <p>{{error.message}}</p>
+            </div>
+            <div class="troubleshoot-btn">
+                <i class="fa fa-bug" (click)="showErrorTroubleshoot = !showErrorTroubleshoot" title="Troubleshoot details"></i>
+            </div>
+        </div>
+        <div class="details" *ngIf="error.details">
+            <div *ngFor="let detail of error.details;trackBy: trackDetail"><b>{{detail.key}}</b>: {{detail.value}}</div>
+        </div>
+    </div>
+    <div class="troubleshoot-info" *ngIf="showErrorTroubleshoot">
+        <table>
+            <tr *ngIf="error.requestId">
+                <td><b>Request ID</b></td>
+                <td>{{error.requestId}}</td>
+            </tr>
+            <tr *ngIf="error.timestamp">
+                <td><b>Time</b> </td>
+                <td>{{error.timestamp}}</td>
+            </tr>
+        </table>
+    </div>
+</div>

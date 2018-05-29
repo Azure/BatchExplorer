@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "app/core";
+import { Model, Prop, Record } from "@batch-flask/core";
 
 import { ComputeNodeInformation } from "./compute-node-information";
 import { FailureInfo } from "./failure-info";

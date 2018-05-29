@@ -1,11 +1,16 @@
-<mat-card>
+<bl-card>
     <h2> This file is too large to preview.</h2>
 
-    <button (click)="open()" [disabled]="downloading">
-        Open
-    </button>
+    <div class="actions">
+        <bl-button (do)="open()" [disabled]="downloading" type="wide">
+            Open
+        </bl-button>
 
-    <button (click)="download()" [disabled]="downloading">
-        Download
-    </button>
-</mat-card>
+        <bl-button (do)="download()" [disabled]="downloading"  type="wide">
+            Download
+        </bl-button>
+    </div>
+    <div *ngIf="downloading" class="downloading">
+        Downloading...
+    </div>
+</bl-card>

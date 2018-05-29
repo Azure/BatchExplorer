@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "app/core";
+import { Model, Prop, Record } from "@batch-flask/core";
 
 export interface SubscriptionAttributes {
     id: string;
@@ -9,7 +9,7 @@ export interface SubscriptionAttributes {
 }
 
 /**
- * Class for displaying MPI sub task information.
+ * Class for subscription information
  */
 @Model()
 export class Subscription extends Record<SubscriptionAttributes> {

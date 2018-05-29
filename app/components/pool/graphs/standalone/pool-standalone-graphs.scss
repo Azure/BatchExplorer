@@ -1,0 +1,22 @@
+@import "app/styles/variables";
+
+bl-pool-standalone-graphs {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: $card-background;
+
+    > .title {
+        padding: 5px 10px;
+        color: $headings-color;
+        font-size: 16px;
+        flex-basis: 30px;
+        border-bottom: 1px solid $border-color;
+    }
+
+    > bl-pool-graphs {
+        flex: 1;
+        height: 100%;
+    }
+}

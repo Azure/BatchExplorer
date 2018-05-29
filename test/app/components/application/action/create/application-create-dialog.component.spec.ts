@@ -5,11 +5,12 @@ import { Response, ResponseOptions } from "@angular/http";
 import { By } from "@angular/platform-browser";
 import { Observable, Subject } from "rxjs";
 
+import { ServerError } from "@batch-flask/core";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { ApplicationCreateDialogComponent } from "app/components/application/action";
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
-import { ServerError } from "app/models";
-import { ApplicationService, StorageService } from "app/services";
+import { ApplicationService } from "app/services";
+import { StorageBlobService } from "app/services/storage";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
@@ -21,7 +22,7 @@ describe("ApplicationCreateDialogComponent ", () => {
     let component: ApplicationCreateDialogComponent;
     let debugElement: DebugElement;
     let appServiceSpy: any;
-    let storageService: any;
+    let storageBlobService: any;
     let notificationServiceSpy: any;
 
     const validators = TestConstants.validators;
@@ -59,7 +60,7 @@ describe("ApplicationCreateDialogComponent ", () => {
             onApplicationAdded: new Subject(),
         };
 
-        storageService = {
+        storageBlobService = {
             uploadToSasUrl: jasmine.createSpy("uploadToSasUrl").and.returnValue(Observable.of({})),
         };
 
@@ -75,7 +76,7 @@ describe("ApplicationCreateDialogComponent ", () => {
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: SidebarRef, useValue: null },
                 { provide: ApplicationService, useValue: appServiceSpy },
-                { provide: StorageService, useValue: storageService },
+                { provide: StorageBlobService, useValue: storageBlobService },
                 { provide: NotificationService, useValue: notificationServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
@@ -141,7 +142,7 @@ describe("ApplicationCreateDialogComponent ", () => {
 
     describe("Package File", () => {
         it("control is initialized", () => {
-            const input = debugElement.query(By.css("input[type=file]")).nativeElement;
+            const input = debugElement.query(By.css("bl-directory-picker")).nativeElement;
             expect(input).toBeDefined();
         });
 
@@ -218,7 +219,7 @@ describe("ApplicationCreateDialogComponent ", () => {
                 expect(appServiceSpy.put).toHaveBeenCalledTimes(1);
                 expect(appServiceSpy.put).toHaveBeenCalledWith("app-5", "1.0");
 
-                expect(storageService.uploadToSasUrl).toHaveBeenCalledOnce();
+                expect(storageBlobService.uploadToSasUrl).toHaveBeenCalledOnce();
 
                 expect(appServiceSpy.activatePackage).toHaveBeenCalledTimes(1);
                 expect(appServiceSpy.activatePackage).toHaveBeenCalledWith("app-5", "1.0");
@@ -256,7 +257,7 @@ describe("ApplicationCreateDialogComponent ", () => {
                     expect(appServiceSpy.put).toHaveBeenCalledTimes(1);
                     expect(appServiceSpy.put).toHaveBeenCalledWith("throw-me", "1.0");
 
-                    expect(storageService.uploadToSasUrl).not.toHaveBeenCalled();
+                    expect(storageBlobService.uploadToSasUrl).not.toHaveBeenCalled();
                     expect(appServiceSpy.activatePackage).toHaveBeenCalledTimes(0);
                     expect(notificationServiceSpy.success).toHaveBeenCalledTimes(0);
 
@@ -279,7 +280,7 @@ describe("ApplicationCreateDialogComponent ", () => {
                 next: () => {
                     expect(appServiceSpy.put).toHaveBeenCalledTimes(1);
                     expect(appServiceSpy.put).toHaveBeenCalledWith("activate-fail", "1.0");
-                    expect(storageService.uploadToSasUrl).toHaveBeenCalledOnce();
+                    expect(storageBlobService.uploadToSasUrl).toHaveBeenCalledOnce();
                     expect(appServiceSpy.activatePackage).toHaveBeenCalledTimes(1);
                     expect(notificationServiceSpy.success).toHaveBeenCalledTimes(0);
                     expect(notificationServiceSpy.error).toHaveBeenCalledTimes(1);

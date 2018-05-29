@@ -1,0 +1,77 @@
+@import "app/styles/variables";
+
+bl-select {
+    $button-height: 26px;
+    $dropdown-zindex: 100;
+
+    min-width: 100px;
+    display: block;
+    color: $input-text-color;
+    border: none;
+    position: relative;
+
+    &.bl-disabled {
+        > .select-button-container {
+            background-color: $input-disabled-background-color;
+        }
+    }
+
+    > .select-button-container {
+        height: $button-height;
+        background-color: $input-background-color;
+        border: 1px solid $input-border-color;
+        color: $input-text-color;
+
+        > .select-button {
+            display: flex;
+            height: $button-height;
+            line-height: $button-height;
+            cursor: pointer;
+            vertical-align: middle;
+            width: 100%;
+            outline: none;
+
+            &:focus {
+                border-bottom: 2px solid $input-focus-border-color;
+            }
+
+            > .label {
+                flex: 1;
+                min-width: 20px;
+                padding: 0 5px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            > .caret {
+                flex-shrink: 0;
+                flex-basis: 20px;
+                text-align: center;
+                color: $input-text-color;
+            }
+        }
+
+        > input.select-filter {
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 100%;
+            display: block;
+            outline: none;
+            height: $button-height;
+            padding: 0 5px;
+            z-index: $dropdown-zindex + 10;
+            border: 1px solid $input-border-color;
+            color: $input-text-color;
+
+            &:focus {
+                border-bottom: 2px solid $input-focus-border-color;
+            }
+
+            &::placeholder {
+                color: $input-placeholder-color;
+            }
+        }
+    }
+}

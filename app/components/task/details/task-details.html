@@ -15,7 +15,7 @@
             </div>
         </bl-summary-card>
         <bl-task-error-display [jobId]="jobId" [task]="task"></bl-task-error-display>
-        <mat-card class="details">
+        <bl-card class="details">
             <bl-tab-group>
                 <bl-tab key="outputs">
                     <bl-tab-label>Task Outputs</bl-tab-label>
@@ -40,11 +40,9 @@
                 </bl-tab>
                 <bl-tab key="dependencies" [disabled]="!hasDependencies">
                     <bl-tab-label>Dependencies</bl-tab-label>
-                    <div class="tab-padding">
-                        <bl-task-dependencies [jobId]="job.id" [task]="task"></bl-task-dependencies>
-                    </div>
+                    <bl-task-dependencies [jobId]="job.id" [task]="task"></bl-task-dependencies>
                 </bl-tab>
             </bl-tab-group>
-        </mat-card>
+        </bl-card>
     </div>
 </bl-loading>

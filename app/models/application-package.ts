@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "app/core";
+import { Model, Prop, Record } from "@batch-flask/core";
 
 export interface ApplicationPackageAttributes {
     version: string;
@@ -20,6 +20,10 @@ export class ApplicationPackage extends Record<ApplicationPackageAttributes> {
     @Prop() public lastActivationTime: Date;
     @Prop() public storageUrl: string;
     @Prop() public storageUrlExpiry: Date;
+
+    public get id() {
+        return this.version;
+    }
 }
 
 export enum PackageState {

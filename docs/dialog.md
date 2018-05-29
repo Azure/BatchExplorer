@@ -5,7 +5,7 @@ You can open a popup dialog in batchlabs to ask for confirmation to the user, fi
 First you need to import the `DialogService`
 
 ```ts
-import { DialogService } from "app/components/base/dialogs";
+import { DialogService } from "@batch-flask/ui/dialogs";
 
 constructor(private dialog: DialogService) {}
 ```

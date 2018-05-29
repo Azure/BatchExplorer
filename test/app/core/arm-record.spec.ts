@@ -1,4 +1,4 @@
-import { ArmRecord, Model, Prop } from "app/core";
+import { ArmRecord, Model, Prop } from "@batch-flask/core";
 
 @Model()
 class TestModel extends ArmRecord<any> {

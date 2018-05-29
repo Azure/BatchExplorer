@@ -1,0 +1,185 @@
+@import "app/styles/variables";
+
+bl-browse-layout {
+    .layout-list-header {
+        display: flex;
+        margin-top: 5px;
+        padding: 0 13px;
+        align-items: center;
+
+        > .title {
+            text-transform: uppercase;
+            font-size: 14px;
+            color: $headings-color;
+            font-weight: 500;
+        }
+
+        > .actions {
+            font-size: 16px;
+
+            bl-button {
+                height: 24px;
+                width: 24px;
+                line-height: 24px;
+            }
+        }
+    }
+
+    .quick-filter-content {
+        border-bottom: 1px solid $border-color;
+        padding-bottom: 10px;
+    }
+
+    .quicksearch {
+        margin: 0 10px;
+    }
+
+    .context-button-bar {
+        &.left {
+            float: left;
+        }
+    }
+
+    [blBrowseLayoutButtons] {
+        display: inline;
+    }
+    > .layout-container {
+        display: flex;
+
+        &.filtering {
+            .list-view {
+                width: $listview-filtering-width;
+
+                > .left-pane {
+                    width: $listview-filtering-width;
+                }
+            }
+
+            .content-view {
+                width: calc(100vw - #{$listview-filtering-width} - #{$navigationbar-width});
+            }
+        }
+
+        > .list-view {
+            transition:width 100ms;
+            width: $listview-width;
+            height: $contentview-height;
+            background-color: $card-background;
+            z-index: 1;
+
+            > .left-pane {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                width: $listview-width;
+
+                .bl-list-content {
+                    flex: 1;
+                    min-height: 100px;
+                    overflow-y: auto;
+                    position: relative;
+                }
+            }
+
+            .header {
+                height: $listview-header-height;
+                padding: 15px 15px 0;
+            }
+
+            .scrollable {
+                height: 100%;
+                overflow-y: hidden;
+
+                &:hover {
+                    overflow-y: auto;
+                }
+            }
+
+            [blbrowselayoutlist] {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+
+                > .list {
+                    flex: 1 1 auto;
+                    min-height: 100px;
+                    overflow-y: hidden;
+                    height: 100%;
+                }
+            }
+        }
+
+        > .content-view {
+            width: calc(100vw - #{$listview-width} - #{$navigationbar-width});
+            height: $contentview-height;
+            overflow-y: auto;
+            background-color: $main-background;
+
+            position: relative;
+
+            .content-wrapper {
+                padding-left: 5px;
+                padding-top: 0;
+                position: relative;
+            }
+        }
+
+        .quotas {
+            border-top: 1px solid $border-color;
+        }
+    }
+}
+
+.load-more-btn {
+    display: flex;
+    justify-content: center;
+    padding: 5px 0;
+}
+
+.quicksearch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > .pre-quicksearch {
+        min-width: 10px;
+    }
+
+    .bl-form-field-infix {
+        width: auto;
+    }
+
+    > input {
+        flex: 1 0 auto;
+        padding: 5px;
+        color: $emperor-grey;
+        font-size: 1.1em;
+        height: 26px;
+
+        border: 1px solid $border-color;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .toggle-advanced-filter {
+        color: $scorpion;
+        cursor: pointer;
+        padding-left: 5px;
+        padding-top: 5px;
+        font-size: 16px;
+        background: $athensGrey;
+        height: 26px;
+        width: 26px;
+
+        &:hover {
+            color: $dusty-grey;
+        }
+    }
+
+    bl-select {
+        margin-right: 10px;
+    }
+}
+

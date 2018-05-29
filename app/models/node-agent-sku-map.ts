@@ -39,15 +39,15 @@ export class NodeAgentSkuMap {
     public dockerOffers: Offer[];
 
     constructor(skus: List<NodeAgentSku> = List([])) {
-        let offers: StringMap<Offer> = {};
-        let dockerOffers: StringMap<Offer> = {};
+        const offers: StringMap<Offer> = {};
+        const dockerOffers: StringMap<Offer> = {};
         /**
          * Split current offer to normal offer and docker offer because some docker container must be displayed
          * in a seperate container configuration tab
          */
         let targetOffers = null;
         skus.forEach((sku) => {
-            for (let imageReference of sku.verifiedImageReferences) {
+            for (const imageReference of sku.verifiedImageReferences) {
                 targetOffers = offers;
                 if (dockerContainer[imageReference.offer] &&
                     dockerContainer[imageReference.offer].includes(imageReference.sku)) {

@@ -1,4 +1,4 @@
-import * as storage from "azure-storage";
+import { BlobService } from "azure-storage";
 
 import { BlobStorageResult, SharedAccessPolicy, StorageRequestOptions } from "./models";
 
@@ -6,7 +6,7 @@ export interface ListBlobOptions {
     /**
      * Filter for the path.(Relative to the prefix if given)
      */
-    startswith?: string;
+    folder?: string;
 
     /**
      * If it should list all files or 1 directory deep.
@@ -26,9 +26,9 @@ export interface ListBlobResponse {
 }
 
 export class BlobStorageClientProxy {
-    public client: storage.BlobService;
+    public client: BlobService;
 
-    constructor(blobService: storage.BlobService) {
+    constructor(blobService: BlobService) {
         this.client = blobService;
     }
 
@@ -50,8 +50,7 @@ export class BlobStorageClientProxy {
         continuationToken?: any): Promise<BlobStorageResult> {
 
         // we want to keep the filter and prefix separate for mapping files in the response.
-        const prefix = options.startswith;
-
+        const prefix = options.folder;
         const storageOptions: StorageRequestOptions = {
             delimiter: options.recursive ? null : "/",
         };
@@ -209,24 +208,22 @@ export class BlobStorageClientProxy {
      * @param {StorageRequestOptions} options - Optional request parameters
      */
     public listContainersWithPrefix(
-        prefix: string,
-        filter: string,
+        startswith: string,
         continuationToken?: any,
         options?: StorageRequestOptions): Promise<BlobStorageResult> {
 
-        const prefixAndFilter = filter ? prefix + filter : prefix;
         return new Promise((resolve, reject) => {
-            this.client.listContainersSegmentedWithPrefix(prefixAndFilter, continuationToken, options,
+            this.client.listContainersSegmentedWithPrefix(startswith, continuationToken, options,
                 (error, result, response) => {
                     if (error) {
                         reject(error);
                     } else {
                         resolve({
                             data: result.entries.map((container) => {
-                                return Object.assign(container, {
+                                return {
+                                    ...container,
                                     id: container.name,
-                                    name: container.name.replace(prefix, ""),
-                                });
+                                };
                             }),
                             continuationToken: result.continuationToken,
                         });
@@ -253,10 +250,10 @@ export class BlobStorageClientProxy {
                     reject(error);
                 } else {
                     resolve({
-                        data: Object.assign(result, {
+                        data: {
+                            ...result,
                             id: result.name,
-                            name: result.name.replace(prefix, ""),
-                        }),
+                        },
                     });
                 }
             });
@@ -307,14 +304,34 @@ export class BlobStorageClientProxy {
     }
 
     /**
+     * Creates a new container under the specified account if it doesn't exsits.
+     *
+     * @param {string} container - Name of the storage container
+     */
+    public createContainerIfNotExists(containerName: string)
+        : Promise<BlobStorageResult> {
+
+        return new Promise((resolve, reject) => {
+            this.client.createContainerIfNotExists(containerName, (error, response) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    /**
      * Retrieves a shared access signature token.
      * http://azure.github.io/azure-storage-node/BlobService.html#generateSharedAccessSignature__anchor
      *
      * @param {string} container - Name of the storage container
      * @param {string} sharedAccessPolicy - The shared access policy
      */
-    public generateSharedAccessSignature(container: string, sharedAccessPolicy: SharedAccessPolicy): string {
-        return this.client.generateSharedAccessSignature(container, null, sharedAccessPolicy, null);
+    public generateSharedAccessSignature(
+        container: string, blob: string, sharedAccessPolicy: SharedAccessPolicy): string {
+        return this.client.generateSharedAccessSignature(container, blob, sharedAccessPolicy, null);
     }
 
     /**
@@ -327,6 +344,16 @@ export class BlobStorageClientProxy {
      */
     public getUrl(container: string, blob?: string, sasToken?: string): string {
         return this.client.getUrl(container, blob, sasToken);
+    }
+
+    public async uploadFile(container: string, file: string, remotePath: string): Promise<BlobService.BlobResult> {
+        return new Promise<BlobService.BlobResult>((resolve, reject) => {
+            this.client.createBlockBlobFromLocalFile(container, remotePath, file,
+                (error: any, result: BlobService.BlobResult) => {
+                    if (error) { return reject(error); }
+                    resolve(result);
+                });
+        });
     }
 
     /**

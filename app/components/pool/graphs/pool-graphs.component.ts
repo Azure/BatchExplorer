@@ -1,30 +1,21 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { autobind } from "core-decorators";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
-import { SidebarManager } from "app/components/base/sidebar";
+import {  autobind } from "@batch-flask/core";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { PerformanceData } from "app/components/pool/graphs/performance-graph";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
-import { Job, JobState, Node, NodeState, Pool, Task } from "app/models";
-import { AppInsightsQueryService, JobListParams, JobService, NodeListParams, NodeService } from "app/services";
+import { Job, Node, NodeState, Pool, Task } from "app/models";
+import {
+    AppInsightsQueryService, BatchLabsService, NodeListParams, NodeService,
+} from "app/services";
 import { ListView, PollObservable, PollService } from "app/services/core";
-import { FilterBuilder } from "app/utils/filter-builder";
+import { ComponentUtils } from "app/utils";
+import { StateCounter } from "./heatmap";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import "./pool-graphs.scss";
-import { StateCounter } from "./state-counter";
-
-enum AvailableGraph {
-    Heatmap,
-    AvailableNodes,
-    RunningTasks,
-    Cpu,
-    Memory,
-    Network,
-    Disk,
-    EnableAppInsights,
-}
 
 const historyLength = {
     TenMinute: 10,
@@ -41,11 +32,10 @@ const appInsightsRefreshRate = 60 * 1000; // Every minute(Aggregation is minimum
     templateUrl: "pool-graphs.html",
 })
 export class PoolGraphsComponent implements OnChanges, OnDestroy {
-    public AvailableGraph = AvailableGraph;
     public historyLength = historyLength;
 
-    @Input()
-    public pool: Pool;
+    @Input() public pool: Pool;
+    @Input() public node: Node;
 
     public data: ListView<Node, NodeListParams>;
 
@@ -63,21 +53,20 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public runningNodesHistory = new NodesStateHistoryData([NodeState.running, NodeState.idle]);
     public maxRunningTasks = 0;
 
-    public focusedGraph = AvailableGraph.Heatmap;
     public selectedHistoryLength = new FormControl(historyLength.TenMinute);
     public performanceData: PerformanceData;
 
-    private _jobData: ListView<Job, JobListParams>;
     private _stateCounter = new StateCounter();
 
     private _polls: PollObservable[] = [];
     private _nodesSub: Subscription;
+    private _appInsightsPoll: PollObservable;
 
     constructor(
         appInsightsQueryService: AppInsightsQueryService,
-        pollService: PollService,
+        private pollService: PollService,
         private nodeService: NodeService,
-        jobService: JobService,
+        private batchLabs: BatchLabsService,
         private sidebarManager: SidebarManager,
     ) {
         this.performanceData = new PerformanceData(appInsightsQueryService);
@@ -95,13 +84,6 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             }
             this._scanForProblems();
         });
-        this._jobData = jobService.listView({
-            select: "id",
-        });
-
-        this._jobData.items.subscribe((jobs) => {
-            this.jobs = jobs;
-        });
 
         this.selectedHistoryLength.valueChanges.subscribe((value) => {
             this.runningNodesHistory.setHistorySize(value);
@@ -109,44 +91,47 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             this.performanceData.historySize = value;
             this.performanceData.update();
         });
-        this._polls.push(this.data.startPoll(refreshRate, true));
 
-        this._polls.push(pollService.startPoll("pool-app-insights", appInsightsRefreshRate, () => {
+        this._appInsightsPoll = this.pollService.startPoll("pool-app-insights", appInsightsRefreshRate, () => {
             return this.performanceData.update();
-        }));
+        });
+        this._startListNodePoll();
     }
 
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.pool) {
             this.performanceData.pool = this.pool;
-            const prev = changes.pool.previousValue;
-            const cur = changes.pool.currentValue;
             this.maxRunningTasks = this.pool ? this.pool.targetNodes * this.pool.maxTasksPerNode : 0;
             this.isPaasPool = Boolean(this.pool.cloudServiceConfiguration);
-            if (prev && cur && prev.id === cur.id) {
-                return;
+            if (ComponentUtils.recordChangedId(changes.pool) && !this.node) {
+                this.performanceData.update();
+                this.data.params = { poolId: this.pool.id };
+                this.data.refreshAll(false);
+
+                this.runningNodesHistory.reset();
+                this.runningTaskHistory.reset();
+            }
+        }
+
+        if (changes.node) {
+            this.performanceData.node = this.node;
+            if (ComponentUtils.recordChangedId(changes.node)) {
+                this.performanceData.update();
             }
 
-            this._checkTabIsValid();
-
-            this.performanceData.update();
-            this.data.updateParams({ poolId: this.pool.id });
-            this.data.refreshAll(false);
-
-            this._jobData.patchOptions({
-                filter: this._buildJobFilter(),
-            });
-            this._jobData.refreshAll();
-            this.runningNodesHistory.reset();
-            this.runningTaskHistory.reset();
+            if (this.node) {
+                this._stopListNodePoll();
+            } else {
+                this._startListNodePoll();
+            }
         }
     }
 
     public ngOnDestroy() {
-        this._polls.forEach(x => x.destroy());
+        this._stopListNodePoll();
+        this._appInsightsPoll.destroy();
         this._nodesSub.unsubscribe();
         this.data.dispose();
-        this._jobData.dispose();
     }
 
     @autobind()
@@ -165,8 +150,12 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         this.nodeService.reimageAll(this.pool.id, [NodeState.startTaskFailed]);
     }
 
-    public focusGraph(graph: AvailableGraph) {
-        this.focusedGraph = graph;
+    @autobind()
+    public openInNewWindow() {
+        const link = `ms-batchlabs://route/standalone/pools/${this.pool.id}/graphs?fullscreen=true`;
+        const window = this.batchLabs.openNewWindow(link);
+
+        return Observable.fromPromise(window.domReady);
     }
 
     public get appInsightsEnabled() {
@@ -184,22 +173,12 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         }
     }
 
-    private _buildJobFilter(): string {
-        return FilterBuilder.and(
-            FilterBuilder.prop("state").eq(JobState.active),
-            FilterBuilder.prop("executionInfo/poolId").eq(this.pool.id),
-        ).toOData();
+    private _startListNodePoll() {
+        this._polls.push(this.data.startPoll(refreshRate, true));
     }
 
-    private _checkTabIsValid() {
-        if (this.appInsightsEnabled && this.focusedGraph === AvailableGraph.EnableAppInsights) {
-            this.focusGraph(AvailableGraph.Heatmap);
-        } else if (this.appInsightsEnabled
-            && !(this.focusedGraph === AvailableGraph.EnableAppInsights
-                || this.focusedGraph === AvailableGraph.Heatmap
-                || this.focusedGraph === AvailableGraph.AvailableNodes
-                || this.focusedGraph === AvailableGraph.RunningTasks)) {
-            this.focusGraph(AvailableGraph.Heatmap);
-        }
+    private _stopListNodePoll() {
+        this._polls.forEach(x => x.destroy());
+        this._polls = [];
     }
 }

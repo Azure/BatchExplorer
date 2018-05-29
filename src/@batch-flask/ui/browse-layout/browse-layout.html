@@ -1,0 +1,49 @@
+<div class="layout-container" [class.filtering]="showAdvancedFilter">
+    <section class="list-view">
+        <div class="left-pane">
+            <div class="quick-filter-content">
+                <div class="layout-list-header">
+                    <div class="title">
+                        <ng-content select="[blBrowseLayoutTitle]"></ng-content>
+                    </div>
+                    <div class="flex-separator"></div>
+                    <div class="actions">
+                        <bl-button icon="fa fa-trash" type="plain" color="light" *ngIf="deleteSelectionIsEnabled && selection.hasAny()" [skipSuccess]="true"
+                            [action]="deleteSelection">
+                        </bl-button>
+                        <bl-refresh-btn [refresh]="refresh" *ngIf="refreshEnabled" type="plain" color="light"></bl-refresh-btn>
+                        <ng-content select="[blBrowseLayoutButtons]"></ng-content>
+                    </div>
+                </div>
+                <div class="quicksearch">
+                    <div class="pre-quicksearch">
+                        <ng-content select="[pre-quicksearch]"></ng-content>
+                    </div>
+                    <input blInput [formControl]="quickSearchQuery" placeholder="Search (Startwith)" #quickSearchInput (keydown)="handleKeyPressedInQuickSearch($event)"/>
+                    <bl-clickable class="toggle-advanced-filter" (do)="toggleFilter()" *ngIf="advancedFilterDirective">
+                        <i class="fa fa-filter"></i>
+                    </bl-clickable>
+                </div>
+            </div>
+            <div class="bl-list-content">
+                <ng-content select="[blBrowseLayoutList]"></ng-content>
+            </div>
+            <div class="quotas">
+                <ng-content select="[blBrowseLayoutQuotas]"></ng-content>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-view">
+        <bl-scrollable class="block">
+            <div class="content-wrapper">
+                <div style="position:relative;">
+                    <router-outlet></router-outlet>
+                    <div class="advanced-filter-content" [hidden]="!showAdvancedFilter">
+                        <ng-content select="[blBrowseLayoutAdvancedFilter]"></ng-content>
+                    </div>
+                </div>
+            </div>
+        </bl-scrollable>
+    </section>
+</div>

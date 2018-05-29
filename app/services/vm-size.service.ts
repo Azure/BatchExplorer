@@ -40,8 +40,15 @@ export class VmSizeService {
      */
     public virtualMachineSizes: Observable<List<VmSize>>;
     public vmSizeCategories: Observable<StringMap<string[]>>;
+    public additionalVmSizeCores = {
+        extrasmall: 1,
+        small: 1,
+        medium: 2,
+        large: 4,
+        extralarge: 8,
+    };
 
-    private _sizes = new BehaviorSubject<List<VmSize>>(List([]));
+    private _sizes = new BehaviorSubject<List<VmSize>>(null);
     private _excludedSizes = new BehaviorSubject<ExcludedSizes>(null);
     private _vmSizeCategories = new BehaviorSubject<StringMap<string[]>>(null);
 
@@ -52,21 +59,21 @@ export class VmSizeService {
         private githubData: GithubDataService, private accountService: AccountService) {
 
         const obs = Observable.combineLatest(this._sizes, this._excludedSizes);
-        this.sizes = this._sizes.asObservable();
+        this.sizes = this._sizes.filter(x => x !== null);
 
         this.cloudServiceSizes = obs.map(([sizes, excluded]) => {
             if (!excluded) {
                 return sizes;
             }
             return this._filterSizes(sizes, excluded.all.concat(excluded.paas));
-        }).share();
+        }).shareReplay(1);
 
         this.virtualMachineSizes = obs.map(([sizes, excluded]) => {
             if (!excluded) {
                 return sizes;
             }
             return this._filterSizes(sizes, excluded.all.concat(excluded.iaas));
-        }).share();
+        }).shareReplay(1);
 
         this.vmSizeCategories = this._vmSizeCategories.asObservable();
     }
@@ -108,9 +115,9 @@ export class VmSizeService {
     }
 
     public get(vmSize: string): Observable<VmSize> {
-        return this._sizes.map(sizes => {
+        return this.sizes.map(sizes => {
             return sizes.filter(x => x.name.toLowerCase() === vmSize.toLowerCase()).first();
-        });
+        }).take(1).share();
     }
     /**
      * Filter the given list of vm sizes by excluding any patching the given patterns.
@@ -118,8 +125,11 @@ export class VmSizeService {
      * @param excludePatterns List of wildcard patterns to exclude
      */
     private _filterSizes(sizes: List<VmSize>, excludePatterns: string[]): List<VmSize> {
+        if (!sizes) {
+            return null;
+        }
         return List<VmSize>(sizes.filter((size) => {
-            for (let wildcard of excludePatterns) {
+            for (const wildcard of excludePatterns) {
                 if (StringUtils.matchWildcard(size.name, wildcard)) {
                     return false;
                 }

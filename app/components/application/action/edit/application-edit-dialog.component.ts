@@ -1,15 +1,15 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
-import { autobind } from "core-decorators";
+import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { ApplicationPackage, BatchApplication } from "app/models";
 import { applicationToEditFormModel, editApplicationFormToJsonData } from "app/models/forms";
-import { ApplicationService  } from "app/services";
+import { ApplicationService } from "app/services";
 import { Constants } from "app/utils";
 
 @Component({
@@ -46,6 +46,10 @@ export class ApplicationEditDialogComponent {
         this.application = application;
         this.packages = application.packages || List([]);
         this.form.patchValue(applicationToEditFormModel(application));
+    }
+
+    public trackByFn(index, pkg: ApplicationPackage) {
+        return pkg.version;
     }
 
     @autobind()

@@ -2,15 +2,15 @@ import { Component, EventEmitter, OnDestroy, Output, forwardRef } from "@angular
 import {
     ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
-import { MatSelectChange } from "@angular/material";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { LoadingStatus } from "app/components/base/loading";
-import { ApplicationPackage, BatchApplication, ServerError } from "app/models";
+import { ServerError } from "@batch-flask/core";
+import { LoadingStatus } from "@batch-flask/ui/loading";
+import { ApplicationPackage, BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService } from "app/services";
 
-import "app/components/base/form/editable-table/editable-table.scss";
+import "@batch-flask/ui/form/editable-table/editable-table.scss";
 import { ListView } from "app/services/core";
 
 interface PackageReference {
@@ -28,8 +28,7 @@ interface PackageReference {
     ],
 })
 export class AppPackagePickerComponent implements ControlValueAccessor, Validator, OnDestroy {
-    @Output()
-    public hasLinkedStorage: EventEmitter<boolean> = new EventEmitter();
+    @Output() public hasLinkedStorage: EventEmitter<boolean> = new EventEmitter();
 
     public status: Observable<LoadingStatus>;
     public applications: List<BatchApplication> = List([]);
@@ -58,7 +57,6 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
         this._data = this.applicationService.listView();
 
-        // TODO-TIM handle error.
         this._data.onError = (error: ServerError) => {
             if (this.applicationService.isAutoStorageError(error)) {
                 this.hasLinkedStorage.emit(false);
@@ -69,7 +67,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         };
 
         // subscribe to the application data proxy
-        this._subscriptions.push(this._data.items.subscribe((applications) => {
+        this._data.items.subscribe((applications) => {
             this._applicationMap = {};
             if (applications.size > 0) {
                 this._mapApplicationPackages(applications);
@@ -84,7 +82,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
                     index++;
                 });
             }
-        }));
+        });
 
         // subscribe to the form change events
         this._subscriptions.push(this.items.valueChanges.subscribe((references: PackageReference[]) => {
@@ -99,7 +97,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
             if (this._propagateChange) {
                 const cloned = this.items.value.slice(0, -1).map(item => {
-                    let clone = JSON.parse(JSON.stringify(item));
+                    const clone = JSON.parse(JSON.stringify(item));
                     if (clone.version === this._defaultVersionValue) {
                         clone.version = null;
                     }
@@ -115,6 +113,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     }
 
     public ngOnDestroy() {
+        this._data.dispose();
         this._subscriptions.forEach(x => x.unsubscribe());
     }
 
@@ -122,7 +121,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         this._writingValue = true;
         this.items.controls = [];
         if (references) {
-            for (let reference of references) {
+            for (const reference of references) {
                 this.addNewItem(reference.applicationId, reference.version || this._defaultVersionValue);
             }
         } else {
@@ -149,9 +148,9 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         }
 
         const tempMap: any = {};
-        for (let reference of control.value) {
+        for (const reference of control.value) {
             // TODO: remove lowerCase when API is fixed.
-            const application = reference.applicationId.toLowerCase();
+            const application = reference.applicationId && reference.applicationId.toLowerCase();
             const key = `${application}-${reference.version}`;
             if (!Boolean(key in tempMap)) {
                 const version = !reference.version // this._defaultVersionValue
@@ -175,7 +174,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         return null;
     }
 
-    public addNewItem(applicationId = "", version = "") {
+    public addNewItem(applicationId = null, version = null) {
         this.items.push(this.formBuilder.group({
             applicationId: [applicationId, []],
             version: [version, []],
@@ -187,18 +186,30 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         this.packageMap.splice(index, 1);
     }
 
-    public applicationSelected(event: MatSelectChange, index: number) {
-        this._setPackageMap(event.value, index);
+    public applicationSelected(appId: string, index: number) {
+        this._setPackageMap(appId, index);
     }
 
     public getPackageValue(version: string) {
         return version.toLowerCase() !== this._defaultVersionText.toLowerCase() ? version : this._defaultVersionValue;
     }
 
+    public trackRow(index) {
+        return index;
+    }
+
+    public trackApplication(index, application: BatchApplication) {
+        return application.id;
+    }
+
+    public trackPackage(index, pkg: ApplicationPackage) {
+        return pkg.version;
+    }
+
     private _setPackageMap(applicationId: string, index: number) {
         // each table row needs it's own package list based on the selected application
         this.packageMap[index] = List(this._applicationMap[applicationId] || []);
-        if (this._propagateTouched) {
+        if (applicationId && this._propagateTouched) {
             this._propagateTouched(true);
         }
     }

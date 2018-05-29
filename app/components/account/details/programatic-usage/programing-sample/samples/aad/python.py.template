@@ -1,0 +1,26 @@
+import azure.batch.batch_service_client as batch
+import azure.batch.batch_auth as batchauth
+from azure.common.credentials import ServicePrincipalCredentials
+
+# Batch account credentials
+BATCH_ACCOUNT_URL = '{accountUrl}'
+
+# Create a Batch service client. We'll now be interacting with the Batch
+# service in addition to Storage.
+
+credentials = ServicePrincipalCredentials(
+    client_id = '{clientId}',
+    secret = '{secret}',
+    tenant = '{tenantId}',
+    resource='https://batch.core.windows.net/'
+)
+
+batch_client = batch.BatchServiceClient(
+    credentials,
+    base_url=BATCH_ACCOUNT_URL)
+
+# Perform action with the batch_client
+jobs = batch_client.job.list()
+
+for job in jobs:
+    print(job.id)

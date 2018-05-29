@@ -1,0 +1,16 @@
+@import "app/styles/variables";
+
+.deallocation-option-picker {
+    bl-banner {
+        margin-top: 30px;
+        width: 550px;
+
+        > bl-card {
+            > .summary-container {
+                > .message {
+                    white-space: unset;
+                }
+            }
+        }
+    }
+}

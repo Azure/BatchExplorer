@@ -1,19 +1,26 @@
 // tslint:disable: object-literal-sort-keys
 import { Routes } from "@angular/router";
 
-import { NavigationGuard } from "app/components/base/guards";
+import { NavigationGuard } from "app/components/common/guards";
 import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
 import { ChooseActionComponent } from "app/components/market/application-action";
 import { LocalTemplateBrowserComponent } from "app/components/market/local-template-browser";
 import { SubmitLocalTemplateComponent } from "app/components/market/submit-local-template";
 import { SubmitRecentTemplateComponent } from "app/components/market/submit-recent-template";
+import { ThemeColorsComponent } from "app/components/misc";
+import { PoolStandaloneGraphsComponent } from "app/components/pool/graphs/standalone";
 import { SettingsComponent } from "app/components/settings";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
+import { AccountMonitoringHomeComponent } from "./components/account/monitoring";
 import { ApplicationDefaultComponent, ApplicationDetailsComponent } from "./components/application/details";
 import { ApplicationHomeComponent } from "./components/application/home/application-home.component";
+import { CertificateDefaultComponent, CertificateDetailsComponent } from "./components/certificate/details";
+import { CertificateHomeComponent } from "./components/certificate/home/certificate-home.component";
 import { DataDefaultComponent, DataDetailsComponent } from "./components/data/details";
 import { DataHomeComponent } from "./components/data/home/data-home.component";
+import { JobScheduleDefaultComponent, JobScheduleDetailsComponent } from "./components/job-schedule/details";
+import { JobScheduleHomeComponent } from "./components/job-schedule/home/job-schedule-home.component";
 import { JobDefaultComponent, JobDetailsComponent } from "./components/job/details";
 import { JobHomeComponent } from "./components/job/home/job-home.component";
 import { MarketComponent } from "./components/market/home";
@@ -34,6 +41,7 @@ export const routes: Routes = [
         children: [
             { path: "", component: AccountDefaultComponent }, // accounts/
             { path: ":id", component: AccountDetailsComponent }, // accounts/{account.id}
+            { path: ":id/monitor", component: AccountMonitoringHomeComponent }, // accounts/{account.id}
         ],
     },
     {
@@ -50,12 +58,30 @@ export const routes: Routes = [
         ],
     },
     {
+        path: "jobschedules",
+        canActivate: [NavigationGuard],
+        component: JobScheduleHomeComponent,
+        children: [
+            { path: "", component: JobScheduleDefaultComponent }, // jobschedules/
+            { path: ":id", component: JobScheduleDetailsComponent }, // jobschedules/{jobschedule.id}
+        ],
+    },
+    {
         path: "pools",
         canActivate: [NavigationGuard],
         component: PoolHomeComponent,
         children: [
             { path: "", component: PoolDefaultComponent }, // pools/
             { path: ":id", component: PoolDetailsComponent }, // pools/{pool.id}
+        ],
+    },
+    {
+        path: "certificates",
+        canActivate: [NavigationGuard],
+        component: CertificateHomeComponent,
+        children: [
+            { path: "", component: CertificateDefaultComponent }, // certificates/
+            { path: ":thumbprint", component: CertificateDetailsComponent }, // certificate/{certificate.thumbprint}
         ],
     },
     {
@@ -94,6 +120,10 @@ export const routes: Routes = [
     },
     {
         path: "data",
+        component: DataHomeComponent,
+    },
+    {
+        path: "data/:dataSource/containers",
         canActivate: [NavigationGuard],
         component: DataHomeComponent,
         children: [
@@ -121,21 +151,12 @@ export const routes: Routes = [
         path: "jobs/:jobId/graphs",
         component: JobGraphsComponent,
     },
+    {
+        path: "theme/colors",
+        component: ThemeColorsComponent,
+    },
+    {
+        path: "standalone/pools/:poolId/graphs",
+        component: PoolStandaloneGraphsComponent,
+    },
 ];
-
-// todo: copied here for reference only, delete when done.
-// export interface Route {
-//     path?: string;
-//     pathMatch?: string;
-//     component?: Type<any>;
-//     redirectTo?: string;
-//     outlet?: string;
-//     canActivate?: any[];
-//     canActivateChild?: any[];
-//     canDeactivate?: any[];
-//     canLoad?: any[];
-//     data?: Data;
-//     resolve?: ResolveData;
-//     children?: Route[];
-//     loadChildren?: LoadChildren;
-// }

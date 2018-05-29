@@ -3,6 +3,8 @@
 ## Prerequistie: Millestone
 Every release should have a millestone with the list of issues fixed in that new version.
 
+You can use the command `npm run publish -- <millestoneid>` to do step 1&2 and skip to step 3
+
 ## Step 1: Create a release issue
 
 Create a new issue in the millestone with the title `Prepare version x.y.z` and the following description:

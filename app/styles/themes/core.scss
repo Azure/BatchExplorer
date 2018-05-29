@@ -1,89 +1,121 @@
-@mixin prop($name, $var, $index) {
-    #{$name}-#{$index}: map-get($var, $index);
+@mixin propL($name, $var) {
+    #{$name}: $var;
 }
 
-@mixin css-var-theme($name, $var) {
-    @include prop($name, $var, 50);
-    @include prop($name, $var, 100);
-    @include prop($name, $var, 200);
-    @include prop($name, $var, 300);
-    @include prop($name, $var, 400);
-    @include prop($name, $var, 500);
-    @include prop($name, $var, 600);
-    @include prop($name, $var, 700);
-    @include prop($name, $var, 800);
-    @include prop($name, $var, 900);
-    @include prop($name, $var, A100);
-    @include prop($name, $var, A200);
-    @include prop($name, $var, A400);
-    @include prop($name, $var, A700);
-};
-
 $primary: (
-    50: var(--primary-50),
-    100: var(--primary-100),
-    200: var(--primary-200),
-    300: var(--primary-300),
-    400: var(--primary-400),
-    500: var(--primary-500),
-    600: var(--primary-600),
-    700: var(--primary-700),
-    800: var(--primary-800),
-    900: var(--primary-900),
-    A100: var(--primary-A100),
-    A200: var(--primary-A200),
-    A400: var(--primary-A400),
-    A700: var(--primary-A700),
+    50: var(--color-primary-50),
+    100: var(--color-primary-100),
+    200: var(--color-primary-200),
+    300: var(--color-primary-300),
+    400: var(--color-primary-400),
+    500: var(--color-primary-500),
+    600: var(--color-primary-600),
+    700: var(--color-primary-700),
+    800: var(--color-primary-800),
+    900: var(--color-primary-900),
+    A100: var(--color-primary-A100),
+    A200: var(--color-primary-A200),
+    A400: var(--color-primary-A400),
+    A700: var(--color-primary-A700),
 );
-$primary: $primary;
 
 $danger: (
-    50: var(--danger-50),
-    100: var(--danger-100),
-    200: var(--danger-200),
-    300: var(--danger-300),
-    400: var(--danger-400),
-    500: var(--danger-500),
-    600: var(--danger-600),
-    700: var(--danger-700),
-    800: var(--danger-800),
-    900: var(--danger-900),
-    A100: var(--danger-A100),
-    A200: var(--danger-A200),
-    A400: var(--danger-A400),
-    A700: var(--danger-A700),
+    50: var(--color-danger-50),
+    100: var(--color-danger-100),
+    200: var(--color-danger-200),
+    300: var(--color-danger-300),
+    400: var(--color-danger-400),
+    500: var(--color-danger-500),
+    600: var(--color-danger-600),
+    700: var(--color-danger-700),
+    800: var(--color-danger-800),
+    900: var(--color-danger-900),
+    A100: var(--color-danger-A100),
+    A200: var(--color-danger-A200),
+    A400: var(--color-danger-A400),
+    A700: var(--color-danger-A700),
 );
 
 $warn: (
-    50: var(--warn-50),
-    100: var(--warn-100),
-    200: var(--warn-200),
-    300: var(--warn-300),
-    400: var(--warn-400),
-    500: var(--warn-500),
-    600: var(--warn-600),
-    700: var(--warn-700),
-    800: var(--warn-800),
-    900: var(--warn-900),
-    A100: var(--warn-A100),
-    A200: var(--warn-A200),
-    A400: var(--warn-A400),
-    A700: var(--warn-A700),
+    50: var(--color-warn-50),
+    100: var(--color-warn-100),
+    200: var(--color-warn-200),
+    300: var(--color-warn-300),
+    400: var(--color-warn-400),
+    500: var(--color-warn-500),
+    600: var(--color-warn-600),
+    700: var(--color-warn-700),
+    800: var(--color-warn-800),
+    900: var(--color-warn-900),
+    A100: var(--color-warn-A100),
+    A200: var(--color-warn-A200),
+    A400: var(--color-warn-A400),
+    A700: var(--color-warn-A700),
 );
 
 $success: (
-    50: var(--success-50),
-    100: var(--success-100),
-    200: var(--success-200),
-    300: var(--success-300),
-    400: var(--success-400),
-    500: var(--success-500),
-    600: var(--success-600),
-    700: var(--success-700),
-    800: var(--success-800),
-    900: var(--success-900),
-    A100: var(--success-A100),
-    A200: var(--success-A200),
-    A400: var(--success-A400),
-    A700: var(--success-A700),
+    50: var(--color-success-50),
+    100: var(--color-success-100),
+    200: var(--color-success-200),
+    300: var(--color-success-300),
+    400: var(--color-success-400),
+    500: var(--color-success-500),
+    600: var(--color-success-600),
+    700: var(--color-success-700),
+    800: var(--color-success-800),
+    900: var(--color-success-900),
+    A100: var(--color-success-A100),
+    A200: var(--color-success-A200),
+    A400: var(--color-success-A400),
+    A700: var(--color-success-A700),
 );
+
+@function entity-color($name) {
+    @return (
+        text: var(--color-#{$name}-text),
+        bg: var(--color-#{$name}-background),
+        hover-text: var(--color-#{$name}-hover-text),
+        hover-bg: var(--color-#{$name}-hover-background),
+    );
+}
+
+$primary-color:             var(--color-primary);
+$primary-color-dark:        var(--color-primary-dark);
+$primary-color-light:       var(--color-primary-light);
+
+$danger-color:              var(--color-danger);
+$danger-color-dark:         var(--color-danger-dark);
+$danger-color-light:        var(--color-danger-light);
+
+$warn-color:                var(--color-warn);
+$warn-color-dark:           var(--color-warn-dark);
+$warn-color-light:          var(--color-warn-light);
+
+$success-color:             var(--color-success);
+$success-color-dark:        var(--color-success-dark);
+$success-color-light:       var(--color-success-light);
+
+$primary-text:              var(--color-text-primary);
+$secondary-text:            var(--color-text-secondary);
+$main-background:           var(--color-main-background);
+$card-background:           var(--color-card-background);
+$outline-color:             var(--color-outline);
+
+// Header
+$header-color:              entity-color(header);
+$footer-color:              entity-color(footer);
+$navigation-color:          entity-color(navigation);
+$breadcrumb-color:          entity-color(breadcrumb);
+$folder-icon-color:         var(--color-file-explorer-folder-icon);
+
+// Input
+$input-text-color:          var(--color-input-text);
+$input-background-color:    var(--color-input-background);
+$input-disabled-background-color:    var(--color-input-disabled-background);
+$input-placeholder-color:   var(--color-input-placeholder);
+$input-border-color:        var(--color-input-border);
+$input-focus-border-color:  var(--color-input-focus-border);
+
+
+$button-disabled-text-color:     var(--color-button-disabled-text);
+$button-disabled-bg-color:     var(--color-button-disabled-bg);

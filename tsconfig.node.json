@@ -18,9 +18,15 @@
     "noImplicitThis": true,
     "noImplicitAny": false,
     "moduleResolution": "node",
-    "listEmittedFiles": true, // debug option
-    "listFiles": true, // debug option
-    "outDir": "build/client",
+    "listEmittedFiles": false, // debug option
+    "listFiles": false, // debug option
+    "outDir": "build",
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "src/*"
+      ]
+    },
     "types": [
       "node",
       "electron",
@@ -33,11 +39,11 @@
     ]
   },
   "files": [
-    "./definitions/index.d.ts",
-    "./node_modules/monaco-editor/monaco.d.ts"
+    "./definitions/index.d.ts"
   ],
   // This is not actually used for building but to let the editor know what files use this config
   "include": [
-    "./src/client/**/*.ts"
+    "./src/client/**/*.ts",
+    "./src/common/**/*.ts"
   ]
 }

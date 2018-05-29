@@ -1,50 +1,28 @@
 import { Injectable } from "@angular/core";
-import { remote } from "electron";
-import * as fs from "fs";
-import * as mkdirp from "mkdirp";
-import * as path from "path";
+import { FSWatcher } from "chokidar";
 
-import { ElectronRemote } from "./electron/remote.service";
-const { app } = remote;
-import { log } from "app/utils";
-import { FileUtils } from "client/api";
-
-export interface CommonFolders {
-    temp: string;
-    downloads: string;
-    appData: string;
-    userData: string;
-}
+import { BatchLabsService } from "app/services/batch-labs.service";
+import { CommonFolders, FileSystem } from "client/core";
 
 /**
- * Service to handle saving files to the client filesystem.
+ * Service to handle saving files to the client FileSystem
  */
 @Injectable()
 export class FileSystemService {
     public commonFolders: CommonFolders;
+    private _fs: FileSystem;
 
-    private _fileUtils: FileUtils;
-
-    constructor(remote: ElectronRemote) {
-        this.commonFolders = {
-            temp: path.join(app.getPath("temp"), "batch-labs"),
-            downloads: app.getPath("downloads"),
-            appData: app.getPath("appData"),
-            userData: app.getPath("userData"),
-        };
-        this._fileUtils = remote.getFileUtils();
+    constructor(batchLabs: BatchLabsService) {
+        this._fs = batchLabs.getFileSystem();
+        this.commonFolders = this._fs.commonFolders;
     }
 
     /**
      * Check if a file exists async
      * @param path Full path to the file
      */
-    public exists(path: string): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
-            fs.exists(path, (exists) => {
-                resolve(exists);
-            });
-        });
+    public async exists(path: string): Promise<boolean> {
+        return this._fs.exists(path);
     }
 
     /**
@@ -52,12 +30,7 @@ export class FileSystemService {
      * @param directory: Path that we expect to exists
      */
     public ensureDir(directory: string): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            mkdirp(directory, (err) => {
-                if (err) { reject(err); }
-                resolve();
-            });
-        });
+        return this._fs.ensureDir(directory);
     }
 
     /**
@@ -67,26 +40,20 @@ export class FileSystemService {
      * @param content: Content of the file
      */
     public saveFile(dest: string, content: string): Promise<string> {
-        return this.ensureDir(path.dirname(dest)).then(() => {
-            return this._writeFile(dest, content);
-        });
+        return this._fs.saveFile(dest, content);
+
     }
 
     public readFile(path: string): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
-            fs.readFile(path, (err, data) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(data.toString());
-            });
-        });
+        return this._fs.readFile(path);
+    }
+
+    public async readdir(path: string, recursive = true): Promise<string[]> {
+        return this._fs.readdir(path, recursive);
     }
 
     public download(source: string, dest: string): Promise<string> {
-        return this.ensureDir(path.dirname(dest)).then(() => {
-            return this._fileUtils.download(source, dest);
-        });
+        return this._fs.download(source, dest);
     }
 
     /**
@@ -95,18 +62,14 @@ export class FileSystemService {
      * @param dest Folder where the zip file should be extracted
      */
     public unzip(source: string, dest: string): Promise<void> {
-        return this._fileUtils.unzip(source, dest);
+        return this._fs.unzip(source, dest);
     }
 
-    private _writeFile(path: string, content: string): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
-            fs.writeFile(path, content, (err) => {
-                if (err) {
-                    log.error(`An error occured writing file "${path}" to disk`, err);
-                    reject(err);
-                }
-                resolve(path);
-            });
-        });
+    public async lstat(path: string) {
+        return this._fs.lstat(path);
+    }
+
+    public watch(path: string): FSWatcher {
+        return this._fs.watch(path);
     }
 }

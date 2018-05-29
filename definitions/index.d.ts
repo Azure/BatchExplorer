@@ -22,6 +22,7 @@ declare module "mousetrap" {
 }
 
 declare type Environment = "production" | "development" | "test";
+declare const ELECTRON_ENV: "renderer" | "main";
 
 // Gloval variables set by webpack
 declare const ENV: Environment;
@@ -34,6 +35,3 @@ type AttrOf<T> = {
 };
 
 type ComponentSize = "small" | "normal" | "large";
-
-declare var TextDecoder: any;
-

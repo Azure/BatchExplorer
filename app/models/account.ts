@@ -1,4 +1,4 @@
-import { ArmRecord, Model, Prop, Record } from "app/core";
+import { ArmRecord, Model, Prop, Record } from "@batch-flask/core";
 import { StorageUtils } from "app/utils";
 import { Subscription } from "./subscription";
 
@@ -8,7 +8,12 @@ export enum PoolAllocationMode {
 }
 
 export enum AccountProvisingState {
+    Invalid = "Invalid",
+    Creating = "Creating",
+    Deleting = "Deleting",
     Succeeded = "Succeeded",
+    Failed = "Failed",
+    Cancelled = "Cancelled",
 }
 
 export interface AutoStorageAccountAttributes {
@@ -75,5 +80,9 @@ export class AccountResource extends ArmRecord<BatchAccountAttributes> {
     public hasArmAutoStorage(): boolean {
         return Boolean(this.autoStorage
             && !StorageUtils.isClassic(this.autoStorage.storageAccountId));
+    }
+
+    public get subscriptionId(): string {
+        return this.subscription && this.subscription.subscriptionId;
     }
 }

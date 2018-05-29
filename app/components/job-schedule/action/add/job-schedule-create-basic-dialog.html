@@ -1,0 +1,43 @@
+<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [config]="complexFormConfig" [fileUri]="fileUri">
+    <bl-form-page main-form-page [title]="title" [formGroup]="form">
+        <bl-form-section title="General info" subtitle="Basic information about the job schedule">
+            <div class="form-element">
+                <bl-form-field>
+                    <input blInput formControlName="id" placeholder="ID">
+                </bl-form-field>
+                <bl-error controlName="id" code="required">ID is a required field</bl-error>
+                <bl-error controlName="id" code="maxlength">ID has a maximum length of 64 characters</bl-error>
+                <bl-error controlName="id" code="pattern">ID can contain any combination of alphanumeric characters including hyphens and underscores</bl-error>
+            </div>
+            <div class="form-element">
+                <bl-form-field>
+                    <input blInput formControlName="displayName" placeholder="Display name">
+                </bl-form-field>
+                <bl-error controlName="displayName" code="maxlength">Display name has a maximum length of 1024 characters</bl-error>
+            </div>
+            <div class="form-element">
+                <div>Metadata</div>
+                <bl-key-value-picker formControlName="metadata"></bl-key-value-picker>
+            </div>
+        </bl-form-section>
+        <bl-form-section title="Job schedule" subtitle="Specify the schedule according to which jobs will be created">
+            <div formGroupName="schedule">
+                <div class="form-element">
+                    <bl-datetime-picker label="Do not run after" formControlName="doNotRunAfter"></bl-datetime-picker>
+                </div>
+                <div class="form-element">
+                    <bl-datetime-picker label="Do not run until" formControlName="doNotRunUntil"></bl-datetime-picker>
+                </div>
+                <div class="form-element">
+                    <bl-duration-picker formControlName="recurrenceInterval" label="Recurrence interval" [allowUnlimited]="false"></bl-duration-picker>
+                </div>
+                <div class="form-element">
+                    <bl-duration-picker formControlName="startWindow" label="Start window"></bl-duration-picker>
+                </div>
+            </div>
+        </bl-form-section>
+        <bl-form-section title="Job specification" subtitle="Specify details of the jobs to be created on a schedule.">
+            <bl-job-schedule-job-specification formControlName="jobSpecification"></bl-job-schedule-job-specification>
+        </bl-form-section>
+    </bl-form-page>
+</bl-complex-form>

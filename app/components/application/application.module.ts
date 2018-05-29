@@ -5,8 +5,8 @@ import { ActivatePackageDialogComponent, ApplicationCreateDialogComponent, Appli
     DeleteApplicationDialogComponent,
 } from "./action";
 import { ApplicationListComponent, ApplicationPreviewComponent } from "./browse";
-import { ApplicationDefaultComponent, ApplicationDetailsComponent , ApplicationPackageTableComponent,
-    ApplicationPackagesComponent, ApplicationPropertiesComponent,
+import { ApplicationConfigurationComponent, ApplicationDefaultComponent , ApplicationDetailsComponent,
+    ApplicationPackageTableComponent, ApplicationPackagesComponent,
 } from "./details";
 import { ApplicationErrorDisplayComponent } from "./errors";
 import { ApplicationHomeComponent } from "./home";
@@ -14,7 +14,7 @@ import { ApplicationHomeComponent } from "./home";
 const components = [ActivatePackageDialogComponent, ApplicationCreateDialogComponent, ApplicationDefaultComponent,
     ApplicationDetailsComponent, ApplicationEditDialogComponent, ApplicationErrorDisplayComponent,
     ApplicationHomeComponent, ApplicationListComponent, ApplicationPackagesComponent, ApplicationPackageTableComponent,
-    ApplicationPreviewComponent, ApplicationPropertiesComponent, DeleteApplicationDialogComponent];
+    ApplicationPreviewComponent, ApplicationConfigurationComponent, DeleteApplicationDialogComponent];
 
 @NgModule({
     declarations: components,

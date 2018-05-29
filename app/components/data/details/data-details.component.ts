@@ -1,16 +1,18 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs/Subscription";
 
-import { DialogService } from "app/components/base/dialogs";
-import { SidebarManager } from "app/components/base/sidebar";
-import { DownloadFileGroupDialogComponent } from "app/components/data/details";
+import { DialogService } from "@batch-flask/ui/dialogs";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { DownloadFolderComponent } from "app/components/common/download-folder-dialog";
 import { BlobContainer } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
 import { FileGroupCreateDto } from "app/models/dtos";
-import { GetContainerParams, StorageService } from "app/services";
 import { EntityView } from "app/services/core";
+import {
+    AutoStorageService, GetContainerParams, StorageBlobService, StorageContainerService,
+} from "app/services/storage";
 import { DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
 @Component({
@@ -19,7 +21,7 @@ import { DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "..
 })
 export class DataDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
-        let label = tab ? `File group - ${tab}` : "File group";
+        const label = tab ? `File group - ${tab}` : "File group";
         return {
             name: id,
             label,
@@ -27,22 +29,29 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     }
 
     public container: BlobContainer;
+    public storageAccountId: string;
     public containerId: string;
     public decorator: ApplicationDecorator;
     public data: EntityView<BlobContainer, GetContainerParams>;
+    public isFileGroup = false;
 
     private _paramsSubscriber: Subscription;
 
     constructor(
+        private changeDetector: ChangeDetectorRef,
         private activatedRoute: ActivatedRoute,
         private dialog: DialogService,
         private router: Router,
         private sidebarManager: SidebarManager,
-        private storageService: StorageService) {
+        private storageContainerService: StorageContainerService,
+        private autoStorageService: AutoStorageService,
+        private storageBlobService: StorageBlobService) {
 
-        this.data = this.storageService.containerView();
+        this.data = this.storageContainerService.view();
         this.data.item.subscribe((container) => {
             this.container = container;
+            this.isFileGroup = container && container.isFileGroup;
+            changeDetector.markForCheck();
         });
 
         this.data.deleted.subscribe((key) => {
@@ -55,8 +64,13 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
             this.containerId = params["id"];
-            this.data.params = { id: this.containerId };
-            this.data.fetch();
+            this.autoStorageService.getStorageAccountIdFromDataSource(params["dataSource"])
+                .subscribe((storageAccountId) => {
+                    this.storageAccountId = storageAccountId;
+                    this.data.params = { storageAccountId: this.storageAccountId, id: this.containerId };
+                    this.data.fetch();
+                    this.changeDetector.markForCheck();
+                });
         });
     }
 
@@ -70,11 +84,11 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         sidebarRef.component.setValue(new FileGroupCreateDto({
             name: this.container.name,
             includeSubDirectories: true,
-            folder: null,
+            paths: [],
         }));
 
         sidebarRef.afterCompletion.subscribe(() => {
-            this.storageService.onFileGroupUpdated.next();
+            this.storageContainerService.onContainerUpdated.next();
         });
     }
 
@@ -92,9 +106,9 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public download() {
-        const ref = this.dialog.open(DownloadFileGroupDialogComponent);
-        ref.componentInstance.containerId = this.containerId;
+        const ref = this.dialog.open(DownloadFolderComponent);
+        ref.componentInstance.navigator = this.storageBlobService.navigate(this.storageAccountId, this.containerId);
         ref.componentInstance.subfolder = this.containerId;
-        ref.componentInstance.pathPrefix = "";
+        ref.componentInstance.folder = "";
     }
 }

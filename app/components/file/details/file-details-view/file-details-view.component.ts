@@ -1,15 +1,14 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
-import { autobind } from "core-decorators";
-import { remote } from "electron";
 import { Observable } from "rxjs";
 
 import "./file-details-view.scss";
 
-import { NotificationService } from "app/components/base/notifications";
-import { File, ServerError } from "app/models";
-import { ElectronShell } from "app/services";
+import { HttpCode, ServerError, autobind } from "@batch-flask/core";
+import { ElectronRemote, ElectronShell } from "@batch-flask/ui";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { File } from "app/models";
 import { FileLoader } from "app/services/file";
-import { Constants, DateUtils, prettyBytes } from "app/utils";
+import { DateUtils, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-details-view",
@@ -29,6 +28,7 @@ export class FileDetailsViewComponent implements OnChanges {
 
     constructor(
         private shell: ElectronShell,
+        private remote: ElectronRemote,
         private notificationService: NotificationService) {
         this.downloadEnabled = true;
     }
@@ -47,7 +47,7 @@ export class FileDetailsViewComponent implements OnChanges {
 
     @autobind()
     public downloadFile() {
-        const dialog = remote.dialog;
+        const dialog = this.remote.dialog;
         const localPath = dialog.showSaveDialog({
             buttonLabel: "Download",
             defaultPath: this.filename,
@@ -102,7 +102,7 @@ export class FileDetailsViewComponent implements OnChanges {
                 this.lastModified = DateUtils.prettyDate(file.properties.lastModified);
             },
             error: (error: ServerError) => {
-                if (error.status === Constants.HttpCode.NotFound) {
+                if (error.status === HttpCode.NotFound) {
                     this.fileNotFound = true;
                 }
             },

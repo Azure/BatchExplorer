@@ -1,0 +1,47 @@
+<bl-loading [status]="loadingStatus">
+    <div *ngIf="loadingStatus">
+        <bl-button type="wide" (do)="pickStorageAccount(noSelectionKey)">
+            Clear
+        </bl-button>
+        <h3>Storage accounts in the same region as your batch account({{account.location}})</h3>
+        <div class="prefered">
+            <ng-template *ngIf="preferedAccounts.size > 0"
+                    [ngTemplateOutlet]="accountTableTemplate"
+                    [ngTemplateOutletContext]="{$implicit: preferedAccounts}"></ng-template>
+        </div>
+        <div *ngIf="preferedAccounts.size === 0" class="no-prefered-account">
+            You have no accounts in the same region!
+        </div>
+
+        <div *ngIf="otherAccounts.size > 0" class="others">
+            <h3>Other regions</h3>
+            <ng-template *ngIf="otherAccounts.size > 0"
+                    [ngTemplateOutlet]="accountTableTemplate"
+                    [ngTemplateOutletContext]="{$implicit: otherAccounts}"></ng-template>
+        </div>
+    </div>
+</bl-loading>
+
+
+<ng-template #accountTableTemplate let-accounts>
+    <bl-table
+        [data]="accounts"
+        [activeItem]="pickedStorageAccountId"
+        (activeItemChange)="pickStorageAccount($event)">
+        <bl-column [sortable]="true" name="name">
+            <div *blHeadCellDef>Name</div>
+            <div *blCellDef="let account">{{account.name}}</div>
+        </bl-column>
+        <bl-column [sortable]="true" name="location">
+            <div *blHeadCellDef>Location</div>
+            <div *blCellDef="let account">{{account.location}}</div>
+        </bl-column>
+        <bl-column [sortable]="false" name="isClassic">
+            <div *blCellDef="let account">
+                <span class="classic-warning" matTooltip="Classic storage accounts are not compatible with data and gallery" *ngIf="account.isClassic">
+                    <span class="fa fa-warning"></span> Classic
+                </span>
+            </div>
+        </bl-column>
+    </bl-table>
+</ng-template>

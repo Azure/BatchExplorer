@@ -1,0 +1,37 @@
+@import "app/styles/variables";
+
+bl-theme-colors {
+    $header-height: 50px;
+    height: $contentview-height;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+
+    > .header {
+        height: $header-height;
+        padding: 10px;
+        border-bottom: 1px solid $border-color;
+    }
+
+    > .color-list {
+        padding: 10px;
+        width: 100%;
+        height: calc(100% - #{$header-height});
+        overflow-y: auto;
+        min-height: 10px;
+
+        > table > tbody > .color-item {
+            .key {
+                color: $primary-color;
+            }
+
+            .color {
+                color: $secondary-text;
+                width: 100px;
+                text-align: center;
+                font-family: Courier New, Courier, monospace;
+            }
+        }
+    }
+}

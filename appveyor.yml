@@ -20,11 +20,7 @@ install:
   # Check that we have the expected version and architecture for Python
   - "python --version"
 
-  # Upgrade to the latest version of pip to avoid it displaying warnings
-  # about it being out of date.
-  - "pip install --disable-pip-version-check --user --upgrade pip"
-
-  - ps: Install-Product node 6.11.4 x64
+  - ps: Install-Product node 8.9.1 x64
   - npm install -g npm -s
   - npm install -g yarn -s
   - yarn install --force
@@ -47,3 +43,4 @@ artifacts:
     name: Batchlabs-windows-setup.exe
   - path: release\*win.zip
     name: Batchlabs-windows.zip
+    

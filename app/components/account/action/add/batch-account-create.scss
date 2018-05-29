@@ -1,0 +1,19 @@
+@import "app/styles/variables";
+
+bl-batch-account-create {
+    .form-element {
+        mat-radio-group {
+            mat-radio-button {
+                margin-right: 15px;
+                &.mat-radio-button {
+                    .mat-radio-inner-circle {
+                        background-color: $primary-color;
+                    }
+                    &.mat-radio-checked .mat-radio-outer-circle {
+                        border-color: $primary-color;
+                    }
+                }
+            }
+        }
+    }
+}

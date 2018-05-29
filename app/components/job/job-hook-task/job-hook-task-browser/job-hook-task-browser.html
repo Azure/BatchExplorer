@@ -4,7 +4,7 @@
     </div>
     <div class="type-toggle">
         <div class="option" (click)="updateType(HookTaskType.preparationTask)" [class.active]="type === HookTaskType.preparationTask">
-            Preparation Tasks
+            Preparation tasks
         </div>
         <div class="option" (click)="updateType(HookTaskType.releaseTask)" [class.active]="type === HookTaskType.releaseTask" [class.disabled]="!hasReleaseTask">
             Release tasks
@@ -12,26 +12,35 @@
     </div>
 </div>
 <div class="content">
-    <bl-table class="list" [activeItem]="pickedTaskId" (activeItemChange)="pickTask($event)">
-        <bl-thead>
-            <bl-column>NodeId</bl-column>
-            <bl-column style="width: 45px">Status</bl-column>
-            <bl-column style="width: 100px" *ngIf="!pickedTask">Started</bl-column>
-            <bl-column style="width: 100px" *ngIf="!pickedTask">Completed</bl-column>
-            <bl-column style="width: 100px">Exit code</bl-column>
-        </bl-thead>
+    <bl-table class="list" [data]="displayItems" [activeItem]="pickedTaskId" (activeItemChange)="pickTask($event)">
+        <bl-column name="nodeId">
+            <div *blHeadCellDef>Node ID</div>
+            <div *blCellDef="let task">{{task.nodeId}}</div>
+        </bl-column>
 
-        <bl-row *ngFor="let task of displayItems; trackBy: task?.id" [key]="task.id">
-            <bl-cell>{{task.nodeId}}</bl-cell>
-            <bl-cell style="width: 45px" [title]="task.status">
+        <bl-column name="status" [defaultWidth]="50">
+            <div *blHeadCellDef>Status</div>
+            <div *blCellDef="let task">
                 <span *ngIf="task.status === 'running'" class="fa fa-spinner"></span>
                 <span *ngIf="task.status === 'success'" class="fa fa-check-circle"></span>
                 <span *ngIf="task.status === 'failure'" class="fa fa-times-circle"></span>
-            </bl-cell>
-            <bl-cell style="width: 100px" *ngIf="!pickedTask">{{task.startTime}}</bl-cell>
-            <bl-cell style="width: 100px" *ngIf="!pickedTask">{{task.endTime}}</bl-cell>
-            <bl-cell style="width: 100px">{{task.exitCode}}</bl-cell>
-        </bl-row>
+            </div>
+        </bl-column>
+
+        <bl-column name="started" *ngIf="!pickedTask" [defaultWidth]="100">
+            <div *blHeadCellDef>Started</div>
+            <div *blCellDef="let task">{{task.startTime}}</div>
+        </bl-column>
+
+        <bl-column name="completed" *ngIf="!pickedTask" [defaultWidth]="100">
+            <div *blHeadCellDef>Completed</div>
+            <div *blCellDef="let task">{{task.endTime}}</div>
+        </bl-column>
+
+        <bl-column name="exitCode" *ngIf="!pickedTask" [defaultWidth]="100">
+            <div *blHeadCellDef>Exit code</div>
+            <div *blCellDef="let task">{{task.exitCode}}</div>
+        </bl-column>
     </bl-table>
     <div *ngIf="pickedTask" class="details">
         <bl-job-hook-task-details [task]="pickedTask" [type]="type"></bl-job-hook-task-details>

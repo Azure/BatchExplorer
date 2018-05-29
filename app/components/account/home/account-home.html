@@ -1,22 +1,19 @@
-<bl-list-and-show-layout #layout [list]="list">
-    <div bl-list-title>
+<bl-browse-layout #layout [config]="layoutConfig">
+    <div blBrowseLayoutTitle>
         Batch Accounts
     </div>
-    <div bl-list-buttons>
+    <div blBrowseLayoutButtons>
+        <bl-button icon="fa fa-plus spin-hover" title="Add a batch account" [action]="addBatchAccount" type="plain" color="light">
+        </bl-button>
     </div>
     <div pre-quicksearch>
-        <mat-form-field>
-            <mat-select multiple placeholder="Subscriptions" [formControl]="subscriptionIds">
-                <mat-option *ngFor="let subscription of subscriptionService.subscriptions | async" [value]="subscription.subscriptionId">
-                    {{subscription.displayName}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+        <bl-select placeholder="Subscriptions" [multiple]="true" [formControl]="subscriptionIds" [filterable]="true">
+            <bl-option *ngFor="let subscription of subscriptionService.subscriptions | async;trackBy: trackByFn;let index = index"
+                [value]="subscription.subscriptionId"
+                [label]="subscription.displayName">
+                {{subscription.displayName}}
+            </bl-option>
+        </bl-select>
     </div>
-    <div bl-list-content>
-        <bl-account-list #list [filter]="layout.filter"></bl-account-list>
-    </div>
-    <div bl-show-content>
-        <router-outlet></router-outlet>
-    </div>
-</bl-list-and-show-layout>
+    <bl-account-list blBrowseLayoutList></bl-account-list>
+</bl-browse-layout>

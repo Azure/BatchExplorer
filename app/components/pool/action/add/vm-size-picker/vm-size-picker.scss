@@ -1,0 +1,10 @@
+@import "app/styles/variables";
+
+bl-vm-size-picker {
+    display: block;
+    .vm-size-list {
+        height: 400px;
+        border: 1px solid $border-color;
+        border-top: none;
+    }
+}

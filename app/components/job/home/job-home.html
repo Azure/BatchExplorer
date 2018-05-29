@@ -1,21 +1,13 @@
-<bl-list-and-show-layout #layout (listScrolledToBottom)="jobList.onScrollToBottom()" [list]="jobList">
-    <div bl-list-title>
+<bl-browse-layout #layout>
+    <div blBrowseLayoutTitle>
         Jobs
     </div>
-    <div bl-list-buttons>
-        <bl-button color="light" type="plain" icon="fa fa-plus spin-hover" title="Add a job" [action]="addJob">
+    <bl-inline-quota blBrowseLayoutQuotas include="jobs"></bl-inline-quota>
+    <div blBrowseLayoutButtons>
+        <bl-button color="light" type="plain" icon="fa fa-plus spin-hover" title="Add a job" [action]="addJob" permission="write">
         </bl-button>
     </div>
-    <div bl-list-content>
-        <bl-focus-section>
-            <bl-job-list #jobList [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-job-list>
-        </bl-focus-section>
-    </div>
-    <div bl-show-content>
-        <router-outlet></router-outlet>
-    </div>
-    <div bl-show-advanced-filter>
-        <bl-job-advanced-filter (change)="layout.advancedFilterChanged($event)">
-        </bl-job-advanced-filter>
-    </div>
-</bl-list-and-show-layout>
+    <bl-job-list blBrowseLayoutList></bl-job-list>
+    <bl-job-advanced-filter blBrowseLayoutAdvancedFilter (change)="layout.advancedFilterChanged($event)">
+    </bl-job-advanced-filter>
+</bl-browse-layout>

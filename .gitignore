@@ -6,3 +6,4 @@ typings/
 *.mem.csv
 release/
 .awcache
+coverage/

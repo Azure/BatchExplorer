@@ -11,57 +11,6 @@ bl-pool-graphs {
         height: 100%;
     }
 
-    .charts-previews {
-        user-select: none;
-        flex: 0 0 200px;
-        overflow-y: auto;
-        height: 100%;
-        border-right: 1px solid $border-color;
-
-        > .preview {
-            cursor: pointer;
-            padding: 5px;
-            display: flex;
-            height: 55px;
-            flex: 1;
-
-            .info {
-                margin-left: 5px;
-            }
-
-            .label {
-                font-size: 11px;
-                line-height: 11px;
-                margin-bottom: 3px;
-            }
-
-            .status {
-                font-size: 11px;
-                color: $generic-grey;
-            }
-
-            &.focused {
-                background: $mercury-grey;
-            }
-
-            &:hover {
-                background: $athens-grey;
-            }
-        }
-
-        > .config {
-            padding: 20px 10px;
-        }
-    }
-
-    .small-preview {
-        display: block;
-        position: relative;
-        width: 60px;
-        height: 40px;
-        border: 1px solid map-get($primary, 100);
-    }
-
     .full-display {
         display: block;
         width: 100%;
@@ -71,7 +20,7 @@ bl-pool-graphs {
     .full-display-heatmap {
         display: block;
         width: 100%;
-        height: 600px;
+        height: 100%;
     }
 
     .focused-graph {

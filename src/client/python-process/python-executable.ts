@@ -1,5 +1,5 @@
-import { execCommand } from "../core";
-import { logger } from "../logger";
+import { log } from "@batch-flask/utils";
+import { execCommand } from "../core/subprocess";
 
 let computedPythonPath: string = null;
 
@@ -72,10 +72,10 @@ export function getPythonPath(): Promise<string> {
         return path;
     }).catch((errors) => {
         let msg = "Fail to find a valid python 3.6 installation:";
-        for (let path of Object.keys(errors)) {
+        for (const path of Object.keys(errors)) {
             msg += `\n  - ${path}: ${errors[path].message}`;
         }
-        logger.error(msg);
+        log.error(msg);
         return null;
     });
 }

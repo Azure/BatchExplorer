@@ -5,7 +5,7 @@
       "name": "Launch",
       "type": "node",
       "request": "launch",
-      "protocol": "legacy",
+      "protocol": "inspector",
       "program": "${workspaceRoot}/src/client/main.ts",
       "stopOnEntry": false,
       "args": [],
@@ -24,6 +24,7 @@
         "HOT": "1"
       },
       "console": "internalConsole",
+      "outputCapture": "std",
       "sourceMaps": true,
       "outFiles": [
         "${workspaceRoot}/build/**/*.js"

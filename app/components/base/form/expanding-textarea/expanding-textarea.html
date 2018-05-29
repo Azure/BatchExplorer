@@ -1,6 +1,0 @@
-<div class="textarea-container">
-    <mat-form-field>
-        <textarea #textarea matInput [placeholder]="placeholder" (focus)="expand()" (blur)="collapse()" [ngModel]="value" (ngModelChange)="valueChange($event)"></textarea>
-        <mat-hint *ngIf="hint" align="end">{{hint}}</mat-hint>
-    </mat-form-field>
-</div>

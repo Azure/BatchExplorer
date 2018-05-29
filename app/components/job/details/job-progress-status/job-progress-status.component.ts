@@ -1,8 +1,7 @@
-import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
 
-import { GaugeConfig } from "app/components/base/graphs/gauge";
+import { GaugeConfig } from "@batch-flask/ui/graphs/gauge";
 import { Job, JobTaskCounts, Node, Pool } from "app/models";
 import { JobService, NodeListParams, NodeService, PoolParams, PoolService } from "app/services";
 import { EntityView, ListView, PollObservable, PollService } from "app/services/core";
@@ -13,13 +12,12 @@ import "./job-progress-status.scss";
 @Component({
     selector: "bl-job-progress-status",
     templateUrl: "job-progress-status.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JobProgressStatusComponent implements OnChanges, OnDestroy {
-    @Input()
-    public job: Job;
+    @Input() public job: Job;
 
-    @Input()
-    public poolId: string;
+    @Input() public poolId: string;
 
     public nodes: List<Node> = List([]);
     public pool: Pool;
@@ -38,13 +36,13 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
     private poolData: EntityView<Pool, PoolParams>;
 
     private _polls: PollObservable[] = [];
-    private _subs: Subscription[] = [];
 
     constructor(
         poolService: PoolService,
         nodeService: NodeService,
         private jobService: JobService,
         pollService: PollService,
+        private changeDetectorRef: ChangeDetectorRef,
     ) {
         this.poolData = poolService.view();
         this.data = nodeService.listView({
@@ -54,20 +52,20 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
 
         this.updateGaugeOptions();
 
-        this._subs.push(this.poolData.item.subscribe((pool) => {
+        this.poolData.item.subscribe((pool) => {
             this.pool = pool;
-            this.maxRunningTasks = pool ? pool.targetNodes * pool.maxTasksPerNode : 1;
+            this.maxRunningTasks = pool ? pool.currentNodes * pool.maxTasksPerNode : 1;
             this.updateGaugeOptions();
-        }));
+        });
 
-        this._subs.push(this.data.items.subscribe((nodes) => {
+        this.data.items.subscribe((nodes) => {
             if (this.nodes.size !== nodes.size) {
                 this.poolData.refresh();
             }
             this.nodes = nodes;
             this.countRunningTasks();
-            this.updateGaugeOptions();
-        }));
+            this.changeDetectorRef.markForCheck();
+        });
 
         this._polls.push(this.data.startPoll(refreshRate));
 
@@ -78,7 +76,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
         if (changes.poolId) {
             this.poolData.params = ({ id: this.poolId });
             this.poolData.refresh();
-            this.data.updateParams({ poolId: this.poolId });
+            this.data.params = { poolId: this.poolId };
             this.data.refreshAll(false);
         }
 
@@ -89,7 +87,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
 
     public ngOnDestroy() {
         this._polls.forEach(x => x.destroy());
-        this._subs.forEach(x => x.unsubscribe());
+        this.data.dispose();
         this.poolData.dispose();
     }
 
@@ -119,6 +117,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
                 },
             },
         };
+        this.changeDetectorRef.markForCheck();
     }
 
     public updateShowAllPoolTasks(value: boolean) {
@@ -134,6 +133,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
             this.jobTaskCounts = x;
             this.countRunningTasks();
             this._computeProgress();
+            this.changeDetectorRef.markForCheck();
         });
         return obs;
     }

@@ -1,16 +1,15 @@
-import { Component, OnDestroy } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
-import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
 
-import { ComplexFormConfig } from "app/components/base/form";
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
-import { DynamicForm } from "app/core";
-import { NodeFillType, Pool } from "app/models";
+import { DynamicForm, autobind } from "@batch-flask/core";
+import { ComplexFormConfig } from "@batch-flask/ui/form";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
+import { Certificate, NodeFillType, Pool } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
 import { CreatePoolModel, PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
-import { PoolService, PricingService, VmSizeService } from "app/services";
+import { AccountService, CertificateService, PoolService, PricingService, VmSizeService } from "app/services";
 import { Constants, NumberUtils } from "app/utils";
 
 @Component({
@@ -21,27 +20,35 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public osSource: PoolOsSources = PoolOsSources.IaaS;
     public osType: "linux" | "windows" = "linux";
     public NodeFillType = NodeFillType;
-    public hasLinkedStorage: boolean = true;
+    public hasLinkedStorage: boolean = false;
     public estimatedCost: string = "-";
     public complexFormConfig: ComplexFormConfig;
     public fileUri = "create.pool.batch.json";
+    public armNetworkOnly = true;
+    public certificates: Certificate[] = [];
+
     private _osControl: FormControl;
     private _renderingSkuSelected: boolean = false;
-    private _sub: Subscription;
-
+    private _subs: Subscription[] = [];
     private _lastFormValue: CreatePoolModel;
 
     constructor(
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<PoolCreateBasicDialogComponent>,
         private poolService: PoolService,
-        vmSizeService: VmSizeService,
+        private accountService: AccountService,
+        private certificateService: CertificateService,
         private pricingService: PricingService,
+        vmSizeService: VmSizeService,
+        changeDetector: ChangeDetectorRef,
         private notificationService: NotificationService) {
         super(PoolCreateDto);
         this._setComplexFormConfig();
 
-        this.hasLinkedStorage = true;
+        this._subs.push(this.accountService.currentAccount.subscribe((account) => {
+            this.hasLinkedStorage = account.hasArmAutoStorage();
+            changeDetector.markForCheck();
+        }));
         this._osControl = this.formBuilder.control({}, Validators.required);
 
         this.form = formBuilder.group({
@@ -62,9 +69,13 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             userAccounts: [[]],
             appLicenses: [[]],
             appPackages: [[]],
+            inboundNATPools: [[]],
+            subnetId: [null],
+            certificateReferences: [[]],
+            metadata: [null],
         });
 
-        this._sub = this._osControl.valueChanges.subscribe((value) => {
+        this._subs.push(this._osControl.valueChanges.subscribe((value) => {
             this.osSource = value.source;
             if (value.source === PoolOsSources.PaaS) {
                 this._renderingSkuSelected = false;
@@ -81,21 +92,41 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
                     this.osType = "linux";
                 }
             }
-        });
+
+            if (!value.virtualMachineConfiguration) {
+                this.form.patchValue({
+                    inboundNATPools: [],
+                });
+            }
+
+            // For pools created with virtualMachineConfiguration only ARM virtual
+            // networks ('Microsoft.Network/virtualNetworks') are supported,
+            // but for pools created with cloudServiceConfiguration both ARM and
+            // classic virtual networks are supported.
+            if (value.virtualMachineConfiguration) {
+                this.armNetworkOnly = true;
+            }
+            if (value.cloudServiceConfiguration) {
+                this.armNetworkOnly = false;
+            }
+        }));
 
         this.form.valueChanges.subscribe((value) => {
             if (!this._lastFormValue
                 || value.os !== this._lastFormValue.os
+                || value.appLicenses !== this._lastFormValue.appLicenses
                 || value.vmSize !== this._lastFormValue.vmSize
                 || this._lastFormValue.scale !== value.scale) {
                 this._updateEstimatedPrice();
             }
             this._lastFormValue = value;
         });
+
+        this._setCertificates();
     }
 
     public ngOnDestroy() {
-        this._sub.unsubscribe();
+        this._subs.forEach(x => x.unsubscribe());
     }
 
     @autobind()
@@ -121,8 +152,12 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         return createPoolToData(data);
     }
 
-    public handleHasLinkedStorage(hasLinkedStorage) {
-        this.hasLinkedStorage = hasLinkedStorage;
+    public trimThumbprint(thumbprint: string) {
+        if (!thumbprint) {
+            return null;
+        }
+        const length = 15;
+        return thumbprint.length > length ? thumbprint.substring(0, length) + "..." : thumbprint;
     }
 
     public get startTask() {
@@ -133,13 +168,17 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         return this._renderingSkuSelected;
     }
 
+    public get virtualMachineConfiguration() {
+        return this._osControl.value && this._osControl.value.virtualMachineConfiguration;
+    }
+
     private _updateEstimatedPrice() {
         const value: CreatePoolModel = this.form.value;
 
         if (!value.vmSize || !this.osType) {
             return;
         }
-        const imaginaryPool = createPoolToData(this.form.value);
+        const imaginaryPool = new Pool(createPoolToData(this.form.value).toJS() as any);
         return this.pricingService.computePoolPrice(imaginaryPool as any, { target: true }).subscribe((cost) => {
             if (cost) {
                 this.estimatedCost = `${cost.unit} ${NumberUtils.pretty(cost.total)}`;
@@ -157,5 +196,11 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
                 fromDto: (value) => this.dtoToForm(value),
             },
         };
+    }
+
+    private _setCertificates() {
+        this._subs.push(this.certificateService.listAll().subscribe(certificates => {
+            this.certificates = certificates.toArray();
+        }));
     }
 }

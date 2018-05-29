@@ -4,9 +4,10 @@ import { MatDialogRef } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
+import { ServerError } from "@batch-flask/core";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { DeleteApplicationDialogComponent } from "app/components/application/action";
-import { BackgroundTaskService } from "app/components/base/background-task";
-import { BatchApplication, ServerError } from "app/models";
+import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { MockEntityView } from "test/utils/mocks";
@@ -80,7 +81,7 @@ describe("DeleteApplicationDialogComponent ", () => {
             error: () => {
                 expect(appServiceSpy.delete).toHaveBeenCalledTimes(1);
 
-                let actionForm = fixture.debugElement.query(By.css("bl-simple-form")).componentInstance;
+                const actionForm = fixture.debugElement.query(By.css("bl-simple-form")).componentInstance;
                 expect(actionForm.error).not.toBeNull();
             },
         });

@@ -1,7 +1,9 @@
 import * as inflection from "inflection";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { BackgroundTask, BackgroundTaskService } from "app/components/base/background-task";
+import { BackgroundTask } from "@batch-flask/ui/background-task/background-task.model";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task/background-task.service";
+
 /**
  * Base class for a long running action
  * e.g. Delete a pool takes a long time and need polling to check the status
@@ -113,7 +115,7 @@ export abstract class LongRunningDeleteAction extends LongRunningAction {
 
     protected wait(taskManager?: BackgroundTaskService) {
         this._updateWaitingMessage();
-        for (let id of this.itemIds) {
+        for (const id of this.itemIds) {
             this.waitForDelete(id, taskManager);
         }
     }
@@ -158,7 +160,7 @@ export abstract class LongRunningUploadAction extends LongRunningAction {
 
     protected wait(taskManager?: BackgroundTaskService) {
         this._updateWaitingMessage();
-        for (let stream of this.fileStreams) {
+        for (const stream of this.fileStreams) {
             this.waitForUpload(stream, taskManager);
         }
     }

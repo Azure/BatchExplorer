@@ -1,51 +1,48 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-import { MatIconRegistry, MatSidenav } from "@angular/material";
+import { Component, OnInit } from "@angular/core";
+import { MatIconRegistry } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
+import { ActivatedRoute } from "@angular/router";
+import { IpcService } from "@batch-flask/ui";
+import { MonacoLoader } from "@batch-flask/ui/editor";
+import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
-    AccountService, AdalService, AutoscaleFormulaService, CommandService, MonacoLoader,
-    NcjTemplateService, NodeService, PredefinedFormulaService, PricingService, PythonRpcService,
-    SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
+    AccountService, AuthorizationHttpService, AutoscaleFormulaService,
+    BatchLabsService, CommandService, NavigatorService, NcjTemplateService,
+    NodeService, PredefinedFormulaService, PricingService, PythonRpcService, SSHKeyService,
+    SettingsService, SubscriptionService, ThemeService, VmSizeService,
 } from "app/services";
-import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
-
-const adalConfig = {
-    tenant: "common",
-    clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46", // Azure CLI
-    redirectUri: "urn:ietf:wg:oauth:2.0:oob",
-};
 
 @Component({
     selector: "bl-app",
     templateUrl: "app.layout.html",
 })
-export class AppComponent implements AfterViewInit, OnInit {
-    public hasAccount: Observable<boolean>;
+export class AppComponent implements OnInit {
     public isAppReady = false;
-
-    @ViewChild("rightSidebar")
-    private sidebar: MatSidenav;
-
-    @ViewChild("sidebarContent")
-    private sidebarContent: SidebarContentComponent;
+    public fullscreen = false;
 
     constructor(
         matIconRegistry: MatIconRegistry,
         sanitizer: DomSanitizer,
-        private sidebarManager: SidebarManager,
         private autoscaleFormulaService: AutoscaleFormulaService,
         private settingsService: SettingsService,
         private commandService: CommandService,
-        private adalService: AdalService,
         private accountService: AccountService,
+        private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
         private nodeService: NodeService,
         private sshKeyService: SSHKeyService,
+        batchLabsService: BatchLabsService,
         pythonRpcService: PythonRpcService,
         private vmSizeService: VmSizeService,
+        themeService: ThemeService,
+        private route: ActivatedRoute,
         monacoLoader: MonacoLoader,
+        permissionService: PermissionService,
+        authHttpService: AuthorizationHttpService,
+        ipc: IpcService,
         private pricingService: PricingService,
         private ncjTemplateService: NcjTemplateService,
         private predefinedFormulaService: PredefinedFormulaService,
@@ -55,14 +52,14 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.sshKeyService.init();
         this.commandService.init();
         this.pricingService.init();
+        this.navigatorService.init();
         this.vmSizeService.init();
-        this.adalService.init(adalConfig);
         this.accountService.loadInitialData();
         this.ncjTemplateService.init();
         pythonRpcService.init();
         this.predefinedFormulaService.init();
-        monacoLoader.get();
-        this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
+        themeService.init();
+        monacoLoader.init(batchLabsService.rootPath);
 
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
@@ -76,26 +73,20 @@ export class AppComponent implements AfterViewInit, OnInit {
         });
 
         registerIcons(matIconRegistry, sanitizer);
-    }
 
-    public ngAfterViewInit() {
-        // Give the reference to the sidebar to the sidebar manager
-        this.sidebarManager.sidebar = this.sidebar;
-        this.sidebarManager.sidebarContent = this.sidebarContent;
+        this.route.queryParams.subscribe(({ fullscreen }) => {
+            this.fullscreen = Boolean(fullscreen);
+        });
+        permissionService.setUserPermissionProvider(() => {
+            return authHttpService.getResourcePermission();
+        });
+
+        ipc.sendEvent("app-ready");
     }
 
     public ngOnInit() {
-        this.adalService.login();
         this.subscriptionService.load();
         this.accountService.load();
-    }
-
-    public open() {
-        this.sidebar.open();
-    }
-
-    public logout() {
-        this.adalService.logout();
     }
 
     /**

@@ -10,11 +10,17 @@
                 <bl-delete-button [action]="delete"></bl-delete-button>
                 <bl-button color="light" [action]="reboot" title="Reboot node" icon="fa fa-power-off"></bl-button>
                 <bl-edit-button [action]="editStartTask" title="Edit start task"></bl-edit-button>
+                <bl-button color="light" [action]="uploadNodeLogs" title="Upload batch logs" [disabled]="pool.cloudServiceConfiguration">
+                    <span class="upload-node-logs fa-stacked">
+                        <i class="fa fa-upload fa-stack-1x"></i>
+                        <i class="fa fa-bug fa-stack-1x"></i>
+                    </span>
+                </bl-button>
             </bl-button-group>
         </bl-summary-card>
         <bl-start-task-error-display [pool]="pool" [nodeId]="nodeId" [startTaskInfo]="node?.startTaskInfo"></bl-start-task-error-display>
         <bl-node-error-display [node]="node"></bl-node-error-display>
-        <mat-card class="details">
+        <bl-card class="details">
             <bl-tab-group>
                 <bl-tab key="files">
                     <bl-tab-label>Files</bl-tab-label>
@@ -24,7 +30,11 @@
                     <bl-tab-label>Configuration</bl-tab-label>
                     <bl-node-configuration [pool]="pool" [node]="node"></bl-node-configuration>
                 </bl-tab>
+                <bl-tab key="monitoring">
+                    <bl-tab-label>Monitoring</bl-tab-label>
+                    <bl-pool-graphs [pool]="pool" [node]="node"></bl-pool-graphs>
+                </bl-tab>
             </bl-tab-group>
-        </mat-card>
+        </bl-card>
     </div>
 </bl-loading>

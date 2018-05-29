@@ -33,6 +33,15 @@ bl-job-graphs-home {
             font-style: italic;
         }
 
+        .task-count {
+            color: $generic-grey;
+            margin-right: 10px;
+
+            bl-clickable {
+                color: map-get($primary, 400);
+            }
+        }
+
         .actions {
             > * {
                 margin: 0 3px;

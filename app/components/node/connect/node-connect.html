@@ -12,16 +12,16 @@
             <bl-node-user-credentials-form [submit]="addOrUpdateUser" [isLinuxNode]="linux" (close)="goToHome()"></bl-node-user-credentials-form>
         </div>
         <div>
-            <bl-property-group *ngIf="credentials" class="normal">
-                <div class="warn-text">These credentials are now valid for 24 hours on this node</div>
+            <bl-property-group *ngIf="credentials">
+                <div class="warn-text">These credentials are now valid until {{expireTime}} on this node</div>
                 <bl-text-property label="Username" [value]="credentials.name"></bl-text-property>
                 <bl-text-property label="Password" [value]="credentials.password" *ngIf="credentialSource === CredentialSource.Generated"></bl-text-property>
             </bl-property-group>
         </div>
         <div *ngIf="hasIp && connectionSettings && credentials">
             <h3>Connection settings</h3>
-            <bl-property-group class="normal">
-                <bl-text-property label="Ip" [value]="connectionSettings.ip"></bl-text-property>
+            <bl-property-group>
+                <bl-text-property label="IP" [value]="connectionSettings.ip"></bl-text-property>
                 <bl-text-property label="Port" [value]="connectionSettings.port"></bl-text-property>
                 <bl-text-property *ngIf="!windows" label="SSH command" [value]="sshCommand"></bl-text-property>
             </bl-property-group>

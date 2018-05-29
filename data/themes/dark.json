@@ -1,0 +1,33 @@
+{
+  "$schema": "./theme.schema.json",
+  "primary": "#3d85c6",
+  "danger": "#aa3939",
+  "warn": "#f4ad42",
+  "success": "#4caf50",
+  "main-background": "#666666",
+  "card-background": "#5b5b5b",
+  "text": {
+    "primary": "",
+    "secondary": "#757575"
+  },
+  "breadcrumb": {
+    "text": "white",
+    "background": "#5b5b5b",
+    "hover-background": "#666666"
+  },
+  "header": {
+    "text": "white",
+    "background": "#333333",
+    "hover-background": "#757575"
+  },
+  "navigation": {
+    "text": "white",
+    "background": "#5b5b5b",
+    "hover-background": "#666666"
+  },
+  "footer": {
+    "text": "whitesmoke",
+    "background": "var(--color-primary)",
+    "hover": "#757575"
+  }
+}

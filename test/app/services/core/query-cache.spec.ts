@@ -1,3 +1,4 @@
+import { Filter, FilterBuilder } from "@batch-flask/core";
 import { ContinuationToken, ListOptions, QueryCache } from "app/services/core";
 import { OrderedSet } from "immutable";
 
@@ -9,8 +10,8 @@ class FakeClientProxy {
     }
 }
 
-function createToken(filter: string): ContinuationToken {
-    return { params: {}, options: new ListOptions({ filter: filter }), nextLink: null };
+function createToken(filter: Filter): ContinuationToken {
+    return { params: {}, options: new ListOptions({ filter }), nextLink: null };
 }
 
 describe("QueryCache", () => {
@@ -21,19 +22,19 @@ describe("QueryCache", () => {
         clientProxy = new FakeClientProxy();
         cache = new QueryCache();
         cache.cacheQuery(OrderedSet(["a", "b", "c"]), createToken(undefined));
-        cache.cacheQuery(OrderedSet(["a"]), createToken("id eq a"));
+        cache.cacheQuery(OrderedSet(["a"]), createToken(FilterBuilder.prop("id").eq("a")));
 
     });
 
     it("Should get the added queries", () => {
-        const cacheList = cache.getKeys("id eq a");
+        const cacheList = cache.getKeys("id eq 'a'");
 
         expect(cacheList).not.toBe(clientProxy as any);
         expect(cacheList.keys).toEqualImmutable(OrderedSet(["a"]));
     });
 
     it("Caching a new query should remove the oldest execluding the no-query", () => {
-        cache.cacheQuery(OrderedSet(["b"]), createToken("id eq b"));
+        cache.cacheQuery(OrderedSet(["b"]), createToken(FilterBuilder.prop("id").eq("b")));
 
         expect(cache.getKeys(undefined)).not.toBe(null, "Should not have removed the undefined query");
         expect(cache.getKeys("id eq b")).not.toBe(null, "The new query should have been added");
@@ -49,6 +50,6 @@ describe("QueryCache", () => {
     it("delete item from query cache should remove from every query", () => {
         cache.deleteItemKey("a");
         expect(cache.getKeys(undefined).keys).toEqualImmutable(OrderedSet(["b", "c"]));
-        expect(cache.getKeys("id eq a").keys).toEqualImmutable(OrderedSet([]));
+        expect(cache.getKeys("id eq 'a'").keys).toEqualImmutable(OrderedSet([]));
     });
 });

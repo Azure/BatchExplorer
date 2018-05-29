@@ -1,0 +1,26 @@
+<div class="grow">
+    <div class="gcol label">
+        {{ label }}
+    </div>
+    <div class="gcol">
+        <bl-form-field>
+            <input blInput [matDatepicker]="datePicker" placeholder="Choose a date" [formControl]="selectedDate">
+            <mat-datepicker-toggle blFormFieldSuffix [for]="datePicker"></mat-datepicker-toggle>
+            <mat-datepicker #datePicker></mat-datepicker>
+        </bl-form-field>
+    </div>
+    <div *ngIf="timePicker" class="gcol time-picker" [formGroup]="selectedTime">
+        <div class="hour-picker time-entry">
+            <bl-form-field>
+                <input blInput placeholder="hh" formControlName="hour" type="number">
+            </bl-form-field>
+        </div>
+        <div class="time-separator">:</div>
+        <div class="hour-picker time-entry">
+            <bl-form-field>
+                <input blInput placeholder="mm" formControlName="minute" type="number">
+            </bl-form-field>
+        </div>
+    </div>
+</div>
+<div class="timezone">Current timezone: {{currentTimeZone}}</div>

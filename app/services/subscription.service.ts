@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { List, Set } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { Subscription } from "app/models";
+import { Location, ResourceGroup, Subscription } from "app/models";
 import { Constants, StringUtils, log } from "app/utils";
 import { AdalService } from "./adal";
 import { AzureHttpService } from "./azure-http.service";
@@ -71,11 +71,42 @@ export class SubscriptionService {
         });
     }
 
-    private _loadSubscriptionsForTenant(tenantId: string): Observable<Subscription[]> {
-        return this.azure.get(tenantId, "subscriptions").map(response => {
-            const subscriptionData = response.json().value;
-            return subscriptionData.map(x => this._createSubscription(tenantId, x));
+    /**
+     * Recursively list the resource groups for given subscription id
+     * @param subscriptionId
+     */
+    public listResourceGroups(subscription: Subscription): Observable<ResourceGroup[]> {
+        const uri = `subscriptions/${subscription.subscriptionId}/resourcegroups`;
+        return this.azure.get(subscription, uri).expand(obs => {
+            return obs.json().nextLink ? this.azure.get(subscription, obs.json().nextLink) : Observable.empty();
+        }).reduce((resourceGroups, response) => {
+            return [...resourceGroups, ...response.json().value];
+        }, []);
+    }
+
+    /**
+     * List all available geo-locations for given subscription id
+     * @param subscriptionId
+     */
+    public listLocations(subscription: Subscription): Observable<Location[]> {
+        const uri = `subscriptions/${subscription.subscriptionId}/locations`;
+        return this.azure.get(subscription, uri).map(response => {
+            return response.json().value;
         });
+    }
+
+    private _loadSubscriptionsForTenant(tenantId: string): Observable<Subscription[]> {
+        return this.azure.get(tenantId, "subscriptions").expand(response => {
+            const data = response.json();
+            if (data.nextLink) {
+                this.azure.get(tenantId, data.nextLink);
+            } else {
+                return Observable.empty();
+            }
+        }).reduce((subs, response) => {
+            const newSubs = response.json().value.map(x => this._createSubscription(tenantId, x));
+            return [...subs, ...newSubs];
+        }, []);
     }
 
     private _createSubscription(tenantId: string, data: any): Subscription {
@@ -133,7 +164,7 @@ export class SubscriptionService {
             return subscriptions;
         }
         return List(subscriptions.filter((subscription) => {
-            for (let ignoredPattern of ignoredPatterns) {
+            for (const ignoredPattern of ignoredPatterns) {
                 if (StringUtils.matchWildcard(subscription.displayName, ignoredPattern, false)) {
                     return false;
                 }

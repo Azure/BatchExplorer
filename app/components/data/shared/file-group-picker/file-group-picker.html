@@ -1,18 +1,17 @@
-<mat-form-field>
-    <input type="text" matInput [matAutocomplete]="auto" [formControl]="value" [placeholder]="label">
-    <mat-hint class="warning" *ngIf="warning">
+<bl-form-field>
+    <input type="text" blInput  [matAutocomplete]="auto" [formControl]="value" [placeholder]="label">
+    <bl-hint class="warning" *ngIf="warning">
         This file group doesn't seem to exist. If you just created it, it will validate when the file group has finished uploading.
-    </mat-hint>
-    <mat-hint *ngIf="hint" align="end">
+    </bl-hint>
+    <bl-hint *ngIf="hint" align="end">
         {{hint}}
-    </mat-hint>
-</mat-form-field>
-
+    </bl-hint>
+</bl-form-field>
 <mat-autocomplete #auto="matAutocomplete">
     <mat-option value="" (onSelectionChange)="createFileGroup($event)" class="new-file-group">
         + Create a new file group
     </mat-option>
-    <mat-option *ngFor="let fileGroup of fileGroups" [value]="fileGroup.name">
+    <mat-option *ngFor="let fileGroup of fileGroups;trackBy: trackFileGroup" [value]="fileGroup.name">
         {{ fileGroup.name }}
     </mat-option>
 </mat-autocomplete>

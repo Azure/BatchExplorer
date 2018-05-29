@@ -1,9 +1,9 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
-import { MaterialModule } from "app/core";
+import { MaterialModule } from "@batch-flask/core";
 
-import { BaseModule } from "app/components/base";
+import { BaseModule } from "@batch-flask/ui";
 import { NodeListDisplayComponent } from "./display";
 import { NodeAdvancedFilterComponent } from "./filter";
 import { NodeListComponent } from "./node-list.component";

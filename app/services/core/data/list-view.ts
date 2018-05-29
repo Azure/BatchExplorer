@@ -1,8 +1,9 @@
-import { LoadingStatus } from "app/components/base/loading";
 import { List, OrderedSet } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { log } from "app/utils";
+import { FilterMatcher } from "@batch-flask/core";
+import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
+import { log } from "@batch-flask/utils";
 import { GenericView, GenericViewConfig } from "./generic-view";
 import { ListGetter, ListResponse } from "./list-getter";
 import { ContinuationToken, ListOptions, ListOptionsAttributes } from "./list-options";
@@ -39,6 +40,7 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
             this._prepend.distinctUntilChanged())
             .map(([itemKeys, prependKeys]) => {
                 prependKeys = prependKeys.filter(x => !itemKeys.has(x)) as any;
+
                 const allKeys = prependKeys.concat(itemKeys.toJS());
 
                 return this.cache.items.map((items) => {
@@ -52,6 +54,12 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
                             return new this._getter.type({ [this.cache.uniqueField]: x });
                         }
                         return item;
+                    }).filter((item) => {
+                        const matcher = new FilterMatcher<TEntity>();
+                        if (this._options.filter && prependKeys.has(item[this.cache.uniqueField])) {
+                            return matcher.test(this._options.filter, item);
+                        }
+                        return true;
                     }));
                 });
             }).switch().distinctUntilChanged((a, b) => a.equals(b)).takeUntil(this.isDisposed);
@@ -61,8 +69,11 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
             this._itemKeys.next(OrderedSet<string>(this._itemKeys.value.filter((key) => key !== deletedKey)));
         });
 
-        this._cacheCleared.subscribe((deletedKey) => {
+        this._cacheCleared.subscribe(() => {
             this._itemKeys.next(OrderedSet<string>([]));
+            this._handleChanges();
+            this._hasMore.next(true);
+            this.fetchNext();
         });
     }
 
@@ -71,10 +82,12 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         return super.startPoll(interval);
     }
 
-    public updateParams(params: TParams) {
-        this.params = params;
+    public set params(params: TParams) {
+        super.params = params;
         this._handleChanges();
+        this._hasMore.next(true);
     }
+    public get params() { return super.params; }
 
     public setOptions(options: ListOptionsAttributes, clearItems = true) {
         super.setOptions(new ListOptions(options));
@@ -113,6 +126,7 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
                 this._hasMore.next(Boolean(response.nextLink)); // This NEEDS to be called after processResponse
             },
             error: (error) => {
+                log.error(`Error loading data in ListView for ${this._getter.type.name}`, error);
                 this._hasMore.next(false);
             },
         });
@@ -225,8 +239,8 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         const response = this._getter.fetchFromCache(this._params, this._options);
         if (!response) { return false; }
         this._itemKeys.next(this._retrieveKeys(response.items));
-        this._lastRequest = { params: this._params, options: this._options };
-        this._hasMore.next(Boolean(response.nextLink));
+        // this._lastRequest = { params: this._params, options: this._options };
+        // this._hasMore.next(Boolean(response.nextLink));
         this._status.next(LoadingStatus.Ready);
         return true;
     }

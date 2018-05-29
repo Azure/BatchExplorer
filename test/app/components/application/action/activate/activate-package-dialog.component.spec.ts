@@ -4,8 +4,8 @@ import { MatDialogRef } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
+import { ServerError } from "@batch-flask/core";
 import { ActivatePackageDialogComponent } from "app/components/application/action";
-import { ServerError } from "app/models";
 import { ApplicationService } from "app/services";
 import { ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 
@@ -69,7 +69,7 @@ describe("ActivatePackageDialogComponent ", () => {
             error: () => {
                 expect(appServiceSpy.activatePackage).toHaveBeenCalledTimes(1);
 
-                let actionForm = fixture.debugElement.query(By.css("bl-simple-form")).componentInstance;
+                const actionForm = fixture.debugElement.query(By.css("bl-simple-form")).componentInstance;
                 expect(actionForm.error).not.toBeNull();
             },
         });

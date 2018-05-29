@@ -1,14 +1,14 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { ComplexFormConfig } from "app/components/base/form";
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarRef } from "app/components/base/sidebar";
-import { RangeValidatorDirective } from "app/components/base/validation";
-import { DynamicForm } from "app/core";
-import { AllTasksCompleteAction, Job, TaskFailureAction, VirtualMachineConfiguration } from "app/models";
+import { DynamicForm, autobind } from "@batch-flask/core";
+import { ComplexFormConfig } from "@batch-flask/ui/form";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarRef } from "@batch-flask/ui/sidebar";
+import { RangeValidator } from "@batch-flask/ui/validation";
+import { AllTasksCompleteAction, Job, TaskFailureAction, UserAccount, VirtualMachineConfiguration } from "app/models";
 import { JobCreateDto } from "app/models/dtos";
 import { createJobFormToJsonData, jobToFormModel } from "app/models/forms";
 import { JobService, PoolService } from "app/services";
@@ -21,20 +21,24 @@ import "./job-create-basic-dialog.scss";
     templateUrl: "job-create-basic-dialog.html",
 })
 export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto> {
+    public userAccounts: List<UserAccount>;
     public AllTasksCompleteAction = AllTasksCompleteAction;
     public TaskFailureAction = TaskFailureAction;
     public complexFormConfig: ComplexFormConfig;
     public constraintsGroup: FormGroup;
     public showJobReleaseTask: boolean;
+    public title = "Create job";
+    public subtitle = null;
     public fileUri = "create.job.batch.json";
     public virtualMachineConfiguration: VirtualMachineConfiguration = null;
+    public containerSettingsRequired: boolean = true;
 
     constructor(
-        private formBuilder: FormBuilder,
+        public formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<JobCreateBasicDialogComponent>,
-        private jobService: JobService,
+        public jobService: JobService,
         poolService: PoolService,
-        private notificationService: NotificationService) {
+        public notificationService: NotificationService) {
         super(JobCreateDto);
         this._setComplexFormConfig();
 
@@ -43,7 +47,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
             maxWallClockTime: null,
             maxTaskRetryCount: [
                 0,
-                new RangeValidatorDirective(validation.range.retry.min, validation.range.retry.max).validator,
+                new RangeValidator(validation.range.retry.min, validation.range.retry.max).validator,
             ],
         });
 
@@ -56,7 +60,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
             displayName: ["", Validators.maxLength(validation.maxLength.displayName)],
             priority: [
                 0,
-                new RangeValidatorDirective(validation.range.priority.min, validation.range.priority.max).validator,
+                new RangeValidator(validation.range.priority.min, validation.range.priority.max).validator,
             ],
             constraints: this.constraintsGroup,
             poolInfo: [null, Validators.required],
@@ -65,6 +69,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
             jobReleaseTask: null,
             onAllTasksComplete: [AllTasksCompleteAction.noaction],
             onTaskFailure: [TaskFailureAction.noaction],
+            metadata: [null],
         });
 
         this.form.controls.jobPreparationTask.valueChanges.subscribe((value) => {
@@ -82,16 +87,25 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
                 if (!this.virtualMachineConfiguration || !this.virtualMachineConfiguration.containerConfiguration) {
                     // Reset job manager, preperation and release task container settings because pool id is changed
                     // because user might change a container-pool to a non-container pool or vice versa
-                    if (this.form.controls.jobManagerTask.value) {
-                        this.form.controls.jobManagerTask.patchValue({ containerSettings: null });
+                    const jobManagerTask = this.form.controls.jobManagerTask.value;
+                    const jobPreparationTask = this.form.controls.jobPreparationTask.value;
+                    const jobReleaseTask = this.form.controls.jobReleaseTask.value;
+                    if (jobManagerTask) {
+                        jobManagerTask.containerSettings = null;
+                        this.form.controls.jobManagerTask.patchValue(jobManagerTask);
                     }
-                    if (this.form.controls.jobPreparationTask.value) {
-                        this.form.controls.jobPreparationTask.patchValue({ containerSettings: null });
+                    if (jobPreparationTask) {
+                        jobPreparationTask.containerSettings = null;
                     }
-                    if (this.form.controls.jobReleaseTask.value) {
-                        this.form.controls.jobReleaseTask.patchValue({ containerSettings: null });
+                    if (jobReleaseTask) {
+                        jobReleaseTask.containerSettings = null;
                     }
+                    this.containerSettingsRequired = false;
+                } else {
+                    this.containerSettingsRequired = true;
                 }
+
+                this.userAccounts = pool.userAccounts;
             });
     }
 
@@ -134,9 +148,19 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
         return this.form.controls.jobReleaseTask.value;
     }
 
+    public get showJobConfiguration() {
+        return !this.form.controls.jobManagerTask.disabled
+         || !this.form.controls.jobPreparationTask.disabled
+         || !this.form.controls.jobReleaseTask.disabled;
+    }
+
+    public get showPoolPicker() {
+        return !this.form.controls.poolInfo.disabled;
+    }
+
     public resetJobPreparationTask() {
         this.showJobReleaseTask = false;
-        let jobReleaseTask =  this.form.controls.jobReleaseTask;
+        const jobReleaseTask = this.form.controls.jobReleaseTask;
         jobReleaseTask.setValue(null);
     }
 

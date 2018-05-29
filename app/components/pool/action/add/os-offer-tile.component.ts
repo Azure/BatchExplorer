@@ -41,4 +41,8 @@ export class OsOfferTileComponent implements OnChanges {
     public onClickSku(sku) {
         this.pickSku.emit(sku);
     }
+
+    public trackSku(index, sku: Sku) {
+        return sku.name;
+    }
 }

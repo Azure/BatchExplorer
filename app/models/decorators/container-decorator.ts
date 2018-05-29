@@ -24,7 +24,7 @@ export class ContainerDecorator extends DecoratorBase<BlobContainer> {
     }
 
     private _buildMetadata(metadata: Map<string, string>): List<Metadata> {
-        let metaArray = [];
+        const metaArray = [];
         if (metadata) {
             for (const key of Object.keys(metadata)) {
                 metaArray.push(new Metadata({ name: key, value: metadata[key] }));

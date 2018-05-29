@@ -2,14 +2,15 @@ import { Component, Input, OnChanges, OnDestroy, OnInit, forwardRef } from "@ang
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
 import * as moment from "moment";
 import { Subscription } from "rxjs";
 
 import { BlobContainer } from "app/models";
-import { ListContainerParams, StorageService } from "app/services";
 import { ListView } from "app/services/core";
+import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
+import { Constants } from "common";
 
 import "./file-group-sas.scss";
 
@@ -31,6 +32,11 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
      */
     @Input() public containerId: string;
 
+    /**
+     * allow write access to the container, defaults to false
+     */
+    @Input() public allowWrite: boolean;
+
     public fileGroups: List<BlobContainer>;
     public value = new FormControl();
     public fileGroupsData: ListView<BlobContainer, ListContainerParams>;
@@ -39,8 +45,11 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
     private _propagateChange: (value: any[]) => void = null;
     private _subscriptions: Subscription[] = [];
 
-    constructor(private storageService: StorageService) {
-        this.fileGroupsData = this.storageService.containerListView(storageService.ncjFileGroupPrefix);
+    constructor(private autoStorageService: AutoStorageService,
+                private storageContainerService: StorageContainerService) {
+
+        this.fileGroupsData = this.storageContainerService.listView();
+
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;
         });
@@ -63,7 +72,15 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
     }
 
     public ngOnInit() {
-        this.fileGroupsData.fetchNext();
+        this.autoStorageService.get().subscribe((storageAccountId) => {
+            this.fileGroupsData.params = {
+                storageAccountId,
+            };
+            this.fileGroupsData.setOptions({
+                prefix: Constants.ncjFileGroupPrefix,
+            });
+            this.fileGroupsData.fetchNext();
+        });
     }
 
     public ngOnDestroy() {
@@ -90,12 +107,12 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
     @autobind()
     public generateSasToken() {
         /**
-         * Blob Container read access policy that is valid for 7 days, The maximum
+         * Blob Container read/write/list access policy that is valid for 7 days, The maximum
          * lifetime of a task in Batch.
          */
         const accessPolicy = {
             AccessPolicy: {
-                Permissions: "rl",
+                Permissions: this.allowWrite ? "rwl" : "rl",
                 ResourceTypes: "CONTAINER",
                 Services: "BLOB",
                 Start: moment.utc().add(-15, "minutes").toDate(),
@@ -103,8 +120,11 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
             },
         };
 
-        this.storageService.generateSharedAccessContainerUrl(this.containerId, accessPolicy).subscribe((value) => {
-            this.value.setValue(value);
+        this.autoStorageService.get().subscribe((storageAccountId) => {
+            this.storageContainerService.generateSharedAccessUrl(storageAccountId,
+                this.containerId, accessPolicy).subscribe((value) => {
+                    this.value.setValue(value);
+                });
         });
     }
 

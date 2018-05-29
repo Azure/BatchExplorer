@@ -1,15 +1,18 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs";
 
-import { DialogService } from "app/components/base/dialogs";
-import { SidebarManager } from "app/components/base/sidebar";
+import { DialogService } from "@batch-flask/ui/dialogs";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Node, Pool } from "app/models";
 import { FileService, NodeParams, NodeService, PoolParams, PoolService } from "app/services";
 import { EntityView } from "app/services/core";
+import { UploadNodeLogsDialogComponent } from "../action";
 import { NodeConnectComponent } from "../connect";
+
+import "./node-details.scss";
 
 @Component({
     selector: "bl-node-details",
@@ -17,7 +20,7 @@ import { NodeConnectComponent } from "../connect";
 })
 export class NodeDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
-        let label = tab ? `Node - ${tab}` : "Node";
+        const label = tab ? `Node - ${tab}` : "Node";
         return {
             name: id,
             label,
@@ -40,6 +43,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
         private poolService: PoolService,
         private dialog: DialogService,
         fileService: FileService,
+        changeDetector: ChangeDetectorRef,
         private sidebarManager: SidebarManager) {
 
         this.data = nodeService.view();
@@ -47,6 +51,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
             if (node) {
                 // this.decorator = new NodeDecorator(node);
                 this.node = node;
+                changeDetector.markForCheck();
             }
         });
 
@@ -119,4 +124,12 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
         ref.component.pool = this.pool;
         ref.component.fromNode = this.nodeId;
     }
+
+    @autobind()
+    public uploadNodeLogs() {
+        const ref = this.dialog.open(UploadNodeLogsDialogComponent);
+        ref.componentInstance.pool = this.pool;
+        ref.componentInstance.node = this.node;
+    }
+
 }

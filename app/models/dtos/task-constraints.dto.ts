@@ -1,6 +1,6 @@
 import * as moment from "moment";
 
-import { Dto, DtoAttr } from "app/core";
+import { Dto, DtoAttr } from "@batch-flask/core";
 
 export class TaskConstraintsDto extends Dto<TaskConstraintsDto> {
     @DtoAttr(moment.duration) public maxWallClockTime?: moment.Duration;

@@ -1,37 +1,43 @@
 <div [formGroup]="form">
     <div class="form-element">
-        <mat-form-field>
-            <input matInput formControlName="id" placeholder="id">
-        </mat-form-field>
-        <bl-error controlName="id" code="required">Id is a required field</bl-error>
+        <bl-form-field>
+            <input blInput formControlName="id" placeholder="ID">
+        </bl-form-field>
+        <bl-error controlName="id" code="required">ID is a required field</bl-error>
     </div>
     <div class="form-element">
-        <mat-form-field>
-            <input matInput formControlName="displayName" placeholder="Display name">
-        </mat-form-field>
+        <bl-form-field>
+            <input blInput formControlName="displayName" placeholder="Display name">
+        </bl-form-field>
     </div>
     <div class="form-element">
-        <mat-form-field>
-            <textarea matInput matTextareaAutosize matAutosizeMinRows="1" blSingleLineTextarea formControlName="commandLine" placeholder="Command line"></textarea>
-        </mat-form-field>
+        <bl-form-field>
+            <textarea blInput matTextareaAutosize matAutosizeMinRows="1" blSingleLineTextarea formControlName="commandLine" placeholder="Command line"></textarea>
+        </bl-form-field>
         <bl-error controlName="commandLine" code="required">Command line is a required field</bl-error>
     </div>
     <div formGroupName="constraints">
         <div class="form-element">
-            <mat-form-field>
-                <input matInput formControlName="maxTaskRetryCount" placeholder="Max retry count" type="number">
-            </mat-form-field>
+            <bl-duration-picker formControlName="maxWallClockTime" label="Max wall-clock time"></bl-duration-picker>
+        </div>
+        <div class="form-element">
+            <bl-form-field>
+                <input blInput formControlName="maxTaskRetryCount" placeholder="Max retry count" type="number">
+            </bl-form-field>
             <bl-error controlName="maxTaskRetryCount" code="validateRange">Retry count values can range from -1 to 100</bl-error>
         </div>
+        <div class="form-element">
+            <bl-duration-picker formControlName="retentionTime" label="Retention time"></bl-duration-picker>
+        </div>
+    </div>
+    <div class="form-element pad-top">
+        <bl-user-identity-picker formControlName="userIdentity" [userAccounts]="userAccounts">
+        </bl-user-identity-picker>
     </div>
     <div class="form-element">
         <mat-slide-toggle formControlName="killJobOnCompletion" color="primary">
             Kill job on completion
         </mat-slide-toggle>
-    </div>
-    <div class="form-element pad-top">
-        <bl-user-identity-picker formControlName="userIdentity" [userAccounts]="userAccounts">
-        </bl-user-identity-picker>
     </div>
     <div class="form-element">
         <mat-slide-toggle formControlName="runExclusive" color="primary">

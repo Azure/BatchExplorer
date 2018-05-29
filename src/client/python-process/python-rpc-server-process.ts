@@ -1,14 +1,18 @@
 import { ChildProcess, spawn } from "child_process";
 import * as path from "path";
 
+import { log } from "@batch-flask/utils";
 import { Constants } from "../client-constants";
-import { logger, pythonLogger } from "../logger";
+import { pythonLogger } from "../logger";
 import { getPythonPath } from "./python-executable";
 
 const asarPath = path.join(Constants.root, "../python-rpc/main");
 const localPath = path.join(Constants.root, "python/main.py");
+const portPromise = process.env.HOT ? Constants.pythonServerPort.dev : Constants.pythonServerPort.prod;
 
 export class PythonRpcServerProcess {
+    public port: Promise<number> = portPromise;
+
     private _spawedProcess: ChildProcess;
     private _askForKill: boolean;
     /**
@@ -18,7 +22,7 @@ export class PythonRpcServerProcess {
     public async start(): Promise<void> {
         this._askForKill = false;
         return this._getCommandLine().then((data) => {
-            logger.info("Python path is", data.cmd, { args: data.args });
+            log.info(`Python path is: '${data.cmd}', Args: ${data.args}`);
             const child = this._spawedProcess = spawn(data.cmd, [...data.args]);
             pythonLogger.info("========================= STARTING PYTHON RPC SERVER PROCESS =========================");
 
@@ -32,19 +36,23 @@ export class PythonRpcServerProcess {
 
             child.on("exit", (code) => {
                 if (this._askForKill) {
-                    logger.info("Python rpc server has stopped!");
+                    log.info("Python rpc server has stopped!");
                 } else {
-                    logger.error("Python Rpc server has exited unexpectedly with code!", code);
+                    log.error("Python Rpc server has exited unexpectedly with code!", code);
                 }
             });
-            logger.info("Python Rpc server started!");
+
+            child.on("error", (e) => {
+                log.error("Error with python server", e);
+            });
+            log.info("Python Rpc server started!");
         });
     }
 
     public stop() {
         if (this._spawedProcess) {
             this._askForKill = true;
-            logger.info("Stopping python rpc server!");
+            log.info("Stopping python rpc server!");
             this._spawedProcess.kill();
         }
     }
@@ -55,7 +63,6 @@ export class PythonRpcServerProcess {
     }
 
     private async _getCommandLine(): Promise<{ cmd: string, args: string[] }> {
-        const portPromise = process.env.HOT ? Constants.pythonServerPort.dev : Constants.pythonServerPort.prod;
 
         return portPromise.then((port) => {
             const portStr = port.toString();

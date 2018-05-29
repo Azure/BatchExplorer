@@ -1,14 +1,22 @@
+import { ServerError } from "@batch-flask/core";
+import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
+import { log } from "@batch-flask/utils";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable, Subscription } from "rxjs";
 
-import { LoadingStatus } from "app/components/base/loading";
-import { File, ServerError } from "app/models";
-import { DataCache, ListView } from "app/services/core";
+import { File } from "app/models";
+import { DataCache, ListGetter } from "app/services/core";
 import { FileLoader } from "app/services/file";
-import { CloudPathUtils, ObjectUtils } from "app/utils";
+import { CloudPathUtils, StringUtils } from "app/utils";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 
-export interface FileNavigatorConfig {
+export interface DeleteProgress {
+    current: string;
+    deleted: number;
+    total: number;
+}
+
+export interface FileNavigatorConfig<TParams = any> {
     /**
      *  Method that return the cache given the params.
      * This allow the use of targeted data cache which depends on some params.
@@ -23,11 +31,14 @@ export interface FileNavigatorConfig {
     basePath?: string;
 
     /**
-     * Callback to be called everytime it loads a new folder.
-     * @param folder: Folder that needs to be loaded. If root. will be null.
-     * @returns  a new RxListProxy
+     * Params to pass to the getter
      */
-    loadPath: (folder: string) => ListView<File, any>;
+    params: TParams;
+
+    /**
+     * List getter that is used to load the data
+     */
+    getter: ListGetter<File, TParams>;
 
     /**
      * Callback called when navigating to a file.
@@ -37,41 +48,69 @@ export interface FileNavigatorConfig {
     getFile: (filename: string) => FileLoader;
 
     /**
+     * Optional function to handle delete in the file navigator
+     */
+    delete?: (filename: string) => Observable<any>;
+
+    /**
      * Optional callback that gets called when an error is returned listing files.
      * You can that way ignore the error or modify it.
      * Return null to ignore error.
      */
     onError?: (error: ServerError) => ServerError;
 
+    /**
+     * Optional wildcard filter that will client side match files/blobs that end with
+     * this filter.
+     */
+    wildcards?: string;
+
+    /**
+     * Optional flag to tell the navigator to fetch all items.
+     */
+    fetchAll?: boolean;
 }
 /**
  * Generic navigator class for a file explorer.
  * This can be extended for a node, task or blob file list
  */
-export class FileNavigator {
+export class FileNavigator<TParams = any> {
     public loadingStatus = LoadingStatus.Ready;
     public basePath: string;
     public tree: Observable<FileTreeStructure>;
-
     public error: ServerError;
 
     private _tree = new BehaviorSubject<FileTreeStructure>(null);
-    private _loadPath: (folder: string) => ListView<File, any>;
+    private _getter: ListGetter<File, TParams>;
+    private _deleteFile: (filename: string) => Observable<any>;
+    private _params: TParams;
     private _cache: DataCache<File>;
     private _fileDeletedSub: Subscription;
+    private _wildcards: string;
+    private _fetchAll: boolean;
 
-    private _proxies: StringMap<ListView<File, any>> = {};
     private _getFileLoader: (filename: string) => FileLoader;
     private _onError: (error: ServerError) => ServerError;
 
-    constructor(config: FileNavigatorConfig) {
+    constructor(config: FileNavigatorConfig<TParams>) {
         this.basePath = config.basePath || "";
-        this._loadPath = config.loadPath;
+        this._getter = config.getter;
+        this._params = config.params;
         this._getFileLoader = config.getFile;
+        this._deleteFile = config.delete;
         this._onError = config.onError;
         this._tree.next(new FileTreeStructure(this.basePath));
         this.tree = this._tree.asObservable();
         this._cache = config.cache;
+        this._wildcards = config.wildcards;
+        this._fetchAll = config.fetchAll;
+    }
+
+    /**
+     * If this file navigator has delete file implemented
+     */
+    public get canDeleteFile(): boolean {
+        return Boolean(this._deleteFile);
     }
 
     /**
@@ -94,6 +133,10 @@ export class FileNavigator {
         return this.getNode(path).cascade((node) => {
             return this._loadFilesInPath(path);
         }).shareReplay(1);
+    }
+
+    public listAllFiles(path: string = ""): Observable<List<File>> {
+        return this._loadPath(path, true);
     }
 
     /**
@@ -134,18 +177,58 @@ export class FileNavigator {
         return Observable.of(node);
     }
 
+    public isDirectory(path: string): Observable<boolean> {
+        const node = this._tree.value.getNode(path);
+        return this._checkIfDirectory(node);
+    }
+
+    /**
+     * Add a folder to the navigator that is only visible from the UI until some files get added to it
+     * @param path Path to the folder
+     */
+    public addVirtualFolder(path: string) {
+        const tree = this._tree.value;
+        tree.addVirtualFolder(path);
+        this._tree.next(tree);
+    }
+
+    public deleteFile(filename: string): Observable<any> {
+        if (!this._deleteFile) {
+            log.error("Cannot delete file with this file navigator has delete is not implemented");
+            return;
+        }
+        return this._deleteFile(filename);
+    }
+
+    public deleteFiles(files: string[]): Observable<DeleteProgress> {
+        if (!this._deleteFile) {
+            log.error("Cannot delete file with this file navigator has delete is not implemented");
+            return;
+        }
+        return Observable.interval(100).take(files.length).flatMap((i) => {
+            return this._deleteFile(files[i]).map(() => {
+                this._removeFile(files[i]);
+                return { deleted: i, total: files.length, current: files[i] };
+            });
+        }).share();
+    }
+
+    public deleteFolder(folder: string): Observable<DeleteProgress> {
+        if (!this._deleteFile) {
+            log.error("Cannot delete file with this file navigator has delete is not implemented");
+            return;
+        }
+        return this.listAllFiles(folder).flatMap((files) => {
+            return this.deleteFiles(files.map(x => x.name).toArray());
+        }).do(() => {
+            this._removeFile(folder);
+        }).share();
+    }
+
     public dispose() {
         if (this._fileDeletedSub) {
             this._fileDeletedSub.unsubscribe();
         }
-        for (let proxy of ObjectUtils.values(this._proxies)) {
-            proxy.dispose();
-        }
-    }
-
-    public isDirectory(path: string): Observable<boolean> {
-        const node = this._tree.value.getNode(path);
-        return this._checkIfDirectory(node);
     }
 
     private _removeFile(key: string) {
@@ -154,14 +237,38 @@ export class FileNavigator {
         this._tree.next(tree);
     }
 
+    /**
+     * Given a path will return all the files underneath
+     * @param path Path to the folder to load
+     * @param recursive If it should list sub folders content too(Default: false)
+     */
+    private _loadPath(path: string, recursive = false): Observable<List<File>> {
+        return this._getter.fetchAll(this._params, {
+            recursive: recursive || this._fetchAll,
+            folder: path,
+        }).flatMap((files) => {
+            if (!this._wildcards) {
+                return Observable.of(files);
+            }
+
+            const filtered = files.filter((file) => file.isDirectory || this._checkWildcardMatch(file.name));
+            return Observable.of(List(filtered));
+        });
+    }
+
+    private _checkWildcardMatch(filename: string): boolean {
+        const result = this._wildcards.split(",").find(wildcard => {
+            return StringUtils.matchWildcard(filename, wildcard, false);
+        });
+
+        return Boolean(result);
+    }
+
     private _checkIfDirectory(node: FileTreeNode): Observable<boolean> {
         if (!node.isUnknown) { return Observable.of(node.isDirectory); }
-        const proxy = this._loadPath(this._getFolderToLoad(node.path, false));
-        const obs = proxy.refresh().flatMap(() => proxy.items.first()).shareReplay(1);
         const subject = new AsyncSubject<boolean>();
-        obs.first().subscribe({
+        this._loadPath(this._getFolderToLoad(node.path, false)).subscribe({
             next: (files: List<File>) => {
-                proxy.dispose();
                 if (files.size === 0) { return false; }
                 const file = files.first();
                 this._tree.value.addFiles(files);
@@ -169,7 +276,6 @@ export class FileNavigator {
                 subject.complete();
             },
             error: (e) => (error) => {
-                proxy.dispose();
                 subject.error(error);
             },
         });
@@ -178,18 +284,18 @@ export class FileNavigator {
 
     private _loadFilesInPath(path: string): Observable<FileTreeNode> {
         this.loadingStatus = LoadingStatus.Loading;
-        if (!this._proxies[path]) {
-            this._proxies[path] = this._loadPath(this._getFolderToLoad(path));
+        const tree = this._tree.value;
+        const node = tree.getNode(path);
+        if (node.loadingStatus === LoadingStatus.Loading && !node.virtual) {
+            return Observable.of(null);
         }
-
-        const proxy = this._proxies[path];
+        node.markAsLoading();
         const output = new AsyncSubject<FileTreeNode>();
-        proxy.refreshAll().flatMap(() => proxy.items.first()).share().subscribe({
+        this._loadPath(this._getFolderToLoad(path)).subscribe({
             next: (files: List<File>) => {
                 this.loadingStatus = LoadingStatus.Ready;
-
                 const tree = this._tree.value;
-                tree.addFiles(files);
+                tree.setFilesAt(path, files);
                 const node = tree.getNode(path);
                 node.markAsLoaded();
                 this._tree.next(tree);
@@ -215,7 +321,7 @@ export class FileNavigator {
     }
 
     private _getFolderToLoad(path: string, asDirectory = true) {
-        let fullPath = [this._normalizedBasePath, path].filter(x => Boolean(x)).join("");
+        const fullPath = [this._normalizedBasePath, path].filter(x => Boolean(x)).join("");
         if (fullPath) {
             if (asDirectory) {
                 return CloudPathUtils.asBaseDirectory(fullPath);

@@ -1,14 +1,20 @@
-import { Component, NgZone, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
+import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
+import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
-import { AccountResource, BatchApplication, Job, Pool, ServerError } from "app/models";
+import { ServerError, autobind } from "@batch-flask/core";
+import { AccountProvisingState, AccountResource, BatchApplication, Job, Pool } from "app/models";
 import {
     AccountParams, AccountService, ApplicationListParams, ApplicationService,
-    JobListParams, JobService, PoolListParams, PoolService,
+    InsightsMetricsService, JobListParams, JobService, PoolListParams, PoolService,
 } from "app/services";
 import { EntityView, ListView } from "app/services/core";
+
+import { TableConfig } from "@batch-flask/ui";
+import { DialogService } from "@batch-flask/ui/dialogs";
+import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
+import { DeleteAccountDialogComponent } from "../action/delete";
 
 import "./account-details.scss";
 
@@ -26,6 +32,11 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         return { name: name, label: "Account" };
     }
 
+    public tableConfig: TableConfig = {
+        resizableColumn: false,
+    };
+
+    public accountProvisioningState = AccountProvisingState;
     public account: AccountResource;
     public accountId: string;
     public loadingError: any;
@@ -42,20 +53,30 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     constructor(
         router: Router,
+        private dialog: MatDialog,
+        private changeDetector: ChangeDetectorRef,
         private activatedRoute: ActivatedRoute,
         private accountService: AccountService,
+        private dialogService: DialogService,
         private applicationService: ApplicationService,
         private jobService: JobService,
         private poolService: PoolService,
+        monitor: InsightsMetricsService,
         zone: NgZone,
         viewContainerRef: ViewContainerRef) {
         this.data = this.accountService.view();
         this.data.item.subscribe((account) => {
             this.account = account;
+            this.changeDetector.markForCheck();
             if (account) {
                 this._loadQuickAccessLists();
             }
         });
+
+        this.poolData = this.poolService.listView();
+        this.jobData = this.jobService.listView();
+        this.applicationData = this.applicationService.listView();
+
     }
 
     public ngOnInit() {
@@ -64,6 +85,9 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
             this.selectAccount(this.accountId);
             this.data.params = { id: this.accountId };
             this.data.fetch().subscribe({
+                next: () => {
+                    this.loadingError = null;
+                },
                 error: (error) => {
                     this.loadingError = error;
                 },
@@ -73,6 +97,9 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();
+        this.poolData.dispose();
+        this.jobData.dispose();
+        this.applicationData.dispose();
     }
 
     @autobind()
@@ -80,13 +107,33 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         return this.data.refresh();
     }
 
+    @autobind()
+    public showKeys() {
+        const ref = this.dialogService.open(ProgramaticUsageComponent);
+        ref.componentInstance.accountId = this.accountId;
+    }
+
+    @autobind()
+    public deleteBatchAccount() {
+        const config = new MatDialogConfig();
+        const dialogRef = this.dialog.open(DeleteAccountDialogComponent, config);
+        dialogRef.componentInstance.accountId = this.accountId;
+        dialogRef.componentInstance.accountName = this.account && this.account.name;
+    }
+
+    public get accountState() {
+        return this.account && this.account.properties && this.account.properties.provisioningState;
+    }
     public selectAccount(accountId: string): void {
         this.noLinkedStorage = false;
         this.accountService.selectAccount(accountId);
     }
 
+    public trackByFn(index, item: Pool | Job | BatchApplication) {
+        return item.id;
+    }
+
     private _loadQuickAccessLists() {
-        this.applicationData = this.applicationService.listView();
         this.applicationData.setOptions(this.initialOptions);
         this.applicationData.fetchNext();
         this.applicationData.onError = (error: ServerError) => {
@@ -99,13 +146,10 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
             return !handled;
         };
 
-        this.jobData = this.jobService.listView();
         this.jobData.setOptions(this.initialOptions);
         this.jobData.fetchNext();
 
-        this.poolData = this.poolService.listView();
         this.poolData.setOptions(this.initialOptions);
-
         this.poolData.fetchNext();
     }
 }

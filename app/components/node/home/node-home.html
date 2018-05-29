@@ -1,19 +1,8 @@
-<bl-list-and-show-layout #layout (listScrolledToBottom)="nodeList.loadMore()" [list]="nodeList">
-    <div bl-list-title>
-        Compute nodes
+<bl-browse-layout #layout>
+    <div blBrowseLayoutTitle>
+            Compute nodes
     </div>
-    <div bl-list-buttons>
-    </div>
-    <div bl-list-content>
-        <bl-focus-section>
-            <bl-node-list #nodeList [poolId]="poolId" [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-node-list>
-        </bl-focus-section>
-    </div>
-    <div bl-show-content>
-        <router-outlet></router-outlet>
-    </div>
-    <div bl-show-advanced-filter>
-        <bl-node-advanced-filter (change)="layout.advancedFilterChanged($event)">
-        </bl-node-advanced-filter>
-    </div>
-</bl-list-and-show-layout>
+    <bl-node-list blBrowseLayoutList [poolId]="poolId"></bl-node-list>
+    <bl-node-advanced-filter blBrowseLayoutAdvancedFilter (change)="layout.advancedFilterChanged($event)">
+    </bl-node-advanced-filter>
+</bl-browse-layout>

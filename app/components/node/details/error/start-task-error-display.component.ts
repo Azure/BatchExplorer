@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "@batch-flask/core";
 
-import { NotificationService } from "app/components/base/notifications";
-import { SidebarManager } from "app/components/base/sidebar";
+import { NotificationService } from "@batch-flask/ui/notifications";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
-import { FailureInfo, Pool, StartTaskInfo } from "app/models";
+import { FailureInfo, NameValuePair, Pool, StartTaskInfo } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
 import { NodeService } from "app/services";
 
@@ -51,6 +51,10 @@ export class StartTaskErrorDisplayComponent implements OnChanges {
         return this.nodeService.reboot(this.pool.id, this.nodeId).subscribe(() => {
             this.notificationService.success("Rebooting", `Node is now rebooting`);
         });
+    }
+
+    public trackDetail(index, detail: NameValuePair) {
+        return detail.name;
     }
 
     private _computeErrorMessage() {

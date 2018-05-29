@@ -1,0 +1,1717 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "jobschedule",
+  "description": "An Azure Batch jobschedule",
+  "type": "object",
+  "$ref": "#/definitions/JobScheduleAddParameter",
+  "definitions": {
+    "JobScheduleAddParameter": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "A string that uniquely identifies the schedule within the account.",
+          "description": "A string that uniquely identifies the schedule within the account."
+        },
+        "displayName": {
+          "type": "string",
+          "title": "The display name for the schedule.",
+          "description": "The display name for the schedule."
+        },
+        "schedule": {
+          "$ref": "#/definitions/Schedule",
+          "title": "The schedule according to which jobs will be created.",
+          "description": "The schedule according to which jobs will be created."
+        },
+        "jobSpecification": {
+          "$ref": "#/definitions/JobSpecification",
+          "title": "The details of the jobs to be created on this schedule.",
+          "description": "The details of the jobs to be created on this schedule."
+        },
+        "metadata": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MetadataItem"
+          },
+          "title": "A list of name-value pairs associated with the schedule as metadata.",
+          "description": "A list of name-value pairs associated with the schedule as metadata."
+        }
+      },
+      "required": [
+        "id",
+        "schedule",
+        "jobSpecification"
+      ],
+      "title": "A job schedule that allows recurring jobs by specifying when to run jobs and a specification used to create each job."
+    },
+    "Schedule": {
+      "properties": {
+        "doNotRunUntil": {
+          "type": "string",
+          "format": "date-time",
+          "title": "The earliest time at which any job may be created under this job schedule.",
+          "description": "The earliest time at which any job may be created under this job schedule."
+        },
+        "doNotRunAfter": {
+          "type": "string",
+          "format": "date-time",
+          "title": "A time after which no job will be created under this job schedule. The schedule will move to the completed state as soon as this deadline is past and there is no active job under this job schedule.",
+          "description": "A time after which no job will be created under this job schedule. The schedule will move to the completed state as soon as this deadline is past and there is no active job under this job schedule."
+        },
+        "startWindow": {
+          "type": "string",
+          "format": "duration",
+          "title": "The time interval, starting from the time at which the schedule indicates a job should be created, within which a job must be created.",
+          "description": "The time interval, starting from the time at which the schedule indicates a job should be created, within which a job must be created."
+        },
+        "recurrenceInterval": {
+          "type": "string",
+          "format": "duration",
+          "title": "The time interval between the start times of two successive jobs under the job schedule. A job schedule can have at most one active job under it at any given time.",
+          "description": "The time interval between the start times of two successive jobs under the job schedule. A job schedule can have at most one active job under it at any given time."
+        }
+      },
+      "title": "The schedule according to which jobs will be created"
+    },
+    "JobSpecification": {
+      "properties": {
+        "priority": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The priority of jobs created under this schedule.",
+          "description": "The priority of jobs created under this schedule."
+        },
+        "displayName": {
+          "type": "string",
+          "title": "The display name for jobs created under this schedule.",
+          "description": "The display name for jobs created under this schedule."
+        },
+        "usesTaskDependencies": {
+          "type": "boolean",
+          "title": "Whether tasks in the job can define dependencies on each other. The default is false.",
+          "description": "Whether tasks in the job can define dependencies on each other. The default is false."
+        },
+        "onAllTasksComplete": {
+          "title": "The action the Batch service should take when all tasks in a job created under this schedule are in the completed state.",
+          "description": "The action the Batch service should take when all tasks in a job created under this schedule are in the completed state.",
+          "$ref": "#/definitions/OnAllTasksComplete"
+        },
+        "onTaskFailure": {
+          "title": "The action the Batch service should take when any task fails in a job created under this schedule. A task is considered to have failed if it have failed if has a failureInfo. A failureInfo is set if the task completes with a non-zero exit code after exhausting its retry count, or if there was an error starting the task, for example due to a resource file download error.",
+          "description": "The action the Batch service should take when any task fails in a job created under this schedule. A task is considered to have failed if it have failed if has a failureInfo. A failureInfo is set if the task completes with a non-zero exit code after exhausting its retry count, or if there was an error starting the task, for example due to a resource file download error.",
+          "$ref": "#/definitions/OnTaskFailure"
+        },
+        "constraints": {
+          "$ref": "#/definitions/JobConstraints",
+          "title": "The execution constraints for jobs created under this schedule.",
+          "description": "The execution constraints for jobs created under this schedule."
+        },
+        "jobManagerTask": {
+          "$ref": "#/definitions/JobManagerTask",
+          "title": "The details of a Job Manager task to be launched when a job is started under this schedule.",
+          "description": "The details of a Job Manager task to be launched when a job is started under this schedule."
+        },
+        "jobPreparationTask": {
+          "$ref": "#/definitions/JobPreparationTask",
+          "title": "The Job Preparation task for jobs created under this schedule.",
+          "description": "The Job Preparation task for jobs created under this schedule."
+        },
+        "jobReleaseTask": {
+          "$ref": "#/definitions/JobReleaseTask",
+          "title": "The Job Release task for jobs created under this schedule.",
+          "description": "The Job Release task for jobs created under this schedule."
+        },
+        "commonEnvironmentSettings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EnvironmentSetting"
+          },
+          "title": "A list of common environment variable settings. These environment variables are set for all tasks in jobs created under this schedule (including the Job Manager, Job Preparation and Job Release tasks).",
+          "description": "A list of common environment variable settings. These environment variables are set for all tasks in jobs created under this schedule (including the Job Manager, Job Preparation and Job Release tasks)."
+        },
+        "poolInfo": {
+          "$ref": "#/definitions/PoolInformation",
+          "title": "The pool on which the Batch service runs the tasks of jobs created under this schedule.",
+          "description": "The pool on which the Batch service runs the tasks of jobs created under this schedule."
+        },
+        "metadata": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MetadataItem"
+          },
+          "title": "A list of name-value pairs associated with each job created under this schedule as metadata.",
+          "description": "A list of name-value pairs associated with each job created under this schedule as metadata."
+        }
+      },
+      "required": [
+        "poolInfo"
+      ],
+      "title": "Specifies details of the jobs to be created on a schedule."
+    },
+    "OnAllTasksComplete": {
+      "type": "string",
+      "title": "The action the Batch service should take when all tasks in the job are in the completed state.",
+      "enum": [
+        "noaction",
+        "terminatejob"
+      ],
+      "x-ms-enum": {
+        "name": "OnAllTasksComplete",
+        "modelAsString": false,
+        "values": [
+          {
+            "value": "noaction",
+            "description": "Do nothing. The job remains active unless terminated or disabled by some other means.",
+            "name": "noAction"
+          },
+          {
+            "value": "terminatejob",
+            "description": "Terminate the job. The job's terminateReason is set to 'AllTasksComplete'.",
+            "name": "terminateJob"
+          }
+        ]
+      }
+    },
+    "OnTaskFailure": {
+      "type": "string",
+      "title": "The action the Batch service should take when any task in the job fails.",
+      "description": "A task is considered to have failed if has a failureInfo. A failureInfo is set if the task completes with a non-zero exit code after exhausting its retry count, or if there was an error starting the task, for example due to a resource file download error. The default is noaction.",
+      "enum": [
+        "noaction",
+        "performexitoptionsjobaction"
+      ],
+      "x-ms-enum": {
+        "name": "OnTaskFailure",
+        "modelAsString": false,
+        "values": [
+          {
+            "value": "noaction",
+            "description": "Do nothing. The job remains active unless terminated or disabled by some other means.",
+            "name": "noAction"
+          },
+          {
+            "value": "performexitoptionsjobaction",
+            "description": "Take the action associated with the task exit condition in the task's exitConditions collection. (This may still result in no action being taken, if that is what the task specifies.)",
+            "name": "performExitOptionsJobAction"
+          }
+        ]
+      }
+    },
+    "JobConstraints": {
+      "properties": {
+        "maxWallClockTime": {
+          "type": "string",
+          "format": "duration",
+          "title": "The maximum elapsed time that the job may run, measured from the time the job is created.",
+          "description": "The maximum elapsed time that the job may run, measured from the time the job is created."
+        },
+        "maxTaskRetryCount": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The maximum number of times each task may be retried. The Batch service retries a task if its exit code is nonzero.",
+          "description": "The maximum number of times each task may be retried. The Batch service retries a task if its exit code is nonzero."
+        }
+      },
+      "title": "The execution constraints for a job."
+    },
+    "JobManagerTask": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "A string that uniquely identifies the Job Manager task within the job.",
+          "description": "A string that uniquely identifies the Job Manager task within the job."
+        },
+        "displayName": {
+          "type": "string",
+          "title": "The display name of the Job Manager task.",
+          "description": "The display name of the Job Manager task."
+        },
+        "commandLine": {
+          "type": "string",
+          "title": "The command line of the Job Manager task.",
+          "description": "The command line of the Job Manager task."
+        },
+        "containerSettings": {
+          "$ref": "#/definitions/TaskContainerSettings",
+          "title": "The settings for the container under which the Job Manager task runs.",
+          "description": "The settings for the container under which the Job Manager task runs."
+        },
+        "resourceFiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceFile"
+          },
+          "title": "A list of files that the Batch service will download to the compute node before running the command line.",
+          "description": "A list of files that the Batch service will download to the compute node before running the command line."
+        },
+        "outputFiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OutputFile"
+          },
+          "title": "A list of files that the Batch service will upload from the compute node after running the command line.",
+          "description": "A list of files that the Batch service will upload from the compute node after running the command line."
+        },
+        "environmentSettings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EnvironmentSetting"
+          },
+          "title": "A list of environment variable settings for the Job Manager task.",
+          "description": "A list of environment variable settings for the Job Manager task."
+        },
+        "constraints": {
+          "$ref": "#/definitions/TaskConstraints",
+          "title": "Constraints that apply to the Job Manager task.",
+          "description": "Constraints that apply to the Job Manager task."
+        },
+        "killJobOnCompletion": {
+          "type": "boolean",
+          "title": "Whether completion of the Job Manager task signifies completion of the entire job.",
+          "description": "Whether completion of the Job Manager task signifies completion of the entire job."
+        },
+        "userIdentity": {
+          "$ref": "#/definitions/UserIdentity",
+          "title": "The user identity under which the Job Manager task runs.",
+          "description": "The user identity under which the Job Manager task runs."
+        },
+        "runExclusive": {
+          "type": "boolean",
+          "title": "Whether the Job Manager task requires exclusive use of the compute node where it runs.",
+          "description": "Whether the Job Manager task requires exclusive use of the compute node where it runs."
+        },
+        "applicationPackageReferences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApplicationPackageReference"
+          },
+          "title": "A list of application packages that the Batch service will deploy to the compute node before running the command line.",
+          "description": "A list of application packages that the Batch service will deploy to the compute node before running the command line."
+        },
+        "authenticationTokenSettings": {
+          "title": "The settings for an authentication token that the task can use to perform Batch service operations.",
+          "description": "The settings for an authentication token that the task can use to perform Batch service operations.",
+          "$ref": "#/definitions/AuthenticationTokenSettings"
+        },
+        "allowLowPriorityNode": {
+          "type": "boolean",
+          "title": "Whether the Job Manager task may run on a low-priority compute node.",
+          "description": "Whether the Job Manager task may run on a low-priority compute node."
+        }
+      },
+      "required": [
+        "id",
+        "commandLine"
+      ],
+      "title": "Specifies details of a Job Manager task.",
+      "description": "The Job Manager task is automatically started when the job is created. The Batch service tries to schedule the Job Manager task before any other tasks in the job. When shrinking a pool, the Batch service tries to preserve compute nodes where Job Manager tasks are running for as long as possible (that is, nodes running 'normal' tasks are removed before nodes running Job Manager tasks). When a Job Manager task fails and needs to be restarted, the system tries to schedule it at the highest priority. If there are no idle nodes available, the system may terminate one of the running tasks in the pool and return it to the queue in order to make room for the Job Manager task to restart. Note that a Job Manager task in one job does not have priority over tasks in other jobs. Across jobs, only job level priorities are observed. For example, if a Job Manager in a priority 0 job needs to be restarted, it will not displace tasks of a priority 1 job."
+    },
+    "TaskContainerSettings": {
+      "properties": {
+        "containerRunOptions": {
+          "type": "string",
+          "title": "Additional options to the container create command.",
+          "description": "Additional options to the container create command."
+        },
+        "imageName": {
+          "type": "string",
+          "title": "The image to use to create the container in which the task will run.",
+          "description": "The image to use to create the container in which the task will run."
+        },
+        "registry": {
+          "$ref": "#/definitions/ContainerRegistry",
+          "title": "The private registry which contains the container image.",
+          "description": "The private registry which contains the container image."
+        }
+      },
+      "required": [
+        "imageName"
+      ],
+      "title": "The container settings for a task."
+    },
+    "ContainerRegistry": {
+      "properties": {
+        "registryServer": {
+          "type": "string",
+          "title": "The registry URL.",
+          "description": "The registry URL."
+        },
+        "username": {
+          "type": "string",
+          "x-ms-client-name": "userName",
+          "title": "The user name to log into the registry server.",
+          "description": "The user name to log into the registry server."
+        },
+        "password": {
+          "type": "string",
+          "title": "The password to log into the registry server.",
+          "description": "The password to log into the registry server."
+        }
+      },
+      "required": [
+        "username",
+        "password"
+      ],
+      "title": "A private container registry."
+    },
+    "ResourceFile": {
+      "properties": {
+        "blobSource": {
+          "type": "string",
+          "title": "The URL of the file within Azure Blob Storage.",
+          "description": "The URL of the file within Azure Blob Storage."
+        },
+        "filePath": {
+          "type": "string",
+          "title": "The location on the compute node to which to download the file, relative to the task's working directory.",
+          "description": "The location on the compute node to which to download the file, relative to the task's working directory."
+        },
+        "fileMode": {
+          "type": "string",
+          "title": "The file permission mode attribute in octal format.",
+          "description": "The file permission mode attribute in octal format."
+        },
+        "source": {
+          "type": "object",
+          "$ref": "#/definitions/ResourceFileSource",
+          "title": "A source for files to be downloaded before running the task command line.",
+          "description": "A source for files to be downloaded before running the task command line."
+        }
+      },
+      "required": [],
+      "title": "A file to be downloaded from Azure blob storage to a compute node.",
+      "oneOf": [
+        {
+          "required": [
+            "source"
+          ]
+        },
+        {
+          "required": [
+            "blobSource"
+          ]
+        }
+      ]
+    },
+    "ResourceFileSource": {
+      "properties": {
+        "fileGroup": {
+          "type": "string",
+          "title": "The file group in the linked storage account from which to download files.",
+          "description": "The file group in the linked storage account from which to download files."
+        },
+        "prefix": {
+          "type": "string",
+          "title": "A prefix with which to filter the files to download.",
+          "description": "A prefix with which to filter the files to download."
+        }
+      },
+      "required": [
+        "fileGroup"
+      ]
+    },
+    "OutputFile": {
+      "properties": {
+        "filePattern": {
+          "type": "string",
+          "title": "A pattern indicating which file(s) to upload.",
+          "description": "A pattern indicating which file(s) to upload."
+        },
+        "destination": {
+          "title": "The destination for the output file(s).",
+          "$ref": "#/definitions/OutputFileDestination",
+          "description": "The destination for the output file(s)."
+        },
+        "uploadOptions": {
+          "title": "Additional options for the upload operation, including under what conditions to perform the upload.",
+          "$ref": "#/definitions/OutputFileUploadOptions",
+          "description": "Additional options for the upload operation, including under what conditions to perform the upload."
+        }
+      },
+      "required": [
+        "filePattern",
+        "destination",
+        "uploadOptions"
+      ],
+      "title": "A specification for uploading files from an Azure Batch node to another location after the Batch service has finished executing the task process."
+    },
+    "OutputFileDestination": {
+      "properties": {
+        "container": {
+          "title": "A location in Azure blob storage to which files are uploaded.",
+          "$ref": "#/definitions/OutputFileBlobContainerDestination",
+          "description": "A location in Azure blob storage to which files are uploaded."
+        },
+        "autoStorage": {
+          "type": "object",
+          "$ref": "#/definitions/OutputFileAutoStorageDestination",
+          "title": "A destination in the linked storage account to which to persist output files.",
+          "description": "A destination in the linked storage account to which to persist output files."
+        }
+      },
+      "title": "The destination to which a file should be uploaded."
+    },
+    "OutputFileBlobContainerDestination": {
+      "properties": {
+        "path": {
+          "type": "string",
+          "title": "The destination blob or virtual directory within the Azure Storage container.",
+          "description": "The destination blob or virtual directory within the Azure Storage container."
+        },
+        "containerUrl": {
+          "type": "string",
+          "title": "The URL of the container within Azure Blob Storage to which to upload the file(s).",
+          "description": "The URL of the container within Azure Blob Storage to which to upload the file(s)."
+        }
+      },
+      "required": [
+        "containerUrl"
+      ],
+      "title": "Specifies a file upload destination within an Azure blob storage container."
+    },
+    "OutputFileAutoStorageDestination": {
+      "properties": {
+        "fileGroup": {
+          "type": "string",
+          "title": "The file group in the linked storage account to which to save files.",
+          "description": "The file group in the linked storage account to which to save files."
+        },
+        "path": {
+          "type": "string",
+          "title": "The path within the file group to which output files will be uploaded.",
+          "description": "The path within the file group to which output files will be uploaded."
+        }
+      },
+      "required": [
+        "fileGroup"
+      ]
+    },
+    "OutputFileUploadOptions": {
+      "properties": {
+        "uploadCondition": {
+          "title": "The conditions under which the task output file or set of files should be uploaded.",
+          "description": "The conditions under which the task output file or set of files should be uploaded.",
+          "$ref": "#/definitions/OutputFileUploadCondition"
+        }
+      },
+      "required": [
+        "uploadCondition"
+      ],
+      "title": "Details about an output file upload operation, including under what conditions to perform the upload."
+    },
+    "OutputFileUploadCondition": {
+      "type": "string",
+      "title": "The conditions under which a task output file or set of files should be uploaded.",
+      "enum": [
+        "tasksuccess",
+        "taskfailure",
+        "taskcompletion"
+      ],
+      "x-ms-enum": {
+        "name": "OutputFileUploadCondition",
+        "modelAsString": false,
+        "values": [
+          {
+            "value": "tasksuccess",
+            "description": "Upload the file(s) only after the task process exits with an exit code of 0.",
+            "name": "taskSuccess"
+          },
+          {
+            "value": "taskfailure",
+            "description": "Upload the file(s) only after the task process exits with a nonzero exit code.",
+            "name": "taskFailure"
+          },
+          {
+            "value": "taskcompletion",
+            "description": "Upload the file(s) after the task process exits, no matter what the exit code was.",
+            "name": "taskCompletion"
+          }
+        ]
+      }
+    },
+    "EnvironmentSetting": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "The name of the environment variable.",
+          "description": "The name of the environment variable."
+        },
+        "value": {
+          "type": "string",
+          "title": "The value of the environment variable.",
+          "description": "The value of the environment variable."
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "An environment variable to be set on a task process."
+    },
+    "TaskConstraints": {
+      "properties": {
+        "maxWallClockTime": {
+          "type": "string",
+          "format": "duration",
+          "title": "The maximum elapsed time that the task may run, measured from the time the task starts. If the task does not complete within the time limit, the Batch service terminates it.",
+          "description": "The maximum elapsed time that the task may run, measured from the time the task starts. If the task does not complete within the time limit, the Batch service terminates it."
+        },
+        "retentionTime": {
+          "type": "string",
+          "format": "duration",
+          "title": "The minimum time to retain the task directory on the compute node where it ran, from the time it completes execution. After this time, the Batch service may delete the task directory and all its contents.",
+          "description": "The minimum time to retain the task directory on the compute node where it ran, from the time it completes execution. After this time, the Batch service may delete the task directory and all its contents."
+        },
+        "maxTaskRetryCount": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The maximum number of times the task may be retried. The Batch service retries a task if its exit code is nonzero.",
+          "description": "The maximum number of times the task may be retried. The Batch service retries a task if its exit code is nonzero."
+        }
+      },
+      "title": "Execution constraints to apply to a task."
+    },
+    "UserIdentity": {
+      "properties": {
+        "username": {
+          "type": "string",
+          "x-ms-client-name": "userName",
+          "title": "The name of the user identity under which the task is run.",
+          "description": "The name of the user identity under which the task is run."
+        },
+        "autoUser": {
+          "$ref": "#/definitions/AutoUserSpecification",
+          "title": "The auto user under which the task is run.",
+          "description": "The auto user under which the task is run."
+        }
+      },
+      "title": "The definition of the user identity under which the task is run.",
+      "description": "Specify either the userName or autoUser property, but not both."
+    },
+    "AutoUserSpecification": {
+      "properties": {
+        "scope": {
+          "type": "string",
+          "title": "The scope for the auto user",
+          "description": "The scope for the auto user",
+          "enum": [
+            "task",
+            "pool"
+          ],
+          "x-ms-enum": {
+            "name": "AutoUserScope",
+            "modelAsString": false,
+            "values": [
+              {
+                "value": "task",
+                "description": "Specifies that the service should create a new user for the task."
+              },
+              {
+                "value": "pool",
+                "description": "Specifies that the task runs as the common auto user account which is created on every node in a pool."
+              }
+            ]
+          }
+        },
+        "elevationLevel": {
+          "title": "The elevation level of the auto user.",
+          "description": "The elevation level of the auto user.",
+          "$ref": "#/definitions/ElevationLevel"
+        }
+      },
+      "title": "Specifies the parameters for the auto user that runs a task on the Batch service."
+    },
+    "ElevationLevel": {
+      "type": "string",
+      "title": "The elevation level of the user.",
+      "enum": [
+        "nonadmin",
+        "admin"
+      ],
+      "x-ms-enum": {
+        "name": "ElevationLevel",
+        "modelAsString": false,
+        "values": [
+          {
+            "value": "nonadmin",
+            "description": "The user is a standard user without elevated access.",
+            "name": "nonAdmin"
+          },
+          {
+            "value": "admin",
+            "description": "The user is a user with elevated access and operates with full Administrator permissions."
+          }
+        ]
+      }
+    },
+    "ApplicationPackageReference": {
+      "properties": {
+        "applicationId": {
+          "type": "string",
+          "title": "The ID of the application to deploy.",
+          "description": "The ID of the application to deploy."
+        },
+        "version": {
+          "type": "string",
+          "title": "The version of the application to deploy. If omitted, the default version is deployed.",
+          "description": "The version of the application to deploy. If omitted, the default version is deployed."
+        }
+      },
+      "required": [
+        "applicationId"
+      ],
+      "title": "A reference to an application package to be deployed to compute nodes."
+    },
+    "AuthenticationTokenSettings": {
+      "properties": {
+        "access": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "x-nullable": false,
+            "enum": [
+              "job"
+            ],
+            "x-ms-enum": {
+              "name": "AccessScope",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": "job",
+                  "description": "Grants access to perform all operations on the job containing the task."
+                }
+              ]
+            }
+          },
+          "title": "The Batch resources to which the token grants access.",
+          "description": "The Batch resources to which the token grants access."
+        }
+      },
+      "title": "The settings for an authentication token that the task can use to perform Batch service operations."
+    },
+    "JobPreparationTask": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "A string that uniquely identifies the Job Preparation task within the job.",
+          "description": "A string that uniquely identifies the Job Preparation task within the job."
+        },
+        "commandLine": {
+          "type": "string",
+          "title": "The command line of the Job Preparation task.",
+          "description": "The command line of the Job Preparation task."
+        },
+        "containerSettings": {
+          "$ref": "#/definitions/TaskContainerSettings",
+          "title": "The settings for the container under which the Job Preparation task runs.",
+          "description": "The settings for the container under which the Job Preparation task runs."
+        },
+        "resourceFiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceFile"
+          },
+          "title": "A list of files that the Batch service will download to the compute node before running the command line.",
+          "description": "A list of files that the Batch service will download to the compute node before running the command line."
+        },
+        "environmentSettings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EnvironmentSetting"
+          },
+          "title": "A list of environment variable settings for the Job Preparation task.",
+          "description": "A list of environment variable settings for the Job Preparation task."
+        },
+        "constraints": {
+          "$ref": "#/definitions/TaskConstraints",
+          "title": "Constraints that apply to the Job Preparation task.",
+          "description": "Constraints that apply to the Job Preparation task."
+        },
+        "waitForSuccess": {
+          "type": "boolean",
+          "title": "Whether the Batch service should wait for the Job Preparation task to complete successfully before scheduling any other tasks of the job on the compute node. A Job Preparation task has completed successfully if it exits with exit code 0.",
+          "description": "Whether the Batch service should wait for the Job Preparation task to complete successfully before scheduling any other tasks of the job on the compute node. A Job Preparation task has completed successfully if it exits with exit code 0."
+        },
+        "userIdentity": {
+          "$ref": "#/definitions/UserIdentity",
+          "title": "The user identity under which the Job Preparation task runs.",
+          "description": "The user identity under which the Job Preparation task runs."
+        },
+        "rerunOnNodeRebootAfterSuccess": {
+          "type": "boolean",
+          "title": "Whether the Batch service should rerun the Job Preparation task after a compute node reboots.",
+          "description": "Whether the Batch service should rerun the Job Preparation task after a compute node reboots."
+        }
+      },
+      "required": [
+        "commandLine"
+      ],
+      "title": "A Job Preparation task to run before any tasks of the job on any given compute node.",
+      "description": "You can use Job Preparation to prepare a compute node to run tasks for the job. Activities commonly performed in Job Preparation include: Downloading common resource files used by all the tasks in the job. The Job Preparation task can download these common resource files to the shared location on the compute node. (AZ_BATCH_NODE_ROOT_DIR\\shared), or starting a local service on the compute node so that all tasks of that job can communicate with it. If the Job Preparation task fails (that is, exhausts its retry count before exiting with exit code 0), Batch will not run tasks of this job on the compute node. The node remains ineligible to run tasks of this job until it is reimaged. The node remains active and can be used for other jobs. The Job Preparation task can run multiple times on the same compute node. Therefore, you should write the Job Preparation task to handle re-execution. If the compute node is rebooted, the Job Preparation task is run again on the node before scheduling any other task of the job, if rerunOnNodeRebootAfterSuccess is true or if the Job Preparation task did not previously complete. If the compute node is reimaged, the Job Preparation task is run again before scheduling any task of the job."
+    },
+    "JobReleaseTask": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "A string that uniquely identifies the Job Release task within the job.",
+          "description": "A string that uniquely identifies the Job Release task within the job."
+        },
+        "commandLine": {
+          "type": "string",
+          "title": "The command line of the Job Release task.",
+          "description": "The command line of the Job Release task."
+        },
+        "containerSettings": {
+          "$ref": "#/definitions/TaskContainerSettings",
+          "title": "The settings for the container under which the Job Release task runs.",
+          "description": "The settings for the container under which the Job Release task runs."
+        },
+        "resourceFiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceFile"
+          },
+          "title": "A list of files that the Batch service will download to the compute node before running the command line.",
+          "description": "A list of files that the Batch service will download to the compute node before running the command line."
+        },
+        "environmentSettings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EnvironmentSetting"
+          },
+          "title": "A list of environment variable settings for the Job Release task.",
+          "description": "A list of environment variable settings for the Job Release task."
+        },
+        "maxWallClockTime": {
+          "type": "string",
+          "format": "duration",
+          "title": "The maximum elapsed time that the Job Release task may run on a given compute node, measured from the time the task starts. If the task does not complete within the time limit, the Batch service terminates it. The default value is 15 minutes. You may not specify a timeout longer than 15 minutes. If you do, the Batch service rejects it with an error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request).",
+          "description": "The maximum elapsed time that the Job Release task may run on a given compute node, measured from the time the task starts. If the task does not complete within the time limit, the Batch service terminates it. The default value is 15 minutes. You may not specify a timeout longer than 15 minutes. If you do, the Batch service rejects it with an error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request)."
+        },
+        "retentionTime": {
+          "type": "string",
+          "format": "duration",
+          "title": "The minimum time to retain the task directory for the Job Release task on the compute node. After this time, the Batch service may delete the task directory and all its contents.",
+          "description": "The minimum time to retain the task directory for the Job Release task on the compute node. After this time, the Batch service may delete the task directory and all its contents."
+        },
+        "userIdentity": {
+          "$ref": "#/definitions/UserIdentity",
+          "title": "The user identity under which the Job Release task runs.",
+          "description": "The user identity under which the Job Release task runs."
+        }
+      },
+      "required": [
+        "commandLine"
+      ],
+      "title": "A Job Release task to run on job completion on any compute node where the job has run.",
+      "description": "The Job Release task runs when the job ends, because of one of the following: The user calls the Terminate Job API, or the Delete Job API while the job is still active, the job's maximum wall clock time constraint is reached, and the job is still active, or the job's Job Manager task completed, and the job is configured to terminate when the Job Manager completes. The Job Release task runs on each compute node where tasks of the job have run and the Job Preparation task ran and completed. If you reimage a compute node after it has run the Job Preparation task, and the job ends without any further tasks of the job running on that compute node (and hence the Job Preparation task does not re-run), then the Job Release task does not run on that node. If a compute node reboots while the Job Release task is still running, the Job Release task runs again when the compute node starts up. The job is not marked as complete until all Job Release tasks have completed. The Job Release task runs in the background. It does not occupy a scheduling slot; that is, it does not count towards the maxTasksPerNode limit specified on the pool."
+    },
+    "PoolInformation": {
+      "properties": {
+        "poolId": {
+          "type": "string",
+          "title": "The ID of an existing pool. All the tasks of the job will run on the specified pool.",
+          "description": "The ID of an existing pool. All the tasks of the job will run on the specified pool."
+        },
+        "autoPoolSpecification": {
+          "$ref": "#/definitions/AutoPoolSpecification",
+          "title": "Characteristics for a temporary 'auto pool'. The Batch service will create this auto pool when the job is submitted.",
+          "description": "Characteristics for a temporary 'auto pool'. The Batch service will create this auto pool when the job is submitted."
+        }
+      },
+      "title": "Specifies how a job should be assigned to a pool.",
+      "oneOf": [
+        {
+          "required": [
+            "poolId"
+          ]
+        },
+        {
+          "required": [
+            "autoPoolSpecification"
+          ]
+        }
+      ]
+    },
+    "AutoPoolSpecification": {
+      "properties": {
+        "autoPoolIdPrefix": {
+          "type": "string",
+          "title": "A prefix to be added to the unique identifier when a pool is automatically created.",
+          "description": "A prefix to be added to the unique identifier when a pool is automatically created."
+        },
+        "poolLifetimeOption": {
+          "type": "string",
+          "title": "The minimum lifetime of created auto pools, and how multiple jobs on a schedule are assigned to pools.",
+          "enum": [
+            "jobschedule",
+            "job"
+          ],
+          "x-ms-enum": {
+            "name": "PoolLifetimeOption",
+            "modelAsString": false,
+            "values": [
+              {
+                "value": "jobschedule",
+                "description": "The pool exists for the lifetime of the job schedule. The Batch Service creates the pool when it creates the first job on the schedule. You may apply this option only to job schedules, not to jobs.",
+                "name": "jobSchedule"
+              },
+              {
+                "value": "job",
+                "description": "The pool exists for the lifetime of the job to which it is dedicated. The Batch service creates the pool when it creates the job. If the 'job' option is applied to a job schedule, the Batch service creates a new auto pool for every job created on the schedule."
+              }
+            ]
+          },
+          "description": "The minimum lifetime of created auto pools, and how multiple jobs on a schedule are assigned to pools."
+        },
+        "keepAlive": {
+          "type": "boolean",
+          "title": "Whether to keep an auto pool alive after its lifetime expires.",
+          "description": "Whether to keep an auto pool alive after its lifetime expires."
+        },
+        "pool": {
+          "$ref": "#/definitions/PoolSpecification",
+          "title": "The pool specification for the auto pool.",
+          "description": "The pool specification for the auto pool."
+        }
+      },
+      "required": [
+        "poolLifetimeOption"
+      ],
+      "title": "Specifies characteristics for a temporary 'auto pool'. The Batch service will create this auto pool when the job is submitted."
+    },
+    "PoolSpecification": {
+      "properties": {
+        "displayName": {
+          "type": "string",
+          "title": "The display name for the pool.",
+          "description": "The display name for the pool."
+        },
+        "vmSize": {
+          "type": "string",
+          "title": "The size of the virtual machines in the pool. All virtual machines in a pool are the same size.",
+          "description": "The size of the virtual machines in the pool. All virtual machines in a pool are the same size."
+        },
+        "cloudServiceConfiguration": {
+          "$ref": "#/definitions/CloudServiceConfiguration",
+          "title": "The cloud service configuration for the pool.",
+          "description": "The cloud service configuration for the pool."
+        },
+        "virtualMachineConfiguration": {
+          "$ref": "#/definitions/VirtualMachineConfiguration",
+          "title": "The virtual machine configuration for the pool.",
+          "description": "The virtual machine configuration for the pool."
+        },
+        "maxTasksPerNode": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The maximum number of tasks that can run concurrently on a single compute node in the pool.",
+          "description": "The maximum number of tasks that can run concurrently on a single compute node in the pool."
+        },
+        "taskSchedulingPolicy": {
+          "$ref": "#/definitions/TaskSchedulingPolicy",
+          "title": "How tasks are distributed across compute nodes in a pool.",
+          "description": "How tasks are distributed across compute nodes in a pool."
+        },
+        "resizeTimeout": {
+          "type": "string",
+          "format": "duration",
+          "title": "The timeout for allocation of compute nodes to the pool.",
+          "description": "The timeout for allocation of compute nodes to the pool."
+        },
+        "targetDedicatedNodes": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The desired number of dedicated compute nodes in the pool.",
+          "description": "The desired number of dedicated compute nodes in the pool."
+        },
+        "targetLowPriorityNodes": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The desired number of low-priority compute nodes in the pool.",
+          "description": "The desired number of low-priority compute nodes in the pool."
+        },
+        "enableAutoScale": {
+          "type": "boolean",
+          "title": "Whether the pool size should automatically adjust over time.",
+          "description": "Whether the pool size should automatically adjust over time."
+        },
+        "autoScaleFormula": {
+          "type": "string",
+          "title": "The formula for the desired number of compute nodes in the pool.",
+          "description": "The formula for the desired number of compute nodes in the pool."
+        },
+        "autoScaleEvaluationInterval": {
+          "type": "string",
+          "format": "duration",
+          "title": "The time interval at which to automatically adjust the pool size according to the autoscale formula.",
+          "description": "The time interval at which to automatically adjust the pool size according to the autoscale formula."
+        },
+        "enableInterNodeCommunication": {
+          "type": "boolean",
+          "title": "Whether the pool permits direct communication between nodes.",
+          "description": "Whether the pool permits direct communication between nodes."
+        },
+        "networkConfiguration": {
+          "$ref": "#/definitions/NetworkConfiguration",
+          "title": "The network configuration for the pool.",
+          "description": "The network configuration for the pool."
+        },
+        "startTask": {
+          "$ref": "#/definitions/StartTask",
+          "title": "A task to run on each compute node as it joins the pool. The task runs when the node is added to the pool or when the node is restarted.",
+          "description": "A task to run on each compute node as it joins the pool. The task runs when the node is added to the pool or when the node is restarted."
+        },
+        "certificateReferences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CertificateReference"
+          },
+          "title": "A list of certificates to be installed on each compute node in the pool.",
+          "description": "A list of certificates to be installed on each compute node in the pool."
+        },
+        "applicationPackageReferences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApplicationPackageReference"
+          },
+          "title": "The list of application packages to be installed on each compute node in the pool.",
+          "description": "The list of application packages to be installed on each compute node in the pool."
+        },
+        "applicationLicenses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "The list of application licenses the Batch service will make available on each compute node in the pool.",
+          "description": "The list of application licenses the Batch service will make available on each compute node in the pool."
+        },
+        "userAccounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserAccount"
+          },
+          "title": "The list of user accounts to be created on each node in the pool.",
+          "description": "The list of user accounts to be created on each node in the pool."
+        },
+        "metadata": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MetadataItem"
+          },
+          "title": "A list of name-value pairs associated with the pool as metadata.",
+          "description": "A list of name-value pairs associated with the pool as metadata."
+        },
+        "packageReferences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PackageReference"
+          },
+          "title": "A collection of packages to be added from external package managers to each node in the pool.",
+          "description": "A collection of packages to be added from external package managers to each node in the pool."
+        }
+      },
+      "required": [
+        "vmSize"
+      ],
+      "title": "Specification for creating a new pool.",
+      "oneOf": [
+        {
+          "required": [
+            "cloudServiceConfiguration"
+          ]
+        },
+        {
+          "required": [
+            "virtualMachineConfiguration"
+          ]
+        }
+      ],
+      "dependencies": {
+        "autoScaleFormula": [
+          "enableAutoScale"
+        ],
+        "autoScaleEvaluationInterval": [
+          "enableAutoScale"
+        ]
+      }
+    },
+    "CloudServiceConfiguration": {
+      "properties": {
+        "osFamily": {
+          "type": "string",
+          "title": "The Azure Guest OS family to be installed on the virtual machines in the pool.",
+          "description": "The Azure Guest OS family to be installed on the virtual machines in the pool."
+        },
+        "targetOSVersion": {
+          "type": "string",
+          "title": "The Azure Guest OS version to be installed on the virtual machines in the pool.",
+          "description": "The Azure Guest OS version to be installed on the virtual machines in the pool."
+        },
+        "currentOSVersion": {
+          "type": "string",
+          "readOnly": true,
+          "title": "The Azure Guest OS Version currently installed on the virtual machines in the pool.",
+          "description": "The Azure Guest OS Version currently installed on the virtual machines in the pool."
+        }
+      },
+      "required": [
+        "osFamily"
+      ],
+      "title": "The configuration for nodes in a pool based on the Azure Cloud Services platform."
+    },
+    "VirtualMachineConfiguration": {
+      "properties": {
+        "imageReference": {
+          "$ref": "#/definitions/ImageReference",
+          "title": "A reference to the Azure Virtual Machines Marketplace image or the custom Virtual Machine image to use.",
+          "description": "A reference to the Azure Virtual Machines Marketplace image or the custom Virtual Machine image to use."
+        },
+        "osDisk": {
+          "$ref": "#/definitions/OSDisk",
+          "title": "Settings for the operating system disk of the Virtual Machine.",
+          "description": "Settings for the operating system disk of the Virtual Machine."
+        },
+        "nodeAgentSKUId": {
+          "type": "string",
+          "title": "The SKU of the Batch node agent to be provisioned on compute nodes in the pool.",
+          "description": "The SKU of the Batch node agent to be provisioned on compute nodes in the pool."
+        },
+        "windowsConfiguration": {
+          "$ref": "#/definitions/WindowsConfiguration",
+          "title": "Windows operating system settings on the virtual machine.",
+          "description": "Windows operating system settings on the virtual machine."
+        },
+        "dataDisks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DataDisk"
+          },
+          "title": "The configuration for data disks attached to the comptue nodes in the pool.",
+          "description": "The configuration for data disks attached to the comptue nodes in the pool."
+        },
+        "licenseType": {
+          "type": "string",
+          "title": "The type of on-premises license to be used when deploying the operating system.",
+          "description": "The type of on-premises license to be used when deploying the operating system."
+        },
+        "containerConfiguration": {
+          "$ref": "#/definitions/ContainerConfiguration",
+          "title": "The container configuration for the pool.",
+          "description": "The container configuration for the pool."
+        }
+      },
+      "required": [
+        "nodeAgentSKUId",
+        "imageReference"
+      ],
+      "title": "The configuration for compute nodes in a pool based on the Azure Virtual Machines infrastructure.",
+      "oneOf": [
+        {
+          "required": [
+            "imageReference"
+          ]
+        },
+        {
+          "required": [
+            "osDisk"
+          ]
+        }
+      ]
+    },
+    "ImageReference": {
+      "properties": {
+        "publisher": {
+          "type": "string",
+          "title": "The publisher of the Azure Virtual Machines Marketplace image.",
+          "description": "The publisher of the Azure Virtual Machines Marketplace image."
+        },
+        "offer": {
+          "type": "string",
+          "title": "The offer type of the Azure Virtual Machines Marketplace image.",
+          "description": "The offer type of the Azure Virtual Machines Marketplace image."
+        },
+        "sku": {
+          "type": "string",
+          "title": "The SKU of the Azure Virtual Machines Marketplace image.",
+          "description": "The SKU of the Azure Virtual Machines Marketplace image."
+        },
+        "version": {
+          "type": "string",
+          "title": "The version of the Azure Virtual Machines Marketplace image.",
+          "description": "The version of the Azure Virtual Machines Marketplace image."
+        },
+        "virtualMachineImageId": {
+          "type": "string",
+          "title": "The ARM resource identifier of the virtual machine image. Computes nodes of the pool will be created using this custom image. This is of the form /subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/images/{imageName}",
+          "description": "The ARM resource identifier of the virtual machine image. Computes nodes of the pool will be created using this custom image. This is of the form /subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/images/{imageName}"
+        }
+      },
+      "title": "A reference to an Azure Virtual Machines Marketplace image or a custom Azure Virtual Machine image. To get the list of all Azure Marketplace image references verified by Azure Batch, see the 'List node agent SKUs' operation."
+    },
+    "OSDisk": {
+      "properties": {
+        "caching": {
+          "title": "The type of caching to enable for the OS disk.",
+          "description": "The type of caching to enable for the OS disk.",
+          "$ref": "#/definitions/CachingType"
+        }
+      },
+      "title": "Settings for the operating system disk of the virtual machine."
+    },
+    "CachingType": {
+      "type": "string",
+      "title": "The type of caching to enable for the disk.",
+      "description": "The default value for caching is none. For information about the caching options see: https://blogs.msdn.microsoft.com/windowsazurestorage/2012/06/27/exploring-windows-azure-drives-disks-and-images/.",
+      "enum": [
+        "none",
+        "readonly",
+        "readwrite"
+      ],
+      "x-ms-enum": {
+        "name": "CachingType",
+        "modelAsString": false,
+        "values": [
+          {
+            "value": "none",
+            "description": "The caching mode for the disk is not enabled."
+          },
+          {
+            "value": "readonly",
+            "description": "The caching mode for the disk is read only.",
+            "name": "readOnly"
+          },
+          {
+            "value": "readwrite",
+            "description": "The caching mode for the disk is read and write.",
+            "name": "readWrite"
+          }
+        ]
+      }
+    },
+    "WindowsConfiguration": {
+      "properties": {
+        "enableAutomaticUpdates": {
+          "type": "boolean",
+          "title": "Whether automatic updates are enabled on the virtual machine.",
+          "description": "Whether automatic updates are enabled on the virtual machine."
+        }
+      },
+      "title": "Windows operating system settings to apply to the virtual machine."
+    },
+    "DataDisk": {
+      "properties": {
+        "lun": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The logical unit number.",
+          "description": "The logical unit number."
+        },
+        "caching": {
+          "$ref": "#/definitions/CachingType",
+          "title": "The type of caching to be enabled for the data disks.",
+          "description": "The type of caching to be enabled for the data disks."
+        },
+        "diskSizeGB": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The initial disk size in gigabytes.",
+          "description": "The initial disk size in gigabytes."
+        },
+        "storageAccountType": {
+          "title": "The storage account type to be used for the data disk.",
+          "description": "The storage account type to be used for the data disk.",
+          "$ref": "#/definitions/StorageAccountType"
+        }
+      },
+      "required": [
+        "lun",
+        "diskSizeGB"
+      ],
+      "title": "Settings which will be used by the data disks associated to compute nodes in the pool."
+    },
+    "StorageAccountType": {
+      "type": "string",
+      "title": "The storage account type for use in creating data disks.",
+      "enum": [
+        "standard_lrs",
+        "premium_lrs"
+      ],
+      "x-ms-enum": {
+        "name": "StorageAccountType",
+        "modelAsString": false,
+        "values": [
+          {
+            "value": "standard_lrs",
+            "description": "The data disk should use standard locally redundant storage.",
+            "name": "StandardLRS"
+          },
+          {
+            "value": "premium_lrs",
+            "description": "The data disk should use premium locally redundant storage.",
+            "name": "PremiumLRS"
+          }
+        ]
+      }
+    },
+    "ContainerConfiguration": {
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "The container technology to be used.",
+          "enum": [
+            "docker"
+          ],
+          "x-ms-enum": {
+            "name": "ContainerType",
+            "modelAsString": false,
+            "values": [
+              {
+                "value": "docker",
+                "description": "Docker will be used to launch the containers."
+              }
+            ]
+          },
+          "description": "The container technology to be used."
+        },
+        "containerImageNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "The collection of container image names.",
+          "description": "The collection of container image names."
+        },
+        "containerRegistries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContainerRegistry"
+          },
+          "title": "Additional private registries from which containers can be pulled.",
+          "description": "Additional private registries from which containers can be pulled."
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "The configuration for container-enabled pools."
+    },
+    "TaskSchedulingPolicy": {
+      "properties": {
+        "nodeFillType": {
+          "type": "string",
+          "title": "How tasks are distributed across compute nodes in a pool.",
+          "enum": [
+            "spread",
+            "pack"
+          ],
+          "x-ms-enum": {
+            "name": "ComputeNodeFillType",
+            "modelAsString": false,
+            "values": [
+              {
+                "value": "spread",
+                "description": "Tasks should be assigned evenly across all nodes in the pool."
+              },
+              {
+                "value": "pack",
+                "description": "As many tasks as possible (maxTasksPerNode) should be assigned to each node in the pool before any tasks are assigned to the next node in the pool."
+              }
+            ]
+          },
+          "description": "How tasks are distributed across compute nodes in a pool."
+        }
+      },
+      "required": [
+        "nodeFillType"
+      ],
+      "title": "Specifies how tasks should be distributed across compute nodes."
+    },
+    "NetworkConfiguration": {
+      "properties": {
+        "subnetId": {
+          "type": "string",
+          "title": "The ARM resource identifier of the virtual network subnet which the compute nodes of the pool will join. This is of the form /subscriptions/{subscription}/resourceGroups/{group}/providers/{provider}/virtualNetworks/{network}/subnets/{subnet}.",
+          "description": "The ARM resource identifier of the virtual network subnet which the compute nodes of the pool will join. This is of the form /subscriptions/{subscription}/resourceGroups/{group}/providers/{provider}/virtualNetworks/{network}/subnets/{subnet}.",
+          "externalDocs": {
+            "url": "https://azure.microsoft.com/en-us/documentation/articles/role-based-access-built-in-roles/#classic-virtual-machine-contributor",
+            "description": "Setting up RBAC for Azure Batch VNETs"
+          }
+        },
+        "endpointConfiguration": {
+          "$ref": "#/definitions/PoolEndpointConfiguration",
+          "title": "The configuration for endpoints on compute nodes in the Batch pool.",
+          "description": "The configuration for endpoints on compute nodes in the Batch pool."
+        }
+      },
+      "description": "The network configuration for a pool."
+    },
+    "PoolEndpointConfiguration": {
+      "properties": {
+        "inboundNATPools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InboundNATPool"
+          },
+          "title": "A list of inbound NAT pools that can be used to address specific ports on an individual compute node externally.",
+          "description": "A list of inbound NAT pools that can be used to address specific ports on an individual compute node externally."
+        }
+      },
+      "required": [
+        "inboundNATPools"
+      ],
+      "title": "The endpoint configuration for a pool."
+    },
+    "InboundNATPool": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "The name of the endpoint.",
+          "description": "The name of the endpoint."
+        },
+        "protocol": {
+          "$ref": "#/definitions/InboundEndpointProtocol",
+          "title": "The protocol of the endpoint.",
+          "description": "The protocol of the endpoint."
+        },
+        "backendPort": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The port number on the compute node.",
+          "description": "The port number on the compute node."
+        },
+        "frontendPortRangeStart": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The first port number in the range of external ports that will be used to provide inbound access to the backendPort on individual compute nodes.",
+          "description": "The first port number in the range of external ports that will be used to provide inbound access to the backendPort on individual compute nodes."
+        },
+        "frontendPortRangeEnd": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The last port number in the range of external ports that will be used to provide inbound access to the backendPort on individual compute nodes.",
+          "description": "The last port number in the range of external ports that will be used to provide inbound access to the backendPort on individual compute nodes."
+        },
+        "networkSecurityGroupRules": {
+          "type": "array",
+          "title": "A list of network security group rules that will be applied to the endpoint.",
+          "description": "A list of network security group rules that will be applied to the endpoint.",
+          "items": {
+            "$ref": "#/definitions/NetworkSecurityGroupRule"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "protocol",
+        "backendPort",
+        "frontendPortRangeStart",
+        "frontendPortRangeEnd"
+      ],
+      "title": "A inbound NAT pool that can be used to address specific ports on compute nodes in a Batch pool externally."
+    },
+    "InboundEndpointProtocol": {
+      "type": "string",
+      "title": "The protocol of the endpoint.",
+      "enum": [
+        "tcp",
+        "udp"
+      ],
+      "x-ms-enum": {
+        "name": "InboundEndpointProtocol",
+        "modelAsString": false,
+        "values": [
+          {
+            "value": "tcp",
+            "description": "Use TCP for the endpoint.",
+            "name": "tcp"
+          },
+          {
+            "value": "udp",
+            "description": "Use UDP for the endpoint.",
+            "name": "udp"
+          }
+        ]
+      }
+    },
+    "NetworkSecurityGroupRule": {
+      "properties": {
+        "priority": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The priority for this rule.",
+          "description": "The priority for this rule."
+        },
+        "access": {
+          "type": "string",
+          "title": "The action that should be taken for a specified IP address, subnet range or tag.",
+          "enum": [
+            "allow",
+            "deny"
+          ],
+          "x-ms-enum": {
+            "name": "NetworkSecurityGroupRuleAccess",
+            "modelAsString": false,
+            "values": [
+              {
+                "value": "allow",
+                "description": "Allow access."
+              },
+              {
+                "value": "deny",
+                "description": "Deny access."
+              }
+            ]
+          },
+          "description": "The action that should be taken for a specified IP address, subnet range or tag."
+        },
+        "sourceAddressPrefix": {
+          "type": "string",
+          "title": "The source address prefix or tag to match for the rule.",
+          "description": "The source address prefix or tag to match for the rule."
+        }
+      },
+      "required": [
+        "priority",
+        "access",
+        "sourceAddressPrefix"
+      ],
+      "title": "A network security group rule to apply to an inbound endpoint."
+    },
+    "StartTask": {
+      "properties": {
+        "commandLine": {
+          "type": "string",
+          "title": "The command line of the start task.",
+          "description": "The command line of the start task."
+        },
+        "containerSettings": {
+          "$ref": "#/definitions/TaskContainerSettings",
+          "title": "The settings for the container under which the start task runs.",
+          "description": "The settings for the container under which the start task runs."
+        },
+        "resourceFiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceFile"
+          },
+          "title": "A list of files that the Batch service will download to the compute node before running the command line.",
+          "description": "A list of files that the Batch service will download to the compute node before running the command line."
+        },
+        "environmentSettings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EnvironmentSetting"
+          },
+          "title": "A list of environment variable settings for the start task.",
+          "description": "A list of environment variable settings for the start task."
+        },
+        "userIdentity": {
+          "$ref": "#/definitions/UserIdentity",
+          "title": "The user identity under which the start task runs.",
+          "description": "The user identity under which the start task runs."
+        },
+        "maxTaskRetryCount": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The maximum number of times the task may be retried.",
+          "description": "The maximum number of times the task may be retried."
+        },
+        "waitForSuccess": {
+          "type": "boolean",
+          "title": "Whether the Batch service should wait for the start task to complete successfully (that is, to exit with exit code 0) before scheduling any tasks on the compute node.",
+          "description": "Whether the Batch service should wait for the start task to complete successfully (that is, to exit with exit code 0) before scheduling any tasks on the compute node."
+        }
+      },
+      "required": [
+        "commandLine"
+      ],
+      "title": "A task which is run when a compute node joins a pool in the Azure Batch service, or when the compute node is rebooted or reimaged."
+    },
+    "CertificateReference": {
+      "properties": {
+        "thumbprint": {
+          "type": "string",
+          "title": "The thumbprint of the certificate.",
+          "description": "The thumbprint of the certificate."
+        },
+        "thumbprintAlgorithm": {
+          "type": "string",
+          "title": "The algorithm with which the thumbprint is associated. This must be sha1.",
+          "description": "The algorithm with which the thumbprint is associated. This must be sha1."
+        },
+        "storeLocation": {
+          "type": "string",
+          "title": "The location of the certificate store on the compute node into which to install the certificate.",
+          "description": "The location of the certificate store on the compute node into which to install the certificate.",
+          "enum": [
+            "currentuser",
+            "localmachine"
+          ],
+          "x-ms-enum": {
+            "name": "CertificateStoreLocation",
+            "modelAsString": false,
+            "values": [
+              {
+                "value": "currentuser",
+                "description": "Certificates should be installed to the CurrentUser certificate store.",
+                "name": "currentUser"
+              },
+              {
+                "value": "localmachine",
+                "description": "Certificates should be installed to the LocalMachine certificate store.",
+                "name": "localMachine"
+              }
+            ]
+          }
+        },
+        "storeName": {
+          "type": "string",
+          "title": "The name of the certificate store on the compute node into which to install the certificate.",
+          "description": "The name of the certificate store on the compute node into which to install the certificate."
+        },
+        "visibility": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "x-nullable": false,
+            "enum": [
+              "starttask",
+              "task",
+              "remoteuser"
+            ],
+            "x-ms-enum": {
+              "name": "CertificateVisibility",
+              "modelAsString": false,
+              "values": [
+                {
+                  "value": "starttask",
+                  "description": "The certificate should be visible to the user account under which the start task is run.",
+                  "name": "startTask"
+                },
+                {
+                  "value": "task",
+                  "description": "The certificate should be visibile to the user accounts under which job tasks are run."
+                },
+                {
+                  "value": "remoteuser",
+                  "description": "The certificate should be visibile to the user accounts under which users remotely access the node.",
+                  "name": "remoteUser"
+                }
+              ]
+            }
+          },
+          "title": "Which user accounts on the compute node should have access to the private data of the certificate.",
+          "description": "Which user accounts on the compute node should have access to the private data of the certificate."
+        }
+      },
+      "required": [
+        "thumbprint",
+        "thumbprintAlgorithm"
+      ],
+      "title": "A reference to a certificate to be installed on compute nodes in a pool."
+    },
+    "UserAccount": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "The name of the user account.",
+          "description": "The name of the user account."
+        },
+        "password": {
+          "type": "string",
+          "title": "The password for the user account.",
+          "description": "The password for the user account."
+        },
+        "elevationLevel": {
+          "title": "The elevation level of the user account.",
+          "description": "The elevation level of the user account.",
+          "$ref": "#/definitions/ElevationLevel"
+        },
+        "linuxUserConfiguration": {
+          "title": "The Linux-specific user configuration for the user account.",
+          "description": "The Linux-specific user configuration for the user account.",
+          "$ref": "#/definitions/LinuxUserConfiguration"
+        }
+      },
+      "required": [
+        "name",
+        "password"
+      ],
+      "title": "Properties used to create a user used to execute tasks on an Azure Batch node."
+    },
+    "LinuxUserConfiguration": {
+      "properties": {
+        "uid": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The user ID of the user account.",
+          "description": "The user ID of the user account."
+        },
+        "gid": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The group ID for the user account.",
+          "description": "The group ID for the user account."
+        },
+        "sshPrivateKey": {
+          "type": "string",
+          "title": "The SSH private key for the user account.",
+          "description": "The SSH private key for the user account."
+        }
+      },
+      "title": "Properties used to create a user account on a Linux node."
+    },
+    "MetadataItem": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "The name of the metadata item.",
+          "description": "The name of the metadata item."
+        },
+        "value": {
+          "type": "string",
+          "title": "The value of the metadata item.",
+          "description": "The value of the metadata item."
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "title": "A name-value pair associated with a Batch service resource.",
+      "description": "The Batch service does not assign any meaning to this metadata; it is solely for the use of user code."
+    },
+    "PackageReference": {
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "The type of package - aptPackage, chocolateyPackage, or yumPackage",
+          "description": "The type of package - aptPackage, chocolateyPackage, or yumPackage"
+        },
+        "id": {
+          "type": "string",
+          "title": "The name or ID of the package to be installed as identified according to the package repository.",
+          "description": "The name or ID of the package to be installed as identified according to the package repository."
+        },
+        "version": {
+          "type": "string",
+          "title": "The version of the package to be installed.",
+          "description": "The version of the package to be installed."
+        },
+        "allowEmptyChecksums": {
+          "type": "boolean",
+          "title": "Whether Chocolatey will install packages without a checksum for validation.",
+          "description": "Whether Chocolatey will install packages without a checksum for validation."
+        },
+        "disableExcludes": {
+          "type": "string",
+          "title": "Packages that might otherwise be excluded by VM configuration (e.g. kernel packages).",
+          "description": "Packages that might otherwise be excluded by VM configuration (e.g. kernel packages)."
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ]
+    }
+  }
+}

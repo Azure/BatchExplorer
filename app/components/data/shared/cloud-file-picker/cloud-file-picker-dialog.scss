@@ -1,7 +1,43 @@
 bl-cloud-file-picker-dialog {
-    display: block;
+    bl-simple-form {
+        bl-complex-form {
+            overflow: visible !important;
 
-    bl-simple-form .content {
-        padding: 0 !important;
+            bl-form-footer {
+                div.summary {
+                    div.file-filter {
+                        display: inline-block;
+                        margin-left: 5px;
+
+                        mat-checkbox {
+                            position: relative;
+                            top: -2px;
+                        }
+
+                        bl-select {
+                            min-width: 150px !important;
+                            display: inline-block;
+                            margin-left: 5px;
+                        }
+
+                        bl-button {
+                            margin-left: 5px;
+                        }
+                    }
+
+                    div.picked-file-text {
+                        display: inline-block;
+                        margin-left: 5px;
+                    }
+
+                    div.note {
+                        padding-top: 4px;
+                        line-height: 8pt;
+                        margin-left: 5px;
+                        font-size: 8pt;
+                    }
+                }
+            }
+        }
     }
 }

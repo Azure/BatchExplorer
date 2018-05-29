@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 
-import { AdvancedFilter, StatePickerControl } from "app/components/base/advanced-filter";
+import { Filter } from "@batch-flask/core";
+import { AdvancedFilter, StatePickerControl } from "@batch-flask/ui/advanced-filter";
 import { PoolAllocationState, PoolState } from "app/models";
-import { Filter } from "app/utils/filter-builder";
 
 @Component({
     selector: "bl-pool-advanced-filter",

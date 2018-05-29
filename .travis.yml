@@ -2,19 +2,19 @@ language: node_js
 dist: trusty
 sudo: false
 
-addons:
-  apt:
-    packages:
-      - libgnome-keyring-dev
-      - icnsutils
-      - graphicsmagick
-      - libreadline6
-      - xz-utils
-      - rpm
-      - bsdtar
+# addons:
+#   apt:
+#     packages:
+#       - libgnome-keyring-dev
+#       - openjpeg-tools # or libopenjp2-tools
+#       - graphicsmagick
+#       - libreadline6
+#       - xz-utils
+#       - rpm
+#       - bsdtar
 
 node_js:
-  - '6.11.4'
+  - 9.6.1
 python:
   - "3.6"
 
@@ -28,15 +28,18 @@ matrix:
       os: osx
       before_install:
         - brew update
-        - brew install python3
-        - virtualenv env -p python3
-        - source env/bin/activate
+        - brew upgrade python
+        - brew install python@2
+        - python --version
         - python3 --version
-        - nvm install 6.11.4
-        - nvm use 6.11.4
+        - which python
+        - npm config set python python2.7
+        - nvm install 9.6.1
+        - nvm use 9.6.1
 
     - language: node_js
       os: linux
+      services: docker
       before_install:
         - pyenv versions
         - pyenv install --list
@@ -46,15 +49,16 @@ matrix:
         - python3 --version
       before_script:
         - export DISPLAY=:99.0
-        - sh -e /etc/init.d/xvfb start
+        - sh -e /etc/init.d/xvfb start &
         - sleep 3
 
 install:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16; fi
+  - npm install -g codecov
   - npm install -g yarn
-  - yarn install
+  - yarn --ignore-engines install
   - python3 --version
   - pip3 install -r python/requirements.txt
-
 
 script:
     - ./scripts/travis/build-and-test.sh
@@ -67,5 +71,8 @@ branches:
   - fix/publish
 
 cache:
-  directories:
-    - node_modules
+  # yarn: true
+  # directories:
+    # - node_modules
+    # - $HOME/.cache/electron
+    # - $HOME/.cache/electron-builder

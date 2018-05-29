@@ -1,0 +1,37 @@
+bl-duration-picker {
+    > .grow {
+        align-items: center;
+    }
+
+    .label {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .gcol {
+        height: 40px;
+        bl-form-field {
+            width: 100%;
+        }
+    }
+
+    mat-slide-toggle {
+        margin-top: 4px;
+        margin-left: 5px;
+    }
+
+    .duration-label {
+        display: inline-block;
+        width: 75%;
+    }
+
+    .duration-unlimited-toggle {
+        display: inline-block;
+        width: 23%;
+    }
+
+    .duration-unlimited {
+        margin-top: 11px;
+    }
+}

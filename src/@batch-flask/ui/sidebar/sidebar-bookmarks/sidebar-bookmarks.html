@@ -1,0 +1,20 @@
+<bl-dropdown [footer]="false" align="right">
+    <div bl-dropdown-btn>
+        <i class="fa fa-wpforms"></i>
+        <span class="count" *ngIf="references.length > 0">{{references.length}}</span>
+    </div>
+    <div bl-dropdown-content class="bookmarks-container">
+        <div *ngFor="let reference of references;trackBy: trackReference"
+            class="dropdown-item bookmark"
+            (click)="selectBookmark(reference)"
+            (mouseup)="handleMouseUp($event, reference)">
+
+            <span>{{referenceTitle(reference)}}</span>
+            <i class="fa fa-times" (click)="destroyBookmark(reference)"></i>
+        </div>
+
+        <div *ngIf="references.length === 0" class="dropdown-item no-bookmarks">
+            <div> No forms in progress</div>
+        </div>
+    </div>
+</bl-dropdown>

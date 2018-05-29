@@ -1,6 +1,7 @@
-import { ObjectUtils, SecureUtils } from "app/utils";
 import { Map } from "immutable";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
+
+import { ObjectUtils, SecureUtils } from "@batch-flask/utils";
 import { PollService } from "./poll-service";
 import { QueryCache } from "./query-cache";
 
@@ -16,10 +17,17 @@ export class DataCacheTracker {
 
     public static clearAllCaches(...except: Array<DataCache<any>>) {
         const excludeIds = except.map(x => x.id);
-        for (let cache of ObjectUtils.values(this._caches)) {
+        for (const cache of ObjectUtils.values(this._caches)) {
             if (excludeIds.indexOf(cache.id) === -1) {
                 cache.clear();
             }
+        }
+    }
+
+    public static disposeAll() {
+        for (const cache of ObjectUtils.values(this._caches)) {
+            cache.clear();
+            this.unregisterCache(cache);
         }
     }
 
@@ -70,7 +78,6 @@ export class DataCache<T> {
     public dispose() {
         this.clear();
         DataCacheTracker.unregisterCache(this);
-        // TODO implement dispose
     }
 
     /**
@@ -97,7 +104,7 @@ export class DataCache<T> {
     public addItems(items: T[], select?: string): string[] {
         const newItems: { [key: string]: T } = {};
         const keys = [];
-        for (let item of items) {
+        for (const item of items) {
             const key = this.getItemKey(item);
             keys.push(key);
             newItems[key] = this._computeNewItem(item, key, select);
@@ -143,7 +150,7 @@ export class DataCache<T> {
             return false;
         }
         this._deleted.next(key);
-        this._items.next(this._items.getValue().delete(key));
+        this._items.next(this._items.value.delete(key));
         return true;
     }
 
@@ -159,7 +166,7 @@ export class DataCache<T> {
         if (!select) { return item; }
         const oldItem = this._items.getValue().get(key);
         if (!oldItem) { return item; }
-        let attributes = ObjectUtils.slice((item as any).toJS(), this._getAttributesList(select));
+        const attributes = ObjectUtils.slice((item as any).toJS(), this._getAttributesList(select));
         return (oldItem as any).merge(attributes);
     }
 }

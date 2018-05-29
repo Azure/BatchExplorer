@@ -8,7 +8,7 @@
             </div>
         </bl-form-section>
         <bl-form-section title="Pool" formGroupName="pool" *ngIf="showPoolForm">
-            <div *ngFor="let param of poolParametersWrapper">
+            <div *ngFor="let param of poolParametersWrapper;trackBy: trackParameter">
                 <bl-parameter-input [formControlName]="param.id" [parameter]="param" [parameterValues]="poolParams.value"> </bl-parameter-input>
             </div>
         </bl-form-section>
@@ -16,8 +16,8 @@
             <bl-pool-picker [formControl]="pickedPool"></bl-pool-picker>
         </bl-form-section>
         <bl-form-section title="Job" formGroupName="job" *ngIf="showJobForm">
-            <div *ngFor="let param of jobParametersWrapper">
-                <bl-parameter-input [formControlName]="param.id" [parameter]="param" [parameterValues]="jobParams.value"> </bl-parameter-input>
+            <div *ngFor="let param of jobParametersWrapper;trackBy: trackParameter">
+                <bl-parameter-input [formControlName]="param.id" [parameter]="param" [parameterValues]="jobParams.value"></bl-parameter-input>
             </div>
         </bl-form-section>
     </bl-form-page>

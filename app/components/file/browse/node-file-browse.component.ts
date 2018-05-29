@@ -7,7 +7,7 @@ import { FileLoader, FileNavigator } from "app/services/file";
 import "./node-file-browse.scss";
 
 const availableStates = new Set([
-    NodeState.idle, NodeState.running, NodeState.waitingForStartTask, NodeState.startTaskFailed,
+    NodeState.idle, NodeState.running, NodeState.waitingForStartTask, NodeState.startTaskFailed, NodeState.offline,
 ]);
 
 /**

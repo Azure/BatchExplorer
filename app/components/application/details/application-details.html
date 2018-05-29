@@ -1,5 +1,5 @@
 <bl-loading [status]="data.newDataStatus | async">
-    <div *ngIf="application">
+    <div *ngIf="application" class="fit-details-container">
         <bl-summary-card>
             <div summaryTitle>{{decorator.id}}</div>
             <div summarySubtitle>
@@ -19,7 +19,7 @@
             </bl-button-group>
         </bl-summary-card>
         <bl-application-error-display [application]="application"></bl-application-error-display>
-        <mat-card class="details">
+        <bl-card class="details">
             <bl-tab-group>
                 <bl-tab key="packages">
                     <bl-tab-label>Packages</bl-tab-label>
@@ -27,11 +27,11 @@
                         <bl-application-packages [application]="application"></bl-application-packages>
                     </div>
                 </bl-tab>
-                <bl-tab key="properties">
-                    <bl-tab-label>Properties</bl-tab-label>
-                    <bl-application-properties [application]="application"></bl-application-properties>
+                <bl-tab key="configuration">
+                    <bl-tab-label>Configuration</bl-tab-label>
+                    <bl-application-configuration [application]="application"></bl-application-configuration>
                 </bl-tab>
             </bl-tab-group>
-        </mat-card>
+        </bl-card>
     </div>
 </bl-loading>

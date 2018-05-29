@@ -2,12 +2,12 @@ import { Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs";
 
-import { NodeAgentSku, NodeAgentSkuMap, Offer, Sku } from "app/models";
+import { NodeAgentSku, NodeAgentSkuMap, Offer, Resource, Sku } from "app/models";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
-import { NodeService } from "app/services";
+import { AccountService, ComputeService, NodeService } from "app/services";
 import { ListView } from "app/services/core";
 
 import "./pool-os-picker.scss";
@@ -25,6 +25,12 @@ const cloudServiceOsFamilies = [{
     id: "5",
     name: "2016",
 }].reverse(); // Reverse so we have most recent first
+
+export enum CustomImagesState {
+    Ready,
+    Empty,
+    Error,
+}
 
 // tslint:disable:no-forward-ref
 @Component({
@@ -55,16 +61,31 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
     public containerConfiguration: FormControl = new FormControl();
     public showContainerConfiguration: boolean = false;
 
+    // Custom images
+    public CustomImagesState = CustomImagesState;
+    public customImage: FormControl<string> = new FormControl();
+    public nodeAgentSku: FormControl<string> = new FormControl();
+    public customImages: Resource[] = [];
+    public currentCustomImageState: CustomImagesState;
+    public customImagesEmptyMsg: string;
+    public customImagesErrorMsg: string;
+    public nodeAgentSkus: NodeAgentSku[] = [];
+
     private _propagateChange: (value: PoolOSPickerModel) => void = null;
     private _nodeAgentSkuMap: NodeAgentSkuMap = new NodeAgentSkuMap();
-    private _sub: Subscription;
+    private _subs: Subscription[] = [];
 
-    constructor(formBuilder: FormBuilder, private nodeService: NodeService) {
+    constructor(formBuilder: FormBuilder,
+                private accountService: AccountService,
+                private computeService: ComputeService,
+                private nodeService: NodeService) {
         this.accountData = this.nodeService.listNodeAgentSkus();
         this.accountData.items.subscribe((result) => {
+            this.nodeAgentSkus = result.toArray();
             this._buildNodeAgentSkuMap(result);
         });
-        this._sub = this.containerConfiguration.valueChanges.subscribe(this._updateContainerConfiguration);
+        this._subs.push(this.containerConfiguration.valueChanges.subscribe(this._updateContainerConfiguration));
+        this._loadCustomImages();
     }
 
     public ngOnInit() {
@@ -85,7 +106,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
     }
 
     public ngOnDestroy(): void {
-        this._sub.unsubscribe();
+        this._subs.forEach(sub => sub.unsubscribe());
     }
 
     public validate(c: FormControl) {
@@ -180,6 +201,17 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
         return this._nodeAgentSkuMap.dockerOffers;
     }
 
+    public get hasCustomImage(): boolean {
+        return Boolean(this.nodeAgentSku.value && this.customImage.value);
+    }
+
+    public get displayContainerConfiguration(): boolean {
+        return this.showContainerConfiguration
+            && this.value.virtualMachineConfiguration
+            && this.value.virtualMachineConfiguration.imageReference
+            && !this.value.virtualMachineConfiguration.imageReference.virtualMachineImageId;
+    }
+
     /**
      * Function that determines whether this OS is active or not
      * Two conditions must be satisfied
@@ -189,6 +221,18 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
     public isOsActive(offer) {
         const hasSku = offer.skus.filter(x => x.name === this.selectedSku).length > 0;
         return offer.name === this.selectedOffer && hasSku;
+    }
+
+    public trackOffer(index, offer: Offer) {
+        return offer.name;
+    }
+
+    public trackResource(index, image: Resource) {
+        return image.id;
+    }
+
+    public trackNodeAgentSku(index, nodeAgent: NodeAgentSku) {
+        return nodeAgent.id;
     }
 
     private _updateSelection() {
@@ -213,6 +257,13 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
             containerRegistries: containerConfiguration.containerRegistries || [],
         } : null;
         this.containerConfiguration.patchValue(mappedContainerConfiguration);
+
+        // Reset custom image dropdown list if other categories are selected
+        const customImage = ref && ref.virtualMachineImageId;
+        if (!customImage) {
+            this.customImage.patchValue(null);
+            this.nodeAgentSku.patchValue(null);
+        }
     }
 
     private _buildNodeAgentSkuMap(nodeAgentSkus: any) {
@@ -238,6 +289,58 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
             } else {
                 vmConfig.containerConfiguration = null;
             }
+        }
+    }
+
+    private _loadCustomImages() {
+        this._subs.push(this.accountService.currentAccount.subscribe(account => {
+            const subscriptionId = account && account.subscription && account.subscription.subscriptionId;
+            const location = account.location;
+            if (!subscriptionId || !location) {
+                return;
+            }
+            this._subs.push(
+                this.computeService.listCustomImages(subscriptionId, location).subscribe({
+                    next: (resources) => {
+                        this.customImages = resources;
+                        if (resources.length > 0) {
+                            this.currentCustomImageState = CustomImagesState.Ready;
+                        } else {
+                            this.currentCustomImageState = CustomImagesState.Empty;
+                            this.customImagesEmptyMsg = `Custom images of subscription '${subscriptionId}'` +
+                                ` are not found in location '${location}'.`;
+                        }
+                    },
+                    error: (error) => {
+                        this.currentCustomImageState = CustomImagesState.Error;
+                        this.customImagesErrorMsg = error ? `${error.code}: ${error.message}`
+                            : "Server encountered an error loading custom images, please try again later.";
+                    },
+                }),
+            );
+        }));
+        this._subs.push(this.customImage.valueChanges.subscribe(this._customImageOnChange));
+        this._subs.push(this.nodeAgentSku.valueChanges.subscribe(this._customImageOnChange));
+    }
+
+    @autobind()
+    private _customImageOnChange() {
+        if (!this.hasCustomImage) {
+            return;
+        }
+        this.value = {
+            source: PoolOsSources.IaaS,
+            virtualMachineConfiguration: {
+                nodeAgentSKUId: this.nodeAgentSku.value,
+                imageReference: {
+                    virtualMachineImageId: this.customImage.value,
+                },
+            },
+            cloudServiceConfiguration: null,
+        };
+        this._updateSelection();
+        if (this._propagateChange) {
+            this._propagateChange(this.value);
         }
     }
 }

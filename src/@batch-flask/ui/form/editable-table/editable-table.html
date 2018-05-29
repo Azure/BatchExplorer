@@ -1,0 +1,31 @@
+<div [formGroup]="form">
+    <table class="noselect" cellspacing="0" cellpadding="0" formArrayName="items">
+        <thead>
+            <tr>
+                <th *ngFor="let column of columns;trackBy: trackColumn">
+                    <ng-template [ngTemplateOutlet]="column.content"></ng-template>
+                </th>
+                <th class="action-column"></th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of items.controls;trackBy: trackRows; let i=index; let isLast=last" [formGroupName]="i">
+                <td *ngFor="let column of columns;trackBy: trackColumn">
+                    <ng-container [ngSwitch]="column.type">
+                        <ng-container *ngSwitchCase="EditableTableColumnType.Select">
+                            <bl-select [formControlName]="column.name">
+                                <bl-option *ngFor="let item of column.options;trackBy: trackRows" [value]="item" [label]="item"></bl-option>
+                            </bl-select>
+                        </ng-container>
+                        <ng-container *ngSwitchDefault>
+                            <input [formControlName]="column.name" [attr.type]="column.type">
+                        </ng-container>
+                    </ng-container>
+                </td>
+                <td class="action-column">
+                    <bl-clickable *ngIf="!isLast" class="delete-item-btn" (do)="deleteItem(i)"><i class="fa fa-times" ></i></bl-clickable>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

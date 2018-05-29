@@ -1,13 +1,12 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { autobind } from "core-decorators";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { List } from "immutable";
 import * as moment from "moment";
 import { Subscription } from "rxjs";
 
 import { FormControl } from "@angular/forms";
+import { FilterBuilder, autobind } from "@batch-flask/core";
 import { Job, JobState } from "app/models";
 import { JobService } from "app/services";
-import { FilterBuilder } from "app/utils/filter-builder";
 import "./all-job-graphs-home.scss";
 
 enum TimeRange {
@@ -18,6 +17,7 @@ enum TimeRange {
 @Component({
     selector: "bl-all-job-graphs-home",
     templateUrl: "all-job-graphs-home.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AllJobGraphsComponent implements OnInit, OnDestroy {
     public TimeRange = TimeRange;
@@ -27,9 +27,10 @@ export class AllJobGraphsComponent implements OnInit, OnDestroy {
     public selectedTimeRange = new FormControl(TimeRange.day);
 
     private _sub: Subscription;
-    constructor(private jobService: JobService) {
+    constructor(private jobService: JobService, private changeDetector: ChangeDetectorRef) {
         this._sub = this.selectedTimeRange.valueChanges.subscribe(() => {
             this.loading = true;
+            this.changeDetector.markForCheck();
             this._loadJobs();
         });
     }
@@ -52,12 +53,13 @@ export class AllJobGraphsComponent implements OnInit, OnDestroy {
 
         const obs = this.jobService.listAll({
             select: "id,executionInfo,stats",
-            filter: this._buildFilter().toOData(),
+            filter: this._buildFilter(),
             pageSize: 1000,
         });
         obs.subscribe((jobs) => {
             this.loading = false;
             this.jobs = List(jobs.filter(x => Boolean(x.stats && x.executionInfo)));
+            this.changeDetector.markForCheck();
         });
         return obs;
     }

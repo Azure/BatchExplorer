@@ -30,7 +30,7 @@ export function main() {
                 }));
 
                 it(`should leak memory`, () => {
-                    let fixture = TestBed.createComponent(TestComponent);
+                    const fixture = TestBed.createComponent(TestComponent);
                     fixture.detectChanges();
                 });
             });

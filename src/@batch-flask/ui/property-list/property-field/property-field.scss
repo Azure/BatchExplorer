@@ -1,0 +1,35 @@
+@import "app/styles/variables";
+
+bl-property-field {
+    $label-font-size: 13px;
+    $value-font-size: 12px;
+    $label-width: 200px;
+    $property-height: 24px;
+    $clipboard-width: 30px;
+
+    display: flex;
+    padding: 0;
+    margin: 0 0 5px;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+
+    > .property-label {
+        color: $secondary-text;
+        font-size: $label-font-size;
+        flex-basis: $label-width;
+        font-weight: bold;
+        margin-right: 5px;
+    }
+
+    > .property-content {
+        flex: 1;
+        min-width: 50px;
+    }
+
+    > .clipboard-field {
+        flex-basis: $clipboard-width;
+        flex-shrink: 0;
+        align-self: center;
+    }
+}

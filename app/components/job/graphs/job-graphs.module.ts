@@ -2,9 +2,9 @@ import { NgModule } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
-import { MaterialModule } from "app/core";
+import { MaterialModule } from "@batch-flask/core";
 
-import { BaseModule } from "app/components/base";
+import { BaseModule } from "@batch-flask/ui";
 import { AllJobGraphsComponent } from "./all-job-graphs-home";
 import { JobsBarChartComponent } from "./all-job-graphs-home/jobs-bar-chart";
 import { JobsCpuWaitTimeGraphComponent } from "./all-job-graphs-home/jobs-cpu-wait-time-graph";

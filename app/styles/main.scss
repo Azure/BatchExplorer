@@ -1,6 +1,8 @@
+
 // Themes
-@import "./variables";
 @import "./mixins";
+
+@import "./variables";
 @import "./common/type";
 
 // Base styles
@@ -41,3 +43,7 @@
 // Vendor styles
 @import "./vendor/angular-extras";
 @import "./vendor/material-theme.scss";
+
+select {
+    cursor: pointer;
+}

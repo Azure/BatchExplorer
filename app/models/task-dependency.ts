@@ -6,6 +6,7 @@ export class TaskDependency {
     public state: string;
     public dependsOn: string;
     public loading: boolean;
+    public routerLink: any[];
 
     constructor(id: string) {
         this.id = id;

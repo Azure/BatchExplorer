@@ -1,0 +1,109 @@
+@import "app/styles/variables";
+
+bl-complex-form {
+    display: block;
+    // height: $contentview-height;
+    position: relative;
+    $header-height: 60px;
+    $footer-height: 60px;
+    overflow: hidden;
+
+    &.small {
+        width: 500px;
+    }
+
+    &.medium {
+        width: 600px;
+    }
+
+    &.large {
+        width: 800px;
+    }
+
+    &.sticky-footer {
+        height: 100%;
+
+        > .content .classic-form {
+            padding-bottom: 100px;
+        }
+
+        > .form-footer {
+            box-shadow: 0 0 40px -10px #a5a5a5;
+        }
+
+        .form-server-error {
+            position: absolute;
+            bottom: $footer-height;
+            width: 100%;
+            z-index: 100;
+        }
+    }
+
+    &:not(.sticky-footer) {
+        .form-server-error {
+            margin-top: 20px;
+        }
+        > .content > .content-wrapper {
+            overflow-y: initial;
+        }
+    }
+
+    .header {
+        display: flex;
+        margin: 10px;
+        flex-shrink: 0;
+
+        > .main {
+            flex: 1;
+
+            h1 {
+                padding: 0 8px;
+            }
+
+            p {
+                padding: 0 10px;
+            }
+        }
+    }
+
+    > .content {
+        // overflow-y: auto;
+        position: relative;
+        height: calc(100% - #{$footer-height});
+
+        > .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            height: 100%;
+            transform: translate3d(0, 0, 0);
+
+            .loading-overlay {
+                position: absolute;
+                background: white;
+                opacity: 0.5;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+            }
+        }
+
+        .classic-form {
+            padding: 10px 5px;
+        }
+
+        .json-editor-container {
+            height: calc(100% - #{$header-height});
+        }
+
+    }
+
+    > .form-server-error {
+
+    }
+
+    > .form-footer {
+        height: $footer-height;
+    }
+}

@@ -1,4 +1,4 @@
-<bl-loading [status]="data.newDataStatus | async">
+<bl-loading [status]="data.newDataStatus | async" [error]="data.error | async">
     <div *ngIf="container" class="fit-details-container">
         <bl-summary-card>
             <div summaryTitle>{{container?.name}}</div>
@@ -7,23 +7,23 @@
             </div>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                <bl-edit-button title="Add more files to the file group" [action]="manageFileGroup"></bl-edit-button>
+                <bl-edit-button title="Add more files to the file group" [action]="manageFileGroup" [disabled]="!isFileGroup"></bl-edit-button>
                 <bl-delete-button title="Delete this file group" [action]="deleteFileGroup"></bl-delete-button>
                 <bl-download-button title="Download this file group" [action]="download"></bl-download-button>
             </bl-button-group>
         </bl-summary-card>
         <bl-storage-error-display></bl-storage-error-display>
-        <mat-card class="details">
+        <bl-card class="details">
             <bl-tab-group>
                 <bl-tab key="files">
                     <bl-tab-label>Files</bl-tab-label>
-                    <bl-data-container-files [container]="container"></bl-data-container-files>
+                    <bl-data-container-files [storageAccountId]="storageAccountId" [container]="container"></bl-data-container-files>
                 </bl-tab>
                 <bl-tab key="configuration">
                     <bl-tab-label>Configuration</bl-tab-label>
                     <bl-data-container-configuration [container]="container"></bl-data-container-configuration>
                 </bl-tab>
             </bl-tab-group>
-        </mat-card>
+        </bl-card>
     </div>
 </bl-loading>

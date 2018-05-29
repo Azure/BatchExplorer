@@ -1,7 +1,6 @@
-<mat-form-field>
-    <mat-select placeholder="User identity" [formControl]="selected" name="food">
-        <mat-option *ngFor="let option of options" [value]="option.identity">
-            {{option.label}}
-        </mat-option>
-    </mat-select>
-</mat-form-field>
+<bl-form-field>
+    <bl-select placeholder="User identity" [formControl]="selected" name="food">
+        <bl-option *ngFor="let option of options;trackBy: trackOption" [value]="option.identity" [label]="option.label">
+        </bl-option>
+    </bl-select>
+</bl-form-field>

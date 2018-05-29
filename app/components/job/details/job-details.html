@@ -9,12 +9,16 @@
             <bl-tags summaryTags [tags]="job.tags" [editable]="job.editable" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                <bl-button [action]="editJob" color="light" title="Edit job" [disabled]="job.state === JobState.completed">
+                    <i class="fa fa-edit"></i>
+                </bl-button>
                 <bl-add-task-button title="Add task" [job]="job" [action]="addTask"></bl-add-task-button>
                 <bl-terminate-button [entity]="job" [action]="terminateJob"></bl-terminate-button>
                 <bl-delete-button [action]="deleteJob" [enabled]="job.state !== JobState.deleting && job.state !== JobState.terminating"></bl-delete-button>
                 <bl-disable-button [job]="job" [action]="disableJob"></bl-disable-button>
                 <bl-enable-button [job]="job" [action]="enableJob"></bl-enable-button>
                 <bl-clone-button [action]="cloneJob"></bl-clone-button>
+                <bl-button [action]="createJobSchedule" color="light" title="Create job schedule for this job"><i class="fa fa-calendar"></i></bl-button>
                 <bl-button [action]="exportAsJSON" color="light" title="Export as JSON"><i class="fa fa-code"></i></bl-button>
             </bl-button-group>
             <div summaryTile>
@@ -29,16 +33,14 @@
             </div>
         </bl-summary-card>
         <bl-job-error-display [job]="job"></bl-job-error-display>
-        <mat-card class="details">
+        <bl-card class="details">
             <bl-tab-group>
                 <bl-tab key="tasks">
                     <bl-tab-label>Tasks</bl-tab-label>
-                    <div class="tab-padding">
-                        <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/jobs', job.id, 'tasks']" [loadMore]="list.loadMore"
-                            [filterPlaceholder]="filterPlaceholderText">
-                            <bl-task-list [jobId]="job.id" [filter]="listWrapper.filter" [quickList]="false" #list [manualLoading]="true"></bl-task-list>
-                        </bl-entity-details-list>
-                    </div>
+                    <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/jobs', job.id, 'tasks']" [loadMore]="list.loadMore"
+                        [filterPlaceholder]="filterPlaceholderText">
+                        <bl-task-list [jobId]="job.id" [filter]="listWrapper.filter" [quicklist]="false" #list [manualLoading]="true"></bl-task-list>
+                    </bl-entity-details-list>
                 </bl-tab>
                 <bl-tab key="configuration">
                     <bl-tab-label>Configuration</bl-tab-label>
@@ -49,6 +51,6 @@
                     <bl-job-hook-task-browser [job]="job" *ngIf="hasHookTask"></bl-job-hook-task-browser>
                 </bl-tab>
             </bl-tab-group>
-        </mat-card>
+        </bl-card>
     </div>
 </bl-loading>

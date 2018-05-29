@@ -1,7 +1,13 @@
-import { Component, OnChanges } from "@angular/core";
-import { BatchUsageMetrics, PerformanceGraphComponent } from "../performance-graph.component";
+import { ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
+import { Router } from "@angular/router";
 
-import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
+import {
+    BatchPerformanceMetricType,
+    NodesPerformanceMetric,
+    PerformanceMetric,
+} from "app/models/app-insights/metrics-result";
+import { PerformanceGraphComponent } from "../performance-graph.component";
+
 import "./cpu-usage-graph.scss";
 
 @Component({
@@ -9,19 +15,20 @@ import "./cpu-usage-graph.scss";
     templateUrl: "cpu-usage-graph.html",
 })
 export class CpuUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
+    @Input() public showIndividualCpu = false;
+
     public max = 100;
     public unit = "%";
-    public metric = BatchUsageMetrics.cpu;
 
-    public cpuUsages: PerformanceMetric[] = [];
+    public cpuUsages: NodesPerformanceMetric = {};
     public individualCpuUsages: PerformanceMetric[][] = [];
     public cpuCount = 1;
     public showOverallUsage = true;
     public lastCpuUsage: PerformanceMetric;
     public lastIndividualCpuUsage: PerformanceMetric[];
 
-    constructor() {
-        super();
+    constructor(router: Router, changeDetector: ChangeDetectorRef) {
+        super(router, changeDetector);
     }
 
     public ngOnChanges(changes) {
@@ -33,7 +40,7 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
                 this.cpuUsages = data;
                 this._updateStatus();
                 this.updateData();
-                this.lastCpuUsage = this.cpuUsages.last();
+                // this.lastCpuUsage = this.cpuUsages.last();
             }));
             this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.individualCpuUsage)
                 .subscribe((data) => {
@@ -61,28 +68,19 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
         this.updateData();
     }
 
+    public trackCpu(index) {
+        return index;
+    }
+
     private _showOverallCpuUsage() {
-        this.datasets = [
-            {
-                data: [
-                    ...this.cpuUsages.map(x => {
-                        return {
-                            x: x.time,
-                            y: x.value,
-                        };
-                    }),
-                ],
-                fill: false,
-                borderWidth: 1,
-            },
-        ];
+        this.datasets = this._getDatasetsGroupedByNode(this.cpuUsages, "rgb(9, 94, 168)");
     }
 
     private _showIndiviualCpuUsage() {
-        if (this.cpuUsages.length === 0) {
-            this._showOverallCpuUsage();
-            return;
-        }
+        // if (this.cpuUsages.length === 0) {
+        //     this._showOverallCpuUsage();
+        //     return;
+        // }
 
         this.datasets = this.individualCpuUsages.map((usages, cpuN) => {
             return {

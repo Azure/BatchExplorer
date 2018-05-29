@@ -1,0 +1,50 @@
+
+namespace Microsoft.Azure.Batch.Samples.HelloWorld
+{
+    using System;
+    using System.Threading.Tasks;
+    using Auth;
+    using Microsoft.Azure.Batch;
+    using Microsoft.IdentityModel.Clients.ActiveDirectory;
+
+    public class AccountSettings
+    {
+        public const string BatchAccountUrl = "{accountUrl}";
+        public const string BatchResourceUri = "https://batch.core.windows.net/";
+        public const string AuthorityUri = "https://login.microsoftonline.com/{clientId}";
+        public const string ClientId = "{clientId}";
+        public const string Secret = "{secret}";
+    }
+
+
+    /// <summary>
+    /// The main program of the HelloWorld sample
+    /// </summary>
+    public static class Program
+    {
+        public static async Task<string> GetAuthenticationTokenAsync()
+        {
+            AuthenticationContext authContext = new AuthenticationContext(AccountSettings.AuthorityUri);
+            AuthenticationResult authResult = await authContext.AcquireTokenAsync(AccountSettings.BatchResourceUri, new ClientCredential(AccountSettings.ClientId, AccountSettings.Secret));
+
+            return authResult.AccessToken;
+        }
+
+        public static void Main(string[] args)
+        {
+
+            Func<Task<string>> tokenProvider = () => GetAuthenticationTokenAsync();
+
+            // Get an instance of the BatchClient for a given Azure Batch account.
+            using (BatchClient batchClient = BatchClient.Open(new BatchTokenCredentials(AccountSettings.BatchAccountUrl, tokenProvider)))
+            {
+                // Perform actions using the batchClient
+                var jobs = batchClient.JobOperations.ListJobs();
+                foreach (var job in jobs)
+                {
+                    Console.Write(job.Id + "\n");
+                }
+            }
+        }
+    }
+}

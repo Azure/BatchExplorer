@@ -2,8 +2,9 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
+import { NavigableRecord, PinnableEntity, PinnedEntityType } from "@batch-flask/core";
 import {
-    BatchApplication, BlobContainer, Job, NavigableRecord, PinnableEntity, PinnedEntityType, Pool,
+    BatchApplication, BlobContainer, Certificate, Job, JobSchedule, Pool,
 } from "app/models";
 import { AccountService } from "./account.service";
 import { LocalFileStorage } from "./local-file-storage.service";
@@ -12,7 +13,9 @@ const pinnedTypeMap = new Map();
 pinnedTypeMap.set(PinnedEntityType.Application, BatchApplication);
 pinnedTypeMap.set(PinnedEntityType.Pool, Pool);
 pinnedTypeMap.set(PinnedEntityType.Job, Job);
-pinnedTypeMap.set(PinnedEntityType.FileGroup, BlobContainer);
+pinnedTypeMap.set(PinnedEntityType.JobSchedule, JobSchedule);
+pinnedTypeMap.set(PinnedEntityType.Certificate, Certificate);
+pinnedTypeMap.set(PinnedEntityType.StorageContainer, BlobContainer);
 
 @Injectable()
 export class PinnedEntityService {
@@ -77,7 +80,7 @@ export class PinnedEntityService {
     }
 
     public getEntityType(entity: NavigableRecord): PinnedEntityType {
-        for (let [type, cls] of pinnedTypeMap) {
+        for (const [type, cls] of pinnedTypeMap) {
             if (entity instanceof cls) {
                 return type as any;
             }

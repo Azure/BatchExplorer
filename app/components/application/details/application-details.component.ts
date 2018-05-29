@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs/Subscription";
 
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { BatchApplication } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
 import { ApplicationParams, ApplicationService } from "app/services";
 import { EntityView } from "app/services/core";
-import { SidebarManager } from "../../base/sidebar";
 import {
     ApplicationCreateDialogComponent, ApplicationEditDialogComponent,
     DeleteApplicationDialogComponent,
@@ -20,7 +20,7 @@ import {
 })
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
-        let label = tab ? `Application - ${tab}` : "Application";
+        const label = tab ? `Application - ${tab}` : "Application";
         return {
             name: id,
             label,
@@ -66,6 +66,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();
+        this.data.dispose();
     }
 
     @autobind()

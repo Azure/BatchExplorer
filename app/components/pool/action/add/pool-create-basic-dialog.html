@@ -3,27 +3,27 @@
         <bl-form-section title="General info" subtitle="Basic information about the pool">
             <div class="grow">
                 <div class="gcol">
-                    <mat-form-field class="form-element">
-                        <input matInput #idInput formControlName="id" placeholder="Id" maxlength="64">
-                        <mat-hint align="end">{{idInput.value.length}} / 64</mat-hint>
-                    </mat-form-field>
+                    <bl-form-field class="form-element">
+                        <input blInput #idInput formControlName="id" placeholder="ID" maxlength="64">
 
-                    <bl-error controlName="id" code="required">Id is a required field</bl-error>
-                    <bl-error controlName="id" code="maxlength">Id has a maximum length of 64 characters</bl-error>
-                    <bl-error controlName="id" code="pattern">Id can contain any combination of alphanumeric characters including hyphens and underscores.</bl-error>
+                        <bl-hint align="end">{{idInput.value.length}} / 64</bl-hint>
+
+                        <bl-error controlName="id" code="required">ID is a required field</bl-error>
+                        <bl-error controlName="id" code="maxlength">ID has a maximum length of 64 characters</bl-error>
+                        <bl-error controlName="id" code="pattern">ID can contain any combination of alphanumeric characters including hyphens and underscores.</bl-error>
+                    </bl-form-field>
                 </div>
-
                 <div class="gcol">
-                    <mat-form-field class="form-element">
-                        <input matInput formControlName="displayName" placeholder="Display name">
-                    </mat-form-field>
+                    <bl-form-field class="form-element">
+                        <input blInput formControlName="displayName" placeholder="Display name">
+                    </bl-form-field>
                 </div>
             </div>
             <div class="grow">
                 <div class="gcol">
-                    <mat-form-field>
-                        <input matInput type="number" formControlName="maxTasksPerNode" placeholder="Max task per node">
-                    </mat-form-field>
+                    <bl-form-field>
+                        <input blInput type="number" formControlName="maxTasksPerNode" placeholder="Max task per node">
+                    </bl-form-field>
                 </div>
                 <div class="gcol">
                     <mat-slide-toggle formControlName="enableInterNodeCommunication" color="primary">
@@ -32,22 +32,26 @@
                 </div>
             </div>
             <div class="form-element">
-                <mat-form-field>
-                    <mat-select formControlName="taskSchedulingPolicy" color="primary" placeholder="Task scheduling policy">
-                        <mat-option [value]="NodeFillType.pack">Pack</mat-option>
-                        <mat-option [value]="NodeFillType.spread">Spread</mat-option>
-                    </mat-select>
-                </mat-form-field>
+                <bl-form-field>
+                    <bl-select formControlName="taskSchedulingPolicy" color="primary" placeholder="Task scheduling policy">
+                        <bl-option [value]="NodeFillType.pack" label="Pack"></bl-option>
+                        <bl-option [value]="NodeFillType.spread" label="Spread"></bl-option>
+                    </bl-select>
+                </bl-form-field>
+            </div>
+            <div class="form-element">
+                <div>Metadata</div>
+                <bl-key-value-picker formControlName="metadata"></bl-key-value-picker>
             </div>
         </bl-form-section>
 
-        <bl-form-section title="Scale" subtitle="Number of nodes in your pool using a fix number or a auto scaling forumla">
+        <bl-form-section title="Scale" subtitle="Number of nodes in your pool using a fixed number or an auto scaling forumla">
             <div class="form-element">
                 <bl-pool-scale-picker formControlName="scale"></bl-pool-scale-picker>
             </div>
         </bl-form-section>
 
-        <bl-form-section title="Select an operating system configuration" subtitle="Choose the operating system that will be installed on all the nodes in the pool">
+        <bl-form-section title="Select an operating system configuration" subtitle="Choose the operating system to be installed on all the nodes in the pool">
             <div class="form-element">
                 <bl-pool-os-picker formControlName="os"></bl-pool-os-picker>
             </div>
@@ -70,8 +74,7 @@
 
         <bl-form-section *ngIf="hasLinkedStorage" title="Choose one or multiple application packages" subtitle="Select application packages to be downloaded onto each compute node in the pool">
             <div class="form-element">
-                <bl-app-package-picker (hasLinkedStorage)="handleHasLinkedStorage($event)" formControlName="appPackages"></bl-app-package-picker>
-                <!-- TODO: change bl-error to display a dynamic custom error message from the control -->
+                <bl-app-package-picker formControlName="appPackages"></bl-app-package-picker>
                 <bl-error controlName="appPackages" code="invalid">Please select valid combinations of application package versions</bl-error>
                 <bl-error controlName="appPackages" code="duplicate">There is a duplicate package version selected</bl-error>
             </div>
@@ -105,6 +108,59 @@
                     </bl-start-task-picker>
                 </div>
             </bl-form-picker>
+        </bl-form-section>
+
+        <bl-form-section title="Network configuration" subtitle="The network configuration for a pool.">
+            <ng-container *ngIf="virtualMachineConfiguration">
+                <bl-form-multi-picker formControlName="inboundNATPools" #inboundNATPoolsPicker addTitle="Inbound NAT Pool" [max]="5">
+                    <ng-template blFormPickerItem let-value>
+                        <div title>
+                            {{value?.name}}
+                        </div>
+                        <div subtitle class="unaccent">
+                            {{value?.protocol}}
+                        </div>
+                    </ng-template>
+                    <div nested-form>
+                        <bl-inbound-nat-pool-picker
+                            [formControl]="inboundNATPoolsPicker.currentEditValue"
+                            [inboundNATPools]="form.controls.inboundNATPools.value">
+                        </bl-inbound-nat-pool-picker>
+                    </div>
+                </bl-form-multi-picker>
+                <div>The configuration for endpoints on compute nodes in the Batch pool.</div>
+            </ng-container>
+            <bl-virtual-network-picker
+                formControlName="subnetId"
+                [armNetworkOnly]="armNetworkOnly">
+            </bl-virtual-network-picker>
+        </bl-form-section>
+
+        <bl-form-section title="Certificate" subtitle="Reference to certificates to be installed on compute nodes in a pool.">
+            <p *ngIf="certificates.length === 0">
+                No certificate(s) found for this batch account, please upload your certificate(s) first.
+            </p>
+            <bl-form-multi-picker
+                *ngIf="certificates.length > 0"
+                formControlName="certificateReferences"
+                #certificatesPicker addTitle="Add a certificate">
+                <ng-template blFormPickerItem let-value>
+                    <div title>
+                        {{ trimThumbprint(value?.thumbprint) }}
+                    </div>
+                    <div subtitle class="unaccent">
+                        {{value?.thumbprintAlgorithm}}
+                    </div>
+                </ng-template>
+                <div nested-form>
+                    <bl-certificate-picker
+                        [formControl]="certificatesPicker.currentEditValue"
+                        [certificates]="certificates"
+                        [currentCertificates]="form.controls.certificateReferences.value"
+                        [osType]="osType">
+                    </bl-certificate-picker>
+                </div>
+            </bl-form-multi-picker>
         </bl-form-section>
     </bl-form-page>
     <div blFormSummary>

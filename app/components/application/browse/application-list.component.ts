@@ -1,53 +1,44 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
-import { MatDialog } from "@angular/material";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { Router } from "@angular/router";
-import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
-import { LoadingStatus } from "app/components/base/loading";
-import { QuickListItemStatus } from "app/components/base/quick-list";
-import { ListOrTableBase } from "app/components/base/selectable-list";
+import { Filter, autobind } from "@batch-flask/core";
+import { ListBaseComponent } from "@batch-flask/core/list";
+import { LoadingStatus } from "@batch-flask/ui";
+import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { BatchApplication } from "app/models";
-import { ApplicationListParams, ApplicationService, PinnedEntityService } from "app/services";
+import { ApplicationListParams, ApplicationService } from "app/services";
 import { ListView } from "app/services/core";
-import { Filter } from "app/utils/filter-builder";
-import { SidebarManager } from "../../base/sidebar";
-import { ApplicationEditDialogComponent, DeleteApplicationDialogComponent } from "../action";
+import { BatchApplicationCommands } from "../action";
+
+import "./application-list.scss";
 
 @Component({
     selector: "bl-application-list",
     templateUrl: "application-list.html",
+    providers: [BatchApplicationCommands, {
+        provide: ListBaseComponent,
+        useExisting: forwardRef(() => ApplicationListComponent),
+    }],
 })
-export class ApplicationListComponent extends ListOrTableBase implements OnInit, OnDestroy {
-    public status: Observable<LoadingStatus>;
+export class ApplicationListComponent extends ListBaseComponent implements OnInit, OnDestroy {
+    public LoadingStatus = LoadingStatus;
+
     public data: ListView<BatchApplication, ApplicationListParams>;
     public applications: List<BatchApplication>;
     public displayedApplications: List<BatchApplication>;
 
-    @Input()
-    public quickList: boolean;
-
-    @Input()
-    public set filter(filter: Filter) {
-        this._filter = filter;
-        this._filterApplications();
-    }
-    public get filter(): Filter { return this._filter; }
-
     private _baseOptions = { maxresults: 50 };
     private _subs: Subscription[] = [];
-    private _filter: Filter;
 
     constructor(
         router: Router,
-        protected dialog: MatDialog,
+        changeDetector: ChangeDetectorRef,
+        public commands: BatchApplicationCommands,
         private applicationService: ApplicationService,
-        private pinnedEntityService: PinnedEntityService,
-        private sidebarManager: SidebarManager) {
-
-        super();
+    ) {
+        super(changeDetector);
 
         this.data = this.applicationService.listView(this._baseOptions);
         this._subs.push(this.data.items.subscribe((applications) => {
@@ -55,7 +46,10 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
             this._filterApplications();
         }));
 
-        this.status = this.data.status;
+        this.data.status.subscribe((status) => {
+            this.status = status;
+        });
+
         this._subs.push(applicationService.onApplicationAdded.subscribe((applicationId) => {
             this.data.loadNewItem(applicationService.get(applicationId));
         }));
@@ -67,11 +61,16 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
 
     public ngOnDestroy() {
         this._subs.forEach(x => x.unsubscribe());
+        this.data.dispose();
     }
 
     @autobind()
     public refresh(): Observable<any> {
         return this.data.refresh();
+    }
+
+    public handleFilter(filter: Filter) {
+        this._filterApplications();
     }
 
     public appStatus(application: BatchApplication): QuickListItemStatus {
@@ -86,58 +85,23 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
             : "Application is locked";
     }
 
-    public onScrollToBottom(x) {
+    public onScrollToBottom() {
         this.data.fetchNext();
     }
 
-    public contextmenu(application: BatchApplication) {
-        return new ContextMenu([
-            new ContextMenuItem({
-                label: "Delete",
-                click: () => this._deleteApplication(application),
-                enabled: application.allowUpdates,
-            }),
-            new ContextMenuItem({
-                label: "Edit",
-                click: () => this._editApplication(application),
-            }),
-            new ContextMenuItem({
-                label: this.pinnedEntityService.isFavorite(application) ? "Unpin favorite" : "Pin to favorites",
-                click: () => this._pinApplication(application),
-            }),
-        ]);
+    public trackByFn(index, application: BatchApplication) {
+        return application.id;
     }
 
     private _filterApplications() {
         let text: string = null;
-        if (this._filter && this._filter.properties.length > 0) {
-            text = (this._filter.properties[0] as any).value;
+        if (this.filter && this.filter.properties.length > 0) {
+            text = (this.filter.properties[0] as any).value;
             text = text && text.toLowerCase();
         }
 
         this.displayedApplications = List<BatchApplication>(this.applications.filter((app) => {
             return !text || app.id.toLowerCase().indexOf(text) !== -1;
         }));
-    }
-
-    private _editApplication(application: BatchApplication) {
-        const sidebarRef = this.sidebarManager.open("edit-application", ApplicationEditDialogComponent);
-        sidebarRef.component.setValue(application);
-        sidebarRef.afterCompletion.subscribe(() => {
-            this.refresh();
-        });
-    }
-
-    private _deleteApplication(application: BatchApplication) {
-        const dialogRef = this.dialog.open(DeleteApplicationDialogComponent);
-        dialogRef.componentInstance.applicationId = application.id;
-    }
-
-    private _pinApplication(application: BatchApplication) {
-        this.pinnedEntityService.pinFavorite(application).subscribe((result) => {
-            if (result) {
-                this.pinnedEntityService.unPinFavorite(application);
-            }
-        });
     }
 }

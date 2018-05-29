@@ -1,0 +1,6 @@
+<div class="textarea-container">
+    <bl-form-field>
+        <textarea #textarea blInput [placeholder]="placeholder" (focus)="expand()" (blur)="collapse()" [ngModel]="value" (ngModelChange)="valueChange($event)"></textarea>
+        <bl-hint *ngIf="hint" align="end">{{hint}}</bl-hint>
+    </bl-form-field>
+</div>

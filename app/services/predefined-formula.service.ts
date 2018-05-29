@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Response } from "@angular/http";
+import { log } from "@batch-flask/utils";
 import { AutoscaleFormula } from "app/models";
-import { log } from "app/utils";
 import { BehaviorSubject, Observable } from "rxjs";
 import { GithubDataService } from "./github-data.service";
 
@@ -27,7 +27,7 @@ export class PredefinedFormulaService {
             next: (response: Response) => {
                 const result: AutoscaleFormula[] = new Array();
                 const data: SampleFormulaIndex[] = response.json();
-                for (let file of data) {
+                for (const file of data) {
                     const filePath = `${predefinedFormulaPath}${file.value}`;
                     this._getPredefinedFormula(filePath, file.name, result);
                 }

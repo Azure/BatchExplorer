@@ -1,6 +1,5 @@
 import { ErrorHandler } from "@angular/core";
-import { log } from "app/utils";
-import { remote } from "electron";
+import { log } from "@batch-flask/utils";
 
 function extractMessage(error: any): string {
     return error instanceof Error ? error.message : error.toString();
@@ -24,7 +23,7 @@ export class BatchLabsErrorHandler extends ErrorHandler {
 export function handleCoreError(error) {
     log.error("[BL] Uncaught exception:", extractMessage(error));
 
-    const window = remote.getCurrentWindow();
+    const window = require("electron").remote.getCurrentWindow();
     if (!window.isVisible()) {
         window.show();
     }

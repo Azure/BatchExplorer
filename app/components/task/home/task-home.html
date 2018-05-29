@@ -1,21 +1,12 @@
-<bl-list-and-show-layout #layout (listScrolledToBottom)="taskList.loadMore()" [list]="taskList">
-    <div bl-list-title>
-        Tasks
+<bl-browse-layout #layout>
+    <div blBrowseLayoutTitle>
+            Tasks
     </div>
-    <div bl-list-buttons>
-        <bl-button color="light" type="plain" icon="fa fa-plus spin-hover" title="Add a task" [action]="addTask">
+    <div blBrowseLayoutButtons>
+        <bl-button color="light" type="plain" icon="fa fa-plus spin-hover" title="Add a task" [action]="addTask" permission="write">
         </bl-button>
     </div>
-    <div bl-list-content>
-        <bl-focus-section>
-            <bl-task-list #taskList [jobId]="jobId" [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-task-list>
-        </bl-focus-section>
-    </div>
-    <div bl-show-content>
-        <router-outlet></router-outlet>
-    </div>
-    <div bl-show-advanced-filter>
-        <bl-task-advanced-filter (filterChange)="layout.advancedFilterChanged($event)">
-        </bl-task-advanced-filter>
-    </div>
-</bl-list-and-show-layout>
+    <bl-task-list blBrowseLayoutList [jobId]="jobId"></bl-task-list>
+    <bl-task-advanced-filter blBrowseLayoutAdvancedFilter (change)="layout.advancedFilterChanged($event)">
+    </bl-task-advanced-filter>
+</bl-browse-layout>

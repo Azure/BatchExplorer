@@ -1,4 +1,4 @@
-import { autobind } from "core-decorators";
+import { autobind } from "@batch-flask/core";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 export class WaitForDeletePoller {
@@ -8,7 +8,7 @@ export class WaitForDeletePoller {
     @autobind()
     public start(progress: BehaviorSubject<any>): Observable<any> {
         const obs = new AsyncSubject();
-        let interval = setInterval(() => {
+        const interval = setInterval(() => {
             this.getFunction().subscribe({
                 error: (e) => {
                     progress.next(100);

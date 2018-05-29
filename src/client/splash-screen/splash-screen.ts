@@ -30,8 +30,13 @@ export class SplashScreen extends UniqueWindow {
             resizable: false,
             titleBarStyle: "hidden",
             frame: false,
+            show: false,
+            center: true,
         });
         window.loadURL(url);
+        window.once("ready-to-show", () => {
+            this.show();
+        });
         window.webContents.once("dom-ready", () => {
             this._sendMessageToWindow();
         });

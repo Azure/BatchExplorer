@@ -27,10 +27,15 @@
             </div>
         </bl-summary-card>
         <bl-pool-error-display [pool]="pool"></bl-pool-error-display>
-        <mat-card class="details">
+        <bl-card class="details">
             <bl-tab-group>
                 <bl-tab key="graphs">
-                    <bl-tab-label>Graphs</bl-tab-label>
+                    <bl-tab-label>
+                        Graphs
+                        <bl-button class="open-pool-graphs-new-window" matTooltip="Open in a new window" [action]="openInNewWindow" type="plain">
+                            <i class="fa fa-window-restore"></i>
+                        </bl-button>
+                    </bl-tab-label>
                     <bl-pool-graphs [pool]="pool"></bl-pool-graphs>
                 </bl-tab>
                 <bl-tab key="configuration">
@@ -39,13 +44,11 @@
                 </bl-tab>
                 <bl-tab key="nodes">
                     <bl-tab-label>Nodes</bl-tab-label>
-                    <div class="tab-padding">
-                        <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']" [filterPlaceholder]="filterPlaceholderText">
-                            <bl-node-list #list [poolId]="poolId" [filter]="listWrapper.filter" [quickList]="false" [manualLoading]="true"></bl-node-list>
-                        </bl-entity-details-list>
-                    </div>
+                    <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']" [filterPlaceholder]="filterPlaceholderText">
+                        <bl-node-list #list [poolId]="poolId" [filter]="listWrapper.filter" [quicklist]="false" [manualLoading]="true"></bl-node-list>
+                    </bl-entity-details-list>
                 </bl-tab>
             </bl-tab-group>
-        </mat-card>
+        </bl-card>
     </div>
 </bl-loading>

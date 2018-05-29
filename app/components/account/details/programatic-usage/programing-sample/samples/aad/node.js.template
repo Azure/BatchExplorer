@@ -1,0 +1,20 @@
+const { SharedKeyCredentials, ServiceClient } = require("azure-batch");
+const { loginWithServicePrincipalSecret } = require("ms-rest-azure");
+
+const accountUrl = "{accountUrl}";
+const tenantId = "{clientId}";
+const clientId = "{clientId}";
+const secret = "{secret}";
+
+async function run() {
+    const credentials = await loginWithServicePrincipalSecret(clientId, secret, tenantId, { tokenAudience: "https://batch.core.windows.net/" });
+    const batchClient = new ServiceClient(credentials, accountUrl);
+    const jobs = await batchClient.job.list();
+
+    for (const job of jobs) {
+        // tslint:disable-next-line:no-console
+        console.log(job.id);
+    }
+}
+
+run().catch(e => console.error("Error", e));

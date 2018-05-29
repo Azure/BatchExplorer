@@ -8,6 +8,7 @@ export enum NcjParameterExtendedType {
     fileGroup = "file-group",
     fileInFileGroup = "file-in-file-group",
     fileGroupSas = "file-group-sas",
+    fileGroupWriteSas = "file-group-write-sas",
     dropDown = "drop-down",
 }
 
@@ -18,6 +19,7 @@ export class NcjParameterWrapper {
     public description: string;
     public defaultValue: any;
     public allowedValues: string[];
+    public wildcards: string;
 
     constructor(public id: string, public param: NcjParameter) {
         this._computeName();
@@ -57,9 +59,17 @@ export class NcjParameterWrapper {
         }
     }
 
+    private _computeWildcardFilter() {
+        if (this.param.metadata && this.param.metadata.wildcards) {
+            this.wildcards = this.param.metadata.wildcards;
+        }
+    }
+
     private _computeType() {
         this._computeDependsOn();
         this._computeAllowedValues();
+        this._computeWildcardFilter();
+
         const param = this.param;
         if (param.allowedValues) {
             this.type = NcjParameterExtendedType.dropDown;
@@ -69,9 +79,11 @@ export class NcjParameterWrapper {
             if (!ObjectUtils.values(NcjParameterExtendedType as any).includes(type)) {
                 log.error(`Advanced typed '${type}' is unknown!`, NcjParameterExtendedType);
             }
+
             this.type = type as NcjParameterExtendedType;
             return;
         }
+
         this.type = param.type as any;
     }
 }

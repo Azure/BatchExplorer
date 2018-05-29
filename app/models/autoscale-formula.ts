@@ -1,5 +1,5 @@
-import { Model, Prop, Record } from "app/core";
-import { SecureUtils } from "app/utils";
+import { Model, Prop, Record } from "@batch-flask/core";
+import { SecureUtils } from "@batch-flask/utils";
 
 export interface AutoscaleFormulaAttributes {
     id: string;

@@ -1,0 +1,29 @@
+<bl-entity-configuration [value]="certificate">
+    <bl-property-list>
+        <bl-property-group label="General" class="wide">
+            <bl-text-property label="Thumbprint algorithm" [value]="decorator.thumbprintAlgorithm"></bl-text-property>
+            <bl-text-property label="Thumbprint" [value]="decorator.thumbprint"></bl-text-property>
+            <bl-text-property label="URL" [value]="decorator.url" [wrap]="true"></bl-text-property>
+            <bl-text-property label="State" [value]="decorator.state"></bl-text-property>
+            <bl-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bl-text-property>
+            <bl-text-property label="Previous state" [value]="decorator.previousState"></bl-text-property>
+            <bl-text-property label="Previous transition time" [value]="decorator.previousStateTransitionTime"></bl-text-property>
+            <bl-text-property label="Public data" [value]="decorator.publicData" [wrap]="true"></bl-text-property>
+        </bl-property-group>
+
+        <bl-property-group *ngIf="certificate.deleteCertificateError" label="Delete certificate error" class="wide" [collapsed]="true">
+            <bl-text-property label="Code" [value]="decorator.deleteCertificateError.code"></bl-text-property>
+            <bl-text-property label="Message" [value]="decorator.deleteCertificateError.message" [wrap]="true"></bl-text-property>
+            <bl-table-property label="Delete certificate error detail" *ngIf="decorator.deleteCertificateError.values?.length > 0">
+                <bl-table-property-header>
+                    <div tp-column>Name</div>
+                    <div tp-column>Value</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let value of decorator.deleteCertificateError.values">
+                    <bl-tp-cell [value]="value.name"></bl-tp-cell>
+                    <bl-tp-cell [value]="value.value"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+        </bl-property-group>
+    </bl-property-list>
+</bl-entity-configuration>

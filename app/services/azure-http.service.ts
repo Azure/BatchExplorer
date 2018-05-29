@@ -5,13 +5,14 @@ import {
 } from "@angular/http";
 import { Observable } from "rxjs";
 
-import { ServerError, Subscription } from "app/models";
-import { Constants } from "app/utils";
-import { AccessToken, AdalService } from "./adal";
+import { AccessToken, RetryableHttpCode, ServerError } from "@batch-flask/core";
+import { Subscription } from "app/models";
+import { Constants } from "common";
+import { AdalService } from "./adal";
+import { BatchLabsService } from "./batch-labs.service";
 
 const apiVersionParams = "api-version";
 const apiVersion = Constants.ApiVersion.arm;
-const baseUrl = Constants.ServiceUrl.arm;
 
 function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
     const options = original || new RequestOptions();
@@ -28,6 +29,11 @@ const providersApiVersion = {
     "microsoft.classicstorage": Constants.ApiVersion.armClassicStorage,
     "microsoft.storage": Constants.ApiVersion.armStorage,
     "microsoft.compute": Constants.ApiVersion.compute,
+    "microsoft.commerce": Constants.ApiVersion.commerce,
+    "microsoft.authorization": Constants.ApiVersion.authorization,
+    "microsoft.insights": Constants.ApiVersion.monitor,
+    "microsoft.network": Constants.ApiVersion.network,
+    "microsoft.classicnetwork": Constants.ApiVersion.classicNetwork,
 };
 
 type SubscriptionOrTenant = Subscription | string;
@@ -38,7 +44,7 @@ type SubscriptionOrTenant = Subscription | string;
  */
 @Injectable()
 export class AzureHttpService {
-    constructor(private http: Http, private adal: AdalService) {
+    constructor(private http: Http, private adal: AdalService, private batchLabs: BatchLabsService) {
     }
 
     public request(
@@ -56,6 +62,10 @@ export class AzureHttpService {
                         return Observable.throw(err);
                     });
             }).share();
+    }
+
+    public get baseUrl() {
+        return this.batchLabs.azureEnvironment.armUrl;
     }
 
     public get(subscription: SubscriptionOrTenant, uri: string, options?: RequestOptionsArgs) {
@@ -118,7 +128,6 @@ export class AzureHttpService {
         if (!uri.includes(apiVersionParams)) {
             options.search.set(apiVersionParams, this.apiVersion(uri));
         }
-
         return options;
     }
 
@@ -126,7 +135,7 @@ export class AzureHttpService {
         if (/^https?:\/\//i.test(uri)) {
             return uri;
         } else {
-            return Location.joinWithSlash(baseUrl, uri);
+            return Location.joinWithSlash(this.baseUrl, uri);
         }
     }
 
@@ -134,7 +143,7 @@ export class AzureHttpService {
         const retryRange = Observable.range(0, Constants.badHttpCodeMaxRetryCount + 1);
         return attempts
             .switchMap((x: any) => {
-                if (Constants.RetryableHttpCode.has(x.status)) {
+                if (RetryableHttpCode.has(x.status)) {
                     return Observable.of(x);
                 }
                 return Observable.throw(x);

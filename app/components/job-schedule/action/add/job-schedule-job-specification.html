@@ -1,0 +1,86 @@
+<div [formGroup]="form">
+    <h4>Pool selection</h4>
+    <div class="form-element">
+        <bl-pool-picker formControlName="poolInfo"></bl-pool-picker>
+        <bl-error controlName="poolInfo" code="required">You must select a pool for this job to run on</bl-error>
+    </div>
+
+    <h4>Job configuration task</h4>
+    <div class="form-element">
+        <bl-form-picker formControlName="jobManagerTask" #jobManagerTaskPicker>
+            <div no-value-title>Job manager task</div>
+            <div value-title>{{jobManagerTask?.id}}</div>
+            <div nested-form>
+                <bl-job-manager-task-picker
+                    [formControl]="jobManagerTaskPicker.nestedValue"
+                    [userAccounts]="form.value.userAccounts"
+                    [virtualMachineConfiguration]="virtualMachineConfiguration"
+                    [containerSettingsRequired]="containerSettingsRequired">
+                </bl-job-manager-task-picker>
+            </div>
+        </bl-form-picker>
+        <bl-form-picker formControlName="jobPreparationTask" (clear)="resetJobPreparationTask()" #jobPreparationTaskPicker>
+            <div no-value-title>Job preparation task</div>
+            <div value-title>{{jobPreparationTask?.id}}</div>
+            <div nested-form>
+                <bl-job-preparation-task-picker
+                    [formControl]="jobPreparationTaskPicker.nestedValue"
+                    [userAccounts]="form.value.userAccounts"
+                    [virtualMachineConfiguration]="virtualMachineConfiguration">
+                </bl-job-preparation-task-picker>
+            </div>
+        </bl-form-picker>
+        <bl-form-picker *ngIf="showJobReleaseTask" formControlName="jobReleaseTask" #jobReleaseTaskPicker>
+            <div no-value-title>Job release task</div>
+            <div value-title>{{jobReleaseTask?.id}}</div>
+            <div nested-form>
+                <bl-job-release-task-picker
+                    [formControl]="jobReleaseTaskPicker.nestedValue"
+                    [userAccounts]="form.value.userAccounts"
+                    [virtualMachineConfiguration]="virtualMachineConfiguration">
+                </bl-job-release-task-picker>
+            </div>
+        </bl-form-picker>
+    </div>
+
+    <h4>Job advanced setting</h4>
+    <div class="form-element">
+        <div class="form-element">
+            <bl-form-field>
+                <input blInput formControlName="displayName" placeholder="Display name">
+            </bl-form-field>
+            <bl-error controlName="displayName" code="maxlength">Display name has a maximum length of 1024 characters</bl-error>
+        </div>
+        <div class="form-element">
+            <bl-form-field>
+                <input blInput formControlName="priority" placeholder="Priority" type="number">
+            </bl-form-field>
+            <bl-error controlName="priority" code="validateRange">Priority values can range from -1000 to 1000</bl-error>
+        </div>
+        <div formGroupName="constraints">
+            <bl-duration-picker formControlName="maxWallClockTime" label="Max wall-clock time"></bl-duration-picker>
+            <div class="form-element">
+                <bl-form-field>
+                    <input blInput formControlName="maxTaskRetryCount" placeholder="Max retry count" type="number">
+                </bl-form-field>
+                <bl-error controlName="maxTaskRetryCount" code="validateRange">Retry count values can range from -1 to 100</bl-error>
+            </div>
+        </div>
+        <div class="form-element">
+            <bl-select>
+                <bl-select formControlName="onAllTasksComplete" color="primary" placeholder="When all tasks complete">
+                    <bl-option [value]="AllTasksCompleteAction.noaction" label="NoAction"></bl-option>
+                    <bl-option [value]="AllTasksCompleteAction.terminatejob" label="TerminateJob"></bl-option>
+                </bl-select>
+            </bl-select>
+        </div>
+        <div class="form-element">
+            <bl-form-field>
+                <bl-select formControlName="onTaskFailure" color="primary" placeholder="When a task fails">
+                    <bl-option [value]="TaskFailureAction.noaction" label="NoAction"></bl-option>
+                    <bl-option [value]="TaskFailureAction.performexitoptionsjobaction" label="PerformExitOptionsJobAction"></bl-option>
+                </bl-select>
+            </bl-form-field>
+        </div>
+    </div>
+</div>

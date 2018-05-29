@@ -1,11 +1,14 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+
+import { HttpCode, ServerError } from "@batch-flask/core";
 import {
-    FileExplorerConfig, FileExplorerWorkspace, FileNavigatorEntry,
+    FileExplorerConfig, FileExplorerWorkspace, FileNavigatorEntry, FileSource,
 } from "app/components/file/browse/file-explorer";
-import { ServerError, Task, TaskState } from "app/models";
-import { FileService, StorageService } from "app/services";
+import { Task, TaskState } from "app/models";
+import { FileService } from "app/services";
 import { FileLoader } from "app/services/file";
-import { ComponentUtils, Constants, StorageUtils } from "app/utils";
+import { AutoStorageService, StorageBlobService } from "app/services/storage";
+import { ComponentUtils, StorageUtils } from "app/utils";
 import "./task-outputs.scss";
 
 enum OutputType {
@@ -25,7 +28,6 @@ const outputTabs = [
 })
 export class TaskOutputsComponent implements OnChanges, OnDestroy {
     @Input() public jobId: string;
-
     @Input() public task: Task;
 
     public OutputType = OutputType;
@@ -39,7 +41,13 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     public workspace: FileExplorerWorkspace;
     public fileExplorerConfig: FileExplorerConfig = {};
 
-    constructor(private fileService: FileService, private storageService: StorageService) { }
+    private _persistedSourceName: string = "Persisted output";
+    private _noPersistedOutputsCode: string = "NoPersistedOutput";
+
+    constructor(
+        private fileService: FileService,
+        private autoStorageService: AutoStorageService,
+        private storageService: StorageBlobService) { }
 
     public ngOnChanges(changes) {
         let updateNavigator = false;
@@ -48,15 +56,18 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
             if (isTaskQueued !== this.isTaskQueued) {
                 updateNavigator = true;
             }
+
             this.isTaskQueued = isTaskQueued;
             this._updateStateTooltip();
             this._updateFileExplorerConfig();
         }
+
         if (changes.jobId || ComponentUtils.recordChangedId(changes.task)) {
             if (!this.isTaskQueued) {
                 updateNavigator = true;
             }
         }
+
         if (updateNavigator) {
             this._updateNavigator();
         }
@@ -79,44 +90,61 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
             tailable: this.task.state === TaskState.running,
         };
     }
+
     private _updateNavigator() {
         this._disposeWorkspace();
         if (this.isTaskQueued) {
             return;
         }
-        StorageUtils.getSafeContainerName(this.jobId).then((container) => {
-            this._clearFileNavigator();
-            const nodeNavigator = this.fileService.navigateTaskFile(this.jobId, this.task.id, {
-                onError: (error) => this._processTaskFilesError(error),
-            });
-            nodeNavigator.init();
+        this.autoStorageService.get().subscribe((storageAccountId) => {
+            StorageUtils.getSafeContainerName(this.jobId).then((container) => {
+                this._clearFileNavigator();
+                const nodeNavigator = this.fileService.navigateTaskFile(this.jobId, this.task.id, {
+                    onError: (error) => this._processTaskFilesError(error),
+                });
+                nodeNavigator.init();
+                const taskOutputPrefix = `${this.task.id}`;
+                const taskOutputNavigator = this.storageService.navigate(storageAccountId,
+                    container, taskOutputPrefix, {
+                        onError: (error) => {
+                            const serverError = this._processBlobError(error);
+                            if (serverError && serverError.code === this._noPersistedOutputsCode) {
+                                // no container exists for the job so it didn't use conventions library.
+                                // remove the source so the user doesn't see it at all.
+                                const index = this.workspace.sources.findIndex((source: FileSource) => {
+                                    return source.name === this._persistedSourceName;
+                                });
+                                if (index > -1) {
+                                    this.workspace.sources.splice(index, 1);
+                                }
+                            }
 
-            const taskOutputPrefix = `${this.task.id}`;
-            const taskOutputNavigator = this.storageService.navigateContainerBlobs(container, taskOutputPrefix, {
-                onError: (error) => this._processBlobError(error),
-            });
-            taskOutputNavigator.init();
+                            return serverError;
+                        },
+                    });
+                taskOutputNavigator.init();
 
-            this.workspace = new FileExplorerWorkspace([
-                {
+                this.workspace = new FileExplorerWorkspace([{
                     name: "Node files",
                     navigator: nodeNavigator,
                     openedFiles: ["stdout.txt", "stderr.txt"],
-                },
-                { name: "Persisted output", navigator: taskOutputNavigator },
-            ]);
+                }, {
+                    name: this._persistedSourceName,
+                    navigator: taskOutputNavigator,
+                }]);
+            });
         });
     }
 
     private _processTaskFilesError(error: ServerError): ServerError {
-        if (error.status === Constants.HttpCode.NotFound) {
+        if (error.status === HttpCode.NotFound) {
             return new ServerError({
                 status: 404,
                 code: "NodeNotFound",
                 message: "The node the task ran on doesn't exist anymore or is in an invalid state.",
                 original: error.original,
             });
-        } else if (error.status === Constants.HttpCode.Conflict) {
+        } else if (error.status === HttpCode.Conflict) {
             return new ServerError({
                 status: 404,
                 code: "TaskFilesDeleted",
@@ -124,18 +152,20 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
                 original: error.original,
             });
         }
+
         return error;
     }
 
     private _processBlobError(error: ServerError): ServerError {
-        if (error.status === Constants.HttpCode.NotFound && error.code === "ContainerNotFound") {
+        if (error && error.status === HttpCode.NotFound && error.code === "ContainerNotFound") {
             return new ServerError({
                 status: 404,
-                code: "NoPersistedOutput",
+                code: this._noPersistedOutputsCode,
                 message: this._fileConventionErrorMessage(),
                 original: error.original,
             });
         }
+
         return error;
     }
 

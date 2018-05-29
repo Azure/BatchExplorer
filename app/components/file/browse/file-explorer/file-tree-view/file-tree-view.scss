@@ -1,10 +1,5 @@
 @import "app/styles/variables";
 
-.node-content-wrapper, .tree-children {
-    color: $black;
-    font-size: 14px;
-}
-
 bl-file-tree-view {
     $tree-view-header-height: 24px;
     position: relative;
@@ -77,100 +72,13 @@ bl-file-tree-view {
     }
 
     .tree-rows-container {
-        // height: 100%;
+        height: 100%;
         &.drop-target {
             background: $whitesmoke-darker;
-        }
-    }
-
-    .tree-row {
-        cursor: pointer;
-        height: 22px;
-        vertical-align: middle;
-        user-select: none;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-
-        &:hover {
-            background: $whitesmoke-darker;
-        }
-
-        &.active {
-            background: $whitesmoke-darker;
-        }
-
-        &.drop-target {
-            background: $whitesmoke-darker;
-        }
-
-        > .file-icon {
-            > .fa-folder, > .fa-folder-open {
-                color: $folder-color;
-            }
-
-            > .fa-file {
-                color: $dove-grey;
-            }
         }
     }
 
     .tree-view-error {
         white-space: pre-line;
     }
-}
-
-.toggle-children-wrapper {
-    padding: 0!important;
-}
-
-.node-wrapper.tree-node-spin .toggle-children-placeholde, .node-wrapper.tree-node-spin .toggle-children {
-    position: relative;
-    -webkit-animation: fa-spin 2s infinite linear;
-    animation: fa-spin 2s infinite linear;
-    height: 15px;
-    width: 15px;
-}
-
-.node-wrapper.tree-node-spin .toggle-children-placeholder:before, .node-wrapper.tree-node-spin .toggle-children:before {
-    content: "\f110"; // fa-spinner icon
-    position: absolute;
-    font-family: FontAwesome;
-    cursor: default;
-    color: $black;
-}
-
-.node-wrapper.tree-node-file .toggle-children-placeholder:before {
-    content: "\f15b"; // fa-file icon
-    position: absolute;
-    font-family: FontAwesome;
-    cursor: default;
-    color: $dove-grey;
-}
-
-.toggle-children, .toggle-children-placeholder {
-    z-index: 1;
-    font-size: 14px;
-    background: none!important;
-    transform: none!important;
-    height: 15px!important;
-    width: 15px!important;
-    margin-top: 1px;
-    margin-left: 20px;
-}
-
-.toggle-children-wrapper-collapsed .toggle-children:before, .node-wrapper.tree-node-collapsed .toggle-children-placeholder:before {
-    content: "\f07b"; // fa-folder icon
-    position: absolute;
-    font-family: FontAwesome;
-    cursor: default;
-    color: #f8d979;
-}
-
-.toggle-children-wrapper-expanded .toggle-children:before, .node-wrapper.tree-node-expanded .toggle-children-placeholder:before {
-    content: "\f07c"; // fa-folder-open icon
-    position: absolute;
-    font-family: FontAwesome;
-    cursor: default;
-    color: #f8d979;
 }

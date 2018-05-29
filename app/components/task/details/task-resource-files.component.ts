@@ -25,4 +25,8 @@ export class TaskResourceFilesComponent {
             this.resourceFiles = this.task.resourceFiles;
         }
     }
+
+    public trackByFn(index, task: ResourceFile) {
+        return task.blobSource;
+    }
 }

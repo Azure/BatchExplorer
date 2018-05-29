@@ -43,7 +43,7 @@ fieldset {
         }
 
         p {
-            padding: 4px 0;;
+            padding: 4px 0;
         }
 
         mat-radio-group {
@@ -126,11 +126,11 @@ fieldset {
             margin-bottom: 5px;
         }
 
-        mat-form-field {
+        bl-form-field {
             width: 100%;
         }
 
-        mat-form-field.ng-invalid.ng-touched {
+        bl-form-field.ng-invalid.ng-touched {
             label {
                 color: $validation-error-color;
 
@@ -148,7 +148,7 @@ fieldset {
                 }
             }
 
-            mat-hint {
+            bl-hint {
                 color: $validation-error-color;
             }
         }
@@ -184,7 +184,6 @@ mat-tab-group.form-tabs {
         height: 32px;
     }
 }
-
 
 input.search-input {
     flex: 1 0 auto;

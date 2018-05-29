@@ -1,8 +1,8 @@
 <bl-scrollable>
     <bl-storage-error-display [noClassic]="true"></bl-storage-error-display>
-    <div *ngIf="storageService.hasArmAutoStorage | async">
+    <div *ngIf="autoStorageService.hasArmAutoStorage | async">
         <div class="header">
-            <h1>Market applications</h1>
+            <h1>Gallery applications</h1>
             <div class="filter">
                 <bl-refresh-btn [refresh]="refreshApplications" type="round"></bl-refresh-btn>
                 <div class="quicksearch">
@@ -14,14 +14,14 @@
             <bl-recent-template-list></bl-recent-template-list>
         </div>
         <div class="applications">
-            <mat-card class="application local-templates" title="All your local templates" routerLink="/market/local">
+            <bl-card class="application local-templates" title="All your local templates" routerLink="/market/local">
                 <i class="fa fa-desktop logo"></i>
                 <div class="name">Local templates</div>
-            </mat-card>
-            <mat-card *ngFor="let application of displayedApplications" class="application" [title]="application.description" [routerLink]="['/market', application.id, 'actions']">
+            </bl-card>
+            <bl-card *ngFor="let application of displayedApplications;trackBy: trackApplication" class="application" [title]="application.description" [routerLink]="['/market', application.id, 'actions']">
                 <img class="logo" [src]="application.icon">
                 <div class="name">{{application.name}}</div>
-            </mat-card>
+            </bl-card>
         </div>
     </div>
 </bl-scrollable>

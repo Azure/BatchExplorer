@@ -1,0 +1,51 @@
+@import "app/styles/variables";
+
+.form-section {
+    $step-index-size: 30px;
+    margin-left: 8px;
+
+    > .section-title {
+        display: flex;
+        align-items: center;
+
+
+        > .step-index {
+            width: $step-index-size;
+            height: $step-index-size;
+            flex: 0 0 $step-index-size;
+            line-height: $step-index-size;
+            text-align: center;
+            background: map-get($primary, 300);
+            border-radius: 99%;
+            font-size: 14px;
+            color: $whitesmoke;
+            margin-right: 10px;
+        }
+
+        > .step-header {
+            padding-top: 8px;
+
+            h3 {
+                color: black;
+            }
+        }
+
+        margin-bottom: 5px;
+    }
+
+    .section-wrapper {
+        display: flex;
+        max-width: 100%;
+
+        > .section-bar {
+            border-right: 1px solid rgba(0, 0, 0, 0.12);
+            margin: 10px 20px 10px 15px;
+        }
+
+        > .section-content {
+            flex: 1;
+            padding: 0 5px;
+            min-width: 0;
+        }
+    }
+}

@@ -1,21 +1,13 @@
-<bl-list-and-show-layout #layout (listScrolledToBottom)="poolList.onScrollToBottom()" [list]="poolList">
-    <div bl-list-title>
+<bl-browse-layout #layout>
+    <div blBrowseLayoutTitle>
         Pools
     </div>
-    <div bl-list-buttons>
-        <bl-button icon="fa fa-plus spin-hover" title="Add a pool" [action]="addPool" type="plain" color="light">
+    <bl-inline-quota blBrowseLayoutQuotas include="pools,dedicatedCores,lowpriCores"></bl-inline-quota>
+    <div blBrowseLayoutButtons>
+        <bl-button icon="fa fa-plus spin-hover" title="Add a pool" [action]="addPool" type="plain" color="light" permission="write">
         </bl-button>
     </div>
-    <div bl-list-content>
-        <bl-focus-section>
-            <bl-pool-list #poolList [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-pool-list>
-        </bl-focus-section>
-    </div>
-    <div bl-show-content>
-        <router-outlet></router-outlet>
-    </div>
-    <div bl-show-advanced-filter>
-        <bl-pool-advanced-filter (change)="layout.advancedFilterChanged($event)">
-        </bl-pool-advanced-filter>
-    </div>
-</bl-list-and-show-layout>
+    <bl-pool-list blBrowseLayoutList></bl-pool-list>
+    <bl-pool-advanced-filter blBrowseLayoutAdvancedFilter (change)="layout.advancedFilterChanged($event)">
+    </bl-pool-advanced-filter>
+</bl-browse-layout>

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
 
-import { EditMetadataFormComponent } from "app/components/base/form/edit-metadata-form";
-import { SidebarManager } from "app/components/base/sidebar";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { EditMetadataFormComponent } from "app/components/common/edit-metadata-form";
 import { Job, Metadata, NameValuePair } from "app/models";
 import {
     JobDecorator,
@@ -14,6 +14,7 @@ import {
 import { JobPatchDto } from "app/models/dtos";
 import { JobService } from "app/services";
 
+// tslint:disable:trackBy-function
 @Component({
     selector: "bl-job-configuration",
     templateUrl: "job-configuration.html",

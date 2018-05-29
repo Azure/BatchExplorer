@@ -1,13 +1,7 @@
-@import "./themes/core";
-@import "./themes/classic";
 @import "./vars/material-colors";
 @import "./vars/zindex";
+@import "./themes/core";
 
-
-$header-background      : map-get($primary, 700);
-$header-hover           : map-get($primary, 800);
-$navigation-background  : map-get($primary, 600);
-$navigation-hover       : map-get($primary, 700);
 
 // Black & white
 //---------------------------------------------
@@ -52,10 +46,7 @@ $link-color                 : map-get($primary, 700);
 $link-alt-color             : map-get($primary, 300);
 $link-color-hover           : map-get($primary, 800);
 $validation-error-color     : map-get($danger, 500);
-$label-text                 : $dusty-grey;
 
-$folder-color: #f8d979;
-$outline-color: #528bff;
 
 $font-size-base     : 13px;
 $font-size-large    : 15px;
@@ -66,7 +57,8 @@ $headingsFontWeight : semilight;
 $headingWeightBold  : semibold;
 $headingsLineHeight : $baseLineHeight;
 $textColor          : $mineShaftGray;
-$main-font          : "Roboto", Helvetica, Arial, sans-serif;
+$main-font          : -apple-system,BlinkMacSystemFont,Segoe WPC,Segoe UI,HelveticaNeue-Light,Ubuntu,Droid Sans,sans-serif;
+
 
 $h1FontSize         : $font-size-base * 1.8;
 $h2FontSize         : $font-size-base * 1.6;
@@ -76,8 +68,6 @@ $h5FontSize         : $font-size-base * 1.1;
 $h6FontSize         : $font-size-base;
 
 // Theme
-$body-background: $whiteSmoke-darker;
-$content-background :  $whiteSmoke-darker;
 $listview-background :  white;
 $footer-background: map-get($primary, 200);
 $navigation-text: $whiteSmoke;

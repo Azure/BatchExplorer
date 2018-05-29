@@ -1,0 +1,21 @@
+const { SharedKeyCredentials, ServiceClient } = require("azure-batch");
+
+const accountName = "{batchAccountName}";
+const accountUrl = "{batchAccountUrl}";
+const accountKey = "{batchAccountKey}";
+
+const credentials = new SharedKeyCredentials(accountName, accountKey);
+const batchClient = new ServiceClient(credentials, accountUrl);
+
+async function run() {
+    const jobs = await batchClient.job.list();
+
+    for (const job of jobs) {
+        // tslint:disable-next-line:no-console
+        console.log(job.id);
+    }
+}
+
+run().then(() => {
+    process.exit();
+});

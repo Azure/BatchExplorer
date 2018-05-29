@@ -1,0 +1,27 @@
+<div class="header">
+    <bl-button type="square" (do)="cancel.emit()">
+        <i class="fa fa-arrow-left"></i>
+    </bl-button>
+    <h1>Create a new application</h1>
+</div>
+<div class="form-container" [formGroup]="form">
+    <div class="form-element">
+        <h4>Application name</h4>
+        <input class="bl-input app-name" formControlName="name">
+    </div>
+    <div class="form-element">
+        <h4>Secret</h4>
+        <bl-aad-app-secret-picker formControlName="secretValue">
+        </bl-aad-app-secret-picker>
+    </div>
+
+    <div class="submit">
+        <bl-button [action]="create" type="wide" color="primary" [disabled]="!form.valid">
+            Create
+        </bl-button>
+
+        <div class="create-status">
+            {{createStatus}}
+        </div>
+    </div>
+</div>

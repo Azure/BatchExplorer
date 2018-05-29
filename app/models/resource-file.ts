@@ -1,9 +1,9 @@
-import { Model, Prop, Record } from "app/core";
+import { Model, Prop, Record } from "@batch-flask/core";
 
 export interface ResourceFileAttributes {
     blobSource: string;
     filePath: string;
-    fileMode: string;
+    fileMode?: string;
 }
 
 /**
@@ -11,12 +11,13 @@ export interface ResourceFileAttributes {
  */
 @Model()
 export class ResourceFile extends Record<ResourceFileAttributes> {
-    @Prop()
-    public blobSource: string;
+    @Prop() public blobSource: string;
 
-    @Prop()
-    public filePath: string;
+    @Prop() public filePath: string;
 
-    @Prop()
-    public fileMode: string;
+    @Prop() public fileMode: string;
+
+    public get id() {
+        return this.filePath;
+    }
 }

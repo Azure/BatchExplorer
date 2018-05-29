@@ -1,10 +1,7 @@
 @import "app/styles/variables";
 
 bl-file-group-picker {
-    display: flex;
-    align-items: center;
-
-    mat-form-field {
+    bl-form-field {
         width: 100%;
         flex: 1;
 

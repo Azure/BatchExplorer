@@ -1,0 +1,14 @@
+bl-inline-quota {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+
+    > bl-quota-display {
+        margin: 5px;
+    }
+
+    > .expanded {
+        padding: 5px;
+    }
+}

@@ -1,9 +1,9 @@
 <div [ngSwitch]="parameter.type">
     <div *ngSwitchCase="NcjParameterExtendedType.string">
-        <mat-form-field class="form-element">
-            <input matInput type="text" [formControl]="parameterValue" [placeholder]="parameter.name">
-            <mat-hint align="end"> {{ parameter.description }} </mat-hint>
-        </mat-form-field>
+        <bl-form-field class="form-element">
+            <input blInput  type="text" [formControl]="parameterValue" [placeholder]="parameter.name">
+            <bl-hint align="end"> {{ parameter.description }} </bl-hint>
+        </bl-form-field>
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.fileGroup">
         <bl-file-group-picker [formControl]="parameterValue" [label]="parameter.name" class="form-element" [hint]="parameter.description">
@@ -14,29 +14,34 @@
             [label]="parameter.name" class="form-element" [hint]="parameter.description">
         </bl-file-group-sas>
     </div>
+    <div *ngSwitchCase="NcjParameterExtendedType.fileGroupWriteSas">
+        <bl-file-group-sas [containerId]="getContainerFromFileGroup(parameterValues[parameter.dependsOn])" [formControl]="parameterValue"
+            [label]="parameter.name" class="form-element" [hint]="parameter.description" [allowWrite]="true">
+        </bl-file-group-sas>
+    </div>
     <div *ngSwitchCase="NcjParameterExtendedType.fileInFileGroup">
         <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(parameterValues[parameter.dependsOn])" [formControl]="parameterValue"
-            [label]="parameter.name" class="form-element" [hint]="parameter.description">
+            [label]="parameter.name" class="form-element" [hint]="parameter.description" [wildcards]="parameter.wildcards">
         </bl-cloud-file-picker>
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.dropDown">
-        <mat-form-field>
-            <mat-select [formControl]="parameterValue" [placeholder]="parameter.name">
-                <mat-hint align="end"> {{ parameter.description }} </mat-hint>
-                <mat-option *ngFor="let opt of parameter.allowedValues" [value]="opt"> {{ opt }} </mat-option>
-            </mat-select>
-        </mat-form-field>
+        <bl-form-field>
+            <bl-select [formControl]="parameterValue" [placeholder]="parameter.name">
+                <bl-option *ngFor="let opt of parameter.allowedValues;trackBy: trackOption" [value]="opt" [label]="opt"></bl-option>
+            </bl-select>
+            <bl-hint align="end"> {{ parameter.description }} </bl-hint>
+        </bl-form-field>
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.int">
-        <mat-form-field class="form-element">
-            <input matInput type="number" [formControl]="parameterValue" [placeholder]="parameter.name">
-            <mat-hint align="end"> {{ parameter.description }} </mat-hint>
-        </mat-form-field>
+        <bl-form-field class="form-element">
+            <input blInput  type="number" [formControl]="parameterValue" [placeholder]="parameter.name">
+            <bl-hint align="end"> {{ parameter.description }} </bl-hint>
+        </bl-form-field>
     </div>
     <div *ngSwitchDefault>
-        <mat-form-field class="form-element">
-            <input matInput type="text" [formControl]="parameterValue" [placeholder]="parameter.name">
-            <mat-hint align="end"> {{ parameter.description }} </mat-hint>
-        </mat-form-field>
+        <bl-form-field class="form-element">
+            <input blInput  type="text" [formControl]="parameterValue" [placeholder]="parameter.name">
+            <bl-hint align="end"> {{ parameter.description }} </bl-hint>
+        </bl-form-field>
     </div>
 </div>

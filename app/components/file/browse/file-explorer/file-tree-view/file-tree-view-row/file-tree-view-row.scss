@@ -1,0 +1,43 @@
+@import "app/styles/variables";
+
+bl-file-tree-view-row {
+    cursor: pointer;
+    display: block;
+    height: 22px;
+    line-height: 22px;
+    vertical-align: middle;
+    user-select: none;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+
+    &:hover {
+        background: $whitesmoke-darker;
+    }
+
+    &.active {
+        background: $whitesmoke-darker;
+    }
+
+    &.focused {
+        background: $primary-color-light;
+    }
+
+    &.drop-target {
+        background: $whitesmoke-darker;
+    }
+
+    &.virtual {
+        opacity: 0.6;
+    }
+
+    > .file-icon {
+        > .fa-folder, > .fa-folder-open {
+            color: $folder-icon-color;
+        }
+
+        > .fa-file {
+            color: $dove-grey;
+        }
+    }
+}
