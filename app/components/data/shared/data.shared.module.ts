@@ -13,9 +13,16 @@ import { JobIdComponent } from "./job-id/job-id.component";
 import { StorageAccountPickerComponent } from "./storage-account-picker";
 
 const components = [
-    BlobContainerPickerComponent, CloudFilePickerComponent, CloudFilePickerDialogComponent,
-    FileGroupPickerComponent, FileGroupSasComponent, FileGroupsPickerComponent, FileOrDirectoryPickerComponent,
-    JobIdComponent, StorageAccountPickerComponent, StorageErrorDisplayComponent,
+    BlobContainerPickerComponent,
+    CloudFilePickerComponent,
+    CloudFilePickerDialogComponent,
+    FileGroupPickerComponent,
+    FileGroupSasComponent,
+    FileGroupsPickerComponent,
+    FileOrDirectoryPickerComponent,
+    JobIdComponent,
+    StorageAccountPickerComponent,
+    StorageErrorDisplayComponent,
 ];
 
 @NgModule({
