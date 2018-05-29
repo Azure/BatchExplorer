@@ -20,7 +20,7 @@ install:
   # Check that we have the expected version and architecture for Python
   - "python --version"
 
-  - ps: Install-Product node 10.2.1 x64
+  - ps: Install-Product node 10 x64
   - npm install -g npm -s
   - npm install -g yarn -s
   - yarn install --force
