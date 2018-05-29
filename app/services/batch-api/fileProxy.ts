@@ -1,4 +1,4 @@
-import { MimeUtils } from "app/utils";
+import { EncodingUtils } from "@batch-flask/utils";
 import { BatchServiceClient } from "azure-batch";
 import * as fs from "fs";
 import { ListProxy, wrapOptions } from "./shared";
@@ -124,7 +124,7 @@ export class FileProxy {
             if (result.done) {
                 return text;
             }
-            const mimeType = MimeUtils.detectMimeAndEncodingFromBuffer({
+            const mimeType = EncodingUtils.detectEncodingFromBuffer({
                 buffer: new Buffer(result.value.buffer),
                 bytesRead: result.value.length,
             });
