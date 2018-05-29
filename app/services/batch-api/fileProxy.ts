@@ -121,14 +121,12 @@ export class FileProxy {
         let result;
         while (true) {
             result = await reader.read();
-            console.log("Result", result);
             if (result.done) {
                 const buffer = Buffer.concat(chunks);
                 const { encoding } = await EncodingUtils.detectEncodingFromBuffer({
                     buffer,
                     bytesRead: buffer.length,
                 });
-                console.log("Result", encoding);
                 return new TextDecoder(encoding || "utf-8").decode(buffer);
             }
             chunks.push(new Buffer(result.value.buffer));
