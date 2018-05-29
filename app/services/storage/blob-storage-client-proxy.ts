@@ -135,40 +135,17 @@ export class BlobStorageClientProxy {
      * @param {string} blob - Fully prefixed blob path: "1001/$TaskOutput/myblob.txt"
      * @param {StorageRequestOptions} options - Optional request parameters
      */
-    public getBlobContent(container: string, blob: string, options?: StorageRequestOptions) {
-        return new Promise((resolve, reject) => {
-            const chunks = [];
-            let encoding = null;
-            const stream = this.client.createReadStream(container, blob, options, (error, text, response) => {
-                if (error) {
-                    reject(error);
-                }
-            });
-            stream.on("data", (chunk) => {
-                chunks.push(chunk);
-                if (!encoding) {
-                    const result = EncodingUtils.detectEncodingFromBuffer({ buffer: chunk, bytesRead: chunk.length });
-                    if (result) {
-                        encoding = result.encoding;
-                    }
-                    console.log("Encoding result is", result);
-                }
-            });
+    public async getBlobContent(container: string, blob: string, options?: StorageRequestOptions) {
+        const buffer = await this._getBlobAsBuffer(container, blob, options);
+        const {encoding} = await EncodingUtils.detectEncodingFromBuffer({ buffer, bytesRead: buffer.length });
+        let content;
+        if (encoding) {
+            content = new TextDecoder(encoding).decode(buffer);
+        } else {
+            content = buffer.toString();
+        }
 
-            stream.on("end", () => {
-                console.log("stream finish", chunks);
-                const buffer = Buffer.concat(chunks);
-                if (encoding) {
-                    console.log("Herere", new TextDecoder(encoding).decode(buffer));
-                    resolve({ content: new TextDecoder(encoding).decode(buffer) });
-                }
-                resolve({ content: buffer.toString() });
-            });
-
-            stream.on("error", (error) => {
-                reject(error);
-            });
-        });
+        return { content };
     }
 
     /**
@@ -391,5 +368,28 @@ export class BlobStorageClientProxy {
         }
         const data = Array.isArray(blobPrefix) ? blobPrefix : [blobPrefix];
         return data.map(x => x["Name"].slice(0, -1));
+    }
+
+    private _getBlobAsBuffer(container: string, blob: string, options: StorageRequestOptions): Promise<Buffer> {
+        return new Promise((resolve, reject) => {
+            const chunks = [];
+            const stream = this.client.createReadStream(container, blob, options, (error, text, response) => {
+                if (error) {
+                    reject(error);
+                }
+            });
+            stream.on("data", (chunk) => {
+                chunks.push(chunk);
+            });
+
+            stream.on("end", () => {
+                const buffer = Buffer.concat(chunks);
+                resolve(buffer);
+            });
+
+            stream.on("error", (error) => {
+                reject(error);
+            });
+        });
     }
 }
