@@ -1,0 +1,36 @@
+@import "app/styles/variables";
+
+bl-toggle-filter-button {
+    position: relative;
+
+    > bl-clickable {
+        display: block;
+        color: $scorpion;
+        cursor: pointer;
+
+        font-size: 16px;
+        background: $athensGrey;
+        height: 26px;
+        width: 26px;
+        position: relative;
+        padding-left: 5px;
+        padding-top: 5px;
+
+        &:hover {
+            color: $dusty-grey;
+        }
+
+        > .filtering {
+            position: absolute;
+            top: 3px;
+            left: 12px;
+            background-color: $primary-color;
+            color: white;
+            border-radius: 99%;
+            width: 12px;
+            height: 12px;
+            vertical-align: middle;
+            text-align: center;
+        }
+    }
+}

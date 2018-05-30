@@ -8,6 +8,7 @@ files:
   - "build/"
   - "node_modules/"
   - "package.json"
+  - "!node_modules/jschardet/"
 
 extraResources:
   - from: "python/dist/main"
@@ -16,6 +17,7 @@ extraResources:
       - "**/*"
   - "ThirdPartyNotices.txt"
   - "data"
+  - "node_modules/jschardet/"
 
 protocols:
   - name: "BatchLabs protocol"

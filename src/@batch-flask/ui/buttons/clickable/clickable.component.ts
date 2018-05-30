@@ -33,12 +33,12 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     @HostBinding("class.focus-outline") public focusOutline = true;
     public subtitle = "";
 
-    private permissionService: PermissionService;
+    private permissionService?: PermissionService;
     private _sub: Subscription;
     private _permissionDisabled = false;
 
     constructor(injector: Injector) {
-        this.permissionService = injector.get(PermissionService);
+        this.permissionService = injector.get(PermissionService, null);
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
