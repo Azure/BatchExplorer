@@ -15,6 +15,12 @@ module.exports = function(config) {
                 pattern: "./test/app/spec-entry.js",
                 watched: false
             },
+            {
+                pattern: "./test/fixtures/**/*",
+                watched: false,
+                included: false,
+                served: true,
+            }
         ],
 
         // proxied base paths
