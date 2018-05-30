@@ -9,9 +9,14 @@ import { ScrollableModule } from "@batch-flask/ui/scrollable";
 import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-filter";
 import { BrowseLayoutListDirective } from "./browse-layout-list";
 import { BrowseLayoutComponent } from "./browse-layout.component";
+import { ToggleFilterButtonComponent } from "./toggle-filter-button";
 
 const privateComponents = [];
-const publicComponents = [BrowseLayoutComponent, BrowseLayoutListDirective, BrowseLayoutAdvancedFilterDirective];
+const publicComponents = [
+    BrowseLayoutComponent,
+    BrowseLayoutListDirective,
+    ToggleFilterButtonComponent,
+    BrowseLayoutAdvancedFilterDirective];
 
 @NgModule({
     imports: [
