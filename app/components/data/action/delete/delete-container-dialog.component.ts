@@ -21,4 +21,8 @@ export class DeleteContainerDialogComponent extends ConfirmationDialog<any> {
     public ok() {
         this.markAsConfirmed();
     }
+
+    public trackContainer(index, container: BlobContainer) {
+        return container.name;
+    }
 }

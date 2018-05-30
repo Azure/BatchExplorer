@@ -7,7 +7,7 @@
                 <th>Location</th>
                 <th>Name</th>
             </tr>
-            <tr *ngFor="let account of accounts">
+            <tr *ngFor="let account of accounts;trackBy: trackAccount">
                 <td>{{account.subscription.subscriptionId}}</td>
                 <td>{{account.location}}</td>
                 <td>{{account.name}}</td>

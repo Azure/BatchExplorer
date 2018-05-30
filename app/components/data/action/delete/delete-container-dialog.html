@@ -6,7 +6,7 @@
             <tr style="text-align: left;">
                 <th>Name</th>
             </tr>
-            <tr *ngFor="let container of containers">
+            <tr *ngFor="let container of containers;trackBy: trackContainer">
                 <td>{{container.name}}</td>
             </tr>
         </table>

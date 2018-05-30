@@ -28,4 +28,8 @@ export class DeleteAccountDialogComponent extends ConfirmationDialog<any> {
     public ok() {
         this.markAsConfirmed();
     }
+
+    public trackAccount(index, account: AccountResource) {
+        return account.id;
+    }
 }
