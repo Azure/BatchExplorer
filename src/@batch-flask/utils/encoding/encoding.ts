@@ -102,6 +102,7 @@ export class EncodingUtils {
         const b0 = buffer.readUInt8(0);
         const b1 = buffer.readUInt8(1);
 
+        console.log("Got here", b0, b1);
         // UTF-16 BE
         if (b0 === 0xFE && b1 === 0xFF) {
             return Encoding.UTF16be;
@@ -117,6 +118,7 @@ export class EncodingUtils {
         }
 
         const b2 = buffer.readUInt8(2);
+        console.log("Got here", b0, b1, b2);
 
         // UTF-8
         if (b0 === 0xEF && b1 === 0xBB && b2 === 0xBF) {

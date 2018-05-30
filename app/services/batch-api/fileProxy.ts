@@ -115,22 +115,13 @@ export class FileProxy {
     }
 
     private async _readContent(response: Response): Promise<string> {
-        const reader = response.body.getReader();
+        const buffer = await response.arrayBuffer();
 
-        const chunks = [];
-        let result;
-        while (true) {
-            result = await reader.read();
-            if (result.done) {
-                const buffer = Buffer.concat(chunks);
-                const { encoding } = await EncodingUtils.detectEncodingFromBuffer({
-                    buffer,
-                    bytesRead: buffer.length,
-                });
-                return new TextDecoder(encoding || "utf-8").decode(buffer);
-            }
-            chunks.push(new Buffer(result.value.buffer));
-        }
+        const { encoding } = await EncodingUtils.detectEncodingFromBuffer({
+            buffer,
+            bytesRead: buffer.byteLength,
+        });
+        return new TextDecoder(encoding || "utf-8").decode(buffer);
     }
 
     private async _downloadContent(response: Response, destination: string): Promise<boolean> {
@@ -145,8 +136,9 @@ export class FileProxy {
                 output.close();
                 return true;
             }
-
-            output.write(new Buffer(result.value.buffer));
+            if (result.value) {
+                output.write(new Buffer(result.value.buffer));
+            }
         }
     }
 }

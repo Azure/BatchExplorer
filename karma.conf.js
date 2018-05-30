@@ -20,6 +20,8 @@ module.exports = function(config) {
                 watched: false,
                 included: false,
                 served: true,
+                // Important, if karma cache the encoding files it will remove the BOM which fails the tests
+                nocache: true,
             }
         ],
 
