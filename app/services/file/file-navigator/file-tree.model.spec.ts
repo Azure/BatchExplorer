@@ -337,5 +337,25 @@ describe("FileTreeStructure", () => {
             | - root.txt
             `));
         });
+
+        it("Shouldn't remove virtual folders", () => {
+            tree.addVirtualFolder("folder/my-virtual");
+
+            const files = List([
+                makeFile("folder/file2.txt"),
+                makeFile("folder/file3.txt"),
+            ]);
+            tree.setFilesAt("folder", files);
+            expect(reprTree(tree)).toEqual(cleanupRepr(`
+            | + folder
+            |   + my-virtual
+            |   - file2.txt
+            |   - file3.txt
+            | + other
+            |   - file1.txt
+            |   - file2.txt
+            | - root.txt
+            `));
+        });
     });
 });

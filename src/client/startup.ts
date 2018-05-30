@@ -50,7 +50,9 @@ async function startApplication(batchLabsApp: BatchLabsApplication) {
 }
 
 export async function startBatchLabs() {
-    process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
+    // Those warnings are electron complaining we are loading remote data
+    // But this is a false positive when using dev server has it doesn't seem to ignore localhost
+    process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true";
     localStorage.load();
     const batchLabsApp = new BatchLabsApplication(autoUpdater);
     setupSingleInstance(batchLabsApp);
