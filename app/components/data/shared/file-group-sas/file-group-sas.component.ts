@@ -49,14 +49,7 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
                 private storageContainerService: StorageContainerService) {
 
         this.fileGroupsData = this.storageContainerService.listView();
-        this.autoStorageService.get().subscribe((storageAccountId) => {
-            this.fileGroupsData.params = {
-                storageAccountId,
-            };
-            this.fileGroupsData.setOptions({
-                prefix: Constants.ncjFileGroupPrefix,
-            });
-        });
+
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;
         });
@@ -79,7 +72,15 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
     }
 
     public ngOnInit() {
-        this.fileGroupsData.fetchNext();
+        this.autoStorageService.get().subscribe((storageAccountId) => {
+            this.fileGroupsData.params = {
+                storageAccountId,
+            };
+            this.fileGroupsData.setOptions({
+                prefix: Constants.ncjFileGroupPrefix,
+            });
+            this.fileGroupsData.fetchNext();
+        });
     }
 
     public ngOnDestroy() {

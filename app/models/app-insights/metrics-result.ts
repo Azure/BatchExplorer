@@ -11,10 +11,15 @@ export interface AppInsightsMetricBody {
     start: string;
     end: string;
     interval: string;
-    segments: AppInsightsMetricSegment[];
+    segments: AppInsightsMetricTimeSegment[];
 }
 
 export interface AppInsightsMetricSegment {
+    segments?: AppInsightsMetricSegment[];
+    [key: string]: any;
+}
+
+export interface AppInsightsMetricTimeSegment {
     start: string;
     end: string;
     [key: string]: any;
@@ -25,14 +30,23 @@ export interface PerformanceMetric {
     value: number;
 }
 
+/**
+ * Value of a metric separated by node. Map key are node ids.
+ */
+export type NodesPerformanceMetric = StringMap<PerformanceMetric[]>;
+export type NodesDisksPerformanceMetric = StringMap<NodesPerformanceMetric>;
+export type NodesCpusPerformanceMetric = StringMap<NodesPerformanceMetric>;
+
 export interface BatchPerformanceMetrics {
-    cpuUsage: PerformanceMetric[];
+    cpuUsage: NodesCpusPerformanceMetric;
     individualCpuUsage: PerformanceMetric[][];
-    memory: PerformanceMetric[];
+    memory: NodesPerformanceMetric;
     networkRead: PerformanceMetric[];
     networkWrite: PerformanceMetric[];
     diskRead: PerformanceMetric[];
     diskWrite: PerformanceMetric[];
+    diskUsed: NodesDisksPerformanceMetric;
+    diskFree: NodesDisksPerformanceMetric;
 }
 
 export enum BatchPerformanceMetricType {
@@ -44,4 +58,6 @@ export enum BatchPerformanceMetricType {
     diskWrite = "diskWrite",
     networkRead = "networkRead",
     networkWrite = "networkWrite",
+    diskUsed = "diskUsed",
+    diskFree = "diskFree",
 }

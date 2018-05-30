@@ -1,5 +1,5 @@
 import {
-    AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, ViewChild,
+    AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild,
 } from "@angular/core";
 import * as d3 from "d3";
 
@@ -41,7 +41,7 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
 
     @Input()
     public set options(options: GaugeConfig) {
-        this._options = Object.assign({}, defaultOptions, options);
+        this._options = { ...defaultOptions, ...options };
     }
     public get options() { return this._options; }
 
@@ -104,7 +104,7 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
         this.redraw();
     }
 
-    public ngOnChanges(inputs) {
+    public ngOnChanges(inputs: SimpleChanges) {
         if (inputs.size) {
             this._computeDimensions();
         }
@@ -214,7 +214,9 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
     private _computePercent() {
         const { min, max } = this._options;
         const diff = max - min;
-        this.percent = (this.value - min) / (diff || 1);
+        const ratio = (this.value - min) / (diff || 1);
+        // Do not allow percent to overflow
+        this.percent = Math.max(0, Math.min(1, ratio));
     }
 
     /**
@@ -223,8 +225,8 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
      * @param previous Previous options
      */
     private _processOptionChange(current: GaugeConfig, previous: GaugeConfig) {
-        current = Object.assign({}, defaultOptions, current);
-        previous = Object.assign({}, defaultOptions, previous);
+        current = { ...defaultOptions, ...current };
+        previous = { ...defaultOptions, ...previous };
 
         if (current.showLabels !== previous.showLabels) {
             if (current.showLabels) {

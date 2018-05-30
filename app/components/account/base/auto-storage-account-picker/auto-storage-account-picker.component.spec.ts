@@ -3,12 +3,14 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
+import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
 import { AccountResource, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
-import { LoadingMockComponent, TableCellMockComponent, TableMockComponent } from "test/utils/mocks/components";
+import { ElectronTestingModule } from "test/utils/mocks";
+import { LoadingMockComponent, TableTestingModule } from "test/utils/mocks/components";
 import { AutoStorageAccountPickerComponent } from "./auto-storage-account-picker.component";
 
 const account = new AccountResource({
@@ -47,13 +49,14 @@ describe("AutoStorageAccountPickerComponent", () => {
             ])),
         };
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, FormsModule],
+            imports: [RouterTestingModule, FormsModule, TableTestingModule, ElectronTestingModule],
             declarations: [
-                AutoStorageAccountPickerComponent, TableMockComponent, TableCellMockComponent,
+                AutoStorageAccountPickerComponent,
                 LoadingMockComponent, TestComponent,
             ],
             providers: [
                 { provide: StorageAccountService, useValue: storageServiceSpy },
+                { provide: BreadcrumbService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -63,19 +66,19 @@ describe("AutoStorageAccountPickerComponent", () => {
         component = de.componentInstance;
         fixture.detectChanges();
 
-        preferedTable = de.query(By.css("bl-table.prefered"));
-        otherTable = de.query(By.css("bl-table.others"));
+        preferedTable = de.query(By.css(".prefered bl-table"));
+        otherTable = de.query(By.css(".others bl-table"));
     });
 
     it("should split accounts in best region and other regions", () => {
-        const preferedRows = preferedTable.queryAll(By.css("bl-row"));
+        const preferedRows = preferedTable.queryAll(By.css("bl-row-render"));
         expect(preferedRows.length).toBe(2);
         expect(preferedRows[0].nativeElement.textContent).toContain("storage-1");
         expect(preferedRows[0].nativeElement.textContent).toContain("westus");
         expect(preferedRows[1].nativeElement.textContent).toContain("storage-3");
         expect(preferedRows[1].nativeElement.textContent).toContain("westus");
 
-        const otherRows = otherTable.queryAll(By.css("bl-row"));
+        const otherRows = otherTable.queryAll(By.css("bl-row-render"));
         expect(otherRows.length).toBe(3);
         expect(otherRows[0].nativeElement.textContent).toContain("storage-2");
         expect(otherRows[1].nativeElement.textContent).toContain("storage-4");

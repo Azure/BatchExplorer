@@ -12,12 +12,10 @@ import { ApplicationPackageTableComponent } from "app/components/application/det
 import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
-import { NoItemMockComponent } from "test/utils/mocks/components";
+import { NoItemMockComponent, TableTestingModule } from "test/utils/mocks/components";
 
 import { ContextMenuService } from "@batch-flask/ui";
-import {
-    TableCellComponent, TableColumnComponent, TableComponent, TableHeadComponent,
-} from "@batch-flask/ui/table";
+import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 
 const appWithPackagesId: string = "app-2";
 const appWithoutPackagesId: string = "app-1";
@@ -70,10 +68,9 @@ describe("ApplicationPackageTableComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
+            imports: [RouterTestingModule, TableTestingModule],
             declarations: [
-                ApplicationPackageTableComponent, NoItemMockComponent, TableComponent, TableCellComponent,
-                TableColumnComponent, TableHeadComponent, TestComponent,
+                ApplicationPackageTableComponent, NoItemMockComponent, TestComponent,
             ],
             providers: [
                 { provide: MatDialog, useValue: null },
@@ -81,6 +78,7 @@ describe("ApplicationPackageTableComponent", () => {
                 { provide: BackgroundTaskService, useValue: null },
                 { provide: ContextMenuService, useValue: null },
                 { provide: SidebarManager, useValue: null },
+                { provide: BreadcrumbService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

@@ -1,17 +1,21 @@
 <bl-focus-section *ngIf="displayedPackages.size > 0">
-    <bl-table [(activeItem)]="activeItem" [(selection)]="selection">
-        <bl-thead>
-            <bl-column style="width: 25%">Version</bl-column>
-            <bl-column style="width: 25%">State</bl-column>
-            <bl-column style="width: 25%">Format</bl-column>
-            <bl-column style="width: 25%">Last activation time</bl-column>
-        </bl-thead>
-        <bl-row *ngFor="let package of displayedPackages;trackBy: trackByFn" [key]="package.version">
-            <bl-cell style="width: 25%" [value]="package.version"></bl-cell>
-            <bl-cell style="width: 25%" [value]="package.state"></bl-cell>
-            <bl-cell style="width: 25%" [value]="package.format"></bl-cell>
-            <bl-cell style="width: 25%" [value]="formatDate(package.lastActivationTime)"></bl-cell>
-        </bl-row>
+    <bl-table [(activeItem)]="activeItem" [(selection)]="selection" [data]="displayedPackages">
+        <bl-column name="version">
+            <div *blHeadCellDef>Version</div>
+            <div *blCellDef="let package">{{package.version}}</div>
+        </bl-column>
+        <bl-column name="state">
+            <div *blHeadCellDef>State</div>
+            <div *blCellDef="let package">{{package.version}}</div>
+        </bl-column>
+        <bl-column name="format">
+            <div *blHeadCellDef>Format</div>
+            <div *blCellDef="let package">{{package.format}}</div>
+        </bl-column>
+        <bl-column name="lastActivationTime">
+            <div *blHeadCellDef>Last activation time</div>
+            <div *blCellDef="let package">{{formatDate(package.lastActivationTime)}}</div>
+        </bl-column>
     </bl-table>
 </bl-focus-section>
 

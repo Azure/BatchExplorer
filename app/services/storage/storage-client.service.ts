@@ -1,13 +1,14 @@
 import { Injectable } from "@angular/core";
+import { ServerError } from "@batch-flask/core";
 import { Observable } from "rxjs";
 
-import { ServerError } from "@batch-flask/core";
-import {  StorageKeys } from "app/models";
+import { StorageKeys } from "app/models";
 import { AccountService } from "app/services/account.service";
 import { BatchLabsService } from "app/services/batch-labs.service";
 import { ArmResourceUtils } from "app/utils";
+import { BlobStorageClientProxy } from "./blob-storage-client-proxy";
 import { StorageAccountKeysService } from "./storage-account-keys.service";
-import {  StorageClientProxyFactory } from "./storage-client-proxy-factory";
+import { StorageClientProxyFactory } from "./storage-client-proxy-factory";
 
 export interface AutoStorageSettings {
     lastKeySync: Date;
@@ -65,7 +66,7 @@ export class StorageClientService {
         }).share();
     }
 
-    public getFor(storageAccountId: string): Observable<any> {
+    public getFor(storageAccountId: string): Observable<BlobStorageClientProxy> {
         return this.storageKeysService.getFor(storageAccountId).map((keys) => {
             return this._storageClientFactory.getBlobServiceForSharedKey({
                 account: ArmResourceUtils.getAccountNameFromResourceId(storageAccountId),

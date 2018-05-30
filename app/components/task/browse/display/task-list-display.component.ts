@@ -12,6 +12,8 @@ import { Task, TaskState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
 import { DateUtils } from "app/utils";
 
+import "./task-list-display.scss";
+
 @Component({
     selector: "bl-task-list-display",
     templateUrl: "task-list-display.html",

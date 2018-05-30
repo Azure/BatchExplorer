@@ -65,7 +65,7 @@ class BatchLabsApp:
                     'paramDescription': e.parameter_description,
                 })
             except TypeError as e:
-                logging.error("Failed to call procedure %s, error was thrown %s", name, str(valueError))
+                logging.error("Failed to call procedure %s, error was thrown %s", name, str(e))
                 print(traceback.format_exc())
                 raise JsonRpcInvalidParamsError(str(e), e.args)
         else:

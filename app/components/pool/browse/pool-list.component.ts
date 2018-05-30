@@ -12,7 +12,6 @@ import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { TableConfig } from "@batch-flask/ui/table";
 import { Pool } from "app/models";
-import { PoolDecorator } from "app/models/decorators";
 import { PoolListParams, PoolService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
@@ -35,7 +34,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         showCheckbox: true,
     };
 
-    public pools: List<PoolDecorator> = List([]);
+    public pools: List<Pool> = List([]);
     private _subs: Subscription[] = [];
 
     constructor(
@@ -57,7 +56,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
             this.data.loadNewItem(poolService.get(poolId));
         }));
         this._subs.push(this.data.items.subscribe((pools) => {
-            this.pools = List<PoolDecorator>(pools.map(x => new PoolDecorator(x)));
+            this.pools = pools;
             this.changeDetector.markForCheck();
         }));
     }

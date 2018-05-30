@@ -1,3 +1,7 @@
+# 0.15.2
+Fixes:
+* 3rd subscription in account list is always disabled [\#1374](https://github.com/Azure/BatchLabs/issues/1374)
+
 # 0.15.1
 * Enable browsing files of a offline node
 * Change offline node color

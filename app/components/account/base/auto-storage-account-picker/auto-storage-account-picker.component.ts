@@ -20,8 +20,7 @@ import "./auto-storage-account-picker.scss";
 export class AutoStorageAccountPickerComponent implements OnInit, ControlValueAccessor {
     public noSelectionKey = "-1";
 
-    @Input()
-    public account: AccountResource;
+    @Input() public account: AccountResource;
 
     public preferedAccounts: List<StorageAccount> = List([]);
     public otherAccounts: List<StorageAccount> = List([]);
@@ -42,7 +41,7 @@ export class AutoStorageAccountPickerComponent implements OnInit, ControlValueAc
     }
 
     public writeValue(value: string) {
-        this.pickedStorageAccountId = value || this.noSelectionKey;
+        this.pickedStorageAccountId = value ? value.toLowerCase() : this.noSelectionKey;
 
     }
 

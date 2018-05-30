@@ -163,19 +163,8 @@ bl-browse-layout {
         }
     }
 
-    .toggle-advanced-filter {
-        color: $scorpion;
-        cursor: pointer;
-        padding-left: 5px;
-        padding-top: 5px;
-        font-size: 16px;
-        background: $athensGrey;
-        height: 26px;
-        width: 26px;
+    bl-toggle-filter-button {
 
-        &:hover {
-            color: $dusty-grey;
-        }
     }
 
     bl-select {

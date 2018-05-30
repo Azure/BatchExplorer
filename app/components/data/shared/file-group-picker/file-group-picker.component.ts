@@ -46,14 +46,6 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         private sidebarManager: SidebarManager) {
 
         this.fileGroupsData = this.storageContainerService.listView();
-        this.autoStorageService.get().subscribe((storageAccountId) => {
-            this.fileGroupsData.params = {
-                storageAccountId,
-            };
-            this.fileGroupsData.setOptions({
-                filter: FilterBuilder.prop("name").startswith(Constants.ncjFileGroupPrefix),
-            });
-        });
 
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;
@@ -79,9 +71,18 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     }
 
     public ngOnInit() {
-        this.fileGroupsData.fetchAll().subscribe(() => {
-            this._loading = false;
-            this._checkValid(this.value.value);
+        this.autoStorageService.get().subscribe((storageAccountId) => {
+            this.fileGroupsData.params = {
+                storageAccountId,
+            };
+            this.fileGroupsData.setOptions({
+                filter: FilterBuilder.prop("name").startswith(Constants.ncjFileGroupPrefix),
+            });
+
+            this.fileGroupsData.fetchAll().subscribe(() => {
+                this._loading = false;
+                this._checkValid(this.value.value);
+            });
         });
     }
 

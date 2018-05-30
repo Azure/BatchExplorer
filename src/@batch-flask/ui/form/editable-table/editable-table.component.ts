@@ -1,5 +1,6 @@
 import {
-    AfterViewInit, Component, ContentChildren, OnDestroy, QueryList, forwardRef,
+    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
+    Component, ContentChildren, HostListener, OnDestroy, QueryList, forwardRef,
 } from "@angular/core";
 import {
     ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
@@ -9,18 +10,19 @@ import { Subscription } from "rxjs";
 import { ObjectUtils } from "@batch-flask/utils";
 import { EditableTableColumnComponent, EditableTableColumnType } from "./editable-table-column.component";
 
+import { ENTER } from "@batch-flask/core/keys";
 import "./editable-table.scss";
 
 @Component({
     selector: "bl-editable-table",
     templateUrl: "editable-table.html",
     providers: [
-        // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => EditableTableComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => EditableTableComponent), multi: true },
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditableTableComponent implements ControlValueAccessor, Validator, AfterViewInit, OnDestroy {
+export class EditableTableComponent implements ControlValueAccessor, Validator, AfterContentInit, OnDestroy {
     @ContentChildren(EditableTableColumnComponent)
     public columns: QueryList<EditableTableColumnComponent>;
     public EditableTableColumnType = EditableTableColumnType;
@@ -31,13 +33,11 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     private _sub: Subscription;
     private _writingValue = false;
 
-    constructor(private formBuilder: FormBuilder) {
+    constructor(private formBuilder: FormBuilder, private changeDetector: ChangeDetectorRef) {
         this.items = formBuilder.array([]);
         this.form = formBuilder.group({ items: this.items });
         this._sub = this.items.valueChanges.subscribe((files) => {
-            if (this._writingValue) {
-                return;
-            }
+            if (this._writingValue) { return; }
             const lastFile = files[files.length - 1];
             if (lastFile && !this._isEmpty(lastFile)) {
                 this.addNewItem();
@@ -48,14 +48,21 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
         });
     }
 
-    public ngAfterViewInit() {
-        setTimeout(() => {
-            this.addNewItem();
-        });
+    public ngAfterContentInit() {
+        this._writingValue = true;
+        this.addNewItem();
+        this._writingValue = false;
     }
 
     public ngOnDestroy() {
         this._sub.unsubscribe();
+    }
+
+    @HostListener("keypress", ["$event"])
+    public handleKeydown(event: KeyboardEvent) {
+        if (event.key === ENTER) {
+            event.preventDefault();
+        }
     }
 
     public addNewItem() {
@@ -72,10 +79,12 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
             obj[column.name] = "";
         }
         this.items.push(this.formBuilder.group(obj));
+        this.changeDetector.markForCheck();
     }
 
     public deleteItem(index: number) {
         this.items.removeAt(index);
+        this.changeDetector.markForCheck();
     }
 
     public writeValue(value: any[]) {

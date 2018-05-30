@@ -58,6 +58,7 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
     public filter: Filter = FilterBuilder.none();
     public quickFilter: Filter = FilterBuilder.none();
     public advancedFilter: Filter = FilterBuilder.none();
+
     public showAdvancedFilter = false;
     public deleteSelectionIsEnabled = false;
     public refreshEnabled = false;
@@ -199,5 +200,6 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
             this.filter = FilterBuilder.and(this.quickFilter, this.advancedFilter);
         }
         this.listDirective.component.filter = this.filter;
+        this.changeDetector.markForCheck();
     }
 }

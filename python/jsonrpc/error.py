@@ -25,11 +25,11 @@ class JsonRpcError(BaseException):
         Class representing a JSON rpc error
     """
 
-    def __init__(self, code: str, message: str, data: object):
+    def __init__(self, code: str, message: str, data: object = None):
         super().__init__()
         self.code = code
         self.message = message
-        self.data = data
+        self.data = data or []
 
     def to_json(self):
         return json.dumps({

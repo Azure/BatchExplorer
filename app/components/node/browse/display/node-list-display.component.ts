@@ -8,6 +8,8 @@ import { QuickListComponent } from "@batch-flask/ui/quick-list";
 import { TableComponent } from "@batch-flask/ui/table";
 import { Node } from "app/models";
 
+import "./node-list-display.scss";
+
 @Component({
     selector: "bl-node-list-display",
     templateUrl: "node-list-display.html",

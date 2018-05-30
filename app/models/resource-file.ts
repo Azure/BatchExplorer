@@ -16,4 +16,8 @@ export class ResourceFile extends Record<ResourceFileAttributes> {
     @Prop() public filePath: string;
 
     @Prop() public fileMode: string;
+
+    public get id() {
+        return this.filePath;
+    }
 }

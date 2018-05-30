@@ -14,6 +14,7 @@ import { PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
 import { StringUtils, exists, prettyBytes } from "app/utils";
 
+import { TableConfig } from "@batch-flask/ui/table";
 import "./vm-size-picker.scss";
 
 const categoriesDisplayName = {
@@ -26,6 +27,7 @@ const categoriesDisplayName = {
 };
 
 export class VmSizeDecorator {
+    public id: string;
     public title: string;
     public prettyCores: string;
     public prettyRAM: string;
@@ -35,6 +37,7 @@ export class VmSizeDecorator {
     public prettyPrice: string;
 
     constructor(public vmSize: VmSize, prices: OSPricing) {
+        this.id = vmSize.id;
         this.title = this.prettyTitle(vmSize.name);
         this.prettyCores = this.prettyMb(vmSize.numberOfCores);
         this.prettyRAM = this.prettyMb(vmSize.memoryInMB);
@@ -59,7 +62,6 @@ export class VmSizeDecorator {
     }
 }
 
-// tslint:disable:no-forward-ref
 @Component({
     selector: "bl-vm-size-picker",
     templateUrl: "vm-size-picker.html",
@@ -80,6 +82,16 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     public categoryNames: string[];
     public categories: StringMap<VmSizeDecorator[]>;
     public prices: OSPricing = null;
+
+    public tableConfig: TableConfig = {
+        values: {
+            title: (size: VmSizeDecorator) => size.vmSize.name,
+            cores: (size: VmSizeDecorator) => size.vmSize.numberOfCores,
+            ram: (size: VmSizeDecorator) => size.vmSize.memoryInMB,
+            osDisk: (size: VmSizeDecorator) => size.vmSize.osDiskSizeInMB,
+            resourceDisk: (size: VmSizeDecorator) => size.vmSize.resourceDiskSizeInMB,
+        },
+    };
 
     private _propagateChange: (value: string) => void = null;
     private _categories: StringMap<string[]> = {};
@@ -148,11 +160,10 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     }
 
     public pickSize(size: string) {
+        if (size === this.pickedSize) { return; }
         this.pickedSize = size;
         if (this._propagateChange) {
-            setTimeout(() => {
-                this._propagateChange(size);
-            });
+            this._propagateChange(size);
         }
     }
 

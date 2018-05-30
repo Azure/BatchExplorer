@@ -8,5 +8,5 @@ export * from "./loading.component.mock";
 export * from "./no-item.component.mock";
 export * from "./server-error.component.mock";
 export * from "./gauge.component.mock";
-export * from "./table.component.mock";
+export * from "./table.module.mock";
 export * from "./virtual-scroll.component.mock";

@@ -45,15 +45,14 @@
                                     <a href="#" routerLink="/jobs">here</a> to add one.
                                 </p>
                             </bl-no-item>
-                            <bl-table class="dashboard">
-                                <bl-thead [show]="false">
-                                    <bl-column></bl-column>
-                                    <bl-column [defaultWidth]="75"></bl-column>
-                                </bl-thead>
-                                <bl-row *ngFor="let job of (jobData.items | async);trackBy: trackByFn" [link]="['/jobs/', job.id]" [key]="job.id">
-                                    <bl-cell [value]="job.id"></bl-cell>
-                                    <bl-cell class="text-right" [value]="job.state"></bl-cell>
-                                </bl-row>
+                            <bl-table class="dashboard" [data]="jobData.items | async"  [config]="tableConfig">
+                                <bl-column name="id">
+                                    <div *blCellDef="let job">{{job.id}}</div>
+                                </bl-column>
+                                <bl-column name="state" [defaultWidth]="75">
+                                    <div *blHeadCellDef>State</div>
+                                    <div *blCellDef="let job">{{job.state}}</div>
+                                </bl-column>
                             </bl-table>
                         </bl-loading>
                     </div>
@@ -76,21 +75,17 @@
                                     <a href="#" routerLink="/pools">here</a> to add one.
                                 </p>
                             </bl-no-item>
-                            <bl-table class="dashboard">
-                                <bl-thead [show]="false">
-                                    <bl-column></bl-column>
-                                    <bl-column [defaultWidth]="30"></bl-column>
-                                    <bl-column [defaultWidth]="60"></bl-column>
-                                </bl-thead>
-                                <bl-row *ngFor="let pool of (poolData.items | async);trackBy: trackByFn" [link]="['/pools/', pool.id]" [key]="pool.id">
-                                    <bl-cell [value]="pool.id"></bl-cell>
-                                    <bl-cell>
-                                        <i aria-hidden="true" class="fa fa-{{pool.osIconName()}}"></i>
-                                    </bl-cell>
-                                    <bl-cell class="text-right">
-                                        <bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>
-                                    </bl-cell>
-                                </bl-row>
+                            <bl-table class="dashboard" [data]="poolData.items | async" [config]="tableConfig">
+                                <bl-column name="id">
+                                    <div *blCellDef="let pool">{{pool.id}}</div>
+                                </bl-column>
+                                <bl-column name="state" [defaultWidth]="30">
+                                    <div *blHeadCellDef>State</div>
+                                    <div *blCellDef="let pool"><i aria-hidden="true" class="fa fa-{{pool.osIconName()}}"></i></div>
+                                </bl-column>
+                                <bl-column name="nodes" [defaultWidth]="60">
+                                    <div *blCellDef="let pool"><bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview></div>
+                                </bl-column>
                             </bl-table>
                         </bl-loading>
                     </div>
@@ -116,11 +111,10 @@
                                     <a href="#" routerLink="/applications">here</a> to add one.
                                 </p>
                             </bl-no-item>
-                            <bl-table class="dashboard">
-                                <bl-row *ngFor="let app of (applicationData.items | async).slice(0, 10);trackBy: trackByFn" [link]="['/applications/', app.id]"
-                                    [key]="app.id">
-                                    <bl-cell>{{app.id}}</bl-cell>
-                                </bl-row>
+                            <bl-table class="dashboard" [data]="applicationData.items | async"  [config]="tableConfig">
+                                <bl-column name="id">
+                                    <div *blCellDef="let app">{{app.id}}</div>
+                                </bl-column>
                             </bl-table>
                         </bl-loading>
                     </div>
