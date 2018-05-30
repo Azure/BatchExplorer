@@ -1,5 +1,6 @@
 import { BlobService } from "azure-storage";
 
+import { EncodingUtils } from "@batch-flask/utils";
 import { BlobStorageResult, SharedAccessPolicy, StorageRequestOptions } from "./models";
 
 export interface ListBlobOptions {
@@ -134,18 +135,17 @@ export class BlobStorageClientProxy {
      * @param {string} blob - Fully prefixed blob path: "1001/$TaskOutput/myblob.txt"
      * @param {StorageRequestOptions} options - Optional request parameters
      */
-    public getBlobContent(container: string, blob: string, options?: StorageRequestOptions) {
-        return new Promise((resolve, reject) => {
-            this.client.getBlobToText(container, blob, options, (error, text, blockBlob, response) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve({
-                        content: text,
-                    });
-                }
-            });
-        });
+    public async getBlobContent(container: string, blob: string, options?: StorageRequestOptions) {
+        const buffer = await this._getBlobAsBuffer(container, blob, options);
+        const {encoding} = await EncodingUtils.detectEncodingFromBuffer({ buffer, bytesRead: buffer.length });
+        let content;
+        if (encoding) {
+            content = new TextDecoder(encoding).decode(buffer);
+        } else {
+            content = buffer.toString();
+        }
+
+        return { content };
     }
 
     /**
@@ -368,5 +368,28 @@ export class BlobStorageClientProxy {
         }
         const data = Array.isArray(blobPrefix) ? blobPrefix : [blobPrefix];
         return data.map(x => x["Name"].slice(0, -1));
+    }
+
+    private _getBlobAsBuffer(container: string, blob: string, options: StorageRequestOptions): Promise<Buffer> {
+        return new Promise((resolve, reject) => {
+            const chunks = [];
+            const stream = this.client.createReadStream(container, blob, options, (error, text, response) => {
+                if (error) {
+                    reject(error);
+                }
+            });
+            stream.on("data", (chunk) => {
+                chunks.push(chunk);
+            });
+
+            stream.on("end", () => {
+                const buffer = Buffer.concat(chunks);
+                resolve(buffer);
+            });
+
+            stream.on("error", (error) => {
+                reject(error);
+            });
+        });
     }
 }

@@ -15,6 +15,14 @@ module.exports = function(config) {
                 pattern: "./test/app/spec-entry.js",
                 watched: false
             },
+            {
+                pattern: "./test/fixtures/**/*",
+                watched: false,
+                included: false,
+                served: true,
+                // Important, if karma cache the encoding files it will remove the BOM which fails the tests
+                nocache: true,
+            }
         ],
 
         // proxied base paths
