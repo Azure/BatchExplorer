@@ -26,7 +26,8 @@ export class StorageClientProxyFactory {
                 `AccountKey=${options.key};`,
                 `EndpointSuffix=${options.endpoint};`,
             ].join("");
-            const blobService = storage.createBlobService(connectionString);
+            const blobService = storage.createBlobService(connectionString)
+                .withFilter(new storage.ExponentialRetryPolicyFilter());
 
             this._blobSharedKeyClient = new BlobStorageClientProxy(blobService);
         }
