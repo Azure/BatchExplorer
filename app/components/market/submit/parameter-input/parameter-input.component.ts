@@ -63,6 +63,7 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
 
     public validate() {
         const valid = this.parameterValue.valid;
+        console.log(`validate: ${this.parameterValue.name} - ${valid}`);
         if (valid) {
             return null;
         } else {
