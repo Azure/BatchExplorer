@@ -21,7 +21,7 @@ import { DropdownModule } from "./dropdown";
 import { DurationPickerComponent } from "./duration-picker";
 import { EditorModule } from "./editor";
 import { ElectronModule } from "./electron";
-import { EntityCommandsListComponent } from "./entity-commands-list";
+import { EntityCommandsListModule } from "./entity-commands-list";
 import { FocusSectionModule } from "./focus-section";
 import { FormModule } from "./form";
 import { GraphsModule } from "./graphs";
@@ -63,6 +63,7 @@ const modules = [
     DialogsModule,
     DropdownModule,
     EditorModule,
+    EntityCommandsListModule,
     FocusSectionModule,
     InfoBoxModule,
     LoadingModule,
@@ -94,7 +95,6 @@ const components = [
     CardComponent,
     TimespanComponent,
     EntityDetailsListComponent,
-    EntityCommandsListComponent,
     DatetimePickerComponent,
     DurationPickerComponent,
     IconComponent,

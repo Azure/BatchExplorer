@@ -1,0 +1,9 @@
+<bl-button *ngIf="command.isVisible(entity)"
+    [action]="execute"
+    [title]="label"
+    [disabled]="disabled"
+    [permission]="command.permission"
+    [tooltipPosition]="command.tooltipPosition"
+    color="light">
+        <i [class]="command.icon(entity)"></i>
+</bl-button>

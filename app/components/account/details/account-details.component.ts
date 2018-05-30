@@ -12,9 +12,6 @@ import { EntityView, ListView } from "app/services/core";
 import { BatchAccountCommands } from "../action";
 
 import { TableConfig } from "@batch-flask/ui";
-import { DialogService } from "@batch-flask/ui/dialogs";
-import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
-import { DeleteAccountDialogComponent } from "../action/delete";
 
 import "./account-details.scss";
 
