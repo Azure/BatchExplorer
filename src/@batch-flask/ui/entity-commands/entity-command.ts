@@ -26,7 +26,6 @@ export interface EntityCommandAttributes<TEntity extends ActionableEntity, TOpti
     confirm?: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     notify?: EntityCommandNotify | boolean;
     permission?: Permission;
-    tooltipPosition?: string;
 }
 
 /**
@@ -40,7 +39,6 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     public confirm: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     public definition: EntityCommands<TEntity>;
     public permission: Permission;
-    public tooltipPosition: string;
 
     private _action: (entity: TEntity, option?: TOptions) => Observable<any> | void;
     private _label: ((entity: TEntity) => string) | string;
@@ -64,7 +62,6 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         this.visible = attributes.visible || (() => true);
         this.confirm = exists(attributes.confirm) ? attributes.confirm : true;
         this.permission = attributes.permission || Permission.Read;
-        this.tooltipPosition = attributes.tooltipPosition || "above";
         if (attributes.notify === true || nil(attributes.notify)) {
             this.notify = EntityCommandNotify.Always;
         } else if (attributes.notify === false) {
