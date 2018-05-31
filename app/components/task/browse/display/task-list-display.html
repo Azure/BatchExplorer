@@ -1,5 +1,11 @@
 <bl-focus-section>
-    <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="scrollBottom.emit()">
+    <bl-quick-list
+        *ngIf="quicklist"
+        [status]="status"
+        [commands]="commands"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        (scrollBottom)="scrollBottom.emit()">
         <bl-quick-list-item *ngFor="let task of tasks;trackBy: trackByFn" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id">
             <bl-quick-list-item-status [status]="taskStatus(task)" [tooltip]="taskStatusText(task)">
             </bl-quick-list-item-status>

@@ -1,3 +1,4 @@
+import { Observable } from "rxjs";
 import { EntityCommand, EntityCommandNotify } from "./entity-command";
 
 interface MyModel {
@@ -39,6 +40,7 @@ describe("EntityCommand", () => {
         });
 
         expect(command.enabled(entity1)).toBe(true);
+        expect(command.disabled(entity1)).toBe(false);
     });
 
     it("should allow to specify enabled", () => {
@@ -49,6 +51,7 @@ describe("EntityCommand", () => {
         });
 
         expect(command.enabled(entity1)).toBe(false);
+        expect(command.disabled(entity1)).toBe(true);
     });
 
     it("should  allow multiple by default", () => {
@@ -98,4 +101,39 @@ describe("EntityCommand", () => {
 
         expect(command.notify).toEqual(EntityCommandNotify.OnFailure);
     });
+
+    describe("#performAction", () => {
+        it("Works when action return observable", (done) => {
+            const actionSpy = jasmine.createSpy("action").and.returnValue(Observable.of("some-obs-value"));
+            const command = new EntityCommand<MyModel>(injector, {
+                label: "my-label",
+                action: actionSpy,
+                notify: EntityCommandNotify.OnFailure,
+            });
+
+            command.performAction(entity1, null).subscribe((result) => {
+                expect(result).toBe("some-obs-value");
+                expect(actionSpy).toHaveBeenCalledOnce();
+                expect(actionSpy).toHaveBeenCalledWith(entity1, null);
+                done();
+            });
+        });
+
+        it("Works when action doesn't return observable", (done) => {
+            const actionSpy = jasmine.createSpy("action").and.returnValue(null);
+            const command = new EntityCommand<MyModel>(injector, {
+                label: "my-label",
+                action: actionSpy,
+                notify: EntityCommandNotify.OnFailure,
+            });
+
+            command.performAction(entity1, null).subscribe((result) => {
+                expect(result).toBe(null);
+                expect(actionSpy).toHaveBeenCalledOnce();
+                expect(actionSpy).toHaveBeenCalledWith(entity1, null);
+                done();
+            });
+        });
+    });
+
 });
