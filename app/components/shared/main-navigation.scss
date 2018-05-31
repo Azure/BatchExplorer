@@ -11,14 +11,14 @@ bl-app-nav {
         user-select: none;
         > li {
             position: relative;
-            > a {
+            > bl-clickable {
                 &.active {
                     background-color: map-get($primary, 500);
                     color: $white;
                 }
             }
         }
-        > li > a, > li > .menu-items > a {
+        > li > bl-clickable, > li > .menu-items > bl-clickable {
             position: relative;
             height: $navigationbar-width;
             display: block;

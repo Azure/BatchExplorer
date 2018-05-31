@@ -4,6 +4,7 @@ import {
 } from "@angular/core";
 import { Subscription } from "rxjs";
 
+import { RouterLink } from "@angular/router";
 import { Permission, PermissionService } from "@batch-flask/ui/permission";
 import "./clickable.scss";
 
@@ -34,10 +35,13 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     public subtitle = "";
 
     private permissionService?: PermissionService;
+    // Router link directive if any
+    private _routerLink?: RouterLink;
     private _sub: Subscription;
     private _permissionDisabled = false;
 
     constructor(injector: Injector) {
+        this._routerLink = injector.get(RouterLink, null);
         this.permissionService = injector.get(PermissionService, null);
     }
 
@@ -78,6 +82,10 @@ export class ClickableComponent implements OnChanges, OnDestroy {
             return;
         }
         this.do.emit(event);
+
+        if (this._routerLink) {
+            this._routerLink.onClick();
+        }
     }
 
     private _clearSubscription() {

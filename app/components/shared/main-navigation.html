@@ -1,49 +1,49 @@
 <ul class="top">
     <li>
-        <a [routerLink]="['/accounts', selectedId]" routerLinkActive="active" title="Dashboard">
+        <bl-clickable [routerLink]="['/accounts', selectedId]" routerLinkActive="active" title="Dashboard">
             <i class="fa fa-th fa-lg"></i><div class="label">Dash</div>
-        </a>
+        </bl-clickable>
     </li>
     <li>
-        <a *blHiddenIfNoAccount routerLink="/jobs" routerLinkActive="active">
+        <bl-clickable *blHiddenIfNoAccount routerLink="/jobs" routerLinkActive="active">
             <i class="fa fa-tasks fa-lg"></i><div class="label">Jobs</div>
-        </a>
+        </bl-clickable>
     </li>
     <li>
-        <a *blHiddenIfNoAccount routerLink="/jobschedules" routerLinkActive="active" title="Job schedules">
+        <bl-clickable *blHiddenIfNoAccount routerLink="/jobschedules" routerLinkActive="active" title="Job schedules">
             <i class="fa fa-calendar fa-lg"></i><div class="label">Schedules</div>
-        </a>
+        </bl-clickable>
     </li>
     <li>
-        <a *blHiddenIfNoAccount routerLink="/pools" routerLinkActive="active">
+        <bl-clickable *blHiddenIfNoAccount routerLink="/pools" routerLinkActive="active">
             <i class="fa fa-database fa-lg"></i><div class="label">Pools</div>
-        </a>
+        </bl-clickable>
     </li>
     <li>
-        <a *blHiddenIfNoAccount routerLink="/applications" routerLinkActive="active" title="Application packages">
+        <bl-clickable *blHiddenIfNoAccount routerLink="/applications" routerLinkActive="active" title="Application packages">
             <i class="fa fa-file-archive-o fa-lg"></i><div class="label">Packages</div>
-        </a>
+        </bl-clickable>
     </li>
     <li>
-        <a *blHiddenIfNoAccount routerLink="/certificates" routerLinkActive="active" title="Certificates">
+        <bl-clickable *blHiddenIfNoAccount routerLink="/certificates" routerLinkActive="active" title="Certificates">
             <i class="fa fa-certificate fa-lg"></i><div class="label">Certificate</div>
-        </a>
+        </bl-clickable>
     </li>
     <li>
-        <a *blHiddenIfNoAccount routerLink="/data" routerLinkActive="active" title="File groups">
+        <bl-clickable *blHiddenIfNoAccount routerLink="/data" routerLinkActive="active" title="File groups">
             <i class="fa fa-cloud-upload fa-lg"></i><div class="label">Data</div>
-        </a>
+        </bl-clickable>
     </li>
     <li>
-        <a *blHiddenIfNoAccount href="#" routerLink="market" routerLinkActive="active" title="Gallery">
+        <bl-clickable *blHiddenIfNoAccount href="#" routerLink="market" routerLinkActive="active" title="Gallery">
             <i class="fa fa-cubes" aria-hidden="true"></i><div class="label">Gallery</div>
-        </a>
+        </bl-clickable>
     </li>
 </ul>
 <div class="spacer"></div>
 <ul class="bottom">
     <li>
-        <a (click)="openSettingsContextMenu()" [title]="currentUserName" class="profile">
+        <bl-clickable (do)="openSettingsContextMenu()" [title]="currentUserName" class="profile">
             <i class="fa fa-user fa-lg"></i><div class="label">Profile</div>
             <ng-container [ngSwitch]="updateStatus">
                 <div *ngSwitchCase="UpdateStatus.Checking" class="notification-overlay checking" >
@@ -54,6 +54,6 @@
                 </div>
                 <div *ngSwitchCase="UpdateStatus.Ready" class="notification-overlay ready">1</div>
             </ng-container>
-        </a>
+        </bl-clickable>
     </li>
 </ul>
