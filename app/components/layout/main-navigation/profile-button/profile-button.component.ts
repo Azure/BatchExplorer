@@ -44,7 +44,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
 
         this._currentUserSub = adalService.currentUser.subscribe((user) => {
             if (user) {
-                this.currentUserName = user.name;
+                this.currentUserName = `${user.name} (${user.unique_name})`;
             } else {
                 this.currentUserName = "";
             }

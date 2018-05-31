@@ -1,4 +1,4 @@
-<bl-clickable (do)="openSettingsContextMenu()" [title]="currentUserName" class="profile">
+<bl-clickable (do)="openSettingsContextMenu()" [matTooltip]="currentUserName" class="profile" matTooltipPosition="right">
     <i class="fa fa-user fa-lg"></i><div class="label">Profile</div>
     <ng-container [ngSwitch]="updateStatus">
         <div *ngSwitchCase="UpdateStatus.Checking" class="notification-overlay checking" >
