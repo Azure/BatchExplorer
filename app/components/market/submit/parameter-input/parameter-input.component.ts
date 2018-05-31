@@ -3,11 +3,10 @@ import {
     ControlValueAccessor,
     FormControl,
     NG_ASYNC_VALIDATORS,
-    NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     Validators,
 } from "@angular/forms";
-import { Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 
 import { NcjParameterRawType } from "app/models";
 import { NcjFileGroupService } from "app/services";
@@ -73,35 +72,6 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
         return FormUtils.passValidation(this.parameterValue, (e) => this._computeError(e));
     }
 
-    private _computeError(errors) {
-        if (this.parameterValue.valid) {
-            return null;
-        }
-        let messageText = "unknown error";
-        if (errors) {
-            if (errors.minlength) {
-                const minLength = String(errors.minlength.requiredLength);
-                messageText = `Should be at least ${minLength} characters`;
-            } else if (errors.maxlength) {
-                const maxLength = String(errors.maxlength.requiredLength);
-                messageText = `Should be at most ${maxLength} characters`;
-            } else if (errors.min) {
-                const minValue = String(errors.min.min);
-                messageText = `Should be greater than or equal to ${minValue}`;
-            } else if (errors.max) {
-                const maxValue = String(errors.max.max);
-                messageText = `Should be less than or equal to ${maxValue}`;
-            }
-        }
-
-        return {
-            validFormInput: {
-                valid: false,
-                message: messageText,
-            },
-        };
-    }
-
     public registerOnChange(fn: any): void {
         this._propagateChange = fn;
     }
@@ -137,4 +107,34 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
 
         this.parameterValue.setValidators(Validators.compose(validatorGroup));
     }
+
+    private _computeError(errors) {
+        if (this.parameterValue.valid) {
+            return null;
+        }
+        let messageText = "unknown error";
+        if (errors) {
+            if (errors.minlength) {
+                const minLength = String(errors.minlength.requiredLength);
+                messageText = `Should be at least ${minLength} characters`;
+            } else if (errors.maxlength) {
+                const maxLength = String(errors.maxlength.requiredLength);
+                messageText = `Should be at most ${maxLength} characters`;
+            } else if (errors.min) {
+                const minValue = String(errors.min.min);
+                messageText = `Should be greater than or equal to ${minValue}`;
+            } else if (errors.max) {
+                const maxValue = String(errors.max.max);
+                messageText = `Should be less than or equal to ${maxValue}`;
+            }
+        }
+
+        return {
+            validFormInput: {
+                valid: false,
+                message: messageText,
+            },
+        };
+    }
+
 }
