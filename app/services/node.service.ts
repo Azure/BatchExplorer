@@ -101,6 +101,10 @@ export class NodeService extends ServiceBase {
         return this._getter.fetch({ poolId, id: nodeId });
     }
 
+    public getFromCache(poolId: string, nodeId: string, options: any = {}): Observable<Node> {
+        return this._getter.fetch({ poolId, id: nodeId }, { cached: true });
+    }
+
     /**
      * Create an entity view for a node
      */

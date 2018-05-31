@@ -27,9 +27,11 @@ export class TaskListDisplayComponent extends ListBaseComponent implements OnCha
 
     @Input() public status: LoadingStatus;
 
+    @Input() public commands: TaskCommands;
+
     @Output() public scrollBottom = new EventEmitter();
 
-    constructor(public commands: TaskCommands, changeDetector: ChangeDetectorRef) {
+    constructor(changeDetector: ChangeDetectorRef) {
         super(changeDetector);
     }
 

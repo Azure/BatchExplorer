@@ -6,10 +6,7 @@
             <div summaryDetails>Pool: {{poolId}}</div>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                <bl-button color="light" [action]="connect" title="Connect to node" icon="fa fa-plug"></bl-button>
-                <bl-delete-button [action]="delete"></bl-delete-button>
-                <bl-button color="light" [action]="reboot" title="Reboot node" icon="fa fa-power-off"></bl-button>
-                <bl-edit-button [action]="editStartTask" title="Edit start task"></bl-edit-button>
+                <bl-commands-list [commands]="commands" [entity]="node"></bl-commands-list>
                 <bl-button color="light" [action]="uploadNodeLogs" title="Upload batch logs" [disabled]="pool.cloudServiceConfiguration">
                     <span class="upload-node-logs fa-stacked">
                         <i class="fa fa-upload fa-stack-1x"></i>
