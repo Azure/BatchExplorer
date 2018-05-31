@@ -13,10 +13,7 @@
             </div>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                <bl-button [action]="showKeys" color="light" title="Credentials and code samples" tooltipPosition="above">
-                    <i class="fa fa-key"></i>
-                </bl-button>
-                <bl-delete-button [action]="deleteBatchAccount" [enabled]="accountState !== accountProvisioningState.Creating && accountState !== accountProvisioningState.Deleting"></bl-delete-button>
+                <bl-commands-list [commands]="commands" [entity]="account"></bl-commands-list>
             </bl-button-group>
             <div summaryTile>
                 <bl-account-quotas-card [account]="account"></bl-account-quotas-card>

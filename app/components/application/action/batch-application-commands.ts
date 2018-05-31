@@ -1,13 +1,15 @@
 import { Injectable, Injector } from "@angular/core";
-import { EntityCommand, EntityCommands } from "@batch-flask/ui";
+import { COMMAND_LABEL_ICON, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { BatchApplication } from "app/models";
 import { ApplicationService, PinnedEntityService } from "app/services";
+import { ApplicationCreateDialogComponent } from "./create";
 import { ApplicationEditDialogComponent } from "./edit";
 
 @Injectable()
 export class BatchApplicationCommands extends EntityCommands<BatchApplication> {
+    public add: EntityCommand<BatchApplication, void>;
     public edit: EntityCommand<BatchApplication, void>;
     public delete: EntityCommand<BatchApplication, void>;
     public pin: EntityCommand<BatchApplication, void>;
@@ -34,20 +36,38 @@ export class BatchApplicationCommands extends EntityCommands<BatchApplication> {
     }
 
     private _buildCommands() {
+        this.add = this.simpleCommand({
+            ...COMMAND_LABEL_ICON.AddApplication,
+            action: (application) => this._addPackage(application),
+            multiple: false,
+            confirm: false,
+            notify: false,
+            permission: Permission.Write,
+        });
+
         this.edit = this.simpleCommand({
-            label: "Edit",
+            ...COMMAND_LABEL_ICON.Edit,
             action: (application) => this._editApplication(application),
             multiple: false,
             confirm: false,
             notify: false,
+            permission: Permission.Write,
         });
+
         this.delete = this.simpleCommand({
-            label: "Delete",
+            ...COMMAND_LABEL_ICON.Delete,
             action: (application: BatchApplication) => this.applicationService.delete(application.id),
+            permission: Permission.Write,
         });
+
         this.pin = this.simpleCommand({
             label: (application: BatchApplication) => {
-                return this.pinnedEntityService.isFavorite(application) ? "Unpin favorite" : "Pin to favorites";
+                return this.pinnedEntityService.isFavorite(application)
+                ? COMMAND_LABEL_ICON.UnpinFavoriteLabel : COMMAND_LABEL_ICON.PinFavoriteLabel;
+            },
+            icon: (application: BatchApplication) => {
+                return this.pinnedEntityService.isFavorite(application)
+                ? COMMAND_LABEL_ICON.UnpinFavoriteIcon : COMMAND_LABEL_ICON.PinFavoriteIcon;
             },
             action: (application: BatchApplication) => this._pinApplication(application),
             confirm: false,
@@ -55,10 +75,19 @@ export class BatchApplicationCommands extends EntityCommands<BatchApplication> {
         });
 
         this.commands = [
+            this.add,
             this.edit,
             this.delete,
             this.pin,
         ];
+    }
+
+    private _addPackage(application: BatchApplication) {
+        const sidebarRef = this.sidebarManager.open("add-package", ApplicationCreateDialogComponent);
+        sidebarRef.component.setValue(application);
+        sidebarRef.afterCompletion.subscribe(() => {
+            this.get(application.id);
+        });
     }
 
     private _editApplication(application: BatchApplication) {
