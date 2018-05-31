@@ -21,7 +21,9 @@ export class EntityCommandButtonComponent implements OnChanges {
     @Input() public entity: any;
 
     public label: string;
+    public icon: string;
     public disabled: boolean;
+    public visible: boolean;
 
     constructor(private changeDetector: ChangeDetectorRef) {
         this.changeDetector.markForCheck();
@@ -31,6 +33,8 @@ export class EntityCommandButtonComponent implements OnChanges {
         if (changes.command || changes.entity) {
             this.label = this.command.label(this.entity);
             this.disabled = this.command.disabled(this.entity);
+            this.visible = this.command.visible(this.entity);
+            this.icon = this.command.icon(this.entity);
         }
     }
 

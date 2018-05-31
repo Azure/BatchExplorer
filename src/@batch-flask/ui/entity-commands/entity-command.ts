@@ -80,11 +80,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     }
 
     public disabled(entity: TEntity) {
-        return this.enabled instanceof Function ? !this.enabled(entity) : !this.enabled;
-    }
-
-    public isVisible(entity: TEntity) {
-        return this.visible instanceof Function ? this.visible(entity) : this.visible;
+        return !this.enabled(entity);
     }
 
     public performAction(entity: TEntity, option: TOptions): Observable<any> {
@@ -143,7 +139,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         this.performAction(entity, options).subscribe({
             next: () => {
                 this._notifySuccess(`${label} was successful.`, `${entity.id}`);
-                this.definition.get((entity as any).id).subscribe({
+                this.definition.get(entity.id).subscribe({
                     error: () => null,
                 });
             },
