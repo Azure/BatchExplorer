@@ -11,7 +11,6 @@ import { routes } from "./app.routes";
 
 // components
 import { AppComponent } from "app/app.component";
-import { MainNavigationComponent } from "app/components/shared/main-navigation.component";
 
 // extenal modules
 import { BaseModule } from "@batch-flask/ui";
@@ -106,7 +105,6 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
     ],
     declarations: [
         AppComponent,
-        MainNavigationComponent,
     ],
     entryComponents: [
         // imported in specific area modules
