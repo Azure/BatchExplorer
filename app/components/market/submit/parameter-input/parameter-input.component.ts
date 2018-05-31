@@ -1,11 +1,19 @@
 import { Component, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
-import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators } from "@angular/forms";
-import { Subscription } from "rxjs";
+import {
+    ControlValueAccessor,
+    FormControl,
+    NG_ASYNC_VALIDATORS,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    Validators,
+} from "@angular/forms";
+import { Observable, Subscription } from "rxjs";
 
 import { NcjParameterRawType } from "app/models";
 import { NcjFileGroupService } from "app/services";
 import { NcjParameterExtendedType, NcjParameterWrapper } from "../market-application.model";
 
+import { FormUtils } from "@batch-flask/utils";
 import "./parameter-input.scss";
 
 @Component({
@@ -13,7 +21,7 @@ import "./parameter-input.scss";
     templateUrl: "parameter-input.html",
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => ParameterInputComponent), multi: true },
-        { provide: NG_VALIDATORS, useExisting: forwardRef(() => ParameterInputComponent), multi: true },
+        { provide: NG_ASYNC_VALIDATORS, useExisting: forwardRef(() => ParameterInputComponent), multi: true },
     ],
 })
 export class ParameterInputComponent implements ControlValueAccessor, OnChanges, OnDestroy {
@@ -62,32 +70,36 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
     }
 
     public validate() {
+        return FormUtils.passValidation(this.parameterValue, (e) => this._computeError(e));
+    }
+
+    private _computeError(errors) {
         if (this.parameterValue.valid) {
             return null;
-        } else {
-            let messageText = "unknown error";
-            const error = this.parameterValue.errors;
-            if (error.minlength) {
-                const minLength = String(error.minlength.requiredLength);
+        }
+        let messageText = "unknown error";
+        if (errors) {
+            if (errors.minlength) {
+                const minLength = String(errors.minlength.requiredLength);
                 messageText = `Should be at least ${minLength} characters`;
-            } else if (error.maxlength) {
-                const maxLength = String(error.maxlength.requiredLength);
+            } else if (errors.maxlength) {
+                const maxLength = String(errors.maxlength.requiredLength);
                 messageText = `Should be at most ${maxLength} characters`;
-            } else if (error.min) {
-                const minValue = String(error.min.min);
+            } else if (errors.min) {
+                const minValue = String(errors.min.min);
                 messageText = `Should be greater than or equal to ${minValue}`;
-            } else if (error.max) {
-                const maxValue = String(error.max.max);
+            } else if (errors.max) {
+                const maxValue = String(errors.max.max);
                 messageText = `Should be less than or equal to ${maxValue}`;
             }
-
-            return {
-                validFormInput: {
-                    valid: false,
-                    message: messageText,
-                },
-            };
         }
+
+        return {
+            validFormInput: {
+                valid: false,
+                message: messageText,
+            },
+        };
     }
 
     public registerOnChange(fn: any): void {
