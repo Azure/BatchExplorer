@@ -1,18 +1,15 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { ElectronRemote } from "@batch-flask/ui";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
-import { BatchLabsService, FileSystemService, PoolParams, PoolService, PricingService } from "app/services";
+import { BatchLabsService, PoolParams, PoolService, PricingService } from "app/services";
 import { EntityView } from "app/services/core/data";
 import { NumberUtils } from "app/utils";
-import { PoolCommands, PoolCreateBasicDialogComponent } from "../action";
+import { PoolCommands } from "../action";
 
 import "./pool-details.scss";
 
@@ -49,9 +46,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private batchLabs: BatchLabsService,
-        private fs: FileSystemService,
-        private sidebarManager: SidebarManager,
-        private remote: ElectronRemote,
         private pricingService: PricingService,
         private poolService: PoolService) {
 
@@ -87,29 +81,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public refreshPool() {
-        return this.data.refresh();
-    }
-
-    @autobind()
-    public addJob() {
-        const createRef = this.sidebarManager.open("add-job", JobCreateBasicDialogComponent);
-        createRef.component.preSelectPool(this.pool.id);
-    }
-
-    @autobind()
-    public deletePool() {
-        this.commands.delete.execute(this.pool);
-    }
-
-    @autobind()
-    public clonePool() {
-        const ref = this.sidebarManager.open(`add-pool-${this.poolId}`, PoolCreateBasicDialogComponent);
-        ref.component.setValueFromEntity(this.pool);
-    }
-
-    @autobind()
-    public resizePool() {
-        this.commands.resize.execute(this.pool);
+        return this.commands.get(this.poolId);
     }
 
     @autobind()
@@ -117,20 +89,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         return this.poolService.updateTags(this.pool, newTags).flatMap(() => {
             return this.data.refresh();
         });
-    }
-
-    @autobind()
-    public exportAsJSON() {
-        const dialog = this.remote.dialog;
-        const localPath = dialog.showSaveDialog({
-            buttonLabel: "Export",
-            defaultPath: `${this.pool.id}.json`,
-        });
-
-        if (localPath) {
-            const content = JSON.stringify(this.pool._original, null, 2);
-            return Observable.fromPromise(this.fs.saveFile(localPath, content));
-        }
     }
 
     @autobind()
