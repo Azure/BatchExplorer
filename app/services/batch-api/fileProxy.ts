@@ -1,3 +1,4 @@
+import { EncodingUtils } from "@batch-flask/utils";
 import { BatchServiceClient } from "azure-batch";
 import * as fs from "fs";
 import { ListProxy, wrapOptions } from "./shared";
@@ -114,7 +115,13 @@ export class FileProxy {
     }
 
     private async _readContent(response: Response): Promise<string> {
-        return response.text();
+        const buffer = await response.arrayBuffer();
+
+        const { encoding } = await EncodingUtils.detectEncodingFromBuffer({
+            buffer: new Buffer(buffer),
+            bytesRead: buffer.byteLength,
+        });
+        return new TextDecoder(encoding || "utf-8").decode(buffer);
     }
 
     private async _downloadContent(response: Response, destination: string): Promise<boolean> {
@@ -129,8 +136,9 @@ export class FileProxy {
                 output.close();
                 return true;
             }
-
-            output.write(new Buffer(result.value.buffer));
+            if (result.value) {
+                output.write(new Buffer(result.value.buffer));
+            }
         }
     }
 }

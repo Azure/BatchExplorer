@@ -3939,9 +3939,9 @@ get-caller-file@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-1.0.2.tgz#f702e63127e7e231c160a80c1554acb70d5047e5"
 
-get-proxy-settings@~0.1.10:
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/get-proxy-settings/-/get-proxy-settings-0.1.10.tgz#8ea511c694185a60fb13952b1364b96591ba4c98"
+get-proxy-settings@~0.1.11:
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/get-proxy-settings/-/get-proxy-settings-0.1.11.tgz#665f7aa9d9a5372272c655e3f1168f75b730ce49"
   dependencies:
     npm-conf "~1.1.3"
 
@@ -5174,6 +5174,10 @@ js-yaml@~3.7.0:
 jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
+
+jschardet@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/jschardet/-/jschardet-1.6.0.tgz#c7d1a71edcff2839db2f9ec30fc5d5ebd3c1a678"
 
 jsesc@^1.3.0:
   version "1.3.0"
