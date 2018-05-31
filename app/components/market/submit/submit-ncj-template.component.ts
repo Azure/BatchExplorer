@@ -1,4 +1,11 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+} from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
@@ -21,6 +28,7 @@ import "./submit-ncj-template.scss";
 @Component({
     selector: "bl-submit-ncj-template",
     templateUrl: "submit-ncj-template.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public jobTemplate: NcjJobTemplate;
@@ -349,6 +357,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
                 pool: pool,
             },
         };
+
         return this.ncjSubmitService.submitJob(jobTemplate, this.jobParams.value)
             .cascade((data) => this._redirectToJob(data.properties.id));
     }

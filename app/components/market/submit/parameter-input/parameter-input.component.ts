@@ -5,9 +5,9 @@ import { Subscription } from "rxjs";
 import { NcjParameterRawType } from "app/models";
 import { NcjFileGroupService } from "app/services";
 import { NcjParameterExtendedType, NcjParameterWrapper } from "../market-application.model";
+
 import "./parameter-input.scss";
 
-// tslint:disable:no-forward-ref
 @Component({
     selector: "bl-parameter-input",
     templateUrl: "parameter-input.html",
@@ -62,9 +62,7 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
     }
 
     public validate() {
-        const valid = this.parameterValue.valid;
-        console.log(`validate: ${this.parameterValue.name} - ${valid}`);
-        if (valid) {
+        if (this.parameterValue.valid) {
             return null;
         } else {
             let messageText = "unknown error";
