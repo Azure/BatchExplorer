@@ -12,6 +12,8 @@ import { Observable, Subscription } from "rxjs";
 import { Job } from "app/models";
 import { JobService } from "app/services";
 
+import { autobind } from "@batch-flask/core";
+import { FormUtils } from "@batch-flask/utils";
 import "./job-id.scss";
 
 @Component({
@@ -38,7 +40,7 @@ export class JobIdComponent implements AsyncValidator, ControlValueAccessor, OnD
         private formBuilder: FormBuilder,
         private jobService: JobService) {
 
-        this.value = this.formBuilder.control([], null, this._validateJobUnique());
+        this.value = this.formBuilder.control([], null, this._validateJobUnique);
         this._subscription = this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
             if (this._propagateChange) {
                 this._propagateChange(value);
@@ -63,26 +65,25 @@ export class JobIdComponent implements AsyncValidator, ControlValueAccessor, OnD
     }
 
     public validate(c: FormControl) {
-        return Observable.of(null);
+        return FormUtils.passValidation(this.value);
     }
 
-    private _validateJobUnique() {
-        return (control: FormControl) => {
-            return Observable.of(null).debounceTime(250)
-                .flatMap(() => this.jobService.get(control.value))
-                .map((job: Job) => {
-                    this.warning = true;
-                    this.changeDetector.markForCheck();
-                    return Observable.of({
-                        duplicateJob: {
-                            valid: false,
-                        },
-                    });
-                }).catch(() => {
-                    this.warning = false;
-                    this.changeDetector.markForCheck();
-                    return Observable.of(null);
+    @autobind()
+    private _validateJobUnique(control: FormControl) {
+        return Observable.of(null).debounceTime(250)
+            .flatMap(() => this.jobService.get(control.value))
+            .map((job: Job) => {
+                this.warning = true;
+                this.changeDetector.markForCheck();
+                return Observable.of({
+                    duplicateJob: {
+                        valid: false,
+                    },
                 });
-        };
+            }).catch(() => {
+                this.warning = false;
+                this.changeDetector.markForCheck();
+                return Observable.of(null);
+            });
     }
 }
