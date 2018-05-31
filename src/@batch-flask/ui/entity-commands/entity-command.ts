@@ -73,6 +73,23 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         return obs;
     }
 
+    public performActionAndRefresh(entity: TEntity, option: TOptions): Observable<any> {
+        const obs = this.performAction(entity, option);
+        obs.subscribe({
+            complete: () => {
+                this.definition.get(entity.id).subscribe({
+                    error: () => null,
+                });
+            },
+            error: () => {
+                this.definition.get(entity.id).subscribe({
+                    error: () => null,
+                });
+            },
+        });
+        return obs;
+    }
+
     public execute(entity: TEntity) {
         if (this.confirm) {
             if (this.confirm instanceof Function) {
@@ -118,12 +135,9 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
 
     private _executeCommand(entity: TEntity, options?: any) {
         const label = this.label(entity);
-        this.performAction(entity, options).subscribe({
+        this.performActionAndRefresh(entity, options).subscribe({
             next: () => {
                 this._notifySuccess(`${label} was successful.`, `${entity.id}`);
-                this.definition.get((entity as any).id).subscribe({
-                    error: () => null,
-                });
             },
             error: (e: ServerError) => {
                 this._notifyError(`${label} failed.`, `${entity.id} ${e.message}`);
@@ -139,7 +153,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         this.backgroundTaskService.startTasks(`${label} ${type}`, enabledEntities.map((entity) => {
             return {
                 name: `${label} ${entity.id}`,
-                func: () => this.performAction(entity, options),
+                func: () => this.performActionAndRefresh(entity, options),
             };
         })).subscribe((result) => {
             this._notifySuccess(`${label} was successful.`,
