@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
+import { Location, ResourceGroup, Subscription, TenantDetails } from "app/models";
+import { Constants, StringUtils, log } from "app/utils";
 import { List, Set } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
-
-import { Location, ResourceGroup, Subscription } from "app/models";
-import { Constants, StringUtils, log } from "app/utils";
 import { AdalService } from "./adal";
 import { AzureHttpService } from "./azure-http.service";
 import { SettingsService } from "./settings.service";
+import { TenantDetailsService } from "./tenant-details.service";
 
 @Injectable()
 export class SubscriptionService {
@@ -17,7 +17,11 @@ export class SubscriptionService {
     private _subscriptionsLoaded = new AsyncSubject();
     private _ignoredSubscriptionPatterns = new BehaviorSubject<string[]>([]);
 
-    constructor(private azure: AzureHttpService, private adal: AdalService, private settingsService: SettingsService) {
+    constructor(
+        private tenantDetailsService: TenantDetailsService,
+        private azure: AzureHttpService,
+        private adal: AdalService,
+        private settingsService: SettingsService) {
         this.subscriptions = this._subscriptionsLoaded
             .flatMap(() => Observable.combineLatest(this._subscriptions, this._ignoredSubscriptionPatterns))
             .map(([subscriptions, ignoredPatterns]) => {
@@ -96,21 +100,24 @@ export class SubscriptionService {
     }
 
     private _loadSubscriptionsForTenant(tenantId: string): Observable<Subscription[]> {
-        return this.azure.get(tenantId, "subscriptions").expand(response => {
-            const data = response.json();
-            if (data.nextLink) {
-                this.azure.get(tenantId, data.nextLink);
-            } else {
-                return Observable.empty();
-            }
-        }).reduce((subs, response) => {
-            const newSubs = response.json().value.map(x => this._createSubscription(tenantId, x));
-            return [...subs, ...newSubs];
-        }, []);
+        return this.tenantDetailsService.get(tenantId).flatMap((tenantDetails) => {
+            return this.azure.get(tenantId, "subscriptions").expand(response => {
+                const data = response.json();
+                if (data.nextLink) {
+                    this.azure.get(tenantId, data.nextLink);
+                } else {
+                    return Observable.empty();
+                }
+            }).reduce((subs, response) => {
+                const newSubs = response.json().value.map(x => this._createSubscription(tenantDetails, x));
+                return [...subs, ...newSubs];
+            }, []);
+        });
     }
 
-    private _createSubscription(tenantId: string, data: any): Subscription {
-        return new Subscription(Object.assign({}, data, { tenantId }));
+    private _createSubscription(tenant: TenantDetails, data: any): Subscription {
+        console.log("Create this", { ...data, tenant, tenantId: tenant.id });
+        return new Subscription({ ...data, tenant, tenantId: tenant.id });
     }
 
     private _cacheSubscriptions() {
