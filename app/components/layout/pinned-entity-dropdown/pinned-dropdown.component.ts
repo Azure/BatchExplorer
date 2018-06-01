@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { PinnableEntity, PinnedEntityType } from "@batch-flask/core";
+import { DropdownComponent } from "@batch-flask/ui";
 import { AccountService, PinnedEntityService } from "app/services";
 
 import "./pinned-dropdown.scss";
@@ -11,8 +12,10 @@ import "./pinned-dropdown.scss";
 @Component({
     selector: "bl-pinned-dropdown",
     templateUrl: "pinned-dropdown.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PinnedDropDownComponent implements OnInit, OnDestroy {
+    @ViewChild(DropdownComponent) dropdown: DropdownComponent;
     public currentUrl: string;
     public favorites: Observable<List<PinnableEntity>>;
     public title: string = "";
@@ -22,12 +25,14 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
 
     constructor(
         private router: Router,
+        private changeDetector: ChangeDetectorRef,
         public pinnedEntityService: PinnedEntityService,
         private accountService: AccountService) {
 
         this.favorites = this.pinnedEntityService.favorites;
         this._subscriptions.push(this.favorites.subscribe((items) => {
             this.title = items.size > 0 ? `${items.size} favorite items pinned` : "No favorite items pinned";
+            this.changeDetector.markForCheck();
         }));
 
         this._subscriptions.push(this.accountService.currentAccount.subscribe((account) => {
@@ -41,6 +46,7 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
             .subscribe((event: NavigationEnd) => {
                 // Application URL scheme maps the Batch API URL for the entity
                 this.currentUrl = `https://${this._accountEndpoint}${event.url}`;
+                this.changeDetector.markForCheck();
             }));
     }
 
@@ -48,6 +54,11 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
         this._subscriptions.forEach(x => x.unsubscribe());
     }
 
+    public gotoFavorite(favorite: PinnableEntity) {
+        this.router.navigate(favorite.routerLink);
+        this.dropdown.close();
+    }
+    
     public entityType(favorite: PinnableEntity) {
         switch (favorite.pinnableType) {
             case PinnedEntityType.Application:
