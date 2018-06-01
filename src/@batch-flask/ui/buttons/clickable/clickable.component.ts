@@ -5,6 +5,7 @@ import {
 import { Subscription } from "rxjs";
 
 import { RouterLink } from "@angular/router";
+import { ENTER, SPACE } from "@batch-flask/core/keys";
 import { Permission, PermissionService } from "@batch-flask/ui/permission";
 import "./clickable.scss";
 
@@ -71,7 +72,7 @@ export class ClickableComponent implements OnChanges, OnDestroy {
 
     @HostListener("keydown", ["$event"])
     public onkeydown(event: KeyboardEvent) {
-        if (event.code === "Space" || event.code === "Enter") {
+        if (event.key === SPACE || event.key === ENTER) {
             this.handleAction(event);
             event.preventDefault();
         }
