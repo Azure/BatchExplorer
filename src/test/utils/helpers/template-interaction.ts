@@ -74,12 +74,7 @@ export function rightClick(el: DebugElement | HTMLElement | Node) {
  */
 export function mouseenter(el: DebugElement | HTMLElement) {
     const event = new MouseEvent("mouseleave", { cancelable: true });
-
-    if (el instanceof HTMLElement) {
-        el.dispatchEvent(event);
-    } else {
-        el.triggerEventHandler("mouseenter", event);
-    }
+    sendEvent(el, event);
 }
 
 /**
@@ -87,12 +82,30 @@ export function mouseenter(el: DebugElement | HTMLElement) {
  */
 export function mouseleave(el: DebugElement | HTMLElement) {
     const event = new MouseEvent("mouseleave", { cancelable: true });
+    sendEvent(el, event);
+}
 
+export function keydown(el: DebugElement | HTMLElement, key: string) {
+    const event = new KeyboardEvent("keydown", {
+        key,
+    });
+    sendEvent(el, event);
+}
+
+/**
+ * Send the given event to the given element
+ * @param el: HTMLELement or DebugElement to receive the event
+ * @param event: Event to be dispatched
+ */
+export function sendEvent(el: DebugElement | HTMLElement, event: Event) {
+    let htmlEl: HTMLElement;
     if (el instanceof HTMLElement) {
-        el.dispatchEvent(event);
+        htmlEl = el;
     } else {
-        el.triggerEventHandler("mouseleave", event);
+        htmlEl = el.nativeElement;
     }
+
+    htmlEl.dispatchEvent(event);
 }
 
 /**
