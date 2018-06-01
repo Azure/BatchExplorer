@@ -38,7 +38,7 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
         activatedRoute: ActivatedRoute,
         sidebarManager: SidebarManager,
         changeDetector: ChangeDetectorRef,
-        subscriptionService: SubscriptionService) {
+        private subscriptionService: SubscriptionService) {
         super(changeDetector);
         this._updateDisplayedAccounts();
 
@@ -59,7 +59,9 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
 
     @autobind()
     public refresh(): Observable<any> {
-        return this.accountService.load();
+        return this.subscriptionService.load().flatMap(() => {
+            return this.accountService.load();
+        }).shareReplay(1);
     }
 
     public handleFilter(filter: Filter) {

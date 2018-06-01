@@ -1,11 +1,15 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, HostListener } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, OnDestroy } from "@angular/core";
 import { ElectronShell } from "@batch-flask/ui";
-import * as path from "path";
-
 import {
-    ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService,
+    ContextMenu,
+    ContextMenuItem,
+    ContextMenuSeparator,
+    ContextMenuService,
 } from "@batch-flask/ui/context-menu";
 import { FileSystemService, PythonRpcService } from "app/services";
+import * as path from "path";
+import { Subscription } from "rxjs";
+
 import "./rpc-server-status.scss";
 
 @Component({
@@ -13,11 +17,10 @@ import "./rpc-server-status.scss";
     templateUrl: "rpc-server-status.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RpcServerStatusComponent {
+export class RpcServerStatusComponent implements OnDestroy {
     @HostBinding("class.connected")
     public connected = false;
 
-    @HostBinding("title")
     public get title() {
         if (this.connected) {
             return "Python service is connnected and running.";
@@ -25,6 +28,7 @@ export class RpcServerStatusComponent {
             return "Python service is currently disconnected. Click to take action.";
         }
     }
+    private _sub: Subscription;
 
     constructor(
         private pythonRpcService: PythonRpcService,
@@ -33,13 +37,15 @@ export class RpcServerStatusComponent {
         private shell: ElectronShell,
         changeDetector: ChangeDetectorRef,
     ) {
-        pythonRpcService.connected.subscribe((connected) => {
+        this._sub = pythonRpcService.connected.subscribe((connected) => {
             this.connected = connected;
             changeDetector.markForCheck();
         });
     }
 
-    @HostListener("click")
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
+    }
     public showContextMenu() {
         const items: any[] = [
             new ContextMenuItem("Restart service", () => this._restartServer()),

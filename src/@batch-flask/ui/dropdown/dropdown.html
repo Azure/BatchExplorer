@@ -1,7 +1,7 @@
 <div class="dropdown" (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
-    <div class="dropdown-btn-container" [ngClass]="{'active': showDropdown}" (click)="forceOpen($event)">
+    <bl-clickable class="dropdown-btn-container" [class.active]="showDropdown" (do)="toggleForceOpen($event)">
         <ng-content select="[bl-dropdown-btn]"></ng-content>
-    </div>
+    </bl-clickable>
     <div class="dropdown-content" *ngIf="showDropdown" [class.above]="footer" [class.below]="!footer" [attr.align]="align">
         <ng-content select="[bl-dropdown-content]"></ng-content>
     </div>
