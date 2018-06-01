@@ -14,11 +14,6 @@ bl-breadcrumb-group {
     ul {
         display: flex;
         margin: 0;
-
-        &.expanded {
-            position: absolute;
-            z-index: 1000;
-        }
     }
 
     ul > bl-breadcrumb {
@@ -87,18 +82,6 @@ bl-breadcrumb-group {
                 direction:rtl;
                 text-align:left;
             }
-        }
-    }
-
-    ul > .expand {
-        margin-right: 14px;
-        font-size: 20px;
-        font-weight: bold;
-        color: $color;
-        cursor: pointer;
-
-        &:hover {
-            color: $hover-color;
         }
     }
 }
