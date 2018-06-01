@@ -34,7 +34,7 @@ export class DropdownComponent {
     }
 
     public toggleForceOpen(event: Event) {
-        if(this.showDropdown) {
+        if (this.showDropdown) {
             this.close();
         } else {
             this.forcedOpen = true;
