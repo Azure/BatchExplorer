@@ -1,4 +1,4 @@
-<bl-clickable (do)="showContextMenu()">
+<bl-clickable (do)="showContextMenu()" [matTooltip]="title">
     <div *ngIf="connected">
         <i class="fa fa-link"></i>
     </div>
