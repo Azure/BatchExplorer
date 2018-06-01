@@ -116,7 +116,6 @@ export class SubscriptionService {
     }
 
     private _createSubscription(tenant: TenantDetails, data: any): Subscription {
-        console.log("Create this", { ...data, tenant, tenantId: tenant.id });
         return new Subscription({ ...data, tenant, tenantId: tenant.id });
     }
 
