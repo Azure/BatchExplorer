@@ -1,16 +1,18 @@
-import { AfterViewInit, ChangeDetectorRef, Component } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { AccountResource } from "app/models";
 import { AccountService, AccountStatus } from "app/services";
 import { ArmResourceUtils } from "app/utils";
+import { Subscription } from "rxjs";
 
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import "./account-dropdown.scss";
 
 @Component({
     selector: "bl-account-dropdown",
     templateUrl: "account-dropdown.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountDropDownComponent implements AfterViewInit {
+export class AccountDropDownComponent implements OnDestroy {
     public status = AccountStatus;
 
     public selectedId: string;
@@ -18,13 +20,14 @@ export class AccountDropDownComponent implements AfterViewInit {
     public showDropdown = false;
     public currentAccountValid = AccountStatus.Loading;
     public currentAccountInvalidError: any = null;
+    private _subs: Subscription[] = [];
 
     constructor(
         public accountService: AccountService,
-        private changeDetection: ChangeDetectorRef,
+        private changeDetector: ChangeDetectorRef,
         private contextMenuService: ContextMenuService) {
 
-        accountService.currentAccountId.subscribe((accountId) => {
+        this._subs.push(accountService.currentAccountId.subscribe((accountId) => {
             if (accountId) {
                 this.selectedId = accountId;
                 this.selectedAccountAlias = ArmResourceUtils.getAccountNameFromResourceId(accountId);
@@ -32,23 +35,26 @@ export class AccountDropDownComponent implements AfterViewInit {
                 this.selectedId = null;
                 this.selectedAccountAlias = "No account selected!";
             }
-        });
+            this.changeDetector.markForCheck();
+        }));
+
+        this._subs.push(this.accountService.currentAccountValid.subscribe((status) => {
+            this.currentAccountValid = status;
+            this.changeDetector.markForCheck();
+        }));
+
+        this._subs.push(this.accountService.currentAccountInvalidError.subscribe((error) => {
+            this.currentAccountInvalidError = error;
+            this.changeDetector.markForCheck();
+        }));
     }
 
     public selectAccount(account: AccountResource): void {
         this.accountService.selectAccount(account.id);
     }
 
-    public ngAfterViewInit() {
-        this.accountService.currentAccountValid.subscribe((status) => {
-            this.currentAccountValid = status;
-            this.changeDetection.detectChanges();
-        });
-
-        this.accountService.currentAccountInvalidError.subscribe((error) => {
-            this.currentAccountInvalidError = error;
-            this.changeDetection.detectChanges();
-        });
+    public ngOnDestroy() {
+        this._subs.forEach(x => x.unsubscribe());
     }
 
     public openContextMenu(account: AccountResource) {

@@ -39,7 +39,6 @@ export class RpcServerStatusComponent {
         });
     }
 
-    @HostListener("click")
     public showContextMenu() {
         const items: any[] = [
             new ContextMenuItem("Restart service", () => this._restartServer()),

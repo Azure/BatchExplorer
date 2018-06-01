@@ -15,11 +15,11 @@ import "./pinned-dropdown.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PinnedDropDownComponent implements OnInit, OnDestroy {
-    @ViewChild(DropdownComponent) dropdown: DropdownComponent;
     public currentUrl: string;
     public favorites: Observable<List<PinnableEntity>>;
     public title: string = "";
 
+    @ViewChild(DropdownComponent) private _dropdown: DropdownComponent;
     private _subscriptions: Subscription[] = [];
     private _accountEndpoint: string = "";
 
@@ -56,9 +56,9 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
 
     public gotoFavorite(favorite: PinnableEntity) {
         this.router.navigate(favorite.routerLink);
-        this.dropdown.close();
+        this._dropdown.close();
     }
-    
+
     public entityType(favorite: PinnableEntity) {
         switch (favorite.pinnableType) {
             case PinnedEntityType.Application:
