@@ -1,6 +1,5 @@
 <bl-dropdown class="account-dropdown" [footer]="true" align="left">
     <div bl-dropdown-btn
-        [routerLink]="['/accounts/', accountService.currentAccountId | async]"
         [class.invalid]="currentAccountValid === status.Invalid"
         [attr.title]="currentAccountInvalidError">
         {{selectedAccountAlias}}
@@ -10,10 +9,10 @@
         <i *ngIf="currentAccountValid === status.Loading" class="fa fa-spinner fa-spin"></i>
     </div>
     <div bl-dropdown-content>
-        <div *ngFor="let account of accountService.accountFavorites | async; trackBy: trackByFn"
+        <bl-clickable *ngFor="let account of accountService.accountFavorites | async; trackBy: trackByFn"
              class="dropdown-item"
              [routerLink]="['/accounts', account.id]"
-             (click)="selectAccount(account)"
+             (do)="selectAccount(account)"
              (contextmenu)="openContextMenu(account)"
              [class.selected]="account.id === selectedId"
              [title]="account.id">
@@ -24,9 +23,9 @@
             <div *ngIf="account.id === selectedId" class="extra">
                 <i class="fa fa-check"></i>
             </div>
-        </div>
-        <div *ngIf="selectedId" class="dropdown-item" routerLink="accounts">
+        </bl-clickable>
+        <bl-clickable *ngIf="selectedId" class="dropdown-item" routerLink="accounts">
             <i class="fa fa-cog fa-2x"></i>Manage accounts
-        </div>
+        </bl-clickable>
     </div>
 </bl-dropdown>
