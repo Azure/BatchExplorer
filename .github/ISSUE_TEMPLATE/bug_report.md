@@ -20,6 +20,9 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem. 
 
+**Logs(Click profile > View Logs > app.log, client.log)**
+If applicable please attach those log files
+
 **Version (please complete the following information):**
  - OS: [Windows/Osx/Linux]
  - Version [e.g. 0.15.2]
