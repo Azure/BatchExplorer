@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, HostListener } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding } from "@angular/core";
 import { ElectronShell } from "@batch-flask/ui";
 import * as path from "path";
 
