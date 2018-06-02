@@ -25,19 +25,19 @@ export class AADGraphHttpService extends HttpService {
         private batchLabs: BatchLabsService) {
         super();
         this.adal.currentUser.subscribe(x => this._currentUser = x);
-        this.http.get("");
     }
 
     public request<T = any>(method: string, uri: string, options: any): Observable<T> {
         return this.accountService.currentAccount.take(1)
             .flatMap((account) => {
-                return this.adal.accessTokenData(account.subscription.tenantId, this.serviceUrl)
+                const tenantId = account.subscription.tenantId;
+                return this.adal.accessTokenData(tenantId, this.serviceUrl)
                     .flatMap((accessToken) => {
                         options = this.addAuthorizationHeader(options, accessToken);
                         options = this._addApiVersion(options);
                         return this.http.request<T>(
                             method,
-                            this._computeUrl(uri, account.subscription.tenantId),
+                            this._computeUrl(uri, tenantId),
                             options)
                             .retryWhen(attempts => this.retryWhen(attempts))
                             .catch((error) => {
