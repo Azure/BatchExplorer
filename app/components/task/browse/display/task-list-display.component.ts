@@ -21,6 +21,7 @@ import "./task-list-display.scss";
     providers: [TaskCommands],
 })
 export class TaskListDisplayComponent extends ListBaseComponent implements OnChanges {
+    public TaskState = TaskState;
     @Input() public jobId: string;
 
     @Input() public tasks: List<Task>;

@@ -32,25 +32,27 @@
 
         <bl-column name="state">
             <div *blHeadCellDef>State</div>
-            <div *blCellDef="let task">{{task.state}}</div>
+            <div *blCellDef="let task">
+                <bl-task-state [task]="task"></bl-task-state>
+            </div>
         </bl-column>
 
-        <bl-column name="creationTime">
+        <bl-column name="creationTime" [defaultWidth]="120">
             <div *blHeadCellDef>Created</div>
             <div *blCellDef="let task">{{formatDate(task.creationTime)}}</div>
         </bl-column>
 
-        <bl-column name="startTime">
+        <bl-column name="startTime" [defaultWidth]="120">
             <div *blHeadCellDef>Started</div>
             <div *blCellDef="let task">{{formatDate(task.executionInfo?.startTime)}}</div>
         </bl-column>
 
-        <bl-column name="endTime">
+        <bl-column name="endTime"  [defaultWidth]="120">
             <div *blHeadCellDef>Completed</div>
             <div *blCellDef="let task">{{formatDate(task.executionInfo?.endTime)}}</div>
         </bl-column>
 
-        <bl-column name="exitCode">
+        <bl-column name="exitCode"  [defaultWidth]="60">
             <div *blHeadCellDef>Exit code</div>
             <div *blCellDef="let task">{{task.executionInfo?.exitCode}}</div>
         </bl-column>
