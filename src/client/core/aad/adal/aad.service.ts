@@ -1,5 +1,5 @@
 
-import { AccessToken } from "@batch-flask/core";
+import { AccessToken, ServerError } from "@batch-flask/core";
 import { fetch, log } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core/batchlabs-application";
 import { localStorage } from "client/core/local-storage";
@@ -82,7 +82,8 @@ export class AADService {
             this._tenantsIds.next(tenantIds);
             this._refreshAllAccessTokens();
         } catch (error) {
-            log.error("Error login", error);
+            this._tenantsIds.error(ServerError.fromARM(error));
+            log.error("Error retrieving tenants", error);
         }
     }
 
@@ -251,7 +252,8 @@ export class AADService {
             Authorization: `${token.token_type} ${token.access_token}`,
         };
         const options = { headers };
-        const url = `${this.app.azureEnvironment.armUrl}tenants?api-version=${Constants.ApiVersion.arm}`;
+        // TODO-TIM REVERT TENANTS
+        const url = `${this.app.azureEnvironment.armUrl}tenants2?api-version=${Constants.ApiVersion.arm}`;
         const response = await fetch(url, options);
         log.info("Listing tenants response", response.status, response.statusText);
         const { value }  = await response.json();
