@@ -36,7 +36,6 @@ export class OnlineStatusComponent implements OnInit, OnDestroy {
     public async updateOnlineStatus() {
         this.browserOnline = this._checkBrowserOnline();
         this.nodeOnline = await this._checkNodeOnline();
-        console.log("Online", this.browserOnline, this.nodeOnline);
         this.offline = !this.browserOnline || !this.nodeOnline;
         this._updateMessage();
         this.changeDetector.markForCheck();
@@ -55,7 +54,6 @@ export class OnlineStatusComponent implements OnInit, OnDestroy {
     }
 
     private _checkBrowserOnline(): boolean {
-        console.log("Vall nav",  this.navigatorService,  this.navigatorService.onLine);
         return this.navigatorService.onLine;
     }
 
