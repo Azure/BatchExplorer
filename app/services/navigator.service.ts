@@ -32,6 +32,9 @@ export class NavigatorService {
         });
     }
 
+    public get onLine(): boolean {
+        return navigator.onLine;
+    }
     /**
      * Handle opening a link with the ms-batchlabs:// protocol
      * @param value Full string starting with ms-batchlabs://

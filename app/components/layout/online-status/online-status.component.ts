@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { ElectronRemote } from "@batch-flask/ui";
 import { Observable, Subscription } from "rxjs";
 
+import { NavigatorService } from "app/services";
 import { IpcEvent } from "common/constants";
 import "./online-status.scss";
 
@@ -17,21 +18,25 @@ export class OnlineStatusComponent implements OnInit, OnDestroy {
     public offline: boolean = false;
     private _sub: Subscription;
 
-    constructor(private changeDetector: ChangeDetectorRef, private remote: ElectronRemote) {
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private remote: ElectronRemote,
+        private navigatorService: NavigatorService) {
     }
 
     public ngOnInit() {
         this._sub = Observable.timer(0, 30000).concatMap(() => {
-            return Observable.fromPromise(this._updateOnlineStatus());
+            return Observable.fromPromise(this.updateOnlineStatus());
         }).subscribe();
     }
     public ngOnDestroy() {
         this._sub.unsubscribe();
     }
 
-    private async _updateOnlineStatus() {
+    public async updateOnlineStatus() {
         this.browserOnline = this._checkBrowserOnline();
         this.nodeOnline = await this._checkNodeOnline();
+        console.log("Online", this.browserOnline, this.nodeOnline);
         this.offline = !this.browserOnline || !this.nodeOnline;
         this._updateMessage();
         this.changeDetector.markForCheck();
@@ -49,8 +54,9 @@ export class OnlineStatusComponent implements OnInit, OnDestroy {
         }
     }
 
-    private _checkBrowserOnline() {
-        return navigator.onLine;
+    private _checkBrowserOnline(): boolean {
+        console.log("Vall nav",  this.navigatorService,  this.navigatorService.onLine);
+        return this.navigatorService.onLine;
     }
 
     private async _checkNodeOnline(): Promise<boolean> {
