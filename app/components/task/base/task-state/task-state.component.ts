@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component,
+    ChangeDetectionStrategy, Component,
     HostBinding, Input, OnChanges, SimpleChanges,
 } from "@angular/core";
 
