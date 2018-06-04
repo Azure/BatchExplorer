@@ -22,6 +22,7 @@ describe("AdalService spec", () => {
     let aadServiceSpy;
     let remoteSpy;
     let batchLabsSpy;
+    let notificationServiceSpy;
 
     beforeEach(() => {
         aadServiceSpy = {
@@ -33,7 +34,11 @@ describe("AdalService spec", () => {
         batchLabsSpy = {
             aadService: aadServiceSpy,
         };
-        service = new AdalService(remoteSpy, batchLabsSpy);
+
+        notificationServiceSpy = {
+            error:  jasmine.createSpy("notify.error"),
+        }
+        service = new AdalService(remoteSpy, batchLabsSpy, notificationServiceSpy);
     });
 
     it("#accessTokenFor returns observable with token string", (done) => {

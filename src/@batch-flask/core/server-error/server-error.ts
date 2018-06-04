@@ -232,6 +232,12 @@ export class ServerError {
     }
 
     public toString() {
-        return [this.status, this.statusText, this.message, this.details].filter(x => exists(x)).join(" - ");
+        return [this.status, this.statusText, this.message].filter(x => exists(x)).join(" - ") + this.detailsToString();
+    }
+
+    public detailsToString() {
+        return this.details.map(({key, value}) => {
+            return `${key}: ${value}`;
+        }).join("\n");
     }
 }

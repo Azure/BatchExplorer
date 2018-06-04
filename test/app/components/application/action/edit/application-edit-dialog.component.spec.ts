@@ -31,7 +31,7 @@ describe("ApplicationEditDialogComponent ", () => {
                     return Observable.throw(ServerError.fromARM(new Response(new ResponseOptions({
                         status: 400,
                         body: JSON.stringify({ error: { message: "blast, we failed" } }),
-                        statusText: "error, error, error",
+                        statusText: "Bad request",
                     }))));
                 }
 
@@ -199,8 +199,8 @@ describe("ApplicationEditDialogComponent ", () => {
                     done();
                 },
                 error: (error: ServerError) => {
-                    expect(error.statusText).toBe("error, error, error");
-                    expect(error.toString()).toBe("400 - blast, we failed");
+                    expect(error.statusText).toBe("Bad request");
+                    expect(error.toString()).toBe("400 - Bad request - blast, we failed");
 
                     expect(appServiceSpy.patch).toHaveBeenCalledTimes(1);
                     expect(notificationServiceSpy.success).toHaveBeenCalledTimes(0);
