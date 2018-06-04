@@ -2,7 +2,7 @@ import * as moment from "moment";
 
 import { AccessToken, ServerError } from "@batch-flask/core";
 import { AdalService } from "app/services/adal";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { F } from "test/utils";
 
 const tenant1 = "tenant-1";
