@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { AccessToken } from "@batch-flask/core";
-import { ElectronRemote } from "@batch-flask/ui";
+import { AccessToken, ServerError } from "@batch-flask/core";
+import { ElectronRemote, NotificationService } from "@batch-flask/ui";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { BatchLabsService } from "app/services/batch-labs.service";
@@ -17,11 +17,23 @@ export class AdalService {
     private _waitingPromises: StringMap<Promise<AccessToken>> = {};
     private _tenantsIds = new BehaviorSubject<string[]>([]);
 
-    constructor(private remote: ElectronRemote, batchLabs: BatchLabsService) {
+    constructor(
+        private remote: ElectronRemote,
+        batchLabs: BatchLabsService,
+        private notificationService: NotificationService) {
         this.aadService = batchLabs.aadService;
         // Need to do this as aadService.tenantIds is in the node processs and electron lose information in the transfer
-        this.aadService.tenantsIds.subscribe((val) => {
-            this._tenantsIds.next(val);
+        this.aadService.tenantsIds.subscribe({
+            next: (val) => {
+                this._tenantsIds.next(val);
+            },
+            error: (error) => {
+                const serverError = new ServerError(error);
+                this._tenantsIds.error(serverError);
+                this.notificationService.error(
+                    `Error loading tenants. This could be an issue with proxy settings or your connection.`,
+                    serverError.toString());
+            },
         });
         this.tenantsIds = this._tenantsIds.asObservable();
     }
@@ -65,7 +77,7 @@ export class AdalService {
             }
         }
 
-        const promise = this.remote.send(Constants.IpcEvent.AAD.accessTokenData, {tenantId, resource}).then((x) => {
+        const promise = this.remote.send(Constants.IpcEvent.AAD.accessTokenData, { tenantId, resource }).then((x) => {
             const token = new AccessToken({ ...x });
             this.tokenCache.storeToken(tenantId, resource, token);
             delete this._waitingPromises[key];
