@@ -5,13 +5,4 @@ bl-task-list-display {
     flex-direction: column;
     position: relative;
     height: 100%;
-
-    .state {
-        &.success {
-            color: $success-color;
-        }
-        &.error {
-            color: $danger-color;
-        }
-    }
 }

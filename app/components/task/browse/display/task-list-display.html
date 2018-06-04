@@ -11,7 +11,9 @@
             </bl-quick-list-item-status>
 
             <div bl-quick-list-item-title>{{task.id}} {{task.displayName}}</div>
-            <p bl-quick-list-item-field>{{task.state}}</p>
+            <p bl-quick-list-item-field>
+                <bl-task-state [task]="task"></bl-task-state>
+            </p>
             <div bl-quick-list-item-preview>
                 <bl-task-preview [task]="task"></bl-task-preview>
             </div>
