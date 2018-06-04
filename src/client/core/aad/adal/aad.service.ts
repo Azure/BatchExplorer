@@ -252,8 +252,7 @@ export class AADService {
             Authorization: `${token.token_type} ${token.access_token}`,
         };
         const options = { headers };
-        // TODO-TIM REVERT TENANTS
-        const url = `${this.app.azureEnvironment.armUrl}tenants2?api-version=${Constants.ApiVersion.arm}`;
+        const url = `${this.app.azureEnvironment.armUrl}tenants?api-version=${Constants.ApiVersion.arm}`;
         const response = await fetch(url, options);
         log.info("Listing tenants response", response.status, response.statusText);
         const { value }  = await response.json();
