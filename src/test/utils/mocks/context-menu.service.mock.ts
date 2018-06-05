@@ -1,10 +1,13 @@
-import { ContextMenuService } from "@batch-flask/ui/context-menu";
+import { ContextMenu, ContextMenuService } from "@batch-flask/ui/context-menu";
 
 export class ContextMenuServiceMock {
     public openMenu: jasmine.Spy;
+    public lastMenu: ContextMenu;
 
     constructor() {
-        this.openMenu = jasmine.createSpy("openMenu");
+        this.openMenu = jasmine.createSpy("openMenu").and.callFake((menu) => {
+            this.lastMenu = menu;
+        });
     }
 
     public asProvider() {

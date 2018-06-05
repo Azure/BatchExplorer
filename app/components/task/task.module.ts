@@ -9,14 +9,13 @@ import { TaskDetailsModule } from "app/components/task/details";
 import { TaskHomeComponent } from "app/components/task/home";
 
 import {
-    DeleteTaskDialogComponent,
     RerunTaskFormComponent,
     TaskCreateBasicDialogComponent,
     TerminateTaskDialogComponent,
 } from "app/components/task/action";
 
 const components = [
-    TaskHomeComponent, DeleteTaskDialogComponent, RerunTaskFormComponent, TaskCreateBasicDialogComponent,
+    TaskHomeComponent, RerunTaskFormComponent, TaskCreateBasicDialogComponent,
     TerminateTaskDialogComponent,
 ];
 
@@ -29,7 +28,6 @@ const modules = [
     exports: [...modules, ...components],
     imports: [...modules],
     entryComponents: [
-        DeleteTaskDialogComponent,
         RerunTaskFormComponent,
         TaskCreateBasicDialogComponent,
         TerminateTaskDialogComponent,

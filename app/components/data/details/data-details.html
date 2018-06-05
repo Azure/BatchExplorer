@@ -7,9 +7,7 @@
             </div>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                <bl-edit-button title="Add more files to the file group" [action]="manageFileGroup" [disabled]="!isFileGroup"></bl-edit-button>
-                <bl-delete-button title="Delete this file group" [action]="deleteFileGroup"></bl-delete-button>
-                <bl-download-button title="Download this file group" [action]="download"></bl-download-button>
+                <bl-commands-list [commands]="commands" [entity]="container"></bl-commands-list>
             </bl-button-group>
         </bl-summary-card>
         <bl-storage-error-display></bl-storage-error-display>

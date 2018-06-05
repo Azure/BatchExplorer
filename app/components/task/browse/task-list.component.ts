@@ -15,12 +15,12 @@ import { Task } from "app/models";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { DeleteTaskAction } from "../action";
+import { DeleteTaskAction, TaskCommands } from "../action";
 
 @Component({
     selector: "bl-task-list",
     templateUrl: "task-list.html",
-    providers: [{
+    providers: [TaskCommands, {
         provide: ListBaseComponent,
         useExisting: forwardRef(() => TaskListComponent),
     }],
@@ -47,6 +47,7 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
     private _onTaskAddedSub: Subscription;
 
     constructor(
+        public commands: TaskCommands,
         private taskService: TaskService,
         activatedRoute: ActivatedRoute,
         private changeDetectorRef: ChangeDetectorRef,

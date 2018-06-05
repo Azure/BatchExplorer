@@ -1,15 +1,15 @@
 import { Component, Input, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
+import { BackgroundTaskService, DialogService, NotificationService } from "@batch-flask/ui";
 import { Observable } from "rxjs";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationDetailsComponent } from "app/components/application/details";
 import { BatchApplication } from "app/models";
-import { ApplicationService } from "app/services";
+import { ApplicationService, PinnedEntityService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { ActivatedRouteMock, MockEntityView } from "test/utils/mocks";
 import { LoadingMockComponent } from "test/utils/mocks/components";
@@ -97,9 +97,12 @@ describe("ApplicationDetailsComponent", () => {
                 ApplicationErrorDisplayMockComponent, LoadingMockComponent,
             ],
             providers: [
-                { provide: MatDialog, useValue: matDialogSpy },
+                { provide: DialogService, useValue: matDialogSpy },
                 { provide: ActivatedRoute, useValue: activatedRouteSpy },
                 { provide: SidebarManager, useValue: null },
+                { provide: PinnedEntityService, useValue: null },
+                { provide: NotificationService, useValue: null },
+                { provide: BackgroundTaskService, useValue: null },
                 { provide: ApplicationService, useValue: applicationServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
@@ -151,13 +154,6 @@ describe("ApplicationDetailsComponent", () => {
             it("subtitle contains locked text", () => {
                 const container = fixture.debugElement.query(By.css("[summarySubtitle]"));
                 expect(container.nativeElement.textContent).toContain("(locked)");
-            });
-        });
-
-        describe("Delete command is shown and wired up", () => {
-            it("calling delete opens dialog", () => {
-                component.deleteApplication();
-                expect(matDialogSpy.open).toHaveBeenCalledTimes(1);
             });
         });
     });

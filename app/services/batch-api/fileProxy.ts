@@ -118,7 +118,7 @@ export class FileProxy {
         const buffer = await response.arrayBuffer();
 
         const { encoding } = await EncodingUtils.detectEncodingFromBuffer({
-            buffer,
+            buffer: new Buffer(buffer),
             bytesRead: buffer.byteLength,
         });
         return new TextDecoder(encoding || "utf-8").decode(buffer);

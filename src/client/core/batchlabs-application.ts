@@ -4,7 +4,7 @@ import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
 import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
-import { log } from "@batch-flask/utils";
+import { fetch, log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { localStorage } from "client/core/local-storage";
 import { setMenu } from "client/menu";
@@ -52,6 +52,13 @@ export class BatchLabsApplication {
         this.state = this._state.asObservable();
         BlIpcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {
             return this.aadService.accessTokenData(tenantId, resource);
+        });
+        BlIpcMain.on(IpcEvent.fetch, async ({ url, options }) => {
+            const response = await  fetch(url, options);
+            return {
+                status: response.status,
+                statusText: response.statusText,
+            };
         });
         BlIpcMain.on(IpcEvent.logoutAndLogin, () => {
             return this.logoutAndLogin();

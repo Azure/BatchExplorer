@@ -1,20 +1,16 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, forwardRef } from "@angular/core";
-import { MatDialog } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { Filter, FilterMatcher, autobind } from "@batch-flask/core";
-import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
-import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
+import { ListBaseComponent } from "@batch-flask/core/list";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { BatchAccountCommands } from "app/components/account/action";
 import { AccountResource } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
-import { DeleteAccountDialogComponent, DeleteAccountTask } from "../../action/delete";
 
 @Component({
     selector: "bl-account-list",
@@ -39,12 +35,10 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
     constructor(
         public commands: BatchAccountCommands,
         private accountService: AccountService,
-        private dialog: MatDialog,
-        private taskManager: BackgroundTaskService,
         activatedRoute: ActivatedRoute,
         sidebarManager: SidebarManager,
         changeDetector: ChangeDetectorRef,
-        subscriptionService: SubscriptionService) {
+        private subscriptionService: SubscriptionService) {
         super(changeDetector);
         this._updateDisplayedAccounts();
 
@@ -65,7 +59,9 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
 
     @autobind()
     public refresh(): Observable<any> {
-        return this.accountService.load();
+        return this.subscriptionService.load().flatMap(() => {
+            return this.accountService.load();
+        }).shareReplay(1);
     }
 
     public handleFilter(filter: Filter) {
@@ -96,26 +92,6 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
 
     public trackByFn(index, account: AccountResource) {
         return account.id;
-    }
-
-    public deleteSelection(selection: ListSelection) {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteAccountTask(this.accountService, [...this.selection.keys]);
-            task.start(backgroundTask);
-            return task.waitingDone;
-        });
-    }
-
-    public deletePool(account: AccountResource) {
-        const dialogRef = this.dialog.open(DeleteAccountDialogComponent);
-        dialogRef.componentInstance.accountId = account.id;
-        dialogRef.componentInstance.accountName = account.name;
-    }
-
-    public contextmenu(account: AccountResource) {
-        return new ContextMenu([
-            new ContextMenuItem({ label: "Delete", click: () => this.deletePool(account) }),
-        ]);
     }
 
     private _updateDisplayedAccounts() {

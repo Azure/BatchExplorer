@@ -1,20 +1,18 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
-import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { ElectronRemote } from "@batch-flask/ui";
-import { Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 
-import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, Task } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
-import { FileSystemService, JobParams, JobService, TaskParams, TaskService } from "app/services";
+import { JobParams, JobService, TaskParams, TaskService } from "app/services";
 import { EntityView } from "app/services/core";
-import { DeleteTaskDialogComponent, TaskCreateBasicDialogComponent, TerminateTaskDialogComponent } from "../action";
+import { TaskCommands } from "../action";
 
 @Component({
     selector: "bl-task-details",
     templateUrl: "task-details.html",
+    providers: [TaskCommands],
 })
 export class TaskDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
@@ -46,18 +44,15 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
     private _paramsSubscribers: Subscription[] = [];
 
     constructor(
-        private dialog: MatDialog,
+        public commands: TaskCommands,
         private route: ActivatedRoute,
-        private sidebarManager: SidebarManager,
-        private fs: FileSystemService,
-        taskService: TaskService,
-        jobService: JobService,
-        private remote: ElectronRemote,
+        private taskService: TaskService,
+        private jobService: JobService,
         private changeDetector: ChangeDetectorRef,
         private router: Router) {
 
-        this.data = taskService.view();
-        this.jobData = jobService.view();
+        this.data = this.taskService.view();
+        this.jobData = this.jobService.view();
         this.data.item.subscribe((task) => {
             this.task = task;
             this.decorator = task && new TaskDecorator(task);
@@ -84,6 +79,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
 
         this._paramsSubscribers.push(this.route.parent.params.subscribe((params) => {
             this.jobId = params["jobId"];
+            this.commands.params = { jobId: this.jobId };
             this.update();
         }));
     }
@@ -97,46 +93,6 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public refresh() {
         return this.data.refresh();
-    }
-
-    @autobind()
-    public terminateTask() {
-        const config = new MatDialogConfig();
-        const dialogRef = this.dialog.open(TerminateTaskDialogComponent, config);
-        dialogRef.componentInstance.jobId = this.job.id;
-        dialogRef.componentInstance.taskId = this.taskId;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.refresh();
-        });
-    }
-
-    @autobind()
-    public deleteTask() {
-        const config = new MatDialogConfig();
-        const dialogRef = this.dialog.open(DeleteTaskDialogComponent, config);
-        dialogRef.componentInstance.jobId = this.job.id;
-        dialogRef.componentInstance.taskId = this.taskId;
-    }
-
-    @autobind()
-    public cloneTask() {
-        const ref = this.sidebarManager.open(`add-task-${this.taskId}`, TaskCreateBasicDialogComponent);
-        ref.component.jobId = this.jobId;
-        ref.component.setValueFromEntity(this.task);
-    }
-
-    @autobind()
-    public exportAsJSON() {
-        const dialog = this.remote.dialog;
-        const localPath = dialog.showSaveDialog({
-            buttonLabel: "Export",
-            defaultPath: `${this.jobId}.${this.taskId}.json`,
-        });
-
-        if (localPath) {
-            const content = JSON.stringify(this.task._original, null, 2);
-            return Observable.fromPromise(this.fs.saveFile(localPath, content));
-        }
     }
 
     public update() {

@@ -3,21 +3,18 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs/Subscription";
 
-import { DialogService } from "@batch-flask/ui/dialogs";
-import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { DownloadFolderComponent } from "app/components/common/download-folder-dialog";
 import { BlobContainer } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
-import { FileGroupCreateDto } from "app/models/dtos";
 import { EntityView } from "app/services/core";
 import {
-    AutoStorageService, GetContainerParams, StorageBlobService, StorageContainerService,
+    AutoStorageService, GetContainerParams, StorageContainerService,
 } from "app/services/storage";
-import { DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
+import { BlobContainerCommands } from "../action";
 
 @Component({
     selector: "bl-data-details",
     templateUrl: "data-details.html",
+    providers: [BlobContainerCommands],
 })
 export class DataDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
@@ -38,14 +35,12 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     private _paramsSubscriber: Subscription;
 
     constructor(
+        private commands: BlobContainerCommands,
         private changeDetector: ChangeDetectorRef,
         private activatedRoute: ActivatedRoute,
-        private dialog: DialogService,
         private router: Router,
-        private sidebarManager: SidebarManager,
         private storageContainerService: StorageContainerService,
-        private autoStorageService: AutoStorageService,
-        private storageBlobService: StorageBlobService) {
+        private autoStorageService: AutoStorageService) {
 
         this.data = this.storageContainerService.view();
         this.data.item.subscribe((container) => {
@@ -67,7 +62,9 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
             this.autoStorageService.getStorageAccountIdFromDataSource(params["dataSource"])
                 .subscribe((storageAccountId) => {
                     this.storageAccountId = storageAccountId;
-                    this.data.params = { storageAccountId: this.storageAccountId, id: this.containerId };
+                    const storageParams = { storageAccountId: this.storageAccountId, id: this.containerId };
+                    this.data.params = storageParams;
+                    this.commands.params = storageParams;
                     this.data.fetch();
                     this.changeDetector.markForCheck();
                 });
@@ -80,36 +77,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     }
 
     @autobind()
-    public manageFileGroup() {
-        const sidebarRef = this.sidebarManager.open("Maintain a file group", FileGroupCreateFormComponent);
-        sidebarRef.component.setValue(new FileGroupCreateDto({
-            name: this.container.name,
-            includeSubDirectories: true,
-            paths: [],
-        }));
-
-        sidebarRef.afterCompletion.subscribe(() => {
-            this.storageContainerService.onContainerUpdated.next();
-        });
-    }
-
-    @autobind()
-    public deleteFileGroup() {
-        const dialogRef = this.dialog.open(DeleteContainerDialogComponent);
-        dialogRef.componentInstance.id = this.container.id;
-        dialogRef.componentInstance.name = this.container.name;
-    }
-
-    @autobind()
     public refresh() {
-        return this.data.refresh();
-    }
-
-    @autobind()
-    public download() {
-        const ref = this.dialog.open(DownloadFolderComponent);
-        ref.componentInstance.navigator = this.storageBlobService.navigate(this.storageAccountId, this.containerId);
-        ref.componentInstance.subfolder = this.containerId;
-        ref.componentInstance.folder = "";
+        return this.commands.get(this.containerId);
     }
 }
