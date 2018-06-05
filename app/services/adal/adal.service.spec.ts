@@ -1,8 +1,8 @@
 import * as moment from "moment";
 
-import { AccessToken } from "@batch-flask/core";
+import { AccessToken, ServerError } from "@batch-flask/core";
 import { AdalService } from "app/services/adal";
-import { Observable } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { F } from "test/utils";
 
 const tenant1 = "tenant-1";
@@ -22,10 +22,11 @@ describe("AdalService spec", () => {
     let aadServiceSpy;
     let remoteSpy;
     let batchLabsSpy;
+    let notificationServiceSpy;
 
     beforeEach(() => {
         aadServiceSpy = {
-            tenantsIds: Observable.of([]),
+            tenantsIds: new BehaviorSubject([]),
         };
         remoteSpy = {
             send: jasmine.createSpy("accessTokenData").and.returnValue(Promise.resolve(token1)),
@@ -33,7 +34,25 @@ describe("AdalService spec", () => {
         batchLabsSpy = {
             aadService: aadServiceSpy,
         };
-        service = new AdalService(remoteSpy, batchLabsSpy);
+
+        notificationServiceSpy = {
+            error: jasmine.createSpy("notify.error"),
+        };
+        service = new AdalService(remoteSpy, batchLabsSpy, notificationServiceSpy);
+    });
+
+    it("It notify of error if tenants ids fail", () => {
+        aadServiceSpy.tenantsIds.error(new ServerError({
+            status: 300,
+            code: "ERRNOCONN",
+            statusText: "ERRNOCONN",
+            message: "Cannot connect",
+        }));
+
+        expect(notificationServiceSpy.error).toHaveBeenCalledOnce();
+        expect(notificationServiceSpy.error).toHaveBeenCalledWith(
+            "Error loading tenants. This could be an issue with proxy settings or your connection.",
+            "300 - ERRNOCONN - Cannot connect");
     });
 
     it("#accessTokenFor returns observable with token string", (done) => {
