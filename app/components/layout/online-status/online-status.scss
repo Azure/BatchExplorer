@@ -1,0 +1,9 @@
+@import "app/styles/variables";
+
+bl-online-status {
+    .offline-warning {
+        padding: 0 5px;
+        background: $danger-color;
+        color: $whitesmoke;
+    }
+}

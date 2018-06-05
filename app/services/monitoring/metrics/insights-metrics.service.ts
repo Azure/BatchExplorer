@@ -77,13 +77,17 @@ export class InsightsMetricsService {
         const metrics: Metric[] = data.value.map((object, index): Metric => {
             const definition = request.metrics[index];
             const label = definition.label || this._convertToSentenceCase(object.name.localizedValue);
+            let data = [];
+            if (object.timeseries.length > 0) {
+                data = object.timeseries[0].data.map((data): MetricValue => {
+                    return data as MetricValue;
+                });
+            }
 
             return {
                 name: object.name.value,
                 label,
-                data: object.timeseries[0].data.map((data): MetricValue => {
-                    return data as MetricValue;
-                }),
+                data,
             } as Metric;
         });
         return new MonitoringMetricList({
