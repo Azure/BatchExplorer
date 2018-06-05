@@ -2,8 +2,7 @@
     <i class="fa"
         [class.fa-warning]="hasError"
         [class.fa-check]="isSuccess"></i>
-    {{task.state}}
-
+    <span class="state">{{task.state}}</span>
     <span *ngIf="errorCode">
         ({{errorCode}})
     </span>
