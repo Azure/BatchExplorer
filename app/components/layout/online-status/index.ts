@@ -1,1 +1,1 @@
-export * from "./online-status.component"
+export * from "./online-status.component";
