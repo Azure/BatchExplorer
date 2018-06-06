@@ -7,7 +7,6 @@ import { ActivatedRoute } from "@angular/router";
 import { IpcService } from "@batch-flask/ui";
 import { MonacoLoader } from "@batch-flask/ui/editor";
 import { PermissionService } from "@batch-flask/ui/permission";
-import { log } from "@batch-flask/utils";
 import { registerIcons } from "app/config";
 import {
     AccountService, AuthorizationHttpService, AutoscaleFormulaService,
