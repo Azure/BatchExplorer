@@ -88,7 +88,7 @@ export class BatchLabsApplication {
         this._setCommonHeaders();
         this.aadService.login();
         this._initializer.setTaskStatus("window", "Loading application");
-        const window = this.openFromArguments(process.argv);
+        const window = this.openFromArguments(process.argv, false);
         const windowSub = window.state.subscribe((state) => {
             switch (state) {
                 case WindowState.Loading:
@@ -161,7 +161,7 @@ export class BatchLabsApplication {
         return this.windows.openNewWindow(link);
     }
 
-    public openFromArguments(argv: string[], showWhenReady = false): MainWindow {
+    public openFromArguments(argv: string[], showWhenReady = true): MainWindow {
         if (ClientConstants.isDev) {
             return this.windows.openNewWindow(null, showWhenReady);
         }

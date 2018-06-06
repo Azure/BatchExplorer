@@ -18,7 +18,7 @@ function setupSingleInstance(batchLabsApp: BatchLabsApplication) {
     if (Constants.isDev) { return; }
     const shouldQuit = app.makeSingleInstance((commandLine) => {
         log.info("Try to open labs again", commandLine);
-        batchLabsApp.openFromArguments(commandLine, true);
+        batchLabsApp.openFromArguments(commandLine);
     });
 
     if (shouldQuit) {
