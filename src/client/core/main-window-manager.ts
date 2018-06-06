@@ -102,13 +102,25 @@ export class MainWindowManager {
         }
 
         window.once("closed", () => {
-            this.windows.delete(windowId);
-            if (window.expectedClose) { return; }
-            if (this.windows.size > 0) { return; }
-            log.info(`Main Window ${this.constructor.name} closed. Quiting the app.`);
-            this.batchLabsApp.quit();
+            this._closeWindow(windowId);
         });
 
         return window;
+    }
+
+    private _closeWindow(windowId: string) {
+        const window = this.windows.get(windowId);
+        if (window) {
+            this.windows.delete(windowId);
+            if (window.expectedClose) { return; }
+        }
+        const visibileWindows = [...this.windows.values()].filter(x => x.isVisible);
+        // Check there is at least one more visible window.
+        // Some window might still have been loading and are not visible yet
+        if (visibileWindows.length > 0) { return; }
+
+        // If no visible window quit the app
+        log.info(`Main Window ${this.constructor.name} closed. Quiting the app.`);
+        this.batchLabsApp.quit();
     }
 }
