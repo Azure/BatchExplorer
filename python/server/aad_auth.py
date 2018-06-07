@@ -1,4 +1,4 @@
-import azure.batch_extensions as batch
+import azext.batch as batch
 from msrestazure.azure_active_directory import AdalAuthentication
 
 
