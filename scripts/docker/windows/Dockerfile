@@ -3,6 +3,7 @@ FROM microsoft/nanoserver
 ENV node_version=10.4.0
 
 ENV PYTHON_VERSION 3.6.5
+ENV PYTHON27_VERSION 2.7.15
 ENV PYTHON_PIP_VERSION 9.0.1
 
 ENV GIT_VERSION 2.17.1
@@ -30,6 +31,12 @@ RUN Invoke-WebRequest $('https://www.python.org/ftp/python/{0}/python-{0}-embed-
     python getpip.py $pipInstall ; \
     Remove-Item get-pip.py ; \
     Remove-Item getpip.py
+
+
+# Install python 27
+RUN Invoke-WebRequest $('https://www.python.org/ftp/python/{0}/python-{0}.amd64-pdb.zip' -f $env:PYTHON27_VERSION) -OutFile 'python.zip' -UseBasicParsing ; \
+    Expand-Archive python.zip -DestinationPath C:\python27 ; \
+    Remove-Item -Path python.zip ;
 
 # Install git
 RUN Invoke-WebRequest $('https://github.com/git-for-windows/git/releases/download/v{0}.windows.1/MinGit-{0}-64-bit.zip' -f $env:GIT_VERSION) -OutFile MinGit.zip
