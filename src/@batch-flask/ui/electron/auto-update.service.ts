@@ -1,9 +1,9 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { AppUpdater, UpdateCheckResult, UpdateInfo } from "electron-updater";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
-
 import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
 import { ElectronRemote } from "./remote.service";
+import { map } from "rxjs/operators";
 
 export enum UpdateStatus {
     Checking,
@@ -31,7 +31,7 @@ export class AutoUpdateService implements OnDestroy {
     constructor(batchFlaskSettings: BatchFlaskSettingsService, remote: ElectronRemote) {
         this._autoUpdater = remote.getCurrentWindow().autoUpdater;
         this.status = this._status.asObservable();
-        this.updateReady = this._status.map(x => x === UpdateStatus.Ready);
+        this.updateReady = this._status.pipe(map(x => x === UpdateStatus.Ready));
 
         this._autoUpdater.on("checking-for-update", (info) => {
             this._status.next(UpdateStatus.Checking);

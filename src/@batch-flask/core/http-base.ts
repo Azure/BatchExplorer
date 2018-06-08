@@ -2,7 +2,8 @@ import { Location } from "@angular/common";
 import { HttpEvent, HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
 import { RetryableHttpCode } from "@batch-flask/core/constants";
 import { UrlUtils } from "@batch-flask/utils";
-import { Observable } from "rxjs";
+import { Observable, range } from "rxjs";
+import { flatMap, zip, switchMap } from "rxjs/operators";
 import { AccessToken } from "./aad/access-token";
 
 export const badHttpCodeMaxRetryCount = 5;
@@ -76,23 +77,24 @@ export abstract class HttpService {
     }
 
     protected retryWhen(attempts: Observable<Response>) {
-        const retryRange = Observable.range(0, badHttpCodeMaxRetryCount + 1);
-        return attempts
-            .switchMap((x: any) => {
+        const retryRange = range(0, badHttpCodeMaxRetryCount + 1);
+        return attempts.pipe(
+            switchMap((x: any) => {
                 if (RetryableHttpCode.has(x.status)) {
                     return Observable.of(x);
                 }
                 return Observable.throw(x);
-            })
-            .zip(retryRange, (attempt, retryCount) => {
+            }),
+            zip(retryRange, (attempt, retryCount) => {
                 if (retryCount >= badHttpCodeMaxRetryCount) {
                     throw attempt;
                 }
                 return retryCount;
-            })
-            .flatMap((retryCount) => {
+            }),
+            flatMap((retryCount) => {
                 return Observable.timer(100 * Math.pow(3, retryCount));
-            });
+            }),
+        );
     }
 
     protected computeUrl(uri: string) {
