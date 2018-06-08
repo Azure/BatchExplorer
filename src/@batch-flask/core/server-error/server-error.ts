@@ -80,7 +80,6 @@ export class ServerError {
     }
 
     public static fromBatch(error: BatchError) {
-        console.log("Error", error);
         const { message, requestId, timestamp } = parseMessage(error.message && error.message.value);
 
         // when the error message returned is not of type ErrorMessage, it will more often

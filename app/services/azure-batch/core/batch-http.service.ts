@@ -41,7 +41,7 @@ export class AzureBatchHttpService extends HttpService {
                             options)
                             .retryWhen(attempts => this.retryWhen(attempts))
                             .catch((error) => {
-                                const err = ServerError.fromBatch(error);
+                                const err = ServerError.fromBatchHttp(error);
                                 return Observable.throw(err);
                             });
                     });
@@ -57,7 +57,8 @@ export class AzureBatchHttpService extends HttpService {
             options.params = options.params.set("api-version", Constants.ApiVersion.batchService);
         }
 
-        options.headers = (options.headers as any).set("Content-Type", "application/json; odata=minimalmetadata; charset=utf-8");
+        options.headers = (options.headers as any)
+            .set("Content-Type", "application/json; odata=minimalmetadata; charset=utf-8");
 
         return options;
     }
