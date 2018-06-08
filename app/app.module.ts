@@ -36,6 +36,7 @@ import { MaterialModule } from "@batch-flask/core";
 import { CommonModule } from "app/components/common";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
+import { AzureBatchHttpService } from "app/services/azure-batch/core";
 import { PollService } from "app/services/core";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 import { AADGraphHttpService, MsGraphHttpService } from "app/services/ms-graph/core";
@@ -130,6 +131,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         AppInsightsQueryService,
         ApplicationService,
         AutoscaleFormulaService,
+        AzureBatchHttpService,
         AzureHttpService,
         ArmHttpService,
         AuthorizationHttpService,
