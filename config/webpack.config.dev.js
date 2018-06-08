@@ -17,7 +17,6 @@ const port = process.env.PORT || 3178;
 
 module.exports = merge(config, {
     devtool: "cheap-module-source-map",
-    // debug: true,
     mode: "development",
     devServer: {
         host,
