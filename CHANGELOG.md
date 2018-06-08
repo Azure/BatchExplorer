@@ -1,3 +1,47 @@
+# 0.16.0
+[All items](https://github.com/Azure/BatchLabs/milestone/19?closed=1)
+
+### feature:
+
+* Show in the footer if Batchlabs is connected to the internet [\#1408](https://github.com/Azure/BatchLabs/issues/1408)
+* BatchLabs not very helpfull when not able to loads tenants(Bad proxy for example) [\#1403](https://github.com/Azure/BatchLabs/issues/1403)
+* Refreshing account list should also refresh subscriptions [\#1398](https://github.com/Azure/BatchLabs/issues/1398)
+* Decode URL parameters passed to application [\#1364](https://github.com/Azure/BatchLabs/issues/1364)
+* File group directory picker should validate directories exists [\#1362](https://github.com/Azure/BatchLabs/issues/1362)
+* Batch insight  show a line for each node on the pool wide graph [\#1359](https://github.com/Azure/BatchLabs/issues/1359)
+* Add disk usage graphs for batch-insights [\#1357](https://github.com/Azure/BatchLabs/issues/1357)
+* Python server: Add more detail to error handling [\#1355](https://github.com/Azure/BatchLabs/issues/1355)
+* Change waiting for start task default to true [\#1349](https://github.com/Azure/BatchLabs/issues/1349)
+* Resizable columns for table [\#1346](https://github.com/Azure/BatchLabs/issues/1346)
+* Show that a filter is selected in quicklist [\#1335](https://github.com/Azure/BatchLabs/issues/1335)
+* Use new commands design to implement bl-command-buttons [\#1319](https://github.com/Azure/BatchLabs/issues/1319)
+* Add and update metadata for entities [\#1318](https://github.com/Azure/BatchLabs/issues/1318)
+* Read file support different encoding [\#875](https://github.com/Azure/BatchLabs/issues/875)
+
+### bug:
+
+* Unable to resize pool using batch labs on mac. [\#1413](https://github.com/Azure/BatchLabs/issues/1413)
+* Opening 2 batchlabs instance is broken [\#1411](https://github.com/Azure/BatchLabs/issues/1411)
+* BatchLabs doesn't handle ProxyEnable setting in registry [\#1385](https://github.com/Azure/BatchLabs/issues/1385)
+* Running task graph seems to be in a weird state [\#1382](https://github.com/Azure/BatchLabs/issues/1382)
+* After ~1 hour of intensive use, app grinds to a halt [\#1369](https://github.com/Azure/BatchLabs/issues/1369)
+* Storage explorer download folder has failed three times in a row [\#1368](https://github.com/Azure/BatchLabs/issues/1368)
+* Tasks quick-list wont scroll [\#1367](https://github.com/Azure/BatchLabs/issues/1367)
+* Navigate to Data before batch account loaded throws an error. [\#1361](https://github.com/Azure/BatchLabs/issues/1361)
+* Delete many from quick-list doesn't remove items from list [\#1360](https://github.com/Azure/BatchLabs/issues/1360)
+* User identity picker doesn't show up current value [\#1353](https://github.com/Azure/BatchLabs/issues/1353)
+* Opening ms-batchlabs:// link to a template with file group picker open crash [\#1344](https://github.com/Azure/BatchLabs/issues/1344)
+* Figure out why call to ratecard API is failing for pool pricing [\#1333](https://github.com/Azure/BatchLabs/issues/1333)
+* Pressing enter on editable table remove the row [\#1327](https://github.com/Azure/BatchLabs/issues/1327)
+
+### other:
+
+* Navigation dropdowns not accessible via keyboard [\#1401](https://github.com/Azure/BatchLabs/issues/1401)
+* Breadcrumb is not accessible via keyboard [\#1400](https://github.com/Azure/BatchLabs/issues/1400)
+* Main navigation keyboard navigation and focus style [\#1395](https://github.com/Azure/BatchLabs/issues/1395)
+* Misleading documentation enable-app-insights-doc [\#1348](https://github.com/Azure/BatchLabs/issues/1348)
+* Make it clear for that search field only support startswith [\#1326](https://github.com/Azure/BatchLabs/issues/1326)
+
 # 0.15.2
 Fixes:
 * 3rd subscription in account list is always disabled [\#1374](https://github.com/Azure/BatchLabs/issues/1374)
