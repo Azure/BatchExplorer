@@ -1,7 +1,7 @@
 # 0.16.0
 [All items](https://github.com/Azure/BatchLabs/milestone/19?closed=1)
 
-### feature:
+### Features:
 
 * Show in the footer if Batchlabs is connected to the internet [\#1408](https://github.com/Azure/BatchLabs/issues/1408)
 * BatchLabs not very helpfull when not able to loads tenants(Bad proxy for example) [\#1403](https://github.com/Azure/BatchLabs/issues/1403)
@@ -18,7 +18,7 @@
 * Add and update metadata for entities [\#1318](https://github.com/Azure/BatchLabs/issues/1318)
 * Read file support different encoding [\#875](https://github.com/Azure/BatchLabs/issues/875)
 
-### bug:
+### Bug fixes:
 
 * Unable to resize pool using batch labs on mac. [\#1413](https://github.com/Azure/BatchLabs/issues/1413)
 * Opening 2 batchlabs instance is broken [\#1411](https://github.com/Azure/BatchLabs/issues/1411)
@@ -34,11 +34,13 @@
 * Figure out why call to ratecard API is failing for pool pricing [\#1333](https://github.com/Azure/BatchLabs/issues/1333)
 * Pressing enter on editable table remove the row [\#1327](https://github.com/Azure/BatchLabs/issues/1327)
 
-### other:
-
+### Accessibility
+First few steps towards an accessible BatchLabs
 * Navigation dropdowns not accessible via keyboard [\#1401](https://github.com/Azure/BatchLabs/issues/1401)
 * Breadcrumb is not accessible via keyboard [\#1400](https://github.com/Azure/BatchLabs/issues/1400)
 * Main navigation keyboard navigation and focus style [\#1395](https://github.com/Azure/BatchLabs/issues/1395)
+
+### Other:
 * Misleading documentation enable-app-insights-doc [\#1348](https://github.com/Azure/BatchLabs/issues/1348)
 * Make it clear for that search field only support startswith [\#1326](https://github.com/Azure/BatchLabs/issues/1326)
 
