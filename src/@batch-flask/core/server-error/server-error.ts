@@ -71,7 +71,7 @@ export class ServerError {
         return new ServerError({
             status: error.statusCode,
             code: error.code,
-            details: error.body && error.body.values,
+            details: error.values,
             message: message || error.message as string,
             requestId,
             timestamp,
