@@ -4,10 +4,15 @@
  */
 
 // tslint:disable:no-var-requires
-const poolTemplate = JSON.parse(require("./pool.template.json"));
-const jobTemplate = JSON.parse(require("./job.template.json"));
-const taskTemplate = JSON.parse(require("./task.template.json"));
-const jobscheduleTemplate = JSON.parse(require("./jobschedule.template.json"));
+// const poolTemplate = JSON.parse(require("./pool.template.json"));
+// const jobTemplate = JSON.parse(require("./job.template.json"));
+// const taskTemplate = JSON.parse(require("./task.template.json"));
+// const jobscheduleTemplate = JSON.parse(require("./jobschedule.template.json"));
+
+const poolTemplate: any = {};
+const jobTemplate: any = {};
+const taskTemplate: any = {};
+const jobscheduleTemplate: any = {};
 
 export class JsonLanguage {
     public static define() {

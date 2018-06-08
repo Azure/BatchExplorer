@@ -14,6 +14,7 @@ const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 
 module.exports = merge(config, {
     devtool: "source-map",
+    mode: "production",
     output: {
         /**
          * The output directory as absolute path (required).

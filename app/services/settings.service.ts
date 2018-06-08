@@ -9,7 +9,8 @@ import { KeyBindings, Settings, defaultKeybindings } from "app/models";
 import { LocalFileStorage } from "./local-file-storage.service";
 
 // tslint:disable-next-line:no-var-requires
-const defaultSettings = JSON.parse(stripJsonComments(require("raw-loader!app/components/settings/default-settings.json")));
+// const defaultSettings = JSON.parse(stripJsonComments(require("raw-loader!app/components/settings/default-settings.json")));
+const defaultSettings: any = {};
 
 @Injectable()
 export class SettingsService implements OnDestroy {
