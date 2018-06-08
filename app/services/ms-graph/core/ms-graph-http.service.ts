@@ -40,7 +40,7 @@ export class MsGraphHttpService extends HttpService {
                     .catch((error) => {
                         const err = ServerError.fromMsGraph(error);
                         return Observable.throw(err);
-                    });
+                    }) as Observable<any>;
             }).shareReplay(1);
     }
 }

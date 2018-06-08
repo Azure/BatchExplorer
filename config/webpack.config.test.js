@@ -3,7 +3,6 @@ const config = require("./webpack.config.base");
 const webpack = require("webpack");
 const helpers = require("./helpers");
 const { commonRules, defineEnv } = require("./webpack.common");
-const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 
 const ENV = "test";
 

@@ -4,7 +4,7 @@ import "./observable";
 
 describe("Observable extensions", () => {
     it("Should cascade observable", (done) => {
-        Observable.of(1).cascade((out) => {
+        Observable.of(1).flatMap((out) => {
             expect(out).toBe(1);
             return Observable.of(1 + out);
         }).subscribe((result) => {

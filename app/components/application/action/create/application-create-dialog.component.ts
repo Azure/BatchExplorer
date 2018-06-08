@@ -88,9 +88,10 @@ export class ApplicationCreateDialogComponent {
         const formData = this.form.value;
 
         return this.applicationService.put(formData.id, formData.version)
-            .cascade((packageVersion) => this._uploadAppPackage(this.file, packageVersion.storageUrl))
-            .cascade(() => {
-                return this.applicationService.activatePackage(formData.id, formData.version).subscribe({
+            .flatMap((packageVersion) => this._uploadAppPackage(this.file, packageVersion.storageUrl))
+            .flatMap(() => {
+                const obs =  this.applicationService.activatePackage(formData.id, formData.version);
+                obs.subscribe({
                     next: () => {
                         this.applicationService.onApplicationAdded.next(formData.id);
                         this.notificationService.success(
@@ -117,6 +118,8 @@ export class ApplicationCreateDialogComponent {
                         );
                     },
                 });
+
+                return obs;
             });
     }
 

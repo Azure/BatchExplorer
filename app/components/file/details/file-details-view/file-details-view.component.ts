@@ -60,7 +60,7 @@ export class FileDetailsViewComponent implements OnChanges {
 
     @autobind()
     public openDefaultEditor() {
-        return this.fileLoader.cache().cascade((pathToFile) => {
+        return this.fileLoader.cache().subscribe((pathToFile) => {
             this.shell.openItem(pathToFile);
         });
     }

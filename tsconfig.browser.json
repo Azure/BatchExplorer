@@ -4,5 +4,8 @@
     "**/*.spec.ts",
     "src/test/**/*.ts",
     "test/**/*.ts"
-  ]
+  ],
+  "paths": {
+    "@angular/*": ["../node_modules/@angular/*"]
+  },
 }

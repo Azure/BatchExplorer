@@ -11,7 +11,9 @@ import { SettingsService } from "app/services";
 import "./settings.scss";
 
 // tslint:disable-next-line:no-var-requires
-const defaultSettings = require("./default-settings.json");
+// TODO-TIM check dis
+// const defaultSettings = require("raw-loader!./default-settings.json");
+const defaultSettings = "{}";
 
 const emptyConfig = "// Place your settings in this file to overwrite the default settings\n{\n\n}";
 

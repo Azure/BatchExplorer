@@ -1,5 +1,6 @@
+import { animate, style, transition, trigger } from "@angular/animations"
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, animate, style, transition, trigger,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input,
 } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { Observable } from "rxjs";

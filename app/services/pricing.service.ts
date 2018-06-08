@@ -1,11 +1,10 @@
 import { Injectable } from "@angular/core";
 import * as moment from "moment";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { AccountResource, BatchSoftwareLicense, Pool, RateCardMeter } from "app/models";
 import { BatchPricing, OSPricing, OsType, SoftwarePricing, VMPrices } from "app/services/pricing";
 import { PoolPrice, PoolPriceOptions, PoolUtils, log } from "app/utils";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
 import { LocalFileStorage } from "./local-file-storage.service";
@@ -123,10 +122,12 @@ export class PricingService {
     }
 
     private _loadPricingFromApi() {
-        return this._loadRateCardMeters().map((x) => this._processMeters(x)).cascade((map) => {
+        const obs = this._loadRateCardMeters().map((x) => this._processMeters(x))
+        obs.subscribe((map) => {
             this._savePricing(map);
             this._pricingMap.next(map);
         });
+        return obs;
     }
 
     private _loadRateCardMeters(): Observable<RateCardMeter[]> {
@@ -169,7 +170,7 @@ export class PricingService {
     }
 
     private _loadPricings() {
-        this._loadPricingFromStorage().cascade((map) => {
+        this._loadPricingFromStorage().subscribe((map) => {
             if (map) {
                 this._pricingMap.next(map);
                 return true;

@@ -1,7 +1,12 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding,
-    Injector, Input, animate, style, transition, trigger,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    HostBinding,
+    Injector,
+    Input,
 } from "@angular/core";
+import { animate, style, transition, trigger } from "@angular/animations"
 import { Observable } from "rxjs";
 
 import { log } from "@batch-flask/utils";
@@ -60,8 +65,9 @@ export class ButtonComponent extends ClickableComponent {
 
     private _status = SubmitStatus.Idle;
 
-    constructor(injector: Injector,
-                private changeDetectionRef: ChangeDetectorRef) {
+    constructor(
+        injector: Injector,
+        private changeDetectionRef: ChangeDetectorRef) {
         super(injector);
     }
 

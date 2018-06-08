@@ -1,4 +1,5 @@
-import { animate, state, style, transition, trigger } from "@angular/core";
+import { animate, state, style, transition, trigger } from "@angular/animations";
+
 
 export enum SlideDirection {
     LeftToRight,

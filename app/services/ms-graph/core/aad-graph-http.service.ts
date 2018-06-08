@@ -35,6 +35,7 @@ export class AADGraphHttpService extends HttpService {
                     .flatMap((accessToken) => {
                         options = this.addAuthorizationHeader(options, accessToken);
                         options = this._addApiVersion(options);
+                        // TODO-TIM check dis (as any)
                         return this.http.request<T>(
                             method,
                             this._computeUrl(uri, tenantId),
@@ -43,7 +44,7 @@ export class AADGraphHttpService extends HttpService {
                             .catch((error) => {
                                 const err = ServerError.fromAADGraph(error);
                                 return Observable.throw(err);
-                            });
+                            }) as any;
                     });
             }).shareReplay(1);
     }
