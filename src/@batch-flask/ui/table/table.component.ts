@@ -1,17 +1,21 @@
 import {
-    AfterContentInit, ChangeDetectorRef, Component, ContentChild, ContentChildren,
-    EventEmitter, HostBinding, HostListener, Input, OnDestroy, Optional, Output, QueryList,
+    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component,
+    ContentChildren, EventEmitter, HostBinding, HostListener, Input,
+    OnChanges, OnDestroy, Optional, Output, QueryList, ViewChild,
 } from "@angular/core";
-import { BehaviorSubject, Observable } from "rxjs";
+import { List } from "immutable";
+import { Subscription } from "rxjs";
 
+import { Router } from "@angular/router";
+import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import { DragUtils, log } from "@batch-flask/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
-import { TableCellComponent } from "./table-cell";
-import { SortDirection, TableColumnComponent } from "./table-column";
+import { TableColumnComponent } from "./table-column";
+import { SortDirection, SortingInfo, TableColumnManager, TableColumnRef } from "./table-column-manager";
 import { TableHeadComponent } from "./table-head";
-import { TableRowComponent } from "./table-row";
+
 import "./table.scss";
 
 export interface TableConfig extends AbstractListBaseConfig {
@@ -26,12 +30,25 @@ export interface TableConfig extends AbstractListBaseConfig {
      * @default false
      */
     droppable?: boolean;
+
+    /**
+     * If the column name don't map to a value of the object
+     * this allows you to return the path this column should map to.
+     * This is used for sorting.
+     */
+    values?: StringMap<(item: any) => any>;
+
+    /**
+     * If the table should allow column to be resized. Default true.
+     */
+    resizableColumn?: boolean;
 }
 
 export const tableDefaultConfig = {
     ...abstractListDefaultConfig,
     showCheckbox: false,
     droppable: false,
+    resizableColumn: true,
 };
 
 export interface DropEvent {
@@ -42,8 +59,9 @@ export interface DropEvent {
 @Component({
     selector: "bl-table",
     templateUrl: "table.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent extends AbstractListBase implements AfterContentInit, OnDestroy {
+export class TableComponent extends AbstractListBase implements AfterContentInit, OnChanges, OnDestroy {
     @Input() public set config(config: TableConfig) {
         this._config = { ...tableDefaultConfig, ...config };
     }
@@ -51,19 +69,21 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
 
     @Output() public dropOnRow = new EventEmitter<DropEvent>();
 
-    @ContentChild(TableHeadComponent) public head: TableHeadComponent;
-    @ContentChildren(TableRowComponent) public items: QueryList<TableRowComponent>;
+    @Input() public data: List<any> | any[] = List([]);
+
+    @ViewChild(TableHeadComponent) public head: TableHeadComponent;
+    @ContentChildren(TableColumnComponent) public columnComponents: QueryList<TableColumnComponent>;
     @HostBinding("class.drag-hover") public isDraging = 0;
     @HostBinding("class.activable") public get activable() {
         return this.config.activable;
     }
     public dropTargetRowKey: string = null;
 
-    public dimensions: Observable<number[]>;
+    public columnManager = new TableColumnManager();
 
     protected _config: TableConfig = tableDefaultConfig;
-    private _sortingColumn: TableColumnComponent;
-    private _dimensions = new BehaviorSubject([]);
+    private _sortingInfo: SortingInfo;
+    private _sub: Subscription;
 
     /**
      * To enable keyboard navigation in the list it must be inside a focus section
@@ -71,21 +91,35 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     constructor(
         contextmenuService: ContextMenuService,
         changeDetection: ChangeDetectorRef,
+        router: Router,
+        breadcrumbService: BreadcrumbService,
         @Optional() focusSection?: FocusSectionComponent) {
-        super(contextmenuService, changeDetection, focusSection);
-        this.dimensions = this._dimensions.asObservable();
+        super(contextmenuService, router, breadcrumbService, changeDetection, focusSection);
     }
 
     public ngAfterContentInit() {
-        super.ngAfterContentInit();
-        if (this.head) {
-            this.head.dimensions.subscribe((dimensions) => this._dimensions.next(dimensions));
-        }
+        this.columnManager.columns = this.columnComponents.map(x => x.getRef());
+        this.columnComponents.changes.subscribe((columns) => {
+            this.columnManager.columns = this.columnComponents.map(x => x.getRef());
+            this.changeDetector.markForCheck();
+        });
+
+        this._sub = this.columnManager.sorting.subscribe((sortingInfo) => {
+            this._sortingInfo = sortingInfo;
+        });
         this.changeDetector.markForCheck();
     }
 
+    public ngOnChanges(changes) {
+        if (changes.data) {
+            this.updateDisplayedItems();
+        }
+    }
+
     public ngOnDestroy() {
-        this._dimensions.complete();
+        if (this._sub) {
+            this._sub.unsubscribe();
+        }
     }
 
     @HostListener("dragover", ["$event"])
@@ -93,24 +127,34 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         DragUtils.allowDrop(event, this.config.droppable);
     }
 
-    public dragEnter(item: TableRowComponent, event: DragEvent) {
+    public updateColumns() {
+        this.columnManager.columns = this.columnComponents.map(x => x.getRef());
+        this.changeDetector.markForCheck();
+    }
+
+    public updateColumn(name: string, ref) {
+        this.columnManager.updateColumn(ref);
+        this.changeDetector.markForCheck();
+    }
+
+    public dragEnter(item, event: DragEvent) {
         event.stopPropagation();
         if (!this.config.droppable) { return; }
         this.isDraging++;
-        this.dropTargetRowKey = item.key;
+        this.dropTargetRowKey = item.id;
     }
 
-    public dragLeave(item: TableRowComponent, event: DragEvent) {
+    public dragLeave(item, event: DragEvent) {
         event.stopPropagation();
 
         if (!this.config.droppable) { return; }
         this.isDraging--;
-        if (item.key === this.dropTargetRowKey && this.isDraging <= 0) {
+        if (item.id === this.dropTargetRowKey && this.isDraging <= 0) {
             this.dropTargetRowKey = null;
         }
     }
 
-    public handleDropOnRow(item: TableRowComponent, event: DragEvent) {
+    public handleDropOnRow(item, event: DragEvent) {
         event.stopPropagation();
         event.preventDefault();
         if (!this.config.droppable) { return; }
@@ -118,37 +162,56 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         this.dropTargetRowKey = null;
         this.isDraging = 0;
 
-        this.dropOnRow.emit({ key: item.key, data: event.dataTransfer });
+        this.dropOnRow.emit({ key: item.id, data: event.dataTransfer });
     }
 
-    public sort(column: TableColumnComponent) {
-        if (this._sortingColumn) {
-            this._sortingColumn.isSorting = false;
-        }
-        column.isSorting = true;
-        this._sortingColumn = column;
-        this.displayItems = this.updateDisplayedItems();
-    }
-
-    public cellTrackByFn(index, cell: TableCellComponent) {
-        return index;
+    /**
+     * Sort the table by the column name
+     * @param column
+     */
+    public sort(column: string, direction: SortDirection = SortDirection.Asc) {
+        this.columnManager.sortBy(column, direction);
+        this.updateDisplayedItems();
     }
 
     protected updateDisplayedItems() {
-        const column = this._sortingColumn;
-        const rows = this.items.toArray();
+        this.displayItems = this.computeDisplayedItems();
+        this.changeDetector.markForCheck();
+    }
+
+    protected computeDisplayedItems() {
+        const sortingInfo = this._sortingInfo;
+        const items = this._getItems();
+        if (!sortingInfo) {
+            return items;
+        }
+        const column = this.columnManager.columnMap.get(sortingInfo.column);
         if (!column) {
-            this.displayItems = rows;
-            return;
+            const keys = [...this.columnManager.columnMap.keys()];
+            log.error(`Cannot sort. There is no column with name ${column.name} in the list of columns ${keys}`);
+            return items;
         }
-        const index = this.head.getColumnIndex(column);
-        if (index === -1) {
-            log.error("Error column is not in the table", column);
-            return;
+        return this._sortItems(items, column, sortingInfo.direction);
+    }
+
+    private _getItems() {
+        if (!this.data) {
+            return [];
+        } else if (this.data instanceof List) {
+            return (this.data as List<any>).toArray();
+        } else if (Array.isArray(this.data)) {
+            return this.data;
+        } else {
+            return [...this.data as any];
         }
-        const sortedRows = rows.sort((a: TableRowComponent, b: TableRowComponent) => {
-            const aValue = a.data[index];
-            const bValue = b.data[index];
+    }
+
+    private _sortItems(items: any[], column: TableColumnRef, direction: SortDirection): any[] {
+        const getColumnValue = this._columnValueFn(column);
+
+        const sortedRows = [...items].sort((a, b) => {
+            const aValue = getColumnValue(a);
+            const bValue = getColumnValue(b);
             if (aValue < bValue) {
                 return -1;
             } else if (aValue > bValue) {
@@ -157,10 +220,18 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
             return 0;
         });
 
-        const desc = column.sortDirection === SortDirection.Desc;
+        const desc = direction === SortDirection.Desc;
         if (desc) {
             return sortedRows.reverse();
         }
         return sortedRows;
+    }
+
+    private _columnValueFn(column: TableColumnRef) {
+        if (this.config.values && column.name in this.config.values) {
+            return this.config.values[column.name];
+        } else {
+            return (item) => item[column.name];
+        }
     }
 }

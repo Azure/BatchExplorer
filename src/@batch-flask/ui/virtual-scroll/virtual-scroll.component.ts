@@ -1,5 +1,6 @@
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     Component,
     ContentChild,
     ElementRef,
@@ -44,6 +45,7 @@ interface VirtualScrollDimensions {
 @Component({
     selector: "bl-virtual-scroll",
     templateUrl: "virtual-scroll.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 
@@ -140,7 +142,9 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
     }
 
     public ngOnDestroy() {
-        this._erd.uninstall(this.element.nativeElement);
+        if (this._erd) {
+            this._erd.uninstall(this.element.nativeElement);
+        }
         this._removeParentEventHandlers(this.parentScroll);
     }
 

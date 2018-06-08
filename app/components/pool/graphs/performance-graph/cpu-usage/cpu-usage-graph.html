@@ -8,7 +8,7 @@
             </tr>
         </table>
     </div>
-    <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type">
+    <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type" (elDblClick)="handleDblClick($event)">
     </canvas>
     <div class="info-overlay" *ngIf="(data.loading | async) && interactive">Loading...</div>
 </div>

@@ -19,11 +19,9 @@ import { SidebarRef } from "./sidebar-ref";
     templateUrl: "sidebar.html",
 })
 export class SidebarContentComponent implements OnInit {
-    @ViewChild(PortalHostDirective)
-    private portalHost: PortalHostDirective;
+    @Input()  private sidebar: MatSidenav;
 
-    @Input("sidebar")
-    private sidebar: MatSidenav;
+    @ViewChild(PortalHostDirective) private portalHost: PortalHostDirective;
 
     private currentComponentRef: ComponentRef<SidebarPageComponent>;
 

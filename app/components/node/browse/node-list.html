@@ -1,9 +1,9 @@
 <bl-node-list-display
-    class="list"
     [poolId]="poolId"
     [nodes]="data.items | async"
     [status]="status"
     [quicklist]="quicklist"
+    [commands]="commands"
     [(activeItem)]="activeItem"
     [(selection)]="selection"
     (scrollBottom)="onScrollToBottom()">

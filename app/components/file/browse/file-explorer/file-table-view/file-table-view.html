@@ -12,22 +12,24 @@
     <bl-loading [status]="loadingStatus" [error]="error">
         <div *ngIf="loadingStatus === LoadingStatus.Ready">
             <bl-focus-section>
-                <bl-table (activeItemChange)="selectNode($event)" [config]="tableConfig" (dropOnRow)="handleDropOnRow($event)">
-                    <bl-thead>
-                        <bl-column>Name</bl-column>
-                        <bl-column style="width: 80px">Size</bl-column>
-                        <bl-column style="width: 155px">Last Modified</bl-column>
-                    </bl-thead>
-                    <bl-row *ngFor="let treeNode of treeNode.walk();trackBy: trackTreeNode" [key]="treeNode.path">
-                        <bl-cell [value]="treeNode.name">
+                <bl-table [data]="treeRows" (activeItemChange)="selectNode($event)" [config]="tableConfig" (dropOnRow)="handleDropOnRow($event)">
+                    <bl-column name="name">
+                        <div *blHeadCellDef>Name</div>
+                        <div *blCellDef="let treeNode">
                             <span class="icon">
-                            <i class="fa" [class.fa-folder]="treeNode.isDirectory" [class.fa-file]="!treeNode.isDirectory"></i>
-                        </span>
+                                <i class="fa" [class.fa-folder]="treeNode.isDirectory" [class.fa-file]="!treeNode.isDirectory"></i>
+                            </span>
                             <span>{{treeNode.name}}</span>
-                        </bl-cell>
-                        <bl-cell [value]="treeNode.contentLength">{{treeNode.isDirectory ? "" : prettyFileSize(treeNode.contentLength)}}</bl-cell>
-                        <bl-cell [value]="treeNode.isDirectory ? '' : prettyDate(treeNode.lastModified)"></bl-cell>
-                    </bl-row>
+                        </div>
+                    </bl-column>
+                    <bl-column name="contentLength" [defaultWidth]="80">
+                        <div *blHeadCellDef>Size</div>
+                        <div *blCellDef="let treeNode">{{treeNode.isDirectory ? "" : prettyFileSize(treeNode.contentLength)}}</div>
+                    </bl-column>
+                    <bl-column name="lastModified" [defaultWidth]="155">
+                        <div *blHeadCellDef>Last Modified</div>
+                        <div *blCellDef="let treeNode">{{treeNode.isDirectory ? '' : prettyDate(treeNode.lastModified)}}</div>
+                    </bl-column>
                 </bl-table>
             </bl-focus-section>
 

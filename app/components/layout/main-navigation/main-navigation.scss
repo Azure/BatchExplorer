@@ -1,0 +1,46 @@
+@import "app/styles/variables";
+
+bl-app-nav {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: map-get($navigation-color, bg);
+
+    > ul {
+        margin: 0;
+        user-select: none;
+
+        bl-clickable {
+            position: relative;
+            height: $navigationbar-width;
+            display: block;
+            padding: 13px 0;
+            outline: none;
+            color: map-get($navigation-color, text);
+            -webkit-user-drag: none;
+
+            i.fa {
+                display: block;
+                margin: 0 auto;
+                color: $whitesmoke;
+            }
+
+            .label {
+                margin-top: 5px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            &:hover:not(.active), &:focus:not(.active) {
+                background-color: map-get($navigation-color, hover-bg);
+                color: map-get($navigation-color, hover-text);
+            }
+
+            &.active {
+                background-color: $primary-color;
+                color: $white;
+            }
+        }
+    }
+}

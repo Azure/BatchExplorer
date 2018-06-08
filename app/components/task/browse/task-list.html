@@ -1,9 +1,9 @@
 <bl-task-list-display
-    class="list"
     [jobId]="jobId"
     [tasks]="data.items | async"
     [status]="status"
     [quicklist]="quicklist"
+    [commands]="commands"
     [(activeItem)]="activeItem"
     [(selection)]="selection"
     (scrollBottom)="onScrollToBottom()">

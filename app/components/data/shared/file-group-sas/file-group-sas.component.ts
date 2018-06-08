@@ -32,6 +32,11 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
      */
     @Input() public containerId: string;
 
+    /**
+     * allow write access to the container, defaults to false
+     */
+    @Input() public allowWrite: boolean;
+
     public fileGroups: List<BlobContainer>;
     public value = new FormControl();
     public fileGroupsData: ListView<BlobContainer, ListContainerParams>;
@@ -44,14 +49,7 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
                 private storageContainerService: StorageContainerService) {
 
         this.fileGroupsData = this.storageContainerService.listView();
-        this.autoStorageService.get().subscribe((storageAccountId) => {
-            this.fileGroupsData.params = {
-                storageAccountId,
-            };
-            this.fileGroupsData.setOptions({
-                prefix: Constants.ncjFileGroupPrefix,
-            });
-        });
+
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;
         });
@@ -74,7 +72,15 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
     }
 
     public ngOnInit() {
-        this.fileGroupsData.fetchNext();
+        this.autoStorageService.get().subscribe((storageAccountId) => {
+            this.fileGroupsData.params = {
+                storageAccountId,
+            };
+            this.fileGroupsData.setOptions({
+                prefix: Constants.ncjFileGroupPrefix,
+            });
+            this.fileGroupsData.fetchNext();
+        });
     }
 
     public ngOnDestroy() {
@@ -101,12 +107,12 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
     @autobind()
     public generateSasToken() {
         /**
-         * Blob Container read access policy that is valid for 7 days, The maximum
+         * Blob Container read/write/list access policy that is valid for 7 days, The maximum
          * lifetime of a task in Batch.
          */
         const accessPolicy = {
             AccessPolicy: {
-                Permissions: "rl",
+                Permissions: this.allowWrite ? "rwl" : "rl",
                 ResourceTypes: "CONTAINER",
                 Services: "BLOB",
                 Start: moment.utc().add(-15, "minutes").toDate(),

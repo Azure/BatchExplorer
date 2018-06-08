@@ -38,8 +38,13 @@ bl-datetime-picker {
     }
 
     .mat-datepicker-toggle .mat-icon-button {
-        width: 16px;
-        height: 26px;
-        line-height: 16px;
+        width: 24px;
+        height: 23px;
+        line-height: 24px;
+
+        > span.mat-button-wrapper > svg {
+            height: 16px;
+            width: 16px;
+        }
     }
 }

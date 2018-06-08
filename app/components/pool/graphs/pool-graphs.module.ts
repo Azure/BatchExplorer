@@ -8,8 +8,9 @@ import { BaseModule } from "@batch-flask/ui";
 import { NodesHeatmapComponent, NodesHeatmapLegendComponent } from "./heatmap";
 import { HistoryGraphComponent } from "./history-graph";
 import {
-    CpuUsageGraphComponent, DiskUsageGraphComponent, EnableAppInsightsDocComponent,
-    MemoryUsageGraphComponent, NetworkUsageGraphComponent, PerformanceGraphComponent,
+    CpuUsageGraphComponent, DiskIOGraphComponent, DiskUsageGraphComponent,
+    EnableAppInsightsDocComponent, MemoryUsageGraphComponent, NetworkUsageGraphComponent,
+    PerformanceGraphComponent,
 } from "./performance-graph";
 import { PoolGraphsComponent } from "./pool-graphs.component";
 import { PoolStandaloneGraphsComponent } from "./standalone";
@@ -17,7 +18,7 @@ import { PoolStandaloneGraphsComponent } from "./standalone";
 const components = [NodesHeatmapComponent,
     NodesHeatmapLegendComponent, PoolGraphsComponent, HistoryGraphComponent,
     PerformanceGraphComponent, CpuUsageGraphComponent,
-    MemoryUsageGraphComponent, DiskUsageGraphComponent,
+    MemoryUsageGraphComponent, DiskUsageGraphComponent, DiskIOGraphComponent,
     NetworkUsageGraphComponent, EnableAppInsightsDocComponent,
     PoolStandaloneGraphsComponent,
 ];

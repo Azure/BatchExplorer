@@ -1,4 +1,11 @@
-import { Component, ElementRef, HostListener, OnDestroy } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    HostListener,
+    OnDestroy,
+} from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { Breadcrumb } from "..//breadcrumbs.model";
@@ -9,6 +16,7 @@ import "./breadcrumb-group.scss";
 @Component({
     selector: "bl-breadcrumb-group",
     templateUrl: "breadcrumb-group.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BreadcrumbGroupComponent implements OnDestroy {
     public crumbs: Breadcrumb[] = [];
@@ -16,9 +24,14 @@ export class BreadcrumbGroupComponent implements OnDestroy {
     private _subscription: Subscription;
     private _lastCrumbCount = 0;
 
-    constructor(breadcrumbService: BreadcrumbService, private elementRef: ElementRef) {
+    constructor(
+        breadcrumbService: BreadcrumbService,
+        private changeDetector: ChangeDetectorRef,
+        private elementRef: ElementRef) {
+
         this._subscription = breadcrumbService.crumbs.subscribe((crumbs) => {
             this.crumbs = crumbs;
+            this.changeDetector.markForCheck();
             if (crumbs.length > this._lastCrumbCount) {
                 setTimeout(() => {
                     this.elementRef.nativeElement.scrollLeft = this.elementRef.nativeElement.scrollWidth;

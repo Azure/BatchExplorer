@@ -1,4 +1,5 @@
-import { ElectronRemote } from "@batch-flask/ui";
+import { NgModule } from "@angular/core";
+import { ElectronRemote, ElectronShell } from "@batch-flask/ui";
 import { AuthenticationWindow } from "client/core/aad/authentication";
 import { SplashScreen } from "client/splash-screen";
 import { MockAuthenticationWindow, MockBrowserWindow, MockSplashScreen } from "../windows";
@@ -26,4 +27,26 @@ export class MockElectronRemote extends ElectronRemote {
     public getSplashScreen(): SplashScreen {
         return this.splashScreen as any;
     }
+}
+
+export class MockElectronShell {
+    public openItem: jasmine.Spy;
+    public openExternal: jasmine.Spy;
+    public showItemInFolder: jasmine.Spy;
+
+    constructor() {
+        this.openItem = jasmine.createSpy("openItem");
+        this.openExternal = jasmine.createSpy("openExternal");
+        this.showItemInFolder = jasmine.createSpy("showItemInFolder");
+    }
+}
+
+@NgModule({
+    providers: [
+        { provide: ElectronRemote, useClass: MockElectronRemote },
+        { provide: ElectronShell, useClass: MockElectronShell },
+    ],
+})
+export class ElectronTestingModule {
+
 }

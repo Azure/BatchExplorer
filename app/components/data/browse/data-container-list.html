@@ -1,4 +1,4 @@
-<bl-focus-section class="list" *ngIf="storageAccountId">
+<bl-focus-section *ngIf="storageAccountId">
     <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()" [commands]="commands">
         <bl-quick-list-item *ngFor="let container of containers;trackBy: trackFileGroup" [link]="['/data/', dataSource, 'containers', container.id]"
             [key]="container.id">
@@ -13,19 +13,33 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()" [commands]="commands">
-        <bl-thead>
-            <bl-column>Name</bl-column>
-            <bl-column>Lease state</bl-column>
-            <bl-column>Lease status</bl-column>
-            <bl-column>Last modified</bl-column>
-        </bl-thead>
-        <bl-row *ngFor="let container of containers;trackBy: trackFileGroup" [link]="['/data/', dataSource, 'containers', container.id]" [key]="container.id">
-            <bl-cell>{{container.name}}</bl-cell>
-            <bl-cell>{{container.lease?.state}}</bl-cell>
-            <bl-cell>{{container.lease?.status}}</bl-cell>
-            <bl-cell>{{container.lastModified}}</bl-cell>
-        </bl-row>
+    <bl-table *ngIf="!quicklist"
+        [data]="containers"
+        [status]="status"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        (scrollBottom)="onScrollToBottom()"
+        [commands]="commands">
+
+        <bl-column name="name">
+            <div *blHeadCellDef>Name</div>
+            <div *blCellDef="let container">{{container.name}}</div>
+        </bl-column>
+
+        <bl-column name="leaseState">
+            <div *blHeadCellDef>Lease state</div>
+            <div *blCellDef="let container">{{container.lease?.state}}</div>
+        </bl-column>
+
+        <bl-column name="leaseStatus">
+            <div *blHeadCellDef>Lease status</div>
+            <div *blCellDef="let container">{{container.lease?.status}}</div>
+        </bl-column>
+
+        <bl-column name="lastModified">
+            <div *blHeadCellDef>Last modified</div>
+            <div *blCellDef="let container">{{container.lastModified}}</div>
+        </bl-column>
     </bl-table>
 </bl-focus-section>
 <bl-no-item [itemCount]="containers.size" [filter]="filter" [status]="status">

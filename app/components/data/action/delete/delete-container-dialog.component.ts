@@ -2,30 +2,27 @@ import { Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
 import { autobind } from "@batch-flask/core";
 
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
-import { DeleteContainerAction } from "app/components/data/action";
-import { StorageContainerService } from "app/services/storage";
+import { ConfirmationDialog } from "@batch-flask/ui";
+import { BlobContainer } from "app/models";
 
 @Component({
     selector: "bl-delete-container-dialog",
     templateUrl: "delete-container-dialog.html",
 })
-export class DeleteContainerDialogComponent {
+export class DeleteContainerDialogComponent extends ConfirmationDialog<any> {
     public storageAccountId: string;
-    public id: string;
-    public name: string;
+    public containers: BlobContainer[];
 
-    constructor(
-        public dialogRef: MatDialogRef<DeleteContainerDialogComponent>,
-        private storageContainerService: StorageContainerService,
-        private taskManager: BackgroundTaskService) {
+    constructor(public dialogRef: MatDialogRef<DeleteContainerDialogComponent>) {
+        super();
     }
 
     @autobind()
-    public destroy() {
-        const task = new DeleteContainerAction(this.storageContainerService, this.storageAccountId, [this.id]);
-        task.startAndWaitAsync(this.taskManager);
+    public ok() {
+        this.markAsConfirmed();
+    }
 
-        return task.actionDone;
+    public trackContainer(index, container: BlobContainer) {
+        return container.name;
     }
 }

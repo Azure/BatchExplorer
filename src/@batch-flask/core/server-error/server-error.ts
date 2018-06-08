@@ -1,6 +1,7 @@
 import { Response } from "@angular/http";
 
 import { HttpErrorResponse } from "@angular/common/http";
+import { exists, log } from "@batch-flask/utils";
 import { BatchError } from "./batch-error";
 import { StorageError } from "./storage-error";
 
@@ -61,6 +62,23 @@ function parseMessage(fullMessage: string) {
  * All their error format needs to be converted to this one so it can then be consumed easily
  */
 export class ServerError {
+    public static fromBatchHttp(response: HttpErrorResponse) {
+        const error = response.error;
+        const { message, requestId, timestamp } = parseMessage(error.message && error.message.value);
+
+        // when the error message returned is not of type ErrorMessage, it will more often
+        // than not be a string.
+        return new ServerError({
+            status: error.statusCode,
+            code: error.code,
+            details: error.values,
+            message: message || error.message as string,
+            requestId,
+            timestamp,
+            original: error,
+        });
+    }
+
     public static fromBatch(error: BatchError) {
         const { message, requestId, timestamp } = parseMessage(error.message && error.message.value);
 
@@ -121,11 +139,23 @@ export class ServerError {
     public static fromPython(error) {
         const { message, requestId, timestamp } = parseMessage(error.message);
 
+        let details;
+        if (error.data) {
+            if (Array.isArray(error.data)) {
+                details = error.data;
+            } else if (typeof (error.data) === "string") {
+                details = [{ key: "Description", value: error.data }];
+            } else if (error.values) {
+                details = error.values;
+            } else {
+                log.error("Unknown Python server error format");
+            }
+        }
         return new ServerError({
             status: error.data && error.data.status,
             code: ServerError._mapPythonErrorCode(error.code),
             message: message,
-            details: error.data && error.data.values,
+            details,
             original: error,
             requestId,
             timestamp,
@@ -219,6 +249,12 @@ export class ServerError {
     }
 
     public toString() {
-        return `${this.status} - ${this.message}`;
+        return [this.status, this.statusText, this.message].filter(x => exists(x)).join(" - ") + this.detailsToString();
+    }
+
+    public detailsToString() {
+        return this.details.map(({key, value}) => {
+            return `${key}: ${value}`;
+        }).join("\n");
     }
 }

@@ -12,6 +12,8 @@ import { Task, TaskState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
 import { DateUtils } from "app/utils";
 
+import "./task-list-display.scss";
+
 @Component({
     selector: "bl-task-list-display",
     templateUrl: "task-list-display.html",
@@ -19,15 +21,18 @@ import { DateUtils } from "app/utils";
     providers: [TaskCommands],
 })
 export class TaskListDisplayComponent extends ListBaseComponent implements OnChanges {
+    public TaskState = TaskState;
     @Input() public jobId: string;
 
     @Input() public tasks: List<Task>;
 
     @Input() public status: LoadingStatus;
 
+    @Input() public commands: TaskCommands;
+
     @Output() public scrollBottom = new EventEmitter();
 
-    constructor(public commands: TaskCommands, changeDetector: ChangeDetectorRef) {
+    constructor(changeDetector: ChangeDetectorRef) {
         super(changeDetector);
     }
 

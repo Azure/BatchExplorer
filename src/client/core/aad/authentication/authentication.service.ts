@@ -59,7 +59,7 @@ export class AuthenticationService {
      * Authorize the user.
      * @param silent If set to true it will not ask the user for prompt. (i.e prompt=none for AD)
      *      This means the request will fail if the user didn't give consent yet or it expired
-     * @returns Observable with the successfull AuthorizeResult.
+     * @returns Observable with the successful AuthorizeResult.
      *      If silent is true and the access fail the observable will return and error of type AuthorizeError
      */
     public async authorize(tenantId: string, silent = false): Promise<AuthorizeResult> {

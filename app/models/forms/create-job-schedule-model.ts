@@ -1,6 +1,6 @@
 import * as moment from "moment";
 
-import { JobScheduleCreateDto } from "app/models/dtos";
+import { JobScheduleCreateDto, MetaDataDto } from "app/models/dtos";
 
 export interface ScheduleModel {
     doNotRunAfter: string;
@@ -12,7 +12,7 @@ export interface ScheduleModel {
 export interface CreateJobScheduleModel {
     id: string;
     displayName: string;
-    metadata: any;
+    metadata: MetaDataDto[];
     schedule: ScheduleModel;
     jobSpecification: any;
 }
@@ -28,6 +28,7 @@ export function createJobScheduleFormToJsonData(formData: CreateJobScheduleModel
             startWindow: formData.schedule && formData.schedule.startWindow,
         },
         jobSpecification: formData.jobSpecification,
+        metadata: formData.metadata,
     };
     return new JobScheduleCreateDto(data);
 }

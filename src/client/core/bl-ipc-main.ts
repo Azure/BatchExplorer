@@ -21,8 +21,8 @@ export class BlIpcMain {
                 .then((result) => {
                     eventEmitter.emit(this._getSuccessEventName(event, id), result);
                 })
-                .catch((result) => {
-                    eventEmitter.emit(this._getFailureEventName(event, id), result);
+                .catch((error) => {
+                    eventEmitter.emit(this._getFailureEventName(event, id), {...error});
                 });
         });
     }

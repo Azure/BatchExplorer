@@ -1,86 +1,86 @@
 import {
-    ChangeDetectionStrategy, Component, HostBinding, HostListener, Inject, Input, OnChanges, forwardRef,
+    AfterContentInit, ChangeDetectionStrategy,
+    ChangeDetectorRef, Component,
+    ContentChild,
+    Inject, Input, OnChanges,
+    OnInit, SimpleChanges, TemplateRef,
+    forwardRef,
 } from "@angular/core";
 
-import { SecureUtils } from "@batch-flask/utils";
+import { TableCellDefDirective } from "../table-cell-def";
+import { TableColumnRef } from "../table-column-manager";
+import { TableHeadCellDefDirective } from "../table-head-cell-def";
 import { TableComponent } from "../table.component";
-
-export enum SortDirection {
-    Asc,
-    Desc,
-}
 
 @Component({
     selector: "bl-column",
-    template: `
-        <ng-content></ng-content>
-        <span *ngIf="sortable" class="sort-icon">
-            <span *ngIf="sortDirection === SortDirection.Asc" class="fa fa-arrow-up"></span>
-            <span *ngIf="sortDirection === SortDirection.Desc" class="fa fa-arrow-down"></span>
-        </span>
-    `,
+    template: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
-
 })
-export class TableColumnComponent implements OnChanges {
-    public SortDirection = SortDirection;
-
+export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges {
     @Input() public defaultWidth: number = null;
+    /**
+     * What should be the minimum width of the column
+     */
+    @Input() public minWidth: number = 30;
+    @Input() public maxWidth: number = null;
+    @Input() public name: string;
 
-    @HostBinding("class.sortable")
+    @ContentChild(TableHeadCellDefDirective, { read: TemplateRef }) public headCell: TemplateRef<any>;
+    @ContentChild(TableCellDefDirective, { read: TemplateRef }) public cell: TemplateRef<any>;
+
     @Input()
     public sortable: boolean = false;
 
-    @HostBinding("class.sorting")
-    public isSorting: boolean = false;
-
-    /**
-     * Current column width
-     */
-    public width = null;
-
-    public sortDirection = SortDirection.Asc;
-
-    public id: string;
-
-    @HostBinding("class.fixed-size")
-    public get fixedSize() {
-        return this.width !== null;
+    constructor(
+        @Inject(forwardRef(() => TableComponent)) private _table: TableComponent,
+        private changeDetector: ChangeDetectorRef) {
     }
 
-    @HostBinding("style.flex-basis")
-    public get flexBasis() {
-        return this.width && `${this.width}px`;
+    public ngOnInit() {
+        this._validateName();
     }
 
-    constructor(@Inject(forwardRef(() => TableComponent)) private _table: TableComponent) {
-        this.id = SecureUtils.uuid();
+    public ngAfterContentInit() {
+        this._validateCellDef();
     }
 
-    public ngOnChanges(changes) {
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes.name) {
+            this._validateName();
+        }
         if (changes.defaultWidth) {
-            this.width = this.defaultWidth;
-            this._table.head.updateDimensions();
+            // TODO-tim handle this
         }
     }
 
-    @HostListener("click")
-    public onClick() {
-        if (!this.sortable) {
-            return;
-        }
-
-        if (this.isSorting) {
-            this._invertOrder();
-        }
-        this._table.sort(this);
+    public update() {
+        this._table.updateColumn(this.name, this.getRef());
+        this.changeDetector.markForCheck();
     }
 
-    private _invertOrder() {
-        if (this.sortDirection) {
-            this.sortDirection = SortDirection.Asc;
-        } else {
-            this.sortDirection = SortDirection.Desc;
+    public getRef(): TableColumnRef {
+        return {
+            name: this.name,
+            defaultWidth: this.defaultWidth,
+            minWidth: this.minWidth,
+            maxWidth: this.maxWidth,
+            headCellTemplate: this.headCell,
+            sortable: this.sortable,
+            cellTemplate: this.cell,
+        };
+    }
+
+    private _validateName() {
+        if (!this.name) {
+            throw new Error("bl-column must have a unique name but not was provided.");
+        }
+    }
+
+    private _validateCellDef() {
+        if (!this.cell) {
+            const example = `<div *blCellDef="let item">item.value</div>`;
+            throw new Error(`bl-column '${this.name}' must have a cell definition. Add '${example}'`);
         }
     }
 }

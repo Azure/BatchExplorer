@@ -3,7 +3,10 @@
         <i class="fa fa-star"></i> {{title}}
     </div>
     <div bl-dropdown-content>
-        <div *ngFor="let favorite of favorites | async;trackBy: trackPinnned" class="dropdown-item" [routerLink]="favorite.routerLink" [class.selected]="favorite.url === currentUrl"
+        <bl-clickable *ngFor="let favorite of favorites | async;trackBy: trackPinnned" 
+            class="dropdown-item" 
+            (do)="gotoFavorite(favorite)"
+            [class.selected]="favorite.url === currentUrl"
             [title]="favorite.id">
             <i class="fa" [ngClass]="entityIcon(favorite)"></i>
             <div class="main">
@@ -13,6 +16,6 @@
             <div *ngIf="favorite.url === currentUrl" class="extra">
                 <i class="fa fa-check"></i>
             </div>
-        </div>
+        </bl-clickable>
     </div>
 </bl-dropdown>

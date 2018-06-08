@@ -1,30 +1,21 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
-import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { ElectronRemote } from "@batch-flask/ui";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 
-import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, JobSchedule, JobScheduleState, Pool } from "app/models";
 import { JobScheduleDecorator } from "app/models/decorators";
-import { FileSystemService, JobScheduleParams, JobScheduleService } from "app/services";
+import {  JobScheduleParams, JobScheduleService } from "app/services";
 import { EntityView } from "app/services/core";
-import {
-    DeleteJobScheduleDialogComponent,
-    DisableJobScheduleDialogComponent,
-    EnableJobScheduleDialogComponent,
-    JobScheduleCreateBasicDialogComponent,
-    PatchJobScheduleComponent,
-    TerminateJobScheduleDialogComponent,
-} from "../action";
 
+import { JobScheduleCommands } from "../action";
 import "./job-schedule-details.scss";
 
 @Component({
     selector: "bl-job-schedule-details",
     templateUrl: "job-schedule-details.html",
+    providers: [JobScheduleCommands],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
@@ -46,11 +37,8 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
     private _paramsSubscriber: Subscription;
 
     constructor(
-        private dialog: MatDialog,
+        public commands: JobScheduleCommands,
         private activatedRoute: ActivatedRoute,
-        private fs: FileSystemService,
-        private remote: ElectronRemote,
-        private sidebarManager: SidebarManager,
         private jobScheduleService: JobScheduleService,
         private router: Router) {
 
@@ -83,80 +71,14 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public refresh() {
-        return this.data.refresh();
-    }
-
-    @autobind()
-    public terminateJobSchedule() {
-        const config = new MatDialogConfig();
-        const dialogRef = this.dialog.open(TerminateJobScheduleDialogComponent, config);
-        dialogRef.componentInstance.jobScheduleId = this.jobSchedule.id;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.refresh();
-        });
-    }
-
-    @autobind()
-    public editJobSchedule() {
-        const ref = this.sidebarManager
-            .open(`edit-job-schedule-${this.jobSchedule.id}`, PatchJobScheduleComponent);
-        ref.component.jobScheduleId = this.jobSchedule.id;
-        ref.component.setValueFromEntity(this.jobSchedule);
-    }
-
-    @autobind()
-    public deleteJobSchedule() {
-        const config = new MatDialogConfig();
-        const dialogRef = this.dialog.open(DeleteJobScheduleDialogComponent, config);
-        dialogRef.componentInstance.jobScheduleId = this.jobSchedule.id;
-    }
-
-    @autobind()
-    public disableJobSchedule() {
-        const config = new MatDialogConfig();
-        const dialogRef = this.dialog.open(DisableJobScheduleDialogComponent, config);
-        dialogRef.componentInstance.jobScheduleId = this.jobSchedule.id;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.refresh();
-        });
-    }
-
-    @autobind()
-    public cloneJobSchedule() {
-        const ref = this.sidebarManager.open(`add-job-schedule-${this.jobScheduleId}`,
-            JobScheduleCreateBasicDialogComponent);
-        ref.component.setValueFromEntity(this.jobSchedule);
-    }
-
-    @autobind()
-    public enableJobSchedule() {
-        const config = new MatDialogConfig();
-        const dialogRef = this.dialog.open(EnableJobScheduleDialogComponent, config);
-        dialogRef.componentInstance.jobScheduleId = this.jobSchedule.id;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.refresh();
-        });
+        return this.commands.get(this.jobScheduleId);
     }
 
     @autobind()
     public updateTags(tags: List<string>) {
         return this.jobScheduleService.updateTags(this.jobSchedule, tags).flatMap(() => {
-            return this.data.refresh();
+            return this.refresh();
         });
-    }
-
-    @autobind()
-    public exportAsJSON() {
-        const dialog = this.remote.dialog;
-        const localPath = dialog.showSaveDialog({
-            buttonLabel: "Export",
-            defaultPath: `${this.jobScheduleId}.json`,
-        });
-
-        if (localPath) {
-            const content = JSON.stringify(this.jobSchedule._original, null, 2);
-            return Observable.fromPromise(this.fs.saveFile(localPath, content));
-        }
     }
 
     public get jobSpecification(): Job {

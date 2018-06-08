@@ -1,7 +1,8 @@
-import { Component, OnChanges } from "@angular/core";
+import { ChangeDetectorRef, Component, OnChanges } from "@angular/core";
+import { Router } from "@angular/router";
 import { PerformanceGraphComponent } from "../performance-graph.component";
 
-import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
+import { BatchPerformanceMetricType, NodesPerformanceMetric } from "app/models/app-insights/metrics-result";
 import { NumberUtils } from "app/utils";
 
 @Component({
@@ -11,12 +12,12 @@ import { NumberUtils } from "app/utils";
 export class NetworkUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
     public unit = "Bps";
 
-    public netReadUsages: PerformanceMetric[] = [];
-    public netWriteUsages: PerformanceMetric[] = [];
+    public netReadUsages: NodesPerformanceMetric = {};
+    public netWriteUsages: NodesPerformanceMetric = {};
     public showOverallUsage = true;
 
-    constructor() {
-        super();
+    constructor(router: Router, changeDetector: ChangeDetectorRef) {
+        super(router, changeDetector);
     }
 
     public ngOnChanges(changes) {
@@ -42,32 +43,8 @@ export class NetworkUsageGraphComponent extends PerformanceGraphComponent implem
 
     public updateData() {
         this.datasets = [
-            {
-                data: [
-                    ...this.netReadUsages.map(x => {
-                        return {
-                            x: x.time,
-                            y: x.value,
-                        };
-                    }),
-                ],
-                fill: false,
-                borderWidth: 1,
-                label: "Network download speed",
-            },
-            {
-                data: [
-                    ...this.netWriteUsages.map(x => {
-                        return {
-                            x: x.time,
-                            y: x.value,
-                        };
-                    }),
-                ],
-                fill: false,
-                borderWidth: 1,
-                label: "Network upload speed",
-            },
+            ...this._getDatasetsGroupedByNode(this.netReadUsages, "rgb(178, 95, 7)", "Network download speed"),
+            ...this._getDatasetsGroupedByNode(this.netWriteUsages, "rgba(178, 95, 7, 0.3)", "Network upload speed"),
         ];
     }
 
@@ -77,12 +54,26 @@ export class NetworkUsageGraphComponent extends PerformanceGraphComponent implem
     }
 
     private _updateStatus() {
-        if (this.netReadUsages.length > 0 && this.netWriteUsages.length > 0) {
-            const read = NumberUtils.prettyMagnitude(this.netReadUsages.last().value);
-            const write = NumberUtils.prettyMagnitude(this.netWriteUsages.last().value);
-            this.status.next(`D: ${read}Bps, U: ${write}Bps`);
+        const read = this._getLast(this.netReadUsages);
+        const write = this._getLast(this.netWriteUsages);
+        this.status.next(`D: ${read}Bps, U: ${write}Bps`);
+
+    }
+
+    private _getLast(data: NodesPerformanceMetric) {
+        let sum = 0;
+        const nodes = Object.keys(data);
+
+        if (nodes.length > 0) {
+            for (const nodeId of nodes) {
+                const last = data[nodeId].last();
+                if (last) {
+                    sum += last.value;
+                }
+            }
+            return NumberUtils.prettyMagnitude(sum / nodes.length);
         } else {
-            this.status.next("- %");
+            return `-`;
         }
     }
 }

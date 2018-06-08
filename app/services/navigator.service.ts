@@ -4,6 +4,7 @@ import { IpcService } from "@batch-flask/ui";
 
 import { Constants } from "app/utils";
 import { BatchLabsLink, BatchLabsLinkAction } from "common";
+import * as decodeUriComponent from "decode-uri-component";
 import { AccountService } from "./account.service";
 
 export interface GotoOptions {
@@ -31,6 +32,9 @@ export class NavigatorService {
         });
     }
 
+    public get onLine(): boolean {
+        return navigator.onLine;
+    }
     /**
      * Handle opening a link with the ms-batchlabs:// protocol
      * @param value Full string starting with ms-batchlabs://
@@ -40,7 +44,8 @@ export class NavigatorService {
         switch (labsLink.action) {
             case BatchLabsLinkAction.route:
                 const params = new URLSearchParams(labsLink.queryParams);
-                this.goto(`${labsLink.path}?${params.toString()}`, {
+                const decodedParams = decodeUriComponent(params.toString());
+                this.goto(`${labsLink.path}?${decodedParams}`, {
                     accountId: labsLink.accountId,
                 });
         }

@@ -1,6 +1,6 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule, ServerError } from "@batch-flask/core";
@@ -158,27 +158,23 @@ describe("AppPackagePickerComponent", () => {
         });
 
         it("validation fails with duplicates", () => {
-            const values = {
-                value: [
-                    { applicationId: "orange", version: "o1" },
-                    { applicationId: "banana", version: "b1" },
-                    { applicationId: "orange", version: "o1" },
-                ],
-            } as any;
+            const values = new FormControl([
+                { applicationId: "orange", version: "o1" },
+                { applicationId: "banana", version: "b1" },
+                { applicationId: "orange", version: "o1" },
+            ]);
 
-            const result = component.validate(values) as any;
+            const result = component.validate(values);
             expect(result.duplicate).toBe(true);
         });
 
         it("validation fails with invalid selection", () => {
-            const values = {
-                value: [
-                    { applicationId: "orange", version: "o1" },
-                    { applicationId: "banana", version: "invalid" },
-                ],
-            } as any;
+            const values = new FormControl([
+                { applicationId: "orange", version: "o1" },
+                { applicationId: "banana", version: "invalid" },
+            ]);
 
-            const result = component.validate(values) as any;
+            const result = component.validate(values);
             expect(result.invalid).toBe(true);
         });
     });

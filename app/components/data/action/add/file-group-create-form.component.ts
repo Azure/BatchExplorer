@@ -197,13 +197,15 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
 
                     return createObs;
                 }).finally(() => {
-                    task.progress.next(100);
-                    const fileGroupName = this.fileGroupService.addFileGroupPrefix(formData.name);
-                    this.storageContainerService.onContainerAdded.next(fileGroupName);
-                    this.notificationService.success(
-                        "Create file group",
-                        `${lastData.actual} files were successfully uploaded to the file group`,
-                    );
+                    if (lastData.actual > 0) {
+                        task.progress.next(100);
+                        const fileGroupName = this.fileGroupService.addFileGroupPrefix(formData.name);
+                        this.storageContainerService.onContainerAdded.next(fileGroupName);
+                        this.notificationService.success(
+                            "Create file group",
+                            `${lastData.actual} files were successfully uploaded to the file group`,
+                        );
+                    }
                 });
             }).share();
 

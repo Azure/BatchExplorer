@@ -11,7 +11,6 @@ import { routes } from "./app.routes";
 
 // components
 import { AppComponent } from "app/app.component";
-import { MainNavigationComponent } from "app/components/shared/main-navigation.component";
 
 // extenal modules
 import { BaseModule } from "@batch-flask/ui";
@@ -37,6 +36,7 @@ import { MaterialModule } from "@batch-flask/core";
 import { CommonModule } from "app/components/common";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
+import { AzureBatchHttpService } from "app/services/azure-batch/core";
 import { PollService } from "app/services/core";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 import { AADGraphHttpService, MsGraphHttpService } from "app/services/ms-graph/core";
@@ -87,6 +87,7 @@ import {
     StorageAccountService,
     SubscriptionService,
     TaskService,
+    TenantDetailsService,
     ThemeService,
     VmSizeService,
 } from "./services";
@@ -106,7 +107,6 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
     ],
     declarations: [
         AppComponent,
-        MainNavigationComponent,
     ],
     entryComponents: [
         // imported in specific area modules
@@ -131,6 +131,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         AppInsightsQueryService,
         ApplicationService,
         AutoscaleFormulaService,
+        AzureBatchHttpService,
         AzureHttpService,
         ArmHttpService,
         AuthorizationHttpService,
@@ -174,6 +175,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         SSHKeyService,
         SubscriptionService,
         TaskService,
+        TenantDetailsService,
         ThemeService,
         VmSizeService,
         PredefinedFormulaService,

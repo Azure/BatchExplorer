@@ -1,0 +1,8 @@
+@import "app/styles/variables";
+
+bl-task-list-display {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 100%;
+}

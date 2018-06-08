@@ -8,6 +8,7 @@ export enum NcjParameterExtendedType {
     fileGroup = "file-group",
     fileInFileGroup = "file-in-file-group",
     fileGroupSas = "file-group-sas",
+    fileGroupWriteSas = "file-group-write-sas",
     dropDown = "drop-down",
 }
 

@@ -31,6 +31,10 @@ export class FileTreeNode {
     public lastModified: Date;
     public virtual: boolean;
 
+    public get id() {
+        return this.path;
+    }
+
     constructor(params: FileTreeNodeParams) {
         this.path = params.path;
         this.isDirectory = params.isDirectory;
@@ -120,7 +124,11 @@ export class FileTreeStructure {
         this._checkDirInTree(folder);
         const directories = this.directories;
         const rootDir = directories[folder];
-        rootDir.children.clear();
+        for (const [dir, node] of rootDir.children.entries()) {
+            if (!node.virtual) {
+                rootDir.children.delete(dir);
+            }
+        }
         this.addFiles(files);
     }
 

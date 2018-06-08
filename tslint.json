@@ -52,6 +52,8 @@
     "no-duplicate-switch-case": true,
     "no-return-await": true,
     "ban-comma-operator": true,
+    "prefer-while": true,
+    "comment-format": [true, "check-space"],
     // "no-dynamic-delete": true,
     // "prefer-readonly": true,
 

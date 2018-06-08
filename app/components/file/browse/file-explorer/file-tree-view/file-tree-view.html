@@ -18,7 +18,8 @@
     class="tree-view-content"
     (focus)="setFocus(true)"
     (blur)="setFocus(false)"
-    (keypress)="handleKeyboardNavigation($event)">
+    (keypress)="handleKeyboardNavigation($event)"
+    (contextmenu)="showContextMenu($event)">
 
     <div *ngIf="fileNavigator.error" class="tree-view-error">{{fileNavigator.error.message}}</div>
     <div class="tree-rows-container"
@@ -35,7 +36,7 @@
             [focused]="isFocused && focusedIndex === i"
             (click)="activateRow(treeRow)"
             (toggleExpanded)="toggleExpanded(treeRow)"
-            (contextmenu)="showContextMenu(treeRow)"
+            (contextmenu)="showContextMenu($event, treeRow)"
             (dragenter)="dragEnterRow($event, treeRow)"
             (dragleave)="dragLeaveRow($event, treeRow)"
             (drop)="handleDropOnRow($event, treeRow)">

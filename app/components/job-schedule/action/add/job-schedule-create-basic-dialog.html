@@ -15,6 +15,10 @@
                 </bl-form-field>
                 <bl-error controlName="displayName" code="maxlength">Display name has a maximum length of 1024 characters</bl-error>
             </div>
+            <div class="form-element">
+                <div>Metadata</div>
+                <bl-key-value-picker formControlName="metadata"></bl-key-value-picker>
+            </div>
         </bl-form-section>
         <bl-form-section title="Job schedule" subtitle="Specify the schedule according to which jobs will be created">
             <div formGroupName="schedule">

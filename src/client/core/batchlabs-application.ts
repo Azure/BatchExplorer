@@ -4,7 +4,7 @@ import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
 import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
-import { log } from "@batch-flask/utils";
+import { fetch, log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { localStorage } from "client/core/local-storage";
 import { setMenu } from "client/menu";
@@ -53,6 +53,13 @@ export class BatchLabsApplication {
         BlIpcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {
             return this.aadService.accessTokenData(tenantId, resource);
         });
+        BlIpcMain.on(IpcEvent.fetch, async ({ url, options }) => {
+            const response = await  fetch(url, options);
+            return {
+                status: response.status,
+                statusText: response.statusText,
+            };
+        });
         BlIpcMain.on(IpcEvent.logoutAndLogin, () => {
             return this.logoutAndLogin();
         });
@@ -81,7 +88,7 @@ export class BatchLabsApplication {
         this._setCommonHeaders();
         this.aadService.login();
         this._initializer.setTaskStatus("window", "Loading application");
-        const window = this.openFromArguments(process.argv);
+        const window = this.openFromArguments(process.argv, false);
         const windowSub = window.state.subscribe((state) => {
             switch (state) {
                 case WindowState.Loading:
@@ -154,9 +161,9 @@ export class BatchLabsApplication {
         return this.windows.openNewWindow(link);
     }
 
-    public openFromArguments(argv: string[]): MainWindow {
+    public openFromArguments(argv: string[], showWhenReady = true): MainWindow {
         if (ClientConstants.isDev) {
-            return this.windows.openNewWindow(null, false);
+            return this.windows.openNewWindow(null, showWhenReady);
         }
         const program = commander
             .version(app.getVersion())
@@ -164,7 +171,7 @@ export class BatchLabsApplication {
             .parse(["", ...argv]);
         const arg = program.args[0];
         if (!arg) {
-            return this.windows.openNewWindow(null, false);
+            return this.windows.openNewWindow(null, showWhenReady);
         }
         try {
             const link = new BatchLabsLink(arg);
@@ -287,10 +294,16 @@ export class BatchLabsApplication {
     private _setCommonHeaders() {
         const requestFilter = { urls: ["https://*", "http://*"] };
         session.defaultSession.webRequest.onBeforeSendHeaders(requestFilter, (details, callback) => {
-            if (details.url.indexOf("batch.azure.com") !== -1) {
+            if (details.url.includes("batch.azure.com")) {
                 details.requestHeaders["Origin"] = "http://localhost";
                 details.requestHeaders["Cache-Control"] = "no-cache";
             }
+
+            // Rate card api does some weird redirect which require removing the authorization header
+            if (details.url.includes("ratecard.blob.core.windows.net")) {
+                delete details.requestHeaders.Authorization;
+            }
+
             details.requestHeaders["User-Agent"] = userAgent;
             callback({ cancel: false, requestHeaders: details.requestHeaders });
         });

@@ -2,7 +2,8 @@ import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { Node, Pool } from "app/models";
 import {
-    BatchPerformanceMetricType, BatchPerformanceMetrics, PerformanceMetric,
+    BatchPerformanceMetricType,
+    BatchPerformanceMetrics,
 } from "app/models/app-insights/metrics-result";
 import { AppInsightsQueryService } from "app/services";
 
@@ -51,10 +52,10 @@ export class PerformanceData {
         });
     }
 
-    public observeMetric(name: BatchPerformanceMetricType): Observable<PerformanceMetric[]> {
+    public observeMetric<T = any>(name: BatchPerformanceMetricType): Observable<T> {
         return this._metrics.map((metrics) => {
             return metrics[name] || [];
-        });
+        }).shareReplay(1);
     }
 
     public retrieveAppId() {

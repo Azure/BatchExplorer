@@ -25,6 +25,22 @@ export const ButtonClickEvents = {
 };
 
 /**
+ * Send the given event to the given element
+ * @param el: HTMLELement or DebugElement to receive the event
+ * @param event: Event to be dispatched
+ */
+export function sendEvent(el: DebugElement | HTMLElement, event: Event) {
+    let htmlEl: HTMLElement;
+    if (el instanceof HTMLElement) {
+        htmlEl = el;
+    } else {
+        htmlEl = el.nativeElement;
+    }
+
+    htmlEl.dispatchEvent(event);
+}
+
+/**
  * Simulate element click. Defaults to mouse left-button click event.
  */
 export function click(el: DebugElement | HTMLElement | Node, eventObj: any = ButtonClickEvents.left): FakeMouseEvent {
@@ -73,21 +89,34 @@ export function rightClick(el: DebugElement | HTMLElement | Node) {
  * Simulate a mouseenter event
  */
 export function mouseenter(el: DebugElement | HTMLElement) {
-    if (el instanceof HTMLElement) {
-        el.dispatchEvent(new Event("mouseenter"));
-    } else {
-        el.triggerEventHandler("mouseenter", {});
-    }
+    const event = new MouseEvent("mouseenter", { cancelable: true });
+    sendEvent(el, event);
 }
 
 /**
  * Simulate a mouseleave event
  */
 export function mouseleave(el: DebugElement | HTMLElement) {
+    const event = new MouseEvent("mouseleave", { cancelable: true });
+    sendEvent(el, event);
+}
+
+export function keydown(el: DebugElement | HTMLElement, key: string) {
+    const event = new KeyboardEvent("keydown", {
+        key,
+    });
+    sendEvent(el, event);
+}
+
+/**
+ * Simulate a mousedown event
+ */
+export function mousedown(el: DebugElement | HTMLElement) {
+    const event = new MouseEvent("mousedown", { cancelable: true });
     if (el instanceof HTMLElement) {
-        el.dispatchEvent(new Event("mouseleave"));
+        el.dispatchEvent(event);
     } else {
-        el.triggerEventHandler("mouseleave", {});
+        el.triggerEventHandler("mousedown", event);
     }
 }
 
@@ -98,4 +127,30 @@ export function updateInput(el: DebugElement | HTMLInputElement, value: any) {
         el.value = value;
         el.dispatchEvent(new Event("input"));
     }
+}
+
+/** Dispatches a keydown event from an element. */
+export function createKeyboardEvent(type: string, keyCode: number, target?: Element, key?: string) {
+    const event = document.createEvent("KeyboardEvent") as any;
+    // Firefox does not support `initKeyboardEvent`, but supports `initKeyEvent`.
+    const initEventFn = (event.initKeyEvent || event.initKeyboardEvent).bind(event);
+    const originalPreventDefault = event.preventDefault;
+
+    initEventFn(type, true, true, window, 0, 0, 0, 0, 0, keyCode);
+
+    // Webkit Browsers don't set the keyCode when calling the init function.
+    // See related bug https://bugs.webkit.org/show_bug.cgi?id=16735
+    Object.defineProperties(event, {
+        keyCode: { get: () => keyCode },
+        key: { get: () => key },
+        target: { get: () => target },
+    });
+
+    // IE won't set `defaultPrevented` on synthetic events so we need to do it manually.
+    event.preventDefault = function () {
+        Object.defineProperty(event, "defaultPrevented", { get: () => true });
+        return originalPreventDefault.apply(this, arguments);
+    };
+
+    return event;
 }

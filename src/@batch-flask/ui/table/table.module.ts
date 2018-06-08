@@ -4,21 +4,28 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
+import { ContextMenuModule } from "@batch-flask/ui/context-menu";
 import { FocusSectionModule } from "../focus-section";
 import { LoadingModule } from "../loading";
 import { VirtualScrollModule } from "../virtual-scroll";
-import { TableCellComponent } from "./table-cell";
+import { TableCellDefDirective } from "./table-cell-def";
 import { TableColumnComponent } from "./table-column";
-import { TableHeadComponent } from "./table-head";
-import { TableRowComponent } from "./table-row";
+import { TableHeadCellComponent, TableHeadComponent } from "./table-head";
+import { TableHeadCellDefDirective } from "./table-head-cell-def";
+import { TableRowRenderComponent } from "./table-row-render";
 import { TableComponent } from "./table.component";
 
-const components = [
-    TableCellComponent,
+const privateComponents = [
+    TableRowRenderComponent,
+    TableHeadCellComponent,
+    TableHeadComponent,
+];
+
+const publicComponents = [
     TableColumnComponent,
     TableComponent,
-    TableHeadComponent,
-    TableRowComponent,
+    TableHeadCellDefDirective,
+    TableCellDefDirective,
 ];
 
 @NgModule({
@@ -31,9 +38,10 @@ const components = [
         MaterialModule,
         VirtualScrollModule,
         LoadingModule,
+        ContextMenuModule,
     ],
-    exports: components,
-    declarations: components,
+    exports: publicComponents,
+    declarations: [...privateComponents, publicComponents],
     providers: [],
 })
 export class TableModule {

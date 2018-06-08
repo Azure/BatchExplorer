@@ -19,11 +19,9 @@
                     <div class="pre-quicksearch">
                         <ng-content select="[pre-quicksearch]"></ng-content>
                     </div>
-                    <input [formControl]="quickSearchQuery" placeholder="Search" #quickSearchInput (keydown)="handleKeyPressedInQuickSearch($event)"
-                    />
-                    <bl-clickable class="toggle-advanced-filter" (do)="toggleFilter()" *ngIf="advancedFilterDirective">
-                        <i class="fa fa-filter"></i>
-                    </bl-clickable>
+                    <input blInput [formControl]="quickSearchQuery" placeholder="Search (Startwith)" #quickSearchInput (keydown)="handleKeyPressedInQuickSearch($event)"/>
+                    <bl-toggle-filter-button *ngIf="advancedFilterDirective" (do)="toggleFilter()" [advancedFilter]="advancedFilter" >
+                    </bl-toggle-filter-button>
                 </div>
             </div>
             <div class="bl-list-content">
