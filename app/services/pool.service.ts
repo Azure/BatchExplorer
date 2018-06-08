@@ -129,10 +129,6 @@ export class PoolService extends ServiceBase {
     }
 
     public resize(poolId: string, target: PoolResizeDto, options: any = {}) {
-        // return this.callBatchClient((client) => client.pool.resize(poolId, target.toJS(), options), (error) => {
-        //     log.error("Error resizing pool: " + poolId, Object.assign({}, error));
-        // });
-
         return this.http.post(`/pools/${poolId}/resize`, target.toJS());
     }
 
@@ -157,20 +153,16 @@ export class PoolService extends ServiceBase {
     }
 
     public enableAutoScale(poolId: string, autoscaleParams: PoolEnableAutoScaleDto) {
-        return this.callBatchClient((client) => client.pool.enableAutoScale(poolId, autoscaleParams), (error) => {
-            log.error("Error enabling autoscale for pool: " + poolId, error);
-        });
+        return this.http.post(`/pools/${poolId}/enableautoscale`, autoscaleParams);
     }
 
-    public evaluateAutoScale(poolId: string, options: any = {}) {
-        return this.callBatchClient((client) => client.pool.evaluateAutoScale(poolId, options), (error) => {
-            log.error("Error resizing pool: " + poolId, Object.assign({}, error));
+    public evaluateAutoScale(poolId: string, formula: string) {
+        return this.http.post(`/pools/${poolId}/evaluateautoscale`, {
+            autoScaleFormula: formula,
         });
     }
 
     public disableAutoScale(poolId: string) {
-        return this.callBatchClient((client) => client.pool.disableAutoScale(poolId), (error) => {
-            log.error("Error disabling autoscale for pool: " + poolId, error);
-        });
+        return this.http.post(`/pools/${poolId}/disableautoscale`);
     }
 }
