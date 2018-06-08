@@ -2,7 +2,7 @@ import { Location } from "@angular/common";
 import { HttpEvent, HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
 import { RetryableHttpCode } from "@batch-flask/core/constants";
 import { UrlUtils } from "@batch-flask/utils";
-import { Observable, range } from "rxjs";
+import { Observable, range, of, timer } from "rxjs";
 import { flatMap, zip, switchMap } from "rxjs/operators";
 import { AccessToken } from "./aad/access-token";
 
@@ -81,7 +81,7 @@ export abstract class HttpService {
         return attempts.pipe(
             switchMap((x: any) => {
                 if (RetryableHttpCode.has(x.status)) {
-                    return Observable.of(x);
+                    return of(x);
                 }
                 return Observable.throw(x);
             }),
@@ -92,7 +92,7 @@ export abstract class HttpService {
                 return retryCount;
             }),
             flatMap((retryCount) => {
-                return Observable.timer(100 * Math.pow(3, retryCount));
+                return timer(100 * Math.pow(3, retryCount));
             }),
         );
     }
