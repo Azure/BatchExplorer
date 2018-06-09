@@ -130,6 +130,21 @@ describe("TagsComponent", () => {
                 // Edit button is now focused
                 expect(editButton.nativeElement).toEqual(document.activeElement);
             }));
+
+            it("click cancel should go back to display view", fakeAsync(() => {
+                const cancelButton = de.query(By.css(".cancel"));
+                expect(cancelButton).not.toBeFalsy();
+                click(cancelButton);
+                fixture.detectChanges();
+                tick();
+                expect(testComponent.save).not.toHaveBeenCalled();
+
+                // SHould now show the edit button again
+                const editButton = de.query(By.css(".edit"));
+                expect(editButton).not.toBeFalsy();
+                // Edit button is now focused
+                expect(editButton.nativeElement).toEqual(document.activeElement);
+            }));
         });
     });
 });

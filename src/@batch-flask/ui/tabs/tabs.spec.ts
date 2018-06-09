@@ -3,9 +3,9 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { ActivatedRoute, Router } from "@angular/router";
-import { MaterialModule } from "@batch-flask/core";
 import { BehaviorSubject } from "rxjs";
 
+import { MatTabsModule } from "@angular/material";
 import { TabsModule } from "@batch-flask/ui/tabs";
 
 @Component({
@@ -40,7 +40,7 @@ describe("Tabs", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, TabsModule, NoopAnimationsModule],
+            imports: [MatTabsModule, TabsModule, NoopAnimationsModule],
             declarations: [TabTestComponent],
             providers: [
                 { provide: Router, useValue: routerSpy },
