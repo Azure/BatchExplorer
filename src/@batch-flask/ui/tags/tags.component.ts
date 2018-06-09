@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnChanges, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    HostBinding,
+    Input,
+    ViewChild,
+} from "@angular/core";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
@@ -31,6 +39,9 @@ export class TagsComponent {
 
     public tagEditString = "";
 
+    @ViewChild("editButton", { read: ElementRef })
+    private _editButton: ElementRef;
+
     @ViewChild("editInput")
     private _editInput: ElementRef;
 
@@ -39,11 +50,7 @@ export class TagsComponent {
 
     public edit() {
         this._resetTagEditStr();
-        this.isEditing = true;
-        this.changeDetector.markForCheck();
-        setTimeout(() => {
-            this._editInput.nativeElement.focus();
-        });
+        this._openForm();
     }
 
     public triggerSave() {
@@ -54,8 +61,7 @@ export class TagsComponent {
 
         this.save(tags).subscribe({
             next: () => {
-                this.saving = false;
-                this.changeDetector.markForCheck();
+                this._closeForm();
             },
             error: (error) => {
                 log.error("Error saving tags", error);
@@ -72,5 +78,24 @@ export class TagsComponent {
     private _resetTagEditStr() {
         this.tagEditString = this.tags.join(",");
         this.changeDetector.markForCheck();
+    }
+
+    private _openForm() {
+        this.isEditing = true;
+        this.changeDetector.markForCheck();
+
+        setTimeout(() => {
+            this._editInput.nativeElement.focus();
+        });
+    }
+
+    private _closeForm() {
+        this.isEditing = false;
+        this.saving = false;
+        this.changeDetector.markForCheck();
+
+        setTimeout(() => {
+            this._editButton.nativeElement.focus();
+        });
     }
 }

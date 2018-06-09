@@ -1,6 +1,6 @@
 <div class="display" *ngIf="!isEditing && !isSaving" >
     <bl-tag-list [tags]="tags" [maxTags]="maxTags" [noTagsMessage]="noTagsMessage"></bl-tag-list>
-    <bl-clickable class="edit" matTooltip="Edit tags" (do)="edit()" *ngIf="editable">
+    <bl-clickable #editButton class="edit" matTooltip="Edit tags" (do)="edit()" *ngIf="editable">
         <i class="fa fa-pencil"></i>
     </bl-clickable>
 </div>
