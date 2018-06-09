@@ -14,6 +14,7 @@ bl-tags {
 
         > .edit {
             margin-left: 5px;
+            padding: 0 3px;
         }
     }
 
@@ -30,7 +31,7 @@ bl-tags {
             padding: 0;
         }
 
-        .save, .cancel {
+        .save, .cancel, .saving {
             display: inline-block;
             height: 24px;
             width: 24px;

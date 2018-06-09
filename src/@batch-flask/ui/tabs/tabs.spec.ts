@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { ComponentFixture, TestBed, async } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -70,20 +70,19 @@ describe("Tabs", () => {
         expect(routerSpy.navigate).not.toHaveBeenCalled();
     });
 
-    it("clicking on a tab label should update the route", async(() => {
+    it("clicking on a tab label should update the route", async () => {
         const labels = fixture.debugElement.queryAll(By.css(".mat-tab-label"));
         expect(labels.length).toBe(2);
         labels[1].nativeElement.click();
         fixture.detectChanges();
-        fixture.whenStable().then(() => {
-            expect(fixture.nativeElement.textContent).toContain("Content 2");
-            expect(routerSpy.navigate).toHaveBeenCalledOnce();
-            expect(routerSpy.navigate).toHaveBeenCalledWith([], {
-                relativeTo: activeRouteSpy,
-                queryParams: {
-                    tab: "second",
-                },
-            });
+        await fixture.whenStable();
+        expect(fixture.nativeElement.textContent).toContain("Content 2");
+        expect(routerSpy.navigate).toHaveBeenCalledOnce();
+        expect(routerSpy.navigate).toHaveBeenCalledWith([], {
+            relativeTo: activeRouteSpy,
+            queryParams: {
+                tab: "second",
+            },
         });
-    }));
+    });
 });
