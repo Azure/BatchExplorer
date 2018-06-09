@@ -36,17 +36,6 @@ export class PoolProxy {
         return this.client.pool.deleteMethod(poolId, wrapOptions(options));
     }
 
-    /**
-     * Resizes the specified pool to the target number of nodes
-     * http://azure.github.io/azure-sdk-for-node/azure-batch/latest/Pool.html#resize
-     * @param poolId: The id of the pool to resize.
-     * @param targetDedicated: The desired number of nodes in the pool
-     * @param options: Optional Parameters.
-     */
-    public resize(poolId: string, target: any, options?: any): Promise<any> {
-        return this.client.pool.resize(poolId, target, wrapOptions(options));
-    }
-
     public patch(poolId: string, attributes: any, options?: any): Promise<any> {
         return this.client.pool.patch(poolId, attributes, wrapOptions(options));
     }
@@ -63,21 +52,5 @@ export class PoolProxy {
      */
     public add(pool: any, options?: any): Promise<any> {
         return this.client.pool.add(pool, wrapOptions(options));
-    }
-
-    public enableAutoScale(
-        poolId: string,
-        attributes: BatchServiceModels.PoolEnableAutoScaleParameter,
-        options?: any): Promise<any> {
-
-        return this.client.pool.enableAutoScale(poolId, attributes, wrapOptions(options));
-    }
-
-    public disableAutoScale(poolId: string, options?: any): Promise<any> {
-        return this.client.pool.disableAutoScale(poolId, wrapOptions(options));
-    }
-
-    public evaluateAutoScale(poolId: string, formula: string, options?: any): Promise<any> {
-        return this.client.pool.evaluateAutoScale(poolId, { autoScaleFormula: formula }, wrapOptions(options));
     }
 }

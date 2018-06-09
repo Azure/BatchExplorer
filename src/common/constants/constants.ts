@@ -114,6 +114,7 @@ export const ApiVersion = {
     monitor: "2017-05-01-preview",
     network: "2017-10-01",
     classicNetwork: "2015-12-01",
+    batchService: "2017-09-01.6.0",
 };
 
 export const ExternalLinks = {

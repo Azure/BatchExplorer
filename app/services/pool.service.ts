@@ -6,6 +6,7 @@ import { PoolCreateDto, PoolEnableAutoScaleDto, PoolPatchDto, PoolResizeDto } fr
 import { BatchEntityGetter, EntityView, ListView } from "app/services/core";
 import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
+import { AzureBatchHttpService } from "./azure-batch/core";
 import { BatchClientService } from "./batch-client.service";
 import { BatchListGetter, ContinuationToken, DataCache, ListOptionsAttributes } from "./core";
 import { ServiceBase } from "./service-base";
@@ -30,7 +31,7 @@ export class PoolService extends ServiceBase {
     private _getter: BatchEntityGetter<Pool, PoolParams>;
     private _listGetter: BatchListGetter<Pool, PoolListParams>;
 
-    constructor(batchService: BatchClientService) {
+    constructor(batchService: BatchClientService, private http: AzureBatchHttpService) {
         super(batchService);
 
         this._getter = new BatchEntityGetter(Pool, this.batchService, {
@@ -128,9 +129,7 @@ export class PoolService extends ServiceBase {
     }
 
     public resize(poolId: string, target: PoolResizeDto, options: any = {}) {
-        return this.callBatchClient((client) => client.pool.resize(poolId, target.toJS(), options), (error) => {
-            log.error("Error resizing pool: " + poolId, Object.assign({}, error));
-        });
+        return this.http.post(`/pools/${poolId}/resize`, target.toJS());
     }
 
     public patch(poolId: string, attributes: PoolPatchDto, options: any = {}) {
@@ -154,20 +153,16 @@ export class PoolService extends ServiceBase {
     }
 
     public enableAutoScale(poolId: string, autoscaleParams: PoolEnableAutoScaleDto) {
-        return this.callBatchClient((client) => client.pool.enableAutoScale(poolId, autoscaleParams), (error) => {
-            log.error("Error enabling autoscale for pool: " + poolId, error);
-        });
+        return this.http.post(`/pools/${poolId}/enableautoscale`, autoscaleParams);
     }
 
-    public evaluateAutoScale(poolId: string, options: any = {}) {
-        return this.callBatchClient((client) => client.pool.evaluateAutoScale(poolId, options), (error) => {
-            log.error("Error resizing pool: " + poolId, Object.assign({}, error));
+    public evaluateAutoScale(poolId: string, formula: string) {
+        return this.http.post(`/pools/${poolId}/evaluateautoscale`, {
+            autoScaleFormula: formula,
         });
     }
 
     public disableAutoScale(poolId: string) {
-        return this.callBatchClient((client) => client.pool.disableAutoScale(poolId), (error) => {
-            log.error("Error disabling autoscale for pool: " + poolId, error);
-        });
+        return this.http.post(`/pools/${poolId}/disableautoscale`);
     }
 }
