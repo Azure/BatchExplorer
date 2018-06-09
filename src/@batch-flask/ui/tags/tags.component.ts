@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, ViewChild } from "@angular/core";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
@@ -11,7 +11,7 @@ import "./tags.scss";
     templateUrl: "tags.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TagsComponent implements OnChanges {
+export class TagsComponent {
     @Input() public tags: List<string>;
 
     @Input() public editable: boolean = false;
@@ -30,30 +30,31 @@ export class TagsComponent implements OnChanges {
 
     public tagEditString = "";
 
-    public displayTags: List<string> = List([]);
-
     @ViewChild("editInput")
     private _editInput: ElementRef;
 
-    public ngOnChanges(inputs) {
-        if (inputs.tags || inputs.maxTags) {
-            this.displayTags = List<string>(this.tags.slice(0, this.maxTags));
-        }
+    constructor(private changeDetector: ChangeDetectorRef) {
     }
 
     public edit() {
         this._resetTagEditStr();
         this.isEditing = true;
-        this._editInput.nativeElement.focus();
+        this.changeDetector.markForCheck();
+        setTimeout(() => {
+            this._editInput.nativeElement.focus();
+        });
     }
 
     public triggerSave() {
-        const tags = this.tagEditString.split(",");
+        const tags = List(this.tagEditString.split(","));
         this.isEditing = false;
         this.saving = true;
-        this.save(List(tags)).subscribe({
+        this.changeDetector.markForCheck();
+
+        this.save(tags).subscribe({
             next: () => {
                 this.saving = false;
+                this.changeDetector.markForCheck();
             },
             error: (error) => {
                 log.error("Error saving tags", error);
@@ -64,13 +65,11 @@ export class TagsComponent implements OnChanges {
     public cancel() {
         this._resetTagEditStr();
         this.isEditing = false;
-    }
-
-    public trackTag(index, tag: string) {
-        return tag;
+        this.changeDetector.markForCheck();
     }
 
     private _resetTagEditStr() {
         this.tagEditString = this.tags.join(",");
+        this.changeDetector.markForCheck();
     }
 }

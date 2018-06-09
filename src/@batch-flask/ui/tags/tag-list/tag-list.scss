@@ -1,3 +1,5 @@
+@import "app/styles/variables";
+
 bl-tag-list {
     display: flex;
     align-items: center;
@@ -5,7 +7,7 @@ bl-tag-list {
     .tag {
         font-size: 11px;
         color: white;
-        background: map-get($primary, 300);
+        background: $primary-color;
         padding: 0 5px;
 
         &:not(:last-child) {
@@ -15,13 +17,13 @@ bl-tag-list {
 
     .expand-tags {
         font-size: 16px;
-        color: map-get($primary, 300);
+        color: $primary-color;
         padding: 0 5px;
         border-radius: 3px;
 
         &:hover {
-            color: map-get($primary, 50);
-            background: map-get($primary, 300);
+            color: whi;
+            background: $primary-color-dark;
         }
     }
 }

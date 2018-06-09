@@ -3,47 +3,38 @@
 
 bl-tags {
 
-    .no-tags {
-        color: $mineshaft-grey;
+    .display {
+        display: flex;
+        align-items: center;
+
+        > .edit {
+            margin-left: 5px;
+        }
     }
 
-    .main {
+
+    .editor {
         display: flex;
         align-items: center;
 
         input {
             min-width: 200px;
         }
-    }
 
-    .tags-control {
-        margin: 0 5px;
-
-        button {
-            background: none;
+        .input-suffix {
+            padding: 0;
         }
 
-        .fa-pencil {
-            cursor: pointer;
-            color: map-get($primary, 500);
-
-            &:hover {
-                color: map-get($primary, 300);
-            }
-        }
-
-        .fa-check, .fa-times {
+        .save, .cancel {
+            display: inline-block;
+            height: 24px;
+            width: 24px;
             font-size: 20px;
-            cursor: pointer;
-        }
-
-        .fa-check:hover {
-            color: map-get($success, 500);
-        }
-
-        .fa-times:hover {
-            color: map-get($danger, 400);
+            text-align: center;
         }
     }
 
+    .no-tags {
+        color: $secondary-text;
+    }
 }
