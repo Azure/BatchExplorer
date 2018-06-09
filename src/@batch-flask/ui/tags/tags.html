@@ -1,12 +1,6 @@
 <div class="main">
     <div class="tags">
-        <div class="tag-list" *ngIf="!isEditing">
-            <span class="tag" *ngFor="let tag of displayTags;trackBy: trackTag">{{tag}}</span>
-            <span class="expand-tags" *ngIf="tags.size > maxTags" [matTooltip]="tags.join(', ')">
-                <i class="fa fa-ellipsis-h"></i>
-            </span>
-            <div class="no-tags" *ngIf="tags.size === 0">{{noTagsMessage}}</div>
-        </div>
+        <bl-tag-list *ngIf="!isEditing"></bl-tag-list>
         <form (submit)="triggerSave()" [hidden]="!isEditing">
             <bl-form-field>
                 <input blInput #editInput placeholder="Tags(Comma separated)" [(ngModel)]="tagEditString" [ngModelOptions]="{standalone: true}">
@@ -14,15 +8,15 @@
         </form>
     </div>
     <div class="tags-control" *ngIf="editable">
-        <button class="edit" matTooltip="Edit tags" (click)="edit()" *ngIf="!isEditing && !saving">
+        <bl-clickable class="edit" matTooltip="Edit tags" (do)="edit()" *ngIf="!isEditing && !saving">
             <i class="fa fa-pencil"></i>
-        </button>
-        <button class="save" matTooltip="Save" (click)="triggerSave()" *ngIf="isEditing">
+        </bl-clickable>
+        <bl-clickable class="save" matTooltip="Save" (do)="triggerSave()" *ngIf="isEditing">
             <i class="fa fa-check"></i>
-        </button>
-        <button class="cancel" matTooltip="Cancel" (click)="cancel()" *ngIf="isEditing">
+        </bl-clickable>
+        <bl-clickable class="cancel" matTooltip="Cancel" (do)="cancel()" *ngIf="isEditing">
             <i class="fa fa-times"></i>
-        </button>
+        </bl-clickable>
         <i class="fa fa-spinner fa-spin" *ngIf="saving"></i>
     </div>
 </div>

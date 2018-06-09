@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnChanges, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, ViewChild } from "@angular/core";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
@@ -9,25 +9,21 @@ import "./tags.scss";
 @Component({
     selector: "bl-tags",
     templateUrl: "tags.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TagsComponent implements OnChanges {
-    @Input()
-    public tags: List<string>;
+    @Input() public tags: List<string>;
 
-    @Input()
-    public editable: boolean = false;
+    @Input() public editable: boolean = false;
 
-    @Input()
-    public save: (tags: List<string>) => Observable<any>;
+    @Input() public save: (tags: List<string>) => Observable<any>;
 
-    @Input()
-    public noTagsMessage = "";
+    @Input() public noTagsMessage = "";
 
     /**
      * Maximum number of tags to display without expanding
      */
-    @Input()
-    public maxTags = 10;
+    @Input() public maxTags = 10;
 
     public isEditing = false;
     public saving = false;

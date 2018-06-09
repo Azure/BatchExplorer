@@ -1,0 +1,5 @@
+<span class="tag" *ngFor="let tag of displayTags;trackBy: trackTag">{{tag}}</span>
+<span class="expand-tags" *ngIf="tags.size > maxTags" [matTooltip]="tags.join(', ')">
+    <i class="fa fa-ellipsis-h"></i>
+</span>
+<div class="no-tags" *ngIf="tags.size === 0">{{noTagsMessage}}</div>
