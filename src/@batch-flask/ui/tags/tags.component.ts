@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnChanges, ViewChild } from "@angular/core";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
@@ -14,7 +14,8 @@ import "./tags.scss";
 export class TagsComponent {
     @Input() public tags: List<string>;
 
-    @Input() public editable: boolean = false;
+    @Input()
+    @HostBinding("class.editable") public editable: boolean = false;
 
     @Input() public save: (tags: List<string>) => Observable<any>;
 

@@ -2,6 +2,11 @@
 
 
 bl-tags {
+    &.editable {
+        display: flex;
+        height: 44px;
+        align-items: center;
+    }
 
     .display {
         display: flex;
