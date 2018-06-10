@@ -108,7 +108,7 @@ describe("TagsComponent", () => {
                 expect(component.tagEditString).toEqual("tag1,tag2");
             });
 
-            it("should focus the input", () => {
+            it("should have focused the input", () => {
                 const input = de.query(By.css("input"));
                 expect(input).not.toBeFalsy();
                 expect(input.nativeElement).toEqual(document.activeElement);
