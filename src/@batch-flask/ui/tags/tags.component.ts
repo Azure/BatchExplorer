@@ -71,7 +71,7 @@ export class TagsComponent {
 
     public cancel() {
         this._resetTagEditStr();
-        this.isEditing = false;
+        this._closeForm();
         this.changeDetector.markForCheck();
     }
 
