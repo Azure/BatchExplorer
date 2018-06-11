@@ -2,9 +2,13 @@
 
 bl-rpc-server-status {
     display: block;
-    padding: 0 5px;
     cursor: pointer;
     user-select: none;
+
+    > bl-clickable {
+        display: block;
+        padding: 0 5px;
+    }
 
     .connected {
         &:hover, &.active {

@@ -1,6 +1,8 @@
-<div *ngIf="connected">
-    <i class="fa fa-link"></i>
-</div>
-<div *ngIf="!connected">
-    <i class="fa fa-exclamation-triangle"></i> Python backend disconnected
-</div>
+<bl-clickable (do)="showContextMenu()" [matTooltip]="title">
+    <div *ngIf="connected">
+        <i class="fa fa-link"></i>
+    </div>
+    <div *ngIf="!connected">
+        <i class="fa fa-exclamation-triangle"></i> Python backend disconnected
+    </div>
+</bl-clickable>

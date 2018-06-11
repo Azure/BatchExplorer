@@ -40,6 +40,7 @@ export * from "./batch-client.service";
 export * from "./storage-account.service";
 export * from "./predefined-formula.service";
 export * from "./themes";
+export * from "./tenant-details.service";
 export * from "./network";
 
 // This needs to be last(as it does dynamic inject which problably have dependencies on above services)

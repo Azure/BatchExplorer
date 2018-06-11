@@ -10,7 +10,7 @@
     "name": "Microsoft Corporation",
     "email": "tiguerin@microsoft.com"
   },
-  "version": "0.15.2",
+  "version": "0.16.0",
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json",
@@ -152,7 +152,7 @@
     "mkdirp": "^0.5.1",
     "moment": "^2.20.1",
     "moment-duration-format": "^2.0.1",
-    "monaco-editor": "~0.10.1",
+    "monaco-editor": "~0.13.1",
     "mousetrap": "^1.6.0",
     "ms-rest-js": "~0.2.3",
     "node-fetch": "~2.1.2",

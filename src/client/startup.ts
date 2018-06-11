@@ -8,9 +8,6 @@ import { Constants } from "./client-constants";
 import { BatchLabsApplication, listenToSelectCertifcateEvent } from "./core";
 
 function initAutoUpdate() {
-    // if (Constants.isDev) {
-    //     autoUpdater.updateConfigPath = path.join(Constants.root, "dev-app-update.yml");
-    // }
     autoUpdater.allowPrerelease = true;
     autoUpdater.autoDownload = true;
     autoUpdater.logger = log;
@@ -25,7 +22,8 @@ function setupSingleInstance(batchLabsApp: BatchLabsApplication) {
     });
 
     if (shouldQuit) {
-        app.quit();
+        log.info("There is already an instance of BatchLabs open. Closing this one.");
+        batchLabsApp.quit();
     }
 }
 

@@ -1,0 +1,29 @@
+@import "app/styles/variables";
+
+bl-tag-list {
+    display: flex;
+    align-items: center;
+
+    .tag {
+        font-size: 11px;
+        color: white;
+        background: $primary-color;
+        padding: 0 5px;
+
+        &:not(:last-child) {
+            margin-right: 5px;
+        }
+    }
+
+    .expand-tags {
+        font-size: 16px;
+        color: $primary-color;
+        padding: 0 5px;
+        border-radius: 3px;
+
+        &:hover {
+            color: whi;
+            background: $primary-color-dark;
+        }
+    }
+}

@@ -1,36 +1,35 @@
-import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { AutoUpdateService, ElectronRemote, ElectronShell, UpdateStatus } from "@batch-flask/ui";
 import { OS } from "@batch-flask/utils";
 import * as path from "path";
+import { Subscription } from "rxjs";
 
 import {
     ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService,
 } from "@batch-flask/ui/context-menu";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import {
-    AccountService, AdalService, BatchLabsService, FileSystemService,
+    AdalService, BatchLabsService, FileSystemService,
 } from "app/services";
 
-import { Subscription } from "rxjs";
-import "./main-navigation.scss";
+import "./profile-button.scss";
 
 @Component({
-    selector: "bl-app-nav",
-    templateUrl: "main-navigation.html",
+    selector: "bl-profile-button",
+    templateUrl: "profile-button.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MainNavigationComponent implements OnInit, OnDestroy {
+export class ProfileButtonComponent implements OnDestroy, OnInit {
     public UpdateStatus = UpdateStatus;
 
-    public selectedId: string;
-    public selectedAccountAlias: string = "";
     public currentUserName: string = "";
     public updateStatus: UpdateStatus;
 
+    private _currentUserSub: Subscription;
     private _updateSub: Subscription;
 
     constructor(
-        accountService: AccountService,
         adalService: AdalService,
         private changeDetector: ChangeDetectorRef,
         private autoUpdateService: AutoUpdateService,
@@ -43,19 +42,13 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
         private fs: FileSystemService,
         private router: Router) {
 
-        accountService.currentAccountId.subscribe((accountId) => {
-            if (accountId) {
-                this.selectedId = accountId;
-                this.selectedAccountAlias = accountService.getNameFromAccountId(accountId);
-            } else {
-                this.selectedAccountAlias = "No account selected!";
-            }
-        });
-
-        adalService.currentUser.subscribe((user) => {
+        this._currentUserSub = adalService.currentUser.subscribe((user) => {
             if (user) {
-                this.currentUserName = user.name;
+                this.currentUserName = `${user.name} (${user.unique_name})`;
+            } else {
+                this.currentUserName = "";
             }
+            this.changeDetector.markForCheck();
         });
 
         this._updateSub = this.autoUpdateService.status.subscribe((status) => {
@@ -69,6 +62,7 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy() {
+        this._currentUserSub.unsubscribe();
         this._updateSub.unsubscribe();
     }
 
