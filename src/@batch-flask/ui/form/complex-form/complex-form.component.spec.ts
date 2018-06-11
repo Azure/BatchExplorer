@@ -186,23 +186,6 @@ describe("ComplexFormComponent", () => {
             expect(error).not.toBe(null);
             expect(error.nativeElement.textContent).toContain("IdExists");
             expect(error.nativeElement.textContent).toContain("Id already exists");
-
-        });
-
-        it("should show the troubleshoot details when clickin on the bug button", () => {
-            const error = getErrorElement();
-            expect(error).not.toBe(null);
-
-            expect(error.nativeElement.textContent).not.toContain("abc-def");
-            expect(error.nativeElement.textContent)
-                .not.toContain(date.toString());
-
-            error.query(By.css("i.fa-bug")).nativeElement.click();
-            fixture.detectChanges();
-            expect(error.nativeElement.textContent).toContain("abc-def");
-            expect(error.nativeElement.textContent)
-                .toContain(date.toString());
-            expect(true).toBe(true);
         });
 
         it("should toggle the error when clicking the warning button", () => {
