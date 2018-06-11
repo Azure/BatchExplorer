@@ -38,7 +38,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     public searchQuery = new FormControl();
 
     // todo: ask tim about setting difference select options for list and details.
-    private _baseOptions = {};
+    private _baseOptions = { };
     private _onJobAddedSub: Subscription;
     constructor(
         router: Router,
