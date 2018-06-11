@@ -54,7 +54,7 @@
             <div *blCellDef="let task">{{formatDate(task.executionInfo?.endTime)}}</div>
         </bl-column>
 
-        <bl-column name="exitCode"  [defaultWidth]="60">
+        <bl-column name="exitCode"  [defaultWidth]="70">
             <div *blHeadCellDef>Exit code</div>
             <div *blCellDef="let task">{{task.executionInfo?.exitCode}}</div>
         </bl-column>
