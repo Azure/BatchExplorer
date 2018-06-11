@@ -2,4 +2,19 @@
 
 bl-parameter-input {
     width: 100%;
+
+    bl-form-field {
+        bl-hint {
+            display: block;
+            width:100%;
+
+            &.warning {
+                color: map-get($warn, 500);
+            }
+
+            &.bl-align-right {
+                text-align: right;
+            }
+        }
+    }
 }

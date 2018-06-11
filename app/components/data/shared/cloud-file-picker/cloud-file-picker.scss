@@ -5,9 +5,6 @@ bl-cloud-file-picker {
     bl-form-field {
         flex: 1;
 
-        .warning {
-            color: map-get($warn, 500);
-        }
         .input-container > .input-suffix {
             border: none;
             padding: 0;
@@ -29,6 +26,4 @@ bl-cloud-file-picker {
             }
         }
     }
-
-
 }

@@ -4,14 +4,6 @@ bl-file-group-picker {
     bl-form-field {
         width: 100%;
         flex: 1;
-
-        .warning {
-            color: map-get($warn, 500);
-        }
-    }
-
-    bl-button {
-        margin-left: 5px;
     }
 }
 .mat-autocomplete-panel {
