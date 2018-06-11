@@ -31,13 +31,13 @@ const fakeErrorWithDetails = new ServerError({
     message: "There was a fake error with details",
     details: [
         { key: "Detail_1", value: "Very detailed error" },
-        { key: "Detail_2", value: "Extremly detailed error" },
+        { key: "Detail_2", value: "Extremely detailed error" },
     ],
     requestId: "abc-def",
     timestamp: date,
 });
 
-fdescribe("ServerErrorComponent", () => {
+describe("ServerErrorComponent", () => {
     let fixture: ComponentFixture<ServerErrorTestComponent>;
     let de: DebugElement;
 
