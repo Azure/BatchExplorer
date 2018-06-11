@@ -6,6 +6,7 @@ import { MaterialModule } from "@batch-flask/core";
 
 import { EditorModule } from "@batch-flask/ui/editor";
 import { SelectModule } from "@batch-flask/ui/select";
+import { ServerErrorModule } from "@batch-flask/ui/server-error";
 import { ButtonsModule } from "../buttons";
 import { ComplexFormComponent } from "./complex-form";
 import { FormFooterComponent } from "./complex-form/footer";
@@ -20,7 +21,6 @@ import { FormSectionComponent } from "./form-section";
 import { HintComponent } from "./hint";
 import { InputDirective } from "./input";
 import { KeyValuePickerComponent } from "./key-value-picker";
-import { ServerErrorComponent } from "./server-error";
 import { SimpleFormComponent } from "./simple-form";
 import { SingleLineTextareaDirective } from "./single-line-textarea";
 
@@ -34,7 +34,6 @@ const components = [
     SimpleFormComponent,
     ComplexFormComponent,
     FormErrorComponent,
-    ServerErrorComponent,
     FormPageComponent,
     FormSectionComponent,
     FormMultiPickerComponent,
@@ -66,6 +65,7 @@ const components = [
         SelectModule,
         RouterModule,
         EditorModule,
+        ServerErrorModule,
         ...modules,
     ],
     providers: [
