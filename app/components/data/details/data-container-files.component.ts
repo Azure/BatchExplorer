@@ -37,16 +37,6 @@ export class DataContainerFilesComponent implements OnDestroy {
         this._onGroupUpdatedSub = this.storageContainerService.onContainerAdded.subscribe(() => {
             this.blobExplorer.refresh();
         });
-
-        setTimeout(() => {
-            this.notificationService.info("Banana", "Potato", {
-                action: () => console.log("Did it"),
-                actions: [
-                    { name: "Ac 1", do: () => console.log("Did that too") },
-                ],
-                autoDismiss: 100000,
-            });
-        });
     }
 
     public ngOnDestroy() {

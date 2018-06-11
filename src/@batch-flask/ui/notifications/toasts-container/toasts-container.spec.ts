@@ -42,7 +42,7 @@ describe("Notification", () => {
 
     it("Should not have any notifications to start with", () => {
         expect(currentNotifications.size).toBe(0);
-        expect(de.query(By.css("bl-notification"))).toBeNull();
+        expect(de.query(By.css("bl-toast"))).toBeNull();
     });
 
     describe("when a notification is sent", () => {
@@ -63,7 +63,7 @@ describe("Notification", () => {
         });
 
         it("notificationContainer should display the notification", () => {
-            const notificationEl = de.query(By.css("bl-notification"));
+            const notificationEl = de.query(By.css("bl-toast"));
             expect(notificationEl).not.toBeNull();
 
             expect(notificationEl.nativeElement.classList).toContain(NotificationLevel.success);
@@ -81,17 +81,17 @@ describe("Notification", () => {
             setTimeout(() => {
                 fixture.detectChanges();
                 expect(currentNotifications.size).toBe(0);
-                expect(de.query(By.css("bl-notification"))).toBeNull();
+                expect(de.query(By.css("bl-toast"))).toBeNull();
                 done();
             }, 1000);
         });
 
         it("clicking dimiss should dismiss", () => {
-            const notificationBtn = de.query(By.css("bl-notification .dismiss-btn"));
+            const notificationBtn = de.query(By.css("bl-toast .dismiss-btn"));
             notificationBtn.nativeElement.click();
             fixture.detectChanges();
             expect(currentNotifications.size).toBe(0);
-            expect(de.query(By.css("bl-notification"))).toBeNull();
+            expect(de.query(By.css("bl-toast"))).toBeNull();
         });
     });
 
@@ -114,7 +114,7 @@ describe("Notification", () => {
         });
 
         it("notificationContainer should display the notification", () => {
-            const notificationEl = de.query(By.css("bl-notification"));
+            const notificationEl = de.query(By.css("bl-toast"));
             expect(notificationEl).not.toBeNull();
 
             expect(notificationEl.nativeElement.classList).toContain(NotificationLevel.success);
@@ -132,7 +132,7 @@ describe("Notification", () => {
             setTimeout(() => {
                 fixture.detectChanges();
                 expect(currentNotifications.size).toBe(0);
-                expect(de.query(By.css("bl-notification"))).toBeNull();
+                expect(de.query(By.css("bl-toast"))).toBeNull();
                 expect(currentPersistedNotifications.size).toBe(1);
                 const notification = currentPersistedNotifications.first();
                 expect(notification.level).toEqual(NotificationLevel.success);
@@ -143,11 +143,11 @@ describe("Notification", () => {
         });
 
         it("clicking dimiss should dismiss and not add to the list", () => {
-            const notificationBtn = de.query(By.css("bl-notification .dismiss-btn"));
+            const notificationBtn = de.query(By.css("bl-toast .dismiss-btn"));
             notificationBtn.nativeElement.click();
             fixture.detectChanges();
             expect(currentNotifications.size).toBe(0);
-            expect(de.query(By.css("bl-notification"))).toBeNull();
+            expect(de.query(By.css("bl-toast"))).toBeNull();
             expect(currentPersistedNotifications.size).toBe(0);
         });
     });
