@@ -6,20 +6,22 @@ import { MaterialModule } from "@batch-flask/core";
 
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { DropdownModule } from "../dropdown";
-import { NotificationContainerComponent } from "./notification-container.component";
 import { NotificationService } from "./notification-service";
-import { NotificationComponent } from "./notification.component";
 import { PersistedNotificationDropdownComponent } from "./persisted-dropdown";
+import { ToastComponent } from "./toast";
+import { ToastsContainerComponent } from "./toasts-container";
 
-const components = [
-    NotificationComponent,
-    NotificationContainerComponent,
+const privateComponents = [
+    ToastComponent,
+];
+const publicComponents = [
+    ToastsContainerComponent,
     PersistedNotificationDropdownComponent,
 ];
 
 @NgModule({
-    declarations: components,
-    exports: components,
+    declarations: [...privateComponents, ...publicComponents],
+    exports: publicComponents,
     imports: [
         BrowserModule,
         FormsModule,

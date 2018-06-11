@@ -1,4 +1,5 @@
 import { DebugElement } from "@angular/core";
+import { MouseButton } from "@batch-flask/core";
 
 export class FakeMouseEvent {
     public stopImmediatePropagation: jasmine.Spy;
@@ -113,11 +114,15 @@ export function keydown(el: DebugElement | HTMLElement, key: string) {
  */
 export function mousedown(el: DebugElement | HTMLElement) {
     const event = new MouseEvent("mousedown", { cancelable: true });
-    if (el instanceof HTMLElement) {
-        el.dispatchEvent(event);
-    } else {
-        el.triggerEventHandler("mousedown", event);
-    }
+    sendEvent(el, event);
+}
+
+/**
+ * Simulate a mouseup event
+ */
+export function mouseup(el: DebugElement | HTMLElement, button?: MouseButton) {
+    const event = new MouseEvent("mouseup", { cancelable: true, button });
+    sendEvent(el, event);
 }
 
 export function updateInput(el: DebugElement | HTMLInputElement, value: any) {
