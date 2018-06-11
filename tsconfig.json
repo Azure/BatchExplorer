@@ -58,5 +58,8 @@
     "forkChecker": true,
     "useCache": true,
     "useWebpackText": true
+  },
+  "angularCompilerOptions": {
+    "disableTypeScriptVersionCheck": true
   }
 }

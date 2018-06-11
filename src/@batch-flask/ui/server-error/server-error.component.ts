@@ -1,11 +1,14 @@
-import { Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
 
 import { ErrorDetail, ServerError } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 
+import "./server-error.scss";
+
 @Component({
     selector: "bl-server-error",
     templateUrl: "server-error.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServerErrorComponent {
 
@@ -18,7 +21,15 @@ export class ServerErrorComponent {
     }
     public get error() { return this._error; }
 
+    public showDebugInformation = false;
     private _error: ServerError = null;
+
+    constructor(private changeDetector: ChangeDetectorRef) { }
+
+    public toggleDebugInformation() {
+        this.showDebugInformation = !this.showDebugInformation;
+        this.changeDetector.markForCheck();
+    }
 
     public trackDetail(index, detail: ErrorDetail) {
         return detail.key;

@@ -1,3 +1,5 @@
+@import "app/styles/variables";
+
 @keyframes animScale {
     0% {
         opacity: 0;
@@ -9,7 +11,7 @@
     }
 }
 
-bl-notification-container {
+bl-toasts-container {
     margin: 30px 10px;
     position: fixed;
     z-index: $zindex-notification;

@@ -1,4 +1,11 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+} from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
@@ -21,6 +28,7 @@ import "./submit-ncj-template.scss";
 @Component({
     selector: "bl-submit-ncj-template",
     templateUrl: "submit-ncj-template.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public jobTemplate: NcjJobTemplate;
@@ -184,7 +192,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             jobTemplate.job.properties.poolInfo = this.pickedPool.value;
         }
         this._saveTemplateAsRecent();
-        const obs = this.ncjSubmitService.submitJob(jobTemplate, this.jobParams.value)
+        const obs = this.ncjSubmitService.submitJob(jobTemplate, this.jobParams.value);
         obs.subscribe((data) => this._redirectToJob(data.properties.id));
         return obs;
     }
@@ -192,7 +200,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     @autobind()
     private _createPool() {
         this._saveTemplateAsRecent();
-        const obs = this.ncjSubmitService.createPool(this.poolTemplate, this.poolParams.value)
+        const obs = this.ncjSubmitService.createPool(this.poolTemplate, this.poolParams.value);
         obs.subscribe((data) => {
             if (this.jobTemplate) {
                 // Dave wants it to never redirect to pool in this context when we also have a job template.
@@ -352,7 +360,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
                 pool: pool,
             },
         };
-        const obs = this.ncjSubmitService.submitJob(jobTemplate, this.jobParams.value)
+        const obs = this.ncjSubmitService.submitJob(jobTemplate, this.jobParams.value);
         obs.subscribe((data) => this._redirectToJob(data.properties.id));
 
         return obs;

@@ -1,0 +1,10 @@
+<bl-form-field>
+    <input type="text" blInput [formControl]="value" [placeholder]="label">
+    <bl-hint class="warning" *ngIf="warning">
+        The job ID has already been used, please choose a unique job ID
+    </bl-hint>
+    <bl-hint *ngIf="hint" align="end">
+        {{hint}}
+    </bl-hint>
+</bl-form-field>
+

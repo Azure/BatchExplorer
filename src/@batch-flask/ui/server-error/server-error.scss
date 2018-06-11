@@ -1,0 +1,61 @@
+@import "app/styles/variables";
+
+bl-server-error {
+    display: block;
+
+    .error-banner {
+        background: map-get($danger, 500);
+        color: $whiteSmoke;
+        > .content {
+            padding: 10px;
+        }
+
+        > .content > .main-content {
+            display: flex;
+            position: relative;
+
+            h4, p, table {
+                color: $whiteSmoke;
+                font-size: 12px;
+            }
+
+            h4 {
+                font-size: 24px;
+                font-weight: 300;
+            }
+
+            .main-info {
+                flex: 1;
+                margin-right: 10px;
+            }
+        }
+
+        .troubleshoot-btn {
+            font-size: 1.5em;
+            z-index: 10;
+
+            bl-clickable {
+                display: inline-block;
+                border: 1px solid $danger-color-dark;
+                border-radius: 3px;
+                padding: 3px;
+                &:hover {
+                    background-color: $danger-color-dark;
+                }
+            }
+        }
+
+        .troubleshoot-info {
+            padding: 10px;
+            border-top: 1px solid map-get($danger, 800);
+
+            table {
+                font-size: 1em;
+                color: $whiteSmoke;
+            }
+            td {
+                padding-right: 10px;
+            }
+        }
+    }
+}

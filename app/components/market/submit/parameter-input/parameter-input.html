@@ -24,6 +24,10 @@
             [label]="parameter.name" class="form-element" [hint]="parameter.description" [wildcards]="parameter.wildcards">
         </bl-cloud-file-picker>
     </div>
+    <div *ngSwitchCase="NcjParameterExtendedType.jobId">
+        <bl-job-id [formControl]="parameterValue" [label]="parameter.name" class="form-element" [hint]="parameter.description">
+        </bl-job-id>
+    </div>
     <div *ngSwitchCase="NcjParameterExtendedType.dropDown">
         <bl-form-field>
             <bl-select [formControl]="parameterValue" [placeholder]="parameter.name">

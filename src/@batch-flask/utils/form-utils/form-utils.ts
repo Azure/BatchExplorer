@@ -1,4 +1,6 @@
-import { AbstractControl, FormGroup } from "@angular/forms";
+import { AbstractControl, FormControl, FormGroup } from "@angular/forms";
+import { Observable } from "rxjs";
+
 export class FormUtils {
     public static getControl(formGroup: FormGroup, path: string | string[]): AbstractControl {
         const actualPath = Array.isArray(path) ? path : [path];
@@ -10,5 +12,17 @@ export class FormUtils {
             }
         }
         return current;
+    }
+
+    public static passValidation(control: FormControl, processErrors?: (errors: any) => any): Observable<any> {
+        processErrors = processErrors || ((errors) => errors);
+
+        if (control.status === "PENDING") {
+            return control.statusChanges.filter(x => x !== "PENDING").take(1).map(() => {
+                return processErrors(control.errors);
+            });
+        } else {
+            return Observable.of(processErrors(control.errors));
+        }
     }
 }
