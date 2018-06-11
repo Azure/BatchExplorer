@@ -39,6 +39,7 @@ import { QuickListModule } from "./quick-list";
 import { QuotasModule } from "./quotas";
 import { ScrollableModule } from "./scrollable";
 import { SelectModule } from "./select";
+import { ServerErrorModule } from "./server-error";
 import { SidebarModule } from "./sidebar";
 import { SimpleDialogComponent } from "./simple-dialog";
 import { SplitPaneModule } from "./split-pane";
@@ -79,6 +80,7 @@ const modules = [
     TagsModule,
     FormModule,
     QuotasModule,
+    ServerErrorModule,
     ScrollableModule,
     SelectModule,
     SplitPaneModule,

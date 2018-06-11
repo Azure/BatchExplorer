@@ -10,8 +10,8 @@ import {
     ComplexFormComponent, FormPageComponent, FormPickerComponent, FormSectionComponent,
 } from "@batch-flask/ui/form";
 import { FormFooterComponent } from "@batch-flask/ui/form/complex-form/footer";
-import { ServerErrorComponent } from "@batch-flask/ui/form/server-error";
 import { PermissionService } from "@batch-flask/ui/permission";
+import { ServerErrorComponent } from "@batch-flask/ui/server-error";
 import { click } from "test/utils/helpers";
 
 const date = new Date(2017, 9, 13, 23, 43, 38);

@@ -5,8 +5,8 @@ import { By } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
 
 import { ButtonComponent } from "@batch-flask/ui/buttons";
-import { ServerErrorComponent } from "@batch-flask/ui/form/server-error";
 import { SimpleFormComponent } from "@batch-flask/ui/form/simple-form";
+import { ServerErrorComponent } from "@batch-flask/ui/server-error";
 import { complexFormMockComponents } from "test/utils/mocks/components";
 
 @Component({

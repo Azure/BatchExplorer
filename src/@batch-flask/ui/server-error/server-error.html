@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="details" *ngIf="error.details">
-            <div *ngFor="let detail of error.details;trackBy: trackDetail">
+            <div class="detail" *ngFor="let detail of error.details;trackBy: trackDetail">
                 <b>{{detail.key}}</b>: {{detail.value}}
             </div>
         </div>
