@@ -1,27 +1,32 @@
-import { Component, HostBinding, HostListener, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostBinding, HostListener, Injector, Input } from "@angular/core";
 
 import { MouseButton } from "@batch-flask/core";
-import { Notification, NotificationAction } from "./notification";
-import { NotificationService } from "./notification-service";
-import "./notification.scss";
+import { ClickableComponent } from "@batch-flask/ui/buttons";
+import { Notification, NotificationAction } from "../notification";
+import { NotificationService } from "../notification-service";
+import "./toast.scss";
 
 @Component({
-    selector: "bl-notification",
-    templateUrl: "notification.html",
+    selector: "bl-toast",
+    templateUrl: "toast.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationComponent {
+export class ToastComponent extends ClickableComponent {
     @Input() public notification: Notification;
 
     @HostBinding("class")
     public get notificationClass(): string {
-        return this.notification && this.notification.level;
+        const level = this.notification && this.notification.level;
+
+        return `${level} focus-outline`;
     }
 
-    constructor(private notificationService: NotificationService) {
+    constructor(injector: Injector, private notificationService: NotificationService) {
+        super(injector);
     }
 
-    @HostListener("click")
-    public performMainAction() {
+    public handleAction(event) {
+        super.handleAction(event);
         if (this.notification.config.action) {
             this.notification.config.action();
             this.dismiss();

@@ -2,15 +2,17 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
-import { Notification } from "./notification";
-import { NotificationService } from "./notification-service";
+import { Notification } from "../notification";
+import { NotificationService } from "../notification-service";
+
+import "./toasts-container.scss";
 
 @Component({
-    selector: "bl-notification-container",
-    templateUrl: "notification-container.html",
+    selector: "bl-toasts-container",
+    templateUrl: "toasts-container.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationContainerComponent implements OnDestroy {
+export class ToastsContainerComponent implements OnDestroy {
     public notifications: List<Notification>;
 
     private _sub: Subscription;
