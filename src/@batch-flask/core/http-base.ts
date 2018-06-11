@@ -50,7 +50,7 @@ export abstract class HttpService {
 
     public post<T>(uri: string, body: any, options: HttpRequestOptions<"events">): Observable<HttpEvent<T>>;
     public post<T>(uri: string, body: any, options: HttpRequestOptions<"response">): Observable<HttpResponse<T>>;
-    public post<T>(uri: string, body: any, options?: HttpRequestOptions): Observable<T>;
+    public post<T>(uri: string, body?: any, options?: HttpRequestOptions): Observable<T>;
     public post(uri: string, body?: any, options?: any) {
         return this.request("post", uri, { body, ...options });
     }

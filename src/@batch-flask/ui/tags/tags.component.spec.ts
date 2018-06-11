@@ -1,10 +1,11 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { ClickableComponent } from "@batch-flask/ui";
+import { TagsComponent } from "@batch-flask/ui/tags";
+import { TagListComponent } from "@batch-flask/ui/tags/tag-list";
 import { List } from "immutable";
 import { Observable } from "rxjs";
-
-import { TagsComponent } from "@batch-flask/ui/tags";
 import { click } from "test/utils/helpers";
 
 @Component({
@@ -25,7 +26,7 @@ describe("TagsComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [],
-            declarations: [TagsComponent, TestComponent],
+            declarations: [TagsComponent, TagListComponent, TestComponent, ClickableComponent],
             schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestComponent);
@@ -37,7 +38,7 @@ describe("TagsComponent", () => {
     });
 
     it("should show all tabs", () => {
-        const tagList = de.query(By.css(".tag-list"));
+        const tagList = de.query(By.css("bl-tag-list"));
         expect(tagList).not.toBeFalsy();
         const tags = tagList.queryAll(By.css(".tag"));
 
@@ -47,7 +48,6 @@ describe("TagsComponent", () => {
     });
 
     describe("when not editable", () => {
-
         it("should should not show the edit button", () => {
             const editButton = de.query(By.css(".edit"));
             expect(editButton).toBeFalsy();
@@ -82,11 +82,12 @@ describe("TagsComponent", () => {
         });
 
         describe("when clicking on edit button", () => {
-            beforeEach(() => {
+            beforeEach(fakeAsync(() => {
                 const editButton = de.query(By.css(".edit"));
                 click(editButton);
                 fixture.detectChanges();
-            });
+                tick();
+            }));
 
             it("should hide the edit button", () => {
                 const editButton = de.query(By.css(".edit"));
@@ -107,19 +108,43 @@ describe("TagsComponent", () => {
                 expect(component.tagEditString).toEqual("tag1,tag2");
             });
 
-            it("should call save with the new values", () => {
+            it("should have focused the input", () => {
+                const input = de.query(By.css("input"));
+                expect(input).not.toBeFalsy();
+                expect(input.nativeElement).toEqual(document.activeElement);
+            });
+
+            it("should call save with the new values", fakeAsync(() => {
                 component.tagEditString = "tag1,tag3,tag4";
                 const saveButton = de.query(By.css(".save"));
                 expect(saveButton).not.toBeFalsy();
                 click(saveButton);
+                fixture.detectChanges();
+                tick();
                 expect(testComponent.save).toHaveBeenCalledOnce();
                 expect(testComponent.save).toHaveBeenCalledWith(List(["tag1", "tag3", "tag4"]));
 
                 // SHould now show the edit button again
-                fixture.detectChanges();
                 const editButton = de.query(By.css(".edit"));
                 expect(editButton).not.toBeFalsy();
-            });
+                // Edit button is now focused
+                expect(editButton.nativeElement).toEqual(document.activeElement);
+            }));
+
+            it("click cancel should go back to display view", fakeAsync(() => {
+                const cancelButton = de.query(By.css(".cancel"));
+                expect(cancelButton).not.toBeFalsy();
+                click(cancelButton);
+                fixture.detectChanges();
+                tick();
+                expect(testComponent.save).not.toHaveBeenCalled();
+
+                // SHould now show the edit button again
+                const editButton = de.query(By.css(".edit"));
+                expect(editButton).not.toBeFalsy();
+                // Edit button is now focused
+                expect(editButton.nativeElement).toEqual(document.activeElement);
+            }));
         });
     });
 });

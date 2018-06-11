@@ -1,4 +1,12 @@
-import { Component, ElementRef, Input, OnChanges, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    HostBinding,
+    Input,
+    ViewChild,
+} from "@angular/core";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
@@ -9,55 +17,51 @@ import "./tags.scss";
 @Component({
     selector: "bl-tags",
     templateUrl: "tags.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TagsComponent implements OnChanges {
-    @Input()
-    public tags: List<string>;
+export class TagsComponent {
+    @Input() public tags: List<string>;
 
     @Input()
-    public editable: boolean = false;
+    @HostBinding("class.editable") public editable: boolean = false;
 
-    @Input()
-    public save: (tags: List<string>) => Observable<any>;
+    @Input() public save: (tags: List<string>) => Observable<any>;
 
-    @Input()
-    public noTagsMessage = "";
+    @Input() public noTagsMessage = "";
 
     /**
      * Maximum number of tags to display without expanding
      */
-    @Input()
-    public maxTags = 10;
+    @Input() public maxTags = 10;
 
     public isEditing = false;
     public saving = false;
 
     public tagEditString = "";
 
-    public displayTags: List<string> = List([]);
+    @ViewChild("editButton", { read: ElementRef })
+    private _editButton: ElementRef;
 
     @ViewChild("editInput")
     private _editInput: ElementRef;
 
-    public ngOnChanges(inputs) {
-        if (inputs.tags || inputs.maxTags) {
-            this.displayTags = List<string>(this.tags.slice(0, this.maxTags));
-        }
+    constructor(private changeDetector: ChangeDetectorRef) {
     }
 
     public edit() {
         this._resetTagEditStr();
-        this.isEditing = true;
-        this._editInput.nativeElement.focus();
+        this._openForm();
     }
 
     public triggerSave() {
-        const tags = this.tagEditString.split(",");
+        const tags = List(this.tagEditString.split(","));
         this.isEditing = false;
         this.saving = true;
-        this.save(List(tags)).subscribe({
+        this.changeDetector.markForCheck();
+
+        this.save(tags).subscribe({
             next: () => {
-                this.saving = false;
+                this._closeForm();
             },
             error: (error) => {
                 log.error("Error saving tags", error);
@@ -67,14 +71,31 @@ export class TagsComponent implements OnChanges {
 
     public cancel() {
         this._resetTagEditStr();
-        this.isEditing = false;
-    }
-
-    public trackTag(index, tag: string) {
-        return tag;
+        this._closeForm();
+        this.changeDetector.markForCheck();
     }
 
     private _resetTagEditStr() {
         this.tagEditString = this.tags.join(",");
+        this.changeDetector.markForCheck();
+    }
+
+    private _openForm() {
+        this.isEditing = true;
+        this.changeDetector.markForCheck();
+
+        setTimeout(() => {
+            this._editInput.nativeElement.focus();
+        });
+    }
+
+    private _closeForm() {
+        this.isEditing = false;
+        this.saving = false;
+        this.changeDetector.markForCheck();
+
+        setTimeout(() => {
+            this._editButton.nativeElement.focus();
+        });
     }
 }
