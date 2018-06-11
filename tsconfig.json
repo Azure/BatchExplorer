@@ -59,7 +59,4 @@
     "useCache": true,
     "useWebpackText": true
   },
-  "angularCompilerOptions": {
-    "disableTypeScriptVersionCheck": true
-  }
 }
