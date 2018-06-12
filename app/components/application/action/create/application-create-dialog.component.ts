@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
 import * as storage from "azure-storage";
 import { Observable } from "rxjs";
+import { flatMap, tap } from "rxjs/operators";
 
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -87,9 +88,9 @@ export class ApplicationCreateDialogComponent {
     public submit(): Observable<any> {
         const formData = this.form.value;
 
-        return this.applicationService.put(formData.id, formData.version)
-            .flatMap((packageVersion) => this._uploadAppPackage(this.file, packageVersion.storageUrl))
-            .flatMap(() => {
+        return this.applicationService.put(formData.id, formData.version).pipe(
+            flatMap((packageVersion) => this._uploadAppPackage(this.file, packageVersion.storageUrl)),
+            tap(() => {
                 const obs =  this.applicationService.activatePackage(formData.id, formData.version);
                 obs.subscribe({
                     next: () => {
@@ -118,9 +119,8 @@ export class ApplicationCreateDialogComponent {
                         );
                     },
                 });
-
-                return obs;
-            });
+            }),
+        );
     }
 
     private _uploadAppPackage(file: File, sasUrl: string): Observable<storage.BlobService.BlobResult> {

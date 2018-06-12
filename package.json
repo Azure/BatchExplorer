@@ -43,8 +43,8 @@
     "package": "electron-builder",
     "publish": "npm run -s ts -- scripts/publish/publish.ts",
     "build-and-pack": "npm run -s build:prod && npm run -s build-python && npm run -s package",
-    "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js --trace-deprecation",
-    "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js  --trace-deprecation"
+    "webpack": "node --trace-deprecation --max_old_space_size=4096 node_modules/webpack/bin/webpack.js",
+    "webpack-dev-server": "node --trace-deprecation --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js"
   },
   "license": "MIT",
   "engines": {
@@ -94,7 +94,7 @@
     "karma-mocha-reporter": "~2.2.5",
     "karma-remap-coverage": "^0.1.5",
     "karma-sourcemap-loader": "^0.3.7",
-    "karma-webpack": "~4.0.0-beta.0",
+    "karma-webpack": "~3.0.0",
     "merge2": "~1.2.1",
     "mini-css-extract-plugin": "^0.4.0",
     "ngc-webpack": "4.1.2",
@@ -106,6 +106,7 @@
     "style-loader": "~0.21.0",
     "stylelint": "~9.2.1",
     "to-string-loader": "^1.1.5",
+    "ts-loader": "^4.4.1",
     "ts-node": "^6.1.0",
     "tslint": "~5.10.0",
     "typescript": "~2.8.3",

@@ -15,7 +15,7 @@ import { click } from "test/utils/helpers";
 import { MockEditorComponent } from "test/utils/mocks/components";
 
 // tslint:disable-next-line:no-var-requires
-const defaultSettingsStr = require("raw-loader!app/components/settings/default-settings.json");
+const defaultSettingsStr = require("app/components/settings/default-settings.json");
 
 const userInitialSettings = `{\n"other": "overide"\n}`;
 const validUserSettings = `{\n"other": "new value"\n}`;
