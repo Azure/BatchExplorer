@@ -4,7 +4,6 @@ const webpack = require("webpack");
 const merge = require("webpack-merge");
 const helpers = require("./helpers");
 const DefinePlugin = require("webpack/lib/DefinePlugin");
-const DllBundlesPlugin = require("webpack-dll-bundles-plugin").DllBundlesPlugin;
 const AddAssetHtmlPlugin = require("add-asset-html-webpack-plugin");
 const WriteFilePlugin = require("write-file-webpack-plugin");
 const { defineEnv } = require("./webpack.common");
@@ -59,41 +58,13 @@ module.exports = merge(config, {
     },
     plugins: [
         defineEnv(ENV),
+        new webpack.EvalSourceMapDevToolPlugin({
+            moduleFilenameTemplate: "[resource-path]",
+            sourceRoot: "webpack:///"
+        }),
+
         new WriteFilePlugin({
             test: /vendor\/vs.*/
         }),
-        new DllBundlesPlugin({
-            bundles: {
-                polyfills: [
-                    "reflect-metadata",
-                    "core-js",
-                    "zone.js",
-                ],
-                vendor: [
-                    "@angular/platform-browser",
-                    "@angular/platform-browser-dynamic",
-                    "@angular/core",
-                    "@angular/common",
-                    "@angular/forms",
-                    "@angular/http",
-                    "@angular/router",
-                    "rxjs",
-                    "immutable",
-                    "moment",
-                    "inflection",
-                    "d3",
-                    "chart.js",
-                ],
-            },
-            dllDir: helpers.root("dll"),
-            webpackConfig: webpackMergeDll(config, {
-                devtool: "cheap-module-source-map",
-                plugins: [],
-            }),
-        }),
-        new AddAssetHtmlPlugin([
-            { filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile("polyfills")}`) },
-            { filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile("vendor")}`) },
-        ]),
     ],
 });
