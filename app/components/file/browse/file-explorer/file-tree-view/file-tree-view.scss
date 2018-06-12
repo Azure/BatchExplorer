@@ -66,6 +66,10 @@ bl-file-tree-view {
         }
     }
 
+    .label {
+        margin-left: 3px;
+    }
+
     .tree-view-content {
         position: relative;
         height: calc(100% - #{$tree-view-header-height});

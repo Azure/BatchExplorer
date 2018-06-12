@@ -1,13 +1,13 @@
 import { ServerError } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { log } from "@batch-flask/utils";
-import { List } from "immutable";
-import { AsyncSubject, BehaviorSubject, Observable, Subscription } from "rxjs";
-
 import { File } from "app/models";
 import { DataCache, ListGetter } from "app/services/core";
 import { FileLoader } from "app/services/file";
 import { CloudPathUtils, StringUtils } from "app/utils";
+import { List } from "immutable";
+import { AsyncSubject, BehaviorSubject, Observable, Subscription } from "rxjs";
+import { mergeMap, shareReplay } from "rxjs/operators";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 
 export interface DeleteProgress {
@@ -130,9 +130,14 @@ export class FileNavigator<TParams = any> {
      * @param openInNewTab If its the path to a file it will open the file in a new tab
      */
     public loadPath(path: string) {
-        return this.getNode(path).flatMap((node) => {
-            return this._loadFilesInPath(path);
-        }).shareReplay(1);
+        const obs = this.getNode(path).pipe(
+            mergeMap((node) => {
+                return this._loadFilesInPath(path);
+            }),
+            shareReplay(1),
+        );
+        obs.subscribe(); // Make sure it trigger at least once
+        return obs;
     }
 
     public listAllFiles(path: string = ""): Observable<List<File>> {

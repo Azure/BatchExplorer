@@ -13,7 +13,7 @@ bl-button {
     vertical-align: middle;
     line-height: $action-btn-size;
     position: relative;
-
+    margin: 2px;
     .hide {
         opacity: 0;
     }
