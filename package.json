@@ -96,6 +96,7 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "~3.0.0",
     "merge2": "~1.2.1",
+    "mini-css-extract-plugin": "^0.4.0",
     "ngc-webpack": "4.1.2",
     "node-sass": "~4.9.0",
     "optimize-js-plugin": "0.0.4",

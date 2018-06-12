@@ -21,3 +21,5 @@ import "moment-duration-format";
 import "test/utils/matchers";
 
 import "../../app/styles/main.scss";
+
+import "rxjs-compat";
