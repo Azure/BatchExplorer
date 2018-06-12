@@ -1,4 +1,4 @@
-import { animate, style, transition, trigger } from "@angular/animations"
+import { animate, style, transition, trigger } from "@angular/animations";
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input,
 } from "@angular/core";

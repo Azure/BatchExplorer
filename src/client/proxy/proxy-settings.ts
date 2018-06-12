@@ -8,7 +8,7 @@ import { BatchLabsApplication } from "client/core";
 import { LocalStorage } from "client/core/local-storage";
 import { Constants } from "common";
 import { BehaviorSubject } from "rxjs";
-import { take, map, filter } from "rxjs/operators";
+import { filter, map, take } from "rxjs/operators";
 
 export interface ProxySettingConfiguration {
     settings: ProxySettings;

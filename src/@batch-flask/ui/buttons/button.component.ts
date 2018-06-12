@@ -1,3 +1,4 @@
+import { animate, style, transition, trigger } from "@angular/animations";
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -6,7 +7,6 @@ import {
     Injector,
     Input,
 } from "@angular/core";
-import { animate, style, transition, trigger } from "@angular/animations"
 import { Observable } from "rxjs";
 
 import { log } from "@batch-flask/utils";

@@ -122,7 +122,7 @@ export class PricingService {
     }
 
     private _loadPricingFromApi() {
-        const obs = this._loadRateCardMeters().map((x) => this._processMeters(x))
+        const obs = this._loadRateCardMeters().map((x) => this._processMeters(x));
         obs.subscribe((map) => {
             this._savePricing(map);
             this._pricingMap.next(map);

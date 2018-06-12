@@ -1,9 +1,9 @@
 import { Injectable, OnDestroy } from "@angular/core";
+import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
 import { AppUpdater, UpdateCheckResult, UpdateInfo } from "electron-updater";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
-import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
-import { ElectronRemote } from "./remote.service";
 import { map } from "rxjs/operators";
+import { ElectronRemote } from "./remote.service";
 
 export enum UpdateStatus {
     Checking,

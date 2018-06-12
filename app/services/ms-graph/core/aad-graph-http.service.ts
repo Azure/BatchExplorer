@@ -10,6 +10,7 @@ import { AdalService } from "app/services/adal";
 import { BatchLabsService } from "app/services/batch-labs.service";
 import { AADUser } from "client/core/aad/adal/aad-user";
 import { Constants } from "common";
+import { flatMap, shareReplay, take } from "rxjs/operators";
 
 @Injectable()
 export class AADGraphHttpService extends HttpService {
@@ -28,14 +29,14 @@ export class AADGraphHttpService extends HttpService {
     }
 
     public request<T = any>(method: string, uri: string, options: any): Observable<T> {
-        return this.accountService.currentAccount.take(1)
-            .flatMap((account) => {
+        return this.accountService.currentAccount.pipe(
+            take(1),
+            flatMap((account) => {
                 const tenantId = account.subscription.tenantId;
                 return this.adal.accessTokenData(tenantId, this.serviceUrl)
                     .flatMap((accessToken) => {
                         options = this.addAuthorizationHeader(options, accessToken);
                         options = this._addApiVersion(options);
-                        // TODO-TIM check dis (as any)
                         return this.http.request<T>(
                             method,
                             this._computeUrl(uri, tenantId),
@@ -46,7 +47,9 @@ export class AADGraphHttpService extends HttpService {
                                 return Observable.throw(err);
                             }) as any;
                     });
-            }).shareReplay(1);
+            }),
+            shareReplay(1),
+        );
     }
 
     private _addApiVersion(options: HttpRequestOptions): HttpRequestOptions {

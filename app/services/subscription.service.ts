@@ -25,7 +25,6 @@ export class SubscriptionService {
         this.subscriptions = this._subscriptionsLoaded
             .flatMap(() => Observable.combineLatest(this._subscriptions, this._ignoredSubscriptionPatterns))
             .map(([subscriptions, ignoredPatterns]) => {
-                console.log("Ignroed", ignoredPatterns);
                 return this._ignoreSubscriptions(subscriptions, ignoredPatterns);
             }).shareReplay(1);
 
