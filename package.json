@@ -27,7 +27,7 @@
     "test-client": "cross-env  NODE_ENV=test node test/client/run-jasmine.js",
     "test-client-watch": "npm run -s test-client -- --watch",
     "build-client": " tsc -p tsconfig.node.json",
-    "build-app": "npm run webpack -- --profile --colors --display-error-details --display-cached",
+    "build-app": "npm run webpack -- --profile --colors --display-error-details --display-cached --progress",
     "build-python": "pyinstaller python/main.spec -y --distpath=python/dist --workpath=python/build",
     "build": "npm run -s clean && npm run -s build-client && npm run -s build-app",
     "build:prod": "cross-env NODE_ENV=production npm run -s build",
