@@ -1,11 +1,9 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy,
 } from "@angular/core";
-import * as moment from "moment";
-import { Subscription } from "rxjs";
-
 import { DateUtils } from "@batch-flask/utils";
-import { Observable } from "rxjs/Observable";
+import * as moment from "moment";
+import { Observable, Subscription } from "rxjs";
 
 export enum TimespanDisplayType {
     humanized = "humanized",

@@ -4,7 +4,7 @@ import { COMMAND_LABEL_ICON, ElectronRemote, EntityCommand, EntityCommands, Perm
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, JobSchedule, JobState } from "app/models";
 import { FileSystemService, JobService, PinnedEntityService } from "app/services";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import { JobScheduleCreateBasicDialogComponent } from "../../job-schedule/action";
 import { TaskCreateBasicDialogComponent } from "../../task/action";
 import { JobCreateBasicDialogComponent, PatchJobComponent } from "./add";

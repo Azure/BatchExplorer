@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule, By } from "@angular/platform-browser";
 import { ServerError } from "@batch-flask/core";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 
 import { JobService } from "app/services";
 import { JobIdComponent } from "./job-id.component";

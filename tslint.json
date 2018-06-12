@@ -3,6 +3,7 @@
   "defaultSeverity": "error",
   "rulesDirectory": [
     "node_modules/codelyzer",
+    "node_modules/rxjs-tslint",
     "scripts/tslint"
   ],
   "rules": {
@@ -54,6 +55,7 @@
     "ban-comma-operator": true,
     "prefer-while": true,
     "comment-format": [true, "check-space"],
+    "prefer-const": true,
     // "no-dynamic-delete": true,
     // "prefer-readonly": true,
 
@@ -78,8 +80,12 @@
     "no-shadowed-variable": false,
     "trackBy-function": true,
     "banana-in-box": true,
-    // TODO enable
-    "prefer-const": true
+
+    // Rxjs
+    "rxjs-collapse-imports": true,
+    "rxjs-pipeable-operators-only": true,
+    "rxjs-no-static-observable-methods": true,
+    "rxjs-proper-imports": true
   },
   "jsRules": {
     "object-literal-sort-keys": false,

@@ -102,6 +102,7 @@
     "optimize-js-plugin": "0.0.4",
     "raw-loader": "~0.5.1",
     "rimraf": "~2.6.2",
+    "rxjs-tslint": "^0.1.4",
     "sass-loader": "~7.0.3",
     "style-loader": "~0.21.0",
     "stylelint": "~9.2.1",

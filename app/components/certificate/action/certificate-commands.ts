@@ -3,7 +3,7 @@ import { COMMAND_LABEL_ICON, ElectronRemote, EntityCommand, EntityCommands, Perm
 
 import { Certificate, CertificateState } from "app/models";
 import { CertificateService, FileSystemService, PinnedEntityService } from "app/services";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 
 @Injectable()
 export class CertificateCommands extends EntityCommands<Certificate> {
