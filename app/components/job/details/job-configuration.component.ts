@@ -50,7 +50,7 @@ export class JobConfigurationComponent {
         const ref = this.sidebarManager.open(`edit-job-metadata-${id}`, EditMetadataFormComponent);
         ref.component.metadata = this.job.metadata;
         ref.component.save = (metadata) => {
-            return this.jobService.patch(id, new JobPatchDto({ metadata })).cascade(() => this.jobService.get(id));
+            return this.jobService.patch(id, new JobPatchDto({ metadata })).flatMap(() => this.jobService.get(id));
         };
     }
 

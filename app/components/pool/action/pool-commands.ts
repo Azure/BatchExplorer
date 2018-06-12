@@ -3,7 +3,7 @@ import {
     COMMAND_LABEL_ICON, DialogService, ElectronRemote,
     EntityCommand, EntityCommands, Permission, SidebarManager,
 } from "@batch-flask/ui";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";

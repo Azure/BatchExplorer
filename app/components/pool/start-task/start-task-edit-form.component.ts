@@ -67,7 +67,7 @@ export class StartTaskEditFormComponent {
                 startTask: startTask,
             }));
         } else {
-            obs = this.poolService.get(this.pool.id).cascade((pool) => {
+            obs = this.poolService.get(this.pool.id).flatMap((pool) => {
                 const poolData = pool.toJS();
                 return this.poolService.replaceProperties(id, new PoolPatchDto({
                     applicationPackageReferences: poolData.applicationPackageReferences || [],
@@ -76,7 +76,7 @@ export class StartTaskEditFormComponent {
                 }));
             });
         }
-        return obs.cascade(() => {
+        return obs.flatMap(() => {
             this._notifySuccess();
             return this.poolService.get(id); // Refresh the pool
 

@@ -108,7 +108,7 @@ export class SubscriptionService {
                 } else {
                     return Observable.empty();
                 }
-            }).reduce((subs, response) => {
+            }).reduce((subs, response: any) => {
                 const newSubs = response.json().value.map(x => this._createSubscription(tenantDetails, x));
                 return [...subs, ...newSubs];
             }, []);

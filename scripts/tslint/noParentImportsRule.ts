@@ -37,16 +37,16 @@ function walk(ctx: Lint.WalkContext<string[]>) {
     }
 }
 
-function checkForbidenImport(ctx: Lint.WalkContext<string[]>, name, forbidenImports: string[]) {
-    for (const forbidden of forbidenImports) {
-        const regex = new RegExp(`^${forbidden.replace(/\*/g, ".*")}$`);
-        if (regex.test(name.text)) {
-            const message = `${Rule.FAILURE_STRING} "${forbidden}"`;
-            ctx.addFailure(name.getStart(ctx.sourceFile) + 1, name.end - 1, message);
-            break;
-        }
-    }
-}
+// function checkForbidenImport(ctx: Lint.WalkContext<string[]>, name, forbidenImports: string[]) {
+//     for (const forbidden of forbidenImports) {
+//         const regex = new RegExp(`^${forbidden.replace(/\*/g, ".*")}$`);
+//         if (regex.test(name.text)) {
+//             const message = `${Rule.FAILURE_STRING} "${forbidden}"`;
+//             ctx.addFailure(name.getStart(ctx.sourceFile) + 1, name.end - 1, message);
+//             break;
+//         }
+//     }
+// }
 
 function findBase(file: string) {
     for (const entry of forbiddenImports) {

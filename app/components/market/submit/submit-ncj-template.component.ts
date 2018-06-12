@@ -182,7 +182,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     private _createJobWithAutoPool() {
         this._saveTemplateAsRecent();
         return this.ncjSubmitService.expandPoolTemplate(this.poolTemplate, this.poolParams.value)
-            .cascade(data => this._runJobWithPool(data));
+            .flatMap(data => this._runJobWithPool(data));
     }
 
     @autobind()
@@ -192,25 +192,28 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             jobTemplate.job.properties.poolInfo = this.pickedPool.value;
         }
         this._saveTemplateAsRecent();
-        return this.ncjSubmitService.submitJob(jobTemplate, this.jobParams.value)
-            .cascade((data) => this._redirectToJob(data.properties.id));
+        const obs = this.ncjSubmitService.submitJob(jobTemplate, this.jobParams.value);
+        obs.subscribe((data) => this._redirectToJob(data.properties.id));
+        return obs;
     }
 
     @autobind()
     private _createPool() {
         this._saveTemplateAsRecent();
-        return this.ncjSubmitService.createPool(this.poolTemplate, this.poolParams.value)
-            .cascade((data) => {
-                if (this.jobTemplate) {
-                    // Dave wants it to never redirect to pool in this context when we also have a job template.
-                    const message = `Create Pool with ID: '${data.id}' was successfully submitted to the service.`;
-                    this.notificationService.success("Create Pool", message, { autoDismiss: 5000 });
-                    this.pickMode(NcjTemplateMode.ExistingPoolAndJob);
-                    this.pickedPool.setValue({ poolId: data.id });
-                } else {
-                    this._redirectToPool(data.id);
-                }
-            });
+        const obs = this.ncjSubmitService.createPool(this.poolTemplate, this.poolParams.value);
+        obs.subscribe((data) => {
+            if (this.jobTemplate) {
+                // Dave wants it to never redirect to pool in this context when we also have a job template.
+                const message = `Create Pool with ID: '${data.id}' was successfully submitted to the service.`;
+                this.notificationService.success("Create Pool", message, { autoDismiss: 5000 });
+                this.pickMode(NcjTemplateMode.ExistingPoolAndJob);
+                this.pickedPool.setValue({ poolId: data.id });
+            } else {
+                this._redirectToPool(data.id);
+            }
+        });
+
+        return obs;
     }
 
     private _checkForAutoPoolParam() {
@@ -357,9 +360,10 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
                 pool: pool,
             },
         };
+        const obs = this.ncjSubmitService.submitJob(jobTemplate, this.jobParams.value);
+        obs.subscribe((data) => this._redirectToJob(data.properties.id));
 
-        return this.ncjSubmitService.submitJob(jobTemplate, this.jobParams.value)
-            .cascade((data) => this._redirectToJob(data.properties.id));
+        return obs;
     }
 
     private _saveTemplateAsRecent() {

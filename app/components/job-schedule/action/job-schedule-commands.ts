@@ -1,10 +1,9 @@
 import { Injectable, Injector } from "@angular/core";
 import { COMMAND_LABEL_ICON, ElectronRemote, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
-
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { JobSchedule, JobScheduleState } from "app/models";
 import { FileSystemService, JobScheduleService, PinnedEntityService } from "app/services";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import { JobScheduleCreateBasicDialogComponent, PatchJobScheduleComponent } from "./add";
 
 @Injectable()

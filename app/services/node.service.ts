@@ -176,7 +176,7 @@ export class NodeService extends ServiceBase {
                 options.filter = FilterBuilder.or(...states.map(x => FilterBuilder.prop("state").eq(x)));
             }
             bTask.progress.next(1);
-            return this.listAll(poolId, options).cascade((nodes) => {
+            return this.listAll(poolId, options).flatMap((nodes) => {
                 const chunks = ArrayUtils.chunk<Node>(nodes.toJS(), 100);
                 const chunkFuncs = chunks.map((chunk, i) => {
                     return () => {

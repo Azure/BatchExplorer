@@ -43,7 +43,7 @@ export class AzureBatchHttpService extends HttpService {
                             .catch((error) => {
                                 const err = ServerError.fromBatchHttp(error);
                                 return Observable.throw(err);
-                            });
+                            }) as any;
                     });
             }).shareReplay(1);
     }

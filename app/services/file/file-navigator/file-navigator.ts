@@ -130,7 +130,7 @@ export class FileNavigator<TParams = any> {
      * @param openInNewTab If its the path to a file it will open the file in a new tab
      */
     public loadPath(path: string) {
-        return this.getNode(path).cascade((node) => {
+        return this.getNode(path).flatMap((node) => {
             return this._loadFilesInPath(path);
         }).shareReplay(1);
     }

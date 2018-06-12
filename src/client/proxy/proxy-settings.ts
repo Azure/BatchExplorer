@@ -8,6 +8,7 @@ import { BatchLabsApplication } from "client/core";
 import { LocalStorage } from "client/core/local-storage";
 import { Constants } from "common";
 import { BehaviorSubject } from "rxjs";
+import { filter, map, take } from "rxjs/operators";
 
 export interface ProxySettingConfiguration {
     settings: ProxySettings;
@@ -40,7 +41,11 @@ export class ProxySettingsManager {
     }
 
     public get settings(): Promise<ProxySettings> {
-        return this._settings.filter(x => x !== undefined).take(1).map(x => x.settings).toPromise();
+        return this._settings.pipe(
+            filter(x => x !== undefined),
+            take(1),
+            map(x => x.settings),
+        ).toPromise();
     }
 
     public async configureManualy(): Promise<ProxySettings> {

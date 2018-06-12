@@ -5,7 +5,7 @@ import { SecureUtils } from "@batch-flask/utils";
 import { RoleAssignment, RoleDefinition } from "app/models";
 import { ArmListGetter, TargetedDataCache } from "app/services/core";
 import { List } from "immutable";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import { AccountService } from "../account.service";
 import { ArmHttpService } from "../arm-http.service";
 

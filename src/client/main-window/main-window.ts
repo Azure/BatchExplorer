@@ -1,8 +1,7 @@
 import { BrowserWindow, app, ipcMain } from "electron";
 
 import { log } from "@batch-flask/utils";
-import { BehaviorSubject } from "rxjs";
-import { Observable } from "rxjs/Observable";
+import { BehaviorSubject, Observable } from "rxjs";
 import { Constants } from "../client-constants";
 import { BatchLabsApplication, FileSystem, GenericWindow, LocalFileStorage } from "../core";
 import { renderLogger } from "../logger";

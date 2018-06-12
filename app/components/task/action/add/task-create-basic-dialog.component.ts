@@ -73,10 +73,10 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
     }
 
     public ngOnInit(): void {
-        this.jobService.get(this.jobId).cascade((job) => {
+        this.jobService.get(this.jobId).subscribe((job) => {
             const jobData = job.toJS();
             if (jobData.poolInfo && jobData.poolInfo.poolId) {
-                this.poolService.get(jobData.poolInfo.poolId).cascade((pool) => {
+                this.poolService.get(jobData.poolInfo.poolId).subscribe((pool) => {
                     const poolData = pool.toJS();
                     this.virtualMachineConfiguration = poolData.virtualMachineConfiguration;
                     this.userAccounts = poolData.userAccounts;

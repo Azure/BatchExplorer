@@ -10,8 +10,7 @@ import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { FormModule } from "@batch-flask/ui/form";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { Subject } from "rxjs";
-import { Observable } from "rxjs/Observable";
+import { Observable, Subject } from "rxjs";
 
 import { FileGroupPickerComponent } from "app/components/data/shared";
 import { CloudFilePickerComponent } from "app/components/data/shared/cloud-file-picker";

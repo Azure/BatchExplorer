@@ -14,22 +14,22 @@ export class JsonLanguage {
         monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
             schemas: [{
                 uri: "//internal/pool.template.json",
-                fileMatch: [ "*.pool.batch.json" ],
+                fileMatch: ["*.pool.batch.json"],
                 schema: poolTemplate,
             },
             {
                 uri: "//internal/job.template.json",
-                fileMatch: [ "*.job.batch.json" ],
+                fileMatch: ["*.job.batch.json"],
                 schema: jobTemplate,
             },
             {
                 uri: "//internal/task.template.json",
-                fileMatch: [ "*.task.batch.json" ],
+                fileMatch: ["*.task.batch.json"],
                 schema: taskTemplate,
             },
             {
                 uri: "//internal/jobscheduleTemplate.template.json",
-                fileMatch: [ "*.jobschedule.batch.json" ],
+                fileMatch: ["*.jobschedule.batch.json"],
                 schema: jobscheduleTemplate,
             }],
         });

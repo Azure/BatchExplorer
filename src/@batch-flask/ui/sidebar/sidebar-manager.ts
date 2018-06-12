@@ -82,14 +82,18 @@ export class SidebarManager {
      * Event when the sidebar is fully open.
      */
     public get onOpen(): Observable<void> {
-        return this.sidebar.onOpen;
+        // TODO-TIM Chceck this
+        return null;
+        // return this.sidebar.opened;
     }
 
     /**
      * Event when the sidebar is closed.
      */
     public get onClosed(): Observable<void> {
-        return  this.sidebar.onClose;
+        // TODO-TIM Chceck this
+        return null;
+        // return  this.sidebar.closeed;
     }
 
     private updateReferenceSubject() {

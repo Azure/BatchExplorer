@@ -1,5 +1,6 @@
 import { AbstractControl, FormControl, FormGroup } from "@angular/forms";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
+import { filter, map, take } from "rxjs/operators";
 
 export class FormUtils {
     public static getControl(formGroup: FormGroup, path: string | string[]): AbstractControl {
@@ -18,11 +19,15 @@ export class FormUtils {
         processErrors = processErrors || ((errors) => errors);
 
         if (control.status === "PENDING") {
-            return control.statusChanges.filter(x => x !== "PENDING").take(1).map(() => {
-                return processErrors(control.errors);
-            });
+            return control.statusChanges.pipe(
+                filter(x => x !== "PENDING"),
+                take(1),
+                map(() => {
+                    return processErrors(control.errors);
+                }),
+            );
         } else {
-            return Observable.of(processErrors(control.errors));
+            return of(processErrors(control.errors));
         }
     }
 }

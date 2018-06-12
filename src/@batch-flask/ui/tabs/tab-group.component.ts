@@ -41,11 +41,11 @@ export class TabGroupComponent implements AfterViewInit, OnInit {
         });
     }
 
-    public changeTab(event) {
-        if (event.index === this.selectedIndex) {
+    public changeTab(index: number) {
+        if (index === this.selectedIndex) {
             return;
         }
-        const tab = this.tabs.toArray()[event.index];
+        const tab = this.tabs.toArray()[index];
         const tabKey = tab.key;
         this.router.navigate([], {
             relativeTo: this.activeRoute,

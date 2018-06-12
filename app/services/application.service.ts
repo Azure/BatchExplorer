@@ -109,6 +109,7 @@ export class ApplicationService extends ServiceBase {
      * @param version: selected package version
      */
     public put(applicationId: string, version: string): Observable<ApplicationPackage> {
+
         return this.arm
             .put(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`)
             .map(response => new ApplicationPackage(response.json()));

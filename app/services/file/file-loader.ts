@@ -129,7 +129,7 @@ export class FileLoader {
      * @returns observable that resolve the path of the cached file when done caching
      */
     public cache(): Observable<string> {
-        return this.getProperties().cascade((file: File) => {
+        return this.getProperties().flatMap((file: File) => {
             const destination = this._getCacheDestination(file);
             return Observable.fromPromise(this._fs.exists(destination)).flatMap((exists) => {
                 if (exists) {

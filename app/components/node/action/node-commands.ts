@@ -85,12 +85,12 @@ export class NodeCommands extends EntityCommands<Node> {
 
     private _reboot(node: Node) {
         return this.nodeService.reboot(this.pool.id, node.id)
-            .cascade(() => this.nodeService.get(this.pool.id, node.id));
+            .flatMap(() => this.nodeService.get(this.pool.id, node.id));
     }
 
     private _delete(node: Node) {
         return this.nodeService.delete(this.pool.id, node.id)
-            .cascade(() => this.nodeService.get(this.pool.id, node.id));
+            .flatMap(() => this.nodeService.get(this.pool.id, node.id));
     }
 
     private _editStartTask(node: Node) {
