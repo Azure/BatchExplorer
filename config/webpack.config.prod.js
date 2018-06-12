@@ -5,7 +5,6 @@ const DefinePlugin = require("webpack/lib/DefinePlugin");
 const webpack = require("webpack");
 const LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 const merge = require("webpack-merge");
-const OptimizeJsPlugin = require("optimize-js-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { defineEnv } = require("./webpack.common");
 
@@ -67,15 +66,6 @@ module.exports = merge(config, {
 
     },
     plugins: [
-        /**
-         * Webpack plugin to optimize a JavaScript file for faster initial load
-         * by wrapping eagerly-invoked functions.
-         *
-         * @see https://github.com/vigneshshanmugam/optimize-js-plugin
-         */
-        new OptimizeJsPlugin({
-            sourceMap: false
-        }),
         /**
          * Plugin: ExtractTextPlugin
          * Description: Extracts imported CSS files into external stylesheet

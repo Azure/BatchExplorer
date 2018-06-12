@@ -99,7 +99,6 @@
     "mini-css-extract-plugin": "^0.4.0",
     "ngc-webpack": "4.1.2",
     "node-sass": "~4.9.0",
-    "optimize-js-plugin": "0.0.4",
     "raw-loader": "~0.5.1",
     "rimraf": "~2.6.2",
     "sass-loader": "~7.0.3",
