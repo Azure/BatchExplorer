@@ -7,6 +7,7 @@ const DefinePlugin = require("webpack/lib/DefinePlugin");
 const AddAssetHtmlPlugin = require("add-asset-html-webpack-plugin");
 const WriteFilePlugin = require("write-file-webpack-plugin");
 const { defineEnv } = require("./webpack.common");
+const EvalSourceMapDevToolPlugin = require("webpack/lib/EvalSourceMapDevToolPlugin");
 
 const webpackMergeDll = merge.strategy({ plugins: "replace" });
 
@@ -15,7 +16,7 @@ const host = "localhost";
 const port = process.env.PORT || 3178;
 
 module.exports = merge(config, {
-    devtool: "cheap-module-source-map",
+    // devtool: "cheap-module-source-map",
     mode: "development",
     devServer: {
         host,
@@ -62,6 +63,10 @@ module.exports = merge(config, {
         ],
     },
     plugins: [
+        new EvalSourceMapDevToolPlugin({
+            moduleFilenameTemplate: "[resource-path]",
+            sourceRoot: "webpack:///"
+        }),
         defineEnv(ENV),
         new WriteFilePlugin({
             test: /vendor\/vs.*/

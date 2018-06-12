@@ -17,6 +17,7 @@ bl-file-content {
 
         .options > button {
             padding: 10px;
+            margin: 5px;
             cursor: pointer;
             background: map-get($primary, 300);
             color: $whitesmoke;
