@@ -2,7 +2,6 @@
     <div code>{{ loadingError.code }}</div>
     <div message [title]="loadingError.message">{{ loadingError.message }}</div>
 </bl-banner>
-
 <bl-loading [status]="data.status">
     <div *ngIf="account">
         <bl-summary-card>

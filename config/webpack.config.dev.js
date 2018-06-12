@@ -20,6 +20,11 @@ module.exports = merge(config, {
     devServer: {
         host,
         port,
+        stats: {
+            // Angular emits warning which are spaming the console
+            warnings: false,
+        },
+        clientLogLevel: "error",
     },
     output: {
         path: path.join(__dirname, "../build/"),
@@ -58,11 +63,6 @@ module.exports = merge(config, {
     },
     plugins: [
         defineEnv(ENV),
-        new webpack.EvalSourceMapDevToolPlugin({
-            moduleFilenameTemplate: "[resource-path]",
-            sourceRoot: "webpack:///"
-        }),
-
         new WriteFilePlugin({
             test: /vendor\/vs.*/
         }),
