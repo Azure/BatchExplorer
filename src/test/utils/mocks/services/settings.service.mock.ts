@@ -5,7 +5,7 @@ const stripJsonComments = require("strip-json-comments");
 import { SettingsService } from "app/services";
 
 // tslint:disable-next-line:no-var-requires
-const defaultSettings = JSON.parse(stripJsonComments(require("raw-loader!app/components/settings/default-settings.json")));
+const defaultSettings = JSON.parse(stripJsonComments(require("app/components/settings/default-settings.json")));
 
 export class MockSettingsService {
     public static asProvider() {

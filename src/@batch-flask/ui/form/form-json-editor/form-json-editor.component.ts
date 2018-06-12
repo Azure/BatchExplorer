@@ -12,7 +12,6 @@ const emptyJson = "{\n\n}";
     selector: "bl-form-json-editor",
     templateUrl: "form-json-editor.html",
     providers: [
-        // tslint:disable-next-line:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FormJsonEditorComponent), multi: true },
     ],
 })
