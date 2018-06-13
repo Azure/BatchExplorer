@@ -9,7 +9,7 @@ const feedUrl = "https://batchlabsdist.blob.core.windows.net/releases";
 
 function getLatest(source) {
     const url = `${feedUrl}/${source}`;
-    return fetch(url).then((res) => {
+    return fetch(url, { cache: "no-cache" }).then((res) => {
         return res.text();
     }).then(content => {
         return jsyaml.load(content);
