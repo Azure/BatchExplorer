@@ -9,6 +9,7 @@ import {
     OnDestroy,
     Optional,
     Self,
+    ViewChild,
 } from "@angular/core";
 import {
     ControlValueAccessor,
@@ -50,8 +51,11 @@ let nextUniqueId = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DurationPickerComponent implements FormFieldControl<any>, ControlValueAccessor, OnChanges, OnDestroy {
-    get id(): string { return this._id; }
-    set id(value: string) { this._id = value || this._uid; }
+    public ConstraintsUnit = ConstraintsUnit;
+
+    @Input()
+    public get id(): string { return this._id; }
+    public set id(value: string) { this._id = value || this._uid; }
 
     @Input()
     @HostBinding("attr.aria-label")
@@ -81,23 +85,20 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
 
     public value: moment.Duration;
 
-    // set default unit value to 'minutes'
+    public time: number;
     public unit: ConstraintsUnit = ConstraintsUnit.Unlimited;
-    public ConstraintsUnit = ConstraintsUnit;
+
+    @HostBinding("attr.aria-describedby")
+    public ariaDescribedby: string;
+
     protected _uid = `bl-input-${nextUniqueId++}`;
 
     protected _propagateChange: (value: moment.Duration) => void = null;
     protected _duration: moment.Duration;
+
+    @ViewChild("inputEl") private _inputEl: ElementRef;
     private _id: string;
     private _disabled: boolean;
-
-    public get duration(): moment.Duration {
-        return this._duration;
-    }
-
-    public set duration(value: moment.Duration) {
-        this._duration = value;
-    }
 
     constructor(
         private changeDetector: ChangeDetectorRef,
@@ -118,29 +119,13 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
         this.stateChanges.complete();
     }
 
-    public onTimeChange(event) {
-        this.duration = this._getDuration();
-        if (this._propagateChange) {
-            this._propagateChange(this.duration);
-        }
-    }
-
-    public updateUnit(unit: ConstraintsUnit) {
-        this.unit = unit;
-        this.duration = this._getDuration();
-        if (this._propagateChange) {
-            this._propagateChange(this.duration);
-        }
-        this.changeDetector.markForCheck();
-    }
-
     public writeValue(value: moment.Duration | string): void {
         if (value === null || value === undefined) {
-            this.duration = null;
+            this.value = null;
         } else if (moment.isMoment(value)) {
-            this.duration = value as moment.Duration;
+            this.value = value as moment.Duration;
         } else {
-            this.duration = moment.duration(value);
+            this.value = moment.duration(value);
         }
         this._setValueAndUnit();
     }
@@ -158,10 +143,28 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
     }
 
     public setDescribedByIds(ids: string[]): void {
-        throw new Error("Method not implemented.");
+        this.ariaDescribedby = ids.join(" ");
     }
     public onContainerClick(event: MouseEvent): void {
-        throw new Error("Method not implemented.");
+        this._inputEl.nativeElement.focus();
+    }
+
+    public updateTime(time: number) {
+        this.time = time;
+        this.value = this._getDuration();
+        if (this._propagateChange) {
+            this._propagateChange(this.value);
+        }
+        this.changeDetector.markForCheck();
+    }
+
+    public updateUnit(unit: ConstraintsUnit) {
+        this.unit = unit;
+        this.value = this._getDuration();
+        if (this._propagateChange) {
+            this._propagateChange(this.value);
+        }
+        this.changeDetector.markForCheck();
     }
 
     private _getDuration(): moment.Duration {
@@ -169,9 +172,9 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
             case ConstraintsUnit.Unlimited:
                 return null;
             case ConstraintsUnit.Custom:
-                return moment.duration(this.value);
+                return moment.duration(this.time);
             default:
-                const duration = moment.duration(this.value, this.unit);
+                const duration = moment.duration(Number(this.time), this.unit);
                 return this._isDurationUnlimited(duration) ? null : duration;
         }
     }

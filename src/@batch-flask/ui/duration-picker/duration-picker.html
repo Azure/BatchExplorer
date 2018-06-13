@@ -1,5 +1,5 @@
 <div class="input-container">
-    <input blInput [disabled]="unit === ConstraintsUnit.Unlimited"/>
+    <input [placeholder]="placeholder" blInput [disabled]="unit === ConstraintsUnit.Unlimited" [ngModel]="time" (ngModelChange)="updateTime($event)"/>
     <div class="unit-picker">
         <bl-select [ngModel]="unit" (ngModelChange)="updateUnit($event)" placeholder="Unit">
             <bl-option [value]="ConstraintsUnit.Unlimited" label="Unlimited" *ngIf="allowUnlimited"></bl-option>
@@ -11,4 +11,3 @@
         </bl-select>
     </div>
 </div>
-Computed: {{duration}}
