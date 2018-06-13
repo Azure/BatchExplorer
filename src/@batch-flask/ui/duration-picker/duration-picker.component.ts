@@ -89,7 +89,8 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
     public unit: ConstraintsUnit = ConstraintsUnit.Unlimited;
 
     // Validation fields
-    public timeInvalidNumber = false;
+    public invalidTimeNumber = false;
+    public invalidCustomDuration = false;
 
     @HostBinding("attr.aria-describedby")
     public ariaDescribedby: string;
@@ -130,7 +131,8 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
         } else {
             this.value = moment.duration(value);
         }
-        this._setValueAndUnit();
+        this._setTimeAndUnitFromDuration(this.value);
+        this.changeDetector.markForCheck();
     }
 
     public registerOnChange(fn) {
@@ -142,7 +144,7 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
     }
 
     public validate() {
-        if (this.timeInvalidNumber) {
+        if (this.invalidTimeNumber || this.invalidCustomDuration) {
             return {
                 duration: "Invalid",
             };
@@ -176,17 +178,17 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
     }
 
     private _getDuration(): moment.Duration {
-        this.timeInvalidNumber = false;
+        this.invalidTimeNumber = false;
 
         switch (this.unit) {
             case ConstraintsUnit.Unlimited:
                 return null;
             case ConstraintsUnit.Custom:
-                return moment.duration(this.time);
+                return this._getCustomDuration(this.time);
             default:
                 const time = Number(this.time);
                 if (isNaN(time)) {
-                    this.timeInvalidNumber = true;
+                    this.invalidTimeNumber = true;
                     return null;
                 } else {
                     const duration = moment.duration(Number(this.time), this.unit);
@@ -209,30 +211,52 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
      * Unit is checked from 'days' to 'seconds'. Value will be taken when current unit has an integer value,
      * otherwise next smaller unit will be checked until last unit.
      */
-    private _setValueAndUnit() {
-        // this.unlimited = this._isDurationUnlimited(this.duration);
-        // if (this.unlimited || moment.isMoment(this.duration)) { return; }
-        // const days = this.duration.asDays();
-        // const hours = this.duration.asHours();
-        // const minutes = this.duration.asMinutes();
-        // const seconds = this.duration.asSeconds();
-        // if (this._isValidUnit(days)) {
-        //     this.value = days;
-        //     this.unit = ConstraintsUnit.days;
-        // } else if (this._isValidUnit(hours)) {
-        //     this.value = hours;
-        //     this.unit = ConstraintsUnit.hours;
-        // } else if (this._isValidUnit(minutes)) {
-        //     this.value = minutes;
-        //     this.unit = ConstraintsUnit.minutes;
-        // } else if (seconds > 0) {
-        //     // don't check whether second is integer or not, just display whatever this value is
-        //     this.value = seconds;
-        //     this.unit = ConstraintsUnit.seconds;
-        // }
+    private _setTimeAndUnitFromDuration(duration: moment.Duration) {
+        if (this._isDurationUnlimited(duration)) {
+            this.unit = ConstraintsUnit.Unlimited;
+            this.time = "";
+            return;
+        }
+
+        const days = duration.asDays();
+        const hours = duration.asHours();
+        const minutes = duration.asMinutes();
+        const seconds = duration.asSeconds();
+        if (this._isValidUnit(days)) {
+            this.time = days.toString();
+            this.unit = ConstraintsUnit.Days;
+        } else if (this._isValidUnit(hours)) {
+            this.time = hours.toString();
+            this.unit = ConstraintsUnit.Hours;
+        } else if (this._isValidUnit(minutes)) {
+            this.time = minutes.toString();
+            this.unit = ConstraintsUnit.Minutes;
+        } else if (seconds > 0) {
+            // don't check whether second is integer or not, just display whatever this value is
+            this.time = seconds.toString();
+            this.unit = ConstraintsUnit.Seconds;
+        } else {
+            this.time = duration.toISOString();
+            this.unit = ConstraintsUnit.Custom;
+        }
     }
 
-    // private _isValidUnit(value: number) {
-    //     return Number(value) === value && value % 1 === 0 && value > 0;
-    // }
+    private _getCustomDuration(time: string) {
+        this.invalidCustomDuration = false;
+
+        const duration = moment.duration(time);
+        if (time === "P0D") {
+            return duration;
+        }
+        if (duration.toISOString() === "P0D") {
+            this.invalidCustomDuration = true;
+            return null;
+        } else {
+            return moment.duration(time);
+        }
+    }
+
+    private _isValidUnit(value: number) {
+        return Number(value) === value && value % 1 === 0 && value > 0;
+    }
 }

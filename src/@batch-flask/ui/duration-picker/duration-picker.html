@@ -7,11 +7,14 @@
             <bl-option [value]="ConstraintsUnit.Hours" label="Hours"></bl-option>
             <bl-option [value]="ConstraintsUnit.Minutes" label="Minutes"></bl-option>
             <bl-option [value]="ConstraintsUnit.Seconds" label="Seconds"></bl-option>
-            <bl-option [value]="ConstraintsUnit.Custom" label="Custom"></bl-option>
+            <bl-option [value]="ConstraintsUnit.Custom" label="Custom (ISO format)"></bl-option>
         </bl-select>
     </div>
 </div>
-<div class="error" *ngIf="timeInvalidNumber">
+<div class="error" *ngIf="invalidTimeNumber">
     Input should be a valid number
+</div>
+<div class="error" *ngIf="invalidCustomDuration">
+    This is not a valid ISO 8601 duration <i>(e.g. PT1M, P1D)</i>
 </div>
 
