@@ -33,7 +33,7 @@ bl-choose-action {
             flex: 1;
 
             &:hover {
-                background: $whitesmoke-darker;
+                background: $whitesmoke;
             }
 
             > .name {
@@ -58,7 +58,7 @@ bl-choose-action {
             justify-content: center;
 
             &:hover {
-                background: $whitesmoke-darker;
+                background: $whitesmoke;
             }
         }
     }
