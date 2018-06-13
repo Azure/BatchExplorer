@@ -356,6 +356,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
 
     public onContainerClick(event: Event) {
+        this._selectButtonEl.nativeElement.focus();
         this.clickSelectButton(event);
     }
 

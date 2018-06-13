@@ -1,6 +1,13 @@
 import {
-    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, ContentChild, ContentChildren, HostBinding, QueryList,
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    ContentChildren,
+    HostBinding,
+    HostListener,
+    QueryList,
 } from "@angular/core";
 
 import { FormErrorComponent } from "@batch-flask/ui/form/form-error";
@@ -39,5 +46,11 @@ export class FormFieldComponent implements AfterContentInit {
         this.suffix.changes.subscribe(() => this.changeDetector.markForCheck());
         this.hints.changes.subscribe(() => this.changeDetector.markForCheck());
         this.errors.changes.subscribe(() => this.changeDetector.markForCheck());
+    }
+
+    @HostListener("click", ["$event"])
+    public notifyControlToFocus(event: MouseEvent) {
+        console.log("CLick dis");
+        this.control.onContainerClick(event);
     }
 }

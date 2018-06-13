@@ -4,21 +4,25 @@ import {
     Component,
     ElementRef,
     HostBinding,
+    Injector,
     Input,
     OnChanges,
     OnDestroy,
-    Optional,
-    Self,
+    OnInit,
     ViewChild,
+    forwardRef,
 } from "@angular/core";
 import {
     ControlValueAccessor,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
     NgControl,
 } from "@angular/forms";
 import { FlagInput, UNLIMITED_DURATION_THRESHOLD, coerceBooleanProperty } from "@batch-flask/core";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import * as moment from "moment";
 
+import { SelectComponent } from "@batch-flask/ui/select";
 import { Subject } from "rxjs";
 import "./duration-picker.scss";
 
@@ -47,10 +51,17 @@ let nextUniqueId = 0;
     templateUrl: "duration-picker.html",
     providers: [
         { provide: FormFieldControl, useExisting: DurationPickerComponent },
+        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DurationPickerComponent), multi: true },
+        { provide: NG_VALIDATORS, useExisting: forwardRef(() => DurationPickerComponent), multi: true },
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DurationPickerComponent implements FormFieldControl<any>, ControlValueAccessor, OnChanges, OnDestroy {
+export class DurationPickerComponent implements FormFieldControl<any>,
+    OnInit,
+    ControlValueAccessor,
+    OnChanges,
+    OnDestroy {
+
     public DurationUnit = DurationUnit;
 
     @Input()
@@ -85,6 +96,7 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
 
     public value: moment.Duration;
 
+    public ngControl: NgControl;
     public time: string = "";
     public unit: DurationUnit = DurationUnit.Unlimited;
 
@@ -101,21 +113,28 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
     protected _duration: moment.Duration;
 
     @ViewChild("inputEl") private _inputEl: ElementRef;
+    @ViewChild(SelectComponent) private _select: SelectComponent;
+
     private _id: string;
     private _disabled: boolean;
 
     constructor(
         private changeDetector: ChangeDetectorRef,
-        @Optional() @Self() public ngControl: NgControl) {
+        private injector: Injector) {
 
-        if (this.ngControl) {
-            // Note: we provide the value accessor through here, instead of
-            // the `providers` to avoid running into a circular import.
-            this.ngControl.valueAccessor = this;
-        }
     }
 
-    public ngOnChanges() {
+    public ngOnInit() {
+        // This is needed here to prevent cirular dependencies
+        this.ngControl = this.injector.get(NgControl, null);
+    }
+
+    public ngOnChanges(changes) {
+        if (changes.allowUnlimited) {
+            if (!this.allowUnlimited && this.unit === DurationUnit.Unlimited) {
+                this.unit = DurationUnit.Hours;
+            }
+        }
         this.stateChanges.next();
     }
 
@@ -155,8 +174,13 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
     public setDescribedByIds(ids: string[]): void {
         this.ariaDescribedby = ids.join(" ");
     }
+
     public onContainerClick(event: MouseEvent): void {
-        this._inputEl.nativeElement.focus();
+        if (this.unit === DurationUnit.Unlimited) {
+            this._select.onContainerClick(event);
+        } else {
+            this._inputEl.nativeElement.focus();
+        }
     }
 
     public updateTime(time: string) {
@@ -179,6 +203,7 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
 
     private _getDuration(): moment.Duration {
         this.invalidTimeNumber = false;
+        this.invalidCustomDuration = false;
 
         switch (this.unit) {
             case DurationUnit.Unlimited:
@@ -242,8 +267,6 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
     }
 
     private _getCustomDuration(time: string) {
-        this.invalidCustomDuration = false;
-
         const duration = moment.duration(time);
         if (time === "P0D") {
             return duration;
