@@ -26,7 +26,7 @@ import "./duration-picker.scss";
  * Enumration of time unit picker that can be directly used in momentjs
  * Days, hours, minutes and seconds
  */
-export enum ConstraintsUnit {
+export enum DurationUnit {
     Unlimited = "unlimited",
     Days = "days",
     Hours = "hours",
@@ -51,7 +51,7 @@ let nextUniqueId = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DurationPickerComponent implements FormFieldControl<any>, ControlValueAccessor, OnChanges, OnDestroy {
-    public ConstraintsUnit = ConstraintsUnit;
+    public DurationUnit = DurationUnit;
 
     @Input()
     public get id(): string { return this._id; }
@@ -86,7 +86,7 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
     public value: moment.Duration;
 
     public time: string = "";
-    public unit: ConstraintsUnit = ConstraintsUnit.Unlimited;
+    public unit: DurationUnit = DurationUnit.Unlimited;
 
     // Validation fields
     public invalidTimeNumber = false;
@@ -168,7 +168,7 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
         this.changeDetector.markForCheck();
     }
 
-    public updateUnit(unit: ConstraintsUnit) {
+    public updateUnit(unit: DurationUnit) {
         this.unit = unit;
         this.value = this._getDuration();
         if (this._propagateChange) {
@@ -181,9 +181,9 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
         this.invalidTimeNumber = false;
 
         switch (this.unit) {
-            case ConstraintsUnit.Unlimited:
+            case DurationUnit.Unlimited:
                 return null;
-            case ConstraintsUnit.Custom:
+            case DurationUnit.Custom:
                 return this._getCustomDuration(this.time);
             default:
                 const time = Number(this.time);
@@ -213,7 +213,7 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
      */
     private _setTimeAndUnitFromDuration(duration: moment.Duration) {
         if (this._isDurationUnlimited(duration)) {
-            this.unit = ConstraintsUnit.Unlimited;
+            this.unit = DurationUnit.Unlimited;
             this.time = "";
             return;
         }
@@ -224,20 +224,20 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
         const seconds = duration.asSeconds();
         if (this._isValidUnit(days)) {
             this.time = days.toString();
-            this.unit = ConstraintsUnit.Days;
+            this.unit = DurationUnit.Days;
         } else if (this._isValidUnit(hours)) {
             this.time = hours.toString();
-            this.unit = ConstraintsUnit.Hours;
+            this.unit = DurationUnit.Hours;
         } else if (this._isValidUnit(minutes)) {
             this.time = minutes.toString();
-            this.unit = ConstraintsUnit.Minutes;
+            this.unit = DurationUnit.Minutes;
         } else if (seconds > 0) {
             // don't check whether second is integer or not, just display whatever this value is
             this.time = seconds.toString();
-            this.unit = ConstraintsUnit.Seconds;
+            this.unit = DurationUnit.Seconds;
         } else {
             this.time = duration.toISOString();
-            this.unit = ConstraintsUnit.Custom;
+            this.unit = DurationUnit.Custom;
         }
     }
 
