@@ -1,3 +1,5 @@
+@import "app/styles/variables";
+
 bl-duration-picker {
     .input-container {
         display: flex;
@@ -9,5 +11,9 @@ bl-duration-picker {
         > .unit-picker {
 
         }
+    }
+
+    > .error {
+        color: $danger-color;
     }
 }

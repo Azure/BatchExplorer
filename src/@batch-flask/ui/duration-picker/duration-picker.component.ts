@@ -85,8 +85,11 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
 
     public value: moment.Duration;
 
-    public time: number;
+    public time: string = "";
     public unit: ConstraintsUnit = ConstraintsUnit.Unlimited;
+
+    // Validation fields
+    public timeInvalidNumber = false;
 
     @HostBinding("attr.aria-describedby")
     public ariaDescribedby: string;
@@ -139,7 +142,12 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
     }
 
     public validate() {
-        return null;
+        if (this.timeInvalidNumber) {
+            return {
+                duration: "Invalid",
+            };
+        }
+        return false;
     }
 
     public setDescribedByIds(ids: string[]): void {
@@ -149,7 +157,7 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
         this._inputEl.nativeElement.focus();
     }
 
-    public updateTime(time: number) {
+    public updateTime(time: string) {
         this.time = time;
         this.value = this._getDuration();
         if (this._propagateChange) {
@@ -168,14 +176,22 @@ export class DurationPickerComponent implements FormFieldControl<any>, ControlVa
     }
 
     private _getDuration(): moment.Duration {
+        this.timeInvalidNumber = false;
+
         switch (this.unit) {
             case ConstraintsUnit.Unlimited:
                 return null;
             case ConstraintsUnit.Custom:
                 return moment.duration(this.time);
             default:
-                const duration = moment.duration(Number(this.time), this.unit);
-                return this._isDurationUnlimited(duration) ? null : duration;
+                const time = Number(this.time);
+                if (isNaN(time)) {
+                    this.timeInvalidNumber = true;
+                    return null;
+                } else {
+                    const duration = moment.duration(Number(this.time), this.unit);
+                    return this._isDurationUnlimited(duration) ? null : duration;
+                }
         }
     }
 
