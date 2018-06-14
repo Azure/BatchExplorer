@@ -1,4 +1,6 @@
 import {
+    AfterContentInit,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ElementRef,
@@ -22,7 +24,7 @@ import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import * as moment from "moment";
 
 import { SelectComponent } from "@batch-flask/ui/select";
-import { Subject } from "rxjs";
+import { Subject, Subscription } from "rxjs";
 import "./duration-picker.scss";
 
 /**
@@ -53,11 +55,11 @@ let nextUniqueId = 0;
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DurationPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => DurationPickerComponent), multi: true },
     ],
-    // Angular 2 form are not working that well is observable https://github.com/angular/angular/issues/10887
-    // changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DurationPickerComponent implements FormFieldControl<any>,
     OnInit,
+    AfterContentInit,
     ControlValueAccessor,
     OnChanges,
     OnDestroy {
@@ -117,6 +119,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
 
     private _id: string;
     private _disabled: boolean;
+    private _controlSub: Subscription;
 
     constructor(
         private changeDetector: ChangeDetectorRef,
@@ -127,6 +130,15 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     public ngOnInit() {
         // This is needed here to prevent cirular dependencies
         this.ngControl = this.injector.get(NgControl, null);
+    }
+
+    public ngAfterContentInit() {
+        // Control properties are not set yet in ngOnInit
+        if (this.ngControl) {
+            this._controlSub = this.ngControl.statusChanges.subscribe(() => {
+                this.changeDetector.markForCheck();
+            });
+        }
     }
 
     public ngOnChanges(changes) {
@@ -140,6 +152,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
 
     public ngOnDestroy() {
         this.stateChanges.complete();
+        this._controlSub.unsubscribe();
     }
 
     public writeValue(value: moment.Duration | string): void {
