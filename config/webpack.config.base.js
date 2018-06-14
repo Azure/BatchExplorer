@@ -3,7 +3,7 @@ const helpers = require("./helpers");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CheckerPlugin = require("awesome-typescript-loader").CheckerPlugin;
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const ngcWebpack = require("ngc-webpack");
+const { AngularCompilerPlugin } = require("@ngtools/webpack");
 const { commonRules } = require("./webpack.common");
 
 const isDevServer = helpers.isWebpackDevServer();
@@ -37,11 +37,12 @@ const baseConfig = {
     },
     plugins: [
         new CheckerPlugin(),
-        new ngcWebpack.NgcWebpackPlugin({
+        new AngularCompilerPlugin({
             skipCodeGeneration: !AOT,
             tsConfigPath: "./tsconfig.browser.json",
             mainPath: "./app/app.ts",              // will auto-detect the root NgModule.
             sourceMap: true,
+            // forkTypeChecker: !AOT,
         }),
         new CopyWebpackPlugin([
             { context: "src/client/splash-screen", from: "**/*", to: "client/splash-screen" },

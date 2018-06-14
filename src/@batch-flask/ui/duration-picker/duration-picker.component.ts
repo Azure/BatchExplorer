@@ -1,25 +1,46 @@
-import { Component, Input, forwardRef } from "@angular/core";
+import {
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    HostBinding,
+    Injector,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    forwardRef,
+} from "@angular/core";
 import {
     ControlValueAccessor,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
+    NgControl,
 } from "@angular/forms";
-
-import { UNLIMITED_DURATION_THRESHOLD } from "@batch-flask/core";
+import { FlagInput, UNLIMITED_DURATION_THRESHOLD, coerceBooleanProperty } from "@batch-flask/core";
+import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import * as moment from "moment";
 
+import { SelectComponent } from "@batch-flask/ui/select";
+import { Subject, Subscription } from "rxjs";
 import "./duration-picker.scss";
 
 /**
  * Enumration of time unit picker that can be directly used in momentjs
  * Days, hours, minutes and seconds
  */
-export enum ConstraintsUnit {
-    days = "days",
-    hours = "hours",
-    minutes = "minutes",
-    seconds = "seconds",
+export enum DurationUnit {
+    Unlimited = "unlimited",
+    Days = "days",
+    Hours = "hours",
+    Minutes = "minutes",
+    Seconds = "seconds",
+    Custom = "custom",
 }
+
+let nextUniqueId = 0;
 
 /**
  * DurationPickerComponent is used in jobConstraint and taskConstraint.
@@ -30,63 +51,120 @@ export enum ConstraintsUnit {
     selector: "bl-duration-picker",
     templateUrl: "duration-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
+        { provide: FormFieldControl, useExisting: DurationPickerComponent },
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DurationPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => DurationPickerComponent), multi: true },
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DurationPickerComponent implements ControlValueAccessor {
-    public value: number;
-    // set default unit value to 'minutes'
-    public unit: ConstraintsUnit = ConstraintsUnit.minutes;
-    public unlimited: boolean = true;
-    public ConstraintsUnit = ConstraintsUnit;
+export class DurationPickerComponent implements FormFieldControl<any>,
+    OnInit,
+    AfterContentInit,
+    ControlValueAccessor,
+    OnChanges,
+    OnDestroy {
 
-    @Input() public label: string;
+    public DurationUnit = DurationUnit;
+
+    @Input()
+    public get id(): string { return this._id; }
+    public set id(value: string) { this._id = value || this._uid; }
+
+    @Input()
+    @HostBinding("attr.aria-label")
+    @HostBinding("attr.placeholder")
+    public label: string;
+
     @Input() public allowUnlimited: boolean = true;
+
+    @Input() @FlagInput() public required = false;
+
+    @Input()
+    public get disabled(): boolean {
+        if (this.ngControl && this.ngControl.disabled !== null) {
+            return this.ngControl.disabled;
+        }
+        return this._disabled;
+    }
+    public set disabled(value: boolean) {
+        this._disabled = coerceBooleanProperty(value);
+    }
+
+    public get placeholder() {
+        return this.label;
+    }
+
+    public readonly stateChanges = new Subject<void>();
+
+    public value: moment.Duration;
+
+    public ngControl: NgControl;
+    public time: string = "";
+    public unit: DurationUnit = DurationUnit.Unlimited;
+
+    // Validation fields
+    public invalidTimeNumber = false;
+    public invalidCustomDuration = false;
+
+    @HostBinding("attr.aria-describedby")
+    public ariaDescribedby: string;
+
+    protected _uid = `bl-input-${nextUniqueId++}`;
 
     protected _propagateChange: (value: moment.Duration) => void = null;
     protected _duration: moment.Duration;
 
-    public get duration(): moment.Duration {
-        return this._duration;
+    @ViewChild("inputEl") private _inputEl: ElementRef;
+    @ViewChild(SelectComponent) private _select: SelectComponent;
+
+    private _id: string;
+    private _disabled: boolean;
+    private _controlSub: Subscription;
+
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private injector: Injector) {
+
     }
 
-    public set duration(value: moment.Duration) {
-        this._duration = value;
+    public ngOnInit() {
+        // This is needed here to prevent cirular dependencies
+        this.ngControl = this.injector.get(NgControl, null);
     }
 
-    public onToggle(event) {
-        this.unlimited = event.checked;
-        this.duration = this.unlimited ? null : this._getDuration();
-        if (this._propagateChange) {
-            this._propagateChange(this.duration);
+    public ngAfterContentInit() {
+        // Control properties are not set yet in ngOnInit
+        if (this.ngControl) {
+            this._controlSub = this.ngControl.statusChanges.subscribe(() => {
+                this.changeDetector.markForCheck();
+            });
         }
     }
 
-    public onTimeChange(event) {
-        this.duration = this._getDuration();
-        if (this._propagateChange) {
-            this._propagateChange(this.duration);
+    public ngOnChanges(changes) {
+        if (changes.allowUnlimited) {
+            if (!this.allowUnlimited && this.unit === DurationUnit.Unlimited) {
+                this.unit = DurationUnit.Hours;
+            }
         }
+        this.stateChanges.next();
     }
 
-    public onUnitChange(event) {
-        this.duration = this._getDuration();
-        if (this._propagateChange) {
-            this._propagateChange(this.duration);
-        }
+    public ngOnDestroy() {
+        this.stateChanges.complete();
+        this._controlSub.unsubscribe();
     }
 
     public writeValue(value: moment.Duration | string): void {
         if (value === null || value === undefined) {
-            this.duration = null;
+            this.value = null;
         } else if (moment.isMoment(value)) {
-            this.duration = value as moment.Duration;
+            this.value = value as moment.Duration;
         } else {
-            this.duration = moment.duration(value);
+            this.value = moment.duration(value);
         }
-        this._setValueAndUnit();
+        this._setTimeAndUnitFromDuration(this.value);
+        this.changeDetector.markForCheck();
     }
 
     public registerOnChange(fn) {
@@ -98,12 +176,63 @@ export class DurationPickerComponent implements ControlValueAccessor {
     }
 
     public validate() {
-        return null;
+        if (this.invalidTimeNumber || this.invalidCustomDuration) {
+            return {
+                duration: "Invalid",
+            };
+        }
+        return false;
+    }
+
+    public setDescribedByIds(ids: string[]): void {
+        this.ariaDescribedby = ids.join(" ");
+    }
+
+    public onContainerClick(event: MouseEvent): void {
+        if (this.unit === DurationUnit.Unlimited) {
+            this._select.onContainerClick(event);
+        } else {
+            this._inputEl.nativeElement.focus();
+        }
+    }
+
+    public updateTime(time: string) {
+        this.time = time;
+        this.value = this._getDuration();
+        if (this._propagateChange) {
+            this._propagateChange(this.value);
+        }
+        this.changeDetector.markForCheck();
+    }
+
+    public updateUnit(unit: DurationUnit) {
+        this.unit = unit;
+        this.value = this._getDuration();
+        if (this._propagateChange) {
+            this._propagateChange(this.value);
+        }
+        this.changeDetector.markForCheck();
     }
 
     private _getDuration(): moment.Duration {
-        const duration = moment.duration(this.value, this.unit);
-        return this._isDurationUnlimited(duration) ? null : duration;
+        this.invalidTimeNumber = false;
+        this.invalidCustomDuration = false;
+
+        switch (this.unit) {
+            case DurationUnit.Unlimited:
+                return null;
+            case DurationUnit.Custom:
+                return this._getCustomDuration(this.time);
+            default:
+                const time = Number(this.time);
+                if (isNaN(time)) {
+                    this.invalidTimeNumber = true;
+                    return null;
+                } else {
+                    const duration = moment.duration(Number(this.time), this.unit);
+                    return this._isDurationUnlimited(duration) ? null : duration;
+                }
+        }
     }
 
     private _isDurationUnlimited(duration: moment.Duration): boolean {
@@ -120,26 +249,46 @@ export class DurationPickerComponent implements ControlValueAccessor {
      * Unit is checked from 'days' to 'seconds'. Value will be taken when current unit has an integer value,
      * otherwise next smaller unit will be checked until last unit.
      */
-    private _setValueAndUnit() {
-        this.unlimited = this._isDurationUnlimited(this.duration);
-        if (this.unlimited || moment.isMoment(this.duration)) { return; }
-        const days = this.duration.asDays();
-        const hours = this.duration.asHours();
-        const minutes = this.duration.asMinutes();
-        const seconds = this.duration.asSeconds();
+    private _setTimeAndUnitFromDuration(duration: moment.Duration) {
+        if (this._isDurationUnlimited(duration)) {
+            this.unit = DurationUnit.Unlimited;
+            this.time = "";
+            return;
+        }
+
+        const days = duration.asDays();
+        const hours = duration.asHours();
+        const minutes = duration.asMinutes();
+        const seconds = duration.asSeconds();
         if (this._isValidUnit(days)) {
-            this.value = days;
-            this.unit = ConstraintsUnit.days;
+            this.time = days.toString();
+            this.unit = DurationUnit.Days;
         } else if (this._isValidUnit(hours)) {
-            this.value = hours;
-            this.unit = ConstraintsUnit.hours;
+            this.time = hours.toString();
+            this.unit = DurationUnit.Hours;
         } else if (this._isValidUnit(minutes)) {
-            this.value = minutes;
-            this.unit = ConstraintsUnit.minutes;
+            this.time = minutes.toString();
+            this.unit = DurationUnit.Minutes;
         } else if (seconds > 0) {
             // don't check whether second is integer or not, just display whatever this value is
-            this.value = seconds;
-            this.unit = ConstraintsUnit.seconds;
+            this.time = seconds.toString();
+            this.unit = DurationUnit.Seconds;
+        } else {
+            this.time = duration.toISOString();
+            this.unit = DurationUnit.Custom;
+        }
+    }
+
+    private _getCustomDuration(time: string) {
+        const duration = moment.duration(time);
+        if (time === "P0D") {
+            return duration;
+        }
+        if (duration.toISOString() === "P0D") {
+            this.invalidCustomDuration = true;
+            return null;
+        } else {
+            return moment.duration(time);
         }
     }
 

@@ -18,7 +18,7 @@ import { ContextMenuModule } from "./context-menu";
 import { DatetimePickerComponent } from "./datetime-picker";
 import { DialogsModule } from "./dialogs";
 import { DropdownModule } from "./dropdown";
-import { DurationPickerComponent } from "./duration-picker";
+import { DurationPickerModule } from "./duration-picker";
 import { EditorModule } from "./editor";
 import { ElectronModule } from "./electron";
 import { EntityCommandsListModule } from "./entity-commands-list";
@@ -63,6 +63,7 @@ const modules = [
     ContextMenuModule,
     DialogsModule,
     DropdownModule,
+    DurationPickerModule,
     EditorModule,
     EntityCommandsListModule,
     FocusSectionModule,
@@ -98,7 +99,6 @@ const components = [
     TimespanComponent,
     EntityDetailsListComponent,
     DatetimePickerComponent,
-    DurationPickerComponent,
     IconComponent,
     SimpleDialogComponent,
     DeleteSelectedItemsDialogComponent,
