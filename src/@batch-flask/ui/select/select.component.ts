@@ -163,6 +163,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
             // the `providers` to avoid running into a circular import.
             this.ngControl.valueAccessor = this;
         }
+
         this._initKeyNavigator();
     }
 

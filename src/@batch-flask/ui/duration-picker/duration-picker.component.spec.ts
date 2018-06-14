@@ -11,7 +11,9 @@ import { DurationPickerModule } from "./duration-picker.module";
 
 @Component({
     template: `
-        <bl-duration-picker label="My duration picker" [formControl]="control" [allowUnlimited]="allowUnlimited">
+        <bl-duration-picker label="My duration picker"
+            [formControl]="control"
+            [allowUnlimited]="allowUnlimited">
         </bl-duration-picker>
     `,
 })
@@ -23,7 +25,9 @@ class TestComponent {
 @Component({
     template: `
         <bl-form-field>
-            <bl-duration-picker label="My duration picker" [formControl]="control" [allowUnlimited]="allowUnlimited">
+            <bl-duration-picker label="My duration picker"
+                [formControl]="control"
+                [allowUnlimited]="allowUnlimited">
             </bl-duration-picker>
         </bl-form-field>
     `,
@@ -107,6 +111,15 @@ describe("DurationPickerComponent", () => {
                 expect(de.queryAll(By.css(".error")).length).toBe(0, "Should not have any errors");
                 expect(moment.isDuration(component.value)).toBe(true);
                 expect(testComponent.control.value.toISOString()).toEqual("PT15H");
+            });
+
+            it("should disable input and select when disabled", async () => {
+                testComponent.control.disable();
+                fixture.detectChanges();
+                await fixture.whenStable();
+                expect(component.disabled).toBe(true, "Duration picker should be disabled");
+                expect(inputEl.nativeElement.disabled).toBe(true, "Input is disabled");
+                expect(selectComponent.disabled).toBe(true, "Unit select is disabled");
             });
         });
 

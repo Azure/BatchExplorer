@@ -1,5 +1,4 @@
 import {
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ElementRef,
@@ -54,7 +53,8 @@ let nextUniqueId = 0;
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DurationPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => DurationPickerComponent), multi: true },
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    // Angular 2 form are not working that well is observable https://github.com/angular/angular/issues/10887
+    // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DurationPickerComponent implements FormFieldControl<any>,
     OnInit,

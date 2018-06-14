@@ -50,6 +50,7 @@ export class FormFieldComponent implements AfterContentInit {
 
     @HostListener("click", ["$event"])
     public notifyControlToFocus(event: MouseEvent) {
+        if(this.control.disabled) {return;}
         this.control.onContainerClick(event);
     }
 }
