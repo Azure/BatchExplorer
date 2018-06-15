@@ -68,7 +68,7 @@ export class ButtonComponent extends ClickableComponent {
     constructor(
         injector: Injector,
         private changeDetectionRef: ChangeDetectorRef) {
-        super(injector);
+        super(injector, null);
     }
 
     public handleAction(event: Event) {
