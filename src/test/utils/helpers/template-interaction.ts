@@ -22,9 +22,9 @@ export class FakeMouseEvent {
  */
 // tslint:disable-next-line:variable-name
 export const ButtonClickEvents = {
-    left: new FakeMouseEvent({ button: 0 }),
-    leftShift: new FakeMouseEvent({ button: 0, shiftKey: true }),
-    leftCtrl: new FakeMouseEvent({ button: 0, ctrlKey: true }),
+    left: new MouseEvent("click", { button: 0 }),
+    leftShift: new MouseEvent("click", { button: 0, shiftKey: true }),
+    leftCtrl: new MouseEvent("click", { button: 0, ctrlKey: true }),
 };
 
 /**
