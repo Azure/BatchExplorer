@@ -91,12 +91,12 @@ export class ClickableComponent implements OnChanges, OnDestroy {
 
     public handleAction(event: Event) {
         if (this.isDisabled) {
+            event.stopImmediatePropagation();
             return;
         }
         this.do.emit(event);
 
         if (this._routerLink) {
-            console.log("Routerlink?", "here");
             this._routerLink.onClick();
         }
     }
