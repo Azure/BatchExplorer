@@ -22,7 +22,7 @@ export class ToastComponent extends ClickableComponent {
     }
 
     constructor(injector: Injector, private notificationService: NotificationService) {
-        super(injector);
+        super(injector, null);
     }
 
     public handleAction(event) {
