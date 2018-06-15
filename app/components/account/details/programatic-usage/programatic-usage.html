@@ -27,14 +27,13 @@
             <bl-property-group label="Batch account credentials {{loading ? '(Loading ...)' : ''}}" class="wide">
                 <bl-text-property label="Name" [value]="sharedKeyCredentials?.batchAccount?.resource.name"></bl-text-property>
                 <bl-text-property label="Resource ID" [value]="sharedKeyCredentials?.batchAccount?.resource.id"></bl-text-property>
-                <bl-text-property label="URL" [value]="sharedKeyCredentials?.batchAccount?.resource.properties.accountEndpoint"></bl-text-property>
+                <bl-text-property label="URL" [value]="'https://' + sharedKeyCredentials?.batchAccount?.resource.properties.accountEndpoint"></bl-text-property>
                 <bl-text-property label="Primary key" [value]="sharedKeyCredentials?.batchAccount?.primary"></bl-text-property>
                 <bl-text-property label="Secondary key" [value]="sharedKeyCredentials?.batchAccount?.secondary"></bl-text-property>
             </bl-property-group>
             <bl-property-group label="Auto storage account credentials {{loading ? '(Loading ...)' : ''}}" class="wide">
                 <bl-text-property label="Name" [value]="sharedKeyCredentials?.storageAccount?.resource.name"></bl-text-property>
                 <bl-text-property label="Resource ID" [value]="sharedKeyCredentials?.storageAccount?.resource.id"></bl-text-property>
-                <bl-text-property label="URL" [value]="sharedKeyCredentials?.storageAccount?.resource.properties.accountEndpoint"></bl-text-property>
                 <bl-text-property label="Primary key" [value]="sharedKeyCredentials?.storageAccount?.primary"></bl-text-property>
                 <bl-text-property label="Secondary key" [value]="sharedKeyCredentials?.storageAccount?.resource.secondary"></bl-text-property>
             </bl-property-group>
