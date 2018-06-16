@@ -10,6 +10,10 @@ bl-header {
     font-size: 12px;
     line-height: $footer-height;
 
+    &.skip-osx-buttons {
+        padding-left: 70px;
+    }
+
     > .menu-item {
         margin: 0 5px;
     }

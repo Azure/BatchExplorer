@@ -1,15 +1,20 @@
 import { Location } from "@angular/common";
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostBinding } from "@angular/core";
+import { OS } from "app/utils";
 
 import "./header.scss";
 
 @Component({
     selector: "bl-header",
     templateUrl: "header.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
-    constructor(
-        private location: Location) { }
+    @HostBinding("class.skip-osx-buttons")
+    public get skipOsxButtons() {
+        return OS.isOSX();
+    }
+    constructor(private location: Location) { }
 
     public goBack() {
         this.location.back();
