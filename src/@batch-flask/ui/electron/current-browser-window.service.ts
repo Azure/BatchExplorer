@@ -1,4 +1,5 @@
 import { Injectable, OnDestroy } from "@angular/core";
+import { autobind } from "@batch-flask/core";
 import { BrowserWindow } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 import { ElectronRemote } from "./remote.service";
@@ -28,10 +29,12 @@ export class CurrentBrowserWindow implements OnDestroy {
         this._electronWindow.removeListener("leave-full-screen", this._leaveFullscreen);
     }
 
+    @autobind()
     private _enterFullscreen() {
         this._fullScreen.next(true);
     }
 
+    @autobind()
     private _leaveFullscreen() {
         this._fullScreen.next(false);
     }

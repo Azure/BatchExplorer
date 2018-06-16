@@ -6,8 +6,7 @@ import {
     HostBinding,
     OnDestroy,
 } from "@angular/core";
-import { CurrentBrowserWindow } from "@batch-flask/ui";
-import { OS } from "app/utils";
+import { CurrentBrowserWindow, OSService } from "@batch-flask/ui";
 import { Subscription } from "rxjs";
 
 import "./header.scss";
@@ -30,9 +29,10 @@ export class HeaderComponent implements OnDestroy {
     constructor(
         private location: Location,
         window: CurrentBrowserWindow,
+        os: OSService,
         private changeDetector: ChangeDetectorRef) {
 
-        this._isOsx = OS.isOSX();
+        this._isOsx = os.isOSX();
         this._sub = window.fullScreen.subscribe((fullScreen) => {
             this._fullScreen = fullScreen;
             this.changeDetector.markForCheck();

@@ -9,6 +9,7 @@ bl-header {
     width: 100vw;
     font-size: 12px;
     line-height: $footer-height;
+    -webkit-app-region: drag;
 
     &.skip-osx-buttons {
         padding-left: 70px;
