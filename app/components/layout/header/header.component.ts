@@ -1,6 +1,14 @@
 import { Location } from "@angular/common";
-import { ChangeDetectionStrategy, Component, HostBinding } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    HostBinding,
+    OnDestroy,
+} from "@angular/core";
+import { CurrentBrowserWindow } from "@batch-flask/ui";
 import { OS } from "app/utils";
+import { Subscription } from "rxjs";
 
 import "./header.scss";
 
@@ -9,12 +17,31 @@ import "./header.scss";
     templateUrl: "header.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnDestroy {
     @HostBinding("class.skip-osx-buttons")
     public get skipOsxButtons() {
-        return OS.isOSX();
+        return this._isOsx && !this._fullScreen;
     }
-    constructor(private location: Location) { }
+
+    private _isOsx = false;
+    private _fullScreen = false;
+    private _sub: Subscription;
+
+    constructor(
+        private location: Location,
+        window: CurrentBrowserWindow,
+        private changeDetector: ChangeDetectorRef) {
+
+        this._isOsx = OS.isOSX();
+        this._sub = window.fullScreen.subscribe((fullScreen) => {
+            this._fullScreen = fullScreen;
+            this.changeDetector.markForCheck();
+        });
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
+    }
 
     public goBack() {
         this.location.back();
