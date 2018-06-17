@@ -2,11 +2,11 @@
 
 bl-header {
     display: flex;
-    user-select: none;
     height: $header-height;
+    width: 100vw;
+    user-select: none;
     color: map-get($header-color, text);
     background-color: map-get($header-color, bg);
-    width: 100vw;
     font-size: 12px;
     line-height: $footer-height;
     -webkit-app-region: drag;
