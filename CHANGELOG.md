@@ -1,3 +1,12 @@
+# 0.16.1
+[All items](https://github.com/Azure/BatchLabs/milestone/22closed=1)
+
+### Bug fixes:
+* App insights docs has wrong environment variables names [\#1443](https://github.com/Azure/BatchLabs/issues/1443)
+* Deleting 1 folder from a file group deletes ALL that match it! [\#1440](https://github.com/Azure/BatchLabs/issues/1440)
+* Application package state equals version string [\#1442](https://github.com/Azure/BatchLabs/issues/1442)
+* Transitioning a pool from fixed scaling to auto-scaling never enables the "Save" button [\#1441](https://github.com/Azure/BatchLabs/issues/1441)
+
 # 0.16.0
 [All items](https://github.com/Azure/BatchLabs/milestone/19?closed=1)
 

@@ -223,7 +223,7 @@ export class FileNavigator<TParams = any> {
             log.error("Cannot delete file with this file navigator has delete is not implemented");
             return;
         }
-        return this.listAllFiles(folder).flatMap((files) => {
+        return this.listAllFiles(CloudPathUtils.asBaseDirectory(folder)).flatMap((files) => {
             return this.deleteFiles(files.map(x => x.name).toArray());
         }).do(() => {
             this._removeFile(folder);
