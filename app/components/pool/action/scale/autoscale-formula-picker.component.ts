@@ -16,7 +16,6 @@ import "./autoscale-formula-picker.scss";
     selector: "bl-autoscale-formula-picker",
     templateUrl: "autoscale-formula-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AutoscaleFormulaPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => AutoscaleFormulaPickerComponent), multi: true },
     ],
@@ -93,7 +92,8 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         return null;
     }
 
-    public textEditorOnChange() {
+    public updateAutoScaleForumla(formula: string) {
+        this.autoscaleFormulaValue = formula;
         if (this._propagateChange && this.autoscaleFormulaValue !== null) {
             this._propagateChange(this.autoscaleFormulaValue);
         }
