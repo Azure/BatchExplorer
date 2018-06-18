@@ -34,6 +34,10 @@ export class MockBrowserWindow {
         return this._isVisible;
     }
 
+    public isFullScreen() {
+        return false;
+    }
+
     public show() {
         this._isVisible = true;
     }

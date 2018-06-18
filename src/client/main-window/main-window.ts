@@ -70,6 +70,7 @@ export class MainWindow extends GenericWindow {
             minWidth: 1200,
             minHeight: 300,
             show: false, // Don't show the window until it is ready
+            titleBarStyle: "hidden",
             webPreferences: {
                 webSecurity: false,
             },
