@@ -6,7 +6,7 @@
 </div>
 <bl-split-pane [config]="splitPaneConfig" class="autoscale-formula-picker">
     <div blFirstPane class="editor">
-        <bl-editor [(ngModel)]="autoscaleFormulaValue" [label]="'Autoscale Formula'" [config]="config" (change)="textEditorOnChange()"
+        <bl-editor [ngModel]="autoscaleFormulaValue" [label]="'Autoscale Formula'" [config]="config" (ngModelChange)="updateAutoScaleForumla($event)"
             (blur)="textEditorOnBlur()"></bl-editor>
     </div>
 
