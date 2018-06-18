@@ -2,7 +2,7 @@ import { Subscription } from "rxjs";
 import { MockBrowserWindow } from "test/utils/mocks/windows";
 import { CurrentBrowserWindow } from "./current-browser-window.service";
 
-fdescribe("CurrentBrowserWindow", () => {
+describe("CurrentBrowserWindow", () => {
     let window: CurrentBrowserWindow;
     let remoteSpy;
     let electronWindowSpy: MockBrowserWindow;
