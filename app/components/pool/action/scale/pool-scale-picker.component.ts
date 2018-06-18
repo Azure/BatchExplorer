@@ -1,18 +1,18 @@
 import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
 import { Pool } from "app/models";
 
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import "./pool-scale-picker.scss";
 
 @Component({
     selector: "bl-pool-scale-picker",
     templateUrl: "pool-scale-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => PoolScalePickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => PoolScalePickerComponent), multi: true },
     ],
@@ -25,27 +25,38 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
     public selectedModeTab = 0;
 
     private _propagateChange: (value: any) => void;
-    private _sub: Subscription;
+    private _subs: Subscription[] = [];
+
+    private _enableAutoScaleControl = new FormControl(false);
+    private _autoScaleFormulaControl = new FormControl("");
+    private _targetDedicatedNodes = new FormControl(0);
+    private _targetLowPriorityNodes = new FormControl(0);
 
     constructor(formBuilder: FormBuilder) {
         this.form = formBuilder.group({
-            enableAutoScale: false,
-            autoScaleFormula: ["", this._invalidAutoscaleFormula()],
-            targetDedicatedNodes: [0, this._invalidTargetNodes()],
-            targetLowPriorityNodes: [0, this._invalidTargetNodes()],
+            enableAutoScale: this._enableAutoScaleControl,
+            autoScaleFormula: this._autoScaleFormulaControl,
+            targetDedicatedNodes: this._targetDedicatedNodes,
+            targetLowPriorityNodes: this._targetLowPriorityNodes,
             autoScaleEvaluationInterval: [15],
             resizeTimeout: [15],
         });
 
-        this._sub = this.form.valueChanges.distinctUntilChanged().subscribe((value) => {
+        this._subs.push(this._enableAutoScaleControl.valueChanges.subscribe((enableAutoScale) => {
+            this._updateValidators(enableAutoScale);
+        }));
+
+        this._updateValidators(this._enableAutoScaleControl.value);
+
+        this._subs.push(this.form.valueChanges.distinctUntilChanged().subscribe((value) => {
             if (this._propagateChange) {
                 this._propagateChange(value);
             }
-        });
+        }));
     }
 
     public ngOnDestroy() {
-        this._sub.unsubscribe();
+        this._subs.forEach(x => x.unsubscribe());
     }
 
     public writeValue(value: any) {
@@ -89,21 +100,18 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
         this.form.controls.autoScaleFormula.updateValueAndValidity();
     }
 
-    private _invalidAutoscaleFormula() {
-        return (control: FormControl): { [key: string]: any } => {
-            if (!this.form || !this.form.controls.enableAutoScale.value) {
-                return null;
-            }
-            return control.value ? null : { required: true };
-        };
-    }
-
-    private _invalidTargetNodes() {
-        return (control: FormControl): { [key: string]: any } => {
-            if (!this.form || this.form.controls.enableAutoScale.value) {
-                return null;
-            }
-            return control.value !== null ? null : { required: true };
-        };
+    private _updateValidators(enableAutoScale: boolean) {
+        if (enableAutoScale) {
+            this._autoScaleFormulaControl.setValidators([Validators.required]);
+            this._targetDedicatedNodes.setValidators([]);
+            this._targetLowPriorityNodes.setValidators([]);
+        } else {
+            this._autoScaleFormulaControl.setValidators([]);
+            this._targetDedicatedNodes.setValidators([Validators.required]);
+            this._targetLowPriorityNodes.setValidators([Validators.required]);
+        }
+        this._autoScaleFormulaControl.updateValueAndValidity();
+        this._targetDedicatedNodes.updateValueAndValidity();
+        this._targetLowPriorityNodes.updateValueAndValidity();
     }
 }
