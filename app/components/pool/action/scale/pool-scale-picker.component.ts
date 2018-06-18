@@ -6,7 +6,6 @@ import { Subscription } from "rxjs";
 
 import { Pool } from "app/models";
 
-import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import "./pool-scale-picker.scss";
 
 @Component({
