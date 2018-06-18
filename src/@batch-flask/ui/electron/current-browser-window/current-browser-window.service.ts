@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { BrowserWindow } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
-import { ElectronRemote } from "./remote.service";
+import { ElectronRemote } from "../remote.service";
 
 @Injectable()
 export class CurrentBrowserWindow implements OnDestroy {
