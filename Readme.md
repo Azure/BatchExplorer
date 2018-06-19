@@ -5,7 +5,7 @@
 **Note: BatchLabs is in beta.**
 
 Batch Labs is a tool to manage your Azure Batch accounts. The goal is to implement a great user experience that will help you debug, monitor and manage your pools, jobs and tasks.
-It will also include expermiental features such as `Batch Templates` in the aim to improve your Batch experience. We are open to any feedback, ideas and contributions you might have.
+It will also include experimental features such as `Batch Templates` in the aim to improve your Batch experience. We are open to any feedback, ideas and contributions you might have.
 
 BatchLabs is updated monthly with new features and bug fixes. You can download it for Windows, macOS, and Linux on [Batch Labs website](https://azure.github.io/BatchLabs/).
 
@@ -44,7 +44,7 @@ Note: You can also use `npm install` at your own risk. However please do not sub
 #### 4.5 Setup some configuration(Only in certain case)
 If you didn't installed python in the path you will need to let batchlabs know where it is.
 Set an environment variable called `BL_PYTHON_PATH` with that path to the python executable.
-Batchlabs will look first to see if this environemnt variable is set if not try `python3` and then `python` to find an installation of python 3.6
+Batchlabs will look first to see if this environment variable is set if not try `python3` and then `python` to find an installation of python 3.6
 
 #### 5. Build and run the application
 ```bash
