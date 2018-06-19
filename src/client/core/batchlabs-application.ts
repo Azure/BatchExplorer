@@ -1,3 +1,4 @@
+import * as child_process from "child_process";
 import * as commander from "commander";
 import { app, dialog, ipcMain, session } from "electron";
 import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
@@ -12,7 +13,7 @@ import { ProxySettingsManager } from "client/proxy";
 import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-configuration-window";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { BatchLabsLink, Constants, Deferred } from "common";
-import { IpcEvent } from "common/constants";
+import { Application, IpcEvent } from "common/constants";
 import { ProxyCredentials, ProxySettings } from "get-proxy-settings";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants as ClientConstants } from "../client-constants";
@@ -62,6 +63,11 @@ export class BatchLabsApplication {
         });
         BlIpcMain.on(IpcEvent.logoutAndLogin, () => {
             return this.logoutAndLogin();
+        });
+        BlIpcMain.on(IpcEvent.launchApplication, (args) => {
+            if (args.name === Application.terminal) {
+                return this.openTerminal(args);
+            }
         });
         this.azureEnvironmentObs = this._azureEnvironment.asObservable();
         this._loadAzureEnviornment();
@@ -144,6 +150,11 @@ export class BatchLabsApplication {
         await this.aadService.login();
         this.windows.openNewWindow();
     }
+
+    public async openTerminal(args) {
+
+    }
+
     /**
      * Open a new link in the ms-batchlabs format
      * If the link provide a session id which already exists it will change the window with that session id.

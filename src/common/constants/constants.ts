@@ -183,8 +183,13 @@ export const IpcEvent = {
     AAD: {
         accessTokenData: "AAD_ACCESS_TOKEN_DATA",
     },
+    launchApplication: "LAUNCH_APPLICATION",
     logoutAndLogin: "LOGOUT_AND_LOGIN",
     fetch: "FETCH",
+};
+
+export const Application = {
+    terminal: "TERMINAL",
 };
 
 export const customProtocolName = "ms-batchlabs";

@@ -5,8 +5,9 @@ import * as moment from "moment";
 
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
-import { AddNodeUserAttributes, NodeService, NodeUserService } from "app/services";
+import { AddNodeUserAttributes, BatchLabsService, NodeService, NodeUserService } from "app/services";
 import { DateUtils, PoolUtils, SecureUtils } from "app/utils";
+import { Application } from "common/constants";
 import "./node-connect.scss";
 
 enum CredentialSource {
@@ -53,8 +54,9 @@ export class NodeConnectComponent implements OnInit {
     constructor(
         public sidebarRef: SidebarRef<any>,
         private nodeUserService: NodeUserService,
-        private nodeService: NodeService) {
-    }
+        private nodeService: NodeService,
+        private batchLabs: BatchLabsService,
+    ) {}
 
     public ngOnInit() {
         const data = this.nodeService.listNodeAgentSkus();
@@ -79,6 +81,13 @@ export class NodeConnectComponent implements OnInit {
         return this.addOrUpdateUser(credentials).do(() => {
             this.credentialSource = CredentialSource.Generated;
             this.expireTime = DateUtils.fullDateAndTime(moment().add(24, "hours").toDate());
+        });
+    }
+
+    @autobind()
+    public generateWithOneClick() {
+        return this.generateCredentials().do(() => {
+            this.batchLabs.launchApplication(Application.terminal);
         });
     }
 
