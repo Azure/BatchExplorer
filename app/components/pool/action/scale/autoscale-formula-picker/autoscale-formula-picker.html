@@ -13,14 +13,16 @@
         <div class="saved-formulas">
             <div class="basic-header">
                 <div class="name"> Saved formulas </div>
-                <bl-clickable (do)="addFormula()" class="action">
+                <bl-clickable (do)="addFormula()" class="save-btn action">
                     <i class="fa fa-save" title="Save"></i>
                 </bl-clickable>
             </div>
             <div class="formula-list">
                 <bl-clickable class="formula" *ngFor="let formula of savedAutoscaleFormulas;trackBy: trackFormula" (do)="selectFormula(formula)">
                     <span class="label">{{formula.name}}</span>
-                    <i class="fa fa-times" title="Delete" (click)="deleteFormula(formula)"></i>
+                    <bl-clickable (do)="deleteFormula(formula)" class="delete-btn" title="Delete" >
+                        <i class="fa fa-times"></i>
+                    </bl-clickable>
                 </bl-clickable>
                 <div class="no-formula" *ngIf="savedAutoscaleFormulas.size === 0">
                     <div>

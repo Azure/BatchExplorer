@@ -24,7 +24,7 @@ class TestComponent {
     public formula = new FormControl("");
 }
 
-describe("AutoscaleFormulaPickerComponent", () => {
+fdescribe("AutoscaleFormulaPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: AutoscaleFormulaPickerComponent;
@@ -38,6 +38,8 @@ describe("AutoscaleFormulaPickerComponent", () => {
     beforeEach(() => {
         autoScaleForumlaServiceSpy = {
             formulas: new BehaviorSubject(List([predefinedFormulas[2]])),
+            saveFormula: jasmine.createSpy("saveFormula"),
+            deleteFormula: jasmine.createSpy("deleteFormula"),
         };
 
         predefinedForumlaServiceSpy = {
@@ -45,7 +47,9 @@ describe("AutoscaleFormulaPickerComponent", () => {
         };
 
         dialogServiceSpy = {
-
+            prompt: (name, { prompt }) => {
+                prompt("some-name");
+            },
         };
 
         TestBed.configureTestingModule({
@@ -102,7 +106,7 @@ describe("AutoscaleFormulaPickerComponent", () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        expect(component.autoscaleFormulaValue).toEqual(predefinedFormulas[2].value,  "Updated formula value");
+        expect(component.autoscaleFormulaValue).toEqual(predefinedFormulas[2].value, "Updated formula value");
         expect(editorComponent.value).toEqual(predefinedFormulas[2].value, "Updated editor value");
         expect(testComponent.formula.value).toEqual(predefinedFormulas[2].value, "Updated parent form control");
     });
@@ -115,5 +119,32 @@ describe("AutoscaleFormulaPickerComponent", () => {
 
         expect(component.autoscaleFormulaValue).toEqual(formula);
         expect(editorComponent.value).toEqual(formula, "Updated editor value");
+    });
+
+    it("save a formula", () => {
+        const formula = "$some3";
+        testComponent.formula.setValue(formula);
+        fixture.detectChanges();
+
+        const saveBtn = de.query(By.css(".save-btn"));
+        click(saveBtn);
+
+        expect(autoScaleForumlaServiceSpy.saveFormula).toHaveBeenCalledOnce();
+        const args = autoScaleForumlaServiceSpy.saveFormula.calls.argsFor(0);
+        expect(args.length).toBe(1);
+        expect(args[0] instanceof AutoscaleFormula).toBe(true);
+        expect(args[0].name).toBe("some-name");
+        expect(args[0].value).toBe(formula);
+    });
+
+    it("delete a saved formula", () => {
+        const formulas = de.queryAll(By.css(".saved-formulas .formula"));
+        expect(formulas.length).toBe(1);
+
+        const deleteBtn = formulas[0].query(By.css(".delete-btn"));
+        click(deleteBtn);
+
+        expect(autoScaleForumlaServiceSpy.deleteFormula).toHaveBeenCalledOnce();
+        expect(autoScaleForumlaServiceSpy.deleteFormula).toHaveBeenCalledWith(predefinedFormulas[2]);
     });
 });
