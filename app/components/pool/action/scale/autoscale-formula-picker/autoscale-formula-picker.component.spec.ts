@@ -24,7 +24,7 @@ class TestComponent {
     public formula = new FormControl("");
 }
 
-fdescribe("AutoscaleFormulaPickerComponent", () => {
+describe("AutoscaleFormulaPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: AutoscaleFormulaPickerComponent;
