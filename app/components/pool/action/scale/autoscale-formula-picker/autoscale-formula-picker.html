@@ -1,9 +1,3 @@
-<div class="evaluation-error" *ngIf="evaluationError">
-    <div>{{evaluationError.message}}</div>
-    <div *ngFor="let detail of evaluationError.values;trackBy: trackEvaluationErrors">
-        {{detail.name}}: {{detail.value}}
-    </div>
-</div>
 <bl-split-pane [config]="splitPaneConfig" class="autoscale-formula-picker">
     <div blFirstPane class="editor">
         <bl-editor [ngModel]="autoscaleFormulaValue" [label]="'Autoscale Formula'" [config]="config" (ngModelChange)="updateAutoScaleForumla($event)"
@@ -11,7 +5,7 @@
     </div>
 
     <div blSecondPane class="formula-managment">
-        <bl-evaluate-autoscale-formula [formula]="autoscaleFormulaValue"></bl-evaluate-autoscale-formula>
+        <bl-evaluate-autoscale-formula [formula]="autoscaleFormulaValue" [pool]="pool"></bl-evaluate-autoscale-formula>
         <div>
             <div class="basic-header">
                 <div class="name"> Saved formulas </div>

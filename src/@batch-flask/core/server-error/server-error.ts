@@ -62,8 +62,7 @@ function parseMessage(fullMessage: string) {
  * All their error format needs to be converted to this one so it can then be consumed easily
  */
 export class ServerError {
-    public static fromBatchHttp(response: HttpErrorResponse) {
-        const error = response.error;
+    public static fromBatchBody(error: any) {
         const { message, requestId, timestamp } = parseMessage(error.message && error.message.value);
 
         // when the error message returned is not of type ErrorMessage, it will more often
@@ -77,6 +76,10 @@ export class ServerError {
             timestamp,
             original: error,
         });
+    }
+
+    public static fromBatchHttp(response: HttpErrorResponse) {
+        return this.fromBatchBody(response.error);
     }
 
     public static fromBatch(error: BatchError) {

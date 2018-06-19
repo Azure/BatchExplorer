@@ -15,7 +15,6 @@ import { Observable, Subscription } from "rxjs";
 
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { EditorConfig } from "@batch-flask/ui/editor";
-import { log } from "@batch-flask/utils";
 import { AutoscaleFormula, Pool } from "app/models";
 import { AutoscaleFormulaService, PoolService } from "app/services";
 import { PredefinedFormulaService } from "app/services/predefined-formula.service";
@@ -36,8 +35,6 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
     public savedAutoscaleFormulas: List<AutoscaleFormula>;
     public predefinedFormula: AutoscaleFormula[];
     public autoscaleFormulaValue: string;
-    public evaluationResults: string[] = [];
-    public evaluationError: AutoScaleRunError;
 
     @ViewChild("nameInput")
     public nameInput: ElementRef;
@@ -113,33 +110,10 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         this._propagateTouch();
     }
 
-    public get canEvaluateFormula() {
-        return this.pool && this.pool.enableAutoScale;
-    }
 
     public addFormula() {
         this.dialogService.prompt("Save formula", {
             prompt: (name) => this._saveFormula(name),
-        });
-    }
-
-    public evaluateFormula() {
-        if (!this.canEvaluateFormula || !this.autoscaleFormulaValue) {
-            return;
-        }
-
-        this.poolService.evaluateAutoScale(this.pool.id, this.autoscaleFormulaValue).subscribe({
-            next: (value: any) => {
-                if (value.results) {
-                    this.evaluationResults = value.results.split(";");
-                } else {
-                    this.evaluationResults = [];
-                }
-                this.evaluationError = value.error;
-            },
-            error: (error) => {
-                log.error("Error while evaluating autoscale formula", error.original);
-            },
         });
     }
 
@@ -155,13 +129,6 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         return formula.id;
     }
 
-    public trackEvaluationErrors(index, error: AutoScaleRunError) {
-        return index;
-    }
-
-    public trackEvaluationResult(index, result: string) {
-        return result;
-    }
 
     private _saveFormula(name: string) {
         const value = this.autoscaleFormulaValue;

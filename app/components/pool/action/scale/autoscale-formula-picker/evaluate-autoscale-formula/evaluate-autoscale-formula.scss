@@ -1,1 +1,22 @@
 @import "app/styles/variables";
+
+bl-evaluate-autoscale-formula {
+    .evaluate-formula-results {
+        padding: 0 5px;
+
+        > .result {
+            > .name {
+                color: $primary-color;
+            }
+
+            > .operator {
+                margin: 0 3px;
+                color: $warn-color;
+            }
+
+            > .value {
+
+            }
+        }
+    }
+}

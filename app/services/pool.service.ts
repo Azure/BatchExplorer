@@ -1,11 +1,13 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
-import { Pool } from "app/models";
+import { ServerError } from "@batch-flask/core";
+import { AutoScaleFormulaEvaluation, NameValuePair, Pool } from "app/models";
 import { PoolCreateDto, PoolEnableAutoScaleDto, PoolPatchDto, PoolResizeDto } from "app/models/dtos";
 import { BatchEntityGetter, EntityView, ListView } from "app/services/core";
 import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
+import { map } from "rxjs/operators";
 import { AzureBatchHttpService } from "./azure-batch/core";
 import { BatchClientService } from "./batch-client.service";
 import { BatchListGetter, ContinuationToken, DataCache, ListOptionsAttributes } from "./core";
@@ -156,13 +158,29 @@ export class PoolService extends ServiceBase {
         return this.http.post(`/pools/${poolId}/enableautoscale`, autoscaleParams);
     }
 
-    public evaluateAutoScale(poolId: string, formula: string) {
-        return this.http.post(`/pools/${poolId}/evaluateautoscale`, {
+    public evaluateAutoScale(poolId: string, formula: string): Observable<AutoScaleFormulaEvaluation> {
+        return this.http.post<any>(`/pools/${poolId}/evaluateautoscale`, {
             autoScaleFormula: formula,
-        });
+        }).pipe(
+            map((response) => {
+                const results = this._parseAutoScaleResults(response.results);
+                return new AutoScaleFormulaEvaluation({
+                    results: results,
+                    error: response.error && ServerError.fromBatchBody(response.error),
+                });
+            }),
+        );
     }
 
     public disableAutoScale(poolId: string) {
         return this.http.post(`/pools/${poolId}/disableautoscale`);
+    }
+
+    private _parseAutoScaleResults(results: string): NameValuePair[] {
+        if (!results) { return []; }
+        return results.split(";").map((result) => {
+            const [name, value] = result.split("=", 2);
+            return new NameValuePair({ name, value });
+        });
     }
 }
