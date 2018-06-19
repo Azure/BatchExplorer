@@ -9,14 +9,13 @@ import {
     forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { AutoScaleRunError } from "azure-batch/typings/lib/models";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { AutoscaleFormula, Pool } from "app/models";
-import { AutoscaleFormulaService, PoolService } from "app/services";
+import { AutoscaleFormulaService } from "app/services";
 import { PredefinedFormulaService } from "app/services/predefined-formula.service";
 import "./autoscale-formula-picker.scss";
 
@@ -61,7 +60,6 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
     private _propagateTouch: () => void;
 
     constructor(
-        private poolService: PoolService,
         private autoscaleFormulaService: AutoscaleFormulaService,
         private predefinedFormulaService: PredefinedFormulaService,
         private dialogService: DialogService,
@@ -110,7 +108,6 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         this._propagateTouch();
     }
 
-
     public addFormula() {
         this.dialogService.prompt("Save formula", {
             prompt: (name) => this._saveFormula(name),
@@ -128,7 +125,6 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
     public trackFormula(index, formula: AutoscaleFormula) {
         return formula.id;
     }
-
 
     private _saveFormula(name: string) {
         const value = this.autoscaleFormulaValue;

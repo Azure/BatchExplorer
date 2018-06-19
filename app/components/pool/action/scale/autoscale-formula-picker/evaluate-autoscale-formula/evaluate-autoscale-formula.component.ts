@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
+import { ServerError } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { AutoScaleFormulaEvaluation, NameValuePair, Pool } from "app/models";
 import { PoolService } from "app/services";
@@ -18,7 +19,7 @@ export class EvaluateAutoScaleForumlaComponent {
 
     public evaluating = false;
     public evaluationResults: List<NameValuePair> = List([]);
-    public evaluationError: AutoScaleRunError;
+    public evaluationError: ServerError;
 
     constructor(private poolService: PoolService, private changeDetector: ChangeDetectorRef) {
         this.changeDetector.markForCheck();

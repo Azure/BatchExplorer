@@ -1,6 +1,6 @@
 <div class="basic-header">
     <div class="name"> Evaluate formula </div>
-    <bl-clickable (do)="evaluateFormula()" class="action" [disabled]="!canEvaluateFormula" [class.flash-opacity]="evaluating">
+    <bl-clickable (do)="evaluateFormula()" class="evaluate-btn action" [disabled]="!canEvaluateFormula" [class.flash-opacity]="evaluating">
         <i class="fa fa-calculator" title="Evaluate autoscale formula"></i>
     </bl-clickable>
 </div>
@@ -21,7 +21,7 @@
 
 <div class="evaluation-error" *ngIf="evaluationError">
     <div>{{evaluationError.message}}</div>
-    <div *ngFor="let detail of evaluationError.values;trackBy: trackEvaluationErrors">
-        {{detail.name}}: {{detail.value}}
+    <div *ngFor="let detail of evaluationError.details;trackBy: trackEvaluationErrors">
+        {{detail.key}}: {{detail.value}}
     </div>
 </div>
