@@ -1,12 +1,16 @@
 <bl-split-pane [config]="splitPaneConfig" class="autoscale-formula-picker">
     <div blFirstPane class="editor">
-        <bl-editor [ngModel]="autoscaleFormulaValue" [label]="'Autoscale Formula'" [config]="config" (ngModelChange)="updateAutoScaleForumla($event)"
+        <bl-editor
+            [ngModel]="autoscaleFormulaValue"
+            [label]="'Autoscale Formula'"
+            [config]="config"
+            (ngModelChange)="updateAutoScaleForumla($event)"
             (blur)="textEditorOnBlur()"></bl-editor>
     </div>
 
     <div blSecondPane class="formula-managment">
         <bl-evaluate-autoscale-formula [formula]="autoscaleFormulaValue" [pool]="pool"></bl-evaluate-autoscale-formula>
-        <div>
+        <div class="saved-formulas">
             <div class="basic-header">
                 <div class="name"> Saved formulas </div>
                 <bl-clickable (do)="addFormula()" class="action">
@@ -14,10 +18,10 @@
                 </bl-clickable>
             </div>
             <div class="formula-list">
-                <div class="formula" *ngFor="let formula of savedAutoscaleFormulas;trackBy: trackFormula" (click)="selectFormula(formula)">
+                <bl-clickable class="formula" *ngFor="let formula of savedAutoscaleFormulas;trackBy: trackFormula" (do)="selectFormula(formula)">
                     <span class="label">{{formula.name}}</span>
                     <i class="fa fa-times" title="Delete" (click)="deleteFormula(formula)"></i>
-                </div>
+                </bl-clickable>
                 <div class="no-formula" *ngIf="savedAutoscaleFormulas.size === 0">
                     <div>
                         <i class="fa fa-file-code-o"></i>
@@ -26,14 +30,14 @@
                 </div>
             </div>
         </div>
-        <div>
+        <div class="predefined-formulas">
             <div class="basic-header">
                 <div class="name"> Sample formulas </div>
             </div>
             <div class="formula-list">
-                <div class="formula" *ngFor="let formula of predefinedFormula;trackBy: trackFormula" (click)="selectFormula(formula)">
+                <bl-clickable class="formula" *ngFor="let formula of predefinedFormula;trackBy: trackFormula" (do)="selectFormula(formula)">
                     <span class="label">{{formula.name}}</span>
-                </div>
+                </bl-clickable>
                 <div class="no-formula" *ngIf="predefinedFormula.length === 0">
                     <div>
                         <i class="fa fa-file-code-o"></i>

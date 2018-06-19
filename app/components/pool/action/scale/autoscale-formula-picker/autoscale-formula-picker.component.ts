@@ -1,5 +1,6 @@
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ElementRef,
     Input,
@@ -60,6 +61,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
     private _propagateTouch: () => void;
 
     constructor(
+        private changeDetector: ChangeDetectorRef,
         private autoscaleFormulaService: AutoscaleFormulaService,
         private predefinedFormulaService: PredefinedFormulaService,
         private dialogService: DialogService,
@@ -73,16 +75,21 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         this._propagateTouch = null;
         this._subs.push(this.autoscaleFormulaService.formulas.subscribe((formulas) => {
             this.savedAutoscaleFormulas = formulas;
+            this.changeDetector.markForCheck();
         }));
-        this.predefinedFormulaService.predefinedFormulas.subscribe(formulas => this.predefinedFormula = formulas);
+        this.predefinedFormulaService.predefinedFormulas.subscribe(formulas => {
+            this.predefinedFormula = formulas;
+            this.changeDetector.markForCheck();
+        });
     }
 
     public ngOnDestroy() {
         this._subs.forEach(x => x.unsubscribe());
     }
 
-    public writeValue(value: any) {
+    public writeValue(value: string) {
         this.autoscaleFormulaValue = value;
+        this.changeDetector.markForCheck();
     }
 
     public registerOnChange(fn) {
@@ -99,6 +106,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
 
     public updateAutoScaleForumla(formula: string) {
         this.autoscaleFormulaValue = formula;
+        this.changeDetector.markForCheck();
         if (this._propagateChange && this.autoscaleFormulaValue !== null) {
             this._propagateChange(this.autoscaleFormulaValue);
         }
@@ -115,7 +123,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
     }
 
     public selectFormula(formula: AutoscaleFormula) {
-        this.autoscaleFormulaValue = formula.value;
+        this.updateAutoScaleForumla(formula.value);
     }
 
     public deleteFormula(formula: AutoscaleFormula) {
