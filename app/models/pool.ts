@@ -22,7 +22,8 @@ export interface PoolAttributes {
     currentDedicatedNodes: number;
     currentLowPriorityNodes: number;
     displayName: string;
-    enableAutoscale: boolean;
+    enableAutoScale: boolean;
+    autoScaleFormula: string;
     enableInterNodeCommunication: boolean;
     id: string;
     lastModified: Date;

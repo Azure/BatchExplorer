@@ -13,7 +13,6 @@ require("zone.js/dist/sync-test");
 require("zone.js/dist/jasmine-patch"); // put here since zone.js 0.6.14
 require("zone.js/dist/async-test");
 require("zone.js/dist/fake-async-test");
-Error.stackTraceLimit = 5;
 
 import "@batch-flask/extensions";
 import "hammerjs";
