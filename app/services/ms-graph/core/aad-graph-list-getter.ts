@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 import { HttpRequestOptions } from "@batch-flask/core";
 import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
 import { ContinuationToken, ListOptions } from "app/services/core/data/list-options";
+import { map, share } from "rxjs/operators";
 import { AADGraphHttpService } from "./aad-graph-http.service";
 
 export interface AADGraphListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
@@ -29,11 +30,16 @@ export class AADGraphListGetter<TEntity, TParams> extends ListGetter<TEntity, TP
     protected list(params: TParams, options: ListOptions): Observable<any> {
         return this.aadGraph.get<any>(
             this._provideUri(params, options),
-            this._requestOptions(options)).map(x => this._processAADGraphResponse(x)).share();
+            this._requestOptions(options)).pipe(
+                map(x => this._processAADGraphResponse(x)),
+                share());
     }
 
     protected listNext(token: ContinuationToken): Observable<any> {
-        return this.aadGraph.get<any>(token.nextLink).map(x => this._processAADGraphResponse(x)).share();
+        return this.aadGraph.get<any>(token.nextLink).pipe(
+            map(x => this._processAADGraphResponse(x)),
+            share(),
+        );
     }
 
     private _processAADGraphResponse(response: { value: TEntity[], "@odata.nextLink": string }) {
