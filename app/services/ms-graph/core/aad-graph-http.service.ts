@@ -33,8 +33,8 @@ export class AADGraphHttpService extends HttpService {
             take(1),
             flatMap((account) => {
                 const tenantId = account.subscription.tenantId;
-                return this.adal.accessTokenData(tenantId, this.serviceUrl)
-                    .flatMap((accessToken) => {
+                return this.adal.accessTokenData(tenantId, this.serviceUrl).pipe(
+                    flatMap((accessToken) => {
                         options = this.addAuthorizationHeader(options, accessToken);
                         options = this._addApiVersion(options);
                         return super.request(
@@ -45,8 +45,8 @@ export class AADGraphHttpService extends HttpService {
                             .catch((error) => {
                                 const err = ServerError.fromAADGraph(error);
                                 return Observable.throw(err);
-                            }) as any;
-                    });
+                            });
+                    }));
             }),
             shareReplay(1),
         );
