@@ -9,12 +9,13 @@ import {
     DataCache,
     EntityView,
     ListOptionsAttributes,
+    ListResponse,
     ListView,
 } from "app/services/core";
 import { Constants, ModelUtils } from "app/utils";
 import { List } from "immutable";
 import { map } from "rxjs/operators";
-import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "./core";
+import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "../core";
 
 export interface PoolListParams { }
 
@@ -56,10 +57,10 @@ export class PoolService {
         return this.http.post("/pools", pool.toJS());
     }
 
-    public list(options?: ListOptionsAttributes, forceNew?: boolean);
-    public list(nextLink: ContinuationToken);
-    public list(nextLinkOrOptions: any, options = {}, forceNew = false) {
-        if (nextLinkOrOptions.nextLink) {
+    public list(options?: ListOptionsAttributes, forceNew?: boolean): Observable<ListResponse<Pool>>;
+    public list(nextLink: ContinuationToken): Observable<ListResponse<Pool>>;
+    public list(nextLinkOrOptions: any, options = {}, forceNew = false): Observable<ListResponse<Pool>> {
+        if (nextLinkOrOptions && nextLinkOrOptions.nextLink) {
             return this._listGetter.fetch(nextLinkOrOptions);
         } else {
             return this._listGetter.fetch({}, options, forceNew);
@@ -110,7 +111,7 @@ export class PoolService {
     /**
      * This will start the delete process
      */
-    public delete(poolId: string, options: any = {}): Observable<any> {
+    public delete(poolId: string): Observable<any> {
         return this.http.delete(`/pools/${poolId}`);
     }
 
@@ -141,7 +142,7 @@ export class PoolService {
     }
 
     public enableAutoScale(poolId: string, autoscaleParams: PoolEnableAutoScaleDto) {
-        return this.http.post(`/pools/${poolId}/enableautoscale`, autoscaleParams);
+        return this.http.post(`/pools/${poolId}/enableautoscale`, autoscaleParams.toJS());
     }
 
     public evaluateAutoScale(poolId: string, formula: string): Observable<AutoScaleFormulaEvaluation> {
@@ -164,9 +165,11 @@ export class PoolService {
 
     private _parseAutoScaleResults(results: string): NameValuePair[] {
         if (!results) { return []; }
-        return results.split(";").map((result) => {
-            const [name, value] = result.split("=", 2);
-            return new NameValuePair({ name, value });
-        });
+        return results.split(";")
+            .filter(x => x !== "")
+            .map((result) => {
+                const [name, value] = result.split("=", 2);
+                return new NameValuePair({ name, value });
+            });
     }
 }

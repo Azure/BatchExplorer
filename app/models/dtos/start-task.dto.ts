@@ -6,10 +6,10 @@ import { UserIdentityDto } from "./user-identity.dto";
 
 export class StartTaskDto extends Dto<StartTaskDto> {
     @DtoAttr() public commandLine: string;
-    @DtoAttr() public containerSettings: TaskContainerSettingsDto;
-    @ListDtoAttr(EnvironmentSettingDto) public environmentSettings: EnvironmentSettingDto[];
-    @DtoAttr() public maxTaskRetryCount: number;
-    @ListDtoAttr(ResourceFileDto) public resourceFiles: ResourceFileDto[];
-    @DtoAttr() public userIdentity: UserIdentityDto;
-    @DtoAttr() public waitForSuccess: boolean;
+    @DtoAttr() public containerSettings?: TaskContainerSettingsDto;
+    @ListDtoAttr(EnvironmentSettingDto) public environmentSettings?: EnvironmentSettingDto[];
+    @DtoAttr() public maxTaskRetryCount?: number;
+    @ListDtoAttr(ResourceFileDto) public resourceFiles?: ResourceFileDto[];
+    @DtoAttr() public userIdentity?: UserIdentityDto;
+    @DtoAttr() public waitForSuccess?: boolean;
 }

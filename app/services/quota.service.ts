@@ -6,7 +6,7 @@ import { AccountResource, BatchQuotas, JobState, Pool } from "app/models";
 import { List } from "immutable";
 import { AccountService } from "./account.service";
 import { ApplicationService } from "./application.service";
-import { PoolService } from "./azure-batch/pool.service";
+import { PoolService } from "./azure-batch/pool";
 import { ComputeService } from "./compute.service";
 import { JobService } from "./job.service";
 import { VmSizeService } from "./vm-size.service";

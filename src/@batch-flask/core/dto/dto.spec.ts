@@ -16,7 +16,7 @@ class FakeDto extends Dto<FakeDto> {
     @ListDtoAttr(FakeNestedDto) public nestedList?: FakeNestedDto[];
 }
 
-fdescribe("Dto", () => {
+describe("Dto", () => {
     it("should not set attributes not in the list", () => {
         const dto = new FakeDto({ id: "foo", other: "wrong", other2: { nested: true } } as any);
         expect(dto.id).toEqual("foo");
@@ -91,5 +91,15 @@ fdescribe("Dto", () => {
         expect(result.nestedList.length).toBe(1);
         expect(result.nestedList[0].foo).toBe("bar");
         expect("name" in result.nestedList[0]).toBe(false);
+    });
+
+    it("doesn't set null list attributes", () => {
+        const dto = new FakeDto({
+            id: "foo",
+            nestedList: null,
+        });
+
+        const result = dto.toJS();
+        expect(result).toEqual({ id: "foo" });
     });
 });
