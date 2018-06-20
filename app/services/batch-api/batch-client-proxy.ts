@@ -5,7 +5,6 @@ import { CertificateProxy } from "./certificateProxy";
 import { FileProxy } from "./fileProxy";
 import { JobProxy } from "./jobProxy";
 import { JobScheduleProxy } from "./jobScheduleProxy";
-import { NodeProxy } from "./nodeProxy";
 import { TaskProxy } from "./taskProxy";
 
 export interface Options {
@@ -23,7 +22,6 @@ export class BatchClientProxy {
     private _jobSchedule: JobScheduleProxy;
     private _certificate: CertificateProxy;
     private _task: TaskProxy;
-    private _node: NodeProxy;
 
     constructor(credentials, url) {
         this.client = new BatchServiceClient(credentials, url);
@@ -34,7 +32,6 @@ export class BatchClientProxy {
         this._jobSchedule = new JobScheduleProxy(this.client);
         this._certificate = new CertificateProxy(this.client);
         this._task = new TaskProxy(this.client);
-        this._node = new NodeProxy(this.client);
     }
 
     get account(): AccountProxy {
@@ -59,10 +56,6 @@ export class BatchClientProxy {
 
     get certificate(): CertificateProxy {
         return this.checkProxy(this._certificate);
-    }
-
-    get node(): NodeProxy {
-        return this.checkProxy(this._node);
     }
 
     private checkProxy(proxy: any): any {
