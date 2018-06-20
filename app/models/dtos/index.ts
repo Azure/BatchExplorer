@@ -22,6 +22,7 @@ export * from "./pool-enable-autoscale.dto";
 export * from "./pool-endpoint-configuration.dto";
 export * from "./pool-patch.dto";
 export * from "./pool-resize.dto";
+export * from "./resource-file.dto";
 export * from "./schedule.dto";
 export * from "./task-create.dto";
 export * from "./task-constraints.dto";

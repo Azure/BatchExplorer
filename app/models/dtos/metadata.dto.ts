@@ -1,9 +1,11 @@
-export interface MetaDataDto {
-    name: string;
-    value: string;
+import { Dto, DtoAttr } from "@batch-flask/core";
+
+export class MetaDataDto extends Dto<MetaDataDto> {
+    @DtoAttr() public name: string;
+    @DtoAttr() public value: string;
 }
 
-export interface EnvironmentSetting {
-    name: string;
-    value: string;
+export class EnvironmentSetting extends Dto<MetaDataDto> {
+    @DtoAttr() public name: string;
+    @DtoAttr() public value: string;
 }

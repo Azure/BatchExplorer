@@ -1,7 +1,8 @@
 import * as moment from "moment";
 
-import { CertificateReference, InboundNATPool, NodeFillType } from "app/models";
+import { NodeFillType } from "app/models";
 import { ContainerRegistryDto, InboundNATPoolDto, MetaDataDto, PoolCreateDto, UserAccountDto } from "app/models/dtos";
+import { CertificateReferenceDto } from "../dtos/certificate-reference.dto";
 
 export enum PoolOsSources {
     PaaS,
@@ -58,7 +59,7 @@ export interface CreatePoolModel {
     appPackages: PackageReferenceModel[];
     inboundNATPools: InboundNATPoolDto[];
     subnetId: string;
-    certificateReferences: CertificateReference[];
+    certificateReferences: CertificateReferenceDto[];
     metadata: MetaDataDto[];
 }
 
@@ -71,7 +72,7 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         enableAutoScale: outputScale.enableAutoScale,
         maxTasksPerNode: Number(output.maxTasksPerNode),
         enableInterNodeCommunication: output.enableInterNodeCommunication,
-        taskSchedulingPolicy:  {
+        taskSchedulingPolicy: {
             nodeFillType: output.taskSchedulingPolicy,
         },
         startTask: output.startTask,

@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
 import { InboundEndpointProtocol, NetworkSecurityGroupRuleAccess } from "app/models";
 
 export class NetworkSecurityGroupRuleDto extends Dto<NetworkSecurityGroupRuleDto> {
@@ -12,10 +12,10 @@ export class InboundNATPoolDto extends Dto<InboundNATPoolDto> {
     @DtoAttr() public frontendPortRangeEnd: number;
     @DtoAttr() public frontendPortRangeStart: number;
     @DtoAttr() public name: string;
-    @DtoAttr() public networkSecurityGroupRules: NetworkSecurityGroupRuleDto[];
+    @ListDtoAttr(NetworkSecurityGroupRuleDto) public networkSecurityGroupRules: NetworkSecurityGroupRuleDto[];
     @DtoAttr() public protocol: InboundEndpointProtocol;
 }
 
 export class PoolEndPointConfigurationDto extends Dto<PoolEndPointConfigurationDto> {
-    @DtoAttr() public inboundNATPools: InboundNATPoolDto[];
+    @ListDtoAttr(InboundNATPoolDto) public inboundNATPools: InboundNATPoolDto[];
 }

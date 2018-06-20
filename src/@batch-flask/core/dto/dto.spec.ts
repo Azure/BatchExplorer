@@ -1,25 +1,22 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
 
 class FakeNestedDto extends Dto<FakeNestedDto> {
-    @DtoAttr()
-    public foo: string;
+    @DtoAttr() public foo: string;
+    @DtoAttr() public name: string;
 }
 
 class FakeDto extends Dto<FakeDto> {
-    @DtoAttr()
-    public id: string;
+    @DtoAttr() public id: string;
 
-    @DtoAttr()
-    public num?: number;
+    @DtoAttr() public num?: number;
 
-    @DtoAttr()
-    public obj?: { a: string, b: string };
+    @DtoAttr() public obj?: { a: string, b: string };
 
-    @DtoAttr()
-    public nested?: FakeNestedDto;
+    @DtoAttr() public nested?: FakeNestedDto;
+    @ListDtoAttr(FakeNestedDto) public nestedList?: FakeNestedDto[];
 }
 
-describe("Dto", () => {
+fdescribe("Dto", () => {
     it("should not set attributes not in the list", () => {
         const dto = new FakeDto({ id: "foo", other: "wrong", other2: { nested: true } } as any);
         expect(dto.id).toEqual("foo");
@@ -35,12 +32,13 @@ describe("Dto", () => {
     });
 
     it("should assign nested dto types correctly", () => {
-        const dto = new FakeDto({ id: "foo", nested: { foo: "bar" } });
+        const dto = new FakeDto({ id: "foo", nested: { foo: "bar", name: null } });
         expect(dto.id).toEqual("foo");
         const nested = dto.nested;
         expect(nested).not.toBeUndefined();
         expect(nested instanceof FakeNestedDto).toBe(true);
         expect(nested.foo).toEqual("bar");
+        expect(nested.name).toBeUndefined();
     });
 
     it("should not assign unknown nested dto types correctly", () => {
@@ -62,5 +60,36 @@ describe("Dto", () => {
         expect(nested).not.toBeUndefined();
         expect(nested instanceof FakeNestedDto).toBe(true);
         expect((nested as any).other).toBeUndefined("bar");
+    });
+
+    it("handle nested list dto", () => {
+        const dto = new FakeDto({
+            id: "foo",
+            nestedList: [{ foo: "bar", name: null, other: "with-value" }],
+        } as any);
+        const nestedList = dto.nestedList;
+        expect(nestedList).not.toBeUndefined();
+        expect(nestedList.length).toBe(1);
+        expect(nestedList[0] instanceof FakeNestedDto).toBe(true);
+        expect(nestedList[0].name).toBeUndefined();
+        expect((nestedList[0] as any).other).toBeUndefined();
+    });
+
+    it("remove null attributes when toJS()", () => {
+        const dto = new FakeDto({
+            id: "foo",
+            nested: { foo: null, name: "some" },
+            nestedList: [{ foo: "bar", name: null }],
+        });
+
+        const result = dto.toJS();
+        expect(result.nested).not.toBeUndefined();
+        expect(result.nested.name).toBe("some");
+        expect("foo" in result.nested).toBe(false);
+
+        expect(result.nestedList).not.toBeUndefined();
+        expect(result.nestedList.length).toBe(1);
+        expect(result.nestedList[0].foo).toBe("bar");
+        expect("name" in result.nestedList[0]).toBe(false);
     });
 });

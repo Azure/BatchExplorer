@@ -1,8 +1,19 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
 import { AppPackageReferenceDto } from "./application-package-reference.dto";
 import { EnvironmentSetting } from "./metadata.dto";
+import { ResourceFileDto } from "./resource-file.dto";
 import { TaskConstraintsDto } from "./task-constraints.dto";
 import { TaskContainerSettingsDto } from "./task-container-settings.dto";
+
+export class GroupSourceDto extends Dto<GroupSourceDto> {
+    @DtoAttr() public fileGroup: string;
+    @DtoAttr() public prefix: string;
+}
+
+export class FileGroupDto extends Dto<FileGroupDto> {
+    @DtoAttr() public source: GroupSourceDto;
+    @DtoAttr() public filePath: string;
+}
 
 export class TaskCreateDto extends Dto<TaskCreateDto> {
     @DtoAttr() public id: string;
@@ -11,13 +22,13 @@ export class TaskCreateDto extends Dto<TaskCreateDto> {
 
     @DtoAttr() public commandLine: string;
 
-    @DtoAttr() public resourceFiles?: ResourceFileDto[];
+    @ListDtoAttr(ResourceFileDto) public resourceFiles?: ResourceFileDto[];
 
     @DtoAttr() public fileGroups?: FileGroupDto[];
 
-    @DtoAttr() public applicationPackageReferences?: AppPackageReferenceDto[];
+    @ListDtoAttr(AppPackageReferenceDto) public applicationPackageReferences?: AppPackageReferenceDto[];
 
-    @DtoAttr() public environmentSettings?: EnvironmentSetting[];
+    @ListDtoAttr(EnvironmentSetting) public environmentSettings?: EnvironmentSetting[];
 
     @DtoAttr() public affinityInfo?: any;
 
@@ -32,20 +43,4 @@ export class TaskCreateDto extends Dto<TaskCreateDto> {
     @DtoAttr() public exitConditions?: any;
 
     @DtoAttr() public containerSettings?: TaskContainerSettingsDto;
-}
-
-export interface ResourceFileDto {
-    blobSource: string;
-    filePath: string;
-    fileMode?: string;
-}
-
-export interface FileGroupDto {
-    source: GroupSourceDto;
-    filePath: string;
-}
-
-export interface GroupSourceDto {
-    fileGroup: string;
-    prefix: string;
 }

@@ -1,8 +1,9 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
 import { NodeFillType } from "app/models";
 import * as moment from "moment";
 
 import { AppPackageReferenceDto } from "./application-package-reference.dto";
+import { CertificateReferenceDto } from "./certificate-reference.dto";
 import { CloudServiceConfiguration } from "./cloud-service-configuration.dto";
 import { MetaDataDto } from "./metadata.dto";
 import { NetworkConfigurationDto } from "./network-configuration.dto";
@@ -45,13 +46,13 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
 
     @DtoAttr() public startTask?: StartTaskDto;
 
-    @DtoAttr() public certificateReferences?: any[];
+    @ListDtoAttr(CertificateReferenceDto) public certificateReferences?: CertificateReferenceDto[];
 
-    @DtoAttr() public applicationPackageReferences: AppPackageReferenceDto[];
+    @ListDtoAttr(AppPackageReferenceDto) public applicationPackageReferences: AppPackageReferenceDto[];
 
-    @DtoAttr() public metadata: MetaDataDto[];
+    @ListDtoAttr(MetaDataDto) public metadata: MetaDataDto[];
 
-    @DtoAttr() public userAccounts: UserAccountDto[];
+    @ListDtoAttr(UserAccountDto) public userAccounts: UserAccountDto[];
 
     @DtoAttr() public applicationLicenses: string[];
 }

@@ -15,7 +15,7 @@ export class Dto<T> {
     constructor(data: AttrOf<T>) {
         const attrs = metadataForDto(this);
         for (const key of Object.keys(attrs)) {
-            const type = attrs[key];
+            const typeMetadata = attrs[key];
             if (!(key in data)) {
                 continue;
             }
@@ -23,8 +23,18 @@ export class Dto<T> {
             if (nil(value)) {
                 continue;
             }
-            if (type && !primitives.has(type.name)) {
-                this[key] = new type(value);
+
+            if (typeMetadata) {
+                const isPrimitive = primitives.has(typeMetadata.type.name);
+                if (typeMetadata.list) {
+                    this[key] = value && value.map(x => isPrimitive ? x : new typeMetadata.type(x));
+                } else {
+                    if (isPrimitive) {
+                        this[key] = value;
+                    } else {
+                        this[key] = new typeMetadata.type(value);
+                    }
+                }
             } else {
                 this[key] = value;
             }
@@ -68,7 +78,16 @@ export function DtoAttr<T>(type?: any) {
                 + "Check your nested type is defined in another file or above this DtoAttr");
         }
         const metadata = Reflect.getMetadata(attrMetadataKey, ctr) || {};
-        metadata[attr] = type;
+        metadata[attr] = {type};
+        Reflect.defineMetadata(attrMetadataKey, metadata, ctr);
+    };
+}
+
+export function ListDtoAttr<T>(type: any) {
+    return (target, attr, descriptor?: TypedPropertyDescriptor<T>) => {
+        const ctr = target.constructor;
+        const metadata = Reflect.getMetadata(attrMetadataKey, ctr) || {};
+        metadata[attr] = {type, list: true};
         Reflect.defineMetadata(attrMetadataKey, metadata, ctr);
     };
 }
