@@ -4,7 +4,7 @@ import {
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
-import { ContainerRegistry } from "app/models/dtos";
+import { ContainerRegistryDto } from "app/models/dtos";
 
 @Component({
     selector: "bl-container-registry-picker",
@@ -18,7 +18,7 @@ import { ContainerRegistry } from "app/models/dtos";
 export class ContainerRegistryPickerComponent implements ControlValueAccessor, OnDestroy {
     public registries: FormControl;
 
-    private _propagateChange: (value: ContainerRegistry[]) => void = null;
+    private _propagateChange: (value: ContainerRegistryDto[]) => void = null;
     private _sub: Subscription;
 
     constructor(private formBuilder: FormBuilder) {
@@ -34,7 +34,7 @@ export class ContainerRegistryPickerComponent implements ControlValueAccessor, O
         this._sub.unsubscribe();
     }
 
-    public writeValue(value: ContainerRegistry[]) {
+    public writeValue(value: ContainerRegistryDto[]) {
         if (value) {
             this.registries.setValue(value);
         }

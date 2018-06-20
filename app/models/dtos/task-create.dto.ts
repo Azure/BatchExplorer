@@ -1,8 +1,8 @@
 import { Dto, DtoAttr } from "@batch-flask/core";
 import { AppPackageReferenceDto } from "./application-package-reference.dto";
-import { TaskContainerSettings } from "./container-setup.dto";
 import { EnvironmentSetting } from "./metadata.dto";
 import { TaskConstraintsDto } from "./task-constraints.dto";
+import { TaskContainerSettingsDto } from "./task-container-settings.dto";
 
 export class TaskCreateDto extends Dto<TaskCreateDto> {
     @DtoAttr() public id: string;
@@ -31,7 +31,7 @@ export class TaskCreateDto extends Dto<TaskCreateDto> {
 
     @DtoAttr() public exitConditions?: any;
 
-    @DtoAttr() public containerSettings?: TaskContainerSettings;
+    @DtoAttr() public containerSettings?: TaskContainerSettingsDto;
 }
 
 export interface ResourceFileDto {

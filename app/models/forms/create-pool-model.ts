@@ -1,7 +1,7 @@
 import * as moment from "moment";
 
 import { CertificateReference, InboundNATPool, NodeFillType } from "app/models";
-import { ContainerRegistry, MetaDataDto, PoolCreateDto, UserAccountDto } from "app/models/dtos";
+import { ContainerRegistryDto, MetaDataDto, PoolCreateDto, UserAccountDto } from "app/models/dtos";
 
 export enum PoolOsSources {
     PaaS,
@@ -24,7 +24,7 @@ export interface PoolOSPickerModel {
         containerConfiguration?: {
             type: string,
             containerImageNames: string[],
-            containerRegistries: ContainerRegistry[],
+            containerRegistries: ContainerRegistryDto[],
         },
     };
 }
