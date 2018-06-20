@@ -26,7 +26,7 @@ export class RegistryPickerComponent implements ControlValueAccessor, OnDestroy 
 
     constructor(formBuilder: FormBuilder) {
         this.form = formBuilder.group( {
-            userName: [null],
+            username: [null],
             password: [null],
             registryServer: [null],
         });

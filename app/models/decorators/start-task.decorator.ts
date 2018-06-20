@@ -12,7 +12,7 @@ export class StartTaskDecorator extends DecoratorBase<StartTask> {
     private _initUserIdentity() {
         const userIdentity = this.original.userIdentity;
         let value;
-        if (!userIdentity || (!userIdentity.userName && !userIdentity.autoUser)) {
+        if (!userIdentity || (!userIdentity.username && !userIdentity.autoUser)) {
             value = "Task user";
         } else if (userIdentity.autoUser) {
             const isAdmin = userIdentity.autoUser.elevationLevel === UserAccountElevationLevel.admin;
@@ -24,7 +24,7 @@ export class StartTaskDecorator extends DecoratorBase<StartTask> {
                 value = scope;
             }
         } else {
-            value = userIdentity.userName;
+            value = userIdentity.username;
         }
 
         this.userIdentitySummary = value;

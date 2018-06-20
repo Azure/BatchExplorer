@@ -11,7 +11,7 @@ export interface ContainerConfigurationAttributes {
 }
 
 export interface ContainerRegistryAttributes {
-    userName: string;
+    username: string;
     password: string;
     registryServer: string;
 }
@@ -24,7 +24,7 @@ export interface TaskContainerSettingsAttributes {
 
 @Model()
 export class ContainerRegistry extends Record<ContainerRegistryAttributes> {
-    @Prop() public userName: string;
+    @Prop() public username: string;
     @Prop() public password: string;
     @Prop() public registryServer: string;
 }

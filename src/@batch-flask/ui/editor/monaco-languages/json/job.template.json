@@ -237,7 +237,7 @@
         },
         "username": {
           "type": "string",
-          "x-ms-client-name": "userName",
+          "x-ms-client-name": "username",
           "title": "The user name to log into the registry server.",
           "description": "The user name to log into the registry server."
         },
@@ -473,7 +473,7 @@
       "properties": {
         "username": {
           "type": "string",
-          "x-ms-client-name": "userName",
+          "x-ms-client-name": "username",
           "title": "The name of the user identity under which the task is run.",
           "description": "The name of the user identity under which the task is run."
         },
@@ -484,7 +484,7 @@
         }
       },
       "title": "The definition of the user identity under which the task is run.",
-      "description": "Specify either the userName or autoUser property, but not both."
+      "description": "Specify either the username or autoUser property, but not both."
     },
     "AutoUserSpecification": {
       "properties": {

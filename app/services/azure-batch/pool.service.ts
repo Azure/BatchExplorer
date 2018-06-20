@@ -11,7 +11,7 @@ import {
     ListOptionsAttributes,
     ListView,
 } from "app/services/core";
-import { Constants, ModelUtils, log } from "app/utils";
+import { Constants, ModelUtils } from "app/utils";
 import { List } from "immutable";
 import { map } from "rxjs/operators";
 import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "./core";

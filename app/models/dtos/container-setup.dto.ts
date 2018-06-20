@@ -5,7 +5,7 @@ export interface ContainerImage {
 }
 
 export interface ContainerRegistry {
-    userName: string;
+    username: string;
     password: string;
     registryServer: string;
 }
