@@ -1,52 +1,41 @@
-import { HttpParams } from "@angular/common/http";
 import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
+import { HttpParams } from "@angular/common/http";
 import { HttpRequestOptions } from "@batch-flask/core";
 import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
 import { ContinuationToken, ListOptions } from "app/services/core/data/list-options";
-import { map, share } from "rxjs/operators";
-import { AADGraphHttpService } from "./aad-graph-http.service";
+import { AzureBatchHttpService } from "./batch-http.service";
 
-export interface AADGraphListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
+export interface BatchListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
     uri: (params: TParams, options: any) => string;
-    filter?: (item: TEntity) => boolean;
 }
 
-export class AADGraphListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams> {
-    private _filter: (item: TEntity) => boolean;
+export class BatchListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams> {
     private _provideUri: (params: TParams, options: any) => string;
 
     constructor(
         type: Type<TEntity>,
-        private aadGraph: AADGraphHttpService,
-        config: AADGraphListConfig<TEntity, TParams>) {
+        private http: AzureBatchHttpService,
+        config: BatchListConfig<TEntity, TParams>) {
 
         super(type, config);
         this._provideUri = config.uri;
-        this._filter = config.filter;
     }
 
     protected list(params: TParams, options: ListOptions): Observable<any> {
-        return this.aadGraph.get<any>(
+        return this.http.get<any>(
             this._provideUri(params, options),
-            this._requestOptions(options)).pipe(
-                map(x => this._processAADGraphResponse(x)),
-                share());
+            this._requestOptions(options)).map(x => this._processResponse(x)).share();
     }
 
     protected listNext(token: ContinuationToken): Observable<any> {
-        return this.aadGraph.get<any>(token.nextLink).pipe(
-            map(x => this._processAADGraphResponse(x)),
-            share(),
-        );
+        return this.http.get<any>(token.nextLink).map(x => this._processResponse(x)).share();
     }
 
-    private _processAADGraphResponse(response: { value: TEntity[], "@odata.nextLink": string }) {
-        let data = response.value;
-        if (this._filter) {
-            data = data.filter(this._filter);
-        }
+    private _processResponse(response: { value: TEntity[], "@odata.nextLink": string }) {
+        const data = response.value;
+
         return {
             data,
             nextLink: response["@odata.nextLink"],
@@ -64,13 +53,12 @@ export class AADGraphListGetter<TEntity, TParams> extends ListGetter<TEntity, TP
         }
 
         if (options.maxResults) {
-            params = params.set("maxResults", options.maxResults.toString());
+            params = params.set("$top", options.maxResults.toString());
         }
 
         for (const key of Object.keys(options.attributes)) {
             params = params.set(key, options.attributes[key]);
         }
-
         return {
             params,
         };

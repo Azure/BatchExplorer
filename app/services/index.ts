@@ -1,3 +1,4 @@
+export * from "./azure-batch";
 export * from "./account.service";
 export * from "./authorization-http";
 export * from "./application.service";
@@ -20,7 +21,6 @@ export * from "./local-file-storage.service";
 export * from "./monitoring";
 export * from "./navigator.service";
 export * from "./pinned-entity.service";
-export * from "./pool.service";
 export * from "./ncj-file-group.service";
 export * from "./ncj-submit.service";
 export * from "./ncj-template.service";

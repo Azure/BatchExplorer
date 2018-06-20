@@ -3,7 +3,7 @@ import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 
-import { ContainerRegistry } from "app/models/dtos";
+import { ContainerRegistryDto } from "app/models/dtos";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -18,15 +18,15 @@ import { Subscription } from "rxjs";
 export class RegistryPickerComponent implements ControlValueAccessor, OnDestroy {
     public form: FormGroup;
     public customValue: boolean;
-    public registry: ContainerRegistry;
+    public registry: ContainerRegistryDto;
 
-    private _propagateChange: (value: ContainerRegistry) => void = null;
+    private _propagateChange: (value: ContainerRegistryDto) => void = null;
 
     private _sub: Subscription;
 
     constructor(formBuilder: FormBuilder) {
         this.form = formBuilder.group( {
-            userName: [null],
+            username: [null],
             password: [null],
             registryServer: [null],
         });
@@ -49,7 +49,7 @@ export class RegistryPickerComponent implements ControlValueAccessor, OnDestroy 
         this._sub.unsubscribe();
     }
 
-    public writeValue(value: ContainerRegistry) {
+    public writeValue(value: ContainerRegistryDto) {
         this.customValue = Boolean(value);
         this.registry = value;
         if (value) {

@@ -4,14 +4,18 @@ import { Observable, Subject } from "rxjs";
 import { ServerError } from "@batch-flask/core";
 import { AutoScaleFormulaEvaluation, NameValuePair, Pool } from "app/models";
 import { PoolCreateDto, PoolEnableAutoScaleDto, PoolPatchDto, PoolResizeDto } from "app/models/dtos";
-import { BatchEntityGetter, EntityView, ListView } from "app/services/core";
-import { Constants, ModelUtils, log } from "app/utils";
+import {
+    ContinuationToken,
+    DataCache,
+    EntityView,
+    ListOptionsAttributes,
+    ListResponse,
+    ListView,
+} from "app/services/core";
+import { Constants, ModelUtils } from "app/utils";
 import { List } from "immutable";
 import { map } from "rxjs/operators";
-import { AzureBatchHttpService } from "./azure-batch/core";
-import { BatchClientService } from "./batch-client.service";
-import { BatchListGetter, ContinuationToken, DataCache, ListOptionsAttributes } from "./core";
-import { ServiceBase } from "./service-base";
+import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "../core";
 
 export interface PoolListParams { }
 
@@ -20,7 +24,7 @@ export interface PoolParams {
 }
 
 @Injectable()
-export class PoolService extends ServiceBase {
+export class PoolService {
     /**
      * Triggered only when a pool is added through this app.
      * Used to notify the list of a new item
@@ -33,18 +37,15 @@ export class PoolService extends ServiceBase {
     private _getter: BatchEntityGetter<Pool, PoolParams>;
     private _listGetter: BatchListGetter<Pool, PoolListParams>;
 
-    constructor(batchService: BatchClientService, private http: AzureBatchHttpService) {
-        super(batchService);
-
-        this._getter = new BatchEntityGetter(Pool, this.batchService, {
+    constructor(private http: AzureBatchHttpService) {
+        this._getter = new BatchEntityGetter(Pool, this.http, {
             cache: () => this._cache,
-            getFn: (client, params: PoolParams) => client.pool.get(params.id),
+            uri: (params: PoolParams) => `/pools/${params.id}`,
         });
 
-        this._listGetter = new BatchListGetter(Pool, this.batchService, {
+        this._listGetter = new BatchListGetter(Pool, this.http, {
             cache: () => this._cache,
-            list: (client, params: PoolListParams, options) => client.pool.list({ poolListOptions: options }),
-            listNext: (client, nextLink: string) => client.pool.listNext(nextLink),
+            uri: () => `/pools`,
         });
     }
 
@@ -53,15 +54,13 @@ export class PoolService extends ServiceBase {
     }
 
     public add(pool: PoolCreateDto, options: any = {}): Observable<any> {
-        return this.callBatchClient((client) => client.pool.add(pool.toJS(), options), (error) => {
-            log.error("Error adding pool", Object.assign({}, error));
-        });
+        return this.http.post("/pools", pool.toJS());
     }
 
-    public list(options?: ListOptionsAttributes, forceNew?: boolean);
-    public list(nextLink: ContinuationToken);
-    public list(nextLinkOrOptions: any, options = {}, forceNew = false) {
-        if (nextLinkOrOptions.nextLink) {
+    public list(options?: ListOptionsAttributes, forceNew?: boolean): Observable<ListResponse<Pool>>;
+    public list(nextLink: ContinuationToken): Observable<ListResponse<Pool>>;
+    public list(nextLinkOrOptions: any, options = {}, forceNew = false): Observable<ListResponse<Pool>> {
+        if (nextLinkOrOptions && nextLinkOrOptions.nextLink) {
             return this._listGetter.fetch(nextLinkOrOptions);
         } else {
             return this._listGetter.fetch({}, options, forceNew);
@@ -112,15 +111,8 @@ export class PoolService extends ServiceBase {
     /**
      * This will start the delete process
      */
-    public delete(poolId: string, options: any = {}): Observable<any> {
-        const observable = this.callBatchClient((client) => client.pool.delete(poolId, options));
-        observable.subscribe({
-            error: (error) => {
-                log.error("Error deleting pool: " + poolId, Object.assign({}, error));
-            },
-        });
-
-        return observable;
+    public delete(poolId: string): Observable<any> {
+        return this.http.delete(`/pools/${poolId}`);
     }
 
     /**
@@ -135,16 +127,11 @@ export class PoolService extends ServiceBase {
     }
 
     public patch(poolId: string, attributes: PoolPatchDto, options: any = {}) {
-        return this.callBatchClient(client => client.pool.patch(poolId, attributes.toJS(), options), (error) => {
-            log.error("Error patching pool: " + poolId, error);
-        });
+        return this.http.patch(`/pools/${poolId}`, attributes.toJS());
     }
 
     public replaceProperties(poolId: string, attributes: PoolPatchDto, options: any = {}) {
-        return this.callBatchClient(client => client.pool.replaceProperties(poolId, attributes.toJS(), options),
-            (error) => {
-                log.error("Error updating pool: " + poolId, error);
-            });
+        return this.http.post(`/pools/${poolId}`, attributes.toJS());
     }
 
     public updateTags(pool: Pool, tags: List<string>) {
@@ -155,7 +142,7 @@ export class PoolService extends ServiceBase {
     }
 
     public enableAutoScale(poolId: string, autoscaleParams: PoolEnableAutoScaleDto) {
-        return this.http.post(`/pools/${poolId}/enableautoscale`, autoscaleParams);
+        return this.http.post(`/pools/${poolId}/enableautoscale`, autoscaleParams.toJS());
     }
 
     public evaluateAutoScale(poolId: string, formula: string): Observable<AutoScaleFormulaEvaluation> {
@@ -178,9 +165,11 @@ export class PoolService extends ServiceBase {
 
     private _parseAutoScaleResults(results: string): NameValuePair[] {
         if (!results) { return []; }
-        return results.split(";").map((result) => {
-            const [name, value] = result.split("=", 2);
-            return new NameValuePair({ name, value });
-        });
+        return results.split(";")
+            .filter(x => x !== "")
+            .map((result) => {
+                const [name, value] = result.split("=", 2);
+                return new NameValuePair({ name, value });
+            });
     }
 }
