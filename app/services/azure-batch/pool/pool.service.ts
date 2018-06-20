@@ -160,7 +160,7 @@ export class PoolService {
     }
 
     public disableAutoScale(poolId: string) {
-        return this.http.post(`/pools/${poolId}/disableautoscale`);
+        return this.http.post(`/pools/${poolId}/disableautoscale`, null);
     }
 
     private _parseAutoScaleResults(results: string): NameValuePair[] {

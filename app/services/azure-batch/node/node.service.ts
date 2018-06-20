@@ -1,18 +1,23 @@
 import { Injectable } from "@angular/core";
-import { List } from "immutable";
-import { Observable } from "rxjs";
-
 import { FilterBuilder } from "@batch-flask/core";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { Node, NodeAgentSku, NodeConnectionSettings, NodeState } from "app/models";
-import { ArrayUtils, Constants, ObservableUtils, log } from "app/utils";
-import { BatchClientService } from "./batch-client.service";
 import {
-    BatchEntityGetter, BatchListGetter, ContinuationToken, DataCache,
-    EntityView, ListOptionsAttributes, ListView, TargetedDataCache,
-} from "./core";
-import { FileContentResult } from "./file-service";
-import { ServiceBase } from "./service-base";
+    ContinuationToken,
+    DataCache,
+    EntityView,
+    ListOptionsAttributes,
+    ListResponse,
+    ListView,
+    TargetedDataCache,
+} from "app/services/core";
+import { ArrayUtils, Constants, ObservableUtils } from "app/utils";
+import { List } from "immutable";
+import { Observable } from "rxjs";
+import { map, share } from "rxjs/operators";
+import {
+    AzureBatchHttpService, BatchEntityGetter, BatchListGetter,
+} from "../core";
 
 export interface NodeListParams {
     poolId?: string;
@@ -27,7 +32,7 @@ export interface PoolListOptions extends ListOptionsAttributes {
 }
 
 @Injectable()
-export class NodeService extends ServiceBase {
+export class NodeService {
     private _basicProperties: string = "id,state,schedulingState,vmSize";
     private _cache = new TargetedDataCache<NodeListParams, Node>({
         key: ({ poolId }) => poolId,
@@ -38,28 +43,20 @@ export class NodeService extends ServiceBase {
     private _listGetter: BatchListGetter<Node, NodeListParams>;
     private _nodeAgentSkuListGetter: BatchListGetter<NodeAgentSku, {}>;
 
-    constructor(private taskManager: BackgroundTaskService, batchService: BatchClientService) {
-        super(batchService);
-
-        this._getter = new BatchEntityGetter(Node, this.batchService, {
+    constructor(private taskManager: BackgroundTaskService, private http: AzureBatchHttpService) {
+        this._getter = new BatchEntityGetter(Node, this.http, {
             cache: ({ poolId }) => this.getCache(poolId),
-            getFn: (client, params: NodeParams) => client.node.get(params.poolId, params.id),
+            uri: (params: NodeParams) => `/pools/${params.poolId}/nodes/${params.id}`,
         });
 
-        this._listGetter = new BatchListGetter(Node, this.batchService, {
+        this._listGetter = new BatchListGetter(Node, this.http, {
             cache: ({ poolId }) => this.getCache(poolId),
-            list: (client, params, options) => {
-                return client.computeNode.list(params.poolId, { computeNodeListOptions: options });
-            },
-            listNext: (client, nextLink: string) => client.computeNode.listNext(nextLink),
+            uri: (params: NodeListParams) => `/pools/${params.poolId}/nodes`,
         });
 
-        this._nodeAgentSkuListGetter = new BatchListGetter(NodeAgentSku, this.batchService, {
+        this._nodeAgentSkuListGetter = new BatchListGetter(NodeAgentSku, this.http, {
             cache: () => this._nodeAgentSkusCache,
-            list: (client, params, options) => {
-                return client.account.listNodeAgentSkus({ accountListNodeAgentSkusOptions: options });
-            },
-            listNext: (client, nextLink: string) => client.account.listNodeAgentSkusNext(nextLink),
+            uri: () => `/nodeagentskus`,
         });
     }
 
@@ -71,9 +68,9 @@ export class NodeService extends ServiceBase {
         return this._cache.getCache({ poolId });
     }
 
-    public list(poolId: string, options?: any, forceNew?: boolean);
-    public list(nextLink: ContinuationToken);
-    public list(poolIdOrNextLink: any, options = {}, forceNew = false) {
+    public list(poolId: string, options?: any, forceNew?: boolean): Observable<ListResponse<Node>>;
+    public list(nextLink: ContinuationToken): Observable<ListResponse<Node>>;
+    public list(poolIdOrNextLink: any, options = {}, forceNew = false): Observable<ListResponse<Node>> {
         if (poolIdOrNextLink.nextLink) {
             return this._listGetter.fetch(poolIdOrNextLink);
         } else {
@@ -117,14 +114,7 @@ export class NodeService extends ServiceBase {
     }
 
     public reboot(poolId: string, nodeId: string): Observable<any> {
-        const observable = this.callBatchClient((client) => client.node.reboot(poolId, nodeId, {}));
-        observable.subscribe({
-            error: (error) => {
-                log.error("Error rebooting node: " + nodeId, Object.assign({}, error));
-            },
-        });
-
-        return observable;
+        return this.http.post(`/pools/${poolId}/nodes/${nodeId}/reboot`, null);
     }
 
     /**
@@ -149,17 +139,20 @@ export class NodeService extends ServiceBase {
         });
     }
 
-    public getRemoteDesktop(poolId: string, nodeId: string, options: any = {}): Observable<FileContentResult> {
-        return this.callBatchClient((client) => client.node.getRemoteDesktop(poolId, nodeId, options), (error) => {
-            log.error("Error downloading RDP file for node " + nodeId, Object.assign({}, error));
+    public getRemoteDesktop(poolId: string, nodeId: string, options: any = {}): Observable<string> {
+        return this.http.get(`/pools/${poolId}/nodes/${nodeId}/rdp`, {
+            observe: "response",
+            responseType: "text",
+        }).map((data) => {
+            return data.body as any;
         });
     }
 
     public getRemoteLoginSettings(poolId: string, nodeId: string, options = {}): Observable<NodeConnectionSettings> {
-        return this.callBatchClient((client) => client.node.getRemoteLoginSettings(poolId, nodeId, options))
-            .map((response: any) => {
-                return new NodeConnectionSettings(response.data);
-            });
+        return this.http.get(`/pools/${poolId}/nodes/${nodeId}/remoteloginsettings`).pipe(
+            map(data => new NodeConnectionSettings(data)),
+            share(),
+        );
     }
 
     public performOnEachNode(
@@ -191,26 +184,18 @@ export class NodeService extends ServiceBase {
     }
 
     public reimage(poolId: string, nodeId: string): Observable<any> {
-        const observable = this.callBatchClient((client) => client.node.reimage(poolId, nodeId, {}));
-        observable.subscribe({
-            error: (error) => {
-                log.error("Error reimaging node: " + nodeId, Object.assign({}, error));
-            },
-        });
+        return this.http.post(`/pools/${poolId}/nodes/${nodeId}/reimage`, null);
 
-        return observable;
     }
 
     public delete(poolId: string, nodeId: string): Observable<any> {
-        return this.callBatchClient((client) => client.node.delete(poolId, nodeId, {}), (error) => {
-            log.error("Error deleting node: " + nodeId, Object.assign({}, error));
+        return this.http.post(`/pools/${poolId}/removenodes`, {
+            nodeList: [nodeId],
         });
     }
 
     public uploadLogs(poolId: string, nodeId: string, params: any): Observable<any> {
-        return this.callBatchClient((client) => client.node.uploadLogs(poolId, nodeId, params), (error) => {
-            log.error("Error uploading logs for node: " + nodeId, {...error});
-        });
+        return this.http.post(`/pools/${poolId}/nodes/${nodeId}/uploadbatchservicelogs`, params);
     }
 
     public listNodeAgentSkus(options: ListOptionsAttributes = { pageSize: 1000 }): ListView<NodeAgentSku, {}> {
