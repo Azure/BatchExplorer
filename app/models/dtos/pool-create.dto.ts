@@ -5,7 +5,7 @@ import * as moment from "moment";
 import { AppPackageReferenceDto } from "./application-package-reference.dto";
 import { CloudServiceConfiguration } from "./cloud-service-configuration.dto";
 import { MetaDataDto } from "./metadata.dto";
-import { PoolEndPointConfigurationDto } from "./pool-endpoint-configuration.dto";
+import { NetworkConfigurationDto } from "./network-configuration.dto";
 import { StartTaskDto } from "./start-task.dto";
 import { UserAccountDto } from "./user-account.dto";
 import { VirtualMachineConfiguration } from "./virtual-machine-configuration.dto";
@@ -21,10 +21,7 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
 
     @DtoAttr() public virtualMachineConfiguration?: VirtualMachineConfiguration;
 
-    @DtoAttr() public networkConfiguration?: {
-        subnetId: string;
-        endpointConfiguration: PoolEndPointConfigurationDto;
-    };
+    @DtoAttr() public networkConfiguration?: NetworkConfigurationDto;
 
     @DtoAttr(moment.duration) public resizeTimeout?: moment.Duration;
 

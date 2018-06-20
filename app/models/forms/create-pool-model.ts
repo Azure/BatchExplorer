@@ -1,7 +1,7 @@
 import * as moment from "moment";
 
 import { CertificateReference, InboundNATPool, NodeFillType } from "app/models";
-import { ContainerRegistryDto, MetaDataDto, PoolCreateDto, UserAccountDto } from "app/models/dtos";
+import { ContainerRegistryDto, InboundNATPoolDto, MetaDataDto, PoolCreateDto, UserAccountDto } from "app/models/dtos";
 
 export enum PoolOsSources {
     PaaS,
@@ -56,7 +56,7 @@ export interface CreatePoolModel {
     taskSchedulingPolicy: NodeFillType;
     appLicenses: string[];
     appPackages: PackageReferenceModel[];
-    inboundNATPools: InboundNATPool[];
+    inboundNATPools: InboundNATPoolDto[];
     subnetId: string;
     certificateReferences: CertificateReference[];
     metadata: MetaDataDto[];
