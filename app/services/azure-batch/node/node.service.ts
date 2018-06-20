@@ -1,4 +1,3 @@
-import { HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { FilterBuilder } from "@batch-flask/core";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
@@ -15,6 +14,7 @@ import {
 import { ArrayUtils, Constants, ObservableUtils } from "app/utils";
 import { List } from "immutable";
 import { Observable } from "rxjs";
+import { map, share } from "rxjs/operators";
 import {
     AzureBatchHttpService, BatchEntityGetter, BatchListGetter,
 } from "../core";
@@ -114,7 +114,7 @@ export class NodeService {
     }
 
     public reboot(poolId: string, nodeId: string): Observable<any> {
-        return this.http.post(`/pools/${poolId}/nodes/${nodeId}/reboot`);
+        return this.http.post(`/pools/${poolId}/nodes/${nodeId}/reboot`, null);
     }
 
     /**
@@ -149,7 +149,10 @@ export class NodeService {
     }
 
     public getRemoteLoginSettings(poolId: string, nodeId: string, options = {}): Observable<NodeConnectionSettings> {
-        return this.http.get(`/pools/${poolId}/nodes/${nodeId}/remoteloginsettings`);
+        return this.http.get(`/pools/${poolId}/nodes/${nodeId}/remoteloginsettings`).pipe(
+            map(data => new NodeConnectionSettings(data)),
+            share(),
+        );
     }
 
     public performOnEachNode(
@@ -181,7 +184,7 @@ export class NodeService {
     }
 
     public reimage(poolId: string, nodeId: string): Observable<any> {
-        return this.http.post(`/pools/${poolId}/nodes/${nodeId}/reimage`);
+        return this.http.post(`/pools/${poolId}/nodes/${nodeId}/reimage`, null);
 
     }
 
