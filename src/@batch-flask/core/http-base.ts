@@ -20,7 +20,7 @@ export interface HttpRequestOptions<T extends HttpRequestObservable = "body"> {
     params?: HttpParams | {
         [param: string]: string | string[];
     };
-    responseType?: "json";
+    responseType?: "json" | "text" | "arraybuffer";
     withCredentials?: boolean;
 }
 

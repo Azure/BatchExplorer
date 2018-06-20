@@ -57,8 +57,11 @@ export class AzureBatchHttpService extends HttpService {
             options.params = options.params.set("api-version", Constants.ApiVersion.batchService);
         }
 
-        options.headers = (options.headers as any)
-            .set("Content-Type", "application/json; odata=minimalmetadata; charset=utf-8");
+        const headers: any = options.headers;
+        if (!headers.has("Content-Type")) {
+            options.headers = (options.headers as any)
+                .set("Content-Type", "application/json; odata=minimalmetadata; charset=utf-8");
+        }
 
         return options;
     }

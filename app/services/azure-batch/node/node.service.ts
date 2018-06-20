@@ -1,3 +1,4 @@
+import { HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { FilterBuilder } from "@batch-flask/core";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
@@ -139,7 +140,12 @@ export class NodeService {
     }
 
     public getRemoteDesktop(poolId: string, nodeId: string, options: any = {}): Observable<string> {
-        return this.http.get(`/pools/${poolId}/nodes/${nodeId}/rdp`);
+        return this.http.get(`/pools/${poolId}/nodes/${nodeId}/rdp`, {
+            observe: "response",
+            responseType: "text",
+        }).map((data) => {
+            return data.body as any;
+        });
     }
 
     public getRemoteLoginSettings(poolId: string, nodeId: string, options = {}): Observable<NodeConnectionSettings> {
