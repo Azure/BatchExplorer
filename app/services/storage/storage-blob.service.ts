@@ -131,7 +131,7 @@ export class StorageBlobService {
         storageAccountId: string,
         container: string,
         options: ListBlobOptions = {},
-        forceNew = false): Observable<ListResponse<Blob>> {
+        forceNew = false): Observable<ListResponse<File>> {
         return this._blobListGetter.fetch({ storageAccountId, container }, options, forceNew);
     }
 

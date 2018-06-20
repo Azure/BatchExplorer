@@ -15,7 +15,6 @@ describe("PoolService", () => {
                 HttpClientTestingModule,
             ],
             providers: [
-                // AzureBatchHttpService,
                 PoolService,
             ],
         });
