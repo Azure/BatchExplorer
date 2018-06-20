@@ -1,23 +1,12 @@
 import { ContainerType } from "../container-setup";
+import { ContainerRegistryDto } from "./container-registry.dto";
 
 export interface ContainerImage {
     imageName: string;
 }
 
-export interface ContainerRegistry {
-    username: string;
-    password: string;
-    registryServer: string;
-}
-
 export interface ContainerConfiguration {
     containerImageNames: string[];
-    containerRegistries: ContainerRegistry[];
+    containerRegistries: ContainerRegistryDto[];
     type: ContainerType;
-}
-
-export interface TaskContainerSettings {
-    containerRunOptions: string;
-    imageName: string;
-    registry: ContainerRegistry;
 }

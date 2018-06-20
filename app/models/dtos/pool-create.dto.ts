@@ -6,6 +6,7 @@ import { AppPackageReferenceDto } from "./application-package-reference.dto";
 import { CloudServiceConfiguration } from "./cloud-service-configuration.dto";
 import { MetaDataDto } from "./metadata.dto";
 import { PoolEndPointConfigurationDto } from "./pool-endpoint-configuration.dto";
+import { StartTaskDto } from "./start-task.dto";
 import { UserAccountDto } from "./user-account.dto";
 import { VirtualMachineConfiguration } from "./virtual-machine-configuration.dto";
 
@@ -45,7 +46,7 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
 
     @DtoAttr() public enableInterNodeCommunication?: boolean;
 
-    @DtoAttr() public startTask?: any;
+    @DtoAttr() public startTask?: StartTaskDto;
 
     @DtoAttr() public certificateReferences?: any[];
 

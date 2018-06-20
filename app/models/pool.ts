@@ -1,5 +1,5 @@
 import { List } from "immutable";
-import { Duration } from "moment";
+import { Duration, duration } from "moment";
 
 import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
 import { ModelUtils, PoolUtils } from "app/utils";
@@ -80,7 +80,7 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord  {
 
     @ListProp(ResizeError) public resizeErrors: List<ResizeError> = List([]);
 
-    @Prop() public resizeTimeout: Duration;
+    @Prop(duration) public resizeTimeout: Duration;
 
     @Prop() public state: string;
 
@@ -92,7 +92,7 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord  {
 
     @Prop() public autoScaleFormula: string;
 
-    @Prop() public autoScaleEvaluationInterval: Duration;
+    @Prop(duration) public autoScaleEvaluationInterval: Duration;
 
     @Prop() public taskSchedulingPolicy: any;
 
