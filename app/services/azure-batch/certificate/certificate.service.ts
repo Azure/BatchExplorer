@@ -4,13 +4,16 @@ import * as forge from "node-forge";
 import { AsyncSubject, Observable, Subject } from "rxjs";
 
 import { Certificate } from "app/models";
-import { Constants, FileUrlUtils, log } from "app/utils";
-import { BatchClientService } from "./batch-client.service";
 import {
-    BatchEntityGetter, BatchListGetter, ContinuationToken,
-    DataCache, EntityView, ListOptionsAttributes, ListView,
-} from "./core";
-import { ServiceBase } from "./service-base";
+    ContinuationToken,
+    DataCache,
+    EntityView,
+    ListOptionsAttributes,
+    ListResponse,
+    ListView,
+} from "app/services/core";
+import { Constants, FileUrlUtils } from "app/utils";
+import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "../core";
 
 export interface CertificateListParams {
 }
@@ -23,6 +26,14 @@ export interface CertificateParams {
 export interface CertificateListOptions extends ListOptionsAttributes {
 }
 
+export interface  NewCertificateDto {
+    password: string;
+    certificateFormat: string;
+    thumbprintAlgorithm: string;
+    thumbprint: string;
+    data: string;
+}
+
 export const defaultThumbprintAlgorithm = "sha1";
 
 export enum CertificateFormat {
@@ -31,7 +42,7 @@ export enum CertificateFormat {
 }
 
 @Injectable()
-export class CertificateService extends ServiceBase {
+export class CertificateService {
     /**
      * Triggered only when a certificate is added through this app.
      * Used to notify the list of a new item
@@ -43,23 +54,18 @@ export class CertificateService extends ServiceBase {
     private _getter: BatchEntityGetter<Certificate, CertificateParams>;
     private _listGetter: BatchListGetter<Certificate, CertificateListParams>;
 
-    constructor(batchService: BatchClientService) {
-        super(batchService);
+    constructor(private http: AzureBatchHttpService) {
 
-        this._getter = new BatchEntityGetter(Certificate, this.batchService, {
+        this._getter = new BatchEntityGetter(Certificate, this.http, {
             cache: () => this.cache,
-            getFn: (client, params: CertificateParams) => {
-                const algorithm = params.thumbprintAlgorithm || defaultThumbprintAlgorithm;
-                return client.certificate.get(algorithm, params.thumbprint);
+            uri: (params: CertificateParams) => {
+                return this._thumprintUrl(params.thumbprint, params.thumbprintAlgorithm);
             },
         });
 
-        this._listGetter = new BatchListGetter(Certificate, this.batchService, {
+        this._listGetter = new BatchListGetter(Certificate, this.http, {
             cache: () => this.cache,
-            list: (client, params: CertificateListParams, options) => {
-                return client.certificate.list({ certificateListOptions: options });
-            },
-            listNext: (client, nextLink: string) => client.certificate.listNext(nextLink),
+            uri: () => `/certificates`,
         });
     }
 
@@ -67,10 +73,10 @@ export class CertificateService extends ServiceBase {
         return this._basicProperties;
     }
 
-    public list(options?: any, forceNew?: boolean);
-    public list(nextLink: ContinuationToken);
-    public list(nextLinkOrOptions: any, options = {}, forceNew = false) {
-        if (nextLinkOrOptions.nextLink) {
+    public list(options?: any, forceNew?: boolean): Observable<ListResponse<Certificate>>;
+    public list(nextLink: ContinuationToken): Observable<ListResponse<Certificate>>;
+    public list(nextLinkOrOptions: any, options = {}, forceNew = false): Observable<ListResponse<Certificate>> {
+        if (nextLinkOrOptions && nextLinkOrOptions.nextLink) {
             return this._listGetter.fetch(nextLinkOrOptions);
         } else {
             return this._listGetter.fetch({}, options, forceNew);
@@ -111,25 +117,15 @@ export class CertificateService extends ServiceBase {
     }
 
     public delete(thumbprint: string, options: any = {}, thumbprintAlgorithm?: string): Observable<{}> {
-        return this.callBatchClient((client) => {
-            const algorithm = thumbprintAlgorithm || defaultThumbprintAlgorithm;
-            return client.certificate.delete(algorithm, thumbprint, options);
-        }, (error) => {
-            log.error(`Error cancel delete certificate: ${thumbprint}`, error);
-        });
+        return this.http.delete(this._thumprintUrl(thumbprint, thumbprintAlgorithm));
     }
 
     public add(certificate: any, options: any = {}): Observable<{}> {
-        return this.callBatchClient((client) => client.certificate.add(certificate, options));
+        return this.http.post(`/certificates`, certificate);
     }
 
     public cancelDelete(thumbprint: string, options: any = {}, thumbprintAlgorithm?: string) {
-        return this.callBatchClient((client) => {
-            const algorithm = thumbprintAlgorithm || defaultThumbprintAlgorithm;
-            return client.certificate.cancelDeletion(algorithm, thumbprint, options);
-        }, (error) => {
-            log.error(`Error cancel delete certificate: ${thumbprint}`, error);
-        });
+        return this.http.post(`${this._thumprintUrl(thumbprint, thumbprintAlgorithm)}/canceldelete`, null);
     }
 
     /**
@@ -138,8 +134,8 @@ export class CertificateService extends ServiceBase {
      * @param file uploaded certificate
      * @param password password for pfx certifcate
      */
-    public parseCertificate(file: File, password: string) {
-        const subject = new AsyncSubject();
+    public parseCertificate(file: File, password: string): Observable<NewCertificateDto> {
+        const subject = new AsyncSubject<NewCertificateDto>();
         const reader = new FileReader();
         reader.readAsBinaryString(file);
         reader.onload = () => {
@@ -202,5 +198,10 @@ export class CertificateService extends ServiceBase {
         md.update(certDer);
         const digest = md.digest();
         return digest.toHex();
+    }
+
+    private _thumprintUrl(thumbprint: string, algorithm?: string) {
+        algorithm = algorithm || defaultThumbprintAlgorithm;
+        return `/certificates(thumbprintAlgorithm=${algorithm},thumbprint=${thumbprint})`;
     }
 }
