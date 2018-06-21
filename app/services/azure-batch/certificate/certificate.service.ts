@@ -68,7 +68,7 @@ export class CertificateService {
     public list(options?: any, forceNew?: boolean): Observable<ListResponse<Certificate>>;
     public list(nextLink: ContinuationToken): Observable<ListResponse<Certificate>>;
     public list(nextLinkOrOptions: any, options = {}, forceNew = false): Observable<ListResponse<Certificate>> {
-        if (nextLinkOrOptions.nextLink) {
+        if (nextLinkOrOptions && nextLinkOrOptions.nextLink) {
             return this._listGetter.fetch(nextLinkOrOptions);
         } else {
             return this._listGetter.fetch({}, options, forceNew);
