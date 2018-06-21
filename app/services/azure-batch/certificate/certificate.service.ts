@@ -26,6 +26,14 @@ export interface CertificateParams {
 export interface CertificateListOptions extends ListOptionsAttributes {
 }
 
+export interface  NewCertificateDto {
+    password: string;
+    certificateFormat: string;
+    thumbprintAlgorithm: string;
+    thumbprint: string;
+    data: string;
+}
+
 export const defaultThumbprintAlgorithm = "sha1";
 
 export enum CertificateFormat {
@@ -113,7 +121,7 @@ export class CertificateService {
     }
 
     public add(certificate: any, options: any = {}): Observable<{}> {
-        return this.http.post(`certificates`, certificate);
+        return this.http.post(`/certificates`, certificate);
     }
 
     public cancelDelete(thumbprint: string, options: any = {}, thumbprintAlgorithm?: string) {
@@ -126,8 +134,8 @@ export class CertificateService {
      * @param file uploaded certificate
      * @param password password for pfx certifcate
      */
-    public parseCertificate(file: File, password: string) {
-        const subject = new AsyncSubject();
+    public parseCertificate(file: File, password: string): Observable<NewCertificateDto> {
+        const subject = new AsyncSubject<NewCertificateDto>();
         const reader = new FileReader();
         reader.readAsBinaryString(file);
         reader.onload = () => {

@@ -4,7 +4,7 @@ import { TestBed } from "@angular/core/testing";
 import { Certificate, CertificateState } from "app/models";
 import { CertificateService } from "./certificate.service";
 
-describe("CertificateService", () => {
+fdescribe("CertificateService", () => {
     let certificateService: CertificateService;
     let httpMock: HttpTestingController;
     beforeEach(() => {
@@ -90,4 +90,48 @@ describe("CertificateService", () => {
         req.flush("");
         httpMock.verify();
     });
+
+    it("add a certificate", (done) => {
+        const certificate = {
+            thumbprintAlgorithm: "sha1",
+            thumbprint: "abcdef",
+            data: "#####...",
+            certificateFormat: "pfx",
+            password: "certpassword",
+        };
+        certificateService.add(certificate).subscribe((res) => {
+            done();
+        });
+
+        const req = httpMock.expectOne({
+            url: "/certificates",
+            method: "POST",
+        });
+        expect(req.request.body).toEqual({
+            thumbprintAlgorithm: "sha1",
+            thumbprint: "abcdef",
+            data: "#####...",
+            certificateFormat: "pfx",
+            password: "certpassword",
+        });
+        req.flush("");
+        httpMock.verify();
+    });
+
+    it("parse the certificate", async (done) => {
+        const file = await loadCertificate("batchtest.pfx");
+        certificateService.parseCertificate(file, "batchtest").subscribe((certificate) => {
+            expect(certificate.thumbprint).toBe("bd7c0d29efad85c5174364c330db1698b14f7f55");
+            expect(certificate.thumbprintAlgorithm).toBe("sha1");
+            expect(certificate.certificateFormat).toBe("pfx");
+            expect(certificate.password).toBe("batchtest");
+            done();
+        });
+    });
 });
+
+async function loadCertificate(file: string): Promise<File> {
+    const response = await fetch(`base/test/fixtures/certificates/${file}`);
+    const blob = await response.blob();
+    return new File([blob], file);
+}
