@@ -4,7 +4,7 @@ import { TestBed } from "@angular/core/testing";
 import { Certificate, CertificateState } from "app/models";
 import { CertificateService } from "./certificate.service";
 
-fdescribe("CertificateService", () => {
+describe("CertificateService", () => {
     let certificateService: CertificateService;
     let httpMock: HttpTestingController;
     beforeEach(() => {
