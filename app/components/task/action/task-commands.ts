@@ -1,5 +1,4 @@
 import { Injectable, Injector } from "@angular/core";
-import { MatDialog } from "@angular/material";
 
 import {
     COMMAND_LABEL_ICON, ElectronRemote, EntityCommand,
@@ -23,7 +22,6 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
 
     constructor(
         injector: Injector,
-        private dialog: MatDialog,
         private sidebarManager: SidebarManager,
         private fs: FileSystemService,
         private remote: ElectronRemote,
