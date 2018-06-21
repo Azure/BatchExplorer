@@ -1,4 +1,3 @@
-import * as child_process from "child_process";
 import * as commander from "commander";
 import { app, dialog, ipcMain, session } from "electron";
 import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
@@ -8,6 +7,7 @@ import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure
 import { fetch, log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { localStorage } from "client/core/local-storage";
+import { WinTerminalService } from "client/core/terminal";
 import { setMenu } from "client/menu";
 import { ProxySettingsManager } from "client/proxy";
 import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-configuration-window";
@@ -41,6 +41,7 @@ export class BatchLabsApplication {
     public aadService = new AADService(this);
     public state: Observable<BatchLabsState>;
     public proxySettings = new ProxySettingsManager(this, localStorage);
+    public winTerminalService = new WinTerminalService();
 
     public get azureEnvironment(): AzureEnvironment { return this._azureEnvironment.value; }
     public azureEnvironmentObs: Observable<AzureEnvironment>;
@@ -66,7 +67,7 @@ export class BatchLabsApplication {
         });
         BlIpcMain.on(IpcEvent.launchApplication, (args) => {
             if (args.name === Application.terminal) {
-                return this.openTerminal(args);
+                return this.winTerminalService.runInTerminal(args.command);
             }
         });
         this.azureEnvironmentObs = this._azureEnvironment.asObservable();
@@ -149,10 +150,6 @@ export class BatchLabsApplication {
         await this.aadService.logout();
         await this.aadService.login();
         this.windows.openNewWindow();
-    }
-
-    public async openTerminal(args) {
-
     }
 
     /**

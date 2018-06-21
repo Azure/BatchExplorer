@@ -12,4 +12,6 @@ export interface Settings {
     "configuration.default-view": EntityConfigurationView;
     "subscription.ignore": string[];
     "storage.default-upload-container": string;
+    "auto-update-on-quit": boolean;
+    "terminal": string;
 }

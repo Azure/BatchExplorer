@@ -57,8 +57,8 @@ export class BatchLabsService {
         return this.remote.send(IpcEvent.logoutAndLogin);
     }
 
-    public async launchApplication(name) {
-        return this.remote.send(IpcEvent.launchApplication, { name });
+    public async launchApplication(args) {
+        return this.remote.send(IpcEvent.launchApplication, args);
     }
 
     /**

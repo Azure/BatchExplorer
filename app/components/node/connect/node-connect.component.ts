@@ -87,7 +87,15 @@ export class NodeConnectComponent implements OnInit {
     @autobind()
     public generateWithOneClick() {
         return this.generateCredentials().do(() => {
-            this.batchLabs.launchApplication(Application.terminal);
+            if (!this.connectionSettings || !this.credentials) {
+                // TODO make sure this has a correct return value
+                return null;
+            }
+            const args = {
+                name: Application.terminal,
+                command: ["echo", "Hello! The one-click tool is still in development. Please check back again soon."],
+            };
+            return this.batchLabs.launchApplication(args);
         });
     }
 
