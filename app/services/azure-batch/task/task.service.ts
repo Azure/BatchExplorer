@@ -5,11 +5,7 @@ import { Observable, Subject } from "rxjs";
 import { FilterBuilder } from "@batch-flask/core";
 import { SubtaskInformation, Task, TaskState } from "app/models";
 import { TaskCreateDto } from "app/models/dtos";
-import { Constants, log } from "app/utils";
-import { BatchClientService } from "./batch-client.service";
 import {
-    BatchEntityGetter,
-    BatchListGetter,
     ContinuationToken,
     DataCache,
     EntityView,
@@ -17,8 +13,11 @@ import {
     ListOptionsAttributes,
     ListView,
     TargetedDataCache,
-} from "./core";
-import { ServiceBase } from "./service-base";
+} from "app/services/core";
+import { Constants, log } from "app/utils";
+import {
+    AzureBatchHttpService, BatchEntityGetter, BatchListGetter,
+} from "../core";
 
 export interface TaskListParams {
     jobId?: string;
@@ -37,7 +36,7 @@ export interface TaskListOptions extends ListOptionsAttributes {
 }
 
 @Injectable()
-export class TaskService extends ServiceBase {
+export class TaskService {
     /**
      * Notify the list of a new item being added
      */
@@ -63,26 +62,21 @@ export class TaskService extends ServiceBase {
         return this._basicProperties;
     }
 
-    constructor(batchService: BatchClientService) {
-        super(batchService);
+    constructor(private http: AzureBatchHttpService) {
 
-        this._getter = new BatchEntityGetter(Task, this.batchService, {
+        this._getter = new BatchEntityGetter(Task, this.http, {
             cache: ({ jobId }) => this.getCache(jobId),
-            getFn: (client, params: TaskParams) => client.task.get(params.jobId, params.id),
+            uri: (params: TaskParams) => `/jobs/${params.jobId}/tasks/${params.id}`,
         });
 
-        this._listGetter = new BatchListGetter(Task, this.batchService, {
+        this._listGetter = new BatchListGetter(Task, this.http, {
             cache: ({ jobId }) => this.getCache(jobId),
-            list: (client, params, options) => client.task.list(params.jobId, { taskListOptions: options }),
-            listNext: (client, nextLink: string) => client.task.listNext(nextLink),
+            uri: (params: TaskListParams) => `/jobs/${params.jobId}/tasks`,
         });
 
-        this._subTaskListGetter = new BatchListGetter(SubtaskInformation, this.batchService, {
+        this._subTaskListGetter = new BatchListGetter(SubtaskInformation, this.http, {
             cache: ({ jobId, taskId }) => this._subTaskCache.getCache({ jobId, taskId }),
-            list: (client, { jobId, taskId }, options) => {
-                return client.task.listSubtasks(jobId, taskId, { taskListSubtasksOptions: options }).then(x => x.value);
-            },
-            listNext: (client, nextLink: string) => null as any,
+            uri: (params: SubtaskListParams) => `/jobs/${params.jobId}/tasks/${params.taskId}/subtasks`,
         });
     }
 
@@ -167,29 +161,24 @@ export class TaskService extends ServiceBase {
     }
 
     public terminate(jobId: string, taskId: string, options: any = {}): Observable<{}> {
-        return this.callBatchClient((client) => client.task.terminate(jobId, taskId, options));
+        return this.http.post(`/jobs/${jobId}/tasks/${taskId}/terminate`, null);
     }
 
     /**
      * Starts the deletion process
      */
     public delete(jobId: string, taskId: string, options: any = {}): Observable<{}> {
-        return this.callBatchClient((client) => client.task.delete(jobId, taskId, options), (error) => {
-            log.error(`Error deleting task: ${taskId}, for job: ${jobId}`, error);
-        });
+        return this.http.delete(`/jobs/${jobId}/tasks/${taskId}`, null);
     }
 
     public add(jobId: string, task: TaskCreateDto, options: any): Observable<{}> {
-        return this.callBatchClient((client) => client.task.add(jobId, task.toJS(), options));
+        return this.http.post(`/jobs/${jobId}/tasks`, task.toJS());
     }
 
     /**
      * Reactivate a task
-     * https://msdn.microsoft.com/en-us/library/azure/mt742660.aspx?f=255&MSPPError=-2147217396
      */
     public reactivate(jobId: string, taskId: string, options: any = {}): Observable<{}> {
-        return this.callBatchClient((client) => client.task.reactivate(jobId, taskId, options), (error) => {
-            log.error(`Error reactivating task: ${taskId}, for job: ${jobId}`, error);
-        });
+        return this.http.post(`/jobs/${jobId}/tasks/${taskId}/reactivate`, null);
     }
 }
