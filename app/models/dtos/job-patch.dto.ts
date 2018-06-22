@@ -1,15 +1,12 @@
 import { Dto, DtoAttr } from "@batch-flask/core";
-import { MetaDataDto, PoolCreateDto } from "app/models/dtos";
+import { MetaDataDto, PoolCreateDto, TaskConstraintsDto } from "app/models/dtos";
 
 export class JobPatchDto extends Dto<JobPatchDto> {
-    @DtoAttr()
-    public priority?: number;
+    @DtoAttr() public priority?: number;
 
-    @DtoAttr()
-    public constraints?: any;
+    @DtoAttr() public constraints?: TaskConstraintsDto;
 
-    @DtoAttr()
-    public poolInfo?: {
+    @DtoAttr() public poolInfo?: {
         poolId?: string;
         autoPoolSpecification: {
             autoPoolIdPrefix?: string;
@@ -19,9 +16,7 @@ export class JobPatchDto extends Dto<JobPatchDto> {
         };
     };
 
-    @DtoAttr()
-    public onAllTasksComplete?: string;
+    @DtoAttr() public onAllTasksComplete?: string;
 
-    @DtoAttr()
-    public metadata?: MetaDataDto[];
+    @DtoAttr() public metadata?: MetaDataDto[];
 }

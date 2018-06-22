@@ -25,7 +25,7 @@ export class JobManagerTaskDto extends Dto<JobPreparationTaskDto> {
     @DtoAttr() public constraints: TaskConstraintsDto;
     @DtoAttr() public containerSettings: TaskContainerSettingsDto;
     @DtoAttr() public userIdentity: UserIdentityDto;
-    @DtoAttr() public authenticationTokenSettings: any;
+    @DtoAttr() public authenticationTokenSettings: AuthenticationTokenSettingsDto;
     @ListDtoAttr(EnvironmentSettingDto) public environmentSettings: EnvironmentSettingDto[];
     @ListDtoAttr(ResourceFileDto) public resourceFiles: ResourceFileDto[];
     @ListDtoAttr(ApplicationPackageReference) public applicationPackageReferences: ApplicationPackageReference[];
@@ -49,9 +49,9 @@ export class JobReleaseTaskDto extends Dto<JobPreparationTaskDto> {
     @DtoAttr() public commandLine: string;
     @DtoAttr() public maxWallClockTime: string;
     @DtoAttr() public retentionTime: string;
-    @DtoAttr() public constraints: TaskConstraintsDto;
     @DtoAttr() public containerSettings: TaskContainerSettingsDto;
     @DtoAttr() public userIdentity: UserIdentityDto;
+    @ListDtoAttr(ResourceFileDto) public resourceFiles: ResourceFileDto[];
     @ListDtoAttr(EnvironmentSettingDto) public environmentSettings: EnvironmentSettingDto[];
 }
 
@@ -64,11 +64,11 @@ export class JobCreateDto extends Dto<JobCreateDto> {
 
     @DtoAttr() public constraints?: JobConstraintDto;
 
-    @DtoAttr() public jobManagerTask?: any;
+    @DtoAttr() public jobManagerTask?: JobManagerTaskDto;
 
-    @DtoAttr() public jobPreparationTask?: any;
+    @DtoAttr() public jobPreparationTask?: JobPreparationTaskDto;
 
-    @DtoAttr() public jobReleaseTask?: any;
+    @DtoAttr() public jobReleaseTask?: JobReleaseTaskDto;
 
     @ListDtoAttr(EnvironmentSetting) public commonEnvironmentSettings?: EnvironmentSetting[];
 
