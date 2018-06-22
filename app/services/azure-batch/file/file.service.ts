@@ -1,17 +1,22 @@
 import { Injectable } from "@angular/core";
-import * as path from "path";
-
 import { HttpCode, ServerError } from "@batch-flask/core";
-import { exists } from "@batch-flask/utils";
-import { File } from "app/models";
-import { Observable } from "rxjs";
-import { BatchClientService } from "./batch-client.service";
+import { AutoScaleFormulaEvaluation, File, NameValuePair } from "app/models";
+import { FileCreateDto, FileEnableAutoScaleDto, FilePatchDto, FileResizeDto } from "app/models/dtos";
+import { FileSystemService } from "app/services";
 import {
-    BatchEntityGetter, BatchListGetter, DataCache, ListOptionsAttributes, ListView, TargetedDataCache,
-} from "./core";
-import { FileLoader, FileNavigator, FileSource } from "./file";
-import { FileSystemService } from "./fs.service";
-import { ServiceBase } from "./service-base";
+    ContinuationToken,
+    DataCache,
+    EntityView,
+    ListOptionsAttributes,
+    ListResponse,
+    ListView,
+    TargetedDataCache,
+} from "app/services/core";
+import { Constants, ModelUtils } from "app/utils";
+import { List } from "immutable";
+import { Observable, Subject } from "rxjs";
+import { map } from "rxjs/operators";
+import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "../core";
 
 export interface NodeFileListParams {
     poolId?: string;
@@ -54,7 +59,7 @@ export const fileIgnoredErrors = [
 ];
 
 @Injectable()
-export class FileService extends ServiceBase {
+export class FileService {
     private _basicProperties: string = "name, url";
     private _nodeFilecache = new TargetedDataCache<NodeFileListParams, File>({
         key: ({ poolId, nodeId }) => poolId + "/" + nodeId,
@@ -68,49 +73,42 @@ export class FileService extends ServiceBase {
     private _taskFileListGetter: BatchListGetter<File, TaskFileListParams>;
     private _nodeFileListGetter: BatchListGetter<File, NodeFileListParams>;
 
-    constructor(batchService: BatchClientService, private fs: FileSystemService) {
-        super(batchService);
-
-        this._taskFileGetter = new BatchEntityGetter(File, this.batchService, {
+    constructor(private http: AzureBatchHttpService, private fs: FileSystemService) {
+        this._taskFileGetter = new BatchEntityGetter(File, this.http, {
             cache: (params) => this.getTaskFileCache(params),
-            getFn: (client, { jobId, taskId, name }) =>
-                client.file.getTaskFileProperties(jobId, taskId, name),
+            uri: ({ jobId, taskId, name }) => `/jobs/${jobId}/tasks/${taskId}/files/${name}`,
         });
 
-        this._nodeFileGetter = new BatchEntityGetter(File, this.batchService, {
+        this._nodeFileGetter = new BatchEntityGetter(File, this.http, {
             cache: (params) => this.getNodeFileCache(params),
-            getFn: (client, { poolId, nodeId, name }) =>
-                client.file.getComputeNodeFileProperties(poolId, nodeId, name),
+            uri: ({ poolId, nodeId, name }) => `/pools/${poolId}/nodes/${nodeId}/files/${name}`,
         });
 
         this._taskFileListGetter = new BatchListGetter(File, this.batchService, {
             cache: (params) => this.getTaskFileCache(params),
-            list: (client, { jobId, taskId }, options) => {
+            uri: (params, options) => {
                 const batchOptions = { ...options };
                 if (options.original.folder) {
                     batchOptions.filter = `startswith(name, '${options.original.folder}')`;
                 }
-                return client.file.listFromTask(jobId, taskId,
-                    { recursive: options.original.recursive, fileListFromTaskOptions: batchOptions });
+                return  `/jobs/${params}/tasks/${params.taskId}/files`;
             },
-            listNext: (client, nextLink: string) => client.file.listFromTaskNext(nextLink),
-            logIgnoreError: fileIgnoredErrors,
-
-        });
-
-        this._nodeFileListGetter = new BatchListGetter(File, this.batchService, {
-            cache: (params) => this.getNodeFileCache(params),
-            list: (client, { poolId, nodeId }, options) => {
-                const batchOptions = { ...options };
-                if (options.original.folder) {
-                    batchOptions.filter = `startswith(name, '${options.original.folder}')`;
-                }
-                return client.file.listFromComputeNode(poolId, nodeId,
-                    { recursive: options.original.recursive, fileListFromComputeNodeOptions: batchOptions });
-            },
-            listNext: (client, nextLink: string) => client.file.listFromComputeNodeNext(nextLink),
             logIgnoreError: fileIgnoredErrors,
         });
+
+        // this._nodeFileListGetter = new BatchListGetter(File, this.batchService, {
+        //     cache: (params) => this.getNodeFileCache(params),
+        //     list: (client, { poolId, nodeId }, options) => {
+        //         const batchOptions = { ...options };
+        //         if (options.original.folder) {
+        //             batchOptions.filter = `startswith(name, '${options.original.folder}')`;
+        //         }
+        //         return client.file.listFromComputeNode(poolId, nodeId,
+        //             { recursive: options.original.recursive, fileListFromComputeNodeOptions: batchOptions });
+        //     },
+        //     listNext: (client, nextLink: string) => client.file.listFromComputeNodeNext(nextLink),
+        //     logIgnoreError: fileIgnoredErrors,
+        // });
     }
 
     public get basicProperties(): string {

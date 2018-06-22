@@ -1,6 +1,4 @@
 import { Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
-
 import { ServerError } from "@batch-flask/core";
 import { AutoScaleFormulaEvaluation, NameValuePair, Pool } from "app/models";
 import { PoolCreateDto, PoolEnableAutoScaleDto, PoolPatchDto, PoolResizeDto } from "app/models/dtos";
@@ -14,6 +12,7 @@ import {
 } from "app/services/core";
 import { Constants, ModelUtils } from "app/utils";
 import { List } from "immutable";
+import { Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "../core";
 
