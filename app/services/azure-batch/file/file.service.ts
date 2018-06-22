@@ -1,7 +1,7 @@
 import { HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { HttpCode, HttpRequestOptions, ServerError } from "@batch-flask/core";
-import { exists } from "@batch-flask/utils";
+import { EncodingUtils, exists } from "@batch-flask/utils";
 import { File } from "app/models";
 import {
     BasicEntityGetter,
@@ -13,10 +13,11 @@ import {
 } from "app/services/core";
 import { FileLoader, FileNavigator, FileSource } from "app/services/file";
 import { FileSystemService } from "app/services/fs.service";
+import * as fs from "fs";
 import * as path from "path";
 import { Observable } from "rxjs";
-import { map, share } from "rxjs/operators";
-import { AzureBatchHttpService, BatchEntityGetter } from "../core";
+import { flatMap, map, share } from "rxjs/operators";
+import { AzureBatchHttpService } from "../core";
 
 export interface NodeFileListParams {
     poolId?: string;
@@ -232,17 +233,61 @@ export class FileService {
     }
 
     public downloadFromNode(poolId: string, nodeId: string, filename: string, dest: string) {
-        return null;
+        return this._download(`/pools/${poolId}/nodes/${nodeId}/files/${filename}`, dest);
     }
 
     public downloadFromTask(jobId: string, taskId: string, filename: string, dest: string) {
-        return null;
+        return this._download(`/jobs/${jobId}/tasks/${taskId}/files/${filename}`, dest);
+
     }
     public getComputeNodeFile(poolId: string, nodeId: string, filename: string, options) {
-        return null;
+        return this._getContent(`/pools/${poolId}/nodes/${nodeId}/files/${filename}`);
     }
-    public getTaskFile(poolId: string, nodeId: string, filename: string, options) {
-        return null;
+    public getTaskFile(jobId: string, taskId: string, filename: string, options) {
+        return this._getContent(`/jobs/${jobId}/tasks/${taskId}/files/${filename}`);
+    }
+
+    private _download(uri: string, dest: string) {
+        return this.http.get(uri, { observe: "response", responseType: "blob" }).pipe(
+            flatMap((response) => Observable.fromPromise(this._downloadContent(response, dest))),
+            share(),
+        );
+    }
+
+    private async _downloadContent(response: HttpResponse<Blob>, destination: string): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            const reader = new FileReader();
+            const output = fs.createWriteStream(destination);
+
+            reader.onload = () => {
+                const buffer = new Buffer(reader.result);
+                output.write(buffer);
+                output.close();
+                resolve(true);
+            };
+
+            reader.onerror = (error) => {
+                reject(error);
+            };
+            reader.readAsArrayBuffer(response.body);
+        });
+    }
+
+    private _getContent(uri: string): Observable<{ content: string }> {
+        return this.http.get(uri, { observe: "response", responseType: "arraybuffer" }).pipe(
+            flatMap((response) => Observable.fromPromise(this._readContent(response))),
+            share(),
+        );
+    }
+
+    private async _readContent(response: HttpResponse<ArrayBuffer>) {
+        const buffer = response.body;
+
+        const { encoding } = await EncodingUtils.detectEncodingFromBuffer({
+            buffer: new Buffer(buffer),
+            bytesRead: buffer.byteLength,
+        });
+        return { content: new TextDecoder(encoding || "utf-8").decode(buffer) };
     }
 
     private _parseHeadersToFile(headers: HttpHeaders, filename: string) {
