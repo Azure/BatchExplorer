@@ -33,12 +33,12 @@ export class BatchListGetter<TEntity, TParams> extends ListGetter<TEntity, TPara
         return this.http.get<any>(token.nextLink).map(x => this._processResponse(x)).share();
     }
 
-    private _processResponse(response: { value: TEntity[], "@odata.nextLink": string }) {
+    private _processResponse(response: { value: TEntity[], "odata.nextLink": string }) {
         const data = response.value;
 
         return {
             data,
-            nextLink: response["@odata.nextLink"],
+            nextLink: response["odata.nextLink"],
         };
     }
 

@@ -1,22 +1,22 @@
+import { HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { HttpCode, ServerError } from "@batch-flask/core";
-import { AutoScaleFormulaEvaluation, File, NameValuePair } from "app/models";
-import { FileCreateDto, FileEnableAutoScaleDto, FilePatchDto, FileResizeDto } from "app/models/dtos";
-import { FileSystemService } from "app/services";
+import { HttpCode, HttpRequestOptions, ServerError } from "@batch-flask/core";
+import { exists } from "@batch-flask/utils";
+import { File } from "app/models";
 import {
-    ContinuationToken,
+    BasicEntityGetter,
+    BasicListGetter,
     DataCache,
-    EntityView,
     ListOptionsAttributes,
-    ListResponse,
     ListView,
     TargetedDataCache,
 } from "app/services/core";
-import { Constants, ModelUtils } from "app/utils";
-import { List } from "immutable";
-import { Observable, Subject } from "rxjs";
-import { map } from "rxjs/operators";
-import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "../core";
+import { FileLoader, FileNavigator, FileSource } from "app/services/file";
+import { FileSystemService } from "app/services/fs.service";
+import * as path from "path";
+import { Observable } from "rxjs";
+import { map, share } from "rxjs/operators";
+import { AzureBatchHttpService, BatchEntityGetter } from "../core";
 
 export interface NodeFileListParams {
     poolId?: string;
@@ -68,47 +68,55 @@ export class FileService {
         key: ({ jobId, taskId }) => jobId + "/" + taskId,
     }, "name");
 
-    private _taskFileGetter: BatchEntityGetter<File, TaskFileParams>;
-    private _nodeFileGetter: BatchEntityGetter<File, NodeFileParams>;
-    private _taskFileListGetter: BatchListGetter<File, TaskFileListParams>;
-    private _nodeFileListGetter: BatchListGetter<File, NodeFileListParams>;
+    private _taskFileGetter: BasicEntityGetter<File, TaskFileParams>;
+    private _nodeFileGetter: BasicEntityGetter<File, NodeFileParams>;
+    private _taskFileListGetter: BasicListGetter<File, TaskFileListParams>;
+    private _nodeFileListGetter: BasicListGetter<File, NodeFileListParams>;
 
     constructor(private http: AzureBatchHttpService, private fs: FileSystemService) {
-        this._taskFileGetter = new BatchEntityGetter(File, this.http, {
+        this._taskFileGetter = new BasicEntityGetter(File, {
             cache: (params) => this.getTaskFileCache(params),
-            uri: ({ jobId, taskId, name }) => `/jobs/${jobId}/tasks/${taskId}/files/${name}`,
+            supplyData: ({ jobId, taskId, name }) => {
+                const uri = `/jobs/${jobId}/tasks/${taskId}/files/${name}`;
+                return this.http.head(uri, { observe: "response" }).pipe(
+                    map((response) => {
+                        return this._parseHeadersToFile(response.headers, name);
+                    }),
+                    share(),
+                );
+            },
         });
 
-        this._nodeFileGetter = new BatchEntityGetter(File, this.http, {
+        this._nodeFileGetter = new BasicEntityGetter(File, {
             cache: (params) => this.getNodeFileCache(params),
-            uri: ({ poolId, nodeId, name }) => `/pools/${poolId}/nodes/${nodeId}/files/${name}`,
+            supplyData: ({ poolId, nodeId, name }) => {
+                const uri = `/pools/${poolId}/nodes/${nodeId}/files/${name}`;
+                return this.http.head(uri, { observe: "response" }).pipe(
+                    map((response) => {
+                        return this._parseHeadersToFile(response.headers, name);
+                    }),
+                    share(),
+                );
+            },
         });
 
-        this._taskFileListGetter = new BatchListGetter(File, this.batchService, {
+        this._taskFileListGetter = new BasicListGetter(File, {
             cache: (params) => this.getTaskFileCache(params),
-            uri: (params, options) => {
-                const batchOptions = { ...options };
-                if (options.original.folder) {
-                    batchOptions.filter = `startswith(name, '${options.original.folder}')`;
-                }
-                return  `/jobs/${params}/tasks/${params.taskId}/files`;
+            supplyData: (params, options, nextLink) => {
+                const uri = `/jobs/${params.jobId}/tasks/${params.taskId}/files`;
+                return this._listFiles(uri, options, nextLink);
             },
             logIgnoreError: fileIgnoredErrors,
         });
 
-        // this._nodeFileListGetter = new BatchListGetter(File, this.batchService, {
-        //     cache: (params) => this.getNodeFileCache(params),
-        //     list: (client, { poolId, nodeId }, options) => {
-        //         const batchOptions = { ...options };
-        //         if (options.original.folder) {
-        //             batchOptions.filter = `startswith(name, '${options.original.folder}')`;
-        //         }
-        //         return client.file.listFromComputeNode(poolId, nodeId,
-        //             { recursive: options.original.recursive, fileListFromComputeNodeOptions: batchOptions });
-        //     },
-        //     listNext: (client, nextLink: string) => client.file.listFromComputeNodeNext(nextLink),
-        //     logIgnoreError: fileIgnoredErrors,
-        // });
+        this._nodeFileListGetter = new BasicListGetter(File, {
+            cache: (params) => this.getNodeFileCache(params),
+            supplyData: (params, options, nextLink) => {
+                const uri = `/pools/${params.poolId}/nodes/${params.nodeId}/files`;
+                return this._listFiles(uri, options, nextLink);
+            },
+            logIgnoreError: fileIgnoredErrors,
+        });
     }
 
     public get basicProperties(): string {
@@ -175,14 +183,10 @@ export class FileService {
                     ocpRange = `bytes=${options.rangeStart}-${options.rangeEnd}`;
                 }
                 const batchOptions = { fileGetFromComputeNodeOptions: { ocpRange } };
-                return this.callBatchClient((client) => {
-                    return client.file.getComputeNodeFile(poolId, nodeId, filename, batchOptions);
-                });
+                return this.getComputeNodeFile(poolId, nodeId, filename, batchOptions);
             },
             download: (dest: string) => {
-                return this.callBatchClient((client) => {
-                    return client.file.downloadFromNode(poolId, nodeId, filename, dest);
-                });
+                return this.downloadFromNode(poolId, nodeId, filename, dest);
             },
         });
     }
@@ -210,14 +214,10 @@ export class FileService {
                     ocpRange = `bytes=${options.rangeStart}-${options.rangeEnd}`;
                 }
                 const batchOptions = { fileGetFromTaskOptions: { ocpRange } };
-                return this.callBatchClient((client) => {
-                    return client.file.getTaskFile(jobId, taskId, filename, batchOptions);
-                });
+                return this.getTaskFile(jobId, taskId, filename, batchOptions);
             },
             download: (dest: string) => {
-                return this.callBatchClient((client) => {
-                    return client.file.downloadFromTask(jobId, taskId, filename, dest);
-                });
+                return this.downloadFromTask(jobId, taskId, filename, dest);
             },
             logIgnoreError: fileIgnoredErrors,
         });
@@ -229,5 +229,54 @@ export class FileService {
         name: string,
         options: any = {}): Observable<File> {
         return this._taskFileGetter.fetch({ jobId, taskId, name });
+    }
+
+    public downloadFromNode(poolId: string, nodeId: string, filename: string, dest: string) {
+        return null;
+    }
+
+    public downloadFromTask(jobId: string, taskId: string, filename: string, dest: string) {
+        return null;
+    }
+    public getComputeNodeFile(poolId: string, nodeId: string, filename: string, options) {
+        return null;
+    }
+    public getTaskFile(poolId: string, nodeId: string, filename: string, options) {
+        return null;
+    }
+
+    private _parseHeadersToFile(headers: HttpHeaders, filename: string) {
+        const contentLength = parseInt(headers.get("content-length"), 10);
+        return {
+            name: filename,
+            isDirectory: headers.get("ocp-batch-file-isdirectory"),
+            url: headers.get("ocp-batch-file-url"),
+            properties: {
+                contentLength: isNaN(contentLength) ? 0 : contentLength,
+                contentType: headers.get("content-type"),
+                creationTime: headers.get("ocp-creation-time"),
+                lastModified: headers.get("last-modified"),
+            },
+        };
+    }
+
+    private _listFiles(uri: string, options, nextLink) {
+        let httpOptions: HttpRequestOptions = null;
+        if (nextLink) {
+            uri = nextLink;
+        } else {
+            const query: any = {};
+            if (options.original.folder) {
+                query["$filter"] = `startswith(name, '${options.original.folder}')`;
+            }
+            query.recursive = Boolean(options.original.recursive);
+            httpOptions = { params: new HttpParams({ fromObject: query }) };
+        }
+        return this.http.get<any>(uri, httpOptions).map(x => {
+            return {
+                data: x.value,
+                nextLink: x["odata.nextLink"],
+            };
+        });
     }
 }
