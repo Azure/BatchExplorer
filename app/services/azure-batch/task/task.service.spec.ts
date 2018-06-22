@@ -4,7 +4,7 @@ import { TestBed } from "@angular/core/testing";
 import { Task, TaskState } from "app/models";
 import { TaskService } from "./task.service";
 
-fdescribe("TaskService", () => {
+describe("TaskService", () => {
     let taskService: TaskService;
     let httpMock: HttpTestingController;
     beforeEach(() => {

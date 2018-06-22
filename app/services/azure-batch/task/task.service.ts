@@ -168,7 +168,7 @@ export class TaskService {
      * Starts the deletion process
      */
     public delete(jobId: string, taskId: string, options: any = {}): Observable<{}> {
-        return this.http.delete(`/jobs/${jobId}/tasks/${taskId}`, null);
+        return this.http.delete(`/jobs/${jobId}/tasks/${taskId}`);
     }
 
     public add(jobId: string, task: TaskCreateDto, options: any): Observable<{}> {
