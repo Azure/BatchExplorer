@@ -17,6 +17,8 @@ export * from "./job-schedule-create.dto";
 export * from "./job-schedule-patch.dto";
 export * from "./job-patch.dto";
 export * from "./metadata.dto";
+export * from "./network-configuration.dto";
+export * from "./output-file.dto";
 export * from "./pool-create.dto";
 export * from "./pool-enable-autoscale.dto";
 export * from "./pool-endpoint-configuration.dto";

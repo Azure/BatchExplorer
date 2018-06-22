@@ -1,4 +1,4 @@
-import { Dto, DtoAttr } from "@batch-flask/core";
+import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
 import { JobCreateDto } from "./job-create.dto";
 import { MetaDataDto } from "./metadata.dto";
 import { ScheduleDto } from "./schedule.dto";
@@ -12,5 +12,5 @@ export class JobScheduleCreateDto extends Dto<JobScheduleCreateDto> {
 
     @DtoAttr() public jobSpecification?: JobCreateDto;
 
-    @DtoAttr() public metadata?: MetaDataDto[];
+    @ListDtoAttr(MetaDataDto) public metadata?: MetaDataDto[];
 }

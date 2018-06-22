@@ -12,7 +12,6 @@ export * from "./compute.service";
 export * from "./fs.service";
 export * from "./github-data.service";
 export * from "./http-upload-service";
-export * from "./job.service";
 export * from "./job-schedule-service";
 export * from "./job-hook-task.service";
 export * from "./local-file-storage.service";

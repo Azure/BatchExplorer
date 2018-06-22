@@ -4,6 +4,7 @@ import { EnvironmentSetting } from "./metadata.dto";
 import { ResourceFileDto } from "./resource-file.dto";
 import { TaskConstraintsDto } from "./task-constraints.dto";
 import { TaskContainerSettingsDto } from "./task-container-settings.dto";
+import { UserIdentityDto } from "./user-identity.dto";
 
 export class GroupSourceDto extends Dto<GroupSourceDto> {
     @DtoAttr() public fileGroup: string;
@@ -34,7 +35,7 @@ export class TaskCreateDto extends Dto<TaskCreateDto> {
 
     @DtoAttr() public constraints?: TaskConstraintsDto;
 
-    @DtoAttr() public userIdentity?: any;
+    @DtoAttr() public userIdentity?: UserIdentityDto;
 
     @DtoAttr() public multiInstanceSettings?: any;
 
