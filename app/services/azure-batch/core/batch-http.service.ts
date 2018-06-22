@@ -33,7 +33,7 @@ export class AzureBatchHttpService extends HttpService {
                 return this.adal.accessTokenData(tenantId, this.serviceUrl).pipe(
                     flatMap((accessToken) => {
                         options = this.addAuthorizationHeader(options, accessToken);
-                        options = this._addApiVersion(options);
+                        options = this._addApiVersion(uri, options);
                         return super.request(
                             method,
                             this._computeUrl(uri, account),
@@ -50,12 +50,12 @@ export class AzureBatchHttpService extends HttpService {
         );
     }
 
-    private _addApiVersion(options: HttpRequestOptions): HttpRequestOptions {
+    private _addApiVersion(uri: string, options: HttpRequestOptions): HttpRequestOptions {
         if (!(options.params instanceof HttpParams)) {
-            options.params = new HttpParams(options.params);
+            options.params = new HttpParams({ fromObject: options.params });
         }
 
-        if (!options.params.get("api-version")) {
+        if (!options.params.has("api-version") && !uri.contains("api-version")) {
             options.params = options.params.set("api-version", Constants.ApiVersion.batchService);
         }
 

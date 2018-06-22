@@ -14,7 +14,7 @@ import {
     ListView,
     TargetedDataCache,
 } from "app/services/core";
-import { Constants, log } from "app/utils";
+import { Constants } from "app/utils";
 import {
     AzureBatchHttpService, BatchEntityGetter, BatchListGetter,
 } from "../core";
