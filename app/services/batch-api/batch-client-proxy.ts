@@ -1,6 +1,5 @@
 import { BatchServiceClient } from "azure-batch";
 
-import { FileProxy } from "./fileProxy";
 import { JobScheduleProxy } from "./jobScheduleProxy";
 import { TaskProxy } from "./taskProxy";
 
@@ -13,20 +12,14 @@ export interface Options {
 export class BatchClientProxy {
     public client: BatchServiceClient;
 
-    private _file: FileProxy;
     private _jobSchedule: JobScheduleProxy;
     private _task: TaskProxy;
 
     constructor(credentials, url) {
         this.client = new BatchServiceClient(credentials, url);
 
-        this._file = new FileProxy(this.client);
         this._jobSchedule = new JobScheduleProxy(this.client);
         this._task = new TaskProxy(this.client);
-    }
-
-    get file(): FileProxy {
-        return this.checkProxy(this._file);
     }
 
     get jobSchedule(): JobScheduleProxy {

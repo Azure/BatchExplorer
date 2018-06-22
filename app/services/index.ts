@@ -9,7 +9,6 @@ export * from "./arm-http.service";
 export * from "./batch-labs.service";
 export * from "./cache-data.service";
 export * from "./compute.service";
-export * from "./file-service";
 export * from "./fs.service";
 export * from "./github-data.service";
 export * from "./http-upload-service";

@@ -12,5 +12,5 @@ export class JobScheduleCreateDto extends Dto<JobScheduleCreateDto> {
 
     @DtoAttr() public jobSpecification?: JobCreateDto;
 
-    @ListDtoAttr(MetaDataDto) public metadata?: MetaDataDto;
+    @ListDtoAttr(MetaDataDto) public metadata?: MetaDataDto[];
 }
