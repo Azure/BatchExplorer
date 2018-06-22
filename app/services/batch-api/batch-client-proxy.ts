@@ -1,7 +1,6 @@
 import { BatchServiceClient } from "azure-batch";
 
 import { JobScheduleProxy } from "./jobScheduleProxy";
-import { TaskProxy } from "./taskProxy";
 
 export interface Options {
     account: string;
@@ -13,21 +12,15 @@ export class BatchClientProxy {
     public client: BatchServiceClient;
 
     private _jobSchedule: JobScheduleProxy;
-    private _task: TaskProxy;
 
     constructor(credentials, url) {
         this.client = new BatchServiceClient(credentials, url);
 
         this._jobSchedule = new JobScheduleProxy(this.client);
-        this._task = new TaskProxy(this.client);
     }
 
     get jobSchedule(): JobScheduleProxy {
         return this.checkProxy(this._jobSchedule);
-    }
-
-    get task(): TaskProxy {
-        return this.checkProxy(this._task);
     }
 
     private checkProxy(proxy: any): any {
