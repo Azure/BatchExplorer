@@ -28,7 +28,6 @@ export * from "./subscription.service";
 export * from "./vm-size.service";
 export * from "./adal";
 export * from "./python-rpc";
-export * from "./batch-client.service";
 export * from "./storage-account.service";
 export * from "./predefined-formula.service";
 export * from "./themes";

@@ -1,5 +1,4 @@
 export * from "./activated-route.mock";
-export * from "./batch-client.service.mock";
 export * from "./context-menu.service.mock";
 export * from "./entity-view.mock";
 export * from "./file.mock";
