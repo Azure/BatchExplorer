@@ -59,7 +59,7 @@ export class JobService {
     public list(options?: any, forceNew?: boolean): Observable<ListResponse<Job>>;
     public list(nextLink: ContinuationToken): Observable<ListResponse<Job>>;
     public list(nextLinkOrOptions: any, options = {}, forceNew = false): Observable<ListResponse<Job>> {
-        if (nextLinkOrOptions.nextLink) {
+        if (nextLinkOrOptions && nextLinkOrOptions.nextLink) {
             return this._listGetter.fetch(nextLinkOrOptions);
         } else {
             return this._listGetter.fetch({}, options, forceNew);
@@ -123,7 +123,7 @@ export class JobService {
     }
 
     public patch(jobId: string, attributes: JobPatchDto, options: any = {}) {
-        return this.http.patch(`/jobs/${jobId}/enable`, attributes.toJS());
+        return this.http.patch(`/jobs/${jobId}`, attributes.toJS());
     }
 
     public updateTags(job: Job, tags: List<string>) {
