@@ -105,9 +105,9 @@ describe("FileService", () => {
         });
 
         it("list file recursively", (done) => {
-            const options = new ListOptions({
+            const options = {
                 recursive: true,
-            });
+            };
             fileService.listFromNode("pool-1", "node-2", options).subscribe((response) => {
                 done();
             });
@@ -116,15 +116,15 @@ describe("FileService", () => {
             expect(req.request.params.get("recursive").toString()).toBe("true");
             expect(req.request.params.has("$filter")).toBe(false);
             expect(req.request.body).toBe(null);
-
+            req.flush({ value: []});
             httpMock.verify();
         });
 
         it("list file with folder", (done) => {
-            const options = new ListOptions({
+            const options = {
                 recursive: true,
-                folder: "abc",
-            });
+                folder: "abc/",
+            };
             fileService.listFromNode("pool-1", "node-2", options).subscribe((response) => {
                 done();
             });
@@ -133,7 +133,7 @@ describe("FileService", () => {
             expect(req.request.params.get("recursive").toString()).toBe("true");
             expect(req.request.params.get("$filter")).toBe("startswith(name, 'abc/')");
             expect(req.request.body).toBe(null);
-
+            req.flush({ value: []});
             httpMock.verify();
         });
     });

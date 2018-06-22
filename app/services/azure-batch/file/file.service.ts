@@ -8,6 +8,7 @@ import {
     BasicListGetter,
     ContinuationToken,
     DataCache,
+    ListOptions,
     ListOptionsAttributes,
     ListResponse,
     ListView,
@@ -158,12 +159,12 @@ export class FileService {
         : Observable<ListResponse<File>>;
     public listFromNode(poolId: string, nodeId: string, nextLink: ContinuationToken)
         : Observable<ListResponse<File>>;
-    public listFromNode(poolId: string, nodeId: string, nextLinkOrOptions: any, options = {}, forceNew = false)
+    public listFromNode(nextLinkOrPoolId: any, nodeId: string, options: any, forceNew = false)
         : Observable<ListResponse<File>> {
-        if (nextLinkOrOptions && nextLinkOrOptions.nextLink) {
-            return this._nodeFileListGetter.fetch(nextLinkOrOptions);
+        if (nextLinkOrPoolId && nextLinkOrPoolId.nextLink) {
+            return this._nodeFileListGetter.fetch(nextLinkOrPoolId);
         } else {
-            return this._nodeFileListGetter.fetch({ poolId, nodeId }, options, forceNew);
+            return this._nodeFileListGetter.fetch({ poolId: nextLinkOrPoolId, nodeId }, options, forceNew);
         }
     }
 
@@ -320,7 +321,7 @@ export class FileService {
         };
     }
 
-    private _listFiles(uri: string, options, nextLink) {
+    private _listFiles(uri: string, options: ListOptions, nextLink) {
         let httpOptions: HttpRequestOptions = null;
         if (nextLink) {
             uri = nextLink;
