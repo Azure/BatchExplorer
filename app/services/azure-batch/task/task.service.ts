@@ -76,7 +76,7 @@ export class TaskService {
 
         this._subTaskListGetter = new BatchListGetter(SubtaskInformation, this.http, {
             cache: ({ jobId, taskId }) => this._subTaskCache.getCache({ jobId, taskId }),
-            uri: (params: SubtaskListParams) => `/jobs/${params.jobId}/tasks/${params.taskId}/subtasks`,
+            uri: (params: SubtaskListParams) => `/jobs/${params.jobId}/tasks/${params.taskId}/subtasksinfo`,
         });
     }
 

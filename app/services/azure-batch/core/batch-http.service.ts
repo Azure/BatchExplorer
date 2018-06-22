@@ -40,6 +40,7 @@ export class AzureBatchHttpService extends HttpService {
                             options)
                             .retryWhen(attempts => this.retryWhen(attempts))
                             .catch((error) => {
+                                console.log("Error", error);
                                 const err = ServerError.fromBatchHttp(error);
                                 return Observable.throw(err);
                             });

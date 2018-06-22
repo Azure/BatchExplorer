@@ -79,7 +79,21 @@ export class ServerError {
     }
 
     public static fromBatchHttp(response: HttpErrorResponse) {
-        return this.fromBatchBody(response.error);
+        const error = response.error;
+        const { message, requestId, timestamp } = parseMessage(error.message && error.message.value);
+
+        // when the error message returned is not of type ErrorMessage, it will more often
+        // than not be a string.
+        return new ServerError({
+            status: response.status,
+            statusText: response.statusText,
+            code: error.code,
+            details: error.values,
+            message: message || error.message as string,
+            requestId,
+            timestamp,
+            original: error,
+        });
     }
 
     public static fromBatch(error: BatchError) {
