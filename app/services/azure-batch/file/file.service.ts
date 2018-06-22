@@ -6,8 +6,10 @@ import { File } from "app/models";
 import {
     BasicEntityGetter,
     BasicListGetter,
+    ContinuationToken,
     DataCache,
     ListOptionsAttributes,
+    ListResponse,
     ListView,
     TargetedDataCache,
 } from "app/services/core";
@@ -152,6 +154,19 @@ export class FileService {
         return view;
     }
 
+    public listFromNode(poolId: string, nodeId: string, options?: ListOptionsAttributes, forceNew?: boolean)
+        : Observable<ListResponse<File>>;
+    public listFromNode(poolId: string, nodeId: string, nextLink: ContinuationToken)
+        : Observable<ListResponse<File>>;
+    public listFromNode(poolId: string, nodeId: string, nextLinkOrOptions: any, options = {}, forceNew = false)
+        : Observable<ListResponse<File>> {
+        if (nextLinkOrOptions && nextLinkOrOptions.nextLink) {
+            return this._nodeFileListGetter.fetch(nextLinkOrOptions);
+        } else {
+            return this._nodeFileListGetter.fetch({ poolId, nodeId }, options, forceNew);
+        }
+    }
+
     public navigateNodeFiles(poolId: string, nodeId: string, config: NaviagateNodeFileConfig = {}) {
         return new FileNavigator({
             basePath: config.basePath,
@@ -294,13 +309,13 @@ export class FileService {
         const contentLength = parseInt(headers.get("content-length"), 10);
         return {
             name: filename,
-            isDirectory: headers.get("ocp-batch-file-isdirectory"),
+            isDirectory: headers.get("ocp-batch-file-isdirectory") === "True",
             url: headers.get("ocp-batch-file-url"),
             properties: {
                 contentLength: isNaN(contentLength) ? 0 : contentLength,
                 contentType: headers.get("content-type"),
-                creationTime: headers.get("ocp-creation-time"),
-                lastModified: headers.get("last-modified"),
+                creationTime: new Date(headers.get("ocp-creation-time")),
+                lastModified: new Date(headers.get("last-modified")),
             },
         };
     }

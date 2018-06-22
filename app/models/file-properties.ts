@@ -3,8 +3,8 @@ import { Model, Prop, Record } from "@batch-flask/core";
 export interface FilePropertiesAttributes {
     contentLength: number;
     contentType: string;
-    creationTime: Date;
-    lastModified: Date;
+    creationTime: Date | string;
+    lastModified: Date | string;
 }
 
 /**
@@ -14,6 +14,6 @@ export interface FilePropertiesAttributes {
 export class FileProperties extends Record<FilePropertiesAttributes> {
     @Prop() public contentLength: number;
     @Prop() public contentType: string;
-    @Prop() public creationTime: Date;
-    @Prop() public lastModified: Date;
+    @Prop(Date) public creationTime: Date;
+    @Prop(Date) public lastModified: Date;
 }
