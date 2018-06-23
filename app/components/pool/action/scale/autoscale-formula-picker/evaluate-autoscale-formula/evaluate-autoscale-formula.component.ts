@@ -3,7 +3,6 @@ import { ServerError } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { AutoScaleFormulaEvaluation, NameValuePair, Pool } from "app/models";
 import { PoolService } from "app/services";
-import { AutoScaleRunError } from "azure-batch/typings/lib/models";
 import { List } from "immutable";
 
 import "./evaluate-autoscale-formula.scss";
@@ -49,7 +48,7 @@ export class EvaluateAutoScaleForumlaComponent {
         });
     }
 
-    public trackEvaluationErrors(index, error: AutoScaleRunError) {
+    public trackEvaluationErrors(index, error: any) {
         return index;
     }
 

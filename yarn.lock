@@ -991,12 +991,6 @@ axios@^0.15.3:
   dependencies:
     follow-redirects "1.0.0"
 
-"azure-batch@git://github.com/amarzavery/azure-batch-ts#0fd31d16d4f5cdc1b2b1aa84dc8561f271c392a4":
-  version "0.1.0"
-  resolved "git://github.com/amarzavery/azure-batch-ts#0fd31d16d4f5cdc1b2b1aa84dc8561f271c392a4"
-  dependencies:
-    ms-rest-azure-js "^0.2.0"
-
 azure-storage@~2.8.3:
   version "2.8.3"
   resolved "https://registry.yarnpkg.com/azure-storage/-/azure-storage-2.8.3.tgz#6ee1539188ee42b91c62dad691b39ac5452e142b"
@@ -6262,13 +6256,7 @@ move-concurrently@^1.0.1:
     rimraf "^2.5.4"
     run-queue "^1.0.3"
 
-ms-rest-azure-js@^0.2.0:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/ms-rest-azure-js/-/ms-rest-azure-js-0.2.1.tgz#771cd1f3e177080f568529f07d68b8f8c5a2f4c8"
-  dependencies:
-    ms-rest-js "^0.2.3"
-
-ms-rest-js@^0.2.3, ms-rest-js@~0.2.3:
+ms-rest-js@~0.2.3:
   version "0.2.6"
   resolved "https://registry.yarnpkg.com/ms-rest-js/-/ms-rest-js-0.2.6.tgz#1856ff620766bcca9bc23a9f01a26e019d0f80d5"
   dependencies:
