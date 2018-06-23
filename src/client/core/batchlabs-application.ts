@@ -7,7 +7,7 @@ import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure
 import { fetch, log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { localStorage } from "client/core/local-storage";
-import { WinTerminalService } from "client/core/terminal";
+import { TerminalService } from "client/core/terminal";
 import { setMenu } from "client/menu";
 import { ProxySettingsManager } from "client/proxy";
 import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-configuration-window";
@@ -41,7 +41,7 @@ export class BatchLabsApplication {
     public aadService = new AADService(this);
     public state: Observable<BatchLabsState>;
     public proxySettings = new ProxySettingsManager(this, localStorage);
-    public winTerminalService = new WinTerminalService();
+    public terminalService = new TerminalService();
 
     public get azureEnvironment(): AzureEnvironment { return this._azureEnvironment.value; }
     public azureEnvironmentObs: Observable<AzureEnvironment>;
@@ -67,7 +67,7 @@ export class BatchLabsApplication {
         });
         BlIpcMain.on(IpcEvent.launchApplication, (args) => {
             if (args.name === Application.terminal) {
-                return this.winTerminalService.runInTerminal(args.command);
+                return this.terminalService.runInTerminal(args.command);
             }
         });
         this.azureEnvironmentObs = this._azureEnvironment.asObservable();

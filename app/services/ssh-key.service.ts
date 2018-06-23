@@ -4,6 +4,7 @@ import { List } from "immutable";
 import { SSHPublicKey } from "app/models";
 import { Constants } from "app/utils";
 import { BehaviorSubject, Observable } from "rxjs";
+import { FileSystemService } from "./fs.service";
 import { LocalFileStorage } from "./local-file-storage.service";
 
 const filename = Constants.SavedDataFilename.sshPublicKeys;
@@ -14,7 +15,7 @@ export class SSHKeyService {
 
     private _keys = new BehaviorSubject<List<SSHPublicKey>>(List([]));
 
-    constructor(private storage: LocalFileStorage) {
+    constructor(private storage: LocalFileStorage, private fs: FileSystemService) {
         this.keys = this._keys.asObservable();
     }
 
@@ -46,6 +47,27 @@ export class SSHKeyService {
             }
         });
     }
+
+    public hasLocalPublicKey(): Observable<boolean> {
+        return Observable.fromPromise(this.fs.exists("~/.ssh/id_rsa.pub"));
+    }
+
+    public getLocalPublicKey(): Observable<string> {
+        return Observable.fromPromise(this.fs.readFile("~/.ssh/id_rsa.pub"));
+    }
+
+    // private async _checkIfKeyExistsAndRead(path): Promise<string | null> {
+    //     let key = null;
+
+    //     const hasPubKey = await this.fs.exists(path);
+
+    //     if (hasPubKey) {
+    //         key = await this.fs.readFile(path);
+    //         return key;
+    //     } else {
+    //         return null;
+    //     }
+    // }
 
     private _saveSSHPublicKeys(keys: List<SSHPublicKey> = null): Observable<any> {
         keys = keys === null ? this._keys.value : keys;

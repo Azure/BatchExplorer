@@ -14,4 +14,5 @@ export interface Settings {
     "storage.default-upload-container": string;
     "auto-update-on-quit": boolean;
     "terminal": string;
+    "username": string;
 }

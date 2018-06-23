@@ -19,5 +19,7 @@
   "auto-update-on-quit": true,
 
   // Default powershell on windows, terminal.app on darwin, ...
-  "terminal": "default"
+  "terminal": "default",
+
+  "username": null
 }
