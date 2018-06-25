@@ -5,7 +5,14 @@ import * as moment from "moment";
 
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
-import { AddNodeUserAttributes, BatchLabsService, NodeService, NodeUserService, SSHKeyService, SettingsService } from "app/services";
+import {
+    AddNodeUserAttributes,
+    BatchLabsService,
+    NodeService,
+    NodeUserService,
+    SSHKeyService,
+    SettingsService,
+} from "app/services";
 import { DateUtils, PoolUtils, SecureUtils } from "app/utils";
 import { Application } from "common/constants";
 import { Observable } from "rxjs";
@@ -32,6 +39,7 @@ export class NodeConnectComponent implements OnInit {
     public expireTime: string;
     public hasLocalPublicKey: boolean;
     public defaultUsername: string;
+    public quickStartTooltip: string = "";
 
     /**
      * Base content for the rdp file(IP Address).
@@ -64,6 +72,7 @@ export class NodeConnectComponent implements OnInit {
         private sshKeyService: SSHKeyService,
     ) {
         this.defaultUsername = settingsService.settings["username"];
+        this.quickStartTooltip = "No SSH Keys Found";
     }
 
     public ngOnInit() {
@@ -120,8 +129,9 @@ export class NodeConnectComponent implements OnInit {
                 // launch a terminal subprocess with the command to access the node
                 const args = {
                     name: Application.terminal,
-                    command: this.sshCommand,
+                    command: PoolUtils.isWindows(this.pool) ? "" : this.sshCommand,
                 };
+                // TODO insert rdpCommand as a get method and place in ternary statement above
                 return Observable.fromPromise(this.batchLabs.launchApplication(args));
             }),
             share(),
