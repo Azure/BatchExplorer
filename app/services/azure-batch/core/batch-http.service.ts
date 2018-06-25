@@ -1,5 +1,5 @@
 import { Location } from "@angular/common";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpHandler, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { HttpRequestOptions, HttpService, ServerError } from "@batch-flask/core";
 import { UrlUtils } from "@batch-flask/utils";
@@ -7,9 +7,9 @@ import { AccountResource } from "app/models";
 import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
 import { BatchLabsService } from "app/services/batch-labs.service";
-import { AADUser } from "client/core/aad/adal/aad-user";
 import { Constants } from "common";
 import { Observable } from "rxjs";
+import { flatMap, shareReplay, take } from "rxjs/operators";
 
 @Injectable()
 export class AzureBatchHttpService extends HttpService {
@@ -17,25 +17,24 @@ export class AzureBatchHttpService extends HttpService {
         return this.batchLabs.azureEnvironment.batchUrl;
     }
 
-    private _currentUser: AADUser;
     constructor(
-        private http: HttpClient,
+        httpHandler: HttpHandler,
         private adal: AdalService,
         private accountService: AccountService,
         private batchLabs: BatchLabsService) {
-        super();
-        this.adal.currentUser.subscribe(x => this._currentUser = x);
+        super(httpHandler);
     }
 
-    public request<T = any>(method: string, uri: string, options: any): Observable<T> {
-        return this.accountService.currentAccount.take(1)
-            .flatMap((account) => {
+    public request(method: any, uri?: any, options?: any): Observable<any> {
+        return this.accountService.currentAccount.pipe(
+            take(1),
+            flatMap((account) => {
                 const tenantId = account.subscription.tenantId;
-                return this.adal.accessTokenData(tenantId, this.serviceUrl)
-                    .flatMap((accessToken) => {
+                return this.adal.accessTokenData(tenantId, this.serviceUrl).pipe(
+                    flatMap((accessToken) => {
                         options = this.addAuthorizationHeader(options, accessToken);
-                        options = this._addApiVersion(options);
-                        return this.http.request<T>(
+                        options = this._addApiVersion(uri, options);
+                        return super.request(
                             method,
                             this._computeUrl(uri, account),
                             options)
@@ -43,17 +42,20 @@ export class AzureBatchHttpService extends HttpService {
                             .catch((error) => {
                                 const err = ServerError.fromBatchHttp(error);
                                 return Observable.throw(err);
-                            }) as any;
-                    });
-            }).shareReplay(1);
+                            });
+                    }),
+                );
+            }),
+            shareReplay(1),
+        );
     }
 
-    private _addApiVersion(options: HttpRequestOptions): HttpRequestOptions {
+    private _addApiVersion(uri: string, options: HttpRequestOptions): HttpRequestOptions {
         if (!(options.params instanceof HttpParams)) {
-            options.params = new HttpParams(options.params);
+            options.params = new HttpParams({ fromObject: options.params });
         }
 
-        if (!options.params.get("api-version")) {
+        if (!options.params.has("api-version") && !uri.contains("api-version")) {
             options.params = options.params.set("api-version", Constants.ApiVersion.batchService);
         }
 

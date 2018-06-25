@@ -15,7 +15,7 @@ export class TaskContainerSettingsDecorator extends DecoratorBase<TaskContainerS
         this.imageName = this.stringField(containerSettings.imageName);
         this.containerRunOptions = this.stringField(containerSettings.containerRunOptions);
         this.registryUsername = this.stringField(containerSettings.registry ?
-            containerSettings.registry.userName : null);
+            containerSettings.registry.username : null);
         this.registryServer = this.stringField(containerSettings.registry ?
             containerSettings.registry.registryServer : null);
     }

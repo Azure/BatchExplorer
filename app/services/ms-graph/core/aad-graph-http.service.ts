@@ -1,5 +1,5 @@
 import { Location } from "@angular/common";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpHandler, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
@@ -20,24 +20,24 @@ export class AADGraphHttpService extends HttpService {
 
     private _currentUser: AADUser;
     constructor(
-        private http: HttpClient,
+        httpHandler: HttpHandler,
         private adal: AdalService,
         private accountService: AccountService,
         private batchLabs: BatchLabsService) {
-        super();
+        super(httpHandler);
         this.adal.currentUser.subscribe(x => this._currentUser = x);
     }
 
-    public request<T = any>(method: string, uri: string, options: any): Observable<T> {
+    public request(method: any, uri?: any, options?: any): Observable<any> {
         return this.accountService.currentAccount.pipe(
             take(1),
             flatMap((account) => {
                 const tenantId = account.subscription.tenantId;
-                return this.adal.accessTokenData(tenantId, this.serviceUrl)
-                    .flatMap((accessToken) => {
+                return this.adal.accessTokenData(tenantId, this.serviceUrl).pipe(
+                    flatMap((accessToken) => {
                         options = this.addAuthorizationHeader(options, accessToken);
                         options = this._addApiVersion(options);
-                        return this.http.request<T>(
+                        return super.request(
                             method,
                             this._computeUrl(uri, tenantId),
                             options)
@@ -45,8 +45,8 @@ export class AADGraphHttpService extends HttpService {
                             .catch((error) => {
                                 const err = ServerError.fromAADGraph(error);
                                 return Observable.throw(err);
-                            }) as any;
-                    });
+                            });
+                    }));
             }),
             shareReplay(1),
         );

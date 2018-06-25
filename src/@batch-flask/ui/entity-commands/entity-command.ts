@@ -117,7 +117,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
             } else {
                 const label = this.label(entity);
                 const type = this.definition.typeName.toLowerCase();
-                this.dialogService.confirm(`Are you sure your want to ${label.toLowerCase()} these ${type}`, {
+                this.dialogService.confirm(`Are you sure you want to ${label.toLowerCase()} this ${type}`, {
                     description: `You are about to ${label.toLowerCase()} ${entity.id}`,
                     yes: () => {
                         this._executeCommand(entity);
@@ -139,7 +139,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
                 const type = inflection.pluralize(this.definition.typeName.toLowerCase());
                 const label = this.label(entities.first());
                 this.dialogService.confirm(
-                    `Are you sure your want to ${label.toLowerCase()} those ${entities.length} ${type}`,
+                    `Are you sure you want to ${label.toLowerCase()} these ${entities.length} ${type}s`,
                     {
                         yes: () => {
                             this._executeMultiple(entities);

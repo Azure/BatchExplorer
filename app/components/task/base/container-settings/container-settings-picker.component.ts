@@ -4,7 +4,7 @@ import {
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
-import { ContainerConfiguration, TaskContainerSettings } from "app/models/dtos";
+import { ContainerConfigurationDto, TaskContainerSettingsDto } from "app/models/dtos";
 
 @Component({
     selector: "bl-container-settings-picker",
@@ -16,11 +16,11 @@ import { ContainerConfiguration, TaskContainerSettings } from "app/models/dtos";
     ],
 })
 export class ContainerSettingsPickerComponent implements ControlValueAccessor, OnChanges, OnDestroy {
-    @Input() public containerConfiguration: ContainerConfiguration = null;
+    @Input() public containerConfiguration: ContainerConfigurationDto = null;
     @Input() public required: boolean = true;
     public containerSettings: FormGroup;
 
-    private _propagateChange: (value: TaskContainerSettings) => void = null;
+    private _propagateChange: (value: TaskContainerSettingsDto) => void = null;
     private _sub: Subscription;
 
     constructor(private formBuilder: FormBuilder) {
@@ -48,7 +48,7 @@ export class ContainerSettingsPickerComponent implements ControlValueAccessor, O
         this._sub.unsubscribe();
     }
 
-    public writeValue(value: TaskContainerSettings) {
+    public writeValue(value: TaskContainerSettingsDto) {
         if (value) {
             this.containerSettings.setValue({
                 imageName: value.imageName,

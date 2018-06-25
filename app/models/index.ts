@@ -1,4 +1,5 @@
 export * from "./account";
+export * from "./azure-batch";
 export * from "./account-keys";
 export * from "./affinity-information";
 export * from "./batch-application";
