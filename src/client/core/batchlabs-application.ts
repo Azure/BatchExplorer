@@ -4,8 +4,10 @@ import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
 import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
+import { OSService } from "@batch-flask/ui/electron";
 import { fetch, log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
+import { FileSystem } from "client/core/fs";
 import { localStorage } from "client/core/local-storage";
 import { TerminalService } from "client/core/terminal";
 import { setMenu } from "client/menu";
@@ -39,9 +41,9 @@ export class BatchLabsApplication {
     public windows = new MainWindowManager(this);
     public pythonServer = new PythonRpcServerProcess();
     public aadService = new AADService(this);
+    public terminalService = new TerminalService(new OSService(), new FileSystem());
     public state: Observable<BatchLabsState>;
     public proxySettings = new ProxySettingsManager(this, localStorage);
-    public terminalService = new TerminalService();
 
     public get azureEnvironment(): AzureEnvironment { return this._azureEnvironment.value; }
     public azureEnvironmentObs: Observable<AzureEnvironment>;
