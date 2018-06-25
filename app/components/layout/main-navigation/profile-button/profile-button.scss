@@ -31,17 +31,21 @@ bl-profile-button {
             background-color: $danger-color;
         }
     }
+}
 
-    // To flash when downloading a new update
-    @keyframes flashOpacity {
-        0% {
-            opacity:1;
-        }
-        50% {
-            opacity:0.2;
-        }
-        100% {
-            opacity:1;
-        }
+.flash-opacity {
+    animation: flashOpacity 1.5s ease-in-out infinite;
+}
+
+// To flash when downloading a new update
+@keyframes flashOpacity {
+    0% {
+        opacity:1;
+    }
+    50% {
+        opacity:0.2;
+    }
+    100% {
+        opacity:1;
     }
 }

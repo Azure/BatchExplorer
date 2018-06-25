@@ -169,7 +169,7 @@ export class NodeConnectComponent implements OnInit {
     private _loadConnectionData() {
         if (PoolUtils.isPaas(this.pool)) {
             this.nodeService.getRemoteDesktop(this.pool.id, this.node.id).subscribe((rdp) => {
-                this.rdpContent = rdp.content.toString();
+                this.rdpContent = rdp;
             });
         } else {
             this.nodeService.getRemoteLoginSettings(this.pool.id, this.node.id).subscribe((connection) => {

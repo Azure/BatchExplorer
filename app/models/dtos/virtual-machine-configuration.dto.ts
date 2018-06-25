@@ -1,5 +1,5 @@
 import { Dto, DtoAttr } from "@batch-flask/core";
-import { ContainerConfiguration } from "./container-setup.dto";
+import { ContainerConfigurationDto } from "./container-setup.dto";
 
 export class VirtualMachineConfiguration extends Dto<VirtualMachineConfiguration> {
     @DtoAttr()
@@ -14,7 +14,7 @@ export class VirtualMachineConfiguration extends Dto<VirtualMachineConfiguration
     };
 
     @DtoAttr()
-    public containerConfiguration: ContainerConfiguration;
+    public containerConfiguration: ContainerConfigurationDto;
 
     @DtoAttr()
     public windowsConfiguration?: {

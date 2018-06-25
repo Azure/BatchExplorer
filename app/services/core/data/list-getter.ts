@@ -22,8 +22,9 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
         super(type, config);
     }
 
-    public fetch(params: TParams, options?: ListOptionsAttributes | ListOptions, forceNew?: boolean);
-    public fetch(nextLink: ContinuationToken);
+    public fetch(params: TParams, options?: ListOptionsAttributes | ListOptions, forceNew?: boolean)
+        : Observable<ListResponse<TEntity>>;
+    public fetch(nextLink: ContinuationToken): Observable<ListResponse<TEntity>>;
     public fetch(paramsOrNextLink: any, options: any = {}, forceNew = false): Observable<ListResponse<TEntity>> {
         if (paramsOrNextLink.nextLink) {
             return this._fetchNext(paramsOrNextLink);

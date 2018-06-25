@@ -59,7 +59,7 @@
                 </bl-table-property-header>
                 <bl-table-property-row *ngFor="let registry of containerConfiguration.containerRegistries">
                     <bl-tp-cell [value]="registry.registryServer"></bl-tp-cell>
-                    <bl-tp-cell [value]="registry.userName"></bl-tp-cell>
+                    <bl-tp-cell [value]="registry.username"></bl-tp-cell>
                 </bl-table-property-row>
             </bl-table-property>
         </bl-property-group>
@@ -95,7 +95,7 @@
             <bl-text-property *ngIf="startTask.containerSettings?.containerRunOptions" label="Container run option" [value]="startTask.containerSettings.containerRunOptions" [wrap]="true"></bl-text-property>
             <ng-container *ngIf="startTask.containerSettings?.registry">
                 <bl-text-property label="Registry server" [value]="startTask.containerSettings.registry.registryServer" [wrap]="true"></bl-text-property>
-                <bl-text-property label="Registry username" [value]="startTask.containerSettings.registry.userName"></bl-text-property>
+                <bl-text-property label="Registry username" [value]="startTask.containerSettings.registry.username"></bl-text-property>
             </ng-container>
             <bl-no-item [itemCount]="startTaskItemCount" [slimline]="true">
                 <span no-filter>Start task is not specified for current pool.</span>

@@ -13,6 +13,9 @@ const ENV = "production";
 module.exports = merge(config, {
     devtool: "source-map",
     mode: "production",
+    optimization: {
+        minimize: false,
+    },
     output: {
         /**
          * The output directory as absolute path (required).

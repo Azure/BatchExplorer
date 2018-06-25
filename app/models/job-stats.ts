@@ -2,7 +2,7 @@
  * Statistics about an executed job
  */
 import { Model, Prop, Record } from "@batch-flask/core";
-import { Duration } from "moment";
+import { Duration, duration } from "moment";
 
 export interface JobStatsAttributes {
     kernelCPUTime: Duration;
@@ -23,7 +23,7 @@ export interface JobStatsAttributes {
 
 @Model()
 export class JobStats extends Record<JobStatsAttributes> {
-    @Prop() public kernelCPUTime: Duration;
+    @Prop(duration) public kernelCPUTime: Duration;
     @Prop() public lastUpdateTime: Date;
     @Prop() public numFailedTasks: number = 0;
     @Prop() public numSucceededTasks: number = 0;
@@ -32,9 +32,9 @@ export class JobStats extends Record<JobStatsAttributes> {
     @Prop() public readIOps: number;
     @Prop() public startTime: Date;
     @Prop() public url: string;
-    @Prop() public userCPUTime: Duration;
-    @Prop() public waitTime: Duration;
-    @Prop() public wallClockTime: Duration;
+    @Prop(duration) public userCPUTime: Duration;
+    @Prop(duration) public waitTime: Duration;
+    @Prop(duration) public wallClockTime: Duration;
     @Prop() public writeIOGiB: number;
     @Prop() public writeIOps: number;
 
