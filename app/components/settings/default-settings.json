@@ -19,7 +19,7 @@
   "auto-update-on-quit": true,
 
   // Default powershell on windows, terminal.app on darwin, ...
-  "terminal": "default",
+  "terminal.external": "default",
 
-  "username": null
+  "node.connect.default-username": null
 }

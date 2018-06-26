@@ -13,6 +13,6 @@ export interface Settings {
     "subscription.ignore": string[];
     "storage.default-upload-container": string;
     "auto-update-on-quit": boolean;
-    "terminal": string;
-    "username": string;
+    "terminal.external": string;
+    "node-connect.default-username": string;
 }
