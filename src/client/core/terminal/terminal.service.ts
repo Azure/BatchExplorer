@@ -5,21 +5,20 @@ import { FileSystem } from "../fs";
 const supportedTerminals = {
     powershell: {
         proc: "cmd.exe",
-        args: "/c start powershell -NoExit -Command \"{command}\"",
+        args: ['/c', 'start', 'powershell', '-NoExit', '-Command', '{command}'],
     },
     cmd: {
         proc: "cmd.exe",
-        args: "/c start cmd /k \"{command}\"",
+        args: ['/c', 'start', 'cmd', '/k', '{command}'],
     },
     linux: {
         proc: "{terminal}",
-        args: "-e \"{command}; bash\"",
+        args: ['-e', '{command}; bash'],
     },
-    // no way to know if this works yet; will update once tested
-    // macTerminal: {
-    //     proc: "/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal",
-    //     args: "-e \"{command}; bash\"",
-    // },
+    macTerminal: {
+        proc: "osascript",
+        args: ['-e', 'tell application "Terminal" to do script "{command}"', '-e', 'tell application "Terminal" to activate'],
+    },
 };
 
 export class TerminalService {
@@ -46,7 +45,7 @@ export class TerminalService {
             myTerminal = JSON.parse(JSON.stringify(myTerminal));
 
             // replace the command template with the actual command to be run in the terminal window
-            myTerminal.args = myTerminal.args.format({command});
+            myTerminal.args = this._formatCommand(myTerminal.args, command);
 
             // merge environment variables into a copy of the process.env
             const env = envVars ? {...process.env, ...envVars} : process.env;
@@ -61,7 +60,7 @@ export class TerminalService {
             };
 
             // spawn the terminal process with the given arguments
-            const cmd = cp.spawn(myTerminal.proc, [myTerminal.args], options);
+            const cmd = cp.spawn(myTerminal.proc, myTerminal.args, options);
             cmd.on("error", reject);
 
             resolve(null);
@@ -79,9 +78,9 @@ export class TerminalService {
             const myTerminal = supportedTerminals.linux;
             myTerminal.proc = myTerminal.proc.format({terminal});
             return myTerminal;
-        } // else {                                 // return Terminal.app for macOS
-        //     return supportedTerminals.macTerminal;
-        // }
+        } else {                                 // return Terminal.app for macOS
+            return supportedTerminals.macTerminal;
+        }
     }
 
     private async _getDefaultTerminalLinux(): Promise<string> {
@@ -101,5 +100,15 @@ export class TerminalService {
         } else {
             return "xterm";
         }
+    }
+
+    private _formatCommand(args: Array<string>, command: string): Array<string> {
+        return args.map(arg => {
+            if (arg.indexOf('{command}') == -1) {
+                return arg;
+            } else {
+                return arg.format({command});
+            }
+        })
     }
 }

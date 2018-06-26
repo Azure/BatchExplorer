@@ -14,7 +14,7 @@ export class FileSystemService {
 
     constructor(batchLabs: BatchLabsService) {
         this._fs = batchLabs.getFileSystem();
-        this.commonFolders = this._fs.commonFolders;
+        this.commonFolders = {...this._fs.commonFolders};
     }
 
     /**
