@@ -91,6 +91,7 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
     @ContentChild(VirtualScrollTailComponent)
     public set tail(tail: VirtualScrollTailComponent) {
         this._tail = tail;
+        this.refresh();
     }
     public get tail() { return this._tail; }
 
@@ -275,7 +276,6 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         const d = this._calculateDimensions();
         const items = this.items || [];
         let { start, end } = this._computeRange(d);
-
         this._applyTopPadding(items, start, d);
 
         start = !isNaN(start) ? start : -1;
@@ -289,6 +289,7 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
 
     private _computeRange(d: VirtualScrollDimensions) {
         const scrollTop = this._computeScrollTop(d);
+
         const indexByScrollTop = scrollTop / d.scrollHeight * d.itemCount / d.itemsPerRow;
         const end = Math.min(d.itemCount, d.itemsPerRow * (Math.ceil(indexByScrollTop) + d.itemsPerCol + 1));
         let maxStartEnd = end;
