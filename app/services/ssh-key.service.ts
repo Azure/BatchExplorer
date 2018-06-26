@@ -49,11 +49,13 @@ export class SSHKeyService {
     }
 
     public hasLocalPublicKey(): Observable<boolean> {
-        return Observable.fromPromise(this.fs.exists("~/.ssh/id_rsa.pub"));
+        const homedir = this.fs.commonFolders.home;
+        return Observable.fromPromise(this.fs.exists(`${homedir}/.ssh/id_rsa.pub`));
     }
 
     public getLocalPublicKey(): Observable<string> {
-        return Observable.fromPromise(this.fs.readFile("~/.ssh/id_rsa.pub"));
+        const homedir = this.fs.commonFolders.home;
+        return Observable.fromPromise(this.fs.readFile(`${homedir}/.ssh/id_rsa.pub`));
     }
 
     // private async _checkIfKeyExistsAndRead(path): Promise<string | null> {

@@ -35,7 +35,6 @@ export class FileSystem {
      * @param path Full path to the file
      */
     public exists(path: string): Promise<boolean> {
-        path = this._formatHomeDir(path);
         return new Promise<boolean>((resolve, reject) => {
             fs.exists(path, (exists) => {
                 resolve(exists);
@@ -69,7 +68,6 @@ export class FileSystem {
     }
 
     public readFile(path: string): Promise<string> {
-        path = this._formatHomeDir(path);
         return new Promise<string>((resolve, reject) => {
             fs.readFile(path, (err, data) => {
                 if (err) {
@@ -149,13 +147,5 @@ export class FileSystem {
                 resolve(files);
             });
         });
-    }
-
-    private _formatHomeDir(path: string): string {
-        if (path.indexOf("~") === 0) {
-            return this.commonFolders.home + path.substring(1);
-        } else {
-            return path;
-        }
     }
 }
