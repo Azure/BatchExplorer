@@ -4,20 +4,25 @@ import { FileSystem } from "../fs";
 
 const supportedTerminals = {
     powershell: {
-        proc: "cmd.exe",
-        args: ['/c', 'start', 'powershell', '-NoExit', '-Command', '{command}'],
+        process: "cmd.exe",
+        args: ["/c", "start", "powershell", "-NoExit", "-Command", "{command}"],
     },
     cmd: {
-        proc: "cmd.exe",
-        args: ['/c', 'start', 'cmd', '/k', '{command}'],
+        process: "cmd.exe",
+        args: ["/c", "start", "cmd", "/k", "{command}"],
     },
     linux: {
-        proc: "{terminal}",
-        args: ['-e', '{command}; bash'],
+        process: "{terminal}",
+        args: ["-e", "{command}; bash"],
     },
     macTerminal: {
-        proc: "osascript",
-        args: ['-e', 'tell application "Terminal" to do script "{command}"', '-e', 'tell application "Terminal" to activate'],
+        process: "osascript",
+        args: [
+            "-e",
+            'tell application "Terminal" to do script "{command}"',
+            "-e",
+            'tell application "Terminal" to activate',
+        ],
     },
 };
 
@@ -60,7 +65,7 @@ export class TerminalService {
             };
 
             // spawn the terminal process with the given arguments
-            const cmd = cp.spawn(myTerminal.proc, myTerminal.args, options);
+            const cmd = cp.spawn(myTerminal.process, myTerminal.args, options);
             cmd.on("error", reject);
 
             resolve(null);
@@ -76,7 +81,7 @@ export class TerminalService {
         } else if (this.osService.isLinux()) {      // get the default linux system terminal, and use it
             const terminal = await this._getDefaultTerminalLinux();
             const myTerminal = supportedTerminals.linux;
-            myTerminal.proc = myTerminal.proc.format({terminal});
+            myTerminal.process = myTerminal.process.format({terminal});
             return myTerminal;
         } else {                                 // return Terminal.app for macOS
             return supportedTerminals.macTerminal;
@@ -102,13 +107,13 @@ export class TerminalService {
         }
     }
 
-    private _formatCommand(args: Array<string>, command: string): Array<string> {
+    private _formatCommand(args: string[], command: string): string[] {
         return args.map(arg => {
-            if (arg.indexOf('{command}') == -1) {
+            if (arg.indexOf("{command}") === -1) {
                 return arg;
             } else {
                 return arg.format({command});
             }
-        })
+        });
     }
 }
