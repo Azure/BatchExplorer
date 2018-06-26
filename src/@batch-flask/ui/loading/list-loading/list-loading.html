@@ -1,9 +1,1 @@
-<div *ngIf="manualLoading">
-    <bl-loading [status]="status || (data.newDataStatus | async)" *ngIf="data.hasMore | async"></bl-loading>
-    <div class="load-more-btn" *ngIf="(data.newDataStatus | async) === loadingStatuses.Ready && data.hasMore | async">
-        <bl-loading-button [loading]="loadingMore" (click)="loadMore()">Load more</bl-loading-button>
-    </div>
-</div>
-<div *ngIf="!manualLoading">
-    <bl-loading [status]="status || (data.status | async)" *ngIf="data.hasMore | async"></bl-loading>
-</div>
+<bl-loading [status]="status || (data.status | async)" *ngIf="data.hasMore | async"></bl-loading>
