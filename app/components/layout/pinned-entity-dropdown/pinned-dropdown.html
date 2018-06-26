@@ -13,9 +13,16 @@
                 <div class="alias">{{favorite.name || favorite.id}}</div>
                 <div class="type">{{entityType(favorite)}}</div>
             </div>
+            <!-- A green check mark appears if you are on the page corresponding a item in the drop down menu-->
             <div *ngIf="favorite.url === currentUrl" class="extra">
                 <i class="fa fa-check"></i>
             </div>
+            <!-- Nehal Added the next 4 LOC -->
+            <bl-clickable class="delete-button" 
+            (do) ="delete"
+            [title]=delete> delete
+            </bl-clickable>
+            
         </bl-clickable>
     </div>
 </bl-dropdown>
