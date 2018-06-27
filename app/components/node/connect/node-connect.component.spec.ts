@@ -9,20 +9,23 @@ import { PermissionService } from "@batch-flask/ui/permission";
 import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/property-list";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
-import { NodeAgentSku } from "app/models";
+import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
 import { BatchLabsService, FileSystemService, NodeService, NodeUserService, SSHKeyService, SettingsService } from "app/services";
-import { PoolUtils } from "app/utils";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
+import { TasksRunningTimeGraphComponent } from "../../job/graphs";
 
 @Component({
-    template: `<bl-node-connect></bl-node-connect>`,
+    template: `<bl-node-connect [pool]="pool" [node]="node"></bl-node-connect>`,
 })
 class TestComponent {
+    public pool: Pool;
+    public node: Node;
 }
 
 fdescribe("NodeConnectComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
+    let testComponent: TestComponent;
     let component: NodeConnectComponent;
     let de: DebugElement;
 
@@ -31,7 +34,6 @@ fdescribe("NodeConnectComponent", () => {
     let settingsServiceSpy;
     let batchLabsServiceSpy;
     let sshKeyServiceSpy;
-    let poolUtilsSpy;
 
     beforeEach(() => {
 
@@ -40,6 +42,9 @@ fdescribe("NodeConnectComponent", () => {
             listNodeAgentSkus: jasmine.createSpy("").and.returnValue(new MockListView(NodeAgentSku, {
                 items: [],
             })),
+            getRemoteLoginSettings: jasmine.createSpy("").and.returnValue(Observable.of(
+                new NodeConnectionSettings({remoteLoginIPAddress: "123.345.654.399", remoteLoginPort: 22})),
+            ),
         };
 
         nodeUserServiceSpy = {
@@ -62,11 +67,7 @@ fdescribe("NodeConnectComponent", () => {
 
         sshKeyServiceSpy = {
             hasLocalPublicKey: jasmine.createSpy("").and.returnValue(Observable.of(true)),
-            getLocalPublicKey: jasmine.createSpy("").and.returnValue(Observable.of("ssh-rsa foobar")),
-        };
-
-        poolUtilsSpy = {
-            isWindows: jasmine.createSpy("").and.returnValue(false),
+            getLocalPublicKey: jasmine.createSpy("").and.returnValue(Observable.of("bar")),
         };
 
         TestBed.configureTestingModule({
@@ -86,15 +87,15 @@ fdescribe("NodeConnectComponent", () => {
                 { provide: BatchLabsService, useValue: batchLabsServiceSpy },
                 { provide: SSHKeyService, useValue: sshKeyServiceSpy },
                 { provide: ClipboardService, useValue: {} },
-                { provide: PoolUtils, useValue: poolUtilsSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestComponent);
+        testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-node-connect"));
         component = de.componentInstance;
-        component.pool = Fixtures.pool.create();
-        component.node = Fixtures.node.create();
+        testComponent.pool = Fixtures.pool.create();
+        testComponent.node = Fixtures.node.create();
         fixture.detectChanges();
     });
 
@@ -157,15 +158,57 @@ fdescribe("NodeConnectComponent", () => {
         });
     });
 
-    it("clicking on quickstart should launch a new process", () => {
-        const button = de.queryAll(By.css("bl-button"))[2].componentInstance;
-        button.action().subscribe(() => {
+    describe("when pool is iaas linux", () => {
+        beforeEach(() => {
+            testComponent.pool = new Pool({
+                id: "iaas-linux-pool",
+                virtualMachineConfiguration: {
+                    nodeAgentSKUId: "batch.node.ubuntu 14.04",
+                    imageReference: {
+                    publisher: "Canonical",
+                    offer: "UbuntuServer",
+                    sku: "14.04.5-LTS",
+                    },
+                },
+            } as any);
             fixture.detectChanges();
-            expect(component.credentials).not.toBeFalsy("Credentials should be defined");
-            expect(component.credentials.name).not.toBeFalsy();
-            expect(component.credentials.sshPublicKey).not.toBeFalsy();
-            expect(nodeUserServiceSpy.addOrUpdateUser).toHaveBeenCalledOnce();
-            expect(batchLabsServiceSpy.launchApplication).toHaveBeenCalledOnce();
+        });
+
+        it("clicking on quickstart should call launchApplication", (done) => {
+            const button = de.queryAll(By.css("bl-button"))[2].componentInstance;
+            button.action().subscribe(() => {
+                fixture.detectChanges();
+                expect(component.credentials).not.toBeFalsy("Credentials should be defined");
+                expect(component.credentials.name).not.toBeFalsy();
+                expect(component.credentials.sshPublicKey).not.toBeFalsy();
+
+                // validate calls to addOrUpdateUser
+                expect(nodeUserServiceSpy.addOrUpdateUser).toHaveBeenCalledOnce();
+                const updateUserArgs = nodeUserServiceSpy.addOrUpdateUser.calls.mostRecent().args;
+                expect(updateUserArgs.length).toBe(3);
+                expect(updateUserArgs[0]).toBe("iaas-linux-pool");
+                expect(updateUserArgs[1]).toBe("node-1");
+                expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ name: "foo" }));
+                expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ sshPublicKey: "bar" }));
+
+                // validate calls to launchApplication
+                expect(batchLabsServiceSpy.launchApplication).toHaveBeenCalledOnce();
+                const launchApplicationArgs = batchLabsServiceSpy.launchApplication.calls.mostRecent().args;
+                expect(launchApplicationArgs.length).toBe(2);
+                expect(Object.keys(launchApplicationArgs[1])).toContain("command");
+                expect(launchApplicationArgs[1].command).toContain("ssh");
+                expect(launchApplicationArgs[1].command).toContain("foo");
+                done();
+            });
+        });
+
+        it("should disable the quickstart button if no ssh key is found", () => {
+            component.hasLocalPublicKey = false;
+            fixture.detectChanges();
+
+            const button = de.queryAll(By.css("bl-button"))[2].componentInstance;
+            expect(button.disabled).toBeTruthy();
         });
     });
+
 });

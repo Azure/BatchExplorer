@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnChanges, OnInit } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
 import * as moment from "moment";
@@ -28,7 +28,7 @@ enum CredentialSource {
     selector: "bl-node-connect",
     templateUrl: "node-connect.html",
 })
-export class NodeConnectComponent implements OnInit {
+export class NodeConnectComponent implements OnInit, OnChanges {
     public CredentialSource = CredentialSource;
     public credentialSource: CredentialSource = null;
     public credentials: AddNodeUserAttributes = null;
@@ -85,8 +85,14 @@ export class NodeConnectComponent implements OnInit {
             });
         });
 
-        this._loadConnectionData();
         this.sshKeyService.hasLocalPublicKey().subscribe(hasKey => this.hasLocalPublicKey = hasKey);
+    }
+
+    public ngOnChanges(inputs) {
+        if (inputs.pool || inputs.node) {
+            this._loadConnectionData();
+        }
+        console.log(inputs);
     }
 
     @autobind()
@@ -106,9 +112,9 @@ export class NodeConnectComponent implements OnInit {
     @autobind()
     public generateWithOneClick() {
         // Todo use observable for this
-        // if (!this.connectionSettings) {
-        //     return null;
-        // }
+        if (!this.connectionSettings) {
+            return null;
+        }
 
         const credentials = {
             name: this.defaultUsername ? this.defaultUsername : SecureUtils.username(),
