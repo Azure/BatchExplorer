@@ -58,8 +58,7 @@ export class BatchLabsService {
     }
 
     public async launchApplication(name: string, args: any): Promise<any> {
-        args.name = name;
-        return this.remote.send(IpcEvent.launchApplication, args);
+        return this.remote.send(IpcEvent.launchApplication, {name, args});
     }
 
     /**

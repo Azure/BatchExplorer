@@ -67,9 +67,9 @@ export class BatchLabsApplication {
         BlIpcMain.on(IpcEvent.logoutAndLogin, () => {
             return this.logoutAndLogin();
         });
-        BlIpcMain.on(IpcEvent.launchApplication, (args) => {
-            if (args.name === Application.terminal) {
-                return this.terminalService.runInTerminal(args.command);
+        BlIpcMain.on(IpcEvent.launchApplication, ({name, args}) => {
+            if (name === Application.terminal) {
+                return this.terminalService.runInTerminal(args);
             }
         });
         this.azureEnvironmentObs = this._azureEnvironment.asObservable();
