@@ -95,25 +95,41 @@ describe("VirtualScrollComponent", () => {
         expect(items[5].nativeElement.textContent).toContain("item-09");
     });
 
-    it("scroll to given item", async (done) => {
-        component.scrollToItemAt(4);
-        fixture.detectChanges();
-        const date = new Date();
-        tween.update(date.setMilliseconds(date.getMilliseconds() + 500));
-        expect(de.nativeElement.scrollTop).toBe(400);
-        await fixture.whenStable();
-        fixture.detectChanges();
-        setTimeout(() => {
+    describe("", () => {
+        let requestAnimationFrameTmp;
+
+        beforeEach(() => {
+            // AnimationDriver
+            requestAnimationFrameTmp = window.requestAnimationFrame;
+            window.requestAnimationFrame = (callback) => setTimeout(() => callback(null)) as any;
+        });
+
+        afterEach(() => {
+            window.requestAnimationFrame = requestAnimationFrameTmp;
+        });
+
+        it("scroll to given item", async (done) => {
+            component.scrollToItemAt(4);
             fixture.detectChanges();
+            const date = new Date();
+            tween.update(date.setMilliseconds(date.getMilliseconds() + 500));
             expect(de.nativeElement.scrollTop).toBe(400);
-            const items = de.queryAll(By.css(".item"));
-            expect(items.length).toBe(5);
-            expect(items[0].nativeElement.textContent).toContain("item-05");
-            expect(items[1].nativeElement.textContent).toContain("item-06");
-            expect(items[2].nativeElement.textContent).toContain("item-07");
-            expect(items[3].nativeElement.textContent).toContain("item-08");
-            expect(items[4].nativeElement.textContent).toContain("item-09");
-            done();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            setTimeout(async () => {
+                await fixture.whenStable();
+                fixture.detectChanges();
+                expect(de.nativeElement.scrollTop).toBe(400);
+                const items = de.queryAll(By.css(".item"));
+                expect(items.length).toBe(5);
+                expect(items[0].nativeElement.textContent).toContain("item-05");
+                expect(items[1].nativeElement.textContent).toContain("item-06");
+                expect(items[2].nativeElement.textContent).toContain("item-07");
+                expect(items[3].nativeElement.textContent).toContain("item-08");
+                expect(items[4].nativeElement.textContent).toContain("item-09");
+                done();
+            });
         });
     });
+
 });
