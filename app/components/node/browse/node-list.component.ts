@@ -22,8 +22,6 @@ import { NodeCommands } from "../action";
 export class NodeListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
-    @Input() public manualLoading: boolean;
-
     @Input() public set poolId(value: string) {
         this._poolId = (value && value.trim());
         this.refresh();
