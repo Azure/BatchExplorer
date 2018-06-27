@@ -106,9 +106,9 @@ export class NodeConnectComponent implements OnInit {
     @autobind()
     public generateWithOneClick() {
         // Todo use observable for this
-        if (!this.connectionSettings) {
-            return null;
-        }
+        // if (!this.connectionSettings) {
+        //     return null;
+        // }
 
         const credentials = {
             name: this.defaultUsername ? this.defaultUsername : SecureUtils.username(),
@@ -135,7 +135,11 @@ export class NodeConnectComponent implements OnInit {
             }),
             share(),
         );
-        obs.subscribe();
+        obs.subscribe({
+            error: (error) => {
+                console.log("Error is", error);
+            },
+        });
         return obs;
     }
 

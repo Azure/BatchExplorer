@@ -10,7 +10,8 @@ import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/p
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
 import { NodeAgentSku } from "app/models";
-import { FileSystemService, NodeService, NodeUserService } from "app/services";
+import { BatchLabsService, FileSystemService, NodeService, NodeUserService, SSHKeyService, SettingsService } from "app/services";
+import { PoolUtils } from "app/utils";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
 
@@ -20,13 +21,17 @@ import { MockListView } from "test/utils/mocks";
 class TestComponent {
 }
 
-describe("NodeConnectComponent", () => {
+fdescribe("NodeConnectComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let component: NodeConnectComponent;
     let de: DebugElement;
 
     let nodeServiceSpy;
     let nodeUserServiceSpy;
+    let settingsServiceSpy;
+    let batchLabsServiceSpy;
+    let sshKeyServiceSpy;
+    let poolUtilsSpy;
 
     beforeEach(() => {
 
@@ -39,6 +44,29 @@ describe("NodeConnectComponent", () => {
 
         nodeUserServiceSpy = {
             addOrUpdateUser: jasmine.createSpy("").and.returnValue(Observable.of(true)),
+        };
+
+        settingsServiceSpy = {
+            settings: {
+                username: "foo",
+            },
+        };
+
+        batchLabsServiceSpy = {
+            launchApplication: jasmine.createSpy("").and.returnValue(
+                new Promise((resolve, reject) => {
+                    resolve({ name: "banana" });
+                }),
+            ),
+        };
+
+        sshKeyServiceSpy = {
+            hasLocalPublicKey: jasmine.createSpy("").and.returnValue(Observable.of(true)),
+            getLocalPublicKey: jasmine.createSpy("").and.returnValue(Observable.of("ssh-rsa foobar")),
+        };
+
+        poolUtilsSpy = {
+            isWindows: jasmine.createSpy("").and.returnValue(false),
         };
 
         TestBed.configureTestingModule({
@@ -54,7 +82,11 @@ describe("NodeConnectComponent", () => {
                 { provide: FileSystemService, useValue: null },
                 { provide: PermissionService, useValue: null },
                 { provide: ElectronShell, useValue: null },
+                { provide: SettingsService, useValue: settingsServiceSpy },
+                { provide: BatchLabsService, useValue: batchLabsServiceSpy },
+                { provide: SSHKeyService, useValue: sshKeyServiceSpy },
                 { provide: ClipboardService, useValue: {} },
+                { provide: PoolUtils, useValue: poolUtilsSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -66,11 +98,12 @@ describe("NodeConnectComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should propose to generate or specify credentials", () => {
+    it("should propose to generate or specify credentials, or connect in one click", () => {
         const buttons = de.queryAll(By.css(".credentials-source bl-button"));
-        expect(buttons.length).toBe(2);
+        expect(buttons.length).toBe(3);
         expect(buttons[0].nativeElement.textContent).toContain("Generate");
         expect(buttons[1].nativeElement.textContent).toContain("Specify");
+        expect(buttons[2].nativeElement.textContent).toContain("QuickStart");
     });
 
     it("should not show more info", () => {
@@ -121,6 +154,18 @@ describe("NodeConnectComponent", () => {
             expect(properties.nativeElement.textContent).toContain("foo");
             expect(properties.nativeElement.textContent).not.toContain("bar");
             expect(de.query(By.css("bl-download-rdp"))).not.toBeFalsy();
+        });
+    });
+
+    it("clicking on quickstart should launch a new process", () => {
+        const button = de.queryAll(By.css("bl-button"))[2].componentInstance;
+        button.action().subscribe(() => {
+            fixture.detectChanges();
+            expect(component.credentials).not.toBeFalsy("Credentials should be defined");
+            expect(component.credentials.name).not.toBeFalsy();
+            expect(component.credentials.sshPublicKey).not.toBeFalsy();
+            expect(nodeUserServiceSpy.addOrUpdateUser).toHaveBeenCalledOnce();
+            expect(batchLabsServiceSpy.launchApplication).toHaveBeenCalledOnce();
         });
     });
 });

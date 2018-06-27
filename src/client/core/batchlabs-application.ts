@@ -69,7 +69,7 @@ export class BatchLabsApplication {
         });
         BlIpcMain.on(IpcEvent.launchApplication, ({name, args}) => {
             if (name === Application.terminal) {
-                return this.terminalService.runInTerminal(args);
+                return this.terminalService.runInTerminal(args.command);
             }
         });
         this.azureEnvironmentObs = this._azureEnvironment.asObservable();

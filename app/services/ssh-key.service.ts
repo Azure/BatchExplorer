@@ -58,19 +58,6 @@ export class SSHKeyService {
         return Observable.fromPromise(this.fs.readFile(`${homedir}/.ssh/id_rsa.pub`));
     }
 
-    // private async _checkIfKeyExistsAndRead(path): Promise<string | null> {
-    //     let key = null;
-
-    //     const hasPubKey = await this.fs.exists(path);
-
-    //     if (hasPubKey) {
-    //         key = await this.fs.readFile(path);
-    //         return key;
-    //     } else {
-    //         return null;
-    //     }
-    // }
-
     private _saveSSHPublicKeys(keys: List<SSHPublicKey> = null): Observable<any> {
         keys = keys === null ? this._keys.value : keys;
         return this.storage.set(filename, keys.toJS());

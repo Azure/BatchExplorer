@@ -3,19 +3,19 @@ import * as cp from "child_process";
 import { FileSystem } from "../fs";
 
 const supportedTerminals = {
-    powershell: {
+    "powershell": {
         process: "cmd.exe",
         args: ["/c", "start", "powershell", "-NoExit", "-Command", "{command}"],
     },
-    cmd: {
+    "cmd": {
         process: "cmd.exe",
         args: ["/c", "start", "cmd", "/k", "{command}"],
     },
-    linux: {
+    "linux": {
         process: "{terminal}",
         args: ["-e", "{command}; bash"],
     },
-    macTerminal: {
+    "Terminal.app": {
         process: "osascript",
         args: [
             "-e",
@@ -66,9 +66,15 @@ export class TerminalService {
 
             // spawn the terminal process with the given arguments
             const cmd = cp.spawn(myTerminal.process, myTerminal.args, options);
-            cmd.on("error", reject);
+            console.log("Pid", cmd.pid);
+            cmd.once("error", (error) => {
+                console.log("Error", error);
+                reject(error);
+            });
 
-            resolve(null);
+            if (cmd.pid) {
+                resolve(null);
+            }
         });
     }
 
@@ -84,7 +90,7 @@ export class TerminalService {
             myTerminal.process = myTerminal.process.format({terminal});
             return myTerminal;
         } else {                                 // return Terminal.app for macOS
-            return supportedTerminals.macTerminal;
+            return supportedTerminals["Terminal.app"];
         }
     }
 
@@ -109,7 +115,7 @@ export class TerminalService {
 
     private _formatCommand(args: string[], command: string): string[] {
         return args.map(arg => {
-            if (arg.indexOf("{command}") === -1) {
+            if (!arg.includes("{command}")) {
                 return arg;
             } else {
                 return arg.format({command});
