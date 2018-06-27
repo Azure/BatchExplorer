@@ -29,8 +29,6 @@ import { DeleteTaskAction, TaskCommands } from "../action";
 export class TaskListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
-    @Input() public manualLoading: boolean;
-
     @Input() public set jobId(value: string) {
         this._jobId = (value && value.trim());
         this.refresh();
@@ -43,7 +41,9 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
     public data: ListView<Task, TaskListParams>;
 
     private _jobId: string;
-    private _baseOptions = { pageSize: 25 };
+    private _baseOptions = {
+        select: "id,state,creationTime,lastModified,executionInfo",
+    };
     private _onTaskAddedSub: Subscription;
 
     constructor(

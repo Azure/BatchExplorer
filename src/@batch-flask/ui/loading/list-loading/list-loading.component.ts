@@ -1,35 +1,14 @@
-import { Component, Input } from "@angular/core";
-import { autobind } from "@batch-flask/core";
-import { Observable } from "rxjs";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { LoadingStatus } from "../loading-status";
 
 @Component({
     selector: "bl-list-loading",
     templateUrl: "list-loading.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListLoadingComponent {
-    public loadingStatuses = LoadingStatus;
+    @Input() public data: any;
 
-    @Input()
-    public manualLoading: boolean = false;
-
-    @Input()
-    public data: any;
-
-    @Input()
-    public status: LoadingStatus;
-
-    public loadingMore = false;
-
-    @autobind()
-    public loadMore(): Observable<any> {
-        this.loadingMore = true;
-        const obs = this.data.fetchNext();
-        obs.subscribe(() => {
-            this.loadingMore = false;
-        });
-
-        return obs;
-    }
+    @Input() public status: LoadingStatus;
 }

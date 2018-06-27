@@ -42,7 +42,7 @@
                 <bl-tab key="nodes">
                     <bl-tab-label>Nodes</bl-tab-label>
                     <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']" [filterPlaceholder]="filterPlaceholderText">
-                        <bl-node-list #list [poolId]="poolId" [filter]="listWrapper.filter" [quicklist]="false" [manualLoading]="true"></bl-node-list>
+                        <bl-node-list #list [poolId]="poolId" [filter]="listWrapper.filter" [quicklist]="false"></bl-node-list>
                     </bl-entity-details-list>
                 </bl-tab>
             </bl-tab-group>
