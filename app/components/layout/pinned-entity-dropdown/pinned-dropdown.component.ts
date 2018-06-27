@@ -59,6 +59,10 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
         this._dropdown.close();
     }
 
+    public removeFavorite(favourite: PinnableEntity) {
+        this.pinnedEntityService.unPinFavorite(favourite);
+    }
+
     public entityType(favorite: PinnableEntity) {
         switch (favorite.pinnableType) {
             case PinnedEntityType.Application:

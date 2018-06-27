@@ -72,21 +72,22 @@ export class PinnedEntityService {
         if (!this.isFavorite(entity)) {
             return;
         }
-
         const url = this._fudgeArmUrl(entity);
         const newFavorites = this._favorites.getValue().filter(pinned => pinned.url !== url);
         this._favorites.next(List<PinnableEntity>(newFavorites));
         this._saveAccountFavorites();
     }
 
-    public getEntityType(entity: NavigableRecord): PinnedEntityType {
-        for (const [type, cls] of pinnedTypeMap) {
-            if (entity instanceof cls) {
-                return type as any;
+    public getEntityType(entity: NavigableRecord | PinnableEntity): PinnedEntityType {
+        for (const [type, cls] of pinnedTypeMap) {
+            if (entity instanceof cls) {
+            return type as any;
             }
         }
-        return null;
-    }
+        /* casting pinnable as a PinnableEntity */
+        const pinnable = entity as PinnableEntity;
+        return pinnable ? pinnable.pinnableType : null;
+        } 
 
     public isFavorite(entity: NavigableRecord): boolean {
         const id = entity.id.toLowerCase();
