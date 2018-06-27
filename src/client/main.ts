@@ -23,6 +23,7 @@ initLogger();
 
 // 4. Setup extension functions
 import "reflect-metadata";
+import "zone.js";
 
 import "@batch-flask/extensions";
 

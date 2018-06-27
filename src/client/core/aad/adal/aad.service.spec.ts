@@ -1,7 +1,6 @@
 import * as moment from "moment";
 
 import { AccessToken } from "@batch-flask/core";
-import { localStorage } from "client/core/local-storage";
 import { Constants } from "common";
 import { F } from "test/utils";
 import { mockNodeStorage } from "test/utils/mocks/storage";
@@ -37,21 +36,26 @@ describe("AADService", () => {
     let service: AADService;
     let currentUser: AADUser;
     let appSpy;
+    const localStorage: any = {};
+    let accessTokenCacheSpy;
 
     beforeEach(() => {
+        accessTokenCacheSpy = {
+
+        };
         appSpy = {
             mainWindow: new MockBrowserWindow(),
             splashScreen: new MockSplashScreen(),
         };
         mockNodeStorage(localStorage);
-        service = new AADService(appSpy);
+        service = new AADService(appSpy, localStorage, accessTokenCacheSpy);
         service.currentUser.subscribe(x => currentUser = x);
         service.init();
     });
 
     it("when there is no item in the localstorage it should not set the id_token", () => {
         localStorage.removeItem(Constants.localStorageKey.currentUser);
-        const tmpService = new AADService(appSpy);
+        const tmpService = new AADService(appSpy, localStorage, accessTokenCacheSpy);
         tmpService.init();
         let user: AADUser = null;
         tmpService.currentUser.subscribe(x => user = x);
@@ -60,7 +64,7 @@ describe("AADService", () => {
 
     it("when localstorage has currentUser it should load it", async (done) => {
         await localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(sampleUser));
-        const tmpService = new AADService(appSpy);
+        const tmpService = new AADService(appSpy, localStorage, accessTokenCacheSpy);
         await tmpService.init();
         let user: AADUser = null;
         tmpService.currentUser.subscribe(x => user = x);

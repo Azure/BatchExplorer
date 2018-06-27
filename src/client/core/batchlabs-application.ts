@@ -3,14 +3,15 @@ import { app, dialog, ipcMain, session } from "electron";
 import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
+import { Inject, Injectable, InjectionToken, Injector } from "@angular/core";
 import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
 import { fetch, log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
-import { localStorage } from "client/core/local-storage";
+import { LocalStorage } from "client/core/local-storage";
 import { setMenu } from "client/menu";
-import { ProxySettingsManager } from "client/proxy";
 import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-configuration-window";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
+import { ProxySettingsManager } from "client/proxy/proxy-settings";
 import { BatchLabsLink, Constants, Deferred } from "common";
 import { IpcEvent } from "common/constants";
 import { ProxyCredentials, ProxySettings } from "get-proxy-settings";
@@ -32,29 +33,35 @@ export enum BatchLabsState {
     Ready,
 }
 
+export const AUTO_UPDATER = new InjectionToken("AUTO_UPDATER");
+
+@Injectable()
 export class BatchLabsApplication {
     public authenticationWindow = new AuthenticationWindow(this);
     public recoverWindow = new RecoverWindow(this);
     public windows = new MainWindowManager(this);
     public pythonServer = new PythonRpcServerProcess();
-    public aadService = new AADService(this);
+    public aadService: AADService;
     public state: Observable<BatchLabsState>;
-    public proxySettings = new ProxySettingsManager(this, localStorage);
+    public proxySettings: ProxySettingsManager;
 
     public get azureEnvironment(): AzureEnvironment { return this._azureEnvironment.value; }
     public azureEnvironmentObs: Observable<AzureEnvironment>;
 
     private _azureEnvironment = new BehaviorSubject(AzureEnvironment.Azure);
     private _state = new BehaviorSubject<BatchLabsState>(BatchLabsState.Loading);
-    private _initializer = new BatchLabsInitializer(this);
+    private _initializer: BatchLabsInitializer;
 
-    constructor(public autoUpdater: AppUpdater) {
+    constructor(
+        @Inject(AUTO_UPDATER) public autoUpdater: AppUpdater,
+        private localStorage: LocalStorage,
+        private injector: Injector) {
         this.state = this._state.asObservable();
         BlIpcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {
             return this.aadService.accessTokenData(tenantId, resource);
         });
         BlIpcMain.on(IpcEvent.fetch, async ({ url, options }) => {
-            const response = await  fetch(url, options);
+            const response = await fetch(url, options);
             return {
                 status: response.status,
                 statusText: response.statusText,
@@ -68,6 +75,10 @@ export class BatchLabsApplication {
     }
 
     public async init() {
+        this._initializer = this.injector.get(BatchLabsInitializer);
+        this.aadService = this.injector.get(AADService);
+        this.proxySettings = this.injector.get(ProxySettingsManager);
+
         BlIpcMain.init();
         await this.aadService.init();
         this._registerProtocol();
@@ -310,7 +321,7 @@ export class BatchLabsApplication {
     }
 
     private async _loadAzureEnviornment() {
-        const initialEnv = await localStorage.getItem(Constants.localStorageKey.azureEnvironment);
+        const initialEnv = await this.localStorage.getItem(Constants.localStorageKey.azureEnvironment);
         if (initialEnv in SupportedEnvironments) {
             this._azureEnvironment.next(SupportedEnvironments[initialEnv]);
         }

@@ -1,15 +1,19 @@
+import { Injectable } from "@angular/core";
 import { LocalFileStorage } from "./local-file-storage";
-
-const localFileStorage = new LocalFileStorage();
 
 const fileKey = "node-local-storage";
 
 /**
  * Implementation of the browser local storage
  */
+@Injectable()
 export class LocalStorage {
     private _data: StringMap<string> = {};
     private _loadPromise: Promise<any>;
+
+    constructor(private localFileStorage: LocalFileStorage) {
+        this.load();
+    }
 
     public async setItem(key: string, value: string) {
         return this._loadPromise.then(() => {
@@ -30,7 +34,7 @@ export class LocalStorage {
     }
 
     public async load() {
-        this._loadPromise = localFileStorage.get<any>(fileKey).then((data) => {
+        this._loadPromise = this.localFileStorage.get<any>(fileKey).then((data) => {
             this._data = data;
             return data;
         });
@@ -47,8 +51,6 @@ export class LocalStorage {
     }
 
     private async _save() {
-        return localFileStorage.set(fileKey, this._data);
+        return this.localFileStorage.set(fileKey, this._data);
     }
 }
-
-export const localStorage = new LocalStorage();

@@ -12,6 +12,7 @@ export class FileUtils {
         return download(source, path.dirname(dest), {
             filename: path.basename(dest),
         }).then(() => dest);
+        // return null;
     }
 
     public unzip(source: string, dest: string): Promise<void> {

@@ -1,9 +1,7 @@
 import * as moment from "moment";
 
 import { AccessToken } from "@batch-flask/core";
-import { localStorage } from "client/core/local-storage";
 import { Constants } from "common";
-import { mockNodeStorage } from "test/utils/mocks/storage";
 import { AccessTokenCache } from "./access-token-cache";
 
 const tenant1 = "tenant-1";
@@ -20,11 +18,11 @@ const token1 = {
 
 describe("AccessTokenCache", () => {
     let cache: AccessTokenCache;
+    const localStorageSpy: any = {};
 
     describe("when using localstorage", () => {
         beforeEach(() => {
-            mockNodeStorage(localStorage);
-            cache = new AccessTokenCache(localStorage);
+            cache = new AccessTokenCache(localStorageSpy);
         });
 
         it("doesn't set the access token if not in localstorage", () => {
@@ -61,7 +59,7 @@ describe("AccessTokenCache", () => {
 
     describe("without local storage(memory only)", () => {
         beforeEach(() => {
-            cache = new AccessTokenCache();
+            cache = new AccessTokenCache(localStorageSpy);
         });
 
         it("save and retrieve tokens", () => {
