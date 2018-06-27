@@ -97,7 +97,7 @@ export class AADService {
         this._tokenCache.clear();
         this._tenantsIds.next([]);
         this._clearUserSpecificCache();
-        for (const [_, window] of this.app.windows) {
+        for (const [, window] of this.app.windows) {
             window.webContents.session.clearStorageData({ storages: ["localStorage"] });
         }
         this.app.windows.closeAll();
