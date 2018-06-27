@@ -184,9 +184,12 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         const d = this._calculateDimensions();
         const scrollTop = (Math.floor(index / d.itemsPerRow) * d.childHeight)
             - (d.childHeight * Math.min(index, this.bufferAmount));
+
         if (this.currentTween) {
             this.currentTween.stop();
         }
+        let animationRequest;
+
         this.currentTween = new tween.Tween({ scrollTop: el.scrollTop })
             .to({ scrollTop }, 500)
             .easing(tween.Easing.Quadratic.Out)
@@ -196,13 +199,19 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
                 }
                 this.refresh();
             })
+            .onStop(() => {
+                cancelAnimationFrame(animationRequest);
+            })
+            .onComplete(() => {
+                cancelAnimationFrame(animationRequest);
+            })
             .start();
 
         const animate = (time?) => {
             this.currentTween.update(time);
             if (this.currentTween._object.scrollTop !== scrollTop) {
                 this.zone.runOutsideAngular(() => {
-                    requestAnimationFrame(animate);
+                    animationRequest = requestAnimationFrame(animate);
                 });
             }
         };

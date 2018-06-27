@@ -2,6 +2,7 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { VirtualScrollTailComponent } from "@batch-flask/ui/virtual-scroll";
+import * as tween from "@tweenjs/tween.js";
 import { sendEvent } from "test/utils/helpers";
 import { VirtualScrollComponent } from "./virtual-scroll.component";
 
@@ -45,6 +46,7 @@ class TestComponent {
 
 describe("VirtualScrollComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
+    let component: VirtualScrollComponent;
     let testComponent: TestComponent;
     let de: DebugElement;
 
@@ -56,6 +58,7 @@ describe("VirtualScrollComponent", () => {
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-virtual-scroll"));
+        component = de.componentInstance;
         fixture.detectChanges();
         await fixture.whenStable();
         fixture.detectChanges();
@@ -90,5 +93,27 @@ describe("VirtualScrollComponent", () => {
         expect(items[3].nativeElement.textContent).toContain("item-07");
         expect(items[4].nativeElement.textContent).toContain("item-08");
         expect(items[5].nativeElement.textContent).toContain("item-09");
+    });
+
+    it("scroll to given item", async (done) => {
+        component.scrollToItemAt(4);
+        fixture.detectChanges();
+        const date = new Date();
+        tween.update(date.setMilliseconds(date.getMilliseconds() + 500));
+        expect(de.nativeElement.scrollTop).toBe(400);
+        await fixture.whenStable();
+        fixture.detectChanges();
+        setTimeout(() => {
+            fixture.detectChanges();
+            expect(de.nativeElement.scrollTop).toBe(400);
+            const items = de.queryAll(By.css(".item"));
+            expect(items.length).toBe(5);
+            expect(items[0].nativeElement.textContent).toContain("item-05");
+            expect(items[1].nativeElement.textContent).toContain("item-06");
+            expect(items[2].nativeElement.textContent).toContain("item-07");
+            expect(items[3].nativeElement.textContent).toContain("item-08");
+            expect(items[4].nativeElement.textContent).toContain("item-09");
+            done();
+        });
     });
 });
