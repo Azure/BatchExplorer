@@ -128,11 +128,10 @@ export class NodeConnectComponent implements OnInit {
             flatMap(() => {
                 // launch a terminal subprocess with the command to access the node
                 const args = {
-                    name: Application.terminal,
                     command: PoolUtils.isWindows(this.pool) ? "" : this.sshCommand,
                 };
                 // TODO insert rdpCommand as a get method and place in ternary statement above
-                return Observable.fromPromise(this.batchLabs.launchApplication(args));
+                return Observable.fromPromise(this.batchLabs.launchApplication(Application.terminal, args));
             }),
             share(),
         );
