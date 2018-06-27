@@ -45,7 +45,7 @@ async function startApplication(batchLabsApp: BatchLabsApplication) {
     // Uncomment to view why windows don't show up.
     batchLabsApp.init().then(() => {
         batchLabsApp.start();
-        batchLabsApp.debugCrash();
+        // batchLabsApp.debugCrash();
     });
 }
 
@@ -56,7 +56,7 @@ export async function startBatchLabs() {
 
     const module = await platformDynamicServer().bootstrapModule(BatchLabsClientModule);
     const batchLabsApp = module.injector.get(BatchLabsApplication);
-    // const batchLabsApp = new BatchLabsApplication(autoUpdater);
+
     setupSingleInstance(batchLabsApp);
 
     if (app.isReady()) {
