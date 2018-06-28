@@ -1,7 +1,6 @@
 import * as moment from "moment";
 
-import { AccessToken, DataStoreKeys } from "@batch-flask/core";
-import { MockNodeStorage } from "test/utils/mocks/storage";
+import { AccessToken, DataStoreKeys, InMemoryDataStore } from "@batch-flask/core";
 import { AccessTokenCache } from "./access-token-cache";
 
 const tenant1 = "tenant-1";
@@ -18,10 +17,10 @@ const token1 = {
 
 describe("AccessTokenCache", () => {
     let cache: AccessTokenCache;
-    let localStorageSpy: MockNodeStorage;
+    let localStorageSpy: InMemoryDataStore;
 
     describe("when using localstorage", () => {
-        localStorageSpy = new MockNodeStorage();
+        localStorageSpy = new InMemoryDataStore();
         beforeEach(() => {
             cache = new AccessTokenCache(localStorageSpy as any);
         });

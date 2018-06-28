@@ -17,21 +17,3 @@ export function mockStorage(storage: Storage) {
         delete data[key];
     });
 }
-
-export class MockNodeStorage {
-    public data: { [key: string]: string } = { };
-
-     public setItem(key: string, value: string) {
-        this.data[key] = value;
-        return Promise.resolve();
-    }
-
-     public getItem(key: string) {
-        return Promise.resolve(this.data[key]);
-    }
-
-     public removeItem(key: string) {
-        delete this.data[key];
-        return Promise.resolve();
-    }
-}

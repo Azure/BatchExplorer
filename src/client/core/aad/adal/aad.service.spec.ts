@@ -1,9 +1,8 @@
 import * as moment from "moment";
 
-import { AccessToken } from "@batch-flask/core";
+import { AccessToken, InMemoryDataStore } from "@batch-flask/core";
 import { Constants } from "common";
 import { F } from "test/utils";
-import { MockNodeStorage } from "test/utils/mocks/storage";
 import { MockBrowserWindow, MockSplashScreen } from "test/utils/mocks/windows";
 import { AADUser } from "./aad-user";
 import { AADService } from "./aad.service";
@@ -36,16 +35,16 @@ describe("AADService", () => {
     let service: AADService;
     let currentUser: AADUser;
     let appSpy;
-    let localStorage;
+    let localStorage: InMemoryDataStore;
 
     beforeEach(() => {
-        localStorage = new MockNodeStorage();
+        localStorage = new InMemoryDataStore();
         appSpy = {
             mainWindow: new MockBrowserWindow(),
             splashScreen: new MockSplashScreen(),
         };
 
-        service = new AADService(appSpy, localStorage);
+        service = new AADService(appSpy, localStorage as any);
         service.currentUser.subscribe(x => currentUser = x);
         service.init();
     });
