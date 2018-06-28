@@ -38,9 +38,14 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
         options?: ListOptionsAttributes | ListOptions,
         progress?: FetchAllProgressCallback): Observable<List<TEntity>> {
 
-        return this._fetch(params, new ListOptions(options), true).flatMap(({ items, nextLink }) => {
-            return this._fetchRemaining(nextLink, items.size, progress)
-                .map(remainingItems => List<TEntity>(items.concat(remainingItems)));
+        return this._fetch(params, new ListOptions(options), true).expand(({ items, nextLink }) => {
+            return nextLink ? this._fetchNext(nextLink) : Observable.empty();
+        }).reduce((items: TEntity[], response: ListResponse<TEntity>) => {
+            const array = [...items, ...response.items.toJS()];
+            if (progress) { progress(array.length); }
+            return array;
+        }, []).map((items) => {
+            return List(items);
         }).share();
     }
 
