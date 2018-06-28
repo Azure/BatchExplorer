@@ -10,10 +10,16 @@ import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/p
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
 import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
-import { BatchLabsService, FileSystemService, NodeService, NodeUserService, SSHKeyService, SettingsService } from "app/services";
+import {
+    BatchLabsService,
+    FileSystemService,
+    NodeService,
+    NodeUserService,
+    SSHKeyService,
+    SettingsService,
+} from "app/services";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
-import { TasksRunningTimeGraphComponent } from "../../job/graphs";
 
 @Component({
     template: `<bl-node-connect [pool]="pool" [node]="node"></bl-node-connect>`,
@@ -23,7 +29,7 @@ class TestComponent {
     public node: Node;
 }
 
-fdescribe("NodeConnectComponent", () => {
+describe("NodeConnectComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: NodeConnectComponent;

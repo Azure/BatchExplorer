@@ -2,20 +2,46 @@ import { OSService } from "@batch-flask/ui/electron";
 import * as cp from "child_process";
 import { FileSystem } from "../fs";
 
-const supportedTerminals = {
-    "powershell": {
+interface TerminalDefinition {
+    process: string;
+    args: string[];
+}
+
+export enum SupportedTerminal {
+    Powershell = "powershell",
+    Cmd = "cmd",
+    XTerminalEmulator = "x-terminal-emulator",
+    GnomeTerminal = "gnome-terminal",
+    Konsole = "konsole",
+    XTerm = "xterm",
+    TerminalApp = "Terminal.app",
+}
+const supportedTerminals: {[key in SupportedTerminal]: TerminalDefinition} = {
+    [SupportedTerminal.Powershell]: {
         process: "cmd.exe",
         args: ["/c", "start", "powershell", "-NoExit", "-Command", "{command}"],
     },
-    "cmd": {
+    [SupportedTerminal.Cmd]: {
         process: "cmd.exe",
         args: ["/c", "start", "cmd", "/k", "{command}"],
     },
-    "linux": {
-        process: "{terminal}",
+    [SupportedTerminal.XTerminalEmulator]: {
+        process: "x-terminal-emulator",
         args: ["-e", "{command}; bash"],
     },
-    "Terminal.app": {
+    [SupportedTerminal.GnomeTerminal]: {
+        process: "gnome-terminal",
+        args: ["-e", "{command}; bash"],
+    },
+    [SupportedTerminal.Konsole]: {
+        process: "konsole",
+        args: ["-e", "{command}; bash"],
+    },
+    [SupportedTerminal.XTerm]: {
+        process: "xterm",
+        args: ["-e", "{command}; bash"],
+    },
+    [SupportedTerminal.TerminalApp]: {
         process: "osascript",
         args: [
             "-e",
@@ -34,13 +60,13 @@ export class TerminalService {
         private fs: FileSystem,
     ) {}
 
-    public runInTerminal(command: string, terminal?: string, envVars?: StringMap<string>): Promise<void> {
-        return new Promise<void>(async (resolve, reject) => {
+    public runInTerminal(command: string, terminal?: string, envVars?: StringMap<string>): Promise<number> {
+        return new Promise<number>(async (resolve, reject) => {
             let myTerminal;
 
             // check if the user provided a the name of a supported terminal application
             if (terminal && (terminal in supportedTerminals)) {
-                myTerminal = await Promise.resolve(supportedTerminals[terminal]);
+                myTerminal = supportedTerminals[terminal];
             } else {
                 // otherwise, use the OS default
                 myTerminal = await this._getDefaultTerminalByOS();
@@ -66,14 +92,13 @@ export class TerminalService {
 
             // spawn the terminal process with the given arguments
             const cmd = cp.spawn(myTerminal.process, myTerminal.args, options);
-            console.log("Pid", cmd.pid);
+
             cmd.once("error", (error) => {
-                console.log("Error", error);
                 reject(error);
             });
 
             if (cmd.pid) {
-                resolve(null);
+                resolve(cmd.pid);
             }
         });
     }
@@ -83,33 +108,31 @@ export class TerminalService {
      */
     private async _getDefaultTerminalByOS(): Promise<any> {
         if (this.osService.isWindows()) {           // return powershell for windows
-            return supportedTerminals.powershell;
+            return supportedTerminals["powershell"];
         } else if (this.osService.isLinux()) {      // get the default linux system terminal, and use it
-            const terminal = await this._getDefaultTerminalLinux();
-            const myTerminal = supportedTerminals.linux;
-            myTerminal.process = myTerminal.process.format({terminal});
-            return myTerminal;
+            return this._getDefaultTerminalLinux();
         } else {                                 // return Terminal.app for macOS
             return supportedTerminals["Terminal.app"];
         }
     }
 
-    private async _getDefaultTerminalLinux(): Promise<string> {
+    private async _getDefaultTerminalLinux(): Promise<any> {
         const isDebian = await this.fs.exists("/etc/debian_version");
 
         if (isDebian) {
-            return "x-terminal-emulator";
+            return supportedTerminals["x-terminal-emulator"];
         } else if (process.env.DESKTOP_SESSION === "gnome"
                 || process.env.DESKTOP_SESSION === "gnome-classic") {
-            return "gnome-terminal";
+            return supportedTerminals["gnome-terminal"];
         } else if (process.env.DESKTOP_SESSION === "kde-plasma") {
-            return "konsole";
-        } else if (process.env.COLORTERM) {
-            return process.env.COLORTERM;
-        } else if (process.env.TERM) {
-            return process.env.TERM;
+            return supportedTerminals["konsole"];
+        } else if (process.env.COLORTERM || process.env.TERM) {
+            return {
+                process: process.env.COLORTERM || process.env.TERM,
+                args: ["-e", "{command}; bash"],
+            };
         } else {
-            return "xterm";
+            return supportedTerminals["xterm"];
         }
     }
 
