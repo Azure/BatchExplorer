@@ -81,7 +81,7 @@ export class PinnedEntityService {
     public getEntityType(entity: NavigableRecord | PinnableEntity): PinnedEntityType {
         for (const [type, cls] of pinnedTypeMap) {
             if (entity instanceof cls) {
-            return type as any;
+                return type as any;
             }
         }
         /* casting pinnable as a PinnableEntity */

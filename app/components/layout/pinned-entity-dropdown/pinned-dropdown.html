@@ -6,9 +6,9 @@
         <bl-clickable *ngFor="let favorite of favorites | async;trackBy: trackPinnned"
             class="dropdown-item"
             (do)="gotoFavorite(favorite)"
-            (mouseup)="handleMiddleMouseUp($event, favorite)"
             [class.selected]="favorite.url === currentUrl"
             (contextmenu)="onContextMenu(favorite)"
+            (mouseup)="handleMiddleMouseUp($event, favorite)"
             [title]="favorite.id">
             <i class="fa" [ngClass]="entityIcon(favorite)"></i>
             <div class="main">
@@ -18,7 +18,9 @@
             <div *ngIf="favorite.url === currentUrl" class="extra">
                 <i class="fa fa-check"></i>
             </div>
-            <i class="fa fa-times" (click)="removeFavorite(favorite)"></i>
+            <div>
+                <i class="fa fa-times" (click)="removeFavorite(favorite)"></i>
+            </div>
             
         </bl-clickable>
     </div>

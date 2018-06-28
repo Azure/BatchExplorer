@@ -3,10 +3,8 @@ import { NavigationEnd, Router } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { PinnableEntity, PinnedEntityType } from "@batch-flask/core";
-import { MouseButton } from "@batch-flask/core";
-import { DropdownComponent } from "@batch-flask/ui";
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
+import { PinnableEntity, PinnedEntityType, MouseButton} from "@batch-flask/core";
+import { DropdownComponent, ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui";
 import { AccountService, PinnedEntityService } from "app/services";
 
 import "./pinned-dropdown.scss";
@@ -71,6 +69,7 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
             this.pinnedEntityService.unPinFavorite(favorite);
         }
     }
+
     public entityType(favorite: PinnableEntity) {
         switch (favorite.pinnableType) {
             case PinnedEntityType.Application:
@@ -113,9 +112,14 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
         return `${entity.pinnableType}/${entity.id}`;
     }
 
-    public onContextMenu(favorite: PinnableEntity) {
+    public onContextMenu(event: MouseEvent, favorite: PinnableEntity) {
         this.contextMenuService.openMenu(new ContextMenu([
             new ContextMenuItem("Remove favorite", () => console.log("Remove favorite: ", favorite)),
         ]));
+        if (event.button === MouseButton.right) {
+            this.pinnedEntityService.unPinFavorite(favorite);
+           /*  this.contextMenuService.closeMenu(new ContextMenu);
+            this.contextMenuService.close(); */
+        }
     }
 }
