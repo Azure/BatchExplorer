@@ -3,9 +3,10 @@ import {
     getProxySettings, validateProxySetting,
 } from "get-proxy-settings";
 
+import { Inject, Injectable, forwardRef } from "@angular/core";
 import { log } from "@batch-flask/utils";
-import { BatchLabsApplication } from "client/core";
-import { LocalStorage } from "client/core/local-storage";
+import { BatchLabsApplication } from "client/core/batchlabs-application";
+import { LocalDataStore } from "client/core/local-data-store";
 import { Constants } from "common";
 import { BehaviorSubject } from "rxjs";
 import { filter, map, take } from "rxjs/operators";
@@ -20,9 +21,12 @@ function allowInsecureRequest() {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 }
 
+@Injectable()
 export class ProxySettingsManager {
     private _settings = new BehaviorSubject<ProxySettingConfiguration>(undefined);
-    constructor(private batchLabsApp: BatchLabsApplication, private storage: LocalStorage) {
+    constructor(
+        @Inject(forwardRef(() => BatchLabsApplication)) private batchLabsApp: BatchLabsApplication,
+        private storage: LocalDataStore) {
     }
 
     public async init() {

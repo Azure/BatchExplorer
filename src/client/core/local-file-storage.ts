@@ -1,10 +1,13 @@
+import { Injectable } from "@angular/core";
 import { log } from "@batch-flask/utils";
 import * as path from "path";
 import { FileSystem } from "./fs";
 
-const fs = new FileSystem();
-
+@Injectable()
 export class LocalFileStorage {
+    constructor(private fs: FileSystem) {
+
+    }
     public async get<T>(key: string): Promise<T> {
         const content = await this.read(key);
         if (!content) {
@@ -25,15 +28,15 @@ export class LocalFileStorage {
     }
 
     public async read(key: string): Promise<string> {
-        return fs.readFile(this._getFile(key)).catch(() => null);
+        return this.fs.readFile(this._getFile(key)).catch(() => null);
     }
 
     public async write(key: string, content: string): Promise<string> {
-        return fs.saveFile(this._getFile(key), content);
+        return this.fs.saveFile(this._getFile(key), content);
     }
 
     private _getFile(key: string) {
         const filename = key.endsWith(".json") ? key : `${key}.json`;
-        return path.join(fs.commonFolders.userData, filename);
+        return path.join(this.fs.commonFolders.userData, filename);
     }
 }

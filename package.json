@@ -130,6 +130,7 @@
     "@angular/material": "6.2.1",
     "@angular/platform-browser": "6.0.5",
     "@angular/platform-browser-dynamic": "6.0.5",
+    "@angular/platform-server": "^6.0.6",
     "@angular/router": "6.0.5",
     "@tweenjs/tween.js": "~17.1.1",
     "azure-storage": "~2.8.3",
