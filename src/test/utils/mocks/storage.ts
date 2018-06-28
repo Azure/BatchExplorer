@@ -20,21 +20,20 @@ export function mockStorage(storage: Storage) {
     });
 }
 
-export function mockNodeStorage(storage: LocalStorage) {
-    const data: { [key: string]: string } = {};
+export class MockNodeStorage {
+    public data: { [key: string]: string } = { };
 
-    spyOn(storage, "setItem").and.callFake((key, value) => {
-        data[key] = value;
+     public setItem(key: string, value: string) {
+        this.data[key] = value;
         return Promise.resolve();
-    });
+    };
 
-    spyOn(storage, "getItem").and.callFake((key) => {
-        return Promise.resolve(data[key]);
+     public getItem(key: string) {
+        return Promise.resolve(this.data[key]);
+    };
 
-    });
-
-    spyOn(storage, "removeItem").and.callFake((key) => {
-        delete data[key];
+     public removeItem(key: string) {
+        delete this.data[key];
         return Promise.resolve();
-    });
+    };
 }

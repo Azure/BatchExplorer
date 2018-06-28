@@ -3,7 +3,7 @@ import * as moment from "moment";
 import { AccessToken } from "@batch-flask/core";
 import { Constants } from "common";
 import { F } from "test/utils";
-import { mockNodeStorage } from "test/utils/mocks/storage";
+import { MockNodeStorage } from "test/utils/mocks/storage";
 import { MockBrowserWindow, MockSplashScreen } from "test/utils/mocks/windows";
 import { AADUser } from "./aad-user";
 import { AADService } from "./aad.service";
@@ -36,26 +36,23 @@ describe("AADService", () => {
     let service: AADService;
     let currentUser: AADUser;
     let appSpy;
-    const localStorage: any = {};
-    let accessTokenCacheSpy;
+    let localStorage;
 
     beforeEach(() => {
-        accessTokenCacheSpy = {
-
-        };
+        localStorage = new MockNodeStorage();
         appSpy = {
             mainWindow: new MockBrowserWindow(),
             splashScreen: new MockSplashScreen(),
         };
-        mockNodeStorage(localStorage);
-        service = new AADService(appSpy, localStorage, accessTokenCacheSpy);
+
+        service = new AADService(appSpy, localStorage);
         service.currentUser.subscribe(x => currentUser = x);
         service.init();
     });
 
     it("when there is no item in the localstorage it should not set the id_token", () => {
         localStorage.removeItem(Constants.localStorageKey.currentUser);
-        const tmpService = new AADService(appSpy, localStorage, accessTokenCacheSpy);
+        const tmpService = new AADService(appSpy, localStorage);
         tmpService.init();
         let user: AADUser = null;
         tmpService.currentUser.subscribe(x => user = x);
@@ -64,7 +61,7 @@ describe("AADService", () => {
 
     it("when localstorage has currentUser it should load it", async (done) => {
         await localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(sampleUser));
-        const tmpService = new AADService(appSpy, localStorage, accessTokenCacheSpy);
+        const tmpService = new AADService(appSpy, localStorage);
         await tmpService.init();
         let user: AADUser = null;
         tmpService.currentUser.subscribe(x => user = x);
