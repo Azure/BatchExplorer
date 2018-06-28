@@ -2,24 +2,66 @@
 @import "app/styles/variables";
 
 bl-pinned-dropdown {
-    $ddl-width: 280px;
+    [bl-dropdown-content] {
+        min-width: 300px;
+        max-width: 350px;
+    }
 
-    .fa {
-        font-size: 1.2em;
-        padding-right: 5px;
+    .dropdown-item.favorite {
+        position: relative;
+        min-width: 250px;
+        cursor: pointer;
+        padding: 0;
+        display: flex;
+        align-items: stretch;
+        justify-content: stretch;
 
-        &.fa-tasks, &.fa-database, &.fa-file-archive-o, &.fa-question, &.fa-cloud-upload, &.fa-certificate, &.fa-calendar {
-            color: map-get($primary, 300);
+        &:hover {
+            i.fa {
+                color: $primary-color-dark;
+            }
+
+            &.selected {
+                color: white;
+            }
         }
 
-        &.fa-times {
+        &.selected {
+            font-weight: bold;
+            color: $primary-color-dark;
+        }
+
+        > span {
+            flex: 1 1 auto;
+            text-align: left;
+            min-width: 20px;
+            text-overflow: ellipsis;
+            overflow-x: hidden;
+            border-right: 1px solid $border-color;
+            padding: 5px 10px;
+
+            &:hover {
+                .fa {
+                    color: white;
+                }
+            }
+
+            & i {
+                margin-right: 5px;
+
+                &.fa {
+                    color: $primary-color-dark;
+                }
+            }
+        }
+
+        > i.fa.fa-times {
             flex: 0 0 30px;
             background-color: white;
             color: $primary-color-dark;
             display: flex;
             align-items: center;
             justify-content: center;
-
             cursor: pointer;
 
             &:hover {
@@ -30,15 +72,6 @@ bl-pinned-dropdown {
             &:active {
                 background-color: map-get($danger, 600);
             }
-        }
-    }
-
-    .main {
-        width: calc(#{$ddl-width} - 60px);
-        border-right: 1px solid $border-color;
-        padding: 5px 10px;
-        .type {
-            font-size: 10px;
         }
     }
 }

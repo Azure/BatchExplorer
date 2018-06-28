@@ -7,7 +7,8 @@
         <div *ngFor="let reference of references;trackBy: trackReference"
             class="dropdown-item bookmark"
             (click)="selectBookmark(reference)"
-            (mouseup)="handleMouseUp($event, reference)">
+            (mouseup)="handleMouseUp($event, reference)"
+            (contextmenu)="onContextMenu(reference)">
 
             <span>{{referenceTitle(reference)}}</span>
             <i class="fa fa-times" (click)="destroyBookmark(reference)"></i>
