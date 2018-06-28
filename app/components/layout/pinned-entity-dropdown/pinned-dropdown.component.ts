@@ -6,6 +6,7 @@ import { Observable, Subscription } from "rxjs";
 import { PinnableEntity, PinnedEntityType } from "@batch-flask/core";
 import { MouseButton } from "@batch-flask/core";
 import { DropdownComponent } from "@batch-flask/ui";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { AccountService, PinnedEntityService } from "app/services";
 
 import "./pinned-dropdown.scss";
@@ -27,7 +28,8 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private changeDetector: ChangeDetectorRef,
-        public pinnedEntityService: PinnedEntityService,
+        private contextMenuService: ContextMenuService,
+        private pinnedEntityService: PinnedEntityService,
         private accountService: AccountService) {
 
         this.favorites = this.pinnedEntityService.favorites;
@@ -109,5 +111,11 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
 
     public trackPinnned(index, entity: PinnableEntity) {
         return `${entity.pinnableType}/${entity.id}`;
+    }
+
+    public onContextMenu(favorite: PinnableEntity) {
+        this.contextMenuService.openMenu(new ContextMenu([
+            new ContextMenuItem("Remove favorite", () => console.log("Remove favorite: ", favorite)),
+        ]));
     }
 }
