@@ -10,25 +10,34 @@ bl-pinned-dropdown {
 
         &.fa-tasks, &.fa-database, &.fa-file-archive-o, &.fa-question, &.fa-cloud-upload, &.fa-certificate, &.fa-calendar {
             color: map-get($primary, 300);
+        } 
+       
+        &.fa-times {
+            flex: 0 0 30px;
+            background-color: white;
+            color: $primary-color-dark;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            cursor: pointer;
+    
+            &:hover {
+                color: white;
+                background-color: map-get($danger, 400);
+            } 
+            &:active {
+                background-color: map-get($danger, 600);
+            }
         }
     }
 
     .main {
-        width: calc(#{$ddl-width} - 65px);
-        padding-right: 4px;
-
+        width: calc(#{$ddl-width} - 60px);
+        border-right: 1px solid $border-color;
+        padding: 5px 10px;
         .type {
             font-size: 10px;
         }
     }
-
-    /* Nehal Added the next few LOC..white background when selected
-     .unpin-button {
-        padding-right: 5px;
-        padding-left: 5px;
-        background: rgb(0, 22, 51);
-        background-color: #4CAF50;
-        border: #ffffff;
-    } 
-    */   
 }

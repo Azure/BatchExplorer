@@ -87,7 +87,7 @@ export class PinnedEntityService {
         /* casting pinnable as a PinnableEntity */
         const pinnable = entity as PinnableEntity;
         return pinnable ? pinnable.pinnableType : null;
-        } 
+    } 
 
     public isFavorite(entity: NavigableRecord): boolean {
         const id = entity.id.toLowerCase();

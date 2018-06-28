@@ -4,6 +4,7 @@ import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { PinnableEntity, PinnedEntityType } from "@batch-flask/core";
+import { MouseButton } from "@batch-flask/core";
 import { DropdownComponent } from "@batch-flask/ui";
 import { AccountService, PinnedEntityService } from "app/services";
 
@@ -59,10 +60,15 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
         this._dropdown.close();
     }
 
-    public removeFavorite(favourite: PinnableEntity) {
-        this.pinnedEntityService.unPinFavorite(favourite);
+    public removeFavorite(favorite: PinnableEntity) {
+        this.pinnedEntityService.unPinFavorite(favorite);
     }
 
+    public handleMiddleMouseUp(event: MouseEvent, favorite: PinnableEntity) {
+        if (event.button === MouseButton.middle) {
+            this.pinnedEntityService.unPinFavorite(favorite);
+        }
+    }
     public entityType(favorite: PinnableEntity) {
         switch (favorite.pinnableType) {
             case PinnedEntityType.Application:

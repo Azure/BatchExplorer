@@ -6,6 +6,7 @@
         <bl-clickable *ngFor="let favorite of favorites | async;trackBy: trackPinnned" 
             class="dropdown-item" 
             (do)="gotoFavorite(favorite)"
+            (mouseup)="handleMiddleMouseUp($event, favorite)"
             [class.selected]="favorite.url === currentUrl"
             [title]="favorite.id">
             <i class="fa" [ngClass]="entityIcon(favorite)"></i>
@@ -13,12 +14,11 @@
                 <div class="alias">{{favorite.name || favorite.id}}</div>
                 <div class="type">{{entityType(favorite)}}</div>
             </div>
-            <!-- A green check mark appears if you are on the page corresponding a item in the drop down menu-->
             <div *ngIf="favorite.url === currentUrl" class="extra">
                 <i class="fa fa-check"></i>
             </div>
-            <!-- <bl-button color= "light" icon="fa fa-trash" class="unpin-button" (click)="removeFavorite(favorite)" > unpin </bl-button> -->
-            <bl-button color="light" icon="fa fa-trash" type="plain" (click)="removeFavorite(favorite)"></bl-button>
+            <i class="fa fa-times" (click)="removeFavorite(favorite)"></i>
+            
         </bl-clickable>
     </div>
 </bl-dropdown>
