@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { ServerModule } from "@angular/platform-server";
 import { AADService } from "client/core/aad";
 import { BatchLabsInitializer } from "client/core/batchlabs-initializer";
+import { BlIpcMain } from "client/core/bl-ipc-main";
 import { FileSystem } from "client/core/fs";
 import { LocalDataStore } from "client/core/local-data-store";
 import { LocalFileStorage } from "client/core/local-file-storage";
@@ -26,6 +27,7 @@ import { AUTO_UPDATER, BatchLabsApplication } from "./core/batchlabs-application
         LocalDataStore,
         LocalFileStorage,
         AADService,
+        BlIpcMain,
         FileSystem,
     ],
 })

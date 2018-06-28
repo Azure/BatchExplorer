@@ -1,9 +1,11 @@
+import { Injectable } from "@angular/core";
 import { IpcPromiseEvent } from "@batch-flask/ui/electron";
 import { ipcMain } from "electron";
 import { EventEmitter } from "events";
 
 const eventEmitter = new EventEmitter();
 
+@Injectable()
 export class BlIpcMain {
 
     /**
@@ -12,7 +14,7 @@ export class BlIpcMain {
      * @param {String} event event name.
      * @param {Function} listener listener function.
      */
-    public static on(event: string, listener: (...args) => Promise<any>) {
+    public on(event: string, listener: (...args) => Promise<any>) {
         // call from main process always.
 
         // add listener to common event emitter for main process.
@@ -22,22 +24,22 @@ export class BlIpcMain {
                     eventEmitter.emit(this._getSuccessEventName(event, id), result);
                 })
                 .catch((error) => {
-                    eventEmitter.emit(this._getFailureEventName(event, id), {...error});
+                    eventEmitter.emit(this._getFailureEventName(event, id), { ...error });
                 });
         });
     }
 
-    public static init() {
+    public init() {
         ipcMain.on(IpcPromiseEvent.request, this._rendererEventHandler.bind(this));
     }
 
     // Temporary event name for success
-    private static _getSuccessEventName(eventName, id) {
+    private _getSuccessEventName(eventName, id) {
         return eventName + id.toString() + IpcPromiseEvent.successSuffix;
     }
 
-    // Temporary event name for success
-    private static _getFailureEventName(eventName, id) {
+    //  event name for success
+    private _getFailureEventName(eventName, id) {
         return eventName + id.toString() + IpcPromiseEvent.failureSuffix;
     }
 
@@ -47,7 +49,7 @@ export class BlIpcMain {
      * @param {Event} event event object.
      * @param {Object} arg argument object.
      */
-    private static _rendererEventHandler(event, arg) {
+    private _rendererEventHandler(event, arg) {
         // NOTE: send from renderer process always.
         const successEventName = this._getSuccessEventName(arg.eventName, arg.id);
         const failureEventName = this._getFailureEventName(arg.eventName, arg.id);

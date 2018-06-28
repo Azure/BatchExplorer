@@ -55,19 +55,18 @@ export class BatchLabsApplication {
     constructor(
         @Inject(AUTO_UPDATER) public autoUpdater: AppUpdater,
         private localStorage: LocalDataStore,
-        private injector: Injector) {
+        private injector: Injector,
+        private ipcMain: BlIpcMain) {
         this.state = this._state.asObservable();
-        BlIpcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {
-            return this.aadService.accessTokenData(tenantId, resource);
-        });
-        BlIpcMain.on(IpcEvent.fetch, async ({ url, options }) => {
+
+        ipcMain.on(IpcEvent.fetch, async ({ url, options }) => {
             const response = await fetch(url, options);
             return {
                 status: response.status,
                 statusText: response.statusText,
             };
         });
-        BlIpcMain.on(IpcEvent.logoutAndLogin, () => {
+        ipcMain.on(IpcEvent.logoutAndLogin, () => {
             return this.logoutAndLogin();
         });
         this.azureEnvironmentObs = this._azureEnvironment.asObservable();
@@ -79,7 +78,7 @@ export class BatchLabsApplication {
         this.aadService = this.injector.get(AADService);
         this.proxySettings = this.injector.get(ProxySettingsManager);
 
-        BlIpcMain.init();
+        this.ipcMain.init();
         await this.aadService.init();
         this._registerProtocol();
         this._setupProcessEvents();

@@ -3,8 +3,10 @@ import { Inject, Injectable, forwardRef } from "@angular/core";
 import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
 import { fetch, log } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core/batchlabs-application";
+import { BlIpcMain } from "client/core/bl-ipc-main";
 import { LocalDataStore } from "client/core/local-data-store";
 import { Constants } from "common";
+import { IpcEvent } from "common/constants";
 import { Deferred } from "common/deferred";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
@@ -42,7 +44,8 @@ export class AADService {
 
     constructor(
         @Inject(forwardRef(() => BatchLabsApplication)) private app: BatchLabsApplication,
-        private localStorage: LocalDataStore) {
+        private localStorage: LocalDataStore,
+        ipcMain: BlIpcMain) {
         this._tokenCache = new AccessTokenCache(localStorage);
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
@@ -50,6 +53,10 @@ export class AADService {
         this.userAuthorization = new AuthenticationService(this.app, adalConfig);
         this._accessTokenService = new AccessTokenService(app, adalConfig);
         this.authenticationState = this._authenticationState.asObservable();
+
+        ipcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {
+            return this.accessTokenData(tenantId, resource);
+        });
 
         this.userAuthorization.state.subscribe((state) => {
             this._authenticationState.next(state);
