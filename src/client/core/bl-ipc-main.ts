@@ -1,4 +1,5 @@
 import { Injectable, OnDestroy } from "@angular/core";
+import { autobind } from "@batch-flask/core";
 import { IpcPromiseEvent } from "@batch-flask/ui/electron";
 import { ipcMain } from "electron";
 import { EventEmitter } from "events";
@@ -53,6 +54,7 @@ export class BlIpcMain implements OnDestroy {
      * @param {Event} event event object.
      * @param {Object} arg argument object.
      */
+    @autobind()
     private _rendererEventHandler(event, arg) {
         // NOTE: send from renderer process always.
         const successEventName = this._getSuccessEventName(arg.eventName, arg.id);
