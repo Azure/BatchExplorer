@@ -1,11 +1,10 @@
 import { Injectable } from "@angular/core";
-import { AccessToken, ServerError } from "@batch-flask/core";
+import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
 import { ElectronRemote, NotificationService } from "@batch-flask/ui";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { BatchLabsService } from "app/services/batch-labs.service";
 import { AADService } from "client/core/aad";
-import { AccessTokenCache } from "client/core/aad/access-token/access-token-cache";
 import { Constants } from "common";
 
 @Injectable()

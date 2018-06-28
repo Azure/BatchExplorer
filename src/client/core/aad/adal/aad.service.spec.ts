@@ -35,7 +35,7 @@ describe("AADService", () => {
     let service: AADService;
     let currentUser: AADUser;
     let appSpy;
-    let localStorage: InMemoryDataStore;
+    let localStorage;
 
     beforeEach(() => {
         localStorage = new InMemoryDataStore();
@@ -44,7 +44,7 @@ describe("AADService", () => {
             splashScreen: new MockSplashScreen(),
         };
 
-        service = new AADService(appSpy, localStorage as any);
+        service = new AADService(appSpy, localStorage);
         service.currentUser.subscribe(x => currentUser = x);
         service.init();
     });
