@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { Job, JobTaskCounts, Node, Pool } from "app/models";
+import { Job, JobTaskCounts, JobTaskCountsValidationStatus, Node, Pool } from "app/models";
 import { JobService, NodeService, PoolService } from "app/services";
 import { PollService } from "app/services/core";
 import { click } from "test/utils/helpers";
@@ -49,17 +49,24 @@ describe("JobProgressStatusComponent", () => {
         };
 
         jobServiceSpy = {
-            getTaskCounts: jasmine.createSpy("getTaskCounts").and.returnValue(Observable.of(new JobTaskCounts({
-                running: 4,
-                completed: 8,
-                active: 12,
-                failed: 2,
-                succeeded: 6,
-            }))),
+            getTaskCounts: jasmine.createSpy("getTaskCounts").and.callFake((jobId) => {
+                const valid = jobId === "large-job"
+                    ? JobTaskCountsValidationStatus.unvalidated
+                    : JobTaskCountsValidationStatus.validated;
+
+                return Observable.of(new JobTaskCounts({
+                    running: 4,
+                    completed: 8,
+                    active: 12,
+                    failed: 2,
+                    succeeded: 6,
+                    validationStatus: valid,
+                }));
+            }),
         };
 
         pollServiceSpy = {
-            startPoll: () => ({destroy: () => null}),
+            startPoll: () => ({ destroy: () => null }),
         };
 
         TestBed.configureTestingModule({
@@ -123,5 +130,19 @@ describe("JobProgressStatusComponent", () => {
     it("should show failed count", () => {
         const el = de.query(By.css(".completed .failed"));
         expect(el.nativeElement.textContent).toContain("2");
+    });
+
+    it("doesn't show warning if data is validated", () => {
+        const warning =  de.query(By.css(".invalidated-data"));
+        expect(warning).toBeFalsy();
+    });
+
+    it("show warning about task count validity if count is unvalidated", () => {
+        testComponent.job = new Job({ id: "large-job" });
+        fixture.detectChanges();
+
+        const warning =  de.query(By.css(".invalidated-data"));
+        expect(warning).not.toBeFalsy();
+        expect(warning.nativeElement.textContent).toContain("Task count might not be accurate");
     });
 });
