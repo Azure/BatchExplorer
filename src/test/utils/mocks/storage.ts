@@ -1,5 +1,3 @@
-import { LocalStorage } from "client/core/local-storage";
-
 export function mockStorage(storage: Storage) {
     let data: { [key: string]: string } = {};
 
@@ -26,14 +24,14 @@ export class MockNodeStorage {
      public setItem(key: string, value: string) {
         this.data[key] = value;
         return Promise.resolve();
-    };
+    }
 
      public getItem(key: string) {
         return Promise.resolve(this.data[key]);
-    };
+    }
 
      public removeItem(key: string) {
         delete this.data[key];
         return Promise.resolve();
-    };
+    }
 }

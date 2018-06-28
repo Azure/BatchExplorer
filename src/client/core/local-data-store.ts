@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { DataStore, InMemoryDataStore } from "@batch-flask/core";
 import { LocalFileStorage } from "./local-file-storage";
 
 const fileKey = "node-local-storage";
@@ -7,24 +8,23 @@ const fileKey = "node-local-storage";
  * Implementation of the browser local storage
  */
 @Injectable()
-export class LocalStorage {
-    private _data: StringMap<string> = {};
+export class LocalDataStore extends InMemoryDataStore implements DataStore {
     private _loadPromise: Promise<any>;
 
     constructor(private localFileStorage: LocalFileStorage) {
+        super();
         this.load();
     }
 
-    public async setItem(key: string, value: string) {
-        return this._loadPromise.then(() => {
-            this._data[key] = value;
-            return this._save();
-        });
+    public async setItem<T = string>(key: string, value: T) {
+        await this._loadPromise;
+        await super.setItem(key, value);
+        return this._save();
     }
 
-    public async getItem(key: string): Promise<string> {
+    public async getItem<T = string>(key: string): Promise<T> {
         await this._loadPromise;
-        return this._data[key];
+        return super.getItem<T>(key);
     }
 
     public async removeItem(key: string) {
@@ -35,22 +35,18 @@ export class LocalStorage {
 
     public async load() {
         this._loadPromise = this.localFileStorage.get<any>(fileKey).then((data) => {
-            this._data = data;
+            this._data = new Map(data);
             return data;
         });
         return this._loadPromise;
     }
 
     public async clear() {
-        this._data = {};
-        return this._save();
+        await super.clear();
+        await this._save();
     }
 
-    public get length(): number {
-        return Object.keys(this._data).length;
-    }
-
-    private async _save() {
-        return this.localFileStorage.set(fileKey, this._data);
+    private async _save(): Promise<void> {
+        await this.localFileStorage.set(fileKey, this._data);
     }
 }

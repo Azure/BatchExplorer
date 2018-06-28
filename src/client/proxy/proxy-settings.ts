@@ -6,7 +6,7 @@ import {
 import { Inject, Injectable, forwardRef } from "@angular/core";
 import { log } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core/batchlabs-application";
-import { LocalStorage } from "client/core/local-storage";
+import { LocalDataStore } from "client/core/local-data-store";
 import { Constants } from "common";
 import { BehaviorSubject } from "rxjs";
 import { filter, map, take } from "rxjs/operators";
@@ -26,7 +26,7 @@ export class ProxySettingsManager {
     private _settings = new BehaviorSubject<ProxySettingConfiguration>(undefined);
     constructor(
         @Inject(forwardRef(() => BatchLabsApplication)) private batchLabsApp: BatchLabsApplication,
-        private storage: LocalStorage) {
+        private storage: LocalDataStore) {
     }
 
     public async init() {

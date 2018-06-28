@@ -1,7 +1,6 @@
 import * as moment from "moment";
 
-import { AccessToken } from "@batch-flask/core";
-import { Constants } from "common";
+import { AccessToken, DataStoreKeys } from "@batch-flask/core";
 import { MockNodeStorage } from "test/utils/mocks/storage";
 import { AccessTokenCache } from "./access-token-cache";
 
@@ -28,7 +27,7 @@ describe("AccessTokenCache", () => {
         });
 
         it("doesn't set the access token if not in localstorage", () => {
-            localStorageSpy.removeItem(Constants.localStorageKey.currentAccessToken);
+            localStorageSpy.removeItem(DataStoreKeys.currentAccessToken);
             cache.init();
             expect((cache as any)._tokens).toEqual({});
         });
@@ -39,7 +38,7 @@ describe("AccessTokenCache", () => {
                     [resource1]: { access_token: "sometoken", expires_on: moment().subtract(1, "hour") },
                 },
             };
-            localStorageSpy.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(token));
+            localStorageSpy.setItem(DataStoreKeys.currentAccessToken, JSON.stringify(token));
             cache.init();
             expect(cache.getToken(tenant1, resource1)).toBeFalsy();
         });
@@ -50,7 +49,7 @@ describe("AccessTokenCache", () => {
                     [resource1]: token1,
                 },
             };
-            localStorageSpy.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(data));
+            localStorageSpy.setItem(DataStoreKeys.currentAccessToken, JSON.stringify(data));
             await cache.init();
             const token = cache.getToken(tenant1, resource1);
             expect(token).not.toBeFalsy();

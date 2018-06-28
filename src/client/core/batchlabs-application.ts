@@ -7,7 +7,7 @@ import { Inject, Injectable, InjectionToken, Injector } from "@angular/core";
 import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
 import { fetch, log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
-import { LocalStorage } from "client/core/local-storage";
+import { LocalDataStore } from "client/core/local-data-store";
 import { setMenu } from "client/menu";
 import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-configuration-window";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
@@ -54,7 +54,7 @@ export class BatchLabsApplication {
 
     constructor(
         @Inject(AUTO_UPDATER) public autoUpdater: AppUpdater,
-        private localStorage: LocalStorage,
+        private localStorage: LocalDataStore,
         private injector: Injector) {
         this.state = this._state.asObservable();
         BlIpcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {

@@ -1,15 +1,14 @@
 
 import { Inject, Injectable, forwardRef } from "@angular/core";
-import { AccessToken, ServerError } from "@batch-flask/core";
+import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
 import { fetch, log } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core/batchlabs-application";
-import { LocalStorage } from "client/core/local-storage";
+import { LocalDataStore } from "client/core/local-data-store";
 import { Constants } from "common";
 import { Deferred } from "common/deferred";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
 import {
-    AccessTokenCache,
     AccessTokenError, AccessTokenErrorResult, AccessTokenService,
 } from "../access-token";
 import { AuthenticationService, AuthenticationState, AuthorizeResult, LogoutError } from "../authentication";
@@ -43,7 +42,7 @@ export class AADService {
 
     constructor(
         @Inject(forwardRef(() => BatchLabsApplication)) private app: BatchLabsApplication,
-        private localStorage: LocalStorage) {
+        private localStorage: LocalDataStore) {
         this._tokenCache = new AccessTokenCache(localStorage);
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
@@ -93,7 +92,6 @@ export class AADService {
 
     public async logout() {
         this.localStorage.removeItem(Constants.localStorageKey.currentUser);
-        this.localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
         this._tokenCache.clear();
         this._tenantsIds.next([]);
         this._clearUserSpecificCache();
@@ -133,7 +131,7 @@ export class AADService {
      * Look into the localStorage to see if there is a user to be loaded
      */
     private async _retrieveUserFromLocalStorage() {
-        const userStr = await this.localStorage.getItem(Constants.localStorageKey.currentUser);
+        const userStr = await this.localStorage.getItem<string>(Constants.localStorageKey.currentUser);
         if (userStr) {
             try {
                 const user = JSON.parse(userStr);
@@ -265,8 +263,8 @@ export class AADService {
 
     private _clearUserSpecificCache() {
         this.localStorage.removeItem(Constants.localStorageKey.subscriptions);
-        this.localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
         this.localStorage.removeItem(Constants.localStorageKey.selectedAccountId);
+        this._tokenCache.clear();
     }
 
     private async _refreshAllAccessTokens() {
