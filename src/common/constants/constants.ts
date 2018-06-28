@@ -62,11 +62,6 @@ export const localStorageKey = {
     currentUser: "current_user",
 
     /**
-     * LocalStorage key for storing the access token(For AAD request)
-     */
-    currentAccessToken: "current_access_token",
-
-    /**
      * List of subsciption id to the multi select in the account list
      */
     accountSubscriptionFilter: "account_subscription_filter",

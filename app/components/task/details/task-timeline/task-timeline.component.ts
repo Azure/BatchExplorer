@@ -13,13 +13,12 @@ import "./task-timeline.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskTimelineComponent {
-    @Input()
-    public task: Task;
+    @Input() public task: Task;
 
-    @Input()
-    public job: Job;
+    @Input() public job: Job;
 
     constructor(private router: Router) { }
+
     public get hasPreparationTask() {
         return Boolean(this.job.jobPreparationTask);
     }
@@ -88,7 +87,7 @@ export class TaskTimelineComponent {
     }
 
     public get timeoutMessage(): string {
-        const maxTime = DateUtils.prettyDuration(this.task.constraints.maxWallClockTime);
+        const maxTime = DateUtils.prettyDuration(this.task.constraints && this.task.constraints.maxWallClockTime);
         if (this.task.didTimeout) {
             return `Task timed out after running for ${maxTime}`;
         } else if (this.isTaskTimeoutClose) {

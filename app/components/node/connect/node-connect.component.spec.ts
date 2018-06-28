@@ -63,6 +63,28 @@ describe("NodeConnectComponent", () => {
             },
         };
 
+        beforeEach(() => {
+
+        nodeServiceSpy = {
+            getRemoteDesktop: jasmine.createSpy("").and.returnValue(Observable.of({ content: "banana" })),
+            listNodeAgentSkus: jasmine.createSpy("").and.returnValue(new MockListView(NodeAgentSku, {
+                items: [],
+            })),
+            getRemoteLoginSettings: jasmine.createSpy("").and.returnValue(Observable.of(
+                new NodeConnectionSettings({remoteLoginIPAddress: "123.345.654.399", remoteLoginPort: 22})),
+            ),
+        };
+
+        nodeUserServiceSpy = {
+            addOrUpdateUser: jasmine.createSpy("").and.returnValue(Observable.of(true)),
+        };
+
+        settingsServiceSpy = {
+            settings: {
+                username: "foo",
+            },
+        };
+
         batchLabsServiceSpy = {
             launchApplication: jasmine.createSpy("").and.returnValue(
                 new Promise((resolve, reject) => {
@@ -105,7 +127,7 @@ describe("NodeConnectComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should propose to generate or specify credentials, or connect in one click", () => {
+        it("should propose to generate or specify credentials, or connect in one click", () => {
         const buttons = de.queryAll(By.css(".credentials-source bl-button"));
         expect(buttons.length).toBe(3);
         expect(buttons[0].nativeElement.textContent).toContain("Generate");
@@ -113,12 +135,12 @@ describe("NodeConnectComponent", () => {
         expect(buttons[2].nativeElement.textContent).toContain("QuickStart");
     });
 
-    it("should not show more info", () => {
+        it("should not show more info", () => {
         expect(de.query(By.css("bl-property-group"))).toBeFalsy();
         expect(de.query(By.css("bl-node-user-credentials-form"))).toBeFalsy();
     });
 
-    it("clicking on generate should generate credentials", (done) => {
+        it("clicking on generate should generate credentials", (done) => {
         const button = de.queryAll(By.css("bl-button"))[0].componentInstance;
         button.action().subscribe(() => {
             fixture.detectChanges();
@@ -137,7 +159,7 @@ describe("NodeConnectComponent", () => {
         });
     });
 
-    describe("clicking on specify", () => {
+        describe("clicking on specify", () => {
         beforeEach(() => {
             const button = de.queryAll(By.css("bl-button"))[1].componentInstance;
             button.action();
@@ -164,7 +186,7 @@ describe("NodeConnectComponent", () => {
         });
     });
 
-    describe("when pool is iaas linux", () => {
+        describe("when pool is iaas linux", () => {
         beforeEach(() => {
             testComponent.pool = new Pool({
                 id: "iaas-linux-pool",

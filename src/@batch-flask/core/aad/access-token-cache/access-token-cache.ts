@@ -1,14 +1,15 @@
-import { AccessToken } from "@batch-flask/core";
-import { LocalStorage } from "client/core/local-storage";
-import { Constants } from "common";
+import { DataStoreKeys } from "@batch-flask/core/constants";
+import { DataStore } from "@batch-flask/core/data-store";
+import { AccessToken } from "../access-token";
 
+const dataStoreKey = DataStoreKeys.currentAccessToken;
 /**
  * Hellper class to storage the access tokens in memory and in the localstorage.
  */
 export class AccessTokenCache {
     private _tokens: any = {};
 
-    constructor(private storage: LocalStorage = null) { }
+    constructor(private storage?: DataStore) { }
 
     public async init() {
         return this._loadFromStorage();
@@ -41,7 +42,7 @@ export class AccessTokenCache {
     public clear() {
         this._tokens = {};
         if (this.storage) {
-            this.storage.removeItem(Constants.localStorageKey.currentAccessToken);
+            this.storage.removeItem(dataStoreKey);
         }
     }
 
@@ -54,12 +55,12 @@ export class AccessTokenCache {
                 tokens[tenantId][resource] = this._tokens[tenantId][resource];
             }
         }
-        return this.storage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(tokens));
+        return this.storage.setItem(dataStoreKey, JSON.stringify(tokens));
     }
 
     private async _loadFromStorage() {
         if (!this.storage) { return; }
-        const tokenStr = await this.storage.getItem(Constants.localStorageKey.currentAccessToken);
+        const tokenStr = await this.storage.getItem<string>(dataStoreKey);
         if (!tokenStr) {
             return;
         }
@@ -71,7 +72,7 @@ export class AccessTokenCache {
             }
         } catch (e) {
             if (this.storage) {
-                this.storage.removeItem(Constants.localStorageKey.currentAccessToken);
+                this.storage.removeItem(dataStoreKey);
             }
         }
     }

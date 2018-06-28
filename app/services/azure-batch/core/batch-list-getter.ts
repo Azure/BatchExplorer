@@ -53,7 +53,7 @@ export class BatchListGetter<TEntity, TParams> extends ListGetter<TEntity, TPara
         }
 
         if (options.maxResults) {
-            params = params.set("$top", options.maxResults.toString());
+            params = params.set("maxresults", options.maxResults.toString());
         }
 
         for (const key of Object.keys(options.attributes)) {

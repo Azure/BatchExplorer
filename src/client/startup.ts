@@ -2,10 +2,12 @@
 import { app, protocol } from "electron";
 import { autoUpdater } from "electron-updater";
 
+import { platformDynamicServer } from "@angular/platform-server";
 import { log } from "@batch-flask/utils";
-import { localStorage } from "client/core/local-storage";
 import { Constants } from "./client-constants";
-import { BatchLabsApplication, listenToSelectCertifcateEvent } from "./core";
+import { BatchLabsClientModule } from "./client.module";
+import { listenToSelectCertifcateEvent } from "./core";
+import {  BatchLabsApplication } from "./core/batchlabs-application";
 
 function initAutoUpdate() {
     autoUpdater.allowPrerelease = true;
@@ -51,8 +53,10 @@ export async function startBatchLabs() {
     // Those warnings are electron complaining we are loading remote data
     // But this is a false positive when using dev server has it doesn't seem to ignore localhost
     process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true";
-    localStorage.load();
-    const batchLabsApp = new BatchLabsApplication(autoUpdater);
+
+    const module = await platformDynamicServer().bootstrapModule(BatchLabsClientModule);
+    const batchLabsApp = module.injector.get(BatchLabsApplication);
+
     setupSingleInstance(batchLabsApp);
 
     if (app.isReady()) {

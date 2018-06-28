@@ -24,7 +24,6 @@
   "tslint.autoFixOnSave": true,
   "vsicons.presets.angular": true,
   "tslint.alwaysShowRuleFailuresAsWarnings": true,
-  "stylelint.enable": true,
   "css.validate": false,
   "scss.validate": false,
   "python.formatting.provider": "yapf"

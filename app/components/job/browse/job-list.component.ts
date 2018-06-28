@@ -49,7 +49,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         private jobService: JobService,
         private taskManager: BackgroundTaskService) {
         super(changeDetector);
-        this.data = this.jobService.listView();
+        this.data = this.jobService.listView(this._baseOptions);
         ComponentUtils.setActiveItem(activatedRoute, this.data);
         this.data.items.subscribe((jobs) => {
             this.jobs = jobs;
