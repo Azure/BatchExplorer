@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { IpcPromiseEvent } from "@batch-flask/ui/electron";
 import { ipcMain } from "electron";
 import { EventEmitter } from "events";
@@ -6,7 +6,7 @@ import { EventEmitter } from "events";
 const eventEmitter = new EventEmitter();
 
 @Injectable()
-export class BlIpcMain {
+export class BlIpcMain implements OnDestroy {
 
     /**
      * Listen to a send event sent by the remote from the renderer process
@@ -30,7 +30,11 @@ export class BlIpcMain {
     }
 
     public init() {
-        ipcMain.on(IpcPromiseEvent.request, this._rendererEventHandler.bind(this));
+        ipcMain.on(IpcPromiseEvent.request, this._rendererEventHandler);
+    }
+
+    public ngOnDestroy() {
+        ipcMain.removeListener(IpcPromiseEvent.request, this._rendererEventHandler);
     }
 
     // Temporary event name for success
