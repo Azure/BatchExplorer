@@ -92,7 +92,6 @@ export class NodeConnectComponent implements OnInit, OnChanges {
         if (inputs.pool || inputs.node) {
             this._loadConnectionData();
         }
-        console.log(inputs);
     }
 
     @autobind()
@@ -143,7 +142,7 @@ export class NodeConnectComponent implements OnInit, OnChanges {
         );
         obs.subscribe({
             error: (error) => {
-                console.log("Error is", error);
+                throw error;
             },
         });
         return obs;
