@@ -21,6 +21,11 @@
         </div>
     </div>
 </div>
+<div class="warning-container">
+    <div class="invalidated-data" matTooltip="The batch service was unable to check the validity of the task counts. Use with caution." *ngIf="!taskCountValidated">
+        <i class="fa fa-warning"></i>Task count might not be accurate
+    </div>
+</div>
 <div class="progress-container">
     <div class="progress" *ngIf="progress" title="Job completion progress">
         <mat-progress-bar class="progress-bar" color="primary" mode="buffer" [value]="progress.completed" [bufferValue]="progress.buffer">
