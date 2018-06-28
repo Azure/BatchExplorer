@@ -52,6 +52,7 @@ export class RefreshButtonComponent implements OnDestroy {
             this._refreshSub.unsubscribe();
         }
     }
+
     @autobind()
     public onClick() {
         this.status = RefreshStatus.Refreshing;
@@ -70,4 +71,5 @@ export class RefreshButtonComponent implements OnDestroy {
             },
         );
     }
+
 }
