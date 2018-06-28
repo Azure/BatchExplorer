@@ -3,10 +3,11 @@
         <i class="fa fa-star"></i> {{title}}
     </div>
     <div bl-dropdown-content>
-        <bl-clickable *ngFor="let favorite of favorites | async;trackBy: trackPinnned" 
-            class="dropdown-item" 
+        <bl-clickable *ngFor="let favorite of favorites | async;trackBy: trackPinnned"
+            class="dropdown-item"
             (do)="gotoFavorite(favorite)"
             [class.selected]="favorite.url === currentUrl"
+            (contextmenu)="onContextMenu(favorite)"
             [title]="favorite.id">
             <i class="fa" [ngClass]="entityIcon(favorite)"></i>
             <div class="main">
