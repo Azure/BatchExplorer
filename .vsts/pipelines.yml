@@ -5,7 +5,7 @@ phases:
     - script: |
         set -e
         apt-get update
-        apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 xvfb libgtk-3-0
+        apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 dbus xvfb libgtk-3-0
         Xvfb :99 &
         export DISPLAY=:99
 
