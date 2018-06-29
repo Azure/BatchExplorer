@@ -31,12 +31,12 @@ phases:
     - task: PublishTestResults@2
       inputs:
         testRunner: 'JUnit'
-        testResultsFiles: ./coverage/TESTS*.xml
+        testResultsFiles: $(System.DefaultWorkingDirectory)/coverage/TESTS*.xml
 
     - task: PublishCodeCoverageResults@1
       inputs:
         codeCoverageTool: cobertura
-        summaryFileLocation: ./coverage/cobertura.xml
+        summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura.xml
 
     - script: npm run build-and-pack
       displayName: Build and pack
