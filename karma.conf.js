@@ -85,5 +85,8 @@ module.exports = function(config) {
             json: "./coverage/coverage.json",
             html: "./coverage/html"
         },
+        junitReporter: {
+            outputDir: "./coverage"
+        }
     });
 };
