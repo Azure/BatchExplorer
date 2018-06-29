@@ -35,7 +35,8 @@ phases:
 
     - task: PublishCodeCoverageResults@1
       inputs:
-        summaryFileLocation: ./coverage/coverage.json
+        codeCoverageTool: cobertura
+        summaryFileLocation: ./coverage/cobertura.xml
 
     - script: npm run build-and-pack
       displayName: Build and pack
