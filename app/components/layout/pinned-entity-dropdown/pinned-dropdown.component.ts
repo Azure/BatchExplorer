@@ -3,7 +3,7 @@ import { NavigationEnd, Router } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { MouseButton, PinnableEntity, PinnedEntityType} from "@batch-flask/core";
+import { MouseButton, PinnableEntity, PinnedEntityType } from "@batch-flask/core";
 import { ContextMenu, ContextMenuItem, ContextMenuService, DropdownComponent } from "@batch-flask/ui";
 import { AccountService, PinnedEntityService } from "app/services";
 
