@@ -25,6 +25,7 @@ phases:
 
     - script: |
         set -e
+        echo "PATH $PATH"
         pyenv --version
         python --version
         npm install -g codecov
