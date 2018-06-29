@@ -24,9 +24,8 @@ phases:
       displayName: Install dependencies
 
     - script: |
-        Xvfb :99 &
         export DISPLAY=:99
-        npm run test
+        xvfb-run npm run test
       displayName: Run tests
 
     - task: PublishTestResults@2
@@ -43,3 +42,9 @@ phases:
 
     - script: npm run lint
       displayName: Lint
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: ./release
+        artifactName: osx
+        artifactType: Container
