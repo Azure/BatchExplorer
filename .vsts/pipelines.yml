@@ -17,8 +17,11 @@ phases:
         export PATH="$PYENV_ROOT/bin:$PATH"
         pyenv --version
         pyenv install 3.6.6
+        pyenv use 3.6.6
         python --version
+        echo "Py env root is $PYENV_ROOT"
         echo "##vso[task.prependpath]$PYENV_ROOT"
+      displayName: Install python
 
     - script: |
         set -e
