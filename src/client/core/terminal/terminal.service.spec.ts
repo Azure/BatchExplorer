@@ -11,6 +11,7 @@ describe("TerminalService", () => {
     let spawnSpy: jasmine.Spy;
     let platform: Platform;
     let isDebian;
+    let ipcMainSpy;
     const envTemp = process.env;
 
     beforeEach(() => {
@@ -37,7 +38,11 @@ describe("TerminalService", () => {
                 }
             }),
         };
-        terminalService = new TerminalService(osServiceSpy, fsServiceSpy);
+
+        ipcMainSpy =  {
+            on: () => null,
+        };
+        terminalService = new TerminalService(osServiceSpy, fsServiceSpy, ipcMainSpy);
     });
 
     afterEach(() => {

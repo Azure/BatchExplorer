@@ -1,5 +1,8 @@
+import { Injectable } from "@angular/core";
 import { OSService } from "@batch-flask/ui/electron";
 import * as cp from "child_process";
+import { BlIpcMain } from "client/core/bl-ipc-main";
+import { Application, IpcEvent } from "common/constants";
 import { FileSystem } from "../fs";
 
 interface TerminalDefinition {
@@ -52,13 +55,21 @@ const supportedTerminals: {[key in SupportedTerminal]: TerminalDefinition} = {
     },
 };
 
+@Injectable()
 export class TerminalService {
     public _serviceBrand: any;
 
     constructor(
         private osService: OSService,
         private fs: FileSystem,
-    ) {}
+        ipcMain: BlIpcMain,
+    ) {
+        ipcMain.on(IpcEvent.launchApplication, ({name, args}) => {
+            if (name === Application.terminal) {
+                return this.runInTerminal(args.command);
+            }
+        });
+    }
 
     public runInTerminal(command: string, terminal?: string, envVars?: StringMap<string>): Promise<number> {
         return new Promise<number>(async (resolve, reject) => {

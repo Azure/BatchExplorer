@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
 import * as moment from "moment";
@@ -28,7 +28,7 @@ enum CredentialSource {
     selector: "bl-node-connect",
     templateUrl: "node-connect.html",
 })
-export class NodeConnectComponent implements OnInit, OnChanges {
+export class NodeConnectComponent implements OnInit {
     public CredentialSource = CredentialSource;
     public credentialSource: CredentialSource = null;
     public credentials: AddNodeUserAttributes = null;
@@ -54,14 +54,22 @@ export class NodeConnectComponent implements OnInit, OnChanges {
         if (pool) {
             this.hasIp = Boolean(pool.virtualMachineConfiguration);
             this.linux = PoolUtils.isLinux(this.pool);
+            this._loadConnectionData();
         }
     }
     public get pool() { return this._pool; }
 
     @Input()
-    public node: Node;
+    public set node(node: Node) {
+        this._node = node;
+        if (node) {
+            this._loadConnectionData();
+        }
+    }
+    public get node() { return this._node; }
 
     private _pool: Pool;
+    private _node: Node;
 
     constructor(
         public sidebarRef: SidebarRef<any>,
@@ -86,12 +94,6 @@ export class NodeConnectComponent implements OnInit, OnChanges {
         });
 
         this.sshKeyService.hasLocalPublicKey().subscribe(hasKey => this.hasLocalPublicKey = hasKey);
-    }
-
-    public ngOnChanges(inputs) {
-        if (inputs.pool || inputs.node) {
-            this._loadConnectionData();
-        }
     }
 
     @autobind()
@@ -185,6 +187,7 @@ export class NodeConnectComponent implements OnInit, OnChanges {
      * Load either the RDP file or the node connection settings depending if the VM is IAAS or PAAS
      */
     private _loadConnectionData() {
+        if (!this.pool || !this.node) { return; }
         if (PoolUtils.isPaas(this.pool)) {
             this.nodeService.getRemoteDesktop(this.pool.id, this.node.id).subscribe((rdp) => {
                 this.rdpContent = rdp;

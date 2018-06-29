@@ -44,7 +44,6 @@ export class BatchLabsApplication {
     public recoverWindow = new RecoverWindow(this);
     public windows = new MainWindowManager(this);
     public pythonServer = new PythonRpcServerProcess();
-    public terminalService = new TerminalService(new OSService(), new FileSystem());
     public aadService: AADService;
     public state: Observable<BatchLabsState>;
     public proxySettings: ProxySettingsManager;
@@ -72,11 +71,6 @@ export class BatchLabsApplication {
         });
         ipcMain.on(IpcEvent.logoutAndLogin, () => {
             return this.logoutAndLogin();
-        });
-        ipcMain.on(IpcEvent.launchApplication, ({name, args}) => {
-            if (name === Application.terminal) {
-                return this.terminalService.runInTerminal(args.command);
-            }
         });
         this.azureEnvironmentObs = this._azureEnvironment.asObservable();
         this._loadAzureEnviornment();
