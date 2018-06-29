@@ -5,10 +5,10 @@ phases:
     - script: |
         set -e
         apt-get update
-        apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 dbus xvfb libgtk-3-0
-        export DISPLAY=:99.0
-        sh -e /etc/init.d/xvfb start &
-        sleep 3
+        apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 xvfb libgtk-3-0 libnss3-dev libasound2
+        Xvfb :99 &
+        export DISPLAY=:99
+
       displayName: Install Linux packages
 
     - task: NodeTool@0
@@ -21,8 +21,7 @@ phases:
 
     - script: |
         npm install -g codecov
-        npm install -g yarn
-        yarn install
+        npm install
         pip install -r python/requirements.txt
       displayName: Install dependencies
 
