@@ -18,7 +18,7 @@ phases:
         pyenv --version
         pyenv install 3.6.6
         python --version
-        Write-Host ("##vso[task.setvariable variable=PATH;]$PATH")
+        echo "##vso[task.prependpath]$PYENV_ROOT"
 
     - script: |
         set -e
