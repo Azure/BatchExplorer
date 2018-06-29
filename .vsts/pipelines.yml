@@ -13,7 +13,7 @@ steps:
       node --version
       npm install -g yarn
       yarn install
-      pip install -r python/requirement.txt
+      pip install -r python/requirements.txt
     displayName: Install dependencies
 
   - script: npm run test
