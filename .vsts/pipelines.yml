@@ -3,13 +3,7 @@ phases:
   - phase: Linux
     queue: Hosted Linux Preview
     steps:
-    - task: NodeTool@0
-      inputs:
-        versionSpec: '8.11.x'
-
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.6.x'
+    - template: ./dependencies.yml
     - script: |
         set -e
         apt-get update
@@ -38,6 +32,7 @@ phases:
       inputs:
         codeCoverageTool: cobertura
         summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura.xml
+        reportDirectory: $(System.DefaultWorkingDirectory)/coverage/html
 
     - script: npm run build-and-pack
       displayName: Build and pack
