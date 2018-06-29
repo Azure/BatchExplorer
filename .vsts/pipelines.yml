@@ -84,7 +84,3 @@ phases:
       pathtoPublish: ./release
       artifactName: osx
       artifactType: Container
-
-steps:
-  - script: echo Do something
-      displayName: Common step?
