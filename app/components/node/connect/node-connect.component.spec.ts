@@ -110,7 +110,7 @@ describe("NodeConnectComponent", () => {
         expect(buttons.length).toBe(3);
         expect(buttons[0].nativeElement.textContent).toContain("Generate");
         expect(buttons[1].nativeElement.textContent).toContain("Specify");
-        expect(buttons[2].nativeElement.textContent).toContain("QuickStart");
+        expect(buttons[2].nativeElement.textContent).toContain("Quick Connect");
     });
 
     it("should not show more info", () => {
