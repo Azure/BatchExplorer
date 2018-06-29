@@ -1,11 +1,11 @@
 steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: '8.11.3'
+      versionSpec: '8.11.x'
 
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.6.5'
+      versionSpec: '3.6.x'
 
   - script: |
       python --version
