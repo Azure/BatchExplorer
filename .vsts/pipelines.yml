@@ -7,7 +7,7 @@ phases:
     - script: |
         set -e
         apt-get update
-        apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 dbus xvfb libgtk-3-0 python3-dev
+        apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 dbus xvfb libgtk-3-0 python3 python3-dev
 
       displayName: Install Linux packages
 
@@ -15,7 +15,7 @@ phases:
         set -e
         npm install -g codecov
         npm install
-        pip install -r python/requirements.txt
+        pip3 install -r python/requirements.txt
       displayName: Install dependencies
 
     - script: |
