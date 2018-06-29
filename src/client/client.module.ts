@@ -15,9 +15,21 @@ import { AUTO_UPDATER, BatchLabsApplication } from "./core/batchlabs-application
 /**
  * List services here that needs to be create even if they are not injected anywhere
  */
-const servicesToIntialize = [
+const servicesToInitialize = [
     TerminalService,
 ];
+
+const setupAppInitializer = () => {
+    return servicesToInitialize.map((x) => {
+        return {
+            provide: APP_INITIALIZER,
+            // tslint:disable-next-line:no-empty
+            useFactory: () => () => {},
+            deps: [x],
+            multi: true,
+        };
+    });
+};
 
 /**
  * BatchLabs client module. This is the root module for managing dependency injection in the Client process
@@ -50,16 +62,4 @@ export class BatchLabsClientModule {
     public ngDoBootstrap() {
         // Nothing to do
     }
-}
-
-function setupAppInitializer() {
-    return servicesToIntialize.map((x) => {
-        return {
-            provide: APP_INITIALIZER,
-            // tslint:disable-next-line:no-empty
-            useFactory: () => () => {},
-            deps: [x],
-            multi: true,
-        };
-    });
 }
