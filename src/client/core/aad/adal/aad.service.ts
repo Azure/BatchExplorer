@@ -1,14 +1,16 @@
 
-import { AccessToken, ServerError } from "@batch-flask/core";
+import { Inject, Injectable, forwardRef } from "@angular/core";
+import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
 import { fetch, log } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core/batchlabs-application";
-import { localStorage } from "client/core/local-storage";
+import { BlIpcMain } from "client/core/bl-ipc-main";
+import { LocalDataStore } from "client/core/local-data-store";
 import { Constants } from "common";
+import { IpcEvent } from "common/constants";
 import { Deferred } from "common/deferred";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
 import {
-    AccessTokenCache,
     AccessTokenError, AccessTokenErrorResult, AccessTokenService,
 } from "../access-token";
 import { AuthenticationService, AuthenticationState, AuthorizeResult, LogoutError } from "../authentication";
@@ -22,6 +24,7 @@ const adalConfig: AADConfig = {
     logoutRedirectUri: "urn:ietf:wg:oauth:2.0:oob/logout",
 };
 
+@Injectable()
 export class AADService {
     public currentUser: Observable<AADUser>;
 
@@ -35,18 +38,25 @@ export class AADService {
     private _userDecoder: UserDecoder;
     private _newAccessTokenSubject: StringMap<Deferred<AccessToken>> = {};
 
-    private _tokenCache = new AccessTokenCache(localStorage);
-
     private _currentUser = new BehaviorSubject<AADUser>(null);
     private _tenantsIds = new BehaviorSubject<string[]>([]);
+    private _tokenCache: AccessTokenCache;
 
-    constructor(private app: BatchLabsApplication) {
+    constructor(
+        @Inject(forwardRef(() => BatchLabsApplication)) private app: BatchLabsApplication,
+        private localStorage: LocalDataStore,
+        ipcMain: BlIpcMain) {
+        this._tokenCache = new AccessTokenCache(localStorage);
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
         this.tenantsIds = this._tenantsIds.asObservable();
         this.userAuthorization = new AuthenticationService(this.app, adalConfig);
         this._accessTokenService = new AccessTokenService(app, adalConfig);
         this.authenticationState = this._authenticationState.asObservable();
+
+        ipcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {
+            return this.accessTokenData(tenantId, resource);
+        });
 
         this.userAuthorization.state.subscribe((state) => {
             this._authenticationState.next(state);
@@ -88,12 +98,11 @@ export class AADService {
     }
 
     public async logout() {
-        localStorage.removeItem(Constants.localStorageKey.currentUser);
-        localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
+        this.localStorage.removeItem(Constants.localStorageKey.currentUser);
         this._tokenCache.clear();
         this._tenantsIds.next([]);
         this._clearUserSpecificCache();
-        for (const [_, window] of this.app.windows) {
+        for (const [, window] of this.app.windows) {
             window.webContents.session.clearStorageData({ storages: ["localStorage"] });
         }
         this.app.windows.closeAll();
@@ -129,13 +138,13 @@ export class AADService {
      * Look into the localStorage to see if there is a user to be loaded
      */
     private async _retrieveUserFromLocalStorage() {
-        const userStr = await localStorage.getItem(Constants.localStorageKey.currentUser);
+        const userStr = await this.localStorage.getItem<string>(Constants.localStorageKey.currentUser);
         if (userStr) {
             try {
                 const user = JSON.parse(userStr);
                 this._currentUser.next(user);
             } catch (e) {
-                localStorage.removeItem(Constants.localStorageKey.currentUser);
+                this.localStorage.removeItem(Constants.localStorageKey.currentUser);
             }
         }
     }
@@ -227,7 +236,7 @@ export class AADService {
             this._clearUserSpecificCache();
         }
         this._currentUser.next(user);
-        localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(user));
+        this.localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(user));
     }
 
     private _processAccessToken(tenantId: string, resource: string, token: AccessToken) {
@@ -255,14 +264,14 @@ export class AADService {
         const url = `${this.app.azureEnvironment.armUrl}tenants?api-version=${Constants.ApiVersion.arm}`;
         const response = await fetch(url, options);
         log.info("Listing tenants response", response.status, response.statusText);
-        const { value }  = await response.json();
+        const { value } = await response.json();
         return value.map(x => x.tenantId);
     }
 
     private _clearUserSpecificCache() {
-        localStorage.removeItem(Constants.localStorageKey.subscriptions);
-        localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
-        localStorage.removeItem(Constants.localStorageKey.selectedAccountId);
+        this.localStorage.removeItem(Constants.localStorageKey.subscriptions);
+        this.localStorage.removeItem(Constants.localStorageKey.selectedAccountId);
+        this._tokenCache.clear();
     }
 
     private async _refreshAllAccessTokens() {

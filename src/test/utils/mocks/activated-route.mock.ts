@@ -1,6 +1,4 @@
-import { Observable } from "rxjs";
-
-import { Partial } from "app/utils";
+import { Observable, of } from "rxjs";
 
 export interface ActivatedRouteMockAttributes {
     params: Observable<any>;
@@ -12,7 +10,7 @@ export class ActivatedRouteMock implements ActivatedRouteMockAttributes {
     public queryParams: Observable<any>;
 
     constructor(attrs: Partial<ActivatedRouteMockAttributes> = {}) {
-        this.params = attrs.params || Observable.of({});
-        this.queryParams = attrs.queryParams || Observable.of({});
+        this.params = attrs.params || of({});
+        this.queryParams = attrs.queryParams || of({});
     }
 }

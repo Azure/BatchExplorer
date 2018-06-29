@@ -26,6 +26,7 @@ export interface AccessTokenErrorResult {
  */
 export class AccessTokenService {
     constructor(private app: BatchLabsApplication, private config: AADConfig) {
+
     }
 
     /**

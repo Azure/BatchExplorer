@@ -1,9 +1,6 @@
 import * as moment from "moment";
 
-import { AccessToken } from "@batch-flask/core";
-import { localStorage } from "client/core/local-storage";
-import { Constants } from "common";
-import { mockNodeStorage } from "test/utils/mocks/storage";
+import { AccessToken, DataStoreKeys, InMemoryDataStore } from "@batch-flask/core";
 import { AccessTokenCache } from "./access-token-cache";
 
 const tenant1 = "tenant-1";
@@ -20,15 +17,16 @@ const token1 = {
 
 describe("AccessTokenCache", () => {
     let cache: AccessTokenCache;
+    let localStorageSpy: InMemoryDataStore;
 
     describe("when using localstorage", () => {
+        localStorageSpy = new InMemoryDataStore();
         beforeEach(() => {
-            mockNodeStorage(localStorage);
-            cache = new AccessTokenCache(localStorage);
+            cache = new AccessTokenCache(localStorageSpy as any);
         });
 
         it("doesn't set the access token if not in localstorage", () => {
-            localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
+            localStorageSpy.removeItem(DataStoreKeys.currentAccessToken);
             cache.init();
             expect((cache as any)._tokens).toEqual({});
         });
@@ -39,7 +37,7 @@ describe("AccessTokenCache", () => {
                     [resource1]: { access_token: "sometoken", expires_on: moment().subtract(1, "hour") },
                 },
             };
-            localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(token));
+            localStorageSpy.setItem(DataStoreKeys.currentAccessToken, JSON.stringify(token));
             cache.init();
             expect(cache.getToken(tenant1, resource1)).toBeFalsy();
         });
@@ -50,7 +48,7 @@ describe("AccessTokenCache", () => {
                     [resource1]: token1,
                 },
             };
-            localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(data));
+            localStorageSpy.setItem(DataStoreKeys.currentAccessToken, JSON.stringify(data));
             await cache.init();
             const token = cache.getToken(tenant1, resource1);
             expect(token).not.toBeFalsy();
@@ -61,7 +59,7 @@ describe("AccessTokenCache", () => {
 
     describe("without local storage(memory only)", () => {
         beforeEach(() => {
-            cache = new AccessTokenCache();
+            cache = new AccessTokenCache(localStorageSpy as any);
         });
 
         it("save and retrieve tokens", () => {

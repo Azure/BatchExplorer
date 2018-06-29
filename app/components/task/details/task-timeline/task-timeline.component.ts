@@ -13,13 +13,12 @@ import "./task-timeline.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskTimelineComponent {
-    @Input()
-    public task: Task;
+    @Input() public task: Task;
 
-    @Input()
-    public job: Job;
+    @Input() public job: Job;
 
     constructor(private router: Router) { }
+
     public get hasPreparationTask() {
         return Boolean(this.job.jobPreparationTask);
     }

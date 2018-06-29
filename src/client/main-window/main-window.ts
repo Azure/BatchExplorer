@@ -86,8 +86,8 @@ export class MainWindow extends GenericWindow {
         anyWindow.batchLabsApp = this.batchLabsApp;
         anyWindow.autoUpdater = this.batchLabsApp.autoUpdater;
         anyWindow.authenticationWindow = this.batchLabsApp.authenticationWindow;
-        anyWindow.fs = new FileSystem();
-        anyWindow.localFileStorage = new LocalFileStorage();
+        const fs = anyWindow.fs = new FileSystem();
+        anyWindow.localFileStorage = new LocalFileStorage(fs);
         anyWindow.clientConstants = Constants;
 
         // Open the DevTools.
