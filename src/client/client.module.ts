@@ -54,7 +54,7 @@ const setupAppInitializer = () => {
         // TODO-TIM move
         OSService,
 
-        ...servicesToIntialize,
+        ...servicesToInitialize,
         ...setupAppInitializer(),
     ],
 })
