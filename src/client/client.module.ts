@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { ServerModule } from "@angular/platform-server";
 import { OSService } from "@batch-flask/ui/electron/os.service";
 import { AADService } from "client/core/aad";
@@ -19,17 +19,12 @@ const servicesToInitialize = [
     TerminalService,
 ];
 
-const setupAppInitializer = () => {
-    return servicesToInitialize.map((x) => {
-        return {
-            provide: APP_INITIALIZER,
-            // tslint:disable-next-line:no-empty
-            useFactory: () => () => {},
-            deps: [x],
-            multi: true,
-        };
-    });
-};
+// make sure that the services are created on app start
+export function initializeServices(injector) {
+    for (const service of servicesToInitialize) {
+        injector.get(service);
+    }
+}
 
 /**
  * BatchLabs client module. This is the root module for managing dependency injection in the Client process
@@ -55,7 +50,6 @@ const setupAppInitializer = () => {
         OSService,
 
         ...servicesToInitialize,
-        ...setupAppInitializer(),
     ],
 })
 export class BatchLabsClientModule {

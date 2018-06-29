@@ -5,7 +5,7 @@ import { autoUpdater } from "electron-updater";
 import { platformDynamicServer } from "@angular/platform-server";
 import { log } from "@batch-flask/utils";
 import { Constants } from "./client-constants";
-import { BatchLabsClientModule } from "./client.module";
+import { BatchLabsClientModule, initializeServices } from "./client.module";
 import { listenToSelectCertifcateEvent } from "./core";
 import {  BatchLabsApplication } from "./core/batchlabs-application";
 
@@ -56,6 +56,7 @@ export async function startBatchLabs() {
 
     const module = await platformDynamicServer().bootstrapModule(BatchLabsClientModule);
     const batchLabsApp = module.injector.get(BatchLabsApplication);
+    initializeServices(module.injector);
 
     setupSingleInstance(batchLabsApp);
 
