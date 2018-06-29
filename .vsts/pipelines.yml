@@ -44,7 +44,8 @@ phases:
       displayName: Lint
 
     - task: PublishBuildArtifacts@1
+      displayName: Publish artifacts
       inputs:
         pathtoPublish: ./release
-        artifactName: osx
+        artifactName: linux
         artifactType: Container
