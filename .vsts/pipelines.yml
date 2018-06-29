@@ -3,13 +3,6 @@ phases:
   - phase: Linux
     queue: Hosted Linux Preview
     steps:
-    - script: |
-        set -e
-        apt-get update
-        apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 dbus xvfb libgtk-3-0 python3-dev
-
-      displayName: Install Linux packages
-
     - task: NodeTool@0
       inputs:
         versionSpec: '8.11.x'
@@ -17,6 +10,12 @@ phases:
     - task: UsePythonVersion@0
       inputs:
         versionSpec: '3.6.x'
+    - script: |
+        set -e
+        apt-get update
+        apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 dbus xvfb libgtk-3-0 python3-dev
+
+      displayName: Install Linux packages
 
     - script: |
         set -e
