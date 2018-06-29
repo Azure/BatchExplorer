@@ -18,7 +18,7 @@ export class CertificateCreateDialogComponent {
     public file: File;
     public form: FormGroup;
     public title = "Add certificate";
-    
+
     constructor(
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<CertificateCreateDialogComponent>,
