@@ -87,4 +87,4 @@ phases:
 
 steps:
   - script: echo Do something
-      displayName: Common step?
+    displayName: Common step?
