@@ -18,6 +18,7 @@ phases:
         versionSpec: '3.6.x'
 
     - script: |
+        set -e
         npm install -g codecov
         npm install
         pip install -r python/requirements.txt
@@ -50,3 +51,39 @@ phases:
         pathtoPublish: ./release
         artifactName: linux
         artifactType: Container
+
+# Mac os build
+- phase: macOS
+  queue: Hosted macOS Preview
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '8.11.x'
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.6.x'
+
+  - script: |
+      set -e
+      npm install -g codecov
+      npm install
+      pip install -r python/requirements.txt
+    displayName: Install dependencies
+
+  - script: npm run build-and-pack
+    displayName: Build and pack
+
+  - script: npm run lint
+    displayName: Lint
+
+  - task: PublishBuildArtifacts@1
+    displayName: Publish artifacts
+    inputs:
+      pathtoPublish: ./release
+      artifactName: osx
+      artifactType: Container
+
+steps:
+  - script: echo Do something
+      displayName: Common step?
