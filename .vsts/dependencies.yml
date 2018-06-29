@@ -1,4 +1,4 @@
-step:
+steps:
   - task: NodeTool@0
       inputs:
         versionSpec: '8.11.x'
