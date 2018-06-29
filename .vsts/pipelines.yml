@@ -1,0 +1,23 @@
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '8.11.3'
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.6.5'
+
+  - script: |
+      python --version
+      pip --version
+      node --version
+      npm install -g yarn
+      yarn install
+      pip install -r python/requirement.txt
+    displayName: Install dependencies
+
+  - script: npm run test
+    displayName: Run tests
+
+  - script: npm run build-and-pack
+    displayName: Build and pack
