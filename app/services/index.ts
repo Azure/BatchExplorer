@@ -26,6 +26,7 @@ export * from "./settings.service";
 export * from "./ssh-key.service";
 export * from "./subscription.service";
 export * from "./vm-size.service";
+export * from "./workspace.service";
 export * from "./adal";
 export * from "./python-rpc";
 export * from "./storage-account.service";

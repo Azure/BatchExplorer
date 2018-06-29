@@ -12,7 +12,7 @@ import {
     AccountService, AuthorizationHttpService, AutoscaleFormulaService,
     BatchLabsService, CommandService, NavigatorService, NcjTemplateService,
     NodeService, PredefinedFormulaService, PricingService, PythonRpcService, SSHKeyService,
-    SettingsService, SubscriptionService, ThemeService, VmSizeService,
+    SettingsService, SubscriptionService, ThemeService, VmSizeService, WorkspaceService,
 } from "app/services";
 
 @Component({
@@ -46,9 +46,11 @@ export class AppComponent implements OnInit {
         private pricingService: PricingService,
         private ncjTemplateService: NcjTemplateService,
         private predefinedFormulaService: PredefinedFormulaService,
+        private workspaceService: WorkspaceService,
     ) {
         this.autoscaleFormulaService.init();
         this.settingsService.init();
+        this.workspaceService.init();
         this.sshKeyService.init();
         this.commandService.init();
         this.pricingService.init();
@@ -62,7 +64,11 @@ export class AppComponent implements OnInit {
         monacoLoader.init(batchLabsService.rootPath);
 
         Observable
-            .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
+            .combineLatest(
+                accountService.accountLoaded,
+                settingsService.hasSettingsLoaded,
+                workspaceService.haveWorkspacesLoaded,
+            )
             .subscribe((loadedArray) => {
                 this.isAppReady = loadedArray[0] && loadedArray[1];
             });
@@ -77,6 +83,7 @@ export class AppComponent implements OnInit {
         this.route.queryParams.subscribe(({ fullscreen }) => {
             this.fullscreen = Boolean(fullscreen);
         });
+
         permissionService.setUserPermissionProvider(() => {
             return authHttpService.getResourcePermission();
         });
