@@ -11,6 +11,7 @@ export class WorkspaceService {
     private _haveWorkspacesLoaded: BehaviorSubject<boolean>;
 
     constructor() {
+        // todo: move these in-line when i have something interesting to put into the constructor
         this._workspaces = new BehaviorSubject<List<Workspace>>(List([]));
         this._currentWorkspace = new BehaviorSubject<Workspace>(null);
         this._haveWorkspacesLoaded = new BehaviorSubject<boolean>(false);
@@ -29,7 +30,6 @@ export class WorkspaceService {
     }
 
     public init() {
-        console.log("init workspace settings");
         this.loadWorkspaces();
     }
 
@@ -39,6 +39,7 @@ export class WorkspaceService {
     }
 
     // guessing these will be the various json templates that we define.
+    // maybe load all from a folder? would have to parse JSON and read the ID and Name from each one.
     private loadWorkspaces() {
         const workspaces = [
             new Workspace("admin", "Developer workspace"),
