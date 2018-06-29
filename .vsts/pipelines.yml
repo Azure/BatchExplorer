@@ -1,23 +1,39 @@
-steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '8.11.x'
+phases:
+  - phase: Linux
+    queue: Hosted Linux Preview
+    steps:
+    - script: |
+      set -e
+      apt-get update
+      apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 dbus xvfb libgtk-3-0
+      cp build/tfs/linux/x64/xvfb.init /etc/init.d/xvfb
+      chmod +x /etc/init.d/xvfb
+      update-rc.d xvfb defaults
+      ln -sf /bin/dbus-daemon /usr/bin/dbus-daemon
+      service xvfb start
+      service dbus start
+      displayName: Install Linux packages
 
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.6.x'
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '8.11.x'
 
-  - script: |
-      python --version
-      pip --version
-      node --version
-      npm install -g yarn
-      yarn install
-      pip install -r python/requirements.txt
-    displayName: Install dependencies
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.6.x'
 
-  - script: npm run test
-    displayName: Run tests
+    - script: |
+        npm install -g codecov
+        npm install -g yarn
+        yarn install
+        pip install -r python/requirements.txt
+      displayName: Install dependencies
 
-  - script: npm run build-and-pack
-    displayName: Build and pack
+    - script: npm run test
+      displayName: Run tests
+
+    - script: npm run build-and-pack
+      displayName: Build and pack
+
+    - script: npm run lint
+      displayName: Lint
