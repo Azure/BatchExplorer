@@ -1,10 +1,10 @@
 import { Type } from "@angular/core";
-import { Iterable, List, OrderedSet } from "immutable";
+import { List, OrderedSet } from "immutable";
 import { Observable } from "rxjs";
 
 import { DataCache } from "app/services/core/data-cache";
-import { GenericGetter, GenericGetterConfig } from "./generic-getter";
-import { ContinuationToken, ListOptions, ListOptionsAttributes } from "./list-options";
+import { GenericGetter, GenericGetterConfig } from "../generic-getter";
+import { ContinuationToken, ListOptions, ListOptionsAttributes } from "../list-options";
 
 export type FetchAllProgressCallback = (count: number) => void;
 
@@ -70,23 +70,6 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
     private _fetchNext(token: ContinuationToken): Observable<ListResponse<TEntity>> {
         const cache = this.getCache(token.params);
         return this.listNext(token).map(x => this._processItems(cache, x, token.params, token.options, false));
-    }
-
-    private _fetchRemaining(
-        nextLink: ContinuationToken,
-        currentCount: number,
-        progress?: FetchAllProgressCallback): Observable<Iterable<any, TEntity>> {
-        if (progress) {
-            progress(currentCount);
-        }
-        if (!nextLink) {
-            return Observable.of(List([]));
-        }
-        return this._fetchNext(nextLink).flatMap((response) => {
-            const newCount = currentCount + response.items.size;
-            return this._fetchRemaining(response.nextLink, newCount, progress)
-                .map(remainingItems => response.items.concat(remainingItems));
-        }).share();
     }
 
     private _processItems(
