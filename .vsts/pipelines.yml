@@ -1,7 +1,7 @@
 name: $(SourceBranchName)$(Rev:.r)
 resources:
   containers:
-    - name: linux-build
+    - container: linux-build
       image: timotheeguerin/batchlabs-build-linux
 
 phases:
