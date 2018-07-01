@@ -103,7 +103,7 @@ resources:
 phases:
 - phase: phase_container
   queue:
-    name: default
+    name: Hosted
     container: dev1
   steps:
   - script: printenv
