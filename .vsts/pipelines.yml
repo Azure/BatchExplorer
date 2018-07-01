@@ -1,33 +1,33 @@
 name: $(SourceBranchName)$(Rev:.r)
-resources:
-  containers:
-    - container: linux-build
-      image: timotheeguerin/batchlabs-build-linux
-
 phases:
   - phase: Linux
-    queue:
-      name: Hosted Linux Preview
-      container: linux-build
+    queue: Hosted Linux Preview
     steps:
-    # - template: ./dependencies.yml
-    # - script: |
-    #     set -e
-    #     apt-get update
-    #     apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 dbus xvfb libgtk-3-0
-
-    #   displayName: Install Linux packages
+    - template: ./dependencies.yml
     - script: |
         set -e
-        # pyenv install 3.6.6
-        # pyenv global 3.6.6
+        apt-get update
+        apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 dbus xvfb libgtk-3-0
+
+      displayName: Install Linux packages
+    - script: |
+        set -e
+        export PYENV_ROOT="$(Agent.WorkFolder)/.pyenv"
+        git clone https://github.com/pyenv/pyenv.git $PYENV_ROOT
+        export PATH="$PYENV_ROOT/bin:$PATH"
+        pyenv --version
+        pyenv install 3.6.6
+        pyenv global 3.6.6
         python --version
-        which python
+        echo "Py env root is $PYENV_ROOT"
+        ls $(Agent.WorkFolder)/.pyenv
+        echo "##vso[task.prependpath]$PYENV_ROOT"
       displayName: Install python
 
     - script: |
         set -e
         echo "PATH $PATH"
+        ls $(Agent.WorkFolder)/.pyenv
         pyenv --version
         python --version
         npm install -g codecov
