@@ -7,7 +7,7 @@ resources:
 phases:
   - phase: Linux
     queue:
-      name: default
+      name: Default
       container: linux-build
     steps:
     - script: printenv
