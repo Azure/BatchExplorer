@@ -1,98 +1,11 @@
-name: $(SourceBranchName)$(Rev:.r)
-resources:
-  containers:
-    - container: linux-build
-      image: timotheeguerin/batchlabs-build-linux
-
+# resources:
+containers:
+  - container: dev1
+    image: ubuntu:16.04
 phases:
-  - phase: Linux
-    queue:
-      name: Default
-      container: linux-build
-    steps:
-    - script: printenv
-    # - template: ./dependencies.yml
-    # - script: |
-    #     set -e
-    #     apt-get update
-    #     apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 dbus xvfb libgtk-3-0
-
-    #   displayName: Install Linux packages
-    - script: |
-        set -e
-        # pyenv install 3.6.6
-        # pyenv global 3.6.6
-        python --version
-        which python
-      displayName: Install python
-
-    - script: |
-        set -e
-        echo "PATH $PATH"
-        pyenv --version
-        python --version
-        npm install -g codecov
-        npm install
-        pip3 install -r python/requirements.txt
-      displayName: Install dependencies
-
-    - script: |
-        export DISPLAY=:99
-        xvfb-run npm run test
-      displayName: Run tests
-
-    - task: PublishTestResults@2
-      inputs:
-        testRunner: 'JUnit'
-        testResultsFiles: $(System.DefaultWorkingDirectory)/coverage/TESTS*.xml
-
-    - task: PublishCodeCoverageResults@1
-      inputs:
-        codeCoverageTool: cobertura
-        summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura.xml
-        reportDirectory: $(System.DefaultWorkingDirectory)/coverage/html
-
-    - script: npm run build-and-pack
-      displayName: Build and pack
-
-    - script: npm run lint
-      displayName: Lint
-
-    - task: PublishBuildArtifacts@1
-      displayName: Publish artifacts
-      inputs:
-        pathtoPublish: ./release
-        artifactName: linux
-        artifactType: Container
-
-# Mac os build
-  # - phase: macOS
-  #   queue: Hosted macOS Preview
-  #   steps:
-  #   - task: NodeTool@0
-  #     inputs:
-  #       versionSpec: '8.11.x'
-
-  #   - task: UsePythonVersion@0
-  #     inputs:
-  #       versionSpec: '3.6.x'
-
-  #   - script: |
-  #       set -e
-  #       npm install -g codecov
-  #       npm install
-  #       pip install -r python/requirements.txt
-  #     displayName: Install dependencies
-
-  #   - script: npm run build-and-pack
-  #     displayName: Build and pack
-
-  #   - script: npm run lint
-  #     displayName: Lint
-
-  #   - task: PublishBuildArtifacts@1
-  #     displayName: Publish artifacts
-  #     inputs:
-  #       pathtoPublish: ./release
-  #       artifactName: osx
-  #       artifactType: Container
+- phase: phase_container
+  queue:
+    name: default
+    container: dev1
+  steps:
+  - script: printenv
