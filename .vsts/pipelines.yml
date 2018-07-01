@@ -18,10 +18,10 @@ phases:
         pyenv --version
         pyenv install 3.6.6
         pyenv global 3.6.6
-        eval "$(pyenv init -)"
         python --version
         echo "Path is $PATH"
         echo "##vso[task.prependpath]$PYENV_ROOT/bin"
+        echo "##vso[task.prependpath]$PYENV_ROOT/shims"
       displayName: Install python
 
     - script: |
