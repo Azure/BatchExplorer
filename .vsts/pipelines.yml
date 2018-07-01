@@ -10,6 +10,7 @@ phases:
       name: Hosted Linux Preview
       container: linux-build
     steps:
+    - script: printenv
     # - template: ./dependencies.yml
     # - script: |
     #     set -e
