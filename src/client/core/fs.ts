@@ -12,6 +12,7 @@ export interface CommonFolders {
     downloads: string;
     appData: string;
     userData: string;
+    home: string;
 }
 
 @Injectable()
@@ -27,6 +28,7 @@ export class FileSystem {
                 downloads: app.getPath("downloads"),
                 appData: app.getPath("appData"),
                 userData: app.getPath("userData"),
+                home: app.getPath("home"),
             };
         }
     }
