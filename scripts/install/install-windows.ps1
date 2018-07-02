@@ -91,8 +91,6 @@ function confirm-node-version() {
     }
 
     $major = [int]$match.Matches.Groups[1].Value;
-    $minor = [int]$match.Matches.Groups[2].Value;
-    $patch = [int]$match.Matches.Groups[3].Value;
 
     if ($major -lt 8) {
         add-failure "Your version of node '$node_version' is invalid. Please install node >= 8. $node_download_Link"
