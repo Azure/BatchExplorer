@@ -1,4 +1,4 @@
-name: $(SourceBranchName)$(Rev:.r)
+name: $(SourceBranch)$(Rev:.r)
 phases:
   - phase: Linux
     queue: Hosted Linux Preview
