@@ -84,12 +84,12 @@ phases:
           pip install -r python/requirements.txt
         displayName: Install dependencies
 
-      - script: npm run build-and-pack
-        displayName: Build and pack
+      # - script: npm run build-and-pack
+      #   displayName: Build and pack
 
-      - task: PublishBuildArtifacts@2
-        displayName: Publish artifacts
-        inputs:
-          pathtoPublish: ./release
-          artifactName: windows
-          artifactType: Container
+      # - task: PublishBuildArtifacts@2
+      #   displayName: Publish artifacts
+      #   inputs:
+      #     pathtoPublish: ./release
+      #     artifactName: windows
+      #     artifactType: Container
