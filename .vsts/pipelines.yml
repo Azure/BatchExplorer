@@ -83,8 +83,8 @@ phases:
           pip install -r python/requirements.txt
         displayName: Install dependencies
 
-      # - powershell: npm run build-and-pack
-      #   displayName: Build and pack
+      - powershell: npm run build-and-pack
+        displayName: Build and pack
 
       # - task: PublishBuildArtifacts@2
       #   displayName: Publish artifacts
