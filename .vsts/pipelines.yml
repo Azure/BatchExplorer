@@ -47,7 +47,7 @@ phases:
   #       artifactName: linux
   #       artifactType: Container
 
-# Mac os build
+  # Mac os build
   - phase: macOS
     queue: Hosted macOS Preview
     steps:
@@ -91,5 +91,5 @@ phases:
         displayName: Publish artifacts
         inputs:
           pathtoPublish: ./release
-          artifactName: osx
+          artifactName: windows
           artifactType: Container
