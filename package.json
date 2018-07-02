@@ -157,7 +157,6 @@
     "moment-duration-format": "^2.0.1",
     "monaco-editor": "~0.13.1",
     "mousetrap": "^1.6.0",
-    "ms-rest-js": "~0.2.3",
     "node-fetch": "~2.1.2",
     "node-forge": "~0.7.5",
     "reflect-metadata": "^0.1.12",
