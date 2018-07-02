@@ -6,136 +6,146 @@ bl-node-connect {
 
     .connect-content {
         min-height: calc(100% - 85px);
-    }
-}
 
-.node-information {
-    bl-property-group {
-        margin: 15px 0;
-
-        .custom-property {
+        .sidebar-header {
             display: flex;
-            padding: 0;
-            margin: 0 0 5px;
-            position: relative;
-            width: 100%;
-            overflow: hidden;
+            justify-content: space-between;
+            align-items: center;
 
-            .label-small {
-                color: $secondary-text;
-                font-size: 13px;
-                flex-basis: 200px;
-                font-weight: bold;
-                line-height: 20px;
-                margin-right: 5px;
-            }
-
-            input {
-                flex: 1;
-                max-width: 350px;
-            }
-
-            div {
-                flex: 1;
-                max-width: 350px;
-                color: $primary-text;
-                background-color: $main-background;
-                padding: 3px 8px;
-                margin: 0;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                display: block;
-                width: 100%;
-                min-height: 24px;
+            bl-button {
+                background: none;
             }
         }
-    }
-}
 
-.credentials-inputs {
-    width: 400px;
-    display: flex;
-    align-items: center;
-    margin: 10px;
+        .node-information {
+            bl-property-group {
+                margin: 15px 0;
 
-    > input {
-        width: 200px;
-        margin: 5px;
-        padding: 5px;
-    }
-}
+                .custom-property {
+                    display: flex;
+                    padding: 0;
+                    margin: 0 0 5px;
+                    position: relative;
+                    width: 100%;
+                    overflow: hidden;
 
-.credentials-source {
-    display: flex;
-    justify-content: center;
+                    .label-small {
+                        color: $secondary-text;
+                        font-size: 13px;
+                        flex-basis: 200px;
+                        font-weight: bold;
+                        line-height: 20px;
+                        margin-right: 5px;
+                    }
 
-    > bl-button {
-        user-select: none;
-        width: 150px;
-        height: 150px;
-        font-size: 20px;
-        margin: 10px 20px;
-        text-align: center;
-        cursor: pointer;
-        position: relative;
+                    input {
+                        flex: 1;
+                        max-width: 350px;
+                    }
 
-        &:hover {
-            color: $whitesmoke;
-            background-color: map-get($primary, 400);
+                    div {
+                        flex: 1;
+                        max-width: 350px;
+                        color: $primary-text;
+                        background-color: $main-background;
+                        padding: 3px 8px;
+                        margin: 0;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        display: block;
+                        width: 100%;
+                        min-height: 24px;
+                    }
+                }
+            }
         }
 
-        &:active {
-            color: $whitesmoke;
-            background-color: map-get($primary, 500);
+        .credentials-inputs {
+            width: 400px;
+            display: flex;
+            align-items: center;
+            margin: 10px;
+
+            > input {
+                width: 200px;
+                margin: 5px;
+                padding: 5px;
+            }
         }
 
-        .button-icon-frame {
-            position: absolute;
-            left: 0;
+        .credentials-source {
             display: flex;
             justify-content: center;
-            align-items: center;
-            width: 150px;
-            height: 150px;
 
-            i {
-                font-size: 50px;
+            > bl-button {
+                user-select: none;
+                width: 150px;
+                height: 150px;
+                font-size: 20px;
+                margin: 10px 20px;
+                text-align: center;
+                cursor: pointer;
+                position: relative;
+
+                &:hover {
+                    color: $whitesmoke;
+                    background-color: map-get($primary, 400);
+                }
+
+                &:active {
+                    color: $whitesmoke;
+                    background-color: map-get($primary, 500);
+                }
+
+                .button-icon-frame {
+                    position: absolute;
+                    left: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 150px;
+                    height: 150px;
+
+                    i {
+                        font-size: 50px;
+                    }
+                }
+
+                .button-label {
+                    position: absolute;
+                    top: 135px;
+                    left: 10px;
+                    line-height: 0;
+                    font-size: 15px;
+                }
             }
         }
 
-        .button-label {
-            position: absolute;
-            top: 135px;
-            left: 10px;
-            line-height: 0;
-            font-size: 15px;
+        .waiting-for-process {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 75px;
+            font-size: 12pt;
         }
-    }
-}
 
-.waiting-for-process {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 75px;
-    font-size: 12pt;
-}
+        .warn-text {
+            margin: 10px 0;
+        }
 
-.warn-text {
-    margin: 10px 0;
-}
+        bl-node-user-credentials-form {
+            display: block;
+            margin-bottom: 20px;
 
-bl-node-user-credentials-form {
-    display: block;
-    margin-bottom: 20px;
+            .username-mode-input {
+                display: flex;
+                align-items: center;
 
-    .username-mode-input {
-        display: flex;
-        align-items: center;
-
-        bl-form-field {
-            flex: 1;
-            margin-right: 20px;
+                bl-form-field {
+                    flex: 1;
+                    margin-right: 20px;
+                }
+            }
         }
     }
 }

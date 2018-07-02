@@ -102,25 +102,10 @@ export class NodeConnectComponent implements OnInit {
             });
         });
 
-        const separator = OS.isLinux() ? "/" : "\\";
-
+        const separator = OS.isWindows() ? "\\" : "/";
         this.publicKeyFile = `${this.fs.commonFolders.home}${separator}.ssh${separator}id_rsa.pub`;
 
         this.sshKeyService.hasLocalPublicKey(this.publicKeyFile).subscribe(hasKey => this.hasLocalPublicKey = hasKey);
-    }
-
-    @autobind()
-    public generateCredentials() {
-        const credentials = {
-            name: SecureUtils.username(),
-            password: SecureUtils.password(),
-            isAdmin: true,
-        };
-
-        return this.addOrUpdateUser(credentials).do(() => {
-            this.credentialSource = CredentialSource.Generated;
-            this.expireTime = DateUtils.fullDateAndTime(moment().add(24, "hours").toDate());
-        });
     }
 
     @autobind()
@@ -163,7 +148,7 @@ export class NodeConnectComponent implements OnInit {
         obs.subscribe({
             next: (pid) => {
                 this.processLaunched = true;
-            }
+            },
             error: (error) => {
                 throw error;
             },
@@ -197,6 +182,7 @@ export class NodeConnectComponent implements OnInit {
     @autobind()
     public goToHome() {
         this.credentialSource = null;
+        this.processLaunched = false;
     }
 
     @autobind()

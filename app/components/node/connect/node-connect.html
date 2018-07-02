@@ -1,6 +1,9 @@
 <div class="slideout-form content-wrapper node-connect" *ngIf="node && pool">
     <div class="connect-content">
-        <h1>Connect to node </h1>
+        <div class="sidebar-header">
+            <h1>Connect to node</h1>
+            <bl-button skipSuccess type="plain" [action]="close"><i class="fa fa-times fa-lg"></i></bl-button>
+        </div>
         <div *ngIf="credentialSource === null">
             <div class="node-information">
                 <bl-property-group>
@@ -12,7 +15,7 @@
                     <bl-text-property *ngIf="connectionSettings" label="Port" [value]="connectionSettings.port"></bl-text-property>
                     <div class="custom-property">
                         <h5 class="label-small username-label">Username</h5>
-                        <input blInput type="text" id="input-username" [placeholder]="defaultUsername" />
+                        <input autofocus blInput type="text" id="input-username" [placeholder]="defaultUsername" />
                     </div>
                     <div class="custom-property" *ngIf="linux">
                         <h5 class="label-small">Key File</h5>
@@ -39,8 +42,8 @@
             <bl-node-user-credentials-form [submit]="addOrUpdateUser" [isLinuxNode]="linux" (close)="goToHome()"></bl-node-user-credentials-form>
         </div>
         <div *ngIf="hasIp && connectionSettings && credentials">
-            <div class="waiting-for-process" *ngIf="!processLaunched">
-                <bl-loading relative></bl-loading>
+            <div class="waiting-for-process" *ngIf="credentialSource === CredentialSource.Generated && !processLaunched">
+                <bl-loading></bl-loading>
                 <div>Connecting to node...</div>
             </div>
             <div *ngIf="processLaunched">
@@ -58,6 +61,8 @@
         <span *ngIf="credentials && windows && agentSkus">
             <bl-download-rdp [nodeId]="node.id" [credentials]="credentials" [rdpContent]="rdpContent" [connectionSettings]="connectionSettings"></bl-download-rdp>
         </span>
-        <bl-button color="light" type="wide" [action]="close">Close</bl-button>
+    </div>
+    <div *ngIf="credentialSource === CredentialSource.Generated || credentialSource === CredentialSource.Specified">
+        <bl-button color="light" type="wide" [action]="goToHome">Back</bl-button>
     </div>
 </div>
