@@ -55,7 +55,7 @@ phases:
     - template: ./pyenv.yml
     - script: |
         set -e
-        npm install -g codecov
+        node --version
         npm install
         pip install -r python/requirements.txt
       displayName: Install dependencies
@@ -78,7 +78,7 @@ phases:
         inputs:
           versionSpec: '3.6.x'
       - powershell: |
-          npm install -g codecov
+          node --version
           npm install
           pip install -r python/requirements.txt
         displayName: Install dependencies
