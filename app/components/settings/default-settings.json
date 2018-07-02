@@ -16,5 +16,10 @@
   "storage.default-upload-container": "batchlabs-input",
 
   // If the app should automatically update when quiting
-  "auto-update-on-quit": true
+  "auto-update-on-quit": true,
+
+  // Default powershell on windows, terminal.app on darwin, ...
+  "terminal.external": "default",
+
+  "node.connect.default-username": null
 }
