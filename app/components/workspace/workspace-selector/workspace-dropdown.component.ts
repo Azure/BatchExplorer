@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
 import { Workspace } from "app/models";
 import { WorkspaceService } from "app/services";
-import { Subscription } from "rxjs";
+import { List } from "immutable";
+import { Observable } from "rxjs";
 
 import "./workspace-dropdown.scss";
 
@@ -14,12 +15,11 @@ export class WorkspaceDropDownComponent implements OnDestroy {
     public workspaces: Observable<List<Workspace>>;
     public selectedWorkspaceId: string = "";
     public showDropdown = false;
-    
-    private _subs: Subscription[] = [];
+
+    // private _subs: Subscription[] = [];
 
     constructor(
-        public workspaceService: WorkspaceService,
-        private changeDetector: ChangeDetectorRef) {
+        public workspaceService: WorkspaceService) {
 
             this.workspaces = this.workspaceService.workspaces;
             this.workspaces.subscribe((items) => {
