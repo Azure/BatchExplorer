@@ -3,12 +3,12 @@ import { WorkspaceDefinition, WorkspaceSettings } from "./workspace-definition";
 export class Workspace {
     public id: string;
     public name: string;
-    public workspace: WorkspaceSettings;
+    public features: WorkspaceSettings;
 
     public constructor(definition: WorkspaceDefinition) {
-        this.id = definition.metadata.id;
-        this.name = definition.metadata.displayName;
-        this.workspace = definition.workspace;
+        this.id = definition.id;
+        this.name = definition.displayName;
+        this.features = definition.features;
     }
 
     public isFeatureEnabled(feature: string): boolean {

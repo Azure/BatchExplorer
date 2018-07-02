@@ -19,6 +19,8 @@ export interface WorkspaceSettings {
  * Define the visible state of conponents in the UI
  */
 export interface WorkspaceDefinition {
-    metadata: WorkspaceMetaData;
-    workspace: WorkspaceSettings;
+    id: WorkspaceMetaData;
+    displayName: WorkspaceMetaData;
+    description: WorkspaceMetaData;
+    features: WorkspaceSettings;
 }
