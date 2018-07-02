@@ -51,7 +51,6 @@ export class SettingsService implements OnDestroy {
 
     public init() {
         this.loadSettings();
-        console.log("Default settings: ", defaultSettings);
     }
 
     public saveUserSettings(userSettings: string): Observable<any> {
