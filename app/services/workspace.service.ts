@@ -2,7 +2,15 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
+// tslint:disable:no-var-requires max-line-length
+const stripJsonComments = require("strip-json-comments");
+
 import { Workspace } from "app/models";
+
+// TODO: can we just read all JSON files in a directory?
+const adminWorkspace = JSON.parse(stripJsonComments(require("app/components/workspace/json-templates/admin-workspace.json")));
+const endUserWorkspace = JSON.parse(stripJsonComments(require("app/components/workspace/json-templates/end-user-workspace.json")));
+// tslint:enable:no-var-requires max-line-length
 
 @Injectable()
 export class WorkspaceService {
@@ -38,12 +46,10 @@ export class WorkspaceService {
         this._currentWorkspace.next(workspace);
     }
 
-    // guessing these will be the various json templates that we define.
-    // maybe load all from a folder? would have to parse JSON and read the ID and Name from each one.
     private loadWorkspaces() {
         const workspaces = [
-            new Workspace("admin", "Developer workspace"),
-            new Workspace("user", "Basic workspace"),
+            new Workspace({ ...adminWorkspace }),
+            new Workspace({ ...endUserWorkspace }),
         ];
 
         console.log("loaded workspaces: ", workspaces);

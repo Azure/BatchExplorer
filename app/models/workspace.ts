@@ -1,15 +1,13 @@
-/**
- * probably needs to take a json file, or a path to a json file and load it.
- * builds a feature map of enabled and disabled features.
- */
+import { WorkspaceDefinition } from "./workspace-definition";
+
 export class Workspace {
     public id: string;
     public name: string;
-    public description: string;
 
-    public constructor(id: string, name: string) {
-        id = id;
-        name = name;
+    public constructor(workspace: WorkspaceDefinition) {
+        console.log("Workspace.constructor: ", workspace);
+        this.id = workspace.metadata.id;
+        this.name = workspace.metadata.displayName;
     }
 
     public isFeatureEnabled(feature: string): boolean {
