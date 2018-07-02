@@ -2,11 +2,37 @@
     <div class="connect-content">
         <h1>Connect to node </h1>
         <div *ngIf="credentialSource === null">
-            <h3>Node credentials</h3>
+            <div class="node-information">
+                <bl-property-group>
+                    <!-- If waiting for connection settings -->
+                    <bl-text-property *ngIf="!connectionSettings" label="IP" value="Fetching..."></bl-text-property>
+                    <bl-text-property *ngIf="!connectionSettings" label="Port" value="Fetching..."></bl-text-property>
+                    <!-- Once connection settings are fetched -->
+                    <bl-text-property *ngIf="connectionSettings" label="IP" [value]="connectionSettings.ip"></bl-text-property>
+                    <bl-text-property *ngIf="connectionSettings" label="Port" [value]="connectionSettings.port"></bl-text-property>
+                    <div class="custom-property">
+                        <h5 class="label-small username-label">Username</h5>
+                        <input blInput type="text" id="input-username" [placeholder]="defaultUsername" />
+                    </div>
+                    <div class="custom-property" *ngIf="linux">
+                        <h5 class="label-small">Key File</h5>
+                        <div>{{publicKeyFile}}</div>
+                    </div>
+                </bl-property-group>
+            </div>
             <div class="credentials-source">
-                <bl-button type="wide" [action]="generateCredentials">Generate</bl-button>
-                <bl-button type="wide" [action]="specifyCredentials">Specify</bl-button>
-                <bl-button type="wide" [action]="generateWithOneClick" [disabled]="!hasLocalPublicKey" [matTooltip]="quickStartTooltip" [matTooltipDisabled]="hasLocalPublicKey">Quick Connect</bl-button>
+                <bl-button type="wide" [action]="autoConnect" [disabled]="!hasLocalPublicKey" [matTooltip]="quickStartTooltip" [matTooltipDisabled]="hasLocalPublicKey">
+                    <div class="button-icon-frame">
+                        <i class="fa fa-plug"></i>
+                    </div>
+                    <div class="button-label">Connect</div>
+                </bl-button>
+                <bl-button type="wide" [action]="specifyCredentials">
+                    <div class="button-icon-frame">
+                        <i class="fa fa-wrench"></i>
+                    </div>
+                    <div class="button-label">Configure</div>
+                </bl-button>
             </div>
         </div>
         <div *ngIf="credentialSource === CredentialSource.Specified && !credentials">

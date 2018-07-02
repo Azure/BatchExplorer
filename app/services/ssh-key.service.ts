@@ -48,14 +48,12 @@ export class SSHKeyService {
         });
     }
 
-    public hasLocalPublicKey(): Observable<boolean> {
-        const homedir = this.fs.commonFolders.home;
-        return Observable.fromPromise(this.fs.exists(`${homedir}/.ssh/id_rsa.pub`));
+    public hasLocalPublicKey(path: string): Observable<boolean> {
+        return Observable.fromPromise(this.fs.exists(path));
     }
 
-    public getLocalPublicKey(): Observable<string> {
-        const homedir = this.fs.commonFolders.home;
-        return Observable.fromPromise(this.fs.readFile(`${homedir}/.ssh/id_rsa.pub`));
+    public getLocalPublicKey(path: string): Observable<string> {
+        return Observable.fromPromise(this.fs.readFile(path));
     }
 
     private _saveSSHPublicKeys(keys: List<SSHPublicKey> = null): Observable<any> {
