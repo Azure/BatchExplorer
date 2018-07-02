@@ -53,7 +53,7 @@ phases:
     queue: Hosted macOS Preview
     steps:
     - template: ./dependencies.yml
-    - template: ./pyenv.yml
+    # - template: ./pyenv.yml
     - script: |
         set -e
         node --version
