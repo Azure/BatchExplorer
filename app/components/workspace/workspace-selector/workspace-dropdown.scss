@@ -2,14 +2,28 @@
 @import "app/styles/variables";
 
 bl-workspace-dropdown {
-    $ddl-width: 280px;
-    width: calc(#{$ddl-width} - 65px);
-    .fa {
-        font-size: 1.2em;
-        padding-right: 5px;
+    [bl-dropdown-btn] {
+        min-width: 125px;
+    }
 
-        &.fa-tasks, &.fa-database, &.fa-file-archive-o, &.fa-question, &.fa-cloud-upload, &.fa-certificate, &.fa-calendar {
-            color: map-get($primary, 300);
+    [bl-dropdown-content] {
+        min-width: 250px;
+        max-width: 400px;
+    }
+
+    .dropdown-item.workspace {
+        &.selected {
+            cursor: not-allowed;
+
+            .main {
+                opacity: 0.3;
+            }
+        }
+    }
+
+    .dropdown-item.manage {
+        i.fa {
+            margin-right: 5px;
         }
     }
 }

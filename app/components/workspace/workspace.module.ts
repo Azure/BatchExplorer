@@ -1,10 +1,10 @@
 import { NgModule } from "@angular/core";
-import { RouterModule } from "@angular/router";
 import { BrowserModule } from "@angular/platform-browser";
+import { RouterModule } from "@angular/router";
 
 import { MaterialModule } from "@batch-flask/core";
 import { BaseModule } from "@batch-flask/ui";
-import { WorkspaceDropDownComponent } from "./workspace-dropdown.component";
+import { WorkspaceDropDownComponent } from "./workspace-selector";
 
 const components = [WorkspaceDropDownComponent];
 
@@ -14,5 +14,4 @@ const components = [WorkspaceDropDownComponent];
     imports: [BrowserModule, MaterialModule, RouterModule, BaseModule],
 })
 export class WorkspaceModule {
-
 }

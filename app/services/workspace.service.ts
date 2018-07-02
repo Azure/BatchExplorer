@@ -14,15 +14,12 @@ const endUserWorkspace = JSON.parse(stripJsonComments(require("app/components/wo
 
 @Injectable()
 export class WorkspaceService {
-    private _workspaces: BehaviorSubject<List<Workspace>>;
-    private _currentWorkspace: BehaviorSubject<Workspace>;
-    private _haveWorkspacesLoaded: BehaviorSubject<boolean>;
+    private _workspaces: BehaviorSubject<List<Workspace>> = new BehaviorSubject(List([]));
+    private _currentWorkspace: BehaviorSubject<Workspace> = new BehaviorSubject(null);
+    private _haveWorkspacesLoaded: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     constructor() {
         // todo: move these in-line when i have something interesting to put into the constructor
-        this._workspaces = new BehaviorSubject<List<Workspace>>(List([]));
-        this._currentWorkspace = new BehaviorSubject<Workspace>(null);
-        this._haveWorkspacesLoaded = new BehaviorSubject<boolean>(false);
     }
 
     public get workspaces(): Observable<List<Workspace>> {
@@ -54,6 +51,7 @@ export class WorkspaceService {
 
         console.log("loaded workspaces: ", workspaces);
         this._workspaces.next(List(workspaces));
+        this._currentWorkspace.next(workspaces[1]);
         this._haveWorkspacesLoaded.next(true);
     }
 }

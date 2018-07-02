@@ -1,21 +1,24 @@
-<bl-dropdown [footer]="false" align="left">
+<bl-dropdown class="workspace-dropdown" [footer]="true" align="left">
     <div bl-dropdown-btn>
-        <i class="fa fa-star"></i> Workspaces 
+        <i class="fa fa-star"></i> Workspaces
+        <i *ngIf="loaded === false" class="fa fa-spinner fa-spin"></i>
     </div>
-        <div bl-dropdown-content>
-            <bl-clickable *ngFor="let workspace of workspaces | async; trackBy: trackByFn"
-                 class="dropdown-item"
-                 [class.selected]="workspace.id === selectedWorkspaceId"
-                 [title]="workspace.name">
-                 <div>{{workspace.name}}</div>
-            </bl-clickable>
-            <!-- <bl-clickable *ngIf="selectedId" class="dropdown-item">
-                <i ></i>Developer View
-                <i ></i>Simplified View
-                <div class="url">{{workspace.properties.workspaceEndpoint}}</div>
-                <div *ngIf="workspace.id === selectedId" class="extra">
-                        <i class="fa fa-check"></i>
-                </div>
-            </bl-clickable> -->
+    <div bl-dropdown-content>
+        <div *ngFor="let workspace of workspaces | async; trackBy: trackByFn"
+            class="dropdown-item workspace"
+            (click)="setWorkspace(workspace)"
+            [class.selected]="workspace.id === selectedWorkspaceId"
+            [title]="workspace.name">
+
+            <div class="main">
+                {{workspace.name}}
+            </div>
+            <div *ngIf="workspace.id === selectedWorkspaceId" class="extra">
+                <i class="fa fa-check"></i>
+            </div>
         </div>
+        <bl-clickable *ngIf="selectedWorkspaceId" class="dropdown-item manage">
+            <i class="fa fa-cog fa-2x"></i> Manage workspaces
+        </bl-clickable>
+    </div>
 </bl-dropdown>
