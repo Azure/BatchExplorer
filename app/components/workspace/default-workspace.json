@@ -1,9 +1,0 @@
-{
-  "job": true,
-  "schedule": true,
-  "pool": true,
-  "package": true,
-  "certificate": true,
-  "data": true,
-  "gallery": true
-}

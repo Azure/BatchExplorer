@@ -1,0 +1,16 @@
+{
+    "metadata": {
+        "id": "admin.workspace",
+        "displayName": "Admin/Developer workspace",
+        "description": "Default admin or developer workspace where everthing is enabled."
+    },
+    "workspace": {
+        "job": true,
+        "schedule": true,
+        "pool": true,
+        "package": true,
+        "certificate": true,
+        "data": true,
+        "gallery": true
+    }
+}

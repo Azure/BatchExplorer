@@ -1,0 +1,16 @@
+{
+    "metadata": {
+        "id": "end-user",
+        "displayName": "Basic end-user workspace",
+        "description": "Default end-user workspace that hides a number of admin related features."
+    },
+    "workspace": {
+        "job": true,
+        "schedule": false,
+        "pool": true,
+        "package": false,
+        "certificate": false,
+        "data": true,
+        "gallery": true
+    }
+}
