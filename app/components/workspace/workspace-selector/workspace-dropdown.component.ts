@@ -25,6 +25,7 @@ export class WorkspaceDropDownComponent implements OnDestroy {
         this.workspaces = this.workspaceService.workspaces;
         this._subscriptions.push(this.workspaces.subscribe((workspaces) => {
             console.log("workspaces.subscribe: ", workspaces);
+            this.loaded = true;
             this.changeDetector.markForCheck();
         }));
 
@@ -36,7 +37,6 @@ export class WorkspaceDropDownComponent implements OnDestroy {
                 this.selectedWorkspaceId = null;
             }
 
-            this.loaded = true;
             this.changeDetector.markForCheck();
         }));
     }

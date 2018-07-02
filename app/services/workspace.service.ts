@@ -19,7 +19,7 @@ export class WorkspaceService {
     private _haveWorkspacesLoaded: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     constructor() {
-        // todo: move these in-line when i have something interesting to put into the constructor
+        // nothing in here at the moment
     }
 
     public get workspaces(): Observable<List<Workspace>> {
