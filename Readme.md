@@ -17,7 +17,7 @@ You can download the latest version at https://github.com/Azure/BatchLabs/releas
 
 ## Building batchlabs yourself
 #### 1. Prerequisites
-- **Install node.js version `6.9` or greater. [Download](https://nodejs.org/en/download/)**
+- **Install node.js version `8` or greater. [Download](https://nodejs.org/en/download/)**
 - Install python **3.6** (doesn't need to be in the path if that breaks your environment)
 
 #### 2. Clone the repo
