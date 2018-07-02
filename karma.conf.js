@@ -3,7 +3,7 @@ const webpackConfig = require("./config/webpack.config.test");
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true";
 
 // Only enable coverage if env is defined(So we don't enable it in watch mode as it duplicate logs)
-const coverageReporters = process.env.COVERAGE ? ["coverage", "remap-coverage", "junit"] : [];
+const coverageReporters = process.env.COVERAGE ? ["coverage", "remap-coverage"] : [];
 
 // Karma config for testing the code running the browser environemnt.
 // For the client testing use the mocha command line.
@@ -86,6 +86,7 @@ module.exports = function(config) {
             html: "./coverage/html",
             cobertura: "./coverage/cobertura.xml",
         },
+        // Can't enable yet has a conflict in dependency with azure-storage
         junitReporter: {
             outputDir: "./coverage"
         }

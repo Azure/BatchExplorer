@@ -13,8 +13,9 @@ phases:
   #   - script: |
   #       set -e
   #       python --version
+  #       npm install -g yarn
   #       npm install -g codecov
-  #       npm install
+  #       yarn install
   #       pip3 install -r python/requirements.txt
   #     displayName: Install dependencies
 
@@ -56,7 +57,8 @@ phases:
     - script: |
         set -e
         node --version
-        npm install
+        npm install -g yarn
+        yarn install
         pip install -r python/requirements.txt
       displayName: Install dependencies
 
@@ -79,7 +81,8 @@ phases:
           versionSpec: '3.6.x'
       - powershell: |
           node --version
-          npm install
+          npm install -g yarn
+          yarn install
           pip install -r python/requirements.txt
         displayName: Install dependencies
 
