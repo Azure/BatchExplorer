@@ -81,7 +81,7 @@ phases:
         inputs:
           versionSpec: '3.6.x'
       - powershell: |
-          node --versionf
+          node --version
           npm install
           pip install -r python/requirements.txt
         displayName: Install dependencies
