@@ -33,7 +33,7 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ] || [ "${TRAVIS_BRANCH}" = "stable" ]; 
             -v ~/.cache/electron:/root/.cache/electron \
             -v ~/.cache/electron-builder:/root/.cache/electron-builder \
             electronuserland/builder:wine \
-            /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn package --linux --publish always --draft"
+            /bin/bash -c "npm --link-duplicates --pure-lockfile && npm package --linux --publish always --draft"
         else
             npm run package -- --publish always --draft
         fi
@@ -45,7 +45,7 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ] || [ "${TRAVIS_BRANCH}" = "stable" ]; 
             -v ~/.cache/electron:/root/.cache/electron \
             -v ~/.cache/electron-builder:/root/.cache/electron-builder \
             electronuserland/builder:wine \
-            /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn package --linux --publish never"
+            /bin/bash -c "npm --link-duplicates --pure-lockfile && npm package --linux --publish never"
         else
             npm run package -- --publish never
         fi

@@ -35,11 +35,9 @@ Call this command and it will check you have everything setup correctly and buil
 
 #### 4. Install the dependencies
 ```bash
-npm install -g yarn
-yarn install
+npm install
 pip3 install -r python/requirements.txt # or pip if on windows or only have python 3.6 installed
 ```
-Note: You can also use `npm install` at your own risk. However please do not submit an issue if you didn't use `yarn install`. Yarn will make sure you have the right set of dependencies, which reduces the likelihood of any unexpected build issues relating to third party packages.
 
 #### 4.5 Setup some configuration(Only in certain case)
 If you didn't installed python in the path you will need to let batchlabs know where it is.

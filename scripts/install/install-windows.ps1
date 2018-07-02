@@ -100,10 +100,9 @@ function confirm-node-version() {
 }
 
 function install-node-dependencies() {
-    npm install -g yarn
 
     Remove-Item -path .\node_modules -recurse -Force
-    yarn install --force
+    npm install
 
     if($lastExitCode -eq 0) {
         add-success "Installed dependencies correctly" -foreground "green";
