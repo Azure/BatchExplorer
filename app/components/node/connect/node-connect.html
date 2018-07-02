@@ -6,6 +6,7 @@
             <div class="credentials-source">
                 <bl-button type="wide" [action]="generateCredentials">Generate</bl-button>
                 <bl-button type="wide" [action]="specifyCredentials">Specify</bl-button>
+                <bl-button type="wide" [action]="generateWithOneClick" [disabled]="!hasLocalPublicKey" [matTooltip]="quickStartTooltip" [matTooltipDisabled]="hasLocalPublicKey">Quick Connect</bl-button>
             </div>
         </div>
         <div *ngIf="credentialSource === CredentialSource.Specified && !credentials">
