@@ -113,6 +113,18 @@ bl-node-connect {
     }
 }
 
+.waiting-for-process {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 75px;
+    font-size: 12pt;
+}
+
+.warn-text {
+    margin: 10px 0;
+}
+
 bl-node-user-credentials-form {
     display: block;
     margin-bottom: 20px;

@@ -23,13 +23,13 @@
             <div class="credentials-source">
                 <bl-button type="wide" [action]="autoConnect" [disabled]="!hasLocalPublicKey" [matTooltip]="quickStartTooltip" [matTooltipDisabled]="hasLocalPublicKey">
                     <div class="button-icon-frame">
-                        <i class="fa fa-plug"></i>
+                        <i class="fa fa-plug fa-fw"></i>
                     </div>
                     <div class="button-label">Connect</div>
                 </bl-button>
                 <bl-button type="wide" [action]="specifyCredentials">
                     <div class="button-icon-frame">
-                        <i class="fa fa-wrench"></i>
+                        <i class="fa fa-wrench fa-fw"></i>
                     </div>
                     <div class="button-label">Configure</div>
                 </bl-button>
@@ -38,20 +38,20 @@
         <div *ngIf="credentialSource === CredentialSource.Specified && !credentials">
             <bl-node-user-credentials-form [submit]="addOrUpdateUser" [isLinuxNode]="linux" (close)="goToHome()"></bl-node-user-credentials-form>
         </div>
-        <div>
-            <bl-property-group *ngIf="credentials">
-                <div class="warn-text">These credentials are now valid until {{expireTime}} on this node</div>
-                <bl-text-property label="Username" [value]="credentials.name"></bl-text-property>
-                <bl-text-property label="Password" [value]="credentials.password" *ngIf="credentialSource === CredentialSource.Generated"></bl-text-property>
-            </bl-property-group>
-        </div>
         <div *ngIf="hasIp && connectionSettings && credentials">
-            <h3>Connection settings</h3>
-            <bl-property-group>
-                <bl-text-property label="IP" [value]="connectionSettings.ip"></bl-text-property>
-                <bl-text-property label="Port" [value]="connectionSettings.port"></bl-text-property>
-                <bl-text-property *ngIf="!windows" label="SSH command" [value]="sshCommand"></bl-text-property>
-            </bl-property-group>
+            <div class="waiting-for-process" *ngIf="!processLaunched">
+                <bl-loading relative></bl-loading>
+                <div>Connecting to node...</div>
+            </div>
+            <div *ngIf="processLaunched">
+                <div class="warn-text" *ngIf="expireTime">Note: These credentials are valid until {{expireTime}} on this node.</div>
+                <bl-property-group>
+                    <bl-text-property label="IP" [value]="connectionSettings.ip"></bl-text-property>
+                    <bl-text-property label="Port" [value]="connectionSettings.port"></bl-text-property>
+                    <bl-text-property label="Username" [value]="credentials.name"></bl-text-property>
+                    <bl-text-property label="Key File" [value]="publicKeyFile"></bl-text-property>
+                </bl-property-group>
+            </div>
         </div>
     </div>
     <div class="action-btns">

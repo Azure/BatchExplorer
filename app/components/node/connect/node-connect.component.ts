@@ -43,6 +43,7 @@ export class NodeConnectComponent implements OnInit {
     public defaultUsername: string;
     public quickStartTooltip: string = "";
     public publicKeyFile: string;
+    public processLaunched: boolean = false;
 
     /**
      * Base content for the rdp file(IP Address).
@@ -129,6 +130,9 @@ export class NodeConnectComponent implements OnInit {
             return null;
         }
 
+        // set the processLaunched flag to false, since we will launch a new process
+        this.processLaunched = false;
+
         const customName = (document.getElementById("input-username") as HTMLInputElement).value;
 
         const credentials = {
@@ -157,6 +161,9 @@ export class NodeConnectComponent implements OnInit {
             share(),
         );
         obs.subscribe({
+            next: (pid) => {
+                this.processLaunched = true;
+            }
             error: (error) => {
                 throw error;
             },
