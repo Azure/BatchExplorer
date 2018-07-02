@@ -3,29 +3,13 @@ phases:
   - phase: Linux
     queue: Hosted Linux Preview
     steps:
-    - template: ./dependencies.yml
     - script: |
         set -e
         apt-get update
         apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 dbus xvfb libgtk-3-0
-
-
-
       displayName: Install Linux packages
-    - script: |
-        set -e
-        export PYENV_ROOT="$(Agent.WorkFolder)/.pyenv"
-        git clone https://github.com/pyenv/pyenv.git $PYENV_ROOT
-        export PATH="$PYENV_ROOT/bin:$PATH"
-        pyenv --version
-        PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.6.6
-        pyenv global 3.6.6
-        python --version
-        echo "Path is $PATH"
-        echo "##vso[task.prependpath]$PYENV_ROOT/bin"
-        echo "##vso[task.prependpath]$PYENV_ROOT/shims"
-      displayName: Install python
-
+    - template: ./dependencies.yml
+    - template: ./pyenv.yml
     - script: |
         set -e
         python --version
@@ -64,33 +48,38 @@ phases:
         artifactType: Container
 
 # Mac os build
-  # - phase: macOS
-  #   queue: Hosted macOS Preview
-  #   steps:
-  #   - task: NodeTool@0
-  #     inputs:
-  #       versionSpec: '8.11.x'
+  - phase: macOS
+    queue: Hosted macOS Preview
+    steps:
+    - template: ./dependencies.yml
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.6.x'
 
-  #   - task: UsePythonVersion@0
-  #     inputs:
-  #       versionSpec: '3.6.x'
+    - script: |
+        set -e
+        npm install -g codecov
+        npm install
+        pip install -r python/requirements.txt
+      displayName: Install dependencies
 
-  #   - script: |
-  #       set -e
-  #       npm install -g codecov
-  #       npm install
-  #       pip install -r python/requirements.txt
-  #     displayName: Install dependencies
+    - script: npm run build-and-pack
+      displayName: Build and pack
 
-  #   - script: npm run build-and-pack
-  #     displayName: Build and pack
+    - script: npm run lint
+      displayName: Lint
 
-  #   - script: npm run lint
-  #     displayName: Lint
+    - task: PublishBuildArtifacts@1
+      displayName: Publish artifacts
+      inputs:
+        pathtoPublish: ./release
+        artifactName: osx
+        artifactType: Container
 
-  #   - task: PublishBuildArtifacts@1
-  #     displayName: Publish artifacts
-  #     inputs:
-  #       pathtoPublish: ./release
-  #       artifactName: osx
-  #       artifactType: Container
+  - phase: Windows
+    queue: Hosted
+    steps:
+      - template: ./dependencies.yml
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.6.x'
