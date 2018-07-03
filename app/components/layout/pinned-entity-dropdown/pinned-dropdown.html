@@ -11,7 +11,8 @@
             (contextmenu)="onContextMenu(favorite)">
 
             <span>
-                <i class="entity-type fa" [ngClass]="entityIcon(favorite)" title="entityType(favorite)"></i>
+                <i class="entity-type fa" [ngClass]="entityIcon(favorite)"
+                [title]="entityType(favorite)"></i>
                 {{favorite.name || favorite.id}}
                 <i *ngIf="favorite.url === currentUrl" class="extra fa fa-check"></i>
             </span>
