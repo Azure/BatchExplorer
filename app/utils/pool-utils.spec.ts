@@ -144,14 +144,14 @@ describe("PoolUtils", () => {
                 },
             });
 
-            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(cs2Pool))).toBe("windows");
-            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(cs3Pool))).toBe("windows");
-            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(cs4Pool))).toBe("windows");
-            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(cs5Pool))).toBe("windows");
-            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(vm1Pool))).toBe("linux");
-            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(vm2Pool))).toBe("windows");
-            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(vm3Pool))).toBe("windows");
-            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(vm4Pool))).toBe("linux");
+            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsType(cs2Pool))).toBe("windows");
+            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsType(cs3Pool))).toBe("windows");
+            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsType(cs4Pool))).toBe("windows");
+            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsType(cs5Pool))).toBe("windows");
+            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsType(vm1Pool))).toBe("linux");
+            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsType(vm2Pool))).toBe("windows");
+            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsType(vm3Pool))).toBe("windows");
+            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsType(vm4Pool))).toBe("linux");
         });
     });
 

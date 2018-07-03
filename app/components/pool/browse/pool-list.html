@@ -11,6 +11,7 @@
             </bl-quick-list-item-status>
             <div bl-quick-list-item-title>{{pool.id}}</div>
             <div bl-quick-list-item-field>
+                <bl-pool-os-icon [pool]="pool"></bl-pool-os-icon>
                 {{pool.state}}
                 <bl-tags [tags]="pool?.tags" [maxTags]="3"></bl-tags>
             </div>
@@ -32,7 +33,7 @@
 
         <bl-column name="id">
             <div *blHeadCellDef>ID</div>
-            <div *blCellDef="let pool">{{pool.id}}</div>
+            <div *blCellDef="let pool"><bl-pool-os-icon [pool]="pool"></bl-pool-os-icon>{{pool.id}}</div>
         </bl-column>
 
         <bl-column name="state">

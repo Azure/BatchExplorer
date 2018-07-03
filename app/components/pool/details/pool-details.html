@@ -6,7 +6,7 @@
             <div summaryDetails>
                 <div>Last resized {{poolDecorator.lastResized}}</div>
                 <div>
-                    <i class="fa fa-{{poolDecorator.poolOsIcon}}" aria-hidden="true"></i> {{poolDecorator.poolOs}}
+                    <bl-pool-os-icon [pool]="pool"></bl-pool-os-icon> {{poolDecorator.poolOs}}
                 </div>
             </div>
             <bl-tags summaryTags [tags]="pool.tags" [editable]="true" [save]="updateTags" noTagsMessage="No tags."></bl-tags>

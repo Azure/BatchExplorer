@@ -12,6 +12,11 @@ import { TaskSchedulingPolicy } from "./task-scheduling-policy";
 import { UserAccount, UserAccountAttributes } from "./user-account";
 import { VirtualMachineConfiguration, VirtualMachineConfigurationAttributes } from "./virtual-machine-configuration";
 
+export enum OSType {
+    Windows = "windows",
+    Linux = "linux",
+}
+
 export interface PoolAttributes {
     allocationState: string;
     allocationStateTransitionTime: Date;
@@ -127,24 +132,16 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord  {
      */
     public currentNodes: number;
 
-    private _osName: string;
-    private _osIcon: string;
+    public readonly osName: string;
+    public readonly osType: OSType;
 
     constructor(data: Partial<PoolAttributes> = {}) {
         super(data);
         this.tags = ModelUtils.tagsFromMetadata(this.metadata);
-        this._osName = PoolUtils.getOsName(this);
-        this._osIcon = PoolUtils.getComputePoolOsIcon(this._osName);
+        this.osName = PoolUtils.getOsName(this);
+        this.osType = PoolUtils.getOsType(this);
         this.targetNodes = this.targetDedicatedNodes + this.targetLowPriorityNodes;
         this.currentNodes = this.currentDedicatedNodes + this.currentLowPriorityNodes;
-    }
-
-    public osIconName(): string {
-        return this._osIcon;
-    }
-
-    public osName(): string {
-        return this._osName;
     }
 
     public get routerLink(): string[] {
