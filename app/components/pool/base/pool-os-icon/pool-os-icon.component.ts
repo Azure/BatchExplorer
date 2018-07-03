@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/core";
 import { OSType, Pool } from "app/models";
 
 import "./pool-os-icon.scss";
@@ -14,9 +14,6 @@ export class PoolOsIconComponent implements OnChanges {
 
     public icon: string;
 
-    constructor(private changeDetector: ChangeDetectorRef) {
-
-    }
 
     public ngOnChanges(inputs) {
         if (inputs.pool) {

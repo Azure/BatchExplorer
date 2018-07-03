@@ -115,6 +115,7 @@ export class PoolUtils {
             return OSType.Windows;
         } else if (pool.virtualMachineConfiguration) {
             const agentId = pool.virtualMachineConfiguration.nodeAgentSKUId;
+            if (!agentId) { return null; }
             return agentId.startsWith("batch.node.windows") ? OSType.Windows : OSType.Linux;
         } else {
             return null;
