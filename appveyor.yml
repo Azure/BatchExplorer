@@ -22,18 +22,13 @@ install:
 
   - ps: Install-Product node 8.9.1 x64
   - npm install -g npm -s
-  - npm install -g yarn -s
-  - yarn install --force
+  - npm install
   - pip install -r python/requirements.txt
 
 build_script:
     - npm run -s build:prod
     - npm run -s build-python
-    - IF [%APPVEYOR_REPO_BRANCH%]==[stable] (
-        npm run -s package -- --publish always --draft --win
-      ) ELSE (
-        npm run -s package -- --publish never
-      )
+    - npm run -s package -- --publish never
 
 test_script:
     # - npm run test -s
@@ -43,4 +38,4 @@ artifacts:
     name: Batchlabs-windows-setup.exe
   - path: release\*win.zip
     name: Batchlabs-windows.zip
-    
+
