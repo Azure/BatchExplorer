@@ -61,7 +61,6 @@ class TestComponent {
 describe("PoolOsIconComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: PoolOsIconComponent;
     let de: DebugElement;
     let iconEl: DebugElement;
 
@@ -73,7 +72,6 @@ describe("PoolOsIconComponent", () => {
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-pool-os-icon"));
-        component = de.componentInstance;
         fixture.detectChanges();
         iconEl = de.query(By.css(".fa"));
     });
