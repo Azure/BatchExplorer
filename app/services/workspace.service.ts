@@ -13,6 +13,7 @@ const endUserWorkspace = JSON.parse(require("app/components/workspace/json-templ
 export class WorkspaceService {
     private _workspaces: BehaviorSubject<List<Workspace>> = new BehaviorSubject(List([]));
     private _currentWorkspace: BehaviorSubject<Workspace> = new BehaviorSubject(null);
+    private _currentWorkspaceId: BehaviorSubject<string> = new BehaviorSubject(null);
     private _haveWorkspacesLoaded: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     constructor() {
@@ -27,6 +28,10 @@ export class WorkspaceService {
         return this._currentWorkspace.asObservable();
     }
 
+    public get currentWorkspaceId(): Observable<string> {
+        return this._currentWorkspaceId.asObservable();
+    }
+
     public get haveWorkspacesLoaded(): Observable<boolean> {
         return this._haveWorkspacesLoaded.asObservable();
     }
@@ -37,6 +42,7 @@ export class WorkspaceService {
 
     public selectWorkspace(workspaceId: string) {
         const workspace = this._workspaces.value.find((ws: Workspace) => ws.id === workspaceId);
+        this._currentWorkspaceId.next(workspaceId);
         this._currentWorkspace.next(workspace);
     }
 
@@ -56,9 +62,9 @@ export class WorkspaceService {
             new Workspace({ ...endUserWorkspace }),
         ];
 
-        console.log("loaded workspaces: ", workspaces);
         this._workspaces.next(List(workspaces));
         this._currentWorkspace.next(workspaces[1]);
+        this._currentWorkspaceId.next(this._currentWorkspace.value.id);
         this._haveWorkspacesLoaded.next(true);
     }
 }
