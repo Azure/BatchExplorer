@@ -6,6 +6,7 @@ const stripJsonComments = require("strip-json-comments");
 
 import { log } from "@batch-flask/utils";
 import { KeyBindings, Settings, defaultKeybindings } from "app/models";
+import { catchError } from "rxjs/operators";
 import { LocalFileStorage } from "./local-file-storage.service";
 
 // tslint:disable-next-line:no-var-requires
@@ -61,14 +62,17 @@ export class SettingsService implements OnDestroy {
     }
 
     private loadSettings() {
-        this.storage.read(this._filename).catch(() => {
-            return null;
-        }).subscribe((userSettings: string) => {
-            this.userSettingsStr = userSettings;
-            this.settings = { ...defaultSettings, ...this._parseUserSettings(userSettings) };
-            this._hasSettingsLoaded.next(true);
-            this._settingsSubject.next(this.settings);
-        });
+        this.storage.read(this._filename).pipe(
+            catchError((error) => {
+                log.error("Error loading user settings", error);
+                return null;
+            }),
+        ).subscribe((userSettings: string) => {
+                this.userSettingsStr = userSettings;
+                this.settings = { ...defaultSettings, ...this._parseUserSettings(userSettings) };
+                this._hasSettingsLoaded.next(true);
+                this._settingsSubject.next(this.settings);
+            });
 
         this.storage.get(this._keybindingsFilename).subscribe((data: KeyBindings[]) => {
             this.zone.run(() => {
