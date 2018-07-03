@@ -7,13 +7,22 @@
             <div class="node-information">
                 <bl-property-group>
                     <!-- If waiting for connection settings -->
-                    <bl-text-property *ngIf="!connectionSettings" label="IP" value="Fetching..."></bl-text-property>
-                    <bl-text-property *ngIf="!connectionSettings" label="Port" value="Fetching..."></bl-text-property>
-                    <bl-text-property *ngIf="!connectionSettings && linux" label="SSH Command" value="Fetching..."></bl-text-property>
+                    <div *ngIf="!connectionSettings && !ipFromRDP">
+                        <bl-text-property label="IP" value="Fetching..."></bl-text-property>
+                        <bl-text-property label="Port" value="Fetching..."></bl-text-property>
+                        <bl-text-property *ngIf="linux" label="SSH Command" value="Fetching..."></bl-text-property>
+                    </div>
                     <!-- Once connection settings are fetched -->
-                    <bl-text-property *ngIf="connectionSettings" label="IP" [value]="connectionSettings.ip"></bl-text-property>
-                    <bl-text-property *ngIf="connectionSettings" label="Port" [value]="connectionSettings.port"></bl-text-property>
-                    <bl-text-property *ngIf="connectionSettings && linux" label="SSH Command" [value]="sshCommand"></bl-text-property>
+                    <div *ngIf="connectionSettings">
+                        <bl-text-property label="IP" [value]="connectionSettings.ip"></bl-text-property>
+                        <bl-text-property label="Port" [value]="connectionSettings.port"></bl-text-property>
+                        <bl-text-property *ngIf="linux" label="SSH Command" [value]="sshCommand"></bl-text-property>
+                    </div>
+                    <!-- Or, alternatively, if rdp settings are fetched -->
+                    <div *ngIf="ipFromRDP">
+                        <bl-text-property label="IP" [value]="ipFromRDP"></bl-text-property>
+                        <bl-text-property label="Port" value="Not Specified"></bl-text-property>
+                    </div>
                     <div class="custom-property">
                         <h5 class="label-small username-label">Username</h5>
                         <input blInput type="text" [(ngModel)]="username" id="input-username" [placeholder]="defaultUsername" />

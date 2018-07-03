@@ -45,6 +45,7 @@ export class NodeConnectComponent implements OnInit {
     public password: string = "";
     public warning: string = "";
     public tooltip: string = "";
+    public ipFromRDP: string = "";
     public connectLoading: boolean = false;
     public publicKeyFile: string;
     public processLaunched: boolean = false;
@@ -155,7 +156,7 @@ export class NodeConnectComponent implements OnInit {
             // for windows, we don't need the public key because we cannot ssh
             delete credentials.sshPublicKey;
 
-            const obs = this.addOrUpdateUser(credentials).flatMap(() => {
+            this.addOrUpdateUser(credentials).flatMap(() => {
                 return new Observable(null);
             }).subscribe({
                 next: () => { this.connectLoading = false; },
@@ -215,6 +216,9 @@ export class NodeConnectComponent implements OnInit {
         if (PoolUtils.isPaas(this.pool)) {
             this.nodeService.getRemoteDesktop(this.pool.id, this.node.id).subscribe((rdp) => {
                 this.rdpContent = rdp;
+
+                // extract the ip address from the rdp file
+                this.ipFromRDP = rdp.match(/[0-9.]{7,}/)[0];
             });
         } else {
             this.nodeService.getRemoteLoginSettings(this.pool.id, this.node.id).subscribe((connection) => {
