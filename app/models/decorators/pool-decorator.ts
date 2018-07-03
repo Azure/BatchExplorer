@@ -39,7 +39,6 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public vmSize: string;
     public poolEndpointConfiguration: PoolEndpointConfigurationDecorator;
     public poolOs: string;
-    public poolOsIcon: string;
     public lastResized: string;
     public userAccounts: string;
     public dedicatedNodes: string;
@@ -82,7 +81,6 @@ export class PoolDecorator extends DecoratorBase<Pool> {
             pool.currentLowPriorityNodes, pool.targetLowPriorityNodes);
 
         this.poolOs = this._computePoolOs();
-        this.poolOsIcon = this._computePoolOsIcon(this.poolOs);
 
         this.cloudServiceConfiguration =
             new CloudServiceConfigurationDecorator(pool.cloudServiceConfiguration || {} as any, this.poolOs);
@@ -102,11 +100,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     }
 
     private _computePoolOs(): string {
-        return this.pool.osName();
-    }
-
-    private _computePoolOsIcon(os): string {
-        return this.pool.osIconName();
+        return this.pool.osName;
     }
 
     private _decorateUserAccount(user: UserAccount) {

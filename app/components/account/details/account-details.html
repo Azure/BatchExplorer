@@ -80,7 +80,7 @@
                                 </bl-column>
                                 <bl-column name="state" [defaultWidth]="30">
                                     <div *blHeadCellDef>State</div>
-                                    <div *blCellDef="let pool"><i aria-hidden="true" class="fa fa-{{pool.osIconName()}}"></i></div>
+                                    <div *blCellDef="let pool"><bl-pool-os-icon [pool]="pool"></bl-pool-os-icon></div>
                                 </bl-column>
                                 <bl-column name="nodes" [defaultWidth]="60">
                                     <div *blCellDef="let pool"><bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview></div>
