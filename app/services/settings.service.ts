@@ -6,8 +6,8 @@ const stripJsonComments = require("strip-json-comments");
 
 import { log } from "@batch-flask/utils";
 import { KeyBindings, Settings, defaultKeybindings } from "app/models";
-import { LocalFileStorage } from "./local-file-storage.service";
 import { catchError } from "rxjs/operators";
+import { LocalFileStorage } from "./local-file-storage.service";
 
 // tslint:disable-next-line:no-var-requires
 const defaultSettings = JSON.parse(stripJsonComments(require("app/components/settings/default-settings.json")));
@@ -71,7 +71,6 @@ export class SettingsService implements OnDestroy {
                 this.userSettingsStr = userSettings;
                 this.settings = { ...defaultSettings, ...this._parseUserSettings(userSettings) };
                 this._hasSettingsLoaded.next(true);
-                console.log("User settings", userSettings, this.settings);
                 this._settingsSubject.next(this.settings);
             });
 
