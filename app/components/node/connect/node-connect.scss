@@ -30,7 +30,7 @@ bl-node-connect {
                     margin: 0 0 5px;
                     position: relative;
                     width: 100%;
-                    overflow: hidden;
+                    overflow: visible;
 
                     .label-small {
                         color: $secondary-text;
@@ -58,6 +58,12 @@ bl-node-connect {
                         display: block;
                         width: 100%;
                         min-height: 24px;
+                    }
+                    .password-failure-hint {
+                        position: absolute;
+                        top: 27px;
+                        left: 205px;
+                        color: red;
                     }
                 }
             }
