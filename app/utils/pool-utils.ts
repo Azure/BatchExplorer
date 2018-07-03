@@ -1,5 +1,5 @@
 import { Icon, IconSources } from "@batch-flask/ui/icon";
-import { CloudServiceOsFamily, Pool, PoolAllocationState, VmSize } from "app/models";
+import { CloudServiceOsFamily, OSType, Pool, PoolAllocationState, VmSize } from "app/models";
 import { SoftwarePricing, VMPrices } from "app/services/pricing";
 import * as Icons from "./icons";
 
@@ -110,6 +110,17 @@ export class PoolUtils {
         }
     }
 
+    public static getOsType(pool: Pool): OSType | null {
+        if (pool.cloudServiceConfiguration) {
+            return OSType.Windows;
+        } else if (pool.virtualMachineConfiguration) {
+            const agentId = pool.virtualMachineConfiguration.nodeAgentSKUId;
+            return agentId.startsWith("batch.node.windows") ? OSType.Windows : OSType.Linux;
+        } else {
+            return null;
+        }
+    }
+
     public static getOsName(pool: Pool): string {
         if (pool.cloudServiceConfiguration) {
             const osFamily = pool.cloudServiceConfiguration.osFamily;
@@ -131,7 +142,8 @@ export class PoolUtils {
             }
 
             if (config.imageReference.virtualMachineImageId) {
-                return "Custom image";
+                const osType = this.getOsType(pool);
+                return `Custom image (${osType})`;
             }
 
             if (config.imageReference.publisher === "MicrosoftWindowsServer") {
@@ -146,14 +158,14 @@ export class PoolUtils {
         return "Unknown";
     }
 
-    public static getComputePoolOsIcon(osName): string {
-        if (osName === "Custom Image") {
-            return "cloud";
-        } else if (/windows/i.test(osName)) {
+    public static getComputePoolOsIcon(osType: OSType): string {
+        if (osType === OSType.Linux) {
+            return "linux";
+        } else if (osType === OSType.Windows) {
             return "windows";
         }
 
-        return "linux";
+        return "cloud";
     }
 
     /**

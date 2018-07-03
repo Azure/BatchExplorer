@@ -102,11 +102,11 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     }
 
     private _computePoolOs(): string {
-        return this.pool.osName();
+        return this.pool.osName;
     }
 
     private _computePoolOsIcon(os): string {
-        return this.pool.osIconName();
+        return PoolUtils.getComputePoolOsIcon(this.pool.osType);
     }
 
     private _decorateUserAccount(user: UserAccount) {
