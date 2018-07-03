@@ -2,14 +2,11 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
-// tslint:disable:no-var-requires max-line-length
-const stripJsonComments = require("strip-json-comments");
-
 import { Workspace } from "app/models";
 
-// TODO: can we just read all JSON files in a directory?
-const adminWorkspace = JSON.parse(stripJsonComments(require("app/components/workspace/json-templates/admin-workspace.json")));
-const endUserWorkspace = JSON.parse(stripJsonComments(require("app/components/workspace/json-templates/end-user-workspace.json")));
+// tslint:disable:no-var-requires max-line-length
+const adminWorkspace = JSON.parse(require("app/components/workspace/json-templates/admin-workspace.json"));
+const endUserWorkspace = JSON.parse(require("app/components/workspace/json-templates/end-user-workspace.json"));
 // tslint:enable:no-var-requires max-line-length
 
 @Injectable()
@@ -41,6 +38,16 @@ export class WorkspaceService {
     public selectWorkspace(workspaceId: string) {
         const workspace = this._workspaces.value.find((ws: Workspace) => ws.id === workspaceId);
         this._currentWorkspace.next(workspace);
+    }
+
+    public isFeatureEnabled(feature: string): boolean {
+        const workspace = this._currentWorkspace.value;
+        if (workspace) {
+            return workspace.isFeatureEnabled(feature);
+        }
+
+        // TODO: default to true if there is no workspace selected?
+        return true;
     }
 
     private loadWorkspaces() {

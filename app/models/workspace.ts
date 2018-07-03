@@ -1,9 +1,9 @@
-import { WorkspaceDefinition, WorkspaceSettings } from "./workspace-definition";
+import { FeatureDefinition, WorkspaceDefinition } from "./workspace-definition";
 
 export class Workspace {
     public id: string;
     public name: string;
-    public features: WorkspaceSettings;
+    public features: FeatureDefinition;
 
     public constructor(definition: WorkspaceDefinition) {
         this.id = definition.id;
