@@ -36,6 +36,19 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
         return this.jobTaskCounts.validationStatus === JobTaskCountsValidationStatus.validated;
     }
 
+    public get taskCountTooHigh() {
+        return this.jobTaskCounts.total > 175000;
+    }
+
+    public get taskCountUnvalidatedTooltip() {
+        if (this.taskCountTooHigh) {
+            return "For performance reasons, Batch will not perform the consistency"
+                + " check if the job includes more than 200,000 tasks. Use with caution.";
+        } else {
+            return "Batch was unable to check the validity of the task counts. Use with caution.";
+        }
+    }
+
     private data: ListView<Node, NodeListParams>;
     private poolData: EntityView<Pool, PoolParams>;
 

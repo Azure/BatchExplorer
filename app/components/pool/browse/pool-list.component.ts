@@ -17,6 +17,8 @@ import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
 import { DeletePoolTask, PoolCommands } from "../action";
 
+import "./pool-list.scss";
+
 @Component({
     selector: "bl-pool-list",
     templateUrl: "pool-list.html",
