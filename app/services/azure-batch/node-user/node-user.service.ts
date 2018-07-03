@@ -37,6 +37,7 @@ export class NodeUserService {
         return this.addUser(poolId, nodeId, user).pipe(
             catchError((e: ServerError) => {
                 if (e.code === "NodeUserExists") {
+                    delete user.isAdmin; // Cannot update user admin rights
                     return this.updateUser(poolId, nodeId, user.name, user);
                 } else {
                     return throwError(e);

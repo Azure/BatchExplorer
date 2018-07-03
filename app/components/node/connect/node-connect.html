@@ -2,7 +2,6 @@
     <div class="connect-content">
         <div class="sidebar-header">
             <h1>Connect to node</h1>
-            <bl-button skipSuccess type="plain" [action]="close"><i class="fa fa-times fa-lg"></i></bl-button>
         </div>
         <div *ngIf="credentialSource === null">
             <div class="node-information">
@@ -10,21 +9,30 @@
                     <!-- If waiting for connection settings -->
                     <bl-text-property *ngIf="!connectionSettings" label="IP" value="Fetching..."></bl-text-property>
                     <bl-text-property *ngIf="!connectionSettings" label="Port" value="Fetching..."></bl-text-property>
+                    <bl-text-property *ngIf="!connectionSettings" label="SSH Command" value="Fetching..."></bl-text-property>
                     <!-- Once connection settings are fetched -->
                     <bl-text-property *ngIf="connectionSettings" label="IP" [value]="connectionSettings.ip"></bl-text-property>
                     <bl-text-property *ngIf="connectionSettings" label="Port" [value]="connectionSettings.port"></bl-text-property>
+                    <bl-text-property *ngIf="connectionSettings" label="SSH Command" [value]="sshCommand"></bl-text-property>
                     <div class="custom-property">
                         <h5 class="label-small username-label">Username</h5>
-                        <input autofocus blInput type="text" id="input-username" [placeholder]="defaultUsername" />
+                        <input blInput type="text" [(ngModel)]="username" id="input-username" [placeholder]="defaultUsername" />
                     </div>
-                    <div class="custom-property" *ngIf="linux">
-                        <h5 class="label-small">Key File</h5>
-                        <div>{{publicKeyFile}}</div>
+                    <div *ngIf="linux">
+                        <div class="custom-property">
+                            <h5 class="label-small">SSH Key File</h5>
+                            <div *ngIf="hasLocalPublicKey">{{publicKeyFile}}</div>
+                            <div *ngIf="!hasLocalPublicKey">Not Found!</div>
+                        </div>
+                    </div>
+                    <div class="custom-property" *ngIf="windows">
+                        <h5 class="label-small username-label">Password</h5>
+                        <input blInput type="password" id="input-password" placeholder="Password" />
                     </div>
                 </bl-property-group>
             </div>
             <div class="credentials-source">
-                <bl-button type="wide" [action]="autoConnect" [disabled]="!hasLocalPublicKey" [matTooltip]="quickStartTooltip" [matTooltipDisabled]="hasLocalPublicKey">
+                <bl-button type="wide" [skipSuccess]="true" [action]="autoConnect" [disabled]="!hasLocalPublicKey" [matTooltip]="quickStartTooltip" [matTooltipDisabled]="hasLocalPublicKey">
                     <div class="button-icon-frame">
                         <i class="fa fa-plug fa-fw"></i>
                     </div>
@@ -62,7 +70,8 @@
             <bl-download-rdp [nodeId]="node.id" [credentials]="credentials" [rdpContent]="rdpContent" [connectionSettings]="connectionSettings"></bl-download-rdp>
         </span>
     </div>
-    <div *ngIf="credentialSource === CredentialSource.Generated || credentialSource === CredentialSource.Specified">
+    <div *ngIf="credentialSource === CredentialSource.Generated">
         <bl-button color="light" type="wide" [action]="goToHome">Back</bl-button>
     </div>
+    <bl-clickable class="close-button" type="plain" (do)="close()"><i class="fa fa-times fa-lg"></i></bl-clickable>
 </div>

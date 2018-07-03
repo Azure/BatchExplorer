@@ -41,6 +41,7 @@ export class NodeConnectComponent implements OnInit {
     public expireTime: string;
     public hasLocalPublicKey: boolean;
     public defaultUsername: string;
+    public username: string = "";
     public quickStartTooltip: string = "";
     public publicKeyFile: string;
     public processLaunched: boolean = false;
@@ -84,8 +85,8 @@ export class NodeConnectComponent implements OnInit {
         private sshKeyService: SSHKeyService,
         private fs: FileSystemService,
     ) {
-        if (settingsService.settings["username"]) {
-            this.defaultUsername = settingsService.settings["username"];
+        if (settingsService.settings["node-connect.default-username"]) {
+            this.defaultUsername = settingsService.settings["node-connect.default-username"];
         } else {
             this.defaultUsername = SecureUtils.username();
         }
@@ -115,14 +116,16 @@ export class NodeConnectComponent implements OnInit {
             return null;
         }
 
+        if (this.windows) {
+            return null;
+        }
+
         // set the processLaunched flag to false, since we will launch a new process
         this.processLaunched = false;
 
-        const customName = (document.getElementById("input-username") as HTMLInputElement).value;
-
         const credentials = {
-            // isAdmin: true,
-            name: customName || this.defaultUsername,
+            isAdmin: true,
+            name: this.username || this.defaultUsername,
             expiryTime:  moment().add(moment.duration({days: 1})).toDate(),
             sshPublicKey: "",
         };
@@ -167,11 +170,12 @@ export class NodeConnectComponent implements OnInit {
     }
 
     public get sshCommand() {
-        if (!this.connectionSettings || !this.credentials) {
+        if (!this.connectionSettings) {
             return "N/A";
         }
         const { ip, port } = this.connectionSettings;
-        return `ssh ${this.credentials.name}@${ip} -p ${port}`;
+
+        return `ssh ${this.username || this.defaultUsername}@${ip} -p ${port}`;
     }
 
     @autobind()
