@@ -77,7 +77,7 @@ function confirm-node-version() {
     $node_download_link = "https://nodejs.org/en/download/current/"
 
     if (!(Get-Command "node" -ErrorAction SilentlyContinue)) {
-       add-failure "Node.JS is not installed. Please install node >= 6.9 and add it to the path. $node_download_link"
+       add-failure "Node.JS is not installed. Please install node >= 8 and add it to the path. $node_download_link"
     }
 
     $node_version = [string](node --version)
@@ -91,21 +91,18 @@ function confirm-node-version() {
     }
 
     $major = [int]$match.Matches.Groups[1].Value;
-    $minor = [int]$match.Matches.Groups[2].Value;
-    $patch = [int]$match.Matches.Groups[3].Value;
 
-    if ($major -lt 5 -or ($major -eq 6 -and $minor -lt 9)) {
-        add-failure "Your version of node '$node_version' is invalid. Please install node >= 6.9.0. $node_download_Link"
+    if ($major -lt 8) {
+        add-failure "Your version of node '$node_version' is invalid. Please install node >= 8. $node_download_Link"
     }
 
     add-success "Node version '$node_version' is valid";
 }
 
 function install-node-dependencies() {
-    npm install -g yarn
 
     Remove-Item -path .\node_modules -recurse -Force
-    yarn install --force
+    npm install
 
     if($lastExitCode -eq 0) {
         add-success "Installed dependencies correctly" -foreground "green";
