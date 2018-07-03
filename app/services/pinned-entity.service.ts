@@ -69,10 +69,11 @@ export class PinnedEntityService {
         return subject.asObservable();
     }
 
-    public unPinFavorite(entity: NavigableRecord) {
+    public unPinFavorite(entity: NavigableRecord | PinnableEntity) {
         if (!this.isFavorite(entity)) {
             return;
         }
+
         const url = this._fudgeArmUrl(entity);
         const newFavorites = this._favorites.getValue().filter(pinned => pinned.url !== url);
         this._favorites.next(List<PinnableEntity>(newFavorites));
@@ -86,12 +87,12 @@ export class PinnedEntityService {
             }
         }
 
-        /* casting pinnable as a PinnableEntity */
+        /* fallback, casting pinnable as a PinnableEntity */
         const pinnable = entity as PinnableEntity;
         return pinnable ? pinnable.pinnableType : null;
     }
 
-    public isFavorite(entity: NavigableRecord): boolean {
+    public isFavorite(entity: NavigableRecord | PinnableEntity): boolean {
         const id = entity.id.toLowerCase();
         const favorites = this._favorites.getValue();
         const entityType = this.getEntityType(entity);
