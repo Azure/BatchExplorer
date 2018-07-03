@@ -14,7 +14,6 @@ export class PoolOsIconComponent implements OnChanges {
 
     public icon: string;
 
-
     public ngOnChanges(inputs) {
         if (inputs.pool) {
             this.icon = this._computeIcon();
