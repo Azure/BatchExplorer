@@ -9,10 +9,9 @@ export interface FeatureDefinition {
     gallery: boolean | GalleryFeatures;
 }
 
-// TODO: expand on these.
 export interface CommonFeatures {
-    view: boolean;
-    add: boolean;
+    view: boolean | any;
+    add: boolean | any;
 }
 
 export interface JobFeatures extends CommonFeatures {

@@ -26,18 +26,6 @@ export class WorkspaceDropDownComponent implements OnDestroy {
         this._subscriptions.push(this.workspaces.subscribe((workspaces) => {
             console.log("workspaces.subscribe: ", workspaces);
             this.loaded = true;
-            console.log("loaded value should now be true: ", this.loaded);
-            this.changeDetector.markForCheck();
-        }));
-
-        this._subscriptions.push(workspaceService.currentWorkspace.subscribe((workspace: Workspace) => {
-            console.log("currentWorkspace.subscribe: ", workspace);
-            if (workspace) {
-                this.selectedWorkspaceId = workspace.id;
-            } else {
-                this.selectedWorkspaceId = null;
-            }
-            console.log("Selected Workspace Id: ", this.selectedWorkspaceId);
             this.changeDetector.markForCheck();
         }));
     }
@@ -47,7 +35,14 @@ export class WorkspaceDropDownComponent implements OnDestroy {
      }
 
     public setWorkspace(workspace: Workspace) {
-        this.workspaceService.selectWorkspace(workspace.id);
+        if (workspace) {
+            this.selectedWorkspaceId = workspace.id;
+            this.workspaceService.selectWorkspace(workspace.id);
+        } else {
+            this.selectedWorkspaceId = null;
+        }
+
+        this.changeDetector.markForCheck();
     }
 
     public trackByFn(index, workspace: Workspace) {
