@@ -1,6 +1,7 @@
+import { fakeAsync, tick } from "@angular/core/testing";
 import { BasicListGetter, DataCache } from "app/services/core";
 import { Observable } from "rxjs";
-import { FakeModel } from "./fake-model";
+import { FakeModel } from "test/app/services/core/data/fake-model";
 
 const firstPage = [
     { id: "1", state: "active", name: "Fake1" },
@@ -95,4 +96,29 @@ describe("ListGetter", () => {
             });
         });
     });
+
+    it("cancel the request when unsubscribing fetchall", fakeAsync(() => {
+        dataSpy = jasmine.createSpy("supplyDataSpy").and.callFake(() => {
+            return Observable.timer(100).map(x => ({
+                data: [{ id: "1", state: "active", name: "Fake1" }],
+                nextLink: "more-to-load",
+            }));
+        });
+
+        getter = new BasicListGetter(FakeModel, {
+            cache: () => cache,
+            supplyData: dataSpy,
+        });
+
+        const sub = getter.fetchAll({}).subscribe();
+        expect(dataSpy).toHaveBeenCalledTimes(1);
+        tick(100);
+        expect(dataSpy).toHaveBeenCalledTimes(2);
+        sub.unsubscribe();
+        tick(100);
+        // Should not have been called anymore
+        expect(dataSpy).toHaveBeenCalledTimes(2);
+        tick(1000);
+        expect(dataSpy).toHaveBeenCalledTimes(2);
+    }));
 });
