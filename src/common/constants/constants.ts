@@ -183,7 +183,7 @@ export const IpcEvent = {
     fetch: "FETCH",
 };
 
-export const Application = {
+export const ExternalApplication = {
     terminal: "TERMINAL",
 };
 

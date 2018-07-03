@@ -16,7 +16,7 @@ import {
     SettingsService,
 } from "app/services";
 import { DateUtils, PoolUtils, SecureUtils } from "app/utils";
-import { Application } from "common/constants";
+import { ExternalApplication } from "common/constants";
 import { Observable } from "rxjs";
 import { flatMap, share, tap } from "rxjs/operators";
 import "./node-connect.scss";
@@ -242,7 +242,7 @@ export class NodeConnectComponent implements OnInit {
                 const args = {
                     command: PoolUtils.isWindows(this.pool) ? "" : this.sshCommand,
                 };
-                return Observable.fromPromise(this.batchLabs.launchApplication(Application.terminal, args));
+                return Observable.fromPromise(this.batchLabs.launchApplication(ExternalApplication.terminal, args));
             }),
             share(),
         );
