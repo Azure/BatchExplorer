@@ -5,6 +5,7 @@ import {
     OnDestroy,
 } from "@angular/core";
 import { MouseButton } from "@batch-flask/core";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { Subscription } from "rxjs";
 
 import { SidebarManager } from "../sidebar-manager";
@@ -22,7 +23,11 @@ export class SidebarBookmarksComponent implements OnDestroy {
 
     private _sub: Subscription;
 
-    constructor(public sidebarManager: SidebarManager, private changeDetector: ChangeDetectorRef) {
+    constructor(
+        public sidebarManager: SidebarManager,
+        private contextMenuService: ContextMenuService,
+        private changeDetector: ChangeDetectorRef) {
+
         this._sub = sidebarManager.references.subscribe((x) => {
             this.references = x;
             this.changeDetector.markForCheck();
@@ -58,5 +63,11 @@ export class SidebarBookmarksComponent implements OnDestroy {
         } else {
             return reference.id;
         }
+    }
+
+    public onContextMenu(reference: SidebarRef<any>) {
+        this.contextMenuService.openMenu(new ContextMenu([
+            new ContextMenuItem("Delete in progress form", () => reference.destroy()),
+        ]));
     }
 }
