@@ -3,37 +3,37 @@
         <i class="fa fa-th fa-lg"></i><div class="label">Dash</div>
     </bl-clickable>
     <div *blHiddenIfNoAccount>
-        <bl-clickable *blFeatureOn="job" routerLink="/jobs" routerLinkActive="active">
+        <bl-clickable *blFeatureOn="'job'" routerLink="/jobs" routerLinkActive="active">
             <i class="fa fa-tasks fa-lg"></i><div class="label">Jobs</div>
         </bl-clickable>
     </div>
     <ng-container *blHiddenIfNoAccount>
-        <bl-clickable *blFeatureOn="schedule" routerLink="/jobschedules" routerLinkActive="active" title="Job schedules">
+        <bl-clickable *blFeatureOn="'schedule'" routerLink="/jobschedules" routerLinkActive="active" title="Job schedules">
             <i class="fa fa-calendar fa-lg"></i><div class="label">Schedules</div>
         </bl-clickable>
     </ng-container>
     <ng-container *blHiddenIfNoAccount>
-        <bl-clickable *blFeatureOn="pool" routerLink="/pools" routerLinkActive="active">
+        <bl-clickable *blFeatureOn="'pool'" routerLink="/pools" routerLinkActive="active">
             <i class="fa fa-database fa-lg"></i><div class="label">Pools</div>
         </bl-clickable>
     </ng-container>
     <ng-container *blHiddenIfNoAccount>
-        <bl-clickable *blFeatureOn="package" routerLink="/applications" routerLinkActive="active" title="Application packages">
+        <bl-clickable *blFeatureOn="'package'" routerLink="/applications" routerLinkActive="active" title="Application packages">
             <i class="fa fa-file-archive-o fa-lg"></i><div class="label">Packages</div>
         </bl-clickable>
     </ng-container>
     <ng-container *blHiddenIfNoAccount>
-        <bl-clickable *blFeatureOn="certificate" routerLink="/certificates" routerLinkActive="active" title="Certificates">
+        <bl-clickable *blFeatureOn="'certificate'" routerLink="/certificates" routerLinkActive="active" title="Certificates">
             <i class="fa fa-certificate fa-lg"></i><div class="label">Certificate</div>
         </bl-clickable>
     </ng-container>
     <ng-container *blHiddenIfNoAccount>
-        <bl-clickable *blFeatureOn="data" routerLink="/data" routerLinkActive="active" title="File groups">
+        <bl-clickable *blFeatureOn="'data'" routerLink="/data" routerLinkActive="active" title="File groups">
             <i class="fa fa-cloud-upload fa-lg"></i><div class="label">Data</div>
         </bl-clickable>
     </ng-container>
     <ng-container *blHiddenIfNoAccount>
-        <bl-clickable *blFeatureOn="gallery" href="#" routerLink="market" routerLinkActive="active" title="Gallery">
+        <bl-clickable *blFeatureOn="'gallery'" href="#" routerLink="market" routerLinkActive="active" title="Gallery">
             <i class="fa fa-cubes" aria-hidden="true"></i><div class="label">Gallery</div>
         </bl-clickable>
     </ng-container>

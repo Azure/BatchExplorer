@@ -30,7 +30,6 @@ export class FeatureVisibleDirective implements OnInit, OnDestroy  {
                 this.viewContainer.createEmbeddedView(this.templateRef);
             }
         });
-
     }
 
     public ngOnDestroy() {
