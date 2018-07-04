@@ -46,16 +46,6 @@ export class WorkspaceService {
         this._currentWorkspace.next(workspace);
     }
 
-    public isFeatureEnabled(feature: string): boolean {
-        const workspace = this._currentWorkspace.value;
-        if (workspace) {
-            return workspace.isFeatureEnabled(feature);
-        }
-
-        // TODO: default to true if there is no workspace selected?
-        return true;
-    }
-
     private loadWorkspaces() {
         const workspaces = [
             new Workspace({ ...adminWorkspace }),

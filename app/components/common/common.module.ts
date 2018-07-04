@@ -6,6 +6,7 @@ import { MaterialModule } from "@batch-flask/core";
 import { BaseModule } from "@batch-flask/ui";
 import { DownloadFolderComponent } from "./download-folder-dialog";
 import { EditMetadataFormComponent } from "./edit-metadata-form";
+import { FeatureVisibleDirective } from "./feature-switching";
 import { GuardsModule } from "./guards";
 import { InlineQuotaComponent } from "./inline-quota";
 import { SubscriptionPickerComponent } from "./subscription-picker";
@@ -13,9 +14,10 @@ import { SubscriptionPickerComponent } from "./subscription-picker";
 const privateComponents = [];
 
 const publicComponents = [
-    InlineQuotaComponent,
-    EditMetadataFormComponent,
     DownloadFolderComponent,
+    EditMetadataFormComponent,
+    FeatureVisibleDirective,
+    InlineQuotaComponent,
     SubscriptionPickerComponent,
 ];
 
