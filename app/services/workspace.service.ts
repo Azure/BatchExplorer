@@ -53,7 +53,7 @@ export class WorkspaceService {
         ];
 
         this._workspaces.next(List(workspaces));
-        this._currentWorkspace.next(workspaces[1]);
+        this._currentWorkspace.next(workspaces.first());
         this._currentWorkspaceId.next(this._currentWorkspace.value.id);
         this._haveWorkspacesLoaded.next(true);
     }

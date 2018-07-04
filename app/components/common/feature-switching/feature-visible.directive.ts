@@ -25,7 +25,6 @@ export class FeatureVisibleDirective implements OnInit, OnDestroy  {
             this.viewContainer.clear();
             // always visible if there is no workspace selected
             const enabled = workspace.isFeatureEnabled(this.feature);
-            console.log(`feature: ${this.feature} enabled: ${enabled}`);
             if (!workspace || enabled) {
                 this.viewContainer.createEmbeddedView(this.templateRef);
             }

@@ -1,6 +1,6 @@
 {
     "id": "end-user.workspace",
-    "displayName": "Basic end-user workspace",
+    "displayName": "Basic end-user",
     "description": "Default end-user workspace that hides a number of admin related features.",
     "features": {
         "job": true,

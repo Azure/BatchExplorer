@@ -1,6 +1,6 @@
 <bl-dropdown class="workspace-dropdown" [footer]="true" align="left">
     <div bl-dropdown-btn>
-        Workspaces
+        {{selectedWorkspaceName}} workspace
         <i *ngIf="loaded === false" class="fa fa-spinner fa-spin"></i>
     </div>
     <div bl-dropdown-content>

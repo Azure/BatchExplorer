@@ -12,6 +12,7 @@ export class Workspace {
     }
 
     public isFeatureEnabled(feature: string): boolean {
-        return true;
+        console.log(`Workspace.isFeatureEnabled: ${feature}`, this.features);
+        return Boolean(this.features[feature]);
     }
 }

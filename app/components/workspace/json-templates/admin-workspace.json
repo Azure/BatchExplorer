@@ -1,6 +1,6 @@
 {
     "id": "admin.workspace",
-    "displayName": "Admin/Developer workspace",
+    "displayName": "Admin/Developer",
     "description": "Default admin or developer workspace where everthing is enabled.",
     "features": {
         "job": true,

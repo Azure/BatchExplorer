@@ -10,7 +10,6 @@ import "./main-navigation.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainNavigationComponent implements OnDestroy {
-
     public selectedAccountAlias: string;
     public selectedId: string;
 
