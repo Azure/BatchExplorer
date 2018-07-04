@@ -6,6 +6,7 @@ import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { NavigableRecord, PinnableEntity, PinnedEntityType } from "@batch-flask/core";
+import { ContextMenuService } from "@batch-flask/ui";
 import { DropdownModule } from "@batch-flask/ui/dropdown";
 import { AccountService, PinnedEntityService } from "app/services";
 import * as Fixtures from "test/fixture";
@@ -35,6 +36,12 @@ describe("PinnedDropDownComponent", () => {
         favorites = new BehaviorSubject(List([]));
         pinServiceSpy = {
             favorites: favorites.asObservable(),
+            unPinFavorite: jasmine.createSpy("unPinFavorite").and.callFake((favorite) => {
+                // remove from fav list
+                const favArray = favorites.value.toArray();
+                favArray.splice(0, 1);
+                favorites.next(List(favArray));
+            }),
         };
 
         accountServiceSpy = {
@@ -52,6 +59,7 @@ describe("PinnedDropDownComponent", () => {
             providers: [
                 { provide: AccountService, useValue: accountServiceSpy },
                 { provide: PinnedEntityService, useValue: pinServiceSpy },
+                { provide: ContextMenuService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -69,6 +77,8 @@ describe("PinnedDropDownComponent", () => {
             expect(component.entityType(createPin(PinnedEntityType.Job))).toBe("Batch job");
             expect(component.entityType(createPin(PinnedEntityType.Pool))).toBe("Batch pool");
             expect(component.entityType(createPin(PinnedEntityType.StorageContainer))).toBe("Storage container");
+            expect(component.entityType(createPin(PinnedEntityType.Certificate))).toBe("Batch certificate");
+            expect(component.entityType(createPin(PinnedEntityType.JobSchedule))).toBe("Batch job schedule");
             expect(component.entityType(createPin(null))).toBe("unknown");
         });
 
@@ -77,6 +87,8 @@ describe("PinnedDropDownComponent", () => {
             expect(component.entityIcon(createPin(PinnedEntityType.Job))).toBe("fa-tasks");
             expect(component.entityIcon(createPin(PinnedEntityType.Pool))).toBe("fa-database");
             expect(component.entityIcon(createPin(PinnedEntityType.StorageContainer))).toBe("fa-cloud-upload");
+            expect(component.entityIcon(createPin(PinnedEntityType.Certificate))).toBe("fa-certificate");
+            expect(component.entityIcon(createPin(PinnedEntityType.JobSchedule))).toBe("fa-calendar");
             expect(component.entityIcon(createPin(null))).toBe("fa-question");
         });
     });
@@ -117,14 +129,15 @@ describe("PinnedDropDownComponent", () => {
             const items = fixture.debugElement.queryAll(By.css(".dropdown-item"));
             expect(items.length).toBe(1);
             expect(items[0].nativeElement.textContent).toContain("my-job-fred");
-            expect(items[0].nativeElement.textContent).toContain("Batch job");
 
-            const icon = items[0].query(By.css(".fa.fa-tasks"));
-            expect(icon.nativeElement).toBeDefined();
+            // type is now in icon title
+            const icon = items[0].query(By.css(".fa.fa-tasks")).nativeElement;
+            expect(icon).toBeDefined();
+            expect(icon.getAttribute("title")).toBe("Batch job");
         });
     });
 
-    describe("when there are more than one favorites", () => {
+    describe("when there are more than one favorite", () => {
         beforeEach(() => {
             favorites.next(List([
                 Fixtures.pinnable.create({
@@ -159,11 +172,34 @@ describe("PinnedDropDownComponent", () => {
         it("pool should show name over id", () => {
             const items = debugElement.queryAll(By.css(".dropdown-item"));
             expect(items[0].nativeElement.textContent).toContain("my-job-matt");
-            expect(items[0].nativeElement.textContent).toContain("Batch job");
-
             expect(items[1].nativeElement.textContent).toContain("my-name-is-bob");
             expect(items[1].nativeElement.textContent).not.toContain("my-pool-bob");
-            expect(items[1].nativeElement.textContent).toContain("Batch pool");
+        });
+    });
+
+    describe("when we remove favorites", () => {
+        beforeEach(() => {
+            favorites.next(List([
+                Fixtures.pinnable.create({
+                    id: "my-apple",
+                    routerLink: ["/certificates", "my-apple"],
+                    pinnableType: PinnedEntityType.Certificate,
+                    url: "https://myaccount.westus.batch.com/jobs/my-apple",
+                }),
+            ]));
+
+            dropDownButton.nativeElement.click();
+            fixture.detectChanges();
+        });
+
+        it("should be one favorite", () => {
+            expect(favorites.value.count()).toBe(1);
+        });
+
+        it("should remove favorite", () => {
+            component.removeFavorite(favorites.value.toArray()[0] as any);
+            expect(pinServiceSpy.unPinFavorite).toHaveBeenCalledTimes(1);
+            expect(favorites.value.count()).toBe(0);
         });
     });
 });
