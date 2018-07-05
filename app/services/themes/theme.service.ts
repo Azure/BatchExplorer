@@ -1,7 +1,7 @@
-import { Injectable, NgZone } from "@angular/core";
+import { Injectable, NgZone, OnDestroy } from "@angular/core";
 import { FSWatcher } from "chokidar";
 import * as path from "path";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
@@ -9,29 +9,39 @@ import { NotificationService } from "@batch-flask/ui/notifications";
 import { FileSystemService } from "app/services/fs.service";
 import { log } from "app/utils";
 import { BatchLabsService } from "../batch-labs.service";
+import { SettingsService } from "../settings.service";
 import { Theme } from "./theme.model";
 
 /**
  * Service handling theme selection
  */
 @Injectable()
-export class ThemeService {
+export class ThemeService implements OnDestroy {
     public baseTheme = "classic";
-    public defaultTheme = "dark";
+    public defaultTheme = "classic";
     public currentTheme: Observable<Theme>;
-    private _currentTheme = new BehaviorSubject(null);
+    private _currentTheme = new BehaviorSubject<Theme>(null);
+    private _currentThemeName = null;
     private _watcher: FSWatcher;
     private _themesLoadPath: string[];
     private _baseThemeDefinition;
+    private _subs: Subscription[] = [];
+
     constructor(
         private fs: FileSystemService,
         private notificationService: NotificationService,
+        private settingsService: SettingsService,
         private zone: NgZone,
         batchLabs: BatchLabsService) {
         this.currentTheme = this._currentTheme.filter(x => x !== null);
-        this.currentTheme.subscribe((theme) => {
+        this._subs.push(this.currentTheme.subscribe((theme) => {
             this._applyTheme(theme);
-        });
+        }));
+
+        this._subs.push(this.settingsService.settingsObs.subscribe((settings) => {
+            const themeName = settings.theme || this.defaultTheme;
+            this.setTheme(themeName);
+        }));
 
         this._themesLoadPath = [
             path.join(batchLabs.resourcesFolder, "data", "themes"),
@@ -44,11 +54,16 @@ export class ThemeService {
         await this.setTheme(this.defaultTheme);
     }
 
+    public ngOnDestroy() {
+        this._subs.forEach(x => x.unsubscribe());
+    }
+
     public async setTheme(name: string) {
+        if (this._currentThemeName === name) { return; }
+        this._currentThemeName = name;
         const theme = await this._loadTheme(name);
         this._setTheme(theme);
     }
-
 
     public async findThemeLocation(name: string): Promise<string> {
         const triedLocations = [];
