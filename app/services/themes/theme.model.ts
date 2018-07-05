@@ -115,6 +115,8 @@ export class Theme extends ThemeElement<ThemeDefinition> {
     @CssColor() public success: ColorPalette;
     @CssColor("main-background") public mainBackground: string;
     @CssColor("card-background") public cardBackground: string;
+    @CssColor() public selection: string;
+    @CssColor() public border: string;
     @CssColor() public outline: string;
     @CssColor() public text: TextColor;
     @CssColor() public header: EntityColor;

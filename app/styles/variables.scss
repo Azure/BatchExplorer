@@ -32,13 +32,6 @@ $emperor-grey       :  #535353;
 $mineshaft-grey     :  #333333;
 $mineShaftGray      :  $mineshaft-grey;
 
-// Status Colours
-//---------------------------------------------
-$warningText        :  map-get($warn, 500);
-$errorText          :  map-get($danger, 500);
-$infoText           :  map-get($primary, 500);
-$successText        :  map-get($success, 500);
-
 // Text
 //---------------------------------------------
 $headings-color             : map-get($primary, 700);
@@ -71,7 +64,6 @@ $h6FontSize         : $font-size-base;
 $listview-background :  white;
 $footer-background: map-get($primary, 200);
 $navigation-text: $whiteSmoke;
-$border-color: $alto;
 
 // Layout sizing
 //---------------------------------------------

@@ -11,23 +11,15 @@
     white-space: nowrap;
 
     &.selected {
-        background-color: map-get($primary, 100);
-
-        p {
-            color: $mineShaftGray;
-        }
+        background-color: $primary-color-light;
     }
 
     &.focused {
-        background-color: map-get($primary, 200);
-    }
-
-    &.conceal {
-        opacity: 0.3;
+        background-color: $primary-color;
     }
 
     &:hover:not(.selected) {
-        background-color: $altoGray;
+        background-color: $selection-color;
     }
 
     .quick-list-details {

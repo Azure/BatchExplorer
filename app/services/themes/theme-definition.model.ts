@@ -37,6 +37,16 @@ export interface ThemeDefinition {
      */
     "card-background": string;
 
+    /**
+     * Background color for selected items
+     */
+    "selection": string;
+
+    /**
+     * Color for borders
+     */
+    "border": string;
+
     outline: string;
 
     /**
