@@ -29,15 +29,24 @@ fdescribe("WorkspaceDropDownComponent", () => {
 
     beforeEach(() => {
         workspaces = new BehaviorSubject(List([]));
+        currentWorkspace = new BehaviorSubject(null);
         workspaceSpy = {
             workspaces: workspaces.asObservable(),
             currentWorkspace: currentWorkspace.asObservable(),
             selectWorkspace: jasmine.createSpy("selectWorkspace").and.callFake((workspaceId) => {
+                // const wsId: "007";
+                // const name: "";
                 // remove from fav list
                 // const favArray = workspaces.value.toArray();
                 // favArray.splice(0, 1);
                 // workspaces.next(List(favArray));
             }),
+            // selectWorkspace: jasmine.createSpy("selectWorkspace").and.callFake((workspaceName) => {
+            //     workspaceName = "";
+            // }),
+            // selectWorkspace: jasmine.createSpy("selectWorkspace").and.callFake((loaded) => {
+            //     loaded = false;
+            // }),
         };
 
         TestBed.configureTestingModule({
@@ -57,71 +66,56 @@ fdescribe("WorkspaceDropDownComponent", () => {
         fixture.detectChanges();
     });
 
-    // describe("basic setup", () => {
-    //     it("should return the correct type name", () => {
-    //         expect(component.entityType(createPin(PinnedEntityType.Application))).toBe("Batch application");
-    //         expect(component.entityType(createPin(PinnedEntityType.Job))).toBe("Batch job");
-    //         expect(component.entityType(createPin(PinnedEntityType.Pool))).toBe("Batch pool");
-    //         expect(component.entityType(createPin(PinnedEntityType.StorageContainer))).toBe("Storage container");
-    //         expect(component.entityType(createPin(PinnedEntityType.Certificate))).toBe("Batch certificate");
-    //         expect(component.entityType(createPin(PinnedEntityType.JobSchedule))).toBe("Batch job schedule");
-    //         expect(component.entityType(createPin(null))).toBe("unknown");
-    //     });
+    describe("basic workspace setup", () => {
+        it("should return the correct workspace ID and be loaded", () => {
+            expect(component.selectedWorkspaceId).toBe("");
+            expect(component.selectedWorkspaceName).toBe("");
+            expect(component.loaded).toBe(true);
+        });
 
-    //     it("should return the correct icon", () => {
-    //         expect(component.entityIcon(createPin(PinnedEntityType.Application))).toBe("fa-file-archive-o");
-    //         expect(component.entityIcon(createPin(PinnedEntityType.Job))).toBe("fa-tasks");
-    //         expect(component.entityIcon(createPin(PinnedEntityType.Pool))).toBe("fa-database");
-    //         expect(component.entityIcon(createPin(PinnedEntityType.StorageContainer))).toBe("fa-cloud-upload");
-    //         expect(component.entityIcon(createPin(PinnedEntityType.Certificate))).toBe("fa-certificate");
-    //         expect(component.entityIcon(createPin(PinnedEntityType.JobSchedule))).toBe("fa-calendar");
-    //         expect(component.entityIcon(createPin(null))).toBe("fa-question");
-    //     });
-    // });
+        it("should show Manage Workspaces only", () => {
+            expect(dropDownButton.nativeElement.textContent).toContain("Manage Workspaces");
+            // expect(component.selectedWorkspaceName).toBe("");
+            // expect(component.selectedWorkspaceId).toBe("");
+        });
 
-    // describe("when there are no workspaces", () => {
-    //     it("should show no workspaces title", () => {
-    //         expect(component.title).toBe("No favorite items pinned");
-    //         expect((component as any)._accountEndpoint).toBe("myaccount.westus.batch.com");
-    //         expect(dropDownButton.nativeElement.textContent).toContain("No favorite items pinned");
-    //     });
+        it("should show 1 item in dropdown", () => {
+            const items = fixture.debugElement.queryAll(By.css(".dropdown-item"));
+            expect(items.length).toBe(1);
+            expect(items[0].nativeElement.textContent).toContain("Manage Workspaces");
+        });
+    });
 
-    //     it("drop down should have no items", () => {
-    //         const items = debugElement.queryAll(By.css(".dropdown-item"));
-    //         expect(items.length).toBe(0);
-    //     });
-    // });
+    describe("when there are workspaces", () => {
+        beforeEach(() => {
+            const ws = new Workspace({
+                id: "me",
+                displayName: "my template",
+                description: "",
+                features: {} as any,
+            });
 
-    // describe("when there are workspaces", () => {
-    //     beforeEach(() => {
-    //         const pin = Fixtures.pinnable.create({
-    //             id: "my-job-fred",
-    //             routerLink: ["/jobs", "my-job-fred"],
-    //             pinnableType: PinnedEntityType.Job,
-    //             url: "https://myaccount.westus.batch.com/jobs/my-job-fred",
-    //         });
+            workspaces.next(List([ws]));
+            currentWorkspace.next(ws);
+            dropDownButton.nativeElement.click();
+            fixture.detectChanges();
+        });
 
-    //         workspaces.next(List([pin]));
-    //         dropDownButton.nativeElement.click();
-    //         fixture.detectChanges();
-    //     });
+        it("should show 2 workspaces", () => {
+            console.log("test now");
+            expect(component.selectedWorkspaceName).toBe("my template");
+            expect(component.selectedWorkspaceId).toBe("me");
+            expect(dropDownButton.nativeElement.textContent).toContain("my template");
+        });
 
-    //     it("should show favorite count in the title", () => {
-    //         expect(component.title).toBe("1 favorite items pinned");
-    //         expect(dropDownButton.nativeElement.textContent).toContain("1 favorite items pinned");
-    //     });
-
-    //     it("drop down should have 1 item", () => {
-    //         const items = fixture.debugElement.queryAll(By.css(".dropdown-item"));
-    //         expect(items.length).toBe(1);
-    //         expect(items[0].nativeElement.textContent).toContain("my-job-fred");
-
-    //         // type is now in icon title
-    //         const icon = items[0].query(By.css(".fa.fa-tasks")).nativeElement;
-    //         expect(icon).toBeDefined();
-    //         expect(icon.getAttribute("title")).toBe("Batch job");
-    //     });
-    // });
+        // todo: add this to the first describe
+        // it("drop down should have 1 item", () => {
+        //     const items = fixture.debugElement.queryAll(By.css(".dropdown-item"));
+        //     expect(items.length).toBe(2);
+        //     expect(items[0].nativeElement.textContent).toContain("my template");
+        //     expect(items[1].nativeElement.textContent).toContain("manage worspaces");
+        // });
+    });
 
     // describe("when there are more than one favorite", () => {
     //     beforeEach(() => {

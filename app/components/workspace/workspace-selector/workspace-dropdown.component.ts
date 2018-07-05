@@ -25,12 +25,14 @@ export class WorkspaceDropDownComponent implements OnDestroy {
 
         this.workspaces = this.workspaceService.workspaces;
         this._subscriptions.push(this.workspaces.subscribe((workspaces) => {
+            console.log("this.workspaces.subscribe: ", workspaces);
             this.loaded = true;
             this.changeDetector.markForCheck();
         }));
 
         this._subscriptions.push(this.workspaceService.currentWorkspace.subscribe((workspace) => {
             // for when the initial workspace is set or the user selects another one
+            console.log("this.currentWorkspace.subscribe: ", workspace);
             this.selectedWorkspaceId = workspace.id;
             this.selectedWorkspaceName = workspace.name;
             this.changeDetector.markForCheck();
