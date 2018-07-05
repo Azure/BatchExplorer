@@ -16,12 +16,13 @@ import { Theme } from "./theme.model";
  */
 @Injectable()
 export class ThemeService {
-    public defaultTheme = "classic";
+    public baseTheme = "classic";
+    public defaultTheme = "dark";
     public currentTheme: Observable<Theme>;
     private _currentTheme = new BehaviorSubject(null);
     private _watcher: FSWatcher;
     private _themesLoadPath: string[];
-
+    private _baseThemeDefinition;
     constructor(
         private fs: FileSystemService,
         private notificationService: NotificationService,
@@ -38,13 +39,15 @@ export class ThemeService {
         ];
     }
 
-    public init() {
-        this.setTheme(this.defaultTheme);
+    public async init() {
+        this._baseThemeDefinition = await this._loadTheme(this.baseTheme);
+        await this.setTheme(this.defaultTheme);
     }
 
     public async setTheme(name: string) {
         const theme = await this._loadTheme(name);
-        this._currentTheme.next(theme);
+        const computedTheme = new Theme({} as any).merge(this._baseThemeDefinition).merge(theme);
+        this._currentTheme.next(computedTheme);
     }
 
     public async findThemeLocation(name: string): Promise<string> {

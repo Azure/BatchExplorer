@@ -1,4 +1,4 @@
-import { log } from "@batch-flask/utils";
+import { exists, log, nil } from "@batch-flask/utils";
 
 const attrMetadataKey = "csscolor:attrs";
 
@@ -30,6 +30,21 @@ export class ThemeElement<ThemeInput> {
                 }
             }
         }
+    }
+
+    public merge(other: this) {
+        for (const { attr, metadata } of this._getAttrs()) {
+            const { type } = metadata;
+            const value = other[attr];
+            if (exists(value)) {
+                if (type.name === "String" || nil(this[attr])) {
+                    this[attr] = value;
+                } else {
+                    this[attr].merge(value);
+                }
+            }
+        }
+        return this;
     }
 
     public asCss(): Array<{ key: string, value: string }> {

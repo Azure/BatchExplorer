@@ -55,7 +55,7 @@
         "placeholder": {"$ref": "#/definitions/color"},
         "border": {"$ref": "#/definitions/color"},
         "focus-border": {"$ref": "#/definitions/color"},
-        "disabled-background": {"$ref": "#/definitions/color"},
+        "disabled-background": {"$ref": "#/definitions/color"}
       }
     }
   }
