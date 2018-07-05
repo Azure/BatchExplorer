@@ -1,7 +1,7 @@
 <bl-scrollable>
     <div *ngIf="application">
         <h1>
-            <img class="logo" [src]="application.icon" height="30" width="30" alt="logo" *ngIf="application?.icon">
+            <img class="logo" [src]="application.icon" height="30" width="30" alt="Logo for {{application.name}}" *ngIf="application?.icon">
             <span>Action selection for
                 <span [title]="application.description">{{application?.name}}</span>
             </span>

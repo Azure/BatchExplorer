@@ -12,7 +12,7 @@ import {
     JobReleaseTaskDecorator,
 } from "app/models/decorators";
 import { JobPatchDto } from "app/models/dtos";
-import { JobService } from "app/services";
+import { JobService, WorkspaceService } from "app/services";
 
 // tslint:disable:trackBy-function
 @Component({
@@ -40,7 +40,10 @@ export class JobConfigurationComponent {
 
     private _job: Job;
 
-    constructor(private sidebarManager: SidebarManager, private jobService: JobService) {
+    constructor(
+        private sidebarManager: SidebarManager,
+        private jobService: JobService,
+        private workspaceService: WorkspaceService) {
 
     }
 

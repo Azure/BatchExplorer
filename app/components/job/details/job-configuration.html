@@ -1,4 +1,4 @@
-<bl-entity-configuration [value]="job">
+<bl-entity-configuration [value]="job" [enableJsonView]="workspaceService.isFeatureEnabled('job.view.configuration.json')">
     <bl-property-list>
         <bl-property-group label="General" class="wide">
             <bl-text-property label="ID" [value]="decorator.id"></bl-text-property>

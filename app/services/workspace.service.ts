@@ -28,10 +28,6 @@ export class WorkspaceService {
         return this._currentWorkspace.asObservable();
     }
 
-    public get currentWorkspaceId(): Observable<string> {
-        return this._currentWorkspaceId.asObservable();
-    }
-
     public get haveWorkspacesLoaded(): Observable<boolean> {
         return this._haveWorkspacesLoaded.asObservable();
     }
@@ -44,6 +40,14 @@ export class WorkspaceService {
         const workspace = this._workspaces.value.find((ws: Workspace) => ws.id === workspaceId);
         this._currentWorkspaceId.next(workspaceId);
         this._currentWorkspace.next(workspace);
+    }
+
+    public isFeatureEnabled(feature: string): boolean {
+        return this._currentWorkspace.value.isFeatureEnabled(feature);
+    }
+
+    public isFeatureDisabled(feature: string): boolean {
+        return !this._currentWorkspace.value.isFeatureEnabled(feature);
     }
 
     private loadWorkspaces() {
