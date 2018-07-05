@@ -152,11 +152,8 @@ bl-browse-layout {
     > input {
         flex: 1 0 auto;
         padding: 5px;
-        color: $emperor-grey;
         font-size: 1.1em;
         height: 26px;
-
-        border: 1px solid $border-color;
 
         &:focus {
             outline: none;

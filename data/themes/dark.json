@@ -1,14 +1,14 @@
 {
   "$schema": "./theme.schema.json",
-  "primary": "#3d85c6",
-  "danger": "#aa3939",
+  "primary": "#61afef",
+  "danger": "#A63234",
   "warn": "#f4ad42",
   "success": "#4caf50",
-  "main-background": "#666666",
-  "card-background": "#5b5b5b",
+  "main-background": "#21252B",
+  "card-background": "#282C34",
   "text": {
-    "primary": "",
-    "secondary": "#757575"
+    "primary": "#cccccc",
+    "secondary": "#A7A8A9"
   },
   "breadcrumb": {
     "text": "white",
@@ -22,12 +22,24 @@
   },
   "navigation": {
     "text": "white",
-    "background": "#5b5b5b",
+    "background": "#333842",
     "hover-background": "#666666"
   },
   "footer": {
     "text": "whitesmoke",
     "background": "var(--color-primary)",
     "hover": "#757575"
+  },
+  "button": {
+    "disabled-text": "#d5d5d5",
+    "disabled-bg": "#ededed"
+  },
+  "input": {
+    "border": "#3C4049",
+    "focus-border": "var(--color-primary)",
+    "placeholder": "#d5d5d5",
+    "text": "var(--color-text-primary)",
+    "background": "#21252B",
+    "disabled-background": "#e5e5e5"
   }
 }

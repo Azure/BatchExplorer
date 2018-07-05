@@ -54,7 +54,7 @@
     "border": "#d5d5d5",
     "focus-border": "var(--color-primary)",
     "placeholder": "#d5d5d5",
-    "text": "var(--color-primary-text)",
+    "text": "var(--color-text-primary)",
     "background": "#fff",
     "disabled-background": "#e5e5e5"
   }

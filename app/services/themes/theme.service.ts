@@ -46,9 +46,9 @@ export class ThemeService {
 
     public async setTheme(name: string) {
         const theme = await this._loadTheme(name);
-        const computedTheme = new Theme({} as any).merge(this._baseThemeDefinition).merge(theme);
-        this._currentTheme.next(computedTheme);
+        this._setTheme(theme);
     }
+
 
     public async findThemeLocation(name: string): Promise<string> {
         const triedLocations = [];
@@ -86,6 +86,11 @@ export class ThemeService {
         }
     }
 
+    private _setTheme(theme: Theme) {
+        const computedTheme = new Theme({} as any).merge(this._baseThemeDefinition).merge(theme);
+        this._currentTheme.next(computedTheme);
+    }
+
     private _notifyErrorLoadingTheme(message: string) {
         this.zone.run(() => {
             this.notificationService.warn(`Error loading theme file`, message);
@@ -101,7 +106,7 @@ export class ThemeService {
             log.info("[BatchLabs] Theme file updated. Reloading theme.");
             const theme = await this._loadThemeAt(filePath);
             this.zone.run(() => {
-                this._currentTheme.next(theme);
+                this._setTheme(theme);
             });
         });
     }
