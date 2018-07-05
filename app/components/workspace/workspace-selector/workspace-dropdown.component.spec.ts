@@ -3,8 +3,9 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 
+import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { DropdownModule } from "@batch-flask/ui/dropdown";
 import { Workspace } from "app/models";
 import { WorkspaceService } from "app/services";
@@ -22,10 +23,10 @@ fdescribe("WorkspaceDropDownComponent", () => {
     let component: WorkspaceDropDownComponent;
     let debugElement;
 
+    let dropDownButton;
     let workspaces: BehaviorSubject<List<Workspace>>;
     let currentWorkspace: BehaviorSubject<Workspace>;
     let workspaceSpy;
-    let dropDownButton;
 
     beforeEach(() => {
         workspaces = new BehaviorSubject(List([]));
@@ -33,30 +34,21 @@ fdescribe("WorkspaceDropDownComponent", () => {
         workspaceSpy = {
             workspaces: workspaces.asObservable(),
             currentWorkspace: currentWorkspace.asObservable(),
+            // selectWorkspace: jasmine.createSpy("selectWorkspace"),
             selectWorkspace: jasmine.createSpy("selectWorkspace").and.callFake((workspaceId) => {
-                // const wsId: "007";
-                // const name: "";
-                // remove from fav list
-                // const favArray = workspaces.value.toArray();
-                // favArray.splice(0, 1);
-                // workspaces.next(List(favArray));
+                const found = workspaces.value.find((item) => item.id === workspaceId);
+                currentWorkspace.next(found);
             }),
-            // selectWorkspace: jasmine.createSpy("selectWorkspace").and.callFake((workspaceName) => {
-            //     workspaceName = "";
-            // }),
-            // selectWorkspace: jasmine.createSpy("selectWorkspace").and.callFake((loaded) => {
-            //     loaded = false;
-            // }),
         };
 
         TestBed.configureTestingModule({
-            imports: [DropdownModule, RouterTestingModule],
+            imports: [ButtonsModule, DropdownModule, RouterTestingModule],
             declarations: [WorkspaceDropDownComponent, TestComponent],
             providers: [
                 { provide: ChangeDetectorRef, useValue: null },
                 { provide: WorkspaceService, useValue: workspaceSpy },
             ],
-            schemas: [NO_ERRORS_SCHEMA],
+            // schemas: [NO_ERRORS_SCHEMA],
         });
 
         fixture = TestBed.createComponent(TestComponent);
@@ -69,55 +61,56 @@ fdescribe("WorkspaceDropDownComponent", () => {
     describe("basic workspace setup", () => {
         it("should return the correct workspace ID and be loaded", () => {
             expect(component.selectedWorkspaceId).toBe("");
-            expect(component.selectedWorkspaceName).toBe("");
+            expect(component.selectButtonText).toBe("No workspace selected");
             expect(component.loaded).toBe(true);
         });
+    });
 
-        it("should show Manage Workspaces only", () => {
-            expect(dropDownButton.nativeElement.textContent).toContain("Manage Workspaces");
-            // expect(component.selectedWorkspaceName).toBe("");
-            // expect(component.selectedWorkspaceId).toBe("");
+    describe("basic workspace setup", () => {
+        beforeEach(() => {
+            dropDownButton.nativeElement.click();
+            fixture.detectChanges();
         });
 
-        it("should show 1 item in dropdown", () => {
+        it("should show manange workspaces item in dropdown", () => {
             const items = fixture.debugElement.queryAll(By.css(".dropdown-item"));
             expect(items.length).toBe(1);
-            expect(items[0].nativeElement.textContent).toContain("Manage Workspaces");
+            expect(items[0].nativeElement.textContent).toContain("Manage workspaces");
         });
     });
 
     describe("when there are workspaces", () => {
         beforeEach(() => {
-            const ws = new Workspace({
-                id: "me",
-                displayName: "my template",
-                description: "",
-                features: {} as any,
-            });
+            const ws = [
+                Fixtures.workspace.create({ id: "not-bob", displayName: "apple" }),
+            ];
 
-            workspaces.next(List([ws]));
-            currentWorkspace.next(ws);
+            workspaces.next(List(ws));
+            currentWorkspace.next(ws.first());
             dropDownButton.nativeElement.click();
             fixture.detectChanges();
         });
 
-        it("should show 2 workspaces", () => {
-            console.log("test now");
-            expect(component.selectedWorkspaceName).toBe("my template");
-            expect(component.selectedWorkspaceId).toBe("me");
-            expect(dropDownButton.nativeElement.textContent).toContain("my template");
+        it("should have selected details", () => {
+            expect(component.selectButtonText).toBe("apple");
+            expect(dropDownButton.nativeElement.textContent).toContain("apple");
+            expect(component.selectedWorkspaceId).toBe("not-bob");
         });
 
-        // todo: add this to the first describe
-        // it("drop down should have 1 item", () => {
-        //     const items = fixture.debugElement.queryAll(By.css(".dropdown-item"));
-        //     expect(items.length).toBe(2);
-        //     expect(items[0].nativeElement.textContent).toContain("my template");
-        //     expect(items[1].nativeElement.textContent).toContain("manage worspaces");
-        // });
+        it("have one workspace", () => {
+            expect(workspaces.value.count()).toBe(1);
+        });
+
+        it("drop down should have 2 items", () => {
+            // one workspace and one 'manage'
+            const items = fixture.debugElement.queryAll(By.css(".dropdown-item"));
+            expect(items.length).toBe(2);
+            expect(items[0].nativeElement.textContent).toContain("apple");
+            expect(items[1].nativeElement.textContent).toContain("Manage workspaces");
+        });
     });
 
-    // describe("when there are more than one favorite", () => {
+    // describe("when we change workspaces", () => {
     //     beforeEach(() => {
     //         workspaces.next(List([
     //             Fixtures.pinnable.create({
@@ -140,6 +133,20 @@ fdescribe("WorkspaceDropDownComponent", () => {
     //     });
 
     //     it("should show favorite count in the title", () => {
+    //         component.selectWorkspace(ws[1])
+    //
+    //         fixture.detectChanges();
+    //
+
+/**
+*                expect(component.selectedWorkspaceId).toBe(the one i set it to)
+*                expect(component.selectButtonText).toBe(the one i set it to)
+ *
+ */
+
+    //         spy.selectWorkspace.hasbeencalledone(1)
+    //         expect(jobScheduleServiceSpy.selectWorkspace).toHaveBeenCalledTimes(1);
+    //                                                       toHaveBeenCalledWith("the id")
     //         expect(component.title).toBe("2 favorite items pinned");
     //         expect(dropDownButton.nativeElement.textContent).toContain("2 favorite items pinned");
     //     });
@@ -154,32 +161,6 @@ fdescribe("WorkspaceDropDownComponent", () => {
     //         expect(items[0].nativeElement.textContent).toContain("my-job-matt");
     //         expect(items[1].nativeElement.textContent).toContain("my-name-is-bob");
     //         expect(items[1].nativeElement.textContent).not.toContain("my-pool-bob");
-    //     });
-    // });
-
-    // describe("when we remove workspaces", () => {
-    //     beforeEach(() => {
-    //         workspaces.next(List([
-    //             Fixtures.pinnable.create({
-    //                 id: "my-apple",
-    //                 routerLink: ["/certificates", "my-apple"],
-    //                 pinnableType: PinnedEntityType.Certificate,
-    //                 url: "https://myaccount.westus.batch.com/jobs/my-apple",
-    //             }),
-    //         ]));
-
-    //         dropDownButton.nativeElement.click();
-    //         fixture.detectChanges();
-    //     });
-
-    //     it("should be one favorite", () => {
-    //         expect(workspaces.value.count()).toBe(1);
-    //     });
-
-    //     it("should remove favorite", () => {
-    //         component.removeFavorite(workspaces.value.toArray()[0] as any);
-    //         expect(pinServiceSpy.unPinFavorite).toHaveBeenCalledTimes(1);
-    //         expect(workspaces.value.count()).toBe(0);
     //     });
     // });
 });

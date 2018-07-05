@@ -1,7 +1,7 @@
 <bl-dropdown class="workspace-dropdown" [footer]="true" align="left">
     <div bl-dropdown-btn>
         <!-- add a default here for while it's loading? -->
-        {{selectedWorkspaceName}}
+        {{selectButtonText}}
         <i *ngIf="loaded === false" class="fa fa-spinner fa-spin"></i>
     </div>
     <div bl-dropdown-content>
@@ -18,7 +18,7 @@
                 <i class="fa fa-check"></i>
             </div>
         </div>
-        <bl-clickable *ngIf="selectedWorkspaceId" class="dropdown-item manage">
+        <bl-clickable class="dropdown-item manage">
             <i class="fa fa-cog fa-2x"></i> Manage workspaces
         </bl-clickable>
     </div>

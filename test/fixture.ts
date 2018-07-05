@@ -2,8 +2,20 @@ import { Type } from "@angular/core";
 import * as moment from "moment";
 
 import { PinnedEntityType } from "@batch-flask/core";
-import { AccountResource, ApplicationPackage, BatchApplication, BlobContainer, File, Job, Node, PackageState,
-     Pool, Subscription, SubtaskInformation, Task,
+import {
+    AccountResource,
+    ApplicationPackage,
+    BatchApplication,
+    BlobContainer,
+    File,
+    Job,
+    Node,
+    PackageState,
+    Pool,
+    Subscription,
+    SubtaskInformation,
+    Task,
+    Workspace,
 } from "app/models";
 
 export class FixtureFactory<TEntity> {
@@ -262,4 +274,11 @@ export const pinnable = new FixtureFactory<any>(Object, {
 export const container = new FixtureFactory<BlobContainer>(BlobContainer, {
     id: "fgrp-container",
     name: "container",
+});
+
+export const workspace = new FixtureFactory<Workspace>(Workspace, {
+    id: "bob",
+    displayName: "my workpace bob",
+    description: "who cares",
+    features: {} as any,
 });

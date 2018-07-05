@@ -22,7 +22,7 @@ export class FeatureVisibleDirective implements OnInit, OnDestroy  {
 
     public ngOnInit() {
         this._subscription = this.workspaceService.currentWorkspace.subscribe((workspace) => {
-            if (this.feature) {
+            if (this.feature && workspace) {
                 this.viewContainer.clear();
                 // always visible if there is no workspace selected
                 const enabled = workspace.isFeatureEnabled(this.feature);
@@ -38,6 +38,6 @@ export class FeatureVisibleDirective implements OnInit, OnDestroy  {
     public ngOnDestroy() {
         if (this._subscription) {
             this._subscription.unsubscribe();
-        }\
+        }
     }
 }

@@ -14,7 +14,7 @@ import "./workspace-dropdown.scss";
 export class WorkspaceDropDownComponent implements OnDestroy {
     public workspaces: Observable<List<Workspace>>;
     public selectedWorkspaceId: string = "";
-    public selectedWorkspaceName: string = "";
+    public selectButtonText: string = "";
     public loaded = false;
 
     private _subscriptions: Subscription[] = [];
@@ -33,8 +33,13 @@ export class WorkspaceDropDownComponent implements OnDestroy {
         this._subscriptions.push(this.workspaceService.currentWorkspace.subscribe((workspace) => {
             // for when the initial workspace is set or the user selects another one
             console.log("this.currentWorkspace.subscribe: ", workspace);
-            this.selectedWorkspaceId = workspace.id;
-            this.selectedWorkspaceName = workspace.name;
+            if (workspace) {
+                this.selectedWorkspaceId = workspace.id;
+                this.selectButtonText = workspace.name;
+            } else {
+                this.selectButtonText = "No workspace selected";
+            }
+
             this.changeDetector.markForCheck();
         }));
     }
