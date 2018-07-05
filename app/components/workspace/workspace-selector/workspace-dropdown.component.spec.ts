@@ -79,7 +79,7 @@ fdescribe("WorkspaceDropDownComponent", () => {
         });
     });
 
-    describe("when there are workspaces", () => {
+    describe("when there is 1 workspace", () => {
         beforeEach(() => {
             const ws = [
                 Fixtures.workspace.create({ id: "not-bob", displayName: "apple" }),
@@ -110,7 +110,51 @@ fdescribe("WorkspaceDropDownComponent", () => {
         });
     });
 
-    // describe("when we change workspaces", () => {
+    describe("when there are multiple workspaces and first workspace is selected", () => {
+        beforeEach(() => {
+            const ws = [
+                Fixtures.workspace.create({ id: "not-bob", displayName: "apple" }),
+                Fixtures.workspace.create({ id: "mouse", displayName: "kiwi" }),
+            ];
+
+            workspaces.next(List(ws));
+            currentWorkspace.next(ws.first());
+            dropDownButton.nativeElement.click();
+            fixture.detectChanges();
+        });
+
+        it("should have selected details", () => {
+            expect(component.selectButtonText).toBe("apple");
+            expect(dropDownButton.nativeElement.textContent).toContain("apple");
+            expect(component.selectedWorkspaceId).toBe("not-bob");
+        });
+
+        it("have two workspace", () => {
+            expect(workspaces.value.count()).toBe(2);
+        });
+
+        it("drop down should have 3 items", () => {
+            // one workspace and one 'manage'
+            const items = fixture.debugElement.queryAll(By.css(".dropdown-item"));
+            expect(items.length).toBe(3);
+            expect(items[0].nativeElement.textContent).toContain("apple");
+            expect(items[1].nativeElement.textContent).toContain("kiwi");
+            expect(items[2].nativeElement.textContent).toContain("Manage workspaces");
+        });
+    });
+
+    describe("when we change workspaces", () => {
+        beforeEach(() => {
+            const ws = [
+                Fixtures.workspace.create({ id: "not-bob", displayName: "apple" }),
+                Fixtures.workspace.create({ id: "mouse", displayName: "kiwi" }),
+            ];
+
+            workspaces.next(List(ws));
+            currentWorkspace.next(ws.first());
+            dropDownButton.nativeElement.click();
+            fixture.detectChanges();
+        });
     //     beforeEach(() => {
     //         workspaces.next(List([
     //             Fixtures.pinnable.create({
@@ -162,5 +206,5 @@ fdescribe("WorkspaceDropDownComponent", () => {
     //         expect(items[1].nativeElement.textContent).toContain("my-name-is-bob");
     //         expect(items[1].nativeElement.textContent).not.toContain("my-pool-bob");
     //     });
-    // });
+    });
 });
