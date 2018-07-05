@@ -112,43 +112,38 @@ bl-button {
         }
 
         &[color="light"] {
-            background: $mercury-grey;
-            color: map-get($primary, 500);
+            color: $button-light-text-color;
+            background: $button-light-bg-color;
 
             &:hover, &:focus {
-                background: $alto;
-                color: map-get($primary, 200);
-            }
-
-            &:active {
-                background: $silver-grey;
+                background: $button-light-hover-bg-color;
             }
         }
 
         &[color="danger"] {
-            background: map-get($danger, 500);
+            background: $danger-color;
             color: $whitesmoke;
 
             &:hover, &:focus {
-                background: map-get($danger, 800);
+                background: $danger-color-dark;
             }
         }
 
         &[color="warn"] {
-            background: map-get($warn, 500);
+            background: $warn-color;
             color: $whitesmoke;
 
             &:hover, &:focus {
-                background: map-get($warn, 800);
+                background: $warn-color-dark;
             }
         }
 
         &[color="success"] {
-            background: map-get($success, 500);
+            background: $success-color;
             color: $whitesmoke;
 
             &:hover, &:focus {
-                background: map-get($success, 800);
+                background: $success-color-dark;
             }
         }
     }

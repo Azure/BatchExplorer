@@ -37,6 +37,9 @@
     "folder-icon": "#f8d979"
   },
   "button": {
+    "light-text": "var(--color-primary)",
+    "light-bg": "#e5e5e5",
+    "light-hover-bg": "#d5d5d5",
     "disabled-text": "#d5d5d5",
     "disabled-bg": "#ededed"
   },

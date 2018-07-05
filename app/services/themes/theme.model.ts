@@ -86,6 +86,9 @@ export class FileExplorerColors extends ThemeElement<ThemeDefinition["file-explo
 }
 
 export class ButtonColors extends ThemeElement<ThemeDefinition["button"]> {
+    @CssColor("light-text") public lightText: string;
+    @CssColor("light-bg") public lightBg: string;
+    @CssColor("light-hover-bg") public lightHoverBg: string;
     @CssColor("disabled-text") public disabledText: string;
     @CssColor("disabled-bg") public disabledBg: string;
 }

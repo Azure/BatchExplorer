@@ -33,8 +33,11 @@
     "hover": "#757575"
   },
   "button": {
-    "disabled-text": "#d5d5d5",
-    "disabled-bg": "#ededed"
+    "light-text": "var(--color-primary)",
+    "light-bg": "#3F3F46",
+    "light-hover-bg": "#373744",
+    "disabled-text": "#8B8B8B",
+    "disabled-bg": "#2D2D30"
   },
   "input": {
     "border": "#3C4049",

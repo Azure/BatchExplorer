@@ -82,6 +82,8 @@ export interface ThemeDefinition {
     };
 
     button: {
+        "light-text": string;
+        "light-bg": string;
         "disabled-text": string;
         "disabled-bg": string;
     };
