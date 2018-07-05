@@ -80,10 +80,6 @@ bl-table {
         &.selected {
             background-color: map-get($primary, 100);
 
-            p {
-                color: $mineShaftGray;
-            }
-
             .checkbox {
                 border-color: $secondary-text;
             }
