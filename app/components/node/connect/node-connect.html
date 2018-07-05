@@ -84,5 +84,6 @@
     <div *ngIf="credentialSource === CredentialSource.Generated">
         <bl-button color="light" type="wide" [action]="goToHome">Back</bl-button>
     </div>
+    <bl-server-error *ngIf="error" [error]="error"></bl-server-error>
     <bl-clickable class="close-button" type="plain" (do)="close()"><i class="fa fa-times fa-lg"></i></bl-clickable>
 </div>

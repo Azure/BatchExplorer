@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { autobind } from "@batch-flask/core";
+import { ServerError, autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/ui";
 import { OS } from "@batch-flask/utils";
 import { List } from "immutable";
@@ -45,7 +45,7 @@ export class NodeConnectComponent implements OnInit {
     public defaultUsername: string;
     public username: string = "";
     public password: string = "";
-    public warning: string = "";
+    public error: ServerError = null;
     public tooltip: string = "";
     public ipFromRDP: string = "";
     public loading: boolean = false;
@@ -129,9 +129,6 @@ export class NodeConnectComponent implements OnInit {
         this.processLaunched = false;
         this.loading = true;
 
-        // set the warning as empty, since the user is trying again
-        this.warning = "";
-
         const credentials = {
             isAdmin: true,
             name: this.username || this.defaultUsername,
@@ -151,9 +148,11 @@ export class NodeConnectComponent implements OnInit {
                     this.credentialSource = CredentialSource.Generated;
                     this.processLaunched = true;
                     this.loading = false;
+                    this.error = null;
                 },
                 error: (error) => {
                     this.loading = false;
+                    this.error = error;
                     throw error;
                 },
             });
@@ -164,12 +163,16 @@ export class NodeConnectComponent implements OnInit {
             this.addOrUpdateUser(credentials).flatMap(() => {
                 return new Observable(null);
             }).subscribe({
-                next: () => { this.loading = false; },
+                next: () => {
+                    this.loading = false;
+                    this.error = null;
+                },
                 error: (err) => {
                     this.loading = false;
+                    this.error = err;
                     try {
                         // get the reason for the error (likely an invaid password)
-                        this.warning = err.details.filter(detail => detail.key === "Reason").pop().value;
+                        this.error = err;
                     } catch (e) {
                         throw err;
                     }
