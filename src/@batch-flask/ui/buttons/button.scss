@@ -100,7 +100,7 @@ bl-button {
 
         &[color="primary"] {
             background: $primary-color;
-            color: $whitesmoke;
+            color: $primary-text;
 
             &:hover, &:focus {
                 background: $primary-color-dark;
@@ -112,17 +112,17 @@ bl-button {
         }
 
         &[color="light"] {
-            color: $button-light-text-color;
-            background: $button-light-bg-color;
+            color: $button-basic-text-color;
+            background: $button-basic-bg-color;
 
             &:hover, &:focus {
-                background: $button-light-hover-bg-color;
+                background: $button-basic-hover-bg-color;
             }
         }
 
         &[color="danger"] {
             background: $danger-color;
-            color: $whitesmoke;
+            color:  $primary-text;
 
             &:hover, &:focus {
                 background: $danger-color-dark;
@@ -131,7 +131,7 @@ bl-button {
 
         &[color="warn"] {
             background: $warn-color;
-            color: $whitesmoke;
+            color:  $primary-text;
 
             &:hover, &:focus {
                 background: $warn-color-dark;
@@ -140,7 +140,7 @@ bl-button {
 
         &[color="success"] {
             background: $success-color;
-            color: $whitesmoke;
+            color:  $primary-text;
 
             &:hover, &:focus {
                 background: $success-color-dark;

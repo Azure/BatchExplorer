@@ -8,7 +8,8 @@ bl-toggle-filter-button {
         cursor: pointer;
 
         font-size: 16px;
-        background: $athensGrey;
+        background: $button-basic-bg-color;
+        color: $button-basic-text-color;
         height: 26px;
         width: 26px;
         position: relative;
@@ -16,7 +17,7 @@ bl-toggle-filter-button {
         padding-top: 5px;
 
         &:hover {
-            color: $dusty-grey;
+            background: $button-basic-hover-bg-color;
         }
 
         > .filtering {

@@ -43,9 +43,9 @@
     "button": {
       "type": "object",
       "properties": {
-        "light-text": {"$ref": "#/definitions/color"},
-        "light-bg": {"$ref": "#/definitions/color"},
-        "light-hover-bg": {"$ref": "#/definitions/color"},
+        "basic-text": {"$ref": "#/definitions/color"},
+        "basic-bg": {"$ref": "#/definitions/color"},
+        "basic-hover-bg": {"$ref": "#/definitions/color"},
         "disabled-text": {"$ref": "#/definitions/color"},
         "disabled-bg": {"$ref": "#/definitions/color"}
       }
