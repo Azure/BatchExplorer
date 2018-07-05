@@ -69,6 +69,13 @@ bl-node-connect {
                         left: 205px;
                         color: red;
                     }
+
+                    .clipboard-info {
+                        position: absolute;
+                        top: 28px;
+                        left: 210px;
+                        color: $secondary-text;
+                    }
                 }
             }
         }

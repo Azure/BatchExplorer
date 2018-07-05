@@ -31,6 +31,31 @@ export class SecureUtils {
         return retVal;
     }
 
+    public static passwordWindowsValid(length: number = 15): string {
+        const charsets = [
+            "abcdefghijklmnopqrstuvwxyz",
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+            "0123456789",
+            "!@#$%^&*()_+~`|}{[]\\:;?><,./-=",
+        ];
+        const charsetJoined = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+            + "!@#$%^&*()_+~`|}{[]\\:;?><,./-=";
+
+        let retVal = "";
+
+        // generate a random symbol from each charset
+        for (let i = 0; i < 4; ++i) {
+            retVal += charsets[i].charAt(Math.floor(Math.random() * charsets[i].length));
+        }
+
+        // fill the rest of the password with random characters from any charset
+        for (let i = 4, n = charsetJoined.length; i < length; ++i) {
+            retVal += charsetJoined.charAt(Math.floor(Math.random() * n));
+        }
+
+        return retVal;
+    }
+
     /**
      * Generate a hexadecimal token
      */

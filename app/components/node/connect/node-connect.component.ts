@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from "@angular/core";
 import { ServerError, autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/ui";
 import { OS } from "@batch-flask/utils";
+import { clipboard } from "electron";
 import { List } from "immutable";
 import * as moment from "moment";
 import * as path from "path";
@@ -32,7 +33,7 @@ enum CredentialSource {
     selector: "bl-node-connect",
     templateUrl: "node-connect.html",
 })
-export class NodeConnectComponent implements OnInit {
+export class NodeConnectComponent implements OnInit, OnChanges {
     public CredentialSource = CredentialSource;
     public credentialSource: CredentialSource = null;
     public credentials: AddNodeUserAttributes = null;
@@ -51,6 +52,7 @@ export class NodeConnectComponent implements OnInit {
     public loading: boolean = false;
     public publicKeyFile: string;
     public processLaunched: boolean = false;
+    public savedToClipboard: boolean = false;
 
     /**
      * Base content for the rdp file(IP Address).
@@ -120,11 +122,6 @@ export class NodeConnectComponent implements OnInit {
 
     @autobind()
     public autoConnect() {
-        // Todo use observable for this
-        if (!this.connectionSettings) {
-            return null;
-        }
-
         // set the processLaunched flag to false, since we will launch a new process
         this.processLaunched = false;
         this.loading = true;
@@ -134,7 +131,7 @@ export class NodeConnectComponent implements OnInit {
             name: this.username || this.defaultUsername,
             expiryTime:  moment().add(moment.duration({days: 1})).toDate(),
             sshPublicKey: "",
-            password: this.password,
+            password: this.password || SecureUtils.passwordWindowsValid(),
         };
 
         if (this.linux) {
@@ -161,11 +158,17 @@ export class NodeConnectComponent implements OnInit {
             delete credentials.sshPublicKey;
 
             this.addOrUpdateUser(credentials).flatMap(() => {
-                return new Observable(null);
+                this.loading = false;
+                this.error = null;
+
+                // save password to clipboard
+                clipboard.writeText(this.credentials.password);
+
+                // create and launch the rdp program
+                return this._saveRdpFile();
             }).subscribe({
-                next: () => {
-                    this.loading = false;
-                    this.error = null;
+                next: (filename) => {
+                    this.shell.openItem(filename);
                 },
                 error: (err) => {
                     this.loading = false;
@@ -214,15 +217,6 @@ export class NodeConnectComponent implements OnInit {
     @autobind()
     public close() {
         this.sidebarRef.destroy();
-    }
-
-    @autobind()
-    public connectWithRdp() {
-        return this._saveRdpFile().subscribe({
-            next: (filename) => {
-                this.shell.openItem(filename);
-            },
-        });
     }
 
     @autobind()
@@ -292,7 +286,7 @@ export class NodeConnectComponent implements OnInit {
 
     private _computeFullRdpFile() {
         const rdpBaseContent = this.rdpContent || this._buildRdpFromConnection();
-        return `${rdpBaseContent}\nusername:s:.\\${this.username}\nprompt for credentials:i:1`;
+        return `${rdpBaseContent}\nusername:s:.\\${this.username || this.defaultUsername}\nprompt for credentials:i:1`;
     }
 
     private _buildRdpFromConnection() {
