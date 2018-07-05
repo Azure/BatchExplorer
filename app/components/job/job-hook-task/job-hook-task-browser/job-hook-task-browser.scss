@@ -12,8 +12,9 @@ bl-job-hook-task-browser {
     .content {
         flex: 1;
         display: flex;
-        border-top: 1px solid #d5d5d5;
+        border-top: 1px solid $border-color;
         height: 100%;
+
         > .details {
             border-left: 1px solid $border-color;
             width: 600px;
@@ -33,7 +34,7 @@ bl-job-hook-task-browser {
 
         > .option.active {
             font-weight: bold;
-            color: map-get($primary, 600);
+            color: $primary-color;
             cursor: default;
         }
 
