@@ -1,5 +1,4 @@
-<!-- todo *blFeatureOn="'job.view.configuration.json'" -->
-<div class="toggle-mode">
+<div class="toggle-mode" *ngIf="enableJsonView">
     <bl-button type="square" [disabled]="!showJson" (do)="toggleShowJson(false)">
         <i class="fa fa-list-ul"></i>
     </bl-button>
