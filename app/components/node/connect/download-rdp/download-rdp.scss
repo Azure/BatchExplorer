@@ -1,0 +1,26 @@
+@import "app/styles/variables";
+
+bl-download-rdp {
+    > div {
+        flex: 1;
+        min-width: 350px;
+        color: $link-color;
+        background-color: $main-background;
+        padding: 3px 8px;
+        margin: 0;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: block;
+        width: 100%;
+        min-height: 24px;
+
+        &:hover {
+            color: $link-color-hover;
+        }
+    }
+
+
+    bl-clickable {
+
+    }
+}

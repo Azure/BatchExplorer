@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { autobind } from "@batch-flask/core";
+import { ElectronShell } from "@batch-flask/ui";
 import { OS } from "@batch-flask/utils";
 import { List } from "immutable";
 import * as moment from "moment";
+import * as path from "path";
 
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
@@ -88,6 +90,7 @@ export class NodeConnectComponent implements OnInit {
         private batchLabs: BatchLabsService,
         private sshKeyService: SSHKeyService,
         private fs: FileSystemService,
+        private shell: ElectronShell,
     ) {
         if (settingsService.settings["node-connect.default-username"]) {
             this.defaultUsername = settingsService.settings["node-connect.default-username"];
@@ -126,7 +129,7 @@ export class NodeConnectComponent implements OnInit {
         this.processLaunched = false;
         this.loading = true;
 
-        // set the warning to false, since the user is trying again
+        // set the warning as empty, since the user is trying again
         this.warning = "";
 
         const credentials = {
@@ -210,6 +213,24 @@ export class NodeConnectComponent implements OnInit {
         this.sidebarRef.destroy();
     }
 
+    @autobind()
+    public connectWithRdp() {
+        return this._saveRdpFile().subscribe({
+            next: (filename) => {
+                this.shell.openItem(filename);
+            },
+        });
+    }
+
+    @autobind()
+    public downloadRdp() {
+        return this._saveRdpFile().subscribe({
+            next: (filename) => {
+                this.shell.showItemInFolder(filename);
+            },
+        });
+    }
+
     /**
      * Load either the RDP file or the node connection settings depending if the VM is IAAS or PAAS
      */
@@ -252,5 +273,28 @@ export class NodeConnectComponent implements OnInit {
             share(),
         );
         return obs;
+    }
+
+    /**
+     * Save the rdp file to the given location
+     */
+    private _saveRdpFile(): Observable<string> {
+        const content = this._computeFullRdpFile();
+        const directory = OS.isWindows() ?
+            path.join(this.fs.commonFolders.temp, "rdp") :
+            this.fs.commonFolders.downloads;
+        const filename = `${this.node.id}.rdp`;
+        return Observable.fromPromise(this.fs.saveFile(path.join(directory, filename), content));
+    }
+
+    private _computeFullRdpFile() {
+        const rdpBaseContent = this.rdpContent || this._buildRdpFromConnection();
+        return `${rdpBaseContent}\nusername:s:.\\${this.username}\nprompt for credentials:i:1`;
+    }
+
+    private _buildRdpFromConnection() {
+        const {ip, port} = this.connectionSettings;
+        const address = `full address:s:${ip}:${port}`;
+        return address;
     }
 }

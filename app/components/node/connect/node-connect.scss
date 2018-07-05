@@ -41,15 +41,14 @@ bl-node-connect {
                         margin-right: 5px;
                     }
 
-                    input {
+                    > input {
                         flex: 1;
                         max-width: 349px;
                     }
 
-                    div {
+                    > .display-field {
                         flex: 1;
                         max-width: 350px;
-                        color: $primary-text;
                         background-color: $main-background;
                         padding: 3px 8px;
                         margin: 0;
@@ -59,6 +58,11 @@ bl-node-connect {
                         width: 100%;
                         min-height: 24px;
                     }
+
+                    bl-clickable {
+                        color: $link-color;
+                    }
+
                     .password-failure-hint {
                         position: absolute;
                         top: 27px;

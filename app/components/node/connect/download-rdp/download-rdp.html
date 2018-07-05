@@ -1,2 +1,5 @@
-<bl-button type="wide" *ngIf="isOSWindows" [action]="connectWithRdp">Connect</bl-button>
-<bl-button type="wide" *ngIf="!isOSWindows" [action]="downloadRdp">Download rdp file</bl-button>
+<!-- DEPRECATED; All functionality now in node-connect.component.ts -->
+
+<div>
+    <bl-clickable *ngIf="isOSWindows" (click)="downloadRdp()">Download RDP File</bl-clickable>
+</div>

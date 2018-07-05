@@ -41,7 +41,6 @@ export class FileSystemService {
      */
     public saveFile(dest: string, content: string): Promise<string> {
         return this._fs.saveFile(dest, content);
-
     }
 
     public readFile(path: string): Promise<string> {

@@ -23,19 +23,22 @@
                         <bl-text-property label="IP" [value]="ipFromRDP"></bl-text-property>
                         <bl-text-property label="Port" value="Not Specified"></bl-text-property>
                     </div>
+                    <div class="custom-property" *ngIf="windows">
+                        <h5 class="label-small username-label">RDP File</h5>
+                        <bl-clickable class="display-field" (click)="downloadRdp()">Download RDP File</bl-clickable>
+                    </div>
                     <div class="custom-property">
                         <h5 class="label-small username-label">Username</h5>
                         <input blInput type="text" [(ngModel)]="username" id="input-username" [placeholder]="defaultUsername" />
                     </div>
                     <div *ngIf="linux" class="custom-property">
                         <h5 class="label-small">SSH Key File</h5>
-                        <div *ngIf="hasLocalPublicKey">{{publicKeyFile}}</div>
-                        <div *ngIf="!hasLocalPublicKey">Not Found!</div>
+                        <div class="display-field" *ngIf="hasLocalPublicKey">{{publicKeyFile}}</div>
+                        <div class="display-field" *ngIf="!hasLocalPublicKey">Not Found!</div>
                     </div>
                     <div class="custom-property" *ngIf="windows">
                         <h5 class="label-small username-label">Password</h5>
                         <input blInput [(ngModel)]="password" type="password" id="input-password" placeholder="Password" />
-                        <span *ngIf="warning" class="password-failure-hint">{{warning}}</span>
                     </div>
                 </bl-property-group>
             </div>
@@ -77,11 +80,6 @@
                 </bl-property-group>
             </div>
         </div>
-    </div>
-    <div class="action-btns">
-        <span *ngIf="credentials && windows && agentSkus">
-            <bl-download-rdp [nodeId]="node.id" [credentials]="credentials" [rdpContent]="rdpContent" [connectionSettings]="connectionSettings"></bl-download-rdp>
-        </span>
     </div>
     <div *ngIf="credentialSource === CredentialSource.Generated">
         <bl-button color="light" type="wide" [action]="goToHome">Back</bl-button>

@@ -1,3 +1,7 @@
+/**
+ * DEPRECATED; All functionality now in node-connect.component.ts
+ */
+
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/ui";
@@ -6,6 +10,7 @@ import { Observable } from "rxjs";
 
 import { FileSystemService } from "app/services";
 import { OS } from "app/utils";
+import "./download-rdp.scss";
 
 @Component({
     selector: "bl-download-rdp",
@@ -17,7 +22,7 @@ export class DownloadRdpComponent {
     public nodeId: string;
 
     @Input()
-    public credentials: any;
+    public username: string;
 
     /**
      * If cloud service this will be provided
@@ -35,15 +40,19 @@ export class DownloadRdpComponent {
 
     @autobind()
     public connectWithRdp() {
-        return this._saveRdpFile().do((filename) => {
-            this.shell.openItem(filename);
+        return this._saveRdpFile().subscribe({
+            next: (filename) => {
+                this.shell.openItem(filename);
+            },
         });
     }
 
     @autobind()
     public downloadRdp() {
-        return this._saveRdpFile().do((filename) => {
-            this.shell.showItemInFolder(filename);
+        return this._saveRdpFile().subscribe({
+            next: (filename) => {
+                this.shell.showItemInFolder(filename);
+            },
         });
     }
 
@@ -78,7 +87,7 @@ export class DownloadRdpComponent {
     }
 
     private _computeFullRdpFile() {
-        return `${this.rdpBaseContent}\nusername:s:.\\${this.credentials.name}\nprompt for credentials:i:1`;
+        return `${this.rdpBaseContent}\nusername:s:.\\${this.username}\nprompt for credentials:i:1`;
     }
 
     private _buildRdpFromConnection() {
