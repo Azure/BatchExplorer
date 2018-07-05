@@ -1,8 +1,9 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { Workspace } from "app/models";
+import { Constants } from "common";
 
 // tslint:disable:no-var-requires max-line-length
 const adminWorkspace = JSON.parse(require("app/components/workspace/json-templates/admin-workspace.json"));
@@ -10,14 +11,24 @@ const endUserWorkspace = JSON.parse(require("app/components/workspace/json-templ
 // tslint:enable:no-var-requires max-line-length
 
 @Injectable()
-export class WorkspaceService {
+export class WorkspaceService implements OnDestroy {
     private _workspaces: BehaviorSubject<List<Workspace>> = new BehaviorSubject(List([]));
     private _currentWorkspace: BehaviorSubject<Workspace> = new BehaviorSubject(null);
     private _currentWorkspaceId: BehaviorSubject<string> = new BehaviorSubject(null);
     private _haveWorkspacesLoaded: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    private _sub: Subscription;
 
     constructor() {
-        // nothing in here at the moment
+        this._sub = this._currentWorkspace.subscribe((ws: Workspace) => {
+            if (ws) {
+                // save the current selection to local storage
+                localStorage.setItem(Constants.localStorageKey.selectedWorkspaceId, ws.id);
+            }
+        });
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 
     public get workspaces(): Observable<List<Workspace>> {
@@ -51,14 +62,21 @@ export class WorkspaceService {
     }
 
     private loadWorkspaces() {
+        // TODO: eventually load any user workspaces as well
         const workspaces = [
             new Workspace({ ...adminWorkspace }),
             new Workspace({ ...endUserWorkspace }),
         ];
 
         this._workspaces.next(List(workspaces));
-        this._currentWorkspace.next(workspaces.first());
-        this._currentWorkspaceId.next(this._currentWorkspace.value.id);
+        const selectedWorkspaceId = localStorage.getItem(Constants.localStorageKey.selectedWorkspaceId);
+        if (selectedWorkspaceId) {
+            this.selectWorkspace(selectedWorkspaceId);
+        } else {
+            this._currentWorkspace.next(workspaces.first());
+            this._currentWorkspaceId.next(this._currentWorkspace.value.id);
+        }
+
         this._haveWorkspacesLoaded.next(true);
     }
 }
