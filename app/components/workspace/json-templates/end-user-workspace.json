@@ -8,7 +8,9 @@
                 "statisticsGraph": false
             },
             "action": {
-                "delete": false
+                "clone": false,
+                "schedule": false,
+                "export": false
             }
         },
         "schedule": false,
