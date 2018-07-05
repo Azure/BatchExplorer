@@ -3,7 +3,14 @@
     "displayName": "Basic end-user workspace",
     "description": "Default end-user workspace that hides a number of admin related features.",
     "features": {
-        "job": true,
+        "job": {
+            "view": {
+                "statisticsGraph": false
+            },
+            "action": {
+                "delete": false
+            }
+        },
         "schedule": false,
         "pool": true,
         "package": false,

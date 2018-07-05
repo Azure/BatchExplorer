@@ -1,14 +1,14 @@
 {
-    "id": "admin.workspace",
-    "displayName": "Admin/Developer workspace",
-    "description": "Default admin or developer workspace where everthing is enabled.",
-    "features": {
-        "job": true,
-        "schedule": true,
-        "pool": true,
-        "package": true,
-        "certificate": true,
-        "data": true,
-        "gallery": true
-    }
+  "id": "admin.workspace",
+  "displayName": "Admin/Developer workspace",
+  "description": "Default admin or developer workspace where everthing is enabled.",
+  "features": {
+    "job": true,
+    "schedule": true,
+    "pool": true,
+    "package": true,
+    "certificate": true,
+    "data": true,
+    "gallery": true
+  }
 }

@@ -24,6 +24,7 @@ export class EntityCommandButtonComponent implements OnChanges {
     public icon: string;
     public disabled: boolean;
     public visible: boolean;
+    public feature: string;
 
     constructor(private changeDetector: ChangeDetectorRef) {
         this.changeDetector.markForCheck();

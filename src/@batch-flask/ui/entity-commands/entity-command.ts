@@ -26,6 +26,7 @@ export interface EntityCommandAttributes<TEntity extends ActionableEntity, TOpti
     confirm?: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     notify?: EntityCommandNotify | boolean;
     permission?: Permission;
+    feature?: string;
 }
 
 /**
@@ -39,6 +40,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     public confirm: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     public definition: EntityCommands<TEntity>;
     public permission: Permission;
+    public feature: string;
 
     private _action: (entity: TEntity, option?: TOptions) => Observable<any> | void;
     private _label: ((entity: TEntity) => string) | string;

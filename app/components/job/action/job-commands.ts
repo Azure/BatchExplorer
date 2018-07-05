@@ -66,6 +66,7 @@ export class JobCommands extends EntityCommands<Job> {
             confirm: false,
             notify: false,
             permission: Permission.Write,
+            feature: "job.action.edit",
         });
 
         this.addTask = this.simpleCommand({
@@ -78,6 +79,7 @@ export class JobCommands extends EntityCommands<Job> {
                 && job.state !== JobState.deleting
                 && job.state !== JobState.terminating,
             permission: Permission.Write,
+            feature: "job.action.addTask",
         });
 
         this.clone = this.simpleCommand({
@@ -87,6 +89,7 @@ export class JobCommands extends EntityCommands<Job> {
             confirm: false,
             notify: false,
             permission: Permission.Write,
+            feature: "job.action.clone",
         });
 
         this.delete = this.simpleCommand({
@@ -94,6 +97,7 @@ export class JobCommands extends EntityCommands<Job> {
             action: (job: Job) => this.jobService.delete(job.id),
             enabled: (job: Job) => job.state !== JobState.deleting && job.state !== JobState.terminating,
             permission: Permission.Write,
+            feature: "job.action.delete",
         });
 
         this.terminate = this.command(TerminateJobCommand);
@@ -104,6 +108,7 @@ export class JobCommands extends EntityCommands<Job> {
             enabled: (job: Job) => job.state === JobState.disabled,
             visible: (job: Job) => job.state === JobState.disabled,
             permission: Permission.Write,
+            feature: "job.action.enable",
         });
 
         this.createJobSchedule = this.simpleCommand({
@@ -113,6 +118,7 @@ export class JobCommands extends EntityCommands<Job> {
             confirm: false,
             notify: false,
             permission: Permission.Write,
+            feature: "job.action.createSchedule",
         });
 
         this.exportAsJSON = this.simpleCommand({
@@ -121,6 +127,7 @@ export class JobCommands extends EntityCommands<Job> {
             multiple: false,
             confirm: false,
             notify: false,
+            feature: "job.action.export",
         });
 
         this.pin = this.simpleCommand({
@@ -135,6 +142,7 @@ export class JobCommands extends EntityCommands<Job> {
             action: (job: Job) => this._pinJob(job),
             confirm: false,
             multiple: false,
+            feature: "job.action.pin",
         });
 
         this.commands = [

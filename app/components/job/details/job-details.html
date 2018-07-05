@@ -11,7 +11,7 @@
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
                 <bl-commands-list [commands]="commands" [entity]="job"></bl-commands-list>
             </bl-button-group>
-            <div summaryTile>
+            <div summaryTile *blFeatureOn="'job.view.statisticsGraph'">
                 <div class="job-graphs-link" [routerLink]="['/jobs', job.id, 'graphs']">
                     <i class="fa fa-line-chart"></i>
                     <i class="fa fa-area-chart"></i>

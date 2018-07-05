@@ -26,5 +26,9 @@
   "tslint.alwaysShowRuleFailuresAsWarnings": true,
   "css.validate": false,
   "scss.validate": false,
-  "python.formatting.provider": "yapf"
+  "python.formatting.provider": "yapf",
+  "[json]": {
+    "editor.tabSize": 4,
+    "editor.detectIndentation": true
+  }
 }
