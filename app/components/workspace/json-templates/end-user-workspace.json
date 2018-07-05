@@ -5,7 +5,12 @@
     "features": {
         "job": {
             "view": {
-                "statisticsGraph": false
+                "graphs": true,
+                "statistics": false,
+                "tags": false,
+                "configuration": {
+                    "json": false
+                }
             },
             "action": {
                 "clone": false,

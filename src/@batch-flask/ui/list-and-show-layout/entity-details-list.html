@@ -4,7 +4,12 @@
             <ng-content select="[pre-quicksearch]"></ng-content>
         </div>
         <input blInput [formControl]="searchQuery" [placeholder]="filterPlaceholder + ' (Startwith)'"/>
-        <bl-clickable class="toggle-advanced-filter" [routerLink]="baseLink" [queryParams]="{filter: true}" *ngIf="enableAdvancedFilter">
+        <bl-clickable *ngIf="enableAdvancedFilter"
+            class="toggle-advanced-filter"
+            matTooltip="Toggle advanced filter"
+            matTooltipPosition="above"
+            [routerLink]="baseLink"
+            [queryParams]="{filter: true}">
             <i class="fa fa-filter"></i>
         </bl-clickable>
     </div>
@@ -12,7 +17,7 @@
         <bl-button type="plain" color="light" icon="fa fa-expand spin-hover" *ngIf="showExpandButton" color="light" [routerLink]="baseLink"
             title="{{expandButtonHoverText}}">
         </bl-button>
-        <bl-refresh-btn *ngIf="showRefreshButton" type="plain" [refresh]="refresh" title="{{refreshButtonHoverText}}" tooltipPosition="left"></bl-refresh-btn>
+        <bl-refresh-btn *ngIf="showRefreshButton" type="plain" [refresh]="refresh" title="{{refreshButtonHoverText}}" tooltipPosition="above"></bl-refresh-btn>
         <ng-content select="[bl-list-buttons]"></ng-content>
     </div>
 </div>

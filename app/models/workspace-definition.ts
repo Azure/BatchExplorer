@@ -29,7 +29,9 @@ export interface JobFeatures  extends CommonFeatures {
         graphs: boolean;
         statistics: boolean;
         tags: boolean;
-        asJson: boolean;
+        configuration: {
+            json: boolean;
+        }
     };
 
     action: {

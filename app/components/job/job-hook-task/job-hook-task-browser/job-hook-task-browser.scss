@@ -25,12 +25,15 @@ bl-job-hook-task-browser {
         margin: 10px;
         text-align: right;
         cursor: pointer;
+
         > .option {
             display: inline-block;
+            margin: 0 4px;
         }
 
         > .option.active {
-            text-decoration: underline;
+            font-weight: bold;
+            color: map-get($primary, 600);
             cursor: default;
         }
 
