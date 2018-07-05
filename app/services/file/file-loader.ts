@@ -1,11 +1,12 @@
 import * as path from "path";
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject, of } from "rxjs";
 
 import { File } from "app/models";
 import { CloudPathUtils, exists, log } from "app/utils";
+import { concatMap, flatMap, map, share } from "rxjs/operators";
 import { FileSystemService } from "../fs.service";
 
-export type PropertiesFunc = () =>  Observable<File>;
+export type PropertiesFunc = () => Observable<File>;
 export type ContentFunc = (options: FileLoadOptions) => Observable<FileLoadResult>;
 export type DownloadFunc = (destination: string) => Observable<boolean>;
 
@@ -88,7 +89,7 @@ export class FileLoader {
      */
     public getProperties(forceNew = false): Observable<File> {
         if (!forceNew && this._cachedProperties) {
-            return Observable.of(this._cachedProperties);
+            return of(this._cachedProperties);
         }
 
         const obs = this._properties();
@@ -113,12 +114,19 @@ export class FileLoader {
     public download(dest: string): Observable<string> {
         if (this._download) {
             const checkDirObs = Observable.fromPromise(this._fs.ensureDir(path.dirname(dest)));
-            return checkDirObs.flatMap(() => this._download(dest)).map(x => dest).share();
+            return checkDirObs.pipe(
+                flatMap(() => this._download(dest)),
+                map(x => dest),
+                share(),
+            );
         }
 
-        const obs = this.content().concatMap((result) => {
-            return this._fs.saveFile(dest, result.content);
-        }).share();
+        const obs = this.content().pipe(
+            concatMap((result) => {
+                return this._fs.saveFile(dest, result.content);
+            }),
+            share(),
+        );
         obs.subscribe();
 
         return obs;
@@ -129,16 +137,21 @@ export class FileLoader {
      * @returns observable that resolve the path of the cached file when done caching
      */
     public cache(): Observable<string> {
-        return this.getProperties().flatMap((file: File) => {
-            const destination = this._getCacheDestination(file);
-            return Observable.fromPromise(this._fs.exists(destination)).flatMap((exists) => {
-                if (exists) {
-                    return Observable.of(destination);
-                } else {
-                    return this.download(destination);
-                }
-            }).share();
-        });
+        return this.getProperties().pipe(
+            flatMap((file: File) => {
+                const destination = this._getCacheDestination(file);
+                return Observable.fromPromise(this._fs.exists(destination)).pipe(
+                    flatMap((exists) => {
+                        if (exists) {
+                            return of(destination);
+                        } else {
+                            return this.download(destination);
+                        }
+                    }),
+                );
+            }),
+            share(),
+        );
     }
 
     public get displayName() {
