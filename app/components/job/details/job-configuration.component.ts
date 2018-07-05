@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
+import { Subscription } from "rxjs";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditMetadataFormComponent } from "app/components/common/edit-metadata-form";
@@ -20,7 +21,7 @@ import { JobService, WorkspaceService } from "app/services";
     templateUrl: "job-configuration.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class JobConfigurationComponent {
+export class JobConfigurationComponent implements OnDestroy {
     @Input()
     public set job(job: Job) {
         this._job = job;
@@ -37,14 +38,27 @@ export class JobConfigurationComponent {
     public environmentSettings: List<NameValuePair> = List([]);
     public jobMetadata: List<Metadata> = List([]);
     public poolInfo: any = {};
+    public jsonViewEnabled = true;
 
+    private _sub: Subscription;
     private _job: Job;
 
     constructor(
-        private sidebarManager: SidebarManager,
+        private changeDetector: ChangeDetectorRef,
         private jobService: JobService,
+        private sidebarManager: SidebarManager,
         private workspaceService: WorkspaceService) {
 
+        this._sub = this.workspaceService.currentWorkspace.subscribe((ws) => {
+            if (ws) {
+                this.jsonViewEnabled = ws.isFeatureEnabled("job.view.configuration.json");
+                this.changeDetector.markForCheck();
+            }
+        });
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 
     @autobind()
