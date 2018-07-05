@@ -45,6 +45,6 @@
     "placeholder": "#d5d5d5",
     "text": "var(--color-text-primary)",
     "background": "#21252B",
-    "disabled-background": "#e5e5e5"
+    "disabled-background": "#2D2D30"
   }
 }
