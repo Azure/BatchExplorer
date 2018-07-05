@@ -11,7 +11,7 @@ class TestComponent {
     public fileLoader;
 }
 
-fdescribe("ImageFileViewerComponent", () => {
+describe("ImageFileViewerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
@@ -33,7 +33,7 @@ fdescribe("ImageFileViewerComponent", () => {
         };
         de = fixture.debugElement.query(By.css("bl-image-file-viewer"));
         fixture.detectChanges();
-        imgEl = fixture.debugElement.query(By.css("img"));
+        imgEl = de.query(By.css("img"));
     });
 
     it("chache the image", () => {
