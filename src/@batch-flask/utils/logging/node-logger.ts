@@ -68,8 +68,8 @@ export class NodeLogger implements Logger {
         this._logger.info(message, ...params);
     }
 
-    public warn(message: string, params?: any) {
-        this._logger.warn({ warn: { ...params } }, message);
+    public warn(message: string, ...params: any[]) {
+        this._logger.warn(message, ...params);
     }
 
     public error(message: string, error?: any) {

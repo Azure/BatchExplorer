@@ -1,3 +1,10 @@
+# 0.16.2
+[All items](https://github.com/Azure/BatchLabs/milestone/23closed=1)
+
+### Bug fixes:
+* Unable to terminate multiple tasks [\#1457](https://github.com/Azure/BatchLabs/issues/1457)
+* Pool with more then 2500 nodes does not show heatmap [\#1484](https://github.com/Azure/BatchLabs/issues/1484)
+
 # 0.16.1
 [All items](https://github.com/Azure/BatchLabs/milestone/22closed=1)
 

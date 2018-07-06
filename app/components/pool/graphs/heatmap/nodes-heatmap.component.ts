@@ -128,6 +128,11 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         }
 
         if (changes.nodes) {
+            const nodes = [];
+            for (let i = 0; i < 2600; i++) {
+                nodes.push(new Node({ id: `node-${i}`, state: NodeState.idle, runningTasksCount: 0 }));
+            }
+            this.nodes = List(nodes);
             if (this.nodes.size > maxNodes) {
                 log.warn(`Only supporting up to ${maxNodes} nodes for now!`);
             }
