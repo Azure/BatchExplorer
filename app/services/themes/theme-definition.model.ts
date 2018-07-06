@@ -37,6 +37,16 @@ export interface ThemeDefinition {
      */
     "card-background": string;
 
+    /**
+     * Background color for selected items
+     */
+    "selection": string;
+
+    /**
+     * Color for borders
+     */
+    "border": string;
+
     outline: string;
 
     /**
@@ -72,6 +82,9 @@ export interface ThemeDefinition {
     };
 
     button: {
+        "basic-text": string;
+        "basic-bg": string;
+        "basic-hover-bg": string;
         "disabled-text": string;
         "disabled-bg": string;
     };

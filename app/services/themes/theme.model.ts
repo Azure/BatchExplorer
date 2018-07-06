@@ -86,6 +86,9 @@ export class FileExplorerColors extends ThemeElement<ThemeDefinition["file-explo
 }
 
 export class ButtonColors extends ThemeElement<ThemeDefinition["button"]> {
+    @CssColor("basic-text") public basicText: string;
+    @CssColor("basic-bg") public basicBg: string;
+    @CssColor("basic-hover-bg") public basicHoverBg: string;
     @CssColor("disabled-text") public disabledText: string;
     @CssColor("disabled-bg") public disabledBg: string;
 }
@@ -115,6 +118,8 @@ export class Theme extends ThemeElement<ThemeDefinition> {
     @CssColor() public success: ColorPalette;
     @CssColor("main-background") public mainBackground: string;
     @CssColor("card-background") public cardBackground: string;
+    @CssColor() public selection: string;
+    @CssColor() public border: string;
     @CssColor() public outline: string;
     @CssColor() public text: TextColor;
     @CssColor() public header: EntityColor;
