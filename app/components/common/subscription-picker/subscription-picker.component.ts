@@ -38,7 +38,7 @@ export class SubscriptionPickerComponent implements ControlValueAccessor, OnDest
         }));
     }
 
-    public writeValue(value: string): void {
+    public writeValue(value: ArmSubscription): void {
         if (value) {
             this.subscription.setValue(value);
         }
