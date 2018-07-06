@@ -332,6 +332,14 @@ describe("NodesHeatmapComponent", () => {
             expect(contextMenuService.openMenu).not.toHaveBeenCalled();
         });
     });
+
+    it("limit the heatmap display to 2500 nodes", () => {
+        const nodes = createNodes(2600);
+        testComponent.nodes = nodes;
+        fixture.detectChanges();
+        const tiles = svg.selectAll("g.node-group");
+        expect(tiles.size()).toBe(2500);
+    });
 });
 
 function createNodes(count: number, dedicated = true) {
