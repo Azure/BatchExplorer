@@ -4,7 +4,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
-import { IpcService, WorkspaceService } from "@batch-flask/ui";
+import { IpcService, Workspace, WorkspaceService } from "@batch-flask/ui";
 import { MonacoLoader } from "@batch-flask/ui/editor";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
     ) {
         this.autoscaleFormulaService.init();
         this.settingsService.init();
-        this.workspaceService.init();
+        this._initWorkspaces();
         this.sshKeyService.init();
         this.commandService.init();
         this.pricingService.init();
@@ -101,5 +101,14 @@ export class AppComponent implements OnInit {
      */
     private _preloadData() {
         this.nodeService.listNodeAgentSkus().fetchAll();
+    }
+
+    private async _initWorkspaces() {
+        const adminWorkspace = JSON.parse(require("app/components/workspace/json-templates/admin-workspace.json"));
+        const endUserWorkspace = JSON.parse(require("app/components/workspace/json-templates/end-user-workspace.json"));
+        this.workspaceService.init([
+            new Workspace({ ...adminWorkspace }),
+            new Workspace({ ...endUserWorkspace }),
+        ]);
     }
 }

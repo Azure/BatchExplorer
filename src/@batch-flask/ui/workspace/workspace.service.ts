@@ -1,15 +1,8 @@
 import { Injectable, OnDestroy } from "@angular/core";
+import { Constants } from "common";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
-
-import { Workspace } from "app/models";
-import { Constants } from "common";
-
-// tslint:disable:no-var-requires max-line-length
-// TODO-TIM move that out of here
-const adminWorkspace = JSON.parse(require("app/components/workspace/json-templates/admin-workspace.json"));
-const endUserWorkspace = JSON.parse(require("app/components/workspace/json-templates/end-user-workspace.json"));
-// tslint:enable:no-var-requires max-line-length
+import { Workspace } from "./workspace.model";
 
 @Injectable()
 export class WorkspaceService implements OnDestroy {
@@ -44,8 +37,8 @@ export class WorkspaceService implements OnDestroy {
         return this._haveWorkspacesLoaded.asObservable();
     }
 
-    public init() {
-        this.loadWorkspaces();
+    public init(workspaces: Workspace[]) {
+        this.loadWorkspaces(workspaces);
     }
 
     public selectWorkspace(workspaceId: string) {
@@ -62,13 +55,7 @@ export class WorkspaceService implements OnDestroy {
         return !this._currentWorkspace.value.isFeatureEnabled(feature);
     }
 
-    private loadWorkspaces() {
-        // TODO: eventually load any user workspaces as well
-        const workspaces = [
-            new Workspace({ ...adminWorkspace }),
-            new Workspace({ ...endUserWorkspace }),
-        ];
-
+    private loadWorkspaces(workspaces) {
         this._workspaces.next(List(workspaces));
         const selectedWorkspaceId = localStorage.getItem(Constants.localStorageKey.selectedWorkspaceId);
         if (selectedWorkspaceId) {

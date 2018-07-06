@@ -1,12 +1,4 @@
-/**
- * Define the visiblity state of certain components in the UI
- */
-export interface WorkspaceDefinition {
-    id: string;
-    displayName: string;
-    description: string;
-    features: FeatureDefinition;
-}
+import { FeatureDefinition } from "@batch-flask/ui";
 
 /**
  * Define components in the UI that the end-user can choose to show or hide.
@@ -18,7 +10,7 @@ export interface WorkspaceDefinition {
  * operation of the application and those which a user could decide that they were
  * not really interested in.
  */
-export interface FeatureDefinition {
+export interface BatchLabsFeatureDefinition extends FeatureDefinition {
     job: boolean | JobFeatures;
     schedule: boolean | ScheduleFeatures;
     pool: boolean | PoolFeatures;

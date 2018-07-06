@@ -5,11 +5,12 @@ import {
     Input,
     OnChanges,
     OnDestroy,
+    OnInit,
     SimpleChanges,
 } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import { WorkspaceService } from "@batch-flask/ui";
 import { EntityCommand } from "@batch-flask/ui/entity-commands";
+import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -17,7 +18,7 @@ import { Subscription } from "rxjs";
     templateUrl: "entity-command-button.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EntityCommandButtonComponent implements OnChanges, OnDestroy {
+export class EntityCommandButtonComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public command: EntityCommand<any>;
     @Input() public entity: any;
 
@@ -29,12 +30,14 @@ export class EntityCommandButtonComponent implements OnChanges, OnDestroy {
     private _sub: Subscription;
 
     constructor(
-        changeDetector: ChangeDetectorRef,
-        workspaceService: WorkspaceService) {
+        private changeDetector: ChangeDetectorRef,
+        private workspaceService: WorkspaceService) {
+    }
 
-        this._sub = workspaceService.currentWorkspace.subscribe(() => {
+    public ngOnInit() {
+        this._sub = this.workspaceService.currentWorkspace.subscribe(() => {
             this._updateVisibility();
-            changeDetector.markForCheck();
+            this.changeDetector.markForCheck();
         });
     }
 
