@@ -95,6 +95,11 @@ export const localStorageKey = {
      * Last selected storage account
      */
     lastStorageAccount: "last_storage_account",
+
+    /**
+     * Last workspace selected.
+     */
+    selectedWorkspaceId: "selected-workspace-id",
 };
 
 export const ApiVersion = {
