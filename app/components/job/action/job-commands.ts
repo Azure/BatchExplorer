@@ -1,10 +1,11 @@
-import { Injectable, Injector } from "@angular/core";
-import { COMMAND_LABEL_ICON, ElectronRemote, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
+import { Injectable, Injector, OnDestroy } from "@angular/core";
+import { Observable, Subscription } from "rxjs";
 
+import { COMMAND_LABEL_ICON, ElectronRemote, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, JobSchedule, JobState } from "app/models";
-import { FileSystemService, JobService, PinnedEntityService } from "app/services";
-import { Observable } from "rxjs";
+import { FileSystemService, JobService, PinnedEntityService, WorkspaceService } from "app/services";
+
 import { JobScheduleCreateBasicDialogComponent } from "../../job-schedule/action";
 import { TaskCreateBasicDialogComponent } from "../../task/action";
 import { JobCreateBasicDialogComponent, PatchJobComponent } from "./add";
@@ -12,7 +13,7 @@ import { DisableJobCommand } from "./disable";
 import { TerminateJobCommand } from "./terminate";
 
 @Injectable()
-export class JobCommands extends EntityCommands<Job> {
+export class JobCommands extends EntityCommands<Job> implements OnDestroy {
     public edit: EntityCommand<Job, void>;
     public addTask: EntityCommand<Job, void>;
     public clone: EntityCommand<Job, void>;
@@ -24,19 +25,37 @@ export class JobCommands extends EntityCommands<Job> {
     public terminate: TerminateJobCommand;
     public pin: EntityCommand<Job, void>;
 
+    private _sub: Subscription;
+    private _cloneVisible: boolean = true;
+    private _scheduleVisible: boolean = true;
+    private _exportVisible: boolean = true;
+    private _pinVisible: boolean = true;
+
     constructor(
         injector: Injector,
         private jobService: JobService,
         private fs: FileSystemService,
         private remote: ElectronRemote,
         private pinnedEntityService: PinnedEntityService,
-        private sidebarManager: SidebarManager) {
+        private sidebarManager: SidebarManager,
+        private workspaceService: WorkspaceService) {
+
         super(
             injector,
             "Job",
         );
 
         this._buildCommands();
+        this._sub = this.workspaceService.currentWorkspace.subscribe((ws) => {
+            this._cloneVisible = ws.isFeatureEnabled("job.action.clone");
+            this._scheduleVisible = ws.isFeatureEnabled("schedule.view");
+            this._exportVisible = ws.isFeatureEnabled("job.action.export");
+            this._pinVisible = ws.isFeatureEnabled("job.action.pin");
+        });
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 
     public get(jobId: string) {
@@ -45,14 +64,6 @@ export class JobCommands extends EntityCommands<Job> {
 
     public getFromCache(jobId: string) {
         return this.jobService.getFromCache(jobId);
-    }
-
-    private _pinJob(job: Job) {
-        this.pinnedEntityService.pinFavorite(job).subscribe((result) => {
-            if (result) {
-                this.pinnedEntityService.unPinFavorite(job);
-            }
-        });
     }
 
     private _buildCommands() {
@@ -66,7 +77,6 @@ export class JobCommands extends EntityCommands<Job> {
             confirm: false,
             notify: false,
             permission: Permission.Write,
-            feature: "job.action.edit",
         });
 
         this.addTask = this.simpleCommand({
@@ -79,7 +89,6 @@ export class JobCommands extends EntityCommands<Job> {
                 && job.state !== JobState.deleting
                 && job.state !== JobState.terminating,
             permission: Permission.Write,
-            feature: "job.action.addTask",
         });
 
         this.clone = this.simpleCommand({
@@ -89,7 +98,7 @@ export class JobCommands extends EntityCommands<Job> {
             confirm: false,
             notify: false,
             permission: Permission.Write,
-            feature: "job.action.clone",
+            visible: (job) => this._cloneVisible,
         });
 
         this.delete = this.simpleCommand({
@@ -97,7 +106,6 @@ export class JobCommands extends EntityCommands<Job> {
             action: (job: Job) => this.jobService.delete(job.id),
             enabled: (job: Job) => job.state !== JobState.deleting && job.state !== JobState.terminating,
             permission: Permission.Write,
-            feature: "job.action.delete",
         });
 
         this.terminate = this.command(TerminateJobCommand);
@@ -108,7 +116,6 @@ export class JobCommands extends EntityCommands<Job> {
             enabled: (job: Job) => job.state === JobState.disabled,
             visible: (job: Job) => job.state === JobState.disabled,
             permission: Permission.Write,
-            feature: "job.action.enable",
         });
 
         this.createJobSchedule = this.simpleCommand({
@@ -118,7 +125,7 @@ export class JobCommands extends EntityCommands<Job> {
             confirm: false,
             notify: false,
             permission: Permission.Write,
-            feature: "job.action.createSchedule",
+            visible: (job) => this._scheduleVisible,
         });
 
         this.exportAsJSON = this.simpleCommand({
@@ -127,7 +134,7 @@ export class JobCommands extends EntityCommands<Job> {
             multiple: false,
             confirm: false,
             notify: false,
-            feature: "job.action.export",
+            visible: (job) => this._exportVisible,
         });
 
         this.pin = this.simpleCommand({
@@ -142,7 +149,7 @@ export class JobCommands extends EntityCommands<Job> {
             action: (job: Job) => this._pinJob(job),
             confirm: false,
             multiple: false,
-            feature: "job.action.pin",
+            visible: (job) => this._pinVisible,
         });
 
         this.commands = [
@@ -173,11 +180,19 @@ export class JobCommands extends EntityCommands<Job> {
     }
 
     private _cloneJob(job: Job) {
+        if (!this._cloneVisible) {
+            return;
+        }
+
         const ref = this.sidebarManager.open(`add-job-${job.id}`, JobCreateBasicDialogComponent);
         ref.component.setValueFromEntity(job);
     }
 
     private _createJobSchedule(job: Job) {
+        if (!this._scheduleVisible) {
+            return;
+        }
+
         const ref = this.sidebarManager.open(`add-job-schedule`,
         JobScheduleCreateBasicDialogComponent);
         ref.component.setValueFromEntity(new JobSchedule({
@@ -186,6 +201,10 @@ export class JobCommands extends EntityCommands<Job> {
     }
 
     private _exportAsJSON(job: Job) {
+        if (!this._exportVisible) {
+            return;
+        }
+
         const dialog = this.remote.dialog;
         const localPath = dialog.showSaveDialog({
             buttonLabel: "Export",
@@ -196,5 +215,17 @@ export class JobCommands extends EntityCommands<Job> {
             const content = JSON.stringify(job._original, null, 2);
             return Observable.fromPromise(this.fs.saveFile(localPath, content));
         }
+    }
+
+    private _pinJob(job: Job) {
+        if (!this._pinVisible) {
+            return;
+        }
+
+        this.pinnedEntityService.pinFavorite(job).subscribe((result) => {
+            if (result) {
+                this.pinnedEntityService.unPinFavorite(job);
+            }
+        });
     }
 }

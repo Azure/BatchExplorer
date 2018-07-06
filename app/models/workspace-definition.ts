@@ -1,5 +1,5 @@
 /**
- * Define the visible state of conponents in the UI
+ * Define the visiblity state of certain components in the UI
  */
 export interface WorkspaceDefinition {
     id: string;
@@ -8,6 +8,16 @@ export interface WorkspaceDefinition {
     features: FeatureDefinition;
 }
 
+/**
+ * Define components in the UI that the end-user can choose to show or hide.
+ * These shouldn't be things like 'add', 'edit', delete' as these should be permissions
+ * based and it doesn't really make sense for a user to stop themselves being able
+ * to add a job. In this case they could just hide all job actions.
+ *
+ * 'clone', 'export', 'pin', would be items that are not crutial to the general
+ * operation of the application and those which a user could decide that they were
+ * not really interested in.
+ */
 export interface FeatureDefinition {
     job: boolean | JobFeatures;
     schedule: boolean | ScheduleFeatures;
@@ -23,8 +33,7 @@ export interface CommonFeatures {
     action: boolean | any;
 }
 
-// TODO: Still a little unsure if this is correct.
-export interface JobFeatures  extends CommonFeatures {
+export interface JobFeatures extends CommonFeatures {
     view: {
         graphs: boolean;
         statistics: boolean;
@@ -35,13 +44,7 @@ export interface JobFeatures  extends CommonFeatures {
     };
 
     action: {
-        add: boolean;
-        delete: boolean;
-        edit: boolean;
-        addTask: boolean;
-        terminate: boolean;
         clone: boolean;
-        schedule: boolean;
         export: boolean;
         pin: boolean;
     };
@@ -63,10 +66,6 @@ export interface PoolFeatures extends CommonFeatures {
     };
 
     action: {
-        add: boolean;
-        delete: boolean;
-        addJob: boolean;
-        resize: boolean;
         clone: boolean;
         export: boolean;
         pin: boolean;
@@ -75,19 +74,12 @@ export interface PoolFeatures extends CommonFeatures {
 
 export interface PackageFeatures extends CommonFeatures {
     action: {
-        add: boolean;
-        delete: boolean;
-        addVersion: boolean;
-        edit: boolean;
         pin: boolean;
     };
 }
 
 export interface CertificateFeatures extends CommonFeatures {
     action: {
-        add: boolean;
-        delete: boolean;
-        reactivate: boolean;
         export: boolean;
         pin: boolean;
     };
@@ -101,12 +93,6 @@ export interface DataFeatures extends CommonFeatures {
     };
 
     action: {
-        addContainer: boolean;
-        deleteContainer: boolean;
-        addFileGroup: boolean;
-        deleteFileGroup: boolean;
-        modify: boolean;
-        download: boolean;
         pin: boolean;
     };
 }

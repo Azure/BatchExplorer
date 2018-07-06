@@ -26,7 +26,6 @@ export interface EntityCommandAttributes<TEntity extends ActionableEntity, TOpti
     confirm?: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     notify?: EntityCommandNotify | boolean;
     permission?: Permission;
-    feature?: string;
 }
 
 /**

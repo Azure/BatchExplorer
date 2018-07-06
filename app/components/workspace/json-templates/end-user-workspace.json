@@ -14,8 +14,8 @@
             },
             "action": {
                 "clone": false,
-                "schedule": false,
-                "export": false
+                "export": false,
+                "pin": false
             }
         },
         "schedule": false,
