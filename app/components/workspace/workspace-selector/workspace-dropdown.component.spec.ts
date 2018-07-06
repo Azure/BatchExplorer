@@ -27,6 +27,7 @@ fdescribe("WorkspaceDropDownComponent", () => {
     let workspaces: BehaviorSubject<List<Workspace>>;
     let currentWorkspace: BehaviorSubject<Workspace>;
     let workspaceSpy;
+    let wsArr = [];
 
     beforeEach(() => {
         workspaces = new BehaviorSubject(List([]));
@@ -34,8 +35,7 @@ fdescribe("WorkspaceDropDownComponent", () => {
         workspaceSpy = {
             workspaces: workspaces.asObservable(),
             currentWorkspace: currentWorkspace.asObservable(),
-            // selectWorkspace: jasmine.createSpy("selectWorkspace"),
-            selectWorkspace: jasmine.createSpy("selectWorkspace").and.callFake((workspaceId) => {
+            selectWorkspace: jasmine.createSpy("selectWorkspace").and.callFake((workspaceId: string) => {
                 const found = workspaces.value.find((item) => item.id === workspaceId);
                 currentWorkspace.next(found);
             }),
@@ -48,7 +48,7 @@ fdescribe("WorkspaceDropDownComponent", () => {
                 { provide: ChangeDetectorRef, useValue: null },
                 { provide: WorkspaceService, useValue: workspaceSpy },
             ],
-            // schemas: [NO_ERRORS_SCHEMA],
+            schemas: [NO_ERRORS_SCHEMA],
         });
 
         fixture = TestBed.createComponent(TestComponent);
@@ -134,7 +134,7 @@ fdescribe("WorkspaceDropDownComponent", () => {
         });
 
         it("drop down should have 3 items", () => {
-            // one workspace and one 'manage'
+            // two workspaces and one 'manage'
             const items = fixture.debugElement.queryAll(By.css(".dropdown-item"));
             expect(items.length).toBe(3);
             expect(items[0].nativeElement.textContent).toContain("apple");
@@ -143,7 +143,7 @@ fdescribe("WorkspaceDropDownComponent", () => {
         });
     });
 
-    describe("when we change workspaces", () => {
+    describe("when there are multiple workspaces and second workspace is selected", () => {
         beforeEach(() => {
             const ws = [
                 Fixtures.workspace.create({ id: "not-bob", displayName: "apple" }),
@@ -151,60 +151,58 @@ fdescribe("WorkspaceDropDownComponent", () => {
             ];
 
             workspaces.next(List(ws));
-            currentWorkspace.next(ws.first());
+            currentWorkspace.next(ws.last());
             dropDownButton.nativeElement.click();
             fixture.detectChanges();
         });
-    //     beforeEach(() => {
-    //         workspaces.next(List([
-    //             Fixtures.pinnable.create({
-    //                 id: "my-job-matt",
-    //                 routerLink: ["/jobs", "my-job-matt"],
-    //                 pinnableType: PinnedEntityType.Job,
-    //                 url: "https://myaccount.westus.batch.com/jobs/my-job-matt",
-    //             }),
-    //             Fixtures.pinnable.create({
-    //                 id: "my-pool-bob",
-    //                 name: "my-name-is-bob",
-    //                 routerLink: ["/pools", "my-pool-bob"],
-    //                 pinnableType: PinnedEntityType.Pool,
-    //                 url: "https://myaccount.westus.batch.com/pools/my-pool-bob",
-    //             }),
-    //         ]));
 
-    //         dropDownButton.nativeElement.click();
-    //         fixture.detectChanges();
-    //     });
+        it("should have selected details", () => {
+            expect(component.selectButtonText).toBe("kiwi");
+            expect(dropDownButton.nativeElement.textContent).toContain("kiwi");
+            expect(component.selectedWorkspaceId).toBe("mouse");
+        });
+    });
 
-    //     it("should show favorite count in the title", () => {
-    //         component.selectWorkspace(ws[1])
-    //
-    //         fixture.detectChanges();
-    //
+    describe("when we change workspaces", () => {
+        beforeEach(() => {
+            wsArr = [
+                Fixtures.workspace.create({ id: "not-bob", displayName: "apple" }),
+                Fixtures.workspace.create({ id: "mouse", displayName: "kiwi" }),
+            ];
 
-/**
-*                expect(component.selectedWorkspaceId).toBe(the one i set it to)
-*                expect(component.selectButtonText).toBe(the one i set it to)
- *
- */
+            workspaces.next(List(wsArr));
+            currentWorkspace.next(wsArr.first());
+            dropDownButton.nativeElement.click();
+            fixture.detectChanges();
+        });
 
-    //         spy.selectWorkspace.hasbeencalledone(1)
-    //         expect(jobScheduleServiceSpy.selectWorkspace).toHaveBeenCalledTimes(1);
-    //                                                       toHaveBeenCalledWith("the id")
-    //         expect(component.title).toBe("2 favorite items pinned");
-    //         expect(dropDownButton.nativeElement.textContent).toContain("2 favorite items pinned");
-    //     });
+        it("should have initially selected workspace apple", () => {
+            expect(component.selectedWorkspaceId).toBe("not-bob");
+            expect(component.selectButtonText).toBe("apple");
+            expect(dropDownButton.nativeElement.textContent).toContain("apple");
+        });
 
-    //     it("drop down should have 2 items", () => {
-    //         const items = debugElement.queryAll(By.css(".dropdown-item"));
-    //         expect(items.length).toBe(2);
-    //     });
+        it("should have changed workspace to kiwi details", () => {
+            component.setWorkspace(wsArr[1]);
+            fixture.detectChanges();
+            expect(workspaceSpy.selectWorkspace).toHaveBeenCalledTimes(1);
+            expect(workspaceSpy.selectWorkspace).toHaveBeenCalledWith("mouse");
 
-    //     it("pool should show name over id", () => {
-    //         const items = debugElement.queryAll(By.css(".dropdown-item"));
-    //         expect(items[0].nativeElement.textContent).toContain("my-job-matt");
-    //         expect(items[1].nativeElement.textContent).toContain("my-name-is-bob");
-    //         expect(items[1].nativeElement.textContent).not.toContain("my-pool-bob");
-    //     });
+            expect(component.selectedWorkspaceId).toBe("mouse");
+            expect(component.selectButtonText).toBe("kiwi");
+            expect(dropDownButton.nativeElement.textContent).toContain("kiwi");
+
+        });
+
+        it("should have changed workspace to apple details", () => {
+            component.setWorkspace(wsArr[0]);
+            fixture.detectChanges();
+            expect(workspaceSpy.selectWorkspace).toHaveBeenCalledTimes(1);
+            expect(workspaceSpy.selectWorkspace).toHaveBeenCalledWith("not-bob");
+
+            expect(component.selectedWorkspaceId).toBe("not-bob");
+            expect(component.selectButtonText).toBe("apple");
+            expect(dropDownButton.nativeElement.textContent).toContain("apple");
+        });
     });
 });
