@@ -49,7 +49,8 @@ bl-button {
         }
 
         &[color="light"] {
-            color: $black;
+            color: $primary-text;
+
             &:hover, &:focus {
                 color: $button-disabled-text-color;
             }
@@ -100,7 +101,7 @@ bl-button {
 
         &[color="primary"] {
             background: $primary-color;
-            color: $whitesmoke;
+            color: $primary-text;
 
             &:hover, &:focus {
                 background: $primary-color-dark;
@@ -112,43 +113,38 @@ bl-button {
         }
 
         &[color="light"] {
-            background: $mercury-grey;
-            color: map-get($primary, 500);
+            color: $button-basic-text-color;
+            background: $button-basic-bg-color;
 
             &:hover, &:focus {
-                background: $alto;
-                color: map-get($primary, 200);
-            }
-
-            &:active {
-                background: $silver-grey;
+                background: $button-basic-hover-bg-color;
             }
         }
 
         &[color="danger"] {
-            background: map-get($danger, 500);
-            color: $whitesmoke;
+            background: $danger-color;
+            color:  $primary-text;
 
             &:hover, &:focus {
-                background: map-get($danger, 800);
+                background: $danger-color-dark;
             }
         }
 
         &[color="warn"] {
-            background: map-get($warn, 500);
-            color: $whitesmoke;
+            background: $warn-color;
+            color:  $primary-text;
 
             &:hover, &:focus {
-                background: map-get($warn, 800);
+                background: $warn-color-dark;
             }
         }
 
         &[color="success"] {
-            background: map-get($success, 500);
-            color: $whitesmoke;
+            background: $success-color;
+            color:  $primary-text;
 
             &:hover, &:focus {
-                background: map-get($success, 800);
+                background: $success-color-dark;
             }
         }
     }

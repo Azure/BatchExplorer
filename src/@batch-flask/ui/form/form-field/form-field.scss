@@ -4,7 +4,9 @@ bl-form-field {
     width: 100%;
     .label-container {
         display: block;
+        color: $primary-text;
     }
+
     .input-container {
         width: 100%;
         display: flex;

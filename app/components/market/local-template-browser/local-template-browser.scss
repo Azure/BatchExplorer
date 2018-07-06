@@ -5,7 +5,6 @@ bl-local-template-browser {
     display: block;
     width: 100%;
     height: $contentview-height;
-    background: $whitesmoke-darker;
 
     > .header {
         height: 40px;
@@ -32,7 +31,7 @@ bl-local-template-browser {
             align-items: center;
             justify-content: center;
             color: $alto;
-            border: 3px dashed $alto;
+            border: 3px dashed $border-color;
             text-align: center;
 
             > .main {

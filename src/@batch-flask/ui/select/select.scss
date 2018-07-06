@@ -63,6 +63,7 @@ bl-select {
             padding: 0 5px;
             z-index: $dropdown-zindex + 10;
             border: 1px solid $input-border-color;
+            background: $input-background-color;
             color: $input-text-color;
 
             &:focus {
