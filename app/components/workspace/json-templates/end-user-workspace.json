@@ -18,7 +18,9 @@
                 "pin": false
             }
         },
-        "schedule": false,
+        "schedule": {
+            "view": false
+        },
         "pool": true,
         "package": false,
         "certificate": false,
