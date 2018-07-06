@@ -149,7 +149,7 @@ describe("NodeConnectComponent", () => {
         });
 
         it("should add the user when form is submitted", () => {
-            component.addOrUpdateUser({ name: "foo", password: "bar", isAdmin: false }).subscribe(() => null);
+            component._addOrUpdateUser({ name: "foo", password: "bar", isAdmin: false }).subscribe(() => null);
             fixture.detectChanges();
             const properties = de.query(By.css("bl-property-group"));
 

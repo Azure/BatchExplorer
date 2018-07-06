@@ -3,7 +3,7 @@
         <div class="sidebar-header">
             <h1>Connect to node</h1>
         </div>
-        <div *ngIf="credentialSource === null">
+        <div *ngIf="!formVisible">
             <div class="node-information">
                 <bl-property-group>
                     <!-- If waiting for connection settings -->
@@ -24,12 +24,12 @@
                         <bl-text-property label="Port" value="Not Specified"></bl-text-property>
                     </div>
                     <div class="custom-property" *ngIf="windows">
-                        <h5 class="label-small username-label">RDP File</h5>
+                        <h5 class="label-small">RDP File</h5>
                         <bl-clickable class="display-field" (click)="downloadRdp()">Download RDP File</bl-clickable>
                     </div>
                     <div class="custom-property">
                         <h5 class="label-small username-label">Username</h5>
-                        <input blInput type="text" [(ngModel)]="username" id="input-username" [placeholder]="defaultUsername" />
+                        <input blInput type="text" [(ngModel)]="username" [placeholder]="defaultUsername" />
                     </div>
                     <div *ngIf="linux" class="custom-property">
                         <h5 class="label-small">SSH Key File</h5>
@@ -37,8 +37,8 @@
                         <div class="display-field" *ngIf="!hasLocalPublicKey">Not Found!</div>
                     </div>
                     <div class="custom-property" *ngIf="windows">
-                        <h5 class="label-small username-label">Password</h5>
-                        <input blInput [(ngModel)]="password" type="password" id="input-password" placeholder="(Optional)" />
+                        <h5 class="label-small">Password</h5>
+                        <input blInput [(ngModel)]="password" type="password" placeholder="(Optional)" />
                         <span class="clipboard-info">Password will be copied to clipboard on Connect</span>
                     </div>
                 </bl-property-group>
@@ -66,24 +66,9 @@
                 </bl-button>
             </div>
         </div>
-        <div *ngIf="credentialSource === CredentialSource.Specified && !credentials">
-            <bl-node-user-credentials-form [submit]="addOrUpdateUser" [isLinuxNode]="linux" (close)="goToHome()"></bl-node-user-credentials-form>
+        <div *ngIf="formVisible">
+            <bl-node-user-credentials-form [submit]="storeCredentialsFromForm" [isLinuxNode]="linux" (close)="goToHome()"></bl-node-user-credentials-form>
         </div>
-        <div *ngIf="hasIp && connectionSettings && credentials">
-            <div *ngIf="processLaunched">
-                <div class="warn-text" *ngIf="expireTime">Note: These credentials are valid until {{expireTime}} on this node.</div>
-                <bl-property-group>
-                    <bl-text-property label="IP" [value]="connectionSettings.ip"></bl-text-property>
-                    <bl-text-property label="Port" [value]="connectionSettings.port"></bl-text-property>
-                    <bl-text-property label="SSH Command" [value]="sshCommand"></bl-text-property>
-                    <bl-text-property label="Username" [value]="credentials.name"></bl-text-property>
-                    <bl-text-property label="Key File" [value]="publicKeyFile"></bl-text-property>
-                </bl-property-group>
-            </div>
-        </div>
-    </div>
-    <div *ngIf="credentialSource === CredentialSource.Generated">
-        <bl-button color="light" type="wide" [action]="goToHome">Back</bl-button>
     </div>
     <bl-server-error *ngIf="error" [error]="error"></bl-server-error>
     <bl-clickable class="close-button" type="plain" (do)="close()"><i class="fa fa-times fa-lg"></i></bl-clickable>

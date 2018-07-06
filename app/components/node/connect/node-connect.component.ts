@@ -18,30 +18,23 @@ import {
     SSHKeyService,
     SettingsService,
 } from "app/services";
-import { DateUtils, PoolUtils, SecureUtils } from "app/utils";
+import { PoolUtils, SecureUtils } from "app/utils";
 import { ExternalApplication } from "common/constants";
 import { Observable } from "rxjs";
 import { flatMap, share, tap } from "rxjs/operators";
 import "./node-connect.scss";
 
-enum CredentialSource {
-    Generated,
-    Specified,
-}
-
 @Component({
     selector: "bl-node-connect",
     templateUrl: "node-connect.html",
 })
-export class NodeConnectComponent implements OnInit, OnChanges {
-    public CredentialSource = CredentialSource;
-    public credentialSource: CredentialSource = null;
+export class NodeConnectComponent implements OnInit {
+    public formVisible: boolean = false;
     public credentials: AddNodeUserAttributes = null;
     public agentSkus: List<NodeAgentSku>;
     public windows = false;
     public linux = false;
     public hasIp = false;
-    public expireTime: string;
     public hasLocalPublicKey: boolean;
     public defaultUsername: string;
     public username: string = "";
@@ -53,6 +46,7 @@ export class NodeConnectComponent implements OnInit, OnChanges {
     public publicKeyFile: string;
     public processLaunched: boolean = false;
     public savedToClipboard: boolean = false;
+    public userUpdatedFromForm: boolean = false;
 
     /**
      * Base content for the rdp file(IP Address).
@@ -60,6 +54,9 @@ export class NodeConnectComponent implements OnInit, OnChanges {
      */
     public rdpContent: string;
     public connectionSettings: NodeConnectionSettings;
+
+    private expiryTime: Date = null;
+    private isAdmin: boolean = null;
 
     @Input()
     public set pool(pool: Pool) {
@@ -127,9 +124,9 @@ export class NodeConnectComponent implements OnInit, OnChanges {
         this.loading = true;
 
         const credentials = {
-            isAdmin: true,
+            isAdmin: this.isAdmin !== null ? this.isAdmin : true,
             name: this.username || this.defaultUsername,
-            expiryTime:  moment().add(moment.duration({days: 1})).toDate(),
+            expiryTime: this.expiryTime || moment().add(moment.duration({days: 1})).toDate(),
             sshPublicKey: "",
             password: this.password || SecureUtils.passwordWindowsValid(),
         };
@@ -138,11 +135,9 @@ export class NodeConnectComponent implements OnInit, OnChanges {
             // we are going to use ssh keys, so we don't need a password
             delete credentials.password;
 
-            const pidObs = this._initSSH(credentials);
+            const pidObs = this._initSSH(credentials, this.userUpdatedFromForm);
             pidObs.subscribe({
                 next: (pid) => {
-                    // set the credentials source to change the template
-                    this.credentialSource = CredentialSource.Generated;
                     this.processLaunched = true;
                     this.loading = false;
                     this.error = null;
@@ -157,7 +152,7 @@ export class NodeConnectComponent implements OnInit, OnChanges {
             // for windows, we don't need the public key because we cannot ssh
             delete credentials.sshPublicKey;
 
-            this.addOrUpdateUser(credentials).flatMap(() => {
+            this._addOrUpdateUser(credentials).flatMap(() => {
                 this.loading = false;
                 this.error = null;
 
@@ -184,14 +179,22 @@ export class NodeConnectComponent implements OnInit, OnChanges {
         }
     }
 
+    /**
+     * Stores the values from the node-user-credentials form in instance variables
+     * @param credentials The credentials entered on the node user credentials form
+     */
     @autobind()
-    public addOrUpdateUser(credentials) {
-        return this.nodeUserService.addOrUpdateUser(this.pool.id, this.node.id, credentials).pipe(
-            tap(() => {
-                this.credentials = credentials;
-                this.expireTime = DateUtils.fullDateAndTime(this.credentials.expiryTime);
-            }),
-        );
+    public storeCredentialsFromForm(credentials: AddNodeUserAttributes) {
+        // update the main template
+        this.username = credentials.name;
+        this.password = credentials.password;
+        this.expiryTime = credentials.expiryTime;
+        if (credentials.isAdmin) {
+            this.isAdmin = credentials.isAdmin;
+        }
+
+        // hide the node user credentials form
+        this.formVisible = false;
     }
 
     public get sshCommand() {
@@ -205,12 +208,12 @@ export class NodeConnectComponent implements OnInit, OnChanges {
 
     @autobind()
     public specifyCredentials() {
-        this.credentialSource = CredentialSource.Specified;
+        this.formVisible = true;
     }
 
     @autobind()
     public goToHome() {
-        this.credentialSource = null;
+        this.formVisible = false;
         this.processLaunched = false;
     }
 
@@ -226,6 +229,14 @@ export class NodeConnectComponent implements OnInit, OnChanges {
                 this.shell.showItemInFolder(filename);
             },
         });
+    }
+
+    private _addOrUpdateUser(credentials) {
+        return this.nodeUserService.addOrUpdateUser(this.pool.id, this.node.id, credentials).pipe(
+            tap(() => {
+                this.credentials = credentials;
+            }),
+        );
     }
 
     /**
@@ -252,18 +263,26 @@ export class NodeConnectComponent implements OnInit, OnChanges {
      * @param credentials an object containing credentials for the ssh command (username, IP, port, ssh public key)
      * @returns an Observable that emits the process id of the child process
      */
-    private _initSSH(credentials): Observable<number> {
+    private _initSSH(credentials: AddNodeUserAttributes, skipUpdate: boolean): Observable<number> {
+        // if the node-user-credentials form has been updated, skip addOrUpdateUser
+        if (skipUpdate) {
+            const args = {
+                command: this.sshCommand,
+            };
+            return Observable.fromPromise(this.batchLabs.launchApplication(ExternalApplication.terminal, args));
+        }
+
         // fetch the public key from the user's filesystem
         const obs =  this.sshKeyService.getLocalPublicKey(this.publicKeyFile).pipe(
             flatMap((key) => {
                 credentials.sshPublicKey = key;                     // set the key to be the fetched public key
                 this.credentials = credentials;
-                return this.addOrUpdateUser(credentials);           // set the user that will be used for authentication
+                return this._addOrUpdateUser(credentials);          // set the user that will be used for authentication
             }),
             flatMap(() => {
                 // launch a terminal subprocess with the command to access the node
                 const args = {
-                    command: PoolUtils.isWindows(this.pool) ? "" : this.sshCommand,
+                    command: this.sshCommand,
                 };
                 return Observable.fromPromise(this.batchLabs.launchApplication(ExternalApplication.terminal, args));
             }),
