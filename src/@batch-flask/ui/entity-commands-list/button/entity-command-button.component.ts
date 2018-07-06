@@ -9,8 +9,6 @@ import {
 import { autobind } from "@batch-flask/core";
 import { EntityCommand } from "@batch-flask/ui/entity-commands";
 
-// import "./entity-command-button.scss";
-
 @Component({
     selector: "bl-entity-command-button",
     templateUrl: "entity-command-button.html",

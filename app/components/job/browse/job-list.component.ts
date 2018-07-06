@@ -142,7 +142,6 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
             task.start(backgroundTask);
             return task.waitingDone;
         });
-        // this.jobService.deleteJobs([...this.selection.keys])
     }
 
     public trackByFn(index: number, job: Job) {

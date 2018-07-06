@@ -18,7 +18,7 @@ export class Workspace {
         }
 
         const features = requestedFeature.split(".");
-        // console.log(`Workspace.isFeatureEnabled: ${requestedFeature}`, this.template);
+        console.log(`Workspace.isFeatureEnabled: ${requestedFeature}`, this.template);
 
         let definition = Object.assign({}, this.template) as any;
         for (const feat of features) {

@@ -64,6 +64,10 @@ export abstract class EntityCommands<TEntity extends ActionableEntity, TParams =
 
     public contextMenuFromEntity(entity: TEntity): ContextMenu {
         return new ContextMenu(this.commands.map((command) => {
+            if (!command.visible(entity)) {
+                return null;
+            }
+
             return new ContextMenuItem({
                 label: command.label(entity),
                 click: () => {

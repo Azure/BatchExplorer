@@ -29,8 +29,6 @@ export class FeatureVisibleDirective implements OnInit, OnDestroy  {
                 if (!workspace || enabled) {
                     this.viewContainer.createEmbeddedView(this.templateRef);
                 }
-            } else {
-                console.log("ignoring empty feature: ", this.templateRef.elementRef.nativeElement);
             }
         });
     }

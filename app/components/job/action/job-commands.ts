@@ -46,6 +46,23 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
         );
 
         this._buildCommands();
+        /**
+         * TODO: TIM - there must be a nicer way to do this.
+         * I also tried
+         *     visible: () => this.workspaceService.isFeatureEnabled("job.action.clone")
+         *
+         * and this in the subscribe below:
+         *     this.pin.visible = () => ws.isFeatureEnabled("job.action.pin");
+         *
+         * Which worked, but was called for every button each time the job refreshed and
+         * I would rather it didn't do that as it can be an expensive operation to check every
+         * button every 5 seconds. Only need to check isFeatureEnabled when the workspace
+         * changes.
+         *
+         * if we could get EntityCommandButtonComponent.ngOnChanged() to only check command
+         * states if the job has actually changed a value we are interested in then this would
+         * work.
+         */
         this._sub = this.workspaceService.currentWorkspace.subscribe((ws) => {
             this._cloneVisible = ws.isFeatureEnabled("job.action.clone");
             this._scheduleVisible = ws.isFeatureEnabled("schedule.view");
@@ -98,7 +115,7 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
             confirm: false,
             notify: false,
             permission: Permission.Write,
-            visible: (job) => this._cloneVisible,
+            visible: () => this._cloneVisible,
         });
 
         this.delete = this.simpleCommand({
@@ -125,7 +142,7 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
             confirm: false,
             notify: false,
             permission: Permission.Write,
-            visible: (job) => this._scheduleVisible,
+            visible: () => this._scheduleVisible,
         });
 
         this.exportAsJSON = this.simpleCommand({
@@ -134,7 +151,7 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
             multiple: false,
             confirm: false,
             notify: false,
-            visible: (job) => this._exportVisible,
+            visible: () => this._exportVisible,
         });
 
         this.pin = this.simpleCommand({
@@ -149,7 +166,7 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
             action: (job: Job) => this._pinJob(job),
             confirm: false,
             multiple: false,
-            visible: (job) => this._pinVisible,
+            visible: () => this._pinVisible,
         });
 
         this.commands = [
@@ -180,7 +197,7 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
     }
 
     private _cloneJob(job: Job) {
-        if (!this._cloneVisible) {
+        if (!this.clone.visible(job)) {
             return;
         }
 
@@ -189,7 +206,7 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
     }
 
     private _createJobSchedule(job: Job) {
-        if (!this._scheduleVisible) {
+        if (!this.createJobSchedule.visible(job)) {
             return;
         }
 
@@ -201,7 +218,7 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
     }
 
     private _exportAsJSON(job: Job) {
-        if (!this._exportVisible) {
+        if (!this.exportAsJSON.visible(job)) {
             return;
         }
 
@@ -218,7 +235,7 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
     }
 
     private _pinJob(job: Job) {
-        if (!this._pinVisible) {
+        if (!this.pin.visible(job)) {
             return;
         }
 

@@ -15,7 +15,6 @@ export class TerminateJobCommand extends EntityCommand<Job> {
             enabled: (job) => job.state !== JobState.completed,
             permission: Permission.Write,
             confirm: true,
-            feature: "job.action.terminate",
         });
     }
 }
