@@ -4,7 +4,7 @@ import { Subscription } from "rxjs";
 
 import { JobSchedule, Metadata } from "app/models";
 import { JobScheduleDecorator } from "app/models/decorators";
-import { WorkspaceService } from "app/services";
+import { WorkspaceService } from "@batch-flask/ui";
 
 // tslint:disable:trackBy-function
 @Component({

@@ -10,7 +10,7 @@
   "outline": "#528bff",
   "border": "#d5d5d5",
   "text": {
-    "primary": "",
+    "primary": "#333333",
     "secondary": "#757575"
   },
   "breadcrumb": {

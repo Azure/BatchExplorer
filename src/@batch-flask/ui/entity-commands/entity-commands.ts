@@ -13,6 +13,10 @@ export interface ActionableEntity {
     id: string;
 }
 
+export interface EntityCommandsConfig {
+    feature?: string;
+}
+
 /**
  * Entity commands is a wrapper for all actions/commands available to an entity
  */
@@ -24,7 +28,7 @@ export abstract class EntityCommands<TEntity extends ActionableEntity, TParams =
 
     public commands: Array<EntityCommand<TEntity, any>>;
 
-    constructor(private injector: Injector, public typeName: string) {
+    constructor(private injector: Injector, public typeName: string, public config: EntityCommandsConfig = {}) {
         this.notificationService = injector.get(NotificationService);
         this.dialogService = injector.get(DialogService);
         this.backgroundTaskService = injector.get(BackgroundTaskService);

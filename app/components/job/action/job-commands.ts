@@ -1,10 +1,13 @@
 import { Injectable, Injector, OnDestroy } from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 
-import { COMMAND_LABEL_ICON, ElectronRemote, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
+import {
+    COMMAND_LABEL_ICON, ElectronRemote, EntityCommand,
+    EntityCommands, Permission,
+} from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, JobSchedule, JobState } from "app/models";
-import { FileSystemService, JobService, PinnedEntityService, WorkspaceService } from "app/services";
+import { FileSystemService, JobService, PinnedEntityService } from "app/services";
 
 import { JobScheduleCreateBasicDialogComponent } from "../../job-schedule/action";
 import { TaskCreateBasicDialogComponent } from "../../task/action";
@@ -13,7 +16,7 @@ import { DisableJobCommand } from "./disable";
 import { TerminateJobCommand } from "./terminate";
 
 @Injectable()
-export class JobCommands extends EntityCommands<Job> implements OnDestroy {
+export class JobCommands extends EntityCommands<Job> {
     public edit: EntityCommand<Job, void>;
     public addTask: EntityCommand<Job, void>;
     public clone: EntityCommand<Job, void>;
@@ -37,42 +40,17 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
         private fs: FileSystemService,
         private remote: ElectronRemote,
         private pinnedEntityService: PinnedEntityService,
-        private sidebarManager: SidebarManager,
-        private workspaceService: WorkspaceService) {
+        private sidebarManager: SidebarManager) {
 
         super(
             injector,
             "Job",
+            {
+                feature: "job.action",
+            },
         );
 
         this._buildCommands();
-        /**
-         * TODO: TIM - there must be a nicer way to do this.
-         * I also tried
-         *     visible: () => this.workspaceService.isFeatureEnabled("job.action.clone")
-         *
-         * and this in the subscribe below:
-         *     this.pin.visible = () => ws.isFeatureEnabled("job.action.pin");
-         *
-         * Which worked, but was called for every button each time the job refreshed and
-         * I would rather it didn't do that as it can be an expensive operation to check every
-         * button every 5 seconds. Only need to check isFeatureEnabled when the workspace
-         * changes.
-         *
-         * if we could get EntityCommandButtonComponent.ngOnChanged() to only check command
-         * states if the job has actually changed a value we are interested in then this would
-         * work.
-         */
-        this._sub = this.workspaceService.currentWorkspace.subscribe((ws) => {
-            this._cloneVisible = ws.isFeatureEnabled("job.action.clone");
-            this._scheduleVisible = ws.isFeatureEnabled("schedule.view");
-            this._exportVisible = ws.isFeatureEnabled("job.action.export");
-            this._pinVisible = ws.isFeatureEnabled("job.action.pin");
-        });
-    }
-
-    public ngOnDestroy() {
-        this._sub.unsubscribe();
     }
 
     public get(jobId: string) {
@@ -87,6 +65,7 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
         this.disable = this.command(DisableJobCommand);
 
         this.edit = this.simpleCommand({
+            name: "edit",
             ...COMMAND_LABEL_ICON.Edit,
             action: (job) => this._editJob(job),
             enabled: (job) => job.state !== JobState.completed,
@@ -97,18 +76,20 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
         });
 
         this.addTask = this.simpleCommand({
+            name: "add",
             ...COMMAND_LABEL_ICON.AddTask,
             action: (job) => this._addTask(job),
             multiple: false,
             confirm: false,
             notify: false,
-            enabled: (job) =>  job.state !== JobState.completed
+            enabled: (job) => job.state !== JobState.completed
                 && job.state !== JobState.deleting
                 && job.state !== JobState.terminating,
             permission: Permission.Write,
         });
 
         this.clone = this.simpleCommand({
+            name: "clone",
             ...COMMAND_LABEL_ICON.Clone,
             action: (job) => this._cloneJob(job),
             multiple: false,
@@ -119,6 +100,7 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
         });
 
         this.delete = this.simpleCommand({
+            name: "delete",
             ...COMMAND_LABEL_ICON.Delete,
             action: (job: Job) => this.jobService.delete(job.id),
             enabled: (job: Job) => job.state !== JobState.deleting && job.state !== JobState.terminating,
@@ -128,6 +110,7 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
         this.terminate = this.command(TerminateJobCommand);
 
         this.enable = this.simpleCommand({
+            name: "enable",
             ...COMMAND_LABEL_ICON.Enable,
             action: (job: Job) => this.jobService.enable(job.id),
             enabled: (job: Job) => job.state === JobState.disabled,
@@ -136,6 +119,7 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
         });
 
         this.createJobSchedule = this.simpleCommand({
+            name: "createJobSchedule",
             ...COMMAND_LABEL_ICON.CreateJobScheduleForJobs,
             action: (job) => this._createJobSchedule(job),
             multiple: false,
@@ -146,6 +130,7 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
         });
 
         this.exportAsJSON = this.simpleCommand({
+            name: "exportAsJson",
             ...COMMAND_LABEL_ICON.ExportAsJSON,
             action: (job) => this._exportAsJSON(job),
             multiple: false,
@@ -155,6 +140,7 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
         });
 
         this.pin = this.simpleCommand({
+            name: "pin",
             label: (job: Job) => {
                 return this.pinnedEntityService.isFavorite(job)
                     ? COMMAND_LABEL_ICON.UnpinFavoriteLabel : COMMAND_LABEL_ICON.PinFavoriteLabel;
@@ -211,7 +197,7 @@ export class JobCommands extends EntityCommands<Job> implements OnDestroy {
         }
 
         const ref = this.sidebarManager.open(`add-job-schedule`,
-        JobScheduleCreateBasicDialogComponent);
+            JobScheduleCreateBasicDialogComponent);
         ref.component.setValueFromEntity(new JobSchedule({
             jobSpecification: job.toJS(),
         }));

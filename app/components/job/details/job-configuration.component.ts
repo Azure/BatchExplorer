@@ -3,6 +3,7 @@ import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
+import { WorkspaceService } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditMetadataFormComponent } from "app/components/common/edit-metadata-form";
 import { Job, Metadata, NameValuePair } from "app/models";
@@ -13,7 +14,7 @@ import {
     JobReleaseTaskDecorator,
 } from "app/models/decorators";
 import { JobPatchDto } from "app/models/dtos";
-import { JobService, WorkspaceService } from "app/services";
+import { JobService } from "app/services";
 
 // tslint:disable:trackBy-function
 @Component({

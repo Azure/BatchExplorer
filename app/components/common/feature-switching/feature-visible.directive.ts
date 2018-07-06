@@ -1,15 +1,13 @@
 import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from "@angular/core";
+import { WorkspaceService } from "@batch-flask/ui";
 import { Subscription } from "rxjs";
-
-import { WorkspaceService } from "app/services";
 
 @Directive({
     selector: "[blFeatureOn]",
 })
 export class FeatureVisibleDirective implements OnInit, OnDestroy  {
     // tslint:disable-next-line:no-input-rename
-    @Input("blFeatureOn")
-    public feature: string;
+    @Input("blFeatureOn") public feature: string;
 
     private _subscription: Subscription;
 

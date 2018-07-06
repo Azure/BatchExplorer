@@ -89,7 +89,6 @@ import {
     TenantDetailsService,
     ThemeService,
     VmSizeService,
-    WorkspaceService,
 } from "./services";
 
 const modules = [
@@ -177,7 +176,6 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         TenantDetailsService,
         ThemeService,
         VmSizeService,
-        WorkspaceService,
         PredefinedFormulaService,
         ...graphApiServices,
         { provide: ErrorHandler, useClass: BatchLabsErrorHandler },

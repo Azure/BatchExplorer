@@ -15,3 +15,4 @@ export * from "./permission";
 export * from "./vtabs";
 export * from "./entity-commands";
 export * from "./table";
+export * from "./workspace";

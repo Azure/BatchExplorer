@@ -8,6 +8,7 @@ import { exists, log, nil } from "@batch-flask/utils";
 import * as inflection from "inflection";
 import { Observable } from "rxjs";
 
+import { WorkspaceService } from "@batch-flask/ui";
 import { ActionableEntity, EntityCommands } from "./entity-commands";
 
 export enum EntityCommandNotify {
@@ -17,6 +18,10 @@ export enum EntityCommandNotify {
 }
 
 export interface EntityCommandAttributes<TEntity extends ActionableEntity, TOptions = void> {
+    /**
+     * Name is to be used by feature to show buttons. Or to define keyboard shortcuts
+     */
+    name?: string;
     label: ((entity: TEntity) => string) | string;
     icon?: ((entity: TEntity) => string) | string;
     action: (entity: TEntity, option?: TOptions) => Observable<any> | void;
@@ -32,10 +37,10 @@ export interface EntityCommandAttributes<TEntity extends ActionableEntity, TOpti
  * Entity command is a commnad available to an entity
  */
 export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
+    public name: string;
     public notify: EntityCommandNotify;
     public multiple: boolean;
     public enabled: (entity: TEntity) => boolean;
-    public visible: (entity: TEntity) => boolean;
     public confirm: ((entities: TEntity[]) => Observable<TOptions>) | boolean;
     public definition: EntityCommands<TEntity>;
     public permission: Permission;
@@ -44,23 +49,27 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     private _action: (entity: TEntity, option?: TOptions) => Observable<any> | void;
     private _label: ((entity: TEntity) => string) | string;
     private _icon: ((entity: TEntity) => string) | string;
+    private _visible: (entity: TEntity) => boolean;
 
     // Services
     private dialogService: DialogService;
     private notificationService: NotificationService;
     private backgroundTaskService: BackgroundTaskService;
+    private workspaceService: WorkspaceService;
 
     constructor(injector: Injector, attributes: EntityCommandAttributes<TEntity, TOptions>) {
         this.notificationService = injector.get(NotificationService);
         this.dialogService = injector.get(DialogService);
         this.backgroundTaskService = injector.get(BackgroundTaskService);
+        this.workspaceService = injector.get(WorkspaceService);
 
+        this.name = attributes.name;
         this._label = attributes.label;
         this._icon = attributes.icon || "fa fa-question";
         this._action = attributes.action;
         this.multiple = exists(attributes.multiple) ? attributes.multiple : true;
         this.enabled = attributes.enabled || (() => true);
-        this.visible = attributes.visible || (() => true);
+        this._visible = attributes.visible || (() => true);
         this.confirm = exists(attributes.confirm) ? attributes.confirm : true;
         this.permission = attributes.permission || Permission.Read;
         if (attributes.notify === true || nil(attributes.notify)) {
@@ -82,6 +91,10 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
 
     public disabled(entity: TEntity) {
         return !this.enabled(entity);
+    }
+
+    public visible(entity: TEntity) {
+        return this._visible(entity) && this._isFeatureEnabled();
     }
 
     public performAction(entity: TEntity, option: TOptions): Observable<any> {
@@ -190,5 +203,11 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         if (this.notify !== EntityCommandNotify.Never) {
             this.notificationService.error(message, description);
         }
+    }
+
+    private _isFeatureEnabled(): boolean {
+        const feature = this.definition.config.feature;
+        if (!feature) {return true; }
+        return this.workspaceService.isFeatureEnabled(`${feature}.${this.name}`);
     }
 }

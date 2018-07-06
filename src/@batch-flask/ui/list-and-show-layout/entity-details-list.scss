@@ -18,13 +18,13 @@ bl-entity-details-list {
 
             .toggle-advanced-filter {
                 display: block;
-                color: $scorpion;
+                color: $primary-color;
                 cursor: pointer;
                 border-style: solid;
                 border-width: 1px 1px 1px 0;
                 border-color: $border-color;
                 font-size: 16px;
-                background: $athensGrey;
+                background: $button-basic-bg-color;
                 height: 26px;
                 width: 26px;
                 position: relative;

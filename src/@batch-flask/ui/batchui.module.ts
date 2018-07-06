@@ -5,6 +5,7 @@ import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
 // components
+import { WorkspaceModule } from "@batch-flask/ui/workspace";
 import { AdvancedFilterModule } from "./advanced-filter";
 import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
@@ -89,6 +90,7 @@ const modules = [
     VirtualScrollModule,
     VTabsModule,
     ElectronModule,
+    WorkspaceModule,
 ];
 
 // Add subcomponnent not in a module here

@@ -2,13 +2,12 @@ import { ChangeDetectorRef, Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
-import { List } from "immutable";
-import { BehaviorSubject } from "rxjs";
-
+import { WorkspaceService } from "@batch-flask/ui";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { DropdownModule } from "@batch-flask/ui/dropdown";
 import { Workspace } from "app/models";
-import { WorkspaceService } from "app/services";
+import { List } from "immutable";
+import { BehaviorSubject } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { WorkspaceDropDownComponent } from "./workspace-dropdown.component";
 

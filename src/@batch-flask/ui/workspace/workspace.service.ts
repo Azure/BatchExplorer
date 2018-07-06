@@ -6,6 +6,7 @@ import { Workspace } from "app/models";
 import { Constants } from "common";
 
 // tslint:disable:no-var-requires max-line-length
+// TODO-TIM move that out of here
 const adminWorkspace = JSON.parse(require("app/components/workspace/json-templates/admin-workspace.json"));
 const endUserWorkspace = JSON.parse(require("app/components/workspace/json-templates/end-user-workspace.json"));
 // tslint:enable:no-var-requires max-line-length
