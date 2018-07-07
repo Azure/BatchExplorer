@@ -39,6 +39,8 @@ export class NodeConnectComponent implements OnInit {
     public defaultUsername: string;
     public username: string = "";
     public password: string = "";
+    public expiryTime: Date = null;
+    public isAdmin: boolean = null;
     public error: ServerError = null;
     public tooltip: string = "";
     public ipFromRDP: string = "";
@@ -54,9 +56,6 @@ export class NodeConnectComponent implements OnInit {
      */
     public rdpContent: string;
     public connectionSettings: NodeConnectionSettings;
-
-    private expiryTime: Date = null;
-    private isAdmin: boolean = null;
 
     @Input()
     public set pool(pool: Pool) {
@@ -118,7 +117,7 @@ export class NodeConnectComponent implements OnInit {
     }
 
     @autobind()
-    public autoConnect() {
+    public autoConnect(): Observable<any> {
         // set the processLaunched flag to false, since we will launch a new process
         this.processLaunched = false;
         this.loading = true;
@@ -148,20 +147,25 @@ export class NodeConnectComponent implements OnInit {
                     throw error;
                 },
             });
+            return pidObs;
         } else {
             // for windows, we don't need the public key because we cannot ssh
             delete credentials.sshPublicKey;
 
-            this._addOrUpdateUser(credentials).flatMap(() => {
-                this.loading = false;
-                this.error = null;
+            const obs = this._addOrUpdateUser(credentials).pipe(
+                flatMap(() => {
+                    this.loading = false;
+                    this.error = null;
 
-                // save password to clipboard
-                clipboard.writeText(this.credentials.password);
+                    // save password to clipboard
+                    clipboard.writeText(this.credentials.password);
 
-                // create and launch the rdp program
-                return this._saveRdpFile();
-            }).subscribe({
+                    // create and launch the rdp program
+                    return this._saveRdpFile();
+                }),
+                share(),
+            );
+            obs.subscribe({
                 next: (filename) => {
                     this.shell.openItem(filename);
                 },
@@ -176,6 +180,7 @@ export class NodeConnectComponent implements OnInit {
                     }
                 },
             });
+            return obs;
         }
     }
 
@@ -224,11 +229,13 @@ export class NodeConnectComponent implements OnInit {
 
     @autobind()
     public downloadRdp() {
-        return this._saveRdpFile().subscribe({
+        const obs = this._saveRdpFile();
+        obs.subscribe({
             next: (filename) => {
                 this.shell.showItemInFolder(filename);
             },
         });
+        return obs;
     }
 
     private _addOrUpdateUser(credentials) {
