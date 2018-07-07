@@ -3,7 +3,7 @@
   "fileTypes": {
     "log": ["txt", "log"],
     "image":  ["png", "jpg", "gif", "svg"],
-    "code": ["json", "ts2", "js", "java", "cs", "cpp", "h", "hpp", "py", "xml", "sh", "cmd", "bat", "yaml", "yml", "ts", "ps1"]
+    "code": ["json", "ts2", "js", "java", "cs", "cpp", "h", "hpp", "py", "xml", "sh", "cmd", "bat", "yaml", "yml", "ts", "ps1", "html", "css", "scss"]
   },
 
   // Default view for the configuration tab of pool, job, task, etc. Can be [pretty,json]

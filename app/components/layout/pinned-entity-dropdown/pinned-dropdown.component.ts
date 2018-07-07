@@ -3,8 +3,8 @@ import { NavigationEnd, Router } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { PinnableEntity, PinnedEntityType } from "@batch-flask/core";
-import { DropdownComponent } from "@batch-flask/ui";
+import { MouseButton, PinnableEntity, PinnedEntityType } from "@batch-flask/core";
+import { ContextMenu, ContextMenuItem, ContextMenuService, DropdownComponent } from "@batch-flask/ui";
 import { AccountService, PinnedEntityService } from "app/services";
 
 import "./pinned-dropdown.scss";
@@ -26,7 +26,8 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private changeDetector: ChangeDetectorRef,
-        public pinnedEntityService: PinnedEntityService,
+        private contextMenuService: ContextMenuService,
+        private pinnedEntityService: PinnedEntityService,
         private accountService: AccountService) {
 
         this.favorites = this.pinnedEntityService.favorites;
@@ -57,6 +58,16 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
     public gotoFavorite(favorite: PinnableEntity) {
         this.router.navigate(favorite.routerLink);
         this._dropdown.close();
+    }
+
+    public removeFavorite(favorite: PinnableEntity) {
+        this.pinnedEntityService.unPinFavorite(favorite);
+    }
+
+    public handleMiddleMouseUp(event: MouseEvent, favorite: PinnableEntity) {
+        if (event.button === MouseButton.middle) {
+            this.pinnedEntityService.unPinFavorite(favorite);
+        }
     }
 
     public entityType(favorite: PinnableEntity) {
@@ -99,5 +110,11 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
 
     public trackPinnned(index, entity: PinnableEntity) {
         return `${entity.pinnableType}/${entity.id}`;
+    }
+
+    public onContextMenu(favorite: PinnableEntity) {
+        this.contextMenuService.openMenu(new ContextMenu([
+            new ContextMenuItem("Remove favorite", () => this.pinnedEntityService.unPinFavorite(favorite)),
+        ]));
     }
 }

@@ -4,7 +4,6 @@ bl-market {
     display: flex;
     width: 100%;
     height: $contentview-height;
-    background: $whitesmoke-darker;
 
     h1 {
         margin: 10px;
@@ -46,7 +45,7 @@ bl-market {
         padding: 5px;
 
         &:hover {
-            background: $whitesmoke-darker;
+            background: $selection-color;
         }
 
         img.logo {

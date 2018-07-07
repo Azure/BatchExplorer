@@ -1,14 +1,16 @@
 {
   "$schema": "./theme.schema.json",
-  "primary": "#3d85c6",
-  "danger": "#aa3939",
+  "primary": "#61afef",
+  "danger": "#A63234",
   "warn": "#f4ad42",
   "success": "#4caf50",
-  "main-background": "#666666",
-  "card-background": "#5b5b5b",
+  "main-background": "#21252B",
+  "card-background": "#282c34",
+  "selection": "#3d4148",
+  "border": "#474a4f",
   "text": {
-    "primary": "",
-    "secondary": "#757575"
+    "primary": "#cccccc",
+    "secondary": "#A7A8A9"
   },
   "breadcrumb": {
     "text": "white",
@@ -22,12 +24,27 @@
   },
   "navigation": {
     "text": "white",
-    "background": "#5b5b5b",
+    "background": "#333842",
     "hover-background": "#666666"
   },
   "footer": {
     "text": "whitesmoke",
     "background": "var(--color-primary)",
     "hover": "#757575"
+  },
+  "button": {
+    "basic-text": "var(--color-primary)",
+    "basic-bg": "#3F3F46",
+    "basic-hover-bg": "#373744",
+    "disabled-text": "#8B8B8B",
+    "disabled-bg": "#2D2D30"
+  },
+  "input": {
+    "border": "#3C4049",
+    "focus-border": "var(--color-primary)",
+    "placeholder": "#d5d5d5",
+    "text": "var(--color-text-primary)",
+    "background": "#21252B",
+    "disabled-background": "#2D2D30"
   }
 }

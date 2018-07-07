@@ -8,15 +8,16 @@ import {
     ViewChild,
 } from "@angular/core";
 import { MatSidenav } from "@angular/material";
-
 import { log } from "@batch-flask/utils";
-import { SidebarManager } from "./sidebar-manager";
-import { SidebarPageComponent } from "./sidebar-page";
-import { SidebarRef } from "./sidebar-ref";
+import { SidebarManager } from "../sidebar-manager";
+import { SidebarPageComponent } from "../sidebar-page";
+import { SidebarRef } from "../sidebar-ref";
+
+import "./sidebar-content.scss";
 
 @Component({
     selector: "bl-sidebar-content",
-    templateUrl: "sidebar.html",
+    templateUrl: "sidebar-content.html",
 })
 export class SidebarContentComponent implements OnInit {
     @Input()  private sidebar: MatSidenav;

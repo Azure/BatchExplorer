@@ -25,7 +25,6 @@ fieldset {
     p {
         line-height: 1.2em;
         padding-top: 10px;
-        color: $mineShaftGray;
     }
 
     .message {
@@ -61,7 +60,7 @@ fieldset {
         padding-top: 15px;
 
         p {
-            color: $errorText;
+            color: $danger-color;
             margin-bottom: 0.1em;
         }
     }
@@ -82,7 +81,7 @@ fieldset {
         background-color: $silver-grey;
 
         i {
-            color: map-get($primary, 400);
+            color: $primary-color;
         }
     }
 

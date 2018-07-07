@@ -100,6 +100,8 @@ $secondary-text:            var(--color-text-secondary);
 $main-background:           var(--color-main-background);
 $card-background:           var(--color-card-background);
 $outline-color:             var(--color-outline);
+$selection-color:           var(--color-selection);
+$border-color:              var(--color-border);
 
 // Header
 $header-color:              entity-color(header);
@@ -117,5 +119,8 @@ $input-border-color:        var(--color-input-border);
 $input-focus-border-color:  var(--color-input-focus-border);
 
 
-$button-disabled-text-color:     var(--color-button-disabled-text);
+$button-basic-text-color:   var(--color-button-basic-text);
+$button-basic-bg-color:     var(--color-button-basic-bg);
+$button-basic-hover-bg-color:     var(--color-button-basic-hover-bg);
+$button-disabled-text-color:   var(--color-button-disabled-text);
 $button-disabled-bg-color:     var(--color-button-disabled-bg);
