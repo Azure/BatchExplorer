@@ -19,14 +19,15 @@ python:
   - "3.6"
 
 matrix:
+  include:
     - language: node_js
       os: linux
       services: docker
       before_install:
         - pyenv versions
         - pyenv install --list
-        - pyenv install 3.6.6
-        - pyenv global 3.6.6
+        - pyenv install 3.6.0
+        - pyenv global 3.6.0
         - python --version
         - python3 --version
       before_script:
@@ -35,10 +36,9 @@ matrix:
         - sleep 3
 
 install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16; fi
+  - /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16
   - npm install -g codecov
-  - npm install -g yarn
-  - yarn --ignore-engines install
+  - npm install
   - python3 --version
   - pip3 install -r python/requirements.txt
 
@@ -50,7 +50,6 @@ branches:
   only:
   - master
   - stable
-  - fix/publish
 
 cache:
   # yarn: true
