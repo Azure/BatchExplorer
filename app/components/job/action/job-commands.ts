@@ -3,7 +3,7 @@ import { Observable, Subscription } from "rxjs";
 
 import {
     COMMAND_LABEL_ICON, ElectronRemote, EntityCommand,
-    EntityCommands, Permission,
+    EntityCommands, Permission, WorkspaceService,
 } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, JobSchedule, JobState } from "app/models";
@@ -16,7 +16,7 @@ import { DisableJobCommand } from "./disable";
 import { TerminateJobCommand } from "./terminate";
 
 @Injectable()
-export class JobCommands extends EntityCommands<Job> {
+export class JobCommands extends EntityCommands<Job> implements OnDestroy {
     public edit: EntityCommand<Job, void>;
     public addTask: EntityCommand<Job, void>;
     public clone: EntityCommand<Job, void>;
@@ -40,7 +40,8 @@ export class JobCommands extends EntityCommands<Job> {
         private fs: FileSystemService,
         private remote: ElectronRemote,
         private pinnedEntityService: PinnedEntityService,
-        private sidebarManager: SidebarManager) {
+        private sidebarManager: SidebarManager,
+        private workspaceService: WorkspaceService) {
 
         super(
             injector,
@@ -51,6 +52,16 @@ export class JobCommands extends EntityCommands<Job> {
         );
 
         this._buildCommands();
+        this._sub = this.workspaceService.currentWorkspace.subscribe((ws) => {
+            this._cloneVisible = ws.isFeatureEnabled("job.action.clone");
+            this._scheduleVisible = ws.isFeatureEnabled("schedule.view");
+            this._exportVisible = ws.isFeatureEnabled("job.action.export");
+            this._pinVisible = ws.isFeatureEnabled("job.action.pin");
+        });
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 
     public get(jobId: string) {

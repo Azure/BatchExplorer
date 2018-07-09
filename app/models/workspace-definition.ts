@@ -68,6 +68,7 @@ export interface PoolFeatures extends CommonFeatures {
         configuration: {
             json: boolean;
         },
+        nodes: boolean;
     };
 
     action: {

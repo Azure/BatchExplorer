@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
-import { WorkspaceService } from "@batch-flask/ui";
-import { Workspace } from "app/models";
+import { Workspace, WorkspaceService } from "@batch-flask/ui";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 

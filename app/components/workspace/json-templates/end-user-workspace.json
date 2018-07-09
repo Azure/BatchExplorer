@@ -21,7 +21,25 @@
         "schedule": {
             "view": false
         },
-        "pool": true,
+        "pool": {
+            "view": {
+                "tags": false,
+                "graphs": {
+                    "nodes": false,
+                    "tasks": false,
+                    "insights": false
+                },
+                "configuration": {
+                    "json": false
+                },
+                "nodes": true
+            },
+            "action": {
+                "clone": false,
+                "export": false,
+                "pin": false
+            }
+        },
         "package": false,
         "certificate": false,
         "data": true,
