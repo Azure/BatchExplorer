@@ -57,7 +57,6 @@ export class GithubDataService implements OnDestroy {
      * @param path path relative to the root of the repo
      */
     public get(path: string): Observable<string> {
-        console.log("Get url", this.getUrl(path));
         return this._settingsLoaded.pipe(
             flatMap(() => this.http.get(this.getUrl(path), { observe: "body", responseType: "text" })),
             share(),
