@@ -25,8 +25,8 @@ matrix:
       before_install:
         - pyenv versions
         - pyenv install --list
-        - pyenv install 3.6.0
-        - pyenv global 3.6.0
+        - pyenv install 3.6.6
+        - pyenv global 3.6.6
         - python --version
         - python3 --version
       before_script:
@@ -39,8 +39,8 @@ install:
   - npm install -g codecov
   - npm install -g yarn
   - yarn --ignore-engines install
-  - python --version
-  - pip install -r python/requirements.txt
+  - python3 --version
+  - pip3 install -r python/requirements.txt
 
 script:
     - ./scripts/travis/build-and-test.sh
