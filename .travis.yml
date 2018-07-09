@@ -39,8 +39,8 @@ install:
   - npm install -g codecov
   - npm install -g yarn
   - yarn --ignore-engines install
-  - python3 --version
-  - pip3 install -r python/requirements.txt
+  - python --version
+  - pip install -r python/requirements.txt
 
 script:
     - ./scripts/travis/build-and-test.sh
