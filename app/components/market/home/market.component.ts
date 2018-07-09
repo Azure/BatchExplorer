@@ -5,7 +5,7 @@ import { Subscription } from "rxjs";
 
 import { autobind } from "@batch-flask/core";
 import { Application } from "app/models";
-import { NcjTemplateService } from "app/services";
+import { GithubDataService, NcjTemplateService } from "app/services";
 import { AutoStorageService } from "app/services/storage";
 import "./market.scss";
 
@@ -25,7 +25,10 @@ export class MarketComponent implements OnInit, OnDestroy {
 
     private _subs: Subscription[] = [];
 
-    constructor(public autoStorageService: AutoStorageService, private templateService: NcjTemplateService) {
+    constructor(
+        public githubDataService: GithubDataService,
+        public autoStorageService: AutoStorageService,
+        private templateService: NcjTemplateService) {
         this._subs.push(this.quicksearch.valueChanges.subscribe((query) => {
             this.query = query;
             this._filterApplications();
@@ -46,7 +49,7 @@ export class MarketComponent implements OnInit, OnDestroy {
 
     @autobind()
     public refreshApplications() {
-        const obs = this.templateService.reloadData().flatMap(() => {
+        const obs = this.githubDataService.reloadData().flatMap(() => {
             return this.templateService.listApplications();
         });
 
