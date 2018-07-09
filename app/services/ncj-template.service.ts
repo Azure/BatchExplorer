@@ -70,26 +70,32 @@ export class NcjTemplateService {
     }
 
     public listApplications(): Observable<List<Application>> {
-        return this.get("index.json").map((apps) => {
-            return List<Application>(apps.map(data => {
-                return new Application({
+        return this.get("index.json").pipe(
+            map((apps) => {
+                return List<Application>(apps.map(data => {
+                    return new Application({
+                        ...data,
+                        icon: this.getApplicationIcon(data.id),
+                        readme: this.getApplicationReadme(data.id),
+                    });
+                }));
+            }),
+            share(),
+        );
+    }
+
+    public getApplication(applicationId: string): Observable<Application> {
+        return this.get("index.json").pipe(
+            map((apps) => {
+                const data = apps.filter(app => app.id === applicationId).first();
+                return data && new Application({
                     ...data,
                     icon: this.getApplicationIcon(data.id),
                     readme: this.getApplicationReadme(data.id),
                 });
-            }));
-        }).share();
-    }
-
-    public getApplication(applicationId: string): Observable<Application> {
-        return this.get("index.json").map((apps) => {
-            const data = apps.filter(app => app.id === applicationId).first();
-            return data && new Application({
-                ...data,
-                icon: this.getApplicationIcon(data.id),
-                readme: this.getApplicationReadme(data.id),
-            });
-        }).share();
+            }),
+            share(),
+        );
     }
 
     /**
