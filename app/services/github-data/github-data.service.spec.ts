@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
 import { TestBed, fakeAsync, tick } from "@angular/core/testing";
+import * as path from "path";
 import { BehaviorSubject } from "rxjs";
 import { GithubDataService } from "./github-data.service";
 
@@ -52,18 +53,20 @@ describe("GithubDataService", () => {
 
     it("download, unzip and save sync settings", (done) => {
         githubDataService.init();
+        const zipFile = path.join("path/to/temp", "batch-labs-data.zip");
+        const downloadDir = path.join("path/to/temp", "batch-labs-data");
         githubDataService.ready.subscribe(() => {
             expect(fsSpy.download).toHaveBeenCalledOnce();
             expect(fsSpy.download).toHaveBeenCalledWith(
                 "https://github.com/Azure/BatchLabs-data/archive/master.zip",
-                "path\\to\\temp\\batch-labs-data.zip");
+                zipFile);
             expect(fsSpy.unzip).toHaveBeenCalledOnce();
             expect(fsSpy.unzip).toHaveBeenCalledWith(
-                "path\\to\\temp\\batch-labs-data.zip",
-                "path\\to\\temp\\batch-labs-data");
+                zipFile,
+                downloadDir);
             expect(fsSpy.saveFile).toHaveBeenCalledOnce();
             expect(fsSpy.saveFile).toHaveBeenCalledWith(
-                "path\\to\\temp\\batch-labs-data\\sync.json",
+                path.join(downloadDir, "sync.json"),
                 jasmine.anything(),
             );
             const args = fsSpy.saveFile.calls.mostRecent().args;
