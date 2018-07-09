@@ -209,6 +209,7 @@ export class BatchLabsApplication {
     }
 
     public askUserForProxyCredentials(): Promise<ProxyCredentials> {
+        log.info("Asking for proxy credentials");
         const proxyCredentials = new ProxyCredentialsWindow(this);
         proxyCredentials.create();
         return proxyCredentials.credentials;
