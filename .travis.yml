@@ -19,24 +19,6 @@ python:
   - "3.6"
 
 matrix:
-  fast_finish: true
-  allow_failures:
-    os: osx # This allows not to wait for the osx build to be scheduled
-
-  include:
-    - language: generic
-      os: osx
-      before_install:
-        - brew update
-        - brew upgrade python
-        - brew install python@2
-        - python --version
-        - python3 --version
-        - which python
-        - npm config set python python2.7
-        - nvm install 9.6.1
-        - nvm use 9.6.1
-
     - language: node_js
       os: linux
       services: docker
