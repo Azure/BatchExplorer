@@ -1,9 +1,4 @@
 import { Injectable } from "@angular/core";
-import { List } from "immutable";
-import * as loadJsonFile from "load-json-file";
-import * as path from "path";
-import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
-
 import {
     Application,
     ApplicationAction,
@@ -14,19 +9,15 @@ import {
 } from "app/models";
 import { FileSystemService } from "app/services/fs.service";
 import { LocalFileStorage } from "app/services/local-file-storage.service";
-import { DateUtils, SecureUtils, log } from "app/utils";
+import { SecureUtils, log } from "app/utils";
+import { List } from "immutable";
+import * as loadJsonFile from "load-json-file";
+import { BehaviorSubject, Observable } from "rxjs";
+import { flatMap, map, share, shareReplay } from "rxjs/operators";
+import { GithubDataService } from "./github-data.service";
 
-const branch = "master";
-const repo = "BatchLabs-data";
-const dataUrl = `https://github.com/Azure/${repo}/archive/${branch}.zip`;
-const remoteFileUrl = `https://github.com/Azure/${repo}/blob/${branch}/ncj`;
-const cacheTime = 1; // In days
 const recentSubmitKey = "ncj-recent-submit";
 const maxRecentSubmissions = 10;
-
-interface SyncFile {
-    lastSync: Date;
-}
 
 export interface RecentSubmissionParams {
     name: string;
@@ -46,24 +37,17 @@ export interface RecentSubmission extends RecentSubmissionParams {
 export class NcjTemplateService {
     public recentSubmission: Observable<RecentSubmission[]>;
 
-    private _ready = new AsyncSubject();
     private _recentSubmission = new BehaviorSubject<RecentSubmission[]>([]);
 
-    constructor(private fs: FileSystemService, private localFileStorage: LocalFileStorage) {
+    constructor(
+        private githubDataService: GithubDataService,
+        private fs: FileSystemService,
+        private localFileStorage: LocalFileStorage) {
         this.recentSubmission = this._recentSubmission.asObservable();
     }
 
     public init() {
         this._loadRecentSubmission();
-        this._checkIfDataNeedReload().then((needReload) => {
-            if (!needReload) {
-                return null;
-            }
-            this._downloadRepo();
-        }).then(() => {
-            this._ready.next(true);
-            this._ready.complete();
-        });
     }
 
     /**
@@ -71,23 +55,18 @@ export class NcjTemplateService {
      * @param path: path to the file
      */
     public get(uri: string): Observable<any> {
-        return this._ready.flatMap(() => {
-            const promise = loadJsonFile(this.getFullPath(uri)).then((json) => {
-                return json;
-            }).catch((error) => {
-                log.error(`File is not valid json: ${error.message}`);
-            });
+        return this.githubDataService.ready.pipe(
+            flatMap(() => {
+                const promise = loadJsonFile(this.githubDataService.getLocalPath(uri)).then((json) => {
+                    return json;
+                }).catch((error) => {
+                    log.error(`File is not valid json: ${error.message}`);
+                });
 
-            return Observable.fromPromise(promise);
-        }).share();
-    }
-
-    public getFullPath(uri: string) {
-        return path.join(this._dataRoot, uri);
-    }
-
-    public reloadData() {
-        return Observable.fromPromise(this._downloadRepo());
+                return Observable.fromPromise(promise);
+            }),
+            share(),
+        );
     }
 
     public listApplications(): Observable<List<Application>> {
@@ -118,7 +97,7 @@ export class NcjTemplateService {
      * @param applicationId Id of the application
      */
     public getApplicationIcon(applicationId: string): string {
-        return "file:" + this.getFullPath(`${applicationId}/icon.svg`);
+        return "file:" + this.githubDataService.getLocalPath(`${applicationId}/icon.svg`);
     }
 
     /**
@@ -126,7 +105,7 @@ export class NcjTemplateService {
      * @param applicationId Id of the application
      */
     public getApplicationReadme(applicationId: string): string {
-        return `${remoteFileUrl}/${applicationId}/readme.md`;
+        return `ncj/${applicationId}/readme.md`;
     }
 
     public listActions(applicationId: string): Observable<List<ApplicationAction>> {
@@ -173,9 +152,12 @@ export class NcjTemplateService {
     }
 
     public getRecentSubmission(id: string): Observable<RecentSubmission> {
-        return this._ready.map(() => {
-            return this._recentSubmission.value.filter(x => x.id === id).first();
-        }).shareReplay(1);
+        return this.githubDataService.ready.pipe(
+            map(() => {
+                return this._recentSubmission.value.filter(x => x.id === id).first();
+            }),
+            shareReplay(1),
+        );
     }
 
     public createParameterFileFromSubmission(path: string, submission: RecentSubmission) {
@@ -194,44 +176,6 @@ export class NcjTemplateService {
         }
     }
 
-    private _checkIfDataNeedReload(): Promise<boolean> {
-        const syncFile = this._syncFile;
-        return this.fs.exists(syncFile).then((exists) => {
-            if (!exists) {
-                return Promise.resolve(true);
-            }
-            return this.fs.readFile(syncFile).then((content) => {
-                try {
-                    const json: SyncFile = JSON.parse(content);
-                    const lastSync = new Date(json.lastSync);
-                    return !DateUtils.withinRange(lastSync, cacheTime, "day");
-                } catch (e) {
-                    log.error("Error reading sync file. Reloading data from github.", e);
-                    return Promise.resolve(true);
-                }
-            });
-        });
-    }
-
-    private _downloadRepo() {
-        const tmpZip = path.join(this.fs.commonFolders.temp, "batch-labs-data.zip");
-        const dest = this._repoDownloadRoot;
-        return this.fs.download(dataUrl, tmpZip).then(() => {
-            return this.fs.unzip(tmpZip, dest);
-        }).then(() => {
-            return this._saveSyncData();
-        });
-    }
-
-    private _saveSyncData(): Promise<string> {
-        const syncFile = this._syncFile;
-        const data: SyncFile = {
-            lastSync: new Date(),
-        };
-        const content = JSON.stringify(data);
-        return this.fs.saveFile(syncFile, content);
-    }
-
     private _saveRecentSubmission() {
         return this.localFileStorage.set(recentSubmitKey, this._recentSubmission.value);
     }
@@ -243,17 +187,5 @@ export class NcjTemplateService {
             }
             this._recentSubmission.next(data);
         });
-    }
-
-    private get _repoDownloadRoot() {
-        return path.join(this.fs.commonFolders.temp, "batch-labs-data");
-    }
-
-    private get _dataRoot() {
-        return path.join(this._repoDownloadRoot, `${repo}-${branch}`, "ncj");
-    }
-
-    private get _syncFile() {
-        return path.join(this._repoDownloadRoot, "sync.json");
     }
 }
