@@ -1,11 +1,12 @@
-import { Injectable, Injector } from "@angular/core";
+import { Injectable, Injector, OnDestroy } from "@angular/core";
 import {
     COMMAND_LABEL_ICON, DialogService, ElectronRemote,
-    EntityCommand, EntityCommands, Permission, SidebarManager,
+    EntityCommand, EntityCommands, Permission, SidebarManager, WorkspaceService,
 } from "@batch-flask/ui";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
+
 import { Pool } from "app/models";
 import { FileSystemService, JobService, PinnedEntityService, PoolService } from "app/services";
 import { PoolCreateBasicDialogComponent } from "./add/pool-create-basic-dialog.component";
@@ -13,13 +14,18 @@ import { DeletePoolDialogComponent, DeletePoolOutput } from "./delete";
 import { PoolResizeDialogComponent } from "./resize";
 
 @Injectable()
-export class PoolCommands extends EntityCommands<Pool> {
+export class PoolCommands extends EntityCommands<Pool> implements OnDestroy {
     public addJob: EntityCommand<Pool, void>;
     public resize: EntityCommand<Pool, void>;
     public clone: EntityCommand<Pool, void>;
     public delete: EntityCommand<Pool, DeletePoolOutput>;
     public exportAsJSON: EntityCommand<Pool, void>;
     public pin: EntityCommand<Pool, void>;
+
+    private _sub: Subscription;
+    private _cloneVisible: boolean = true;
+    private _exportVisible: boolean = true;
+    private _pinVisible: boolean = true;
 
     constructor(
         injector: Injector,
@@ -29,12 +35,27 @@ export class PoolCommands extends EntityCommands<Pool> {
         private poolService: PoolService,
         private pinnedEntityService: PinnedEntityService,
         private remote: ElectronRemote,
-        private sidebarManager: SidebarManager) {
+        private sidebarManager: SidebarManager,
+        private workspaceService: WorkspaceService) {
+
         super(
             injector,
             "Pool",
+            // Implementing the below hides all action buttons, not just export, clone and pin
+            // {
+            //     feature: "pool.action",
+            // },
         );
         this._buildCommands();
+        this._sub = this.workspaceService.currentWorkspace.subscribe((ws) => {
+            this._cloneVisible = ws.isFeatureEnabled("pool.action.clone");
+            this._exportVisible = ws.isFeatureEnabled("pool.action.export");
+            this._pinVisible = ws.isFeatureEnabled("pool.action.pin");
+        });
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 
     public get(poolId: string) {
@@ -71,6 +92,7 @@ export class PoolCommands extends EntityCommands<Pool> {
             confirm: false,
             notify: false,
             permission: Permission.Write,
+            visible: () => this._cloneVisible,
         });
 
         this.delete = this.simpleCommand<DeletePoolOutput>({
@@ -86,6 +108,7 @@ export class PoolCommands extends EntityCommands<Pool> {
             multiple: false,
             confirm: false,
             notify: false,
+            visible: () => this._exportVisible,
         });
 
         this.pin = this.simpleCommand({
@@ -100,6 +123,7 @@ export class PoolCommands extends EntityCommands<Pool> {
             action: (pool: Pool) => this._pinPool(pool),
             confirm: false,
             multiple: false,
+            visible: () => this._pinVisible,
         });
 
         this.commands = [
@@ -126,11 +150,19 @@ export class PoolCommands extends EntityCommands<Pool> {
     }
 
     private _clonePool(pool: Pool) {
+        if (!this.clone.visible(pool)) {
+            return;
+        }
+
         const ref = this.sidebarManager.open(`add-pool-${pool.id}`, PoolCreateBasicDialogComponent);
         ref.component.setValueFromEntity(pool);
     }
 
     private _exportAsJSON(pool: Pool) {
+        if (!this.exportAsJSON.visible(pool)) {
+            return;
+        }
+
         const dialog = this.remote.dialog;
         const localPath = dialog.showSaveDialog({
             buttonLabel: "Export",
@@ -144,6 +176,10 @@ export class PoolCommands extends EntityCommands<Pool> {
     }
 
     private _pinPool(pool: Pool) {
+        if (!this.pin.visible(pool)) {
+            return;
+        }
+
         this.pinnedEntityService.pinFavorite(pool).subscribe((result) => {
             if (result) {
                 this.pinnedEntityService.unPinFavorite(pool);
