@@ -1,9 +1,9 @@
-import { Injectable, Injector, OnDestroy } from "@angular/core";
+import { Injectable, Injector } from "@angular/core";
 import {
     COMMAND_LABEL_ICON, DialogService, ElectronRemote,
-    EntityCommand, EntityCommands, Permission, SidebarManager, WorkspaceService,
+    EntityCommand, EntityCommands, Permission, SidebarManager,
 } from "@batch-flask/ui";
-import { Observable, Subscription } from "rxjs";
+import { Observable } from "rxjs";
 
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 
@@ -14,18 +14,13 @@ import { DeletePoolDialogComponent, DeletePoolOutput } from "./delete";
 import { PoolResizeDialogComponent } from "./resize";
 
 @Injectable()
-export class PoolCommands extends EntityCommands<Pool> implements OnDestroy {
+export class PoolCommands extends EntityCommands<Pool> {
     public addJob: EntityCommand<Pool, void>;
     public resize: EntityCommand<Pool, void>;
     public clone: EntityCommand<Pool, void>;
     public delete: EntityCommand<Pool, DeletePoolOutput>;
     public exportAsJSON: EntityCommand<Pool, void>;
     public pin: EntityCommand<Pool, void>;
-
-    private _sub: Subscription;
-    private _cloneVisible: boolean = true;
-    private _exportVisible: boolean = true;
-    private _pinVisible: boolean = true;
 
     constructor(
         injector: Injector,
@@ -35,27 +30,16 @@ export class PoolCommands extends EntityCommands<Pool> implements OnDestroy {
         private poolService: PoolService,
         private pinnedEntityService: PinnedEntityService,
         private remote: ElectronRemote,
-        private sidebarManager: SidebarManager,
-        private workspaceService: WorkspaceService) {
+        private sidebarManager: SidebarManager) {
 
         super(
             injector,
             "Pool",
-            // Implementing the below hides all action buttons, not just export, clone and pin
-            // {
-            //     feature: "pool.action",
-            // },
+            {
+                feature: "pool.action",
+            },
         );
         this._buildCommands();
-        this._sub = this.workspaceService.currentWorkspace.subscribe((ws) => {
-            this._cloneVisible = ws.isFeatureEnabled("pool.action.clone");
-            this._exportVisible = ws.isFeatureEnabled("pool.action.export");
-            this._pinVisible = ws.isFeatureEnabled("pool.action.pin");
-        });
-    }
-
-    public ngOnDestroy() {
-        this._sub.unsubscribe();
     }
 
     public get(poolId: string) {
@@ -68,6 +52,7 @@ export class PoolCommands extends EntityCommands<Pool> implements OnDestroy {
 
     private _buildCommands() {
         this.addJob = this.simpleCommand({
+            name: "add",
             ...COMMAND_LABEL_ICON.AddJob,
             action: (pool) => this._addJob(pool),
             multiple: false,
@@ -77,6 +62,7 @@ export class PoolCommands extends EntityCommands<Pool> implements OnDestroy {
         });
 
         this.resize = this.simpleCommand({
+            name: "resize",
             ...COMMAND_LABEL_ICON.Resize,
             action: (pool) => this._resizePool(pool),
             multiple: false,
@@ -86,16 +72,17 @@ export class PoolCommands extends EntityCommands<Pool> implements OnDestroy {
         });
 
         this.clone = this.simpleCommand({
+            name: "clone",
             ...COMMAND_LABEL_ICON.Clone,
             action: (pool) => this._clonePool(pool),
             multiple: false,
             confirm: false,
             notify: false,
             permission: Permission.Write,
-            visible: () => this._cloneVisible,
         });
 
         this.delete = this.simpleCommand<DeletePoolOutput>({
+            name: "delete",
             ...COMMAND_LABEL_ICON.Delete,
             action: (pool: Pool, options) => this._deletePool(pool, options),
             confirm: (entities) => this._confirmDeletePool(entities),
@@ -103,15 +90,16 @@ export class PoolCommands extends EntityCommands<Pool> implements OnDestroy {
         });
 
         this.exportAsJSON = this.simpleCommand({
+            name: "exportAsJson",
             ...COMMAND_LABEL_ICON.ExportAsJSON,
             action: (pool) => this._exportAsJSON(pool),
             multiple: false,
             confirm: false,
             notify: false,
-            visible: () => this._exportVisible,
         });
 
         this.pin = this.simpleCommand({
+            name: "pin",
             label: (pool: Pool) => {
                 return this.pinnedEntityService.isFavorite(pool)
                     ? COMMAND_LABEL_ICON.UnpinFavoriteLabel : COMMAND_LABEL_ICON.PinFavoriteLabel;
@@ -123,7 +111,6 @@ export class PoolCommands extends EntityCommands<Pool> implements OnDestroy {
             action: (pool: Pool) => this._pinPool(pool),
             confirm: false,
             multiple: false,
-            visible: () => this._pinVisible,
         });
 
         this.commands = [
@@ -150,19 +137,12 @@ export class PoolCommands extends EntityCommands<Pool> implements OnDestroy {
     }
 
     private _clonePool(pool: Pool) {
-        if (!this.clone.visible(pool)) {
-            return;
-        }
 
         const ref = this.sidebarManager.open(`add-pool-${pool.id}`, PoolCreateBasicDialogComponent);
         ref.component.setValueFromEntity(pool);
     }
 
     private _exportAsJSON(pool: Pool) {
-        if (!this.exportAsJSON.visible(pool)) {
-            return;
-        }
-
         const dialog = this.remote.dialog;
         const localPath = dialog.showSaveDialog({
             buttonLabel: "Export",
@@ -176,10 +156,6 @@ export class PoolCommands extends EntityCommands<Pool> implements OnDestroy {
     }
 
     private _pinPool(pool: Pool) {
-        if (!this.pin.visible(pool)) {
-            return;
-        }
-
         this.pinnedEntityService.pinFavorite(pool).subscribe((result) => {
             if (result) {
                 this.pinnedEntityService.unPinFavorite(pool);
