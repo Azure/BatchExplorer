@@ -101,7 +101,7 @@ bl-button {
 
         &[color="primary"] {
             background: $primary-color;
-            color: $primary-text;
+            color: $primary-contrast-color;
 
             &:hover, &:focus {
                 background: $primary-color-dark;
@@ -123,7 +123,7 @@ bl-button {
 
         &[color="danger"] {
             background: $danger-color;
-            color:  $primary-text;
+            color:  $danger-contrast-color;
 
             &:hover, &:focus {
                 background: $danger-color-dark;
@@ -132,7 +132,7 @@ bl-button {
 
         &[color="warn"] {
             background: $warn-color;
-            color:  $primary-text;
+            color:  $warn-contrast-color;
 
             &:hover, &:focus {
                 background: $warn-color-dark;
@@ -141,7 +141,7 @@ bl-button {
 
         &[color="success"] {
             background: $success-color;
-            color:  $primary-text;
+            color:  $success-contrast-color;
 
             &:hover, &:focus {
                 background: $success-color-dark;

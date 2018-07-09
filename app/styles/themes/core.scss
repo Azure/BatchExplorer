@@ -80,18 +80,22 @@ $success: (
 }
 
 $primary-color:             var(--color-primary);
+$primary-contrast-color:    var(--color-primary-contrast);
 $primary-color-dark:        var(--color-primary-dark);
 $primary-color-light:       var(--color-primary-light);
 
 $danger-color:              var(--color-danger);
+$danger-contrast-color:     var(--color-danger-contrast);
 $danger-color-dark:         var(--color-danger-dark);
 $danger-color-light:        var(--color-danger-light);
 
 $warn-color:                var(--color-warn);
+$warn-contrast-color:       var(--color-warn-contrast);
 $warn-color-dark:           var(--color-warn-dark);
 $warn-color-light:          var(--color-warn-light);
 
 $success-color:             var(--color-success);
+$success-contrast-color:    var(--color-success-contrast);
 $success-color-dark:        var(--color-success-dark);
 $success-color-light:       var(--color-success-light);
 

@@ -49,7 +49,7 @@ describe("NodeConnectComponent", () => {
     beforeEach(() => {
 
         nodeServiceSpy = {
-            getRemoteDesktop: jasmine.createSpy("").and.returnValue(Observable.of({ content: "banana" })),
+            getRemoteDesktop: jasmine.createSpy("").and.returnValue(Observable.of("full address:s:0.0.0.0")),
             listNodeAgentSkus: jasmine.createSpy("").and.returnValue(new MockListView(NodeAgentSku, {
                 items: [],
             })),
@@ -87,11 +87,7 @@ describe("NodeConnectComponent", () => {
                 temp: "temp",
                 downloads: "downloads",
             },
-            saveFile: jasmine.createSpy("").and.returnValue(
-                new Promise((resolve, reject) => {
-                    resolve("path/to/file");
-                }),
-            ),
+            saveFile: jasmine.createSpy("").and.returnValue(Promise.resolve("path/to/file")),
         };
 
         electronShellSpy = {
@@ -276,21 +272,20 @@ describe("NodeConnectComponent", () => {
                 });
             });
 
-            it("should download the rdp file", () => {
-                // TODO-Adam this test doesn't appear to actually be running
-                const expectedContent = "full address:s:0.0.0.0\nusername:s:.\\bar\nprompt for credentials:i:1";
+            it("should download the rdp file", (done) => {
+                const expectedContent = "full address:s:0.0.0.0\nusername:s:.\\foo\nprompt for credentials:i:1";
 
                 component.downloadRdp().subscribe(() => {
                     expect(fsServiceSpy.saveFile).toHaveBeenCalledOnce();
-                    const saveFileArgs = fsServiceSpy.showItemInFolder.calls.mostRecent().args;
-                    expect(saveFileArgs.length).toBe(2);
-                    expect(saveFileArgs[0]).toEqual(path.join(fsServiceSpy.commonFolders.temp, "rdp"));
-                    expect(saveFileArgs[1]).toEqual(expectedContent);
+                    expect(fsServiceSpy.saveFile).toHaveBeenCalledWith(
+                        path.join(fsServiceSpy.commonFolders.temp, "rdp", `${component.node.id}.rdp`),
+                        expectedContent);
 
                     expect(electronShellSpy.showItemInFolder).toHaveBeenCalledOnce();
                     const showItemInFolderArgs = electronShellSpy.showItemInFolder.calls.mostRecent().args;
                     expect(showItemInFolderArgs.length).toBe(1);
                     expect(showItemInFolderArgs[0]).toContain("path/to/file");
+                    done();
                 });
             });
         });
@@ -375,12 +370,20 @@ describe("NodeConnectComponent", () => {
                 });
             });
 
-            it("should download the rdp file", () => {
+            it("should download the rdp file", (done) => {
+                const expectedContent = "full address:s:0.0.0.0\nusername:s:.\\foo\nprompt for credentials:i:1";
+
                 component.downloadRdp().subscribe(() => {
+                    expect(fsServiceSpy.saveFile).toHaveBeenCalledOnce();
+                    expect(fsServiceSpy.saveFile).toHaveBeenCalledWith(
+                        path.join(fsServiceSpy.commonFolders.temp, "rdp", `${component.node.id}.rdp`),
+                        expectedContent);
+
                     expect(electronShellSpy.showItemInFolder).toHaveBeenCalledOnce();
                     const showItemInFolderArgs = electronShellSpy.showItemInFolder.calls.mostRecent().args;
                     expect(showItemInFolderArgs.length).toBe(1);
                     expect(showItemInFolderArgs[0]).toContain("path/to/file");
+                    done();
                 });
             });
         });
