@@ -5,8 +5,8 @@ import { Constants, DateUtils } from "app/utils";
 import * as path from "path";
 import { AsyncSubject, Observable, Subscription } from "rxjs";
 import { flatMap, share } from "rxjs/operators";
-import { FileSystemService } from "./fs.service";
-import { SettingsService } from "./settings.service";
+import { FileSystemService } from "../fs.service";
+import { SettingsService } from "../settings.service";
 
 const repo = "BatchLabs-data";
 const cacheTime = 1; // In days
@@ -44,6 +44,7 @@ export class GithubDataService implements OnDestroy {
     }
 
     public reloadData(): Observable<any> {
+        this._ready = new AsyncSubject();
         return Observable.fromPromise(this._downloadRepo());
     }
 
@@ -56,6 +57,7 @@ export class GithubDataService implements OnDestroy {
      * @param path path relative to the root of the repo
      */
     public get(path: string): Observable<string> {
+        console.log("Get url", this.getUrl(path));
         return this._settingsLoaded.pipe(
             flatMap(() => this.http.get(this.getUrl(path), { observe: "body", responseType: "text" })),
             share(),
@@ -96,8 +98,6 @@ export class GithubDataService implements OnDestroy {
     }
 
     private async _downloadRepo() {
-        this._ready = new AsyncSubject();
-
         const tmpZip = path.join(this.fs.commonFolders.temp, "batch-labs-data.zip");
         const dest = this._repoDownloadRoot;
         await this.fs.download(this._zipUrl, tmpZip);

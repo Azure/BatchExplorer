@@ -14,7 +14,7 @@ import { List } from "immutable";
 import * as loadJsonFile from "load-json-file";
 import { BehaviorSubject, Observable } from "rxjs";
 import { flatMap, map, share, shareReplay } from "rxjs/operators";
-import { GithubDataService } from "./github-data.service";
+import { GithubDataService } from "./github-data";
 
 const recentSubmitKey = "ncj-recent-submit";
 const maxRecentSubmissions = 10;

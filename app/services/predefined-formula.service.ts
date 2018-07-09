@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { log } from "@batch-flask/utils";
 import { AutoscaleFormula } from "app/models";
 import { BehaviorSubject, Observable } from "rxjs";
-import { GithubDataService } from "./github-data.service";
+import { GithubDataService } from "./github-data";
 
 const indexFile = "index.json";
 const predefinedFormulaPath = "data/autoscale-formula/";

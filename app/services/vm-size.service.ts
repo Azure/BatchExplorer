@@ -7,7 +7,7 @@ import { StringUtils, log } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
 import { computeUrl } from "./compute.service";
-import { GithubDataService } from "./github-data.service";
+import { GithubDataService } from "./github-data";
 
 const excludedVmsSizesPath = "data/vm-sizes.json";
 
