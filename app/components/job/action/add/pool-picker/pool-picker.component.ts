@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
@@ -9,10 +9,12 @@ import { PoolListParams, PoolService, VmSizeService } from "app/services";
 import { ListOptionsAttributes, ListView } from "app/services/core";
 import { PoolUtils } from "app/utils";
 
-// tslint:disable:no-forward-ref
+import "./pool-picker.scss";
+
 @Component({
     selector: "bl-pool-picker",
     templateUrl: "pool-picker.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => PoolPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => PoolPickerComponent), multi: true },
