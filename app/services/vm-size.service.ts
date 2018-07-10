@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { Response } from "@angular/http";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
@@ -8,7 +7,7 @@ import { StringUtils, log } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
 import { computeUrl } from "./compute.service";
-import { GithubDataService } from "./github-data.service";
+import { GithubDataService } from "./github-data";
 
 const excludedVmsSizesPath = "data/vm-sizes.json";
 
@@ -90,7 +89,7 @@ export class VmSizeService {
         const { subscription, location } = this._currentAccount;
         const url = `${computeUrl(subscription.subscriptionId)}/locations/${location}/vmSizes`;
         this.arm.get(url).subscribe({
-            next: (response: Response) => {
+            next: (response) => {
                 const data = response.json();
                 const sizes = data.value.map(x => new VmSize(x));
                 this._sizes.next(List<VmSize>(sizes));
@@ -103,8 +102,8 @@ export class VmSizeService {
 
     public loadVmSizeData() {
         this.githubData.get(excludedVmsSizesPath).subscribe({
-            next: (response: Response) => {
-                const data: VmSizeData = response.json();
+            next: (response: string) => {
+                const data: VmSizeData = JSON.parse(response);
                 this._vmSizeCategories.next(data.category);
                 this._excludedSizes.next(data.excluded);
             },

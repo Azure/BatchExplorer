@@ -106,7 +106,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     }
     public get focusedOption() { return this._focusedOption; }
 
-    public set selected(selection: Set<string>) {
+    public set selected(selection: Set<any>) {
         this._selected = selection;
         if (this._dropdownRef) { this._dropdownRef.instance.selected = selection; }
     }

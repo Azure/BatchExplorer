@@ -12,4 +12,5 @@ export interface Settings {
     "auto-update-on-quit": boolean;
     "terminal.external": string;
     "node-connect.default-username": string;
+    "github-data.source.branch": string;
 }

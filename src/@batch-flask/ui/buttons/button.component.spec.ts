@@ -26,7 +26,7 @@ class TestComponent {
     }
 }
 
-describe("ActionButton", () => {
+describe("ButtonComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
