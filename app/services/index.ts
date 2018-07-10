@@ -30,6 +30,7 @@ export * from "./adal";
 export * from "./python-rpc";
 export * from "./storage-account.service";
 export * from "./predefined-formula.service";
+export * from "./node-connect.service";
 export * from "./themes";
 export * from "./tenant-details.service";
 export * from "./network";

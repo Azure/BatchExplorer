@@ -31,7 +31,7 @@ export class SecureUtils {
         return retVal;
     }
 
-    public static passwordWindowsValid(length: number = 15): string {
+    public static generateWindowsPassword(length: number = 15): string {
         const charsets = [
             "abcdefghijklmnopqrstuvwxyz",
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ",

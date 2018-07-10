@@ -1,0 +1,62 @@
+@import "app/styles/variables";
+
+bl-node-property-display {
+
+    bl-property-group {
+        margin: 15px 0;
+
+        .custom-property {
+            display: flex;
+            padding: 0;
+            margin: 0 0 5px;
+            position: relative;
+            width: 100%;
+            overflow: visible;
+
+            .label-small {
+                color: $secondary-text;
+                font-size: 13px;
+                flex-basis: 200px;
+                font-weight: bold;
+                line-height: 20px;
+                margin-right: 5px;
+            }
+
+            > input {
+                flex: 1;
+                max-width: 349px;
+            }
+
+            > .display-field {
+                flex: 1;
+                max-width: 350px;
+                background-color: $main-background;
+                padding: 3px 8px;
+                margin: 0;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                display: block;
+                width: 100%;
+                min-height: 24px;
+            }
+
+            bl-clickable {
+                color: $link-color;
+            }
+
+            .password-failure-hint {
+                position: absolute;
+                top: 27px;
+                left: 205px;
+                color: red;
+            }
+
+            .clipboard-info {
+                position: absolute;
+                top: 28px;
+                left: 210px;
+                color: $secondary-text;
+            }
+        }
+    }
+}

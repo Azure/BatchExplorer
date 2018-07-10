@@ -5,60 +5,33 @@
         </div>
         <div *ngIf="!formVisible">
             <div class="node-information">
-                <bl-property-group>
-                    <!-- If waiting for connection settings -->
-                    <div *ngIf="!connectionSettings && !ipFromRDP">
-                        <bl-text-property label="IP" value="Fetching..."></bl-text-property>
-                        <bl-text-property label="Port" value="Fetching..."></bl-text-property>
-                        <bl-text-property *ngIf="linux" label="SSH Command" value="Fetching..."></bl-text-property>
-                    </div>
-                    <!-- Once connection settings are fetched -->
-                    <div *ngIf="connectionSettings">
-                        <bl-text-property label="IP" [value]="connectionSettings.ip"></bl-text-property>
-                        <bl-text-property label="Port" [value]="connectionSettings.port"></bl-text-property>
-                        <bl-text-property *ngIf="linux" label="SSH Command" [value]="sshCommand"></bl-text-property>
-                    </div>
-                    <!-- Or, alternatively, if rdp settings are fetched -->
-                    <div *ngIf="ipFromRDP">
-                        <bl-text-property label="IP" [value]="ipFromRDP"></bl-text-property>
-                        <bl-text-property label="Port" value="Not Specified"></bl-text-property>
-                    </div>
-                    <div class="custom-property" *ngIf="windows">
-                        <h5 class="label-small">RDP File</h5>
-                        <bl-clickable id="download-rdp" class="display-field" (click)="downloadRdp()">Download RDP File</bl-clickable>
-                    </div>
-                    <div class="custom-property">
-                        <h5 class="label-small username-label">Username</h5>
-                        <input blInput type="text" [(ngModel)]="username" [placeholder]="defaultUsername" />
-                    </div>
-                    <div *ngIf="linux" class="custom-property">
-                        <h5 class="label-small">SSH Key File</h5>
-                        <div class="display-field" *ngIf="hasLocalPublicKey">{{publicKeyFile}}</div>
-                        <div class="display-field" *ngIf="!hasLocalPublicKey">Not Found!</div>
-                    </div>
-                    <div class="custom-property" *ngIf="windows">
-                        <h5 class="label-small">Password</h5>
-                        <input blInput [(ngModel)]="password" type="password" placeholder="(Optional)" />
-                        <span class="clipboard-info">Password will be copied to clipboard on Connect</span>
-                    </div>
-                </bl-property-group>
+                <div *ngIf="!rdpContent && !connectionSettings" class="connection-data-loader">
+                    <bl-loading></bl-loading>
+                    <span>Fetching connection data...</span>
+                </div>
+                <bl-node-property-display *ngIf="rdpContent || connectionSettings"
+                    [connectionSettings]="connectionSettings"
+                    [rdpContent]="rdpContent"
+                    [linux]="linux"
+                    [node]="node"
+                ></bl-node-property-display>
             </div>
             <div class="credentials-source">
-                <bl-button *ngIf="linux" type="wide" [skipSuccess]="true" [action]="autoConnect" [disabled]="!hasLocalPublicKey || !connectionSettings" [matTooltip]="quickStartTooltip" [matTooltipDisabled]="hasLocalPublicKey">
+                <bl-button *ngIf="linux" type="wide" [skipSuccess]="true" [action]="autoConnect" [disabled]="!publicKey || !connectionSettings" [matTooltip]="quickStartTooltip" [matTooltipDisabled]="publicKey">
                     <div class="button-icon-frame">
                         <i *ngIf="!loading" class="fa fa-plug"></i>
                         <i *ngIf="loading" class="fa fa-spinner fa-pulse"></i>
                     </div>
                     <div class="button-label">Connect</div>
                 </bl-button>
-                <bl-button *ngIf="!linux" type="wide" [skipSuccess]="true" [action]="autoConnect" [disabled]="!ipFromRDP && !connectionSettings">
+                <bl-button *ngIf="!linux" type="wide" [skipSuccess]="true" [action]="autoConnect" [disabled]="!rdpContent && !connectionSettings">
                     <div class="button-icon-frame">
                         <i *ngIf="!loading" class="fa fa-plug"></i>
                         <i *ngIf="loading" class="fa fa-spinner fa-pulse"></i>
                     </div>
                     <div class="button-label">Connect</div>
                 </bl-button>
-                <bl-button type="wide" [action]="specifyCredentials">
+                <bl-button type="wide" [action]="configureCredentials">
                     <div class="button-icon-frame">
                         <i class="fa fa-wrench"></i>
                     </div>

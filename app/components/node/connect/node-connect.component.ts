@@ -1,21 +1,17 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
 import { ServerError, autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/ui";
-import { OS } from "@batch-flask/utils";
 import { clipboard } from "electron";
-import { List } from "immutable";
 import * as moment from "moment";
-import * as path from "path";
 
 import { SidebarRef } from "@batch-flask/ui/sidebar";
-import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
+import { Node, NodeConnectionSettings, Pool } from "app/models";
 import {
     AddNodeUserAttributes,
     BatchLabsService,
-    FileSystemService,
+    NodeConnectService,
     NodeService,
     NodeUserService,
-    SSHKeyService,
     SettingsService,
 } from "app/services";
 import { PoolUtils, SecureUtils } from "app/utils";
@@ -27,28 +23,18 @@ import "./node-connect.scss";
 @Component({
     selector: "bl-node-connect",
     templateUrl: "node-connect.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NodeConnectComponent implements OnInit {
     public formVisible: boolean = false;
     public credentials: AddNodeUserAttributes = null;
-    public agentSkus: List<NodeAgentSku>;
-    public windows = false;
     public linux = false;
-    public hasIp = false;
-    public hasLocalPublicKey: boolean;
-    public defaultUsername: string;
-    public username: string = "";
-    public password: string = "";
+    public hasPublicKey: boolean;
     public expiryTime: Date = null;
     public isAdmin: boolean = null;
     public error: ServerError = null;
     public tooltip: string = "";
-    public ipFromRDP: string = "";
     public loading: boolean = false;
-    public publicKeyFile: string;
-    public processLaunched: boolean = false;
-    public savedToClipboard: boolean = false;
-    public userUpdatedFromForm: boolean = false;
 
     /**
      * Base content for the rdp file(IP Address).
@@ -56,16 +42,18 @@ export class NodeConnectComponent implements OnInit {
      */
     public rdpContent: string;
     public connectionSettings: NodeConnectionSettings;
+    private _pool: Pool;
+    private _node: Node;
 
     @Input()
     public set pool(pool: Pool) {
         this._pool = pool;
         if (pool) {
-            this.hasIp = Boolean(pool.virtualMachineConfiguration);
             this.linux = PoolUtils.isLinux(this.pool);
             this._loadConnectionData();
         }
     }
+
     public get pool() { return this._pool; }
 
     @Input()
@@ -75,10 +63,8 @@ export class NodeConnectComponent implements OnInit {
             this._loadConnectionData();
         }
     }
-    public get node() { return this._node; }
 
-    private _pool: Pool;
-    private _node: Node;
+    public get node() { return this._node; }
 
     constructor(
         public sidebarRef: SidebarRef<any>,
@@ -86,58 +72,45 @@ export class NodeConnectComponent implements OnInit {
         private nodeUserService: NodeUserService,
         private nodeService: NodeService,
         private batchLabs: BatchLabsService,
-        private sshKeyService: SSHKeyService,
-        private fs: FileSystemService,
+        private nodeConnectService: NodeConnectService,
         private shell: ElectronShell,
-    ) {
-        if (settingsService.settings["node-connect.default-username"]) {
-            this.defaultUsername = settingsService.settings["node-connect.default-username"];
-        } else {
-            this.defaultUsername = SecureUtils.username();
-        }
+        private changeDetector: ChangeDetectorRef,
+    ) { }
+
+    public ngOnInit() {
+        this.nodeConnectService.publicKey.subscribe({
+            next: (key) => {
+                this.hasPublicKey = Boolean(key);
+                this.changeDetector.markForCheck();
+            },
+            error: (err) => {
+                throw err;
+            },
+        });
 
         // set the tooltip for the disabled connect button: ssh-based for linux, password for windows
         this.tooltip = this.linux ? "No SSH Keys Found" : "Invalid Password";
     }
 
-    public ngOnInit() {
-        const data = this.nodeService.listNodeAgentSkus();
-        data.fetchAll().subscribe(() => {
-            data.items.take(1).subscribe((agentSkus) => {
-                this.agentSkus = agentSkus;
-                this.windows = PoolUtils.isWindows(this.pool, agentSkus);
-                data.dispose();
-            });
-        });
-
-        const separator = OS.isWindows() ? "\\" : "/";
-        this.publicKeyFile = `${this.fs.commonFolders.home}${separator}.ssh${separator}id_rsa.pub`;
-
-        this.sshKeyService.hasLocalPublicKey(this.publicKeyFile).subscribe(hasKey => this.hasLocalPublicKey = hasKey);
-    }
-
     @autobind()
     public autoConnect(): Observable<any> {
-        // set the processLaunched flag to false, since we will launch a new process
-        this.processLaunched = false;
         this.loading = true;
 
         const credentials = {
             isAdmin: this.isAdmin !== null ? this.isAdmin : true,
-            name: this.username || this.defaultUsername,
+            name: this.nodeConnectService.username,
             expiryTime: this.expiryTime || moment().add(moment.duration({days: 1})).toDate(),
             sshPublicKey: "",
-            password: this.password || SecureUtils.passwordWindowsValid(),
+            password: this.nodeConnectService.password || SecureUtils.generateWindowsPassword(),
         };
 
         if (this.linux) {
             // we are going to use ssh keys, so we don't need a password
             delete credentials.password;
 
-            const pidObs = this._initSSH(credentials, this.userUpdatedFromForm);
+            const pidObs = this._initSSH(credentials);
             pidObs.subscribe({
                 next: (pid) => {
-                    this.processLaunched = true;
                     this.loading = false;
                     this.error = null;
                 },
@@ -152,20 +125,8 @@ export class NodeConnectComponent implements OnInit {
             // for windows, we don't need the public key because we cannot ssh
             delete credentials.sshPublicKey;
 
-            const obs = this._addOrUpdateUser(credentials).pipe(
-                flatMap(() => {
-                    this.loading = false;
-                    this.error = null;
-
-                    // save password to clipboard
-                    clipboard.writeText(this.credentials.password);
-
-                    // create and launch the rdp program
-                    return this._saveRdpFile();
-                }),
-                share(),
-            );
-            obs.subscribe({
+            const rdpObs = this._initRDP(credentials);
+            rdpObs.subscribe({
                 next: (filename) => {
                     this.shell.openItem(filename);
                 },
@@ -180,7 +141,7 @@ export class NodeConnectComponent implements OnInit {
                     }
                 },
             });
-            return obs;
+            return rdpObs;
         }
     }
 
@@ -191,8 +152,8 @@ export class NodeConnectComponent implements OnInit {
     @autobind()
     public storeCredentialsFromForm(credentials: AddNodeUserAttributes) {
         // update the main template
-        this.username = credentials.name;
-        this.password = credentials.password;
+        this.nodeConnectService.username = credentials.name;
+        this.nodeConnectService.password = credentials.password;
         this.expiryTime = credentials.expiryTime;
         if (credentials.isAdmin) {
             this.isAdmin = credentials.isAdmin;
@@ -208,34 +169,26 @@ export class NodeConnectComponent implements OnInit {
         }
         const { ip, port } = this.connectionSettings;
 
-        return `ssh ${this.username || this.defaultUsername}@${ip} -p ${port}`;
+        return `ssh ${this.username}@${ip} -p ${port}`;
+    }
+
+    public get username() {
+        return this.nodeConnectService.username;
     }
 
     @autobind()
-    public specifyCredentials() {
+    public configureCredentials() {
         this.formVisible = true;
     }
 
     @autobind()
     public goToHome() {
         this.formVisible = false;
-        this.processLaunched = false;
     }
 
     @autobind()
     public close() {
         this.sidebarRef.destroy();
-    }
-
-    @autobind()
-    public downloadRdp() {
-        const obs = this._saveRdpFile();
-        obs.subscribe({
-            next: (filename) => {
-                this.shell.showItemInFolder(filename);
-            },
-        });
-        return obs;
     }
 
     private _addOrUpdateUser(credentials) {
@@ -254,13 +207,12 @@ export class NodeConnectComponent implements OnInit {
         if (PoolUtils.isPaas(this.pool)) {
             this.nodeService.getRemoteDesktop(this.pool.id, this.node.id).subscribe((rdp) => {
                 this.rdpContent = rdp;
-
-                // extract the ip address from the rdp file
-                this.ipFromRDP = rdp.match(/[0-9.]{7,}/)[0];
+                this.changeDetector.markForCheck();
             });
         } else {
             this.nodeService.getRemoteLoginSettings(this.pool.id, this.node.id).subscribe((connection) => {
                 this.connectionSettings = connection;
+                this.changeDetector.markForCheck();
             });
         }
     }
@@ -270,17 +222,9 @@ export class NodeConnectComponent implements OnInit {
      * @param credentials an object containing credentials for the ssh command (username, IP, port, ssh public key)
      * @returns an Observable that emits the process id of the child process
      */
-    private _initSSH(credentials: AddNodeUserAttributes, skipUpdate: boolean): Observable<number> {
-        // if the node-user-credentials form has been updated, skip addOrUpdateUser
-        if (skipUpdate) {
-            const args = {
-                command: this.sshCommand,
-            };
-            return Observable.fromPromise(this.batchLabs.launchApplication(ExternalApplication.terminal, args));
-        }
-
+    private _initSSH(credentials: AddNodeUserAttributes): Observable<number> {
         // fetch the public key from the user's filesystem
-        const obs =  this.sshKeyService.getLocalPublicKey(this.publicKeyFile).pipe(
+        const obs =  this.nodeConnectService.publicKey.pipe(
             flatMap((key) => {
                 credentials.sshPublicKey = key;                     // set the key to be the fetched public key
                 this.credentials = credentials;
@@ -295,29 +239,25 @@ export class NodeConnectComponent implements OnInit {
             }),
             share(),
         );
+
         return obs;
     }
 
-    /**
-     * Save the rdp file to the given location
-     */
-    private _saveRdpFile(): Observable<string> {
-        const content = this._computeFullRdpFile();
-        const directory = OS.isWindows() ?
-            path.join(this.fs.commonFolders.temp, "rdp") :
-            this.fs.commonFolders.downloads;
-        const filename = `${this.node.id}.rdp`;
-        return Observable.fromPromise(this.fs.saveFile(path.join(directory, filename), content));
-    }
+    private _initRDP(credentials: AddNodeUserAttributes): Observable<string> {
+        const obs = this._addOrUpdateUser(credentials).pipe(
+            flatMap(() => {
+                this.loading = false;
+                this.error = null;
 
-    private _computeFullRdpFile() {
-        const rdpBaseContent = this.rdpContent || this._buildRdpFromConnection();
-        return `${rdpBaseContent}\nusername:s:.\\${this.username || this.defaultUsername}\nprompt for credentials:i:1`;
-    }
+                // save password to clipboard
+                clipboard.writeText(this.credentials.password);
 
-    private _buildRdpFromConnection() {
-        const {ip, port} = this.connectionSettings;
-        const address = `full address:s:${ip}:${port}`;
-        return address;
+                // create and launch the rdp program
+                return this.nodeConnectService.saveRdpFile(this.rdpContent, this.connectionSettings, this.node.id);
+            }),
+            share(),
+        );
+
+        return obs;
     }
 }
