@@ -30,9 +30,10 @@
             "view": {
                 "tags": false,
                 "graphs": {
+                    "heatmap": true,
+                    "insights": false,
                     "nodes": false,
-                    "tasks": false,
-                    "insights": false
+                    "tasks": false
                 },
                 "configuration": {
                     "json": false
