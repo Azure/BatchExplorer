@@ -7,6 +7,12 @@ bl-pool-picker {
     display: block;
     position: relative;
 
+
+    .search-input {
+       width: 100%;
+    }
+
+
     .has-more {
         color: $dusty-grey;
         text-align: right;
