@@ -51,11 +51,8 @@ export class AppComponent implements OnInit {
     ) {
         this.autoscaleFormulaService.init();
         this.settingsService.init();
-<<<<<<< HEAD
         this._initWorkspaces();
-=======
         this.githubDataService.init();
->>>>>>> master
         this.sshKeyService.init();
         this.commandService.init();
         this.pricingService.init();

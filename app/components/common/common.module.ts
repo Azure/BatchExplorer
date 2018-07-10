@@ -6,7 +6,6 @@ import { MaterialModule } from "@batch-flask/core";
 import { BaseModule } from "@batch-flask/ui";
 import { DownloadFolderComponent } from "./download-folder-dialog";
 import { EditMetadataFormComponent } from "./edit-metadata-form";
-import { FeatureModule } from "./feature-switching";
 import { GuardsModule } from "./guards";
 import { InlineQuotaComponent } from "./inline-quota";
 import { SubscriptionPickerComponent } from "./subscription-picker";
@@ -21,7 +20,7 @@ const publicComponents = [
 ];
 
 const publicModules = [
-    GuardsModule, FeatureModule,
+    GuardsModule,
 ];
 /**
  * Commons module shouldn't import any module that:

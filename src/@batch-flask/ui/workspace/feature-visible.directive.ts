@@ -1,6 +1,6 @@
 import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from "@angular/core";
-import { WorkspaceService } from "@batch-flask/ui";
 import { Subscription } from "rxjs";
+import { WorkspaceService } from "./workspace.service";
 
 @Directive({
     selector: "[blFeatureOn]",

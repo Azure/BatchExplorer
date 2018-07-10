@@ -1,2 +1,1 @@
-export * from "./feature-visible.directive";
-export * from "./feature.module";
+export * from "../../../../src/@batch-flask/ui/workspace/feature-visible.directive";
