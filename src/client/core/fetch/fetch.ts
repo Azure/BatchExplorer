@@ -49,7 +49,6 @@ export async function fetch(url: string, options: RequestInit = {}): Promise<Res
 }
 
 function getRequestOptions(request: Request) {
-    console.log("Headeres", request.headers);
     return {
         url: request.url,
         method: request.method,
