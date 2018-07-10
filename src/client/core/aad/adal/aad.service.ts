@@ -1,7 +1,8 @@
 
 import { AccessToken, ServerError } from "@batch-flask/core";
-import { fetch, log } from "@batch-flask/utils";
+import { log } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core/batchlabs-application";
+import { fetch } from "client/core/fetch";
 import { localStorage } from "client/core/local-storage";
 import { Constants } from "common";
 import { Deferred } from "common/deferred";
@@ -82,8 +83,8 @@ export class AADService {
             this._tenantsIds.next(tenantIds);
             this._refreshAllAccessTokens();
         } catch (error) {
-            this._tenantsIds.error(ServerError.fromARM(error));
             log.error("Error retrieving tenants", error);
+            this._tenantsIds.error(ServerError.fromARM(error));
         }
     }
 

@@ -1,6 +1,6 @@
 import {
     ProxyAuthenticationRequiredError, ProxyCredentials, ProxyInvalidCredentialsError, ProxySetting, ProxySettings,
-    getProxySettings, validateProxySetting,
+    validateProxySetting,
 } from "get-proxy-settings";
 
 import { log } from "@batch-flask/utils";
@@ -26,13 +26,13 @@ export class ProxySettingsManager {
 
     public async init() {
         await this._loadSettingsFromStorage();
-        if (!this._settings.value) {
-            try {
-                await this._loadProxySettings();
-            } catch (e) {
-                log.error("Failed to load proxy settings", e);
-            }
-        }
+        // if (!this._settings.value) {
+        //     try {
+        //         await this._loadProxySettings();
+        //     } catch (e) {
+        //         log.error("Failed to load proxy settings", e);
+        //     }
+        // }
 
         if (this._settings.value) {
             this._applyProxySettings(this._settings.value.settings);
@@ -57,19 +57,19 @@ export class ProxySettingsManager {
 
     public async credentials(): Promise<ProxyCredentials> {
         if (this._settings.value) { return this._currentCredentials; }
-        await this.settings;
-        return this._currentCredentials;
+        const credentials = await this.batchLabsApp.askUserForProxyCredentials();
+        return credentials;
     }
 
-    private async _loadProxySettings() {
-        let settings = await getProxySettings();
-        settings = await this._validateProxySettings(settings);
-        this._settings.next({
-            settings,
-            manual: false,
-        });
-        await this._saveProxySettings();
-    }
+    // private async _loadProxySettings() {
+    //     let settings = await getProxySettings();
+    //     settings = await this._validateProxySettings(settings);
+    //     this._settings.next({
+    //         settings,
+    //         manual: false,
+    //     });
+    //     await this._saveProxySettings();
+    // }
 
     private async _validateProxySettings(settings: ProxySettings, askForCreds = true) {
         if (!settings) { return null; }

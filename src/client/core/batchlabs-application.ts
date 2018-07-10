@@ -4,7 +4,7 @@ import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
 import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
-import { fetch, log } from "@batch-flask/utils";
+import { log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { localStorage } from "client/core/local-storage";
 import { setMenu } from "client/menu";
@@ -47,18 +47,12 @@ export class BatchLabsApplication {
     private _azureEnvironment = new BehaviorSubject(AzureEnvironment.Azure);
     private _state = new BehaviorSubject<BatchLabsState>(BatchLabsState.Loading);
     private _initializer = new BatchLabsInitializer(this);
+    private _currentlyAskingForCredentials: Promise<any>;
 
     constructor(public autoUpdater: AppUpdater) {
         this.state = this._state.asObservable();
         BlIpcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {
             return this.aadService.accessTokenData(tenantId, resource);
-        });
-        BlIpcMain.on(IpcEvent.fetch, async ({ url, options }) => {
-            const response = await  fetch(url, options);
-            return {
-                status: response.status,
-                statusText: response.statusText,
-            };
         });
         BlIpcMain.on(IpcEvent.logoutAndLogin, () => {
             return this.logoutAndLogin();
@@ -209,10 +203,17 @@ export class BatchLabsApplication {
     }
 
     public askUserForProxyCredentials(): Promise<ProxyCredentials> {
-        log.info("Asking for proxy credentials");
+        log.warn("Asking for proxy credentials");
+        if (this._currentlyAskingForCredentials) { return this._currentlyAskingForCredentials; }
         const proxyCredentials = new ProxyCredentialsWindow(this);
         proxyCredentials.create();
-        return proxyCredentials.credentials;
+        this._currentlyAskingForCredentials = proxyCredentials.credentials;
+        this._currentlyAskingForCredentials.then(() => {
+            this._currentlyAskingForCredentials = null;
+        }).catch(() => {
+            this._currentlyAskingForCredentials = null;
+        });
+        return this._currentlyAskingForCredentials;
     }
 
     public askUserForProxyConfiguration(current?: ProxySettings): Promise<ProxySettings> {
@@ -270,6 +271,7 @@ export class BatchLabsApplication {
 
         app.on("login", async (event, webContents, request, authInfo, callback) => {
             event.preventDefault();
+            log.info("Electron chromium process need browser credentials.");
             try {
                 const { username, password } = await this.proxySettings.credentials();
                 callback(username, password);
