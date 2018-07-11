@@ -106,7 +106,7 @@ describe("NodePropertyDisplay", () => {
                 );
 
                 expect(electronShellSpy.showItemInFolder).toHaveBeenCalledOnce();
-                expect(electronShellSpy.showItemInFolderArgs).toHaveBeenCalledWith("path/to/file");
+                expect(electronShellSpy.showItemInFolder).toHaveBeenCalledWith("path/to/file");
                 done();
             });
         });
@@ -128,7 +128,7 @@ describe("NodePropertyDisplay", () => {
                 );
 
                 expect(electronShellSpy.showItemInFolder).toHaveBeenCalledOnce();
-                expect(electronShellSpy.showItemInFolderArgs).toHaveBeenCalledWith("path/to/file");
+                expect(electronShellSpy.showItemInFolder).toHaveBeenCalledWith("path/to/file");
                 done();
             });
         });
