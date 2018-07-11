@@ -7,6 +7,11 @@ import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter
 import { ContinuationToken, ListOptions } from "app/services/core/data/list-options";
 import { AzureBatchHttpService } from "./batch-http.service";
 
+export interface BatchListResponse<TEntity> {
+    value: TEntity[],
+    "odata.nextLink": string
+}
+
 export interface BatchListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
     uri: (params: TParams, options: any) => string;
 }
@@ -33,7 +38,7 @@ export class BatchListGetter<TEntity, TParams> extends ListGetter<TEntity, TPara
         return this.http.get<any>(token.nextLink).map(x => this._processResponse(x)).share();
     }
 
-    private _processResponse(response: { value: TEntity[], "odata.nextLink": string }) {
+    private _processResponse(response: BatchListResponse<TEntity>) {
         const data = response.value;
 
         return {

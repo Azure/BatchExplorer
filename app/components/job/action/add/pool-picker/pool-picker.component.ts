@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
@@ -24,40 +24,43 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
     public pickedPool: string;
     public poolsData: ListView<Pool, PoolListParams>;
     public pools: List<Pool> = List([]);
-    public poolCores: StringMap<number> = {};
+    public poolCores = new Map<string, number>();
 
     public searchInput = new FormControl();
 
     private _propagateChange: (value: any) => void = null;
     private _subs: Subscription[] = [];
 
-    constructor(private poolService: PoolService, private vmSizeService: VmSizeService) {
+    constructor(
+        private poolService: PoolService,
+        private vmSizeService: VmSizeService,
+        private changeDetector: ChangeDetectorRef) {
         this.poolsData = this.poolService.listView(this._computeOptions());
 
         this._subs.push(this.searchInput.valueChanges.debounceTime(400).distinctUntilChanged()
             .subscribe((query: string) => {
-                this.poolsData.setOptions(this._computeOptions(query));
-                this.poolsData.fetchNext();
+
             }));
 
         this._subs.push(Observable.combineLatest(this.poolsData.items, this.vmSizeService.sizes)
             .subscribe(([pools, sizes]) => {
                 this.pools = pools;
-                const poolCores = {};
+                const poolCores = new Map<string, number>();
 
                 pools.forEach((pool) => {
                     const vmSize = pool.vmSize.toLowerCase();
                     const size = sizes.filter(x => x.name.toLowerCase() === vmSize).first();
                     const core = size ? size.numberOfCores : 1;
-                    poolCores[pool.id] = core;
+                    poolCores.set(pool.id, core);
                 });
 
                 this.poolCores = poolCores;
+                this.changeDetector.markForCheck();
             }));
     }
 
     public ngOnInit() {
-        this.poolsData.fetchNext();
+        this.poolsData.fetchAll();
     }
 
     public ngOnDestroy() {
@@ -93,7 +96,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
     }
 
     public poolCoreCount(pool: Pool) {
-        const cores = this.poolCores[pool.id] || 1;
+        const cores = this.poolCores.get(pool.id) || 1;
         return cores * pool.targetNodes;
     }
 

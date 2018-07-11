@@ -31,7 +31,7 @@ export interface Offer {
     skus: Sku[];
 }
 
-export class NodeAgentSkuMap {
+export class PoolOsSkus {
     public allOffers: Offer[];
     public vmOffers: Offer[];
     public dataScienceOffers: Offer[];
