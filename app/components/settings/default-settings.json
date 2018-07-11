@@ -21,5 +21,8 @@
   // Default powershell on windows, terminal.app on darwin, ...
   "terminal.external": "default",
 
-  "node-connect.default-username": null
+  "node-connect.default-username": null,
+
+  // Branch to be used when loading data from github(This is mostly for experimenting with new NCJ templates)
+  "github-data.source.branch": "master"
 }
