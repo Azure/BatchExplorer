@@ -7,11 +7,18 @@ bl-pool-picker {
     display: block;
     position: relative;
 
+    .pool-filters {
+        display: flex;
+        align-items: center;
 
-    .search-input {
-       width: 100%;
+        .search-input {
+            flex: 1;
+        }
+
+        > * {
+            margin: 5px;
+        }
     }
-
 
     .has-more {
         color: $dusty-grey;

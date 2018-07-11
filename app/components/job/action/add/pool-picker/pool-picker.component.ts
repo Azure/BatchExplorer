@@ -4,8 +4,8 @@ import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { FilterBuilder } from "@batch-flask/core";
-import { Pool } from "app/models";
-import { PoolListParams, PoolService, VmSizeService } from "app/services";
+import { Offer, Pool, PoolOsSkus } from "app/models";
+import { PoolListParams, PoolOsService, PoolService, VmSizeService } from "app/services";
 import { ListOptionsAttributes, ListView } from "app/services/core";
 import { PoolUtils } from "app/utils";
 
@@ -21,6 +21,7 @@ import "./pool-picker.scss";
     ],
 })
 export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+    public offers: Offer[] = [];
     public pickedPool: string;
     public poolsData: ListView<Pool, PoolListParams>;
     public pools: List<Pool> = List([]);
@@ -33,6 +34,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
 
     constructor(
         private poolService: PoolService,
+        private poolOsService: PoolOsService,
         private vmSizeService: VmSizeService,
         private changeDetector: ChangeDetectorRef) {
         this.poolsData = this.poolService.listView(this._computeOptions());
@@ -41,6 +43,10 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
             .subscribe((query: string) => {
 
             }));
+
+        this._subs.push(this.poolOsService.offers.subscribe((offers: PoolOsSkus) => {
+            this.offers = offers.allOffers;
+        }));
 
         this._subs.push(Observable.combineLatest(this.poolsData.items, this.vmSizeService.sizes)
             .subscribe(([pools, sizes]) => {

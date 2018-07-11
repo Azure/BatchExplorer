@@ -1,8 +1,7 @@
-<div class="flex-center">
+<div class="pool-filters">
     <input blInput class="search-input" placeholder="Filter" [formControl]="searchInput" />
     <bl-select placeholder="OS">
-        <bl-option value="windows" label="Windows"></bl-option>
-        <bl-option value="ubuntu" label="Ubuntu"></bl-option>
+        <bl-option [value]="offer.name" [label]="offer.name" *ngFor="let offer of offers"></bl-option>
     </bl-select>
 </div>
 <bl-loading [status]="poolsData.status | async">

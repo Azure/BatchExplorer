@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import { Component, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
@@ -8,7 +8,6 @@ import { Subscription } from "rxjs";
 import { NodeAgentSku, Offer, PoolOsSkus, Resource, Sku } from "app/models";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
 import { AccountService, ComputeService, PoolOsService } from "app/services";
-import { ListView } from "app/services/core";
 
 import "./pool-os-picker.scss";
 
