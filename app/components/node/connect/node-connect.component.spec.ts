@@ -2,8 +2,6 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { ClipboardService, ElectronShell } from "@batch-flask/ui";
-import { clipboard } from "electron";
-import * as path from "path";
 import { Observable } from "rxjs";
 
 import { ButtonComponent } from "@batch-flask/ui/buttons";
@@ -16,11 +14,13 @@ import {
     AddNodeUserAttributes,
     BatchLabsService,
     FileSystemService,
+    NodeConnectService,
     NodeService,
     NodeUserService,
     SSHKeyService,
     SettingsService,
 } from "app/services";
+import { SecureUtils } from "app/utils";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
 
@@ -45,6 +45,8 @@ describe("NodeConnectComponent", () => {
     let sshKeyServiceSpy;
     let fsServiceSpy;
     let electronShellSpy;
+    let nodeConnectServiceSpy;
+    let secureUtilsSpy;
 
     beforeEach(() => {
 
@@ -95,6 +97,17 @@ describe("NodeConnectComponent", () => {
             showItemInFolder: jasmine.createSpy("").and.returnValue(true),
         };
 
+        nodeConnectServiceSpy = {
+            username: "foo",
+            password: "bar",
+            publicKey: Observable.of("baz"),
+            saveRdpFile: jasmine.createSpy("").and.returnValue(Observable.of("path/to/file")),
+        };
+
+        secureUtilsSpy = {
+            generateWindowsPassword: jasmine.createSpy("").and.returnValue("beep"),
+        };
+
         TestBed.configureTestingModule({
             declarations: [
                 NodeConnectComponent, ButtonComponent,
@@ -111,6 +124,8 @@ describe("NodeConnectComponent", () => {
                 { provide: SSHKeyService, useValue: sshKeyServiceSpy },
                 { provide: ClipboardService, useValue: {} },
                 { provide: ElectronShell, useValue: electronShellSpy },
+                { provide: NodeConnectService, useValue: nodeConnectServiceSpy },
+                { provide: SecureUtils, useValue: secureUtilsSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -155,9 +170,8 @@ describe("NodeConnectComponent", () => {
                 const button = de.queryAll(By.css("bl-button"))[0].componentInstance;
                 button.action().subscribe(() => {
                     fixture.detectChanges();
-                    expect(component.credentials).not.toBeFalsy("Credentials should be defined");
-                    expect(component.credentials.name).not.toBeFalsy();
-                    expect(component.credentials.sshPublicKey).not.toBeFalsy();
+                    expect(nodeConnectServiceSpy.username).not.toBeFalsy();
+                    expect(nodeConnectServiceSpy.publicKey).not.toBeFalsy();
 
                     // validate calls to addOrUpdateUser
                     expect(nodeUserServiceSpy.addOrUpdateUser).toHaveBeenCalledOnce();
@@ -166,7 +180,7 @@ describe("NodeConnectComponent", () => {
                     expect(updateUserArgs[0]).toBe("iaas-linux-pool");
                     expect(updateUserArgs[1]).toBe("node-1");
                     expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ name: "foo" }));
-                    expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ sshPublicKey: "bar" }));
+                    expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ sshPublicKey: "baz" }));
 
                     // validate calls to launchApplication
                     expect(batchLabsServiceSpy.launchApplication).toHaveBeenCalledOnce();
@@ -180,7 +194,7 @@ describe("NodeConnectComponent", () => {
             });
 
             it("should disable the connect button if no ssh key is found", () => {
-                component.hasLocalPublicKey = false;
+                component.hasPublicKey = false;
                 fixture.detectChanges();
 
                 const button = de.queryAll(By.css("bl-button"))[0].componentInstance;
@@ -209,9 +223,7 @@ describe("NodeConnectComponent", () => {
                 const button = de.queryAll(By.css("bl-button"))[0].componentInstance;
                 button.action().subscribe(() => {
                     fixture.detectChanges();
-                    expect(component.credentials).not.toBeFalsy("Credentials should be defined");
-                    expect(component.credentials.name).not.toBeFalsy();
-                    expect(component.credentials.password).not.toBeFalsy();
+                    expect(nodeConnectServiceSpy.username).not.toBeFalsy();
 
                     // validate calls to addOrUpdateUser
                     expect(nodeUserServiceSpy.addOrUpdateUser).toHaveBeenCalledOnce();
@@ -220,9 +232,7 @@ describe("NodeConnectComponent", () => {
                     expect(updateUserArgs[0]).toBe("insights-windows");
                     expect(updateUserArgs[1]).toBe("node-1");
                     expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ name: "foo" }));
-                    expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({
-                        password: component.credentials.password,
-                    }));
+                    expect(updateUserArgs[2].password).toBeTruthy();
 
                     // validate calls to shell.openItem
                     expect(electronShellSpy.openItem).toHaveBeenCalledOnce();
@@ -230,61 +240,6 @@ describe("NodeConnectComponent", () => {
                     expect(openItemArgs.length).toBe(1);
                     expect(openItemArgs[0]).toContain("path/to/file");
 
-                    // ensure the password was copied to clipboard
-                    expect(clipboard.readText()).toEqual(component.credentials.password);
-
-                    done();
-                });
-            });
-
-            it("should use a provided password if a user entered one", (done) => {
-                const password = "mypassword";
-                component.password = password;
-
-                const button = de.queryAll(By.css("bl-button"))[0].componentInstance;
-                button.action().subscribe(() => {
-                    fixture.detectChanges();
-                    expect(component.credentials).not.toBeFalsy("Credentials should be defined");
-                    expect(component.credentials.name).not.toBeFalsy();
-                    expect(component.credentials.password).not.toBeFalsy();
-
-                    // validate calls to addOrUpdateUser
-                    expect(nodeUserServiceSpy.addOrUpdateUser).toHaveBeenCalledOnce();
-                    const updateUserArgs = nodeUserServiceSpy.addOrUpdateUser.calls.mostRecent().args;
-                    expect(updateUserArgs.length).toBe(3);
-                    expect(updateUserArgs[0]).toBe("insights-windows");
-                    expect(updateUserArgs[1]).toBe("node-1");
-                    expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ name: "foo" }));
-                    expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({
-                        password: password,
-                    }));
-
-                    // validate calls to shell.openItem
-                    expect(electronShellSpy.openItem).toHaveBeenCalledOnce();
-                    const openItemArgs = electronShellSpy.openItem.calls.mostRecent().args;
-                    expect(openItemArgs.length).toBe(1);
-                    expect(openItemArgs[0]).toContain("path/to/file");
-
-                    // ensure the password was copied to clipboard
-                    expect(clipboard.readText()).toEqual(password);
-
-                    done();
-                });
-            });
-
-            it("should download the rdp file", (done) => {
-                const expectedContent = "full address:s:0.0.0.0\nusername:s:.\\foo\nprompt for credentials:i:1";
-
-                component.downloadRdp().subscribe(() => {
-                    expect(fsServiceSpy.saveFile).toHaveBeenCalledOnce();
-                    expect(fsServiceSpy.saveFile).toHaveBeenCalledWith(
-                        path.join(fsServiceSpy.commonFolders.temp, "rdp", `${component.node.id}.rdp`),
-                        expectedContent);
-
-                    expect(electronShellSpy.showItemInFolder).toHaveBeenCalledOnce();
-                    const showItemInFolderArgs = electronShellSpy.showItemInFolder.calls.mostRecent().args;
-                    expect(showItemInFolderArgs.length).toBe(1);
-                    expect(showItemInFolderArgs[0]).toContain("path/to/file");
                     done();
                 });
             });
@@ -307,9 +262,7 @@ describe("NodeConnectComponent", () => {
                 const button = de.queryAll(By.css("bl-button"))[0].componentInstance;
                 button.action().subscribe(() => {
                     fixture.detectChanges();
-                    expect(component.credentials).not.toBeFalsy("Credentials should be defined");
-                    expect(component.credentials.name).not.toBeFalsy();
-                    expect(component.credentials.password).not.toBeFalsy();
+                    expect(nodeConnectServiceSpy.username).not.toBeFalsy();
 
                     // validate calls to addOrUpdateUser
                     expect(nodeUserServiceSpy.addOrUpdateUser).toHaveBeenCalledOnce();
@@ -318,9 +271,7 @@ describe("NodeConnectComponent", () => {
                     expect(updateUserArgs[0]).toBe("a");
                     expect(updateUserArgs[1]).toBe("node-1");
                     expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ name: "foo" }));
-                    expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({
-                        password: component.credentials.password,
-                    }));
+                    expect(updateUserArgs[2].password).toBeTruthy();
 
                     // validate calls to shell.openItem
                     expect(electronShellSpy.openItem).toHaveBeenCalledOnce();
@@ -328,61 +279,6 @@ describe("NodeConnectComponent", () => {
                     expect(openItemArgs.length).toBe(1);
                     expect(openItemArgs[0]).toContain("path/to/file");
 
-                    // ensure the password was copied to clipboard
-                    expect(clipboard.readText()).toEqual(component.credentials.password);
-
-                    done();
-                });
-            });
-
-            it("should use a provided password if a user entered one", (done) => {
-                const password = "mypassword";
-                component.password = password;
-
-                const button = de.queryAll(By.css("bl-button"))[0].componentInstance;
-                button.action().subscribe(() => {
-                    fixture.detectChanges();
-                    expect(component.credentials).not.toBeFalsy("Credentials should be defined");
-                    expect(component.credentials.name).not.toBeFalsy();
-                    expect(component.credentials.password).not.toBeFalsy();
-
-                    // validate calls to addOrUpdateUser
-                    expect(nodeUserServiceSpy.addOrUpdateUser).toHaveBeenCalledOnce();
-                    const updateUserArgs = nodeUserServiceSpy.addOrUpdateUser.calls.mostRecent().args;
-                    expect(updateUserArgs.length).toBe(3);
-                    expect(updateUserArgs[0]).toBe("a");
-                    expect(updateUserArgs[1]).toBe("node-1");
-                    expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ name: "foo" }));
-                    expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({
-                        password: password,
-                    }));
-
-                    // validate calls to shell.openItem
-                    expect(electronShellSpy.openItem).toHaveBeenCalledOnce();
-                    const openItemArgs = electronShellSpy.openItem.calls.mostRecent().args;
-                    expect(openItemArgs.length).toBe(1);
-                    expect(openItemArgs[0]).toContain("path/to/file");
-
-                    // ensure the password was copied to clipboard
-                    expect(clipboard.readText()).toEqual(password);
-
-                    done();
-                });
-            });
-
-            it("should download the rdp file", (done) => {
-                const expectedContent = "full address:s:0.0.0.0\nusername:s:.\\foo\nprompt for credentials:i:1";
-
-                component.downloadRdp().subscribe(() => {
-                    expect(fsServiceSpy.saveFile).toHaveBeenCalledOnce();
-                    expect(fsServiceSpy.saveFile).toHaveBeenCalledWith(
-                        path.join(fsServiceSpy.commonFolders.temp, "rdp", `${component.node.id}.rdp`),
-                        expectedContent);
-
-                    expect(electronShellSpy.showItemInFolder).toHaveBeenCalledOnce();
-                    const showItemInFolderArgs = electronShellSpy.showItemInFolder.calls.mostRecent().args;
-                    expect(showItemInFolderArgs.length).toBe(1);
-                    expect(showItemInFolderArgs[0]).toContain("path/to/file");
                     done();
                 });
             });
@@ -397,10 +293,10 @@ describe("NodeConnectComponent", () => {
         });
 
         it("should show the form", () => {
-            expect(de.query(By.css("bl-node-user-credentials-form"))).not.toBeFalsy();
+            expect(component.formVisible).toBeTruthy();
         });
 
-        it("should only affect component variables when the form is submitted", () => {
+        it("should change service variables when the form is submitted", () => {
             const now = new Date();
 
             const formCredentials: AddNodeUserAttributes = {
@@ -412,8 +308,8 @@ describe("NodeConnectComponent", () => {
             component.storeCredentialsFromForm(formCredentials);
             fixture.detectChanges();
 
-            expect(component.username).toEqual("foo");
-            expect(component.password).toEqual("bar");
+            expect(nodeConnectServiceSpy.username).toEqual("foo");
+            expect(nodeConnectServiceSpy.password).toEqual("bar");
             expect(component.isAdmin).toBeFalsy();
             expect(component.expiryTime).toEqual(now);
         });

@@ -9,7 +9,7 @@
     <div *ngIf="connectionSettings">
         <bl-text-property label="IP" [value]="connectionSettings.ip"></bl-text-property>
         <bl-text-property label="Port" [value]="connectionSettings.port"></bl-text-property>
-        <bl-text-property *ngIf="linux" label="SSH Command" [value]="sshCommand"></bl-text-property>
+        <bl-text-property *ngIf="linux" id="ssh-command" label="SSH Command" [value]="sshCommand"></bl-text-property>
     </div>
     <!-- Or, alternatively, if rdp settings are fetched -->
     <div *ngIf="ipFromRdp">
@@ -30,7 +30,7 @@
     </div>
     <div class="custom-property" *ngIf="!linux">
         <h5 class="label-small">Password</h5>
-        <input blInput [(ngModel)]="password" type="password" placeholder="(Optional)" />
+        <input blInput [(ngModel)]="password" id="password-input" type="password" placeholder="(Optional)" />
         <span class="clipboard-info">Password will be copied to clipboard on Connect</span>
     </div>
 </bl-property-group>

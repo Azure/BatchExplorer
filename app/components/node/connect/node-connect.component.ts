@@ -17,7 +17,7 @@ import {
 import { PoolUtils, SecureUtils } from "app/utils";
 import { ExternalApplication } from "common/constants";
 import { Observable } from "rxjs";
-import { flatMap, share, tap } from "rxjs/operators";
+import { flatMap, share } from "rxjs/operators";
 import "./node-connect.scss";
 
 @Component({
@@ -27,7 +27,6 @@ import "./node-connect.scss";
 })
 export class NodeConnectComponent implements OnInit {
     public formVisible: boolean = false;
-    public credentials: AddNodeUserAttributes = null;
     public linux = false;
     public hasPublicKey: boolean;
     public expiryTime: Date = null;
@@ -192,11 +191,7 @@ export class NodeConnectComponent implements OnInit {
     }
 
     private _addOrUpdateUser(credentials) {
-        return this.nodeUserService.addOrUpdateUser(this.pool.id, this.node.id, credentials).pipe(
-            tap(() => {
-                this.credentials = credentials;
-            }),
-        );
+        return this.nodeUserService.addOrUpdateUser(this.pool.id, this.node.id, credentials);
     }
 
     /**
@@ -227,7 +222,6 @@ export class NodeConnectComponent implements OnInit {
         const obs =  this.nodeConnectService.publicKey.pipe(
             flatMap((key) => {
                 credentials.sshPublicKey = key;                     // set the key to be the fetched public key
-                this.credentials = credentials;
                 return this._addOrUpdateUser(credentials);          // set the user that will be used for authentication
             }),
             flatMap(() => {
@@ -250,7 +244,7 @@ export class NodeConnectComponent implements OnInit {
                 this.error = null;
 
                 // save password to clipboard
-                clipboard.writeText(this.credentials.password);
+                clipboard.writeText(credentials.password);
 
                 // create and launch the rdp program
                 return this.nodeConnectService.saveRdpFile(this.rdpContent, this.connectionSettings, this.node.id);

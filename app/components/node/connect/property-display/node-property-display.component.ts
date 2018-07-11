@@ -56,6 +56,10 @@ export class NodePropertyDisplayComponent implements OnInit {
         return this.nodeConnectService.password;
     }
 
+    public set password(password) {
+        this.nodeConnectService.password = password;
+    }
+
     @autobind()
     public downloadRdp() {
         const obs = this.nodeConnectService.saveRdpFile(this.rdpContent, this.connectionSettings, this.node.id);
