@@ -36,6 +36,10 @@ export class Workspace {
             definition = definition[feat];
             if (definition === true) {
                 return true;
+            } else if (definition === undefined) {
+                return true;
+            } else if (definition === false) {
+                return false;
             }
         }
 

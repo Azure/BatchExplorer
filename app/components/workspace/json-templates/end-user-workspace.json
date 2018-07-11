@@ -5,7 +5,6 @@
     "features": {
         "job": {
             "view": {
-                "graphs": true,
                 "statistics": false,
                 "tags": false,
                 "configuration": {
@@ -13,12 +12,7 @@
                 }
             },
             "action": {
-                "add": true,
                 "clone": false,
-                "createJobSchedule": true,
-                "delete": true,
-                "edit": true,
-                "enable": true,
                 "exportAsJson": false,
                 "pin": false
             }
@@ -30,36 +24,26 @@
             "view": {
                 "tags": false,
                 "graphs": {
-                    "heatmap": true,
                     "insights": false,
                     "nodes": false,
                     "tasks": false
                 },
                 "configuration": {
                     "json": false
-                },
-                "nodes": true
+                }
             },
             "action": {
-                "add": true,
                 "clone": false,
-                "delete": true,
                 "exportAsJson": false,
-                "pin": false,
-                "resize": true
+                "pin": false
             }
         },
         "package": false,
         "certificate": false,
         "data": {
-            "view" : true,
             "action": {
-                "add": true,
-                "delete": true,
-                "download": true,
                 "pin": false
             }
-        },
-        "gallery": true
+        }
     }
 }
