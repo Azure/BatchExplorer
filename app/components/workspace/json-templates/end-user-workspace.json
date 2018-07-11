@@ -3,6 +3,7 @@
     "displayName": "Basic end-user workspace",
     "description": "Default end-user workspace that hides a number of admin related features.",
     "features": {
+      "pinned": false,
         "job": {
             "view": {
                 "statistics": false,
