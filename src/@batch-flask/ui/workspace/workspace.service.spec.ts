@@ -1,3 +1,3 @@
-fdescribe("WorkspaceService", () => {
+describe("WorkspaceService", () => {
     // TODO
 });

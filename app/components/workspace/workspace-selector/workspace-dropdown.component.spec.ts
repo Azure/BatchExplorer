@@ -17,7 +17,7 @@ import { WorkspaceDropDownComponent } from "./workspace-dropdown.component";
 class TestComponent {
 }
 
-fdescribe("WorkspaceDropDownComponent", () => {
+describe("WorkspaceDropDownComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let component: WorkspaceDropDownComponent;
     let debugElement;

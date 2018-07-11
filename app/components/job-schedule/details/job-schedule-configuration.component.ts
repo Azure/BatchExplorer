@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
+import { WorkspaceService } from "@batch-flask/ui";
 import { JobSchedule, Metadata } from "app/models";
 import { JobScheduleDecorator } from "app/models/decorators";
-import { WorkspaceService } from "@batch-flask/ui";
 
 // tslint:disable:trackBy-function
 @Component({
