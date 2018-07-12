@@ -3,14 +3,15 @@ import { ServerError, autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/ui";
 import { clipboard } from "electron";
 import * as moment from "moment";
+import * as path from "path";
 
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Node, NodeConnectionSettings, Pool } from "app/models";
 import {
     AddNodeUserAttributes,
     BatchLabsService,
+    FileSystemService,
     NodeConnectService,
-    NodeService,
     NodeUserService,
     SettingsService,
 } from "app/services";
@@ -27,13 +28,12 @@ import "./node-connect.scss";
 })
 export class NodeConnectComponent implements OnInit {
     public formVisible: boolean = false;
-    public linux = false;
-    public hasPublicKey: boolean;
-    public expiryTime: Date = null;
-    public isAdmin: boolean = null;
+    public usingSSH = false;
     public error: ServerError = null;
     public tooltip: string = "";
     public loading: boolean = false;
+    public credentials: AddNodeUserAttributes;
+    public publicKeyFile: string;
 
     /**
      * Base content for the rdp file(IP Address).
@@ -48,7 +48,7 @@ export class NodeConnectComponent implements OnInit {
     public set pool(pool: Pool) {
         this._pool = pool;
         if (pool) {
-            this.linux = PoolUtils.isLinux(this.pool);
+            this.usingSSH = PoolUtils.isLinux(this.pool);
             this._loadConnectionData();
         }
     }
@@ -69,17 +69,25 @@ export class NodeConnectComponent implements OnInit {
         public sidebarRef: SidebarRef<any>,
         public settingsService: SettingsService,
         private nodeUserService: NodeUserService,
-        private nodeService: NodeService,
         private batchLabs: BatchLabsService,
         private nodeConnectService: NodeConnectService,
         private shell: ElectronShell,
         private changeDetector: ChangeDetectorRef,
+        private fs: FileSystemService,
     ) { }
 
     public ngOnInit() {
-        this.nodeConnectService.publicKey.subscribe({
+        this.credentials = {
+            name: this.settingsService.settings["node-connect.default-username"],
+            password: "",
+            expiryTime: null,
+            isAdmin: true,
+            sshPublicKey: "",
+        };
+        this.publicKeyFile = path.join(this.fs.commonFolders.home, ".ssh", "id_rsa.pub");
+        this.nodeConnectService.getPublicKey(this.publicKeyFile).subscribe({
             next: (key) => {
-                this.hasPublicKey = Boolean(key);
+                this.credentials.sshPublicKey = key;
                 this.changeDetector.markForCheck();
             },
             error: (err) => {
@@ -88,22 +96,19 @@ export class NodeConnectComponent implements OnInit {
         });
 
         // set the tooltip for the disabled connect button: ssh-based for linux, password for windows
-        this.tooltip = this.linux ? "No SSH Keys Found" : "Invalid Password";
+        this.tooltip = this.usingSSH ? "No SSH Keys Found" : "Invalid Password";
     }
 
     @autobind()
     public autoConnect(): Observable<any> {
         this.loading = true;
 
-        const credentials = {
-            isAdmin: this.isAdmin !== null ? this.isAdmin : true,
-            name: this.nodeConnectService.username,
-            expiryTime: this.expiryTime || moment().add(moment.duration({days: 1})).toDate(),
-            sshPublicKey: "",
-            password: this.nodeConnectService.password || SecureUtils.generateWindowsPassword(),
-        };
+        const credentials = {...this.credentials};
+        if (!credentials.expiryTime) {
+            credentials.expiryTime = moment().add(moment.duration({days: 1})).toDate();
+        }
 
-        if (this.linux) {
+        if (this.usingSSH) {
             // we are going to use ssh keys, so we don't need a password
             delete credentials.password;
 
@@ -124,6 +129,11 @@ export class NodeConnectComponent implements OnInit {
             // for windows, we don't need the public key because we cannot ssh
             delete credentials.sshPublicKey;
 
+            // generate a password if the user didn't provide one
+            if (!credentials.password) {
+                credentials.password = SecureUtils.generateWindowsPassword();
+            }
+
             const rdpObs = this._initRDP(credentials);
             rdpObs.subscribe({
                 next: (filename) => {
@@ -133,7 +143,7 @@ export class NodeConnectComponent implements OnInit {
                     this.loading = false;
                     this.error = err;
                     try {
-                        // get the reason for the error (likely an invaid password)
+                        // get the reason for the error (likely an invalid password)
                         this.error = err;
                     } catch (e) {
                         throw err;
@@ -151,12 +161,7 @@ export class NodeConnectComponent implements OnInit {
     @autobind()
     public storeCredentialsFromForm(credentials: AddNodeUserAttributes) {
         // update the main template
-        this.nodeConnectService.username = credentials.name;
-        this.nodeConnectService.password = credentials.password;
-        this.expiryTime = credentials.expiryTime;
-        if (credentials.isAdmin) {
-            this.isAdmin = credentials.isAdmin;
-        }
+        this.credentials = {...credentials};
 
         // hide the node user credentials form
         this.formVisible = false;
@@ -168,11 +173,7 @@ export class NodeConnectComponent implements OnInit {
         }
         const { ip, port } = this.connectionSettings;
 
-        return `ssh ${this.username}@${ip} -p ${port}`;
-    }
-
-    public get username() {
-        return this.nodeConnectService.username;
+        return `ssh ${this.credentials.name}@${ip} -p ${port}`;
     }
 
     @autobind()
@@ -199,17 +200,10 @@ export class NodeConnectComponent implements OnInit {
      */
     private _loadConnectionData() {
         if (!this.pool || !this.node) { return; }
-        if (PoolUtils.isPaas(this.pool)) {
-            this.nodeService.getRemoteDesktop(this.pool.id, this.node.id).subscribe((rdp) => {
-                this.rdpContent = rdp;
-                this.changeDetector.markForCheck();
-            });
-        } else {
-            this.nodeService.getRemoteLoginSettings(this.pool.id, this.node.id).subscribe((connection) => {
-                this.connectionSettings = connection;
-                this.changeDetector.markForCheck();
-            });
-        }
+        this.nodeConnectService.getConnectionSettings(this.pool, this.node).subscribe(settings => {
+            this.connectionSettings = settings;
+            this.changeDetector.markForCheck();
+        });
     }
 
     /**
@@ -218,12 +212,8 @@ export class NodeConnectComponent implements OnInit {
      * @returns an Observable that emits the process id of the child process
      */
     private _initSSH(credentials: AddNodeUserAttributes): Observable<number> {
-        // fetch the public key from the user's filesystem
-        const obs =  this.nodeConnectService.publicKey.pipe(
-            flatMap((key) => {
-                credentials.sshPublicKey = key;                     // set the key to be the fetched public key
-                return this._addOrUpdateUser(credentials);          // set the user that will be used for authentication
-            }),
+        // set the user that will be used for authentication
+        const obs =  this._addOrUpdateUser(credentials).pipe(
             flatMap(() => {
                 // launch a terminal subprocess with the command to access the node
                 const args = {
@@ -247,7 +237,7 @@ export class NodeConnectComponent implements OnInit {
                 clipboard.writeText(credentials.password);
 
                 // create and launch the rdp program
-                return this.nodeConnectService.saveRdpFile(this.rdpContent, this.connectionSettings, this.node.id);
+                return this.nodeConnectService.saveRdpFile(this.connectionSettings, this.credentials, this.node.id);
             }),
             share(),
         );

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { FilterBuilder } from "@batch-flask/core";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
-import { Node, NodeAgentSku, NodeConnectionSettings, NodeState } from "app/models";
+import { Node, NodeAgentSku, NodeState } from "app/models";
 import {
     ContinuationToken,
     DataCache,
@@ -14,7 +14,6 @@ import {
 import { ArrayUtils, Constants, ObservableUtils } from "app/utils";
 import { List } from "immutable";
 import { Observable } from "rxjs";
-import { map, share } from "rxjs/operators";
 import {
     AzureBatchHttpService, BatchEntityGetter, BatchListGetter,
 } from "../core";
@@ -137,22 +136,6 @@ export class NodeService {
         this.performOnEachNode(`Reboot pool '${poolId}' nodes`, poolId, states, (node) => {
             return this.reimage(poolId, node.id);
         });
-    }
-
-    public getRemoteDesktop(poolId: string, nodeId: string, options: any = {}): Observable<string> {
-        return this.http.get(`/pools/${poolId}/nodes/${nodeId}/rdp`, {
-            observe: "response",
-            responseType: "text",
-        }).map((data) => {
-            return data.body as any;
-        });
-    }
-
-    public getRemoteLoginSettings(poolId: string, nodeId: string, options = {}): Observable<NodeConnectionSettings> {
-        return this.http.get(`/pools/${poolId}/nodes/${nodeId}/remoteloginsettings`).pipe(
-            map(data => new NodeConnectionSettings(data)),
-            share(),
-        );
     }
 
     public performOnEachNode(

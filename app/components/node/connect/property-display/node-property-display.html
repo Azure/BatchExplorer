@@ -1,36 +1,36 @@
 <bl-property-group>
     <!-- If waiting for connection settings -->
-    <div *ngIf="!connectionSettings && !ipFromRdp">
+    <div *ngIf="!connectionSettings">
         <bl-text-property label="IP" value="Fetching..."></bl-text-property>
         <bl-text-property label="Port" value="Fetching..."></bl-text-property>
-        <bl-text-property *ngIf="linux" label="SSH Command" value="Fetching..."></bl-text-property>
+        <bl-text-property *ngIf="usingSSH" label="SSH Command" value="Fetching..."></bl-text-property>
     </div>
     <!-- Once connection settings are fetched -->
     <div *ngIf="connectionSettings">
         <bl-text-property label="IP" [value]="connectionSettings.ip"></bl-text-property>
         <bl-text-property label="Port" [value]="connectionSettings.port"></bl-text-property>
-        <bl-text-property *ngIf="linux" id="ssh-command" label="SSH Command" [value]="sshCommand"></bl-text-property>
+        <bl-text-property *ngIf="usingSSH" id="ssh-command" label="SSH Command" [value]="sshCommand"></bl-text-property>
     </div>
     <!-- Or, alternatively, if rdp settings are fetched -->
     <div *ngIf="ipFromRdp">
         <bl-text-property label="IP" [value]="ipFromRdp"></bl-text-property>
         <bl-text-property label="Port" value="Not Specified"></bl-text-property>
     </div>
-    <div class="custom-property" *ngIf="!linux">
+    <div class="custom-property" *ngIf="!usingSSH">
         <h5 class="label-small">RDP File</h5>
         <bl-clickable id="download-rdp" class="display-field" (click)="downloadRdp()">Download RDP File</bl-clickable>
     </div>
     <div class="custom-property">
         <h5 class="label-small username-label">Username</h5>
-        <input blInput type="text" [placeholder]="username" (input)="setUsername($event)" />
+        <input blInput type="text" [placeholder]="credentials.name" (input)="setUsername($event)" />
     </div>
-    <div *ngIf="linux" class="custom-property">
+    <div *ngIf="usingSSH" class="custom-property">
         <h5 class="label-small">SSH Key File</h5>
         <div class="display-field">{{publicKeyFile}}</div>
     </div>
-    <div class="custom-property" *ngIf="!linux">
+    <div class="custom-property" *ngIf="!usingSSH">
         <h5 class="label-small">Password</h5>
-        <input blInput [(ngModel)]="password" id="password-input" type="password" placeholder="(Optional)" />
+        <input blInput (input)="setPassword($event)" id="password-input" type="password" placeholder="(Optional)" />
         <span class="clipboard-info">Password will be copied to clipboard on Connect</span>
     </div>
 </bl-property-group>

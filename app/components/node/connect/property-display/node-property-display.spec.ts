@@ -10,7 +10,7 @@ import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Node } from "app/models";
 import {
     NodeConnectService,
-} from "app/services";
+} from "app/services/node-connect";
 import * as Fixtures from "test/fixture";
 import { NodePropertyDisplayComponent } from ".";
 

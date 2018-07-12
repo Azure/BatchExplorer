@@ -42,7 +42,7 @@ export interface ThemeDefinition {
      */
     success: string;
 
-     /**
+    /**
      * Primary color contrast
      */
     "success-contrast": string;

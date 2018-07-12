@@ -11,20 +11,21 @@
                 </div>
                 <bl-node-property-display *ngIf="rdpContent || connectionSettings"
                     [connectionSettings]="connectionSettings"
-                    [rdpContent]="rdpContent"
-                    [linux]="linux"
                     [node]="node"
+                    [publicKeyFile]="publicKeyFile"
+                    [credentials]="credentials"
+                    (credentialsChange)="updateCredentials($event)"
                 ></bl-node-property-display>
             </div>
             <div class="credentials-source">
-                <bl-button *ngIf="linux" type="wide" [skipSuccess]="true" [action]="autoConnect" [disabled]="!publicKey || !connectionSettings" [matTooltip]="quickStartTooltip" [matTooltipDisabled]="publicKey">
+                <bl-button *ngIf="usingSSH" type="wide" [skipSuccess]="true" [action]="autoConnect" [disabled]="!credentials.sshPublicKey || !connectionSettings" [matTooltip]="quickStartTooltip" [matTooltipDisabled]="credentials.sshPublicKey">
                     <div class="button-icon-frame">
                         <i *ngIf="!loading" class="fa fa-plug"></i>
                         <i *ngIf="loading" class="fa fa-spinner fa-pulse"></i>
                     </div>
                     <div class="button-label">Connect</div>
                 </bl-button>
-                <bl-button *ngIf="!linux" type="wide" [skipSuccess]="true" [action]="autoConnect" [disabled]="!rdpContent && !connectionSettings">
+                <bl-button *ngIf="!usingSSH" type="wide" [skipSuccess]="true" [action]="autoConnect" [disabled]="!rdpContent && !connectionSettings">
                     <div class="button-icon-frame">
                         <i *ngIf="!loading" class="fa fa-plug"></i>
                         <i *ngIf="loading" class="fa fa-spinner fa-pulse"></i>
@@ -40,7 +41,7 @@
             </div>
         </div>
         <div *ngIf="formVisible">
-            <bl-node-user-credentials-form [submit]="storeCredentialsFromForm" [isLinuxNode]="linux" (close)="goToHome()"></bl-node-user-credentials-form>
+            <bl-node-user-credentials-form [submit]="storeCredentialsFromForm" [isLinuxNode]="usingSSH" (close)="goToHome()"></bl-node-user-credentials-form>
         </div>
     </div>
     <bl-server-error *ngIf="error" [error]="error"></bl-server-error>

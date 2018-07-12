@@ -2,7 +2,7 @@ import { Component, Input, OnChanges } from "@angular/core";
 
 import { Node, Pool } from "app/models";
 import { NodeDecorator } from "app/models/decorators";
-import { NodeService } from "app/services";
+import { NodeConnectService } from "app/services";
 import { PoolUtils } from "app/utils";
 
 @Component({
@@ -25,13 +25,13 @@ export class NodeConfigurationComponent implements OnChanges {
 
     private _node: Node;
 
-    constructor(private nodeService: NodeService) { }
+    constructor(private nodeConnectService: NodeConnectService) { }
 
     public ngOnChanges(inputs) {
         if (inputs.node && inputs.pool) {
             if (PoolUtils.isIaas(this.pool)) {
                 this.externalIpAddress = "Loading...";
-                this.nodeService.getRemoteLoginSettings(this.pool.id, this.node.id).subscribe({
+                this.nodeConnectService.getConnectionSettings(this.pool, this.node).subscribe({
                     next: (settings) => {
                         this.externalIpAddress = settings.ip;
                     },

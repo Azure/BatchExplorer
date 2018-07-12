@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/ui";
-import { Node, NodeConnectionSettings } from "app/models";
-import { NodeConnectService } from "app/services";
+import { ConnectionType, Node, NodeConnectionSettings } from "app/models";
+import { AddNodeUserAttributes, NodeConnectService, SettingsService } from "app/services";
 
 import "./node-property-display.scss";
 
@@ -15,24 +15,22 @@ export class NodePropertyDisplayComponent implements OnInit {
 
     // inherited input properties
     @Input() public connectionSettings: NodeConnectionSettings;
-    @Input() public rdpContent: string;
     @Input() public node: Node;
-    @Input() public linux: boolean;
+    @Input() public credentials: AddNodeUserAttributes;
+    @Input() public publicKeyFile: string;
+    @Output() public credentialsChange = new EventEmitter<AddNodeUserAttributes>();
 
     // other instance
-    public ipFromRdp: string;
-    public publicKeyFile: string;
+    public usingSSH;
 
     constructor(
         private nodeConnectService: NodeConnectService,
         private shell: ElectronShell,
+        private settingsService: SettingsService,
     ) {}
 
     public ngOnInit() {
-        if (this.rdpContent) {
-            this.ipFromRdp = this.rdpContent.match(/[0-9.]{7,}/)[0];
-        }
-        this.publicKeyFile = this.nodeConnectService.publicKeyFile;
+        this.usingSSH = this.connectionSettings.type === ConnectionType.SSH;
     }
 
     public get sshCommand() {
@@ -41,28 +39,26 @@ export class NodePropertyDisplayComponent implements OnInit {
         }
         const { ip, port } = this.connectionSettings;
 
-        return `ssh ${this.username}@${ip} -p ${port}`;
+        return `ssh ${this.credentials.name}@${ip} -p ${port}`;
     }
 
-    public get username() {
-        return this.nodeConnectService.username;
-    }
-
+    @autobind()
     public setUsername(event) {
-        this.nodeConnectService.username = event.target.value;
+        // TODO-Adam reimplement as a FormControl with custom validator
+        const newName = event.target.value.replace(/ /g, "");
+        this.credentials.name = newName || this.settingsService.settings["node-connect.default-username"];
+        this.credentialsChange.emit(this.credentials);
     }
 
-    public get password() {
-        return this.nodeConnectService.password;
-    }
-
-    public set password(password) {
-        this.nodeConnectService.password = password;
+    @autobind()
+    public setPassword(event) {
+        this.credentials.password = event.target.value;
+        this.credentialsChange.emit(this.credentials);
     }
 
     @autobind()
     public downloadRdp() {
-        const obs = this.nodeConnectService.saveRdpFile(this.rdpContent, this.connectionSettings, this.node.id);
+        const obs = this.nodeConnectService.saveRdpFile(this.connectionSettings, this.credentials, this.node.id);
         obs.subscribe({
             next: (filename) => {
                 this.shell.showItemInFolder(filename);
