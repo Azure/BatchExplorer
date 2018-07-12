@@ -39,7 +39,7 @@ bl-pool-picker {
         user-select: none;
         cursor: pointer;
 
-        &:hover, &:focus {
+        &:hover {
             background-color: $selection-color;
         }
 
@@ -85,11 +85,10 @@ bl-pool-picker {
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 margin-top: 3px;
-                color: $primary-color;
             }
 
             > .details {
-                color: $secondary-color;
+                color: $secondary-text;
                 display: flex;
                 align-items: center;
 
