@@ -1,15 +1,30 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
-import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
+import {
+    ControlValueAccessor,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+} from "@angular/forms";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 
-import { FilterBuilder } from "@batch-flask/core";
+import { LoadingStatus } from "@batch-flask/ui";
 import { Offer, Pool, PoolOsSkus } from "app/models";
 import { PoolListParams, PoolOsService, PoolService, VmSizeService } from "app/services";
-import { ListOptionsAttributes, ListView } from "app/services/core";
+import { ListView } from "app/services/core";
 import { PoolUtils } from "app/utils";
+import { distinctUntilChanged, filter } from "rxjs/operators";
 
 import "./pool-picker.scss";
+
+interface PoolFilters {
+    id: string;
+    offer: string;
+}
+
+const CLOUD_SERVICE_OFFER = "cloudservice-windows";
 
 @Component({
     selector: "bl-pool-picker",
@@ -21,48 +36,55 @@ import "./pool-picker.scss";
     ],
 })
 export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
-    public offers: Offer[] = [];
+    public LoadingStatus = LoadingStatus;
+
     public pickedPool: string;
     public poolsData: ListView<Pool, PoolListParams>;
-    public pools: List<Pool> = List([]);
-    public poolCores = new Map<string, number>();
+    public displayedPools: List<Pool> = List([]);
+    public filters: FormGroup;
+    private offers: any[] = [];
 
-    public searchInput = new FormControl();
-
+    private _vmSizeCoresMap = new Map<string, number>();
+    private _pools: List<Pool> = List([]);
+    private _offers: Offer[] = [];
     private _propagateChange: (value: any) => void = null;
     private _subs: Subscription[] = [];
 
     constructor(
+        formBuilder: FormBuilder,
         private poolService: PoolService,
         private poolOsService: PoolOsService,
         private vmSizeService: VmSizeService,
         private changeDetector: ChangeDetectorRef) {
-        this.poolsData = this.poolService.listView(this._computeOptions());
-
-        this._subs.push(this.searchInput.valueChanges.debounceTime(400).distinctUntilChanged()
-            .subscribe((query: string) => {
-
-            }));
-
-        this._subs.push(this.poolOsService.offers.subscribe((offers: PoolOsSkus) => {
-            this.offers = offers.allOffers;
+        this.poolsData = this.poolService.listView();
+        this.filters = formBuilder.group({
+            id: "",
+            offer: null,
+        });
+        this._subs.push(this.filters.valueChanges.pipe(distinctUntilChanged()).subscribe((query: PoolFilters) => {
+            this._updateDisplayedPools();
         }));
 
-        this._subs.push(Observable.combineLatest(this.poolsData.items, this.vmSizeService.sizes)
-            .subscribe(([pools, sizes]) => {
-                this.pools = pools;
-                const poolCores = new Map<string, number>();
+        this._subs.push(this.poolOsService.offers.subscribe((offers: PoolOsSkus) => {
+            this._offers = offers.allOffers;
+            this._updateOffers();
+        }));
 
-                pools.forEach((pool) => {
-                    const vmSize = pool.vmSize.toLowerCase();
-                    const size = sizes.filter(x => x.name.toLowerCase() === vmSize).first();
-                    const core = size ? size.numberOfCores : 1;
-                    poolCores.set(pool.id, core);
-                });
+        this._subs.push(this.poolsData.items.subscribe((pools) => {
+            this._pools = pools;
+            this._updateOffers();
+            this._updateDisplayedPools();
+        }));
 
-                this.poolCores = poolCores;
-                this.changeDetector.markForCheck();
-            }));
+        this._subs.push(this.vmSizeService.sizes.subscribe((sizes) => {
+            const vmSizeCoresMap = new Map<string, number>();
+            sizes.forEach((size) => {
+                vmSizeCoresMap.set(size.id, size.numberOfCores);
+            });
+
+            this._vmSizeCoresMap = vmSizeCoresMap;
+            this.changeDetector.markForCheck();
+        }));
     }
 
     public ngOnInit() {
@@ -102,7 +124,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
     }
 
     public poolCoreCount(pool: Pool) {
-        const cores = this.poolCores.get(pool.id) || 1;
+        const cores = this._vmSizeCoresMap.get(pool.vmSize) || 1;
         return cores * pool.targetNodes;
     }
 
@@ -110,11 +132,60 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
         return pool.id;
     }
 
-    private _computeOptions(query: string = null) {
-        const options: ListOptionsAttributes = { maxItems: 20 };
-        if (query) {
-            options.filter = FilterBuilder.prop("id").startswith(query.clearWhitespace());
+    public resetFilters() {
+        this.filters.reset();
+    }
+
+    private _updateDisplayedPools() {
+        const pools = this._pools.filter((pool) => {
+            return this._filterPool(pool);
+        });
+        this.displayedPools = List(pools);
+        this.changeDetector.markForCheck();
+    }
+
+    private _filterPool(pool: Pool): boolean {
+        const filters: PoolFilters = this.filters.value;
+        if (filters.id !== "" && !pool.id.toLowerCase().contains(filters.id.toLowerCase())) {
+            return false;
         }
-        return options;
+
+        if (filters.offer) {
+            if (!this._filterByOffer(pool, filters.offer)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private _filterByOffer(pool: Pool, offer: string) {
+        const filterByPaaS = offer === CLOUD_SERVICE_OFFER;
+        const isIaaS = PoolUtils.isIaas(pool);
+        if (isIaaS) {
+            if (filterByPaaS) { return false; }
+            if (pool.virtualMachineConfiguration.imageReference.offer !== offer) { return false; }
+        } else {
+            if (!filterByPaaS) { return false; }
+        }
+        return true;
+    }
+
+    private _updateOffers() {
+        const offers = this._offers.map((offer) => {
+            const count = this._pools.count(x => this._filterByOffer(x, offer.name));
+            return {
+                name: offer.name,
+                label: `${offer.name} (${count})`,
+            };
+        });
+
+        const cloudServiceCount = this._pools.count(x => this._filterByOffer(x, CLOUD_SERVICE_OFFER));
+        offers.push({
+            name: CLOUD_SERVICE_OFFER,
+            label: `Windows (Cloud service) (${cloudServiceCount})`,
+        });
+
+        this.offers = offers;
+        this.changeDetector.markForCheck();
     }
 }

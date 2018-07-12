@@ -1,12 +1,18 @@
-<div class="pool-filters">
-    <input blInput class="search-input" placeholder="Filter" [formControl]="searchInput" />
-    <bl-select placeholder="OS">
-        <bl-option [value]="offer.name" [label]="offer.name" *ngFor="let offer of offers"></bl-option>
+<div class="pool-filters" [formGroup]="filters">
+    <bl-select placeholder="OS" formControlName="offer">
+        <bl-option [value]="null" label="No Filter"></bl-option>
+        <bl-option [value]="offer.name" [label]="offer.label" *ngFor="let offer of offers"></bl-option>
     </bl-select>
+    <input blInput class="search-input" placeholder="Filter" formControlName="id" />
 </div>
 <bl-loading [status]="poolsData.status | async">
     <div class="pool-list">
-        <button class="pool" *ngFor="let pool of pools; trackBy: trackPool" (click)="pickPool(pool)" [class.active]="pool.id === pickedPool" [title]="pool.id">
+        <bl-clickable
+            class="pool"
+            *ngFor="let pool of displayedPools; trackBy: trackPool"
+            [class.active]="pool.id === pickedPool"
+            [title]="pool.id"
+            (do)="pickPool(pool)">
             <div class="pool-wrapper">
                 <div class="icon">
                     <bl-icon [icon]="iconForPool(pool)"></bl-icon>
@@ -30,16 +36,10 @@
             <div class="pool-tags">
                 <bl-tags [tags]="pool.tags" [maxTags]="3"></bl-tags>
             </div>
-        </button>
-        <div *ngIf="pools.size > 0 && (poolsData.hasMore | async)" class="has-more">
-            There is more pools available for selection, use the search above.
+        </bl-clickable>
+
+        <div *ngIf="displayedPools.size === 0 && (poolsData.status | async) === LoadingStatus.Ready">
+            You don't have any pools matching the current filters. <bl-clickable class="reset-filters" (do)="resetFilters()">Reset</bl-clickable>
         </div>
-        <!--TODO uncomment and wire to auto pool when supporting
-        <button class="auto-pool">
-            <div class="pool-wrapper">
-                <div class="icon"><i class="fa fa-plus"></i></div>
-                <div class="info">Auto pool</div>
-            </div>
-        </button>-->
     </div>
 </bl-loading>
