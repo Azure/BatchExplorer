@@ -5,7 +5,7 @@
             <div summarySubtitle>
                 <i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}
             </div>
-            <bl-tags *blFeatureOn="'schedule.view.tags'" summaryTags [tags]="jobSchedule.tags" [editable]="jobSchedule.editable" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
+            <bl-tags summaryTags [tags]="jobSchedule.tags" [editable]="jobSchedule.editable" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
                 <bl-commands-list [commands]="commands" [entity]="jobSchedule"></bl-commands-list>

@@ -6,7 +6,7 @@
       "pinned": false,
         "job": {
             "statistics": false,
-            "tags": false,
+            "tagView": false,
             "configuration": {
                 "json": false
             },
@@ -18,7 +18,7 @@
         },
         "schedule": false,
         "pool": {
-            "tags": false,
+            "tagView": false,
             "graphs": {
                 "insights": false,
                 "nodes": false,

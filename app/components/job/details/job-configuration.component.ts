@@ -52,7 +52,7 @@ export class JobConfigurationComponent implements OnDestroy {
 
         this._sub = this.workspaceService.currentWorkspace.subscribe((ws) => {
             if (ws) {
-                this.jsonViewEnabled = ws.isFeatureEnabled("job.view.configuration.json");
+                this.jsonViewEnabled = ws.isFeatureEnabled("job.configuration.json");
                 this.changeDetector.markForCheck();
             }
         });

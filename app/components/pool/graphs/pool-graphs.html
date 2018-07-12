@@ -12,7 +12,7 @@
 
             <bl-nodes-heatmap blMonitorGraphChart [pool]="pool" [nodes]="nodes"></bl-nodes-heatmap>
         </bl-metrics-monitor-metric>
-        <bl-metrics-monitor-metric *blFeatureOn="'pool.view.graphs.nodes'" label="Available nodes">
+        <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.nodes'" label="Available nodes">
             <bl-history-graph blMonitorGraphPreview [max]="pool.targetNodes"  [history]="runningNodesHistory.history"
                 [interactive]="false" [historySize]="selectedHistoryLength.value">
             </bl-history-graph>
@@ -20,7 +20,7 @@
             <bl-history-graph blMonitorGraphChart [max]="pool.targetNodes" class="full-display" [history]="runningNodesHistory.history" [historySize]="selectedHistoryLength.value">
             </bl-history-graph>
         </bl-metrics-monitor-metric>
-        <bl-metrics-monitor-metric *blFeatureOn="'pool.view.graphs.tasks'" label="Running tasks">
+        <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.tasks'" label="Running tasks">
             <bl-history-graph blMonitorGraphPreview [max]="maxRunningTasks" [history]="runningTaskHistory.history" [interactive]="false"
                 [historySize]="selectedHistoryLength.value">
             </bl-history-graph>
@@ -31,31 +31,31 @@
     </ng-container>
 
     <ng-container *ngIf="appInsightsEnabled">
-        <bl-metrics-monitor-metric *blFeatureOn="'pool.view.graphs.insights'" label="Cpu">
+        <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.insights'" label="Cpu">
             <bl-cpu-usage-graph blMonitorGraphPreview #cpuUsage [data]="performanceData" [interactive]="false"></bl-cpu-usage-graph>
             <div blMetricsStatus>{{cpuUsage.status | async}}</div>
 
             <bl-cpu-usage-graph blMonitorGraphChart [data]="performanceData" [showIndividualCpu]="node" class="full-display"></bl-cpu-usage-graph>
         </bl-metrics-monitor-metric>
-        <bl-metrics-monitor-metric *blFeatureOn="'pool.view.graphs.insights'" label="Memory">
+        <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.insights'" label="Memory">
             <bl-memory-usage-graph blMonitorGraphPreview #memUsage [data]="performanceData" [interactive]="false"></bl-memory-usage-graph>
             <div blMetricsStatus>{{memUsage.status | async}}</div>
 
             <bl-memory-usage-graph blMonitorGraphChart [data]="performanceData" class="full-display"></bl-memory-usage-graph>
         </bl-metrics-monitor-metric>
-        <bl-metrics-monitor-metric *blFeatureOn="'pool.view.graphs.insights'" label="Disk IO">
+        <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.insights'" label="Disk IO">
             <bl-disk-io-graph blMonitorGraphPreview #diskUsage [data]="performanceData" [interactive]="false"></bl-disk-io-graph>
             <div blMetricsStatus>{{diskUsage.status | async}}</div>
 
             <bl-disk-io-graph blMonitorGraphChart [data]="performanceData" class="full-display"></bl-disk-io-graph>
         </bl-metrics-monitor-metric>
-        <bl-metrics-monitor-metric *blFeatureOn="'pool.view.graphs.insights'" label="Disk usage">
+        <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.insights'" label="Disk usage">
             <bl-disk-usage-graph blMonitorGraphPreview #diskUsage [data]="performanceData" [interactive]="false"></bl-disk-usage-graph>
             <div blMetricsStatus>{{diskUsage.status | async}}</div>
 
             <bl-disk-usage-graph blMonitorGraphChart [data]="performanceData" class="full-display"></bl-disk-usage-graph>
         </bl-metrics-monitor-metric>
-        <bl-metrics-monitor-metric *blFeatureOn="'pool.view.graphs.insights'" label="Network">
+        <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.insights'" label="Network">
             <bl-network-usage-graph blMonitorGraphPreview #netUsage [data]="performanceData" [interactive]="false"></bl-network-usage-graph>
             <div blMetricsStatus>{{netUsage.status | async}}</div>
 
@@ -63,7 +63,7 @@
         </bl-metrics-monitor-metric>
     </ng-container>
     <ng-container *ngIf="!appInsightsEnabled">
-        <bl-metrics-monitor-metric *blFeatureOn="'pool.view.graphs.insights'" label="Application Insights">
+        <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.insights'" label="Application Insights">
             <bl-cpu-usage-graph blMonitorGraphPreview [data]="performanceData" [interactive]="false"></bl-cpu-usage-graph>
             <div blMetricsStatus>Cpu, memory, disk, etc.</div>
 
