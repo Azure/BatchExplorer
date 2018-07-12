@@ -21,16 +21,9 @@ export class FeatureVisibleDirective implements OnInit, OnDestroy, OnChanges  {
     }
 
     public ngOnInit() {
-        this._subscription = this.workspaceService.currentWorkspace.subscribe((workspace) => {
-            if (this.feature && workspace) {
-                // this._updateVisibility();
-                this.viewContainer.clear();
-                // always visible if there is no workspace selected
-                const enabled = workspace.isFeatureEnabled(this.feature);
-                if (!workspace || enabled) {
-                    this.viewContainer.createEmbeddedView(this.templateRef);
-                }
-            }
+        this._subscription = this.workspaceService.currentWorkspace.subscribe((workspace)  => {
+            this._workspace = workspace;
+            this._updateVisibility();
         });
     }
 
@@ -45,11 +38,13 @@ export class FeatureVisibleDirective implements OnInit, OnDestroy, OnChanges  {
         }
     }
     private _updateVisibility() {
-        this.viewContainer.clear();
-        // always visible if there is no workspace selected
-        const enabled = this._workspace.isFeatureEnabled(this.feature);
-        if (!this._workspace || enabled) {
-            this.viewContainer.createEmbeddedView(this.templateRef);
+        if (this.feature && this._workspace) {
+            this.viewContainer.clear();
+            // always visible if there is no workspace selected
+            const enabled = this._workspace.isFeatureEnabled(this.feature);
+            if (!this._workspace || enabled) {
+                this.viewContainer.createEmbeddedView(this.templateRef);
+            }
         }
     }
 }
