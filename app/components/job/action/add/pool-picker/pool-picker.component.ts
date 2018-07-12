@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import {
     ControlValueAccessor,
     FormBuilder,
-    FormControl,
     FormGroup,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
@@ -15,7 +14,7 @@ import { Offer, Pool, PoolOsSkus } from "app/models";
 import { PoolListParams, PoolOsService, PoolService, VmSizeService } from "app/services";
 import { ListView } from "app/services/core";
 import { PoolUtils } from "app/utils";
-import { distinctUntilChanged, filter } from "rxjs/operators";
+import { distinctUntilChanged } from "rxjs/operators";
 
 import "./pool-picker.scss";
 
@@ -42,7 +41,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
     public poolsData: ListView<Pool, PoolListParams>;
     public displayedPools: List<Pool> = List([]);
     public filters: FormGroup;
-    private offers: any[] = [];
+    public offers: any[] = [];
 
     private _vmSizeCoresMap = new Map<string, number>();
     private _pools: List<Pool> = List([]);

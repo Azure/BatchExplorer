@@ -11,30 +11,26 @@
             class="pool"
             *ngFor="let pool of displayedPools; trackBy: trackPool"
             [class.active]="pool.id === pickedPool"
-            [title]="pool.id"
+            [title]="pool.id"s
             (do)="pickPool(pool)">
-            <div class="pool-wrapper">
-                <div class="icon">
-                    <bl-icon [icon]="iconForPool(pool)"></bl-icon>
-                </div>
-                <div class="info">
-                    <div class="title">{{pool.id}}</div>
-                    <div class="details">
-                        <div>
-                            <span title="Pool has {{pool.targetNodes}} nodes">
-                                <i class="fa fa-tv"></i>
-                                <span>{{pool.targetNodes}}</span>
-                            </span>
-                            <span title="Pool has {{poolCoreCount(pool)}} cores">
-                                <i class="fa fa-microchip"></i>
-                                <span>{{poolCoreCount(pool)}}</span>
-                            </span>
-                        </div>
+            <div class="icon">
+                <bl-icon [icon]="iconForPool(pool)"></bl-icon>
+            </div>
+            <div class="info">
+                <div class="title">{{pool.id}}</div>
+                <div class="details">
+                    <div title="Pool has {{pool.targetNodes}} nodes" class="metric">
+                        <i class="fa fa-tv"></i>
+                        <span>{{pool.targetNodes}}</span>
+                    </div>
+                    <div title="Pool has {{poolCoreCount(pool)}} cores" class="metric">
+                        <i class="fa fa-microchip"></i>
+                        <span>{{poolCoreCount(pool)}}</span>
+                    </div>
+                    <div class="pool-tags">
+                        <bl-tags [tags]="pool.tags" [maxTags]="3"></bl-tags>
                     </div>
                 </div>
-            </div>
-            <div class="pool-tags">
-                <bl-tags [tags]="pool.tags" [maxTags]="3"></bl-tags>
             </div>
         </bl-clickable>
 

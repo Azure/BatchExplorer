@@ -1,8 +1,8 @@
 @import "app/styles/variables";
 
 bl-pool-picker {
-    $tile-width: 150px;
-    $tile-height: 70px;
+    $tile-width: 235px;
+    $tile-height: 50px;
 
     display: block;
     position: relative;
@@ -20,19 +20,12 @@ bl-pool-picker {
         }
     }
 
-    .has-more {
-        color: $dusty-grey;
-        text-align: right;
-    }
-
     .pool-list {
         min-height: 100px;
     }
 
     .pool, .auto-pool {
         display: inline-flex;
-        flex-direction: column;
-        justify-content: center;
         position: relative;
         width: $tile-width;
         height: $tile-height;
@@ -41,98 +34,90 @@ bl-pool-picker {
         vertical-align: top;
 
         border: 1px solid $border-color;
-        border-radius: 3px;
-        background: $white;
+        background: $input-background-color;
         outline: none;
         user-select: none;
         cursor: pointer;
 
         &:hover, &:focus {
-            background-color: $whitesmoke-darker;
+            background-color: $selection-color;
         }
 
         &.active {
-            color: $whitesmoke;
-            border-color: map-get($primary, 300);
-            background:  map-get($primary, 300);
+            color: $whitesmoke; // TODO-tim change to primary-contrast when merged
+            border-color: $primary-color;
+            background:  $primary-color;
 
-            > .pool-wrapper {
-                > .icon {
-                    color: map-get($primary, 50);
-                }
-                > .info > .details {
-                    color: map-get($primary, 50);
-                }
+            > .icon {
+                color: $whitesmoke;
+            }
+            > .info > .details {
+                color: $whitesmoke;
             }
 
-            > .pool-tags .tag {
-                color: map-get($primary, 700);
-                background-color: map-get($primary, 50);
+            .pool-tags .tag {
+                color: $primary-color;
+                background-color: $whitesmoke;
             }
         }
 
-        > .pool-wrapper {
+        > .icon {
+            color: $primary-color;
+            font-size: 30px;
+            height: 30px;
+            margin: 5px;
             display: flex;
-            align-items: flex-start;
-            width: $tile-width;
+            align-items: center;
 
-            > .icon {
-                color: map-get($primary, 300);
-                font-size: 30px;
-                height: 30px;
-                margin: 5px;
+            svg {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        > .info {
+            padding: 0 5px;
+            text-align: left;
+            overflow: hidden;
+
+            > .title {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                margin-top: 3px;
+                color: $primary-color;
+            }
+
+            > .details {
+                color: $secondary-color;
                 display: flex;
                 align-items: center;
 
-                svg {
-                    width: 40px;
-                    height: 40px;
-                }
-            }
-
-            > .info {
-                padding: 0 5px;
-                text-align: left;
-                overflow: hidden;
-
-                > .title {
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
+                .fa {
+                    margin-right: 3px;
                 }
 
-                > .details {
-                    color: $dusty-grey;
+                .metric {
+                    flex-shrink: 0;
+                    min-width: 10px;
+                    margin-right: 3px;
                 }
-            }
-        }
 
-        > .pool-tags {
-            margin: 0 5px;
-            overflow: hidden;
-
-            .tag {
-                line-height: 11px;
-                margin-right: 3px;
+                bl-tags {
+                    flex-shrink: 1;
+                    min-width: 0;
+                }
             }
         }
     }
 
-    .auto-pool > .pool-wrapper {
-        color: $alto;
+    > .pool-tags {
+        margin: 0 5px;
+        overflow: hidden;
 
-        > .icon {
-            color: $alto;
-            margin-left: 10px;
-            margin-right: 0;
-        }
-
-        > .info {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
+        .tag {
+            line-height: 11px;
+            margin-right: 3px;
         }
     }
 }
