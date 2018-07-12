@@ -27,6 +27,9 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         super(
             injector,
             "JobSchedule",
+            {
+                feature: "schedule.action",
+            },
         );
 
         this._buildCommands();
@@ -50,6 +53,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
 
     private _buildCommands() {
         this.edit = this.simpleCommand({
+            name: "build",
             ...COMMAND_LABEL_ICON.Edit,
             action: (jobSchedule) => this._editJobSchedule(jobSchedule),
             enabled: (jobSchedule) => jobSchedule.state !== JobScheduleState.completed,
@@ -60,12 +64,14 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         });
 
         this.delete = this.simpleCommand({
+            name: "delete",
             ...COMMAND_LABEL_ICON.Delete,
             action: (jobSchedule: JobSchedule) => this.jobScheduleService.delete(jobSchedule.id),
             permission: Permission.Write,
         });
 
         this.terminate = this.simpleCommand({
+            name: "terminate",
             ...COMMAND_LABEL_ICON.Terminate,
             action: (jobSchedule) => this.jobScheduleService.terminate(jobSchedule.id),
             enabled: (jobSchedule) => jobSchedule.state !== JobScheduleState.completed,
@@ -73,6 +79,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         });
 
         this.enable = this.simpleCommand({
+            name: "enable",
             ...COMMAND_LABEL_ICON.Enable,
             action: (jobSchedule: JobSchedule) => this.jobScheduleService.enable(jobSchedule.id),
             enabled: (jobSchedule: JobSchedule) => {
@@ -87,6 +94,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         });
 
         this.disable = this.simpleCommand({
+            name: "disable",
             ...COMMAND_LABEL_ICON.Disable,
             action: (jobSchedule: JobSchedule) => this.jobScheduleService.disable(jobSchedule.id),
             enabled: (jobSchedule: JobSchedule) => jobSchedule.state !== JobScheduleState.disabled,
@@ -95,6 +103,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         });
 
         this.clone = this.simpleCommand({
+            name: "clone",
             ...COMMAND_LABEL_ICON.Clone,
             action: (jobSchedule) => this._cloneJobSchedule(jobSchedule),
             multiple: false,
@@ -104,6 +113,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         });
 
         this.exportAsJSON = this.simpleCommand({
+            name: "exportAsJSON",
             ...COMMAND_LABEL_ICON.ExportAsJSON,
             action: (jobSchedule) => this._exportAsJSON(jobSchedule),
             multiple: false,
@@ -112,6 +122,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         });
 
         this.pin = this.simpleCommand({
+            name: "pin",
             label: (jobSchedule: JobSchedule) => {
                 return this.pinnedEntityService.isFavorite(jobSchedule)
                     ? COMMAND_LABEL_ICON.UnpinFavoriteLabel : COMMAND_LABEL_ICON.PinFavoriteLabel;

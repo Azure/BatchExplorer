@@ -21,7 +21,7 @@ export interface EntityCommandAttributes<TEntity extends ActionableEntity, TOpti
     /**
      * Name is to be used by feature to show buttons. Or to define keyboard shortcuts
      */
-    name?: string;
+    name: string;
     label: ((entity: TEntity) => string) | string;
     icon?: ((entity: TEntity) => string) | string;
     action: (entity: TEntity, option?: TOptions) => Observable<any> | void;

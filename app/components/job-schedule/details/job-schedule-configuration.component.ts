@@ -34,10 +34,8 @@ export class JobScheduleConfigurationComponent implements OnDestroy {
         private workspaceService: WorkspaceService) {
 
         this._sub = this.workspaceService.currentWorkspace.subscribe((ws) => {
-            if (ws) {
-                this.jsonViewEnabled = ws.isFeatureEnabled("schedule.view.configuration.json");
-                this.changeDetector.markForCheck();
-            }
+            this.jsonViewEnabled = ws.isFeatureEnabled("schedule.view.configuration.json");
+            this.changeDetector.markForCheck();
         });
     }
 

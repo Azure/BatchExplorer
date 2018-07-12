@@ -43,14 +43,6 @@ export class Workspace {
             }
         }
 
-        // TODO: debug - remove
-        if (definition) {
-            // console.log(`traversed feature '${requestedFeature}' to end ... definition tree ->`, definition);
-        }
-
-        // if there are any remaining template definition children after we
-        // have got to the end of the requested feature, we can assume this means
-        // that it should be enabled.
-        return definition ? true : false;
+        return definition === false ? false : true;
     }
 }

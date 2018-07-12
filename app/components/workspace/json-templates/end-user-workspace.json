@@ -1,16 +1,14 @@
 {
     "id": "end-user.workspace",
     "displayName": "Basic end-user workspace",
-    "description": "Default end-user workspace that hides a number of admin related features.",
+    "description": "Default end-user workspace that hides a number of advanced features.",
     "features": {
       "pinned": false,
         "job": {
-            "view": {
-                "statistics": false,
-                "tags": false,
-                "configuration": {
-                    "json": false
-                }
+            "statistics": false,
+            "tags": false,
+            "configuration": {
+                "json": false
             },
             "action": {
                 "clone": false,
@@ -18,20 +16,16 @@
                 "pin": false
             }
         },
-        "schedule": {
-            "view": false
-        },
+        "schedule": false,
         "pool": {
-            "view": {
-                "tags": false,
-                "graphs": {
-                    "insights": false,
-                    "nodes": false,
-                    "tasks": false
-                },
-                "configuration": {
-                    "json": false
-                }
+            "tags": false,
+            "graphs": {
+                "insights": false,
+                "nodes": false,
+                "tasks": false
+            },
+            "configuration": {
+                "json": false
             },
             "action": {
                 "clone": false,

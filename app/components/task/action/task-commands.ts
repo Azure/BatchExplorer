@@ -46,18 +46,21 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
 
     private _buildCommands() {
         this.delete = this.simpleCommand({
+            name: "delete",
             ...COMMAND_LABEL_ICON.Delete,
             action: (task: Task) => this._deleteTask(task),
             permission: Permission.Write,
         });
 
         this.terminate = this.simpleCommand({
+            name: "terminate",
             ...COMMAND_LABEL_ICON.Terminate,
             action: (task) => this._terminateTask(task),
             enabled: (task) => task.state !== TaskState.completed,
         });
 
         this.clone = this.simpleCommand({
+            name: "clone",
             ...COMMAND_LABEL_ICON.Clone,
             action: (task) => this._cloneTask(task),
             multiple: false,
@@ -67,6 +70,7 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
         });
 
         this.exportAsJSON = this.simpleCommand({
+            name: "exportAsJSON",
             ...COMMAND_LABEL_ICON.ExportAsJSON,
             action: (task) => this._exportAsJSON(task),
             multiple: false,
