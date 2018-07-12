@@ -1,46 +1,54 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { List } from "immutable";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
+import { SelectModule } from "@batch-flask/ui";
 import { PoolPickerComponent } from "app/components/job/action/add";
 import { Pool } from "app/models";
-import { PoolService, VmSizeService } from "app/services";
+import { PoolOsService, PoolService, VmSizeService } from "app/services";
 import { click } from "test/utils/helpers";
 import { MockListView } from "test/utils/mocks";
 
 @Component({
-    template: `<bl-pool-picker [(ngModel)]="poolInfo"></bl-pool-picker>`,
+    template: `<bl-pool-picker [formControl]="poolInfo"></bl-pool-picker>`,
 })
 class TestComponent {
-    public poolInfo: any = {};
+    public poolInfo = new FormControl({});
 }
-const config = {
+
+const centosVM = {
     imageReference: { publisher: "openlogic", offer: "centos", sku: "7.3", version: "*" },
-    nodeAgentId: "centos.batch",
+    nodeAgentId: "batch.centos",
+};
+
+const ubuntuVM = {
+    imageReference: { publisher: "cannonical", offer: "ubuntu", sku: "16.04", version: "*" },
+    nodeAgentId: "batch.ubuntu",
 };
 
 const pool1 = new Pool({
     id: "pool-1", vmSize: "standard_a2",
-    targetDedicatedNodes: 3, virtualMachineConfiguration: config,
+    targetDedicatedNodes: 3, virtualMachineConfiguration: centosVM,
 });
 const pool2 = new Pool({
     id: "pool-2", vmSize: "standard_a2",
-    targetDedicatedNodes: 1, virtualMachineConfiguration: config,
+    targetDedicatedNodes: 1, virtualMachineConfiguration: centosVM,
 });
 const pool3 = new Pool({
     id: "pool-3", vmSize: "standard_a2",
-    targetDedicatedNodes: 19, virtualMachineConfiguration: config,
+    targetDedicatedNodes: 19, virtualMachineConfiguration: ubuntuVM,
 });
 
-describe("PoolPickerComponent", () => {
+fdescribe("PoolPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
     let poolServiceSpy;
     let vmSizeServiceSpy;
+    let poolOsServiceSpy;
 
     beforeEach(() => {
         poolServiceSpy = {
@@ -51,13 +59,19 @@ describe("PoolPickerComponent", () => {
         vmSizeServiceSpy = {
             sizes: Observable.of(List([])),
         };
+        poolOsServiceSpy = {
+            offers: new BehaviorSubject({
+                allOffers: [],
+            }),
+        };
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule],
+            imports: [FormsModule, ReactiveFormsModule, SelectModule],
             declarations: [PoolPickerComponent, TestComponent],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
                 { provide: PoolService, useValue: poolServiceSpy },
                 { provide: VmSizeService, useValue: vmSizeServiceSpy },
+                { provide: PoolOsService, useValue: poolOsServiceSpy },
             ],
         });
         fixture = TestBed.createComponent(TestComponent);
@@ -82,18 +96,18 @@ describe("PoolPickerComponent", () => {
         expect(pools.length).toBe(3);
         click(pools[1]);
         fixture.detectChanges();
-        expect(testComponent.poolInfo).toEqual({ poolId: "pool-2" });
+        expect(testComponent.poolInfo.value).toEqual({ poolId: "pool-2" });
         expect(pools[1].classes["active"]).toBe(true);
 
     });
 
-    it("update the active pool from the ngModel", fakeAsync(() => {
-        testComponent.poolInfo = { poolId: "pool-3" };
+    it("update the active pool from the parent", () => {
+        testComponent.poolInfo.setValue({ poolId: "pool-3" });
         fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+        // await fixture.whenStable();
+        // fixture.detectChanges();
         const pools = de.queryAll(By.css(".pool-list .pool"));
         expect(pools.length).toBe(3);
         expect(pools[2].classes["active"]).toBe(true);
-    }));
+    });
 });

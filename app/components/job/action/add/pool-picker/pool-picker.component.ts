@@ -70,6 +70,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
         }));
 
         this._subs.push(this.poolsData.items.subscribe((pools) => {
+            console.log("GOt pools", pools.size);
             this._pools = pools;
             this._updateOffers();
             this._updateDisplayedPools();
