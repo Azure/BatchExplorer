@@ -19,24 +19,7 @@ python:
   - "3.6"
 
 matrix:
-  fast_finish: true
-  allow_failures:
-    os: osx # This allows not to wait for the osx build to be scheduled
-
   include:
-    - language: generic
-      os: osx
-      before_install:
-        - brew update
-        - brew upgrade python
-        - brew install python@2
-        - python --version
-        - python3 --version
-        - which python
-        - npm config set python python2.7
-        - nvm install 9.6.1
-        - nvm use 9.6.1
-
     - language: node_js
       os: linux
       services: docker
@@ -53,10 +36,10 @@ matrix:
         - sleep 3
 
 install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16; fi
+  - /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16
   - npm install -g codecov
   - npm install -g yarn
-  - yarn --ignore-engines install
+  - yarn install
   - python3 --version
   - pip3 install -r python/requirements.txt
 
@@ -68,7 +51,6 @@ branches:
   only:
   - master
   - stable
-  - fix/publish
 
 cache:
   # yarn: true
