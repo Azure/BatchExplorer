@@ -28,18 +28,20 @@ import "./node-connect.scss";
 })
 export class NodeConnectComponent implements OnInit {
     public formVisible: boolean = false;
-    public usingSSH = false;
     public error: ServerError = null;
     public tooltip: string = "";
     public loading: boolean = false;
     public credentials: AddNodeUserAttributes;
     public publicKeyFile: string;
 
+    // NOTE: using linux does not necessarily mean using SSH! (user can still use password)
+    public linux = false;
+    public usingSSHKeys = false;
+
     /**
      * Base content for the rdp file(IP Address).
      * This is either downloaded from the api on CloudService nodes or generated from the ip/port on VMs nodes
      */
-    public rdpContent: string;
     public connectionSettings: NodeConnectionSettings;
     private _pool: Pool;
     private _node: Node;
@@ -48,7 +50,8 @@ export class NodeConnectComponent implements OnInit {
     public set pool(pool: Pool) {
         this._pool = pool;
         if (pool) {
-            this.usingSSH = PoolUtils.isLinux(this.pool);
+            this.linux = PoolUtils.isLinux(this.pool);
+            this.usingSSHKeys = this.linux; // by default, use ssh on linux
             this._loadConnectionData();
         }
     }
@@ -96,7 +99,7 @@ export class NodeConnectComponent implements OnInit {
         });
 
         // set the tooltip for the disabled connect button: ssh-based for linux, password for windows
-        this.tooltip = this.usingSSH ? "No SSH Keys Found" : "Invalid Password";
+        this.tooltip = this.usingSSHKeys ? "No SSH Keys Found" : "Invalid Password";
     }
 
     @autobind()
@@ -108,13 +111,26 @@ export class NodeConnectComponent implements OnInit {
             credentials.expiryTime = moment().add(moment.duration({days: 1})).toDate();
         }
 
-        if (this.usingSSH) {
+        // generate a password if the user didn't provide one
+        if (!credentials.password) {
+            credentials.password = SecureUtils.generateWindowsPassword();
+        }
+
+        if (this.linux) {
             // we are going to use ssh keys, so we don't need a password
-            delete credentials.password;
+            if (this.usingSSHKeys) {
+                delete credentials.password;
+            } else {
+                delete credentials.sshPublicKey;
+            }
 
             const pidObs = this._initSSH(credentials);
             pidObs.subscribe({
                 next: (pid) => {
+                    // if using password, save it to clipboard
+                    if (!this.usingSSHKeys) {
+                        clipboard.writeText(credentials.password);
+                    }
                     this.loading = false;
                     this.error = null;
                 },
@@ -128,11 +144,6 @@ export class NodeConnectComponent implements OnInit {
         } else {
             // for windows, we don't need the public key because we cannot ssh
             delete credentials.sshPublicKey;
-
-            // generate a password if the user didn't provide one
-            if (!credentials.password) {
-                credentials.password = SecureUtils.generateWindowsPassword();
-            }
 
             const rdpObs = this._initRDP(credentials);
             rdpObs.subscribe({
@@ -162,6 +173,15 @@ export class NodeConnectComponent implements OnInit {
     public storeCredentialsFromForm(credentials: AddNodeUserAttributes) {
         // update the main template
         this.credentials = {...credentials};
+
+        // if the user entered a password in the form, use it to connect
+        if (credentials.password) {
+            this.usingSSHKeys = false;
+        } else if (credentials.sshPublicKey) {
+            this.usingSSHKeys = true;
+        }
+
+        this.changeDetector.markForCheck();
 
         // hide the node user credentials form
         this.formVisible = false;

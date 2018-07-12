@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+} from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/ui";
 import { ConnectionType, Node, NodeConnectionSettings } from "app/models";
@@ -6,31 +14,38 @@ import { AddNodeUserAttributes, NodeConnectService, SettingsService } from "app/
 
 import "./node-property-display.scss";
 
+const AUTH_STRATEGIES = {
+    Keys: "Keys",
+    Password: "Password",
+};
+
 @Component({
     selector: "bl-node-property-display",
     templateUrl: "node-property-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NodePropertyDisplayComponent implements OnInit {
-
     // inherited input properties
     @Input() public connectionSettings: NodeConnectionSettings;
     @Input() public node: Node;
     @Input() public credentials: AddNodeUserAttributes;
     @Input() public publicKeyFile: string;
+    @Input() public usingSSHKeys: boolean;
     @Output() public credentialsChange = new EventEmitter<AddNodeUserAttributes>();
 
-    // other instance
-    public usingSSH;
+    public isLinux: boolean;
+    public otherStrategy: string;
 
     constructor(
         private nodeConnectService: NodeConnectService,
         private shell: ElectronShell,
         private settingsService: SettingsService,
+        private changeDetector: ChangeDetectorRef,
     ) {}
 
     public ngOnInit() {
-        this.usingSSH = this.connectionSettings.type === ConnectionType.SSH;
+        this.isLinux = this.connectionSettings.type === ConnectionType.SSH;
+        this.otherStrategy = this.isLinux ? AUTH_STRATEGIES.Password : AUTH_STRATEGIES.Keys;
     }
 
     public get sshCommand() {
@@ -65,5 +80,16 @@ export class NodePropertyDisplayComponent implements OnInit {
             },
         });
         return obs;
+    }
+
+    @autobind()
+    public switchAuthStrategy() {
+        this.usingSSHKeys = !this.usingSSHKeys;
+        if (this.otherStrategy === AUTH_STRATEGIES.Keys) {
+            this.otherStrategy = AUTH_STRATEGIES.Password;
+         } else {
+            this.otherStrategy = AUTH_STRATEGIES.Keys;
+         }
+        this.changeDetector.markForCheck();
     }
 }
