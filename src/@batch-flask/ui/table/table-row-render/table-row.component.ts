@@ -62,6 +62,7 @@ export class TableRowRenderComponent implements OnInit, OnDestroy {
     public get id() {
         return this.item.id;
     }
+
     public trackColumn(index: number, column: TableColumnRef) {
         return column.name;
     }
