@@ -313,8 +313,8 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     public openContextMenu(target?: any) {
         if (!this.commands) { return; }
-
         let selection = this.selection;
+        console.log("Tag", target, this.selection);
 
         // If we right clicked on an non selected item it will just make this the context menu selection
         if (target && !selection.has(target.id)) {

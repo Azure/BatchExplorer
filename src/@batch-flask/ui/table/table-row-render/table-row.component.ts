@@ -59,6 +59,9 @@ export class TableRowRenderComponent implements OnInit, OnDestroy {
         this.table.openContextMenu(this);
     }
 
+    public get id() {
+        return this.item.id;
+    }
     public trackColumn(index: number, column: TableColumnRef) {
         return column.name;
     }
