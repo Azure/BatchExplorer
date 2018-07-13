@@ -1,5 +1,4 @@
 import { Injectable, Injector } from "@angular/core";
-import { MatDialog, MatDialogConfig } from "@angular/material";
 
 import {
     COMMAND_LABEL_ICON, ElectronRemote, EntityCommand,
@@ -8,7 +7,7 @@ import {
 import { Task, TaskState } from "app/models";
 import { FileSystemService, TaskService } from "app/services";
 import { Observable } from "rxjs";
-import { TaskCreateBasicDialogComponent, TerminateTaskDialogComponent } from "../action";
+import { TaskCreateBasicDialogComponent } from "../action";
 
 export interface TaskParams {
     jobId: string;
@@ -23,7 +22,6 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
 
     constructor(
         injector: Injector,
-        private dialog: MatDialog,
         private sidebarManager: SidebarManager,
         private fs: FileSystemService,
         private remote: ElectronRemote,
@@ -53,7 +51,7 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
 
         this.terminate = this.simpleCommand({
             ...COMMAND_LABEL_ICON.Terminate,
-            action: (task) => this._terminateTask(task),
+            action: (task) => this.taskService.terminate(this.params.jobId, task.id),
             enabled: (task) => task.state !== TaskState.completed,
         });
 
@@ -80,16 +78,6 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
             this.clone,
             this.exportAsJSON,
         ];
-    }
-
-    private _terminateTask(task: Task) {
-        const config = new MatDialogConfig();
-        const dialogRef = this.dialog.open(TerminateTaskDialogComponent, config);
-        dialogRef.componentInstance.jobId = this.params.jobId;
-        dialogRef.componentInstance.taskId = task.id;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.get(task.id);
-        });
     }
 
     private _deleteTask(task: Task) {

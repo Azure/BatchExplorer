@@ -1,9 +1,10 @@
 
 import { Inject, Injectable, forwardRef } from "@angular/core";
 import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
-import { fetch, log } from "@batch-flask/utils";
+import { log } from "@batch-flask/utils";
+import { BlIpcMain } from "client/core";
 import { BatchLabsApplication } from "client/core/batchlabs-application";
-import { BlIpcMain } from "client/core/bl-ipc-main";
+import { fetch } from "client/core/fetch";
 import { LocalDataStore } from "client/core/local-data-store";
 import { Constants } from "common";
 import { IpcEvent } from "common/constants";
@@ -92,8 +93,8 @@ export class AADService {
             this._tenantsIds.next(tenantIds);
             this._refreshAllAccessTokens();
         } catch (error) {
-            this._tenantsIds.error(ServerError.fromARM(error));
             log.error("Error retrieving tenants", error);
+            this._tenantsIds.error(ServerError.fromARM(error));
         }
     }
 
