@@ -55,6 +55,10 @@ bl-pool-picker {
                 color: $whitesmoke;
             }
 
+            > .info > .title {
+                color: $whitesmoke;
+            }
+
             .pool-tags .tag {
                 color: $primary-color;
                 background-color: $whitesmoke;
@@ -82,6 +86,7 @@ bl-pool-picker {
             overflow: hidden;
 
             > .title {
+                color: $primary-text;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
