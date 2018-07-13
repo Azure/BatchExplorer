@@ -14,6 +14,7 @@ phases:
         set -e
         python --version
         npm install -g codecov
+        npm install -g npm
         npm ci
         pip3 install -r python/requirements.txt
       displayName: Install dependencies
@@ -59,6 +60,7 @@ phases:
         set -e
         node --version
         npm config list
+        npm install -g npm
         npm ci
         pip install -r python/requirements.txt
       displayName: Install dependencies
@@ -82,6 +84,7 @@ phases:
           versionSpec: '3.6.x'
       - powershell: |
           node --version
+          npm install -g npm
           npm ci
           pip install -r python/requirements.txt
         displayName: Install dependencies
