@@ -1,6 +1,6 @@
 <div class="pool-filters" [formGroup]="filters">
     <bl-select placeholder="OS" formControlName="offer">
-        <bl-option [value]="null" label="No Filter"></bl-option>
+        <bl-option [value]="null" label="No filter"></bl-option>
         <bl-option [value]="offer.name" [label]="offer.label" *ngFor="let offer of offers"></bl-option>
     </bl-select>
     <input blInput class="search-input" placeholder="Filter" formControlName="id" />

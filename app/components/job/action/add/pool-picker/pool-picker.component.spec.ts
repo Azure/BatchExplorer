@@ -5,11 +5,11 @@ import { By } from "@angular/platform-browser";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { SelectModule } from "@batch-flask/ui";
+import { ButtonsModule, SelectComponent, SelectModule } from "@batch-flask/ui";
 import { PoolPickerComponent } from "app/components/job/action/add";
-import { Pool } from "app/models";
+import { CloudServiceOsFamily, Pool } from "app/models";
 import { PoolOsService, PoolService, VmSizeService } from "app/services";
-import { click } from "test/utils/helpers";
+import { click, updateInput } from "test/utils/helpers";
 import { MockListView } from "test/utils/mocks";
 
 @Component({
@@ -29,20 +29,36 @@ const ubuntuVM = {
     nodeAgentId: "batch.ubuntu",
 };
 
-const pool1 = new Pool({
-    id: "pool-1", vmSize: "standard_a2",
+const windowsVM = {
+    imageReference: { publisher: "cannonical", offer: "windows", sku: "2016", version: "*" },
+    nodeAgentId: "batch.windows",
+};
+
+const centosPool1 = new Pool({
+    id: "centos-pool-1", vmSize: "standard_a2",
     targetDedicatedNodes: 3, virtualMachineConfiguration: centosVM,
 });
-const pool2 = new Pool({
-    id: "pool-2", vmSize: "standard_a2",
+const centosPool2 = new Pool({
+    id: "centos-pool-2", vmSize: "standard_a2",
     targetDedicatedNodes: 1, virtualMachineConfiguration: centosVM,
 });
-const pool3 = new Pool({
-    id: "pool-3", vmSize: "standard_a2",
+const ubuntuPool = new Pool({
+    id: "ubuntu-pool-1", vmSize: "standard_a2",
     targetDedicatedNodes: 19, virtualMachineConfiguration: ubuntuVM,
 });
+const windowsPool = new Pool({
+    id: "windows-pool-1", vmSize: "standard_a2",
+    targetDedicatedNodes: 43, virtualMachineConfiguration: windowsVM,
+});
+const cloudServicePool = new Pool({
+    id: "windows-cloudservice-pool-1", vmSize: "standard_a2",
+    targetDedicatedNodes: 12,
+    cloudServiceConfiguration: {
+        osFamily: CloudServiceOsFamily.windowsServer2016,
+    },
+});
 
-fdescribe("PoolPickerComponent", () => {
+describe("PoolPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
@@ -53,7 +69,7 @@ fdescribe("PoolPickerComponent", () => {
     beforeEach(() => {
         poolServiceSpy = {
             listView: () => new MockListView(Pool, {
-                items: [pool1, pool2, pool3],
+                items: [centosPool1, centosPool2, ubuntuPool, windowsPool, cloudServicePool],
             }),
         };
         vmSizeServiceSpy = {
@@ -61,11 +77,15 @@ fdescribe("PoolPickerComponent", () => {
         };
         poolOsServiceSpy = {
             offers: new BehaviorSubject({
-                allOffers: [],
+                allOffers: [
+                    {name: "centos"},
+                    {name: "ubuntu"},
+                    {name: "windows"},
+                ],
             }),
         };
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule, SelectModule],
+            imports: [FormsModule, ReactiveFormsModule, SelectModule, ButtonsModule],
             declarations: [PoolPickerComponent, TestComponent],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
@@ -82,32 +102,84 @@ fdescribe("PoolPickerComponent", () => {
 
     it("should list all the pools", () => {
         const pools = de.queryAll(By.css(".pool-list .pool"));
-        expect(pools.length).toBe(3);
-        expect(pools[0].query(By.css(".title")).nativeElement.textContent).toContain("pool-1");
+        expect(pools.length).toBe(5);
+        expect(pools[0].query(By.css(".title")).nativeElement.textContent).toContain("centos-pool-1");
         expect(pools[0].query(By.css(".details")).nativeElement.textContent).toContain("3");
-        expect(pools[1].query(By.css(".title")).nativeElement.textContent).toContain("pool-2");
+        expect(pools[1].query(By.css(".title")).nativeElement.textContent).toContain("centos-pool-2");
         expect(pools[1].query(By.css(".details")).nativeElement.textContent).toContain("1");
-        expect(pools[2].query(By.css(".title")).nativeElement.textContent).toContain("pool-3");
+        expect(pools[2].query(By.css(".title")).nativeElement.textContent).toContain("ubuntu-pool-1");
         expect(pools[2].query(By.css(".details")).nativeElement.textContent).toContain("19");
+        expect(pools[3].query(By.css(".title")).nativeElement.textContent).toContain("windows-pool-1");
+        expect(pools[3].query(By.css(".details")).nativeElement.textContent).toContain("43");
+        expect(pools[4].query(By.css(".title")).nativeElement.textContent).toContain("windows-cloudservice-pool-1");
+        expect(pools[4].query(By.css(".details")).nativeElement.textContent).toContain("12");
     });
 
     it("should select the pool when clicking on it", () => {
         const pools = de.queryAll(By.css(".pool-list .pool"));
-        expect(pools.length).toBe(3);
+        expect(pools.length).toBe(5);
         click(pools[1]);
         fixture.detectChanges();
-        expect(testComponent.poolInfo.value).toEqual({ poolId: "pool-2" });
+        expect(testComponent.poolInfo.value).toEqual({ poolId: "centos-pool-2" });
         expect(pools[1].classes["active"]).toBe(true);
 
     });
 
     it("update the active pool from the parent", () => {
-        testComponent.poolInfo.setValue({ poolId: "pool-3" });
+        testComponent.poolInfo.setValue({ poolId: "ubuntu-pool-1" });
         fixture.detectChanges();
-        // await fixture.whenStable();
-        // fixture.detectChanges();
         const pools = de.queryAll(By.css(".pool-list .pool"));
-        expect(pools.length).toBe(3);
+        expect(pools.length).toBe(5);
         expect(pools[2].classes["active"]).toBe(true);
+    });
+
+    it("select is listed with all offers", () => {
+        const select: SelectComponent = de.query(By.css("bl-select")).componentInstance;
+        const options = select.options.toArray();
+        expect(options.length).toBe(5);
+        expect(options[0].label).toEqual("No filter");
+        expect(options[0].value).toEqual(null);
+        expect(options[1].label).toEqual("centos (2)");
+        expect(options[1].value).toEqual("centos");
+        expect(options[2].label).toEqual("ubuntu (1)");
+        expect(options[2].value).toEqual("ubuntu");
+        expect(options[3].label).toEqual("windows (1)");
+        expect(options[3].value).toEqual("windows");
+        expect(options[4].label).toEqual("Windows (Cloud service) (1)");
+        expect(options[4].value).toEqual("cloudservice-windows");
+    });
+
+    it("filter by id", () => {
+        const inputEl = de.query(By.css("input.search-input"));
+        updateInput(inputEl, "entos");
+        fixture.detectChanges();
+
+        const pools = de.queryAll(By.css(".pool-list .pool"));
+        expect(pools.length).toBe(2);
+
+        expect(pools[0].nativeElement.textContent).toContain("centos-pool-1");
+        expect(pools[1].nativeElement.textContent).toContain("centos-pool-2");
+    });
+
+    it("filter by os", () => {
+        const select: SelectComponent = de.query(By.css("bl-select")).componentInstance;
+        select.selectOption(select.options.toArray()[2]); // Ubuntu option
+        fixture.detectChanges();
+
+        const pools = de.queryAll(By.css(".pool-list .pool"));
+        expect(pools.length).toBe(1);
+
+        expect(pools[0].nativeElement.textContent).toContain("ubuntu-pool-1");
+    });
+
+    it("filter by os (cloudservice)", () => {
+        const select: SelectComponent = de.query(By.css("bl-select")).componentInstance;
+        select.selectOption(select.options.toArray()[4]); // Cloud service
+        fixture.detectChanges();
+
+        const pools = de.queryAll(By.css(".pool-list .pool"));
+        expect(pools.length).toBe(1);
+
+        expect(pools[0].nativeElement.textContent).toContain("windows-cloudservice-pool-1");
     });
 });
