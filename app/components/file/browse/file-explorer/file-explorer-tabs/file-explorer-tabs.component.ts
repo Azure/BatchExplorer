@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnChanges, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input, OnChanges, OnDestroy } from "@angular/core";
 import { MouseButton } from "@batch-flask/core";
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FileExplorerWorkspace, FileSource, OpenedFile } from "app/components/file/browse/file-explorer";
@@ -18,6 +18,7 @@ interface Tab {
 @Component({
     selector: "bl-file-explorer-tabs",
     templateUrl: "file-explorer-tabs.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
     @Input() public workspace: FileExplorerWorkspace;
@@ -28,7 +29,7 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
     private _workspaceSubs: Subscription[] = [];
     private _lastFolderExplored: any = null;
 
-    constructor(private contextMenuService: ContextMenuService) { }
+    constructor(private changeDetector: ChangeDetectorRef, private contextMenuService: ContextMenuService) { }
 
     public ngOnChanges(changes) {
         if (changes.workspace) {
@@ -104,7 +105,7 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
         ]));
     }
 
-    public trackByFn(index, tab) {
+    public trackByFn(index, tab: Tab) {
         return tab.filename;
     }
 
@@ -138,5 +139,6 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
                 source: file.source,
             };
         });
+        this.changeDetector.markForCheck();
     }
 }

@@ -33,6 +33,11 @@ export interface ThemeDefinition {
     "main-background": string;
 
     /**
+     * Secondary Background
+     */
+    "secondary-background": string;
+
+    /**
      * Background for any card on top the main background
      */
     "card-background": string;

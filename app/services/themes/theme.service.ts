@@ -33,6 +33,10 @@ export class ThemeService implements OnDestroy {
         private settingsService: SettingsService,
         private zone: NgZone,
         batchLabs: BatchLabsService) {
+
+        (window as any).setTheme = (val) => {
+            this.setTheme(val);
+        };
         this.currentTheme = this._currentTheme.filter(x => x !== null);
         this._subs.push(this.currentTheme.subscribe((theme) => {
             this._applyTheme(theme);

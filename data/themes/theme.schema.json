@@ -22,6 +22,7 @@
     "success": {"$ref": "#/definitions/color"},
     "main-background": {"$ref": "#/definitions/color"},
     "card-background": {"$ref": "#/definitions/color"},
+    "secondary-background": {"$ref": "#/definitions/color"},
     "outline": {"$ref": "#/definitions/color"},
     "text": {
       "type": "object",
