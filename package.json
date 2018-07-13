@@ -10,7 +10,7 @@
     "name": "Microsoft Corporation",
     "email": "tiguerin@microsoft.com"
   },
-  "version": "0.16.1",
+  "version": "0.16.2",
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json",
@@ -158,7 +158,6 @@
     "moment-duration-format": "^2.0.1",
     "monaco-editor": "~0.13.1",
     "mousetrap": "^1.6.0",
-    "node-fetch": "~2.1.2",
     "node-forge": "~0.7.5",
     "reflect-metadata": "^0.1.12",
     "rxjs": "~6.2.1",

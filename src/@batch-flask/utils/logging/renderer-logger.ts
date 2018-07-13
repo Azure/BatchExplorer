@@ -36,7 +36,7 @@ export class RendererLogger implements Logger {
         this._logger.info(message, ...params);
     }
 
-    public warn(message: string, params?: any) {
+    public warn(message: string, ...params: any[]) {
         console.warn(message, params);
         this._logger.warn(message, ...params);
     }
