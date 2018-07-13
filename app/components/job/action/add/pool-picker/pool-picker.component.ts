@@ -132,6 +132,10 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
         return pool.id;
     }
 
+    public trackOffer(_, offer: Offer) {
+        return offer.name;
+    }
+
     public resetFilters() {
         this.filters.reset();
     }

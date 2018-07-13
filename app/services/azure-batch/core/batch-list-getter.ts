@@ -8,8 +8,8 @@ import { ContinuationToken, ListOptions } from "app/services/core/data/list-opti
 import { AzureBatchHttpService } from "./batch-http.service";
 
 export interface BatchListResponse<TEntity> {
-    value: TEntity[],
-    "odata.nextLink": string
+    value: TEntity[];
+    "odata.nextLink": string;
 }
 
 export interface BatchListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
