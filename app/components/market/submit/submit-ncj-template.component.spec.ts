@@ -27,6 +27,7 @@ import {
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { Constants } from "app/utils";
 
+import { SelectModule } from "@batch-flask/ui";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";
@@ -194,7 +195,14 @@ describe("SubmitNcjTemplateComponent", () => {
             }),
         };
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, ReactiveFormsModule, FormsModule, MaterialModule, NoopAnimationsModule],
+            imports: [
+                RouterTestingModule,
+                ReactiveFormsModule,
+                FormsModule,
+                MaterialModule,
+                NoopAnimationsModule,
+                SelectModule,
+            ],
             declarations: [NoItemMockComponent, SubmitNcjTemplateComponent, FileGroupSasComponent,
                 TestComponent, FileGroupPickerComponent, CloudFilePickerComponent, ParameterInputComponent,
                 PoolPickerComponent],
