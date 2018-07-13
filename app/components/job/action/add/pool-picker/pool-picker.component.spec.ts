@@ -1,5 +1,5 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
-import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { List } from "immutable";
@@ -78,9 +78,9 @@ describe("PoolPickerComponent", () => {
         poolOsServiceSpy = {
             offers: new BehaviorSubject({
                 allOffers: [
-                    {name: "centos"},
-                    {name: "ubuntu"},
-                    {name: "windows"},
+                    { name: "centos" },
+                    { name: "ubuntu" },
+                    { name: "windows" },
                 ],
             }),
         };
