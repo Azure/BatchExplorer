@@ -131,6 +131,7 @@ export class Theme extends ThemeElement<ThemeDefinition> {
     @CssColor() public button: ButtonColors;
     @CssColor() public monitorChart: MonitorChartColor;
     @CssColor() public input: InputColor;
+    @CssColor() public editor: string;
 }
 
 function multiply(rgb1, rgb2) {

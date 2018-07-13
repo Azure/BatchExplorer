@@ -10,7 +10,6 @@ bl-file-details-view {
 
         > .details {
             height: calc(100% - #{$file-header-height + $separator-height});
-            // overflow: auto;
 
             > bl-file-content {
                 height: 100%;
@@ -23,7 +22,7 @@ bl-file-details-view {
         display: flex;
         height: $file-header-height;
         align-items: stretch;
-        color: $mineshaft-grey;
+        color: $primary-text;
         border-bottom: 1px solid $border-color;
         margin-bottom: $separator-height;
         > * {
@@ -39,17 +38,16 @@ bl-file-details-view {
             vertical-align: middle;
 
             &:hover {
-                background: $alto;
+                background: $selection-color;
             }
             .fa {
-                // color: $minshaft-grey;
-                color: map-get($primary, 400);
+                color: $primary-color;
             }
         }
 
         > .content-length, > .last-modified {
             > .label {
-                color: map-get($primary, 400);
+                color: $primary-color;
             }
 
             > .value {

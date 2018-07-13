@@ -10,6 +10,7 @@
   "selection": "#d5d5d5",
   "outline": "#528bff",
   "border": "#d5d5d5",
+  "editor": "vs",
   "text": {
     "primary": "#333333",
     "secondary": "#757575"

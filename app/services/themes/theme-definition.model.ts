@@ -54,6 +54,8 @@ export interface ThemeDefinition {
 
     outline: string;
 
+    editor: string;
+
     /**
      * Generic text color,
      */
