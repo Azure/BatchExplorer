@@ -22,7 +22,7 @@ install:
 
   - ps: Install-Product node 8.9.1 x64
   - npm install -g npm -s
-  - npm install
+  - npm ci
   - pip install -r python/requirements.txt
 
 build_script:
