@@ -92,7 +92,7 @@ bl-autoscale-formula-picker {
         border-bottom: 1px solid $border-color;
         border-right: 1px solid $border-color;
         border-left: 1px solid $border-color;
-        color: map-get($danger, 500);
+        color: $danger-color;
         padding: 5px;
     }
 
