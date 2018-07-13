@@ -23,6 +23,7 @@
     <bl-table *ngIf="!quicklist"
         [data]="tasks"
         [status]="status"
+        [commands]="commands"
         [(activeItem)]="activeItem"
         [(selection)]="selection"
         (scrollBottom)="scrollBottom.emit()">

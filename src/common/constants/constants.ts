@@ -180,7 +180,6 @@ export const IpcEvent = {
     },
     launchApplication: "LAUNCH_APPLICATION",
     logoutAndLogin: "LOGOUT_AND_LOGIN",
-    fetch: "FETCH",
 };
 
 export const Application = {

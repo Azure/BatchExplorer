@@ -1,8 +1,7 @@
-import { RequestInit } from "node-fetch";
-
 import { AccessToken } from "@batch-flask/core";
-import { fetch, log } from "@batch-flask/utils";
+import { log } from "@batch-flask/utils";
 import { BatchLabsApplication } from "client/core//batchlabs-application";
+import { RequestInit, fetch } from "client/core/fetch";
 import { AADConfig } from "../aad-config";
 import { objectToParams } from "../adal-constants";
 
