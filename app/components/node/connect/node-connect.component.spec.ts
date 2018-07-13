@@ -2,24 +2,25 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { ClipboardService, ElectronShell } from "@batch-flask/ui";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/property-list";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
-import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
+import { Node, NodeConnectionSettings, Pool } from "app/models";
 import {
     BatchLabsService,
     FileSystemService,
     NodeService,
     NodeUserService,
+    PoolOsService,
     SSHKeyService,
     SettingsService,
 } from "app/services";
+import { List } from "immutable";
 import * as Fixtures from "test/fixture";
-import { MockListView } from "test/utils/mocks";
 
 @Component({
     template: `<bl-node-connect [pool]="pool" [node]="node"></bl-node-connect>`,
@@ -40,14 +41,12 @@ describe("NodeConnectComponent", () => {
     let settingsServiceSpy;
     let batchLabsServiceSpy;
     let sshKeyServiceSpy;
+    let poolOsServiceSpy;
 
     beforeEach(() => {
 
         nodeServiceSpy = {
             getRemoteDesktop: jasmine.createSpy("").and.returnValue(Observable.of({ content: "banana" })),
-            listNodeAgentSkus: jasmine.createSpy("").and.returnValue(new MockListView(NodeAgentSku, {
-                items: [],
-            })),
             getRemoteLoginSettings: jasmine.createSpy("").and.returnValue(Observable.of(
                 new NodeConnectionSettings({remoteLoginIPAddress: "123.345.654.399", remoteLoginPort: 22})),
             ),
@@ -76,6 +75,10 @@ describe("NodeConnectComponent", () => {
             getLocalPublicKey: jasmine.createSpy("").and.returnValue(Observable.of("bar")),
         };
 
+        poolOsServiceSpy = {
+            nodeAgentSkus: new BehaviorSubject(List([])),
+        };
+
         TestBed.configureTestingModule({
             declarations: [
                 NodeConnectComponent, ButtonComponent,
@@ -93,6 +96,7 @@ describe("NodeConnectComponent", () => {
                 { provide: BatchLabsService, useValue: batchLabsServiceSpy },
                 { provide: SSHKeyService, useValue: sshKeyServiceSpy },
                 { provide: ClipboardService, useValue: {} },
+                { provide: PoolOsService, useValue: poolOsServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
