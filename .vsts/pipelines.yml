@@ -61,6 +61,7 @@ phases:
         node --version
         npm config list
         npm install -g npm
+        npm --version
         npm ci
         pip install -r python/requirements.txt
       displayName: Install dependencies
