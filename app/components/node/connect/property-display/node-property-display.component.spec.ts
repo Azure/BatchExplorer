@@ -1,13 +1,14 @@
-import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
+import { ChangeDetectorRef, Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { ClipboardService, ElectronShell } from "@batch-flask/ui";
 import { Observable } from "rxjs";
 
-import { ButtonComponent } from "@batch-flask/ui/buttons";
+import { ClickableComponent } from "@batch-flask/ui/buttons";
 import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/property-list";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
-import { Node } from "app/models";
+import { ConnectionType, Node, NodeConnectionSettings } from "app/models";
+import { AddNodeUserAttributes, SettingsService } from "app/services";
 import {
     NodeConnectService,
 } from "app/services/node-connect";
@@ -17,16 +18,19 @@ import { NodePropertyDisplayComponent } from ".";
 @Component({
     template: `<bl-node-property-display
         [connectionSettings]="connectionSettings"
-        [rdpContent]="rdpContent"
         [node]="node"
-        [linux]="linux"
+        [publicKeyFile]="publicKeyFile"
+        [(usingSSHKeys)]="usingSSHKeys"
+        [credentials]="credentials"
+        (credentialsChange)="updateCredentials($event)"
     ></bl-node-property-display>`,
 })
 class TestComponent {
-    public connectionSettings: any;
-    public rdpContent: string;
+    public connectionSettings: NodeConnectionSettings;
     public node: Node;
-    public linux: boolean;
+    public publicKeyFile: string;
+    public usingSSHKeys: boolean;
+    public credentials: AddNodeUserAttributes;
 }
 
 describe("NodePropertyDisplay", () => {
@@ -37,6 +41,7 @@ describe("NodePropertyDisplay", () => {
 
     let electronShellSpy;
     let nodeConnectServiceSpy;
+    let settingsServiceSpy;
 
     beforeEach(() => {
         electronShellSpy = {
@@ -45,22 +50,27 @@ describe("NodePropertyDisplay", () => {
         };
 
         nodeConnectServiceSpy = {
-            username: "foo",
-            password: "bar",
-            publicKey: Observable.of("baz"),
             saveRdpFile: jasmine.createSpy("").and.returnValue(Observable.of("path/to/file")),
+        };
+
+        settingsServiceSpy = {
+            settings: {
+                "node-connect.default-username": "foo",
+            },
         };
 
         TestBed.configureTestingModule({
             declarations: [
-                NodePropertyDisplayComponent, ButtonComponent,
-                TextPropertyComponent, PropertyGroupComponent, TestComponent,
+                NodePropertyDisplayComponent, TextPropertyComponent,
+                PropertyGroupComponent, ClickableComponent, TestComponent,
             ],
             providers: [
                 { provide: SidebarRef, useValue: null },
                 { provide: ElectronShell, useValue: electronShellSpy },
                 { provide: NodeConnectService, useValue: nodeConnectServiceSpy },
+                ChangeDetectorRef,
                 { provide: ClipboardService, useValue: {} },
+                { provide: SettingsService, useValue: settingsServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -68,19 +78,32 @@ describe("NodePropertyDisplay", () => {
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-node-property-display"));
         component = de.componentInstance;
+
+        // test component defaults
+        testComponent.credentials = {
+            name: "foo",
+            password: "bar",
+            sshPublicKey: "baz",
+        };
         testComponent.connectionSettings = {
             ip: "0.0.0.0",
-            port: "50000",
-        };
+            port: 50000,
+            type: ConnectionType.SSH,
+        } as NodeConnectionSettings;
+        testComponent.usingSSHKeys = true;
         testComponent.node = Fixtures.node.create();
-        testComponent.rdpContent = "full address:s:0.0.0.0\nusername:s:.\\foo\nprompt for credentials:i:1";
-        testComponent.linux = true;
+        testComponent.publicKeyFile = "beep";
         fixture.detectChanges();
     });
 
     describe("when pool is iaas linux", () => {
         beforeEach(() => {
-            testComponent.linux = true;
+            testComponent.connectionSettings = {
+                ip: "0.0.0.0",
+                port: 50000,
+                type: ConnectionType.SSH,
+            } as NodeConnectionSettings;
+            testComponent.usingSSHKeys = true;
             fixture.detectChanges();
         });
 
@@ -92,7 +115,12 @@ describe("NodePropertyDisplay", () => {
 
     describe("when pool is iaas windows", () => {
         beforeEach(() => {
-            testComponent.linux = false;
+            testComponent.connectionSettings = {
+                ip: "0.0.0.0",
+                port: 50000,
+                type: ConnectionType.RDP,
+            } as NodeConnectionSettings;
+            testComponent.usingSSHKeys = false;
             fixture.detectChanges();
         });
 
@@ -100,8 +128,8 @@ describe("NodePropertyDisplay", () => {
             component.downloadRdp().subscribe(() => {
                 expect(nodeConnectServiceSpy.saveRdpFile).toHaveBeenCalledOnce();
                 expect(nodeConnectServiceSpy.saveRdpFile).toHaveBeenCalledWith(
-                    component.rdpContent,
                     component.connectionSettings,
+                    component.credentials,
                     component.node.id,
                 );
 
@@ -114,7 +142,12 @@ describe("NodePropertyDisplay", () => {
 
     describe("when pool is paas windows", () => {
         beforeEach(() => {
-            testComponent.linux = false;
+            testComponent.connectionSettings = {
+                ip: "0.0.0.0",
+                port: null,
+                type: ConnectionType.RDP,
+            } as NodeConnectionSettings;
+            testComponent.usingSSHKeys = false;
             fixture.detectChanges();
         });
 
@@ -122,8 +155,8 @@ describe("NodePropertyDisplay", () => {
             component.downloadRdp().subscribe(() => {
                 expect(nodeConnectServiceSpy.saveRdpFile).toHaveBeenCalledOnce();
                 expect(nodeConnectServiceSpy.saveRdpFile).toHaveBeenCalledWith(
-                    component.rdpContent,
                     component.connectionSettings,
+                    component.credentials,
                     component.node.id,
                 );
 

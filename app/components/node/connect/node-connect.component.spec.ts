@@ -2,14 +2,14 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { ClipboardService, ElectronShell } from "@batch-flask/ui";
-import { Observable } from "rxjs";
+import { BehaviorSubject, of } from "rxjs";
 
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/property-list";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
-import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
+import { ConnectionType, Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
 import {
     AddNodeUserAttributes,
     BatchLabsService,
@@ -17,10 +17,10 @@ import {
     NodeConnectService,
     NodeService,
     NodeUserService,
-    SSHKeyService,
     SettingsService,
 } from "app/services";
-import { SecureUtils } from "app/utils";
+import { PoolUtils, SecureUtils } from "app/utils";
+import { clipboard } from "electron";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
 
@@ -42,26 +42,25 @@ describe("NodeConnectComponent", () => {
     let nodeUserServiceSpy;
     let settingsServiceSpy;
     let batchLabsServiceSpy;
-    let sshKeyServiceSpy;
     let fsServiceSpy;
     let electronShellSpy;
-    let nodeConnectServiceSpy;
     let secureUtilsSpy;
+    let nodeConnectServiceSpy;
+    const pubKeySubject = new BehaviorSubject("baz");
 
     beforeEach(() => {
-
         nodeServiceSpy = {
-            getRemoteDesktop: jasmine.createSpy("").and.returnValue(Observable.of("full address:s:0.0.0.0")),
+            getRemoteDesktop: jasmine.createSpy("").and.returnValue(of("full address:s:0.0.0.0")),
             listNodeAgentSkus: jasmine.createSpy("").and.returnValue(new MockListView(NodeAgentSku, {
                 items: [],
             })),
-            getRemoteLoginSettings: jasmine.createSpy("").and.returnValue(Observable.of(
+            getRemoteLoginSettings: jasmine.createSpy("").and.returnValue(of(
                 new NodeConnectionSettings({remoteLoginIPAddress: "123.345.654.399", remoteLoginPort: 22})),
             ),
         };
 
         nodeUserServiceSpy = {
-            addOrUpdateUser: jasmine.createSpy("").and.returnValue(Observable.of(true)),
+            addOrUpdateUser: jasmine.createSpy("").and.returnValue(of(true)),
         };
 
         settingsServiceSpy = {
@@ -78,11 +77,6 @@ describe("NodeConnectComponent", () => {
             ),
         };
 
-        sshKeyServiceSpy = {
-            hasLocalPublicKey: jasmine.createSpy("").and.returnValue(Observable.of(true)),
-            getLocalPublicKey: jasmine.createSpy("").and.returnValue(Observable.of("bar")),
-        };
-
         fsServiceSpy = {
             commonFolders: {
                 home: "home",
@@ -97,15 +91,24 @@ describe("NodeConnectComponent", () => {
             showItemInFolder: jasmine.createSpy("").and.returnValue(true),
         };
 
-        nodeConnectServiceSpy = {
-            username: "foo",
-            password: "bar",
-            publicKey: Observable.of("baz"),
-            saveRdpFile: jasmine.createSpy("").and.returnValue(Observable.of("path/to/file")),
-        };
-
         secureUtilsSpy = {
             generateWindowsPassword: jasmine.createSpy("").and.returnValue("beep"),
+        };
+
+        nodeConnectServiceSpy = {
+            getPublicKey: jasmine.createSpy("").and.returnValue(pubKeySubject),
+            saveRdpFile: jasmine.createSpy("").and.returnValue(of("path/to/file")),
+            getConnectionSettings: jasmine.createSpy("").and.callFake((pool, node) => {
+                if (PoolUtils.isPaas(pool)) {
+                    return of("full address:s:0.0.0.0");
+                } else {
+                    return of({
+                        ip: "0.0.0.0",
+                        port: 50000,
+                        type: PoolUtils.isLinux ? ConnectionType.SSH : ConnectionType.RDP,
+                    });
+                }
+            }),
         };
 
         TestBed.configureTestingModule({
@@ -121,11 +124,10 @@ describe("NodeConnectComponent", () => {
                 { provide: PermissionService, useValue: null },
                 { provide: SettingsService, useValue: settingsServiceSpy },
                 { provide: BatchLabsService, useValue: batchLabsServiceSpy },
-                { provide: SSHKeyService, useValue: sshKeyServiceSpy },
                 { provide: ClipboardService, useValue: {} },
                 { provide: ElectronShell, useValue: electronShellSpy },
-                { provide: NodeConnectService, useValue: nodeConnectServiceSpy },
                 { provide: SecureUtils, useValue: secureUtilsSpy },
+                { provide: NodeConnectService, useValue: nodeConnectServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -170,9 +172,6 @@ describe("NodeConnectComponent", () => {
                 const button = de.queryAll(By.css("bl-button"))[0].componentInstance;
                 button.action().subscribe(() => {
                     fixture.detectChanges();
-                    expect(nodeConnectServiceSpy.username).not.toBeFalsy();
-                    expect(nodeConnectServiceSpy.publicKey).not.toBeFalsy();
-
                     // validate calls to addOrUpdateUser
                     expect(nodeUserServiceSpy.addOrUpdateUser).toHaveBeenCalledOnce();
                     const updateUserArgs = nodeUserServiceSpy.addOrUpdateUser.calls.mostRecent().args;
@@ -194,7 +193,8 @@ describe("NodeConnectComponent", () => {
             });
 
             it("should disable the connect button if no ssh key is found", () => {
-                component.hasPublicKey = false;
+                // emit null to the subject, so it is registered as the public key
+                pubKeySubject.next(null);
                 fixture.detectChanges();
 
                 const button = de.queryAll(By.css("bl-button"))[0].componentInstance;
@@ -223,7 +223,6 @@ describe("NodeConnectComponent", () => {
                 const button = de.queryAll(By.css("bl-button"))[0].componentInstance;
                 button.action().subscribe(() => {
                     fixture.detectChanges();
-                    expect(nodeConnectServiceSpy.username).not.toBeFalsy();
 
                     // validate calls to addOrUpdateUser
                     expect(nodeUserServiceSpy.addOrUpdateUser).toHaveBeenCalledOnce();
@@ -234,11 +233,15 @@ describe("NodeConnectComponent", () => {
                     expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ name: "foo" }));
                     expect(updateUserArgs[2].password).toBeTruthy();
 
+                    expect(nodeConnectServiceSpy.saveFile);
+
                     // validate calls to shell.openItem
                     expect(electronShellSpy.openItem).toHaveBeenCalledOnce();
                     const openItemArgs = electronShellSpy.openItem.calls.mostRecent().args;
                     expect(openItemArgs.length).toBe(1);
                     expect(openItemArgs[0]).toContain("path/to/file");
+
+                    expect(clipboard.readText()).toEqual(updateUserArgs[2].password);
 
                     done();
                 });
@@ -262,7 +265,6 @@ describe("NodeConnectComponent", () => {
                 const button = de.queryAll(By.css("bl-button"))[0].componentInstance;
                 button.action().subscribe(() => {
                     fixture.detectChanges();
-                    expect(nodeConnectServiceSpy.username).not.toBeFalsy();
 
                     // validate calls to addOrUpdateUser
                     expect(nodeUserServiceSpy.addOrUpdateUser).toHaveBeenCalledOnce();
@@ -308,10 +310,7 @@ describe("NodeConnectComponent", () => {
             component.storeCredentialsFromForm(formCredentials);
             fixture.detectChanges();
 
-            expect(nodeConnectServiceSpy.username).toEqual("foo");
-            expect(nodeConnectServiceSpy.password).toEqual("bar");
-            expect(component.isAdmin).toBeFalsy();
-            expect(component.expiryTime).toEqual(now);
+            expect(component.credentials).toEqual(formCredentials);
         });
     });
 });
