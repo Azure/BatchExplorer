@@ -11,8 +11,8 @@ import { registerIcons } from "app/config";
 import {
     AccountService, AuthorizationHttpService, AutoscaleFormulaService,
     BatchLabsService, CommandService, GithubDataService, NavigatorService,
-    NcjTemplateService, NodeService, PredefinedFormulaService, PricingService, PythonRpcService,
-    SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
+    NcjTemplateService, PoolOsService, PredefinedFormulaService, PricingService,
+    PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
 } from "app/services";
 
 @Component({
@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
         private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
         private githubDataService: GithubDataService,
-        private nodeService: NodeService,
+        private poolOsService: PoolOsService,
         private sshKeyService: SSHKeyService,
         batchLabsService: BatchLabsService,
         pythonRpcService: PythonRpcService,
@@ -102,7 +102,7 @@ export class AppComponent implements OnInit {
      * Preload some data needed.
      */
     private _preloadData() {
-        this.nodeService.listNodeAgentSkus().fetchAll();
+        this.poolOsService.refresh();
     }
 
     private async _initWorkspaces() {
