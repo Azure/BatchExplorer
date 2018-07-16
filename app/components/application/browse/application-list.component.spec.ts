@@ -5,7 +5,7 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { Subject } from "rxjs";
 
 import { FilterBuilder } from "@batch-flask/core";
-import { DialogService, NotificationService } from "@batch-flask/ui";
+import { DialogService, NotificationService, WorkspaceService } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationListComponent } from "app/components/application/browse";
@@ -51,6 +51,7 @@ describe("ApplicationListComponent", () => {
                 { provide: PinnedEntityService, useValue: pinServiceSpy },
                 { provide: BackgroundTaskService, useValue: null },
                 { provide: SidebarManager, useValue: null },
+                { provide: WorkspaceService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

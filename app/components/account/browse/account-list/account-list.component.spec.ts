@@ -7,7 +7,7 @@ import { List } from "immutable";
 import { Observable } from "rxjs";
 
 import { FilterBuilder } from "@batch-flask/core";
-import { DialogService, NotificationService } from "@batch-flask/ui";
+import { DialogService, NotificationService, WorkspaceService } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { AccountListComponent } from "app/components/account/browse";
@@ -68,6 +68,7 @@ describe("AccountListComponent", () => {
                 { provide: BackgroundTaskService, useValue: null },
                 { provide: NotificationService, useValue: null },
                 { provide: DialogService, useValue: null },
+                { provide: WorkspaceService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

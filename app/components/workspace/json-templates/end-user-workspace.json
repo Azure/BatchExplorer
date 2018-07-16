@@ -3,7 +3,6 @@
     "displayName": "Basic end-user workspace",
     "description": "Default end-user workspace that hides a number of advanced features.",
     "features": {
-      "pinned": false,
         "job": {
             "statistics": false,
             "tags": false,
