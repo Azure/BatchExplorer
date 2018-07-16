@@ -38,6 +38,8 @@ export class NodePropertyDisplayComponent implements OnInit {
     public otherStrategy: string;
     public hasPublicKey: boolean;
 
+    public PORT_NOT_SPECIFIED: string = "(Not Specified)";
+
     constructor(
         private nodeConnectService: NodeConnectService,
         private shell: ElectronShell,

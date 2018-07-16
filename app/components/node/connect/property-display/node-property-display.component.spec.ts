@@ -130,6 +130,11 @@ describe("NodePropertyDisplay", () => {
             const button = de.query(By.css(".switch-strategy"));
             expect(button).toBeFalsy();
         });
+
+        it("should not display a password input", () => {
+            const input = de.query(By.css("#password-input"));
+            expect(input).toBeFalsy();
+        });
     });
 
     describe("when pool is iaas windows", () => {
@@ -157,6 +162,11 @@ describe("NodePropertyDisplay", () => {
                 done();
             });
         });
+
+        it("should display a password input", () => {
+            const input = de.query(By.css("#password-input"));
+            expect(input).toBeTruthy();
+        });
     });
 
     describe("when pool is paas windows", () => {
@@ -183,6 +193,11 @@ describe("NodePropertyDisplay", () => {
                 expect(electronShellSpy.showItemInFolder).toHaveBeenCalledWith("path/to/file");
                 done();
             });
+        });
+
+        it("should display a password input", () => {
+            const input = de.query(By.css("#password-input"));
+            expect(input).toBeTruthy();
         });
     });
 });

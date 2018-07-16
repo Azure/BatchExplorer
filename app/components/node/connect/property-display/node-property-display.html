@@ -8,7 +8,7 @@
     <!-- Once connection settings are fetched -->
     <div *ngIf="connectionSettings">
         <bl-text-property label="IP" [value]="connectionSettings.ip"></bl-text-property>
-        <bl-text-property label="Port" [value]="connectionSettings.port"></bl-text-property>
+        <bl-text-property label="Port" [value]="connectionSettings.port || PORT_NOT_SPECIFIED"></bl-text-property>
         <bl-text-property *ngIf="isLinux" id="ssh-command" label="SSH Command" [value]="sshCommand"></bl-text-property>
     </div>
     <div class="custom-property" *ngIf="!isLinux">

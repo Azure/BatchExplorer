@@ -13,7 +13,6 @@ import {
     FileSystemService,
     NodeConnectService,
     NodeUserService,
-    PoolOsService,
     SettingsService,
 } from "app/services";
 import { PoolUtils, SecureUtils } from "app/utils";
@@ -45,13 +44,12 @@ export class NodeConnectComponent implements OnInit {
     public connectionSettings: NodeConnectionSettings;
     private _pool: Pool;
     private _node: Node;
-    private agentSkus: any;
 
     @Input()
     public set pool(pool: Pool) {
         this._pool = pool;
         if (pool) {
-            this.linux = !PoolUtils.isWindows(this.pool, this.agentSkus);
+            this.linux = PoolUtils.isLinux(this.pool);
             this._loadConnectionData();
         }
     }
@@ -72,7 +70,6 @@ export class NodeConnectComponent implements OnInit {
         public sidebarRef: SidebarRef<any>,
         public settingsService: SettingsService,
         private nodeUserService: NodeUserService,
-        private poolOsService: PoolOsService,
         private batchLabs: BatchLabsService,
         private nodeConnectService: NodeConnectService,
         private shell: ElectronShell,
@@ -89,21 +86,23 @@ export class NodeConnectComponent implements OnInit {
             sshPublicKey: "",
         };
         this.publicKeyFile = path.join(this.fs.commonFolders.home, ".ssh", "id_rsa.pub");
-        this.nodeConnectService.getPublicKey(this.publicKeyFile).subscribe({
-            next: (key) => {
-                this.credentials.sshPublicKey = key;
-                this.usingSSHKeys = true;
-                this.changeDetector.markForCheck();
-            },
-            error: (err) => {
-                this.usingSSHKeys = false;
-            },
-        });
 
-        this.poolOsService.nodeAgentSkus.take(1).subscribe((agentSkus) => {
-            this.agentSkus = agentSkus;
-            this.linux = !PoolUtils.isWindows(this.pool, this.agentSkus);
-        });
+        this.linux = PoolUtils.isLinux(this.pool);
+
+        // skip the public key thing if we are on windows
+        if (this.linux) {
+            this.nodeConnectService.getPublicKey(this.publicKeyFile).subscribe({
+                next: (key) => {
+                    this.credentials.sshPublicKey = key;
+                    this.usingSSHKeys = true;
+                    this.changeDetector.markForCheck();
+                },
+                error: (err) => {
+                    this.usingSSHKeys = false;
+                    this.changeDetector.markForCheck();
+                },
+            });
+        }
     }
 
     @autobind()
