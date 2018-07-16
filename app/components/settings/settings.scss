@@ -59,7 +59,7 @@ bl-settings {
             }
 
             .error {
-                color: map-get($danger, 500);
+                color: $danger-color;
             }
 
             bl-editor {

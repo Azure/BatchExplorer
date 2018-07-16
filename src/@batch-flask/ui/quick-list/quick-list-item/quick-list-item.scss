@@ -81,7 +81,7 @@
             width: 100%;
 
             &.warning {
-                background-color: map-get($danger, 500);
+                background-color: $danger-color;
             }
 
             &.lightaccent {

@@ -22,7 +22,7 @@ interface Array<T> {
      * Sort by the given attribute
      */
 
-    sortBy(attr: (item: T) => any);
+    sortBy(attr: (item: T) => any): T[];
 }
 
 // First, checks if it isn't implemented yet.

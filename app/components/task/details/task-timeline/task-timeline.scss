@@ -55,7 +55,7 @@ bl-task-timeline {
 
                     .error {
                         font-weight: bold;
-                        color: map-get($danger, 500);
+                        color: $danger-color;
                     }
                 }
             }
@@ -78,7 +78,7 @@ bl-task-timeline {
             }
 
             &.error > .tile {
-                background: map-get($danger, 500);
+                background: $danger-color;
             }
         }
 

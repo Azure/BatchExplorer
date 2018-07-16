@@ -5,7 +5,7 @@
 
     [bl-dropdown-btn] {
         &.invalid {
-            color: map-get($danger, 500);
+            color: $danger-color;
         }
 
         i {

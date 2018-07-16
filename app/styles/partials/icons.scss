@@ -3,7 +3,7 @@
 }
 
 .fa-ban, .fa-times, .fa-warning, .fa-times-circle {
-    color: map-get($danger, 500);
+    color: $danger-color;
 }
 
 .fa-check, .fa-check-circle-o, .fa-check-circle {
