@@ -30,7 +30,6 @@ import "./node-connect.scss";
 export class NodeConnectComponent implements OnInit {
     public formVisible: boolean = false;
     public error: ServerError = null;
-    public tooltip: string = "";
     public loading: boolean = false;
     public credentials: AddNodeUserAttributes;
     public publicKeyFile: string;
@@ -46,13 +45,13 @@ export class NodeConnectComponent implements OnInit {
     public connectionSettings: NodeConnectionSettings;
     private _pool: Pool;
     private _node: Node;
+    private agentSkus: any;
 
     @Input()
     public set pool(pool: Pool) {
         this._pool = pool;
         if (pool) {
-            this.linux = PoolUtils.isLinux(this.pool);
-            this.usingSSHKeys = this.linux; // by default, use ssh on linux
+            this.linux = !PoolUtils.isWindows(this.pool, this.agentSkus);
             this._loadConnectionData();
         }
     }
@@ -93,19 +92,18 @@ export class NodeConnectComponent implements OnInit {
         this.nodeConnectService.getPublicKey(this.publicKeyFile).subscribe({
             next: (key) => {
                 this.credentials.sshPublicKey = key;
+                this.usingSSHKeys = true;
                 this.changeDetector.markForCheck();
             },
             error: (err) => {
-                throw err;
+                this.usingSSHKeys = false;
             },
         });
 
         this.poolOsService.nodeAgentSkus.take(1).subscribe((agentSkus) => {
-            this.linux = !PoolUtils.isWindows(this.pool, agentSkus);
+            this.agentSkus = agentSkus;
+            this.linux = !PoolUtils.isWindows(this.pool, this.agentSkus);
         });
-
-        // set the tooltip for the disabled connect button: ssh-based for linux, password for windows
-        this.tooltip = this.usingSSHKeys ? "No SSH Keys Found" : "Invalid Password";
     }
 
     @autobind()

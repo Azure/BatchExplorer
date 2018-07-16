@@ -48,7 +48,6 @@ describe("NodeConnectComponent", () => {
     let electronShellSpy;
     let secureUtilsSpy;
     let nodeConnectServiceSpy;
-    const pubKeySubject = new BehaviorSubject("baz");
     let poolOsServiceSpy;
 
     beforeEach(() => {
@@ -96,7 +95,7 @@ describe("NodeConnectComponent", () => {
         };
 
         nodeConnectServiceSpy = {
-            getPublicKey: jasmine.createSpy("").and.returnValue(pubKeySubject),
+            getPublicKey: jasmine.createSpy("").and.returnValue(of("baz")),
             saveRdpFile: jasmine.createSpy("").and.returnValue(of("path/to/file")),
             getConnectionSettings: jasmine.createSpy("").and.callFake((pool, node) => {
                 if (PoolUtils.isPaas(pool)) {
@@ -195,15 +194,6 @@ describe("NodeConnectComponent", () => {
                     expect(launchApplicationArgs[1].command).toContain("foo");
                     done();
                 });
-            });
-
-            it("should disable the connect button if no ssh key is found", () => {
-                // emit null to the subject, so it is registered as the public key
-                pubKeySubject.next(null);
-                fixture.detectChanges();
-
-                const button = de.queryAll(By.css("bl-button"))[0].componentInstance;
-                expect(button.disabled).toBeTruthy();
             });
         });
 

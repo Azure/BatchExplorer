@@ -33,5 +33,5 @@
         <input blInput (input)="setPassword($event)" [value]="credentials.password" id="password-input" type="password" placeholder="(Optional)" />
         <span class="clipboard-info">Password will be copied to clipboard on Connect</span>
     </div>
-    <bl-clickable *ngIf="isLinux" class="switch-strategy" (click)="switchAuthStrategy()">Use {{otherStrategy}}</bl-clickable>
+    <bl-clickable *ngIf="isLinux && hasPublicKey" class="switch-strategy" (click)="switchAuthStrategy()">Use {{otherStrategy}}</bl-clickable>
 </bl-property-group>

@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, DebugElement, NO_ERRORS_SCHEMA } from "@a
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { ClipboardService, ElectronShell } from "@batch-flask/ui";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { ClickableComponent } from "@batch-flask/ui/buttons";
 import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/property-list";
@@ -42,8 +42,11 @@ describe("NodePropertyDisplay", () => {
     let electronShellSpy;
     let nodeConnectServiceSpy;
     let settingsServiceSpy;
+    let pubKeySubject: BehaviorSubject<string>;
 
     beforeEach(() => {
+        pubKeySubject = new BehaviorSubject("baz");
+
         electronShellSpy = {
             openItem: jasmine.createSpy("").and.returnValue(true),
             showItemInFolder: jasmine.createSpy("").and.returnValue(true),
@@ -51,6 +54,7 @@ describe("NodePropertyDisplay", () => {
 
         nodeConnectServiceSpy = {
             saveRdpFile: jasmine.createSpy("").and.returnValue(Observable.of("path/to/file")),
+            getPublicKey: keyFile => pubKeySubject,
         };
 
         settingsServiceSpy = {
@@ -110,6 +114,21 @@ describe("NodePropertyDisplay", () => {
         it("should display ssh info", () => {
             const display = de.query(By.css("#ssh-command")).componentInstance;
             expect(display.value).toEqual("ssh foo@0.0.0.0 -p 50000");
+        });
+
+        it("if ssh key detected, should display button with prompt to switch to password", () => {
+            const button = de.query(By.css(".switch-strategy"));
+            expect(button).toBeTruthy();
+
+            expect(button.nativeElement.textContent).toEqual("Use Password");
+        });
+
+        it("should hide the switch strategy button if keys are not detected", () => {
+            pubKeySubject.next(null);
+            fixture.detectChanges();
+
+            const button = de.query(By.css(".switch-strategy"));
+            expect(button).toBeFalsy();
         });
     });
 

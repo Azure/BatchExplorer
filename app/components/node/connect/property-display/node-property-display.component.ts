@@ -36,6 +36,7 @@ export class NodePropertyDisplayComponent implements OnInit {
 
     public isLinux: boolean;
     public otherStrategy: string;
+    public hasPublicKey: boolean;
 
     constructor(
         private nodeConnectService: NodeConnectService,
@@ -46,7 +47,18 @@ export class NodePropertyDisplayComponent implements OnInit {
 
     public ngOnInit() {
         this.isLinux = this.connectionSettings.type === ConnectionType.SSH;
-        this.otherStrategy = this.isLinux ? AUTH_STRATEGIES.Password : AUTH_STRATEGIES.Keys;
+        this.otherStrategy = this.usingSSHKeys ? AUTH_STRATEGIES.Password : AUTH_STRATEGIES.Keys;
+
+        this.nodeConnectService.getPublicKey(this.publicKeyFile).subscribe({
+            next: (key) => {
+                this.hasPublicKey = Boolean(key);
+                this.changeDetector.markForCheck();
+            },
+            error: (err) => {
+                this.hasPublicKey = false;
+                this.changeDetector.markForCheck();
+            },
+        });
     }
 
     public get sshCommand() {
