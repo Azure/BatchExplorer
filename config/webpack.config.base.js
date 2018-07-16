@@ -5,6 +5,7 @@ const CheckerPlugin = require("awesome-typescript-loader").CheckerPlugin;
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { AngularCompilerPlugin } = require("@ngtools/webpack");
 const { commonRules } = require("./webpack.common");
+const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 
 const isDevServer = helpers.isWebpackDevServer();
 const AOT = !isDevServer;
@@ -37,6 +38,7 @@ const baseConfig = {
     },
     plugins: [
         new CheckerPlugin(),
+        new MonacoWebpackPlugin(),
         new AngularCompilerPlugin({
             skipCodeGeneration: !AOT,
             tsConfigPath: "./tsconfig.browser.json",

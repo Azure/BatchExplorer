@@ -5,7 +5,6 @@ import { BehaviorSubject, Observable, Subscription } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
-import { MonacoLoader } from "@batch-flask/ui/editor";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { FileSystemService } from "app/services/fs.service";
 import { log } from "app/utils";
@@ -33,7 +32,6 @@ export class ThemeService implements OnDestroy {
         private notificationService: NotificationService,
         private settingsService: SettingsService,
         private zone: NgZone,
-        private monacoLoader: MonacoLoader,
         batchLabs: BatchLabsService) {
 
         (window as any).setTheme = (val) => {
@@ -132,11 +130,12 @@ export class ThemeService implements OnDestroy {
         });
     }
 
-    private _applyTheme(theme: Theme) {
+    private async _applyTheme(theme: Theme) {
         for (const entry of theme.asCss()) {
             this._applyCss(entry);
         }
-        this.monacoLoader.setTheme(theme.editor);
+        const monaco = await import("monaco-editor");
+        monaco.editor.setTheme(theme.editor);
     }
 
     private _applyCss({ key, value }) {
