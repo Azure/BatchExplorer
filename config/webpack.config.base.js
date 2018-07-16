@@ -50,7 +50,6 @@ const baseConfig = {
             { context: "src/client/splash-screen", from: "**/*", to: "client/splash-screen" },
             { context: "src/client/proxy", from: "**/*", to: "client/proxy" },
             { context: "app/assets", from: "**/*", to: "assets" },
-            { from: "node_modules/monaco-editor/min/vs", to: "vendor/vs", },
         ]),
         new HtmlWebpackPlugin({
             template: "app/index.html",
