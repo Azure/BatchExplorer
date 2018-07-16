@@ -7,7 +7,7 @@ import { Observable, of } from "rxjs";
 export class MockFileNavigator extends FileNavigator {
     private _mockFiles: File[];
     constructor(mockFiles: File[]) {
-        const cache = new DataCache<File>();
+        const cache = new DataCache<File>("name");
 
         super({
             cache,
@@ -22,7 +22,7 @@ export class MockFileNavigator extends FileNavigator {
                 filename,
                 fs: null,
                 source: FileSource.node,
-                properties: () => of(new File({name: filename})),
+                properties: () => of(new File({ name: filename })),
                 content: () => of({ content: "some-content" }),
             }),
         });
@@ -31,9 +31,8 @@ export class MockFileNavigator extends FileNavigator {
     }
 
     private _supplyFiles(params, options): Observable<any> {
-        const data = this._mockFiles;
         return of({
-            data,
+            data: this._mockFiles,
         });
     }
 }

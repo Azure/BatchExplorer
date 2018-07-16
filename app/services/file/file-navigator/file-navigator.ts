@@ -7,7 +7,7 @@ import { FileLoader } from "app/services/file";
 import { CloudPathUtils, StringUtils } from "app/utils";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable, Subscription } from "rxjs";
-import { mergeMap, shareReplay } from "rxjs/operators";
+import { map, mergeMap, shareReplay } from "rxjs/operators";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 
 export interface DeleteProgress {
@@ -116,13 +116,13 @@ export class FileNavigator<TParams = any> {
     /**
      * Load the inital data
      */
-    public init() {
-        this._loadFilesInPath("");
+    public init(): Observable<any> {
         if (this._cache) {
             this._fileDeletedSub = this._cache.deleted.subscribe((key: string) => {
                 this._removeFile(key);
             });
         }
+        return this._loadFilesInPath("");
     }
 
     /**
@@ -251,14 +251,16 @@ export class FileNavigator<TParams = any> {
         return this._getter.fetchAll(this._params, {
             recursive: recursive || this._fetchAll,
             folder: path,
-        }).flatMap((files) => {
-            if (!this._wildcards) {
-                return Observable.of(files);
-            }
+        }).pipe(
+            map((files) => {
+                if (!this._wildcards) {
+                    return files;
+                }
 
-            const filtered = files.filter((file) => file.isDirectory || this._checkWildcardMatch(file.name));
-            return Observable.of(List(filtered));
-        });
+                const filtered = files.filter((file) => file.isDirectory || this._checkWildcardMatch(file.name));
+                return List(filtered);
+            }),
+        );
     }
 
     private _checkWildcardMatch(filename: string): boolean {
