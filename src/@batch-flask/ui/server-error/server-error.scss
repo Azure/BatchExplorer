@@ -4,7 +4,7 @@ bl-server-error {
     display: block;
 
     .error-banner {
-        background: map-get($danger, 500);
+        background: $danger-color;
         color: $whiteSmoke;
         > .content {
             padding: 10px;

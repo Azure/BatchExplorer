@@ -28,7 +28,7 @@ ol ul {
 }
 
 .danger {
-    color: map-get($danger, 500);
+    color: $danger-color;
 }
 
 .warning, .warn {

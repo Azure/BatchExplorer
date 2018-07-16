@@ -10,7 +10,7 @@ import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import {
     QuickListComponent, QuickListItemComponent, QuickListItemStatusComponent,
 } from "@batch-flask/ui/quick-list";
-import { ButtonClickEvents, click } from "test/utils/helpers";
+import { ButtonClickEvents, click, sendEvent } from "test/utils/helpers";
 import { virtualScrollMockComponents } from "test/utils/mocks/components";
 
 interface TestItem {
@@ -116,7 +116,7 @@ describe("QuickListComponent", () => {
         });
 
         it("Shift click should select all items between current active and clicked", () => {
-            click(items[3], ButtonClickEvents.leftShift);
+            sendEvent(items[3], ButtonClickEvents.leftShift);
             fixture.detectChanges();
             expect(activeItemKey).toEqual("item-2", "Should not have changed active item");
             expect(selection.keys.size).toBe(3);
@@ -126,7 +126,7 @@ describe("QuickListComponent", () => {
         });
 
         it("Ctrl click should select on item + the active item", () => {
-            click(items[3], ButtonClickEvents.leftCtrl);
+            sendEvent(items[3], ButtonClickEvents.leftCtrl);
             fixture.detectChanges();
             expect(activeItemKey).toEqual("item-2", "Should not have changed active item");
 
@@ -134,7 +134,7 @@ describe("QuickListComponent", () => {
             expect(selection.keys.has("item-2")).toBe(true, "has item-2");
             expect(selection.keys.has("item-4")).toBe(true, "has item-4");
 
-            click(items[4], ButtonClickEvents.leftCtrl);
+            sendEvent(items[4], ButtonClickEvents.leftCtrl);
             expect(selection.keys.size).toBe(3);
 
             expect(selection.keys.has("item-2")).toBe(true, "has item-2");
@@ -143,16 +143,16 @@ describe("QuickListComponent", () => {
         });
 
         it("Ctrl click on a selected item should unselect", () => {
-            click(items[3], ButtonClickEvents.leftCtrl);
-            click(items[4], ButtonClickEvents.leftCtrl);
+            sendEvent(items[3], ButtonClickEvents.leftCtrl);
+            sendEvent(items[4], ButtonClickEvents.leftCtrl);
             fixture.detectChanges();
             expect(selection.keys.size).toBe(3);
-            click(items[3], ButtonClickEvents.leftCtrl);
+            sendEvent(items[3], ButtonClickEvents.leftCtrl);
             expect(selection.keys.size).toBe(2);
             expect(selection.keys.has("item-2")).toBe(true);
             expect(selection.keys.has("item-5")).toBe(true);
 
-            click(items[4], ButtonClickEvents.leftCtrl);
+            sendEvent(items[4], ButtonClickEvents.leftCtrl);
 
             expect(selection.keys.size).toBe(1, "Should not have unselected the active");
             expect(selection.keys.has("item-2")).toBe(true, "Should not have unselected the active");

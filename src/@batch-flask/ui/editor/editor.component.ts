@@ -4,8 +4,8 @@ import {
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import * as elementResizeDetectorMaker from "element-resize-detector";
+import * as monaco from "monaco-editor";
 import "./editor.scss";
-import { MonacoLoader } from "./monaco-loader.service";
 
 export interface EditorKeyBinding {
     key: any;
@@ -72,8 +72,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     public get value() { return this._value; }
 
     constructor(
-        private elementRef: ElementRef,
-        private monacoLoader: MonacoLoader) { }
+        private elementRef: ElementRef) { }
 
     public ngOnChanges(changes) {
         if (changes.config) {
@@ -91,9 +90,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
             }
         });
 
-        this.monacoLoader.get().then((monaco) => {
-            this.initMonaco();
-        });
+        this.initMonaco();
 
         this.config = this.config || {};
     }
@@ -113,7 +110,8 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         this._resizeDetector.uninstall(this.elementRef.nativeElement);
     }
 
-    public initMonaco() {
+    public async initMonaco() {
+        const monaco = await import("monaco-editor");
         const myDiv: HTMLDivElement = this.editorContent.nativeElement;
         const options: monaco.editor.IEditorConstructionOptions = this.config;
 

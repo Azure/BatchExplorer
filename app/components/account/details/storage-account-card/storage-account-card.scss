@@ -20,7 +20,7 @@ bl-storage-account-card > .storage-account-card {
                 font-size: 16px;
             }
             .error {
-                color: map-get($danger, 500);
+                color: $danger-color;
             }
         }
     }

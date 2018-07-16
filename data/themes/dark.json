@@ -5,9 +5,11 @@
   "warn": "#f4ad42",
   "success": "#4caf50",
   "main-background": "#21252B",
+  "secondary-background": "#333842",
   "card-background": "#282c34",
   "selection": "#3d4148",
   "border": "#474a4f",
+  "editor": "vs-dark",
   "text": {
     "primary": "#cccccc",
     "secondary": "#A7A8A9"

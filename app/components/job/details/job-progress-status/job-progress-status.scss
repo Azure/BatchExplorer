@@ -36,7 +36,7 @@ bl-job-progress-status {
         }
 
         > .failed {
-            color: map-get($danger, 500);
+            color: $danger-color;
         }
     }
 

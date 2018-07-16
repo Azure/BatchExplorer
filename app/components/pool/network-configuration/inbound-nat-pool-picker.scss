@@ -2,6 +2,6 @@
 
 bl-inbound-nat-pool-picker {
     .form-error {
-        color: map-get($danger, 500);
+        color: $danger-color;
     }
 }

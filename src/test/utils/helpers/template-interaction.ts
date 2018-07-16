@@ -46,12 +46,9 @@ export function sendEvent(el: DebugElement | HTMLElement | Node, event: Event) {
 /**
  * Simulate element click. Defaults to mouse left-button click event.
  */
-export function click(el: DebugElement | HTMLElement | Node, eventObj?: any) {
-    eventObj =  eventObj || new MouseEvent("click", {
-        button: 0,
-    });
-    sendEvent(el, eventObj);
-    return eventObj;
+export function click(el: DebugElement | HTMLElement | Node, button?: MouseButton) {
+    const event =  new MouseEvent("click", { button });
+    sendEvent(el, event);
 }
 
 /**
@@ -63,6 +60,7 @@ export function dblclick(el: DebugElement | HTMLElement | Node) {
     });
     sendEvent(el, event);
 }
+
 /**
  * Simulate element click. Defaults to mouse left-button click event.
  */
@@ -99,8 +97,8 @@ export function keydown(el: DebugElement | HTMLElement, key: string) {
 /**
  * Simulate a mousedown event
  */
-export function mousedown(el: DebugElement | HTMLElement) {
-    const event = new MouseEvent("mousedown", { cancelable: true });
+export function mousedown(el: DebugElement | HTMLElement, button?: MouseButton) {
+    const event = new MouseEvent("mousedown", { cancelable: true, button });
     sendEvent(el, event);
 }
 

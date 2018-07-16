@@ -5,7 +5,6 @@ import { Observable } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
 import { IpcService } from "@batch-flask/ui";
-import { MonacoLoader } from "@batch-flask/ui/editor";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
@@ -40,7 +39,6 @@ export class AppComponent implements OnInit {
         private vmSizeService: VmSizeService,
         themeService: ThemeService,
         private route: ActivatedRoute,
-        monacoLoader: MonacoLoader,
         permissionService: PermissionService,
         authHttpService: AuthorizationHttpService,
         ipc: IpcService,
@@ -61,7 +59,6 @@ export class AppComponent implements OnInit {
         pythonRpcService.init();
         this.predefinedFormulaService.init();
         themeService.init();
-        monacoLoader.init(batchLabsService.rootPath);
 
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
