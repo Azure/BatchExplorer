@@ -1,7 +1,8 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { Constants } from "common";
+import { DataStoreKeys } from "@batch-flask/core/constants";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
+
 import { Workspace } from "./workspace.model";
 
 @Injectable()
@@ -16,7 +17,7 @@ export class WorkspaceService implements OnDestroy {
         this._sub = this._currentWorkspace.subscribe((ws: Workspace) => {
             if (ws) {
                 // save the current selection to local storage
-                localStorage.setItem(Constants.localStorageKey.selectedWorkspaceId, ws.id);
+                localStorage.setItem(DataStoreKeys.selectedWorkspaceId, ws.id);
             }
         });
     }
@@ -57,7 +58,7 @@ export class WorkspaceService implements OnDestroy {
 
     private loadWorkspaces(workspaces) {
         this._workspaces.next(List(workspaces));
-        const selectedWorkspaceId = localStorage.getItem(Constants.localStorageKey.selectedWorkspaceId);
+        const selectedWorkspaceId = localStorage.getItem(DataStoreKeys.selectedWorkspaceId);
         if (selectedWorkspaceId) {
             this.selectWorkspace(selectedWorkspaceId);
         } else {

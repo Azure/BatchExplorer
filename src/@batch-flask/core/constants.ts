@@ -29,7 +29,12 @@ export const RetryableHttpCode = new Set([
 
 export const DataStoreKeys = {
     /**
-     * LocalStorage key for storing the access token(For AAD request)
+     * LocalStorage key for storing the access token (For AAD request)
      */
     currentAccessToken: "current_access_token",
+
+    /**
+     * LocalStorage key for storing the current selected workspace ID
+     */
+    selectedWorkspaceId: "selected-workspace-id",
 };

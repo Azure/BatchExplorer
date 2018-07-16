@@ -4,11 +4,11 @@ import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
+import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { exists, log, nil } from "@batch-flask/utils";
 import * as inflection from "inflection";
 import { Observable } from "rxjs";
 
-import { WorkspaceService } from "@batch-flask/ui";
 import { ActionableEntity, EntityCommands } from "./entity-commands";
 
 export enum EntityCommandNotify {
