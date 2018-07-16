@@ -36,7 +36,7 @@ This is quite straightforward. Just change the following line to have the versio
 
 #### Update the changelog
 
-This is a bit more tedious as it require looking at the millestone completed and writing a reable changelog for the user of batch labs.
+This is a bit more tedious as it require looking at the millestone completed and writing a reable changelog for the user of Batch Explorer.
 This should be targeted at user and not developper which means there is no need to include internal issues and refactoring work.
 Describe what functionality changed in the app with a link to the issue.
 

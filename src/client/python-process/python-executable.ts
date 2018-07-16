@@ -59,7 +59,7 @@ export function tryMultiplePythons(paths: string[]): Promise<string> {
 }
 
 /**
- * Retrieve the python path that should be used for batch labs.
+ * Retrieve the python path that should be used for Batch Explorer.
  * It will only look for the python executable on the first run. It will then used the cached value
  */
 export function getPythonPath(): Promise<string> {

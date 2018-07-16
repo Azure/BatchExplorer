@@ -110,7 +110,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
             title: "BatchLabs",
             message: [
                 `Version: ${this.batchLabs.version}`,
-                `Batch labs is licensed under MIT`,
+                `Batch Explorer is licensed under MIT`,
                 `Some icons are under Creative Commons Attribution-ShareAlike 3.0 Unported`,
             ].join("\n"),
         });

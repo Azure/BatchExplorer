@@ -8,7 +8,7 @@ import logging
 
 class BatchLabsApp:
     """
-        Batch labs app
+        Batch Explorer app
     """
 
     def __init__(self):

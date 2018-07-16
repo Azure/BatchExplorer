@@ -37,7 +37,7 @@
 
 ### Bug fixes:
 
-* Unable to resize pool using batch labs on mac. [\#1413](https://github.com/Azure/BatchLabs/issues/1413)
+* Unable to resize pool using Batch Explorer on mac. [\#1413](https://github.com/Azure/BatchLabs/issues/1413)
 * Opening 2 batchlabs instance is broken [\#1411](https://github.com/Azure/BatchLabs/issues/1411)
 * BatchLabs doesn't handle ProxyEnable setting in registry [\#1385](https://github.com/Azure/BatchLabs/issues/1385)
 * Running task graph seems to be in a weird state [\#1382](https://github.com/Azure/BatchLabs/issues/1382)
@@ -292,7 +292,7 @@ Hot fixes:
 ### feature:
 
 * Register batchlabs default protocol to open from the browser [\#934](https://github.com/Azure/BatchLabs/issues/934)
-* Batch Labs should show a clear error when it cannot connect to its python web service [\#923](https://github.com/Azure/BatchLabs/issues/923)
+* Batch Explorer should show a clear error when it cannot connect to its python web service [\#923](https://github.com/Azure/BatchLabs/issues/923)
 * Implement a footer for the app and move some of the dropdown from the header [\#901](https://github.com/Azure/BatchLabs/issues/901)
 * Show current quota usage on the account page [\#799](https://github.com/Azure/BatchLabs/issues/799)
 * File explorer download a folder with right click [\#657](https://github.com/Azure/BatchLabs/issues/657)
@@ -357,7 +357,7 @@ Hot fixes:
 
 * Prepare release 0.10.0 [\#915](https://github.com/Azure/BatchLabs/issues/915)
 * Useragent should include OS [\#895](https://github.com/Azure/BatchLabs/issues/895)
-* Should we integrate Application Insights into Batch Labs? [\#824](https://github.com/Azure/BatchLabs/issues/824)
+* Should we integrate Application Insights into Batch Explorer? [\#824](https://github.com/Azure/BatchLabs/issues/824)
 * Refactor rx-list-proxy to a new system [\#814](https://github.com/Azure/BatchLabs/issues/814)
 * Suggest using iconography instead of a label for the breadcrumb bar [\#696](https://github.com/Azure/BatchLabs/issues/696)
 * Ability to pin Jobs, Tasks, or Pools. [\#456](https://github.com/Azure/BatchLabs/issues/456)
@@ -513,7 +513,7 @@ Hot fixes:
 [All items](https://github.com/Azure/BatchLabs/milestone/5?closed=1)
 
 ### Features
-* Link Storage account in batch labs [\#385](https://github.com/Azure/BatchLabs/issues/385)
+* Link Storage account in Batch Explorer [\#385](https://github.com/Azure/BatchLabs/issues/385)
 * New actions buttons [\#408](https://github.com/Azure/BatchLabs/issues/408)
 * Low priority VMs [\#414](https://github.com/Azure/BatchLabs/issues/414)
 * Details now refresh automatically every 10 seconds [\#428](https://github.com/Azure/BatchLabs/issues/428)
