@@ -1,5 +1,5 @@
 import { Type } from "@angular/core";
-import { Observable } from "rxjs";
+import { of } from "rxjs";
 
 import { BasicListGetter, DataCache, ListView } from "app/services/core";
 
@@ -27,7 +27,7 @@ export class MockListView<TEntity, TParams> extends ListView<TEntity, TParams> {
             getter: new BasicListGetter(type, {
                 cache: () => cache,
                 supplyData: (params) => {
-                    return Observable.of({
+                    return of({
                         data: this._getItems(params),
                     });
                 },

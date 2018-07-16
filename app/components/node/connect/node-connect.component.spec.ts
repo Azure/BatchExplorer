@@ -9,7 +9,8 @@ import { PermissionService } from "@batch-flask/ui/permission";
 import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/property-list";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
-import { ConnectionType, Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
+import { ConnectionType, Node, NodeConnectionSettings, Pool } from "app/models";
+
 import {
     AddNodeUserAttributes,
     BatchLabsService,
@@ -17,12 +18,13 @@ import {
     NodeConnectService,
     NodeService,
     NodeUserService,
+    PoolOsService,
     SettingsService,
 } from "app/services";
 import { PoolUtils, SecureUtils } from "app/utils";
 import { clipboard } from "electron";
+import { List } from "immutable";
 import * as Fixtures from "test/fixture";
-import { MockListView } from "test/utils/mocks";
 
 @Component({
     template: `<bl-node-connect [pool]="pool" [node]="node"></bl-node-connect>`,
@@ -47,13 +49,11 @@ describe("NodeConnectComponent", () => {
     let secureUtilsSpy;
     let nodeConnectServiceSpy;
     const pubKeySubject = new BehaviorSubject("baz");
+    let poolOsServiceSpy;
 
     beforeEach(() => {
         nodeServiceSpy = {
             getRemoteDesktop: jasmine.createSpy("").and.returnValue(of("full address:s:0.0.0.0")),
-            listNodeAgentSkus: jasmine.createSpy("").and.returnValue(new MockListView(NodeAgentSku, {
-                items: [],
-            })),
             getRemoteLoginSettings: jasmine.createSpy("").and.returnValue(of(
                 new NodeConnectionSettings({remoteLoginIPAddress: "123.345.654.399", remoteLoginPort: 22})),
             ),
@@ -111,6 +111,10 @@ describe("NodeConnectComponent", () => {
             }),
         };
 
+        poolOsServiceSpy = {
+            nodeAgentSkus: new BehaviorSubject(List([])),
+        };
+
         TestBed.configureTestingModule({
             declarations: [
                 NodeConnectComponent, ButtonComponent,
@@ -128,6 +132,7 @@ describe("NodeConnectComponent", () => {
                 { provide: ElectronShell, useValue: electronShellSpy },
                 { provide: SecureUtils, useValue: secureUtilsSpy },
                 { provide: NodeConnectService, useValue: nodeConnectServiceSpy },
+                { provide: PoolOsService, useValue: poolOsServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

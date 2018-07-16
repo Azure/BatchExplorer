@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { FilterBuilder } from "@batch-flask/core";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
-import { Node, NodeAgentSku, NodeState } from "app/models";
+import { Node, NodeState } from "app/models";
 import {
     ContinuationToken,
     DataCache,
@@ -37,10 +37,8 @@ export class NodeService {
         key: ({ poolId }) => poolId,
     });
 
-    private _nodeAgentSkusCache = new DataCache<any>();
     private _getter: BatchEntityGetter<Node, NodeParams>;
     private _listGetter: BatchListGetter<Node, NodeListParams>;
-    private _nodeAgentSkuListGetter: BatchListGetter<NodeAgentSku, {}>;
 
     constructor(private taskManager: BackgroundTaskService, private http: AzureBatchHttpService) {
         this._getter = new BatchEntityGetter(Node, this.http, {
@@ -51,11 +49,6 @@ export class NodeService {
         this._listGetter = new BatchListGetter(Node, this.http, {
             cache: ({ poolId }) => this.getCache(poolId),
             uri: (params: NodeListParams) => `/pools/${params.poolId}/nodes`,
-        });
-
-        this._nodeAgentSkuListGetter = new BatchListGetter(NodeAgentSku, this.http, {
-            cache: () => this._nodeAgentSkusCache,
-            uri: () => `/nodeagentskus`,
         });
     }
 
@@ -179,14 +172,6 @@ export class NodeService {
 
     public uploadLogs(poolId: string, nodeId: string, params: any): Observable<any> {
         return this.http.post(`/pools/${poolId}/nodes/${nodeId}/uploadbatchservicelogs`, params);
-    }
-
-    public listNodeAgentSkus(options: ListOptionsAttributes = { pageSize: 1000 }): ListView<NodeAgentSku, {}> {
-        return new ListView({
-            cache: (params) => this._nodeAgentSkusCache,
-            getter: this._nodeAgentSkuListGetter,
-            initialOptions: options,
-        });
     }
 
     private _performOnNodeChunk(nodes: Node[], callback: any) {

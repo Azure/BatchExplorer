@@ -12,7 +12,9 @@ import {
     BatchLabsService,
     FileSystemService,
     NodeConnectService,
+    NodeService,
     NodeUserService,
+    PoolOsService,
     SettingsService,
 } from "app/services";
 import { PoolUtils, SecureUtils } from "app/utils";
@@ -45,6 +47,7 @@ export class NodeConnectComponent implements OnInit {
     public connectionSettings: NodeConnectionSettings;
     private _pool: Pool;
     private _node: Node;
+    private agentSkus: any;
 
     @Input()
     public set pool(pool: Pool) {
@@ -72,6 +75,7 @@ export class NodeConnectComponent implements OnInit {
         public sidebarRef: SidebarRef<any>,
         public settingsService: SettingsService,
         private nodeUserService: NodeUserService,
+        private poolOsService: PoolOsService,
         private batchLabs: BatchLabsService,
         private nodeConnectService: NodeConnectService,
         private shell: ElectronShell,
@@ -96,6 +100,11 @@ export class NodeConnectComponent implements OnInit {
             error: (err) => {
                 throw err;
             },
+        });
+
+        this.poolOsService.nodeAgentSkus.take(1).subscribe((agentSkus) => {
+            this.agentSkus = agentSkus;
+            this.linux = !PoolUtils.isWindows(this.pool, agentSkus);
         });
 
         // set the tooltip for the disabled connect button: ssh-based for linux, password for windows

@@ -19,10 +19,15 @@ import { FileGroupSasComponent } from "app/components/data/shared/file-group-sas
 import { PoolPickerComponent } from "app/components/job/action/add";
 import { ParameterInputComponent, SubmitNcjTemplateComponent } from "app/components/market/submit";
 import { NcjJobTemplate, NcjParameterRawType, NcjPoolTemplate, NcjTemplateMode, Pool } from "app/models";
-import { NcjFileGroupService, NcjSubmitService, NcjTemplateService, PoolService, VmSizeService } from "app/services";
+import {
+    NcjFileGroupService, NcjSubmitService,
+    NcjTemplateService, PoolOsService, PoolService,
+    VmSizeService,
+} from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { Constants } from "app/utils";
 
+import { SelectModule } from "@batch-flask/ui";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";
@@ -104,6 +109,7 @@ describe("SubmitNcjTemplateComponent", () => {
     let autoStorageServiceSpy;
     let storageBlobServiceSpy;
     let fileGroupServiceSpy;
+    let poolOsServiceSpy;
 
     const blendFile = "myscene.blend";
     let queryParameters;
@@ -155,6 +161,10 @@ describe("SubmitNcjTemplateComponent", () => {
             }),
         };
 
+        poolOsServiceSpy = {
+            offers: new BehaviorSubject({ allOffers: [] }),
+        };
+
         storageBlobServiceSpy = {};
 
         storageContainerServiceSpy = {
@@ -185,7 +195,14 @@ describe("SubmitNcjTemplateComponent", () => {
             }),
         };
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, ReactiveFormsModule, FormsModule, MaterialModule, NoopAnimationsModule],
+            imports: [
+                RouterTestingModule,
+                ReactiveFormsModule,
+                FormsModule,
+                MaterialModule,
+                NoopAnimationsModule,
+                SelectModule,
+            ],
             declarations: [NoItemMockComponent, SubmitNcjTemplateComponent, FileGroupSasComponent,
                 TestComponent, FileGroupPickerComponent, CloudFilePickerComponent, ParameterInputComponent,
                 PoolPickerComponent],
@@ -204,6 +221,7 @@ describe("SubmitNcjTemplateComponent", () => {
                 { provide: AutoStorageService, useValue: autoStorageServiceSpy },
                 { provide: StorageBlobService, useValue: storageBlobServiceSpy },
                 { provide: NotificationService, useValue: notificationServiceSpy },
+                { provide: PoolOsService, useValue: poolOsServiceSpy },
             ],
 
             schemas: [NO_ERRORS_SCHEMA],

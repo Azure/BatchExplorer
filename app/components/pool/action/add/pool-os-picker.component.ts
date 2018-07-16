@@ -1,14 +1,13 @@
-import { Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import { Component, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs";
 
-import { NodeAgentSku, NodeAgentSkuMap, Offer, Resource, Sku } from "app/models";
+import { NodeAgentSku, Offer, PoolOsSkus, Resource, Sku } from "app/models";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
-import { AccountService, ComputeService, NodeService } from "app/services";
-import { ListView } from "app/services/core";
+import { AccountService, ComputeService, PoolOsService } from "app/services";
 
 import "./pool-os-picker.scss";
 
@@ -32,7 +31,6 @@ export enum CustomImagesState {
     Error,
 }
 
-// tslint:disable:no-forward-ref
 @Component({
     selector: "bl-pool-os-picker",
     templateUrl: "pool-os-picker.html",
@@ -41,9 +39,8 @@ export enum CustomImagesState {
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => PoolOsPickerComponent), multi: true },
     ],
 })
-export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
     public value: PoolOSPickerModel;
-    public accountData: ListView<NodeAgentSku, {}>;
 
     // Shared to the view
     public PoolOsSources = PoolOsSources;
@@ -72,24 +69,21 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
     public nodeAgentSkus: NodeAgentSku[] = [];
 
     private _propagateChange: (value: PoolOSPickerModel) => void = null;
-    private _nodeAgentSkuMap: NodeAgentSkuMap = new NodeAgentSkuMap();
+    private _nodeAgentSkuMap: PoolOsSkus = new PoolOsSkus();
     private _subs: Subscription[] = [];
 
-    constructor(formBuilder: FormBuilder,
-                private accountService: AccountService,
-                private computeService: ComputeService,
-                private nodeService: NodeService) {
-        this.accountData = this.nodeService.listNodeAgentSkus();
-        this.accountData.items.subscribe((result) => {
+    constructor(
+        private accountService: AccountService,
+        private computeService: ComputeService,
+        private poolOsService: PoolOsService) {
+        this._subs.push(this.poolOsService.nodeAgentSkus.subscribe((result) => {
             this.nodeAgentSkus = result.toArray();
-            this._buildNodeAgentSkuMap(result);
-        });
+        }));
+        this._subs.push(this.poolOsService.offers.subscribe((offers) => {
+            this._nodeAgentSkuMap = offers;
+        }));
         this._subs.push(this.containerConfiguration.valueChanges.subscribe(this._updateContainerConfiguration));
         this._loadCustomImages();
-    }
-
-    public ngOnInit() {
-        this.accountData.fetchNext();
     }
 
     public writeValue(value: any) {
@@ -264,10 +258,6 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
             this.customImage.patchValue(null);
             this.nodeAgentSku.patchValue(null);
         }
-    }
-
-    private _buildNodeAgentSkuMap(nodeAgentSkus: any) {
-        this._nodeAgentSkuMap = new NodeAgentSkuMap(nodeAgentSkus);
     }
 
     /**
