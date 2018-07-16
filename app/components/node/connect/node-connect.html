@@ -14,8 +14,7 @@
                     [node]="node"
                     [publicKeyFile]="publicKeyFile"
                     [(usingSSHKeys)]="usingSSHKeys"
-                    [credentials]="credentials"
-                    (credentialsChange)="updateCredentials($event)"
+                    [(credentials)]="credentials"
                 ></bl-node-property-display>
             </div>
             <div class="credentials-source">

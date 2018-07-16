@@ -32,6 +32,7 @@ export class NodePropertyDisplayComponent implements OnInit {
     @Input() public publicKeyFile: string;
     @Input() public usingSSHKeys: boolean;
     @Output() public credentialsChange = new EventEmitter<AddNodeUserAttributes>();
+    @Output() public usingSSHKeysChange = new EventEmitter<boolean>();
 
     public isLinux: boolean;
     public otherStrategy: string;
@@ -85,6 +86,7 @@ export class NodePropertyDisplayComponent implements OnInit {
     @autobind()
     public switchAuthStrategy() {
         this.usingSSHKeys = !this.usingSSHKeys;
+        this.usingSSHKeysChange.emit(this.usingSSHKeys);
         if (this.otherStrategy === AUTH_STRATEGIES.Keys) {
             this.otherStrategy = AUTH_STRATEGIES.Password;
          } else {
