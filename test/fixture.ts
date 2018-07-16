@@ -2,6 +2,7 @@ import { Type } from "@angular/core";
 import * as moment from "moment";
 
 import { PinnedEntityType } from "@batch-flask/core";
+import { Workspace } from "@batch-flask/ui";
 import {
     AccountResource,
     ApplicationPackage,
@@ -15,7 +16,6 @@ import {
     Subscription,
     SubtaskInformation,
     Task,
-    Workspace,
 } from "app/models";
 
 export class FixtureFactory<TEntity> {

@@ -19,6 +19,7 @@ describe("EntityCommand", () => {
         const command = new EntityCommand<MyModel>(injector, {
             label: "my-fixed-label",
             action: () => null,
+            name: "my-fixed-label",
         });
 
         expect(command.label(entity1)).toEqual("my-fixed-label");
@@ -28,6 +29,7 @@ describe("EntityCommand", () => {
         const command = new EntityCommand<MyModel>(injector, {
             label: () => "my-dynamic-label",
             action: () => null,
+            name: "my-dynamic-label",
         });
 
         expect(command.label(entity1)).toEqual("my-dynamic-label");
@@ -37,6 +39,7 @@ describe("EntityCommand", () => {
         const command = new EntityCommand<MyModel>(injector, {
             label: "my-label",
             action: () => null,
+            name: "my-label",
         });
 
         expect(command.enabled(entity1)).toBe(true);
@@ -48,6 +51,7 @@ describe("EntityCommand", () => {
             label: "my-label",
             action: () => null,
             enabled: () => false,
+            name: "my-label",
         });
 
         expect(command.enabled(entity1)).toBe(false);
@@ -58,6 +62,7 @@ describe("EntityCommand", () => {
         const command = new EntityCommand<MyModel>(injector, {
             label: "my-label",
             action: () => null,
+            name: "my-label",
         });
 
         expect(command.multiple).toBe(true);
@@ -68,6 +73,7 @@ describe("EntityCommand", () => {
             label: "my-label",
             action: () => null,
             multiple: false,
+            name: "my-label",
         });
 
         expect(command.multiple).toBe(false);
@@ -77,6 +83,7 @@ describe("EntityCommand", () => {
         const command = new EntityCommand<MyModel>(injector, {
             label: "my-label",
             action: () => null,
+            name: "my-label",
         });
 
         expect(command.notify).toEqual(EntityCommandNotify.Always);
@@ -87,6 +94,7 @@ describe("EntityCommand", () => {
             label: "my-label",
             action: () => null,
             notify: false,
+            name: "my-label",
         });
 
         expect(command.notify).toEqual(EntityCommandNotify.Never);
@@ -97,6 +105,7 @@ describe("EntityCommand", () => {
             label: "my-label",
             action: () => null,
             notify: EntityCommandNotify.OnFailure,
+            name: "my-label",
         });
 
         expect(command.notify).toEqual(EntityCommandNotify.OnFailure);
@@ -109,6 +118,7 @@ describe("EntityCommand", () => {
                 label: "my-label",
                 action: actionSpy,
                 notify: EntityCommandNotify.OnFailure,
+                name: "my-label",
             });
 
             command.performAction(entity1, null).subscribe((result) => {
@@ -125,6 +135,7 @@ describe("EntityCommand", () => {
                 label: "my-label",
                 action: actionSpy,
                 notify: EntityCommandNotify.OnFailure,
+                name: "my-label",
             });
 
             command.performAction(entity1, null).subscribe((result) => {
