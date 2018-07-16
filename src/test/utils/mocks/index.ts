@@ -7,3 +7,4 @@ export * from "./notification.service.mock";
 export * from "./services";
 export * from "./storage";
 export * from "./storage-list-getter.mock";
+export * from "./file-navigator.mock";
