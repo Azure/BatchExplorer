@@ -11,11 +11,6 @@
         <bl-text-property label="Port" [value]="connectionSettings.port"></bl-text-property>
         <bl-text-property *ngIf="isLinux" id="ssh-command" label="SSH Command" [value]="sshCommand"></bl-text-property>
     </div>
-    <!-- Or, alternatively, if rdp settings are fetched -->
-    <div *ngIf="ipFromRdp">
-        <bl-text-property label="IP" [value]="ipFromRdp"></bl-text-property>
-        <bl-text-property label="Port" value="Not Specified"></bl-text-property>
-    </div>
     <div class="custom-property" *ngIf="!isLinux">
         <h5 class="label-small">RDP File</h5>
         <bl-clickable id="download-rdp" class="display-field" (click)="downloadRdp()">Download RDP File</bl-clickable>
