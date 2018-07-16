@@ -6,7 +6,7 @@ import { MaterialModule } from "@batch-flask/core";
 import { SelectModule } from "@batch-flask/ui";
 import { PermissionService } from "@batch-flask/ui/permission";
 import * as moment from "moment";
-import { Observable } from "rxjs";
+import { of } from "rxjs";
 
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { DialogService } from "@batch-flask/ui/dialogs";
@@ -43,7 +43,7 @@ describe("NodeUserCredentialsForm", () => {
 
     beforeEach(() => {
         sshKeyService = {
-            keys: Observable.of([]),
+            keys: of([]),
         };
         TestBed.configureTestingModule({
             imports: [FormsModule, ReactiveFormsModule, MaterialModule, NoopAnimationsModule, SelectModule],

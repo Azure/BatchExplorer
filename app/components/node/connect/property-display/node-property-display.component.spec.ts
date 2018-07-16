@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, DebugElement, NO_ERRORS_SCHEMA } from "@a
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { ClipboardService, ElectronShell } from "@batch-flask/ui";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, of } from "rxjs";
 
 import { ClickableComponent } from "@batch-flask/ui/buttons";
 import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/property-list";
@@ -53,7 +53,7 @@ describe("NodePropertyDisplay", () => {
         };
 
         nodeConnectServiceSpy = {
-            saveRdpFile: jasmine.createSpy("").and.returnValue(Observable.of("path/to/file")),
+            saveRdpFile: jasmine.createSpy("").and.returnValue(of("path/to/file")),
             getPublicKey: keyFile => pubKeySubject,
         };
 

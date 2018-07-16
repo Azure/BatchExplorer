@@ -2,7 +2,7 @@ import { Component, ElementRef, OnDestroy, ViewChild, forwardRef } from "@angula
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Subscription, of } from "rxjs";
 
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { SSHPublicKey } from "app/models";
@@ -107,6 +107,6 @@ export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
             name,
             value,
         }));
-        return Observable.of({});
+        return of({});
     }
 }

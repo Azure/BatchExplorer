@@ -18,7 +18,7 @@ import {
 } from "app/services";
 import { PoolUtils, SecureUtils } from "app/utils";
 import { ExternalApplication } from "common/constants";
-import { Observable } from "rxjs";
+import { Observable, from } from "rxjs";
 import { flatMap, share } from "rxjs/operators";
 import "./node-connect.scss";
 
@@ -243,7 +243,7 @@ export class NodeConnectComponent implements OnInit {
                 const args = {
                     command: this.sshCommand,
                 };
-                return Observable.fromPromise(this.batchLabs.launchApplication(ExternalApplication.terminal, args));
+                return from(this.batchLabs.launchApplication(ExternalApplication.terminal, args));
             }),
             share(),
         );

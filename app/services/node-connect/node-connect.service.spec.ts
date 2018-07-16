@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import * as path from "path";
-import { BehaviorSubject, Observable, of } from "rxjs";
+import { BehaviorSubject, of } from "rxjs";
 
 import { ConnectionType, IaasNodeConnectionSettings, NodeConnectionSettings, Pool } from "app/models";
 import { OS, Platform } from "app/utils";
@@ -46,7 +46,7 @@ describe("NodeConnectService", () => {
         };
 
         sshKeyServiceSpy = {
-            getLocalPublicKey: jasmine.createSpy("getLocalPublicKey").and.returnValue(Observable.of("baz")),
+            getLocalPublicKey: jasmine.createSpy("getLocalPublicKey").and.returnValue(of("baz")),
         };
 
         settingsServiceSpy = {

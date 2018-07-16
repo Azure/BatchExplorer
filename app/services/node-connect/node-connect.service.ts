@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import * as path from "path";
-import { Observable, Subscription, of } from "rxjs";
+import { Observable, Subscription, from, of } from "rxjs";
 import { flatMap, map, share } from "rxjs/operators";
 
 import { OS } from "@batch-flask/utils";
@@ -44,7 +44,7 @@ export class NodeConnectService implements OnDestroy {
             path.join(this.fs.commonFolders.temp, "rdp") :
             this.fs.commonFolders.downloads;
         const filename = `${nodeId}.rdp`;
-        return Observable.fromPromise(this.fs.saveFile(path.join(directory, filename), rdpContent));
+        return from(this.fs.saveFile(path.join(directory, filename), rdpContent));
     }
 
     public getConnectionSettings(pool: Pool, node: Node): Observable<NodeConnectionSettings> {
