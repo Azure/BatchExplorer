@@ -26,7 +26,9 @@
     "success-contrast": {"$ref": "#/definitions/color"},
     "main-background": {"$ref": "#/definitions/color"},
     "card-background": {"$ref": "#/definitions/color"},
+    "secondary-background": {"$ref": "#/definitions/color"},
     "outline": {"$ref": "#/definitions/color"},
+    "editor": {"type": "string"},
     "text": {
       "type": "object",
       "properties": {

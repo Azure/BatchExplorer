@@ -182,7 +182,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
             this.expandedDirs.delete(treeRow.path);
         } else {
             this.expandedDirs.add(treeRow.path);
-            this.fileNavigator.loadPath(treeRow.path);
+            // this.fileNavigator.loadPath(treeRow.path);
         }
         this._buildTreeRows(this._tree);
         this.changeDetector.markForCheck();

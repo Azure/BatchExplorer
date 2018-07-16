@@ -23,7 +23,7 @@ bl-file-table-view {
         display: flex;
         height: $file-header-height;
         align-items: stretch;
-        color: $mineshaft-grey;
+        color: $primary-text;
         border-bottom: 1px solid $border-color;
 
         > * {
@@ -39,11 +39,11 @@ bl-file-table-view {
             vertical-align: middle;
 
             &:hover {
-                background: $alto;
+                background: $selection-color;
             }
             .fa {
                 // color: $minshaft-grey;
-                color: map-get($primary, 400);
+                color: $primary-color;
             }
         }
 
@@ -64,12 +64,12 @@ bl-file-table-view {
         }
 
         .fa-file {
-            color: $dove-grey;
+            color: $secondary-text;
         }
     }
 
     .drop-hint {
-        color: $dusty-grey;
+        color: $secondary-text;
         text-align: center;
         font-style: italic;
     }
