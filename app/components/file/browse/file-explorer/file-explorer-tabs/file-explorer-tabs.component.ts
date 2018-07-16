@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input, OnChanges, OnDestroy } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    HostListener,
+    Input,
+    OnChanges,
+    OnDestroy,
+} from "@angular/core";
 import { MouseButton } from "@batch-flask/core";
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FileExplorerWorkspace, FileSource, OpenedFile } from "app/components/file/browse/file-explorer";
@@ -22,6 +30,7 @@ interface Tab {
 })
 export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
     @Input() public workspace: FileExplorerWorkspace;
+
     public openedFiles: OpenedFile[] = [];
     public tabs: Tab[] = [];
     public activePath: string = null;

@@ -60,7 +60,7 @@ export class FileLoader {
     /**
      * Base path to show the file as relative to this.
      */
-    public basePath: string;
+    public readonly basePath: string;
 
     private _fs: FileSystemService;
     private _properties: PropertiesFunc;

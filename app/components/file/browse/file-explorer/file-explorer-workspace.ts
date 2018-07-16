@@ -1,6 +1,7 @@
 import { FileLoader, FileNavigator, FileTreeNode } from "app/services/file";
 import { CloudPathUtils, log } from "app/utils";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, combineLatest } from "rxjs";
+import { flatMap, map, shareReplay } from "rxjs/operators";
 
 export interface FileSource {
     name?: string;
@@ -48,16 +49,21 @@ export class FileExplorerWorkspace {
         this.currentSource = this._currentSource.asObservable();
         this._currentSource.next(this.sources.first());
 
-        this.currentNode = this._currentSource.flatMap((source) => {
-            return Observable.combineLatest(this._currentPath, source.navigator.tree).map(([path, tree]) => {
-                const node = tree.getNode(path);
-                return {
-                    source,
-                    path: node.path,
-                    treeNode: node,
-                };
-            });
-        }).shareReplay(1);
+        this.currentNode = this._currentSource.pipe(
+            flatMap((source) => {
+                return combineLatest(this._currentPath, source.navigator.tree).pipe(
+                    map(([path, tree]) => {
+                        const node = tree.getNode(path);
+                        return {
+                            source,
+                            path: node.path,
+                            treeNode: node,
+                        };
+                    }),
+                );
+            }),
+            shareReplay(1),
+        );
 
         this._openInitalFiles();
     }
@@ -136,7 +142,10 @@ export class FileExplorerWorkspace {
 
     public dispose() {
         this.sources.forEach(x => x.navigator.dispose());
-        this.sources  = [];
+        this.sources = [];
+
+        this._openedFiles.complete();
+        this._currentSource.complete();
     }
 
     private _getSource(source?: FileSource) {
