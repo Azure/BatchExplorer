@@ -36,7 +36,7 @@ $headings-color             : map-get($primary, 700);
 $link-color                 : map-get($primary, 700);
 $link-alt-color             : map-get($primary, 300);
 $link-color-hover           : map-get($primary, 800);
-$validation-error-color     : map-get($danger, 500);
+$validation-error-color     : $danger-color;
 
 
 $font-size-base     : 13px;

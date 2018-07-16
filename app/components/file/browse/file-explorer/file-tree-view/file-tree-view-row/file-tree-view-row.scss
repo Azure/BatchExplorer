@@ -10,21 +10,23 @@ bl-file-tree-view-row {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    color: $primary-text;
 
     &:hover {
-        background: $whitesmoke-darker;
+        background: $selection-color;
     }
 
     &.active {
-        background: $whitesmoke-darker;
+        background: $selection-color;
     }
 
     &.focused {
         background: $primary-color-light;
+        color: $whitesmoke // TODO-TIM change to primary color contrast
     }
 
     &.drop-target {
-        background: $whitesmoke-darker;
+        background: $selection-color;
     }
 
     &.virtual {
@@ -37,7 +39,7 @@ bl-file-tree-view-row {
         }
 
         > .fa-file {
-            color: $dove-grey;
+            color: $secondary-text;
         }
     }
 }

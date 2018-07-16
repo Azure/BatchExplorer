@@ -117,6 +117,7 @@ export class Theme extends ThemeElement<ThemeDefinition> {
     @CssColor() public warn: ColorPalette;
     @CssColor() public success: ColorPalette;
     @CssColor("main-background") public mainBackground: string;
+    @CssColor("secondary-background") public secondaryBackground: string;
     @CssColor("card-background") public cardBackground: string;
     @CssColor() public selection: string;
     @CssColor() public border: string;
@@ -130,6 +131,7 @@ export class Theme extends ThemeElement<ThemeDefinition> {
     @CssColor() public button: ButtonColors;
     @CssColor() public monitorChart: MonitorChartColor;
     @CssColor() public input: InputColor;
+    @CssColor() public editor: string;
 }
 
 function multiply(rgb1, rgb2) {

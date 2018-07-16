@@ -40,7 +40,6 @@ export class AppComponent implements OnInit {
         private vmSizeService: VmSizeService,
         themeService: ThemeService,
         private route: ActivatedRoute,
-        monacoLoader: MonacoLoader,
         permissionService: PermissionService,
         authHttpService: AuthorizationHttpService,
         ipc: IpcService,
@@ -63,7 +62,6 @@ export class AppComponent implements OnInit {
         pythonRpcService.init();
         this.predefinedFormulaService.init();
         themeService.init();
-        monacoLoader.init(batchLabsService.rootPath);
 
         Observable
             .combineLatest(

@@ -7,7 +7,7 @@ bl-job-stats-preview {
 
     .task-failed {
         display: inline-block;
-        color: map-get($danger, 500);
+        color: $danger-color;
     }
 }
 
@@ -21,6 +21,6 @@ bl-application-preview, bl-task-preview {
     }
 
     .failure {
-        color: map-get($danger, 500);
+        color: $danger-color;
     }
 }
