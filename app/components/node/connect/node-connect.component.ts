@@ -12,7 +12,6 @@ import {
     BatchLabsService,
     FileSystemService,
     NodeConnectService,
-    NodeService,
     NodeUserService,
     PoolOsService,
     SettingsService,
@@ -47,7 +46,6 @@ export class NodeConnectComponent implements OnInit {
     public connectionSettings: NodeConnectionSettings;
     private _pool: Pool;
     private _node: Node;
-    private agentSkus: any;
 
     @Input()
     public set pool(pool: Pool) {
@@ -103,7 +101,6 @@ export class NodeConnectComponent implements OnInit {
         });
 
         this.poolOsService.nodeAgentSkus.take(1).subscribe((agentSkus) => {
-            this.agentSkus = agentSkus;
             this.linux = !PoolUtils.isWindows(this.pool, agentSkus);
         });
 
