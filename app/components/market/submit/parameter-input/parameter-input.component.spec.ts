@@ -586,7 +586,7 @@ describe("ParameterInputComponent", () => {
             discardPeriodicTasks();
         }));
 
-        it("should update but fail validation with non existant job-id", fakeAsync(() => {
+        it("should update but fail validation with non-existent job-id", fakeAsync(() => {
             testComponent.paramControl.setValue(badJobId);
             fixture.detectChanges();
             tick(250);
