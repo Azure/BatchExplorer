@@ -17,9 +17,13 @@
   },
   "properties": {
     "primary": {"$ref": "#/definitions/color"},
+    "primary-contrast": {"$ref": "#/definitions/color"},
     "danger": {"$ref": "#/definitions/color"},
+    "danger-contrast": {"$ref": "#/definitions/color"},
     "warn": {"$ref": "#/definitions/color"},
+    "warn-contrast": {"$ref": "#/definitions/color"},
     "success": {"$ref": "#/definitions/color"},
+    "success-contrast": {"$ref": "#/definitions/color"},
     "main-background": {"$ref": "#/definitions/color"},
     "card-background": {"$ref": "#/definitions/color"},
     "secondary-background": {"$ref": "#/definitions/color"},

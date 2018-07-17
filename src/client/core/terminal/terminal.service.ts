@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { OSService } from "@batch-flask/ui/electron";
 import * as cp from "child_process";
 import { BlIpcMain } from "client/core/bl-ipc-main";
-import { Application, IpcEvent } from "common/constants";
+import { ExternalApplication, IpcEvent } from "common/constants";
 import { FileSystem } from "../fs";
 
 interface TerminalDefinition {
@@ -65,7 +65,7 @@ export class TerminalService {
         ipcMain: BlIpcMain,
     ) {
         ipcMain.on(IpcEvent.launchApplication, ({name, args}) => {
-            if (name === Application.terminal) {
+            if (name === ExternalApplication.terminal) {
                 return this.runInTerminal(args.command);
             }
         });

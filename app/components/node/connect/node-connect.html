@@ -1,37 +1,42 @@
 <div class="slideout-form content-wrapper node-connect" *ngIf="node && pool">
     <div class="connect-content">
-        <h1>Connect to node </h1>
-        <div *ngIf="credentialSource === null">
-            <h3>Node credentials</h3>
+        <div class="sidebar-header">
+            <h1>Connect to node</h1>
+        </div>
+        <div *ngIf="!formVisible">
+            <div class="node-information">
+                <div *ngIf="!connectionSettings" class="connection-data-loader">
+                    <bl-loading></bl-loading>
+                    <span>Fetching connection data...</span>
+                </div>
+                <bl-node-property-display *ngIf="connectionSettings"
+                    [connectionSettings]="connectionSettings"
+                    [node]="node"
+                    [publicKeyFile]="publicKeyFile"
+                    [(usingSSHKeys)]="usingSSHKeys"
+                    [(credentials)]="credentials"
+                ></bl-node-property-display>
+            </div>
             <div class="credentials-source">
-                <bl-button type="wide" [action]="generateCredentials">Generate</bl-button>
-                <bl-button type="wide" [action]="specifyCredentials">Specify</bl-button>
-                <bl-button type="wide" [action]="generateWithOneClick" [disabled]="!hasLocalPublicKey" [matTooltip]="quickStartTooltip" [matTooltipDisabled]="hasLocalPublicKey">Quick Connect</bl-button>
+                <bl-button type="wide" [skipSuccess]="true" [action]="autoConnect" [disabled]="!connectionSettings">
+                    <div class="button-icon-frame">
+                        <i *ngIf="!loading" class="fa fa-plug"></i>
+                        <i *ngIf="loading" class="fa fa-spinner fa-pulse"></i>
+                    </div>
+                    <div class="button-label">Connect</div>
+                </bl-button>
+                <bl-button type="wide" [action]="configureCredentials">
+                    <div class="button-icon-frame">
+                        <i class="fa fa-wrench"></i>
+                    </div>
+                    <div class="button-label">Configure</div>
+                </bl-button>
             </div>
         </div>
-        <div *ngIf="credentialSource === CredentialSource.Specified && !credentials">
-            <bl-node-user-credentials-form [submit]="addOrUpdateUser" [isLinuxNode]="linux" (close)="goToHome()"></bl-node-user-credentials-form>
-        </div>
-        <div>
-            <bl-property-group *ngIf="credentials">
-                <div class="warn-text">These credentials are now valid until {{expireTime}} on this node</div>
-                <bl-text-property label="Username" [value]="credentials.name"></bl-text-property>
-                <bl-text-property label="Password" [value]="credentials.password" *ngIf="credentialSource === CredentialSource.Generated"></bl-text-property>
-            </bl-property-group>
-        </div>
-        <div *ngIf="hasIp && connectionSettings && credentials">
-            <h3>Connection settings</h3>
-            <bl-property-group>
-                <bl-text-property label="IP" [value]="connectionSettings.ip"></bl-text-property>
-                <bl-text-property label="Port" [value]="connectionSettings.port"></bl-text-property>
-                <bl-text-property *ngIf="!windows" label="SSH command" [value]="sshCommand"></bl-text-property>
-            </bl-property-group>
+        <div *ngIf="formVisible">
+            <bl-node-user-credentials-form [submit]="storeCredentialsFromForm" [isLinuxNode]="linux" (close)="goToHome()"></bl-node-user-credentials-form>
         </div>
     </div>
-    <div class="action-btns">
-        <span *ngIf="credentials && windows && agentSkus">
-            <bl-download-rdp [nodeId]="node.id" [credentials]="credentials" [rdpContent]="rdpContent" [connectionSettings]="connectionSettings"></bl-download-rdp>
-        </span>
-        <bl-button color="light" type="wide" [action]="close">Close</bl-button>
-    </div>
+    <bl-server-error *ngIf="error" [error]="error"></bl-server-error>
+    <bl-clickable class="close-button" type="plain" (do)="close()"><i class="fa fa-times fa-lg"></i></bl-clickable>
 </div>

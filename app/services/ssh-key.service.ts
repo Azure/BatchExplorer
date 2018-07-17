@@ -3,7 +3,7 @@ import { List } from "immutable";
 
 import { SSHPublicKey } from "app/models";
 import { Constants } from "app/utils";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, from } from "rxjs";
 import { FileSystemService } from "./fs.service";
 import { LocalFileStorage } from "./local-file-storage.service";
 
@@ -48,14 +48,12 @@ export class SSHKeyService {
         });
     }
 
-    public hasLocalPublicKey(): Observable<boolean> {
-        const homedir = this.fs.commonFolders.home;
-        return Observable.fromPromise(this.fs.exists(`${homedir}/.ssh/id_rsa.pub`));
+    public hasLocalPublicKey(path: string): Observable<boolean> {
+        return from(this.fs.exists(path));
     }
 
-    public getLocalPublicKey(): Observable<string> {
-        const homedir = this.fs.commonFolders.home;
-        return Observable.fromPromise(this.fs.readFile(`${homedir}/.ssh/id_rsa.pub`));
+    public getLocalPublicKey(path: string): Observable<string> {
+        return from(this.fs.readFile(path));
     }
 
     private _saveSSHPublicKeys(keys: List<SSHPublicKey> = null): Observable<any> {

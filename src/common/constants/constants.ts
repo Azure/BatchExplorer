@@ -182,7 +182,7 @@ export const IpcEvent = {
     logoutAndLogin: "LOGOUT_AND_LOGIN",
 };
 
-export const Application = {
+export const ExternalApplication = {
     terminal: "TERMINAL",
 };
 

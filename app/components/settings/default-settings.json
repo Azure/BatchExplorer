@@ -21,8 +21,8 @@
   // Default powershell on windows, terminal.app on darwin, ...
   "terminal.external": "default",
 
-  // Username to be used by default when connecting to a node(Or adding a user)
-  "node.connect.default-username": null,
+  // Default username to connect to a remote node
+  "node-connect.default-username": "batchlabs-user",
 
   // Branch to be used when loading data from github(This is mostly for experimenting with new NCJ templates)
   "github-data.source.branch": "master"

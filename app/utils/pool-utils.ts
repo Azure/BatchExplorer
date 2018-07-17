@@ -69,11 +69,7 @@ export class PoolUtils {
     }
 
     public static isLinux(pool: Pool) {
-        if (this.isPaas(pool)) {
-            return false;
-        }
-        const ref = pool.virtualMachineConfiguration.imageReference;
-        return this.isOfferLinux(ref.offer);
+        return this.getOsType(pool) === OSType.Linux;
     }
 
     public static isOfferLinux(offer: string) {

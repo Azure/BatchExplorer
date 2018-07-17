@@ -1,4 +1,4 @@
-import { Observable } from "rxjs";
+import { of } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
@@ -14,5 +14,5 @@ export class MockSettingsService {
 
     public settings = defaultSettings;
 
-    public settingsObs = Observable.of(defaultSettings);
+    public settingsObs = of(defaultSettings);
 }
