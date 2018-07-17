@@ -15,7 +15,8 @@ export class BatchExplorerInitializer {
 
     private _sub: Subscription;
     private _tasks = new BehaviorSubject<Map<string, InitializerTask>>(new Map());
-    constructor(@Inject(forwardRef(() => BatchExplorerApplication)) batchExplorerApplication: BatchExplorerApplication) {
+    constructor(
+        @Inject(forwardRef(() => BatchExplorerApplication)) batchExplorerApplication: BatchExplorerApplication) {
         this.splashScreen = new SplashScreen(batchExplorerApplication);
         this._sub = this._tasks.subscribe(() => {
             this._updateSplashScreen();
