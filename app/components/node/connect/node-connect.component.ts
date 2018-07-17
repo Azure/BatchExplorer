@@ -1,63 +1,59 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { autobind } from "@batch-flask/core";
-import { List } from "immutable";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
+import { ServerError, autobind } from "@batch-flask/core";
+import { ElectronShell } from "@batch-flask/ui";
+import { clipboard } from "electron";
 import * as moment from "moment";
+import * as path from "path";
 
 import { SidebarRef } from "@batch-flask/ui/sidebar";
-import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
+import { Node, NodeConnectionSettings, Pool } from "app/models";
 import {
     AddNodeUserAttributes,
     BatchExplorerService,
-    NodeService,
+    FileSystemService,
+    NodeConnectService,
     NodeUserService,
-    PoolOsService,
-    SSHKeyService,
     SettingsService,
 } from "app/services";
-import { DateUtils, PoolUtils, SecureUtils } from "app/utils";
-import { Application } from "common/constants";
-import { Observable } from "rxjs";
-import { flatMap, share, tap } from "rxjs/operators";
+import { PoolUtils, SecureUtils } from "app/utils";
+import { ExternalApplication } from "common/constants";
+import { Observable, from } from "rxjs";
+import { flatMap, share } from "rxjs/operators";
 import "./node-connect.scss";
-
-enum CredentialSource {
-    Generated,
-    Specified,
-}
 
 @Component({
     selector: "bl-node-connect",
     templateUrl: "node-connect.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NodeConnectComponent implements OnInit {
-    public CredentialSource = CredentialSource;
-    public credentialSource: CredentialSource = null;
-    public credentials: AddNodeUserAttributes = null;
-    public agentSkus: List<NodeAgentSku>;
-    public windows = false;
+    public formVisible: boolean = false;
+    public error: ServerError = null;
+    public loading: boolean = false;
+    public credentials: AddNodeUserAttributes;
+    public publicKeyFile: string;
+
+    // NOTE: using linux does not necessarily mean using SSH! (user can still use password)
     public linux = false;
-    public hasIp = false;
-    public expireTime: string;
-    public hasLocalPublicKey: boolean;
-    public defaultUsername: string;
-    public quickStartTooltip: string = "";
+    public usingSSHKeys = false;
 
     /**
      * Base content for the rdp file(IP Address).
      * This is either downloaded from the api on CloudService nodes or generated from the ip/port on VMs nodes
      */
-    public rdpContent: string;
     public connectionSettings: NodeConnectionSettings;
+    private _pool: Pool;
+    private _node: Node;
 
     @Input()
     public set pool(pool: Pool) {
         this._pool = pool;
         if (pool) {
-            this.hasIp = Boolean(pool.virtualMachineConfiguration);
             this.linux = PoolUtils.isLinux(this.pool);
             this._loadConnectionData();
         }
     }
+
     public get pool() { return this._pool; }
 
     @Input()
@@ -67,113 +63,150 @@ export class NodeConnectComponent implements OnInit {
             this._loadConnectionData();
         }
     }
-    public get node() { return this._node; }
 
-    private _pool: Pool;
-    private _node: Node;
+    public get node() { return this._node; }
 
     constructor(
         public sidebarRef: SidebarRef<any>,
         public settingsService: SettingsService,
         private nodeUserService: NodeUserService,
-        private nodeService: NodeService,
-        private poolOsService: PoolOsService,
         private batchExplorer: BatchExplorerService,
-        private sshKeyService: SSHKeyService,
-    ) {
-        this.defaultUsername = settingsService.settings["username"];
-        this.quickStartTooltip = "No SSH Keys Found";
-    }
+        private nodeConnectService: NodeConnectService,
+        private shell: ElectronShell,
+        private changeDetector: ChangeDetectorRef,
+        private fs: FileSystemService,
+    ) { }
 
     public ngOnInit() {
-        this.poolOsService.nodeAgentSkus.take(1).subscribe((agentSkus) => {
-            this.agentSkus = agentSkus;
-            this.windows = PoolUtils.isWindows(this.pool, agentSkus);
-        });
-
-        this.sshKeyService.hasLocalPublicKey().subscribe(hasKey => this.hasLocalPublicKey = hasKey);
-    }
-
-    @autobind()
-    public generateCredentials() {
-        const credentials = {
-            name: SecureUtils.username(),
-            password: SecureUtils.password(),
+        this.credentials = {
+            name: this.settingsService.settings["node-connect.default-username"],
+            password: "",
+            expiryTime: null,
             isAdmin: true,
-        };
-
-        return this.addOrUpdateUser(credentials).do(() => {
-            this.credentialSource = CredentialSource.Generated;
-            this.expireTime = DateUtils.fullDateAndTime(moment().add(24, "hours").toDate());
-        });
-    }
-
-    @autobind()
-    public generateWithOneClick() {
-        // Todo use observable for this
-        if (!this.connectionSettings) {
-            return null;
-        }
-
-        const credentials = {
-            name: this.defaultUsername ? this.defaultUsername : SecureUtils.username(),
-            isAdmin: true,
-            expiryTime: moment().add(moment.duration({ days: 1 })).toDate(),
             sshPublicKey: "",
         };
+        this.publicKeyFile = path.join(this.fs.commonFolders.home, ".ssh", "id_rsa.pub");
 
-        // fetch the public key from the user's filesystem
-        const obs = this.sshKeyService.getLocalPublicKey().pipe(
-            flatMap((key) => {
-                this.credentialSource = CredentialSource.Generated; // set the credentials source to be autogenerated
-                credentials.sshPublicKey = key;                     // set the key to be the fetched public key
-                this.credentials = credentials;
-                return this.addOrUpdateUser(credentials);           // set the user that will be used for authentication
-            }),
-            flatMap(() => {
-                // launch a terminal subprocess with the command to access the node
-                const args = {
-                    command: PoolUtils.isWindows(this.pool) ? "" : this.sshCommand,
-                };
-                // TODO insert rdpCommand as a get method and place in ternary statement above
-                return Observable.fromPromise(this.batchExplorer.launchApplication(Application.terminal, args));
-            }),
-            share(),
-        );
-        obs.subscribe({
-            error: (error) => {
-                throw error;
-            },
-        });
-        return obs;
+        this.linux = PoolUtils.isLinux(this.pool);
+
+        // skip the public key thing if we are on windows
+        if (this.linux) {
+            this.nodeConnectService.getPublicKey(this.publicKeyFile).subscribe({
+                next: (key) => {
+                    this.credentials.sshPublicKey = key;
+                    this.usingSSHKeys = true;
+                    this.changeDetector.markForCheck();
+                },
+                error: (err) => {
+                    this.usingSSHKeys = false;
+                    this.changeDetector.markForCheck();
+                },
+            });
+        }
     }
 
     @autobind()
-    public addOrUpdateUser(credentials) {
-        return this.nodeUserService.addOrUpdateUser(this.pool.id, this.node.id, credentials).pipe(
-            tap(() => {
-                this.credentials = credentials;
-                this.expireTime = DateUtils.fullDateAndTime(this.credentials.expiryTime);
-            }),
-        );
+    public autoConnect(): Observable<any> {
+        this.loading = true;
+
+        const credentials = {...this.credentials};
+        if (!credentials.expiryTime) {
+            credentials.expiryTime = moment().add(moment.duration({days: 1})).toDate();
+        }
+
+        // generate a password if the user didn't provide one
+        if (!credentials.password) {
+            credentials.password = SecureUtils.generateWindowsPassword();
+        }
+
+        if (this.linux) {
+            // we are going to use ssh keys, so we don't need a password
+            if (this.usingSSHKeys) {
+                delete credentials.password;
+            } else {
+                delete credentials.sshPublicKey;
+            }
+
+            const pidObs = this._initSSH(credentials);
+            pidObs.subscribe({
+                next: (pid) => {
+                    // if using password, save it to clipboard
+                    if (!this.usingSSHKeys) {
+                        clipboard.writeText(credentials.password);
+                    }
+                    this.loading = false;
+                    this.error = null;
+                },
+                error: (error) => {
+                    this.loading = false;
+                    this.error = error;
+                    throw error;
+                },
+            });
+            return pidObs;
+        } else {
+            // for windows, we don't need the public key because we cannot ssh
+            delete credentials.sshPublicKey;
+
+            const rdpObs = this._initRDP(credentials);
+            rdpObs.subscribe({
+                next: (filename) => {
+                    this.shell.openItem(filename);
+                },
+                error: (err) => {
+                    this.loading = false;
+                    this.error = err;
+                    try {
+                        // get the reason for the error (likely an invalid password)
+                        this.error = err;
+                    } catch (e) {
+                        throw err;
+                    }
+                },
+            });
+            return rdpObs;
+        }
+    }
+
+    /**
+     * Stores the values from the node-user-credentials form in instance variables
+     * @param credentials The credentials entered on the node user credentials form
+     */
+    @autobind()
+    public storeCredentialsFromForm(credentials: AddNodeUserAttributes) {
+        // update the main template
+        this.credentials = {...credentials};
+
+        // if the user entered a password in the form, use it to connect
+        if (credentials.password) {
+            this.usingSSHKeys = false;
+        } else if (credentials.sshPublicKey) {
+            this.usingSSHKeys = true;
+        }
+
+        this.changeDetector.markForCheck();
+
+        // hide the node user credentials form
+        this.formVisible = false;
     }
 
     public get sshCommand() {
-        if (!this.connectionSettings || !this.credentials) {
+        if (!this.connectionSettings) {
             return "N/A";
         }
         const { ip, port } = this.connectionSettings;
+
         return `ssh ${this.credentials.name}@${ip} -p ${port}`;
     }
 
     @autobind()
-    public specifyCredentials() {
-        this.credentialSource = CredentialSource.Specified;
+    public configureCredentials() {
+        this.formVisible = true;
     }
 
     @autobind()
     public goToHome() {
-        this.credentialSource = null;
+        this.formVisible = false;
     }
 
     @autobind()
@@ -181,19 +214,57 @@ export class NodeConnectComponent implements OnInit {
         this.sidebarRef.destroy();
     }
 
+    private _addOrUpdateUser(credentials) {
+        return this.nodeUserService.addOrUpdateUser(this.pool.id, this.node.id, credentials);
+    }
+
     /**
      * Load either the RDP file or the node connection settings depending if the VM is IAAS or PAAS
      */
     private _loadConnectionData() {
         if (!this.pool || !this.node) { return; }
-        if (PoolUtils.isPaas(this.pool)) {
-            this.nodeService.getRemoteDesktop(this.pool.id, this.node.id).subscribe((rdp) => {
-                this.rdpContent = rdp;
-            });
-        } else {
-            this.nodeService.getRemoteLoginSettings(this.pool.id, this.node.id).subscribe((connection) => {
-                this.connectionSettings = connection;
-            });
-        }
+        this.nodeConnectService.getConnectionSettings(this.pool, this.node).subscribe(settings => {
+            this.connectionSettings = settings;
+            this.changeDetector.markForCheck();
+        });
+    }
+
+    /**
+     * Spawns a node child process to launch a terminal and ssh into the remote node (linux only)
+     * @param credentials an object containing credentials for the ssh command (username, IP, port, ssh public key)
+     * @returns an Observable that emits the process id of the child process
+     */
+    private _initSSH(credentials: AddNodeUserAttributes): Observable<number> {
+        // set the user that will be used for authentication
+        const obs =  this._addOrUpdateUser(credentials).pipe(
+            flatMap(() => {
+                // launch a terminal subprocess with the command to access the node
+                const args = {
+                    command: this.sshCommand,
+                };
+                return from(this.batchExplorer.launchApplication(ExternalApplication.terminal, args));
+            }),
+            share(),
+        );
+
+        return obs;
+    }
+
+    private _initRDP(credentials: AddNodeUserAttributes): Observable<string> {
+        const obs = this._addOrUpdateUser(credentials).pipe(
+            flatMap(() => {
+                this.loading = false;
+                this.error = null;
+
+                // save password to clipboard
+                clipboard.writeText(credentials.password);
+
+                // create and launch the rdp program
+                return this.nodeConnectService.saveRdpFile(this.connectionSettings, this.credentials, this.node.id);
+            }),
+            share(),
+        );
+
+        return obs;
     }
 }

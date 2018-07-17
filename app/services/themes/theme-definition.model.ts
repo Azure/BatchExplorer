@@ -13,9 +13,19 @@ export interface ThemeDefinition {
     primary: string;
 
     /**
+     * Primary color contrast
+     */
+    "primary-contrast": string;
+
+    /**
      * Danger and error color
      */
     danger: string;
+
+    /**
+     * Danger color contrast
+     */
+    "danger-contrast": string;
 
     /**
      * Warning color
@@ -23,9 +33,19 @@ export interface ThemeDefinition {
     warn: string;
 
     /**
+     * Warning color contrast
+     */
+    "warn-contrast": string;
+
+    /**
      * Success color
      */
     success: string;
+
+    /**
+     * Primary color contrast
+     */
+    "success-contrast": string;
 
     /**
      * Overall background color

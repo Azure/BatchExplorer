@@ -6,12 +6,13 @@ import { MaterialModule } from "@batch-flask/core";
 import { SelectModule } from "@batch-flask/ui";
 import { PermissionService } from "@batch-flask/ui/permission";
 import * as moment from "moment";
-import { Observable } from "rxjs";
+import { of } from "rxjs";
 
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { DurationPickerComponent } from "@batch-flask/ui/duration-picker";
-import { NodeUserCredentialsFormComponent, SSHKeyPickerComponent } from "app/components/node/connect";
+import { NodeUserCredentialsFormComponent } from "app/components/node/connect";
+import { SSHKeyPickerComponent } from "app/components/node/connect/ssh-key-picker";
 import { SSHKeyService } from "app/services";
 import { updateInput } from "test/utils/helpers";
 import { SimpleFormMockComponent } from "test/utils/mocks/components";
@@ -42,7 +43,7 @@ describe("NodeUserCredentialsForm", () => {
 
     beforeEach(() => {
         sshKeyService = {
-            keys: Observable.of([]),
+            keys: of([]),
         };
         TestBed.configureTestingModule({
             imports: [FormsModule, ReactiveFormsModule, MaterialModule, NoopAnimationsModule, SelectModule],

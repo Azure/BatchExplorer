@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "@batch-flask/core";
-import { Observable } from "rxjs";
+import { of } from "rxjs";
 
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { EditorComponent } from "@batch-flask/ui/editor";
@@ -45,7 +45,7 @@ describe("SettingsComponent", () => {
     beforeEach(() => {
         settingsServiceSpy = {
             userSettingsStr: userInitialSettings,
-            settingsObs: Observable.of({ some: "value" }),
+            settingsObs: of({ some: "value" }),
             saveUserSettings: jasmine.createSpy("saveUserSettings"),
         };
         TestBed.configureTestingModule({
