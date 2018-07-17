@@ -1,5 +1,5 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, tick } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
@@ -576,18 +576,24 @@ describe("ParameterInputComponent", () => {
             expect(jobIdComponent.value.value).toBe(initialInput);
         });
 
-        it("should show updated input and validate", () => {
+        it("should show updated input and validate", fakeAsync(() => {
             testComponent.paramControl.setValue(goodJobId);
             fixture.detectChanges();
+            tick(250);
+
             expect(jobIdComponent.value.value).toBe(goodJobId);
             expect(component.parameterValue.valid).toBe(true);
-        });
+            discardPeriodicTasks();
+        }));
 
-        it("should update but fail validation with non existant job-id", () => {
+        it("should update but fail validation with non existant job-id", fakeAsync(() => {
             testComponent.paramControl.setValue(badJobId);
             fixture.detectChanges();
+            tick(250);
+
             expect(jobIdComponent.value.value).toBe(badJobId);
             expect(component.parameterValue.valid).toBe(false);
-        });
+            discardPeriodicTasks();
+        }));
     });
 });
