@@ -4,19 +4,27 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "identifier": "build-client",
       "type": "npm",
       "script": "build-client",
+      "problemMatcher": [
+        "$tsc"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
     },
     {
       "type": "npm",
-      "script": "stylelint",
+      "script": "stylelint"
     },
     {
       "type": "npm",
       "script": "tslint",
       "problemMatcher": {
         "base": "$tslint5",
-	      "fileLocation": "absolute"
+        "fileLocation": "absolute"
       }
     }
   ]
