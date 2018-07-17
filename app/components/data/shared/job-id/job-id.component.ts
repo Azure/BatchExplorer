@@ -70,7 +70,12 @@ export class JobIdComponent implements AsyncValidator, ControlValueAccessor, OnD
 
     @autobind()
     private _validateJobUnique(control: FormControl) {
-        return Observable.of(null).debounceTime(250)
+        // on init value is an empty array.
+        if (!control.value || (Array.isArray(control.value) && control.value.length === 0)) {
+            return Observable.of(null);
+        }
+
+        return Observable.of(null).delay(400)
             .flatMap(() => this.jobService.get(control.value))
             .map((job: Job) => {
                 this.warning = true;

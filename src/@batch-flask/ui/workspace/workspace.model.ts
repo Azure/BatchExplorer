@@ -24,16 +24,31 @@ export class Workspace {
         this.template = definition.features;
     }
 
+    /**
+     * Check a requested feature against the workspace definition.
+     * requestedFeature can contain multiple features separated by
+     * a '|' character. e.g. pool.graphs.insights|pool.graphs.tasks
+     */
     public isFeatureEnabled(requestedFeature: string): boolean {
         // no feature supplied, default to visible
         if (!requestedFeature) { return true; }
 
-        const features = requestedFeature.split(".");
-        // console.log(`Workspace.isFeatureEnabled: ${requestedFeature}`, this.template);
+        const features = requestedFeature.split("|");
+        for (const feature of features) {
+            const result = this._checkFeatureParts(feature);
+            if (result) {
+                return true;
+            }
+        }
 
+        return false;
+    }
+
+    private _checkFeatureParts(feature: string) {
+        const featureParts = feature.split(".");
         let definition = this.template;
-        for (const feat of features) {
-            definition = definition[feat];
+        for (const part of featureParts) {
+            definition = definition[part];
             if (definition === true) {
                 return true;
             } else if (definition === undefined) {

@@ -72,7 +72,7 @@
     </ng-container>
 
     <div blMetricsMonitorConfig>
-        <div class="history-length">
+        <div class="history-length" *blFeatureOn="'pool.graphs.insights|pool.graphs.tasks|pool.graphs.nodes'">
             <span>Last </span>
             <select [formControl]="selectedHistoryLength" placeholder="History" class="select">
                 <option [value]="historyLength.TenMinute">10 Minutes</option>

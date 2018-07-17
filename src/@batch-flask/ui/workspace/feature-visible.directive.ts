@@ -32,11 +32,13 @@ export class FeatureVisibleDirective implements OnInit, OnDestroy, OnChanges  {
             this._updateVisibility();
         }
     }
+
     public ngOnDestroy() {
         if (this._subscription) {
             this._subscription.unsubscribe();
         }
     }
+
     private _updateVisibility() {
         if (this.feature && this._workspace) {
             this.viewContainer.clear();
