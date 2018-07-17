@@ -20,7 +20,8 @@ describe("BatchExplorerLink", () => {
     });
 
     it("extract other query params", () => {
-        expect(new BatchExplorerLink(`ms-batch-explorer://?custom=value-1`).queryParams.get("custom")).toEqual("value-1");
+        expect(new BatchExplorerLink(`ms-batch-explorer://?custom=value-1`).queryParams.get("custom"))
+            .toEqual("value-1");
         expect(new BatchExplorerLink(`${prefix}?custom=value-1&accountId=account-1`).queryParams.get("custom"))
             .toEqual("value-1");
         expect(new BatchExplorerLink(`${prefix}?accountId=account-1&custom=value-1&session=session-1`)
