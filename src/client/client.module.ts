@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { ServerModule } from "@angular/platform-server";
+import { I18nModule } from "@batch-flask/core";
 import { OSService } from "@batch-flask/ui/electron/os.service";
 import { AADService } from "client/core/aad";
 import { BatchExplorerInitializer } from "client/core/batch-explorer-initializer";
@@ -34,6 +35,7 @@ export function initializeServices(injector) {
 @NgModule({
     imports: [
         ServerModule,
+        I18nModule,
     ],
     providers: [
         { provide: AUTO_UPDATER, useValue: autoUpdater },
