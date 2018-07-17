@@ -106,7 +106,7 @@ function parsePythonVersion(str: string): SemVersion {
 }
 
 /**
- * Check if the version is the right for batchlabs.
+ * Check if the version is the right for Batch Explorer.
  * @param version Python version
  */
 function isValidVersion(version: SemVersion) {

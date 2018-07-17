@@ -6,7 +6,7 @@ import { UrlUtils } from "@batch-flask/utils";
 import { AccountResource } from "app/models";
 import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
-import { BatchLabsService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-labs.service";
 import { Constants } from "common";
 import { Observable } from "rxjs";
 import { flatMap, shareReplay, take } from "rxjs/operators";
@@ -14,14 +14,14 @@ import { flatMap, shareReplay, take } from "rxjs/operators";
 @Injectable()
 export class AzureBatchHttpService extends HttpService {
     public get serviceUrl() {
-        return this.batchLabs.azureEnvironment.batchUrl;
+        return this.batchExplorer.azureEnvironment.batchUrl;
     }
 
     constructor(
         httpHandler: HttpHandler,
         private adal: AdalService,
         private accountService: AccountService,
-        private batchLabs: BatchLabsService) {
+        private batchExplorer: BatchExplorerService) {
         super(httpHandler);
     }
 

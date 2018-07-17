@@ -5,7 +5,7 @@ import { ServerError } from "@batch-flask/core";
 import { ElectronRemote } from "@batch-flask/ui";
 import { AccountResource } from "app/models";
 import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";
-import { BatchLabsService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-labs.service";
 import { SecureUtils, log } from "app/utils";
 import { PythonRpcServerProcess } from "client/python-process";
 import { AccountService } from "../account.service";
@@ -26,9 +26,9 @@ export class PythonRpcService {
         private accountService: AccountService,
         private adalService: AdalService,
         private _zone: NgZone,
-        private batchLabs: BatchLabsService,
+        private batchExplorer: BatchExplorerService,
     ) {
-        this._serverProcess = batchLabs.pythonServer;
+        this._serverProcess = batchExplorer.pythonServer;
         this.connected = this._connected.asObservable();
     }
     /**
@@ -124,7 +124,7 @@ export class PythonRpcService {
     }
 
     public callWithAuth(method: string, params: any[]): Observable<any> {
-        const resourceUrl = this.batchLabs.azureEnvironment;
+        const resourceUrl = this.batchExplorer.azureEnvironment;
         return this.accountService.currentAccount.first().flatMap((account: AccountResource) => {
             const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.batchUrl);
             const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.armUrl);

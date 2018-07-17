@@ -4,7 +4,7 @@
   "description": "Batch Explorer is a tool to manage your Azure Batch accounts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Azure/BatchLabs"
+    "url": "https://github.com/Azure/BatchExplorer"
   },
   "author": {
     "name": "Microsoft Corporation",

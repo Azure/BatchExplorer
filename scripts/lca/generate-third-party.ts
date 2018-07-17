@@ -75,8 +75,8 @@ function listDependencies(): string[] {
 
     const packageJsonPath = path.join(Constants.root, "package.json");
 
-    const batchLabsPackage = JSON.parse(fs.readFileSync(packageJsonPath).toString());
-    const dependencies: string[] = Object.keys(batchLabsPackage.dependencies);
+    const batchExplorerPackage = JSON.parse(fs.readFileSync(packageJsonPath).toString());
+    const dependencies: string[] = Object.keys(batchExplorerPackage.dependencies);
 
     return dependencies.sort((a, b) => {
         if (a < b) { return -1; }

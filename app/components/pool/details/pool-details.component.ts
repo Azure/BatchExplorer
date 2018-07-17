@@ -6,7 +6,7 @@ import { Observable, Subscription } from "rxjs";
 
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
-import { BatchLabsService, PoolParams, PoolService, PricingService } from "app/services";
+import { BatchExplorerService, PoolParams, PoolService, PricingService } from "app/services";
 import { EntityView } from "app/services/core/data";
 import { NumberUtils } from "app/utils";
 import { PoolCommands } from "../action";
@@ -47,7 +47,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         private changeDetector: ChangeDetectorRef,
         private router: Router,
         private activatedRoute: ActivatedRoute,
-        private batchLabs: BatchLabsService,
+        private batchExplorer: BatchExplorerService,
         private pricingService: PricingService,
         private poolService: PoolService) {
 
@@ -96,8 +96,8 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public openInNewWindow() {
-        const link = `ms-batchlabs://route/standalone/pools/${this.pool.id}/graphs?fullscreen=true`;
-        const window = this.batchLabs.openNewWindow(link);
+        const link = `ms-batch-explorer://route/standalone/pools/${this.pool.id}/graphs?fullscreen=true`;
+        const window = this.batchExplorer.openNewWindow(link);
 
         return Observable.fromPromise(window.appReady);
     }

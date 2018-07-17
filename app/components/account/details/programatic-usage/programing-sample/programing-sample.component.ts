@@ -4,7 +4,7 @@ import { prerequisites, sampleTemplates } from "./samples";
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { AADCredential, CredentialType } from "app/components/account/details/programatic-usage";
 import { AccountResource } from "app/models";
-import { BatchLabsService } from "app/services";
+import { BatchExplorerService } from "app/services";
 import { SharedKeyCredentials } from "../shared-key-credentials.model";
 import "./programing-sample.scss";
 
@@ -39,7 +39,7 @@ export class ProgramingSampleComponent implements OnChanges {
     public content: string;
     public editorConfig: EditorConfig;
 
-    constructor(private batchLabs: BatchLabsService) {}
+    constructor(private batchExplorer: BatchExplorerService) {}
 
     public ngOnChanges(changes) {
         this._updateContent();
@@ -88,7 +88,7 @@ export class ProgramingSampleComponent implements OnChanges {
         if (storageAccount) {
             params.storageAccountName = storageAccount.resource.name;
             params.storageAccountKey = storageAccount.primary;
-            params.storageAccountSuffix = this.batchLabs.azureEnvironment.storageEndpoint;
+            params.storageAccountSuffix = this.batchExplorer.azureEnvironment.storageEndpoint;
         }
         return params;
     }

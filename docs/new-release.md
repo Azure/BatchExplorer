@@ -42,7 +42,7 @@ Describe what functionality changed in the app with a link to the issue.
 
 Example:
 ```md
-* Added this awesome thing in the pool details [\#123](https://github.com/Azure/BatchLabs/issues/123)
+* Added this awesome thing in the pool details [\#123](https://github.com/Azure/BatchExplorer/issues/123)
 ```
 
 **Note:** There is now a utility to generate the change log for a millestone also so you don't have to write it manually.
@@ -84,7 +84,7 @@ Create a PR against master with the changelog, package.json changes and referenc
 ## Step 4: Create a PR against stable.
 Now create a pull request against stable. Wait for the CI to pass.
 
-**Important:** DO NOT squash merge the changes.(Go in BatchLabs [settings](https://github.com/Azure/BatchLabs/settings) and renenable "Allow merge commits")
+**Important:** DO NOT squash merge the changes.(Go in BatchExplorer [settings](https://github.com/Azure/BatchExplorer/settings) and renenable "Allow merge commits")
 Then click on merge commit(Make sure it is not squash merge)
 
 ![](images/merge-commit.png)
@@ -93,8 +93,8 @@ All the commits in master should now be in stable with the merge commit.
 Now disable the "Allow merge commit" again to prevent mistake when merging to master.
 
 ## Step 5: Publish the release
-* Wait for the CI to test and build stable branch [Travis](https://travis-ci.org/Azure/BatchLabs/branches).
-* Go to github [release](https://github.com/Azure/BatchLabs/releases).
+* Wait for the CI to test and build stable branch [Travis](https://travis-ci.org/Azure/BatchExplorer/branches).
+* Go to github [release](https://github.com/Azure/BatchExplorer/releases).
 * You should see a new draft release with the new version.
 * Double check every platform executable and installer is present (exe, app, zip, dmg, deb, rpm).
 * Download and install one of the versions to make sure it runs and validate that the Python server is correctly running by creating an empty file-group or kicking off an NCJ job.

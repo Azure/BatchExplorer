@@ -4,15 +4,15 @@ import { TenantDetails, TenantDetailsAttributes } from "app/models";
 import { Constants } from "common";
 import { Observable } from "rxjs";
 import { AdalService } from "./adal";
-import { BatchLabsService } from "./batch-labs.service";
+import { BatchExplorerService } from "./batch-labs.service";
 
 @Injectable()
 export class TenantDetailsService {
     public get serviceUrl() {
-        return this.batchLabs.azureEnvironment.aadGraph;
+        return this.batchExplorer.azureEnvironment.aadGraph;
     }
 
-    constructor(private adal: AdalService, private http: HttpClient, private batchLabs: BatchLabsService) {
+    constructor(private adal: AdalService, private http: HttpClient, private batchExplorer: BatchExplorerService) {
 
     }
 

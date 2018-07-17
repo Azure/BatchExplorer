@@ -1,19 +1,19 @@
 # BatchExplorer
-[![Build Status](https://travis-ci.org/Azure/BatchLabs.svg?branch=master)](https://travis-ci.org/Azure/BatchLabs)
-[![codecov](https://codecov.io/gh/Azure/BatchLabs/branch/master/graph/badge.svg)](https://codecov.io/gh/Azure/BatchLabs)
+[![Build Status](https://travis-ci.org/Azure/BatchExplorer.svg?branch=master)](https://travis-ci.org/Azure/BatchExplorer)
+[![codecov](https://codecov.io/gh/Azure/BatchExplorer/branch/master/graph/badge.svg)](https://codecov.io/gh/Azure/BatchExplorer)
 
 **Note: BatchExplorer is in preview.**
 
 Batch Explorer is a tool to manage your Azure Batch accounts. The goal is to implement a great user experience that will help you debug, monitor and manage your pools, jobs and tasks.
 It will also include experimental features such as `Batch Templates` in the aim to improve your Batch experience. We are open to any feedback, ideas and contributions you might have.
 
-BatchLabs is updated monthly with new features and bug fixes. You can download it for Windows, macOS, and Linux on [Batch Explorer website](https://azure.github.io/BatchLabs/).
+BatchExplorer is updated monthly with new features and bug fixes. You can download it for Windows, macOS, and Linux on [Batch Explorer website](https://azure.github.io/BatchExplorer/).
 
 ![](docs/images/job-home.png)
 
 ## Downloads
 
-You can download the latest version at https://github.com/Azure/BatchLabs/releases
+You can download the latest version at https://github.com/Azure/BatchExplorer/releases
 
 ## Building BatchExplorer yourself
 #### 1. Prerequisites

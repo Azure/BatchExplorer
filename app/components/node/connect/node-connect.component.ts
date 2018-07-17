@@ -7,7 +7,7 @@ import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
 import {
     AddNodeUserAttributes,
-    BatchLabsService,
+    BatchExplorerService,
     NodeService,
     NodeUserService,
     PoolOsService,
@@ -78,7 +78,7 @@ export class NodeConnectComponent implements OnInit {
         private nodeUserService: NodeUserService,
         private nodeService: NodeService,
         private poolOsService: PoolOsService,
-        private batchLabs: BatchLabsService,
+        private batchExplorer: BatchExplorerService,
         private sshKeyService: SSHKeyService,
     ) {
         this.defaultUsername = settingsService.settings["username"];
@@ -136,7 +136,7 @@ export class NodeConnectComponent implements OnInit {
                     command: PoolUtils.isWindows(this.pool) ? "" : this.sshCommand,
                 };
                 // TODO insert rdpCommand as a get method and place in ternary statement above
-                return Observable.fromPromise(this.batchLabs.launchApplication(Application.terminal, args));
+                return Observable.fromPromise(this.batchExplorer.launchApplication(Application.terminal, args));
             }),
             share(),
         );

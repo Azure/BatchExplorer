@@ -4,7 +4,7 @@ import {
 
 import { Inject, Injectable, forwardRef } from "@angular/core";
 import { log } from "@batch-flask/utils";
-import { BatchLabsApplication } from "client/core/batchlabs-application";
+import { BatchExplorerApplication } from "client/core/batch-explorer-application";
 import { LocalDataStore } from "client/core/local-data-store";
 import { Constants } from "common";
 import { BehaviorSubject } from "rxjs";
@@ -24,7 +24,7 @@ function allowInsecureRequest() {
 export class ProxySettingsManager {
     private _settings = new BehaviorSubject<ProxySettingConfiguration>(undefined);
     constructor(
-        @Inject(forwardRef(() => BatchLabsApplication)) private batchLabsApp: BatchLabsApplication,
+        @Inject(forwardRef(() => BatchExplorerApplication)) private batchExplorerApp: BatchExplorerApplication,
         private storage: LocalDataStore) {
     }
 
@@ -42,20 +42,20 @@ export class ProxySettingsManager {
 
     public async configureManualy(): Promise<ProxySettings> {
         const config = this._settings.value;
-        const settings = await this.batchLabsApp.askUserForProxyConfiguration(config && config.settings);
+        const settings = await this.batchExplorerApp.askUserForProxyConfiguration(config && config.settings);
         this._settings.next({
             settings,
             credentials: null,
         });
         await this._saveProxySettings();
-        this.batchLabsApp.restart();
+        this.batchExplorerApp.restart();
         return settings;
     }
 
     public async credentials(): Promise<ProxyCredentials> {
         const current = this._currentCredentials;
         if (current) { return current; }
-        const credentials = await this.batchLabsApp.askUserForProxyCredentials();
+        const credentials = await this.batchExplorerApp.askUserForProxyCredentials();
 
         this._settings.next({
             settings: this._settings.value && this._settings.value.settings,

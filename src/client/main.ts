@@ -6,7 +6,7 @@
  *   2. Update electron user data folder
  *   3. Initialize the logger
  *   4. Setup extension functions
- *   5. Call startBatchLabs from startup.ts
+ *   5. Call startBatchExplorer from startup.ts
  */
 
 // 1. Add the src/ folder to the NODE_PATH to be able to do absolute import(Relative to src folder)
@@ -27,10 +27,10 @@ import "zone.js";
 
 import "@batch-flask/extensions";
 
-// 5. Call startBatchLabs from startup.ts
+// 5. Call startBatchExplorer from startup.ts
 import { log } from "@batch-flask/utils";
-import { startBatchLabs } from "./startup";
+import { startBatchExplorer } from "./startup";
 
-startBatchLabs().catch((e) => {
-    log.error("Error starting batchlabs", e);
+startBatchExplorer().catch((e) => {
+    log.error("Error starting Batch Explorer", e);
 });

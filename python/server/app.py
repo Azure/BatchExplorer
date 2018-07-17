@@ -6,7 +6,7 @@ import azure.batch.models.batch_error as batch_error
 import azure.common
 import logging
 
-class BatchLabsApp:
+class BatchExplorerApp:
     """
         Batch Explorer app
     """
@@ -72,4 +72,4 @@ class BatchLabsApp:
             raise JsonRpcMethodNotFoundError(name)
 
 
-app = BatchLabsApp()
+app = BatchExplorerApp()

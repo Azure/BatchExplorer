@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 
 import { HttpCode, ServerError } from "@batch-flask/core";
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
-import { AdalService, AzureHttpService, BatchLabsService } from "app/services";
+import { AdalService, AzureHttpService, BatchExplorerService } from "app/services";
 
 describe("AzureHttpService", () => {
     let service: AzureHttpService;
@@ -38,7 +38,7 @@ describe("AzureHttpService", () => {
             { provide: ConnectionBackend, useClass: MockBackend },
             { provide: RequestOptions, useClass: BaseRequestOptions },
             { provide: AdalService, useValue: adalSpy },
-            { provide: BatchLabsService, useValue: appServiceSpy },
+            { provide: BatchExplorerService, useValue: appServiceSpy },
             Http,
             AzureHttpService,
         ]);
