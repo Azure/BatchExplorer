@@ -25,7 +25,7 @@ export class NavigatorService {
     }
 
     public init() {
-        this.ipc.on(Constants.rendererEvents.batchlabsLink, (event, link) => {
+        this.ipc.on(Constants.rendererEvents.batchExplorerLink, (event, link) => {
             this.zone.run(() => {
                 this.openBatchExplorerLink(link);
             });
@@ -35,6 +35,7 @@ export class NavigatorService {
     public get onLine(): boolean {
         return navigator.onLine;
     }
+
     /**
      * Handle opening a link with the ms-batch-explorer:// protocol
      * @param value Full string starting with ms-batch-explorer://

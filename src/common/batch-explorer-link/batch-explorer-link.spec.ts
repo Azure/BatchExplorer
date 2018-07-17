@@ -1,4 +1,4 @@
-import { BatchExplorerLink } from "./batchlabs-link";
+import { BatchExplorerLink } from "./batch-explorer-link";
 
 describe("BatchExplorerLink", () => {
     const prefix = "ms-batch-explorer://route/pools/pool-1";
