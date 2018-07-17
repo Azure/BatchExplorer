@@ -2,12 +2,12 @@
     <input blInput #inputEl [placeholder]="placeholder" [disabled]="disabled || unit === DurationUnit.Unlimited" [ngModel]="time" (ngModelChange)="updateTime($event)"/>
     <div class="unit-picker">
         <bl-select [ngModel]="unit" (ngModelChange)="updateUnit($event)" placeholder="Unit" [disabled]="disabled">
-            <bl-option [value]="DurationUnit.Unlimited" label="Unlimited" *ngIf="allowUnlimited"></bl-option>
-            <bl-option [value]="DurationUnit.Days" label="Days"></bl-option>
-            <bl-option [value]="DurationUnit.Hours" label="Hours"></bl-option>
-            <bl-option [value]="DurationUnit.Minutes" label="Minutes"></bl-option>
-            <bl-option [value]="DurationUnit.Seconds" label="Seconds"></bl-option>
-            <bl-option [value]="DurationUnit.Custom" label="Custom (ISO format)"></bl-option>
+            <bl-option [value]="DurationUnit.Unlimited" [label]="'duration.unit.unlimited' | i18n" *ngIf="allowUnlimited"></bl-option>
+            <bl-option [value]="DurationUnit.Days" [label]="'duration.unit.days' | i18n"></bl-option>
+            <bl-option [value]="DurationUnit.Hours" [label]="'duration.unit.hours' | i18n"></bl-option>
+            <bl-option [value]="DurationUnit.Minutes" [label]="'duration.unit.minutes' | i18n"></bl-option>
+            <bl-option [value]="DurationUnit.Seconds" [label]="'duration.unit.seconds' | i18n"></bl-option>
+            <bl-option [value]="DurationUnit.Custom" [label]="'duration.unit.custom' | i18n"></bl-option>
         </bl-select>
     </div>
 </div>

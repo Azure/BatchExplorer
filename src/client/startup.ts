@@ -4,6 +4,7 @@ import { autoUpdater } from "electron-updater";
 
 import { platformDynamicServer } from "@angular/platform-server";
 import { log } from "@batch-flask/utils";
+import { ClientTranslationsLoaderService } from "client/core/client-translations-loader.service";
 import { Constants } from "./client-constants";
 import { BatchExplorerClientModule, initializeServices } from "./client.module";
 import { listenToSelectCertifcateEvent } from "./core";
@@ -55,6 +56,8 @@ export async function startBatchExplorer() {
     process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true";
 
     const module = await platformDynamicServer().bootstrapModule(BatchExplorerClientModule);
+    const translationLoader = module.injector.get(ClientTranslationsLoaderService);
+    await translationLoader.load();
     const batchExplorerApp = module.injector.get(BatchExplorerApplication);
     initializeServices(module.injector);
 

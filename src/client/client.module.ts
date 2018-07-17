@@ -1,10 +1,12 @@
 import { NgModule } from "@angular/core";
 import { ServerModule } from "@angular/platform-server";
 import { I18nModule } from "@batch-flask/core";
+import { TranslationsLoaderService } from "@batch-flask/core";
 import { OSService } from "@batch-flask/ui/electron/os.service";
 import { AADService } from "client/core/aad";
 import { BatchExplorerInitializer } from "client/core/batch-explorer-initializer";
 import { BlIpcMain } from "client/core/bl-ipc-main";
+import { ClientTranslationsLoaderService } from "client/core/client-translations-loader.service";
 import { FileSystem } from "client/core/fs";
 import { LocalDataStore } from "client/core/local-data-store";
 import { LocalFileStorage } from "client/core/local-file-storage";
@@ -39,6 +41,8 @@ export function initializeServices(injector) {
     ],
     providers: [
         { provide: AUTO_UPDATER, useValue: autoUpdater },
+        ClientTranslationsLoaderService,
+        { provide: TranslationsLoaderService, useClass: ClientTranslationsLoaderService },
         BatchExplorerApplication,
         BatchExplorerInitializer,
         ProxySettingsManager,
