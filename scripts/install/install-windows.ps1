@@ -132,7 +132,7 @@ function install-python-dependencies() {
     }
 }
 
-function build-batchlabs() {
+function build-batch-explorer() {
     npm run build-and-pack
 
     if($lastExitCode -eq 0) {
@@ -147,6 +147,6 @@ confirm-latest-commit
 confirm-node-version
 install-node-dependencies
 install-python-dependencies
-build-batchlabs
+build-batch-explorer
 
 display-summary

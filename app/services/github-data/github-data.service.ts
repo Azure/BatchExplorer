@@ -8,7 +8,7 @@ import { flatMap, share } from "rxjs/operators";
 import { FileSystemService } from "../fs.service";
 import { SettingsService } from "../settings.service";
 
-const repo = "BatchLabs-data";
+const repo = "BatchExplorer-data";
 const cacheTime = 1; // In days
 
 interface SyncFile {

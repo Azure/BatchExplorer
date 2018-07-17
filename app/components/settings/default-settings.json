@@ -12,8 +12,8 @@
   // List of subscription pattern to ignore(e.g. ["other-subscription*"])
   "subscription.ignore": [],
 
-  // Name of the container batchlabs will use to upload resource files when drag and drop
-  "storage.default-upload-container": "batchlabs-input",
+  // Name of the container BatchExplorer will use to upload resource files when drag and drop
+  "storage.default-upload-container": "batch-explorer-input",
 
   // If the app should automatically update when quiting
   "auto-update-on-quit": true,

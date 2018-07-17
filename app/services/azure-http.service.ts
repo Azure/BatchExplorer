@@ -9,7 +9,7 @@ import { AccessToken, RetryableHttpCode, ServerError } from "@batch-flask/core";
 import { Subscription } from "app/models";
 import { Constants } from "common";
 import { AdalService } from "./adal";
-import { BatchLabsService } from "./batch-labs.service";
+import { BatchExplorerService } from "./batch-labs.service";
 
 const apiVersionParams = "api-version";
 const apiVersion = Constants.ApiVersion.arm;
@@ -44,7 +44,7 @@ type SubscriptionOrTenant = Subscription | string;
  */
 @Injectable()
 export class AzureHttpService {
-    constructor(private http: Http, private adal: AdalService, private batchLabs: BatchLabsService) {
+    constructor(private http: Http, private adal: AdalService, private batchExplorer: BatchExplorerService) {
     }
 
     public request(
@@ -65,7 +65,7 @@ export class AzureHttpService {
     }
 
     public get baseUrl() {
-        return this.batchLabs.azureEnvironment.armUrl;
+        return this.batchExplorer.azureEnvironment.armUrl;
     }
 
     public get(subscription: SubscriptionOrTenant, uri: string, options?: RequestOptionsArgs) {

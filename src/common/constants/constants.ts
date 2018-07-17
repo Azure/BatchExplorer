@@ -186,13 +186,14 @@ export const ExternalApplication = {
     terminal: "TERMINAL",
 };
 
-export const customProtocolName = "ms-batchlabs";
+export const legacyProtocolName = "ms-batchlabs";
+export const customProtocolName = "ms-batch-explorer";
 
 /**
  * Name of events that needs to be passed between rendered and main
  */
 export const rendererEvents = {
-    batchlabsLink: "batchlabs-link",
+    batchExplorerLink: "batchExplorer-link",
 };
 
 export const isRenderer = (process && process.type === "renderer");

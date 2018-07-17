@@ -1,26 +1,26 @@
 import { Injectable } from "@angular/core";
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { ElectronRemote } from "@batch-flask/ui";
-import { BatchLabsApplication, FileSystem, LocalFileStorage } from "client/core";
+import { BatchExplorerApplication, FileSystem, LocalFileStorage } from "client/core";
 import { AADService, AuthenticationWindow } from "client/core/aad";
 import { PythonRpcServerProcess } from "client/python-process";
 import { SplashScreen } from "client/splash-screen";
-import { BatchLabsLink } from "common";
+import { BatchExplorerLink } from "common";
 import { IpcEvent } from "common/constants";
 import { AppUpdater } from "electron-updater";
 
 @Injectable()
-export class BatchLabsService {
+export class BatchExplorerService {
     public pythonServer: PythonRpcServerProcess;
     public aadService: AADService;
     public autoUpdater: AppUpdater;
     /**
-     * Root path of where BatchLabs is running.
+     * Root path of where BatchExplorer is running.
      */
     public rootPath: string;
 
     /**
-     * Version of BatchLabs
+     * Version of BatchExplorer
      */
     public version: string;
 
@@ -29,11 +29,11 @@ export class BatchLabsService {
      */
     public resourcesFolder: string;
 
-    private _app: BatchLabsApplication;
+    private _app: BatchExplorerApplication;
     private _azureEnvironment: AzureEnvironment;
 
     constructor(private remote: ElectronRemote) {
-        this._app = remote.getCurrentWindow().batchLabsApp;
+        this._app = remote.getCurrentWindow().batchExplorerApp;
         this._app.azureEnvironmentObs.subscribe((x) => {
             this._azureEnvironment = x;
         });
@@ -49,7 +49,7 @@ export class BatchLabsService {
         return this._azureEnvironment;
     }
 
-    public openNewWindow(link: string | BatchLabsLink) {
+    public openNewWindow(link: string | BatchExplorerLink) {
         return this._app.openNewWindow(link);
     }
 

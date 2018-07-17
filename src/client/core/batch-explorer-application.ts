@@ -12,7 +12,7 @@ import { setMenu } from "client/menu";
 import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-configuration-window";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { ProxySettingsManager } from "client/proxy/proxy-settings";
-import { BatchLabsLink, Constants, Deferred } from "common";
+import { BatchExplorerLink, Constants, Deferred } from "common";
 import {  IpcEvent } from "common/constants";
 import { ProxyCredentials, ProxySettings } from "get-proxy-settings";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -21,14 +21,14 @@ import { MainWindow, WindowState } from "../main-window";
 import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
 import { AADService, AuthenticationState, AuthenticationWindow } from "./aad";
-import { BatchLabsInitializer } from "./batchlabs-initializer";
+import { BatchExplorerInitializer } from "./batch-explorer-initializer";
 import { MainWindowManager } from "./main-window-manager";
 
 const osName = `${os.platform()}-${os.arch()}/${os.release()}`;
 const isDev = ClientConstants.isDev ? "-dev" : "";
-const userAgent = `(${osName}) BatchLabs/${ClientConstants.version}${isDev}`;
+const userAgent = `(${osName}) BatchExplorer/${ClientConstants.version}${isDev}`;
 
-export enum BatchLabsState {
+export enum BatchExplorerState {
     Loading,
     Ready,
 }
@@ -36,21 +36,21 @@ export enum BatchLabsState {
 export const AUTO_UPDATER = new InjectionToken("AUTO_UPDATER");
 
 @Injectable()
-export class BatchLabsApplication {
+export class BatchExplorerApplication {
     public authenticationWindow = new AuthenticationWindow(this);
     public recoverWindow = new RecoverWindow(this);
     public windows = new MainWindowManager(this);
     public pythonServer = new PythonRpcServerProcess();
     public aadService: AADService;
-    public state: Observable<BatchLabsState>;
+    public state: Observable<BatchExplorerState>;
     public proxySettings: ProxySettingsManager;
 
     public get azureEnvironment(): AzureEnvironment { return this._azureEnvironment.value; }
     public azureEnvironmentObs: Observable<AzureEnvironment>;
 
     private _azureEnvironment = new BehaviorSubject(AzureEnvironment.Azure);
-    private _state = new BehaviorSubject<BatchLabsState>(BatchLabsState.Loading);
-    private _initializer: BatchLabsInitializer;
+    private _state = new BehaviorSubject<BatchExplorerState>(BatchExplorerState.Loading);
+    private _initializer: BatchExplorerInitializer;
     private _currentlyAskingForCredentials: Promise<any>;
 
     constructor(
@@ -68,7 +68,7 @@ export class BatchLabsApplication {
     }
 
     public async init() {
-        this._initializer = this.injector.get(BatchLabsInitializer);
+        this._initializer = this.injector.get(BatchExplorerInitializer);
         this.aadService = this.injector.get(AADService);
         this.proxySettings = this.injector.get(ProxySettingsManager);
 
@@ -150,19 +150,19 @@ export class BatchLabsApplication {
     }
 
     /**
-     * Open a new link in the ms-batchlabs format
+     * Open a new link in the ms-batch-explorer format
      * If the link provide a session id which already exists it will change the window with that session id.
-     * @param link ms-batchlabs://...
+     * @param link ms-batch-explorer://...
      */
-    public openLink(link: string | BatchLabsLink, show) {
+    public openLink(link: string | BatchExplorerLink, show) {
         return this.windows.openLink(link);
     }
 
     /**
-     * Open a new link in the ms-batchlabs format
-     * @param link ms-batchlabs://...
+     * Open a new link in the ms-batch-explorer format
+     * @param link ms-batch-explorer://...
      */
-    public openNewWindow(link?: string | BatchLabsLink): MainWindow {
+    public openNewWindow(link?: string | BatchExplorerLink): MainWindow {
         return this.windows.openNewWindow(link);
     }
 
@@ -179,12 +179,12 @@ export class BatchLabsApplication {
             return this.windows.openNewWindow(null, showWhenReady);
         }
         try {
-            const link = new BatchLabsLink(arg);
+            const link = new BatchExplorerLink(arg);
             return this.openLink(link, false);
         } catch (e) {
             dialog.showMessageBox({
                 type: "error",
-                title: "Cannot open given link in BatchLabs",
+                title: "Cannot open given link in BatchExplorer",
                 message: e.message,
             }, () => {
                 // If there is no window open we quit the app
@@ -299,9 +299,14 @@ export class BatchLabsApplication {
         }
 
         if (app.setAsDefaultProtocolClient(Constants.customProtocolName)) {
-            log.info(`Registered ${Constants.customProtocolName}:// as a protocol for batchlabs`);
+            log.info(`Registered ${Constants.customProtocolName}:// as a protocol for Batch Explorer`);
         } else {
-            log.error(`Failed to register ${Constants.customProtocolName}:// as a protocol for batchlabs`);
+            log.error(`Failed to register ${Constants.customProtocolName}:// as a protocol for Batch Explorer`);
+        }
+        if (app.setAsDefaultProtocolClient(Constants.legacyProtocolName)) {
+            log.info(`Registered ${Constants.legacyProtocolName}:// as a protocol for Batch Explorer`);
+        } else {
+            log.error(`Failed to register ${Constants.legacyProtocolName}:// as a protocol for Batch Explorer`);
         }
     }
 

@@ -28,7 +28,7 @@ import { SettingsModule } from "app/components/settings";
 import { TaskModule } from "app/components/task/task.module";
 
 // unhandled application error handler
-import { BatchLabsErrorHandler } from "app/error-handler";
+import { BatchExplorerErrorHandler } from "app/error-handler";
 
 // services
 import { HttpModule } from "@angular/http";
@@ -53,7 +53,7 @@ import {
     AuthorizationHttpService,
     AutoscaleFormulaService,
     AzureHttpService,
-    BatchLabsService,
+    BatchExplorerService,
     CacheDataService,
     CertificateService,
     CommandService,
@@ -136,7 +136,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         AzureHttpService,
         ArmHttpService,
         AuthorizationHttpService,
-        BatchLabsService,
+        BatchExplorerService,
         CacheDataService,
         CertificateService,
         CommandService,
@@ -182,7 +182,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         VmSizeService,
         PredefinedFormulaService,
         ...graphApiServices,
-        { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
+        { provide: ErrorHandler, useClass: BatchExplorerErrorHandler },
     ],
 })
 export class AppModule { }

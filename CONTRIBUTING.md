@@ -1,4 +1,4 @@
-# Contributing to BatchLabs
+# Contributing to BatchExplorer
 :+1::tada: First off, thanks for taking the time to contribute! :tada::+1:
 
 ### Pull request message format

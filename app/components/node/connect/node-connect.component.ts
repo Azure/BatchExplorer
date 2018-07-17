@@ -9,7 +9,7 @@ import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Node, NodeConnectionSettings, Pool } from "app/models";
 import {
     AddNodeUserAttributes,
-    BatchLabsService,
+    BatchExplorerService,
     FileSystemService,
     NodeConnectService,
     NodeUserService,
@@ -70,7 +70,7 @@ export class NodeConnectComponent implements OnInit {
         public sidebarRef: SidebarRef<any>,
         public settingsService: SettingsService,
         private nodeUserService: NodeUserService,
-        private batchLabs: BatchLabsService,
+        private batchExplorer: BatchExplorerService,
         private nodeConnectService: NodeConnectService,
         private shell: ElectronShell,
         private changeDetector: ChangeDetectorRef,
@@ -242,7 +242,7 @@ export class NodeConnectComponent implements OnInit {
                 const args = {
                     command: this.sshCommand,
                 };
-                return from(this.batchLabs.launchApplication(ExternalApplication.terminal, args));
+                return from(this.batchExplorer.launchApplication(ExternalApplication.terminal, args));
             }),
             share(),
         );

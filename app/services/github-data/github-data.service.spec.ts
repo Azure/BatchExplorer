@@ -58,7 +58,7 @@ describe("GithubDataService", () => {
         githubDataService.ready.subscribe(() => {
             expect(fsSpy.download).toHaveBeenCalledOnce();
             expect(fsSpy.download).toHaveBeenCalledWith(
-                "https://github.com/Azure/BatchLabs-data/archive/master.zip",
+                "https://github.com/Azure/BatchExplorer-data/archive/master.zip",
                 zipFile);
             expect(fsSpy.unzip).toHaveBeenCalledOnce();
             expect(fsSpy.unzip).toHaveBeenCalledWith(
@@ -71,7 +71,7 @@ describe("GithubDataService", () => {
             );
             const args = fsSpy.saveFile.calls.mostRecent().args;
             const data = JSON.parse(args[1]);
-            expect(data.source).toEqual("https://github.com/Azure/BatchLabs-data/archive/master.zip");
+            expect(data.source).toEqual("https://github.com/Azure/BatchExplorer-data/archive/master.zip");
             expect(isNaN(Date.parse(data.lastSync))).toBe(false);
             done();
         });
@@ -85,7 +85,7 @@ describe("GithubDataService", () => {
         });
 
         const response = httpMock.expectOne(
-            "https://raw.githubusercontent.com/Azure/BatchLabs-data/master/some/file/on/github.json");
+            "https://raw.githubusercontent.com/Azure/BatchExplorer-data/master/some/file/on/github.json");
         response.flush(`{some: "content"}`);
     });
 });

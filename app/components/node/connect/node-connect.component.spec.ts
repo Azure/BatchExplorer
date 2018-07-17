@@ -13,7 +13,7 @@ import { ConnectionType, Node, Pool } from "app/models";
 
 import {
     AddNodeUserAttributes,
-    BatchLabsService,
+    BatchExplorerService,
     FileSystemService,
     NodeConnectService,
     NodeUserService,
@@ -39,7 +39,7 @@ describe("NodeConnectComponent", () => {
 
     let nodeUserServiceSpy;
     let settingsServiceSpy;
-    let batchLabsServiceSpy;
+    let batchExplorerServiceSpy;
     let fsServiceSpy;
     let electronShellSpy;
     let secureUtilsSpy;
@@ -56,7 +56,7 @@ describe("NodeConnectComponent", () => {
             },
         };
 
-        batchLabsServiceSpy = {
+        batchExplorerServiceSpy = {
             launchApplication: jasmine.createSpy("").and.returnValue(
                 new Promise((resolve, reject) => {
                     resolve({ name: "banana" });
@@ -109,7 +109,7 @@ describe("NodeConnectComponent", () => {
                 { provide: FileSystemService, useValue: fsServiceSpy },
                 { provide: PermissionService, useValue: null },
                 { provide: SettingsService, useValue: settingsServiceSpy },
-                { provide: BatchLabsService, useValue: batchLabsServiceSpy },
+                { provide: BatchExplorerService, useValue: batchExplorerServiceSpy },
                 { provide: ClipboardService, useValue: {} },
                 { provide: ElectronShell, useValue: electronShellSpy },
                 { provide: SecureUtils, useValue: secureUtilsSpy },
@@ -170,8 +170,8 @@ describe("NodeConnectComponent", () => {
                     expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ sshPublicKey: "baz" }));
 
                     // validate calls to launchApplication
-                    expect(batchLabsServiceSpy.launchApplication).toHaveBeenCalledOnce();
-                    const launchApplicationArgs = batchLabsServiceSpy.launchApplication.calls.mostRecent().args;
+                    expect(batchExplorerServiceSpy.launchApplication).toHaveBeenCalledOnce();
+                    const launchApplicationArgs = batchExplorerServiceSpy.launchApplication.calls.mostRecent().args;
                     expect(launchApplicationArgs.length).toBe(2);
                     expect(Object.keys(launchApplicationArgs[1])).toContain("command");
                     expect(launchApplicationArgs[1].command).toContain("ssh");

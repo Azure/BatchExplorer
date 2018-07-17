@@ -50,7 +50,7 @@ export class ChooseActionComponent implements OnInit, OnDestroy {
     }
 
     public viewOnGithub(action: ApplicationAction) {
-        const link = `https://github.com/Azure/BatchLabs-data/tree/master/ncj/${this.application.id}/${action.id}`;
+        const link = `https://github.com/Azure/BatchExplorer-data/tree/master/ncj/${this.application.id}/${action.id}`;
         this.electronShell.openExternal(link);
     }
 

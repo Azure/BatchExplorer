@@ -3,7 +3,7 @@ import { ProxySetting, ProxySettings } from "get-proxy-settings";
 
 import { autobind } from "@batch-flask/core";
 import { Constants } from "client/client-constants";
-import { BatchLabsApplication, GenericWindow } from "client/core";
+import { BatchExplorerApplication, GenericWindow } from "client/core";
 import { Deferred } from "common";
 const urls = Constants.urls.manualProxyConfiguration;
 const url = process.env.HOT ? urls.dev : urls.prod;
@@ -12,8 +12,8 @@ export class ManualProxyConfigurationWindow extends GenericWindow {
     public settings: Promise<ProxySettings>;
     private _deferred: Deferred<ProxySettings>;
 
-    constructor(batchLabsApplication: BatchLabsApplication, private currentSettings: ProxySettings) {
-        super(batchLabsApplication);
+    constructor(batchExplorerApplication: BatchExplorerApplication, private currentSettings: ProxySettings) {
+        super(batchExplorerApplication);
         this._deferred = new Deferred();
         this.settings = this._deferred.promise;
     }

@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 
 import { StorageKeys } from "app/models";
 import { AccountService } from "app/services/account.service";
-import { BatchLabsService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-labs.service";
 import { ArmResourceUtils } from "app/utils";
 import { BlobStorageClientProxy } from "./blob-storage-client-proxy";
 import { StorageAccountKeysService } from "./storage-account-keys.service";
@@ -32,7 +32,7 @@ export class StorageClientService {
     private _sharedKeyMap = new Map<string, any>();
 
     constructor(
-        private batchLabs: BatchLabsService,
+        private batchExplorer: BatchExplorerService,
         private accountService: AccountService,
         private storageKeysService: StorageAccountKeysService) {
 
@@ -71,7 +71,7 @@ export class StorageClientService {
             return this._storageClientFactory.getBlobServiceForSharedKey({
                 account: ArmResourceUtils.getAccountNameFromResourceId(storageAccountId),
                 key: keys.primaryKey,
-                endpoint: this.batchLabs.azureEnvironment.storageEndpoint,
+                endpoint: this.batchExplorer.azureEnvironment.storageEndpoint,
             });
         });
     }
