@@ -113,9 +113,13 @@ export class MonitorChartColor extends ThemeElement<ThemeDefinition["monitorChar
 
 export class Theme extends ThemeElement<ThemeDefinition> {
     @CssColor() public primary: ColorPalette;
+    @CssColor("primary-contrast") public primaryContrast: ColorPalette;
     @CssColor() public danger: ColorPalette;
+    @CssColor("danger-contrast") public dangerContrast: ColorPalette;
     @CssColor() public warn: ColorPalette;
+    @CssColor("warn-contrast") public warnContrast: ColorPalette;
     @CssColor() public success: ColorPalette;
+    @CssColor("success-contrast") public successContrast: ColorPalette;
     @CssColor("main-background") public mainBackground: string;
     @CssColor("secondary-background") public secondaryBackground: string;
     @CssColor("card-background") public cardBackground: string;

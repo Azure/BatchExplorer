@@ -24,7 +24,7 @@ export interface ApplicationCreateParams {
 export interface SecretParams {
     /**
      * Description for the secret.
-     * @default "BatchLabs secret"
+     * @default "BatchExplorer secret"
      */
     name?: string;
 
@@ -124,7 +124,7 @@ export class AADApplicationService {
     private _builtSecret(secret: SecretParams): PasswordCredentialAttributes {
         const startDate = new Date();
         const endDate = secret.endDate || new Date(2299, 12, 31);
-        const name = secret.name || "BatchLabs secret";
+        const name = secret.name || "BatchExplorer secret";
         const value = secret.value || SecureUtils.token();
         const customKeyIdentifier = btoa(name);
         const keyId = SecureUtils.uuid();

@@ -10,7 +10,7 @@ import { issueUrl } from "./github-urls";
 
 const root = path.resolve(path.join(__dirname, "../.."));
 const allMessages = [];
-const repoName = "Azure/BatchLabs";
+const repoName = "Azure/BatchExplorer";
 const newIssueBody = `
 - [x] Update version in package.json
 - [x] Update changelog
@@ -162,7 +162,7 @@ async function buildApp() {
     console.log("Building the app with npm run build-and-pack...");
     await run("npm run build-and-pack");
     success("Build the app successfully. Starting it now, double check it is working correctly");
-    await run(path.join(root, "release/win-unpacked/BatchLabs.exe"));
+    await run(path.join(root, "release/win-unpacked/BatchExplorer.exe"));
 }
 
 async function startPublish() {

@@ -1,6 +1,6 @@
 # How to open a popup dialog
 
-You can open a popup dialog in batchlabs to ask for confirmation to the user, fill a small form, etc.
+You can open a popup dialog in Batch Explorer to ask for confirmation to the user, fill a small form, etc.
 
 First you need to import the `DialogService`
 

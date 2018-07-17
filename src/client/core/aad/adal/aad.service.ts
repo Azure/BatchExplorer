@@ -2,7 +2,7 @@
 import { Inject, Injectable, forwardRef } from "@angular/core";
 import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
-import { BatchLabsApplication } from "client/core/batchlabs-application";
+import { BatchExplorerApplication } from "client/core/batch-explorer-application";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { fetch } from "client/core/fetch";
 import { LocalDataStore } from "client/core/local-data-store";
@@ -44,7 +44,7 @@ export class AADService {
     private _tokenCache: AccessTokenCache;
 
     constructor(
-        @Inject(forwardRef(() => BatchLabsApplication)) private app: BatchLabsApplication,
+        @Inject(forwardRef(() => BatchExplorerApplication)) private app: BatchExplorerApplication,
         private localStorage: LocalDataStore,
         ipcMain: BlIpcMain) {
         this._tokenCache = new AccessTokenCache(localStorage);
@@ -73,7 +73,7 @@ export class AADService {
 
     /**
      * Login to azure active directory.
-     * This will retrieve fresh tokens for all tenant and resources needed by BatchLabs.
+     * This will retrieve fresh tokens for all tenant and resources needed by BatchExplorer.
      * It will try to use the refresh token cached to prevent a new prompt window if possible.
      */
     public async login(): Promise<any> {

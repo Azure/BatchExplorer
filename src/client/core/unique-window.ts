@@ -1,5 +1,5 @@
 import { log } from "@batch-flask/utils";
-import { BatchLabsApplication } from ".";
+import { BatchExplorerApplication } from ".";
 
 export abstract class GenericWindow {
     public expectedClose = false;
@@ -7,7 +7,7 @@ export abstract class GenericWindow {
     protected _window: Electron.BrowserWindow;
     private _resolveDomReady: () => void;
 
-    constructor(protected batchLabsApp: BatchLabsApplication) {
+    constructor(protected batchExplorerApp: BatchExplorerApplication) {
         this.domReady = new Promise((resolve) => {
             this._resolveDomReady = resolve;
         });
@@ -98,7 +98,7 @@ export abstract class UniqueWindow extends GenericWindow {
         window.once("close", () => {
             if (this.expectedClose) { return; }
             log.info(`Window ${this.constructor.name} closed. Quiting the app.`);
-            this.batchLabsApp.quit();
+            this.batchExplorerApp.quit();
         });
     }
 }

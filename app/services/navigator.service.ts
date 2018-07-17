@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { IpcService } from "@batch-flask/ui";
 
 import { Constants } from "app/utils";
-import { BatchLabsLink, BatchLabsLinkAction } from "common";
+import { BatchExplorerLink, BatchExplorerLinkAction } from "common";
 import * as decodeUriComponent from "decode-uri-component";
 import { AccountService } from "./account.service";
 
@@ -25,9 +25,9 @@ export class NavigatorService {
     }
 
     public init() {
-        this.ipc.on(Constants.rendererEvents.batchlabsLink, (event, link) => {
+        this.ipc.on(Constants.rendererEvents.batchExplorerLink, (event, link) => {
             this.zone.run(() => {
-                this.openBatchLabsLink(link);
+                this.openBatchExplorerLink(link);
             });
         });
     }
@@ -35,14 +35,15 @@ export class NavigatorService {
     public get onLine(): boolean {
         return navigator.onLine;
     }
+
     /**
-     * Handle opening a link with the ms-batchlabs:// protocol
-     * @param value Full string starting with ms-batchlabs://
+     * Handle opening a link with the ms-batch-explorer:// protocol
+     * @param value Full string starting with ms-batch-explorer://
      */
-    public openBatchLabsLink(link: string | BatchLabsLink) {
-        const labsLink = new BatchLabsLink(link);
+    public openBatchExplorerLink(link: string | BatchExplorerLink) {
+        const labsLink = new BatchExplorerLink(link);
         switch (labsLink.action) {
-            case BatchLabsLinkAction.route:
+            case BatchExplorerLinkAction.route:
                 const params = new URLSearchParams(labsLink.queryParams);
                 const decodedParams = decodeUriComponent(params.toString());
                 this.goto(`${labsLink.path}?${decodedParams}`, {

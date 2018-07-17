@@ -1,10 +1,10 @@
 {
   "name": "batch-labs",
-  "productName": "Batch Labs",
-  "description": "Batch labs is a tool to manage your Azure Batch accounts",
+  "productName": "Batch Explorer",
+  "description": "Batch Explorer is a tool to manage your Azure Batch accounts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Azure/BatchLabs"
+    "url": "https://github.com/Azure/BatchExplorer"
   },
   "author": {
     "name": "Microsoft Corporation",
@@ -37,7 +37,7 @@
     "dev": "concurrently --kill-others \"npm run -s dev-server\" \"npm run -s dev-electron\"",
     "dev-electron": "cross-env HOT=1 electron build/client/main.js",
     "dev-server": "npm run webpack-dev-server -- --hot --inline --colors --content-base app/",
-    "tslint": "node -r ts-node/register node_modules/tslint/bin/tslint -p tsconfig.json -c tslint.json \"app/**/*.ts\" \"src/**/*.ts\" \"test/**/*.ts\" \"./*.js\" \"config/**/*.js\"",
+    "tslint": "node -r ts-node/register node_modules/tslint/bin/tslint -p tsconfig.json -c tslint.json \"app/**/*.ts\" \"src/**/*.ts\" \"test/**/*.ts\" \"./*.js\" \"config/**/*.js\" -t verbose",
     "stylelint": "stylelint --syntax scss \"app/**/*.scss\"",
     "lint": "npm run -s tslint && npm run -s stylelint",
     "package": "electron-builder",

@@ -2,7 +2,7 @@
 
 
 ## 1. Prerequisites
-Follow the **Building batchlabs yourself** instruction of the [main readme](../Readme.md) in order to install all require dependencies.
+Follow the **Building Batch Explorer yourself** instruction of the [main readme](../Readme.md) in order to install all require dependencies.
 
 **Use `npm` 5 and above. This ensures a consistent build environment with the right set of dependencies**
 

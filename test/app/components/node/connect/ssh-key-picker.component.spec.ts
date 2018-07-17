@@ -7,7 +7,7 @@ import { BehaviorSubject } from "rxjs";
 
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { DialogService } from "@batch-flask/ui/dialogs";
-import { SSHKeyPickerComponent } from "app/components/node/connect";
+import { SSHKeyPickerComponent } from "app/components/node/connect/ssh-key-picker";
 import { SSHPublicKey } from "app/models";
 import { SSHKeyService } from "app/services";
 import { click } from "test/utils/helpers";

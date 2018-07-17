@@ -10,7 +10,7 @@ import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
     AccountService, AuthorizationHttpService, AutoscaleFormulaService,
-    BatchLabsService, CommandService, GithubDataService, NavigatorService,
+    BatchExplorerService, CommandService, GithubDataService, NavigatorService,
     NcjTemplateService, PoolOsService, PredefinedFormulaService, PricingService,
     PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
 } from "app/services";
@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
         private githubDataService: GithubDataService,
         private poolOsService: PoolOsService,
         private sshKeyService: SSHKeyService,
-        batchLabsService: BatchLabsService,
+        batchExplorerService: BatchExplorerService,
         pythonRpcService: PythonRpcService,
         private vmSizeService: VmSizeService,
         themeService: ThemeService,

@@ -2,7 +2,7 @@ import { BehaviorSubject, Subscription } from "rxjs";
 
 import { Inject, Injectable, forwardRef } from "@angular/core";
 import { SplashScreen } from "client/splash-screen";
-import { BatchLabsApplication } from "./batchlabs-application";
+import { BatchExplorerApplication } from "./batch-explorer-application";
 
 interface InitializerTask {
     message: string;
@@ -10,13 +10,14 @@ interface InitializerTask {
 }
 
 @Injectable()
-export class BatchLabsInitializer {
+export class BatchExplorerInitializer {
     public splashScreen: SplashScreen;
 
     private _sub: Subscription;
     private _tasks = new BehaviorSubject<Map<string, InitializerTask>>(new Map());
-    constructor(@Inject(forwardRef(() => BatchLabsApplication)) batchLabsApplication: BatchLabsApplication) {
-        this.splashScreen = new SplashScreen(batchLabsApplication);
+    constructor(
+        @Inject(forwardRef(() => BatchExplorerApplication)) batchExplorerApplication: BatchExplorerApplication) {
+        this.splashScreen = new SplashScreen(batchExplorerApplication);
         this._sub = this._tasks.subscribe(() => {
             this._updateSplashScreen();
         });

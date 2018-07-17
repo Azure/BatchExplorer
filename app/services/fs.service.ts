@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { FSWatcher } from "chokidar";
 
-import { BatchLabsService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-labs.service";
 import { CommonFolders, FileSystem } from "client/core";
 
 /**
@@ -12,8 +12,8 @@ export class FileSystemService {
     public commonFolders: CommonFolders;
     private _fs: FileSystem;
 
-    constructor(batchLabs: BatchLabsService) {
-        this._fs = batchLabs.getFileSystem();
+    constructor(batchExplorer: BatchExplorerService) {
+        this._fs = batchExplorer.getFileSystem();
         this.commonFolders = {...this._fs.commonFolders};
     }
 
@@ -41,7 +41,6 @@ export class FileSystemService {
      */
     public saveFile(dest: string, content: string): Promise<string> {
         return this._fs.saveFile(dest, content);
-
     }
 
     public readFile(path: string): Promise<string> {

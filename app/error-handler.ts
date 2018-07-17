@@ -5,7 +5,7 @@ function extractMessage(error: any): string {
     return error instanceof Error ? error.message : error.toString();
 }
 
-export class BatchLabsErrorHandler extends ErrorHandler {
+export class BatchExplorerErrorHandler extends ErrorHandler {
     constructor() {
         super();
     }

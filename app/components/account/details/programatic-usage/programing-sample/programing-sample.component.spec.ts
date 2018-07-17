@@ -5,7 +5,7 @@ import { By } from "@angular/platform-browser";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ClipboardService } from "@batch-flask/ui";
 import { PropertyListModule } from "@batch-flask/ui/property-list";
-import { BatchLabsService } from "app/services";
+import { BatchExplorerService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { MockEditorComponent } from "test/utils/mocks/components";
 import { ProgramingSampleComponent } from "./programing-sample.component";
@@ -43,7 +43,7 @@ describe("ProgramingSampleComponent", () => {
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
                 { provide: ClipboardService, useValue: {} },
-                { provide: BatchLabsService, useValue: {} },
+                { provide: BatchExplorerService, useValue: {} },
             ],
         });
         fixture = TestBed.createComponent(TestComponent);

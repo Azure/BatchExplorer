@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 import { AccessToken, RetryableHttpCode, ServerError } from "@batch-flask/core";
 import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
-import { BatchLabsService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-labs.service";
 import { Constants } from "app/utils";
 
 function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
@@ -25,15 +25,15 @@ export class AppInsightsApiService {
         private http: Http,
         private adal: AdalService,
         private accountService: AccountService,
-        private batchLabs: BatchLabsService) {
+        private batchExplorer: BatchExplorerService) {
     }
 
     public get resourceUrl() {
-        return this.batchLabs.azureEnvironment.appInsights;
+        return this.batchExplorer.azureEnvironment.appInsights;
     }
 
     public get baseUrl() {
-        return this.batchLabs.azureEnvironment.appInsights + "v1/";
+        return this.batchExplorer.azureEnvironment.appInsights + "v1/";
     }
 
     public request(

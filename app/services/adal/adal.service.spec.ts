@@ -21,7 +21,7 @@ describe("AdalService spec", () => {
     let service: AdalService;
     let aadServiceSpy;
     let remoteSpy;
-    let batchLabsSpy;
+    let batchExplorerSpy;
     let notificationServiceSpy;
 
     beforeEach(() => {
@@ -31,14 +31,14 @@ describe("AdalService spec", () => {
         remoteSpy = {
             send: jasmine.createSpy("accessTokenData").and.returnValue(Promise.resolve(token1)),
         };
-        batchLabsSpy = {
+        batchExplorerSpy = {
             aadService: aadServiceSpy,
         };
 
         notificationServiceSpy = {
             error: jasmine.createSpy("notify.error"),
         };
-        service = new AdalService(remoteSpy, batchLabsSpy, notificationServiceSpy);
+        service = new AdalService(remoteSpy, batchExplorerSpy, notificationServiceSpy);
     });
 
     it("It notify of error if tenants ids fail", () => {

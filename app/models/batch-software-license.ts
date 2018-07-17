@@ -1,5 +1,5 @@
 /**
- * List of software license that can be added to batchlabs
+ * List of software license that can be added to Batch Explorer
  */
 export enum BatchSoftwareLicense {
     "3dsmax" = "3dsmax",

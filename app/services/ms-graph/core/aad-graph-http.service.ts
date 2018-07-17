@@ -7,7 +7,7 @@ import { HttpRequestOptions, HttpService, ServerError } from "@batch-flask/core"
 import { UrlUtils } from "@batch-flask/utils";
 import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
-import { BatchLabsService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-labs.service";
 import { AADUser } from "client/core/aad/adal/aad-user";
 import { Constants } from "common";
 import { flatMap, shareReplay, take } from "rxjs/operators";
@@ -15,7 +15,7 @@ import { flatMap, shareReplay, take } from "rxjs/operators";
 @Injectable()
 export class AADGraphHttpService extends HttpService {
     public get serviceUrl() {
-        return this.batchLabs.azureEnvironment.aadGraph;
+        return this.batchExplorer.azureEnvironment.aadGraph;
     }
 
     private _currentUser: AADUser;
@@ -23,7 +23,7 @@ export class AADGraphHttpService extends HttpService {
         httpHandler: HttpHandler,
         private adal: AdalService,
         private accountService: AccountService,
-        private batchLabs: BatchLabsService) {
+        private batchExplorer: BatchExplorerService) {
         super(httpHandler);
         this.adal.currentUser.subscribe(x => this._currentUser = x);
     }
