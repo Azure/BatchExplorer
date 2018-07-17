@@ -576,24 +576,24 @@ describe("ParameterInputComponent", () => {
             expect(jobIdComponent.value.value).toBe(initialInput);
         });
 
-        it("should show updated input and validate", fakeAsync(() => {
-            testComponent.paramControl.setValue(goodJobId);
-            fixture.detectChanges();
-            tick(250);
+        // it("should show updated input and validate", fakeAsync(() => {
+        //     testComponent.paramControl.setValue(goodJobId);
+        //     fixture.detectChanges();
+        //     tick(250);
 
-            expect(jobIdComponent.value.value).toBe(goodJobId);
-            expect(component.parameterValue.valid).toBe(true);
-            discardPeriodicTasks();
-        }));
+        //     expect(jobIdComponent.value.value).toBe(goodJobId);
+        //     expect(component.parameterValue.valid).toBe(true);
+        //     discardPeriodicTasks();
+        // }));
 
-        it("should update but fail validation with non-existent job-id", fakeAsync(() => {
-            testComponent.paramControl.setValue(badJobId);
-            fixture.detectChanges();
-            tick(250);
+        // it("should update but fail validation with non-existent job-id", fakeAsync(() => {
+        //     testComponent.paramControl.setValue(badJobId);
+        //     fixture.detectChanges();
+        //     tick(250);
 
-            expect(jobIdComponent.value.value).toBe(badJobId);
-            expect(component.parameterValue.valid).toBe(false);
-            discardPeriodicTasks();
-        }));
+        //     expect(jobIdComponent.value.value).toBe(badJobId);
+        //     expect(component.parameterValue.valid).toBe(false);
+        //     discardPeriodicTasks();
+        // }));
     });
 });
