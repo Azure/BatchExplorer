@@ -2,7 +2,7 @@
 import { platformDynamicServer } from "@angular/platform-server";
 import { LocaleService, TranslationsLoaderService } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
-import { ClientTranslationsLoaderService } from "client/core/client-translations-loader.service";
+import { ClientTranslationsLoaderService } from "client/core/i18n";
 import { app, protocol } from "electron";
 import { autoUpdater } from "electron-updater";
 import { Constants } from "./client-constants";

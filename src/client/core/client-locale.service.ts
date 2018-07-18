@@ -24,7 +24,7 @@ export class ClientLocaleService extends LocaleService {
     }
 
     private get _localeFile() {
-        return path.join(this.fs.commonFolders.appData, "locale.json");
+        return path.join(this.fs.commonFolders.userData, "locale.json");
     }
 
     private async _loadLocale(): Promise<Locale> {
@@ -35,10 +35,14 @@ export class ClientLocaleService extends LocaleService {
                 const definition = JSON.parse(await this.fs.readFile(localeFile));
                 const locale = definition.locale;
 
-                if (locale && locale in Object.values(Locale)) {
-                    return locale;
-                } else {
-                    log.warn("locale configuration file is invalid");
+                if (locale) {
+                    const availableLocales = Object.values(Locale);
+                    if (availableLocales.includes(locale)) {
+                        return locale;
+                    } else {
+                        log.warn(`Locale configuration file is invalid. Unknown locale ${locale}. `
+                            + `Use one of ${availableLocales}`);
+                    }
                 }
             }
         } catch (e) {
