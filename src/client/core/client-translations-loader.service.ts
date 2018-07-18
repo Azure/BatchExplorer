@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
-import { Locale, TranslationsLoaderService } from "@batch-flask/core";
+import { Locale, LocaleService, TranslationsLoaderService } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { Constants as ClientConstants } from "client/client-constants";
-import { ClientLocaleService, FileSystem } from "client/core";
+import { FileSystem } from "client/core";
 import * as jsyaml from "js-yaml";
 import * as path from "path";
 
@@ -18,7 +18,7 @@ export class ClientTranslationsLoaderService extends TranslationsLoaderService {
         return translations;
     }
 
-    constructor(private fs: FileSystem, private localeService: ClientLocaleService) {
+    constructor(private fs: FileSystem, private localeService: LocaleService) {
         super();
     }
 
@@ -111,11 +111,18 @@ export class ClientTranslationsLoaderService extends TranslationsLoaderService {
         }
 
     }
+
     private async _loadProductionTranslationFile(file: string) {
         const content = await this.fs.readFile(file);
-        const translations = JSON.parse(content);
-        for (const key of Object.keys(translations)) {
-            this.translations.set(key, translationFiles[key]);
+        try {
+
+            const translations = JSON.parse(content);
+            for (const key of Object.keys(translations)) {
+                this.translations.set(key, translationFiles[key]);
+            }
+        } catch (e) {
+            log.error(`Failed to load translations file ${file}.`, e);
         }
+
     }
 }
