@@ -5,7 +5,6 @@ import { Observable } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
 import { IpcService, Workspace, WorkspaceService } from "@batch-flask/ui";
-// import { MonacoLoader } from "@batch-flask/ui/editor";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
