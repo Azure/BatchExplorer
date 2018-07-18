@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
-import { TranslationsLoaderService } from "@batch-flask/core";
+import { Locale, TranslationsLoaderService } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { Constants as ClientConstants } from "client/client-constants";
-import { FileSystem } from "client/core";
+import { ClientLocaleService, FileSystem } from "client/core";
 import * as jsyaml from "js-yaml";
 import * as path from "path";
 
@@ -18,7 +18,7 @@ export class ClientTranslationsLoaderService extends TranslationsLoaderService {
         return translations;
     }
 
-    constructor(private fs: FileSystem) {
+    constructor(private fs: FileSystem, private localeService: ClientLocaleService) {
         super();
     }
 
@@ -96,11 +96,21 @@ export class ClientTranslationsLoaderService extends TranslationsLoaderService {
 
     private async _loadProductionTranslations() {
         const englishTranslationFile = path.join(ClientConstants.resourcesFolder, "./i18n/resources.en.json");
-        const localeTranslationFile = path.join(ClientConstants.resourcesFolder, "./i18n/resources.fr.json");
         await this._loadProductionTranslationFile(englishTranslationFile);
-        await this._loadProductionTranslationFile(localeTranslationFile);
+        await this._loadLocaleTranslations();
     }
 
+    private async _loadLocaleTranslations() {
+        const locale = this.localeService.locale;
+        if (locale === Locale.EN) { return; }
+        const localeTranslationFile = path.join(ClientConstants.resourcesFolder, `./i18n/resources.${locale}.json`);
+        if (await this.fs.exists(localeTranslationFile)) {
+            await this._loadProductionTranslationFile(localeTranslationFile);
+        } else {
+            log.warn(`Missing translation file for ${locale}. "${localeTranslationFile}" doesn't exists.`);
+        }
+
+    }
     private async _loadProductionTranslationFile(file: string) {
         const content = await this.fs.readFile(file);
         const translations = JSON.parse(content);

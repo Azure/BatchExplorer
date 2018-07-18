@@ -1,6 +1,4 @@
-import { Inject, Injectable, InjectionToken } from "@angular/core";
-
-export const I18N_LOCALE = new InjectionToken("I18N_LOCALE");
+import { Injectable } from "@angular/core";
 
 export enum Locale {
     EN = "en",
@@ -8,10 +6,9 @@ export enum Locale {
 }
 
 @Injectable()
-export class LocaleService {
-    public currentLocale: Locale;
+export abstract class LocaleService {
+    public locale: Locale;
 
-    constructor(@Inject(I18N_LOCALE) locale: Locale) {
-        this.currentLocale = locale;
-    }
+    public abstract load(): Promise<any>;
+    public abstract setLocale(locale: Locale): Promise<any>;
 }

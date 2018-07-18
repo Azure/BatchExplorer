@@ -1,4 +1,0 @@
-@Injectable()
-export class LocaleLoaderService {
-
-}
