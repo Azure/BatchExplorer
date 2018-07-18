@@ -17,7 +17,9 @@ export class DevTranslationsLoader {
     public async load(duplicateCallback: DuplicateCallback): Promise<Map<string, string>> {
         this.translations.clear();
         if (!this.translationFiles) {
-            this.translationFiles = await glob("**/*.i18n.yml");
+            this.translationFiles = await glob("**/*.i18n.yml", {
+                ignore: "node_modules/**/*",
+            });
         }
         await this._processFiles(this.translationFiles, duplicateCallback);
         return this.translations;

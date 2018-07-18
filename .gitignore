@@ -10,5 +10,5 @@ coverage/
 *.stackdump
 
 # Ignore the english compiled file
-i18n/resource.en.json
+i18n/resources.en.json
 i18n/xliff/

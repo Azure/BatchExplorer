@@ -59,6 +59,7 @@
     "@types/colors": "~1.2.1",
     "@types/d3": "~5.0.0",
     "@types/extract-zip": "~1.6.2",
+    "@types/glob": "^5.0.35",
     "@types/hammerjs": "^2.0.33",
     "@types/inflection": "^1.5.28",
     "@types/jasmine": "~2.8.8",

@@ -25,7 +25,7 @@ async function createEnglishTranslations() {
         return obj;
     }, {});
 
-    const content = JSON.stringify(map);
+    const content = JSON.stringify(map, null, 2);
 
     const dest = "./i18n/resources.en.json";
     await writeFile(dest, content);
