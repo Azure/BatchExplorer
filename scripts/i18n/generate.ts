@@ -15,7 +15,7 @@ async function createEnglishTranslations() {
         console.warn(`${key} is being duplicated. "${file}"`);
         hasDuplicate = true;
     });
-    console.log("Loaded dev translations");
+    console.log(`Loaded dev translations (${translations.size})`);
     if (hasDuplicate) {
         process.exit(1);
     }
@@ -26,8 +26,10 @@ async function createEnglishTranslations() {
     }, {});
 
     const content = JSON.stringify(map);
-    await fs.writeFile("./i18n/resources.en.json", content, null);
-    console.log("Saved combined english translations to ./i18n/resources.en.json");
+
+    const dest = "./i18n/resources.en.json";
+    await writeFile(dest, content);
+    console.log(`Saved combined english translations (${translations.size}) to ${dest}`);
 
 }
 
