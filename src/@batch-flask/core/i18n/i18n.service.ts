@@ -1,7 +1,5 @@
-import { Injectable, InjectionToken } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { TranslationsLoaderService } from "@batch-flask/core/i18n/translations-loader.service";
-
-export const I18N_TRANSLATIONS = new InjectionToken("I18N_TRANSLATIONS");
 
 @Injectable()
 export class I18nService {
@@ -9,7 +7,6 @@ export class I18nService {
 
     constructor(loader: TranslationsLoaderService) {
         this._translations = loader.translations;
-        console.log("Trans", this._translations);
     }
     /**
      * Alias of #translate

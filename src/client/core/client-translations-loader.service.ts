@@ -1,8 +1,10 @@
 import { Injectable } from "@angular/core";
 import { TranslationsLoaderService } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
+import { Constants as ClientConstants } from "client/client-constants";
 import { FileSystem } from "client/core";
 import * as jsyaml from "js-yaml";
+import * as path from "path";
 
 const translations = new Map<string, string>();
 let translationFiles;
@@ -21,15 +23,12 @@ export class ClientTranslationsLoaderService extends TranslationsLoaderService {
     }
 
     public async load() {
-        console.time("Glob");
         this.translations.clear();
-        if (!translationFiles) {
-            translationFiles = await this.fs.glob("**/*.i18n.yml");
+        if (process.env.NODE_ENV === "production") {
+            this._loadProductionTranslations();
+        } else {
+            this._loadDevelopementTranslations();
         }
-        console.timeEnd("Glob");
-        console.time("ProcessF");
-        await this._processFiles(translationFiles);
-        console.timeEnd("ProcessF");
     }
 
     public get serializedTranslations() {
@@ -82,6 +81,31 @@ export class ClientTranslationsLoaderService extends TranslationsLoaderService {
 
         for (const key of Object.keys(translations)) {
             this.translations.set(key, translations[key]);
+        }
+    }
+
+    private async _loadDevelopementTranslations() {
+        if (!translationFiles) {
+            translationFiles = await this.fs.glob("**/*.i18n.yml");
+        }
+        await this._processFiles(translationFiles);
+
+        const localeTranslationFile = path.join(ClientConstants.resourcesFolder, "./i18n/resources.fr.json");
+        await this._loadProductionTranslationFile(localeTranslationFile);
+    }
+
+    private async _loadProductionTranslations() {
+        const englishTranslationFile = path.join(ClientConstants.resourcesFolder, "./i18n/resources.en.json");
+        const localeTranslationFile = path.join(ClientConstants.resourcesFolder, "./i18n/resources.fr.json");
+        await this._loadProductionTranslationFile(englishTranslationFile);
+        await this._loadProductionTranslationFile(localeTranslationFile);
+    }
+
+    private async _loadProductionTranslationFile(file: string) {
+        const content = await this.fs.readFile(file);
+        const translations = JSON.parse(content);
+        for (const key of Object.keys(translations)) {
+            this.translations.set(key, translationFiles[key]);
         }
     }
 }
