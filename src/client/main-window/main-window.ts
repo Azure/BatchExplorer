@@ -86,7 +86,7 @@ export class MainWindow extends GenericWindow {
         anyWindow.batchExplorerApp = this.batchExplorerApp;
         anyWindow.autoUpdater = this.batchExplorerApp.autoUpdater;
         anyWindow.authenticationWindow = this.batchExplorerApp.authenticationWindow;
-        anyWindow.translations = JSON.stringify([...this.batchExplorerApp.translationLoader.translations]);
+        anyWindow.translationsLoader = this.batchExplorerApp.translationLoader;
         const fs = anyWindow.fs = new FileSystem();
         anyWindow.localFileStorage = new LocalFileStorage(fs);
         anyWindow.clientConstants = Constants;

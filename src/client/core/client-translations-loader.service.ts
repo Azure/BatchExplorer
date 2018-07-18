@@ -5,9 +5,13 @@ import { FileSystem } from "client/core";
 import * as jsyaml from "js-yaml";
 
 const translations = new Map<string, string>();
+let translationFiles;
 
 @Injectable()
 export class ClientTranslationsLoaderService extends TranslationsLoaderService {
+    /**
+     * List of translation files
+     */
     public get translations() {
         return translations;
     }
@@ -17,8 +21,19 @@ export class ClientTranslationsLoaderService extends TranslationsLoaderService {
     }
 
     public async load() {
-        const files = await this.fs.glob("**/*.i18n.yml");
-        await this._processFiles(files);
+        console.time("Glob");
+        this.translations.clear();
+        if (!translationFiles) {
+            translationFiles = await this.fs.glob("**/*.i18n.yml");
+        }
+        console.timeEnd("Glob");
+        console.time("ProcessF");
+        await this._processFiles(translationFiles);
+        console.timeEnd("ProcessF");
+    }
+
+    public get serializedTranslations() {
+        return JSON.stringify([...this.translations]);
     }
 
     private async _processFiles(files: string[]) {

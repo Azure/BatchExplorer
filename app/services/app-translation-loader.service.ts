@@ -8,8 +8,8 @@ export class AppTranslationsLoaderService extends TranslationsLoaderService {
 
     constructor() {
         super();
-        const translations = (remote.getCurrentWindow() as any).translations;
-        console.log("Here", translations);
-        this.translations = new Map(JSON.parse(translations));
+        const translationsLoader = (remote.getCurrentWindow() as any).translationsLoader;
+        console.log("Here", translationsLoader);
+        this.translations = new Map(JSON.parse(translationsLoader.serializedTranslations));
     }
 }
