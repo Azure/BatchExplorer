@@ -25,9 +25,9 @@ export class ClientTranslationsLoaderService extends TranslationsLoaderService {
     public async load() {
         this.translations.clear();
         if (process.env.NODE_ENV === "production") {
-            this._loadProductionTranslations();
+            await this._loadProductionTranslations();
         } else {
-            this._loadDevelopementTranslations();
+            await this._loadDevelopementTranslations();
         }
     }
 
@@ -89,9 +89,7 @@ export class ClientTranslationsLoaderService extends TranslationsLoaderService {
             translationFiles = await this.fs.glob("**/*.i18n.yml");
         }
         await this._processFiles(translationFiles);
-
-        const localeTranslationFile = path.join(ClientConstants.resourcesFolder, "./i18n/resources.fr.json");
-        await this._loadProductionTranslationFile(localeTranslationFile);
+        await this._loadLocaleTranslations();
     }
 
     private async _loadProductionTranslations() {
@@ -100,6 +98,9 @@ export class ClientTranslationsLoaderService extends TranslationsLoaderService {
         await this._loadLocaleTranslations();
     }
 
+    /**
+     * Laad the locale translation file if not english and merge with english translations
+     */
     private async _loadLocaleTranslations() {
         const locale = this.localeService.locale;
         if (locale === Locale.EN) { return; }
@@ -118,7 +119,7 @@ export class ClientTranslationsLoaderService extends TranslationsLoaderService {
 
             const translations = JSON.parse(content);
             for (const key of Object.keys(translations)) {
-                this.translations.set(key, translationFiles[key]);
+                this.translations.set(key, translations[key]);
             }
         } catch (e) {
             log.error(`Failed to load translations file ${file}.`, e);

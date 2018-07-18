@@ -6,14 +6,29 @@ import { FileSystem } from "./fs";
 
 @Injectable()
 export class ClientLocaleService extends LocaleService {
-    public locale: Locale;
+    public locale: Locale = Locale.EN;
 
     constructor(private fs: FileSystem) {
         super();
     }
 
-    public async load() {
-        const localeFile = path.join(this.fs.commonFolders.appData, "locale.json");
+    public async load(): Promise<Locale> {
+        this.locale = await this._loadLocale();
+        return this.locale;
+    }
+
+    public async setLocale(locale: Locale) {
+        const localeFile = this._localeFile;
+        const content = JSON.stringify({ locale: this.locale });
+        await this.fs.saveFile(localeFile, content);
+    }
+
+    private get _localeFile() {
+        return path.join(this.fs.commonFolders.appData, "locale.json");
+    }
+
+    private async _loadLocale(): Promise<Locale> {
+        const localeFile = this._localeFile;
         try {
 
             if (await this.fs.exists(localeFile)) {
@@ -31,9 +46,5 @@ export class ClientLocaleService extends LocaleService {
         }
 
         return Locale.EN;
-    }
-
-    public async setLocale(locale: Locale) {
-
     }
 }
