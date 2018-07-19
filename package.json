@@ -30,6 +30,7 @@
     "build-app": "npm run webpack -- --profile --colors --display-error-details --display-cached",
     "build-python": "pyinstaller python/main.spec -y --distpath=python/dist --workpath=python/build",
     "build-i18n": "npm run -s ts -- scripts/i18n/generate.ts",
+    "build-i18n-xliff": "npm run -s ts -- scripts/i18n/create-xliff.ts",
     "build": "npm run -s clean && npm run -s build-client && npm run -s build-app && npm run build-i18n",
     "build:prod": "cross-env NODE_ENV=production npm run -s build",
     "watch": "npm run webpack -- --watch --progress --profile --colors --display-error-details --display-cached",
@@ -122,6 +123,7 @@
     "webpack-dev-server": "~3.1.4",
     "webpack-inline-manifest-plugin": "^4.0.1",
     "webpack-merge": "~4.1.2",
+    "xliff": "^3.0.1",
     "yesno": "~0.0.1"
   },
   "dependencies": {

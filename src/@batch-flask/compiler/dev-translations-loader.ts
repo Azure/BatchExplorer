@@ -1,4 +1,3 @@
-import { Injectable } from "@angular/core";
 import * as fs from "fs";
 import * as globF from "glob";
 import * as jsyaml from "js-yaml";
@@ -9,7 +8,6 @@ const readFile = util.promisify(fs.readFile);
 
 type DuplicateCallback = (key: string, source: string) => void;
 
-@Injectable()
 export class DevTranslationsLoader {
     public translationFiles: string[];
     public translations = new Map<string, string>();
