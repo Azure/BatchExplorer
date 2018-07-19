@@ -1,4 +1,3 @@
-import { promisify } from "util";
 import * as convert from "xml-js";
 
 // tslint:disable:max-line-length
