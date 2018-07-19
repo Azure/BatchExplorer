@@ -64,7 +64,6 @@ export class ClientTranslationsLoaderService extends TranslationsLoaderService {
     private async _loadProductionTranslationFile(file: string) {
         const content = await this.fs.readFile(file);
         try {
-
             const translations = JSON.parse(content);
             for (const key of Object.keys(translations)) {
                 this.translations.set(key, translations[key]);
