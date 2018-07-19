@@ -20,9 +20,6 @@ describe("WorkspaceService", () => {
             Fixtures.workspace.create({ id: "mouse", displayName: "kiwi" }),
         ];
         currentWorkspace = undefined;
-        // currentWorkspace = workspaceArr.first();
-        // currentWorkspaceId = currentWorkspace.id;
-        // workspaceService.selectWorkspace(currentWorkspaceId);
         subs.push(workspaceService.currentWorkspace.subscribe(x => currentWorkspace = x));
 
         workspaceService.init(workspaceArr);
@@ -30,12 +27,14 @@ describe("WorkspaceService", () => {
         // need something like: fixture.detectChanges();
     });
 
-    // describe("No workspace selected", () => {
-    //     it("should have not any selected workspace selected details", () => {
-    //         console.log("workspaceService.currentWorkspace IS = ", workspaceService.currentWorkspace);
-    //         expect(workspaceService.currentWorkspace).toBe(undefined);
-    //     });
-    // });
+    describe("No workspace selected", () => {
+        it("should have not any selected workspace selected details", () => {
+            // console.log("workspaceService.currentWorkspace IS = ", workspaceService.currentWorkspace);
+            console.log("workspaceService.currentWorkspaceId IS = ", currentWorkspaceId);
+            // expect(workspaceService.currentWorkspace).toBe(undefined);
+            expect(currentWorkspaceId).toBe("");
+        });
+    });
 
     describe("First workspace selected", () => {
         beforeEach(() => {
