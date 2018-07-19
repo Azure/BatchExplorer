@@ -19,12 +19,13 @@ const webpackRequire: any = require;
  * Below, context will be a function/object with file names as keys.
  * Using that regex we are saying look in ../src then find
  * any file that ends with spec.ts and get its path. By passing in true
- * we say do this recursively
+ * we say do this recursivelyf
  */
 const testContext = webpackRequire.context(".", true, /\.spec\.ts/);
 const testAppContext = webpackRequire.context("../../app", true, /\.spec\.ts/);
 const testCommonContext = webpackRequire.context("../../src/common", true, /\.spec\.ts/);
-const testBlCommonContext = webpackRequire.context("../../src/@batch-flask", true, /\.spec\.ts/);
+// Exclude the @batch-flask/compiler folder
+const testBlCommonContext = webpackRequire.context("../../src/@batch-flask", true, /^\.\/(?!compiler).*\.spec\.ts$/);
 
 /*
  * get all the files, for each file, call the context function
