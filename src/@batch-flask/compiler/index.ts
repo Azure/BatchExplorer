@@ -1,2 +1,2 @@
 export * from "./dev-translations-loader";
-export * from "./xliff-utils";
+export * from "./xliff-serializer";

@@ -5,7 +5,7 @@ import * as fs from "fs";
 import * as mkdirp from "mkdirp";
 import * as path from "path";
 import { promisify } from "util";
-import { XliffUtils } from "../../src/@batch-flask/compiler";
+import { XliffSerializer } from "../../src/@batch-flask/compiler";
 import { loadDevTranslations } from "./load-dev-translations";
 
 const ensureDir = promisify(mkdirp);
@@ -13,8 +13,7 @@ const writeFile = promisify(fs.writeFile);
 
 async function createXliffTranslations() {
     const translations = await loadDevTranslations();
-    const xliff = await XliffUtils.encode(translations);
-    console.log("X:IFF", xliff);
+    const xliff = XliffSerializer.encode(translations);
     const dest = "./i18n/xliff/resources.en.xliff";
     await ensureDir(path.dirname(dest));
     await writeFile(dest, xliff);
