@@ -3,6 +3,7 @@ export * from "./background-task";
 export * from "./buttons";
 export * from "./dialogs";
 export * from "./dropdown";
+export * from "./i18n";
 export * from "./metrics-monitor";
 export * from "./notifications";
 export * from "./loading";
