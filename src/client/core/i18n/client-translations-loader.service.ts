@@ -3,7 +3,7 @@ import { DevTranslationsLoader } from "@batch-flask/compiler";
 import { Locale, LocaleService, TranslationsLoaderService } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { Constants as ClientConstants } from "client/client-constants";
-import { FileSystem } from "client/core";
+import { FileSystem } from "client/core/fs";
 import * as path from "path";
 
 @Injectable()

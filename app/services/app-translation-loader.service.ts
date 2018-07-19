@@ -9,7 +9,6 @@ export class AppTranslationsLoaderService extends TranslationsLoaderService {
     constructor() {
         super();
         const translationsLoader = (remote.getCurrentWindow() as any).translationsLoader;
-        console.log("Here", translationsLoader);
         this.translations = new Map(JSON.parse(translationsLoader.serializedTranslations));
     }
 }
