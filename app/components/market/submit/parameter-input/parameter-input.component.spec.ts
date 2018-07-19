@@ -1,5 +1,5 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
-import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
@@ -551,8 +551,8 @@ describe("ParameterInputComponent", () => {
 
     describe("job-id parameter type", () => {
         const initialInput = "";
-        const goodJobId = "good";
-        const badJobId = "bad";
+        // const goodJobId = "good";
+        // const badJobId = "bad";
         let jobIdComponent: JobIdComponent;
         let jobIdInputEl: DebugElement;
 
