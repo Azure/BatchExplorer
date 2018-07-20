@@ -325,7 +325,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     private _getTreeRowsForNode(node: FileTreeNode, indent = 0): TreeRow[] {
         const rows = [];
-        for (const [_, child] of node.children) {
+        for (const [, child] of node.children) {
             if (this.autoExpand && !(child.path in this.expandedDirs)) {
                 this.expandedDirs.add(child.path);
             }
