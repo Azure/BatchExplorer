@@ -9,7 +9,6 @@ import { Workspace } from "./workspace.model";
 export class WorkspaceService implements OnDestroy {
     private _workspaces: BehaviorSubject<List<Workspace>> = new BehaviorSubject(List([]));
     private _currentWorkspace: BehaviorSubject<Workspace> = new BehaviorSubject(null);
-    private _currentWorkspaceId: BehaviorSubject<string> = new BehaviorSubject(null);
     private _haveWorkspacesLoaded: BehaviorSubject<boolean> = new BehaviorSubject(false);
     private _sub: Subscription;
 
@@ -44,7 +43,6 @@ export class WorkspaceService implements OnDestroy {
 
     public selectWorkspace(workspaceId: string) {
         const workspace = this._workspaces.value.find((ws: Workspace) => ws.id === workspaceId);
-        this._currentWorkspaceId.next(workspaceId);
         this._currentWorkspace.next(workspace);
     }
 
@@ -63,7 +61,6 @@ export class WorkspaceService implements OnDestroy {
             this.selectWorkspace(selectedWorkspaceId);
         } else {
             this._currentWorkspace.next(workspaces.first());
-            this._currentWorkspaceId.next(this._currentWorkspace.value.id);
         }
 
         this._haveWorkspacesLoaded.next(true);

@@ -1,105 +1,137 @@
+import { List } from "immutable";
 import { Subscription } from "rxjs";
+
 import * as Fixtures from "test/fixture";
 import { Workspace } from "./workspace.model";
 import { WorkspaceService } from "./workspace.service";
 
 describe("WorkspaceService", () => {
-    let workspaceService: WorkspaceService;
+    let workspaces: List<Workspace> = List([]);
     let currentWorkspace: Workspace = null;
-    let currentWorkspaceId: string;
-    let workspaceArr = [];
-    // const workspaceId = workspaceArr[0].id;
-    // const workspace1 = new Workspace({ id: "workspace-1" } as any);
+    let haveWorkspacesLoaded: boolean = false;
 
+    let store = {};
+    let workspaceService: WorkspaceService;
     const subs: Subscription[] = [];
+    let wsArr = [];
 
     beforeEach(() => {
+        spyOn(localStorage, "getItem").and.callFake((key) => {
+            return store[key];
+        });
+
+        spyOn(localStorage, "setItem").and.callFake((key, value) => {
+            return store[key] = value;
+        });
+
         workspaceService = new WorkspaceService();
-        workspaceArr = [
-            Fixtures.workspace.create({ id: "not-bob", displayName: "apple" }),
-            Fixtures.workspace.create({ id: "mouse", displayName: "kiwi" }),
-        ];
-        currentWorkspace = undefined;
+        subs.push(workspaceService.workspaces.subscribe(x => workspaces = x));
+        subs.push(workspaceService.haveWorkspacesLoaded.subscribe(x => haveWorkspacesLoaded = x));
         subs.push(workspaceService.currentWorkspace.subscribe(x => currentWorkspace = x));
-
-        workspaceService.init(workspaceArr);
-        workspaceService.selectWorkspace(workspaceArr[0].id);
-        // need something like: fixture.detectChanges();
     });
 
-    describe("No workspace selected", () => {
-        it("should have not any selected workspace selected details", () => {
-            // console.log("workspaceService.currentWorkspace IS = ", workspaceService.currentWorkspace);
-            console.log("workspaceService.currentWorkspaceId IS = ", currentWorkspaceId);
-            // expect(workspaceService.currentWorkspace).toBe(undefined);
-            expect(currentWorkspaceId).toBe("");
-        });
+    afterEach(() => {
+        store = {};
+        subs.forEach(x => x.unsubscribe());
     });
 
-    describe("First workspace selected", () => {
+    it("should not have any selected workspace selected", () => {
+        workspaceService.init([]);
+
+        expect(workspaces.count()).toBe(0);
+        expect(currentWorkspace).toBe(undefined);
+        expect(haveWorkspacesLoaded).toBe(true);
+    });
+
+    describe("given only one workspace", () => {
         beforeEach(() => {
-            workspaceArr = [
-                Fixtures.workspace.create({ id: "not-bob", displayName: "apple" }),
+            wsArr = [
                 Fixtures.workspace.create({ id: "mouse", displayName: "kiwi" }),
             ];
-            currentWorkspace = workspaceArr.first();
-            currentWorkspaceId = currentWorkspace.id;
-            workspaceService.selectWorkspace(currentWorkspaceId);
+
+            workspaceService.init(wsArr);
         });
 
-        it("should be showing first selected workspace", () => {
-            // console.log("currentWorkspaceId = ", currentWorkspaceId);
-            // workspaceService.init(workspaceArr);
-            workspaceService.selectWorkspace("not-bob");
-            expect(currentWorkspaceId).toBe("not-bob");
+        it("first and only ws should be selected", () => {
+            expect(workspaces.count()).toBe(1);
+            expect(currentWorkspace).not.toBe(null);
+            expect(currentWorkspace.id).toBe("mouse");
         });
     });
 
-    describe("Second workspace selected", () => {
+    describe("given two workspaces", () => {
         beforeEach(() => {
-            workspaceArr = [
-                Fixtures.workspace.create({ id: "not-bob", displayName: "apple" }),
+            wsArr = [
+                Fixtures.workspace.create({ id: "frog", displayName: "not a kiwi" }),
                 Fixtures.workspace.create({ id: "mouse", displayName: "kiwi" }),
             ];
-            // console.log("currentWorkspaceId should still be not-bob = ", currentWorkspaceId);
-            currentWorkspace = workspaceArr.last();
-            currentWorkspaceId = currentWorkspace.id;
-            workspaceService.selectWorkspace(currentWorkspaceId);
         });
 
-        it("should be showing second selected workspace", () => {
-            // console.log("currentWorkspaceId should be mouse = ", currentWorkspaceId);
-            expect(currentWorkspaceId).toBe("mouse");
+        it("the first ws should be selected", () => {
+            workspaceService.init(wsArr);
+
+            expect(workspaces.count()).toBe(2);
+            expect(currentWorkspace).not.toBe(null);
+            expect(currentWorkspace.id).toBe("frog");
+        });
+
+        it("if ws id in local store then that one selected", () => {
+            store["selected-workspace-id"] = "mouse";
+            workspaceService.init(wsArr);
+
+            expect(currentWorkspace.id).toBe("mouse");
         });
     });
 
-    // describe("Changing selected workspace", () => {
-    //     beforeEach(() => {
-    //         workspaceArr = [
-    //             Fixtures.workspace.create({ id: "not-bob", displayName: "apple" }),
-    //             Fixtures.workspace.create({ id: "mouse", displayName: "kiwi" }),
-    //         ];
-    //         currentWorkspace = workspaceArr.first();
-    //         currentWorkspaceId = currentWorkspace.id;
-    //         workspaceService.selectWorkspace(currentWorkspaceId);
-    //     });
+    describe("workspace service handles changing selected workspace", () => {
+        beforeEach(() => {
+            wsArr = [
+                Fixtures.workspace.create({ id: "hippo" }),
+                Fixtures.workspace.create({ id: "mouse" }),
+                Fixtures.workspace.create({ id: "cat" }),
+            ];
 
-    //     it("should be showing second workspace", () => {
-    //         currentWorkspace = workspaceArr.last();
-    //         console.log("currentWorkspace = workspaceArr.last() = ", currentWorkspace);
-    //         console.log("should be showing second workspace which has id mouse = ", currentWorkspaceId);
-    //         expect(currentWorkspaceId).toBe("mouse");
-    //     });
+            workspaceService.init(wsArr);
+        });
 
-    //     it("should be showing first workspace", () => {
-    //         currentWorkspace = workspaceArr.first();
-    //         console.log("should be showing first workspace which has id not-bob = ", currentWorkspaceId);
-    //         expect(currentWorkspaceId).toBe("not-bob");
-    //     });
-    // });
+        it("the first ws should be selected by default", () => {
+            expect(workspaces.count()).toBe(3);
+            expect(currentWorkspace.id).toBe("hippo");
+        });
 
-    // afterEach(() => {
-    //     workspaceService = null;
-    //     subs.forEach(x => x.unsubscribe());
-    // });
+        it("can externally change selected workspace", () => {
+            workspaceService.selectWorkspace(wsArr[2].id);
+            expect(currentWorkspace).not.toBe(null);
+            expect(currentWorkspace.id).toBe("cat");
+        });
+    });
+
+    describe("ws service returns enabled feature state", () => {
+        beforeEach(() => {
+            wsArr = [
+                Fixtures.workspace.create({ id: "hippo", features: {
+                    job: {
+                        graphs: false,
+                        configuration: {
+                            json: true,
+                        },
+                    },
+                }}),
+            ];
+
+            workspaceService.init(wsArr);
+        });
+
+        it("hippo should be selected", () => {
+            expect(currentWorkspace.id).toBe("hippo");
+        });
+
+        it("can ask for enabled features", () => {
+            expect(workspaceService.isFeatureEnabled("job")).toBe(true);
+            expect(workspaceService.isFeatureEnabled("job.graphs")).toBe(false);
+            expect(workspaceService.isFeatureEnabled("job.configuration.json")).toBe(true);
+            expect(workspaceService.isFeatureEnabled("job.configuration.apples")).toBe(true);
+            expect(workspaceService.isFeatureEnabled("mouse")).toBe(true);
+        });
+    });
 });

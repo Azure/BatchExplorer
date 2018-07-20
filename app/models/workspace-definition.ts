@@ -21,18 +21,15 @@ export interface BatchLabsFeatureDefinition extends FeatureDefinition {
 }
 
 export interface CommonFeatures {
-    view: boolean | any;
     action: boolean | any;
 }
 
 export interface JobFeatures extends CommonFeatures {
-    view: {
-        graphs: boolean;
-        statistics: boolean;
-        tags: boolean;
-        configuration: {
-            json: boolean;
-        },
+    graphs: boolean;
+    statistics: boolean;
+    tags: boolean;
+    configuration: {
+        json: boolean;
     };
 
     action: {
