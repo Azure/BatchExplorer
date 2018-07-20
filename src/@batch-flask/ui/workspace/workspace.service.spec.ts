@@ -134,4 +134,54 @@ describe("WorkspaceService", () => {
             expect(workspaceService.isFeatureEnabled("mouse")).toBe(true);
         });
     });
+
+    describe("ws service hides disabled feature state", () => {
+        beforeEach(() => {
+            wsArr = [
+                Fixtures.workspace.create({ id: "giraffe", features: {
+                    pool: {
+                        graphs: false,
+                    },
+                    data: false,
+                }}),
+            ];
+
+            workspaceService.init(wsArr);
+        });
+
+        it("giraffe should be selected", () => {
+            expect(currentWorkspace.id).toBe("giraffe");
+        });
+
+        it("hides disabled features", () => {
+            expect(workspaceService.isFeatureDisabled("pool")).toBe(false);
+            expect(workspaceService.isFeatureDisabled("pool.graphs")).toBe(true);
+            expect(workspaceService.isFeatureDisabled("data")).toBe(true);
+        });
+    });
+
+    describe("ws service returns enabled feature specific to that ws", () => {
+        beforeEach(() => {
+            wsArr = [
+                Fixtures.workspace.create({ id: "snake", features: {
+                    package: false,
+                }}),
+                Fixtures.workspace.create({ id: "deer", features: {
+                    package: true,
+                }}),
+            ];
+            workspaceService.init(wsArr);
+        });
+
+        it("hides disabled features for snake", () => {
+            expect(currentWorkspace.id).toBe("snake");
+            expect(workspaceService.isFeatureEnabled("package")).toBe(false);
+        });
+
+        it("deer should be selected", () => {
+            workspaceService.selectWorkspace(wsArr[1].id);
+            expect(currentWorkspace.id).toBe("deer");
+            expect(workspaceService.isFeatureEnabled("package")).toBe(true);
+        });
+    });
 });
