@@ -5,6 +5,7 @@ import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
 // components
+import { ActivityModule } from "./activity-monitor";
 import { AdvancedFilterModule } from "./advanced-filter";
 import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
@@ -53,6 +54,7 @@ import { VTabsModule } from "./vtabs";
 
 // Add submodules there
 const modules = [
+    ActivityModule,
     AdvancedFilterModule,
     BatchFlaskSettingsModule,
     BreadcrumbModule,

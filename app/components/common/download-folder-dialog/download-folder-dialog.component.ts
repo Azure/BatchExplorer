@@ -1,20 +1,18 @@
 import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
-import { ElectronShell } from "@batch-flask/ui";
 import { List } from "immutable";
 import * as path from "path";
-import { AsyncSubject, Observable } from "rxjs";
+import { Observable, forkJoin, from } from "rxjs";
 
 import { autobind } from "@batch-flask/core";
-import { BackgroundTask, BackgroundTaskService } from "@batch-flask/ui/background-task";
-import { NotificationService } from "@batch-flask/ui/notifications";
+import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { SecureUtils } from "@batch-flask/utils";
 import { FileSystemService } from "app/services";
 import { FileNavigator } from "app/services/file";
 import * as minimatch from "minimatch";
+import { map, reduce } from "rxjs/operators";
 import "./download-folder-dialog.scss";
-
 @Component({
     selector: "bl-download-folder-dialog",
     templateUrl: "download-folder-dialog.html",
@@ -41,10 +39,8 @@ export class DownloadFolderComponent {
 
     constructor(
         public dialogRef: MatDialogRef<DownloadFolderComponent>,
-        private backgroundTaskService: BackgroundTaskService,
         private fs: FileSystemService,
-        private shell: ElectronShell,
-        private notificationService: NotificationService,
+        private activityService: ActivityService,
     ) { }
 
     public get title() {
@@ -65,33 +61,51 @@ export class DownloadFolderComponent {
         this.downloadFolder.setValue(folder);
     }
 
-    private async _startDownloadAsync() {
-        const folder = await this._getDownloadFolder();
-
-        this.backgroundTaskService.startTask(this.title, (task: BackgroundTask) => {
-            const subject = new AsyncSubject();
-            task.progress.next(1);
-            this._getListOfFilesToDownload().subscribe((files) => {
-                if (files.size === 0) {
-                    this.notificationService.warn(
-                        "Pattern not found",
-                        `Failed to find pattern: ${this._getPatterns()}`,
-                    );
-                    task.progress.next(100);
-                    subject.complete();
-                } else {
-                    task.progress.next(10);
-                    const downloadObs = this._downloadFiles(task, folder, files);
-                    Observable.forkJoin(downloadObs).subscribe(() => {
-                        this.shell.showItemInFolder(folder);
-                        task.progress.next(100);
-                        subject.complete();
+    private _startDownloadAsync(): void {
+        const activity = new Activity("Downloading Files", true, () => {
+            return forkJoin(from(this._getDownloadFolder()), this._getListOfFilesToDownload()).pipe(
+                map(result => {
+                    const [folder, files] = result;
+                    return files.map(file => {
+                        return new Activity("Downloading One File", false, () => {
+                            return this._downloadFile(folder, file);
+                        });
                     });
-                }
-            });
-
-            return subject.asObservable();
+                }),
+                reduce((folder, activities) => {
+                    return activities;
+                }),
+            );
         });
+
+        this.activityService.loadAndRun(activity);
+
+        // const folder = await this._getDownloadFolder();
+
+        // this.backgroundTaskService.startTask(this.title, (task: BackgroundTask) => {
+        //     const subject = new AsyncSubject();
+        //     task.progress.next(1);
+        //     this._getListOfFilesToDownload().subscribe((files) => {
+        //         if (files.size === 0) {
+        //             this.notificationService.warn(
+        //                 "Pattern not found",
+        //                 `Failed to find pattern: ${this._getPatterns()}`,
+        //             );
+        //             task.progress.next(100);
+        //             subject.complete();
+        //         } else {
+        //             task.progress.next(10);
+        //             const downloadObs = this._downloadFiles(task, folder, files);
+        //             Observable.forkJoin(downloadObs).subscribe(() => {
+        //                 this.shell.showItemInFolder(folder);
+        //                 task.progress.next(100);
+        //                 subject.complete();
+        //             });
+        //         }
+        //     });
+
+        //     return subject.asObservable();
+        // });
     }
 
     private _getPatterns(): string[] {
@@ -111,17 +125,24 @@ export class DownloadFolderComponent {
         });
     }
 
-    private _downloadFiles(task: BackgroundTask, folder: string, files: List<File>): Array<Observable<any>> {
-        const progressStep = 90 / files.size;
-        return files.map((file) => {
-            const fileLoader = this.navigator.getFile(file.name);
-            const fileName = this._getSubdirectoryPath(file.name);
-            const filePath = path.join(folder, fileName);
-            return fileLoader.download(filePath).do(() => {
-                task.progress.next(task.progress.value + progressStep);
-            });
-        }).toArray();
+    private _downloadFile(folder: string, file: File): Observable<any> {
+        const fileLoader = this.navigator.getFile(file.name);
+        const fileName = this._getSubdirectoryPath(file.name);
+        const filePath = path.join(folder, fileName);
+        return fileLoader.download(filePath);
     }
+
+    // private _downloadFiles(task: BackgroundTask, folder: string, files: List<File>): Array<Observable<any>> {
+    //     const progressStep = 90 / files.size;
+    //     return files.map((file) => {
+    //         const fileLoader = this.navigator.getFile(file.name);
+    //         const fileName = this._getSubdirectoryPath(file.name);
+    //         const filePath = path.join(folder, fileName);
+    //         return fileLoader.download(filePath).do(() => {
+    //             task.progress.next(task.progress.value + progressStep);
+    //         });
+    //     }).toArray();
+    // }
 
     private _getListOfFilesToDownload(): Observable<List<File>> {
         const patterns = this._getPatterns();
