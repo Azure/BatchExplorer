@@ -79,7 +79,7 @@ export class MainWindowManager {
     }
 
     public closeAll() {
-        for (const [_, window] of this) {
+        for (const [, window] of this) {
             window.destroy();
         }
     }
