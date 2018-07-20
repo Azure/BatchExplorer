@@ -25,52 +25,44 @@ export interface CommonFeatures {
 }
 
 export interface JobFeatures extends CommonFeatures {
-    graphs: boolean;
     statistics: boolean;
     tags: boolean;
     configuration: {
         json: boolean;
     };
-
     action: {
         clone: boolean;
-        export: boolean;
+        exportAsJson: boolean;
         pin: boolean;
     };
 }
 
 export interface ScheduleFeatures extends CommonFeatures {
-    view: {
-        tags: boolean;
-        configuration: {
-            json: boolean;
-        },
+    tags: boolean;
+    configuration: {
+        json: boolean;
     };
-
     action: {
         clone: boolean;
-        export: boolean;
+        exportAsJson: boolean;
         pin: boolean;
     };
 }
 
 export interface PoolFeatures extends CommonFeatures {
-    view: {
-        tags: boolean;
-        graphs: {
-            nodes: boolean;
-            tasks: boolean;
-            insights: boolean;
-        },
-        configuration: {
-            json: boolean;
-        },
+    tags: boolean;
+    graphs: {
+        insights: boolean;
         nodes: boolean;
+        tasks: boolean;
     };
-
+    configuration: {
+        json: boolean;
+    };
+    nodes: boolean;
     action: {
         clone: boolean;
-        export: boolean;
+        exportAsJson: boolean;
         pin: boolean;
     };
 }
@@ -82,14 +74,11 @@ export interface PackageFeatures extends CommonFeatures {
 }
 
 export interface CertificateFeatures extends CommonFeatures {
-    view: {
-        configuration: {
-            json: boolean;
-        },
+    configuration: {
+        json: boolean;
     };
-
     action: {
-        export: boolean;
+        exportAsJson: boolean;
         pin: boolean;
     };
 }
@@ -101,5 +90,4 @@ export interface DataFeatures extends CommonFeatures {
 }
 
 export interface GalleryFeatures extends CommonFeatures {
-
 }

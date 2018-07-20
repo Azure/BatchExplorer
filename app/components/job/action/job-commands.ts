@@ -1,5 +1,5 @@
 import { Injectable, Injector } from "@angular/core";
-import { Observable } from "rxjs";
+import { from } from "rxjs";
 
 import {
     COMMAND_LABEL_ICON, ElectronRemote, EntityCommand,
@@ -194,7 +194,7 @@ export class JobCommands extends EntityCommands<Job> {
 
         if (localPath) {
             const content = JSON.stringify(job._original, null, 2);
-            return Observable.fromPromise(this.fs.saveFile(localPath, content));
+            return from(this.fs.saveFile(localPath, content));
         }
     }
 

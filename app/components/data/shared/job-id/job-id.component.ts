@@ -7,7 +7,7 @@ import {
     NG_ASYNC_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { Observable, Subscription, timer } from "rxjs";
+import { Subscription, of, timer } from "rxjs";
 
 import { Job } from "app/models";
 import { JobService } from "app/services";
@@ -72,7 +72,7 @@ export class JobIdComponent implements AsyncValidator, ControlValueAccessor, OnD
     private _validateJobUnique(control: FormControl) {
         // on init, value is an empty array.
         if (!control.value || (Array.isArray(control.value) && control.value.length === 0)) {
-            return Observable.of(null);
+            return of(null);
         }
 
         return timer(250)
@@ -80,7 +80,7 @@ export class JobIdComponent implements AsyncValidator, ControlValueAccessor, OnD
             .map((job: Job) => {
                 this.warning = true;
                 this.changeDetector.markForCheck();
-                return Observable.of({
+                return of({
                     duplicateJob: {
                         valid: false,
                     },
@@ -88,7 +88,7 @@ export class JobIdComponent implements AsyncValidator, ControlValueAccessor, OnD
             }).catch(() => {
                 this.warning = false;
                 this.changeDetector.markForCheck();
-                return Observable.of(null);
+                return of(null);
             });
     }
 }
