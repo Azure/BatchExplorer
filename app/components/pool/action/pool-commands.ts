@@ -137,7 +137,6 @@ export class PoolCommands extends EntityCommands<Pool> {
     }
 
     private _clonePool(pool: Pool) {
-
         const ref = this.sidebarManager.open(`add-pool-${pool.id}`, PoolCreateBasicDialogComponent);
         ref.component.setValueFromEntity(pool);
     }

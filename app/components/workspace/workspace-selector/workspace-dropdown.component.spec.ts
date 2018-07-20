@@ -64,18 +64,19 @@ describe("WorkspaceDropDownComponent", () => {
         });
     });
 
-    describe("basic workspace setup", () => {
-        beforeEach(() => {
-            dropDownButton.nativeElement.click();
-            fixture.detectChanges();
-        });
+    // TODO: [AS] - uncomment when we add it back in
+    // describe("basic workspace setup", () => {
+    //     beforeEach(() => {
+    //         dropDownButton.nativeElement.click();
+    //         fixture.detectChanges();
+    //     });
 
-        it("should show manange workspaces item in dropdown", () => {
-            const items = fixture.debugElement.queryAll(By.css(".dropdown-item"));
-            expect(items.length).toBe(1);
-            expect(items[0].nativeElement.textContent).toContain("Manage workspaces");
-        });
-    });
+    //     it("should show manange workspaces item in dropdown", () => {
+    //         const items = fixture.debugElement.queryAll(By.css(".dropdown-item"));
+    //         expect(items.length).toBe(1);
+    //         expect(items[0].nativeElement.textContent).toContain("Manage workspaces");
+    //     });
+    // });
 
     describe("when there is 1 workspace", () => {
         beforeEach(() => {
@@ -99,12 +100,13 @@ describe("WorkspaceDropDownComponent", () => {
             expect(workspaces.value.count()).toBe(1);
         });
 
-        it("drop down should have 2 items", () => {
-            // one workspace and one 'manage'
+        it("drop down should have 1 item", () => {
+            // one workspace and no 'manage' menu as yet
             const items = fixture.debugElement.queryAll(By.css(".dropdown-item"));
-            expect(items.length).toBe(2);
+            expect(items.length).toBe(1);
             expect(items[0].nativeElement.textContent).toContain("apple");
-            expect(items[1].nativeElement.textContent).toContain("Manage workspaces");
+            // TODO: [AS] - uncomment when we add it back in
+            // expect(items[1].nativeElement.textContent).toContain("Manage workspaces");
         });
     });
 
@@ -131,13 +133,14 @@ describe("WorkspaceDropDownComponent", () => {
             expect(workspaces.value.count()).toBe(2);
         });
 
-        it("drop down should have 3 items", () => {
+        it("drop down should have 2 items", () => {
             // two workspaces and one 'manage'
             const items = fixture.debugElement.queryAll(By.css(".dropdown-item"));
-            expect(items.length).toBe(3);
+            expect(items.length).toBe(2);
             expect(items[0].nativeElement.textContent).toContain("apple");
             expect(items[1].nativeElement.textContent).toContain("kiwi");
-            expect(items[2].nativeElement.textContent).toContain("Manage workspaces");
+            // TODO: [AS] - uncomment when we add it back in
+            // expect(items[2].nativeElement.textContent).toContain("Manage workspaces");
         });
     });
 
