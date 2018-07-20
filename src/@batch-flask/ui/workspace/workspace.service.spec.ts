@@ -160,16 +160,13 @@ describe("WorkspaceService", () => {
         });
     });
 
-    describe("ws service returns enabled feature specific to that ws", () => {
+    describe("changing workspace changes visibility state", () => {
         beforeEach(() => {
             wsArr = [
-                Fixtures.workspace.create({ id: "snake", features: {
-                    package: false,
-                }}),
-                Fixtures.workspace.create({ id: "deer", features: {
-                    package: true,
-                }}),
+                Fixtures.workspace.create({ id: "snake", features: { package: false }}),
+                Fixtures.workspace.create({ id: "deer", features: { package: true }}),
             ];
+
             workspaceService.init(wsArr);
         });
 
@@ -178,7 +175,7 @@ describe("WorkspaceService", () => {
             expect(workspaceService.isFeatureEnabled("package")).toBe(false);
         });
 
-        it("deer should be selected", () => {
+        it("on workspace change, feature is enabled", () => {
             workspaceService.selectWorkspace(wsArr[1].id);
             expect(currentWorkspace.id).toBe("deer");
             expect(workspaceService.isFeatureEnabled("package")).toBe(true);
