@@ -20,13 +20,13 @@ import "./styles/main.scss";
 // console.time("Bootstrap");
 
 ipcRenderer.send("initializing");
-// console.time("Load trans");
+console.time("Load trans");
 Promise.resolve().then(() => {
     if (process.env.NODE_ENV !== "production") {
         return (remote.getCurrentWindow() as any).translationsLoader.load();
     }
 }).then(() => {
-    // console.timeEnd("Load trans");
+    console.timeEnd("Load trans");
 
     return platformBrowserDynamic().bootstrapModule(AppModule);
 }).then(() => {
