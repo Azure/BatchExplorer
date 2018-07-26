@@ -166,6 +166,7 @@
     "monaco-editor": "~0.13.1",
     "mousetrap": "^1.6.0",
     "node-forge": "~0.7.5",
+    "patternomaly": "^1.3.0",
     "reflect-metadata": "^0.1.12",
     "rxjs": "~6.2.1",
     "rxjs-compat": "~6.2.1",
