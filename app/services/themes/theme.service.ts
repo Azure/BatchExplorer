@@ -37,6 +37,7 @@ export class ThemeService implements OnDestroy {
         (window as any).setTheme = (val) => {
             this.setTheme(val);
         };
+
         this.currentTheme = this._currentTheme.filter(x => x !== null);
         this._subs.push(this.currentTheme.subscribe((theme) => {
             this._applyTheme(theme);
@@ -55,7 +56,6 @@ export class ThemeService implements OnDestroy {
 
     public async init() {
         this._baseThemeDefinition = await this._loadTheme(this.baseTheme);
-        await this.setTheme(this.defaultTheme);
     }
 
     public ngOnDestroy() {

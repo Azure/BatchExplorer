@@ -4,6 +4,7 @@ import * as chokidar from "chokidar";
 import { FileUtils } from "client/api";
 import { app } from "electron";
 import * as fs from "fs";
+import * as glob from "glob";
 import * as mkdirp from "mkdirp";
 import * as path from "path";
 
@@ -123,6 +124,15 @@ export class FileSystem {
             }
         }
         return result;
+    }
+
+    public async glob(pattern: string): Promise<string[]> {
+        return new Promise<string[]>((resolve, reject) => {
+            glob(pattern, (err, files) => {
+                if (err) { reject(err); return; }
+                resolve(files);
+            });
+        });
     }
 
     public watch(path: string): chokidar.FSWatcher {

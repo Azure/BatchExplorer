@@ -1,8 +1,8 @@
 {
   "spec_dir": ".",
   "spec_files": [
-    "test/client/**/*.spec.ts",
-    "src/client/**/*.spec.ts"
+    "src/client/**/*.spec.ts",
+    "src/@batch-flask/compiler/**/*.spec.ts"
   ],
   "helpers": [
     "test/client/ts-node.helper.js",

@@ -4,6 +4,7 @@ import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
 import { Inject, Injectable, InjectionToken, Injector } from "@angular/core";
+import { TranslationsLoaderService } from "@batch-flask/core";
 import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
@@ -55,6 +56,7 @@ export class BatchExplorerApplication {
 
     constructor(
         @Inject(AUTO_UPDATER) public autoUpdater: AppUpdater,
+        public translationLoader: TranslationsLoaderService,
         private localStorage: LocalDataStore,
         private injector: Injector,
         private ipcMain: BlIpcMain) {

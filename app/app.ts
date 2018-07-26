@@ -1,5 +1,5 @@
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, remote } from "electron";
 
 import "@batch-flask/extensions";
 
@@ -21,16 +21,20 @@ import "./styles/main.scss";
 
 ipcRenderer.send("initializing");
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-    .then(() => {
-        // console.timeEnd("Bootstrap");
-        // console.time("Render");
-        // console.profile("Render profile");
-    })
-    .catch(error => {
-        log.error("Bootstrapping failed :: ", error);
-        handleCoreError(error);
-    });
+Promise.resolve().then(() => {
+    if (process.env.NODE_ENV !== "production") {
+        return (remote.getCurrentWindow() as any).translationsLoader.load();
+    }
+}).then(() => {
+    return platformBrowserDynamic().bootstrapModule(AppModule);
+}).then(() => {
+    // console.timeEnd("Bootstrap");
+    // console.time("Render");
+    // console.profile("Render profile");
+}).catch(error => {
+    log.error("Bootstrapping failed :: ", error);
+    handleCoreError(error);
+});
 
 document.addEventListener("dragover", (event) => {
     event.dataTransfer.dropEffect = "none";

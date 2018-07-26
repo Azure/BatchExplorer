@@ -86,6 +86,7 @@ export class MainWindow extends GenericWindow {
         anyWindow.batchExplorerApp = this.batchExplorerApp;
         anyWindow.autoUpdater = this.batchExplorerApp.autoUpdater;
         anyWindow.authenticationWindow = this.batchExplorerApp.authenticationWindow;
+        anyWindow.translationsLoader = this.batchExplorerApp.translationLoader;
         const fs = anyWindow.fs = new FileSystem();
         anyWindow.localFileStorage = new LocalFileStorage(fs);
         anyWindow.clientConstants = Constants;
@@ -123,7 +124,7 @@ export class MainWindow extends GenericWindow {
         });
 
         ipcMain.once("initializing", (event) => {
-            if (this._window &&  event.sender.id === this._window.webContents.id) {
+            if (this._window && event.sender.id === this._window.webContents.id) {
                 this._state.next(WindowState.Initializing);
             }
         });

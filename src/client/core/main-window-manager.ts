@@ -61,25 +61,25 @@ export class MainWindowManager {
     }
 
     public hideAll() {
-        for (const [_, window] of this) {
+        for (const [, window] of this) {
             window.hide();
         }
     }
 
     public showAll() {
-        for (const [_, window] of this) {
+        for (const [, window] of this) {
             window.show();
         }
     }
 
     public reloadAll() {
-        for (const [_, window] of this) {
+        for (const [, window] of this) {
             window.reload();
         }
     }
 
     public closeAll() {
-        for (const [_, window] of this) {
+        for (const [, window] of this) {
             window.destroy();
         }
     }
