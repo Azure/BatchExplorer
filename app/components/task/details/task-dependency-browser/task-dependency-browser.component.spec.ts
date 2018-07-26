@@ -5,7 +5,8 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { ContextMenuService } from "@batch-flask/ui";
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { ContextMenuService, I18nUIModule } from "@batch-flask/ui";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
@@ -47,7 +48,7 @@ describe("TaskDependenciesComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, TableTestingModule],
+            imports: [RouterTestingModule, TableTestingModule, I18nTestingModule, I18nUIModule],
             declarations: [
                 TestComponent, NoItemMockComponent, TaskDependencyBrowserComponent,
             ],
