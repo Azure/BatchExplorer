@@ -33,10 +33,9 @@
     </bl-table>
 </bl-focus-section>
 
-<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>
-
 <bl-no-item [itemCount]="displayedCertificates.size" [filter]="filter" [status]="status">
     <i icon class="fa fa-certificate"></i>
     <span no-filter>No certificates</span>
     <span with-filter>No certificates match this filter</span>
 </bl-no-item>
+<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>

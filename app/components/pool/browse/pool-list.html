@@ -62,10 +62,10 @@
         </bl-column>
     </bl-table>
 </bl-focus-section>
-<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>
 
 <bl-no-item [itemCount]="pools.size" [filter]="filter" [status]="status">
     <i icon class="fa fa-database small"></i>
     <span no-filter>No pools</span>
     <span with-filter>No pools match this filter</span>
 </bl-no-item>
+<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>
