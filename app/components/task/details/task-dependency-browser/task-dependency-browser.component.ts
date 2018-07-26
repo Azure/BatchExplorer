@@ -36,26 +36,22 @@ export class TaskDependencyBrowserComponent implements OnChanges {
         }
     }
 
-    public trackByFn(index, dependency: TaskDependency) {
-        return dependency.id;
-    }
-
     private _refresh(task: Task) {
         this.dependentIds = (task && task.dependsOn)
             ? this._getTaskDependencyIds(task.dependsOn)
             : [];
         this._updateDependencies();
-        this._loadStates();
+        this._loadTasks();
     }
 
-    private _loadStates() {
+    private _loadTasks() {
         if (this._loaded >= this.dependentIds.length) { return; }
         this.taskService.getMultiple(this.jobId, this.dependentIds.slice(this._loaded, this._loaded + 20),
             this.taskService.basicProperties).subscribe({
                 next: (tasks: List<Task>) => {
                     this._loaded = this._loaded + 20;
                     this._processMultipleTaskResponse(tasks);
-                    this._loadStates();
+                    this._loadTasks();
                 },
             });
     }

@@ -26,7 +26,7 @@ class TestComponent {
     public task: Task;
 }
 
-describe("TaskDependenciesComponent", () => {
+fdescribe("TaskDependenciesComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: TaskDependencyBrowserComponent;
