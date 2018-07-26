@@ -6,11 +6,11 @@ import { TaskService } from "app/services";
 import { ComponentUtils } from "app/utils";
 
 @Component({
-    selector: "bl-task-dependencies",
-    templateUrl: "task-dependencies.html",
+    selector: "bl-task-dependency-browser",
+    templateUrl: "task-dependency-browser.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskDependenciesComponent implements OnChanges {
+export class TaskDependencyBrowserComponent implements OnChanges {
     @Input() public jobId: string;
     @Input() public task: Task;
 
@@ -66,7 +66,7 @@ export class TaskDependenciesComponent implements OnChanges {
             dep.loading = this._loaded < index;
             if (this._tasks.has(id)) {
                 const task = this._tasks.get(id);
-                dep.state = task.state;
+                dep.task = task;
                 dep.loading = false;
 
                 const dependencies = task.dependsOn;
