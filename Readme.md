@@ -1,4 +1,5 @@
 # BatchExplorer
+[![VSTS Build Status](https://azurebatch.visualstudio.com/3426cbfe-4c9a-4da4-88df-70f025a77017/_apis/build/status/8)](https://azurebatch.visualstudio.com/BatchExplorer/_build?definitionId=8)
 [![Build Status](https://travis-ci.org/Azure/BatchExplorer.svg?branch=master)](https://travis-ci.org/Azure/BatchExplorer)
 [![codecov](https://codecov.io/gh/Azure/BatchExplorer/branch/master/graph/badge.svg)](https://codecov.io/gh/Azure/BatchExplorer)
 
