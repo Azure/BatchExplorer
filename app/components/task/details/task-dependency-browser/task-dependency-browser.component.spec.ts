@@ -70,7 +70,7 @@ describe("TaskDependenciesComponent", () => {
     describe("when task has no dependencies", () => {
         it("should show no item error", () => {
             const container = fixture.debugElement.query(By.css("bl-no-item"));
-            expect(container.nativeElement.textContent).toContain("This task contains no dependent tasks");
+            expect(container.nativeElement.textContent).toContain("task-dependency-browser.no-dependency");
             expect(container).toBeVisible();
         });
 
