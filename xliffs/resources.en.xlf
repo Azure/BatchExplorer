@@ -1,0 +1,51 @@
+<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="Batch" datatype="plaintext" source-language="en">
+    <body>
+      <trans-unit id="duration-picker.unit.unlimited">
+        <source>Unlimited</source>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.days">
+        <source>Days</source>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.minutes">
+        <source>Minutes</source>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.hours">
+        <source>Hours</source>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.seconds">
+        <source>Seconds</source>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.custom">
+        <source>Custom (ISO format)</source>
+      </trans-unit>
+      <trans-unit id="main-navigation.dashboard">
+        <source>Dash</source>
+      </trans-unit>
+      <trans-unit id="main-navigation.jobs">
+        <source>Jobs</source>
+      </trans-unit>
+      <trans-unit id="main-navigation.jobschedules">
+        <source>Job schedules</source>
+      </trans-unit>
+      <trans-unit id="main-navigation.pools">
+        <source>Pools</source>
+      </trans-unit>
+      <trans-unit id="main-navigation.packages">
+        <source>Packages</source>
+      </trans-unit>
+      <trans-unit id="main-navigation.certificates">
+        <source>Certificates</source>
+      </trans-unit>
+      <trans-unit id="main-navigation.data">
+        <source>Data</source>
+      </trans-unit>
+      <trans-unit id="main-navigation.gallery">
+        <source>Gallery</source>
+      </trans-unit>
+      <trans-unit id="main-navigation.profile">
+        <source>Profile</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
