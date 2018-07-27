@@ -40,10 +40,12 @@ const lowPriColor = colors.map(x => pattern.draw("diagonal", x));
     templateUrl: "pool-state-graph.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PoolStateGraphComponent implements OnInit, OnChanges, OnDestroy {
+export class PoolStateGraphComponent implements OnChanges, OnDestroy {
     @Input() public pool: Pool;
+    @Input() public interactive = true;
 
     public datasets: Chart.ChartDataSets[] = [];
+    public chartType: string;
 
     public labels = [
         "Idle",
@@ -55,35 +57,7 @@ export class PoolStateGraphComponent implements OnInit, OnChanges, OnDestroy {
         "Error",
     ];
 
-    public options: Chart.ChartOptions = {
-        maintainAspectRatio: false,
-        legend: {
-            display: false,
-        },
-        scales: {
-            xAxes: [{
-                categoryPercentage: 1.0,
-                barPercentage: 0.9,
-                stacked: true,
-                gridLines: {
-                    display: false,
-                },
-                ticks: {
-                    display: false,
-                },
-            }],
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true,
-                    callback: value => { if (value % 1 === 0) { return value; } },
-                },
-                stacked: true,
-                gridLines: {
-                    display: false,
-                },
-            }],
-        },
-    };
+    public options: Chart.ChartOptions;
 
     private _sub: Subscription;
     private _counts: Map<string, PoolNodeCounts>;
@@ -93,6 +67,7 @@ export class PoolStateGraphComponent implements OnInit, OnChanges, OnDestroy {
         private poolNodeCountSerivce: PoolNodeCountService,
         private contextMenuService: ContextMenuService) {
         this._updateDataSets();
+        this._updateOptions();
 
         this._sub = poolNodeCountSerivce.counts.subscribe((counts) => {
             this._counts = counts;
@@ -100,13 +75,13 @@ export class PoolStateGraphComponent implements OnInit, OnChanges, OnDestroy {
         });
     }
 
-    public ngOnInit() {
-        this.poolNodeCountSerivce.refresh();
-    }
-
     public ngOnChanges(changes) {
         if (changes.pool) {
             this._updateDataSets();
+        }
+
+        if (changes.interactive) {
+            this._updateOptions();
         }
     }
     public ngOnDestroy() {
@@ -122,21 +97,32 @@ export class PoolStateGraphComponent implements OnInit, OnChanges, OnDestroy {
 
     private _updateDataSets() {
         const counts = this._getCounts();
-        this.datasets = [
+        if (this.interactive) {
 
-            {
-                label: "Dedicated nodes",
-                backgroundColor: colors,
-                data: this._getData(counts && counts.dedicated),
-                borderWidth: 0,
-            },
-            {
-                label: "Low priority nodes",
-                backgroundColor: lowPriColor,
-                data: this._getData(counts && counts.lowPriority),
-                borderWidth: 0,
-            },
-        ];
+            this.datasets = [
+                {
+                    label: "Dedicated nodes",
+                    backgroundColor: colors,
+                    data: this._getData(counts && counts.dedicated),
+                    borderWidth: 0,
+                },
+                {
+                    label: "Low priority nodes",
+                    backgroundColor: this.interactive ? lowPriColor : colors,
+                    data: this._getData(counts && counts.lowPriority),
+                    borderWidth: 0,
+                },
+            ];
+        } else {
+            this.datasets = [
+                {
+                    label: "Dedicated nodes",
+                    backgroundColor: colors,
+                    data: this._getData(counts),
+                    borderWidth: 0,
+                },
+            ];
+        }
         this.changeDetector.markForCheck();
     }
 
@@ -186,5 +172,45 @@ export class PoolStateGraphComponent implements OnInit, OnChanges, OnDestroy {
         sum.unknown += count.unknown;
         sum.unusable += count.unusable;
         sum.waitingForStartTask += count.waitingForStartTask;
+    }
+
+    private _updateOptions() {
+        this.chartType = this.interactive ? "bar" : "pie";
+        this.options = {
+            maintainAspectRatio: false,
+            legend: {
+                display: false,
+            },
+            tooltips: {
+                enabled: this.interactive,
+            },
+            scales: {
+                xAxes: [{
+                    display: this.interactive,
+                    categoryPercentage: 1.0,
+                    barPercentage: 0.9,
+                    stacked: true,
+                    gridLines: {
+                        display: false,
+                    },
+                    ticks: {
+                        display: false,
+                    },
+                }],
+                yAxes: [{
+                    display: this.interactive,
+                    ticks: {
+                        beginAtZero: true,
+                        callback: value => { if (value % 1 === 0) { return value; } },
+                        display: this.interactive,
+                    },
+                    stacked: true,
+                    gridLines: {
+                        display: false,
+                    },
+                }],
+            },
+        };
+        this.changeDetector.markForCheck();
     }
 }

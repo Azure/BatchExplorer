@@ -56,12 +56,72 @@ export class NodeCounts extends Record<NodeCountsAttributes> {
 }
 
 @Model()
-export class PoolNodeCounts extends Record<any> {
+export class PoolNodeCounts extends Record<any> implements NodeCountsAttributes {
     @Prop() public dedicated: NodeCounts;
     @Prop() public lowPriority: NodeCounts;
 
     public get total() {
         return this.dedicated.total + this.lowPriority.total;
+    }
+
+    public get creating() {
+        return this.dedicated.creating + this.lowPriority.creating;
+    }
+
+    public get idle() {
+        return this.dedicated.idle + this.lowPriority.idle;
+    }
+
+    public get leavingPool() {
+        return this.dedicated.leavingPool + this.lowPriority.leavingPool;
+    }
+
+    public get offline() {
+        return this.dedicated.offline + this.lowPriority.offline;
+    }
+
+    public get preempted() {
+        return this.dedicated.creating + this.lowPriority.preempted;
+    }
+
+    public get rebooting() {
+        return this.dedicated.creating + this.lowPriority.rebooting;
+    }
+
+    public get reimaging() {
+        return this.dedicated.reimaging + this.lowPriority.reimaging;
+    }
+
+    public get running() {
+        return this.dedicated.running + this.lowPriority.running;
+    }
+
+    public get startTaskFailed() {
+        return this.dedicated.startTaskFailed + this.lowPriority.startTaskFailed;
+    }
+
+    public get starting() {
+        return this.dedicated.starting + this.lowPriority.starting;
+    }
+
+    public get transitioning() {
+        return this.dedicated.transitioning + this.lowPriority.transitioning;
+    }
+
+    public get error() {
+        return this.dedicated.error + this.lowPriority.error;
+    }
+
+    public get unknown() {
+        return this.dedicated.unknown + this.lowPriority.unknown;
+    }
+
+    public get unusable() {
+        return this.dedicated.unusable + this.lowPriority.unusable;
+    }
+
+    public get waitingForStartTask() {
+        return this.dedicated.waitingForStartTask + this.lowPriority.waitingForStartTask;
     }
 }
 

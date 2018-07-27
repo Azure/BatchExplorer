@@ -18,6 +18,7 @@
 
             <div bl-quick-list-item-preview>
                 <bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>
+                <bl-pool-state-graph [pool]="pool" [interactive]="false"></bl-pool-state-graph>
             </div>
         </bl-quick-list-item>
     </bl-quick-list>
@@ -59,6 +60,12 @@
         <bl-column name="targetLowPriorityNodes">
             <div *blHeadCellDef>Low pri <i class="fa fa-tv"></i></div>
             <div *blCellDef="let pool">{{pool.targetLowPriorityNodes}}</div>
+        </bl-column>
+
+        <bl-column name="poolState">
+            <div *blHeadCellDef>Node counts</div>
+            <div *blCellDef="let pool"> <bl-pool-state-graph [pool]="pool" [interactive]="false"></bl-pool-state-graph></div>
+
         </bl-column>
     </bl-table>
 </bl-focus-section>
