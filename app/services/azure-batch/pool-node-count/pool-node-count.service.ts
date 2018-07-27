@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { Model, Prop, Record } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { AccountService } from "app/services/account.service";
-import { BehaviorSubject, Observable, Subscription } from "rxjs";
+import { BehaviorSubject, Observable, Subscription, interval } from "rxjs";
 import { expand, map, reduce, share } from "rxjs/operators";
 import { AzureBatchHttpService, BatchListResponse } from "../core";
 
@@ -90,6 +90,7 @@ export class PoolNodeCountService implements OnDestroy {
     }
 
     public ngOnDestroy() {
+        this._counts.complete();
         this._accountSub.unsubscribe();
         this._pollSub.unsubscribe();
     }
@@ -114,10 +115,9 @@ export class PoolNodeCountService implements OnDestroy {
     }
 
     private _startPolling() {
-        const obs = Observable.interval(30000).concatMap(() => {
-            return this.refresh();
+        this._pollSub = interval(30000).subscribe(() => {
+            this.refresh();
         });
-        this._pollSub = obs.subscribe();
     }
 
     private _fetchPoolNodeCounts(): Observable<Map<string, PoolNodeCounts>> {
