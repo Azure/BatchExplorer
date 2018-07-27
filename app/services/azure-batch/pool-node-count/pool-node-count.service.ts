@@ -1,9 +1,8 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { Model, Prop, Record } from "@batch-flask/core";
-import { log } from "@batch-flask/utils";
 import { AccountService } from "app/services/account.service";
-import { BehaviorSubject, Observable, Subscription, interval } from "rxjs";
-import { expand, map, reduce, share } from "rxjs/operators";
+import { BehaviorSubject, Observable, combineLatest, timer } from "rxjs";
+import { expand, flatMap, map, publishReplay, reduce, refCount, share, tap } from "rxjs/operators";
 import { AzureBatchHttpService, BatchListResponse } from "../core";
 
 export interface NodeCountsAttributes {
@@ -125,6 +124,8 @@ export class PoolNodeCounts extends Record<any> implements NodeCountsAttributes 
     }
 }
 
+const NODE_COUNT_REFRESH_INTERVAL = 10000; // 30 seconds
+
 @Injectable()
 export class PoolNodeCountService implements OnDestroy {
 
@@ -134,25 +135,24 @@ export class PoolNodeCountService implements OnDestroy {
     public counts: Observable<Map<string, PoolNodeCounts>>;
 
     private _counts = new BehaviorSubject(new Map<string, PoolNodeCounts>());
-    private _accountSub: Subscription;
-    private _pollSub: Subscription;
 
     constructor(
         accountService: AccountService,
         private http: AzureBatchHttpService) {
-        this.counts = this._counts.asObservable();
 
-        this._accountSub = accountService.currentAccountId.subscribe(() => {
-            this._counts.next(new Map());
-            this.refresh();
-        });
-        this._startPolling();
+        this.counts = combineLatest(
+            accountService.currentAccountId,
+            timer(0, NODE_COUNT_REFRESH_INTERVAL),
+        ).pipe(
+            flatMap(() => this.refresh()),
+            flatMap(() => this._counts),
+            publishReplay(),
+            refCount(),
+        );
     }
 
     public ngOnDestroy() {
         this._counts.complete();
-        this._accountSub.unsubscribe();
-        this._pollSub.unsubscribe();
     }
 
     public countsFor(poolId: string): Observable<PoolNodeCounts | null> {
@@ -162,25 +162,15 @@ export class PoolNodeCountService implements OnDestroy {
     }
 
     public refresh(): Observable<any> {
-        const obs = this._fetchPoolNodeCounts();
-        obs.subscribe({
-            next: (value) => {
+        return this._fetchPoolNodeCounts().pipe(
+            tap((value) => {
                 this._counts.next(value);
-            },
-            error: (error) => {
-                log.error("Error loading pool node counts", error);
-            },
-        });
-        return obs;
-    }
-
-    private _startPolling() {
-        this._pollSub = interval(30000).subscribe(() => {
-            this.refresh();
-        });
+            }),
+        );
     }
 
     private _fetchPoolNodeCounts(): Observable<Map<string, PoolNodeCounts>> {
+        console.log("Fettch more nodes");
         return this.http.get<BatchListResponse<BatchPoolNodeCounts>>("/nodecounts").pipe(
             expand(response => {
                 return response["odata.nextLink"] ? this.http.get(response["odata.nextLink"]) : Observable.empty();

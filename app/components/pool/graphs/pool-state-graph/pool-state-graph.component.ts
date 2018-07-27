@@ -68,7 +68,7 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
         private contextMenuService: ContextMenuService) {
         this._updateDataSets();
         this._updateOptions();
-
+        console.log("Sub from here");
         this._sub = poolNodeCountSerivce.counts.subscribe((counts) => {
             this._counts = counts;
             this._updateDataSets();
@@ -84,7 +84,9 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
             this._updateOptions();
         }
     }
+
     public ngOnDestroy() {
+        console.log("unsub from here");
         this._sub.unsubscribe();
     }
 
