@@ -54,7 +54,6 @@ export * from "./node-connection-settings";
 export * from "./node-user";
 export * from "./node-agent-sku";
 export * from "./node-recent-task";
-export * from "./pool";
 export * from "./pool-endpoint-configuration";
 export * from "./pool-os-skus";
 export * from "./rate-card";

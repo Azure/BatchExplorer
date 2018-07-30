@@ -6,8 +6,8 @@ export enum ContainerType {
 }
 
 export interface ContainerConfigurationAttributes {
-    containerImageNames: string[];
-    containerRegistries: ContainerRegistryAttributes[];
+    containerImageNames?: string[];
+    containerRegistries?: ContainerRegistryAttributes[];
     type: ContainerType;
 }
 
@@ -20,7 +20,7 @@ export interface ContainerRegistryAttributes {
 export interface TaskContainerSettingsAttributes {
     imageName: string;
     containerRunOptions: string;
-    registry: ContainerRegistryAttributes;
+    registry: Partial<ContainerRegistryAttributes>;
 }
 
 @Model()
