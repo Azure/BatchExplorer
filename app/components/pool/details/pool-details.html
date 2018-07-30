@@ -21,6 +21,9 @@
                     {{estimatedCost}}/h
                 </div>
             </div>
+            <div summaryTile>
+                <bl-pool-state-graph [pool]="pool"></bl-pool-state-graph>
+            </div>
         </bl-summary-card>
 
         <bl-pool-error-display [pool]="pool"></bl-pool-error-display>

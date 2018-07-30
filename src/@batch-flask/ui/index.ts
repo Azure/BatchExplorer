@@ -1,6 +1,7 @@
 export * from "./electron";
 export * from "./background-task";
 export * from "./buttons";
+export * from "./charts";
 export * from "./dialogs";
 export * from "./dropdown";
 export * from "./i18n";
