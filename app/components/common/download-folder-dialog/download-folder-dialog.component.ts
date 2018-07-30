@@ -6,7 +6,7 @@ import * as path from "path";
 import { Observable, forkJoin, from } from "rxjs";
 
 import { autobind } from "@batch-flask/core";
-import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
+import { Activity, ActivityService, ElectronShell } from "@batch-flask/ui";
 import { SecureUtils } from "@batch-flask/utils";
 import { FileSystemService } from "app/services";
 import { FileNavigator } from "app/services/file";
@@ -41,6 +41,7 @@ export class DownloadFolderComponent {
         public dialogRef: MatDialogRef<DownloadFolderComponent>,
         private fs: FileSystemService,
         private activityService: ActivityService,
+        private shell: ElectronShell,
     ) { }
 
     public get title() {
@@ -61,51 +62,42 @@ export class DownloadFolderComponent {
         this.downloadFolder.setValue(folder);
     }
 
+    /**
+     * Start a new asynchronous storage folder download
+     * Gets the list of files to download from information in the component
+     * Creates a file download activity which creates a single file download subactivity for each file
+     */
     private _startDownloadAsync(): void {
-        const activity = new Activity("Downloading Files", true, () => {
+        // prepare the initializer function
+        const initializer = () => {
+            // get the download folder and a list of files to download
             return forkJoin(from(this._getDownloadFolder()), this._getListOfFilesToDownload()).pipe(
+                // map the list of files to a list of file download activities
                 map(result => {
                     const [folder, files] = result;
                     return files.map(file => {
+                        // each file becomes a new activity whose initializer is to download one file
                         return new Activity("Downloading One File", false, () => {
                             return this._downloadFile(folder, file);
                         });
-                    });
+                    }).toArray();
                 }),
+                // reduce the output to contain only activities and not the
                 reduce((folder, activities) => {
                     return activities;
                 }),
             );
-        });
+        };
 
-        this.activityService.loadAndRun(activity);
+        // prepare the done function
+        const onDone = () => {
+            from(this._getDownloadFolder()).subscribe(folder => {
+                this.shell.showItemInFolder(folder);
+            });
+        };
 
-        // const folder = await this._getDownloadFolder();
-
-        // this.backgroundTaskService.startTask(this.title, (task: BackgroundTask) => {
-        //     const subject = new AsyncSubject();
-        //     task.progress.next(1);
-        //     this._getListOfFilesToDownload().subscribe((files) => {
-        //         if (files.size === 0) {
-        //             this.notificationService.warn(
-        //                 "Pattern not found",
-        //                 `Failed to find pattern: ${this._getPatterns()}`,
-        //             );
-        //             task.progress.next(100);
-        //             subject.complete();
-        //         } else {
-        //             task.progress.next(10);
-        //             const downloadObs = this._downloadFiles(task, folder, files);
-        //             Observable.forkJoin(downloadObs).subscribe(() => {
-        //                 this.shell.showItemInFolder(folder);
-        //                 task.progress.next(100);
-        //                 subject.complete();
-        //             });
-        //         }
-        //     });
-
-        //     return subject.asObservable();
-        // });
+        // load and run a new file download activity with the declared functions
+        this.activityService.loadAndRun(new Activity("Downloading Files", true, initializer, onDone));
     }
 
     private _getPatterns(): string[] {

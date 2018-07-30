@@ -1,63 +1,55 @@
-import { BehaviorSubject, Observable, combineLatest } from "rxjs";
+import { BehaviorSubject, Observable, combineLatest, merge } from "rxjs";
 
 import { Activity, ActivityStatus } from "@batch-flask/ui/activity-monitor/activity";
 
-interface ActivityQueues {
-    pending: Activity[];
-    running: Activity[];
-    finished: Activity[];
-}
-
 export class ActivityProcessor {
-    public activityQueues: BehaviorSubject<ActivityQueues>;
-    private _activityQueues: ActivityQueues;
+    public activities: Activity[];
+    public singleStatusSubject: BehaviorSubject<ActivityStatus>;
+    public statusListSubject: BehaviorSubject<ActivityStatus[]>;
 
-    constructor(activities?: Activity[]) {
-        this._activityQueues = {
-            pending: activities || [],
-            running: [],
-            finished: [],
-        };
-        this.activityQueues = new BehaviorSubject(this._activityQueues);
+    constructor() {
+        this.activities = [];
+        this.singleStatusSubject = new BehaviorSubject(null);
+        this.statusListSubject = new BehaviorSubject([]);
     }
 
-    public loadAndRun(activities: Activity[]): Observable<any> {
-        this.enqueue(activities);
-        return this.start();
+    /**
+     * Load the processor with activities and run the processor
+     * @param activities A list of Activity objects
+     */
+    public loadAndRun(activities: Activity[]): void {
+        this._load(activities);
+        return this._startProcessor();
     }
 
-    public enqueue(activities: Activity[]) {
-        this._activityQueues.pending.push(...activities);
-        this.sendUpdate();
-    }
-
-    public start(): Observable<ActivityStatus[]> {
-        // note that right now, run returns void (don't worry, it should)
-        // You need to return an observable with an array for each status of each activity
-        // parent activity will subscribe to this, and when all subactivities complete, parent activity will
-        // call statusSubject.next() with its own completion status
-        // #Genius
-        const observables = this._activityQueues.pending.map(activity => activity.run());
-        const obs = combineLatest(observables);
-        while (this._activityQueues.pending.length > 0) {
-            const activity = this._activityQueues.pending.shift();
+    /**
+     * Starts the processor by running every activity
+     * Will combine all activity status observables into one observable, and emit it on change
+     */
+    private _startProcessor(): void {
+        // compile and run all activities
+        const statuses: Array<Observable<ActivityStatus>> = [];
+        for (const activity of this.activities) {
+            statuses.push(activity.statusSubject);
             activity.run();
-            this._activityQueues.running.push();
         }
-        this.sendUpdate();
-        return obs;
+
+        // On each status change, emit the status to the parent activity
+        merge(...statuses).subscribe(status => {
+            this.singleStatusSubject.next(status);
+        });
+
+        // on any status change, emit the entire status list to the parent activity
+        combineLatest(...statuses).subscribe(statusList => {
+            this.statusListSubject.next(statusList);
+        });
     }
 
-    //     const observables = this._activityQueues.pending.map(activity => activity.run());
-    //     console.log(observables);
-    //     const obs = combineLatest(...observables);
-    //     while (this._activityQueues.pending.length > 0) {
-    //         this._activityQueues.running.push(this._activityQueues.pending.shift());
-    //     }
-    //     this.sendUpdate();
-    //     return obs;
-
-    private sendUpdate() {
-        this.activityQueues.next(this._activityQueues);
+    /**
+     * Pushes the given activities onto the processor's activity list
+     * @param activities An array of activities
+     */
+    private _load(activities: Activity[]): void {
+        this.activities = activities;
     }
 }

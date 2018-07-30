@@ -6,7 +6,7 @@ export class ActivityService {
     private masterProcessor: ActivityProcessor;
 
     constructor() {
-        this.masterProcessor = new ActivityProcessor([]);
+        this.masterProcessor = new ActivityProcessor();
     }
 
     public loadAndRun(activity: Activity) {
