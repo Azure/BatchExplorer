@@ -2,15 +2,18 @@ import { List } from "immutable";
 import { Duration, duration } from "moment";
 
 import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
+import { CloudServiceConfiguration } from "app/models/cloud-service-configuration";
+import { Metadata, MetadataAttributes } from "app/models/metadata";
+import { NetworkConfiguration } from "app/models/network-configuration";
+import { ResizeError } from "app/models/resize-error";
+import { StartTask, StartTaskAttributes } from "app/models/start-task";
+import { TaskSchedulingPolicy } from "app/models/task-scheduling-policy";
+import { UserAccount, UserAccountAttributes } from "app/models/user-account";
+import {
+    VirtualMachineConfiguration,
+    VirtualMachineConfigurationAttributes,
+} from "app/models/virtual-machine-configuration";
 import { ModelUtils, PoolUtils } from "app/utils";
-import { CloudServiceConfiguration } from "./cloud-service-configuration";
-import { Metadata, MetadataAttributes } from "./metadata";
-import { NetworkConfiguration } from "./network-configuration";
-import { ResizeError } from "./resize-error";
-import { StartTask, StartTaskAttributes } from "./start-task";
-import { TaskSchedulingPolicy } from "./task-scheduling-policy";
-import { UserAccount, UserAccountAttributes } from "./user-account";
-import { VirtualMachineConfiguration, VirtualMachineConfigurationAttributes } from "./virtual-machine-configuration";
 
 export enum OSType {
     Windows = "windows",
@@ -53,7 +56,7 @@ export interface PoolAttributes {
  * Class for displaying Batch pool information.
  */
 @Model()
-export class Pool extends Record<PoolAttributes> implements NavigableRecord  {
+export class Pool extends Record<PoolAttributes> implements NavigableRecord {
 
     @Prop() public allocationState: string;
 

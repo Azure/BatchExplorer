@@ -44,7 +44,7 @@ bl-account-details {
         margin-top: 5px;
         margin-right: 5px;
 
-        > bl-monitor-chart {
+        > .monitor-chart {
             min-width: 0;
             grid-row: span 2;
             grid-column: span 2;
@@ -52,9 +52,8 @@ bl-account-details {
             cursor: pointer;
         }
 
-        bl-getting-started-card {
-            grid-row: span 2;
-            grid-column: span 2;
+        > .current-node-counts {
+            padding: 5px 10px;
         }
 
         > .node-states {

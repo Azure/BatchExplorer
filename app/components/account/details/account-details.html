@@ -24,10 +24,14 @@
         </bl-summary-card>
         <h1 class="section-title">Monitoring</h1>
         <div class="monitor-charts">
-            <bl-monitor-chart chartType="coreCount" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
-            <bl-monitor-chart chartType="failedTask" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
-            <bl-monitor-chart chartType="taskStates" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
-            <bl-monitor-chart class="node-states" chartType="nodeStates" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
+            <bl-monitor-chart class="monitor-chart" chartType="coreCount" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
+            <bl-monitor-chart class="monitor-chart" chartType="failedTask" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
+            <bl-monitor-chart class="monitor-chart" chartType="taskStates" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
+            <bl-monitor-chart class="monitor-chart node-states" chartType="nodeStates" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
+            <div class="monitor-chart current-node-counts">
+                <h2>Current node counts</h2>
+                <bl-pool-state-graph ></bl-pool-state-graph>
+            </div>
         </div>
         <h1 class="section-title">Resources</h1>
         <div class="account-cards">
