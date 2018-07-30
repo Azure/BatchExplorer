@@ -6,11 +6,11 @@ import { TaskService } from "app/services";
 import { ComponentUtils } from "app/utils";
 
 @Component({
-    selector: "bl-task-dependencies",
-    templateUrl: "task-dependencies.html",
+    selector: "bl-task-dependency-browser",
+    templateUrl: "task-dependency-browser.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskDependenciesComponent implements OnChanges {
+export class TaskDependencyBrowserComponent implements OnChanges {
     @Input() public jobId: string;
     @Input() public task: Task;
 
@@ -36,26 +36,22 @@ export class TaskDependenciesComponent implements OnChanges {
         }
     }
 
-    public trackByFn(index, dependency: TaskDependency) {
-        return dependency.id;
-    }
-
     private _refresh(task: Task) {
         this.dependentIds = (task && task.dependsOn)
             ? this._getTaskDependencyIds(task.dependsOn)
             : [];
         this._updateDependencies();
-        this._loadStates();
+        this._loadTasks();
     }
 
-    private _loadStates() {
+    private _loadTasks() {
         if (this._loaded >= this.dependentIds.length) { return; }
         this.taskService.getMultiple(this.jobId, this.dependentIds.slice(this._loaded, this._loaded + 20),
             this.taskService.basicProperties).subscribe({
                 next: (tasks: List<Task>) => {
                     this._loaded = this._loaded + 20;
                     this._processMultipleTaskResponse(tasks);
-                    this._loadStates();
+                    this._loadTasks();
                 },
             });
     }
@@ -66,7 +62,7 @@ export class TaskDependenciesComponent implements OnChanges {
             dep.loading = this._loaded < index;
             if (this._tasks.has(id)) {
                 const task = this._tasks.get(id);
-                dep.state = task.state;
+                dep.task = task;
                 dep.loading = false;
 
                 const dependencies = task.dependsOn;

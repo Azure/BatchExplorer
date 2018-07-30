@@ -35,7 +35,8 @@ export class BatchExplorerService {
     constructor(private remote: ElectronRemote) {
         this._app = remote.getCurrentWindow().batchExplorerApp;
         this._app.azureEnvironmentObs.subscribe((x) => {
-            this._azureEnvironment = x;
+            // Clone the environement to prevent calling the electron ipc sync for every key
+            this._azureEnvironment = new AzureEnvironment(x);
         });
         this.autoUpdater = this._app.autoUpdater;
         this.aadService = this._app.aadService;

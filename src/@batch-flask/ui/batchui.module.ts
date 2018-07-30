@@ -26,6 +26,7 @@ import { EntityCommandsListModule } from "./entity-commands-list";
 import { FocusSectionModule } from "./focus-section";
 import { FormModule } from "./form";
 import { GraphsModule } from "./graphs";
+import { I18nUIModule } from "./i18n";
 import { IconComponent } from "./icon";
 import { InfoBoxModule } from "./info-box";
 import {
@@ -68,6 +69,7 @@ const modules = [
     EditorModule,
     EntityCommandsListModule,
     FocusSectionModule,
+    I18nUIModule,
     InfoBoxModule,
     LoadingModule,
     MetricsMonitorModule,

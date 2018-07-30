@@ -124,7 +124,6 @@ export class DurationPickerComponent implements FormFieldControl<any>,
     constructor(
         private changeDetector: ChangeDetectorRef,
         private injector: Injector) {
-
     }
 
     public ngOnInit() {

@@ -111,11 +111,13 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
                             if (serverError && serverError.code === this._noPersistedOutputsCode) {
                                 // no container exists for the job so it didn't use conventions library.
                                 // remove the source so the user doesn't see it at all.
-                                const index = this.workspace.sources.findIndex((source: FileSource) => {
-                                    return source.name === this._persistedSourceName;
-                                });
-                                if (index > -1) {
-                                    this.workspace.sources.splice(index, 1);
+                                if (this.workspace) {
+                                    const index = this.workspace.sources.findIndex((source: FileSource) => {
+                                        return source.name === this._persistedSourceName;
+                                    });
+                                    if (index > -1) {
+                                        this.workspace.sources.splice(index, 1);
+                                    }
                                 }
                             }
 

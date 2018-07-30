@@ -5,20 +5,21 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { ContextMenuService } from "@batch-flask/ui";
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { ContextMenuService, I18nUIModule } from "@batch-flask/ui";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { NoItemMockComponent, TableTestingModule } from "test/utils/mocks/components";
-import { TaskDependenciesComponent } from "./task-dependencies.component";
+import { TaskDependencyBrowserComponent } from "./task-dependency-browser.component";
 
 const taskMap: Map<string, Task> = new Map()
     .set("1", new Task({ id: "1", dependsOn: { taskIds: ["1", "2"] } } as any))
     .set("2", new Task({ id: "2", dependsOn: { taskIds: ["3", "4", "5"] } } as any));
 
 @Component({
-    template: `<bl-task-dependencies [jobId]="jobId" [task]="task"></bl-task-dependencies>`,
+    template: `<bl-task-dependency-browser [jobId]="jobId" [task]="task"></bl-task-dependency-browser>`,
 })
 class TestComponent {
     public jobId = "job-id-1";
@@ -29,7 +30,7 @@ class TestComponent {
 describe("TaskDependenciesComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: TaskDependenciesComponent;
+    let component: TaskDependencyBrowserComponent;
     let taskServiceSpy: any;
 
     beforeEach(() => {
@@ -47,9 +48,9 @@ describe("TaskDependenciesComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, TableTestingModule],
+            imports: [RouterTestingModule, TableTestingModule, I18nTestingModule, I18nUIModule],
             declarations: [
-                TestComponent, NoItemMockComponent, TaskDependenciesComponent,
+                TestComponent, NoItemMockComponent, TaskDependencyBrowserComponent,
             ],
             providers: [
                 { provide: TaskService, useValue: taskServiceSpy },
@@ -62,14 +63,14 @@ describe("TaskDependenciesComponent", () => {
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         testComponent.task = Fixtures.task.create();
-        component = fixture.debugElement.query(By.css("bl-task-dependencies")).componentInstance;
+        component = fixture.debugElement.query(By.css("bl-task-dependency-browser")).componentInstance;
         fixture.detectChanges();
     });
 
     describe("when task has no dependencies", () => {
         it("should show no item error", () => {
             const container = fixture.debugElement.query(By.css("bl-no-item"));
-            expect(container.nativeElement.textContent).toContain("This task contains no dependent tasks");
+            expect(container.nativeElement.textContent).toContain("task-dependency-browser.no-dependency");
             expect(container).toBeVisible();
         });
 
