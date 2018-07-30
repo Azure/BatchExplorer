@@ -9,7 +9,10 @@ import { ResizeError } from "app/models/resize-error";
 import { StartTask, StartTaskAttributes } from "app/models/start-task";
 import { TaskSchedulingPolicy } from "app/models/task-scheduling-policy";
 import { UserAccount, UserAccountAttributes } from "app/models/user-account";
-import { VirtualMachineConfiguration, VirtualMachineConfigurationAttributes } from "app/models/virtual-machine-configuration";
+import {
+    VirtualMachineConfiguration,
+    VirtualMachineConfigurationAttributes,
+} from "app/models/virtual-machine-configuration";
 import { ModelUtils, PoolUtils } from "app/utils";
 
 export enum OSType {
@@ -53,7 +56,7 @@ export interface PoolAttributes {
  * Class for displaying Batch pool information.
  */
 @Model()
-export class Pool extends Record<PoolAttributes> implements NavigableRecord  {
+export class Pool extends Record<PoolAttributes> implements NavigableRecord {
 
     @Prop() public allocationState: string;
 
