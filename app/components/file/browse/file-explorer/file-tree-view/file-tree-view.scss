@@ -7,7 +7,7 @@ bl-file-tree-view {
     flex-direction: column;
 
     .tree-view-header {
-        background: $mercury-grey;
+        background: $secondary-background;
         display: flex;
         align-items: stretch;
         height: $tree-view-header-height;
@@ -27,25 +27,25 @@ bl-file-tree-view {
             display: inline-block;
             flex: 1;
             font-size: 11px;
-            color: $mineshaft-grey;
+            color: $secondary-text;
             font-weight: 700;
             user-select: none;
             text-transform: uppercase;
         }
 
         .error {
-            color: map-get($danger, 500);
+            color: $danger-color;
             padding: 0 5px;
         }
 
         .action {
             padding: 4px 5px;
             cursor: pointer;
-            color: $mineshaft-grey;
+            color: $secondary-text;
             font-size: 16px;
 
             &:hover {
-                color: $alto;
+                color: $selection-color;
             }
         }
     }
@@ -59,11 +59,15 @@ bl-file-tree-view {
     }
 
     .caret {
-        color: $dove-grey;
+        color: $secondary-text;
 
         &:hover {
-            color: $dusty-grey;
+            color: $selection-color;
         }
+    }
+
+    .label {
+        margin-left: 3px;
     }
 
     .tree-view-content {
@@ -74,7 +78,7 @@ bl-file-tree-view {
     .tree-rows-container {
         height: 100%;
         &.drop-target {
-            background: $whitesmoke-darker;
+            background: $main-background;
         }
     }
 

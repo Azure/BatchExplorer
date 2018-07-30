@@ -6,17 +6,17 @@ import { Constants } from "../client-constants";
 const logsFolder = Constants.logsFolder;
 
 export const logger = new NodeLogger({
-    name: "BatchLabs Main",
+    name: "BatchExplorer Main",
     path: path.join(logsFolder, "client.log"),
 });
 
 export const pythonLogger = new NodeLogger({
-    name: "BatchLabs Python",
+    name: "BatchExplorer Python",
     path: path.join(logsFolder, "python-server.log"),
 });
 
 export const renderLogger = new NodeLogger({
-    name: "BatchLabs Renderer",
+    name: "BatchExplorer Renderer",
     path: path.join(logsFolder, "app.log"),
 });
 

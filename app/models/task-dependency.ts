@@ -1,9 +1,11 @@
+import { Task } from "./task";
+
 /**
  * A single dependent task in a list of task dependencies.
  */
 export class TaskDependency {
     public id: string;
-    public state: string;
+    public task: Task;
     public dependsOn: string;
     public loading: boolean;
     public routerLink: any[];

@@ -1,0 +1,15 @@
+@import "app/styles/variables";
+
+bl-task-state {
+    .fa {
+        margin-right: 3px;
+    }
+
+    &.success {
+        color: $success-color;
+    }
+
+    &.error {
+        color: $danger-color;
+    }
+}

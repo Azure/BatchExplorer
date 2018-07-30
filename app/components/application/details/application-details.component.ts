@@ -1,22 +1,18 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { Subscription } from "rxjs/Subscription";
+import { Subscription } from "rxjs";
 
-import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { BatchApplication } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
 import { ApplicationParams, ApplicationService } from "app/services";
 import { EntityView } from "app/services/core";
-import {
-    ApplicationCreateDialogComponent, ApplicationEditDialogComponent,
-    DeleteApplicationDialogComponent,
-} from "../action";
+import { BatchApplicationCommands } from "../action";
 
 @Component({
     selector: "bl-application-details",
     templateUrl: "application-details.html",
+    providers: [BatchApplicationCommands],
 })
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
@@ -35,11 +31,10 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     private _paramsSubscriber: Subscription;
 
     constructor(
+        public commands: BatchApplicationCommands,
         private activatedRoute: ActivatedRoute,
         private applicationService: ApplicationService,
-        private dialog: MatDialog,
-        private router: Router,
-        private sidebarManager: SidebarManager) {
+        private router: Router) {
 
         this.data = this.applicationService.view();
         this.data.item.subscribe((application) => {
@@ -70,31 +65,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     }
 
     @autobind()
-    public addPackage() {
-        const sidebarRef = this.sidebarManager.open("add-package", ApplicationCreateDialogComponent);
-        sidebarRef.component.setValue(this.application);
-        sidebarRef.afterCompletion.subscribe(() => {
-            this.refresh();
-        });
-    }
-
-    @autobind()
-    public editApplication() {
-        const sidebarRef = this.sidebarManager.open("edit-application", ApplicationEditDialogComponent);
-        sidebarRef.component.setValue(this.application);
-        sidebarRef.afterCompletion.subscribe(() => {
-            this.refresh();
-        });
-    }
-
-    @autobind()
-    public deleteApplication() {
-        const dialogRef = this.dialog.open(DeleteApplicationDialogComponent);
-        dialogRef.componentInstance.applicationId = this.application.id;
-    }
-
-    @autobind()
     public refresh() {
-        return this.data.refresh();
+        return this.commands.get(this.applicationId);
     }
 }

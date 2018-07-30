@@ -9,8 +9,7 @@ bl-job-progress-status {
     }
 
     .running {
-        // width: 180px;
-        height: 140px;
+        height: 130px;
     }
 
     .queued, .completed {
@@ -37,7 +36,7 @@ bl-job-progress-status {
         }
 
         > .failed {
-            color: map-get($danger, 500);
+            color: $danger-color;
         }
     }
 
@@ -76,6 +75,17 @@ bl-job-progress-status {
             > .progress-label {
                 margin-left: 10px;
                 color: $mineshaft-grey;
+            }
+        }
+    }
+    .warning-container {
+        height: 10px;
+        .invalidated-data {
+            color: $warn-color;
+            text-align: center;
+            .fa {
+                color: $warn-color;
+                margin-right: 5px;
             }
         }
     }

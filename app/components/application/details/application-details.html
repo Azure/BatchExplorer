@@ -13,9 +13,7 @@
             </div>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                <bl-add-button title="Add package" [action]="addPackage"></bl-add-button>
-                <bl-edit-button [action]="editApplication"></bl-edit-button>
-                <bl-delete-button [action]="deleteApplication" [enabled]="application.allowUpdates"></bl-delete-button>
+                <bl-commands-list [commands]="commands" [entity]="application"></bl-commands-list>
             </bl-button-group>
         </bl-summary-card>
         <bl-application-error-display [application]="application"></bl-application-error-display>

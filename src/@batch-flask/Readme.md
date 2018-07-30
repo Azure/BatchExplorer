@@ -1,4 +1,4 @@
-# BatchLabs Common
+# BatchExplorer Common
 
 This is supposed to act like an independent package.
 

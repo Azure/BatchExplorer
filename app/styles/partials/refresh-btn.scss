@@ -5,7 +5,7 @@ bl-refresh-btn {
     }
 
     .fa-warning {
-        color: map-get($danger, 500);
+        color: $danger-color;
     }
 
     .success-container {
@@ -16,5 +16,5 @@ bl-refresh-btn {
 }
 
 .fa-ban {
-    color: $errorText;
+    color: $danger-color;
 }

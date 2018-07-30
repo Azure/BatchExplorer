@@ -21,15 +21,18 @@ import "./task-list-display.scss";
     providers: [TaskCommands],
 })
 export class TaskListDisplayComponent extends ListBaseComponent implements OnChanges {
+    public TaskState = TaskState;
     @Input() public jobId: string;
 
     @Input() public tasks: List<Task>;
 
     @Input() public status: LoadingStatus;
 
+    @Input() public commands: TaskCommands;
+
     @Output() public scrollBottom = new EventEmitter();
 
-    constructor(public commands: TaskCommands, changeDetector: ChangeDetectorRef) {
+    constructor(changeDetector: ChangeDetectorRef) {
         super(changeDetector);
     }
 

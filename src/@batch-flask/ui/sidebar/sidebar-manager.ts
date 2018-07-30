@@ -82,14 +82,14 @@ export class SidebarManager {
      * Event when the sidebar is fully open.
      */
     public get onOpen(): Observable<void> {
-        return this.sidebar.onOpen;
+        return this.sidebar.openedStart;
     }
 
     /**
      * Event when the sidebar is closed.
      */
     public get onClosed(): Observable<void> {
-        return  this.sidebar.onClose;
+        return this.sidebar.closedStart;
     }
 
     private updateReferenceSubject() {

@@ -182,7 +182,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
             this.expandedDirs.delete(treeRow.path);
         } else {
             this.expandedDirs.add(treeRow.path);
-            this.fileNavigator.loadPath(treeRow.path);
+            // this.fileNavigator.loadPath(treeRow.path);
         }
         this._buildTreeRows(this._tree);
         this.changeDetector.markForCheck();
@@ -325,7 +325,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     private _getTreeRowsForNode(node: FileTreeNode, indent = 0): TreeRow[] {
         const rows = [];
-        for (const [_, child] of node.children) {
+        for (const [, child] of node.children) {
             if (this.autoExpand && !(child.path in this.expandedDirs)) {
                 this.expandedDirs.add(child.path);
             }

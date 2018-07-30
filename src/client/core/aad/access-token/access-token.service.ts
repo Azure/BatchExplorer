@@ -1,8 +1,7 @@
-import { RequestInit } from "node-fetch";
-
 import { AccessToken } from "@batch-flask/core";
-import { fetch, log } from "@batch-flask/utils";
-import { BatchLabsApplication } from "client/core//batchlabs-application";
+import { log } from "@batch-flask/utils";
+import { BatchExplorerApplication } from "client/core//batch-explorer-application";
+import { RequestInit, fetch } from "client/core/fetch";
 import { AADConfig } from "../aad-config";
 import { objectToParams } from "../adal-constants";
 
@@ -25,7 +24,8 @@ export interface AccessTokenErrorResult {
  * This service handle the retrival of the access token to auth AAD queries
  */
 export class AccessTokenService {
-    constructor(private app: BatchLabsApplication, private config: AADConfig) {
+    constructor(private app: BatchExplorerApplication, private config: AADConfig) {
+
     }
 
     /**

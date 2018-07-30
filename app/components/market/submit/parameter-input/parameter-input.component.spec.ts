@@ -4,19 +4,21 @@ import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
+import { MaterialModule, ServerError } from "@batch-flask/core";
 import { PermissionService, SelectComponent, SelectModule } from "@batch-flask/ui";
-import { Subject } from "rxjs";
-import { Observable } from "rxjs/Observable";
-
-import { MaterialModule } from "@batch-flask/core";
+import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { DialogService } from "@batch-flask/ui/dialogs";
+import { FormModule } from "@batch-flask/ui/form";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { Observable, Subject } from "rxjs";
+
 import { FileGroupPickerComponent } from "app/components/data/shared";
 import { CloudFilePickerComponent } from "app/components/data/shared/cloud-file-picker";
 import { FileGroupSasComponent } from "app/components/data/shared/file-group-sas";
+import { JobIdComponent } from "app/components/data/shared/job-id";
 import { NcjParameterExtendedType, NcjParameterWrapper, ParameterInputComponent } from "app/components/market/submit";
-import { BatchApplication, NcjParameterRawType } from "app/models";
-import { NcjFileGroupService } from "app/services";
+import { BlobContainer, NcjParameterRawType } from "app/models";
+import { JobService, NcjFileGroupService } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { Constants } from "app/utils";
 
@@ -64,13 +66,14 @@ describe("ParameterInputComponent", () => {
     let dialogServiceSpy: any;
     let storageBlobServiceSpy: any;
     let sidebarSpy: any;
-    let listProxy: MockListView<BatchApplication, any>;
+    let jobServiceSpy: any;
+    let listProxy: MockListView<BlobContainer, any>;
 
     beforeEach(() => {
-        listProxy = new MockListView(BatchApplication, {
+        listProxy = new MockListView(BlobContainer, {
             cacheKey: "id",
             items: [
-                Fixtures.application.create({ id: "app-1" }),
+                Fixtures.container.create(),
             ],
         });
 
@@ -86,9 +89,23 @@ describe("ParameterInputComponent", () => {
             },
         };
 
-        storageBlobServiceSpy = {
+        jobServiceSpy = {
+            get: jasmine.createSpy("get").and.callFake((jobId, ...args) => {
+                if (jobId === "good") {
+                    return Observable.throw(ServerError.fromBatch({
+                        statusCode: 404,
+                        code: "RandomTestErrorCode",
+                        message: { value: "Try again ..." },
+                    }));
+                }
 
+                return Observable.of(Fixtures.job.create({ id: jobId }));
+            }),
         };
+
+        storageBlobServiceSpy = {
+        };
+
         fileGroupServiceSpy = {
             addFileGroupPrefix: jasmine.createSpy("addFileGroupPrefix").and.callFake((fgName) => {
                 return `${Constants.ncjFileGroupPrefix}${fgName}`;
@@ -105,11 +122,24 @@ describe("ParameterInputComponent", () => {
 
         TestBed.configureTestingModule({
             imports: [
-                RouterTestingModule, ReactiveFormsModule, FormsModule,
-                MaterialModule, SelectModule, NoopAnimationsModule,
+                ButtonsModule,
+                FormModule,
+                FormsModule,
+                MaterialModule,
+                NoopAnimationsModule,
+                RouterTestingModule,
+                ReactiveFormsModule,
+                SelectModule,
             ],
-            declarations: [NoItemMockComponent, ParameterInputComponent, FileGroupSasComponent,
-                TestComponent, FileGroupPickerComponent, CloudFilePickerComponent],
+            declarations: [
+                CloudFilePickerComponent,
+                FileGroupPickerComponent,
+                FileGroupSasComponent,
+                JobIdComponent,
+                NoItemMockComponent,
+                ParameterInputComponent,
+                TestComponent,
+            ],
             providers: [
                 { provide: NcjFileGroupService, useValue: fileGroupServiceSpy },
                 { provide: StorageContainerService, useValue: storageContainerSpy },
@@ -118,6 +148,7 @@ describe("ParameterInputComponent", () => {
                 { provide: DialogService, useValue: dialogServiceSpy },
                 { provide: SidebarManager, useValue: sidebarSpy },
                 { provide: PermissionService, useValue: {} },
+                { provide: JobService, useValue: jobServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -515,6 +546,48 @@ describe("ParameterInputComponent", () => {
             });
             fixture.detectChanges();
             expect(fileInputComponent.value.value).toBe(`https://storage-acc-1.com?sastoken`);
+        });
+    });
+
+    describe("job-id parameter type", () => {
+        const initialInput = "";
+        const goodJobId = "good";
+        const badJobId = "bad";
+        let jobIdComponent: JobIdComponent;
+        let jobIdInputEl: DebugElement;
+
+        beforeEach(() => {
+            testComponent.param = new NcjParameterWrapper("jobName", {
+                type: NcjParameterRawType.string,
+                metadata: {
+                    description: "description",
+                    advancedType: NcjParameterExtendedType.jobId,
+                },
+            });
+
+            testComponent.paramControl.setValue(initialInput);
+            fixture.detectChanges();
+            jobIdInputEl = de.query(By.css("bl-job-id"));
+            expect(jobIdInputEl).not.toBeFalsy();
+            jobIdComponent = jobIdInputEl.componentInstance;
+        });
+
+        it("should show initial input", () => {
+            expect(jobIdComponent.value.value).toBe(initialInput);
+        });
+
+        it("should show updated input and validate", () => {
+            testComponent.paramControl.setValue(goodJobId);
+            fixture.detectChanges();
+            expect(jobIdComponent.value.value).toBe(goodJobId);
+            expect(component.parameterValue.valid).toBe(true);
+        });
+
+        it("should update but fail validation with non existant job-id", () => {
+            testComponent.paramControl.setValue(badJobId);
+            fixture.detectChanges();
+            expect(jobIdComponent.value.value).toBe(badJobId);
+            expect(component.parameterValue.valid).toBe(false);
         });
     });
 });

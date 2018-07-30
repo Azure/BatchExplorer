@@ -12,7 +12,7 @@ bl-persisted-notifications-dropdown {
         position: absolute;
         left: 0;
         top: 0;
-        background-color: map-get($danger, 500);
+        background-color: $danger-color;
         border-radius: 10px;
         width: 14px;
         height: 14px;

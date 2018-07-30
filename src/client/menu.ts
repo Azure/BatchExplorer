@@ -1,9 +1,9 @@
 import { SupportedEnvironments } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
-import { BatchLabsApplication } from "client/core";
+import { BatchExplorerApplication } from "client/core";
 import { BrowserWindow, Menu, MenuItemConstructorOptions, app } from "electron";
 
-function getEditMenu(app: BatchLabsApplication): MenuItemConstructorOptions {
+function getEditMenu(app: BatchExplorerApplication): MenuItemConstructorOptions {
     return {
         label: "Edit",
         submenu: [
@@ -76,7 +76,7 @@ const viewMenu: MenuItemConstructorOptions = {
     }],
 };
 
-function getWindowMenu(batchLabsApp: BatchLabsApplication): MenuItemConstructorOptions {
+function getWindowMenu(batchExplorerApp: BatchExplorerApplication): MenuItemConstructorOptions {
     return {
         label: "Window",
         role: "window",
@@ -85,7 +85,7 @@ function getWindowMenu(batchLabsApp: BatchLabsApplication): MenuItemConstructorO
                 label: "New Window",
                 accelerator: "CmdOrCtrl+Shift+N",
                 click: () => {
-                    batchLabsApp.openNewWindow();
+                    batchExplorerApp.openNewWindow();
                 },
             },
             { role: "minimize" },
@@ -95,7 +95,7 @@ function getWindowMenu(batchLabsApp: BatchLabsApplication): MenuItemConstructorO
     };
 }
 
-function environmentMenu(app: BatchLabsApplication) {
+function environmentMenu(app: BatchExplorerApplication) {
 
     return {
         label: "Environment",
@@ -149,7 +149,7 @@ function setupOSXSpecificMenu(template) {
     }
 }
 
-export function setMenu(app: BatchLabsApplication) {
+export function setMenu(app: BatchExplorerApplication) {
     const template = [
         getEditMenu(app),
         viewMenu,

@@ -2,7 +2,7 @@ import { Type } from "@angular/core";
 import * as moment from "moment";
 
 import { PinnedEntityType } from "@batch-flask/core";
-import { AccountResource, ApplicationPackage, BatchApplication, File, Job, Node, PackageState,
+import { AccountResource, ApplicationPackage, BatchApplication, BlobContainer, File, Job, Node, PackageState,
      Pool, Subscription, SubtaskInformation, Task,
 } from "app/models";
 
@@ -257,4 +257,9 @@ export const pinnable = new FixtureFactory<any>(Object, {
     routerLink: [],
     pinnableType: PinnedEntityType.Application,
     url: "",
+});
+
+export const container = new FixtureFactory<BlobContainer>(BlobContainer, {
+    id: "fgrp-container",
+    name: "container",
 });

@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { Observable } from "rxjs";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Observable, Subscription } from "rxjs";
 
 /**
  * Loading showing a simple loading text.
@@ -8,16 +8,20 @@ import { Observable } from "rxjs";
     selector: "bl-simple-loading",
     template: `{{message}}`,
 })
-export class SimpleLoadingComponent implements OnInit {
-    @Input()
-    public rate = 500;
+export class SimpleLoadingComponent implements OnInit, OnDestroy {
+    @Input() public rate = 500;
 
     public message = "";
+    private _sub: Subscription;
 
     public ngOnInit() {
-        Observable.interval(this.rate).subscribe((i) => {
+        this._sub = Observable.interval(this.rate).subscribe((i) => {
             const dots = ".".repeat(i % 4);
             this.message = `Loading${dots}`;
         });
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 }

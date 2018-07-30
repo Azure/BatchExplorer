@@ -9,7 +9,7 @@ bl-editable-table, .editable-table {
 
         thead {
             text-align: left;
-            color: $genericGray;
+            color: $primary-text;
             font-size: 12px;
             font-weight: 200;
 
@@ -19,7 +19,7 @@ bl-editable-table, .editable-table {
         }
 
         tr:last-child > td {
-            background: $whiteSmoke-darker;
+            background: $input-disabled-background-color;
         }
 
         td {
@@ -39,13 +39,13 @@ bl-editable-table, .editable-table {
             width: 100%;
             border: none;
             outline: none;
-            color: $mineshaft-grey;
+            color: $input-text-color;
             border-bottom: 2px solid transparent;
             background: transparent;
 
             &:focus {
-                background: white;
-                border-bottom: 2px solid map-get($primary, 500);
+                background: $input-background-color;
+                border-bottom: 2px solid $primary-color;
             }
         }
 

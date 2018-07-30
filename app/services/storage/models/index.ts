@@ -1,3 +1,3 @@
-export * from "./blobStorageResult";
-export * from "./sharedAccessPolicy";
-export * from "./storageRequestOptions";
+export * from "./blob-storage-result";
+export * from "./shared-access-policy";
+export * from "./storage-request-options";

@@ -26,3 +26,10 @@ export const RetryableHttpCode = new Set([
     HttpCode.ServiceUnavailable,
     HttpCode.GatewayTimeout,
 ]);
+
+export const DataStoreKeys = {
+    /**
+     * LocalStorage key for storing the access token(For AAD request)
+     */
+    currentAccessToken: "current_access_token",
+};

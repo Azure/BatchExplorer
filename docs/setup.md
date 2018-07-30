@@ -2,9 +2,9 @@
 
 
 ## 1. Prerequisites
-Follow the **Building batchlabs yourself** instruction of the [main readme](../Readme.md) in order to install all require dependencies.
+Follow the **Building Batch Explorer yourself** instruction of the [main readme](../Readme.md) in order to install all require dependencies.
 
-**Use `yarn install` instead of `npm install`. This ensures a consistent build environment with the right set of dependencies [Migrating from npm to yarn](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)**
+**Use `npm` 5 and above. This ensures a consistent build environment with the right set of dependencies**
 
 Start the dev server
 ```bash

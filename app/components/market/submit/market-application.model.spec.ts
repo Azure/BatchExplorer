@@ -204,4 +204,27 @@ describe("marketApplicationModel", () => {
         });
         expect(parameter.type).toBe(NcjParameterExtendedType.fileGroupSas);
     });
+
+    it("should detect filegroup writable sas type", () => {
+        parameter = new NcjParameterWrapper("fileGroupWritableSas", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "description",
+                advancedType: NcjParameterExtendedType.fileGroupWriteSas,
+            },
+        });
+        expect(parameter.type).toBe(NcjParameterExtendedType.fileGroupWriteSas);
+    });
+
+    it("should detect job-ids type", () => {
+        parameter = new NcjParameterWrapper("jobName", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "description",
+                advancedType: NcjParameterExtendedType.jobId,
+            },
+        });
+
+        expect(parameter.type).toBe(NcjParameterExtendedType.jobId);
+    });
 });

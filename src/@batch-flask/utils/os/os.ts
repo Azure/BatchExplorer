@@ -1,4 +1,4 @@
-enum Platform {
+export enum Platform {
     Windows = "win32",
     OSX = "darwin",
     Linux = "linux",
@@ -14,6 +14,8 @@ if (typeof process !== "undefined") {
 }
 
 export class OS {
+    public static platform: Platform = platform;
+
     public static isWindows(): boolean {
         return platform === "win32";
     }

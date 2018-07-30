@@ -5,10 +5,7 @@
             <div summaryDetails>Job: {{jobId}}</div>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                <bl-terminate-button [entity]="task" [action]="terminateTask"></bl-terminate-button>
-                <bl-delete-button [action]="deleteTask"></bl-delete-button>
-                <bl-clone-button [action]="cloneTask"></bl-clone-button>
-                <bl-button [action]="exportAsJSON" color="light" title="Export as JSON"><i class="fa fa-code"></i></bl-button>
+                <bl-commands-list [commands]="commands" [entity]="task"></bl-commands-list>
             </bl-button-group>
             <div summaryRightContent>
                 <bl-task-timeline [job]="job" [task]="task"></bl-task-timeline>
@@ -40,7 +37,7 @@
                 </bl-tab>
                 <bl-tab key="dependencies" [disabled]="!hasDependencies">
                     <bl-tab-label>Dependencies</bl-tab-label>
-                    <bl-task-dependencies [jobId]="job.id" [task]="task"></bl-task-dependencies>
+                    <bl-task-dependency-browser [jobId]="job.id" [task]="task"></bl-task-dependency-browser>
                 </bl-tab>
             </bl-tab-group>
         </bl-card>

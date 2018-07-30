@@ -45,7 +45,6 @@ export class IpcService {
                 if (params.id !== id || params.eventName !== eventName) {
                     return;
                 }
-
                 // remove this listener.
                 this._ipcRenderer.removeListener(IpcPromiseEvent.responseSuccess, onSuccess);
                 this._ipcRenderer.removeListener(IpcPromiseEvent.responseFailure, onFailure);

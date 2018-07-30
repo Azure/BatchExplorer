@@ -13,9 +13,19 @@ export interface ThemeDefinition {
     primary: string;
 
     /**
+     * Primary color contrast
+     */
+    "primary-contrast": string;
+
+    /**
      * Danger and error color
      */
     danger: string;
+
+    /**
+     * Danger color contrast
+     */
+    "danger-contrast": string;
 
     /**
      * Warning color
@@ -23,9 +33,19 @@ export interface ThemeDefinition {
     warn: string;
 
     /**
+     * Warning color contrast
+     */
+    "warn-contrast": string;
+
+    /**
      * Success color
      */
     success: string;
+
+    /**
+     * Primary color contrast
+     */
+    "success-contrast": string;
 
     /**
      * Overall background color
@@ -33,11 +53,28 @@ export interface ThemeDefinition {
     "main-background": string;
 
     /**
+     * Secondary Background
+     */
+    "secondary-background": string;
+
+    /**
      * Background for any card on top the main background
      */
     "card-background": string;
 
+    /**
+     * Background color for selected items
+     */
+    "selection": string;
+
+    /**
+     * Color for borders
+     */
+    "border": string;
+
     outline: string;
+
+    editor: string;
 
     /**
      * Generic text color,
@@ -72,6 +109,9 @@ export interface ThemeDefinition {
     };
 
     button: {
+        "basic-text": string;
+        "basic-bg": string;
+        "basic-hover-bg": string;
         "disabled-text": string;
         "disabled-bg": string;
     };

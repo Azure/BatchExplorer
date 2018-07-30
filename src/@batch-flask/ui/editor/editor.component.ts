@@ -4,8 +4,8 @@ import {
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import * as elementResizeDetectorMaker from "element-resize-detector";
+import * as monaco from "monaco-editor";
 import "./editor.scss";
-import { MonacoLoader } from "./monaco-loader.service";
 
 export interface EditorKeyBinding {
     key: any;
@@ -31,7 +31,6 @@ const defaultConfig = {
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            // tslint:disable-next-line:no-forward-ref
             useExisting: forwardRef(() => EditorComponent),
             multi: true,
         }],
@@ -63,6 +62,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     private _config: EditorConfig;
     private _editor: monaco.editor.IStandaloneCodeEditor;
     private _model: monaco.editor.IModel;
+    private _modelChangeSub: monaco.IDisposable;
 
     @Input() public set value(v) {
         if (v !== this._value) {
@@ -72,8 +72,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     public get value() { return this._value; }
 
     constructor(
-        private elementRef: ElementRef,
-        private monacoLoader: MonacoLoader) { }
+        private elementRef: ElementRef) { }
 
     public ngOnChanges(changes) {
         if (changes.config) {
@@ -91,9 +90,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
             }
         });
 
-        this.monacoLoader.get().then((monaco) => {
-            this.initMonaco();
-        });
+        this.initMonaco();
 
         this.config = this.config || {};
     }
@@ -102,10 +99,19 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         if (this._editor) {
             this._editor.dispose();
         }
+        if (this._modelChangeSub) {
+            this._modelChangeSub.dispose();
+        }
+        if (this._model) {
+            this._model.dispose();
+        }
+        this._model = null;
+        this._editor = null;
         this._resizeDetector.uninstall(this.elementRef.nativeElement);
     }
 
-    public initMonaco() {
+    public async initMonaco() {
+        const monaco = await import("monaco-editor");
         const myDiv: HTMLDivElement = this.editorContent.nativeElement;
         const options: monaco.editor.IEditorConstructionOptions = this.config;
 
@@ -131,7 +137,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
                 this._editor.addCommand(binding.key, binding.action, "");
             }
         }
-        this._model.onDidChangeContent((e) => {
+        this._modelChangeSub = this._model.onDidChangeContent((e) => {
             this.updateValue(this._model.getValue());
         });
     }

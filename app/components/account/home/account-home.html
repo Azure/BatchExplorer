@@ -10,8 +10,7 @@
         <bl-select placeholder="Subscriptions" [multiple]="true" [formControl]="subscriptionIds" [filterable]="true">
             <bl-option *ngFor="let subscription of subscriptionService.subscriptions | async;trackBy: trackByFn;let index = index"
                 [value]="subscription.subscriptionId"
-                [label]="subscription.displayName">
-                {{subscription.displayName}}
+                label="{{subscription.displayName}} ({{subscription.tenant?.displayName}})">
             </bl-option>
         </bl-select>
     </div>

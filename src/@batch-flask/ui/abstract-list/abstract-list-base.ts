@@ -261,7 +261,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         }
         index = (index + items.length) % items.length;
         const newItem = items[index];
-        this.focusedItem.next(newItem.id);
+        this.focusedItem.next(newItem && newItem.id);
     }
 
     public handleClick(event: MouseEvent, item, activate = true) {

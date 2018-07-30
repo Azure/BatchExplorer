@@ -34,13 +34,15 @@ mat-tab-group:not(.form-tabs) {
         border-right: 1px solid #ddd;
         height: 32px;
         line-height: 32px;
+        color: $primary-text;
 
         &.mat-tab-label-active {
-            background-color: map-get($primary, 100);
+            background-color: $primary-color-light;
+            color: $card-background;
         }
 
         &.mat-tab-disabled {
-            color: #bbb;
+            color: $button-disabled-text-color;
         }
 
         &:focus {
@@ -165,4 +167,10 @@ mat-button-toggle-group {
             border: 1px solid $primary-color;
         }
     }
+}
+
+
+.mat-drawer-container {
+    color: $primary-text;
+    background-color: $main-background;
 }

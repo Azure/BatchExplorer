@@ -1,57 +1,101 @@
 import { Injectable, Injector } from "@angular/core";
-import { DialogService, EntityCommand, EntityCommands, SidebarManager } from "@batch-flask/ui";
+import {
+    COMMAND_LABEL_ICON, DialogService, ElectronRemote,
+    EntityCommand, EntityCommands, Permission, SidebarManager,
+} from "@batch-flask/ui";
+import { Observable } from "rxjs";
 
+import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";
-import { JobService, PinnedEntityService, PoolService } from "app/services";
+import { FileSystemService, JobService, PinnedEntityService, PoolService } from "app/services";
+import { PoolCreateBasicDialogComponent } from "./add/pool-create-basic-dialog.component";
 import { DeletePoolDialogComponent, DeletePoolOutput } from "./delete";
 import { PoolResizeDialogComponent } from "./resize";
 
 @Injectable()
 export class PoolCommands extends EntityCommands<Pool> {
+    public addJob: EntityCommand<Pool, void>;
     public resize: EntityCommand<Pool, void>;
+    public clone: EntityCommand<Pool, void>;
     public delete: EntityCommand<Pool, DeletePoolOutput>;
+    public exportAsJSON: EntityCommand<Pool, void>;
     public pin: EntityCommand<Pool, void>;
 
     constructor(
         injector: Injector,
         private dialog: DialogService,
+        private fs: FileSystemService,
         private jobService: JobService,
         private poolService: PoolService,
         private pinnedEntityService: PinnedEntityService,
+        private remote: ElectronRemote,
         private sidebarManager: SidebarManager) {
         super(
             injector,
             "Pool",
         );
-
         this._buildCommands();
     }
 
-    public get(jobId: string) {
-        return this.poolService.get(jobId);
+    public get(poolId: string) {
+        return this.poolService.get(poolId);
     }
 
-    public getFromCache(jobId: string) {
-        return this.poolService.getFromCache(jobId);
+    public getFromCache(poolId: string) {
+        return this.poolService.getFromCache(poolId);
     }
 
     private _buildCommands() {
+        this.addJob = this.simpleCommand({
+            ...COMMAND_LABEL_ICON.AddJob,
+            action: (pool) => this._addJob(pool),
+            multiple: false,
+            confirm: false,
+            notify: false,
+            permission: Permission.Write,
+        });
+
         this.resize = this.simpleCommand({
-            label: "Resize",
+            ...COMMAND_LABEL_ICON.Resize,
             action: (pool) => this._resizePool(pool),
             multiple: false,
             confirm: false,
             notify: false,
+            permission: Permission.Write,
         });
+
+        this.clone = this.simpleCommand({
+            ...COMMAND_LABEL_ICON.Clone,
+            action: (pool) => this._clonePool(pool),
+            multiple: false,
+            confirm: false,
+            notify: false,
+            permission: Permission.Write,
+        });
+
         this.delete = this.simpleCommand<DeletePoolOutput>({
-            label: "Delete",
+            ...COMMAND_LABEL_ICON.Delete,
             action: (pool: Pool, options) => this._deletePool(pool, options),
             confirm: (entities) => this._confirmDeletePool(entities),
+            permission: Permission.Write,
+        });
+
+        this.exportAsJSON = this.simpleCommand({
+            ...COMMAND_LABEL_ICON.ExportAsJSON,
+            action: (pool) => this._exportAsJSON(pool),
+            multiple: false,
+            confirm: false,
+            notify: false,
         });
 
         this.pin = this.simpleCommand({
             label: (pool: Pool) => {
-                return this.pinnedEntityService.isFavorite(pool) ? "Unpin favorite" : "Pin to favorites";
+                return this.pinnedEntityService.isFavorite(pool)
+                    ? COMMAND_LABEL_ICON.UnpinFavoriteLabel : COMMAND_LABEL_ICON.PinFavoriteLabel;
+            },
+            icon: (pool: Pool) => {
+                return this.pinnedEntityService.isFavorite(pool)
+                    ? COMMAND_LABEL_ICON.UnpinFavoriteIcon : COMMAND_LABEL_ICON.PinFavoriteIcon;
             },
             action: (pool: Pool) => this._pinPool(pool),
             confirm: false,
@@ -59,10 +103,18 @@ export class PoolCommands extends EntityCommands<Pool> {
         });
 
         this.commands = [
+            this.addJob,
             this.resize,
+            this.clone,
             this.delete,
+            this.exportAsJSON,
             this.pin,
         ];
+    }
+
+    private _addJob(pool: Pool) {
+        const createRef = this.sidebarManager.open("add-job", JobCreateBasicDialogComponent);
+        createRef.component.preSelectPool(pool.id);
     }
 
     private _resizePool(pool: Pool) {
@@ -71,6 +123,24 @@ export class PoolCommands extends EntityCommands<Pool> {
         this.sidebarManager.onClosed.subscribe(() => {
             this.poolService.get(pool.id);
         });
+    }
+
+    private _clonePool(pool: Pool) {
+        const ref = this.sidebarManager.open(`add-pool-${pool.id}`, PoolCreateBasicDialogComponent);
+        ref.component.setValueFromEntity(pool);
+    }
+
+    private _exportAsJSON(pool: Pool) {
+        const dialog = this.remote.dialog;
+        const localPath = dialog.showSaveDialog({
+            buttonLabel: "Export",
+            defaultPath: `${pool.id}.json`,
+        });
+
+        if (localPath) {
+            const content = JSON.stringify(pool._original, null, 2);
+            return Observable.fromPromise(this.fs.saveFile(localPath, content));
+        }
     }
 
     private _pinPool(pool: Pool) {

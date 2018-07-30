@@ -3,7 +3,7 @@ import * as mkdirp from "mkdirp";
 import * as net from "net";
 import * as path from "path";
 /**
- * Root of BatchLabs(This is relative to where this file is when in the build folder)
+ * Root of BatchExplorer(This is relative to where this file is when in the build folder)
  */
 const root = path.join(__dirname, "../..");
 
@@ -43,7 +43,7 @@ const urls = {
         dev: `file://${root}/src/client/splash-screen/splash-screen.html`,
         prod: `file://${root}/build/client/splash-screen/splash-screen.html`,
     },
-    proxyCredentials: clientUrl("proxy/proxy-credentials/proxy-credentials.html"),
+    proxyCredentials: clientUrl("proxy/proxy-credentials-window/proxy-credentials.html"),
     manualProxyConfiguration:
         clientUrl("proxy/manual-proxy-configuration-window/manual-proxy-configuration-window.html"),
     recover: {

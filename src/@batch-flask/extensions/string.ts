@@ -13,12 +13,6 @@ interface String {
     clearWhitespace();
 
     /**
-     * Add padding to the start of a string so that is in N characters long.
-     * '1'.padStart(5, '0') = 00001
-     */
-    padStart(maxLength: number, padString?: string);
-
-    /**
      * Trims all occurrences of the given set of strings off the end of the input.
      */
     trimEnd(...values: string[]);
@@ -47,39 +41,11 @@ if (!String.prototype.format) {
             return typeof args[i] !== "undefined" ? args[i] : match;
         });
     };
-
-    // String.prototype.format = function (this: string, ...args) {
-    //     return this.replace(/{(\d+)}/g, (match, i) => {
-    //         return typeof args[i] !== "undefined" ? args[i] : match;
-    //     });
-    // };
 }
 
 if (!String.prototype.clearWhitespace) {
     String.prototype.clearWhitespace = function (this: string) {
         return this.replace(/\s/g, "");
-    };
-}
-
-if (!String.prototype.padStart) {
-    String.prototype.padStart = function (this: string, maxLength: number, padString?: string) {
-        padString = padString ? String(padString) : " ";
-        if (padString.length === 0) {
-            padString = " ";
-        }
-
-        const str = String(this);
-        const fillLen = maxLength - str.length;
-        if (fillLen > 0) {
-            const timesToRepeat = Math.ceil(fillLen / padString.length);
-            const truncatedStringFiller = padString
-                .repeat(timesToRepeat)
-                .slice(0, fillLen);
-
-            return truncatedStringFiller + str;
-        }
-
-        return str;
     };
 }
 

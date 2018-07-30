@@ -5,14 +5,13 @@ import { Observable } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
 import { IpcService } from "@batch-flask/ui";
-import { MonacoLoader } from "@batch-flask/ui/editor";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
     AccountService, AuthorizationHttpService, AutoscaleFormulaService,
-    BatchLabsService, CommandService, NavigatorService, NcjTemplateService,
-    NodeService, PredefinedFormulaService, PricingService, PythonRpcService, SSHKeyService,
-    SettingsService, SubscriptionService, ThemeService, VmSizeService,
+    BatchExplorerService, CommandService, GithubDataService, NavigatorService,
+    NcjTemplateService, PoolOsService, PredefinedFormulaService, PricingService,
+    PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
 } from "app/services";
 
 @Component({
@@ -32,14 +31,14 @@ export class AppComponent implements OnInit {
         private accountService: AccountService,
         private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
-        private nodeService: NodeService,
+        private githubDataService: GithubDataService,
+        private poolOsService: PoolOsService,
         private sshKeyService: SSHKeyService,
-        batchLabsService: BatchLabsService,
+        batchExplorerService: BatchExplorerService,
         pythonRpcService: PythonRpcService,
         private vmSizeService: VmSizeService,
         themeService: ThemeService,
         private route: ActivatedRoute,
-        monacoLoader: MonacoLoader,
         permissionService: PermissionService,
         authHttpService: AuthorizationHttpService,
         ipc: IpcService,
@@ -49,6 +48,7 @@ export class AppComponent implements OnInit {
     ) {
         this.autoscaleFormulaService.init();
         this.settingsService.init();
+        this.githubDataService.init();
         this.sshKeyService.init();
         this.commandService.init();
         this.pricingService.init();
@@ -59,7 +59,6 @@ export class AppComponent implements OnInit {
         pythonRpcService.init();
         this.predefinedFormulaService.init();
         themeService.init();
-        monacoLoader.init(batchLabsService.rootPath);
 
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
@@ -93,6 +92,6 @@ export class AppComponent implements OnInit {
      * Preload some data needed.
      */
     private _preloadData() {
-        this.nodeService.listNodeAgentSkus().fetchAll();
+        this.poolOsService.refresh();
     }
 }

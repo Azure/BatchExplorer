@@ -1,9 +1,21 @@
 import {
-    Component, EventEmitter, HostBinding, HostListener,
-    Injector, Input, OnChanges, OnDestroy, Output, SimpleChanges,
+    Component,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Injector,
+    Input,
+    OnChanges,
+    OnDestroy,
+    Optional,
+    Output,
+    Self,
+    SimpleChanges,
 } from "@angular/core";
 import { Subscription } from "rxjs";
 
+import { RouterLink } from "@angular/router";
+import { ENTER, SPACE } from "@batch-flask/core/keys";
 import { Permission, PermissionService } from "@batch-flask/ui/permission";
 import "./clickable.scss";
 
@@ -34,10 +46,13 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     public subtitle = "";
 
     private permissionService?: PermissionService;
+    // Router link directive if any
+    private _routerLink?: RouterLink;
     private _sub: Subscription;
     private _permissionDisabled = false;
 
-    constructor(injector: Injector) {
+    constructor(injector: Injector, @Self() @Optional() routerLink: RouterLink) {
+        this._routerLink = routerLink;
         this.permissionService = injector.get(PermissionService, null);
     }
 
@@ -61,13 +76,14 @@ export class ClickableComponent implements OnChanges, OnDestroy {
 
     @HostListener("click", ["$event"])
     public handleClick(event: Event) {
+        event.preventDefault();
         event.stopPropagation();
         this.handleAction(event);
     }
 
     @HostListener("keydown", ["$event"])
     public onkeydown(event: KeyboardEvent) {
-        if (event.code === "Space" || event.code === "Enter") {
+        if (event.key === SPACE || event.key === ENTER) {
             this.handleAction(event);
             event.preventDefault();
         }
@@ -75,9 +91,14 @@ export class ClickableComponent implements OnChanges, OnDestroy {
 
     public handleAction(event: Event) {
         if (this.isDisabled) {
+            event.stopImmediatePropagation();
             return;
         }
         this.do.emit(event);
+
+        if (this._routerLink) {
+            this._routerLink.onClick();
+        }
     }
 
     private _clearSubscription() {

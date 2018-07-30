@@ -10,7 +10,7 @@ bl-file-group-sas {
     }
 
     bl-button {
-        margin-left: 5px;
+        margin: 0 0 0 5px;
 
         &.disabled[color] {
             cursor: not-allowed;

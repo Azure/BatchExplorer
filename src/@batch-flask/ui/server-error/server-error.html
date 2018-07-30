@@ -1,0 +1,32 @@
+<div class="error-banner" *ngIf="error" [attr.aria-expanded]="showDebugInformation">
+    <div class="content">
+        <div class="main-content">
+            <div class="main-info">
+                <h4>{{error.code}}</h4>
+                <p>{{error.message}}</p>
+            </div>
+            <div class="troubleshoot-btn">
+                <bl-clickable (do)="toggleDebugInformation()" matTooltip="Troubleshoot details">
+                    <i class="fa fa-bug"></i>
+                </bl-clickable>
+            </div>
+        </div>
+        <div class="details" *ngIf="error.details">
+            <div class="detail" *ngFor="let detail of error.details;trackBy: trackDetail">
+                <b>{{detail.key}}</b>: {{detail.value}}
+            </div>
+        </div>
+    </div>
+    <div class="troubleshoot-info" *ngIf="showDebugInformation">
+        <table>
+            <tr *ngIf="error.requestId">
+                <td><b>Request ID</b></td>
+                <td>{{error.requestId}}</td>
+            </tr>
+            <tr *ngIf="error.timestamp">
+                <td><b>Time</b> </td>
+                <td>{{error.timestamp}}</td>
+            </tr>
+        </table>
+    </div>
+</div>

@@ -4,5 +4,8 @@
     "**/*.spec.ts",
     "src/test/**/*.ts",
     "test/**/*.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "disableTypeScriptVersionCheck": true
+  }
 }

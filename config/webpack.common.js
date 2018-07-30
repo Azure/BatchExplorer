@@ -8,6 +8,7 @@ const rules = {
         exclude: [/node_modules/, helpers.root("app/index.html")],
     },
     json: {
+        type: "javascript/auto",
         test: /\.json$/,
         loader: "raw-loader",
         exclude: [/node_modules/],

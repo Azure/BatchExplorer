@@ -1,7 +1,7 @@
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { SecureUtils } from "@batch-flask/utils";
-import { BatchLabsApplication } from "client/core/batchlabs-application";
+import { BatchExplorerApplication } from "client/core/batch-explorer-application";
 import { Deferred } from "common";
 import { AADConfig } from "../aad-config";
 import * as AdalConstants from "../adal-constants";
@@ -52,7 +52,7 @@ export class AuthenticationService {
     private _state = new BehaviorSubject(AuthenticationState.None);
     private _logoutDeferred: Deferred<void>;
 
-    constructor(private app: BatchLabsApplication, private config: AADConfig) {
+    constructor(private app: BatchExplorerApplication, private config: AADConfig) {
         this.state = this._state.asObservable();
     }
     /**

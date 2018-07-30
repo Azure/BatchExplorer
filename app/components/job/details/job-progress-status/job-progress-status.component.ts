@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges
 import { List } from "immutable";
 
 import { GaugeConfig } from "@batch-flask/ui/graphs/gauge";
-import { Job, JobTaskCounts, Node, Pool } from "app/models";
+import { Job, JobTaskCounts, JobTaskCountsValidationStatus, Node, Pool } from "app/models";
 import { JobService, NodeListParams, NodeService, PoolParams, PoolService } from "app/services";
 import { EntityView, ListView, PollObservable, PollService } from "app/services/core";
 
@@ -31,6 +31,23 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
     public gaugeOptions: GaugeConfig;
     public jobTaskCounts: JobTaskCounts = new JobTaskCounts();
     public progress = null;
+
+    public get taskCountValidated() {
+        return this.jobTaskCounts.validationStatus === JobTaskCountsValidationStatus.validated;
+    }
+
+    public get taskCountTooHigh() {
+        return this.jobTaskCounts.total > 175000;
+    }
+
+    public get taskCountUnvalidatedTooltip() {
+        if (this.taskCountTooHigh) {
+            return "For performance reasons, Batch will not perform the consistency"
+                + " check if the job includes more than 200,000 tasks. Use with caution.";
+        } else {
+            return "Batch was unable to check the validity of the task counts. Use with caution.";
+        }
+    }
 
     private data: ListView<Node, NodeListParams>;
     private poolData: EntityView<Pool, PoolParams>;

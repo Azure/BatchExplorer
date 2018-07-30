@@ -15,12 +15,12 @@ import { Task } from "app/models";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { DeleteTaskAction } from "../action";
+import { DeleteTaskAction, TaskCommands } from "../action";
 
 @Component({
     selector: "bl-task-list",
     templateUrl: "task-list.html",
-    providers: [{
+    providers: [TaskCommands, {
         provide: ListBaseComponent,
         useExisting: forwardRef(() => TaskListComponent),
     }],
@@ -28,8 +28,6 @@ import { DeleteTaskAction } from "../action";
 })
 export class TaskListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
-
-    @Input() public manualLoading: boolean;
 
     @Input() public set jobId(value: string) {
         this._jobId = (value && value.trim());
@@ -43,10 +41,13 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
     public data: ListView<Task, TaskListParams>;
 
     private _jobId: string;
-    private _baseOptions = { pageSize: 25 };
+    private _baseOptions = {
+        select: "id,state,creationTime,lastModified,executionInfo",
+    };
     private _onTaskAddedSub: Subscription;
 
     constructor(
+        public commands: TaskCommands,
         private taskService: TaskService,
         activatedRoute: ActivatedRoute,
         private changeDetectorRef: ChangeDetectorRef,

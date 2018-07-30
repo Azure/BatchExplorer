@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2015",
     "module": "commonjs",
     "lib": [
       "dom",
@@ -31,7 +31,8 @@
         "*",
         "src/*",
         "app/scripts/*"
-      ]
+      ],
+      "@angular/*": ["../node_modules/@angular/*"]
     },
     "types": [
       "node",
@@ -57,5 +58,5 @@
     "forkChecker": true,
     "useCache": true,
     "useWebpackText": true
-  }
+  },
 }

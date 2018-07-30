@@ -24,8 +24,7 @@ export class AADGraphEntityGetter<TEntity, TParams> extends EntityGetter<TEntity
     }
 
     protected getData(params: TParams): Observable<any> {
-        return this.aadGraph.get<TEntity>(this._computeURI(params))
-            .share();
+        return this.aadGraph.get<TEntity>(this._computeURI(params));
     }
 
     private _computeURI(params: TParams): string {

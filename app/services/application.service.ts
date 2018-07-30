@@ -7,9 +7,13 @@ import { Constants } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
 import {
-    ArmEntityGetter, ArmListGetter, DataCache, EntityView, ListOptionsAttributes, ListView,
+    ArmEntityGetter,
+    ArmListGetter,
+    DataCache,
+    EntityView,
+    ListOptionsAttributes,
+    ListView,
 } from "./core";
-import { ServiceBase } from "./service-base";
 
 export interface ApplicationListParams {
 }
@@ -24,7 +28,7 @@ const applicationIgnoredErrors = [
 ];
 
 @Injectable()
-export class ApplicationService extends ServiceBase {
+export class ApplicationService {
     /**
      * Triggered when an application is added through this app.
      * Used to notify the list of a new item
@@ -47,7 +51,6 @@ export class ApplicationService extends ServiceBase {
         private arm: ArmHttpService,
         accountService: AccountService) {
 
-        super();
         accountService.currentAccountId.subscribe((accountId) => {
             this._currentAccountId = accountId;
         });
@@ -109,6 +112,7 @@ export class ApplicationService extends ServiceBase {
      * @param version: selected package version
      */
     public put(applicationId: string, version: string): Observable<ApplicationPackage> {
+
         return this.arm
             .put(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`)
             .map(response => new ApplicationPackage(response.json()));

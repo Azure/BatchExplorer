@@ -1,24 +1,22 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { ElectronRemote } from "@batch-flask/ui";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
-import { BatchLabsService, FileSystemService, PoolParams, PoolService, PricingService } from "app/services";
+import { BatchExplorerService, PoolParams, PoolService, PricingService } from "app/services";
 import { EntityView } from "app/services/core/data";
 import { NumberUtils } from "app/utils";
-import { PoolCommands, PoolCreateBasicDialogComponent } from "../action";
+import { PoolCommands } from "../action";
 
 import "./pool-details.scss";
 
 @Component({
     selector: "bl-pool-details",
     templateUrl: "pool-details.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [PoolCommands],
 })
 export class PoolDetailsComponent implements OnInit, OnDestroy {
@@ -46,18 +44,17 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     constructor(
         public commands: PoolCommands,
+        private changeDetector: ChangeDetectorRef,
         private router: Router,
         private activatedRoute: ActivatedRoute,
-        private batchLabs: BatchLabsService,
-        private fs: FileSystemService,
-        private sidebarManager: SidebarManager,
-        private remote: ElectronRemote,
+        private batchExplorer: BatchExplorerService,
         private pricingService: PricingService,
         private poolService: PoolService) {
 
         this.data = this.poolService.view();
         this.data.item.subscribe((pool) => {
             this.pool = pool;
+            this.changeDetector.markForCheck();
             this._updatePrice();
         });
 
@@ -87,29 +84,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public refreshPool() {
-        return this.data.refresh();
-    }
-
-    @autobind()
-    public addJob() {
-        const createRef = this.sidebarManager.open("add-job", JobCreateBasicDialogComponent);
-        createRef.component.preSelectPool(this.pool.id);
-    }
-
-    @autobind()
-    public deletePool() {
-        this.commands.delete.execute(this.pool);
-    }
-
-    @autobind()
-    public clonePool() {
-        const ref = this.sidebarManager.open(`add-pool-${this.poolId}`, PoolCreateBasicDialogComponent);
-        ref.component.setValueFromEntity(this.pool);
-    }
-
-    @autobind()
-    public resizePool() {
-        this.commands.resize.execute(this.pool);
+        return this.commands.get(this.poolId);
     }
 
     @autobind()
@@ -120,23 +95,9 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     }
 
     @autobind()
-    public exportAsJSON() {
-        const dialog = this.remote.dialog;
-        const localPath = dialog.showSaveDialog({
-            buttonLabel: "Export",
-            defaultPath: `${this.pool.id}.json`,
-        });
-
-        if (localPath) {
-            const content = JSON.stringify(this.pool._original, null, 2);
-            return Observable.fromPromise(this.fs.saveFile(localPath, content));
-        }
-    }
-
-    @autobind()
     public openInNewWindow() {
-        const link = `ms-batchlabs://route/standalone/pools/${this.pool.id}/graphs?fullscreen=true`;
-        const window = this.batchLabs.openNewWindow(link);
+        const link = `ms-batch-explorer://route/standalone/pools/${this.pool.id}/graphs?fullscreen=true`;
+        const window = this.batchExplorer.openNewWindow(link);
 
         return Observable.fromPromise(window.appReady);
     }
@@ -144,6 +105,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     private _updatePrice() {
         if (!this.pool) {
             this.estimatedCost = "-";
+            this.changeDetector.markForCheck();
             return;
         }
         this.pricingService.computePoolPrice(this.pool).subscribe((cost) => {
@@ -152,6 +114,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
             } else {
                 this.estimatedCost = `${cost.unit} ${NumberUtils.pretty(cost.total)}`;
             }
+            this.changeDetector.markForCheck();
         });
     }
 }

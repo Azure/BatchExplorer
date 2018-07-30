@@ -25,7 +25,6 @@ fieldset {
     p {
         line-height: 1.2em;
         padding-top: 10px;
-        color: $mineShaftGray;
     }
 
     .message {
@@ -61,7 +60,7 @@ fieldset {
         padding-top: 15px;
 
         p {
-            color: $errorText;
+            color: $danger-color;
             margin-bottom: 0.1em;
         }
     }
@@ -82,7 +81,7 @@ fieldset {
         background-color: $silver-grey;
 
         i {
-            color: map-get($primary, 400);
+            color: $primary-color;
         }
     }
 
@@ -183,15 +182,4 @@ mat-tab-group.form-tabs {
         line-height: 32px;
         height: 32px;
     }
-}
-
-input.search-input {
-    flex: 1 0 auto;
-    padding: 5px;
-    color: $emperor-grey;
-    font-size: 1.1em;
-
-    background-color: $athensGrey;
-    border: none;
-    outline: none;
 }

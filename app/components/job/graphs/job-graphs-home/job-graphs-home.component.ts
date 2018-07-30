@@ -1,16 +1,16 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
 import * as path from "path";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import { FilterBuilder, autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/ui";
-import { log } from "@batch-flask/utils";
 import { tasksToCsv } from "app/components/job/graphs/job-graphs-home/helpers";
 import { Job, Task, TaskState } from "app/models";
-import { CacheDataService,  FileSystemService, JobParams, JobService, TaskService } from "app/services";
+import { CacheDataService, FileSystemService, JobParams, JobService, TaskService } from "app/services";
 import { EntityView } from "app/services/core";
+import { flatMap, share, tap } from "rxjs/operators";
 import "./job-graphs-home.scss";
 
 enum AvailableGraph {
@@ -20,6 +20,7 @@ enum AvailableGraph {
 @Component({
     selector: "bl-job-graphs-home",
     templateUrl: "job-graphs-home.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JobGraphsComponent implements OnInit, OnDestroy {
     public static breadcrumb(params, queryParams) {
@@ -38,6 +39,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
     public taskCount: number;
 
     private _data: EntityView<Job, JobParams>;
+    private _updateTasksSub: Subscription;
 
     constructor(
         private route: ActivatedRoute,
@@ -46,11 +48,13 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
         private cacheDataService: CacheDataService,
         private shell: ElectronShell,
         private fs: FileSystemService,
+        private changeDetector: ChangeDetectorRef,
     ) {
 
         this._data = this.jobService.view();
         this._data.item.subscribe((job) => {
             this.job = job;
+            this.changeDetector.markForCheck();
         });
         this._updateDescription();
     }
@@ -60,48 +64,44 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
             this.jobId = params["jobId"];
             this._data.params = { id: this.jobId };
             this._data.fetch();
-            this.updateTasks().subscribe();
+            this.updateTasks();
         });
         this._updateTaskCount();
     }
 
-    public updateTasks(force = false): Observable<any> {
-        this.loading = true;
-
-        const obs =  Observable.fromPromise(this._tryLoadTasksFromCache(force)).flatMap((success) => {
-            if (success) {
-                this.loading = false;
-                return Observable.of(null);
-            }
-            this.taskLoadedProgress = 0;
-            this._updateTaskCount();
-            const obs = this.taskService.listAll(this.jobId, {
-                select: "id,executionInfo,nodeInfo",
-                filter: FilterBuilder.prop("state").eq(TaskState.completed),
-                pageSize: 1000,
-            }, (x) => {
-                this.taskLoadedProgress = x;
-            });
-
-            obs.subscribe({
-                next: (tasks) => {
-                    this.loading = false;
-                    this.tasks = tasks;
-                    this.cacheDataService.cache(this._cacheKey, tasks.toJS());
-                },
-                error: (error) => {
-                    log.error(`Error retrieving all tasks for job ${this.job.id}`, error);
-                },
-            });
-            return obs;
-
-        }).share();
-        obs.subscribe();
-        return obs;
-    }
-
     public ngOnDestroy() {
         this._data.dispose();
+        if (this._updateTasksSub) {
+            this._updateTasksSub.unsubscribe();
+        }
+    }
+
+    public updateTasks(force = false): Observable<any> {
+        if (this._updateTasksSub) {
+            this._updateTasksSub.unsubscribe();
+        }
+        this.loading = true;
+        this.changeDetector.markForCheck();
+
+        const obs = Observable.fromPromise(this._tryLoadTasksFromCache(force)).pipe(
+            flatMap((success) => {
+                if (success) {
+                    this.loading = false;
+                    this.changeDetector.markForCheck();
+
+                    return Observable.of(null);
+                }
+                this.taskLoadedProgress = 0;
+                this.changeDetector.markForCheck();
+
+                this._updateTaskCount();
+                return this._loadAllTasks();
+
+            }),
+            share(),
+        );
+        this._updateTasksSub = obs.subscribe();
+        return obs;
     }
 
     public updateGraph(newGraph: AvailableGraph) {
@@ -127,7 +127,26 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
     private _updateTaskCount() {
         this.jobService.getTaskCounts(this.jobId).subscribe((taskCount) => {
             this.taskCount = taskCount.completed;
+            this.changeDetector.markForCheck();
         });
+    }
+
+    private _loadAllTasks() {
+        return this.taskService.listAll(this.jobId, {
+            select: "id,executionInfo,nodeInfo",
+            filter: FilterBuilder.prop("state").eq(TaskState.completed),
+            pageSize: 1000,
+        }, (x) => {
+            this.taskLoadedProgress = x;
+            this.changeDetector.markForCheck();
+        }).pipe(
+            tap((tasks) => {
+                this.loading = false;
+                this.tasks = tasks;
+                this.cacheDataService.cache(this._cacheKey, tasks.toJS());
+                this.changeDetector.markForCheck();
+            }),
+        );
     }
 
     private _updateDescription() {
@@ -142,6 +161,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
             default:
                 this.description = "Unkown graph type.";
         }
+        this.changeDetector.markForCheck();
     }
 
     private get _cacheKey() {
@@ -153,6 +173,8 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
             return false;
         }
         this.loadingFromCache = true;
+        this.changeDetector.markForCheck();
+
         const data = await this.cacheDataService.read(this._cacheKey);
         if (data) {
             this.tasks = List(data.map(x => new Task(x)));
@@ -160,6 +182,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
             return true;
         }
         this.loadingFromCache = false;
+        this.changeDetector.markForCheck();
         return false;
     }
 }

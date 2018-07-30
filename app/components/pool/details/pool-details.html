@@ -6,17 +6,13 @@
             <div summaryDetails>
                 <div>Last resized {{poolDecorator.lastResized}}</div>
                 <div>
-                    <i class="fa fa-{{poolDecorator.poolOsIcon}}" aria-hidden="true"></i> {{poolDecorator.poolOs}}
+                    <bl-pool-os-icon [pool]="pool"></bl-pool-os-icon> {{poolDecorator.poolOs}}
                 </div>
             </div>
             <bl-tags summaryTags [tags]="pool.tags" [editable]="true" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refreshPool"></bl-refresh-btn>
-                <bl-add-button title="Add job" [action]="addJob"></bl-add-button>
-                <bl-resize-button [action]="resizePool"></bl-resize-button>
-                <bl-clone-button [action]="clonePool"></bl-clone-button>
-                <bl-delete-button [action]="deletePool"></bl-delete-button>
-                <bl-button [action]="exportAsJSON" color="light" title="Export as JSON"><i class="fa fa-code"></i></bl-button>
+                <bl-commands-list [commands]="commands" [entity]="pool"></bl-commands-list>
             </bl-button-group>
             <div summaryRightContent>
                 <bl-pool-nodes-preview [pool]="pool" size="large"></bl-pool-nodes-preview>
@@ -25,7 +21,11 @@
                     {{estimatedCost}}/h
                 </div>
             </div>
+            <div summaryTile>
+                <bl-pool-state-graph [pool]="pool"></bl-pool-state-graph>
+            </div>
         </bl-summary-card>
+
         <bl-pool-error-display [pool]="pool"></bl-pool-error-display>
         <bl-card class="details">
             <bl-tab-group>
@@ -45,7 +45,7 @@
                 <bl-tab key="nodes">
                     <bl-tab-label>Nodes</bl-tab-label>
                     <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']" [filterPlaceholder]="filterPlaceholderText">
-                        <bl-node-list #list [poolId]="poolId" [filter]="listWrapper.filter" [quicklist]="false" [manualLoading]="true"></bl-node-list>
+                        <bl-node-list #list [poolId]="poolId" [filter]="listWrapper.filter" [quicklist]="false"></bl-node-list>
                     </bl-entity-details-list>
                 </bl-tab>
             </bl-tab-group>

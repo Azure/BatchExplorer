@@ -62,11 +62,6 @@ export const localStorageKey = {
     currentUser: "current_user",
 
     /**
-     * LocalStorage key for storing the access token(For AAD request)
-     */
-    currentAccessToken: "current_access_token",
-
-    /**
      * List of subsciption id to the multi select in the account list
      */
     accountSubscriptionFilter: "account_subscription_filter",
@@ -114,6 +109,7 @@ export const ApiVersion = {
     monitor: "2017-05-01-preview",
     network: "2017-10-01",
     classicNetwork: "2015-12-01",
+    batchService: "2018-03-01.6.1",
 };
 
 export const ExternalLinks = {
@@ -182,16 +178,22 @@ export const IpcEvent = {
     AAD: {
         accessTokenData: "AAD_ACCESS_TOKEN_DATA",
     },
+    launchApplication: "LAUNCH_APPLICATION",
     logoutAndLogin: "LOGOUT_AND_LOGIN",
 };
 
-export const customProtocolName = "ms-batchlabs";
+export const ExternalApplication = {
+    terminal: "TERMINAL",
+};
+
+export const legacyProtocolName = "ms-batchlabs";
+export const customProtocolName = "ms-batch-explorer";
 
 /**
  * Name of events that needs to be passed between rendered and main
  */
 export const rendererEvents = {
-    batchlabsLink: "batchlabs-link",
+    batchExplorerLink: "batchExplorer-link",
 };
 
 export const isRenderer = (process && process.type === "renderer");

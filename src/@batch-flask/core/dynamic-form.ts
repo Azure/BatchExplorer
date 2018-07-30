@@ -3,6 +3,7 @@ import { FormGroup } from "@angular/forms";
 import { Dto } from "@batch-flask/core/dto";
 import { FormUtils } from "@batch-flask/utils";
 import { BehaviorSubject, Observable } from "rxjs";
+import { map } from "rxjs/operators";
 
 export interface AsyncTask {
     name: string;
@@ -18,8 +19,8 @@ export abstract class DynamicForm<TEntity, TDto extends Dto<TDto>> {
     private _asyncTasks = new BehaviorSubject(new Map<number, AsyncTask>());
 
     constructor(private dtoType: Type<TDto>) {
-        this.asyncTasks = this._asyncTasks.map(x => [...x.values()]);
-        this.hasAsyncTask = this._asyncTasks.map(x => x.size > 0);
+        this.asyncTasks = this._asyncTasks.pipe(map(x => [...x.values()]));
+        this.hasAsyncTask = this._asyncTasks.pipe(map(x => x.size > 0));
     }
 
     public setValue(value: TDto) {

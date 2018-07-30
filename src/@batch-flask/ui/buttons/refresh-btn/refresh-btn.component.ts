@@ -1,8 +1,9 @@
+import { animate, style, transition, trigger } from "@angular/animations";
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, animate, style, transition, trigger,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy,
 } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 export enum RefreshStatus {
     Idle,
@@ -24,7 +25,7 @@ export enum RefreshStatus {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefreshButtonComponent {
+export class RefreshButtonComponent implements OnDestroy {
     public statuses = RefreshStatus;
 
     @Input() public refresh: () => Observable<any>;
@@ -41,14 +42,21 @@ export class RefreshButtonComponent {
     public get status() { return this._status; }
 
     private _status = RefreshStatus.Idle;
+    private _refreshSub: Subscription;
 
     constructor(private changeDetector: ChangeDetectorRef) {
+    }
+
+    public ngOnDestroy() {
+        if (this._refreshSub) {
+            this._refreshSub.unsubscribe();
+        }
     }
 
     @autobind()
     public onClick() {
         this.status = RefreshStatus.Refreshing;
-        this.refresh().subscribe(
+        this._refreshSub = this.refresh().subscribe(
             () => {
                 this.status = RefreshStatus.Succeeded;
                 setTimeout(() => {
@@ -63,4 +71,5 @@ export class RefreshButtonComponent {
             },
         );
     }
+
 }

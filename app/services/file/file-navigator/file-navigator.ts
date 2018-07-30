@@ -1,13 +1,13 @@
 import { ServerError } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { log } from "@batch-flask/utils";
-import { List } from "immutable";
-import { AsyncSubject, BehaviorSubject, Observable, Subscription } from "rxjs";
-
 import { File } from "app/models";
 import { DataCache, ListGetter } from "app/services/core";
 import { FileLoader } from "app/services/file";
 import { CloudPathUtils, StringUtils } from "app/utils";
+import { List } from "immutable";
+import { AsyncSubject, BehaviorSubject, Observable, Subscription } from "rxjs";
+import { map, mergeMap, shareReplay } from "rxjs/operators";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 
 export interface DeleteProgress {
@@ -116,13 +116,13 @@ export class FileNavigator<TParams = any> {
     /**
      * Load the inital data
      */
-    public init() {
-        this._loadFilesInPath("");
+    public init(): Observable<any> {
         if (this._cache) {
             this._fileDeletedSub = this._cache.deleted.subscribe((key: string) => {
                 this._removeFile(key);
             });
         }
+        return this._loadFilesInPath("");
     }
 
     /**
@@ -130,9 +130,14 @@ export class FileNavigator<TParams = any> {
      * @param openInNewTab If its the path to a file it will open the file in a new tab
      */
     public loadPath(path: string) {
-        return this.getNode(path).cascade((node) => {
-            return this._loadFilesInPath(path);
-        }).shareReplay(1);
+        const obs = this.getNode(path).pipe(
+            mergeMap((node) => {
+                return this._loadFilesInPath(path);
+            }),
+            shareReplay(1),
+        );
+        obs.subscribe(); // Make sure it trigger at least once
+        return obs;
     }
 
     public listAllFiles(path: string = ""): Observable<List<File>> {
@@ -218,7 +223,7 @@ export class FileNavigator<TParams = any> {
             log.error("Cannot delete file with this file navigator has delete is not implemented");
             return;
         }
-        return this.listAllFiles(folder).flatMap((files) => {
+        return this.listAllFiles(CloudPathUtils.asBaseDirectory(folder)).flatMap((files) => {
             return this.deleteFiles(files.map(x => x.name).toArray());
         }).do(() => {
             this._removeFile(folder);
@@ -246,14 +251,16 @@ export class FileNavigator<TParams = any> {
         return this._getter.fetchAll(this._params, {
             recursive: recursive || this._fetchAll,
             folder: path,
-        }).flatMap((files) => {
-            if (!this._wildcards) {
-                return Observable.of(files);
-            }
+        }).pipe(
+            map((files) => {
+                if (!this._wildcards) {
+                    return files;
+                }
 
-            const filtered = files.filter((file) => file.isDirectory || this._checkWildcardMatch(file.name));
-            return Observable.of(List(filtered));
-        });
+                const filtered = files.filter((file) => file.isDirectory || this._checkWildcardMatch(file.name));
+                return List(filtered);
+            }),
+        );
     }
 
     private _checkWildcardMatch(filename: string): boolean {

@@ -1,4 +1,13 @@
-import { Component, ElementRef, HostListener, Input, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    HostListener,
+    Input,
+    OnChanges,
+    OnInit,
+} from "@angular/core";
 
 import "./split-pane.scss";
 
@@ -24,14 +33,15 @@ const defaultConfig: SplitPaneConfig = {
         minSize: 10,
         hidden: false,
     },
-    initialDividerPosition: -1,
+    initialDividerPosition: null,
 };
 
 @Component({
     selector: "bl-split-pane",
     templateUrl: "split-pane.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SplitPaneComponent implements OnInit {
+export class SplitPaneComponent implements OnInit, OnChanges {
     @Input() public set config(config: SplitPaneConfig) {
         const newConfig = {
             ...defaultConfig,
@@ -52,24 +62,25 @@ export class SplitPaneComponent implements OnInit {
     public secondPaneSize = "";
 
     private _config: SplitPaneConfig = defaultConfig;
+    private _dividerPosision: number = null;
 
-    constructor(private elementRef: ElementRef) { }
+    constructor(private elementRef: ElementRef, private changeDetector: ChangeDetectorRef) { }
 
     public ngOnInit() {
         this.resetDividerPosition();
     }
 
+    public ngOnChanges(changes) {
+        if (changes.config) {
+            this._computeSizes();
+        }
+    }
     public handleStartResize(event: MouseEvent) {
         this.isResizing = true;
     }
 
     public resetDividerPosition() {
-        const value = this.config.initialDividerPosition;
-        if (value === -1) {
-            this.updateSize(-1);
-        } else {
-            this.updateSize(Math.abs(value), value < 0);
-        }
+        this.updateSize(this.config.initialDividerPosition);
     }
 
     @HostListener("document:mouseup")
@@ -85,7 +96,12 @@ export class SplitPaneComponent implements OnInit {
         }
     }
 
-    public updateSize(dividerPosition: number, fromEnd = false) {
+    public updateSize(dividerPosision: number, fromEnd = false) {
+        this._dividerPosision = dividerPosision;
+        this._computeSizes();
+    }
+
+    public _computeSizes() {
         if (this.config.firstPane.hidden) {
             this.firstPaneSize = "0px";
             this.secondPaneSize = "100%";
@@ -97,7 +113,12 @@ export class SplitPaneComponent implements OnInit {
         }
 
         const rect = this.elementRef.nativeElement.getBoundingClientRect();
-        if (dividerPosition === -1) {
+
+        const result = this._getDividerPosision();
+        let dividerPosition = result.dividerPosition;
+        const fromEnd = result.fromEnd;
+
+        if (dividerPosition === null) {
             this.firstPaneSize = "50%";
             this.secondPaneSize = "50%";
         } else {
@@ -114,13 +135,23 @@ export class SplitPaneComponent implements OnInit {
                 }
             }
             if (fromEnd) {
-                this.firstPaneSize = `calc(100% - ${dividerPosition}px)`;
+                this.firstPaneSize = `calc(100% - ${dividerPosition  + this.config.separatorThickness}px)`;
                 this.secondPaneSize = `${dividerPosition}px`;
             } else {
                 this.firstPaneSize = `${dividerPosition}px`;
-                this.secondPaneSize = `calc(100% - ${dividerPosition}px)`;
+                this.secondPaneSize = `calc(100% - ${dividerPosition + this.config.separatorThickness}px)`;
 
             }
         }
+        this.changeDetector.markForCheck();
+    }
+
+    private _getDividerPosision() {
+        const position = this._dividerPosision || this.config.initialDividerPosition;
+
+        return {
+            dividerPosition: position == null ? position : Math.abs(position),
+            fromEnd: position < 0, // If negative
+        };
     }
 }

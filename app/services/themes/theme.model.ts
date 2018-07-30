@@ -86,6 +86,9 @@ export class FileExplorerColors extends ThemeElement<ThemeDefinition["file-explo
 }
 
 export class ButtonColors extends ThemeElement<ThemeDefinition["button"]> {
+    @CssColor("basic-text") public basicText: string;
+    @CssColor("basic-bg") public basicBg: string;
+    @CssColor("basic-hover-bg") public basicHoverBg: string;
     @CssColor("disabled-text") public disabledText: string;
     @CssColor("disabled-bg") public disabledBg: string;
 }
@@ -110,11 +113,18 @@ export class MonitorChartColor extends ThemeElement<ThemeDefinition["monitorChar
 
 export class Theme extends ThemeElement<ThemeDefinition> {
     @CssColor() public primary: ColorPalette;
+    @CssColor("primary-contrast") public primaryContrast: ColorPalette;
     @CssColor() public danger: ColorPalette;
+    @CssColor("danger-contrast") public dangerContrast: ColorPalette;
     @CssColor() public warn: ColorPalette;
+    @CssColor("warn-contrast") public warnContrast: ColorPalette;
     @CssColor() public success: ColorPalette;
+    @CssColor("success-contrast") public successContrast: ColorPalette;
     @CssColor("main-background") public mainBackground: string;
+    @CssColor("secondary-background") public secondaryBackground: string;
     @CssColor("card-background") public cardBackground: string;
+    @CssColor() public selection: string;
+    @CssColor() public border: string;
     @CssColor() public outline: string;
     @CssColor() public text: TextColor;
     @CssColor() public header: EntityColor;
@@ -125,6 +135,7 @@ export class Theme extends ThemeElement<ThemeDefinition> {
     @CssColor() public button: ButtonColors;
     @CssColor() public monitorChart: MonitorChartColor;
     @CssColor() public input: InputColor;
+    @CssColor() public editor: string;
 }
 
 function multiply(rgb1, rgb2) {

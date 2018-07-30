@@ -62,6 +62,40 @@ function parseMessage(fullMessage: string) {
  * All their error format needs to be converted to this one so it can then be consumed easily
  */
 export class ServerError {
+    public static fromBatchBody(error: any) {
+        const { message, requestId, timestamp } = parseMessage(error.message && error.message.value);
+
+        // when the error message returned is not of type ErrorMessage, it will more often
+        // than not be a string.
+        return new ServerError({
+            status: error.statusCode,
+            code: error.code,
+            details: error.values,
+            message: message || error.message as string,
+            requestId,
+            timestamp,
+            original: error,
+        });
+    }
+
+    public static fromBatchHttp(response: HttpErrorResponse) {
+        const error = response.error || {};
+        const { message, requestId, timestamp } = parseMessage(error.message && error.message.value);
+
+        // when the error message returned is not of type ErrorMessage, it will more often
+        // than not be a string.
+        return new ServerError({
+            status: response.status,
+            statusText: response.statusText,
+            code: error.code,
+            details: error.values,
+            message: message || error.message as string,
+            requestId,
+            timestamp,
+            original: error,
+        });
+    }
+
     public static fromBatch(error: BatchError) {
         const { message, requestId, timestamp } = parseMessage(error.message && error.message.value);
 
@@ -232,6 +266,12 @@ export class ServerError {
     }
 
     public toString() {
-        return [this.status, this.message].filter(x => exists(x)).join(" - ");
+        return [this.status, this.statusText, this.message].filter(x => exists(x)).join(" - ") + this.detailsToString();
+    }
+
+    public detailsToString() {
+        return this.details.map(({key, value}) => {
+            return `${key}: ${value}`;
+        }).join("\n");
     }
 }

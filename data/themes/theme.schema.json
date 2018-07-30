@@ -17,12 +17,18 @@
   },
   "properties": {
     "primary": {"$ref": "#/definitions/color"},
+    "primary-contrast": {"$ref": "#/definitions/color"},
     "danger": {"$ref": "#/definitions/color"},
+    "danger-contrast": {"$ref": "#/definitions/color"},
     "warn": {"$ref": "#/definitions/color"},
+    "warn-contrast": {"$ref": "#/definitions/color"},
     "success": {"$ref": "#/definitions/color"},
+    "success-contrast": {"$ref": "#/definitions/color"},
     "main-background": {"$ref": "#/definitions/color"},
     "card-background": {"$ref": "#/definitions/color"},
+    "secondary-background": {"$ref": "#/definitions/color"},
     "outline": {"$ref": "#/definitions/color"},
+    "editor": {"type": "string"},
     "text": {
       "type": "object",
       "properties": {
@@ -43,6 +49,9 @@
     "button": {
       "type": "object",
       "properties": {
+        "basic-text": {"$ref": "#/definitions/color"},
+        "basic-bg": {"$ref": "#/definitions/color"},
+        "basic-hover-bg": {"$ref": "#/definitions/color"},
         "disabled-text": {"$ref": "#/definitions/color"},
         "disabled-bg": {"$ref": "#/definitions/color"}
       }
@@ -55,7 +64,7 @@
         "placeholder": {"$ref": "#/definitions/color"},
         "border": {"$ref": "#/definitions/color"},
         "focus-border": {"$ref": "#/definitions/color"},
-        "disabled-background": {"$ref": "#/definitions/color"},
+        "disabled-background": {"$ref": "#/definitions/color"}
       }
     }
   }

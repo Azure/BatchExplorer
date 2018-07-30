@@ -1,6 +1,6 @@
 # Third party dependencies
 
-Each dependencies shipped with batchlabs must go through Microsoft open source approval. This include every new version of the same dependency. That mean every time you update a dependency you must request [here](https://ossmsft.visualstudio.com/DefaultCollection/_oss?searchText=p%3A%22Batchlabs%22&_a=existing)
+Each dependencies shipped with Batch Explorer must go through Microsoft open source approval. This include every new version of the same dependency. That mean every time you update a dependency you must request [here](https://ossmsft.visualstudio.com/DefaultCollection/_oss?searchText=p%3A%22BatchExplorer%22&_a=existing)
 
 
 ## Which dependencies needs to be approved

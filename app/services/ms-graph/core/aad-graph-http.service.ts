@@ -1,5 +1,5 @@
 import { Location } from "@angular/common";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpHandler, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
@@ -7,45 +7,49 @@ import { HttpRequestOptions, HttpService, ServerError } from "@batch-flask/core"
 import { UrlUtils } from "@batch-flask/utils";
 import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
-import { BatchLabsService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-labs.service";
 import { AADUser } from "client/core/aad/adal/aad-user";
 import { Constants } from "common";
+import { flatMap, shareReplay, take } from "rxjs/operators";
 
 @Injectable()
 export class AADGraphHttpService extends HttpService {
     public get serviceUrl() {
-        return this.batchLabs.azureEnvironment.aadGraph;
+        return this.batchExplorer.azureEnvironment.aadGraph;
     }
 
     private _currentUser: AADUser;
     constructor(
-        private http: HttpClient,
+        httpHandler: HttpHandler,
         private adal: AdalService,
         private accountService: AccountService,
-        private batchLabs: BatchLabsService) {
-        super();
+        private batchExplorer: BatchExplorerService) {
+        super(httpHandler);
         this.adal.currentUser.subscribe(x => this._currentUser = x);
-        this.http.get("");
     }
 
-    public request<T = any>(method: string, uri: string, options: any): Observable<T> {
-        return this.accountService.currentAccount.take(1)
-            .flatMap((account) => {
-                return this.adal.accessTokenData(account.subscription.tenantId, this.serviceUrl)
-                    .flatMap((accessToken) => {
+    public request(method: any, uri?: any, options?: any): Observable<any> {
+        return this.accountService.currentAccount.pipe(
+            take(1),
+            flatMap((account) => {
+                const tenantId = account.subscription.tenantId;
+                return this.adal.accessTokenData(tenantId, this.serviceUrl).pipe(
+                    flatMap((accessToken) => {
                         options = this.addAuthorizationHeader(options, accessToken);
                         options = this._addApiVersion(options);
-                        return this.http.request<T>(
+                        return super.request(
                             method,
-                            this._computeUrl(uri, account.subscription.tenantId),
+                            this._computeUrl(uri, tenantId),
                             options)
                             .retryWhen(attempts => this.retryWhen(attempts))
                             .catch((error) => {
                                 const err = ServerError.fromAADGraph(error);
                                 return Observable.throw(err);
                             });
-                    });
-            }).shareReplay(1);
+                    }));
+            }),
+            shareReplay(1),
+        );
     }
 
     private _addApiVersion(options: HttpRequestOptions): HttpRequestOptions {

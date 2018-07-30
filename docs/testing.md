@@ -1,4 +1,4 @@
-# Test in batch labs
+# Test in Batch Explorer
 
 ## Test the browser code(99% of the code should be there)
 

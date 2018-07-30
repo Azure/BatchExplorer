@@ -1,14 +1,22 @@
 {
   "$schema": "./theme.schema.json",
   "primary": "#3d85c6",
+  "primary-contrast": "#ffffff",
   "danger": "#aa3939",
+  "danger-contrast": "#ffffff",
   "warn": "#f4ad42",
+  "warn-contrast": "#ffffff",
   "success": "#4caf50",
+  "success-contrast": "#ffffff",
   "main-background": "#f5f5f5",
+  "secondary-background": "#e5e5e5",
   "card-background": "white",
+  "selection": "#d5d5d5",
   "outline": "#528bff",
+  "border": "#d5d5d5",
+  "editor": "vs",
   "text": {
-    "primary": "",
+    "primary": "#333333",
     "secondary": "#757575"
   },
   "breadcrumb": {
@@ -35,6 +43,9 @@
     "folder-icon": "#f8d979"
   },
   "button": {
+    "basic-text": "var(--color-primary)",
+    "basic-bg": "#e5e5e5",
+    "basic-hover-bg": "#d5d5d5",
     "disabled-text": "#d5d5d5",
     "disabled-bg": "#ededed"
   },
@@ -54,7 +65,7 @@
     "border": "#d5d5d5",
     "focus-border": "var(--color-primary)",
     "placeholder": "#d5d5d5",
-    "text": "var(--color-primary-text)",
+    "text": "var(--color-text-primary)",
     "background": "#fff",
     "disabled-background": "#e5e5e5"
   }

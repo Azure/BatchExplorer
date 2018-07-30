@@ -2,7 +2,7 @@ import { BrowserWindow, app, ipcMain } from "electron";
 import { ProxyCredentials } from "get-proxy-settings";
 
 import { Constants } from "client/client-constants";
-import { BatchLabsApplication, UniqueWindow } from "client/core";
+import { BatchExplorerApplication, UniqueWindow } from "client/core";
 import { Deferred } from "common";
 const urls = Constants.urls.proxyCredentials;
 const url = process.env.HOT ? urls.dev : urls.prod;
@@ -11,8 +11,8 @@ export class ProxyCredentialsWindow extends UniqueWindow {
     public credentials: Promise<ProxyCredentials>;
     private _deferred: Deferred<ProxyCredentials>;
 
-    constructor(batchLabsApplication: BatchLabsApplication) {
-        super(batchLabsApplication);
+    constructor(batchExplorerApplication: BatchExplorerApplication) {
+        super(batchExplorerApplication);
         this._deferred = new Deferred();
         this.credentials = this._deferred.promise;
     }

@@ -11,7 +11,6 @@ import { routes } from "./app.routes";
 
 // components
 import { AppComponent } from "app/app.component";
-import { MainNavigationComponent } from "app/components/shared/main-navigation.component";
 
 // extenal modules
 import { BaseModule } from "@batch-flask/ui";
@@ -29,14 +28,15 @@ import { SettingsModule } from "app/components/settings";
 import { TaskModule } from "app/components/task/task.module";
 
 // unhandled application error handler
-import { BatchLabsErrorHandler } from "app/error-handler";
+import { BatchExplorerErrorHandler } from "app/error-handler";
 
 // services
 import { HttpModule } from "@angular/http";
-import { MaterialModule } from "@batch-flask/core";
+import { MaterialModule, TranslationsLoaderService } from "@batch-flask/core";
 import { CommonModule } from "app/components/common";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
+import { AzureBatchHttpService } from "app/services/azure-batch/core";
 import { PollService } from "app/services/core";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 import { AADGraphHttpService, MsGraphHttpService } from "app/services/ms-graph/core";
@@ -48,13 +48,13 @@ import {
     AdalService,
     AppInsightsApiService,
     AppInsightsQueryService,
+    AppTranslationsLoaderService,
     ApplicationService,
     ArmHttpService,
     AuthorizationHttpService,
     AutoscaleFormulaService,
     AzureHttpService,
-    BatchClientService,
-    BatchLabsService,
+    BatchExplorerService,
     CacheDataService,
     CertificateService,
     CommandService,
@@ -73,9 +73,12 @@ import {
     NcjSubmitService,
     NcjTemplateService,
     NetworkConfigurationService,
+    NodeConnectService,
     NodeService,
     NodeUserService,
     PinnedEntityService,
+    PoolNodeCountService,
+    PoolOsService,
     PoolService,
     PredefinedFormulaService,
     PricingService,
@@ -87,6 +90,7 @@ import {
     StorageAccountService,
     SubscriptionService,
     TaskService,
+    TenantDetailsService,
     ThemeService,
     VmSizeService,
 } from "./services";
@@ -106,7 +110,6 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
     ],
     declarations: [
         AppComponent,
-        MainNavigationComponent,
     ],
     entryComponents: [
         // imported in specific area modules
@@ -125,22 +128,24 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
+        { provide: TranslationsLoaderService, useClass: AppTranslationsLoaderService },
         AccountService,
         AdalService,
         AppInsightsApiService,
         AppInsightsQueryService,
         ApplicationService,
         AutoscaleFormulaService,
+        AzureBatchHttpService,
         AzureHttpService,
         ArmHttpService,
         AuthorizationHttpService,
-        BatchClientService,
-        BatchLabsService,
+        BatchExplorerService,
         CacheDataService,
         CertificateService,
         CommandService,
         CommonModule,
         ComputeService,
+        NodeConnectService,
         FileService,
         FileSystemService,
         GithubDataService,
@@ -160,6 +165,8 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         PinnedEntityService,
         PollService,
         PoolService,
+        PoolNodeCountService,
+        PoolOsService,
         PricingService,
         QuotaService,
         PythonRpcService,
@@ -174,11 +181,12 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         SSHKeyService,
         SubscriptionService,
         TaskService,
+        TenantDetailsService,
         ThemeService,
         VmSizeService,
         PredefinedFormulaService,
         ...graphApiServices,
-        { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
+        { provide: ErrorHandler, useClass: BatchExplorerErrorHandler },
     ],
 })
 export class AppModule { }

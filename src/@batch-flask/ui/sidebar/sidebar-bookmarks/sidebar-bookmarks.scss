@@ -24,6 +24,7 @@ bl-sidebar-bookmarks {
                 color: $primary-color-dark;
             }
         }
+
         > span {
             flex: 1 1 auto;
             text-align: left;
@@ -55,7 +56,6 @@ bl-sidebar-bookmarks {
         }
     }
 
-
     [bl-dropdown-btn] {
         height: $header-height;
         width: $header-height;
@@ -71,7 +71,7 @@ bl-sidebar-bookmarks {
             position: absolute;
             left: 0;
             top: 0;
-            background-color: map-get($danger, 500);
+            background-color: $danger-color;
             border-radius: 10px;
             width: 18px;
             height: 18px;
