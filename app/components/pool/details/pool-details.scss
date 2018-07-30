@@ -13,4 +13,8 @@ bl-pool-details {
         margin-left: 10px;
         z-index: 100;
     }
+
+    div[summaryTile] > bl-pool-state-graph {
+        margin: 10px;
+    }
 }
