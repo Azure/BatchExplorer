@@ -1,5 +1,15 @@
-import { Directive, Input, OnChanges, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from "@angular/core";
+import {
+    ChangeDetectorRef,
+    Directive,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    TemplateRef,
+    ViewContainerRef,
+} from "@angular/core";
 import { Subscription } from "rxjs";
+import { detectChanges } from "../../../../node_modules/@angular/core/src/render3";
 import { Workspace } from "./workspace.model";
 import { WorkspaceService } from "./workspace.service";
 
@@ -14,6 +24,7 @@ export class FeatureVisibleDirective implements OnInit, OnDestroy, OnChanges  {
     private _workspace: Workspace;
 
     constructor(
+        private changeDetector: ChangeDetectorRef,
         private templateRef: TemplateRef<any>,
         private viewContainer: ViewContainerRef,
         private workspaceService: WorkspaceService,
@@ -46,6 +57,7 @@ export class FeatureVisibleDirective implements OnInit, OnDestroy, OnChanges  {
             const enabled = this._workspace.isFeatureEnabled(this.feature);
             if (!this._workspace || enabled) {
                 this.viewContainer.createEmbeddedView(this.templateRef);
+                this.changeDetector.detectChanges();
             }
         }
     }
