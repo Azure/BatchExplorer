@@ -1,5 +1,5 @@
 import { Model, Prop, Record } from "@batch-flask/core";
-import { ContainerConfiguration } from "./container-setup";
+import { ContainerConfiguration, ContainerConfigurationAttributes } from "./container-setup";
 import { ImageReference, ImageReferenceAttributes } from "./image-reference";
 import { PoolOSDisk, PoolOSDiskAttributes } from "./pool-os-disk";
 import { WindowsConfiguration } from "./windows-configuration";
@@ -9,7 +9,7 @@ export interface VirtualMachineConfigurationAttributes {
     nodeAgentSKUId: string;
     windowsConfiguration: WindowsConfiguration;
     osDisk?: PoolOSDiskAttributes;
-    containerConfiguration: ContainerConfiguration;
+    containerConfiguration: ContainerConfigurationAttributes;
 }
 
 /**

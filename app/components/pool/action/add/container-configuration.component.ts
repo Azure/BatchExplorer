@@ -17,7 +17,6 @@ import "./container-configuration.scss";
     selector: "bl-container-configuration",
     templateUrl: "container-configuration.html",
     providers: [
-        // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => ContainerConfigurationComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => ContainerConfigurationComponent), multi: true },
     ],
@@ -31,7 +30,7 @@ export class ContainerConfigurationComponent implements ControlValueAccessor {
     constructor(formBuilder: FormBuilder) {
         this.form = formBuilder.group({
             type: [null, Validators.required],
-            containerImageNames: [[], Validators.required],
+            containerImageNames: [[]],
             containerRegistries: [[]],
         });
 

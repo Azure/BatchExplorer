@@ -10,6 +10,6 @@ export class ContainerConfigurationDecorator extends DecoratorBase<ContainerConf
         super(containerConfiguration);
         this.type = this.stringField(containerConfiguration.type);
         this.containerImageNames = this.stringField(containerConfiguration.containerImageNames.join(";"));
-        this.containerRegistries = containerConfiguration.containerRegistries;
+        this.containerRegistries = containerConfiguration.containerRegistries.toArray();
     }
 }
