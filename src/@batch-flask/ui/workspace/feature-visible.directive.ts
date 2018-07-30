@@ -9,7 +9,6 @@ import {
     ViewContainerRef,
 } from "@angular/core";
 import { Subscription } from "rxjs";
-import { detectChanges } from "../../../../node_modules/@angular/core/src/render3";
 import { Workspace } from "./workspace.model";
 import { WorkspaceService } from "./workspace.service";
 
