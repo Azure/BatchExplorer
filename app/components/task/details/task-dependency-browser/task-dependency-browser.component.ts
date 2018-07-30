@@ -30,16 +30,12 @@ export class TaskDependencyBrowserComponent implements OnChanges {
             this._tasks.clear();
         }
 
-        // Task initially loaded with no dedendsOn. Change to task properties was not handled here.
-        if (changes.jobId || ComponentUtils.recordChangedId(changes.task) || this._hasUnloadedDependencies) {
+        if (changes.jobId
+            || ComponentUtils.recordChangedId(changes.task)
+            || ComponentUtils.recordChangedAttr(changes.task, "dependsOn")) {
             this._loaded = 0;
             this._refresh(this.task);
         }
-    }
-
-    private get _hasUnloadedDependencies(): boolean {
-        if (!this.task || !this.task.dependsOn) { return false; }
-        return this.dependentIds.length === 0;
     }
 
     private _refresh(task: Task) {
