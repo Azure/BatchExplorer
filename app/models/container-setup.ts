@@ -1,4 +1,5 @@
-import { Model, Prop, Record } from "@batch-flask/core";
+import { ListProp, Model, Prop, Record } from "@batch-flask/core";
+import { List } from "immutable";
 
 export enum ContainerType {
     Docker = "docker",
@@ -38,7 +39,7 @@ export class TaskContainerSettings extends Record<TaskContainerSettingsAttribute
 
 @Model()
 export class ContainerConfiguration extends Record<ContainerConfigurationAttributes> {
-    @Prop() public containerImageNames: string[];
-    @Prop() public containerRegistries: ContainerRegistry[];
+    @ListProp(String) public containerImageNames: List<string> = List();
+    @ListProp(ContainerRegistry) public containerRegistries: List<ContainerRegistry> = List();
     @Prop() public type: ContainerType;
 }
