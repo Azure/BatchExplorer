@@ -7,13 +7,13 @@ import {
     NG_ASYNC_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { Subscription, of, timer } from "rxjs";
-
-import { Job } from "app/models";
-import { JobService } from "app/services";
-
 import { autobind } from "@batch-flask/core";
 import { FormUtils } from "@batch-flask/utils";
+import { Job } from "app/models";
+import { JobService } from "app/services";
+import { Subscription, of, timer } from "rxjs";
+import { catchError,  distinctUntilChanged,  map, switchMap, tap } from "rxjs/operators";
+
 import "./job-id.scss";
 
 @Component({
@@ -41,11 +41,12 @@ export class JobIdComponent implements AsyncValidator, ControlValueAccessor, OnD
         private jobService: JobService) {
 
         this.value = this.formBuilder.control([], null, this._validateJobUnique);
-        this._subscription = this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
-            if (this._propagateChange) {
-                this._propagateChange(value);
-            }
-        });
+        this._subscription = this.value.valueChanges.pipe(
+            distinctUntilChanged()).subscribe((value) => {
+                if (this._propagateChange) {
+                    this._propagateChange(value);
+                }
+            });
     }
 
     public ngOnDestroy() {
@@ -74,10 +75,9 @@ export class JobIdComponent implements AsyncValidator, ControlValueAccessor, OnD
         if (!control.value || (Array.isArray(control.value) && control.value.length === 0)) {
             return of(null);
         }
-
-        return timer(250)
-            .flatMap(() => this.jobService.get(control.value))
-            .map((job: Job) => {
+        return timer(250).pipe(
+            switchMap(() => this.jobService.get(control.value)),
+            map((job: Job) => {
                 this.warning = true;
                 this.changeDetector.markForCheck();
                 return of({
@@ -85,10 +85,12 @@ export class JobIdComponent implements AsyncValidator, ControlValueAccessor, OnD
                         valid: false,
                     },
                 });
-            }).catch(() => {
+            }),
+            catchError(() => {
                 this.warning = false;
                 this.changeDetector.markForCheck();
                 return of(null);
-            });
+            }),
+        );
     }
 }

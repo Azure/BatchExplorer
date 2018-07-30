@@ -4,7 +4,7 @@ import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { PermissionService, Workspace, WorkspaceService } from "@batch-flask/ui";
 import { ButtonComponent, ButtonsModule } from "@batch-flask/ui/buttons";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, of } from "rxjs";
 
 import * as Fixtures from "test/fixture";
 import { click } from "test/utils/helpers";
@@ -73,7 +73,7 @@ describe("EntityCommandButtonComponent", () => {
     beforeEach(() => {
         permissionServiceSpy = {
             hasPermission: jasmine.createSpy("hasPermission").and.callFake((permission) => {
-                return Observable.of(permission !== "admin");
+                return of(permission !== "admin");
             }),
         };
 
