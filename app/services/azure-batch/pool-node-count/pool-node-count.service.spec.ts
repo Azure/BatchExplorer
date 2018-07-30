@@ -1,6 +1,6 @@
 import { fakeAsync, tick } from "@angular/core/testing";
 import { BehaviorSubject, of } from "rxjs";
-import { PoolNodeCountService, PoolNodeCounts } from "./pool-node-count.service";
+import { PoolNodeCountService } from "./pool-node-count.service";
 
 const mockResponse = [
     {
@@ -114,7 +114,6 @@ describe("PoolNodeCountService", () => {
     let service: PoolNodeCountService;
     let accountServiceSpy;
     let httpSpy;
-    let counts: Map<string, PoolNodeCounts>;
     beforeEach(() => {
         accountServiceSpy = {
             currentAccountId: new BehaviorSubject("acc-1"),
@@ -123,7 +122,6 @@ describe("PoolNodeCountService", () => {
             get: jasmine.createSpy("http.get").and.returnValue(of({ value: mockResponse })),
         };
         service = new PoolNodeCountService(accountServiceSpy, httpSpy);
-        service.counts.subscribe((x) => counts = x);
     });
 
     afterEach(() => {
@@ -131,10 +129,10 @@ describe("PoolNodeCountService", () => {
     });
 
     it("Loads the counts when asked to refresh", (done) => {
-        expect(httpSpy.get).toHaveBeenCalledTimes(1);
-        counts = null;
-        service.refresh().subscribe(() => {
-            expect(httpSpy.get).toHaveBeenCalledTimes(2);
+        expect(httpSpy.get).toHaveBeenCalledTimes(0);
+        service.refresh().subscribe((counts) => {
+            expect(httpSpy.get).toHaveBeenCalledTimes(1);
+            expect(counts).not.toBeNull();
             expect(counts.size).toBe(3);
             const pool3Counts = counts.get("pool3");
             expect(pool3Counts).not.toBeFalsy();
@@ -147,17 +145,52 @@ describe("PoolNodeCountService", () => {
         });
     });
 
-    xit("Refresh the node counts every 30 seconds", fakeAsync(() => {
+    it("Refresh the node counts every 30 seconds when subscribing to it", fakeAsync(() => {
+        service.ngOnDestroy();
+        service = new PoolNodeCountService(accountServiceSpy, httpSpy);
+
+        expect(httpSpy.get).toHaveBeenCalledTimes(0);
+        const sub = service.counts.subscribe();
+        tick();
         expect(httpSpy.get).toHaveBeenCalledTimes(1);
         tick(30000);
         expect(httpSpy.get).toHaveBeenCalledTimes(2);
         tick(30000);
         expect(httpSpy.get).toHaveBeenCalledTimes(3);
+
+        sub.unsubscribe();
+        tick(30000);
+        expect(httpSpy.get).toHaveBeenCalledTimes(3); // Not called anymore as no more subs
     }));
 
-    it("Refresh when the account id changes", () => {
+    it("Don't double refresh when subscribing multiple times to count", fakeAsync(() => {
+        service.ngOnDestroy();
+        service = new PoolNodeCountService(accountServiceSpy, httpSpy);
+
+        expect(httpSpy.get).toHaveBeenCalledTimes(0);
+        const sub1 = service.counts.subscribe();
+        const sub2 = service.counts.subscribe();
+        tick();
+        expect(httpSpy.get).toHaveBeenCalledTimes(1);
+        tick(30000);
+        expect(httpSpy.get).toHaveBeenCalledTimes(2);
+        tick(30000);
+        expect(httpSpy.get).toHaveBeenCalledTimes(3);
+
+        sub1.unsubscribe();
+        tick(30000);
+        expect(httpSpy.get).toHaveBeenCalledTimes(4);
+        sub2.unsubscribe();
+        tick(30000);
+        expect(httpSpy.get).toHaveBeenCalledTimes(4); // Not called anymore as no more subs
+    }));
+
+    it("Refresh when the account id changes", fakeAsync(() => {
+        const sub = service.counts.subscribe();
+        tick();
         expect(httpSpy.get).toHaveBeenCalledTimes(1);
         accountServiceSpy.currentAccountId.next("acc-2");
         expect(httpSpy.get).toHaveBeenCalledTimes(2);
-    });
+        sub.unsubscribe();
+    }));
 });

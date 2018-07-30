@@ -124,7 +124,7 @@ export class PoolNodeCounts extends Record<any> implements NodeCountsAttributes 
     }
 }
 
-const NODE_COUNT_REFRESH_INTERVAL = 10000; // 30 seconds
+const NODE_COUNT_REFRESH_INTERVAL = 30000; // 30 seconds
 
 @Injectable()
 export class PoolNodeCountService implements OnDestroy {
@@ -139,7 +139,6 @@ export class PoolNodeCountService implements OnDestroy {
     constructor(
         accountService: AccountService,
         private http: AzureBatchHttpService) {
-
         this.counts = combineLatest(
             accountService.currentAccountId,
             timer(0, NODE_COUNT_REFRESH_INTERVAL),
@@ -170,7 +169,6 @@ export class PoolNodeCountService implements OnDestroy {
     }
 
     private _fetchPoolNodeCounts(): Observable<Map<string, PoolNodeCounts>> {
-        console.log("Fettch more nodes");
         return this.http.get<BatchListResponse<BatchPoolNodeCounts>>("/nodecounts").pipe(
             expand(response => {
                 return response["odata.nextLink"] ? this.http.get(response["odata.nextLink"]) : Observable.empty();

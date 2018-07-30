@@ -6,7 +6,6 @@ import {
     Input,
     OnChanges,
     OnDestroy,
-    OnInit,
 } from "@angular/core";
 import { Pool } from "app/models";
 import { NodeCounts, NodeCountsAttributes, PoolNodeCountService, PoolNodeCounts } from "app/services";
@@ -68,7 +67,6 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
         private contextMenuService: ContextMenuService) {
         this._updateDataSets();
         this._updateOptions();
-        console.log("Sub from here");
         this._sub = poolNodeCountSerivce.counts.subscribe((counts) => {
             this._counts = counts;
             this._updateDataSets();
@@ -86,7 +84,6 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnDestroy() {
-        console.log("unsub from here");
         this._sub.unsubscribe();
     }
 
@@ -118,7 +115,7 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
         } else {
             this.datasets = [
                 {
-                    label: "Dedicated nodes",
+                    label: "Nodes",
                     backgroundColor: colors,
                     data: this._getData(counts),
                     borderWidth: 0,
@@ -133,7 +130,6 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
         if (this.pool) {
             return this._counts.get(this.pool.id);
         }
-        // TODO do sum
 
         const dedicatedCounts: NodeCountsAttributes = new NodeCounts().toJS();
         const lowPriorityCounts: NodeCountsAttributes = new NodeCounts().toJS();
