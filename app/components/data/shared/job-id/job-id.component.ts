@@ -12,7 +12,7 @@ import { FormUtils } from "@batch-flask/utils";
 import { Job } from "app/models";
 import { JobService } from "app/services";
 import { Subscription, of, timer } from "rxjs";
-import { catchError,  distinctUntilChanged,  map, switchMap, tap } from "rxjs/operators";
+import { catchError,  distinctUntilChanged,  map, switchMap } from "rxjs/operators";
 
 import "./job-id.scss";
 
