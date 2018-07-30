@@ -15,6 +15,7 @@ function reprTree(tree: FileTreeStructure) {
 
 function reprNode(node: FileTreeNode, indent = 0) {
     const rows = [];
+    // tslint:disable-next-line:no-unused-variable
     for (const [_, child] of node.children) {
         rows.push({ indent, node: child });
         if (child.children.size > 0) {
