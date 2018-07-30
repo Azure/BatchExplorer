@@ -30,7 +30,9 @@ export class TaskDependencyBrowserComponent implements OnChanges {
             this._tasks.clear();
         }
 
-        if (changes.jobId || ComponentUtils.recordChangedId(changes.task)) {
+        if (changes.jobId
+            || ComponentUtils.recordChangedId(changes.task)
+            || ComponentUtils.recordChangedAttr(changes.task, "dependsOn")) {
             this._loaded = 0;
             this._refresh(this.task);
         }
