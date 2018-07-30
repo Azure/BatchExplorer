@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { MatIconRegistry } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
-import { Observable } from "rxjs";
+import { combineLatest } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
 import { IpcService, Workspace, WorkspaceService } from "@batch-flask/ui";
@@ -62,15 +62,14 @@ export class AppComponent implements OnInit {
         this.predefinedFormulaService.init();
         themeService.init();
 
-        Observable
-            .combineLatest(
-                accountService.accountLoaded,
-                settingsService.hasSettingsLoaded,
-                workspaceService.haveWorkspacesLoaded,
-            )
-            .subscribe((loadedArray) => {
-                this.isAppReady = loadedArray[0] && loadedArray[1];
-            });
+        combineLatest(
+            accountService.accountLoaded,
+            settingsService.hasSettingsLoaded,
+            workspaceService.haveWorkspacesLoaded,
+        )
+        .subscribe((loadedArray) => {
+            this.isAppReady = loadedArray[0] && loadedArray[1];
+        });
 
         // Wait for the first account to be loaded.
         accountService.currentAccount.filter(x => Boolean(x)).first().subscribe((x) => {
