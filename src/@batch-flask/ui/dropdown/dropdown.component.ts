@@ -15,6 +15,7 @@ export class DropdownComponent {
     public showDropdown = false;
 
     constructor(private changeDetector: ChangeDetectorRef) { }
+
     public mouseEnter() {
         this.showDropdown = true;
         this.changeDetector.markForCheck();

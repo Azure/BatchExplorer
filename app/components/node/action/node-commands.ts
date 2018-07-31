@@ -40,6 +40,7 @@ export class NodeCommands extends EntityCommands<Node> {
 
     private _buildCommands() {
         this.connect = this.simpleCommand({
+            name: "connect",
             ...COMMAND_LABEL_ICON.ConnectToNode,
             action: (node) => this._connect(node),
             multiple: false,
@@ -49,18 +50,21 @@ export class NodeCommands extends EntityCommands<Node> {
         });
 
         this.delete = this.simpleCommand({
+            name: "delete",
             ...COMMAND_LABEL_ICON.Delete,
             action: (node: Node) => this._delete(node),
             permission: Permission.Write,
         });
 
         this.reboot = this.simpleCommand({
+            name: "reboot",
             ...COMMAND_LABEL_ICON.RebootNode,
             action: (node: Node) => this._reboot(node),
             permission: Permission.Write,
         });
 
         this.editStartTask = this.simpleCommand({
+            name: "editStartTask",
             ...COMMAND_LABEL_ICON.EditStartTask,
             action: (node) => this._editStartTask(node),
             multiple: false,

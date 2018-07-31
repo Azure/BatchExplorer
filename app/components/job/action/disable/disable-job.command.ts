@@ -13,6 +13,7 @@ export class DisableJobCommand extends EntityCommand<Job, string> {
         const jobService = injector.get(JobService);
 
         super(injector, {
+            name: "disable",
             ...COMMAND_LABEL_ICON.Disable,
             action: (job: Job, option: string) => jobService.disable(job.id, option),
             enabled: (job) => job.state !== JobState.completed && job.state !== JobState.disabled,

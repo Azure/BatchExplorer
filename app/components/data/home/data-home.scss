@@ -5,6 +5,10 @@ bl-data-home {
     width: 100%;
     height: $contentview-height;
 
+    .quicksearch {
+        margin: 0 10px;
+    }
+
     .pre-quicksearch {
         width: 200px;
     }

@@ -13,9 +13,9 @@ import { SubscriptionPickerComponent } from "./subscription-picker";
 const privateComponents = [];
 
 const publicComponents = [
-    InlineQuotaComponent,
-    EditMetadataFormComponent,
     DownloadFolderComponent,
+    EditMetadataFormComponent,
+    InlineQuotaComponent,
     SubscriptionPickerComponent,
 ];
 

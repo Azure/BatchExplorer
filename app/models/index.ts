@@ -87,3 +87,4 @@ export * from "./user-identity";
 export * from "./virtual-machine-configuration";
 export * from "./vm-size";
 export * from "./windows-configuration";
+export * from "./workspace-definition";

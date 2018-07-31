@@ -1,0 +1,25 @@
+<bl-dropdown class="workspace-dropdown" [footer]="true" align="left">
+    <div bl-dropdown-btn>
+        <!-- add a default here for while it's loading? -->
+        {{selectButtonText}}
+        <i *ngIf="loaded === false" class="fa fa-spinner fa-spin"></i>
+    </div>
+    <div bl-dropdown-content>
+        <div *ngFor="let workspace of workspaces | async; trackBy: trackByFn"
+            class="dropdown-item workspace"
+            (click)="setWorkspace(workspace)"
+            [class.selected]="workspace.id === selectedWorkspaceId"
+            [title]="workspace.name">
+
+            <div class="main">
+                {{workspace.name}}
+            </div>
+            <div *ngIf="workspace.id === selectedWorkspaceId" class="extra">
+                <i class="fa fa-check"></i>
+            </div>
+        </div>
+        <!-- <bl-clickable class="dropdown-item manage">
+            <i class="fa fa-cog fa-2x"></i> Manage workspaces
+        </bl-clickable> -->
+    </div>
+</bl-dropdown>

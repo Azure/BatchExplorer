@@ -1,10 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { MatIconRegistry } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
-import { Observable } from "rxjs";
+import { combineLatest } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
-import { IpcService } from "@batch-flask/ui";
+import { IpcService, Workspace, WorkspaceService } from "@batch-flask/ui";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
@@ -45,9 +45,11 @@ export class AppComponent implements OnInit {
         private pricingService: PricingService,
         private ncjTemplateService: NcjTemplateService,
         private predefinedFormulaService: PredefinedFormulaService,
+        private workspaceService: WorkspaceService,
     ) {
         this.autoscaleFormulaService.init();
         this.settingsService.init();
+        this._initWorkspaces();
         this.githubDataService.init();
         this.sshKeyService.init();
         this.commandService.init();
@@ -60,11 +62,14 @@ export class AppComponent implements OnInit {
         this.predefinedFormulaService.init();
         themeService.init();
 
-        Observable
-            .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
-            .subscribe((loadedArray) => {
-                this.isAppReady = loadedArray[0] && loadedArray[1];
-            });
+        combineLatest(
+            accountService.accountLoaded,
+            settingsService.hasSettingsLoaded,
+            workspaceService.haveWorkspacesLoaded,
+        )
+        .subscribe((loadedArray) => {
+            this.isAppReady = loadedArray[0] && loadedArray[1];
+        });
 
         // Wait for the first account to be loaded.
         accountService.currentAccount.filter(x => Boolean(x)).first().subscribe((x) => {
@@ -76,6 +81,7 @@ export class AppComponent implements OnInit {
         this.route.queryParams.subscribe(({ fullscreen }) => {
             this.fullscreen = Boolean(fullscreen);
         });
+
         permissionService.setUserPermissionProvider(() => {
             return authHttpService.getResourcePermission();
         });
@@ -93,5 +99,14 @@ export class AppComponent implements OnInit {
      */
     private _preloadData() {
         this.poolOsService.refresh();
+    }
+
+    private async _initWorkspaces() {
+        const adminWorkspace = JSON.parse(require("app/components/workspace/json-templates/admin-workspace.json"));
+        const endUserWorkspace = JSON.parse(require("app/components/workspace/json-templates/end-user-workspace.json"));
+        this.workspaceService.init([
+            new Workspace({ ...adminWorkspace }),
+            new Workspace({ ...endUserWorkspace }),
+        ]);
     }
 }

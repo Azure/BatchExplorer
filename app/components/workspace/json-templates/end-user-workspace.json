@@ -1,0 +1,43 @@
+{
+    "id": "end-user.workspace",
+    "displayName": "Basic end-user workspace",
+    "description": "Default end-user workspace that hides a number of advanced features.",
+    "features": {
+        "job": {
+            "statistics": false,
+            "tags": false,
+            "configuration": {
+                "json": false
+            },
+            "action": {
+                "clone": false,
+                "exportAsJson": false,
+                "pin": false
+            }
+        },
+        "schedule": false,
+        "pool": {
+            "tags": false,
+            "graphs": {
+                "insights": false,
+                "nodes": false,
+                "tasks": false
+            },
+            "configuration": {
+                "json": false
+            },
+            "action": {
+                "clone": false,
+                "exportAsJson": false,
+                "pin": false
+            }
+        },
+        "package": false,
+        "certificate": false,
+        "data": {
+            "action": {
+                "pin": false
+            }
+        }
+    }
+}

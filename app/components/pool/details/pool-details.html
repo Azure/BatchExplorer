@@ -9,7 +9,7 @@
                     <bl-pool-os-icon [pool]="pool"></bl-pool-os-icon> {{poolDecorator.poolOs}}
                 </div>
             </div>
-            <bl-tags summaryTags [tags]="pool.tags" [editable]="true" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
+            <bl-tags *blFeatureOn="'pool.tags'" summaryTags [tags]="pool.tags" [editable]="true" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refreshPool"></bl-refresh-btn>
                 <bl-commands-list [commands]="commands" [entity]="pool"></bl-commands-list>
