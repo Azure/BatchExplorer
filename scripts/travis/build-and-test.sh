@@ -8,7 +8,6 @@ cd $(dirname $0)/../..
 
 # Run the test
 npm run test -s
-codecov
 
 # Run the lint
 npm run lint -s
