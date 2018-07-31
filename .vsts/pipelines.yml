@@ -34,6 +34,8 @@ phases:
         codeCoverageTool: cobertura
         summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura.xml
         reportDirectory: $(System.DefaultWorkingDirectory)/coverage/html
+    - script: codecov
+      displayName: Upload code coverage to codecov
 
     - script: npm run build-and-pack
       displayName: Build and pack
