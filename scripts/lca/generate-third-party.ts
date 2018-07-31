@@ -101,7 +101,6 @@ function loadDependency(name: string) {
 }
 
 function getRepoUrl(dependency) {
-    console.log("Dep", dependency);
     const repo = dependency.repository;
     if (!repo) { return null; }
     if (typeof repo === "string") {
