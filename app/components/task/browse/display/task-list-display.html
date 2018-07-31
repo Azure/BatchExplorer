@@ -50,6 +50,11 @@
             <div *blCellDef="let task">{{formatDate(task.executionInfo?.startTime)}}</div>
         </bl-column>
 
+        <bl-column name="runTime" [defaultWidth]="120">
+            <div *blHeadCellDef>Runtime</div>
+            <div *blCellDef="let task"><bl-task-runtime [task]="task"></bl-task-runtime></div>
+        </bl-column>
+
         <bl-column name="endTime"  [defaultWidth]="120">
             <div *blHeadCellDef>Completed</div>
             <div *blCellDef="let task">{{formatDate(task.executionInfo?.endTime)}}</div>
