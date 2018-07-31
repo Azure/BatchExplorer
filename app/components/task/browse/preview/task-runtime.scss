@@ -2,7 +2,7 @@
 
 bl-task-runtime {
     // inherits .failure and .success from base.scss
-    color: map-get($primary, 400);
+    color: $primary-color;
 
     .fa-clock-o {
         margin-right: 4px;

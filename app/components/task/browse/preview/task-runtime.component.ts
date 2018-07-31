@@ -19,9 +19,9 @@ export class TaskRuntimeComponent {
 
     @Input() public task: any;
 
-    public get exitCode() {
-        const code = this.task.executionInfo ? this.task.executionInfo.exitCode : this.task.exitCode;
-        return code === undefined ? "?" : code;
+    public get failed() {
+        const info = this.task.executionInfo;
+        return info && info.failureInfo;
     }
 
     public get startTime() {

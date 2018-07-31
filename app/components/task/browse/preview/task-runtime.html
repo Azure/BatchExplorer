@@ -9,8 +9,9 @@
     </div>
 
     <div *ngSwitchCase="taskStates.completed">
-        <div class="running-time" [class.success]="exitCode === 0" [class.failure]="exitCode !== 0">
-            <bl-timespan [startTime]="startTime" [endTime]="endTime"></bl-timespan>
+        <div class="running-time" [class.success]="!failed" [class.failure]="failed">
+            <bl-timespan [startTime]="startTime" [endTime]="endTime" *ngIf="startTime"></bl-timespan>
+            <span *ngIf="!startTime">-</span>
         </div>
     </div>
 </div>
