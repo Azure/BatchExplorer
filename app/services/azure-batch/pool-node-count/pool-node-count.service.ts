@@ -144,8 +144,8 @@ export class PoolNodeCountService implements OnDestroy {
             timer(0, NODE_COUNT_REFRESH_INTERVAL),
         ).pipe(
             flatMap(() => this.refresh()),
-            flatMap(() => this._counts),
-            publishReplay(),
+            flatMap(() => this._counts.take(1)),
+            publishReplay(1),
             refCount(),
         );
     }
