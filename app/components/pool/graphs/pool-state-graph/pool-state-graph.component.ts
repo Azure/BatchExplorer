@@ -87,8 +87,6 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnDestroy() {
-        console.log("Destroy here");
-
         this._sub.unsubscribe();
     }
 
