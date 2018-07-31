@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostBinding, Input, OnChanges } from "@angular/core";
 
 import { Pool, PoolAllocationState } from "app/models";
 
@@ -8,23 +8,24 @@ import "./pool-nodes-preview.scss";
 @Component({
     selector: "bl-pool-nodes-preview",
     templateUrl: "pool-nodes-preview.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PoolNodesPreviewComponent implements OnChanges {
-    @Input()
-    public pool: Pool;
+    @Input() public pool: Pool;
 
-    @Input()
-    public tooltipPosition: string = "below";
+    @Input() public tooltipPosition: string = "below";
 
     @Input()
     @HostBinding("class")
     public size: ComponentSize = "normal";
+
     public tooltipMessage: string;
 
     public prettyStatus: string = "";
 
     @HostBinding("class.resize-error")
     public hasResizeError: boolean = false;
+
     public ngOnChanges(inputs) {
         if (inputs.pool) {
             this.tooltipMessage = this._getTooltipMessage();

@@ -6,10 +6,10 @@
             <div summaryDetails>
                 <div>Last resized {{poolDecorator.lastResized}}</div>
                 <div>
-                    <i class="fa fa-{{poolDecorator.poolOsIcon}}" aria-hidden="true"></i> {{poolDecorator.poolOs}}
+                    <bl-pool-os-icon [pool]="pool"></bl-pool-os-icon> {{poolDecorator.poolOs}}
                 </div>
             </div>
-            <bl-tags summaryTags [tags]="pool.tags" [editable]="true" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
+            <bl-tags *blFeatureOn="'pool.tags'" summaryTags [tags]="pool.tags" [editable]="true" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refreshPool"></bl-refresh-btn>
                 <bl-commands-list [commands]="commands" [entity]="pool"></bl-commands-list>
@@ -20,6 +20,9 @@
                 <div class="estimated-cost" title="Estimated cost of this pool at this current state">
                     {{estimatedCost}}/h
                 </div>
+            </div>
+            <div summaryTile>
+                <bl-pool-state-graph [pool]="pool"></bl-pool-state-graph>
             </div>
         </bl-summary-card>
 
@@ -42,7 +45,7 @@
                 <bl-tab key="nodes">
                     <bl-tab-label>Nodes</bl-tab-label>
                     <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']" [filterPlaceholder]="filterPlaceholderText">
-                        <bl-node-list #list [poolId]="poolId" [filter]="listWrapper.filter" [quicklist]="false" [manualLoading]="true"></bl-node-list>
+                        <bl-node-list #list [poolId]="poolId" [filter]="listWrapper.filter" [quicklist]="false"></bl-node-list>
                     </bl-entity-details-list>
                 </bl-tab>
             </bl-tab-group>

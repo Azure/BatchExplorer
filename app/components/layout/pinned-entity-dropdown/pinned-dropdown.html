@@ -3,19 +3,20 @@
         <i class="fa fa-star"></i> {{title}}
     </div>
     <div bl-dropdown-content>
-        <bl-clickable *ngFor="let favorite of favorites | async;trackBy: trackPinnned" 
-            class="dropdown-item" 
-            (do)="gotoFavorite(favorite)"
+        <div *ngFor="let favorite of favorites | async;trackBy: trackPinnned"
+            class="dropdown-item favorite"
             [class.selected]="favorite.url === currentUrl"
-            [title]="favorite.id">
-            <i class="fa" [ngClass]="entityIcon(favorite)"></i>
-            <div class="main">
-                <div class="alias">{{favorite.name || favorite.id}}</div>
-                <div class="type">{{entityType(favorite)}}</div>
-            </div>
-            <div *ngIf="favorite.url === currentUrl" class="extra">
-                <i class="fa fa-check"></i>
-            </div>
-        </bl-clickable>
+            (click)="gotoFavorite(favorite)"
+            (mouseup)="handleMiddleMouseUp($event, favorite)"
+            (contextmenu)="onContextMenu(favorite)">
+
+            <span>
+                <i class="entity-type fa" [ngClass]="entityIcon(favorite)"
+                [title]="entityType(favorite)"></i>
+                {{favorite.name || favorite.id}}
+                <i *ngIf="favorite.url === currentUrl" class="extra fa fa-check"></i>
+            </span>
+            <i class="fa fa-times" (click)="removeFavorite(favorite)"></i>
+        </div>
     </div>
 </bl-dropdown>

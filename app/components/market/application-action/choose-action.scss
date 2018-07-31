@@ -4,7 +4,6 @@ bl-choose-action {
     display: flex;
     width: 100%;
     height: $contentview-height;
-    background: $whitesmoke-darker;
 
     h1 {
         margin: 10px;
@@ -30,8 +29,10 @@ bl-choose-action {
 
         > .action-link {
             display: flex;
+            flex: 1;
+
             &:hover {
-                background: $whitesmoke-darker;
+                background: $selection-color;
             }
 
             > .name {
@@ -56,7 +57,7 @@ bl-choose-action {
             justify-content: center;
 
             &:hover {
-                background: $whitesmoke-darker;
+                background: $whitesmoke;
             }
         }
     }

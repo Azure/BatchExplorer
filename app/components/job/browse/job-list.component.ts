@@ -38,7 +38,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     public searchQuery = new FormControl();
 
     // todo: ask tim about setting difference select options for list and details.
-    private _baseOptions = {};
+    private _baseOptions = { };
     private _onJobAddedSub: Subscription;
     constructor(
         router: Router,
@@ -49,7 +49,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         private jobService: JobService,
         private taskManager: BackgroundTaskService) {
         super(changeDetector);
-        this.data = this.jobService.listView();
+        this.data = this.jobService.listView(this._baseOptions);
         ComponentUtils.setActiveItem(activatedRoute, this.data);
         this.data.items.subscribe((jobs) => {
             this.jobs = jobs;
@@ -142,7 +142,6 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
             task.start(backgroundTask);
             return task.waitingDone;
         });
-        // this.jobService.deleteJobs([...this.selection.keys])
     }
 
     public trackByFn(index: number, job: Job) {

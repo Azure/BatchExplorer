@@ -1,7 +1,7 @@
 import { List } from "immutable";
 
 import { ListProp, Model, Prop, Record } from "@batch-flask/core";
-import { TaskContainerSettings } from "app/models/dtos";
+import { TaskContainerSettings } from "./container-setup";
 import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";
 import { UserIdentity } from "./user-identity";

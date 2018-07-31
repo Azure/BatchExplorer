@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
+import { Subscription } from "rxjs";
 
+import { WorkspaceService } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditMetadataFormComponent } from "app/components/common/edit-metadata-form";
 import { Job, Metadata, NameValuePair } from "app/models";
@@ -20,7 +22,7 @@ import { JobService } from "app/services";
     templateUrl: "job-configuration.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class JobConfigurationComponent {
+export class JobConfigurationComponent implements OnDestroy {
     @Input()
     public set job(job: Job) {
         this._job = job;
@@ -37,11 +39,27 @@ export class JobConfigurationComponent {
     public environmentSettings: List<NameValuePair> = List([]);
     public jobMetadata: List<Metadata> = List([]);
     public poolInfo: any = {};
+    public jsonViewEnabled = true;
 
+    private _sub: Subscription;
     private _job: Job;
 
-    constructor(private sidebarManager: SidebarManager, private jobService: JobService) {
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private jobService: JobService,
+        private sidebarManager: SidebarManager,
+        private workspaceService: WorkspaceService) {
 
+        this._sub = this.workspaceService.currentWorkspace.subscribe((ws) => {
+            if (ws) {
+                this.jsonViewEnabled = ws.isFeatureEnabled("job.configuration.json");
+                this.changeDetector.markForCheck();
+            }
+        });
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 
     @autobind()
@@ -50,7 +68,7 @@ export class JobConfigurationComponent {
         const ref = this.sidebarManager.open(`edit-job-metadata-${id}`, EditMetadataFormComponent);
         ref.component.metadata = this.job.metadata;
         ref.component.save = (metadata) => {
-            return this.jobService.patch(id, new JobPatchDto({ metadata })).cascade(() => this.jobService.get(id));
+            return this.jobService.patch(id, new JobPatchDto({ metadata })).flatMap(() => this.jobService.get(id));
         };
     }
 

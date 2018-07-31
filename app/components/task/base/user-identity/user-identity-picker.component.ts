@@ -78,8 +78,8 @@ export class UserIdentityComponent implements OnChanges, OnDestroy {
         if (value) {
             const options = this.options;
             let picked;
-            if (value.userName) {
-                picked = options.filter(x => x.identity.userName === value.userName).first();
+            if (value.username) {
+                picked = options.filter(x => x.identity.username === value.username).first();
             } else if (value.autoUser) {
                 picked = options.filter(x => {
                     return value.autoUser
@@ -148,7 +148,7 @@ export class UserIdentityComponent implements OnChanges, OnDestroy {
             }
             return {
                 label,
-                identity: { userName: x.name },
+                identity: { username: x.name },
             };
         });
         this.options = options.concat(defaultUsers);

@@ -11,7 +11,11 @@ bl-pool-nodes-preview {
     }
 
     &.resize-error {
-        color: map-get($danger, 500);
+        color: $danger-color;
         font-weight: bold;
+    }
+
+    .fa {
+        margin-right: 2px;
     }
 }

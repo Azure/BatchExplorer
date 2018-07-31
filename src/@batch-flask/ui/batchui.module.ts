@@ -5,6 +5,7 @@ import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
 // components
+import { WorkspaceModule } from "@batch-flask/ui/workspace";
 import { AdvancedFilterModule } from "./advanced-filter";
 import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
@@ -18,13 +19,14 @@ import { ContextMenuModule } from "./context-menu";
 import { DatetimePickerComponent } from "./datetime-picker";
 import { DialogsModule } from "./dialogs";
 import { DropdownModule } from "./dropdown";
-import { DurationPickerComponent } from "./duration-picker";
+import { DurationPickerModule } from "./duration-picker";
 import { EditorModule } from "./editor";
 import { ElectronModule } from "./electron";
 import { EntityCommandsListModule } from "./entity-commands-list";
 import { FocusSectionModule } from "./focus-section";
 import { FormModule } from "./form";
 import { GraphsModule } from "./graphs";
+import { I18nUIModule } from "./i18n";
 import { IconComponent } from "./icon";
 import { InfoBoxModule } from "./info-box";
 import {
@@ -39,6 +41,7 @@ import { QuickListModule } from "./quick-list";
 import { QuotasModule } from "./quotas";
 import { ScrollableModule } from "./scrollable";
 import { SelectModule } from "./select";
+import { ServerErrorModule } from "./server-error";
 import { SidebarModule } from "./sidebar";
 import { SimpleDialogComponent } from "./simple-dialog";
 import { SplitPaneModule } from "./split-pane";
@@ -62,9 +65,11 @@ const modules = [
     ContextMenuModule,
     DialogsModule,
     DropdownModule,
+    DurationPickerModule,
     EditorModule,
     EntityCommandsListModule,
     FocusSectionModule,
+    I18nUIModule,
     InfoBoxModule,
     LoadingModule,
     MetricsMonitorModule,
@@ -79,6 +84,7 @@ const modules = [
     TagsModule,
     FormModule,
     QuotasModule,
+    ServerErrorModule,
     ScrollableModule,
     SelectModule,
     SplitPaneModule,
@@ -86,6 +92,7 @@ const modules = [
     VirtualScrollModule,
     VTabsModule,
     ElectronModule,
+    WorkspaceModule,
 ];
 
 // Add subcomponnent not in a module here
@@ -96,7 +103,6 @@ const components = [
     TimespanComponent,
     EntityDetailsListComponent,
     DatetimePickerComponent,
-    DurationPickerComponent,
     IconComponent,
     SimpleDialogComponent,
     DeleteSelectedItemsDialogComponent,

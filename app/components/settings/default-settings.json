@@ -3,7 +3,7 @@
   "fileTypes": {
     "log": ["txt", "log"],
     "image":  ["png", "jpg", "gif", "svg"],
-    "code": ["json", "ts2", "js", "java", "cs", "cpp", "h", "hpp", "py", "xml", "sh", "cmd", "bat", "yaml", "yml", "ts", "ps1"]
+    "code": ["json", "ts2", "js", "java", "cs", "cpp", "h", "hpp", "py", "xml", "sh", "cmd", "bat", "yaml", "yml", "ts", "ps1", "html", "css", "scss"]
   },
 
   // Default view for the configuration tab of pool, job, task, etc. Can be [pretty,json]
@@ -12,9 +12,18 @@
   // List of subscription pattern to ignore(e.g. ["other-subscription*"])
   "subscription.ignore": [],
 
-  // Name of the container batchlabs will use to upload resource files when drag and drop
-  "storage.default-upload-container": "batchlabs-input",
+  // Name of the container BatchExplorer will use to upload resource files when drag and drop
+  "storage.default-upload-container": "batch-explorer-input",
 
   // If the app should automatically update when quiting
-  "auto-update-on-quit": true
+  "auto-update-on-quit": true,
+
+  // Default powershell on windows, terminal.app on darwin, ...
+  "terminal.external": "default",
+
+  // Default username to connect to a remote node
+  "node-connect.default-username": "batchlabs-user",
+
+  // Branch to be used when loading data from github(This is mostly for experimenting with new NCJ templates)
+  "github-data.source.branch": "master"
 }

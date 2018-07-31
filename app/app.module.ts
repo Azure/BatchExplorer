@@ -28,11 +28,11 @@ import { SettingsModule } from "app/components/settings";
 import { TaskModule } from "app/components/task/task.module";
 
 // unhandled application error handler
-import { BatchLabsErrorHandler } from "app/error-handler";
+import { BatchExplorerErrorHandler } from "app/error-handler";
 
 // services
 import { HttpModule } from "@angular/http";
-import { MaterialModule } from "@batch-flask/core";
+import { MaterialModule, TranslationsLoaderService } from "@batch-flask/core";
 import { CommonModule } from "app/components/common";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
@@ -48,13 +48,13 @@ import {
     AdalService,
     AppInsightsApiService,
     AppInsightsQueryService,
+    AppTranslationsLoaderService,
     ApplicationService,
     ArmHttpService,
     AuthorizationHttpService,
     AutoscaleFormulaService,
     AzureHttpService,
-    BatchClientService,
-    BatchLabsService,
+    BatchExplorerService,
     CacheDataService,
     CertificateService,
     CommandService,
@@ -73,9 +73,12 @@ import {
     NcjSubmitService,
     NcjTemplateService,
     NetworkConfigurationService,
+    NodeConnectService,
     NodeService,
     NodeUserService,
     PinnedEntityService,
+    PoolNodeCountService,
+    PoolOsService,
     PoolService,
     PredefinedFormulaService,
     PricingService,
@@ -125,6 +128,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
+        { provide: TranslationsLoaderService, useClass: AppTranslationsLoaderService },
         AccountService,
         AdalService,
         AppInsightsApiService,
@@ -135,13 +139,13 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         AzureHttpService,
         ArmHttpService,
         AuthorizationHttpService,
-        BatchClientService,
-        BatchLabsService,
+        BatchExplorerService,
         CacheDataService,
         CertificateService,
         CommandService,
         CommonModule,
         ComputeService,
+        NodeConnectService,
         FileService,
         FileSystemService,
         GithubDataService,
@@ -161,6 +165,8 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         PinnedEntityService,
         PollService,
         PoolService,
+        PoolNodeCountService,
+        PoolOsService,
         PricingService,
         QuotaService,
         PythonRpcService,
@@ -180,7 +186,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         VmSizeService,
         PredefinedFormulaService,
         ...graphApiServices,
-        { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
+        { provide: ErrorHandler, useClass: BatchExplorerErrorHandler },
     ],
 })
 export class AppModule { }

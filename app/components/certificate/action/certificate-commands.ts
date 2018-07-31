@@ -3,7 +3,7 @@ import { COMMAND_LABEL_ICON, ElectronRemote, EntityCommand, EntityCommands, Perm
 
 import { Certificate, CertificateState } from "app/models";
 import { CertificateService, FileSystemService, PinnedEntityService } from "app/services";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 
 @Injectable()
 export class CertificateCommands extends EntityCommands<Certificate> {
@@ -21,6 +21,9 @@ export class CertificateCommands extends EntityCommands<Certificate> {
         super(
             injector,
             "Certificate",
+            {
+                feature: "certificate.action",
+            },
         );
 
         this._buildCommands();
@@ -36,6 +39,7 @@ export class CertificateCommands extends EntityCommands<Certificate> {
 
     private _buildCommands() {
         this.delete = this.simpleCommand({
+            name: "delete",
             ...COMMAND_LABEL_ICON.Delete,
             action: (certificate: Certificate) => this.certificateService.delete(certificate.id),
             enabled: (certificate) => certificate.state !== CertificateState.deleting,
@@ -43,6 +47,7 @@ export class CertificateCommands extends EntityCommands<Certificate> {
         });
 
         this.reactivate = this.simpleCommand({
+            name: "reactivate",
             ...COMMAND_LABEL_ICON.Reactivate,
             action: (certificate) => this.certificateService.cancelDelete(certificate.id),
             enabled: (certificate) => certificate.state === CertificateState.deletefailed,
@@ -53,6 +58,7 @@ export class CertificateCommands extends EntityCommands<Certificate> {
         });
 
         this.exportAsJSON = this.simpleCommand({
+            name: "exportAsJSON",
             ...COMMAND_LABEL_ICON.ExportAsJSON,
             action: (certificate) => this._exportAsJSON(certificate),
             multiple: false,
@@ -61,6 +67,7 @@ export class CertificateCommands extends EntityCommands<Certificate> {
         });
 
         this.pin = this.simpleCommand({
+            name: "pin",
             label: (certificate: Certificate) => {
                 return this.pinnedEntityService.isFavorite(certificate)
                 ? COMMAND_LABEL_ICON.UnpinFavoriteLabel : COMMAND_LABEL_ICON.PinFavoriteLabel;

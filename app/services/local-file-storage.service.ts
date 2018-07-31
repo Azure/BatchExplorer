@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { log } from "@batch-flask/utils";
-import { BatchLabsService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-labs.service";
 import { LocalFileStorage as NodeLocalFileStorage } from "client/core";
 
 /**
@@ -14,8 +14,8 @@ import { LocalFileStorage as NodeLocalFileStorage } from "client/core";
 export class LocalFileStorage {
     private _localStorage: NodeLocalFileStorage;
 
-    constructor(batchLabs: BatchLabsService) {
-        this._localStorage = batchLabs.getLocalFileStorage();
+    constructor(batchExplorer: BatchExplorerService) {
+        this._localStorage = batchExplorer.getLocalFileStorage();
 
     }
 

@@ -24,7 +24,7 @@ bl-table {
         }
 
         &.no-scroll {
-            border-bottom: 1px solid $athensGrey;
+            border-bottom: 1px solid $border-color;
         }
     }
 
@@ -72,17 +72,16 @@ bl-table {
     }
 
     bl-row-render {
+        color: $primary-text;
+
         &:not(:last-child) {
-            border-bottom: 1px solid $athensGrey;
+            border-bottom: 1px solid $border-color;
         }
         height: $table-row-height;
 
         &.selected {
-            background-color: map-get($primary, 100);
-
-            p {
-                color: $mineShaftGray;
-            }
+            background-color: $primary-color-light;
+            color: $card-background;
 
             .checkbox {
                 border-color: $secondary-text;
@@ -90,29 +89,26 @@ bl-table {
         }
 
         &.focused {
-            outline: 2px dashed map-get($primary, 200);
+            outline: 2px dashed $primary-color;
             outline-offset: -2px;
         }
 
-        &.conceal {
-            opacity: 0.3;
-        }
-
         &.drop-target {
-            background: $altoGray;
+            background: $selection-color;
         }
 
         &:hover:not(.selected) {
-            background-color: $altoGray;
+            background-color: $selection-color;
         }
 
         &:last-child {
-            border-bottom: 1px $athensGrey solid;
+            border-bottom: 1px $border-color solid;
         }
     }
 
     .bl-table-cell,
     bl-table-head-cell {
+        position: relative;
         vertical-align: middle;
         padding: 0 5px;
         overflow: hidden;
@@ -148,12 +144,13 @@ bl-table {
         white-space: nowrap;
         user-select: none;
 
-
         > * {
             display: inline;
         }
+
         &.sortable {
             cursor: pointer;
+
             .sort-icon {
                 color: $main-background;
             }
@@ -165,6 +162,7 @@ bl-table {
 
         &.sorting {
             color: $primary-color;
+
             > .sort-icon {
                 color: $primary-color;
             }

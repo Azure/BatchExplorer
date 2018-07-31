@@ -1,50 +1,72 @@
-import { Injectable, NgZone } from "@angular/core";
+import { Injectable, NgZone, OnDestroy } from "@angular/core";
 import { FSWatcher } from "chokidar";
 import * as path from "path";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { FileSystemService } from "app/services/fs.service";
 import { log } from "app/utils";
-import { BatchLabsService } from "../batch-labs.service";
+import { BatchExplorerService } from "../batch-labs.service";
+import { SettingsService } from "../settings.service";
 import { Theme } from "./theme.model";
 
 /**
  * Service handling theme selection
  */
 @Injectable()
-export class ThemeService {
+export class ThemeService implements OnDestroy {
+    public baseTheme = "classic";
     public defaultTheme = "classic";
     public currentTheme: Observable<Theme>;
-    private _currentTheme = new BehaviorSubject(null);
+    private _currentTheme = new BehaviorSubject<Theme>(null);
+    private _currentThemeName = null;
     private _watcher: FSWatcher;
     private _themesLoadPath: string[];
+    private _baseThemeDefinition;
+    private _subs: Subscription[] = [];
 
     constructor(
         private fs: FileSystemService,
         private notificationService: NotificationService,
+        private settingsService: SettingsService,
         private zone: NgZone,
-        batchLabs: BatchLabsService) {
+        batchExplorer: BatchExplorerService) {
+
+        (window as any).setTheme = (val) => {
+            this.setTheme(val);
+        };
+
         this.currentTheme = this._currentTheme.filter(x => x !== null);
-        this.currentTheme.subscribe((theme) => {
+        this._subs.push(this.currentTheme.subscribe((theme) => {
             this._applyTheme(theme);
-        });
+        }));
+
+        this._subs.push(this.settingsService.settingsObs.subscribe((settings) => {
+            const themeName = settings.theme || this.defaultTheme;
+            this.setTheme(themeName);
+        }));
 
         this._themesLoadPath = [
-            path.join(batchLabs.resourcesFolder, "data", "themes"),
+            path.join(batchExplorer.resourcesFolder, "data", "themes"),
             path.join(fs.commonFolders.userData, "themes"),
         ];
     }
 
-    public init() {
-        this.setTheme(this.defaultTheme);
+    public async init() {
+        this._baseThemeDefinition = await this._loadTheme(this.baseTheme);
+    }
+
+    public ngOnDestroy() {
+        this._subs.forEach(x => x.unsubscribe());
     }
 
     public async setTheme(name: string) {
+        if (this._currentThemeName === name) { return; }
+        this._currentThemeName = name;
         const theme = await this._loadTheme(name);
-        this._currentTheme.next(theme);
+        this._setTheme(theme);
     }
 
     public async findThemeLocation(name: string): Promise<string> {
@@ -83,6 +105,11 @@ export class ThemeService {
         }
     }
 
+    private _setTheme(theme: Theme) {
+        const computedTheme = new Theme({} as any).merge(this._baseThemeDefinition).merge(theme);
+        this._currentTheme.next(computedTheme);
+    }
+
     private _notifyErrorLoadingTheme(message: string) {
         this.zone.run(() => {
             this.notificationService.warn(`Error loading theme file`, message);
@@ -95,18 +122,20 @@ export class ThemeService {
         }
         this._watcher = this.fs.watch(filePath);
         this._watcher.on("change", async () => {
-            log.info("[BatchLabs] Theme file updated. Reloading theme.");
+            log.info("[BatchExplorer] Theme file updated. Reloading theme.");
             const theme = await this._loadThemeAt(filePath);
             this.zone.run(() => {
-                this._currentTheme.next(theme);
+                this._setTheme(theme);
             });
         });
     }
 
-    private _applyTheme(theme: Theme) {
+    private async _applyTheme(theme: Theme) {
         for (const entry of theme.asCss()) {
             this._applyCss(entry);
         }
+        const monaco = await import("monaco-editor");
+        monaco.editor.setTheme(theme.editor);
     }
 
     private _applyCss({ key, value }) {

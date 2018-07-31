@@ -47,6 +47,7 @@ export class PinnedEntityService {
         if (this.isFavorite(entity)) {
             return Observable.of(true);
         }
+
         const subject = new AsyncSubject();
         const favourite: PinnableEntity = {
             id: entity.id,
@@ -68,7 +69,7 @@ export class PinnedEntityService {
         return subject.asObservable();
     }
 
-    public unPinFavorite(entity: NavigableRecord) {
+    public unPinFavorite(entity: NavigableRecord | PinnableEntity) {
         if (!this.isFavorite(entity)) {
             return;
         }
@@ -79,16 +80,19 @@ export class PinnedEntityService {
         this._saveAccountFavorites();
     }
 
-    public getEntityType(entity: NavigableRecord): PinnedEntityType {
+    public getEntityType(entity: NavigableRecord | PinnableEntity): PinnedEntityType {
         for (const [type, cls] of pinnedTypeMap) {
             if (entity instanceof cls) {
                 return type as any;
             }
         }
-        return null;
+
+        /* fallback, casting pinnable as a PinnableEntity */
+        const pinnable = entity as PinnableEntity;
+        return pinnable ? pinnable.pinnableType : null;
     }
 
-    public isFavorite(entity: NavigableRecord): boolean {
+    public isFavorite(entity: NavigableRecord | PinnableEntity): boolean {
         const id = entity.id.toLowerCase();
         const favorites = this._favorites.getValue();
         const entityType = this.getEntityType(entity);

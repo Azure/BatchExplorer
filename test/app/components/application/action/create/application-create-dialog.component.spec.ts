@@ -293,7 +293,7 @@ describe("ApplicationCreateDialogComponent ", () => {
                     done();
                 },
                 error: (error: ServerError) => {
-                    fail("call should not have failed");
+                    fail(`Call should not have failed ${error}`);
                     done();
                 },
             });

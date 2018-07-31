@@ -10,6 +10,7 @@ export enum NcjParameterExtendedType {
     fileGroupSas = "file-group-sas",
     fileGroupWriteSas = "file-group-write-sas",
     dropDown = "drop-down",
+    jobId = "job-id",
 }
 
 export class NcjParameterWrapper {

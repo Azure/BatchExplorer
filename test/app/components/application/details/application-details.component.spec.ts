@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
-import { BackgroundTaskService, DialogService, NotificationService } from "@batch-flask/ui";
+import { BackgroundTaskService, DialogService, NotificationService, WorkspaceService } from "@batch-flask/ui";
 import { Observable } from "rxjs";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
@@ -104,6 +104,7 @@ describe("ApplicationDetailsComponent", () => {
                 { provide: NotificationService, useValue: null },
                 { provide: BackgroundTaskService, useValue: null },
                 { provide: ApplicationService, useValue: applicationServiceSpy },
+                { provide: WorkspaceService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

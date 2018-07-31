@@ -1,8 +1,10 @@
 import { DebugElement } from "@angular/core";
+import { MouseButton } from "@batch-flask/core";
 
 export class FakeMouseEvent {
     public stopImmediatePropagation: jasmine.Spy;
     public stopPropagation: jasmine.Spy;
+    public preventDefault: jasmine.Spy;
     public shiftKey = false;
     public ctrlKey = false;
     public button: number;
@@ -10,6 +12,7 @@ export class FakeMouseEvent {
     constructor(attrs: any) {
         this.stopImmediatePropagation = jasmine.createSpy("stopImmediatePropagation");
         this.stopPropagation = jasmine.createSpy("stopPropagation");
+        this.preventDefault = jasmine.createSpy("preventDefault");
         Object.assign(this, attrs);
     }
 }
@@ -19,9 +22,9 @@ export class FakeMouseEvent {
  */
 // tslint:disable-next-line:variable-name
 export const ButtonClickEvents = {
-    left: new FakeMouseEvent({ button: 0 }),
-    leftShift: new FakeMouseEvent({ button: 0, shiftKey: true }),
-    leftCtrl: new FakeMouseEvent({ button: 0, ctrlKey: true }),
+    left: new MouseEvent("click", { button: 0 }),
+    leftShift: new MouseEvent("click", { button: 0, shiftKey: true }),
+    leftCtrl: new MouseEvent("click", { button: 0, ctrlKey: true }),
 };
 
 /**
@@ -29,10 +32,10 @@ export const ButtonClickEvents = {
  * @param el: HTMLELement or DebugElement to receive the event
  * @param event: Event to be dispatched
  */
-export function sendEvent(el: DebugElement | HTMLElement, event: Event) {
+export function sendEvent(el: DebugElement | HTMLElement | Node, event: Event) {
     let htmlEl: HTMLElement;
-    if (el instanceof HTMLElement) {
-        htmlEl = el;
+    if (el instanceof HTMLElement || el instanceof Node) {
+        htmlEl = el as any;
     } else {
         htmlEl = el.nativeElement;
     }
@@ -43,46 +46,29 @@ export function sendEvent(el: DebugElement | HTMLElement, event: Event) {
 /**
  * Simulate element click. Defaults to mouse left-button click event.
  */
-export function click(el: DebugElement | HTMLElement | Node, eventObj: any = ButtonClickEvents.left): FakeMouseEvent {
-    if (el instanceof DebugElement) {
-        el.triggerEventHandler("click", eventObj);
-    } else if ((el as any).click) {
-        (el as any).click();
-    } else if (el.dispatchEvent) {
-        const evt = document.createEvent("MouseEvents");
-        evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-        el.dispatchEvent(evt);
-    }
-    return eventObj;
+export function click(el: DebugElement | HTMLElement | Node, button?: MouseButton) {
+    const event =  new MouseEvent("click", { button });
+    sendEvent(el, event);
 }
 
 /**
  * Simulate element dobule click.
  */
 export function dblclick(el: DebugElement | HTMLElement | Node) {
-    if (el instanceof DebugElement) {
-        el.triggerEventHandler("dblclick", new FakeMouseEvent({}));
-    } else if ((el as any).click) {
-        (el as any).click();
-    } else if (el.dispatchEvent) {
-        const evt = document.createEvent("MouseEvents");
-        evt.initMouseEvent("dblclick", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-        el.dispatchEvent(evt);
-    }
+    const event = new MouseEvent("dblclick", {
+        button: 0,
+    });
+    sendEvent(el, event);
 }
+
 /**
  * Simulate element click. Defaults to mouse left-button click event.
  */
 export function rightClick(el: DebugElement | HTMLElement | Node) {
-    if (el instanceof DebugElement) {
-        el.triggerEventHandler("contextmenu", new FakeMouseEvent({}));
-    } else if ((el as any).contextmenu) {
-        (el as any).contextmenu();
-    } else if (el.dispatchEvent) {
-        const evt = document.createEvent("MouseEvents");
-        evt.initMouseEvent("contextmenu", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-        el.dispatchEvent(evt);
-    }
+    const event = new MouseEvent("contextmenu", {
+        button: 0,
+    });
+    sendEvent(el, event);
 }
 
 /**
@@ -111,13 +97,17 @@ export function keydown(el: DebugElement | HTMLElement, key: string) {
 /**
  * Simulate a mousedown event
  */
-export function mousedown(el: DebugElement | HTMLElement) {
-    const event = new MouseEvent("mousedown", { cancelable: true });
-    if (el instanceof HTMLElement) {
-        el.dispatchEvent(event);
-    } else {
-        el.triggerEventHandler("mousedown", event);
-    }
+export function mousedown(el: DebugElement | HTMLElement, button?: MouseButton) {
+    const event = new MouseEvent("mousedown", { cancelable: true, button });
+    sendEvent(el, event);
+}
+
+/**
+ * Simulate a mouseup event
+ */
+export function mouseup(el: DebugElement | HTMLElement, button?: MouseButton) {
+    const event = new MouseEvent("mouseup", { cancelable: true, button });
+    sendEvent(el, event);
 }
 
 export function updateInput(el: DebugElement | HTMLInputElement, value: any) {

@@ -17,6 +17,7 @@ import "./certificate-create-dialog.scss";
 export class CertificateCreateDialogComponent {
     public file: File;
     public form: FormGroup;
+    public title = "Add certificate";
 
     constructor(
         private formBuilder: FormBuilder,

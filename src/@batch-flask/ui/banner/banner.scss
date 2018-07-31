@@ -141,7 +141,7 @@ bl-banner > bl-card {
 }
 
 bl-banner > bl-card.error {
-    @include banner-scheme(map-get($danger, 500), map-get($danger, 800));
+    @include banner-scheme($danger-color, map-get($danger, 800));
     color: $whiteSmoke-darker;
 }
 

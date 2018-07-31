@@ -80,26 +80,33 @@ $success: (
 }
 
 $primary-color:             var(--color-primary);
+$primary-contrast-color:    var(--color-primary-contrast);
 $primary-color-dark:        var(--color-primary-dark);
 $primary-color-light:       var(--color-primary-light);
 
 $danger-color:              var(--color-danger);
+$danger-contrast-color:     var(--color-danger-contrast);
 $danger-color-dark:         var(--color-danger-dark);
 $danger-color-light:        var(--color-danger-light);
 
 $warn-color:                var(--color-warn);
+$warn-contrast-color:       var(--color-warn-contrast);
 $warn-color-dark:           var(--color-warn-dark);
 $warn-color-light:          var(--color-warn-light);
 
 $success-color:             var(--color-success);
+$success-contrast-color:    var(--color-success-contrast);
 $success-color-dark:        var(--color-success-dark);
 $success-color-light:       var(--color-success-light);
 
 $primary-text:              var(--color-text-primary);
 $secondary-text:            var(--color-text-secondary);
 $main-background:           var(--color-main-background);
+$secondary-background:           var(--color-secondary-background);
 $card-background:           var(--color-card-background);
 $outline-color:             var(--color-outline);
+$selection-color:           var(--color-selection);
+$border-color:              var(--color-border);
 
 // Header
 $header-color:              entity-color(header);
@@ -117,5 +124,8 @@ $input-border-color:        var(--color-input-border);
 $input-focus-border-color:  var(--color-input-focus-border);
 
 
-$button-disabled-text-color:     var(--color-button-disabled-text);
+$button-basic-text-color:   var(--color-button-basic-text);
+$button-basic-bg-color:     var(--color-button-basic-bg);
+$button-basic-hover-bg-color:     var(--color-button-basic-hover-bg);
+$button-disabled-text-color:   var(--color-button-disabled-text);
 $button-disabled-bg-color:     var(--color-button-disabled-bg);

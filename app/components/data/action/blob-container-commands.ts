@@ -33,6 +33,9 @@ export class BlobContainerCommands extends EntityCommands<BlobContainer, Storage
         super(
             injector,
             "BlobContainer",
+            {
+                feature: "data.action",
+            },
         );
 
         this._buildCommands();
@@ -48,6 +51,7 @@ export class BlobContainerCommands extends EntityCommands<BlobContainer, Storage
 
     private _buildCommands() {
         this.delete = this.simpleCommand({
+            name: "delete",
             ...COMMAND_LABEL_ICON.Delete,
             action: (container: BlobContainer) => this._deleteFileGroup(container),
             confirm: (containers) => this._confirmDeletion(containers),
@@ -55,6 +59,7 @@ export class BlobContainerCommands extends EntityCommands<BlobContainer, Storage
         });
 
         this.addMoreFiles = this.simpleCommand({
+            name: "add",
             ...COMMAND_LABEL_ICON.AddFile,
             action: (container: BlobContainer) => this._addFilesToFileGroup(container),
             enabled: (container) => container.isFileGroup,
@@ -65,6 +70,7 @@ export class BlobContainerCommands extends EntityCommands<BlobContainer, Storage
         });
 
         this.download = this.simpleCommand({
+            name: "download",
             ...COMMAND_LABEL_ICON.Download,
             action: (container: BlobContainer) => this._download(container),
             multiple: false,
@@ -73,6 +79,7 @@ export class BlobContainerCommands extends EntityCommands<BlobContainer, Storage
         });
 
         this.pin = this.simpleCommand({
+            name: "pin",
             label: (pool: BlobContainer) => {
                 return this.pinnedEntityService.isFavorite(pool)
                     ? COMMAND_LABEL_ICON.UnpinFavoriteLabel : COMMAND_LABEL_ICON.PinFavoriteLabel;

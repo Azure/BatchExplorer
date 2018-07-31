@@ -1,11 +1,14 @@
 
+import { platformDynamicServer } from "@angular/platform-server";
+import { LocaleService, TranslationsLoaderService } from "@batch-flask/core";
+import { log } from "@batch-flask/utils";
+import { ClientTranslationsLoaderService } from "client/core/i18n";
 import { app, protocol } from "electron";
 import { autoUpdater } from "electron-updater";
-
-import { log } from "@batch-flask/utils";
-import { localStorage } from "client/core/local-storage";
 import { Constants } from "./client-constants";
-import { BatchLabsApplication, listenToSelectCertifcateEvent } from "./core";
+import { BatchExplorerClientModule, initializeServices } from "./client.module";
+import { ClientLocaleService, listenToSelectCertifcateEvent } from "./core";
+import { BatchExplorerApplication } from "./core/batch-explorer-application";
 
 function initAutoUpdate() {
     autoUpdater.allowPrerelease = true;
@@ -14,16 +17,16 @@ function initAutoUpdate() {
     autoUpdater.setFeedURL("https://batchlabsdist.blob.core.windows.net/releases");
 }
 
-function setupSingleInstance(batchLabsApp: BatchLabsApplication) {
+function setupSingleInstance(batchExplorerApp: BatchExplorerApplication) {
     if (Constants.isDev) { return; }
     const shouldQuit = app.makeSingleInstance((commandLine) => {
         log.info("Try to open labs again", commandLine);
-        batchLabsApp.openFromArguments(commandLine);
+        batchExplorerApp.openFromArguments(commandLine);
     });
 
     if (shouldQuit) {
-        log.info("There is already an instance of BatchLabs open. Closing this one.");
-        batchLabsApp.quit();
+        log.info("There is already an instance of BatchExplorer open. Closing this one.");
+        batchExplorerApp.quit();
     }
 }
 
@@ -36,37 +39,44 @@ function registerAuthProtocol() {
     });
 }
 
-async function startApplication(batchLabsApp: BatchLabsApplication) {
+async function startApplication(batchExplorerApp: BatchExplorerApplication) {
     initAutoUpdate();
     registerAuthProtocol();
 
     // Uncomment to view why windows don't show up.
-    batchLabsApp.init().then(() => {
-        batchLabsApp.start();
-        // batchLabsApp.debugCrash();
+    batchExplorerApp.init().then(() => {
+        batchExplorerApp.start();
+        // batchExplorerApp.debugCrash();
     });
 }
 
-export async function startBatchLabs() {
+export async function startBatchExplorer() {
     // Those warnings are electron complaining we are loading remote data
     // But this is a false positive when using dev server has it doesn't seem to ignore localhost
     process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true";
-    localStorage.load();
-    const batchLabsApp = new BatchLabsApplication(autoUpdater);
-    setupSingleInstance(batchLabsApp);
+
+    const module = await platformDynamicServer().bootstrapModule(BatchExplorerClientModule);
+    const localeService = module.injector.get(LocaleService) as ClientLocaleService;
+    await localeService.load();
+    const translationLoader = module.injector.get(TranslationsLoaderService) as ClientTranslationsLoaderService;
+    await translationLoader.load();
+    const batchExplorerApp = module.injector.get(BatchExplorerApplication);
+    initializeServices(module.injector);
+
+    setupSingleInstance(batchExplorerApp);
 
     if (app.isReady()) {
-        startApplication(batchLabsApp);
+        startApplication(batchExplorerApp);
     } else {
         app.on("ready", async () => {
-            startApplication(batchLabsApp);
+            startApplication(batchExplorerApp);
         });
     }
 
     listenToSelectCertifcateEvent();
 
     process.on("exit", () => {
-        batchLabsApp.quit();
+        batchExplorerApp.quit();
     });
 
     process.on("SIGINT", () => {

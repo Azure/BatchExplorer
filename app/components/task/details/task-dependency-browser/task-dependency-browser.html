@@ -1,0 +1,23 @@
+<bl-table *ngIf="dependencies.size > 0" [forceBreadcrumb]="true" [data]="dependencies">
+
+    <bl-column name="id">
+        <div *blHeadCellDef>Task ID</div>
+        <div *blCellDef="let dependency">{{dependency.id}}</div>
+    </bl-column>
+
+    <bl-column name="state">
+        <div *blHeadCellDef>State</div>
+        <div *blCellDef="let dependency">
+            <bl-task-state *ngIf="!dependency.loading && dependency.task" [task]="dependency.task"></bl-task-state>
+            <i *ngIf="dependency.loading" class="fa fa-spinner fa-spin cell-spinner"></i>
+        </div>
+    </bl-column>
+
+    <bl-column name="dependsOn">
+        <div *blHeadCellDef>Depends On</div>
+        <div *blCellDef="let dependency">{{dependency.dependsOn}}</div>
+    </bl-column>
+</bl-table>
+<bl-no-item [itemCount]="dependencies.size">
+    <span no-filter>{{'task-dependency-browser.no-dependency' | i18n}}</span>
+</bl-no-item>

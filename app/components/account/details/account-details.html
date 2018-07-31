@@ -2,13 +2,12 @@
     <div code>{{ loadingError.code }}</div>
     <div message [title]="loadingError.message">{{ loadingError.message }}</div>
 </bl-banner>
-
 <bl-loading [status]="data.status">
     <div *ngIf="account">
         <bl-summary-card>
             <div summaryTitle>{{account.name}}</div>
             <div summaryDetails>
-                <div>{{account.properties.accountEndpoint}}</div>
+                <div>https://{{account.properties.accountEndpoint}}</div>
                 <div>{{account.subscription?.displayName}}</div>
             </div>
             <bl-button-group summaryActions>
@@ -25,10 +24,14 @@
         </bl-summary-card>
         <h1 class="section-title">Monitoring</h1>
         <div class="monitor-charts">
-            <bl-monitor-chart chartType="coreCount" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
-            <bl-monitor-chart chartType="failedTask" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
-            <bl-monitor-chart chartType="taskStates" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
-            <bl-monitor-chart class="node-states" chartType="nodeStates" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
+            <bl-monitor-chart class="monitor-chart" chartType="coreCount" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
+            <bl-monitor-chart class="monitor-chart" chartType="failedTask" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
+            <bl-monitor-chart class="monitor-chart" chartType="taskStates" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
+            <bl-monitor-chart class="monitor-chart node-states" chartType="nodeStates" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
+            <div class="monitor-chart current-node-counts">
+                <h2>Current node counts</h2>
+                <bl-pool-state-graph ></bl-pool-state-graph>
+            </div>
         </div>
         <h1 class="section-title">Resources</h1>
         <div class="account-cards">
@@ -81,7 +84,7 @@
                                 </bl-column>
                                 <bl-column name="state" [defaultWidth]="30">
                                     <div *blHeadCellDef>State</div>
-                                    <div *blCellDef="let pool"><i aria-hidden="true" class="fa fa-{{pool.osIconName()}}"></i></div>
+                                    <div *blCellDef="let pool"><bl-pool-os-icon [pool]="pool"></bl-pool-os-icon></div>
                                 </bl-column>
                                 <bl-column name="nodes" [defaultWidth]="60">
                                     <div *blCellDef="let pool"><bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview></div>

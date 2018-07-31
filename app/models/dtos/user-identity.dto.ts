@@ -1,7 +1,7 @@
 import { UserAccountElevationLevel } from "app/models";
 
 export interface UserIdentityDto {
-    userName?: string;
+    username?: string;
     autoUser?: AutoUserDto;
 }
 

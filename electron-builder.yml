@@ -1,5 +1,5 @@
-productName: "BatchLabs"
-appId: "microsoft.azure.batchlabs"
+productName: "BatchExplorer"
+appId: "microsoft.azure.batch-explorer"
 
 # Package electron code into a asar archive. Set to false to debug issues.
 asar: true
@@ -17,13 +17,15 @@ extraResources:
       - "**/*"
   - "ThirdPartyNotices.txt"
   - "data"
+  - "i18n"
   - "node_modules/jschardet/"
 
 protocols:
-  - name: "BatchLabs protocol"
+  - name: "BatchExplorer protocol"
     role: "Viewer"
     schemes:
      - ms-batchlabs
+     - ms-batch-explorer
 
 # Mac OS configuration
 mac:

@@ -5,19 +5,21 @@ bl-toggle-filter-button {
 
     > bl-clickable {
         display: block;
-        color: $scorpion;
         cursor: pointer;
-
+        border-style: solid;
+        border-width: 1px 1px 1px 0;
+        border-color: $border-color;
         font-size: 16px;
-        background: $athensGrey;
+        background: $button-basic-bg-color;
+        color: $button-basic-text-color;
         height: 26px;
         width: 26px;
         position: relative;
-        padding-left: 5px;
-        padding-top: 5px;
+        padding-left: 6px;
+        padding-top: 3px;
 
         &:hover {
-            color: $dusty-grey;
+            background: $button-basic-hover-bg-color;
         }
 
         > .filtering {

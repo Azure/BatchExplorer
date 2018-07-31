@@ -10,6 +10,7 @@ export class TerminateJobCommand extends EntityCommand<Job> {
         const jobService = injector.get(JobService);
 
         super(injector, {
+            name: "terminate",
             ...COMMAND_LABEL_ICON.Terminate,
             action: (job: Job) => jobService.terminate(job.id),
             enabled: (job) => job.state !== JobState.completed,

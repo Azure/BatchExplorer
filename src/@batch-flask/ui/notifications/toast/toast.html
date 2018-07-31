@@ -1,0 +1,11 @@
+<div class="notification-title">{{notification.title}}</div>
+<div class="notification-message">{{notification.message}}</div>
+<div class="separator"></div>
+<div class="actions">
+    <bl-clickable *ngFor="let action of actions;trackBy: trackAction" (do)="performAction($event, action)" class="action">
+        {{action.name}}
+    </bl-clickable>
+</div>
+<bl-clickable class="dismiss-btn" (do)="dismiss()">
+    <i class="fa fa-times"></i>
+</bl-clickable>

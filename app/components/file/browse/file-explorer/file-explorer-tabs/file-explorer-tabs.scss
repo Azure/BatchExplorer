@@ -5,7 +5,7 @@ bl-file-explorer-tabs {
     display: block;
     .tablist {
         height: $tab-height;
-        background: $mercury-grey;
+        background: $secondary-background;
         display: flex;
 
         > .tab {
@@ -16,7 +16,7 @@ bl-file-explorer-tabs {
             white-space: nowrap;
             cursor: pointer;
             padding-left: 10px;
-            color: $dove-grey;
+            color: $secondary-text;
             border-right: 1px solid $border-color;
             user-select: none;
         }
@@ -27,7 +27,7 @@ bl-file-explorer-tabs {
         }
 
         > .tab.active {
-            background: $whitesmoke;
+            background: $main-background;
         }
 
         > .tab .tab-close {
@@ -35,11 +35,11 @@ bl-file-explorer-tabs {
             padding: 0 3px;
 
             > .close-icon {
-                color: $dove-grey;
+                color: $secondary-text;
                 opacity: 0;
 
                 &:hover {
-                    color: $mineshaft-grey;
+                    color: $selection-color;
                 }
             }
 

@@ -3,21 +3,19 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Batch Labs</title>
+    <title>Batch Explorer</title>
 
     <% if (htmlWebpackPlugin.options.metadata.isDevServer) { %>
         <base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
     <% } %>
 
-    <script>
-    // console.time("Load scripts");
+    <!-- <script>
+    console.time("Load scripts");
 
-    // window.onload = function() {
-    //    console.timeEnd("Render");
-
-    //     console.profileEnd();
-    // };
-    </script>
+    window.onload = function() {
+       console.timeEnd("Load scripts");
+    };
+    </script> -->
 </head>
 
 <body>

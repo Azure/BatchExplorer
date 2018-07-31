@@ -31,7 +31,7 @@ bl-browse-layout {
     }
 
     .quicksearch {
-        margin: 0 10px;
+        margin: 0 10px 0 0;
     }
 
     .context-button-bar {
@@ -152,19 +152,12 @@ bl-browse-layout {
     > input {
         flex: 1 0 auto;
         padding: 5px;
-        color: $emperor-grey;
         font-size: 1.1em;
         height: 26px;
-
-        border: 1px solid $border-color;
 
         &:focus {
             outline: none;
         }
-    }
-
-    bl-toggle-filter-button {
-
     }
 
     bl-select {

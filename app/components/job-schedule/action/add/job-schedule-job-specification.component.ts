@@ -8,8 +8,7 @@ import {
     NG_VALUE_ACCESSOR,
     Validators,
 } from "@angular/forms";
-import { Subscription } from "rxjs";
-import { Observable } from "rxjs/Observable";
+import { Observable, Subscription } from "rxjs";
 
 import { RangeValidator } from "@batch-flask/ui/validation";
 import { AllTasksCompleteAction, TaskFailureAction, VirtualMachineConfiguration } from "app/models";

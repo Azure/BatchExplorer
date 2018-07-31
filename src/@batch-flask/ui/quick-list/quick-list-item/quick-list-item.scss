@@ -11,23 +11,33 @@
     white-space: nowrap;
 
     &.selected {
-        background-color: map-get($primary, 100);
+        background-color: $primary-color-light;
 
-        p {
-            color: $mineShaftGray;
+        [bl-quick-list-item-title] {
+            font-size: 14px;
+            color: $card-background;
+        }
+
+        [bl-quick-list-item-field] {
+            color: $card-background;
         }
     }
 
     &.focused {
-        background-color: map-get($primary, 200);
-    }
-
-    &.conceal {
-        opacity: 0.3;
+        background-color: $primary-color;
     }
 
     &:hover:not(.selected) {
-        background-color: $altoGray;
+        background-color: $selection-color;
+    }
+
+    [bl-quick-list-item-title] {
+        font-size: 14px;
+        color: $primary-text;
+    }
+
+    [bl-quick-list-item-field] {
+        color: $secondary-text;
     }
 
     .quick-list-details {
@@ -37,14 +47,6 @@
         text-overflow: ellipsis;
         min-width: 0;
 
-        [bl-quick-list-item-title] {
-            font-size: 14px;
-            color: $primary-text;
-        }
-
-        [bl-quick-list-item-field] {
-            color: $secondary-text;
-        }
 
         [bl-quick-list-item-title], [bl-quick-list-item-field] {
             display: flex;
@@ -79,7 +81,7 @@
             width: 100%;
 
             &.warning {
-                background-color: map-get($danger, 500);
+                background-color: $danger-color;
             }
 
             &.lightaccent {

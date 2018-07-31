@@ -3,40 +3,27 @@ const config = require("./webpack.config.base");
 const webpack = require("webpack");
 const helpers = require("./helpers");
 const { commonRules, defineEnv } = require("./webpack.common");
-const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
-
+const  ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const ENV = "test";
 
 // We need to remove the app entry from the default config as this is defined in karma
 delete config.entry;
-
+config.mode = "development";
 config.devtool = "inline-source-map";
 
 // Karma webpack doesn't support CommonChunkPlugin yet https://github.com/webpack-contrib/karma-webpack/issues/24
 config.plugins = [
     defineEnv(ENV),
+    new ForkTsCheckerWebpackPlugin(),
 ];
 config.module.rules = config.module.rules = [
     {
         test: /\.ts$/,
         use: [
             {
-                loader: "awesome-typescript-loader",
-                query: {
-                    /**
-                     * Use inline sourcemaps for "karma-remap-coverage" reporter
-                     */
-                    sourceMap: false,
-                    inlineSourceMap: true,
-                    compilerOptions: {
-
-                        /**
-                         * Remove TypeScript helpers to be injected
-                         * below by DefinePlugin
-                         */
-                        removeComments: true
-
-                    }
+                loader: "ts-loader",
+                options: {
+                    transpileOnly: true
                 },
             },
             "angular2-template-loader",

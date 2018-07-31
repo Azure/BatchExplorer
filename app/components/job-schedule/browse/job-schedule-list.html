@@ -41,10 +41,9 @@
     </bl-table>
 </bl-focus-section>
 
-<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>
-
 <bl-no-item [itemCount]="jobSchedules.size" [filter]="filter" [status]="status">
     <i icon class="fa fa-calendar"></i>
     <span no-filter>No job schedules</span>
     <span with-filter>No job schedules match this filter</span>
 </bl-no-item>
+<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="status === LoadingStatus.Error"></bl-server-error>

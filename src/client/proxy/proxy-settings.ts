@@ -2,11 +2,13 @@ import {
     ProxyCredentials, ProxySetting, ProxySettings,
 } from "get-proxy-settings";
 
+import { Inject, Injectable, forwardRef } from "@angular/core";
 import { log } from "@batch-flask/utils";
-import { BatchLabsApplication } from "client/core";
-import { LocalStorage } from "client/core/local-storage";
+import { BatchExplorerApplication } from "client/core/batch-explorer-application";
+import { LocalDataStore } from "client/core/local-data-store";
 import { Constants } from "common";
 import { BehaviorSubject } from "rxjs";
+import { filter, map, take } from "rxjs/operators";
 
 export interface ProxySettingConfiguration {
     settings: ProxySettings;
@@ -18,9 +20,12 @@ function allowInsecureRequest() {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 }
 
+@Injectable()
 export class ProxySettingsManager {
     private _settings = new BehaviorSubject<ProxySettingConfiguration>(undefined);
-    constructor(private batchLabsApp: BatchLabsApplication, private storage: LocalStorage) {
+    constructor(
+        @Inject(forwardRef(() => BatchExplorerApplication)) private batchExplorerApp: BatchExplorerApplication,
+        private storage: LocalDataStore) {
     }
 
     public async init() {
@@ -28,25 +33,29 @@ export class ProxySettingsManager {
     }
 
     public get settings(): Promise<ProxySettings> {
-        return this._settings.filter(x => x !== undefined).take(1).map(x => x.settings).toPromise();
+        return this._settings.pipe(
+            filter(x => x !== undefined),
+            take(1),
+            map(x => x.settings),
+        ).toPromise();
     }
 
     public async configureManualy(): Promise<ProxySettings> {
         const config = this._settings.value;
-        const settings = await this.batchLabsApp.askUserForProxyConfiguration(config && config.settings);
+        const settings = await this.batchExplorerApp.askUserForProxyConfiguration(config && config.settings);
         this._settings.next({
             settings,
             credentials: null,
         });
         await this._saveProxySettings();
-        this.batchLabsApp.restart();
+        this.batchExplorerApp.restart();
         return settings;
     }
 
     public async credentials(): Promise<ProxyCredentials> {
         const current = this._currentCredentials;
         if (current) { return current; }
-        const credentials = await this.batchLabsApp.askUserForProxyCredentials();
+        const credentials = await this.batchExplorerApp.askUserForProxyCredentials();
 
         this._settings.next({
             settings: this._settings.value && this._settings.value.settings,

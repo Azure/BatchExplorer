@@ -1,0 +1,23 @@
+@import "app/styles/variables";
+
+bl-pool-list {
+    bl-pool-os-icon {
+        margin-right: 4px;
+    }
+
+    [bl-quick-list-item-preview] {
+        position: relative;
+        > bl-pool-state-graph {
+            position: absolute;
+            height: 100%;
+            width: 40px;
+            right: 0;
+        }
+    }
+
+    bl-table {
+        bl-pool-state-graph {
+            height: 20px;
+        }
+    }
+}

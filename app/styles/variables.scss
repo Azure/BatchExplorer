@@ -27,17 +27,8 @@ $dusty-grey         :  #9e9e9e;
 $generic-grey       :  #757575;
 $genericGray        :  $generic-grey;
 $dove-grey          :  #666666;
-$scorpion           :  #5b5b5b;
 $emperor-grey       :  #535353;
 $mineshaft-grey     :  #333333;
-$mineShaftGray      :  $mineshaft-grey;
-
-// Status Colours
-//---------------------------------------------
-$warningText        :  map-get($warn, 500);
-$errorText          :  map-get($danger, 500);
-$infoText           :  map-get($primary, 500);
-$successText        :  map-get($success, 500);
 
 // Text
 //---------------------------------------------
@@ -45,7 +36,7 @@ $headings-color             : map-get($primary, 700);
 $link-color                 : map-get($primary, 700);
 $link-alt-color             : map-get($primary, 300);
 $link-color-hover           : map-get($primary, 800);
-$validation-error-color     : map-get($danger, 500);
+$validation-error-color     : $danger-color;
 
 
 $font-size-base     : 13px;
@@ -56,7 +47,6 @@ $baseLineHeight     : 1.4em;
 $headingsFontWeight : semilight;
 $headingWeightBold  : semibold;
 $headingsLineHeight : $baseLineHeight;
-$textColor          : $mineShaftGray;
 $main-font          : -apple-system,BlinkMacSystemFont,Segoe WPC,Segoe UI,HelveticaNeue-Light,Ubuntu,Droid Sans,sans-serif;
 
 
@@ -71,7 +61,6 @@ $h6FontSize         : $font-size-base;
 $listview-background :  white;
 $footer-background: map-get($primary, 200);
 $navigation-text: $whiteSmoke;
-$border-color: $alto;
 
 // Layout sizing
 //---------------------------------------------

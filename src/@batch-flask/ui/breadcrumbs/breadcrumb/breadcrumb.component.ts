@@ -28,7 +28,7 @@ export class BreadcrumbComponent extends ClickableComponent {
     @HostBinding("class.noselect") public readonly noselect = true;
 
     constructor(injector: Injector, private breadcrumbService: BreadcrumbService) {
-        super(injector);
+        super(injector, null);
     }
 
     public handleAction(event) {

@@ -1,8 +1,10 @@
 export * from "./electron";
 export * from "./background-task";
 export * from "./buttons";
+export * from "./charts";
 export * from "./dialogs";
 export * from "./dropdown";
+export * from "./i18n";
 export * from "./metrics-monitor";
 export * from "./notifications";
 export * from "./loading";
@@ -15,3 +17,4 @@ export * from "./permission";
 export * from "./vtabs";
 export * from "./entity-commands";
 export * from "./table";
+export * from "./workspace";

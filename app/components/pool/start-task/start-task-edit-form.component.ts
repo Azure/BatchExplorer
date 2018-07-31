@@ -7,6 +7,7 @@ import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Pool } from "app/models";
 import { PoolPatchDto } from "app/models/dtos";
 import { NodeService, PoolService } from "app/services";
+import { flatMap, share } from "rxjs/operators";
 
 @Component({
     selector: "bl-start-task-edit-form",
@@ -67,20 +68,25 @@ export class StartTaskEditFormComponent {
                 startTask: startTask,
             }));
         } else {
-            obs = this.poolService.get(this.pool.id).cascade((pool) => {
-                const poolData = pool.toJS();
-                return this.poolService.replaceProperties(id, new PoolPatchDto({
-                    applicationPackageReferences: poolData.applicationPackageReferences || [],
-                    certificateReferences: poolData.certificateReferences || [],
-                    metadata: poolData.metadata || [],
-                }));
-            });
+            // Remove start task
+            obs = this.poolService.get(this.pool.id).pipe(
+                flatMap((pool) => {
+                    const poolData = pool.toJS();
+                    return this.poolService.replaceProperties(id, new PoolPatchDto({
+                        applicationPackageReferences: poolData.applicationPackageReferences || [],
+                        certificateReferences: poolData.certificateReferences || [],
+                        metadata: poolData.metadata || [],
+                    }));
+                }),
+            );
         }
-        return obs.cascade(() => {
-            this._notifySuccess();
-            return this.poolService.get(id); // Refresh the pool
-
-        });
+        return obs.pipe(
+            flatMap(() => {
+                this._notifySuccess();
+                return this.poolService.get(id); // Refresh the pool
+            }),
+            share(),
+        );
     }
 
     public reboot() {

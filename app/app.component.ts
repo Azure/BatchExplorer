@@ -1,18 +1,17 @@
 import { Component, OnInit } from "@angular/core";
 import { MatIconRegistry } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
-import { Observable } from "rxjs";
+import { combineLatest } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
-import { IpcService } from "@batch-flask/ui";
-import { MonacoLoader } from "@batch-flask/ui/editor";
+import { IpcService, Workspace, WorkspaceService } from "@batch-flask/ui";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
     AccountService, AuthorizationHttpService, AutoscaleFormulaService,
-    BatchLabsService, CommandService, NavigatorService, NcjTemplateService,
-    NodeService, PredefinedFormulaService, PricingService, PythonRpcService, SSHKeyService,
-    SettingsService, SubscriptionService, ThemeService, VmSizeService,
+    BatchExplorerService, CommandService, GithubDataService, NavigatorService,
+    NcjTemplateService, PoolOsService, PredefinedFormulaService, PricingService,
+    PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
 } from "app/services";
 
 @Component({
@@ -32,23 +31,26 @@ export class AppComponent implements OnInit {
         private accountService: AccountService,
         private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
-        private nodeService: NodeService,
+        private githubDataService: GithubDataService,
+        private poolOsService: PoolOsService,
         private sshKeyService: SSHKeyService,
-        batchLabsService: BatchLabsService,
+        batchExplorerService: BatchExplorerService,
         pythonRpcService: PythonRpcService,
         private vmSizeService: VmSizeService,
         themeService: ThemeService,
         private route: ActivatedRoute,
-        monacoLoader: MonacoLoader,
         permissionService: PermissionService,
         authHttpService: AuthorizationHttpService,
         ipc: IpcService,
         private pricingService: PricingService,
         private ncjTemplateService: NcjTemplateService,
         private predefinedFormulaService: PredefinedFormulaService,
+        private workspaceService: WorkspaceService,
     ) {
         this.autoscaleFormulaService.init();
         this.settingsService.init();
+        this._initWorkspaces();
+        this.githubDataService.init();
         this.sshKeyService.init();
         this.commandService.init();
         this.pricingService.init();
@@ -59,13 +61,15 @@ export class AppComponent implements OnInit {
         pythonRpcService.init();
         this.predefinedFormulaService.init();
         themeService.init();
-        monacoLoader.init(batchLabsService.rootPath);
 
-        Observable
-            .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
-            .subscribe((loadedArray) => {
-                this.isAppReady = loadedArray[0] && loadedArray[1];
-            });
+        combineLatest(
+            accountService.accountLoaded,
+            settingsService.hasSettingsLoaded,
+            workspaceService.haveWorkspacesLoaded,
+        )
+        .subscribe((loadedArray) => {
+            this.isAppReady = loadedArray[0] && loadedArray[1];
+        });
 
         // Wait for the first account to be loaded.
         accountService.currentAccount.filter(x => Boolean(x)).first().subscribe((x) => {
@@ -77,6 +81,7 @@ export class AppComponent implements OnInit {
         this.route.queryParams.subscribe(({ fullscreen }) => {
             this.fullscreen = Boolean(fullscreen);
         });
+
         permissionService.setUserPermissionProvider(() => {
             return authHttpService.getResourcePermission();
         });
@@ -93,6 +98,15 @@ export class AppComponent implements OnInit {
      * Preload some data needed.
      */
     private _preloadData() {
-        this.nodeService.listNodeAgentSkus().fetchAll();
+        this.poolOsService.refresh();
+    }
+
+    private async _initWorkspaces() {
+        const adminWorkspace = JSON.parse(require("app/components/workspace/json-templates/admin-workspace.json"));
+        const endUserWorkspace = JSON.parse(require("app/components/workspace/json-templates/end-user-workspace.json"));
+        this.workspaceService.init([
+            new Workspace({ ...adminWorkspace }),
+            new Workspace({ ...endUserWorkspace }),
+        ]);
     }
 }

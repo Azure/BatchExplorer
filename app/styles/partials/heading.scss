@@ -24,7 +24,7 @@
     }
 
     .error {
-        color: map-get($danger, 500);
+        color: $danger-color;
         padding: 0 5px;
     }
 

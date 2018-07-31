@@ -1,0 +1,82 @@
+@import "app/styles/variables";
+
+bl-toast {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-width: 250px;
+    cursor: pointer;
+    font-size: 13px;
+    margin: 10px 0 0;
+    padding: 10px;
+    transition: 0.3s ease-in-out;
+    color: rgba(250, 251, 255, 0.95);
+
+    animation-name: animScale;
+    animation-duration: 0.25s;
+    box-shadow: 1px 1px 5px 0 $alto;
+    pointer-events: all;
+
+    > .separator {
+        flex: 1;
+    }
+
+    &.success {
+        background-color: map-get($success, 500);
+    }
+
+    &.error {
+        background-color: map-get($danger, 300);
+    }
+
+    &.info {
+        color: $whitesmoke;
+        background-color: map-get($primary, 200);
+    }
+
+    &.warn {
+        background-color: map-get($warn, 400);
+    }
+
+    &.notification-hidden {
+        opacity: 0;
+    }
+
+    > .notification-title {
+        font-size: 14px;
+        margin-right: 10px;
+        padding: 0;
+        font-weight: bold;
+    }
+
+    > .notification-message {
+        margin: 0 5px;
+    }
+
+    > .dismiss-btn {
+        cursor: pointer;
+        .fa-times {
+            color: rgba(0, 0, 0, 0.2);
+        }
+        &:hover {
+            .fa-times {
+                color: rgba(255, 255, 255, 0.3);
+            }
+        }
+    }
+
+    > .actions {
+        margin-left: 10px;
+        margin-right: 7px;
+
+        > .action {
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.2);
+            margin-right: 3px;
+            white-space: nowrap;
+            &:hover {
+                background: rgba(0, 0, 0, 0.3);
+            }
+        }
+    }
+}

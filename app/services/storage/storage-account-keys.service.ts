@@ -26,14 +26,14 @@ export class StorageAccountKeysService {
         const url = `${storageAccountId}/listkeys`;
         return this.arm.post(url)
             .map(response => this._parseKeysReponse(response.json()))
-            .cascade((keys: StorageKeys) => {
+            .map((keys: StorageKeys) => {
                 // bail out if we didn't get any keys
                 if (!keys.primaryKey && !keys.secondaryKey) {
                     throw new Error(`Failed to load storage keys for: ${storageAccountId}`);
                 }
                 this._cache.set(storageAccountId, keys);
                 return keys;
-            });
+            }).shareReplay(1);
     }
 
     /**

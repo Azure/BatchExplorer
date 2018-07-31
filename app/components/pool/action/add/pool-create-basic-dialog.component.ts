@@ -26,6 +26,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public fileUri = "create.pool.batch.json";
     public armNetworkOnly = true;
     public certificates: Certificate[] = [];
+    public title = "Add pool";
 
     private _osControl: FormControl;
     private _renderingSkuSelected: boolean = false;

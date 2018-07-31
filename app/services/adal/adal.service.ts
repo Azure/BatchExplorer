@@ -1,11 +1,10 @@
 import { Injectable } from "@angular/core";
-import { AccessToken, ServerError } from "@batch-flask/core";
+import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
 import { ElectronRemote, NotificationService } from "@batch-flask/ui";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { BatchLabsService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-labs.service";
 import { AADService } from "client/core/aad";
-import { AccessTokenCache } from "client/core/aad/access-token/access-token-cache";
 import { Constants } from "common";
 
 @Injectable()
@@ -19,9 +18,9 @@ export class AdalService {
 
     constructor(
         private remote: ElectronRemote,
-        batchLabs: BatchLabsService,
+        batchExplorer: BatchExplorerService,
         private notificationService: NotificationService) {
-        this.aadService = batchLabs.aadService;
+        this.aadService = batchExplorer.aadService;
         // Need to do this as aadService.tenantIds is in the node processs and electron lose information in the transfer
         this.aadService.tenantsIds.subscribe({
             next: (val) => {

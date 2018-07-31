@@ -3,7 +3,7 @@
 There is a rpc server that starts automaticaly when you start the app that allows you to run python code from the browser.
 
 ## Step 0: Setup python
-Install python > 3.6 **Important: Batch labs will look for python and check the version is more than 3.6 before starting the server**
+Install python > 3.6 **Important: Batch Explorer will look for python and check the version is more than 3.6 before starting the server**
 It will scan for executable in the path called `python3` or `python`. If your python is not in your path you can set the environment variable `BL_PYTHON_PATH` with the path to python 3.6.
 
 ## Step 1: Write the python controller

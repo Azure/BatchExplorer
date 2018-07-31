@@ -1,6 +1,16 @@
 import {
-    Component, EventEmitter, HostBinding, HostListener,
-    Injector, Input, OnChanges, OnDestroy, Output, SimpleChanges,
+    Component,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Injector,
+    Input,
+    OnChanges,
+    OnDestroy,
+    Optional,
+    Output,
+    Self,
+    SimpleChanges,
 } from "@angular/core";
 import { Subscription } from "rxjs";
 
@@ -41,8 +51,8 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     private _sub: Subscription;
     private _permissionDisabled = false;
 
-    constructor(injector: Injector) {
-        this._routerLink = injector.get(RouterLink, null);
+    constructor(injector: Injector, @Self() @Optional() routerLink: RouterLink) {
+        this._routerLink = routerLink;
         this.permissionService = injector.get(PermissionService, null);
     }
 
@@ -66,6 +76,7 @@ export class ClickableComponent implements OnChanges, OnDestroy {
 
     @HostListener("click", ["$event"])
     public handleClick(event: Event) {
+        event.preventDefault();
         event.stopPropagation();
         this.handleAction(event);
     }
@@ -80,6 +91,7 @@ export class ClickableComponent implements OnChanges, OnDestroy {
 
     public handleAction(event: Event) {
         if (this.isDisabled) {
+            event.stopImmediatePropagation();
             return;
         }
         this.do.emit(event);

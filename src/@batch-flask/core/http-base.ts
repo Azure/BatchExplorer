@@ -1,25 +1,23 @@
 import { Location } from "@angular/common";
-import { HttpEvent, HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { RetryableHttpCode } from "@batch-flask/core/constants";
 import { UrlUtils } from "@batch-flask/utils";
-import { Observable } from "rxjs";
+import { Observable, of, range, timer } from "rxjs";
+import { flatMap, switchMap, zip } from "rxjs/operators";
 import { AccessToken } from "./aad/access-token";
 
 export const badHttpCodeMaxRetryCount = 5;
 
-export type HttpRequestObservable = "body" | "events" | "response";
+export type HttpResponseType = "arraybuffer" | "blob" | "json" | "text";
+export type HttpObserve = "body" | "events" | "response";
 
-export interface HttpRequestOptions<T extends HttpRequestObservable = "body"> {
+export interface HttpRequestOptions<O extends HttpObserve = "body", R extends HttpResponseType = "json"> {
     body?: any;
-    headers?: HttpHeaders | {
-        [header: string]: string | string[];
-    };
+    headers?: HttpHeaders | { [header: string]: string | string[] };
+    observe?: O;
+    params?: HttpParams | { [param: string]: string | string[] };
     reportProgress?: boolean;
-    observe?: T;
-    params?: HttpParams | {
-        [param: string]: string | string[];
-    };
-    responseType?: "json";
+    responseType?: R;
     withCredentials?: boolean;
 }
 
@@ -27,72 +25,28 @@ export interface HttpRequestOptions<T extends HttpRequestObservable = "body"> {
  * abstract class for a http warpper service
  * This use angular 5 HttpClient
  */
-export abstract class HttpService {
+export abstract class HttpService extends HttpClient {
     public abstract get serviceUrl();
 
-    public abstract request<T>(
-        method: string,
-        uri: string,
-        options: HttpRequestOptions<"events">): Observable<HttpEvent<T>>;
-    public abstract request<T>(
-        method: string,
-        uri: string,
-        options: HttpRequestOptions<"response">): Observable<HttpResponse<T>>;
-    public abstract request<T>(method: string, uri: string, options?: HttpRequestOptions): Observable<T>;
-
-    public get<T>(uri: string, options: HttpRequestOptions<"events">): Observable<HttpEvent<T>>;
-    public get<T>(uri: string, options: HttpRequestOptions<"response">): Observable<HttpResponse<T>>;
-    public get<T>(uri: string, options?: HttpRequestOptions): Observable<T>;
-    public get<T>(uri: string, options?: any) {
-        return this.request<T>("get", uri, options);
-    }
-
-    public post<T>(uri: string, body: any, options: HttpRequestOptions<"events">): Observable<HttpEvent<T>>;
-    public post<T>(uri: string, body: any, options: HttpRequestOptions<"response">): Observable<HttpResponse<T>>;
-    public post<T>(uri: string, body?: any, options?: HttpRequestOptions): Observable<T>;
-    public post(uri: string, body?: any, options?: any) {
-        return this.request("post", uri, { body, ...options });
-    }
-
-    public patch<T>(uri: string, body: any, options: HttpRequestOptions<"events">): Observable<HttpEvent<T>>;
-    public patch<T>(uri: string, body: any, options: HttpRequestOptions<"response">): Observable<HttpResponse<T>>;
-    public patch<T>(uri: string, body: any, options?: HttpRequestOptions): Observable<T>;
-    public patch(uri: string, body?: any, options?: any) {
-        return this.request("patch", uri, { body, ...options });
-    }
-
-    public put<T>(uri: string, body: any, options: HttpRequestOptions<"events">): Observable<HttpEvent<T>>;
-    public put<T>(uri: string, body: any, options: HttpRequestOptions<"response">): Observable<HttpResponse<T>>;
-    public put<T>(uri: string, body: any, options?: HttpRequestOptions): Observable<T>;
-    public put(uri: string, body?: any, options?: any) {
-        return this.request("put", uri, { body, ...options });
-    }
-
-    public delete<T>(uri: string, options: HttpRequestOptions<"events">): Observable<HttpEvent<T>>;
-    public delete<T>(uri: string, options: HttpRequestOptions<"response">): Observable<HttpResponse<T>>;
-    public delete<T>(uri: string, options?: HttpRequestOptions): Observable<T>;
-    public delete(uri: string, options?: any) {
-        return this.request("delete", uri, options);
-    }
-
     protected retryWhen(attempts: Observable<Response>) {
-        const retryRange = Observable.range(0, badHttpCodeMaxRetryCount + 1);
-        return attempts
-            .switchMap((x: any) => {
+        const retryRange = range(0, badHttpCodeMaxRetryCount + 1);
+        return attempts.pipe(
+            switchMap((x: any) => {
                 if (RetryableHttpCode.has(x.status)) {
-                    return Observable.of(x);
+                    return of(x);
                 }
                 return Observable.throw(x);
-            })
-            .zip(retryRange, (attempt, retryCount) => {
+            }),
+            zip(retryRange, (attempt, retryCount) => {
                 if (retryCount >= badHttpCodeMaxRetryCount) {
                     throw attempt;
                 }
                 return retryCount;
-            })
-            .flatMap((retryCount) => {
-                return Observable.timer(100 * Math.pow(3, retryCount));
-            });
+            }),
+            flatMap((retryCount) => {
+                return timer(100 * Math.pow(3, retryCount));
+            }),
+        );
     }
 
     protected computeUrl(uri: string) {
@@ -104,8 +58,8 @@ export abstract class HttpService {
     }
 
     protected addAuthorizationHeader(
-        originalOptions: HttpRequestOptions,
-        accessToken: AccessToken): HttpRequestOptions {
+        originalOptions: HttpRequestOptions<any, any>,
+        accessToken: AccessToken): HttpRequestOptions<any, any> {
 
         const options = { ...originalOptions };
         if (!(options.headers instanceof HttpHeaders)) {

@@ -6,14 +6,16 @@ import { MaterialModule } from "@batch-flask/core";
 import { SplitPaneComponent } from "./split-pane.component";
 import { SplitSeparatorComponent } from "./split-separator";
 
-const components = [
-    SplitPaneComponent,
+const privateComponents = [
     SplitSeparatorComponent,
+];
+const publicComponents = [
+    SplitPaneComponent,
 ];
 
 @NgModule({
-    declarations: components,
-    exports: components,
+    declarations: [...privateComponents, ...publicComponents],
+    exports: publicComponents,
     imports: [BrowserModule, MaterialModule, RouterModule],
 })
 export class SplitPaneModule {

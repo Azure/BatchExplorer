@@ -1,6 +1,9 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 
+import { WorkspaceService } from "@batch-flask/ui";
+import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { JobConfigurationComponent } from "app/components/job/details";
+import { JobService } from "app/services";
 
 // tslint:disable:trackBy-function
 @Component({
@@ -9,4 +12,12 @@ import { JobConfigurationComponent } from "app/components/job/details";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JobScheduleJobSpecificationComponent extends JobConfigurationComponent {
+    constructor(
+        changeDetector: ChangeDetectorRef,
+        jobService: JobService,
+        sidebarManager: SidebarManager,
+        workspaceService: WorkspaceService) {
+
+        super(changeDetector, jobService, sidebarManager, workspaceService);
+    }
 }
