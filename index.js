@@ -1,5 +1,5 @@
 const githubAccessToken = "dbf50a23223f537679de24de2ccff0e6fc9e14cd";
-const labsRepo = "Azure/BatchLabs";
+const labsRepo = "Azure/BatchExplorer";
 
 let downloadLinkEls;
 let downloadLinks = {};
@@ -62,23 +62,23 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     getWindowsLatest().then((version) => {
         versionEl.textContent = version;
-        downloadLinks["windowsInstaller"] = `${feedUrl}/${version}/BatchLabs Setup.exe`
-        downloadLinks["windowsZip"] = `${feedUrl}/${version}/BatchLabs-win.zip`
+        downloadLinks["windowsInstaller"] = `${feedUrl}/${version}/BatchExplorer Setup.exe`
+        downloadLinks["windowsZip"] = `${feedUrl}/${version}/BatchExplorer-win.zip`
         updateDownloadLinks()
     });
 
     getLinuxLatest().then((version) => {
         versionEl.textContent = version;
-        downloadLinks["linuxDeb"] = `${feedUrl}/${version}/BatchLabs.deb`;
-        downloadLinks["linuxRpm"] = `${feedUrl}/${version}/BatchLabs.rpm`;
-        downloadLinks["linuxAppimage"] = `${feedUrl}/${version}/BatchLabs.AppImage`;
+        downloadLinks["linuxDeb"] = `${feedUrl}/${version}/BatchExplorer.deb`;
+        downloadLinks["linuxRpm"] = `${feedUrl}/${version}/BatchExplorer.rpm`;
+        downloadLinks["linuxAppimage"] = `${feedUrl}/${version}/BatchExplorer.AppImage`;
         updateDownloadLinks()
     });
 
     getMacLatest().then((version) => {
         versionEl.textContent = version;
-        downloadLinks["osxDmg"] = `${feedUrl}/${version}/BatchLabs.dmg`;
-        downloadLinks["osxZip"] = `${feedUrl}/${version}/BatchLabs-osx.zip`;
+        downloadLinks["osxDmg"] = `${feedUrl}/${version}/BatchExplorer.dmg`;
+        downloadLinks["osxZip"] = `${feedUrl}/${version}/BatchExplorer-osx.zip`;
         updateDownloadLinks()
     });
 
