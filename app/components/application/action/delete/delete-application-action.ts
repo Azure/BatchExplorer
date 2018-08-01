@@ -1,14 +1,16 @@
-import { BehaviorSubject, Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { Activity, ActivityService } from "@batch-flask/ui";
 import { WaitForDeletePoller } from "app/components/core/pollers";
 import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import { LongRunningDeleteAction } from "app/services/core";
+import { catchError, map } from "rxjs/operators";
 
 export class DeleteApplicationAction extends LongRunningDeleteAction {
     constructor(
         private applicationService: ApplicationService,
+        private activityService: ActivityService,
         applicationIds: string[]) {
 
         super("Application", applicationIds);
@@ -31,27 +33,23 @@ export class DeleteApplicationAction extends LongRunningDeleteAction {
             }).share();
     }
 
-    protected waitForDelete(id: string, taskManager?: BackgroundTaskService) {
-        this.applicationService.get(id).subscribe({
-            next: (application: BatchApplication) => {
-                const task = new WaitForDeletePoller(() => this.applicationService.get(id));
-                if (taskManager) {
-                    const message = `Deleting application: ${id}`;
-                    taskManager.startTask(message, (bTask) => {
-                        return task.start(bTask.progress);
-                    });
-                } else {
-                    task.start(new BehaviorSubject<any>(-1)).subscribe({
-                        complete: () => {
-                            this.markItemAsDeleted();
-                        },
-                    });
-                }
-            },
-            error: (error) => {
-                // No need to watch for App it is already deleted
-                this.markItemAsDeleted();
-            },
-        });
+    protected waitForDelete(id: string) {
+        // prepare the initializer function, which will delete the application
+        const initializer = () => {
+            return this.applicationService.get(id).pipe(
+                // if an application with this ID exists, delete it
+                map((application: BatchApplication) => {
+                    const deletionPoller = new WaitForDeletePoller(() => this.applicationService.get(id));
+                    return deletionPoller.start();
+                }),
+                // if an applcation with this ID does not exist, pipe through a dummy observable to complete the task
+                catchError((error, caught) => {
+                    return of("foo");
+                }),
+            );
+        };
+
+        const activity = new Activity(`Deleting application: ${id}`, initializer);
+        this.activityService.loadAndRun(activity);
     }
 }

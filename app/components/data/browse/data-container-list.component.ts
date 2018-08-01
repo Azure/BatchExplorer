@@ -6,17 +6,17 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import {
-    BackgroundTaskService, LoadingStatus, QuickListItemStatus,
+    Activity, ActivityService, LoadingStatus, QuickListItemStatus,
 } from "@batch-flask/ui";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, of } from "rxjs";
 
 import { BlobContainer, LeaseStatus } from "app/models";
 import { ListView } from "app/services/core";
 import { ListContainerParams, StorageContainerService } from "app/services/storage";
 import { ComponentUtils } from "app/utils";
 import { Constants } from "common";
-import { BlobContainerCommands, DeleteContainerAction } from "../action";
+import { BlobContainerCommands } from "../action";
 
 import "./data-container-list.scss";
 
@@ -48,8 +48,8 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         changeDetector: ChangeDetectorRef,
         public commands: BlobContainerCommands,
         private activeRoute: ActivatedRoute,
-        private taskManager: BackgroundTaskService,
-        private storageContainerService: StorageContainerService) {
+        private storageContainerService: StorageContainerService,
+        private activityService: ActivityService) {
 
         super(changeDetector);
         this.data = this.storageContainerService.listView();
@@ -132,13 +132,19 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
     }
 
     public deleteSelection(selection: ListSelection) {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteContainerAction(this.storageContainerService, this.storageAccountId,
-                [...selection.keys]);
-            task.start(backgroundTask);
+        const initializer = () => {
+            const arr = Array.from(selection.keys).map(id => {
+                return new Activity(`Deleting container: ${id}`, () => {
+                    return this.storageContainerService.delete(this.storageAccountId, id);
+                }, () => {
+                    this.refresh();
+                });
+            });
 
-            return task.waitingDone;
-        });
+            return of(arr);
+        };
+
+        this.activityService.loadAndRun(new Activity("Deleting containers", initializer));
     }
 
     public trackFileGroup(index, fileGroup: BlobContainer) {

@@ -114,6 +114,23 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
             task.start(backgroundTask);
             return task.waitingDone;
         });
+
+        // // ActivityService Code
+        // const initializer = () => {
+        //     return of(Array.from(selection.keys)).pipe(
+        //         map(keyList => {
+        //             return keyList.map(key => {
+        //                 return new Activity(`Deleting Certificate '${key}'`, () => {
+        //                     return this.certificateService.delete(key);
+        //                 }, () => {
+        //                     this.refresh();
+        //                 });
+        //             });
+        //         }),
+        //     );
+        // };
+
+        // this.activityService.loadAndRun(new Activity("Deleting Certificates", initializer));
     }
 
     public trackByFn(index: number, certificate: Certificate) {

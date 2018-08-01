@@ -2,7 +2,6 @@ import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
 import { ActivatePackageDialogComponent, ApplicationCreateDialogComponent, ApplicationEditDialogComponent,
-    DeleteApplicationDialogComponent,
 } from "./action";
 import { ApplicationListComponent, ApplicationPreviewComponent } from "./browse";
 import { ApplicationConfigurationComponent, ApplicationDefaultComponent , ApplicationDetailsComponent,
@@ -14,7 +13,8 @@ import { ApplicationHomeComponent } from "./home";
 const components = [ActivatePackageDialogComponent, ApplicationCreateDialogComponent, ApplicationDefaultComponent,
     ApplicationDetailsComponent, ApplicationEditDialogComponent, ApplicationErrorDisplayComponent,
     ApplicationHomeComponent, ApplicationListComponent, ApplicationPackagesComponent, ApplicationPackageTableComponent,
-    ApplicationPreviewComponent, ApplicationConfigurationComponent, DeleteApplicationDialogComponent];
+    ApplicationPreviewComponent, ApplicationConfigurationComponent,
+];
 
 @NgModule({
     declarations: components,
@@ -24,7 +24,6 @@ const components = [ActivatePackageDialogComponent, ApplicationCreateDialogCompo
         ActivatePackageDialogComponent,
         ApplicationCreateDialogComponent,
         ApplicationEditDialogComponent,
-        DeleteApplicationDialogComponent,
     ],
 })
 export class ApplicationModule {

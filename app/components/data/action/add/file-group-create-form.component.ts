@@ -151,6 +151,21 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         const msgFormat = `Syncing ({0}/{1}) paths to: {2}`;
         const trimmedName = this._sanitizeFileGroupName(formData.name);
 
+        // const initializer = () => {
+        //     const obs = from(this._getValidPaths(formData.paths)).pipe(
+        //         flatMap(validPaths => {
+        //             return validPaths.map(path => {
+        //                 // check if the path is a file or folder, and make an activity accordingly
+        //                 return from(this.fs.readFile(path));
+        //             });
+        //         }),
+        //     );
+
+        //     obs.subscribe(x => console.log(x));
+        // };
+
+        // initializer();
+
         return this.backgroundTaskService.startTask("Uploading files to file group", (task) => {
             const observable = Observable.fromPromise(this._getValidPaths(formData.paths)).flatMap((validPaths) => {
                 const lastData: DataTotals = this._initDataTotals(1, validPaths.length);

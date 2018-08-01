@@ -25,12 +25,11 @@ export class Activity {
 
     private initializer: () => Observable<any>;
     private done: () => void;
-    private requireSubTask: boolean;
     private processor: ActivityProcessor;
     private numSubActivities: number;
     private counters: ActivityCounters;
 
-    constructor(name: string, requireSubTask: boolean, initializerFn: () => Observable<any>, doneFn?: () => void) {
+    constructor(name: string, initializerFn: () => Observable<any>, doneFn?: () => void) {
         this.name = name;
         this.statusList = [];
 
@@ -38,7 +37,6 @@ export class Activity {
         this.done = doneFn || (() => {});
         this.initializer = initializerFn;
 
-        this.requireSubTask = requireSubTask;
         this.processor = new ActivityProcessor();
         this.numSubActivities = 0;
         this.counters = new ActivityCounters();
@@ -60,10 +58,7 @@ export class Activity {
         this.initializer().pipe(
             tap((result) => {
                 // if we need to run subtasks, load and run the subtasks
-                if (this.requireSubTask) {
-                    if (!Array.isArray(result)) {
-                        throw new Error("An initializer that requires a subtask must return an Observable<any[]>");
-                    }
+                if (Array.isArray(result)) {
                     this.numSubActivities = result.length;
                     this.processor.loadAndRun(result);
                 } else {

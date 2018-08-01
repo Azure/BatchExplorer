@@ -77,7 +77,7 @@ export class DownloadFolderComponent {
                     const [folder, files] = result;
                     return files.map(file => {
                         // each file becomes a new activity whose initializer is to download one file
-                        return new Activity("Downloading One File", false, () => {
+                        return new Activity("Downloading One File", () => {
                             return this._downloadFile(folder, file);
                         });
                     }).toArray();
@@ -97,7 +97,7 @@ export class DownloadFolderComponent {
         };
 
         // load and run a new file download activity with the declared functions
-        this.activityService.loadAndRun(new Activity("Downloading Files", true, initializer, onDone));
+        this.activityService.loadAndRun(new Activity("Downloading Files", initializer, onDone));
     }
 
     private _getPatterns(): string[] {
