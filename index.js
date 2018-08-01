@@ -43,7 +43,7 @@ function updateDownloadLinks() {
     document.getElementById("primary-download-btn").href = downloadLinks["windowsInstaller"]
 
     document.getElementById("download-windows-installer-btn").href = downloadLinks["windowsInstaller"]
-    document.getElementById("download-osx-app-btn").href = downloadLinks["osxZip"]
+    document.getElementById("download-osx-app-btn").href = downloadLinks["osxDmg"]
     document.getElementById("download-linux-deb-btn").href = downloadLinks["linuxDeb"]
 }
 
@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         windowsInstaller: document.getElementById("download-windows-installer"),
         windowsZip: document.getElementById("download-windows-zip"),
         osxZip: document.getElementById("download-osx-zip"),
+        osxDmg: document.getElementById("download-osx-dmg"),
         linuxDeb: document.getElementById("download-linux-deb"),
         linuxRpm: document.getElementById("download-linux-rpm"),
         linuxAppimage: document.getElementById("download-linux-appimage"),
@@ -76,6 +77,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     getMacLatest().then((version) => {
         versionEl.textContent = version;
+        downloadLinks["osxDmg"] = `${feedUrl}/${version}/BatchLabs.dmg`;
         downloadLinks["osxZip"] = `${feedUrl}/${version}/BatchLabs-osx.zip`;
         updateDownloadLinks()
     });
