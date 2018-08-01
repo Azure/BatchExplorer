@@ -276,7 +276,7 @@ export class FileService {
             const output = fs.createWriteStream(destination);
 
             reader.onload = () => {
-                const buffer = new Buffer(reader.result);
+                const buffer = new Buffer(reader.result as any);
                 output.write(buffer);
                 output.close();
                 resolve(true);

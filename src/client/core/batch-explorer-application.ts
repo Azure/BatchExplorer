@@ -14,7 +14,7 @@ import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-config
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { ProxySettingsManager } from "client/proxy/proxy-settings";
 import { BatchExplorerLink, Constants, Deferred } from "common";
-import {  IpcEvent } from "common/constants";
+import { IpcEvent } from "common/constants";
 import { ProxyCredentials, ProxySettings } from "get-proxy-settings";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants as ClientConstants } from "../client-constants";

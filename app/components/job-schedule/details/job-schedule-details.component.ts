@@ -6,7 +6,7 @@ import { Subscription } from "rxjs";
 
 import { Job, JobSchedule, JobScheduleState, Pool } from "app/models";
 import { JobScheduleDecorator } from "app/models/decorators";
-import {  JobScheduleParams, JobScheduleService } from "app/services";
+import { JobScheduleParams, JobScheduleService } from "app/services";
 import { EntityView } from "app/services/core";
 
 import { JobScheduleCommands } from "../action";
