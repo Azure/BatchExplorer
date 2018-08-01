@@ -1,3 +1,12 @@
+# 0.17.1
+[All items](https://github.com/Azure/BatchExplorer/milestone/25?closed=1)
+
+### Bug fixes:
+* Task outputs is broken when not using autostorage account [\#1522](https://github.com/Azure/BatchExplorer/issues/1522)
+
+### Other
+* Task properties pool and node should be links [\#1523](https://github.com/Azure/BatchExplorer/issues/1523)
+
 # 0.17.0
 [All items](https://github.com/Azure/BatchExplorer/milestone/21?closed=1)
 

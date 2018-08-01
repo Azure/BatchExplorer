@@ -34,8 +34,10 @@ describe("TaskOutputsComponent", () => {
     let mockBlobGetter: any;
     let cache: DataCache<File>;
     let autoStorageServiceSpy;
+    let currentStorageAccount;
 
     beforeEach(() => {
+        currentStorageAccount = "storage-acc-1";
         cache = new DataCache<File>("url");
         mockBlobGetter = new MockStorageListGetter(File, {
             cache: (params) => cache,
@@ -87,7 +89,7 @@ describe("TaskOutputsComponent", () => {
         };
 
         autoStorageServiceSpy = {
-            get: () => Observable.of("storage-acc-1"),
+            get: () => Observable.of(currentStorageAccount),
         };
 
         TestBed.configureTestingModule({
@@ -152,6 +154,16 @@ describe("TaskOutputsComponent", () => {
 
         fixture.detectChanges();
         expect(component.workspace.sources.length).toBe(2);
+    }));
+
+    it("when storage account id is not provided we remove teh workspace source", fakeAsync(() => {
+        currentStorageAccount = null;
+        testComponent.task = new Task({ id: "task-1", state: TaskState.running });
+        fixture.detectChanges();
+        tick();
+
+        fixture.detectChanges();
+        expect(component.workspace.sources.length).toBe(1);
     }));
 
     it("when storage call returns 404 we remove the workspace source", fakeAsync(() => {
