@@ -3,7 +3,7 @@ interface String {
     /**
      * Format a string
      */
-    format(args: StringMap<string>);
+    format(args: { [key: string]: string });
     format(...args: string[]);
 
     /**
