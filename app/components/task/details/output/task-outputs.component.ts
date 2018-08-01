@@ -106,6 +106,7 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
             navigator: nodeNavigator,
             openedFiles: ["stdout.txt", "stderr.txt"],
         }];
+        nodeNavigator.init();
 
         const navigator = await this._getTaskConventionNavigator();
         if (navigator) {
@@ -116,11 +117,9 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
 
     private async _getTaskConventionNavigator(): Promise<any> {
         const storageAccountId = await this.autoStorageService.get().toPromise();
-        console.log("Storage account Id", storageAccountId);
         if (!storageAccountId) { return null; }
         const container = await StorageUtils.getSafeContainerName(this.jobId);
 
-        nodeNavigator.init();
         const taskOutputPrefix = `${this.task.id}`;
         const taskOutputNavigator = this.storageService.navigate(storageAccountId,
             container, taskOutputPrefix, {
