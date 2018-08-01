@@ -3,7 +3,7 @@ import { FormControl } from "@angular/forms";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import {  autobind } from "@batch-flask/core";
+import { autobind } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { PerformanceData } from "app/components/pool/graphs/performance-graph";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
