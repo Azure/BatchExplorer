@@ -13,7 +13,7 @@
   "version": "0.17.0",
   "main": "build/client/main.prod.js",
   "scripts": {
-    "ts": "ts-node --project tsconfig.node.json",
+    "ts": "ts-node --project tsconfig.node.json --files",
     "start": "npm run -s electron:prod",
     "clean": "rimraf build/* dll/* python/dist/* python/build/*",
     "karma": "node --max_old_space_size=4096 node_modules/karma/bin/karma",
