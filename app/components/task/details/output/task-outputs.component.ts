@@ -108,11 +108,12 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
         }];
         nodeNavigator.init();
 
-        const navigator = await this._getTaskConventionNavigator();
-        if (navigator) {
-            navigators.push(navigator);
+        const conventionOutputNavigator = await this._getTaskConventionNavigator();
+        if (conventionOutputNavigator) {
+            navigators.push(conventionOutputNavigator);
         }
         this.workspace = new FileExplorerWorkspace(navigators);
+        navigators.forEach(x => x.navigator.init());
     }
 
     private async _getTaskConventionNavigator(): Promise<any> {
@@ -142,7 +143,6 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
                 },
             });
 
-        taskOutputNavigator.init();
         return {
             name: this._persistedSourceName,
             navigator: taskOutputNavigator,
