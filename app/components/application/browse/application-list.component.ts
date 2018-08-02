@@ -1,15 +1,13 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { Router } from "@angular/router";
-import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
-
-import { Filter, autobind } from "@batch-flask/core";
+import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/core/list";
 import { LoadingStatus } from "@batch-flask/ui";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService } from "app/services";
-import { ListView } from "@batch-flask/core";
+import { List } from "immutable";
+import { Observable, Subscription } from "rxjs";
 import { BatchApplicationCommands } from "../action";
 
 import "./application-list.scss";

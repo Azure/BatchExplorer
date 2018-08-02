@@ -1,9 +1,7 @@
-import { Type } from "@angular/core";
-import { Observable } from "rxjs";
-
 import { HttpParams } from "@angular/common/http";
-import { HttpRequestOptions } from "@batch-flask/core";
-import { ListGetter, ListGetterConfig, ContinuationToken, ListOptions } from "@batch-flask/core";
+import { Type } from "@angular/core";
+import { ContinuationToken, HttpRequestOptions, ListGetter, ListGetterConfig, ListOptions } from "@batch-flask/core";
+import { Observable } from "rxjs";
 import { map, share } from "rxjs/operators";
 import { AzureBatchHttpService } from "./batch-http.service";
 
