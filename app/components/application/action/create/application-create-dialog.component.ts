@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
 import * as storage from "azure-storage";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
 import { flatMap, tap } from "rxjs/operators";
 
 import { autobind } from "@batch-flask/core";
@@ -125,7 +125,7 @@ export class ApplicationCreateDialogComponent {
 
     private _uploadAppPackage(file: File, sasUrl: string): Observable<storage.BlobService.BlobResult> {
         if (!this.hasValidFile()) {
-            return Observable.throw("Valid file not selected");
+            return throwError("Valid file not selected");
         }
         return this.storageBlobService.uploadToSasUrl(sasUrl, file.path);
     }

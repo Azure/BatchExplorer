@@ -25,7 +25,7 @@ describe("DisableJobDialogComponent ", () => {
         jobServiceSpy = {
             disable: jasmine.createSpy("DisableJob").and.callFake((jobid, ...args) => {
                 if (jobid === "bad-job-id") {
-                    return Observable.throw(ServerError.fromBatch({
+                    return throwError(ServerError.fromBatch({
                         statusCode: 408,
                         code: "RandomTestErrorCode",
                         message: { value: "Some random test error happened disabling job" },

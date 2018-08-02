@@ -2,7 +2,7 @@ import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatDialogRef } from "@angular/material";
 import { By } from "@angular/platform-browser";
-import { Observable, of } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { ActivatePackageDialogComponent } from "app/components/application/action";
@@ -19,7 +19,7 @@ describe("ActivatePackageDialogComponent ", () => {
         appServiceSpy = {
             activatePackage: jasmine.createSpy("activatePackage").and.callFake((appId, version) => {
                 if (appId === "bad-app-id") {
-                    return Observable.throw(ServerError.fromBatch({
+                    return throwError(ServerError.fromBatch({
                         statusCode: 408,
                         code: "RandomTestErrorCode",
                         message: { value: "error, error, error" },

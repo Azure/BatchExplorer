@@ -1,5 +1,5 @@
 import { Type } from "@angular/core";
-import { Observable, of } from "rxjs";
+import { Observable, of, throwError } from "rxjs";
 
 import { HttpCode, ServerError } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
@@ -40,7 +40,7 @@ export abstract class EntityGetter<TEntity, TParams> extends GenericGetter<TEnti
             }),
             catchError((error) => {
                 this._processError(cache, params, error);
-                return Observable.throw(error);
+                return throwError(error);
             }),
             share(),
         );

@@ -1,5 +1,5 @@
 import { fakeAsync, tick } from "@angular/core/testing";
-import { Observable, from } from "rxjs";
+import { from, throwError } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { BasicEntityGetter, DataCache, EntityView } from "app/services/core";
@@ -119,7 +119,7 @@ describe("EntityView", () => {
             deleted = null;
             const responses = [
                 from(Promise.resolve(data[0])),
-                Observable.throw(new ServerError({ status: 404, message: "404 not found" } as any)),
+                throwError(new ServerError({ status: 404, message: "404 not found" } as any)),
             ];
             dataSpy = jasmine.createSpy("supplyDataSpy")
                 .and.returnValues(...responses);
@@ -139,7 +139,7 @@ describe("EntityView", () => {
         it("should not send to delete if loading for the first time and I get a 404", fakeAsync(() => {
             getter = new BasicEntityGetter(FakeModel, {
                 cache: () => cache,
-                supplyData: () => Observable.throw(new ServerError({ status: 404, message: "404 not found" } as any)),
+                supplyData: () => throwError(new ServerError({ status: 404, message: "404 not found" } as any)),
             });
             view.dispose();
             view = new EntityView({

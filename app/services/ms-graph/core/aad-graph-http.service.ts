@@ -1,7 +1,7 @@
 import { Location } from "@angular/common";
 import { HttpHandler, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
 
 import { HttpRequestOptions, HttpService, ServerError } from "@batch-flask/core";
 import { UrlUtils } from "@batch-flask/utils";
@@ -44,7 +44,7 @@ export class AADGraphHttpService extends HttpService {
                                 retryWhen(attempts => this.retryWhen(attempts)),
                                 catchError((error) => {
                                     const err = ServerError.fromAADGraph(error);
-                                    return Observable.throw(err);
+                                    return throwError(err);
                                 }),
                             );
                     }));

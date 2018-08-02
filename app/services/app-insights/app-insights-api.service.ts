@@ -49,7 +49,7 @@ export class AppInsightsApiService {
                     retryWhen(attempts => this._retryWhen(attempts)),
                     catchError((error) => {
                         const err = ServerError.fromARM(error);
-                        return Observable.throw(err);
+                        return throwError(err);
                     }),
                 );
             }),

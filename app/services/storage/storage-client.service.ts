@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
 import { StorageKeys } from "app/models";
 import { AccountService } from "app/services/account.service";
 import { BatchExplorerService } from "app/services/batch-labs.service";
@@ -58,7 +58,7 @@ export class StorageClientService {
             flatMap((account) => {
                 const settings = account.properties && account.properties.autoStorage;
                 if (!settings) {
-                    return Observable.throw(new ServerError({
+                    return throwError(new ServerError({
                         status: 404,
                         code: "AutostorageNotSetup",
                         message: "Autostorage not setup for this account",

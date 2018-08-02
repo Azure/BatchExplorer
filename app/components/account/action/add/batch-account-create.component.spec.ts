@@ -4,7 +4,7 @@ import { FormBuilder } from "@angular/forms";
 import { Response, ResponseOptions } from "@angular/http";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { Observable, of } from "rxjs";
+import {  of, throwError } from "rxjs";
 
 import { MaterialModule, ServerError } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -36,7 +36,7 @@ describe("BatchAccountCreateComponent ", () => {
                         status: 400,
                         body: JSON.stringify({ error: { message: "invalid subscription" } }),
                     });
-                    return Observable.throw(ServerError.fromARM(new Response(options)));
+                    return throwError(ServerError.fromARM(new Response(options)));
                 }
                 const options = new ResponseOptions({
                     status: [200, 201][Math.floor(Math.random() * 2)],
@@ -53,7 +53,7 @@ describe("BatchAccountCreateComponent ", () => {
                         status: 400,
                         body: JSON.stringify({ error: { message: "invalid subscription" } }),
                     });
-                    return Observable.throw(ServerError.fromARM(new Response(options)));
+                    return throwError(ServerError.fromARM(new Response(options)));
                 }
                 const options = new ResponseOptions({
                     status: [200, 201][Math.floor(Math.random() * 2)],
@@ -71,7 +71,7 @@ describe("BatchAccountCreateComponent ", () => {
                         message: `Account name '${name}' is in use`,
                     });
                 } else if (name === "servererror") {
-                    return Observable.throw({
+                    return throwError({
                         status: 500,
                         message: serverErrorMsg,
                     });
@@ -90,7 +90,7 @@ describe("BatchAccountCreateComponent ", () => {
                         quota: 10,
                     });
                 } else if (loc === "servererror") {
-                    return Observable.throw({
+                    return throwError({
                         status: 500,
                         message: serverErrorMsg,
                     });
@@ -104,7 +104,7 @@ describe("BatchAccountCreateComponent ", () => {
                 if (resourceId === "dummy-1-rg-2") {
                     return of(Permission.Read);
                 } else if (resourceId === "servererror") {
-                    return Observable.throw({
+                    return throwError({
                         status: 500,
                         message: serverErrorMsg,
                     });

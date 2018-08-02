@@ -2,7 +2,7 @@ import { Location } from "@angular/common";
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { RetryableHttpCode } from "@batch-flask/core/constants";
 import { UrlUtils } from "@batch-flask/utils";
-import { Observable, of, range, timer } from "rxjs";
+import { Observable, of, range, timer, throwError } from "rxjs";
 import { flatMap, switchMap, zip } from "rxjs/operators";
 import { AccessToken } from "./aad/access-token";
 
@@ -35,7 +35,7 @@ export abstract class HttpService extends HttpClient {
                 if (RetryableHttpCode.has(x.status)) {
                     return of(x);
                 }
-                return Observable.throw(x);
+                return throwError(x);
             }),
             zip(retryRange, (attempt, retryCount) => {
                 if (retryCount >= badHttpCodeMaxRetryCount) {

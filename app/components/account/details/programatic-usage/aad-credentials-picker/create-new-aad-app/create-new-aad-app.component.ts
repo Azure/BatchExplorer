@@ -7,17 +7,17 @@ import { AccountResource, RoleDefinition } from "app/models";
 import { AADApplication, PasswordCredential, ServicePrincipal } from "app/models/ms-graph";
 import { ResourceAccessService } from "app/services";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
-import { Observable, forkJoin, from, timer, of } from "rxjs";
-import "./create-new-aad-app.scss";
+import { Observable, forkJoin, from, of, timer, throwError } from "rxjs";
 import {
-    shareReplay,
-    flatMap, last,
-    concatMap,
-    delay,
-    tap,
-    map,
     catchError,
+    concatMap, delay,
+    flatMap,
+    last,
+    map,
+    shareReplay,
+    tap,
 } from "rxjs/operators";
+import "./create-new-aad-app.scss";
 
 export interface AppCreatedEvent {
     application: AADApplication;
@@ -116,7 +116,7 @@ export class CreateNewAadAppComponent {
     private _try(name: string, callback: () => Observable<any>, retryCount = 0) {
         return callback().pipe(catchError((error: ServerError) => {
             if (!(error.status === HttpCode.BadRequest && error.code === "PrincipalNotFound")) {
-                return Observable.throw(error);
+                return throwError(error);
             }
             if (retryCount < maxRetry) {
                 retryCount++;

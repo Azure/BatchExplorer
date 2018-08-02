@@ -1,5 +1,5 @@
 import { Type } from "@angular/core";
-import { Observable, from } from "rxjs";
+import { Observable, from, throwError } from "rxjs";
 import { ServerError } from "@batch-flask/core";
 import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
 import { StorageClientService } from "app/services/storage/storage-client.service";
@@ -41,7 +41,7 @@ export class StorageListGetter<TEntity, TParams extends StorageBaseParams> exten
             }),
             map(response => this._processStorageResponse(response)),
             catchError((error) => {
-                return Observable.throw(ServerError.fromStorage(error));
+                return throwError(ServerError.fromStorage(error));
             }),
             share(),
         );
@@ -54,7 +54,7 @@ export class StorageListGetter<TEntity, TParams extends StorageBaseParams> exten
             }),
             map(response => this._processStorageResponse(response)),
             catchError((error) => {
-                return Observable.throw(ServerError.fromStorage(error));
+                return throwError(ServerError.fromStorage(error));
             }),
             share(),
         );
