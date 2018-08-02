@@ -8,12 +8,9 @@ import {
 } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Observable, Subscription } from "rxjs";
-
 import { ServerError, autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
-
 import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, NcjTemplateMode } from "app/models";
 import { FileGroupCreateDto, FileOrDirectoryDto } from "app/models/dtos";
@@ -21,6 +18,8 @@ import { NcjFileGroupService, NcjSubmitService, NcjTemplateService } from "app/s
 import { StorageContainerService } from "app/services/storage";
 import { exists, log } from "app/utils";
 import { Constants } from "common";
+import { Subscription, of } from "rxjs";
+import { debounceTime, distinctUntilChanged, flatMap } from "rxjs/operators";
 import { NcjParameterExtendedType, NcjParameterWrapper } from "./market-application.model";
 
 import "./submit-ncj-template.scss";
@@ -181,8 +180,9 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     @autobind()
     private _createJobWithAutoPool() {
         this._saveTemplateAsRecent();
-        return this.ncjSubmitService.expandPoolTemplate(this.poolTemplate, this.poolParams.value)
-            .flatMap(data => this._runJobWithPool(data));
+        return this.ncjSubmitService.expandPoolTemplate(this.poolTemplate, this.poolParams.value).pipe(
+            flatMap(data => this._runJobWithPool(data)),
+        );
     }
 
     @autobind()

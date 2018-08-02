@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Subscription, from } from "rxjs";
 
 import { autobind } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";

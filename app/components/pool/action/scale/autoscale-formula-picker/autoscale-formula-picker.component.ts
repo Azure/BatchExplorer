@@ -11,7 +11,7 @@ import {
 } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Subscription, of } from "rxjs";
 
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { EditorConfig } from "@batch-flask/ui/editor";

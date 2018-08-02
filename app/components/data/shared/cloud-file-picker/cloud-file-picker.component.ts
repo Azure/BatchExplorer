@@ -3,11 +3,11 @@ import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
-import { Subscription } from "rxjs";
-
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { StorageBlobService } from "app/services/storage";
 import { AutoStorageService } from "app/services/storage/auto-storage.service";
+import { Subscription } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { CloudFilePickerDialogComponent } from "./cloud-file-picker-dialog.component";
 
 import "./cloud-file-picker.scss";
@@ -45,7 +45,10 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges
         private autoStorageService: AutoStorageService,
         private dialog: DialogService) {
 
-        this._subscriptions.push(this.value.valueChanges.pipe(debounceTime(400), distinctUntilChanged()).subscribe((value) => {
+        this._subscriptions.push(this.value.valueChanges.pipe(
+            debounceTime(400),
+            distinctUntilChanged(),
+        ).subscribe((value) => {
             this._checkValid(value);
             if (this._propagateChange) {
                 this._propagateChange(value);

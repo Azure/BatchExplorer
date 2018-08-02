@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
     HostBinding, Input, OnChanges, OnDestroy, Output,
 } from "@angular/core";
-import { Observable, Subscription } from "rxjs";
+import {  Subscription, of } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FileNavigator, FileTreeNode, FileTreeStructure } from "app/services/file";

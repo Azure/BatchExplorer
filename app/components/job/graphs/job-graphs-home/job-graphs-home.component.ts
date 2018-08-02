@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
 import * as path from "path";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, from, of } from "rxjs";
 
 import { FilterBuilder, autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/ui";

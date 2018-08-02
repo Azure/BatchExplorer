@@ -4,7 +4,7 @@ import { FormBuilder } from "@angular/forms";
 import { Response, ResponseOptions } from "@angular/http";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 import { MaterialModule, ServerError } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";

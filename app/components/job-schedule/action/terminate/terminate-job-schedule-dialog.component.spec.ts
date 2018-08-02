@@ -1,7 +1,7 @@
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatDialogRef } from "@angular/material";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { TerminateJobScheduleDialogComponent } from "app/components/job-schedule/action";

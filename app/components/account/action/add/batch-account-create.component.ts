@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, interval, of } from "rxjs";
 
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -14,6 +14,7 @@ import {
 } from "app/services";
 import { Constants, log } from "app/utils";
 import "./batch-account-create.scss";
+import { flatMap, retry, map, catchError, debounceTime } from "rxjs/operators";
 
 const accountIdSuffix = ".batch.azure.com";
 
@@ -112,7 +113,9 @@ export class BatchAccountCreateComponent implements OnDestroy {
         if (this.isNewResourceGroup) {
             observable = this.accountService.putResourcGroup(subscription, resourceGroup, {
                 location: formData.location.name,
-            }).flatMap(() => this.accountService.putBatchAccount(subscription, resourceGroup, accountName, body));
+            }).pipe(
+                flatMap(() => this.accountService.putBatchAccount(subscription, resourceGroup, accountName, body)),
+            );
         } else {
             observable = this.accountService.putBatchAccount(subscription, resourceGroup, accountName, body);
         }
@@ -120,14 +123,14 @@ export class BatchAccountCreateComponent implements OnDestroy {
             next: () => {
                 const accountUri = this.accountService.getAccountId(subscription, resourceGroup, accountName);
                 // poll account every 1.5 sec to check whether it has been created
-                const sub = interval(1500)
-                    .flatMap(() => this.accountService.get(accountUri))
-                    .retry()
-                    .subscribe(response => {
-                        const message = `Batch account '${accountName}' was successfully created!`;
-                        this.notificationService.success("Create batch account", message, { persist: true });
-                        sub.unsubscribe();
-                    });
+                const sub = interval(1500).pipe(
+                    flatMap(() => this.accountService.get(accountUri)),
+                    retry(),
+                ).subscribe(response => {
+                    const message = `Batch account '${accountName}' was successfully created!`;
+                    this.notificationService.success("Create batch account", message, { persist: true });
+                    sub.unsubscribe();
+                });
             },
             error: (response: Response) => {
                 log.error("Failed to create batch account:: ", response);
@@ -237,23 +240,24 @@ export class BatchAccountCreateComponent implements OnDestroy {
             const subscription = this.form.controls.subscription.value;
             const location = this.form.controls.location.value;
             return this.accountService
-                .nameAvailable(accountName, subscription, location && location.name)
-                .map((response: AvailabilityResult) => {
-                    if (!response || response.nameAvailable) {
-                        return null;
-                    }
-                    return {
-                        accountExists: {
-                            message: response.message,
-                        },
-                    };
-                })
-                .catch(err => {
-                    return of({
-                        serverError: err && err.message,
-                    });
-                })
-                .debounceTime(400);
+                .nameAvailable(accountName, subscription, location && location.name).pipe(
+                    map((response: AvailabilityResult) => {
+                        if (!response || response.nameAvailable) {
+                            return null;
+                        }
+                        return {
+                            accountExists: {
+                                message: response.message,
+                            },
+                        };
+                    }),
+                    catchError(err => {
+                        return of({
+                            serverError: err && err.message,
+                        });
+                    }),
+                    debounceTime(400),
+                );
         };
     }
 
@@ -271,22 +275,22 @@ export class BatchAccountCreateComponent implements OnDestroy {
                     return of(null);
                 }
             }
-            return this.authService
-                .getPermission(resourceGroup.id)
-                .map((response: Permission) => {
+            return this.authService.getPermission(resourceGroup.id).pipe(
+                map((response: Permission) => {
                     if (response !== Permission.Write) {
                         return {
                             noPermission: true,
                         };
                     }
                     return null;
-                })
-                .catch(err => {
+                }),
+                catchError(err => {
                     return of({
                         serverError: err && err.message,
                     });
-                })
-                .debounceTime(400);
+                }),
+                debounceTime(400),
+            );
         };
     }
 
@@ -295,9 +299,8 @@ export class BatchAccountCreateComponent implements OnDestroy {
         return (control: FormControl): Observable<{ [key: string]: any }> => {
             const location = control.value;
             const subscription = this.form.controls.subscription.value;
-            return this.accountService
-                .accountQuota(subscription, location && location.name)
-                .map((response: QuotaResult) => {
+            return this.accountService.accountQuota(subscription, location && location.name).pipe(
+                map((response: QuotaResult) => {
                     if (!response || !response.quota) {
                         return null;
                     }
@@ -307,13 +310,14 @@ export class BatchAccountCreateComponent implements OnDestroy {
                     return {
                         quotaReached: response,
                     };
-                })
-                .catch(err => {
+                }),
+                catchError(err => {
                     return of({
                         serverError: err && err.message,
                     });
-                })
-                .debounceTime(400);
+                }),
+                debounceTime(400),
+            );
         };
     }
 
