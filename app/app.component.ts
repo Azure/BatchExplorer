@@ -75,7 +75,7 @@ export class AppComponent implements OnInit {
         // Wait for the first account to be loaded.
         accountService.currentAccount.pipe(
             filter(x => Boolean(x)),
-            first()
+            first(),
         ).subscribe((x) => {
             this._preloadData();
         });

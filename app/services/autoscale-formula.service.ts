@@ -3,8 +3,8 @@ import { AutoscaleFormula } from "app/models";
 import { Constants, log } from "app/utils";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 import { LocalFileStorage } from "./local-file-storage.service";
-import { map, catchError } from "rxjs/operators";
 
 const filename = Constants.SavedDataFilename.autosacleFormula;
 
