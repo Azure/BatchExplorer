@@ -3,7 +3,7 @@ import {
 } from "@angular/core";
 import { DateUtils } from "@batch-flask/utils";
 import * as moment from "moment";
-import { Observable, Subscription } from "rxjs";
+import { Subscription, interval } from "rxjs";
 
 export enum TimespanDisplayType {
     humanized = "humanized",

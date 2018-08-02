@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
-import { Observable, Subscription } from "rxjs";
+import { Subscription, interval } from "rxjs";
 
 /**
  * Loading showing a simple loading text.

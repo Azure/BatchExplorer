@@ -1,7 +1,7 @@
 import { fakeAsync, tick } from "@angular/core/testing";
 
 import { PollObservable, PollService } from "app/services/core";
-import { Observable } from "rxjs";
+import { timer } from "rxjs";
 
 describe("PollService", () => {
     let service: PollService;
