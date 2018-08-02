@@ -14,12 +14,6 @@ export const caching = {
 
 export const badHttpCodeMaxRetryCount = 5;
 
-export const FileUrlStrings = {
-    Job: "jobs",
-    Pool: "pools",
-    Separator: "/",
-};
-
 export const FileSourceTypes = {
     Job: "job",
     Pool: "pool",

@@ -3,7 +3,7 @@ import { ServerError } from "@batch-flask/core";
 import { FileTreeNode } from "@batch-flask/ui/file/file-navigator";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { DropEvent, TableConfig } from "@batch-flask/ui/table";
-import { DragUtils, prettyBytes } from "app/utils";
+import { DragUtils, prettyBytes } from "@batch-flask/utils";
 import * as moment from "moment";
 import { FileDropEvent } from "../file-explorer.component";
 

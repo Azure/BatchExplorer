@@ -46,7 +46,7 @@ async function startApplication(batchExplorerApp: BatchExplorerApplication) {
     // Uncomment to view why windows don't show up.
     batchExplorerApp.init().then(() => {
         batchExplorerApp.start();
-        // batchExplorerApp.debugCrash();
+        batchExplorerApp.debugCrash();
     });
 }
 

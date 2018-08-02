@@ -1,10 +1,14 @@
 import { NgModule } from "@angular/core";
 
 import { FileDetailsModule } from "./details";
+import { FileDialogViewerComponent } from "./file-dialog-viewer";
 import { FileDialogService } from "./file-dialog.service";
 import { FileExplorerModule } from "./file-explorer";
 
-const components = [];
+const privateComponents = [];
+const publicComponents = [
+    FileDialogViewerComponent,
+];
 
 const modules = [
     FileDetailsModule,
@@ -12,13 +16,14 @@ const modules = [
 ];
 
 @NgModule({
-    declarations: components,
-    exports: [...modules],
+    declarations: [...privateComponents, ...publicComponents],
+    exports: [...modules, ...publicComponents],
     imports: [...modules],
     providers: [
         FileDialogService,
     ],
     entryComponents: [
+        FileDialogViewerComponent,
     ],
 })
 export class FileModule {

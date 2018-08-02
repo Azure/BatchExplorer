@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { FSWatcher } from "chokidar";
-import { CommonFolders, FileSystem } from "client/core";
 import { ElectronRemote } from "./remote.service";
 
 /**
@@ -8,8 +7,8 @@ import { ElectronRemote } from "./remote.service";
  */
 @Injectable()
 export class FileSystemService {
-    public commonFolders: CommonFolders;
-    private _fs: FileSystem;
+    public commonFolders: any;
+    private _fs: any;
 
     constructor(remote: ElectronRemote) {
         this._fs = (remote.getCurrentWindow() as any).fs;

@@ -1,8 +1,9 @@
 import { Component, Input, OnChanges } from "@angular/core";
-
-import { File, FileLoader } from "@batch-flask/ui";
 import { EditorConfig } from "@batch-flask/ui/editor";
+import { FileLoader } from "@batch-flask/ui/file/file-loader";
+import { File } from "@batch-flask/ui/file/file.model";
 import { LoadingStatus } from "@batch-flask/ui/loading";
+
 import "./code-file-viewer.scss";
 
 const maxSize = 100000; // 100KB

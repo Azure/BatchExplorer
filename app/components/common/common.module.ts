@@ -22,6 +22,7 @@ const publicComponents = [
 const publicModules = [
     GuardsModule,
 ];
+
 /**
  * Commons module shouldn't import any module that:
  *  - are not external dependencies

@@ -2,7 +2,6 @@ import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, View
 import { HttpCode, ServerError } from "@batch-flask/core";
 import { File , FileLoader, ScrollableComponent, ScrollableService } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
-import { TaskService } from "app/services";
 import { Subscription } from "rxjs";
 
 import { EditorComponent, EditorConfig } from "@batch-flask/ui/editor";
@@ -54,7 +53,6 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
 
     constructor(
         private scrollableService: ScrollableService,
-        taskService: TaskService,
         private element: ElementRef) {
     }
 

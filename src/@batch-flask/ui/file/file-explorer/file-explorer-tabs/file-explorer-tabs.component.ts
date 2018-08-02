@@ -8,7 +8,8 @@ import {
     OnDestroy,
 } from "@angular/core";
 import { MouseButton } from "@batch-flask/core";
-import { ContextMenu, ContextMenuItem, ContextMenuService, FileLoader } from "@batch-flask/ui";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
+import { FileLoader } from "@batch-flask/ui/file/file-loader";
 import * as path from "path";
 import { Subscription } from "rxjs";
 import { FileExplorerWorkspace, FileSource, OpenedFile } from "../file-explorer-workspace";
