@@ -1,4 +1,4 @@
-import { Filter } from "@batch-flask/core";
+import { Filter } from "@batch-flask/core/filter-builder";
 import { OptionsBase, ProxyOptions } from "./proxy-options";
 
 export interface ContinuationToken {

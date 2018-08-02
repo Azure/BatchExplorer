@@ -13,7 +13,7 @@ import { BatchFlaskSettingsModule } from "./batch-flask-settings";
 import { BreadcrumbModule } from "./breadcrumbs";
 import { BrowseLayoutModule } from "./browse-layout";
 import { ButtonsModule } from "./buttons";
-import { CardComponent } from "./card";
+import { CardModule } from "./card";
 import { ChartsModule } from "./charts";
 import { ContextMenuModule } from "./context-menu";
 import { DatetimePickerComponent } from "./datetime-picker";
@@ -62,6 +62,7 @@ const modules = [
     BrowseLayoutModule,
     ButtonsModule,
     BackgroundTaskModule,
+    CardModule,
     ChartsModule,
     ContextMenuModule,
     DialogsModule,
@@ -101,7 +102,6 @@ const modules = [
 const components = [
     BannerComponent,
     BannerOtherFixDirective,
-    CardComponent,
     TimespanComponent,
     EntityDetailsListComponent,
     DatetimePickerComponent,

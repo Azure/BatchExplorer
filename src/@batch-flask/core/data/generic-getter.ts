@@ -1,7 +1,7 @@
 import { Type } from "@angular/core";
 import { HttpCode } from "@batch-flask/core/constants";
 import { ServerError } from "@batch-flask/core/server-error";
-import { exists, log } from "app/utils";
+import { exists, log } from "@batch-flask/utils";
 import { DataCache } from "./data-cache";
 
 export interface GenericGetterConfig<TEntity, TParams> {
