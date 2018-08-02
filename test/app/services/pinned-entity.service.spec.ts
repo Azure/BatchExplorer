@@ -1,5 +1,5 @@
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Subscription, of } from "rxjs";
 
 import { PinnableEntity, PinnedEntityType } from "@batch-flask/core";
 import { BatchApplication, Job } from "app/models";
@@ -24,17 +24,17 @@ describe("PinnedEntityService", () => {
         jsonDataFromFileService = null;
 
         localFileStorageSpy = {
-            get: jasmine.createSpy("get").and.returnValue(Observable.of(jsonDataFromFileService)),
+            get: jasmine.createSpy("get").and.returnValue(of(jsonDataFromFileService)),
             set: jasmine.createSpy("set").and.callFake((filename, jsonData) => {
                 jsonDataFromFileService = jsonData;
                 jsonFilename = filename;
 
-                return Observable.of(null);
+                return of(null);
             }),
         };
 
         accountServiceSpy = {
-            currentAccount: Observable.of(Fixtures.account.create({
+            currentAccount: of(Fixtures.account.create({
                 id: "myaccount",
                 properties: {
                     accountEndpoint: "myaccount.westus.batch.com",

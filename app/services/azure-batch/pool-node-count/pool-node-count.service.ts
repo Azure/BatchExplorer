@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { Model, Prop, Record } from "@batch-flask/core";
 import { AccountService } from "app/services/account.service";
-import { BehaviorSubject, Observable, combineLatest, timer } from "rxjs";
+import { BehaviorSubject, Observable, combineLatest, empty, timer } from "rxjs";
 import { expand, flatMap, map, publishReplay, reduce, refCount, share, tap } from "rxjs/operators";
 import { AzureBatchHttpService, BatchListResponse } from "../core";
 
@@ -144,7 +144,7 @@ export class PoolNodeCountService implements OnDestroy {
             timer(0, NODE_COUNT_REFRESH_INTERVAL),
         ).pipe(
             flatMap(() => this.refresh()),
-            flatMap(() => this._counts.take(1)),
+            flatMap(() => this._counts),
             publishReplay(1),
             refCount(),
         );
@@ -171,7 +171,7 @@ export class PoolNodeCountService implements OnDestroy {
     private _fetchPoolNodeCounts(): Observable<Map<string, PoolNodeCounts>> {
         return this.http.get<BatchListResponse<BatchPoolNodeCounts>>("/nodecounts").pipe(
             expand(response => {
-                return response["odata.nextLink"] ? this.http.get(response["odata.nextLink"]) : Observable.empty();
+                return response["odata.nextLink"] ? this.http.get(response["odata.nextLink"]) : empty();
             }),
             reduce((resourceGroups, response: BatchListResponse<BatchPoolNodeCounts>) => {
                 return [...resourceGroups, ...response.value];

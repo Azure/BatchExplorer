@@ -9,8 +9,10 @@ import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
 import { ListSelection } from "@batch-flask/core/list";
 import { DeleteSelectedItemsDialogComponent } from "@batch-flask/ui/list-and-show-layout";
 import { Subscription } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-filter";
 import { BrowseLayoutListDirective } from "./browse-layout-list";
+
 import "./browse-layout.scss";
 
 export interface BrowseLayoutConfig {
@@ -92,7 +94,10 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
     }
 
     public ngOnInit() {
-        this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
+        this.quickSearchQuery.valueChanges.pipe(
+            debounceTime(400),
+            distinctUntilChanged(),
+        ).subscribe((query: string) => {
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
             } else {

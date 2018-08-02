@@ -2,14 +2,14 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output,
 } from "@angular/core";
 import { HttpCode, ServerError } from "@batch-flask/core";
-import { List } from "immutable";
-import { Observable } from "rxjs";
-
 import { RoleAssignmentPrincipalType } from "app/models";
 import { AADApplication, ServicePrincipal } from "app/models/ms-graph";
 import { ArmHttpService, AuthorizationHttpService, ResourceAccessService } from "app/services";
 import { ListView } from "app/services/core";
 import { AADApplicationListParams, AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
+import { List } from "immutable";
+import { forkJoin, of } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 
 import "./aad-app-picker.scss";
 
@@ -75,9 +75,9 @@ export class AADAppPickerComponent implements OnInit, OnDestroy {
         const unique = new Set<string>(roleDefs);
 
         const obs = [...unique].map((x) => {
-            return this.arm.get(x).map(x => x.json());
+            return this.arm.get(x).pipe(map(x => x.json()));
         });
-        Observable.forkJoin(obs).subscribe((roles) => {
+        forkJoin(obs).subscribe((roles) => {
             for (const role of roles) {
                 this._permissions.set(role.id, this.permissionService
                     .checkResoucePermissions(role.properties.permissions));
@@ -98,14 +98,16 @@ export class AADAppPickerComponent implements OnInit, OnDestroy {
 
             this._loadRoleDefinitions(apps.map(x => x.properties.roleDefinitionId));
             const obs = apps.map((x) => {
-                return this.servicePrincipalService.get(x.properties.principalId).catch((error: ServerError) => {
-                    if (error.status === HttpCode.NotFound) {
-                        return Observable.of(null);
-                    }
-                });
+                return this.servicePrincipalService.get(x.properties.principalId).pipe(
+                    catchError((error: ServerError) => {
+                        if (error.status === HttpCode.NotFound) {
+                            return of(null);
+                        }
+                    }),
+                );
             });
 
-            Observable.forkJoin(obs).subscribe((servicePrincipals: ServicePrincipal[]) => {
+            forkJoin(obs).subscribe((servicePrincipals: ServicePrincipal[]) => {
                 for (const [index, servicePrincipal] of servicePrincipals.entries()) {
                     if (servicePrincipal) {
                         const role = apps[index];

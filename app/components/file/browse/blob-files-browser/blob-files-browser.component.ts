@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { FileDropEvent, FileExplorerConfig } from "app/components/file/browse/file-explorer";
@@ -64,7 +64,7 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
                     this.fileNavigator.refresh(path);
                 });
 
-                return Observable.of(null);
+                return of(null);
             },
         });
     }

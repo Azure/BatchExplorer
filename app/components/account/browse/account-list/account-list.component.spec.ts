@@ -4,7 +4,6 @@ import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { List } from "immutable";
-import { Observable } from "rxjs";
 
 import { FilterBuilder } from "@batch-flask/core";
 import { DialogService, NotificationService, WorkspaceService } from "@batch-flask/ui";
@@ -12,6 +11,7 @@ import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { AccountListComponent } from "app/components/account/browse";
 import { AccountService, SubscriptionService } from "app/services";
+import { of } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 
@@ -43,8 +43,8 @@ describe("AccountListComponent", () => {
 
     beforeEach(() => {
         accountService = {
-            accountsLoaded: Observable.of(true),
-            accounts: Observable.of(List([
+            accountsLoaded: of(true),
+            accounts: of(List([
                 Fixtures.account.create({ id: "acc-1", name: "Batch 1", location: "westus", subscription: sub1 }),
                 Fixtures.account.create({ id: "acc-2", name: "Account 2", location: "eastus", subscription: sub1 }),
                 Fixtures.account.create({ id: "acc-3", name: "Account 3", location: "canada", subscription: sub2 }),
@@ -54,7 +54,7 @@ describe("AccountListComponent", () => {
         };
 
         subscriptionService = {
-            subscriptions: Observable.of([sub1, sub2, sub3]),
+            subscriptions: of([sub1, sub2, sub3]),
         };
 
         TestBed.configureTestingModule({

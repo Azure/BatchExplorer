@@ -12,7 +12,7 @@ import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/u
 import { FileExplorerWorkspace, FileSource, OpenedFile } from "app/components/file/browse/file-explorer";
 import { FileLoader } from "app/services/file";
 import * as path from "path";
-import { Subscription } from "rxjs/Rx";
+import { Subscription } from "rxjs";
 import "./file-explorer-tabs.scss";
 
 interface Tab {

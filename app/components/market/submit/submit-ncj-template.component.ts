@@ -8,12 +8,9 @@ import {
 } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Observable, Subscription } from "rxjs";
-
 import { ServerError, autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
-
 import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, NcjTemplateMode } from "app/models";
 import { FileGroupCreateDto, FileOrDirectoryDto } from "app/models/dtos";
@@ -21,6 +18,8 @@ import { NcjFileGroupService, NcjSubmitService, NcjTemplateService } from "app/s
 import { StorageContainerService } from "app/services/storage";
 import { exists, log } from "app/utils";
 import { Constants } from "common";
+import { Subscription, of } from "rxjs";
+import { debounceTime, distinctUntilChanged, flatMap } from "rxjs/operators";
 import { NcjParameterExtendedType, NcjParameterWrapper } from "./market-application.model";
 
 import "./submit-ncj-template.scss";
@@ -174,15 +173,16 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             return obs;
         } else {
             log.error("Couldn't find how to submit this template.", { modeState: this.modeState });
-            return Observable.of(null);
+            return of(null);
         }
     }
 
     @autobind()
     private _createJobWithAutoPool() {
         this._saveTemplateAsRecent();
-        return this.ncjSubmitService.expandPoolTemplate(this.poolTemplate, this.poolParams.value)
-            .flatMap(data => this._runJobWithPool(data));
+        return this.ncjSubmitService.expandPoolTemplate(this.poolTemplate, this.poolParams.value).pipe(
+            flatMap(data => this._runJobWithPool(data)),
+        );
     }
 
     @autobind()
@@ -324,7 +324,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     private _handleControlChangeEvents(formGroup, key) {
         // Listen to control value change events and update the route parameters to match
         // tslint:disable-next-line:max-line-length
-        this._controlChanges.push(formGroup[key].valueChanges.debounceTime(400).distinctUntilChanged().subscribe((change) => {
+        this._controlChanges.push(formGroup[key].valueChanges.pipe(debounceTime(400), distinctUntilChanged()).subscribe((change) => {
             if (this._parameterTypeMap[key] === NcjParameterExtendedType.fileGroup && Boolean(change)) {
                 // Quick-Fix until we modify the CLI to finally sort out file group prefixes
                 change = this.fileGroupService.addFileGroupPrefix(change);

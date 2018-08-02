@@ -3,7 +3,7 @@ import { COMMAND_LABEL_ICON, ElectronRemote, EntityCommand, EntityCommands, Perm
 
 import { Certificate, CertificateState } from "app/models";
 import { CertificateService, FileSystemService, PinnedEntityService } from "app/services";
-import { Observable } from "rxjs";
+import { from } from "rxjs";
 
 @Injectable()
 export class CertificateCommands extends EntityCommands<Certificate> {
@@ -106,7 +106,7 @@ export class CertificateCommands extends EntityCommands<Certificate> {
 
         if (localPath) {
             const content = JSON.stringify(certificate._original, null, 2);
-            return Observable.fromPromise(this.fs.saveFile(localPath, content));
+            return from(this.fs.saveFile(localPath, content));
         }
     }
 }

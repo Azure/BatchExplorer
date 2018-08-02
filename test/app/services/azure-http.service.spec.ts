@@ -2,7 +2,7 @@ import { Injector, ReflectiveInjector } from "@angular/core";
 import { fakeAsync, tick } from "@angular/core/testing";
 import { BaseRequestOptions, ConnectionBackend, Http, RequestOptions, Response, ResponseOptions } from "@angular/http";
 import { MockBackend, MockConnection } from "@angular/http/testing";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 import { HttpCode, ServerError } from "@batch-flask/core";
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
@@ -27,7 +27,7 @@ describe("AzureHttpService", () => {
     beforeEach(() => {
 
         adalSpy = {
-            accessTokenData: () => Observable.of({ accessToken: "abc" }),
+            accessTokenData: () => of({ accessToken: "abc" }),
         };
 
         appServiceSpy = {

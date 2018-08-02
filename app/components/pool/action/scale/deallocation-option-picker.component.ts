@@ -2,9 +2,9 @@ import { Component, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { Subscription } from "rxjs";
-
 import { NodeDeallocationOption } from "app/models/dtos";
+import { Subscription } from "rxjs";
+import { distinctUntilChanged } from "rxjs/operators";
 
 import "./deallocation-option-picker.scss";
 
@@ -30,7 +30,7 @@ export class DeallocationOptionPickerComponent implements OnDestroy, ControlValu
             nodeDeallocationOption: NodeDeallocationOption.requeue,
         });
 
-        this._sub = this.form.valueChanges.distinctUntilChanged().subscribe((value: any) => {
+        this._sub = this.form.valueChanges.pipe(distinctUntilChanged()).subscribe((value: any) => {
             this._setCurrentOption(value.nodeDeallocationOption);
             if (this._propagateChange) {
                 this._propagateChange(value);

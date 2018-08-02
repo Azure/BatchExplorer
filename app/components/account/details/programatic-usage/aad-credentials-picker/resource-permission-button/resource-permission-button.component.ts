@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
-import { List } from "immutable";
-
 import { RoleAssignment, RoleDefinition } from "app/models";
 import { ResourceAccessService } from "app/services";
-import { Observable } from "rxjs";
+import { List } from "immutable";
+import { Observable, of } from "rxjs";
+import { flatMap } from "rxjs/operators";
+
 import "./resource-permission-button.scss";
 
 const allowedRoleNames = new Set([
@@ -70,9 +71,11 @@ export class ResourcePermissionButtonComponent implements OnChanges {
         if (!role) {
             obs = this._deleteAssignment();
         } else {
-            obs = this._deleteAssignment().flatMap(() => {
-                return this.resourceAccessService.createAssignment(this.resourceId, this.principalId, role.id);
-            });
+            obs = this._deleteAssignment().pipe(
+                flatMap(() => {
+                    return this.resourceAccessService.createAssignment(this.resourceId, this.principalId, role.id);
+                }),
+            );
         }
 
         obs.subscribe(() => {
@@ -90,7 +93,7 @@ export class ResourcePermissionButtonComponent implements OnChanges {
         if (assignment) {
             return this.resourceAccessService.deleteAssignment(assignment.id);
         } else {
-            return Observable.of(null);
+            return of(null);
         }
     }
 

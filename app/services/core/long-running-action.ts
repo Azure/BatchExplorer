@@ -1,5 +1,5 @@
 import * as inflection from "inflection";
-import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable, of } from "rxjs";
 
 import { BackgroundTask } from "@batch-flask/ui/background-task/background-task.model";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task/background-task.service";
@@ -70,7 +70,7 @@ export abstract class LongRunningAction {
         progressIncrease: number) {
 
         if (index === funcs.length) {
-            return Observable.of({});
+            return of({});
         }
         const current = funcs[index];
         const obs = new AsyncSubject();

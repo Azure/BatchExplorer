@@ -1,7 +1,7 @@
 import { fakeAsync, tick } from "@angular/core/testing";
 
 import { PollObservable, PollService } from "app/services/core";
-import { Observable } from "rxjs";
+import { timer } from "rxjs";
 
 describe("PollService", () => {
     let service: PollService;
@@ -32,7 +32,7 @@ describe("PollService", () => {
     it("should wait for callback observable to complete if applicable", fakeAsync(() => {
         poll1 = service.startPoll("key-1", 1000, () => {
             poll1Spy();
-            return Observable.timer(1000);
+            return timer(1000);
         });
 
         expect(poll1Spy).toHaveBeenCalledTimes(0); // Not yet called

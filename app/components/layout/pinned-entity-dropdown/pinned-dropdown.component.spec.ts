@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, of } from "rxjs";
 
 import { NavigableRecord, PinnableEntity, PinnedEntityType } from "@batch-flask/core";
 import { ContextMenuService } from "@batch-flask/ui";
@@ -45,7 +45,7 @@ describe("PinnedDropDownComponent", () => {
         };
 
         accountServiceSpy = {
-            currentAccount: Observable.of(Fixtures.account.create({
+            currentAccount: of(Fixtures.account.create({
                 id: "myaccount",
                 properties: {
                     accountEndpoint: "myaccount.westus.batch.com",

@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { TenantDetails, TenantDetailsAttributes } from "app/models";
 import { Constants } from "common";
 import { Observable } from "rxjs";
+import { flatMap, map, share } from "rxjs/operators";
 import { AdalService } from "./adal";
 import { BatchExplorerService } from "./batch-labs.service";
 
@@ -17,8 +18,8 @@ export class TenantDetailsService {
     }
 
     public get(tenantId: string): Observable<TenantDetails> {
-        return this.adal.accessTokenData(tenantId, this.serviceUrl)
-            .flatMap((accessToken) => {
+        return this.adal.accessTokenData(tenantId, this.serviceUrl).pipe(
+            flatMap((accessToken) => {
                 const options = {
                     headers: new HttpHeaders({
                         Authorization: `${accessToken.token_type} ${accessToken.access_token}`,
@@ -31,9 +32,12 @@ export class TenantDetailsService {
                 };
                 const url = `${this.serviceUrl}${tenantId}/tenantDetails`;
                 return this.http.get<{ value: TenantDetailsAttributes[] }>(url, options);
-            }).map((response) => {
+            }),
+            map((response) => {
                 const value = response.value[0];
                 return value && new TenantDetails(value);
-            }).share();
+            }),
+            share(),
+        );
     }
 }
