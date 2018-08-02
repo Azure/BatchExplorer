@@ -265,7 +265,7 @@ export class FileService {
 
     private _download(uri: string, dest: string) {
         return this.http.get(uri, { observe: "response", responseType: "blob" }).pipe(
-            flatMap((response) => Observable.fromPromise(this._downloadContent(response, dest))),
+            flatMap((response) => from(this._downloadContent(response, dest))),
             share(),
         );
     }
@@ -291,7 +291,7 @@ export class FileService {
 
     private _getContent(uri: string): Observable<{ content: string }> {
         return this.http.get(uri, { observe: "response", responseType: "arraybuffer" }).pipe(
-            flatMap((response) => Observable.fromPromise(this._readContent(response))),
+            flatMap((response) => from(this._readContent(response))),
             share(),
         );
     }

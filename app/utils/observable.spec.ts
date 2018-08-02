@@ -47,10 +47,10 @@
 //         }));
 
 //         it("should return value if not returned an observable", () => {
-//             const obs1 = Observable.of(1).flatMap((val) => {
+//             const obs1 = of(1).flatMap((val) => {
 //                 return null;
 //             });
-//             const obs2 = Observable.of(1).flatMap((val) => {
+//             const obs2 = of(1).flatMap((val) => {
 //                 return val + 2;
 //             });
 //             let obs1Val;

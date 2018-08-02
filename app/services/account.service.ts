@@ -244,7 +244,7 @@ export class AccountService {
 
     public favoriteAccount(accountId: string): Observable<any> {
         if (this.isAccountFavorite(accountId)) {
-            return Observable.of(true);
+            return of(true);
         }
 
         const subject = new AsyncSubject();
@@ -336,7 +336,7 @@ export class AccountService {
      */
     public nameAvailable(name: string, subscription: Subscription, location: string): Observable<AvailabilityResult> {
         if (!name || !subscription || !location) {
-            return Observable.of(null);
+            return of(null);
         }
         const uri = `subscriptions/${subscription.subscriptionId}/providers/${batchProvider}`
             + `/locations/${location}/checkNameAvailability`;
@@ -355,7 +355,7 @@ export class AccountService {
      */
     public accountQuota(subscription: Subscription, location: string): Observable<QuotaResult> {
         if (!subscription || !location) {
-            return Observable.of(null);
+            return of(null);
         }
 
         // get current subscription account quota

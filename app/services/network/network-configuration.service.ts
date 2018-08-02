@@ -42,9 +42,9 @@ export class NetworkConfigurationService {
         return this.armService.get(url).flatMap(response => {
             const virtualNetworks = response.json();
             if (!virtualNetworks || !virtualNetworks.value) {
-                return Observable.of(null);
+                return of(null);
             }
-            return Observable.of(this._filterByLocation(virtualNetworks.value, location, type));
+            return of(this._filterByLocation(virtualNetworks.value, location, type));
         }).first();
     }
 
@@ -59,9 +59,9 @@ export class NetworkConfigurationService {
         return this.armService.get(url).flatMap(response => {
             const virtualNetworks = response.json();
             if (!virtualNetworks || !virtualNetworks.value) {
-                return Observable.of(null);
+                return of(null);
             }
-            return Observable.of(this._filterByLocation(virtualNetworks.value, location, type));
+            return of(this._filterByLocation(virtualNetworks.value, location, type));
         }).first();
     }
 

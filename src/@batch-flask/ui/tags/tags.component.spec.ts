@@ -5,8 +5,8 @@ import { ClickableComponent } from "@batch-flask/ui";
 import { TagsComponent } from "@batch-flask/ui/tags";
 import { TagListComponent } from "@batch-flask/ui/tags/tag-list";
 import { List } from "immutable";
-import { Observable } from "rxjs";
 import { click } from "test/utils/helpers";
+import { of } from "rxjs";
 
 @Component({
     template: `<bl-tags [tags]="tags" [editable]="editable" [save]="save"></bl-tags>`,
@@ -31,7 +31,7 @@ describe("TagsComponent", () => {
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
-        testComponent.save = jasmine.createSpy("save").and.returnValue(Observable.of(true));
+        testComponent.save = jasmine.createSpy("save").and.returnValue(of(true));
         de = fixture.debugElement.query(By.css("bl-tags"));
         component = de.componentInstance;
         fixture.detectChanges();

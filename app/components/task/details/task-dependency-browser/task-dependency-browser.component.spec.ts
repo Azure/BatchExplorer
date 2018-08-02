@@ -43,7 +43,7 @@ describe("TaskDependenciesComponent", () => {
                         return taskMap.get(id) || Fixtures.task.create({ id: id });
                     }));
 
-                    return Observable.of(result);
+                    return of(result);
                 }),
         };
 

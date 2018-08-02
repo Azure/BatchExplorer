@@ -29,7 +29,7 @@ describe("TerminateJobScheduleDialogComponent ", () => {
                         message: { value: "Some random test error happened terminating job schedule" },
                     }));
                 }
-                return Observable.of({});
+                return of({});
             }),
         };
 

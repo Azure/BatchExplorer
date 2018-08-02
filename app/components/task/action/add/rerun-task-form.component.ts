@@ -36,7 +36,7 @@ export class RerunTaskFormComponent extends TaskCreateBasicDialogComponent {
         const id = this.form.getRawValue().id;
         data.id = id;
         return ObservableUtils.queue(
-            () => this.taskService.delete(this.jobId, id).catch(() => Observable.of({})),
+            () => this.taskService.delete(this.jobId, id).catch(() => of({})),
             () => super.submit(data),
         );
     }

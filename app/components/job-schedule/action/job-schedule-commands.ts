@@ -170,7 +170,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
 
         if (localPath) {
             const content = JSON.stringify(jobSchedule._original, null, 2);
-            return Observable.fromPromise(this.fs.saveFile(localPath, content));
+            return from(this.fs.saveFile(localPath, content));
         }
     }
 }

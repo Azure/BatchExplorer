@@ -1,10 +1,11 @@
 import { BasicEntityGetter, BasicListGetter, DataCache, ListView } from "app/services/core";
 import { List, OrderedSet } from "immutable";
-import { Observable } from "rxjs";
+import { Observable, from, of } from "rxjs";
 
 import { FilterBuilder, ServerError } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { FakeModel } from "./fake-model";
+import { flatMap } from "rxjs/operators";
 
 const firstPage = [
     { id: "1", state: "active", name: "Fake1" },
@@ -61,13 +62,13 @@ describe("ListView", () => {
         cache = new DataCache<FakeModel>();
         dataSpy = jasmine.createSpy("supplyDataSpy").and.callFake((params, options, nextLink) => {
             if (options && options.filter === filters.badFilter) {
-                return Observable.fromPromise(Promise.reject(new ServerError({
+                return from(Promise.reject(new ServerError({
                     status: 409,
                     message: "Conflict on the resource",
                     code: "Conflict",
                 })));
             } else {
-                return Observable.fromPromise(Promise.resolve(getData(params, options, nextLink)));
+                return from(Promise.resolve(getData(params, options, nextLink)));
             }
         });
 
@@ -106,7 +107,9 @@ describe("ListView", () => {
     });
 
     it("It retrieve the next batch of items", (done) => {
-        view.fetchNext().flatMap(() => view.fetchNext()).subscribe(() => {
+        view.fetchNext().pipe(
+            flatMap(() => view.fetchNext()),
+        ).subscribe(() => {
             expect(dataSpy).toHaveBeenCalledTimes(2);
             expect(items.toJS()).toEqual(firstPage.concat(secondPage));
             expect(hasMore).toBe(false);
@@ -211,7 +214,7 @@ describe("ListView", () => {
         it("should NOT add the item if already present and update exiting one", (done) => {
             const getter = new BasicEntityGetter(FakeModel, {
                 cache: () => cache,
-                supplyData: () => Observable.of(new FakeModel({ id: "2", state: "running", name: "Fake2" })),
+                supplyData: () => of(new FakeModel({ id: "2", state: "running", name: "Fake2" })),
             });
             const expected = [
                 { id: "1", state: "active", name: "Fake1" },
@@ -228,7 +231,7 @@ describe("ListView", () => {
         it("should add the item if NOT already present", (done) => {
             const getter = new BasicEntityGetter(FakeModel, {
                 cache: () => cache,
-                supplyData: () => Observable.of(new FakeModel({ id: "4", state: "running", name: "Fake4" })),
+                supplyData: () => of(new FakeModel({ id: "4", state: "running", name: "Fake4" })),
             });
             const expected = [
                 { id: "4", state: "running", name: "Fake4" },

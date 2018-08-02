@@ -103,7 +103,7 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
 
         if (localPath) {
             const content = JSON.stringify(task._original, null, 2);
-            return Observable.fromPromise(this.fs.saveFile(localPath, content));
+            return from(this.fs.saveFile(localPath, content));
         }
     }
 }

@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, from, timer } from "rxjs";
 
 import { NavigatorService } from "app/services";
+import { concatMap } from "rxjs/operators";
 import "./online-status.scss";
 
 @Component({
@@ -21,9 +22,11 @@ export class OnlineStatusComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this._sub = Observable.timer(0, 30000).concatMap(() => {
-            return Observable.fromPromise(this.updateOnlineStatus());
-        }).subscribe();
+        this._sub = timer(0, 30000).pipe(
+            concatMap(() => {
+                return from(this.updateOnlineStatus());
+            }),
+        ).subscribe();
     }
     public ngOnDestroy() {
         this._sub.unsubscribe();

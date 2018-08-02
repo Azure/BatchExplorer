@@ -120,7 +120,7 @@ export class QuotaService implements OnDestroy {
 
     private _computeQuotas(account: AccountResource): Observable<BatchQuotas> {
         if (account.isBatchManaged) {
-            return Observable.of(new BatchQuotas({
+            return of(new BatchQuotas({
                 dedicatedCores: account.properties.dedicatedCoreQuota,
                 lowpriCores: account.properties.lowPriorityCoreQuota,
                 pools: account.properties.poolQuota,

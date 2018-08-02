@@ -140,6 +140,6 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
             name,
             value,
         }));
-        return Observable.of({});
+        return of({});
     }
 }

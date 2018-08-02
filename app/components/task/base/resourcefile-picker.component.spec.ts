@@ -35,13 +35,13 @@ describe("ResourcefilePickerComponent", () => {
     beforeEach(() => {
         storageBlobServiceSpy = {
             uploadFile: jasmine.createSpy("uploadFile")
-                .and.returnValue(Observable.of(null)),
+                .and.returnValue(of(null)),
             generateSharedAccessBlobUrl: jasmine.createSpy("uploadFile")
-                .and.callFake((a, b) => Observable.of(`${a}.${b}?key=abc`)),
+                .and.callFake((a, b) => of(`${a}.${b}?key=abc`)),
         };
 
         autoStorageServiceSpy = {
-            get: () => Observable.of("storage-acc-1"),
+            get: () => of("storage-acc-1"),
         };
         fsSpy = {
             lstat: () => Promise.resolve({
@@ -50,7 +50,7 @@ describe("ResourcefilePickerComponent", () => {
         };
         storageContainerServiceSpy = {
             createIfNotExists: jasmine.createSpy("createIfNotExists")
-                .and.returnValue(Observable.of(null)),
+                .and.returnValue(of(null)),
         };
         settingsServiceSpy = {
             settings: {

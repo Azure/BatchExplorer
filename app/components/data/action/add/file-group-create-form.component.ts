@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { MatCheckboxChange } from "@angular/material";
 import { DynamicForm, autobind } from "@batch-flask/core";
 import { BackgroundTaskService, NotificationService, SidebarRef } from "@batch-flask/ui";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, from } from "rxjs";
 
 import { BlobContainer } from "app/models";
 import { FileGroupCreateDto, FileOrDirectoryDto } from "app/models/dtos";
@@ -13,6 +13,7 @@ import { StorageContainerService } from "app/services/storage";
 import { Constants, log } from "app/utils";
 
 import "./file-group-create-form.scss";
+import { distinctUntilChanged, debounceTime, flatMap, share, finalize } from "rxjs/operators";
 
 interface DataTotals {
     uploaded?: number;
@@ -65,7 +66,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
             accessPolicy: ["private"],
         });
 
-        this._subscription = this.form.controls.name.valueChanges.distinctUntilChanged().debounceTime(400)
+        this._subscription = this.form.controls.name.valueChanges.pipe(distinctUntilChanged(), debounceTime(400))
             .subscribe((groupName) => {
                 if (!groupName) { return; }
                 this.fileGroupService.get(groupName).subscribe({
@@ -152,12 +153,12 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         const trimmedName = this._sanitizeFileGroupName(formData.name);
 
         return this.backgroundTaskService.startTask("Uploading files to file group", (task) => {
-            const observable = Observable.fromPromise(this._getValidPaths(formData.paths)).flatMap((validPaths) => {
+            const observable = from(this._getValidPaths(formData.paths)).pipe(flatMap((validPaths) => {
                 const lastData: DataTotals = this._initDataTotals(1, validPaths.length);
                 let message = msgFormat.format(`${lastData.pathCounter}`, `${lastData.pathsExpected}`, trimmedName);
                 task.name.next(message);
 
-                return Observable.from(validPaths).flatMap((fileOrDirPath) => {
+                return from(validPaths).pipe(flatMap((fileOrDirPath) => {
                     const createObs = this.fileGroupService.createOrUpdateFileGroup(
                         formData.name,
                         fileOrDirPath,
@@ -196,18 +197,21 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                     });
 
                     return createObs;
-                }).finally(() => {
-                    if (lastData.actual > 0) {
-                        task.progress.next(100);
-                        const fileGroupName = this.fileGroupService.addFileGroupPrefix(formData.name);
-                        this.storageContainerService.onContainerAdded.next(fileGroupName);
-                        this.notificationService.success(
-                            "Create file group",
-                            `${lastData.actual} files were successfully uploaded to the file group`,
-                        );
-                    }
-                });
-            }).share();
+                }),
+                    finalize(() => {
+                        if (lastData.actual > 0) {
+                            task.progress.next(100);
+                            const fileGroupName = this.fileGroupService.addFileGroupPrefix(formData.name);
+                            this.storageContainerService.onContainerAdded.next(fileGroupName);
+                            this.notificationService.success(
+                                "Create file group",
+                                `${lastData.actual} files were successfully uploaded to the file group`,
+                            );
+                        }
+                    }));
+            }),
+                share(),
+            );
 
             return observable;
         });

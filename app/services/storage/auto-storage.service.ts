@@ -30,11 +30,11 @@ export class AutoStorageService {
     }
 
     public getStorageAccountIdFromDataSource(dataSource: StorageDataSource): Observable<string> {
-        if (!dataSource) { return Observable.of(dataSource); }
+        if (!dataSource) { return of(dataSource); }
         if (dataSource === "file-groups") {
             return this.get();
         } else {
-            return Observable.of(dataSource);
+            return of(dataSource);
         }
     }
 }

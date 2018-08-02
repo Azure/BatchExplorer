@@ -70,7 +70,7 @@ export abstract class LongRunningAction {
         progressIncrease: number) {
 
         if (index === funcs.length) {
-            return Observable.of({});
+            return of({});
         }
         const current = funcs[index];
         const obs = new AsyncSubject();

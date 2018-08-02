@@ -1,5 +1,5 @@
-import { Observable } from "rxjs";
 import { EntityCommand, EntityCommandNotify } from "./entity-command";
+import { of } from "rxjs";
 
 interface MyModel {
     id: string;
@@ -113,7 +113,7 @@ describe("EntityCommand", () => {
 
     describe("#performAction", () => {
         it("Works when action return observable", (done) => {
-            const actionSpy = jasmine.createSpy("action").and.returnValue(Observable.of("some-obs-value"));
+            const actionSpy = jasmine.createSpy("action").and.returnValue(of("some-obs-value"));
             const command = new EntityCommand<MyModel>(injector, {
                 label: "my-label",
                 action: actionSpy,

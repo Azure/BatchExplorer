@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
 import { Response, ResponseOptions } from "@angular/http";
 import { By } from "@angular/platform-browser";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -35,7 +35,7 @@ describe("ApplicationEditDialogComponent ", () => {
                     }))));
                 }
 
-                return Observable.of({});
+                return of({});
             }),
         };
 

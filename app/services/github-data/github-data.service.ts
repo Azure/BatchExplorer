@@ -45,7 +45,7 @@ export class GithubDataService implements OnDestroy {
 
     public reloadData(): Observable<any> {
         this._ready = new AsyncSubject();
-        return Observable.fromPromise(this._downloadRepo());
+        return from(this._downloadRepo());
     }
 
     public ngOnDestroy() {

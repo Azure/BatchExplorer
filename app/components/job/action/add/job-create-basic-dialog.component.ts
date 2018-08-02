@@ -81,7 +81,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
         this.form.controls.poolInfo.valueChanges
             .debounceTime(400)
             .distinctUntilChanged()
-            .flatMap(pool => pool ? poolService.get(pool.poolId) : Observable.of(null))
+            .flatMap(pool => pool ? poolService.get(pool.poolId) : of(null))
             .subscribe(pool => {
                 this.virtualMachineConfiguration = pool && pool.virtualMachineConfiguration;
                 if (!this.virtualMachineConfiguration || !this.virtualMachineConfiguration.containerConfiguration) {

@@ -249,7 +249,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
                     };
                 })
                 .catch(err => {
-                    return Observable.of({
+                    return of({
                         serverError: err && err.message,
                     });
                 })
@@ -262,13 +262,13 @@ export class BatchAccountCreateComponent implements OnDestroy {
         return (control: FormControl): Observable<{ [key: string]: any }> => {
             let resourceGroup = control.value;
             if (!resourceGroup) {
-                return Observable.of(null);
+                return of(null);
             }
             if (typeof resourceGroup === "string") {
                 if (this._containsResourceGroup(resourceGroup)) {
                     resourceGroup = this.resourceGroups.find(rg => rg.name === resourceGroup);
                 } else {
-                    return Observable.of(null);
+                    return of(null);
                 }
             }
             return this.authService
@@ -282,7 +282,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
                     return null;
                 })
                 .catch(err => {
-                    return Observable.of({
+                    return of({
                         serverError: err && err.message,
                     });
                 })
@@ -309,7 +309,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
                     };
                 })
                 .catch(err => {
-                    return Observable.of({
+                    return of({
                         serverError: err && err.message,
                     });
                 })

@@ -64,7 +64,7 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
                     this.fileNavigator.refresh(path);
                 });
 
-                return Observable.of(null);
+                return of(null);
             },
         });
     }

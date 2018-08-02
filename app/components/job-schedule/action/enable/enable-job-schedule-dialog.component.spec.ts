@@ -30,7 +30,7 @@ describe("EnableJobScheduleDialogComponent ", () => {
                     }));
                 }
 
-                return Observable.of({});
+                return of({});
             }),
         };
 

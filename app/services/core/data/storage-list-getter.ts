@@ -36,7 +36,7 @@ export class StorageListGetter<TEntity, TParams extends StorageBaseParams> exten
 
     protected list(params: TParams, options: any): Observable<any> {
         return this._clientProxy(params, options, null).flatMap((client) => {
-            return Observable.fromPromise(client);
+            return from(client);
         }).map(response => this._processStorageResponse(response)).catch((error) => {
             return Observable.throw(ServerError.fromStorage(error));
         }).share();
@@ -44,7 +44,7 @@ export class StorageListGetter<TEntity, TParams extends StorageBaseParams> exten
 
     protected listNext(token: ContinuationToken): Observable<any> {
         return this._clientProxy(token.params, token.options, token.nextLink).flatMap((client) => {
-            return Observable.fromPromise(client);
+            return from(client);
         }).map(response => this._processStorageResponse(response)).catch((error) => {
             return Observable.throw(ServerError.fromStorage(error));
         }).share();

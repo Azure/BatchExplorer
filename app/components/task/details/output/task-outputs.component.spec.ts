@@ -87,7 +87,7 @@ describe("TaskOutputsComponent", () => {
         };
 
         autoStorageServiceSpy = {
-            get: () => Observable.of("storage-acc-1"),
+            get: () => of("storage-acc-1"),
         };
 
         TestBed.configureTestingModule({

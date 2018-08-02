@@ -98,7 +98,7 @@ export class AppInsightsApiService {
         return attempts
             .switchMap((x: any) => {
                 if (RetryableHttpCode.has(x.status)) {
-                    return Observable.of(x);
+                    return of(x);
                 }
                 return Observable.throw(x);
             })

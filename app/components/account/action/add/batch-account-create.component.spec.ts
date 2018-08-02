@@ -45,7 +45,7 @@ describe("BatchAccountCreateComponent ", () => {
                         name: rg,
                     }),
                 });
-                return Observable.of(ServerError.fromARM(new Response(options)));
+                return of(ServerError.fromARM(new Response(options)));
             }),
             putBatchAccount: jasmine.createSpy("putBatchAccount").and.callFake((sub, rg, account, body) => {
                 if (sub.subscriptionId === "mock-bad-subscription") {
@@ -62,11 +62,11 @@ describe("BatchAccountCreateComponent ", () => {
                         location: body.location,
                     }),
                 });
-                return Observable.of(ServerError.fromARM(new Response(options)));
+                return of(ServerError.fromARM(new Response(options)));
             }),
             nameAvailable: jasmine.createSpy("nameAvailable").and.callFake((name, sub, loc) => {
                 if (name === "badname") {
-                    return Observable.of({
+                    return of({
                         nameAvailable: false,
                         message: `Account name '${name}' is in use`,
                     });
@@ -76,16 +76,16 @@ describe("BatchAccountCreateComponent ", () => {
                         message: serverErrorMsg,
                     });
                 }
-                return Observable.of(null);
+                return of(null);
             }),
             accountQuota: jasmine.createSpy("accountQuota").and.callFake((sub, loc) => {
                 if (loc === "validquota") {
-                    return Observable.of({
+                    return of({
                         used: 10,
                         quota: 100,
                     });
                 } else if (loc === "invalidquota") {
-                    return Observable.of({
+                    return of({
                         used: 10,
                         quota: 10,
                     });
@@ -95,61 +95,61 @@ describe("BatchAccountCreateComponent ", () => {
                         message: serverErrorMsg,
                     });
                 }
-                return Observable.of(null);
+                return of(null);
             }),
         };
 
         authServiceSpy = {
             getPermission: jasmine.createSpy("getPermission").and.callFake((resourceId) => {
                 if (resourceId === "dummy-1-rg-2") {
-                    return Observable.of(Permission.Read);
+                    return of(Permission.Read);
                 } else if (resourceId === "servererror") {
                     return Observable.throw({
                         status: 500,
                         message: serverErrorMsg,
                     });
                 }
-                return Observable.of(Permission.Write);
+                return of(Permission.Write);
             }),
         };
 
         subscriptionServiceSpy = {
-            subscriptions: Observable.of([
+            subscriptions: of([
                 { subscriptionId: "dummy-1", displayName: "sub-1" },
                 { subscriptionId: "dummy-2", displayName: "sub-2" },
                 { subscriptionId: "dummy-3", displayName: "sub-3" },
             ]),
             listResourceGroups: jasmine.createSpy("listResourceGroups").and.callFake((sub) => {
                 if (sub.subscriptionId === "dummy-1") {
-                    return Observable.of([
+                    return of([
                         { id: "dummy-1-rg-1", name: "dummy-1-rg-1", location: "eastus" },
                         { id: "dummy-1-rg-2", name: "dummy-1-rg-2", location: "westus" },
                     ]);
                 } else if (sub.subscriptionId === "dummy-2") {
-                    return Observable.of([
+                    return of([
                         { id: "dummy-2-rg-1", location: "eastus" },
                         { id: "dummy-2-rg-2", location: "westus" },
                         { id: "dummy-2-rg-3", location: "westus" },
                     ]);
                 }
-                return Observable.of([]);
+                return of([]);
             }),
             listLocations: jasmine.createSpy("listLocations").and.callFake((sub) => {
                 if (sub.subscriptionId === "dummy-1") {
-                    return Observable.of([
+                    return of([
                         { id: "dummy-1-loc-1", name: "eastus1", displayName: "East US", subscriptionId: "dummy-1" },
                         { id: "dummy-1-loc-2", name: "eastus2", displayName: "East US 2", subscriptionId: "dummy-1" },
                         { id: "dummy-1-loc-3", name: "eastus3", displayName: "East US 3", subscriptionId: "dummy-1" },
                         { id: "dummy-1-loc-4", name: "eastus4", displayName: "East US 4", subscriptionId: "dummy-1" },
                     ]);
                 } else if (sub.subscriptionId === "dummy-2") {
-                    return Observable.of([
+                    return of([
                         { id: "dummy-2-loc-1", name: "westus1", displayName: "West US", subscriptionId: "dummy-2" },
                         { id: "dummy-2-loc-2", name: "westus2", displayName: "West US 2", subscriptionId: "dummy-2" },
                         { id: "dummy-2-loc-3", name: "westus3", displayName: "West US 3", subscriptionId: "dummy-2" },
                     ]);
                 }
-                return Observable.of([]);
+                return of([]);
             }),
         };
 

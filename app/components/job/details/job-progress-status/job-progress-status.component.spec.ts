@@ -54,7 +54,7 @@ describe("JobProgressStatusComponent", () => {
                     ? JobTaskCountsValidationStatus.unvalidated
                     : JobTaskCountsValidationStatus.validated;
 
-                return Observable.of(new JobTaskCounts({
+                return of(new JobTaskCounts({
                     running: 4,
                     completed: 8,
                     active: 12,

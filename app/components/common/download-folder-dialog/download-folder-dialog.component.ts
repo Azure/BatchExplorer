@@ -4,7 +4,7 @@ import { MatDialogRef } from "@angular/material";
 import { ElectronShell } from "@batch-flask/ui";
 import { List } from "immutable";
 import * as path from "path";
-import { AsyncSubject, Observable } from "rxjs";
+import { AsyncSubject, Observable, of, forkJoin } from "rxjs";
 
 import { autobind } from "@batch-flask/core";
 import { BackgroundTask, BackgroundTaskService } from "@batch-flask/ui/background-task";
@@ -14,6 +14,7 @@ import { FileSystemService } from "app/services";
 import { FileNavigator } from "app/services/file";
 import * as minimatch from "minimatch";
 import "./download-folder-dialog.scss";
+import { tap, map } from "rxjs/operators";
 
 @Component({
     selector: "bl-download-folder-dialog",
@@ -58,7 +59,7 @@ export class DownloadFolderComponent {
     @autobind()
     public startDownload() {
         this._startDownloadAsync();
-        return Observable.of({});
+        return of({});
     }
 
     public updateDownloadFolder(folder: string) {
@@ -82,7 +83,7 @@ export class DownloadFolderComponent {
                 } else {
                     task.progress.next(10);
                     const downloadObs = this._downloadFiles(task, folder, files);
-                    Observable.forkJoin(downloadObs).subscribe(() => {
+                    forkJoin(downloadObs).subscribe(() => {
                         this.shell.showItemInFolder(folder);
                         task.progress.next(100);
                         subject.complete();
@@ -117,15 +118,17 @@ export class DownloadFolderComponent {
             const fileLoader = this.navigator.getFile(file.name);
             const fileName = this._getSubdirectoryPath(file.name);
             const filePath = path.join(folder, fileName);
-            return fileLoader.download(filePath).do(() => {
-                task.progress.next(task.progress.value + progressStep);
-            });
+            return fileLoader.download(filePath).pipe(
+                tap(() => {
+                    task.progress.next(task.progress.value + progressStep);
+                }),
+            );
         }).toArray();
     }
 
     private _getListOfFilesToDownload(): Observable<List<File>> {
         const patterns = this._getPatterns();
-        return this.navigator.listAllFiles(this.folder).map((items) => {
+        return this.navigator.listAllFiles(this.folder).pipe(map((items) => {
             const files = items.filter((file) => {
                 for (const pattern of patterns) {
                     // Path prefix must be excluded when compared to pattern
@@ -137,7 +140,8 @@ export class DownloadFolderComponent {
                 return false;
             });
             return List(files);
-        });
+        }),
+        );
     }
 
     private get _defaultDownloadFolder() {

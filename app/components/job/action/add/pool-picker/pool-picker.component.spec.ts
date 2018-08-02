@@ -73,7 +73,7 @@ describe("PoolPickerComponent", () => {
             }),
         };
         vmSizeServiceSpy = {
-            sizes: Observable.of(List([])),
+            sizes: of(List([])),
         };
         poolOsServiceSpy = {
             offers: new BehaviorSubject({

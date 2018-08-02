@@ -136,7 +136,7 @@ describe("SubmitNcjTemplateComponent", () => {
         };
 
         vmSizeServiceSpy = {
-            sizes: Observable.of(List([])),
+            sizes: of(List([])),
         };
 
         routerSpy = {
@@ -151,13 +151,13 @@ describe("SubmitNcjTemplateComponent", () => {
 
         ncjSubmitServiceSpy = {
             expandPoolTemplate: jasmine.createSpy("expandPoolTemplate").and.callFake((poolTemplate, poolParams) => {
-                return Observable.of({});
+                return of({});
             }),
             submitJob: jasmine.createSpy("submitJob").and.callFake((jobTemplate, jobParams) => {
-                return Observable.of({});
+                return of({});
             }),
             createPool: jasmine.createSpy("createPool").and.callFake((poolTemplate, poolParams) => {
-                return Observable.of({});
+                return of({});
             }),
         };
 
@@ -186,7 +186,7 @@ describe("SubmitNcjTemplateComponent", () => {
         };
 
         autoStorageServiceSpy = {
-            get: () => Observable.of("storage-acc-1"),
+            get: () => of("storage-acc-1"),
         };
 
         fileGroupServiceSpy = {

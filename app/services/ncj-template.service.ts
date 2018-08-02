@@ -63,7 +63,7 @@ export class NcjTemplateService {
                     log.error(`File is not valid json: ${error.message}`);
                 });
 
-                return Observable.fromPromise(promise);
+                return from(promise);
             }),
             share(),
         );

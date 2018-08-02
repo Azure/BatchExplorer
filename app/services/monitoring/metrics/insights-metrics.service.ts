@@ -56,7 +56,7 @@ export class InsightsMetricsService {
      */
     private _getCurrentAccount() {
         return this.accountService.currentAccount.flatMap(account => {
-            return Observable.of(account && account.id);
+            return of(account && account.id);
         }).share();
     }
 

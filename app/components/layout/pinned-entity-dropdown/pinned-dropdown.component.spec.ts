@@ -45,7 +45,7 @@ describe("PinnedDropDownComponent", () => {
         };
 
         accountServiceSpy = {
-            currentAccount: Observable.of(Fixtures.account.create({
+            currentAccount: of(Fixtures.account.create({
                 id: "myaccount",
                 properties: {
                     accountEndpoint: "myaccount.westus.batch.com",

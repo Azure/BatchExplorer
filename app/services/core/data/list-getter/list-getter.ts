@@ -1,8 +1,9 @@
 import { Type } from "@angular/core";
 import { List, OrderedSet } from "immutable";
-import { Observable } from "rxjs";
+import { Observable, empty, of } from "rxjs";
 
 import { DataCache } from "app/services/core/data-cache";
+import { expand, map, reduce, share } from "rxjs/operators";
 import { GenericGetter, GenericGetterConfig } from "../generic-getter";
 import { ContinuationToken, ListOptions, ListOptionsAttributes } from "../list-options";
 
@@ -38,15 +39,18 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
         options?: ListOptionsAttributes | ListOptions,
         progress?: FetchAllProgressCallback): Observable<List<TEntity>> {
 
-        return this._fetch(params, new ListOptions(options), true).expand(({ items, nextLink }) => {
-            return nextLink ? this._fetchNext(nextLink) : Observable.empty();
-        }).reduce((items: TEntity[], response: ListResponse<TEntity>) => {
-            const array = [...items, ...response.items.toJS()];
-            if (progress) { progress(array.length); }
-            return array;
-        }, []).map((items) => {
-            return List(items);
-        }).share();
+        return this._fetch(params, new ListOptions(options), true).pipe(
+            expand(({ items, nextLink }) => {
+                return nextLink ? this._fetchNext(nextLink) : empty();
+            }),
+            reduce((items: TEntity[], response: ListResponse<TEntity>) => {
+                const array = [...items, ...response.items.toJS()];
+                if (progress) { progress(array.length); }
+                return array;
+            }, []),
+            map(items => List(items)),
+            share(),
+        );
     }
 
     public fetchFromCache(params: TParams, options?: ListOptionsAttributes | ListOptions): ListResponse<TEntity> {
@@ -61,15 +65,15 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
         const cache = this.getCache(params);
         const cachedResponse = this._tryLoadFromCache(cache, options, forceNew);
         if (cachedResponse !== null) {
-            return Observable.of(cachedResponse);
+            return of(cachedResponse);
         }
 
-        return this.list(params, options).map(x => this._processItems(cache, x, params, options, true));
+        return this.list(params, options).pipe(map(x => this._processItems(cache, x, params, options, true)));
     }
 
     private _fetchNext(token: ContinuationToken): Observable<ListResponse<TEntity>> {
         const cache = this.getCache(token.params);
-        return this.listNext(token).map(x => this._processItems(cache, x, token.params, token.options, false));
+        return this.listNext(token).pipe(map(x => this._processItems(cache, x, token.params, token.options, false)));
     }
 
     private _processItems(

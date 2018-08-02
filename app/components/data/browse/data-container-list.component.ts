@@ -9,7 +9,7 @@ import {
     BackgroundTaskService, LoadingStatus, QuickListItemStatus,
 } from "@batch-flask/ui";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, of } from "rxjs";
 
 import { BlobContainer, LeaseStatus } from "app/models";
 import { ListView } from "app/services/core";
@@ -101,7 +101,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
             return this.data.refresh();
         }
 
-        return Observable.of(null);
+        return of(null);
     }
 
     public handleFilter(filter: Filter) {

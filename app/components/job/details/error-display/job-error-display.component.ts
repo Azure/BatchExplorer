@@ -57,7 +57,7 @@ export class JobErrorDisplayComponent {
         this.router.navigate(["/jobs", this.job.id, "tasks"], {
             queryParams: { filter: JSON.stringify(filter) },
         });
-        return Observable.of(0);
+        return of(0);
     }
 
     public trackDetail(index, detail: NameValuePair) {

@@ -89,7 +89,7 @@ export class JobScheduleJobSpecificationComponent implements ControlValueAccesso
         this._subs.push(this.form.controls.poolInfo.valueChanges
             .debounceTime(400)
             .distinctUntilChanged()
-            .flatMap(pool => pool ? this.poolService.get(pool.poolId) : Observable.of(null))
+            .flatMap(pool => pool ? this.poolService.get(pool.poolId) : of(null))
             .subscribe(pool => {
                 this.virtualMachineConfiguration = pool && pool.virtualMachineConfiguration;
                 if (!this.virtualMachineConfiguration || !this.virtualMachineConfiguration.containerConfiguration) {

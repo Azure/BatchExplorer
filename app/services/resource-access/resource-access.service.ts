@@ -86,7 +86,7 @@ export class ResourceAccessService {
         : Observable<{ role: RoleDefinition, roleAssignment: RoleAssignment }> {
 
         return this.getRoleAssignmentFor(resourceId, principalId).flatMap((roleAssignment) => {
-            if (!roleAssignment) { return Observable.of({ role: null, roleAssignment: null }); }
+            if (!roleAssignment) { return of({ role: null, roleAssignment: null }); }
             return this.arm.get(roleAssignment.properties.roleDefinitionId).map(x => {
                 const role = new RoleDefinition(x.json());
                 return { role, roleAssignment };
@@ -101,7 +101,7 @@ export class ResourceAccessService {
      */
     public getRoleDefinitionFor(resourceId: string, principalId: string): Observable<RoleDefinition> {
         return this.getRoleAssignmentFor(resourceId, principalId).flatMap((roleAssignment) => {
-            if (!roleAssignment) { return Observable.of(null); }
+            if (!roleAssignment) { return of(null); }
             return this.arm.get(roleAssignment.properties.roleDefinitionId);
         }).map(x => new RoleDefinition(x.json())).share();
     }

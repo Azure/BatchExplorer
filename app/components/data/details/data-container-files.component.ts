@@ -46,7 +46,7 @@ export class DataContainerFilesComponent implements OnDestroy {
     @autobind()
     public handleFileUpload(event: FileDropEvent) {
         const container = this.container.name;
-        return Observable.fromPromise(this._getFilesToUpload(event.files)).flatMap((files) => {
+        return from(this._getFilesToUpload(event.files)).flatMap((files) => {
             const message = `Uploading ${files.length} files to ${container}`;
             return this.backgroundTaskService.startTask(message, (task) => {
                 const observable = this.storageBlobService.uploadFiles(this.storageAccountId,

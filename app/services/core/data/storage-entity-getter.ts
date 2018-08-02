@@ -33,7 +33,7 @@ export class StorageEntityGetter<TEntity, TParams extends StorageBaseParams> ext
 
     protected getData(params: TParams): Observable<any> {
         return this.storageClient.getFor(params.storageAccountId).flatMap((client) => {
-            return Observable.fromPromise(this._getMethod(client, params));
+            return from(this._getMethod(client, params));
         }).map(x => x.data)
             .catch((error) => {
                 return Observable.throw(ServerError.fromStorage(error));

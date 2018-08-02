@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
 import { ElectronRemote, NotificationService } from "@batch-flask/ui";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, from } from "rxjs";
 
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { AADService } from "client/core/aad";
@@ -47,7 +47,7 @@ export class AdalService {
     }
 
     public accessTokenFor(tenantId: string, resource: string = null) {
-        return Observable.fromPromise(this.accessTokenDataAsync(tenantId, resource).then(x => x.access_token));
+        return from(this.accessTokenDataAsync(tenantId, resource).then(x => x.access_token));
     }
 
     /**
@@ -56,7 +56,7 @@ export class AdalService {
      * @param resource
      */
     public accessTokenData(tenantId: string, resource: string = null): Observable<AccessToken> {
-        return Observable.fromPromise(this.accessTokenDataAsync(tenantId, resource));
+        return from(this.accessTokenDataAsync(tenantId, resource));
     }
 
     /**

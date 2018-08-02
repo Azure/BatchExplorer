@@ -32,7 +32,7 @@ describe("ListGetter", () => {
     beforeEach(() => {
         cache = new DataCache<FakeModel>();
         dataSpy = jasmine.createSpy("supplyDataSpy")
-            .and.returnValues(...data.map(x => Observable.of(x)));
+            .and.returnValues(...data.map(x => of(x)));
         getter = new BasicListGetter(FakeModel, {
             cache: () => cache,
             supplyData: dataSpy,

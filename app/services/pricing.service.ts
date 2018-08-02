@@ -195,7 +195,7 @@ export class PricingService {
             return BatchPricing.fromJS(data.map);
         }).catch((error) => {
             log.error("Error retrieving pricing locally", error);
-            return Observable.of(null);
+            return of(null);
         });
     }
 

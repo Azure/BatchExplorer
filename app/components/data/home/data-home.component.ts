@@ -5,7 +5,6 @@ import { Filter, FilterBuilder, Property, autobind } from "@batch-flask/core";
 import { BrowseLayoutComponent, BrowseLayoutConfig } from "@batch-flask/ui/browse-layout";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { Observable } from "rxjs";
 
 import { BlobContainer } from "app/models";
 import { AutoStorageService, StorageContainerService } from "app/services/storage";
@@ -14,6 +13,8 @@ import { FileGroupCreateFormComponent } from "../action";
 
 import { ActivatedRoute, Router } from "@angular/router";
 import "./data-home.scss";
+import { of } from "rxjs";
+import { debounceTime, flatMap, map, catchError } from "rxjs/operators";
 
 @Component({
     selector: "bl-data-home",
@@ -189,15 +190,18 @@ export class DataHomeComponent implements OnInit {
     private _validateContainerUnique(prefix = "") {
         return (control: FormControl) => {
             const containerName = `${prefix}${control.value}`;
-            return Observable.of(null).debounceTime(500)
-                .flatMap(() => this.storageContainerService.get(this.storageAccountId, containerName))
-                .map((container: BlobContainer) => {
+            return of(null).pipe(
+                debounceTime(500),
+                flatMap(() => this.storageContainerService.get(this.storageAccountId, containerName)),
+                map((container: BlobContainer) => {
                     return {
                         duplicateContainer: {
                             valid: false,
                         },
                     };
-                }).catch(() => Observable.of(null));
+                }),
+                catchError(() => of(null)),
+            );
         };
     }
 

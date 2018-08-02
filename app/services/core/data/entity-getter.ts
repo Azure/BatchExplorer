@@ -29,7 +29,7 @@ export abstract class EntityGetter<TEntity, TParams> extends GenericGetter<TEnti
         if (options.cached) {
             const item = this._tryToLoadFromCache(cache, params);
             if (item) {
-                return Observable.of(item);
+                return of(item);
             }
         }
 

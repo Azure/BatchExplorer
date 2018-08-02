@@ -1,5 +1,5 @@
 import { fakeAsync, tick } from "@angular/core/testing";
-import { Observable } from "rxjs";
+import { Observable, from } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { BasicEntityGetter, DataCache, EntityView } from "app/services/core";
@@ -23,7 +23,7 @@ describe("EntityView", () => {
     beforeEach(() => {
         cache = new DataCache<FakeModel>();
         dataSpy = jasmine.createSpy("supplyDataSpy")
-            .and.returnValues(...data.map(x => Observable.fromPromise(Promise.resolve(x))));
+            .and.returnValues(...data.map(x => from(Promise.resolve(x))));
         getter = new BasicEntityGetter(FakeModel, {
             cache: () => cache,
             supplyData: dataSpy,
@@ -118,7 +118,7 @@ describe("EntityView", () => {
             item = null;
             deleted = null;
             const responses = [
-                Observable.fromPromise(Promise.resolve(data[0])),
+                from(Promise.resolve(data[0])),
                 Observable.throw(new ServerError({ status: 404, message: "404 not found" } as any)),
             ];
             dataSpy = jasmine.createSpy("supplyDataSpy")

@@ -174,7 +174,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             return obs;
         } else {
             log.error("Couldn't find how to submit this template.", { modeState: this.modeState });
-            return Observable.of(null);
+            return of(null);
         }
     }
 

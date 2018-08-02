@@ -83,13 +83,13 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
         this.loading = true;
         this.changeDetector.markForCheck();
 
-        const obs = Observable.fromPromise(this._tryLoadTasksFromCache(force)).pipe(
+        const obs = from(this._tryLoadTasksFromCache(force)).pipe(
             flatMap((success) => {
                 if (success) {
                     this.loading = false;
                     this.changeDetector.markForCheck();
 
-                    return Observable.of(null);
+                    return of(null);
                 }
                 this.taskLoadedProgress = 0;
                 this.changeDetector.markForCheck();
@@ -119,7 +119,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
         const csv = tasksToCsv(this.tasks);
 
         const dest = path.join(this.fs.commonFolders.downloads, `${this.jobId}.csv`);
-        return Observable.fromPromise(this.fs.saveFile(dest, csv).then(() => {
+        return from(this.fs.saveFile(dest, csv).then(() => {
             this.shell.showItemInFolder(dest);
         }));
     }

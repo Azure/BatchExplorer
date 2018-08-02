@@ -155,7 +155,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         const link = `ms-batch-explorer://route/standalone/pools/${this.pool.id}/graphs?fullscreen=true`;
         const window = this.batchExplorer.openNewWindow(link);
 
-        return Observable.fromPromise(window.domReady);
+        return from(window.domReady);
     }
 
     public get appInsightsEnabled() {

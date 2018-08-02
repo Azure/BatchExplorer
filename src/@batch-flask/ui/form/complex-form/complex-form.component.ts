@@ -6,12 +6,13 @@ import { AsyncTask, Dto, ServerError, autobind } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 
 import { validJsonConfig } from "@batch-flask/utils/validators";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, of } from "rxjs";
 import { FormBase } from "../form-base";
 import { FormPageComponent } from "../form-page";
 import { FormActionConfig } from "./footer";
 
 import "./complex-form.scss";
+import { first, filter, tap, share } from "rxjs/operators";
 
 export type FormSize = "small" | "medium" | "large";
 
@@ -109,17 +110,22 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
         let ready;
         if (this._hasAsyncTask) {
             this.waitingForAsyncTask = true;
-            ready = this.asyncTasks.filter(x => [...x].length === 0).first().do(() => {
-                this.waitingForAsyncTask = false;
-            }).share();
+            ready = this.asyncTasks.pipe(
+                filter(x => [...x].length === 0),
+                first(),
+                tap(() => {
+                    this.waitingForAsyncTask = false;
+                }),
+                share(),
+            );
         } else {
-            ready = Observable.of(null);
+            ready = of(null);
         }
         this.loading = true;
         const obs = ready.flatMap(() => {
             const submitResult = this.submit(this.getCurrentDto());
             if (!submitResult) {
-                return Observable.of(null);
+                return of(null);
             } else {
                 return submitResult;
             }

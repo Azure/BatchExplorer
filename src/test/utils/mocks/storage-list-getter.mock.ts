@@ -1,8 +1,9 @@
 import { Type } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
-import { Observable } from "rxjs";
+import { Observable, from, of } from "rxjs";
 
 import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
+import { map, share, catchError } from "rxjs/operators";
 
 export interface MockStorageListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
     getData: (params: TParams, options: any) => any;
@@ -20,15 +21,16 @@ export class MockStorageListGetter<TEntity, TParams> extends ListGetter<TEntity,
     }
 
     protected list(params: TParams, options: any): Observable<any> {
-        return Observable
-            .fromPromise(this._getData(params, options))
-            .map((response: any) => ({ data: response.data }))
-            .catch((error) => {
+        return from(this._getData(params, options)).pipe(
+            map((response: any) => ({ data: response.data })),
+            catchError((error) => {
                 return Observable.throw(ServerError.fromStorage(error));
-            }).share();
+            }),
+            share(),
+        );
     }
 
     protected listNext(token: any): Observable<any> {
-        return Observable.of(null);
+        return of(null);
     }
 }

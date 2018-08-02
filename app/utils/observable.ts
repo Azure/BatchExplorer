@@ -1,4 +1,4 @@
-import { AsyncSubject, Observable } from "rxjs";
+import { AsyncSubject, Observable, of } from "rxjs";
 
 type ObservableBuilder = () => Observable<any>;
 
@@ -10,9 +10,9 @@ export class ObservableUtils {
      * @return List of the output in the order it was given
      *
      * @example
-     * const a = () => Observable.of("a");
-     * const b = () => Observable.of("b");
-     * const c = () => Observable.of("c");
+     * const a = () => of("a");
+     * const b = () => of("b");
+     * const c = () => of("c");
      *
      * ObservableUtils.queue(a, b, c).subscribe(x => {
      * // x is ["a", "b", "c"]
@@ -25,7 +25,7 @@ export class ObservableUtils {
     private static _queueNext(callback: ObservableBuilder[], index: number = 0): Observable<any[]> {
         const subject = new AsyncSubject<any[]>();
         if (index === callback.length) {
-            return Observable.of([]);
+            return of([]);
         }
         callback[index]().subscribe({
             next: (x) => {

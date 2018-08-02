@@ -23,7 +23,7 @@ describe("AuthorizationHttpService", () => {
 
     beforeEach(() => {
         accountServiceSpy = {
-            currentAccount: Observable.of(Fixtures.account.create({
+            currentAccount: of(Fixtures.account.create({
                 id: "myaccount",
             })),
         };
@@ -32,9 +32,9 @@ describe("AuthorizationHttpService", () => {
             get: jasmine.createSpy("get").and.callFake((url, options) => {
                 requestUrl = url;
                 if (url === "fakeNextLink") {
-                    return Observable.of(new Response(new ResponseOptions(mockNextLinkResponse)));
+                    return of(new Response(new ResponseOptions(mockNextLinkResponse)));
                 }
-                return Observable.of(new Response(new ResponseOptions(mockAuthResponse)));
+                return of(new Response(new ResponseOptions(mockAuthResponse)));
             }),
         };
         authService = new AuthorizationHttpService(accountServiceSpy, armServiceSpy);
@@ -95,7 +95,7 @@ describe("AuthorizationHttpService", () => {
         let permission: Permission;
         beforeEach(() => {
             const getResourcePermissionSpy = jasmine.createSpy("getResourcePermission").and.callFake(() => {
-                return Observable.of(permission);
+                return of(permission);
             });
             authService.getResourcePermission = getResourcePermissionSpy;
         });

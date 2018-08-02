@@ -336,7 +336,7 @@ export class StorageBlobService {
                 total,
                 current: file,
             }));
-            return Observable.of(status).concat(uploadObs);
+            return of(status).concat(uploadObs);
         }).share();
     }
 

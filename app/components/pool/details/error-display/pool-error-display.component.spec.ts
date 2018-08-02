@@ -24,7 +24,7 @@ describe("PoolErrorDisplayComponent", () => {
 
     beforeEach(() => {
         accountServiceSpy = {
-            currentAccount: Observable.of(Fixtures.account.create()),
+            currentAccount: of(Fixtures.account.create()),
         };
 
         TestBed.configureTestingModule({

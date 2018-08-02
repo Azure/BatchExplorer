@@ -109,7 +109,7 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
      */
     public fetchNext(forceNew = false): Observable<any> {
         if (!this._hasMore.value) {
-            return Observable.of({ data: [] });
+            return of({ data: [] });
         }
         let fetchObs;
         if (this._nextLink === null) {

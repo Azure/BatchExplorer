@@ -2,7 +2,7 @@ import { SimpleChange } from "@angular/core";
 import { BasicListGetter, DataCache, ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, of } from "rxjs";
 import { FakeModel } from "test/app/services/core/data/fake-model";
 
 describe("ComponentUtils", () => {
@@ -63,7 +63,7 @@ describe("ComponentUtils", () => {
             cache.addItems([pool1, pool2, pool3]);
             getter = new BasicListGetter(FakeModel, {
                 cache: () => cache,
-                supplyData: () => Observable.of({ data: [pool1.toJS(), pool2.toJS()] }),
+                supplyData: () => of({ data: [pool1.toJS(), pool2.toJS()] }),
             });
             view = new ListView({
                 cache: () => cache,

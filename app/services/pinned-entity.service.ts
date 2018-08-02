@@ -45,7 +45,7 @@ export class PinnedEntityService {
 
     public pinFavorite(entity: NavigableRecord): Observable<any> {
         if (this.isFavorite(entity)) {
-            return Observable.of(true);
+            return of(true);
         }
 
         const subject = new AsyncSubject();

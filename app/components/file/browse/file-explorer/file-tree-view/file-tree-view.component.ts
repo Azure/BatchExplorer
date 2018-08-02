@@ -312,7 +312,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
                 }
                 const path = treeRow ? treeRow.path : null;
                 this.fileNavigator.addVirtualFolder(CloudPathUtils.join(path, value));
-                return Observable.of(null);
+                return of(null);
             },
         });
     }

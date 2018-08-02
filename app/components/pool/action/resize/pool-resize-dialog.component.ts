@@ -101,7 +101,7 @@ export class PoolResizeDialogComponent {
         if (this.pool.enableAutoScale) {
             return this.poolService.disableAutoScale(this.pool.id).delay(1000);
         } else {
-            return Observable.of({});
+            return of({});
         }
     }
 }

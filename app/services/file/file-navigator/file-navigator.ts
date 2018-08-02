@@ -155,10 +155,10 @@ export class FileNavigator<TParams = any> {
             return this._checkIfDirectory(node).map(() => {
                 return this._tree.value.getNode(path);
             }).catch(() => {
-                return Observable.of(null);
+                return of(null);
             });
         } else {
-            return Observable.of(node);
+            return of(node);
         }
     }
 
@@ -179,7 +179,7 @@ export class FileNavigator<TParams = any> {
                 return this._loadFilesInPath(path);
             }
         }
-        return Observable.of(node);
+        return of(node);
     }
 
     public isDirectory(path: string): Observable<boolean> {
@@ -272,7 +272,7 @@ export class FileNavigator<TParams = any> {
     }
 
     private _checkIfDirectory(node: FileTreeNode): Observable<boolean> {
-        if (!node.isUnknown) { return Observable.of(node.isDirectory); }
+        if (!node.isUnknown) { return of(node.isDirectory); }
         const subject = new AsyncSubject<boolean>();
         this._loadPath(this._getFolderToLoad(node.path, false)).subscribe({
             next: (files: List<File>) => {
@@ -294,7 +294,7 @@ export class FileNavigator<TParams = any> {
         const tree = this._tree.value;
         const node = tree.getNode(path);
         if (node.loadingStatus === LoadingStatus.Loading && !node.virtual) {
-            return Observable.of(null);
+            return of(null);
         }
         node.markAsLoading();
         const output = new AsyncSubject<FileTreeNode>();

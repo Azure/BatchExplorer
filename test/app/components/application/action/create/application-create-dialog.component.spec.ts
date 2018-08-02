@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
 import { Response, ResponseOptions } from "@angular/http";
 import { By } from "@angular/platform-browser";
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject, of } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -40,7 +40,7 @@ describe("ApplicationCreateDialogComponent ", () => {
                     return Observable.throw(ServerError.fromARM(new Response(options)));
                 }
 
-                return Observable.of({ storageUrl: "https://some/url" });
+                return of({ storageUrl: "https://some/url" });
             }),
 
             activatePackage: jasmine.createSpy("activatePackage").and.callFake((applicationId, version) => {
@@ -54,14 +54,14 @@ describe("ApplicationCreateDialogComponent ", () => {
                     return Observable.throw(ServerError.fromARM(new Response(options)));
                 }
 
-                return Observable.of({});
+                return of({});
             }),
 
             onApplicationAdded: new Subject(),
         };
 
         storageBlobService = {
-            uploadToSasUrl: jasmine.createSpy("uploadToSasUrl").and.returnValue(Observable.of({})),
+            uploadToSasUrl: jasmine.createSpy("uploadToSasUrl").and.returnValue(of({})),
         };
 
         notificationServiceSpy = {

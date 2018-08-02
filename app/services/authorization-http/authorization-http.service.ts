@@ -40,12 +40,12 @@ export class AuthorizationHttpService {
      */
     public getPermission(resourceId: string): Observable<Permission> {
         if (!resourceId) {
-            return Observable.of(Permission.None);
+            return of(Permission.None);
         }
         const url = this._getPermissionUrl(resourceId);
         return this._recursiveRequest(url).flatMap(permissions => {
             const permission = this.checkResoucePermissions(permissions);
-            return Observable.of(permission);
+            return of(permission);
         });
     }
 

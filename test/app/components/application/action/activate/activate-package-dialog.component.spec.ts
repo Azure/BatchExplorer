@@ -2,7 +2,7 @@ import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatDialogRef } from "@angular/material";
 import { By } from "@angular/platform-browser";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { ActivatePackageDialogComponent } from "app/components/application/action";
@@ -26,7 +26,7 @@ describe("ActivatePackageDialogComponent ", () => {
                     }));
                 }
 
-                return Observable.of({});
+                return of({});
             }),
         };
 
