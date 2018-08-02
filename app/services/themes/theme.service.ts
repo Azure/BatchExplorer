@@ -5,8 +5,7 @@ import { BehaviorSubject, Observable, Subscription } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
-import { NotificationService } from "@batch-flask/ui/notifications";
-import { FileSystemService } from "app/services/fs.service";
+import { FileSystemService, NotificationService } from "@batch-flask/ui";
 import { log } from "app/utils";
 import { filter } from "rxjs/operators";
 import { BatchExplorerService } from "../batch-labs.service";

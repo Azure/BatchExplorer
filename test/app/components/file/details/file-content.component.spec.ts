@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
 import { FileContentComponent } from "app/components/file/details";
-import { File } from "app/models";
+import { File } from "@batch-flask/ui";
 import { FileService } from "app/services";
 import { of } from "rxjs";
 import { click } from "test/utils/helpers";

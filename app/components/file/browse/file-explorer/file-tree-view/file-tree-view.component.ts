@@ -2,18 +2,18 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
     HostBinding, Input, OnChanges, OnDestroy, Output,
 } from "@angular/core";
-import { Subscription, of } from "rxjs";
-
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
-import { FileNavigator, FileTreeNode, FileTreeStructure } from "app/services/file";
-import { CloudPathUtils, DragUtils } from "app/utils";
-import { FileDeleteEvent, FileDropEvent } from "../file-explorer.component";
-
 import { ServerError } from "@batch-flask/core";
-import { ElectronRemote, ElectronShell } from "@batch-flask/ui";
+import {
+    ContextMenu, ContextMenuItem, ContextMenuService, ElectronRemote, ElectronShell, FileNavigator,
+    FileTreeNode, FileTreeStructure,
+} from "@batch-flask/ui";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { DownloadFolderComponent } from "app/components/common/download-folder-dialog";
+import { CloudPathUtils, DragUtils } from "app/utils";
+import { Subscription, of } from "rxjs";
+import { FileDeleteEvent, FileDropEvent } from "../file-explorer.component";
+
 import "./file-tree-view.scss";
 
 export interface TreeRow {

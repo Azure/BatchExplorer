@@ -1,8 +1,7 @@
-import { List } from "immutable";
-
+import { File } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { File } from "app/models";
-import { FileTreeNode, FileTreeStructure } from "app/services/file";
+import { List } from "immutable";
+import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 
 function reprTree(tree: FileTreeStructure) {
     const rows = reprNode(tree.root);

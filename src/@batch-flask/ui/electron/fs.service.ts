@@ -1,8 +1,7 @@
 import { Injectable } from "@angular/core";
 import { FSWatcher } from "chokidar";
-
-import { BatchExplorerService } from "app/services/batch-labs.service";
 import { CommonFolders, FileSystem } from "client/core";
+import { ElectronRemote } from "./remote.service";
 
 /**
  * Service to handle saving files to the client FileSystem
@@ -12,9 +11,9 @@ export class FileSystemService {
     public commonFolders: CommonFolders;
     private _fs: FileSystem;
 
-    constructor(batchExplorer: BatchExplorerService) {
-        this._fs = batchExplorer.getFileSystem();
-        this.commonFolders = {...this._fs.commonFolders};
+    constructor(remote: ElectronRemote) {
+        this._fs = (remote.getCurrentWindow() as any).fs;
+        this.commonFolders = { ...this._fs.commonFolders };
     }
 
     /**

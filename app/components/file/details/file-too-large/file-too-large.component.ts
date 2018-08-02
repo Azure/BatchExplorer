@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
-import { ElectronRemote, ElectronShell } from "@batch-flask/ui";
-
+import { ElectronRemote, ElectronShell, File, FileLoader } from "@batch-flask/ui";
 import { NotificationService } from "@batch-flask/ui/notifications";
-import { File } from "app/models";
-import { FileLoader } from "app/services/file";
+
 import "./file-too-large.scss";
 
 @Component({

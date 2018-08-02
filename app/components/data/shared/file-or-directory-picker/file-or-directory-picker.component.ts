@@ -16,8 +16,8 @@ import {
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
+import { FileSystemService } from "@batch-flask/ui";
 import { FileOrDirectoryDto } from "app/models/dtos";
-import { FileSystemService } from "app/services";
 import { DragUtils } from "app/utils";
 import { Subscription, from } from "rxjs";
 import { map } from "rxjs/operators";

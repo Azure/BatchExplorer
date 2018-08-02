@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { AutoUpdateService, ElectronRemote, ElectronShell, UpdateStatus } from "@batch-flask/ui";
+import { AutoUpdateService, ElectronRemote, ElectronShell, FileSystemService, UpdateStatus } from "@batch-flask/ui";
 import { OS } from "@batch-flask/utils";
 import * as path from "path";
 import { Subscription } from "rxjs";
@@ -10,7 +10,7 @@ import {
 } from "@batch-flask/ui/context-menu";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import {
-    AdalService, BatchExplorerService, FileSystemService,
+    AdalService, BatchExplorerService,
 } from "app/services";
 
 import "./profile-button.scss";

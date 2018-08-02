@@ -1,14 +1,14 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
-
 import { HttpCode, ServerError } from "@batch-flask/core";
+import { FileLoader } from "@batch-flask/ui";
 import {
     FileExplorerConfig, FileExplorerWorkspace, FileNavigatorEntry, FileSource,
 } from "app/components/file/browse/file-explorer";
 import { Task, TaskState } from "app/models";
 import { FileService } from "app/services";
-import { FileLoader } from "app/services/file";
 import { AutoStorageService, StorageBlobService } from "app/services/storage";
 import { ComponentUtils, StorageUtils } from "app/utils";
+
 import "./task-outputs.scss";
 
 enum OutputType {

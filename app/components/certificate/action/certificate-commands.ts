@@ -1,8 +1,11 @@
 import { Injectable, Injector } from "@angular/core";
-import { COMMAND_LABEL_ICON, ElectronRemote, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
+import {
+    COMMAND_LABEL_ICON, ElectronRemote, EntityCommand,
+    EntityCommands, FileSystemService, Permission,
+} from "@batch-flask/ui";
 
 import { Certificate, CertificateState } from "app/models";
-import { CertificateService, FileSystemService, PinnedEntityService } from "app/services";
+import { CertificateService, PinnedEntityService } from "app/services";
 import { from } from "rxjs";
 
 @Injectable()
@@ -70,7 +73,7 @@ export class CertificateCommands extends EntityCommands<Certificate> {
             name: "pin",
             label: (certificate: Certificate) => {
                 return this.pinnedEntityService.isFavorite(certificate)
-                ? COMMAND_LABEL_ICON.UnpinFavoriteLabel : COMMAND_LABEL_ICON.PinFavoriteLabel;
+                    ? COMMAND_LABEL_ICON.UnpinFavoriteLabel : COMMAND_LABEL_ICON.PinFavoriteLabel;
             },
             icon: (certificate: Certificate) => {
                 return this.pinnedEntityService.isFavorite(certificate)

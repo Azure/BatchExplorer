@@ -1,8 +1,7 @@
-import { List } from "immutable";
-
+import { File } from "@batch-flask/ui/file/file.model";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
-import { File } from "app/models";
 import { CloudPathUtils } from "app/utils";
+import { List } from "immutable";
 import { fileToTreeNode, generateDir, sortTreeNodes } from "./helper";
 
 export interface FileTreeNodeParams {

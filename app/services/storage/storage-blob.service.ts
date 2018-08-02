@@ -2,7 +2,7 @@ import { Injectable, NgZone } from "@angular/core";
 import { AsyncSubject, Observable, from, of, throwError } from "rxjs";
 
 import { HttpCode, ServerError } from "@batch-flask/core";
-import { File } from "app/models";
+import { File, FileLoadOptions, FileLoader, FileNavigator, FileSource, FileSystemService } from "@batch-flask/ui";
 import {
     DataCache,
     EntityView,
@@ -12,8 +12,6 @@ import {
     StorageListGetter,
     TargetedDataCache,
 } from "app/services/core";
-import { FileLoadOptions, FileLoader, FileNavigator, FileSource } from "app/services/file";
-import { FileSystemService } from "app/services/fs.service";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { CloudPathUtils, log } from "app/utils";
 import { BlobService, createBlobServiceWithSas } from "azure-storage";

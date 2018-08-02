@@ -1,10 +1,12 @@
 <bl-table [data]="resourceFiles">
     <bl-column name="blobSource">
         <div *blHeadCellDef>BlobSource</div>
-        <div *blCellDef="let resourceFile">{{resourceFile.blobSource}}</div>
+        <div *blCellDef="let resourceFile">
+            <bl-clickable (do)="openResourceFile(resourceFile)">{{resourceFile.blobSource}}</bl-clickable>
+        </div>
     </bl-column>
     <bl-column name="filePath" [defaultWidth]="400">
-        <div *blHeadCellDef>File path</div>
+        <div *blHeadCellDef>Node file path</div>
         <div *blCellDef="let resourceFile">{{resourceFile.filePath}}</div>
     </bl-column>
     <bl-column name="fileMode" [defaultWidth]="100">

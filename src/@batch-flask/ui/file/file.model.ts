@@ -1,6 +1,5 @@
 import { Model, Prop, Record } from "@batch-flask/core";
-import { Partial } from "app/utils";
-import { FileProperties, FilePropertiesAttributes } from "./file-properties";
+import { FileProperties, FilePropertiesAttributes } from "./file-properties.model";
 
 export interface FileAttributes {
     name: string;

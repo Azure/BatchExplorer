@@ -4,9 +4,9 @@ import { By } from "@angular/platform-browser";
 import {
     ButtonsModule,
     DialogService,
+    File,
 } from "@batch-flask/ui";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";
-import { File } from "app/models";
 import { click, rightClick } from "test/utils/helpers";
 import {
     ContextMenuServiceMock,

@@ -1,10 +1,9 @@
+import { FileSystemService } from "@batch-flask/ui/electron";
+import { CloudPathUtils, exists, log } from "app/utils";
 import * as path from "path";
 import { Observable, Subject, from, of } from "rxjs";
-
-import { File } from "app/models";
-import { CloudPathUtils, exists, log } from "app/utils";
 import { concatMap, flatMap, map, share } from "rxjs/operators";
-import { FileSystemService } from "../fs.service";
+import { File } from "../file.model";
 
 export type PropertiesFunc = () => Observable<File>;
 export type ContentFunc = (options: FileLoadOptions) => Observable<FileLoadResult>;

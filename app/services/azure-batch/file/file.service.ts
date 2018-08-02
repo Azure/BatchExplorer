@@ -1,8 +1,8 @@
 import { HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { HttpCode, HttpRequestOptions, ServerError } from "@batch-flask/core";
+import { File, FileLoader, FileNavigator, FileSource, FileSystemService } from "@batch-flask/ui";
 import { EncodingUtils, exists } from "@batch-flask/utils";
-import { File } from "app/models";
 import {
     BasicEntityGetter,
     BasicListGetter,
@@ -14,8 +14,6 @@ import {
     ListView,
     TargetedDataCache,
 } from "app/services/core";
-import { FileLoader, FileNavigator, FileSource } from "app/services/file";
-import { FileSystemService } from "app/services/fs.service";
 import * as fs from "fs";
 import * as path from "path";
 import { Observable, from } from "rxjs";
