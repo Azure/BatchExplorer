@@ -3,6 +3,7 @@
 
 ### Bug fixes:
 * Task outputs is broken when not using autostorage account [\#1522](https://github.com/Azure/BatchExplorer/issues/1522)
+* Cannot connect to Windows Cloud Service node [\#1529](https://github.com/Azure/BatchExplorer/issues/1529)
 
 ### Other
 * Task properties pool and node should be links [\#1523](https://github.com/Azure/BatchExplorer/issues/1523)
