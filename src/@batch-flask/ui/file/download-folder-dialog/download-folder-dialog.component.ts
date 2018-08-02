@@ -2,9 +2,9 @@ import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
 import { autobind } from "@batch-flask/core";
-import {
-    BackgroundTask, BackgroundTaskService, ElectronShell, FileNavigator, FileSystemService,
-} from "@batch-flask/ui";
+import { BackgroundTask, BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { ElectronShell, FileSystemService } from "@batch-flask/ui/electron";
+import { FileNavigator } from "@batch-flask/ui/file/file-navigator";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SecureUtils } from "@batch-flask/utils";
 import { List } from "immutable";
@@ -12,6 +12,7 @@ import * as minimatch from "minimatch";
 import * as path from "path";
 import { AsyncSubject, Observable, forkJoin, of } from "rxjs";
 import { map, tap } from "rxjs/operators";
+
 import "./download-folder-dialog.scss";
 
 @Component({

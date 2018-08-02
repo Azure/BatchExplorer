@@ -3,8 +3,8 @@ import { AsyncSubject, BehaviorSubject, Observable, Subject, Subscription } from
 import { ServerError } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { ObjectUtils } from "@batch-flask/utils";
-import { DataCache } from "app/services/core/data-cache";
-import { PollObservable } from "../poll-service";
+import { DataCache } from "./data-cache";
+import { PollObservable } from "./poll.service";
 import { ProxyOptions } from "./proxy-options";
 
 export interface FetchDataOptions {

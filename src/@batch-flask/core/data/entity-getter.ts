@@ -1,10 +1,9 @@
 import { Type } from "@angular/core";
-import { Observable, of, throwError } from "rxjs";
-
 import { HttpCode, ServerError } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
-import { DataCache } from "app/services/core/data-cache";
+import { Observable, of, throwError } from "rxjs";
 import { catchError, map, share } from "rxjs/operators";
+import { DataCache } from "./data-cache";
 import { GenericGetter, GenericGetterConfig } from "./generic-getter";
 
 export interface FetchOptions {

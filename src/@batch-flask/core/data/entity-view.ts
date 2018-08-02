@@ -1,10 +1,10 @@
 import { HttpCode, ServerError } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
-import { PollObservable } from "app/services/core/poll-service";
 import { BehaviorSubject, Observable } from "rxjs";
 import { distinctUntilChanged, map, switchAll, takeUntil } from "rxjs/operators";
 import { EntityGetter } from "./entity-getter";
 import { GenericView, GenericViewConfig } from "./generic-view";
+import { PollObservable } from "./poll.service";
 
 export interface EntityViewConfig<TEntity, TParams> extends GenericViewConfig<TEntity, TParams> {
     /**

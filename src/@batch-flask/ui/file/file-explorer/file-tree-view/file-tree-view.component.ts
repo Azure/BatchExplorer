@@ -8,9 +8,9 @@ import {
     FileTreeNode, FileTreeStructure,
 } from "@batch-flask/ui";
 import { DialogService } from "@batch-flask/ui/dialogs";
+import { DownloadFolderComponent } from "@batch-flask/ui/file/download-folder-dialog";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { CloudPathUtils, DragUtils } from "@batch-flask/utils";
-import { DownloadFolderComponent } from "app/components/common/download-folder-dialog";
 import { Subscription, of } from "rxjs";
 import { FileDeleteEvent, FileDropEvent } from "../file-explorer.component";
 

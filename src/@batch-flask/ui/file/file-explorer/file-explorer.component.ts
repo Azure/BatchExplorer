@@ -1,8 +1,10 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output,
 } from "@angular/core";
-import { BackgroundTaskService, DialogService, LoadingStatus } from "@batch-flask/ui";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { DialogService } from "@batch-flask/ui/dialogs";
 import { FileNavigator, FileTreeNode } from "@batch-flask/ui/file/file-navigator";
+import { LoadingStatus } from "@batch-flask/ui/loading";
 import { SplitPaneConfig } from "@batch-flask/ui/split-pane";
 import { FileUrlUtils, log } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
