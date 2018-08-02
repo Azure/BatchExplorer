@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, PRIMARY_OUTLET, Router } from "@angular/router";
-import { BehaviorSubject, Observable } from "rxjs";
-
 import { log } from "@batch-flask/utils";
+import { BehaviorSubject, Observable } from "rxjs";
+import { filter } from "rxjs/operators";
 import { Breadcrumb, RouteComponent } from "./breadcrumbs.model";
 
 const sessionStorageKey = "breadcrumb";
@@ -27,7 +27,7 @@ export class BreadcrumbService {
 
     constructor(private router: Router, private activatedRoute: ActivatedRoute) {
         this._loadInitialData();
-        this.router.events.filter(event => event instanceof NavigationEnd).subscribe(event => {
+        this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
             const root: ActivatedRoute = this.activatedRoute.root;
             const crumb = this.getBreadcrumbFromRoute(root);
             if (crumb) {

@@ -1,6 +1,7 @@
-import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable, from } from "rxjs";
 
 import { log } from "@batch-flask/utils";
+import { concatMap, shareReplay } from "rxjs/operators";
 import { BackgroundTaskService } from "./background-task.service";
 
 /**
@@ -96,8 +97,8 @@ export class GroupedBackgroundTask extends BackgroundTask<GroupedBackgroundTaskR
     public start() {
         const totalTask = this._tasks.length;
 
-        const obs = Observable.from(this._tasks)
-            .concatMap((task, index) => {
+        const obs = from(this._tasks).pipe(
+            concatMap((task, index) => {
                 this.progress.next((index + 1) / totalTask * 100);
                 this.name.next(`${this._baseName} (${index + 1}/${totalTask})`);
 
@@ -116,7 +117,9 @@ export class GroupedBackgroundTask extends BackgroundTask<GroupedBackgroundTaskR
                     },
                 });
                 return taskObs;
-            }).shareReplay(1);
+            }),
+            shareReplay(1),
+        );
 
         obs.subscribe({
             complete: () => {

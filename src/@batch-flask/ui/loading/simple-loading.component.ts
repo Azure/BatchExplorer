@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
-import { Observable, Subscription } from "rxjs";
+import { Subscription, interval } from "rxjs";
 
 /**
  * Loading showing a simple loading text.
@@ -15,7 +15,7 @@ export class SimpleLoadingComponent implements OnInit, OnDestroy {
     private _sub: Subscription;
 
     public ngOnInit() {
-        this._sub = Observable.interval(this.rate).subscribe((i) => {
+        this._sub = interval(this.rate).subscribe((i) => {
             const dots = ".".repeat(i % 4);
             this.message = `Loading${dots}`;
         });

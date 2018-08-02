@@ -4,12 +4,11 @@ import { By } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
 import { BackgroundTaskService, DialogService, NotificationService, WorkspaceService } from "@batch-flask/ui";
-import { Observable } from "rxjs";
-
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationDetailsComponent } from "app/components/application/details";
 import { BatchApplication } from "app/models";
 import { ApplicationService, PinnedEntityService } from "app/services";
+import { of } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { ActivatedRouteMock, MockEntityView } from "test/utils/mocks";
 import { LoadingMockComponent } from "test/utils/mocks/components";
@@ -79,7 +78,7 @@ describe("ApplicationDetailsComponent", () => {
         };
 
         activatedRouteSpy = new ActivatedRouteMock({
-            params: Observable.of({ id: "app-1" }),
+            params: of({ id: "app-1" }),
         });
 
         matDialogSpy = {

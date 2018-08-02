@@ -11,6 +11,7 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { BatchAccountCommands } from "app/components/account/action";
 import { AccountResource } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
+import { flatMap, shareReplay } from "rxjs/operators";
 
 @Component({
     selector: "bl-account-list",
@@ -59,9 +60,10 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
 
     @autobind()
     public refresh(): Observable<any> {
-        return this.subscriptionService.load().flatMap(() => {
-            return this.accountService.load();
-        }).shareReplay(1);
+        return this.subscriptionService.load().pipe(
+            flatMap(() => this.accountService.load()),
+            shareReplay(1),
+        );
     }
 
     public handleFilter(filter: Filter) {

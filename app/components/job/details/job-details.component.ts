@@ -10,6 +10,7 @@ import { JobParams, JobService } from "app/services";
 import { EntityView } from "app/services/core";
 import { JobCommands } from "../action";
 
+import { flatMap } from "rxjs/operators";
 import "./job-details.scss";
 
 @Component({
@@ -84,8 +85,8 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public updateTags(tags: List<string>) {
-        return this.jobService.updateTags(this.job, tags).flatMap(() => {
-            return this.data.refresh();
-        });
+        return this.jobService.updateTags(this.job, tags).pipe(
+            flatMap(() => this.data.refresh()),
+        );
     }
 }

@@ -6,13 +6,13 @@ import {
     NG_VALUE_ACCESSOR,
     Validators,
 } from "@angular/forms";
-import { Subscription } from "rxjs";
-
+import { FormUtils } from "@batch-flask/utils";
 import { NcjParameterRawType } from "app/models";
 import { NcjFileGroupService } from "app/services";
+import { Subscription } from "rxjs";
+import { distinctUntilChanged } from "rxjs/operators";
 import { NcjParameterExtendedType, NcjParameterWrapper } from "../market-application.model";
 
-import { FormUtils } from "@batch-flask/utils";
 import "./parameter-input.scss";
 
 @Component({
@@ -35,8 +35,9 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
     private _subs: Subscription[] = [];
 
     constructor(private fileGroupService: NcjFileGroupService) {
-        this._subs.push(this.parameterValue.valueChanges.distinctUntilChanged()
-            .subscribe((query: string) => {
+        this._subs.push(this.parameterValue.valueChanges.pipe(
+            distinctUntilChanged(),
+        ).subscribe((query: string) => {
                 if (this._propagateChange) {
                     this._propagateChange(query);
                 }

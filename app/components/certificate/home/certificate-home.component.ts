@@ -3,6 +3,7 @@ import { FormBuilder, FormControl } from "@angular/forms";
 
 import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { CertificateCreateDialogComponent } from "../action/add";
 
 @Component({
@@ -24,7 +25,10 @@ export class CertificateHomeComponent {
     };
 
     constructor(formBuilder: FormBuilder, private sidebarManager: SidebarManager) {
-        this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
+        this.quickSearchQuery.valueChanges.pipe(
+            debounceTime(400),
+            distinctUntilChanged(),
+        ).subscribe((query: string) => {
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
             } else {

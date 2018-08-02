@@ -1,8 +1,8 @@
 import { HttpCode, ServerError } from "@batch-flask/core";
-import { BehaviorSubject, Observable } from "rxjs";
-
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { PollObservable } from "app/services/core/poll-service";
+import { BehaviorSubject, Observable } from "rxjs";
+import { distinctUntilChanged, map, switchAll, takeUntil } from "rxjs/operators";
 import { EntityGetter } from "./entity-getter";
 import { GenericView, GenericViewConfig } from "./generic-view";
 
@@ -31,11 +31,17 @@ export class EntityView<TEntity, TParams> extends GenericView<TEntity, TParams, 
         super(config);
         this._getter = config.getter;
 
-        this.item = this._itemKey.distinctUntilChanged().map((key) => {
-            return this.cache.items.map((items) => {
-                return items.get(key);
-            });
-        }).switch().distinctUntilChanged().takeUntil(this.isDisposed);
+        this.item = this._itemKey.pipe(
+            distinctUntilChanged(),
+            map((key) => {
+                return this.cache.items.pipe(map((items) => {
+                    return items.get(key);
+                }));
+            }),
+            switchAll(),
+            distinctUntilChanged(),
+            takeUntil(this.isDisposed),
+        );
 
         if (config.poll) {
             this._pollTracker = this.startPoll(5000);

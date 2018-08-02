@@ -1,8 +1,8 @@
 import { Response, ResponseOptions } from "@angular/http";
 import { Permission } from "@batch-flask/ui/permission";
-import { Observable, Subscription } from "rxjs";
+import { Subscription, of } from "rxjs";
+import { take } from "rxjs/operators";
 import * as Fixtures from "test/fixture";
-
 import { AuthorizationHttpService, BatchAccountPermission } from "./authorization-http.service";
 
 describe("AuthorizationHttpService", () => {
@@ -23,7 +23,7 @@ describe("AuthorizationHttpService", () => {
 
     beforeEach(() => {
         accountServiceSpy = {
-            currentAccount: Observable.of(Fixtures.account.create({
+            currentAccount: of(Fixtures.account.create({
                 id: "myaccount",
             })),
         };
@@ -32,9 +32,9 @@ describe("AuthorizationHttpService", () => {
             get: jasmine.createSpy("get").and.callFake((url, options) => {
                 requestUrl = url;
                 if (url === "fakeNextLink") {
-                    return Observable.of(new Response(new ResponseOptions(mockNextLinkResponse)));
+                    return of(new Response(new ResponseOptions(mockNextLinkResponse)));
                 }
-                return Observable.of(new Response(new ResponseOptions(mockAuthResponse)));
+                return of(new Response(new ResponseOptions(mockAuthResponse)));
             }),
         };
         authService = new AuthorizationHttpService(accountServiceSpy, armServiceSpy);
@@ -95,35 +95,35 @@ describe("AuthorizationHttpService", () => {
         let permission: Permission;
         beforeEach(() => {
             const getResourcePermissionSpy = jasmine.createSpy("getResourcePermission").and.callFake(() => {
-                return Observable.of(permission);
+                return of(permission);
             });
             authService.getResourcePermission = getResourcePermissionSpy;
         });
 
         it("returns TRUE when need write and has write access", () => {
             permission = Permission.Write;
-            authService.hasPermission(Permission.Write).take(1).subscribe(hasPermission => {
+            authService.hasPermission(Permission.Write).pipe(take(1)).subscribe(hasPermission => {
                 expect(hasPermission).toBe(true);
             });
         });
 
         it("returns TRUE when need read and has read access", () => {
             permission = Permission.Read;
-            authService.hasPermission(Permission.Read).take(1).subscribe(hasPermission => {
+            authService.hasPermission(Permission.Read).pipe(take(1)).subscribe(hasPermission => {
                 expect(hasPermission).toBe(true);
             });
         });
 
         it("returns TRUE when need read and has write access", () => {
             permission = Permission.Write;
-            authService.hasPermission(Permission.Read).take(1).subscribe(hasPermission => {
+            authService.hasPermission(Permission.Read).pipe(take(1)).subscribe(hasPermission => {
                 expect(hasPermission).toBe(true);
             });
         });
 
         it("returns FALSE when need write and has read access", () => {
             permission = Permission.Read;
-            authService.hasPermission(Permission.Write).take(1).subscribe(hasPermission => {
+            authService.hasPermission(Permission.Write).pipe(take(1)).subscribe(hasPermission => {
                 expect(hasPermission).toBe(false);
             });
         });

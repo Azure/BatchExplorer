@@ -8,8 +8,8 @@ import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { Constants } from "common";
-import { Observable } from "rxjs";
-import { flatMap, shareReplay, take } from "rxjs/operators";
+import { Observable, throwError } from "rxjs";
+import { catchError, flatMap, retryWhen, shareReplay, take } from "rxjs/operators";
 
 @Injectable()
 export class AzureBatchHttpService extends HttpService {
@@ -37,12 +37,13 @@ export class AzureBatchHttpService extends HttpService {
                         return super.request(
                             method,
                             this._computeUrl(uri, account),
-                            options)
-                            .retryWhen(attempts => this.retryWhen(attempts))
-                            .catch((error) => {
+                            options).pipe(
+                            retryWhen(attempts => this.retryWhen(attempts)),
+                            catchError((error) => {
                                 const err = ServerError.fromBatchHttp(error);
-                                return Observable.throw(err);
-                            });
+                                return throwError(err);
+                            }),
+                        );
                     }),
                 );
             }),

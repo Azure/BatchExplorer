@@ -10,6 +10,8 @@ import { List } from "immutable";
 import { StorageAccount } from "app/models";
 import { AutoStorageService } from "app/services/storage";
 import { Subscription } from "rxjs";
+import { first } from "rxjs/operators";
+
 import "./storage-account-picker.scss";
 
 @Component({
@@ -45,7 +47,7 @@ export class StorageAccountPickerComponent implements OnInit, AfterContentInit, 
     }
 
     public ngOnInit() {
-        this.batchAccountService.currentAccount.first().subscribe((currentAccount) => {
+        this.batchAccountService.currentAccount.pipe(first()).subscribe((currentAccount) => {
             this.storageAccountService.list(currentAccount.subscription.subscriptionId).subscribe((storageAccounts) => {
                 this._storageAccounts = storageAccounts;
                 this.loading = false;

@@ -3,13 +3,13 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { List } from "immutable";
-import { Observable } from "rxjs";
 
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ContextMenuService, I18nUIModule } from "@batch-flask/ui";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
+import { of } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { NoItemMockComponent, TableTestingModule } from "test/utils/mocks/components";
 import { TaskDependencyBrowserComponent } from "./task-dependency-browser.component";
@@ -43,7 +43,7 @@ describe("TaskDependenciesComponent", () => {
                         return taskMap.get(id) || Fixtures.task.create({ id: id });
                     }));
 
-                    return Observable.of(result);
+                    return of(result);
                 }),
         };
 

@@ -4,7 +4,6 @@ import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { List } from "immutable";
-import { Observable } from "rxjs";
 
 import { RouterTestingModule } from "@angular/router/testing";
 import { ElectronModule } from "@batch-flask/ui";
@@ -14,6 +13,7 @@ import { AccountResource, VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
 import { AccountService, PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
+import { of } from "rxjs";
 import { TableTestingModule } from "test/utils/mocks/components";
 
 @Component({
@@ -35,12 +35,12 @@ describe("VmSizePickerComponent", () => {
 
     beforeEach(() => {
         vmSizeServiceSpy = {
-            vmSizeCategories: Observable.of({
+            vmSizeCategories: of({
                 standard: ["Standard_A*"],
                 compute: ["Standard_C*"],
                 memory: ["Standard_M*"],
             }),
-            virtualMachineSizes: Observable.of(List([
+            virtualMachineSizes: of(List([
                 new VmSize({ name: "Standard_A1" } as any),
                 new VmSize({ name: "Standard_A2" } as any),
                 new VmSize({ name: "Standard_A3" } as any),
@@ -48,7 +48,7 @@ describe("VmSizePickerComponent", () => {
                 new VmSize({ name: "Standard_C2" } as any),
                 new VmSize({ name: "Standard_O1" } as any),
             ])),
-            cloudServiceSizes: Observable.of(List([
+            cloudServiceSizes: of(List([
                 new VmSize({ name: "Standard_A1" } as any),
                 new VmSize({ name: "Standard_A2" } as any),
                 new VmSize({ name: "Standard_A3" } as any),
@@ -58,12 +58,12 @@ describe("VmSizePickerComponent", () => {
         };
 
         accountServiceSpy = {
-            currentAccount: Observable.of(new AccountResource({ location: "westus" } as any)),
+            currentAccount: of(new AccountResource({ location: "westus" } as any)),
         };
 
         pricingServiceSpy = {
-            getPrice: () => Observable.of(0),
-            getPrices: () => Observable.of(new OSPricing("westus", "linux")),
+            getPrice: () => of(0),
+            getPrices: () => of(new OSPricing("westus", "linux")),
         };
 
         TestBed.configureTestingModule({

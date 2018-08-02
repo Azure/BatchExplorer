@@ -1,9 +1,10 @@
 import { List, OrderedSet } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, combineLatest, of } from "rxjs";
 
 import { FilterMatcher } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { log } from "@batch-flask/utils";
+import { distinctUntilChanged, map, switchAll, takeUntil } from "rxjs/operators";
 import { GenericView, GenericViewConfig } from "./generic-view";
 import { ListGetter, ListResponse } from "./list-getter";
 import { ContinuationToken, ListOptions, ListOptionsAttributes } from "./list-options";
@@ -35,15 +36,15 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         this._getter = config.getter;
         this._options = new ListOptions(config.initialOptions || {});
 
-        this.items = Observable.combineLatest(
-            this._itemKeys.distinctUntilChanged(),
-            this._prepend.distinctUntilChanged())
-            .map(([itemKeys, prependKeys]) => {
+        this.items = combineLatest(
+            this._itemKeys.pipe(distinctUntilChanged()),
+            this._prepend.pipe(distinctUntilChanged())).pipe(
+            map(([itemKeys, prependKeys]) => {
                 prependKeys = prependKeys.filter(x => !itemKeys.has(x)) as any;
 
                 const allKeys = prependKeys.concat(itemKeys.toJS());
 
-                return this.cache.items.map((items) => {
+                return this.cache.items.pipe(map((items) => {
                     let keys = allKeys;
                     if (this._options.maxItems) {
                         keys = allKeys.slice(0, this._options.maxItems);
@@ -61,8 +62,12 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
                         }
                         return true;
                     }));
-                });
-            }).switch().distinctUntilChanged((a, b) => a.equals(b)).takeUntil(this.isDisposed);
+                }));
+            }),
+            switchAll(),
+            distinctUntilChanged((a, b) => a.equals(b)),
+            takeUntil(this.isDisposed),
+        );
         this.hasMore = this._hasMore.asObservable();
 
         this.deleted.subscribe((deletedKey) => {
@@ -109,7 +114,7 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
      */
     public fetchNext(forceNew = false): Observable<any> {
         if (!this._hasMore.value) {
-            return Observable.of({ data: [] });
+            return of({ data: [] });
         }
         let fetchObs;
         if (this._nextLink === null) {

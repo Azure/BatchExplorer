@@ -1,16 +1,17 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
+import { Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
 import { BackgroundTaskService, NotificationService } from "@batch-flask/ui";
-import * as moment from "moment";
-import { AsyncSubject, Observable } from "rxjs";
-
-import { Router } from "@angular/router";
 import { Node, Pool } from "app/models";
 import { AccountService, NodeService } from "app/services";
 import { AutoStorageService, StorageBlobService } from "app/services/storage";
 import { CloudPathUtils, StorageUtils } from "app/utils";
+import * as moment from "moment";
+import { AsyncSubject, interval } from "rxjs";
+import { distinctUntilChanged, first, flatMap } from "rxjs/operators";
+
 import "./upload-node-logs-dialog.scss";
 
 enum TimeRangePreset {
@@ -62,7 +63,7 @@ export class UploadNodeLogsDialogComponent {
             endTime: [new Date(), Validators.required],
         });
 
-        this.form.valueChanges.distinctUntilChanged().subscribe((value) => {
+        this.form.valueChanges.pipe(distinctUntilChanged()).subscribe((value) => {
             const diff = moment.duration(moment(value.endTime).diff(value.startTime));
             this.warningTimeRange = diff.asDays() > 1;
             this.changeDetector.markForCheck();
@@ -97,7 +98,7 @@ export class UploadNodeLogsDialogComponent {
 
         obs.subscribe((result) => {
             const { container, account } = StorageUtils.getContainerFromUrl(value.container);
-            this.accountService.currentAccount.first().subscribe((batchAccount) => {
+            this.accountService.currentAccount.pipe(first()).subscribe((batchAccount) => {
                 if (batchAccount.autoStorage && batchAccount.autoStorage.storageAccountId.contains(account)) {
                     this._watchUpload(container, result.virtualDirectoryName, result.numberOfFilesUploaded);
                 } else {
@@ -113,25 +114,25 @@ export class UploadNodeLogsDialogComponent {
     private _watchUpload(container: string, folder: string, numberOfFiles: number) {
         this.backgroundTaskService.startTask("Node logs uploading", (task) => {
             const done = new AsyncSubject();
-            const sub = Observable.interval(5000)
-                .flatMap(() => this.autoStorageService.get())
-                .flatMap((storageAccountId) => {
+            const sub = interval(5000).pipe(
+                flatMap(() => this.autoStorageService.get()),
+                flatMap((storageAccountId) => {
                     return this.storageBlobService.list(storageAccountId, container, {
                         folder: CloudPathUtils.asBaseDirectory(folder),
                     }, true);
-                })
-                .subscribe((blobs) => {
-                    const uploaded = blobs.items.size;
-                    if (uploaded >= numberOfFiles) {
-                        task.progress.next(100);
-                        done.complete();
-                        sub.unsubscribe();
-                        this._notifyLogUploaded(container, folder, numberOfFiles);
-                    } else {
-                        task.name.next(`Node logs uploading (${uploaded}/${numberOfFiles})`);
-                        task.progress.next(uploaded / numberOfFiles * 100);
-                    }
-                });
+                }),
+            ).subscribe((blobs) => {
+                const uploaded = blobs.items.size;
+                if (uploaded >= numberOfFiles) {
+                    task.progress.next(100);
+                    done.complete();
+                    sub.unsubscribe();
+                    this._notifyLogUploaded(container, folder, numberOfFiles);
+                } else {
+                    task.name.next(`Node logs uploading (${uploaded}/${numberOfFiles})`);
+                    task.progress.next(uploaded / numberOfFiles * 100);
+                }
+            });
 
             return done;
         });

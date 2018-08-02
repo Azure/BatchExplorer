@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 
 export enum Permission {
     None = "none",
@@ -19,9 +20,11 @@ export class PermissionService {
     }
 
     public hasPermission(permission: Permission): Observable<boolean> {
-        return this._userPermissionProvider().map((userPermission) => {
-            if (permission === Permission.Read) { return userPermission !== Permission.None; }
-            return userPermission === Permission.Write;
-        });
+        return this._userPermissionProvider().pipe(
+            map((userPermission) => {
+                if (permission === Permission.Read) { return userPermission !== Permission.None; }
+                return userPermission === Permission.Write;
+            }),
+        );
     }
 }

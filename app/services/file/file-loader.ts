@@ -1,5 +1,5 @@
 import * as path from "path";
-import { Observable, Subject, of } from "rxjs";
+import { Observable, Subject, from, of } from "rxjs";
 
 import { File } from "app/models";
 import { CloudPathUtils, exists, log } from "app/utils";
@@ -113,7 +113,7 @@ export class FileLoader {
 
     public download(dest: string): Observable<string> {
         if (this._download) {
-            const checkDirObs = Observable.fromPromise(this._fs.ensureDir(path.dirname(dest)));
+            const checkDirObs = from(this._fs.ensureDir(path.dirname(dest)));
             return checkDirObs.pipe(
                 flatMap(() => this._download(dest)),
                 map(x => dest),
@@ -140,7 +140,7 @@ export class FileLoader {
         return this.getProperties().pipe(
             flatMap((file: File) => {
                 const destination = this._getCacheDestination(file);
-                return Observable.fromPromise(this._fs.exists(destination)).pipe(
+                return from(this._fs.exists(destination)).pipe(
                     flatMap((exists) => {
                         if (exists) {
                             return of(destination);

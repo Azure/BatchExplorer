@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 import { AccountService } from "app/services/account.service";
+import { map, take } from "rxjs/operators";
 
 export type StorageDataSource = string | "file-groups";
 
@@ -12,29 +13,29 @@ export class AutoStorageService {
     public hasAutoStorage: Observable<boolean>;
 
     constructor(private accountService: AccountService) {
-        this.storageAccountId = this.accountService.currentAccount.map((account) => {
+        this.storageAccountId = this.accountService.currentAccount.pipe(map((account) => {
             return account.autoStorage && account.autoStorage.storageAccountId;
-        });
+        }));
 
-        this.hasAutoStorage = this.accountService.currentAccount.map((account) => {
+        this.hasAutoStorage = this.accountService.currentAccount.pipe(map((account) => {
             return Boolean(account.autoStorage);
-        });
+        }));
 
-        this.hasArmAutoStorage = this.accountService.currentAccount.map((account) => {
+        this.hasArmAutoStorage = this.accountService.currentAccount.pipe(map((account) => {
             return account.hasArmAutoStorage();
-        });
+        }));
     }
 
     public get(): Observable<string> {
-        return this.storageAccountId.take(1);
+        return this.storageAccountId.pipe(take(1));
     }
 
     public getStorageAccountIdFromDataSource(dataSource: StorageDataSource): Observable<string> {
-        if (!dataSource) { return Observable.of(dataSource); }
+        if (!dataSource) { return of(dataSource); }
         if (dataSource === "file-groups") {
             return this.get();
         } else {
-            return Observable.of(dataSource);
+            return of(dataSource);
         }
     }
 }

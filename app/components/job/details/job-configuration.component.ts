@@ -15,6 +15,7 @@ import {
 } from "app/models/decorators";
 import { JobPatchDto } from "app/models/dtos";
 import { JobService } from "app/services";
+import { flatMap } from "rxjs/operators";
 
 // tslint:disable:trackBy-function
 @Component({
@@ -68,7 +69,9 @@ export class JobConfigurationComponent implements OnDestroy {
         const ref = this.sidebarManager.open(`edit-job-metadata-${id}`, EditMetadataFormComponent);
         ref.component.metadata = this.job.metadata;
         ref.component.save = (metadata) => {
-            return this.jobService.patch(id, new JobPatchDto({ metadata })).flatMap(() => this.jobService.get(id));
+            return this.jobService.patch(id, new JobPatchDto({ metadata })).pipe(
+                flatMap(() => this.jobService.get(id)),
+            );
         };
     }
 

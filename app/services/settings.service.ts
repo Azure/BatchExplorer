@@ -6,7 +6,7 @@ const stripJsonComments = require("strip-json-comments");
 
 import { log } from "@batch-flask/utils";
 import { KeyBindings, Settings, defaultKeybindings } from "app/models";
-import { catchError } from "rxjs/operators";
+import { catchError, filter } from "rxjs/operators";
 import { LocalFileStorage } from "./local-file-storage.service";
 
 // tslint:disable-next-line:no-var-requires
@@ -33,8 +33,8 @@ export class SettingsService implements OnDestroy {
         private zone: NgZone,
         private storage: LocalFileStorage,
         batchFlaskSettings: BatchFlaskSettingsService) {
-        this.settingsObs = this._settingsSubject.filter(x => Boolean(x));
-        this.keybindings = this._keybindings.filter(x => Boolean(x));
+        this.settingsObs = this._settingsSubject.pipe(filter(x => Boolean(x)));
+        this.keybindings = this._keybindings.pipe(filter(x => Boolean(x)));
         this.hasSettingsLoaded = this._hasSettingsLoaded.asObservable();
         this._sub = this.settingsObs.subscribe((settings) => {
             batchFlaskSettings.updateSettings({
@@ -68,20 +68,22 @@ export class SettingsService implements OnDestroy {
                 return null;
             }),
         ).subscribe((userSettings: string) => {
-                this.userSettingsStr = userSettings;
-                this.settings = { ...defaultSettings, ...this._parseUserSettings(userSettings) };
-                this._hasSettingsLoaded.next(true);
-                this._settingsSubject.next(this.settings);
-            });
+            this.userSettingsStr = userSettings;
+            this.settings = { ...defaultSettings, ...this._parseUserSettings(userSettings) };
+            this._hasSettingsLoaded.next(true);
+            this._settingsSubject.next(this.settings);
+        });
 
         this.storage.get(this._keybindingsFilename).subscribe((data: KeyBindings[]) => {
             this.zone.run(() => {
                 // If the file has never been init create it
                 if (!Array.isArray(data)) {
-                    this.storage.set(this._keybindingsFilename, []).catch((e) => {
-                        log.error("Error saving the initial keybinding settings.", e);
-                        return null;
-                    }).subscribe();
+                    this.storage.set(this._keybindingsFilename, []).pipe(
+                        catchError((e) => {
+                            log.error("Error saving the initial keybinding settings.", e);
+                            return null;
+                        }),
+                    ).subscribe();
                 }
                 this._keybindings.next(defaultKeybindings.concat(data));
             });

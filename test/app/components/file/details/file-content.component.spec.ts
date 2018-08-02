@@ -1,11 +1,11 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { Observable } from "rxjs";
 
 import { FileContentComponent } from "app/components/file/details";
 import { File } from "app/models";
 import { FileService } from "app/services";
+import { of } from "rxjs";
 import { click } from "test/utils/helpers";
 import { MockSettingsService } from "test/utils/mocks";
 
@@ -28,8 +28,8 @@ describe("FileContentComponent", () => {
     beforeEach(() => {
         fileServiceSpy = {
             fileFromNode: (pool, node, filename) => ({
-                properties: () => Observable.of(new File()),
-                content: () => Observable.of({ content: "something" }),
+                properties: () => of(new File()),
+                content: () => of({ content: "something" }),
             }),
         };
 

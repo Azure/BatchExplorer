@@ -7,6 +7,7 @@ import { MouseButton, PinnableEntity, PinnedEntityType } from "@batch-flask/core
 import { ContextMenu, ContextMenuItem, ContextMenuService, DropdownComponent } from "@batch-flask/ui";
 import { AccountService, PinnedEntityService } from "app/services";
 
+import { filter } from "rxjs/operators";
 import "./pinned-dropdown.scss";
 
 @Component({
@@ -43,7 +44,7 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this._subscriptions.push(this.router.events
-            .filter(event => event instanceof NavigationEnd)
+            .pipe(filter(event => event instanceof NavigationEnd))
             .subscribe((event: NavigationEnd) => {
                 // Application URL scheme maps the Batch API URL for the entity
                 this.currentUrl = `https://${this._accountEndpoint}${event.url}`;

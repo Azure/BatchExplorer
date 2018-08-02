@@ -6,6 +6,7 @@ import {
     BatchPerformanceMetrics,
 } from "app/models/app-insights/metrics-result";
 import { AppInsightsQueryService } from "app/services";
+import { map, shareReplay } from "rxjs/operators";
 
 export class PerformanceData {
     public set pool(pool: Pool) {
@@ -53,9 +54,10 @@ export class PerformanceData {
     }
 
     public observeMetric<T = any>(name: BatchPerformanceMetricType): Observable<T> {
-        return this._metrics.map((metrics) => {
-            return metrics[name] || [];
-        }).shareReplay(1);
+        return this._metrics.pipe(
+            map((metrics) => metrics[name] || []),
+            shareReplay(1),
+        );
     }
 
     public retrieveAppId() {

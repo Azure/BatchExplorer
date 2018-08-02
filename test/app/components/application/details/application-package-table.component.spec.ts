@@ -3,8 +3,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
-import { Observable } from "rxjs";
-
 import { Property } from "@batch-flask/core";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
@@ -16,6 +14,7 @@ import { NoItemMockComponent, TableTestingModule } from "test/utils/mocks/compon
 
 import { ContextMenuService } from "@batch-flask/ui";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
+import { of } from "rxjs";
 
 const appWithPackagesId: string = "app-2";
 const appWithoutPackagesId: string = "app-1";
@@ -61,7 +60,7 @@ describe("ApplicationPackageTableComponent", () => {
                 .createSpy("get").and
                 .callFake((applicationId: string) => {
 
-                    return Observable.of(
+                    return of(
                         applicationMap.get(applicationId) || Fixtures.application.create({ id: applicationId }),
                     );
                 }),

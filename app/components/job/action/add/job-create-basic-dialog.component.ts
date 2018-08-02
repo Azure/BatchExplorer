@@ -1,8 +1,5 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { List } from "immutable";
-import { Observable } from "rxjs";
-
 import { DynamicForm, autobind } from "@batch-flask/core";
 import { ComplexFormConfig } from "@batch-flask/ui/form";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -13,6 +10,9 @@ import { JobCreateDto } from "app/models/dtos";
 import { createJobFormToJsonData, jobToFormModel } from "app/models/forms";
 import { JobService, PoolService } from "app/services";
 import { Constants } from "app/utils";
+import { List } from "immutable";
+import { Observable, of } from "rxjs";
+import { debounceTime, distinctUntilChanged, flatMap } from "rxjs/operators";
 
 import "./job-create-basic-dialog.scss";
 
@@ -78,11 +78,11 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
 
         // Load current pool container configuration to indicate whether job manager, preparation and release task
         // displays task container setting accordingly
-        this.form.controls.poolInfo.valueChanges
-            .debounceTime(400)
-            .distinctUntilChanged()
-            .flatMap(pool => pool ? poolService.get(pool.poolId) : Observable.of(null))
-            .subscribe(pool => {
+        this.form.controls.poolInfo.valueChanges.pipe(
+            debounceTime(400),
+            distinctUntilChanged(),
+            flatMap(pool => pool ? poolService.get(pool.poolId) : of(null)),
+        ).subscribe(pool => {
                 this.virtualMachineConfiguration = pool && pool.virtualMachineConfiguration;
                 if (!this.virtualMachineConfiguration || !this.virtualMachineConfiguration.containerConfiguration) {
                     // Reset job manager, preperation and release task container settings because pool id is changed

@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Subscription, from } from "rxjs";
 
 import { autobind } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
@@ -155,7 +155,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         const link = `ms-batch-explorer://route/standalone/pools/${this.pool.id}/graphs?fullscreen=true`;
         const window = this.batchExplorer.openNewWindow(link);
 
-        return Observable.fromPromise(window.domReady);
+        return from(window.domReady);
     }
 
     public get appInsightsEnabled() {

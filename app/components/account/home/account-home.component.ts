@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { Set } from "immutable";
-
 import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
 import { BrowseLayoutComponent, BrowseLayoutConfig } from "@batch-flask/ui/browse-layout";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Subscription } from "app/models";
 import { SubscriptionService } from "app/services";
+import { Set } from "immutable";
+import { distinctUntilChanged } from "rxjs/operators";
 import { BatchAccountCreateComponent } from "../action/add";
 
 @Component({
@@ -29,7 +29,7 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this._subs.push(this.subscriptionService.accountSubscriptionFilter.distinctUntilChanged()
+        this._subs.push(this.subscriptionService.accountSubscriptionFilter.pipe(distinctUntilChanged())
             .subscribe((subscriptionIds) => {
                 this.subscriptionIds.setValue(subscriptionIds.toJS());
                 this.layout.advancedFilterChanged(this._buildSubscriptionFilter(subscriptionIds));

@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
     HostBinding, Input, OnChanges, OnDestroy, Output,
 } from "@angular/core";
-import { Observable, Subscription } from "rxjs";
+import { Subscription, of } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FileNavigator, FileTreeNode, FileTreeStructure } from "app/services/file";
@@ -312,7 +312,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
                 }
                 const path = treeRow ? treeRow.path : null;
                 this.fileNavigator.addVirtualFolder(CloudPathUtils.join(path, value));
-                return Observable.of(null);
+                return of(null);
             },
         });
     }

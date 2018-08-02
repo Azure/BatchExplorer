@@ -7,7 +7,7 @@ import { Permission } from "@batch-flask/ui/permission";
 import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { exists, log, nil } from "@batch-flask/utils";
 import * as inflection from "inflection";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 import { ActionableEntity, EntityCommands } from "./entity-commands";
 
@@ -100,7 +100,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     public performAction(entity: TEntity, option: TOptions): Observable<any> {
         const obs = this._action(entity, option);
         if (!obs) {
-            return Observable.of(null);
+            return of(null);
         }
         return obs;
     }
