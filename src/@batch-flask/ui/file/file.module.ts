@@ -1,13 +1,14 @@
 import { NgModule } from "@angular/core";
 
-import { commonModules } from "app/common";
 import { FileDetailsModule } from "./details";
 import { FileDialogService } from "./file-dialog.service";
+import { FileExplorerModule } from "./file-explorer";
 
 const components = [];
 
 const modules = [
     FileDetailsModule,
+    FileExplorerModule,
 ];
 
 @NgModule({

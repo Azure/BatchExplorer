@@ -2,13 +2,13 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output,
 } from "@angular/core";
 import { BackgroundTaskService, DialogService, LoadingStatus } from "@batch-flask/ui";
+import { FileNavigator, FileTreeNode } from "@batch-flask/ui/file/file-navigator";
 import { SplitPaneConfig } from "@batch-flask/ui/split-pane";
 import { log } from "@batch-flask/utils";
+import { CurrentNode, FileExplorerWorkspace, FileSource, OpenedFile } from "app/components/file/browse/file-explorer";
+import { FileUrlUtils } from "app/utils";
 import { Subscription } from "rxjs";
 
-import { CurrentNode, FileExplorerWorkspace, FileSource, OpenedFile } from "app/components/file/browse/file-explorer";
-import { FileNavigator, FileTreeNode } from "app/services/file";
-import { FileUrlUtils } from "app/utils";
 import "./file-explorer.scss";
 
 export interface FileNavigatorEntry {
