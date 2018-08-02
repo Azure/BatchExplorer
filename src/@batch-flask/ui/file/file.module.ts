@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
-
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormModule } from "@batch-flask/ui/form";
 import { FileDetailsModule } from "./details";
 import { DownloadFolderComponent } from "./download-folder-dialog";
 import { FileDialogViewerComponent } from "./file-dialog-viewer";
@@ -15,6 +16,9 @@ const publicComponents = [
 const modules = [
     FileDetailsModule,
     FileExplorerModule,
+    FormModule,
+    ReactiveFormsModule,
+    FormsModule,
 ];
 
 @NgModule({
