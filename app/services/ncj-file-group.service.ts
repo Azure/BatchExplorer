@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-
 import { BlobContainer } from "app/models";
 import { FileGroupOptionsDto } from "app/models/dtos";
 import { Constants } from "common";
+import { Observable } from "rxjs";
+import { flatMap, share } from "rxjs/operators";
 import { PythonRpcService } from "./python-rpc/python-rpc.service";
 import { AutoStorageService } from "./storage/auto-storage.service";
 import { StorageContainerService } from "./storage/storage-container.service";
@@ -33,15 +33,11 @@ export class NcjFileGroupService {
          * NOTE: Have tweaked the progress callback to return percantage of any large file over 64MB
          * as per storage client. Would still like to have a throughput fugure in here also.
          */
-        const observable = this.pythonRpcService.callWithAuth("create-file-group", [
+        return this.pythonRpcService.callWithAuth("create-file-group", [
             fileGroupName,
             fileOrFolderPath,
             { ...options, recursive: includeSubDirectories },
-        ]).catch((error) => {
-            return Observable.throw(error);
-        });
-
-        return observable;
+        ]);
     }
 
     /**
@@ -50,9 +46,10 @@ export class NcjFileGroupService {
      */
     public create(name: string) {
         const prefixedName = this.addFileGroupPrefix(name);
-        return this.autoStorageService.get().flatMap((storageAccountId) => {
-            return this.storageContainerService.create(storageAccountId, prefixedName);
-        }).share();
+        return this.autoStorageService.get().pipe(
+            flatMap((storageAccountId) =>  this.storageContainerService.create(storageAccountId, prefixedName)),
+            share(),
+        );
     }
 
     /**
@@ -61,9 +58,10 @@ export class NcjFileGroupService {
      */
     public get(name: string): Observable<BlobContainer> {
         const prefixedName = this.addFileGroupPrefix(name);
-        return this.autoStorageService.get().flatMap((storageAccountId) => {
-            return this.storageContainerService.get(storageAccountId, prefixedName);
-        }).share();
+        return this.autoStorageService.get().pipe(
+            flatMap((storageAccountId) =>  this.storageContainerService.create(storageAccountId, prefixedName)),
+            share(),
+        );
     }
     /**
      * Return the container name from a file group name

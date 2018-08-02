@@ -7,6 +7,7 @@ import { Node, Pool } from "app/models";
 import { NodeService, PoolParams } from "app/services";
 import { EntityView } from "app/services/core";
 import { NodeConnectComponent } from "../connect";
+import { flatMap } from "rxjs/operators";
 
 @Injectable()
 export class NodeCommands extends EntityCommands<Node> {
@@ -88,13 +89,15 @@ export class NodeCommands extends EntityCommands<Node> {
     }
 
     private _reboot(node: Node) {
-        return this.nodeService.reboot(this.pool.id, node.id)
-            .flatMap(() => this.nodeService.get(this.pool.id, node.id));
+        return this.nodeService.reboot(this.pool.id, node.id).pipe(
+            flatMap(() => this.nodeService.get(this.pool.id, node.id)),
+        );
     }
 
     private _delete(node: Node) {
-        return this.nodeService.delete(this.pool.id, node.id)
-            .flatMap(() => this.nodeService.get(this.pool.id, node.id));
+        return this.nodeService.delete(this.pool.id, node.id).pipe(
+            flatMap(() => this.nodeService.get(this.pool.id, node.id)),
+        );
     }
 
     private _editStartTask(node: Node) {

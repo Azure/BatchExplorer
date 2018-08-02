@@ -13,7 +13,8 @@ import {
 } from "app/services/core";
 import { ArrayUtils, Constants, ObservableUtils } from "app/utils";
 import { List } from "immutable";
-import { Observable } from "rxjs";
+import { Observable, zip } from "rxjs";
+import { delay, flatMap } from "rxjs/operators";
 import {
     AzureBatchHttpService, BatchEntityGetter, BatchListGetter,
 } from "../core";
@@ -145,17 +146,19 @@ export class NodeService {
                 options.filter = FilterBuilder.or(...states.map(x => FilterBuilder.prop("state").eq(x)));
             }
             bTask.progress.next(1);
-            return this.listAll(poolId, options).flatMap((nodes) => {
-                const chunks = ArrayUtils.chunk<Node>(nodes.toJS(), 100);
-                const chunkFuncs = chunks.map((chunk, i) => {
-                    return () => {
-                        bTask.progress.next(10 + (i + 1 / chunks.length * 100));
-                        return this._performOnNodeChunk(chunk, callback);
-                    };
-                });
+            return this.listAll(poolId, options).pipe(
+                flatMap((nodes) => {
+                    const chunks = ArrayUtils.chunk<Node>(nodes.toJS(), 100);
+                    const chunkFuncs = chunks.map((chunk, i) => {
+                        return () => {
+                            bTask.progress.next(10 + (i + 1 / chunks.length * 100));
+                            return this._performOnNodeChunk(chunk, callback);
+                        };
+                    });
 
-                return ObservableUtils.queue(...chunkFuncs);
-            });
+                    return ObservableUtils.queue(...chunkFuncs);
+                }),
+            );
         });
     }
 
@@ -179,6 +182,6 @@ export class NodeService {
         nodes.forEach((node, i) => {
             waitFor.push(callback(node));
         });
-        return Observable.zip(...waitFor).delay(1000);
+        return zip(...waitFor).pipe(delay(1000));
     }
 }
