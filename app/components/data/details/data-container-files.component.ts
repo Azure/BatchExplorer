@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, ViewChild } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import { FileSystemService, FileDropEvent } from "@batch-flask/ui";
+import { FileDropEvent, FileSystemService } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { log } from "@batch-flask/utils";
