@@ -4,7 +4,7 @@ import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { Pool } from "app/models";
 import { PoolService } from "app/services";
-import { LongRunningDeleteAction } from "app/services/core";
+import { LongRunningDeleteAction } from "@batch-flask/core";
 
 export class DeletePoolTask extends LongRunningDeleteAction {
     constructor(private poolService: PoolService, poolIds: string[]) {

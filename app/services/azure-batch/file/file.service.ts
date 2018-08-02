@@ -13,7 +13,7 @@ import {
     ListResponse,
     ListView,
     TargetedDataCache,
-} from "app/services/core";
+} from "@batch-flask/core";
 import * as fs from "fs";
 import * as path from "path";
 import { Observable, from } from "rxjs";

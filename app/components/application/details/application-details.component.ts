@@ -6,7 +6,7 @@ import { Subscription } from "rxjs";
 import { BatchApplication } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
 import { ApplicationParams, ApplicationService } from "app/services";
-import { EntityView } from "app/services/core";
+import { EntityView } from "@batch-flask/core";
 import { BatchApplicationCommands } from "../action";
 
 @Component({

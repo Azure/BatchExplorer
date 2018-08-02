@@ -9,7 +9,7 @@ import { SubTaskDisplayListComponent } from "./sub-tasks";
 import { ListBaseComponent } from "@batch-flask/core/list";
 import { SubtaskInformation } from "app/models";
 import { SubtaskListParams, TaskService } from "app/services";
-import { ListView } from "app/services/core";
+import { ListView } from "@batch-flask/core";
 import { List } from "immutable";
 
 @Component({

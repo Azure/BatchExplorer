@@ -6,7 +6,7 @@ import { Subscription } from "rxjs";
 import { FilterBuilder } from "@batch-flask/core";
 import { Job, JobHookTask, JobHookTaskResult, JobHookTaskState } from "app/models";
 import { JobHookTaskListParams, JobHookTaskService } from "app/services";
-import { ListView } from "app/services/core";
+import { ListView } from "@batch-flask/core";
 import { DateUtils } from "app/utils";
 
 import "./job-hook-task-browser.scss";

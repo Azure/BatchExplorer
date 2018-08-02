@@ -5,7 +5,7 @@ import { HttpCode, ServerError } from "@batch-flask/core";
 import { RoleAssignmentPrincipalType } from "app/models";
 import { AADApplication, ServicePrincipal } from "app/models/ms-graph";
 import { ArmHttpService, AuthorizationHttpService, ResourceAccessService } from "app/services";
-import { ListView } from "app/services/core";
+import { ListView } from "@batch-flask/core";
 import { AADApplicationListParams, AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 import { List } from "immutable";
 import { forkJoin, of } from "rxjs";

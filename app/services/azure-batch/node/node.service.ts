@@ -10,7 +10,7 @@ import {
     ListResponse,
     ListView,
     TargetedDataCache,
-} from "app/services/core";
+} from "@batch-flask/core";
 import { ArrayUtils, Constants, ObservableUtils } from "app/utils";
 import { List } from "immutable";
 import { Observable, zip } from "rxjs";

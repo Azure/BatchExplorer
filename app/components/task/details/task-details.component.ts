@@ -6,7 +6,7 @@ import { Subscription } from "rxjs";
 import { Job, Task } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
 import { JobParams, JobService, TaskParams, TaskService } from "app/services";
-import { EntityView } from "app/services/core";
+import { EntityView } from "@batch-flask/core";
 import { TaskCommands } from "../action";
 
 @Component({

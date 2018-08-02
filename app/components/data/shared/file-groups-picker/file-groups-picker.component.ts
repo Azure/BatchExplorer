@@ -6,7 +6,7 @@ import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { BlobContainer } from "app/models";
-import { ListView } from "app/services/core";
+import { ListView } from "@batch-flask/core";
 import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 

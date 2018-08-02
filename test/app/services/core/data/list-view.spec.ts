@@ -1,6 +1,6 @@
 import { FilterBuilder, ServerError } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { BasicEntityGetter, BasicListGetter, DataCache, ListView } from "app/services/core";
+import { BasicEntityGetter, BasicListGetter, DataCache, ListView } from "@batch-flask/core";
 import { List, OrderedSet } from "immutable";
 import { from, of } from "rxjs";
 import { flatMap } from "rxjs/operators";

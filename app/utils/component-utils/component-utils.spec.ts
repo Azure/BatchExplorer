@@ -1,5 +1,5 @@
 import { SimpleChange } from "@angular/core";
-import { BasicListGetter, DataCache, ListView } from "app/services/core";
+import { BasicListGetter, DataCache, ListView } from "@batch-flask/core";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
 import { BehaviorSubject, of } from "rxjs";

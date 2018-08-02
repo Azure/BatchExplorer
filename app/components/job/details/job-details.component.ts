@@ -7,7 +7,7 @@ import { Subscription } from "rxjs";
 import { Job } from "app/models";
 import { JobDecorator } from "app/models/decorators";
 import { JobParams, JobService } from "app/services";
-import { EntityView } from "app/services/core";
+import { EntityView } from "@batch-flask/core";
 import { JobCommands } from "../action";
 
 import { flatMap } from "rxjs/operators";

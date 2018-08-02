@@ -6,7 +6,7 @@ import { Subscription } from "rxjs";
 import { Certificate, CertificateState } from "app/models";
 import { CertificateDecorator } from "app/models/decorators";
 import { CertificateParams, CertificateService } from "app/services";
-import { EntityView } from "app/services/core";
+import { EntityView } from "@batch-flask/core";
 import { CertificateCommands } from "../action";
 
 import "./certificate-details.scss";

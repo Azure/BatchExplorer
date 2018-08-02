@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 
-import { FilterBuilder } from "@batch-flask/core";
+import { FilterBuilder, TargetedDataCache } from "@batch-flask/core";
 import { SecureUtils } from "@batch-flask/utils";
 import { RoleAssignment, RoleDefinition } from "app/models";
-import { ArmListGetter, TargetedDataCache } from "app/services/core";
+import { ArmListGetter } from "app/services/core";
 import { List } from "immutable";
 import { Observable, of } from "rxjs";
 import { flatMap, map, share, shareReplay, take } from "rxjs/operators";

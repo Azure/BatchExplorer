@@ -1,6 +1,6 @@
 import { fakeAsync, tick } from "@angular/core/testing";
 
-import { PollObservable, PollService } from "app/services/core";
+import { PollObservable, PollService } from "@batch-flask/core";
 import { timer } from "rxjs";
 
 describe("PollService", () => {

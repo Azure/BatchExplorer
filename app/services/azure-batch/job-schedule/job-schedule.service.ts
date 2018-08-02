@@ -4,7 +4,7 @@ import { JobScheduleCreateDto, JobSchedulePatchDto } from "app/models/dtos";
 import {
     ContinuationToken,
     DataCache, EntityView, ListOptionsAttributes, ListView,
-} from "app/services/core";
+} from "@batch-flask/core";
 import { Constants, ModelUtils } from "app/utils";
 import { List } from "immutable";
 import { Observable, Subject } from "rxjs";

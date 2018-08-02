@@ -13,7 +13,7 @@ import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { TableConfig } from "@batch-flask/ui/table";
 import { Pool } from "app/models";
 import { PoolListParams, PoolService } from "app/services";
-import { ListView } from "app/services/core";
+import { ListView } from "@batch-flask/core";
 import { ComponentUtils } from "app/utils";
 import { DeletePoolTask, PoolCommands } from "../action";
 

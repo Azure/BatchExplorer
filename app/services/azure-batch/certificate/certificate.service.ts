@@ -11,7 +11,7 @@ import {
     ListOptionsAttributes,
     ListResponse,
     ListView,
-} from "app/services/core";
+} from "@batch-flask/core";
 import { Constants, FileUrlUtils } from "app/utils";
 import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "../core";
 

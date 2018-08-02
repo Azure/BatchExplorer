@@ -4,7 +4,7 @@ import {
 } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { BlobContainer } from "app/models";
-import { ListView } from "app/services/core";
+import { ListView } from "@batch-flask/core";
 import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 import { List } from "immutable";

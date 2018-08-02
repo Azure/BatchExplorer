@@ -5,7 +5,7 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Node, Pool } from "app/models";
 import { NodeService, PoolParams } from "app/services";
-import { EntityView } from "app/services/core";
+import { EntityView } from "@batch-flask/core";
 import { flatMap } from "rxjs/operators";
 import { NodeConnectComponent } from "../connect";
 

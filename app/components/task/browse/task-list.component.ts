@@ -13,7 +13,7 @@ import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Task } from "app/models";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
-import { ListView } from "app/services/core";
+import { ListView } from "@batch-flask/core";
 import { ComponentUtils } from "app/utils";
 import { DeleteTaskAction, TaskCommands } from "../action";
 

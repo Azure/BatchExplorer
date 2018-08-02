@@ -1,4 +1,4 @@
-import { ProxyOptions } from "app/services/core";
+import { ProxyOptions } from "@batch-flask/core";
 
 describe("ProxyOptions", () => {
     it("should create from attributes", () => {

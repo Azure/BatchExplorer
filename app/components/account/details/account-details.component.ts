@@ -8,7 +8,7 @@ import {
     AccountParams, AccountService, ApplicationListParams, ApplicationService,
     InsightsMetricsService, JobListParams, JobService, PoolListParams, PoolService,
 } from "app/services";
-import { EntityView, ListView } from "app/services/core";
+import { EntityView, ListView } from "@batch-flask/core";
 import { BatchAccountCommands } from "../action";
 
 import { TableConfig } from "@batch-flask/ui";

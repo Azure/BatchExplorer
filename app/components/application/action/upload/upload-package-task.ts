@@ -5,7 +5,7 @@
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 // import { Pool } from "app/models";
 import { PoolService } from "app/services";
-import { LongRunningUploadAction } from "app/services/core";
+import { LongRunningUploadAction } from "@batch-flask/core";
 
 export class UploadPackageTask extends LongRunningUploadAction {
     constructor(poolService: PoolService, poolIds: string[]) {

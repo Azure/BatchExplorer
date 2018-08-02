@@ -11,7 +11,7 @@ import { ApplicationPackage, BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService } from "app/services";
 
 import "@batch-flask/ui/form/editable-table/editable-table.scss";
-import { ListView } from "app/services/core";
+import { ListView } from "@batch-flask/core";
 
 interface PackageReference {
     applicationId?: string;

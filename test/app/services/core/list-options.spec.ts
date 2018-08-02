@@ -1,5 +1,5 @@
 import { FilterBuilder } from "@batch-flask/core";
-import { ListOptions } from "app/services/core";
+import { ListOptions } from "@batch-flask/core";
 
 const fooFilter = FilterBuilder.prop("foo").eq("bar");
 const myFilter = FilterBuilder.prop("foo").eq("myFilter");

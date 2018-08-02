@@ -12,7 +12,7 @@ import { List } from "immutable";
 import { Observable, Subscription, of } from "rxjs";
 
 import { BlobContainer, LeaseStatus } from "app/models";
-import { ListView } from "app/services/core";
+import { ListView } from "@batch-flask/core";
 import { ListContainerParams, StorageContainerService } from "app/services/storage";
 import { ComponentUtils } from "app/utils";
 import { Constants } from "common";

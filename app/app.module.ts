@@ -37,7 +37,7 @@ import { CommonModule } from "app/components/common";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
 import { AzureBatchHttpService } from "app/services/azure-batch/core";
-import { PollService } from "app/services/core";
+import { PollService } from "@batch-flask/core";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 import { AADGraphHttpService, MsGraphHttpService } from "app/services/ms-graph/core";
 import {

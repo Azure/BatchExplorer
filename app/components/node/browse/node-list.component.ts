@@ -7,7 +7,7 @@ import { ListBaseComponent } from "@batch-flask/core/list";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Node, Pool } from "app/models";
 import { NodeListParams, NodeService, PoolParams, PoolService } from "app/services";
-import { EntityView, ListView } from "app/services/core";
+import { EntityView, ListView } from "@batch-flask/core";
 import { ComponentUtils } from "app/utils";
 import { NodeCommands } from "../action";
 

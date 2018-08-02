@@ -5,7 +5,7 @@ import { Subscription } from "rxjs";
 
 import { BlobContainer } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
-import { EntityView } from "app/services/core";
+import { EntityView } from "@batch-flask/core";
 import {
     AutoStorageService, GetContainerParams, StorageContainerService,
 } from "app/services/storage";

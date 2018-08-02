@@ -2,7 +2,7 @@ import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { WaitForDeletePoller } from "app/components/core/pollers";
 import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
-import { LongRunningDeleteAction } from "app/services/core";
+import { LongRunningDeleteAction } from "@batch-flask/core";
 import { BehaviorSubject, interval } from "rxjs";
 import { flatMap, last, share, take } from "rxjs/operators";
 

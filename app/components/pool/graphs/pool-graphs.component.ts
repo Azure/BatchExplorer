@@ -11,7 +11,7 @@ import { Job, Node, NodeState, Pool, Task } from "app/models";
 import {
     AppInsightsQueryService, BatchExplorerService, NodeListParams, NodeService,
 } from "app/services";
-import { ListView, PollObservable, PollService } from "app/services/core";
+import { ListView, PollObservable, PollService } from "@batch-flask/core";
 import { ComponentUtils } from "app/utils";
 import { StateCounter } from "./heatmap";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";

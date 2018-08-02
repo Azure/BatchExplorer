@@ -1,4 +1,4 @@
-import { BasicEntityGetter, DataCache } from "app/services/core";
+import { BasicEntityGetter, DataCache } from "@batch-flask/core";
 import { EntityGetter } from "app/services/core/data/entity-getter";
 import { of } from "rxjs";
 import { FakeModel, FakeParams } from "./fake-model";

@@ -10,7 +10,7 @@ import {
     ListOptionsAttributes,
     ListResponse,
     ListView,
-} from "app/services/core";
+} from "@batch-flask/core";
 import { Constants, ModelUtils } from "app/utils";
 import { List } from "immutable";
 import { map, share } from "rxjs/operators";

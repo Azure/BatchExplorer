@@ -4,7 +4,7 @@ import { List } from "immutable";
 import { GaugeConfig } from "@batch-flask/ui/graphs/gauge";
 import { Job, JobTaskCounts, JobTaskCountsValidationStatus, Node, Pool } from "app/models";
 import { JobService, NodeListParams, NodeService, PoolParams, PoolService } from "app/services";
-import { EntityView, ListView, PollObservable, PollService } from "app/services/core";
+import { EntityView, ListView, PollObservable, PollService } from "@batch-flask/core";
 
 const refreshRate = 5000;
 import "./job-progress-status.scss";

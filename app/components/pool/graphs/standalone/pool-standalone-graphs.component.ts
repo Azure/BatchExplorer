@@ -4,7 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Pool } from "app/models";
 
 import { PoolParams, PoolService } from "app/services";
-import { EntityView } from "app/services/core";
+import { EntityView } from "@batch-flask/core";
 import "./pool-standalone-graphs.scss";
 
 @Component({

@@ -1,5 +1,5 @@
 import { fakeAsync, tick } from "@angular/core/testing";
-import { BasicListGetter, DataCache } from "app/services/core";
+import { BasicListGetter, DataCache } from "@batch-flask/core";
 import { of, timer } from "rxjs";
 import { flatMap, map } from "rxjs/operators";
 import { FakeModel } from "test/app/services/core/data/fake-model";
