@@ -3,7 +3,10 @@ import { JobSchedule } from "app/models";
 import { JobScheduleCreateDto, JobSchedulePatchDto } from "app/models/dtos";
 import {
     ContinuationToken,
-    DataCache, EntityView, ListOptionsAttributes, ListView,
+    DataCache,
+    EntityView,
+    ListOptionsAttributes,
+    ListView,
 } from "@batch-flask/core";
 import { Constants, ModelUtils } from "app/utils";
 import { List } from "immutable";

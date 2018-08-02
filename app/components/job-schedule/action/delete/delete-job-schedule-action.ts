@@ -4,7 +4,7 @@ import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { WaitForDeletePoller } from "app/components/core/pollers";
 import { JobSchedule } from "app/models";
 import { JobScheduleService } from "app/services";
-import { LongRunningDeleteAction } from "@batch-flask/core";
+import { LongRunningDeleteAction } from "app/services/core";
 
 export class DeleteJobScheduleAction extends LongRunningDeleteAction {
     constructor(private jobScheduleService: JobScheduleService, jobScheduleIds: string[]) {

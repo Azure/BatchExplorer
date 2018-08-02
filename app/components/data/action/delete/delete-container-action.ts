@@ -3,7 +3,7 @@ import { BehaviorSubject } from "rxjs";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { WaitForDeletePoller } from "app/components/core/pollers";
 import { BlobContainer } from "app/models";
-import { LongRunningDeleteAction } from "@batch-flask/core";
+import { LongRunningDeleteAction } from "app/services/core";
 import { StorageContainerService } from "app/services/storage";
 
 export class DeleteContainerAction extends LongRunningDeleteAction {

@@ -3,8 +3,7 @@ import { Observable } from "rxjs";
 
 import { HttpParams } from "@angular/common/http";
 import { HttpRequestOptions } from "@batch-flask/core";
-import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
-import { ContinuationToken, ListOptions } from "app/services/core/data/list-options";
+import { ListGetter, ListGetterConfig, ContinuationToken, ListOptions } from "@batch-flask/core";
 import { map, share } from "rxjs/operators";
 import { AzureBatchHttpService } from "./batch-http.service";
 

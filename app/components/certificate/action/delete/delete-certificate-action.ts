@@ -4,7 +4,7 @@ import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { WaitForDeletePoller } from "app/components/core/pollers";
 import { Certificate } from "app/models";
 import { CertificateService } from "app/services";
-import { LongRunningDeleteAction } from "@batch-flask/core";
+import { LongRunningDeleteAction } from "app/services/core";
 
 export class DeleteCertificateAction extends LongRunningDeleteAction {
     constructor(private certificateService: CertificateService, certificateThumbprints: string[]) {

@@ -1,10 +1,13 @@
 import { Injectable, Injector } from "@angular/core";
 import {
-    COMMAND_LABEL_ICON, DialogService, EntityCommand,
-    EntityCommands, Permission, SidebarManager,
+    COMMAND_LABEL_ICON,
+    DialogService,
+    DownloadFolderComponent,
+    EntityCommand,
+    EntityCommands,
+    Permission,
+    SidebarManager,
 } from "@batch-flask/ui";
-
-import { DownloadFolderComponent } from "app/components/common/download-folder-dialog";
 import { BlobContainer } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { PinnedEntityService } from "app/services";
