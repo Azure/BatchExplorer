@@ -10,7 +10,7 @@ import { NodeDeallocationOption, PoolEnableAutoScaleDto, PoolResizeDto } from "a
 import { PoolScaleModel } from "app/models/forms";
 import { PoolService } from "app/services";
 import { of } from "rxjs";
-import { delay, flatMap } from "rxjs/operators";
+import { delay, flatMap, share } from "rxjs/operators";
 
 @Component({
     selector: "bl-pool-resize-dialog",
@@ -78,7 +78,7 @@ export class PoolResizeDialogComponent {
             );
         }
 
-        const finalObs = obs.flatMap(() => this.poolService.get(this.pool.id)).share();
+        const finalObs = obs.pipe(flatMap(() => this.poolService.get(this.pool.id)), share());
         finalObs.subscribe({
             next: (pool) => {
                 this.notificationService.success("Pool resize started!",

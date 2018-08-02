@@ -6,10 +6,10 @@ import { AsyncTask, Dto, ServerError, autobind } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { validJsonConfig } from "@batch-flask/utils/validators";
 import { Observable, Subscription, of } from "rxjs";
+import { filter, first, flatMap, share, shareReplay, tap } from "rxjs/operators";
 import { FormBase } from "../form-base";
 import { FormPageComponent } from "../form-page";
 import { FormActionConfig } from "./footer";
-import { first, filter, tap, share } from "rxjs/operators";
 
 import "./complex-form.scss";
 
@@ -121,14 +121,17 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
             ready = of(null);
         }
         this.loading = true;
-        const obs = ready.flatMap(() => {
-            const submitResult = this.submit(this.getCurrentDto());
-            if (!submitResult) {
-                return of(null);
-            } else {
-                return submitResult;
-            }
-        }).shareReplay(1);
+        const obs = ready.pipe(
+            flatMap(() => {
+                const submitResult = this.submit(this.getCurrentDto());
+                if (!submitResult) {
+                    return of(null);
+                } else {
+                    return submitResult;
+                }
+            }),
+            shareReplay(1),
+        );
         obs.subscribe({
             next: () => {
                 this.loading = false;
