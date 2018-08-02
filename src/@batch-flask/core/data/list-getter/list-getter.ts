@@ -2,8 +2,8 @@ import { Type } from "@angular/core";
 import { List, OrderedSet } from "immutable";
 import { Observable, empty, of } from "rxjs";
 
-import { DataCache } from "app/services/core/data-cache";
 import { expand, map, reduce, share } from "rxjs/operators";
+import { DataCache } from "../data-cache";
 import { GenericGetter, GenericGetterConfig } from "../generic-getter";
 import { ContinuationToken, ListOptions, ListOptionsAttributes } from "../list-options";
 

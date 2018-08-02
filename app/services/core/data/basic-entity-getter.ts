@@ -1,7 +1,6 @@
 import { Type } from "@angular/core";
+import { EntityGetter, EntityGetterConfig } from "@batch-flask/core";
 import { Observable } from "rxjs";
-
-import { EntityGetter, EntityGetterConfig } from "./entity-getter";
 
 export interface BasicEntityGetterConfig<TEntity, TParams> extends EntityGetterConfig<TEntity, TParams> {
     /**

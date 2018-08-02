@@ -1,4 +1,5 @@
 export * from "./data-cache";
+export * from "./targeted-data-cache";
 export * from "./poll.service";
 export * from "./query-cache";
 export * from "./entity-view";

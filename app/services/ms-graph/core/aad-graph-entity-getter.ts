@@ -1,7 +1,6 @@
 import { Type } from "@angular/core";
+import { EntityGetter, EntityGetterConfig } from "@batch-flask/core";
 import { Observable } from "rxjs";
-
-import { EntityGetter, EntityGetterConfig } from "app/services/core/data/entity-getter";
 import { AADGraphHttpService } from "./aad-graph-http.service";
 
 export interface AADGraphEntityGetterConfig<TEntity, TParams> extends EntityGetterConfig<TEntity, TParams> {
