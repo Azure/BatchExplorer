@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 
 import * as FilterBuilder from "@batch-flask/core/filter-builder";
 import { log } from "@batch-flask/utils";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { AdvancedFilterControlBase } from "./control-base";
 
 export class AdvancedFilter {
@@ -23,7 +24,7 @@ export class AdvancedFilter {
 
         this.group = this._buildFormGroup();
 
-        this.group.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((data) => {
+        this.group.valueChanges.pipe(debounceTime(400), distinctUntilChanged()).subscribe((data) => {
             this._handleFormChange(data);
         });
     }

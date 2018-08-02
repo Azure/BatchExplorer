@@ -12,6 +12,7 @@ import { Subscription } from "rxjs";
 import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-filter";
 import { BrowseLayoutListDirective } from "./browse-layout-list";
 import "./browse-layout.scss";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 export interface BrowseLayoutConfig {
     /**
@@ -92,7 +93,10 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
     }
 
     public ngOnInit() {
-        this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
+        this.quickSearchQuery.valueChanges.pipe(
+            debounceTime(400),
+            distinctUntilChanged(),
+        ).subscribe((query: string) => {
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
             } else {

@@ -15,7 +15,7 @@ export class ApplicationHomeComponent {
     public quickFilter: Filter = FilterBuilder.none();
 
     constructor(private sidebarManager: SidebarManager) {
-        this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
+        this.quickSearchQuery.valueChanges.pipe(debounceTime(400), distinctUntilChanged()).subscribe((query: string) => {
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
             } else {

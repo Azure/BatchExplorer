@@ -45,7 +45,7 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnChanges
         private autoStorageService: AutoStorageService,
         private dialog: DialogService) {
 
-        this._subscriptions.push(this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
+        this._subscriptions.push(this.value.valueChanges.pipe(debounceTime(400), distinctUntilChanged()).subscribe((value) => {
             this._checkValid(value);
             if (this._propagateChange) {
                 this._propagateChange(value);

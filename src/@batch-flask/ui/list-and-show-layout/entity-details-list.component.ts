@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 import { FilterBuilder } from "@batch-flask/core";
 
 import "./entity-details-list.scss";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 /**
  * Wrapper for a list that should be displayed in the detailed area
@@ -62,7 +63,7 @@ export class EntityDetailsListComponent {
     public searchQuery = new FormControl();
 
     constructor(changeDetector: ChangeDetectorRef) {
-        this.searchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
+        this.searchQuery.valueChanges.pipe(debounceTime(400), distinctUntilChanged()).subscribe((query: string) => {
             if (query === "") {
                 this.filter = FilterBuilder.none();
             } else {

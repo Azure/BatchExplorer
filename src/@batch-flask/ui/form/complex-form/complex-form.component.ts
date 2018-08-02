@@ -4,15 +4,14 @@ import {
 import { FormControl } from "@angular/forms";
 import { AsyncTask, Dto, ServerError, autobind } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
-
 import { validJsonConfig } from "@batch-flask/utils/validators";
 import { Observable, Subscription, of } from "rxjs";
 import { FormBase } from "../form-base";
 import { FormPageComponent } from "../form-page";
 import { FormActionConfig } from "./footer";
+import { first, filter, tap, share } from "rxjs/operators";
 
 import "./complex-form.scss";
-import { first, filter, tap, share } from "rxjs/operators";
 
 export type FormSize = "small" | "medium" | "large";
 

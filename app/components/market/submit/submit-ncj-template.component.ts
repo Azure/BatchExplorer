@@ -324,7 +324,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     private _handleControlChangeEvents(formGroup, key) {
         // Listen to control value change events and update the route parameters to match
         // tslint:disable-next-line:max-line-length
-        this._controlChanges.push(formGroup[key].valueChanges.debounceTime(400).distinctUntilChanged().subscribe((change) => {
+        this._controlChanges.push(formGroup[key].valueChanges.pipe(debounceTime(400), distinctUntilChanged()).subscribe((change) => {
             if (this._parameterTypeMap[key] === NcjParameterExtendedType.fileGroup && Boolean(change)) {
                 // Quick-Fix until we modify the CLI to finally sort out file group prefixes
                 change = this.fileGroupService.addFileGroupPrefix(change);
