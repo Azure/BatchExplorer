@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { FormModule } from "@batch-flask/ui/form";
 import { FileDetailsModule } from "./details";
 import { DownloadFolderComponent } from "./download-folder-dialog";
@@ -19,6 +20,7 @@ const modules = [
     FormModule,
     ReactiveFormsModule,
     FormsModule,
+    ButtonsModule,
 ];
 
 @NgModule({
