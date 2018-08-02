@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
-import { Observable, Subscription, from, timer } from "rxjs";
+import { Subscription, from, timer } from "rxjs";
 
 import { NavigatorService } from "app/services";
 import { concatMap } from "rxjs/operators";

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ArmHttpService } from "app/services/arm-http.service";
-import { Observable, of } from "rxjs";
+import { of } from "rxjs";
 
 import { StorageKeys } from "app/models";
 import { map, shareReplay } from "rxjs/operators";

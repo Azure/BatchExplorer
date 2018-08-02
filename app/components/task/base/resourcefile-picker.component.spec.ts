@@ -10,7 +10,7 @@ import { EditableTableColumnComponent, EditableTableComponent } from "@batch-fla
 import { ResourcefilePickerComponent } from "app/components/task/base";
 import { FileSystemService, SettingsService } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
-import { Observable, of } from "rxjs";
+import { of } from "rxjs";
 import { F } from "test/utils";
 
 @Component({

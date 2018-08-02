@@ -1,11 +1,10 @@
-import { BasicEntityGetter, BasicListGetter, DataCache, ListView } from "app/services/core";
-import { List, OrderedSet } from "immutable";
-import { Observable, from, of } from "rxjs";
-
 import { FilterBuilder, ServerError } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { FakeModel } from "./fake-model";
+import { BasicEntityGetter, BasicListGetter, DataCache, ListView } from "app/services/core";
+import { List, OrderedSet } from "immutable";
+import { from, of } from "rxjs";
 import { flatMap } from "rxjs/operators";
+import { FakeModel } from "./fake-model";
 
 const firstPage = [
     { id: "1", state: "active", name: "Fake1" },

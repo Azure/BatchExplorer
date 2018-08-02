@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
 
 import { AccountService } from "app/services/account.service";
-import { take, map } from "rxjs/operators";
+import { map, take } from "rxjs/operators";
 
 export type StorageDataSource = string | "file-groups";
 

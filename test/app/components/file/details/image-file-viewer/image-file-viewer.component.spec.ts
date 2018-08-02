@@ -1,7 +1,7 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { Observable, Subject, of } from "rxjs";
+import { Subject, of } from "rxjs";
 
 import { ImageFileViewerComponent } from "app/components/file/details/image-file-viewer";
 

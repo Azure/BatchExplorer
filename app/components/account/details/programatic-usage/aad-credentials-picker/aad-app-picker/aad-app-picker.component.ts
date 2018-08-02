@@ -2,17 +2,16 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output,
 } from "@angular/core";
 import { HttpCode, ServerError } from "@batch-flask/core";
-import { List } from "immutable";
-import { Observable, of, forkJoin } from "rxjs";
-
 import { RoleAssignmentPrincipalType } from "app/models";
 import { AADApplication, ServicePrincipal } from "app/models/ms-graph";
 import { ArmHttpService, AuthorizationHttpService, ResourceAccessService } from "app/services";
 import { ListView } from "app/services/core";
 import { AADApplicationListParams, AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
+import { List } from "immutable";
+import { forkJoin, of } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 
 import "./aad-app-picker.scss";
-import { catchError, map } from "rxjs/operators";
 
 @Component({
     selector: "bl-aad-app-picker",
@@ -104,7 +103,7 @@ export class AADAppPickerComponent implements OnInit, OnDestroy {
                         if (error.status === HttpCode.NotFound) {
                             return of(null);
                         }
-                    })
+                    }),
                 );
             });
 

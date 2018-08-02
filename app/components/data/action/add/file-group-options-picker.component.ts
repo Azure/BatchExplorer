@@ -3,9 +3,9 @@ import {
     AbstractControl, ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS,
     NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
-import { Subscription } from "rxjs";
-
 import { Constants } from "app/utils";
+import { Subscription } from "rxjs";
+import { distinctUntilChanged } from "rxjs/operators";
 
 @Component({
     selector: "bl-file-group-options-picker",
@@ -30,7 +30,7 @@ export class FileGroupOptionsPickerComponent implements OnDestroy, ControlValueA
             fullPath: [false, this._validateFullPath()],
         });
 
-        this._valueChangeSub = this.form.valueChanges.distinctUntilChanged().subscribe((value) => {
+        this._valueChangeSub = this.form.valueChanges.pipe(distinctUntilChanged()).subscribe((value) => {
             this._emitChangeAndTouchedEvents(value);
         });
     }

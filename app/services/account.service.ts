@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { RequestOptions, URLSearchParams, Response } from "@angular/http";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable, combineLatest, of, empty, forkJoin } from "rxjs";
-
 import { AccountKeys, AccountResource, BatchAccountAttributes, Subscription } from "app/models";
 import { AccountPatchDto } from "app/models/dtos";
 import { ArmResourceUtils, log } from "app/utils";

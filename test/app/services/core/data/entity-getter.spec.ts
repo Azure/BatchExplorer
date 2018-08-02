@@ -1,6 +1,6 @@
 import { BasicEntityGetter, DataCache } from "app/services/core";
 import { EntityGetter } from "app/services/core/data/entity-getter";
-import { Observable, of } from "rxjs";
+import { of } from "rxjs";
 import { FakeModel, FakeParams } from "./fake-model";
 
 const data = [

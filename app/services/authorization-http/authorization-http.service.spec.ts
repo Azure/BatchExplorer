@@ -1,10 +1,9 @@
 import { Response, ResponseOptions } from "@angular/http";
 import { Permission } from "@batch-flask/ui/permission";
-import { Observable, Subscription, of } from "rxjs";
-import * as Fixtures from "test/fixture";
-
-import { AuthorizationHttpService, BatchAccountPermission } from "./authorization-http.service";
+import { Subscription, of } from "rxjs";
 import { take } from "rxjs/operators";
+import * as Fixtures from "test/fixture";
+import { AuthorizationHttpService, BatchAccountPermission } from "./authorization-http.service";
 
 describe("AuthorizationHttpService", () => {
     let authService: AuthorizationHttpService;

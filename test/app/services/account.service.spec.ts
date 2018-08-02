@@ -1,5 +1,5 @@
 import { fakeAsync, tick } from "@angular/core/testing";
-import { AsyncSubject, Observable, Subscription, of } from "rxjs";
+import { AsyncSubject, Subscription, of } from "rxjs";
 
 import { AccountResource } from "app/models";
 import { AccountService } from "app/services";

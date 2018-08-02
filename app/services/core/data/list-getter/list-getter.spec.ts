@@ -1,8 +1,8 @@
 import { fakeAsync, tick } from "@angular/core/testing";
 import { BasicListGetter, DataCache } from "app/services/core";
-import { Observable, of, timer } from "rxjs";
-import { FakeModel } from "test/app/services/core/data/fake-model";
+import { of, timer } from "rxjs";
 import { flatMap, map } from "rxjs/operators";
+import { FakeModel } from "test/app/services/core/data/fake-model";
 
 const firstPage = [
     { id: "1", state: "active", name: "Fake1" },

@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, ViewChild } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import * as path from "path";
-import { Observable, Subscription, from } from "rxjs";
+import { Subscription, from } from "rxjs";
 
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { NotificationService } from "@batch-flask/ui/notifications";

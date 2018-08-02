@@ -1,7 +1,7 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { Observable, of, throwError } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { ButtonComponent } from "@batch-flask/ui/buttons";

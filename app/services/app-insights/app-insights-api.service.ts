@@ -1,14 +1,13 @@
 import { Location } from "@angular/common";
 import { Injectable } from "@angular/core";
 import { Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response } from "@angular/http";
-import { Observable, range, of, timer, zip, throwError } from "rxjs";
-
 import { AccessToken, RetryableHttpCode, ServerError } from "@batch-flask/core";
 import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { Constants } from "app/utils";
-import { retryWhen, take, flatMap, catchError, share, switchMap, mergeMap } from "rxjs/operators";
+import { Observable, throwError, timer } from "rxjs";
+import { catchError, flatMap, mergeMap, retryWhen, share, take } from "rxjs/operators";
 
 function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
     const options = original || new RequestOptions();
@@ -45,7 +44,7 @@ export class AppInsightsApiService {
             take(1),
             flatMap((account) => this.adal.accessTokenData(account.subscription.tenantId, this.resourceUrl)),
             flatMap((accessToken) => {
-                options = this._setupRequestOptions(uri, options, accessToken);
+                options = this._setupRequestOptions(options, accessToken);
                 return this.http.request(this._computeUrl(uri), options).pipe(
                     retryWhen(attempts => this._retryWhen(attempts)),
                     catchError((error) => {
@@ -79,7 +78,6 @@ export class AppInsightsApiService {
     }
 
     private _setupRequestOptions(
-        uri: string,
         originalOptions: RequestOptionsArgs,
         accessToken: AccessToken): RequestOptionsArgs {
 

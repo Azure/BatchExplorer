@@ -1,5 +1,5 @@
 import { List } from "immutable";
-import { Observable, Subscription, of } from "rxjs";
+import { Subscription, of } from "rxjs";
 
 import { PinnableEntity, PinnedEntityType } from "@batch-flask/core";
 import { BatchApplication, Job } from "app/models";
