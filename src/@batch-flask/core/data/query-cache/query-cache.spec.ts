@@ -1,6 +1,6 @@
-import { Filter, FilterBuilder, ContinuationToken, ListOptions, } from "@batch-flask/core";
-import { QueryCache } from "./query-cache";
+import { ContinuationToken, Filter, FilterBuilder, ListOptions } from "@batch-flask/core";
 import { OrderedSet } from "immutable";
+import { QueryCache } from "./query-cache";
 
 class FakeClientProxy {
     public value = "original";

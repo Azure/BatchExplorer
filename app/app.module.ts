@@ -32,12 +32,11 @@ import { BatchExplorerErrorHandler } from "app/error-handler";
 
 // services
 import { HttpModule } from "@angular/http";
-import { MaterialModule, TranslationsLoaderService } from "@batch-flask/core";
+import { MaterialModule, PollService, TranslationsLoaderService } from "@batch-flask/core";
 import { CommonModule } from "app/components/common";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
 import { AzureBatchHttpService } from "app/services/azure-batch/core";
-import { PollService } from "@batch-flask/core";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 import { AADGraphHttpService, MsGraphHttpService } from "app/services/ms-graph/core";
 import {

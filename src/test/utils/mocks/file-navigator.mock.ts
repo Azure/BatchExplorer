@@ -1,5 +1,6 @@
-import { File, FileLoader, FileNavigator, FileSource } from "@batch-flask/ui";
-import { BasicListGetter, DataCache } from "@batch-flask/core";
+import { DataCache } from "@batch-flask/core";
+import { File, FileLoader, FileNavigator } from "@batch-flask/ui";
+import { BasicListGetter } from "app/services/core";
 import { Observable, of } from "rxjs";
 
 export class MockFileNavigator extends FileNavigator {
@@ -19,7 +20,7 @@ export class MockFileNavigator extends FileNavigator {
             getFile: (filename) => new FileLoader({
                 filename,
                 fs: null,
-                source: FileSource.node,
+                source: "custom-test",
                 properties: () => of(new File({ name: filename })),
                 content: () => of({ content: "some-content" }),
             }),
