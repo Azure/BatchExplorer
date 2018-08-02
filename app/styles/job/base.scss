@@ -1,15 +1,3 @@
-bl-job-stats-preview {
-    .task-success {
-        display: inline-block;
-        color: map-get($success, 800);
-        margin-right: 5px;
-    }
-
-    .task-failed {
-        display: inline-block;
-        color: $danger-color;
-    }
-}
 
 bl-application-preview, bl-task-preview, bl-task-runtime {
     i {
