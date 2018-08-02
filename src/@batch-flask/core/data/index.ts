@@ -9,3 +9,5 @@ export * from "./list-options";
 export * from "./proxy-options";
 export * from "./list-getter";
 export * from "./list-view";
+export * from "./basic-entity-getter";
+export * from "./basic-list-getter";

@@ -2,10 +2,11 @@ import { OrderedSet } from "immutable";
 import * as moment from "moment";
 
 import { ObjectUtils } from "@batch-flask/utils";
-import { Constants } from "common";
 import { ContinuationToken } from "../list-options";
 
 const noQueryKey = "no-query";
+
+const maxQuery =  1;
 
 export class CachedKeyList {
     public createdAt: Date;
@@ -50,7 +51,7 @@ export class QueryCache {
             return moment.utc(this._cache[a].createdAt).diff(moment.utc(this._cache[b].createdAt));
         });
 
-        for (let i = 0; i < sortedKeys.length - Constants.caching.maxQuery; i++) {
+        for (let i = 0; i < sortedKeys.length - maxQuery; i++) {
             delete this._cache[sortedKeys[i]];
         }
     }

@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { ServerError } from "@batch-flask/core";
 import {
     ContinuationToken,
     DataCache,
@@ -7,6 +6,7 @@ import {
     ListOptionsAttributes,
     ListResponse,
     ListView,
+    ServerError,
 } from "@batch-flask/core";
 import { AutoScaleFormulaEvaluation, NameValuePair, Pool } from "app/models";
 import { PoolCreateDto, PoolEnableAutoScaleDto, PoolPatchDto, PoolResizeDto } from "app/models/dtos";

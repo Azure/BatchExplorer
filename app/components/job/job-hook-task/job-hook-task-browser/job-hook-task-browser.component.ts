@@ -3,8 +3,7 @@ import { FormControl } from "@angular/forms";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
-import { FilterBuilder } from "@batch-flask/core";
-import { ListView } from "@batch-flask/core";
+import { FilterBuilder, ListView } from "@batch-flask/core";
 import { Job, JobHookTask, JobHookTaskResult, JobHookTaskState } from "app/models";
 import { JobHookTaskListParams, JobHookTaskService } from "app/services";
 import { DateUtils } from "app/utils";

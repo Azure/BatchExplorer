@@ -1,6 +1,6 @@
 import { AsyncSubject, BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
 
-import { ServerError } from "@batch-flask/core";
+import { ServerError } from "@batch-flask/core/server-error";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { ObjectUtils } from "@batch-flask/utils";
 import { DataCache } from "./data-cache";

@@ -1,10 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Observable, Subscription } from "rxjs";
-
-import { Filter, autobind } from "@batch-flask/core";
-import { ListView } from "@batch-flask/core";
+import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
@@ -15,6 +12,7 @@ import { FailureInfoDecorator } from "app/models/decorators";
 import { JobListParams, JobService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
+import { Observable, Subscription } from "rxjs";
 import {
     DeleteJobAction,
     JobCommands,

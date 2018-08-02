@@ -1,17 +1,5 @@
 // tslint:disable:variable-name
 
-export const caching = {
-    /**
-     * Max number of filtered query that it should remember.
-     * It will always keep the query for no query and that last n queries with a filter
-     */
-    maxQuery: 1,
-    /**
-     * Max number of cache a targeted cache would keep at the same time
-     */
-    maxTargetedCache: 2,
-};
-
 export const badHttpCodeMaxRetryCount = 5;
 
 export const FileSourceTypes = {

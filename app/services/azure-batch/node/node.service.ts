@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { FilterBuilder } from "@batch-flask/core";
 import {
     ContinuationToken,
     DataCache,
     EntityView,
+    FilterBuilder,
     ListOptionsAttributes,
     ListResponse,
     ListView,

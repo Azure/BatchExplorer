@@ -1,7 +1,7 @@
 import { List, OrderedSet } from "immutable";
 import { BehaviorSubject, Observable, combineLatest, of } from "rxjs";
 
-import { FilterMatcher } from "@batch-flask/core";
+import { FilterMatcher } from "@batch-flask/core/filter-builder";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { log } from "@batch-flask/utils";
 import { distinctUntilChanged, map, switchAll, takeUntil } from "rxjs/operators";

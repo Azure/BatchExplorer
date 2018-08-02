@@ -1,16 +1,13 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, ViewChild,
 } from "@angular/core";
-import { autobind } from "@batch-flask/core";
-import { Observable } from "rxjs";
-
-import { SubTaskDisplayListComponent } from "./sub-tasks";
-
-import { ListView } from "@batch-flask/core";
+import { ListView,  autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/core/list";
 import { SubtaskInformation } from "app/models";
 import { SubtaskListParams, TaskService } from "app/services";
 import { List } from "immutable";
+import { Observable } from "rxjs";
+import { SubTaskDisplayListComponent } from "./sub-tasks";
 
 @Component({
     selector: "bl-task-sub-tasks-tab",

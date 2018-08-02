@@ -1,9 +1,6 @@
 import { fakeAsync, tick } from "@angular/core/testing";
+import { BasicEntityGetter, DataCache, EntityGetter, EntityView, ServerError } from "@batch-flask/core";
 import { from, throwError } from "rxjs";
-
-import { ServerError } from "@batch-flask/core";
-import { BasicEntityGetter, DataCache, EntityView } from "@batch-flask/core";
-import { EntityGetter } from "app/services/core/data/entity-getter";
 import { FakeModel, FakeParams } from "./fake-model";
 
 const data = [

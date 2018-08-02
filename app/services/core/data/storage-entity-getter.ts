@@ -1,6 +1,5 @@
 import { Type } from "@angular/core";
-import { ServerError } from "@batch-flask/core";
-import { EntityGetter, EntityGetterConfig } from "@batch-flask/core";
+import { EntityGetter, EntityGetterConfig, ServerError } from "@batch-flask/core";
 import { StorageClientService } from "app/services/storage/storage-client.service";
 import { Observable, from, throwError } from "rxjs";
 import { catchError, flatMap, map, share } from "rxjs/operators";

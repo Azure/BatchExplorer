@@ -7,8 +7,7 @@ import { Observable, Subscription } from "rxjs";
 import { TaskListDisplayComponent } from "./display";
 
 import { ActivatedRoute } from "@angular/router";
-import { Filter, autobind } from "@batch-flask/core";
-import { ListView } from "@batch-flask/core";
+import { Filter, ListView,  autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";

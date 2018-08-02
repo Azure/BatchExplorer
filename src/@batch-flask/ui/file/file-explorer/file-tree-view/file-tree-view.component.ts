@@ -3,17 +3,16 @@ import {
     HostBinding, Input, OnChanges, OnDestroy, Output,
 } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
-import {
-    ContextMenu, ContextMenuItem, ContextMenuService, ElectronRemote, ElectronShell, FileNavigator,
-    FileTreeNode, FileTreeStructure,
-} from "@batch-flask/ui";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { DialogService } from "@batch-flask/ui/dialogs";
+import { ElectronRemote, ElectronShell } from "@batch-flask/ui/electron";
 import { DownloadFolderComponent } from "@batch-flask/ui/file/download-folder-dialog";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { CloudPathUtils, DragUtils } from "@batch-flask/utils";
 import { Subscription, of } from "rxjs";
 import { FileDeleteEvent, FileDropEvent } from "../file-explorer.component";
 
+import { FileNavigator, FileTreeNode, FileTreeStructure } from "@batch-flask/ui/file/file-navigator";
 import "./file-tree-view.scss";
 
 export interface TreeRow {
