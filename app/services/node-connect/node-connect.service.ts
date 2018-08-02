@@ -92,9 +92,9 @@ export class NodeConnectService implements OnDestroy {
         return this.http.get(`/pools/${poolId}/nodes/${nodeId}/rdp`, {
             observe: "response",
             responseType: "text",
-        }).map((data) => {
-            return data.body as any;
-        });
+        }).pipe(
+            map((data) =>   data.body as any),
+        );
     }
 
     // tslint:disable-next-line:max-line-length

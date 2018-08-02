@@ -13,6 +13,7 @@ import {
     NcjTemplateService, PoolOsService, PredefinedFormulaService, PricingService,
     PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
 } from "app/services";
+import { filter, first } from "rxjs/operators";
 
 @Component({
     selector: "bl-app",
@@ -67,12 +68,15 @@ export class AppComponent implements OnInit {
             settingsService.hasSettingsLoaded,
             workspaceService.haveWorkspacesLoaded,
         )
-        .subscribe((loadedArray) => {
-            this.isAppReady = loadedArray[0] && loadedArray[1];
-        });
+            .subscribe((loadedArray) => {
+                this.isAppReady = loadedArray[0] && loadedArray[1];
+            });
 
         // Wait for the first account to be loaded.
-        accountService.currentAccount.filter(x => Boolean(x)).first().subscribe((x) => {
+        accountService.currentAccount.pipe(
+            filter(x => Boolean(x)),
+            first()
+        ).subscribe((x) => {
             this._preloadData();
         });
 

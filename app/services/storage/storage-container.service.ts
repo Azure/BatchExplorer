@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from "@angular/core";
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject, from, throwError } from "rxjs";
 
 import { HttpCode, ServerError } from "@batch-flask/core";
 import { BlobContainer } from "app/models";
@@ -13,6 +13,7 @@ import {
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { log } from "app/utils";
 import { Constants } from "common";
+import { catchError, flatMap, map, share } from "rxjs/operators";
 import { BlobStorageClientProxy } from "./blob-storage-client-proxy";
 import { StorageClientService } from "./storage-client.service";
 
@@ -170,16 +171,19 @@ export class StorageContainerService {
         promise: (client: BlobStorageClientProxy) => Promise<any>,
         errorCallback?: (error: any) => void): Observable<T> {
 
-        return this.storageClient.getFor(storageAccountId).flatMap((client) => {
-            return Observable.fromPromise<T>(promise(client)).catch((err) => {
+        return this.storageClient.getFor(storageAccountId).pipe(
+            flatMap((client) => from<T>(promise(client))),
+            catchError((err) => {
                 const serverError = ServerError.fromStorage(err);
                 if (errorCallback) {
                     errorCallback(serverError);
                 }
 
-                return Observable.throw(serverError);
-            }).map((x) => this.zone.run(() => x));
-        }).share();
+                return throwError(serverError);
+            }),
+            map((x) => this.zone.run(() => x)),
+            share(),
+        );
     }
 
 }
