@@ -11,7 +11,7 @@ import { SecureUtils } from "@batch-flask/utils";
 import { FileSystemService } from "app/services";
 import { FileNavigator } from "app/services/file";
 import * as minimatch from "minimatch";
-import { map, reduce } from "rxjs/operators";
+import { flatMap, map, reduce } from "rxjs/operators";
 import "./download-folder-dialog.scss";
 @Component({
     selector: "bl-download-folder-dialog",
@@ -89,15 +89,17 @@ export class DownloadFolderComponent {
             );
         };
 
-        // prepare the done function
-        const onDone = () => {
-            from(this._getDownloadFolder()).subscribe(folder => {
-                this.shell.showItemInFolder(folder);
-            });
-        };
+        const activity = new Activity("Downloading Files", initializer);
+        activity.done.pipe(
+            flatMap(obs => {
+                return from(this._getDownloadFolder());
+            }),
+        ).subscribe(folder => {
+            this.shell.showItemInFolder(folder);
+        });
 
-        // load and run a new file download activity with the declared functions
-        this.activityService.loadAndRun(new Activity("Downloading Files", initializer, onDone));
+        // load and run a new file download activity with the declared function
+        this.activityService.loadAndRun(activity);
     }
 
     private _getPatterns(): string[] {

@@ -1,8 +1,8 @@
 import { ActivityProcessor, ActivityStatus } from "@batch-flask/ui/activity-monitor/activity";
-import { BehaviorSubject, Observable } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 
-class ActivityCounters {
+export class ActivityCounters {
     public completed: number;
     public failed: number;
     public canceled: number;
@@ -22,23 +22,21 @@ export class Activity {
     public name: string;
     public statusSubject: BehaviorSubject<ActivityStatus>;
     public statusList: ActivityStatus[];
+    public done: AsyncSubject<ActivityStatus>; // only emits on completion
 
     private initializer: () => Observable<any>;
-    private done: () => void;
     private processor: ActivityProcessor;
-    private numSubActivities: number;
     private counters: ActivityCounters;
 
-    constructor(name: string, initializerFn: () => Observable<any>, doneFn?: () => void) {
+    constructor(name: string, initializerFn: () => Observable<any>) {
         this.name = name;
         this.statusList = [];
 
-        // tslint:disable-next-line:no-empty
-        this.done = doneFn || (() => {});
+        this.done = new AsyncSubject<ActivityStatus>();
+
         this.initializer = initializerFn;
 
         this.processor = new ActivityProcessor();
-        this.numSubActivities = 0;
         this.counters = new ActivityCounters();
 
         // default all activity progress to pending before executing
@@ -59,7 +57,6 @@ export class Activity {
             tap((result) => {
                 // if we need to run subtasks, load and run the subtasks
                 if (Array.isArray(result)) {
-                    this.numSubActivities = result.length;
                     this.processor.loadAndRun(result);
                 } else {
                     // we're done, mark activity as completed
@@ -75,8 +72,11 @@ export class Activity {
         });
 
         // every time a status is emitted, check against the total number and emit completed if necessary
-        this.processor.singleStatusSubject.subscribe(status => {
-            if (this.numSubActivities <= 0) {
+        this.processor.completionSubject.subscribe(status => {
+            // get the number of subactivities for comparison
+            const numSubActivities = this.processor.activities.length;
+
+            if (numSubActivities <= 0) {
                 return;
             }
 
@@ -95,7 +95,7 @@ export class Activity {
             }
 
             // in all cases, check the total; if it is equal to the number of subactivities, emit completed
-            if (this.counters.total === this.numSubActivities) {
+            if (this.counters.total === numSubActivities) {
                 this._markAsCompleted();
             }
         });
@@ -109,7 +109,8 @@ export class Activity {
         // emit a completed status to the statusSubject
         this.statusSubject.next(ActivityStatus.Completed);
 
-        // run the function to be run on completion
-        this.done();
+        // signal completion of this activity
+        this.done.next(ActivityStatus.Completed);
+        this.done.complete();
     }
 }

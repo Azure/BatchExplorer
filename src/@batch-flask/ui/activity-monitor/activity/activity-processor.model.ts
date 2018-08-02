@@ -4,12 +4,12 @@ import { Activity, ActivityStatus } from "@batch-flask/ui/activity-monitor/activ
 
 export class ActivityProcessor {
     public activities: Activity[];
-    public singleStatusSubject: BehaviorSubject<ActivityStatus>;
+    public completionSubject: BehaviorSubject<ActivityStatus>;
     public statusListSubject: BehaviorSubject<ActivityStatus[]>;
 
     constructor() {
         this.activities = [];
-        this.singleStatusSubject = new BehaviorSubject(null);
+        this.completionSubject = new BehaviorSubject(null);
         this.statusListSubject = new BehaviorSubject([]);
     }
 
@@ -29,14 +29,17 @@ export class ActivityProcessor {
     private _startProcessor(): void {
         // compile and run all activities
         const statuses: Array<Observable<ActivityStatus>> = [];
+        const completions: Array<Observable<ActivityStatus>> = [];
         for (const activity of this.activities) {
             statuses.push(activity.statusSubject);
             activity.run();
+
+            completions.push(activity.done.asObservable());
         }
 
-        // On each status change, emit the status to the parent activity
-        merge(...statuses).subscribe(status => {
-            this.singleStatusSubject.next(status);
+        // On each activity completion, emit the status to the parent activity
+        merge(...completions).subscribe(status => {
+            this.completionSubject.next(status);
         });
 
         // on any status change, emit the entire status list to the parent activity

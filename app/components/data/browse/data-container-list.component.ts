@@ -134,11 +134,13 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
     public deleteSelection(selection: ListSelection) {
         const initializer = () => {
             const arr = Array.from(selection.keys).map(id => {
-                return new Activity(`Deleting container: ${id}`, () => {
+                const activity = new Activity(`Deleting container: ${id}`, () => {
                     return this.storageContainerService.delete(this.storageAccountId, id);
-                }, () => {
+                });
+                activity.done.subscribe(() => {
                     this.refresh();
                 });
+                return activity;
             });
 
             return of(arr);
