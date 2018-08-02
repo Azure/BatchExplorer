@@ -3,11 +3,11 @@ import { Observable } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
 import { Filter, autobind } from "@batch-flask/core";
+import { EntityView, ListView } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/core/list";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Node, Pool } from "app/models";
 import { NodeListParams, NodeService, PoolParams, PoolService } from "app/services";
-import { EntityView, ListView } from "@batch-flask/core";
 import { ComponentUtils } from "app/utils";
 import { NodeCommands } from "../action";
 

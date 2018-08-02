@@ -7,13 +7,13 @@ import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { Filter, autobind } from "@batch-flask/core";
+import { ListView } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { JobSchedule, JobScheduleState } from "app/models";
 import { JobScheduleListParams, JobScheduleService } from "app/services";
-import { ListView } from "@batch-flask/core";
 import { ComponentUtils } from "app/utils";
 import { DeleteJobScheduleAction, JobScheduleCommands } from "../action";
 

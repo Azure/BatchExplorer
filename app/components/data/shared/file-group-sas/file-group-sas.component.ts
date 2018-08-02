@@ -3,8 +3,8 @@ import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
-import { BlobContainer } from "app/models";
 import { ListView } from "@batch-flask/core";
+import { BlobContainer } from "app/models";
 import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 import { List } from "immutable";

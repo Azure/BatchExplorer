@@ -4,11 +4,11 @@ import {
 } from "@angular/forms";
 import { MatOptionSelectionChange } from "@angular/material";
 import { FilterBuilder } from "@batch-flask/core";
+import { ListView } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { BlobContainer } from "app/models";
 import { NcjFileGroupService } from "app/services";
-import { ListView } from "@batch-flask/core";
 import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 import { List } from "immutable";

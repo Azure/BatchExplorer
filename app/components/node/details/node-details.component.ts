@@ -3,10 +3,10 @@ import { ActivatedRoute } from "@angular/router";
 import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs";
 
+import { EntityView } from "@batch-flask/core";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { Node, Pool } from "app/models";
 import { FileService, NodeParams, NodeService, PoolParams, PoolService } from "app/services";
-import { EntityView } from "@batch-flask/core";
 import { NodeCommands, UploadNodeLogsDialogComponent } from "../action";
 
 import "./node-details.scss";

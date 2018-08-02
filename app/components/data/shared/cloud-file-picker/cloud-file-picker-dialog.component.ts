@@ -1,9 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { MatCheckboxChange, MatDialogRef } from "@angular/material";
 import { ServerError, autobind } from "@batch-flask/core";
+import { EntityView } from "@batch-flask/core";
 import { FileExplorerConfig, FileExplorerSelectable } from "@batch-flask/ui";
 import { BlobContainer } from "app/models";
-import { EntityView } from "@batch-flask/core";
 import { GetContainerParams, StorageContainerService } from "app/services/storage";
 import { AsyncSubject, of } from "rxjs";
 

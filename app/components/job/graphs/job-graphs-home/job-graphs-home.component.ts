@@ -5,11 +5,11 @@ import * as path from "path";
 import { Observable, Subscription, from, of } from "rxjs";
 
 import { FilterBuilder, autobind } from "@batch-flask/core";
+import { EntityView } from "@batch-flask/core";
 import { ElectronShell, FileSystemService } from "@batch-flask/ui";
 import { tasksToCsv } from "app/components/job/graphs/job-graphs-home/helpers";
 import { Job, Task, TaskState } from "app/models";
 import { CacheDataService, JobParams, JobService, TaskService } from "app/services";
-import { EntityView } from "@batch-flask/core";
 import { flatMap, share, tap } from "rxjs/operators";
 import "./job-graphs-home.scss";
 

@@ -10,8 +10,8 @@ import { LoadingStatus } from "@batch-flask/ui/loading";
 import { ApplicationPackage, BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService } from "app/services";
 
-import "@batch-flask/ui/form/editable-table/editable-table.scss";
 import { ListView } from "@batch-flask/core";
+import "@batch-flask/ui/form/editable-table/editable-table.scss";
 
 interface PackageReference {
     applicationId?: string;

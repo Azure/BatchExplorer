@@ -1,7 +1,5 @@
 import { Injectable } from "@angular/core";
 import { FilterBuilder } from "@batch-flask/core";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
-import { Node, NodeState } from "app/models";
 import {
     ContinuationToken,
     DataCache,
@@ -11,6 +9,8 @@ import {
     ListView,
     TargetedDataCache,
 } from "@batch-flask/core";
+import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { Node, NodeState } from "app/models";
 import { ArrayUtils, Constants, ObservableUtils } from "app/utils";
 import { List } from "immutable";
 import { Observable, zip } from "rxjs";

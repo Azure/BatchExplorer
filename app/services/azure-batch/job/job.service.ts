@@ -1,8 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
-import { Job, JobTaskCounts } from "app/models";
-import { JobCreateDto, JobPatchDto } from "app/models/dtos";
 import {
     ContinuationToken,
     DataCache,
@@ -11,6 +9,8 @@ import {
     ListResponse,
     ListView,
 } from "@batch-flask/core";
+import { Job, JobTaskCounts } from "app/models";
+import { JobCreateDto, JobPatchDto } from "app/models/dtos";
 import { Constants, ModelUtils } from "app/utils";
 import { List } from "immutable";
 import { map, share } from "rxjs/operators";

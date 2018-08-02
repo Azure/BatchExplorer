@@ -6,10 +6,10 @@ import { Observable } from "rxjs";
 
 import { SubTaskDisplayListComponent } from "./sub-tasks";
 
+import { ListView } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/core/list";
 import { SubtaskInformation } from "app/models";
 import { SubtaskListParams, TaskService } from "app/services";
-import { ListView } from "@batch-flask/core";
 import { List } from "immutable";
 
 @Component({

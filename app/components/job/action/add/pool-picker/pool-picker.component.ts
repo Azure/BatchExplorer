@@ -9,10 +9,10 @@ import {
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
+import { ListView } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui";
 import { Offer, Pool, PoolOsSkus } from "app/models";
 import { PoolListParams, PoolOsService, PoolService, VmSizeService } from "app/services";
-import { ListView } from "@batch-flask/core";
 import { PoolUtils } from "app/utils";
 import { distinctUntilChanged } from "rxjs/operators";
 

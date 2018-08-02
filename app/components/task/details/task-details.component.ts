@@ -3,10 +3,10 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs";
 
+import { EntityView } from "@batch-flask/core";
 import { Job, Task } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
 import { JobParams, JobService, TaskParams, TaskService } from "app/services";
-import { EntityView } from "@batch-flask/core";
 import { TaskCommands } from "../action";
 
 @Component({

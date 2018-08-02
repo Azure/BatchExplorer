@@ -4,10 +4,10 @@ import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
+import { EntityView } from "@batch-flask/core";
 import { Job } from "app/models";
 import { JobDecorator } from "app/models/decorators";
 import { JobParams, JobService } from "app/services";
-import { EntityView } from "@batch-flask/core";
 import { JobCommands } from "../action";
 
 import { flatMap } from "rxjs/operators";

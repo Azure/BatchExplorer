@@ -3,7 +3,6 @@ import { List } from "immutable";
 import * as forge from "node-forge";
 import { AsyncSubject, Observable, Subject } from "rxjs";
 
-import { Certificate } from "app/models";
 import {
     ContinuationToken,
     DataCache,
@@ -12,6 +11,7 @@ import {
     ListResponse,
     ListView,
 } from "@batch-flask/core";
+import { Certificate } from "app/models";
 import { Constants, FileUrlUtils } from "app/utils";
 import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "../core";
 

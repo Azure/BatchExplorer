@@ -8,12 +8,12 @@ import { TaskListDisplayComponent } from "./display";
 
 import { ActivatedRoute } from "@angular/router";
 import { Filter, autobind } from "@batch-flask/core";
+import { ListView } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Task } from "app/models";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
-import { ListView } from "@batch-flask/core";
 import { ComponentUtils } from "app/utils";
 import { DeleteTaskAction, TaskCommands } from "../action";
 

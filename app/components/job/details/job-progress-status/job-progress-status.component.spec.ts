@@ -1,9 +1,9 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { PollService } from "@batch-flask/core";
 import { Job, JobTaskCounts, JobTaskCountsValidationStatus, Node, Pool } from "app/models";
 import { JobService, NodeService, PoolService } from "app/services";
-import { PollService } from "@batch-flask/core";
 import { of } from "rxjs";
 import { click } from "test/utils/helpers";
 import { MockEntityView, MockListView } from "test/utils/mocks";

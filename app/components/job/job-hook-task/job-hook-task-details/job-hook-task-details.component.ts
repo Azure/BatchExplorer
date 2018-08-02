@@ -1,9 +1,9 @@
 import { Component, Input, OnChanges } from "@angular/core";
 
+import { EntityView } from "@batch-flask/core";
 import { FileExplorerConfig } from "@batch-flask/ui";
 import { JobHookTask, Node } from "app/models";
 import { NodeParams, NodeService } from "app/services";
-import { EntityView } from "@batch-flask/core";
 import "./job-hook-task-details.scss";
 
 @Component({

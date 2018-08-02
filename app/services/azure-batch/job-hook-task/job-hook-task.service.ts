@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 
-import { JobHookTask } from "app/models";
 import { ListOptionsAttributes, ListView, TargetedDataCache } from "@batch-flask/core";
+import { JobHookTask } from "app/models";
 import { AzureBatchHttpService, BatchListGetter } from "../core";
 
 export interface JobHookTaskListParams {
