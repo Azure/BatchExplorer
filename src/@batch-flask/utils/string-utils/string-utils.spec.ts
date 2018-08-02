@@ -1,4 +1,4 @@
-import { StringUtils } from "app/utils";
+import { StringUtils } from "./string-utils";
 
 describe("StringUtils", () => {
     describe("matchWildcard()", () => {

@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
-import { FileLoader } from "@batch-flask/ui";
+import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
+import { FileLoader } from "@batch-flask/ui/file/file-loader";
 import { log } from "@batch-flask/utils";
-import { SettingsService } from "app/services";
 import "./file-content.scss";
 
 enum FileType {
@@ -22,7 +22,8 @@ export class FileContentComponent implements OnChanges {
 
     public fileType: FileType;
 
-    constructor(private settingsService: SettingsService) { }
+    constructor(private settingsService: BatchFlaskSettingsService) { }
+
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.fileLoader) {
             if (!this.fileLoader) {

@@ -1,4 +1,4 @@
-import { CloudPathUtils } from "app/utils";
+import { CloudPathUtils } from "./cloud-path-utils";
 
 describe("CloudPathUtils", () => {
     it("#join", () => {

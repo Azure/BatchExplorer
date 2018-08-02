@@ -1,6 +1,8 @@
 import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild } from "@angular/core";
 import { HttpCode, ServerError } from "@batch-flask/core";
-import { File , FileLoader, ScrollableComponent, ScrollableService } from "@batch-flask/ui";
+import { FileLoader } from "@batch-flask/ui/file/file-loader";
+import { File } from "@batch-flask/ui/file/file.model";
+import { ScrollableComponent, ScrollableService } from "@batch-flask/ui/scrollable";
 import { log } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
 

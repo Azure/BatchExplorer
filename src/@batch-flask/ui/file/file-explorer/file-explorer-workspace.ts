@@ -1,4 +1,5 @@
-import { FileLoader, FileNavigator, FileTreeNode } from "@batch-flask/ui";
+import { FileLoader } from "@batch-flask/ui/file/file-loader";
+import { FileNavigator, FileTreeNode } from "@batch-flask/ui/file/file-navigator";
 import { CloudPathUtils, log } from "@batch-flask/utils";
 import { BehaviorSubject, Observable, combineLatest } from "rxjs";
 import { flatMap, map, shareReplay } from "rxjs/operators";
