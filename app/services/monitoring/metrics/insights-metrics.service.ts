@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Response } from "@angular/http";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 import { Metric, MetricValue, MonitoringMetricList } from "app/models/monitoring";
 import { AccountService } from "app/services/account.service";
@@ -11,6 +11,7 @@ import { FailedTaskMetrics } from "./failed-task-metrics";
 import { MonitorChartTimeFrame, MonitoringMetricDefinition } from "./monitor-metrics-base";
 import { NodeStatesMetrics } from "./node-states-metrics";
 import { TaskStatesMetrics } from "./task-states-metrics";
+import { flatMap, share, map } from "rxjs/operators";
 
 /**
  * Wrapper around the http service so call the azure ARM monitor api.
@@ -55,9 +56,12 @@ export class InsightsMetricsService {
      * Get account observable for rendering selected account metrics
      */
     private _getCurrentAccount() {
-        return this.accountService.currentAccount.flatMap(account => {
-            return of(account && account.id);
-        }).share();
+        return this.accountService.currentAccount.pipe(
+            flatMap(account => {
+                return of(account && account.id);
+            }),
+            share(),
+        );
     }
 
     /**
@@ -66,10 +70,11 @@ export class InsightsMetricsService {
      */
     private _fetchMetrics(metric: MonitoringMetricDefinition) {
         const options = metric.getRequestOptions();
-        return this._getCurrentAccount()
-            .flatMap((resourceId) => this.armService.get(metric.getRequestUrl(resourceId), options))
-            .map(response => this._processResponse(metric, response))
-            .share();
+        return this._getCurrentAccount().pipe(
+            flatMap((resourceId) => this.armService.get(metric.getRequestUrl(resourceId), options)),
+            map(response => this._processResponse(metric, response)),
+            share(),
+        );
     }
 
     private _processResponse(request: MonitoringMetricDefinition, response: Response) {

@@ -120,7 +120,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
             next: () => {
                 const accountUri = this.accountService.getAccountId(subscription, resourceGroup, accountName);
                 // poll account every 1.5 sec to check whether it has been created
-                const sub = Observable.interval(1500)
+                const sub = interval(1500)
                     .flatMap(() => this.accountService.get(accountUri))
                     .retry()
                     .subscribe(response => {

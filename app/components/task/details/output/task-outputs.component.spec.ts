@@ -11,7 +11,7 @@ import { DataCache } from "app/services/core";
 import { FileNavigator } from "app/services/file";
 import { AutoStorageService, ListBlobParams, NavigateBlobsOptions, StorageBlobService } from "app/services/storage";
 import { StorageUtils } from "app/utils";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { MockStorageListGetter } from "test/utils/mocks";
 

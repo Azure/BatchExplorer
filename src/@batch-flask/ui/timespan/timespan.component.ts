@@ -64,7 +64,7 @@ export class TimespanComponent implements OnChanges, OnDestroy {
         this._clearInterval();
         if (this.startTime && this.endTime) { return; }
         if (!this.startTime && !this.endTime) { return; }
-        this._intervalSub = Observable.interval(1000).subscribe(() => {
+        this._intervalSub = interval(1000).subscribe(() => {
             this._updateElapsedTime();
         });
     }

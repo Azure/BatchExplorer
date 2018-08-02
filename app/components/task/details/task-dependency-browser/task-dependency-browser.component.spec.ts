@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { List } from "immutable";
-import { Observable } from "rxjs";
 
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ContextMenuService, I18nUIModule } from "@batch-flask/ui";
@@ -13,6 +12,7 @@ import { TaskService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { NoItemMockComponent, TableTestingModule } from "test/utils/mocks/components";
 import { TaskDependencyBrowserComponent } from "./task-dependency-browser.component";
+import { of } from "rxjs";
 
 const taskMap: Map<string, Task> = new Map()
     .set("1", new Task({ id: "1", dependsOn: { taskIds: ["1", "2"] } } as any))

@@ -15,7 +15,7 @@ export class SimpleLoadingComponent implements OnInit, OnDestroy {
     private _sub: Subscription;
 
     public ngOnInit() {
-        this._sub = Observable.interval(this.rate).subscribe((i) => {
+        this._sub = interval(this.rate).subscribe((i) => {
             const dots = ".".repeat(i % 4);
             this.message = `Loading${dots}`;
         });

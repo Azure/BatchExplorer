@@ -6,8 +6,8 @@ import {
 } from "@batch-flask/ui";
 import { Task, TaskState } from "app/models";
 import { FileSystemService, TaskService } from "app/services";
-import { Observable } from "rxjs";
 import { TaskCreateBasicDialogComponent } from "../action";
+import { from } from "rxjs";
 
 export interface TaskParams {
     jobId: string;

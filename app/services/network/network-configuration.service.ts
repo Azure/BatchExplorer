@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 import { ArmHttpService } from "../arm-http.service";
+import { flatMap, first } from "rxjs/operators";
 
 export enum ProviderType {
     Network = "Network",
@@ -39,13 +40,16 @@ export class NetworkConfigurationService {
     public listArmVirtualNetworks(subscriptionId: string, location: string): Observable<VirtualNetwork[]> {
         const type = ProviderType.Network;
         const url = this._getNetworkUrl(subscriptionId, type);
-        return this.armService.get(url).flatMap(response => {
-            const virtualNetworks = response.json();
-            if (!virtualNetworks || !virtualNetworks.value) {
-                return of(null);
-            }
-            return of(this._filterByLocation(virtualNetworks.value, location, type));
-        }).first();
+        return this.armService.get(url).pipe(
+            flatMap(response => {
+                const virtualNetworks = response.json();
+                if (!virtualNetworks || !virtualNetworks.value) {
+                    return of(null);
+                }
+                return of(this._filterByLocation(virtualNetworks.value, location, type));
+            }),
+            first(),
+        );
     }
 
     /**
@@ -56,13 +60,16 @@ export class NetworkConfigurationService {
     public listClassicVirtualNetworks(subscriptionId: string, location: string): Observable<VirtualNetwork[]> {
         const type = ProviderType.ClassicNetwork;
         const url = this._getNetworkUrl(subscriptionId, type);
-        return this.armService.get(url).flatMap(response => {
-            const virtualNetworks = response.json();
-            if (!virtualNetworks || !virtualNetworks.value) {
-                return of(null);
-            }
-            return of(this._filterByLocation(virtualNetworks.value, location, type));
-        }).first();
+        return this.armService.get(url).pipe(
+            flatMap(response => {
+                const virtualNetworks = response.json();
+                if (!virtualNetworks || !virtualNetworks.value) {
+                    return of(null);
+                }
+                return of(this._filterByLocation(virtualNetworks.value, location, type));
+            }),
+            first(),
+        );
     }
 
     /**

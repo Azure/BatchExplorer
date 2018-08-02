@@ -1,5 +1,5 @@
 import { Response, ResponseOptions } from "@angular/http";
-import { Observable, Subscription } from "rxjs";
+import { Subscription, of } from "rxjs";
 import * as Fixtures from "test/fixture";
 
 import { InsightsMetricsService } from "./insights-metrics.service";

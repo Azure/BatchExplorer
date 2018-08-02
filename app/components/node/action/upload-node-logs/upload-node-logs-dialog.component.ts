@@ -113,7 +113,7 @@ export class UploadNodeLogsDialogComponent {
     private _watchUpload(container: string, folder: string, numberOfFiles: number) {
         this.backgroundTaskService.startTask("Node logs uploading", (task) => {
             const done = new AsyncSubject();
-            const sub = Observable.interval(5000)
+            const sub = interval(5000)
                 .flatMap(() => this.autoStorageService.get())
                 .flatMap((storageAccountId) => {
                     return this.storageBlobService.list(storageAccountId, container, {

@@ -22,7 +22,7 @@ export class DeleteApplicationAction extends LongRunningDeleteAction {
         return this.applicationService.get(id)
             .flatMap((app) => {
                 const packageArray = app.packages.toArray();
-                const observable = Observable.interval(100).take(packageArray.length);
+                const observable = interval(100).take(packageArray.length);
                 return observable.flatMap((i) => {
                     return this.applicationService.deletePackage(id, packageArray[i].version);
                 });

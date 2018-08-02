@@ -1,5 +1,5 @@
 import * as path from "path";
-import { Observable, Subject, of } from "rxjs";
+import { Observable, Subject, from, of } from "rxjs";
 
 import { File } from "app/models";
 import { CloudPathUtils, exists, log } from "app/utils";

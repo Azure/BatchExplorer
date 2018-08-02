@@ -3,8 +3,8 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { log } from "@batch-flask/utils";
 import { Constants, DateUtils } from "app/utils";
 import * as path from "path";
-import { AsyncSubject, Observable, Subscription } from "rxjs";
-import { flatMap, share } from "rxjs/operators";
+import { AsyncSubject, Observable, Subscription, from } from "rxjs";
+import { flatMap, share, take } from "rxjs/operators";
 import { FileSystemService } from "../fs.service";
 import { SettingsService } from "../settings.service";
 
@@ -34,7 +34,7 @@ export class GithubDataService implements OnDestroy {
 
     public init() {
         const obs = this.settingsService.settingsObs;
-        this._settingsLoaded = obs.take(1);
+        this._settingsLoaded = obs.pipe(take(1));
         this._settingsSub = obs.subscribe((settings) => {
             const branch = settings["github-data.source.branch"];
             if (!branch || branch === this._branch) { return; }
