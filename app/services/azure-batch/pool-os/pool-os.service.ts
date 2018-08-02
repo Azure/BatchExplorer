@@ -43,7 +43,7 @@ export class PoolOsService {
     private _loadNodeAgentSkus() {
         return this.http.get<BatchListResponse<NodeAgentSkuAttributes>>("/nodeagentskus").pipe(
             expand(response => {
-                return response["odata.nextLink"] ? this.http.get(response["odata.nextLink"]) : Observable.empty();
+                return response["odata.nextLink"] ? this.http.get(response["odata.nextLink"]) : empty();
             }),
             reduce((resourceGroups, response: BatchListResponse<NodeAgentSkuAttributes>) => {
                 return [...resourceGroups, ...response.value];

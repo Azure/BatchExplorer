@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { List } from "immutable";
-import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable, of } from "rxjs";
 
 import { NavigableRecord, PinnableEntity, PinnedEntityType } from "@batch-flask/core";
 import {
@@ -8,6 +8,7 @@ import {
 } from "app/models";
 import { AccountService } from "./account.service";
 import { LocalFileStorage } from "./local-file-storage.service";
+import { map, share } from "rxjs/operators";
 
 const pinnedTypeMap = new Map();
 pinnedTypeMap.set(PinnedEntityType.Application, BatchApplication);
@@ -114,13 +115,16 @@ export class PinnedEntityService {
     }
 
     private _loadFavorites(): Observable<List<PinnableEntity>> {
-        return this.localFileStorage.get(this._jsonFilename).map((data) => {
-            if (Array.isArray(data)) {
-                return List(data);
-            } else {
-                return List([]);
-            }
-        }).share();
+        return this.localFileStorage.get(this._jsonFilename).pipe(
+            map((data) => {
+                if (Array.isArray(data)) {
+                    return List(data);
+                } else {
+                    return List([]);
+                }
+            }),
+            share(),
+        );
     }
 
     private _saveAccountFavorites(favourites: List<PinnableEntity> = null): Observable<any> {

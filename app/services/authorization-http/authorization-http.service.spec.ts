@@ -1,9 +1,10 @@
 import { Response, ResponseOptions } from "@angular/http";
 import { Permission } from "@batch-flask/ui/permission";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, of } from "rxjs";
 import * as Fixtures from "test/fixture";
 
 import { AuthorizationHttpService, BatchAccountPermission } from "./authorization-http.service";
+import { take } from "rxjs/operators";
 
 describe("AuthorizationHttpService", () => {
     let authService: AuthorizationHttpService;
@@ -102,28 +103,28 @@ describe("AuthorizationHttpService", () => {
 
         it("returns TRUE when need write and has write access", () => {
             permission = Permission.Write;
-            authService.hasPermission(Permission.Write).take(1).subscribe(hasPermission => {
+            authService.hasPermission(Permission.Write).pipe(take(1)).subscribe(hasPermission => {
                 expect(hasPermission).toBe(true);
             });
         });
 
         it("returns TRUE when need read and has read access", () => {
             permission = Permission.Read;
-            authService.hasPermission(Permission.Read).take(1).subscribe(hasPermission => {
+            authService.hasPermission(Permission.Read).pipe(take(1)).subscribe(hasPermission => {
                 expect(hasPermission).toBe(true);
             });
         });
 
         it("returns TRUE when need read and has write access", () => {
             permission = Permission.Write;
-            authService.hasPermission(Permission.Read).take(1).subscribe(hasPermission => {
+            authService.hasPermission(Permission.Read).pipe(take(1)).subscribe(hasPermission => {
                 expect(hasPermission).toBe(true);
             });
         });
 
         it("returns FALSE when need write and has read access", () => {
             permission = Permission.Read;
-            authService.hasPermission(Permission.Write).take(1).subscribe(hasPermission => {
+            authService.hasPermission(Permission.Write).pipe(take(1)).subscribe(hasPermission => {
                 expect(hasPermission).toBe(false);
             });
         });

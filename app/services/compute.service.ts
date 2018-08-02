@@ -1,12 +1,13 @@
 import { Injectable } from "@angular/core";
-import { RequestOptions, URLSearchParams } from "@angular/http";
-import { Observable } from "rxjs";
+import { RequestOptions, URLSearchParams, Response } from "@angular/http";
+import { Observable, empty } from "rxjs";
 
 import { Resource } from "app/models";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
 import { AzureHttpService } from "./azure-http.service";
 import { SubscriptionService } from "./subscription.service";
+import { flatMap, map, share, expand, reduce } from "rxjs/operators";
 
 export function computeUrl(subscriptionId: string) {
     return `subscriptions/${subscriptionId}/providers/Microsoft.Compute`;
@@ -32,22 +33,28 @@ const computeImageProvider = computeProvider + "/images";
 @Injectable()
 export class ComputeService {
     constructor(private arm: ArmHttpService,
-                private accountService: AccountService,
-                private azure: AzureHttpService,
-                private subscriptionService: SubscriptionService) {
+        private accountService: AccountService,
+        private azure: AzureHttpService,
+        private subscriptionService: SubscriptionService) {
     }
 
     public getQuotas(): Observable<ComputeUsage[]> {
-        return this.accountService.currentAccount.flatMap((account) => {
-            const { subscription, location } = account;
+        return this.accountService.currentAccount.pipe(
+            flatMap((account) => {
+                const { subscription, location } = account;
 
-            const url = `${computeUrl(subscription.subscriptionId)}/locations/${location}/usages`;
-            return this.arm.get(url).map((response) => response.json().value);
-        }).share();
+                const url = `${computeUrl(subscription.subscriptionId)}/locations/${location}/usages`;
+                return this.arm.get(url).pipe(map((response) => response.json().value));
+            }),
+            share(),
+        );
     }
 
     public getCoreQuota(): Observable<number> {
-        return this.getQuotas().map(x => this._getTotalRegionalQuotas(x)).share();
+        return this.getQuotas().pipe(
+            map(x => this._getTotalRegionalQuotas(x)),
+            share(),
+        );
     }
 
     public listCustomImages(subscriptionId: string, location: string): Observable<Resource[]> {
@@ -55,14 +62,20 @@ export class ComputeService {
         search.set("$filter", `resourceType eq '${computeImageProvider}' and location eq '${location}'`);
         const options = new RequestOptions({ search });
 
-        return this.subscriptionService.get(subscriptionId).flatMap((subscription) => {
-            return this.azure.get(subscription, resourceUrl(subscriptionId), options).expand(obs => {
-                return obs.json().nextLink ?
-                    this.azure.get(subscription, obs.json().nextLink, options) : Observable.empty();
-            }).reduce((images, response) => {
-                return [...images, ...response.json().value];
-            }, []);
-        }).share();
+        return this.subscriptionService.get(subscriptionId).pipe(
+            flatMap((subscription) => {
+                return this.azure.get(subscription, resourceUrl(subscriptionId), options).pipe(
+                    expand(obs => {
+                        return obs.json().nextLink ?
+                            this.azure.get(subscription, obs.json().nextLink, options) : empty();
+                    }),
+                    reduce((images, response: Response) => {
+                        return [...images, ...response.json().value];
+                    }, []),
+                );
+            }),
+            share(),
+        );
     }
 
     private _getTotalRegionalQuotas(data: ComputeUsage[]): number {

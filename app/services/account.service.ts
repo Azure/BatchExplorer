@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { RequestOptions, URLSearchParams } from "@angular/http";
+import { RequestOptions, URLSearchParams, Response } from "@angular/http";
 import { List } from "immutable";
-import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable, combineLatest, of, empty, forkJoin } from "rxjs";
 
 import { AccountKeys, AccountResource, BatchAccountAttributes, Subscription } from "app/models";
 import { AccountPatchDto } from "app/models/dtos";
@@ -13,6 +13,7 @@ import {
 } from "./core";
 import { LocalFileStorage } from "./local-file-storage.service";
 import { SubscriptionService } from "./subscription.service";
+import { flatMap, filter, map, share, expand, reduce } from "rxjs/operators";
 
 const batchProvider = "Microsoft.Batch";
 const batchResourceProvider = batchProvider + "/batchAccounts";
@@ -105,11 +106,14 @@ export class AccountService {
 
         this.currentAccountId = this._currentAccountId.asObservable();
 
-        this.currentAccount = this._currentAccountId.flatMap((id) => {
-            return this._currentAccount
-                .filter(x => x && id && x.account && x.account.id.toLowerCase() === id.toLowerCase())
-                .map(x => x && x.account);
-        });
+        this.currentAccount = this._currentAccountId.pipe(
+            flatMap((id) => {
+                return this._currentAccount.pipe(
+                    filter(x => x && id && x.account && x.account.id.toLowerCase() === id.toLowerCase()),
+                    map(x => x && x.account),
+                );
+            }),
+        );
     }
 
     public get accountFavorites(): Observable<List<AccountResource>> {
@@ -168,13 +172,15 @@ export class AccountService {
 
     public load() {
         this._loadCachedAccounts();
-        const obs = this.subscriptionService.subscriptions.flatMap((subscriptions) => {
-            const accountObs = subscriptions.map((subscription) => {
-                return this.list(subscription.subscriptionId);
-            }).toArray();
+        const obs = this.subscriptionService.subscriptions.pipe(
+            flatMap((subscriptions) => {
+                const accountObs = subscriptions.map((subscription) => {
+                    return this.list(subscription.subscriptionId);
+                }).toArray();
 
-            return Observable.combineLatest(...accountObs);
-        });
+                return combineLatest(...accountObs);
+            }),
+        );
 
         obs.subscribe({
             next: (accountsPerSubscriptions) => {
@@ -196,16 +202,18 @@ export class AccountService {
         search.set("$filter", `resourceType eq '${batchResourceProvider}'`);
         const options = new RequestOptions({ search });
 
-        return this.subscriptionService.get(subscriptionId)
-            .flatMap((subscription) => {
-                return this.azure.get(subscription, `/subscriptions/${subscriptionId}/resources`, options)
-                    .map(response => {
+        return this.subscriptionService.get(subscriptionId).pipe(
+            flatMap((subscription) => {
+                return this.azure.get(subscription, `/subscriptions/${subscriptionId}/resources`, options).pipe(
+                    map(response => {
                         return List<AccountResource>(response.json().value.map((data) => {
                             return new AccountResource(Object.assign({}, data, { subscription }));
                         }));
-                    });
-            })
-            .share();
+                    }),
+                );
+            }),
+            share(),
+        );
     }
 
     public view(): EntityView<AccountResource, AccountParams> {
@@ -236,10 +244,11 @@ export class AccountService {
 
     public getAccountKeys(accountId: string): Observable<AccountKeys> {
         const subId = ArmResourceUtils.getSubscriptionIdFromResourceId(accountId);
-        return this.subscriptionService.get(subId)
-            .flatMap((sub) => this.azure.post(sub, `${accountId}/listKeys`))
-            .map(response => new AccountKeys(response.json()))
-            .share();
+        return this.subscriptionService.get(subId).pipe(
+            flatMap((sub) => this.azure.post(sub, `${accountId}/listKeys`)),
+            map(response => new AccountKeys(response.json())),
+            share(),
+        );
     }
 
     public favoriteAccount(accountId: string): Observable<any> {
@@ -298,10 +307,11 @@ export class AccountService {
     }
 
     public patch(accountId: string, properties: AccountPatchDto): Observable<any> {
-        return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(accountId))
-            .flatMap((subscription) => {
+        return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(accountId)).pipe(
+            flatMap((subscription) => {
                 return this.azure.patch(subscription, accountId, { properties: properties.toJS() });
-            });
+            }),
+        );
     }
 
     public putResourcGroup(sub: Subscription, resourceGroup: string, body: any) {
@@ -315,10 +325,11 @@ export class AccountService {
     }
 
     public deleteBatchAccount(accountId: string): Observable<any> {
-        return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(accountId))
-            .flatMap((subscription) => {
+        return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(accountId)).pipe(
+            flatMap((subscription) => {
                 return this.azure.delete(subscription, accountId);
-            });
+            }),
+        );
     }
 
     public getAccountId(sub: Subscription, resourceGroup: string, accountName: string): string {
@@ -343,9 +354,11 @@ export class AccountService {
         return this.azure.post(subscription, uri, {
             name: name,
             type: batchResourceProvider,
-        }).map(response => {
-            return response.json();
-        });
+        }).pipe(
+            map(response => {
+                return response.json();
+            }),
+        );
     }
 
     /**
@@ -361,41 +374,49 @@ export class AccountService {
         // get current subscription account quota
         const quotaUri = `subscriptions/${subscription.subscriptionId}/providers/${batchProvider}`
             + `/locations/${location}/quotas`;
-        const getQuotaObs = this.azure.get(subscription, quotaUri).map(response => {
+        const getQuotaObs = this.azure.get(subscription, quotaUri).pipe(map(response => {
             return response.json();
-        });
+        }));
 
         // get current batch accounts number
         const resourceUri = `/subscriptions/${subscription.subscriptionId}/resources`;
         const search = new URLSearchParams();
         search.set("$filter", `resourceType eq '${batchResourceProvider}' and location eq '${location}'`);
         const options = new RequestOptions({ search });
-        const batchAccountObs = this.azure.get(subscription, resourceUri, options).expand(obs => {
-            return obs.json().nextLink ?
-                this.azure.get(subscription, obs.json().nextLink, options) : Observable.empty();
-        }).reduce((batchAccounts, response) => {
-            return [...batchAccounts, ...response.json().value];
-        }, []);
+        const batchAccountObs = this.azure.get(subscription, resourceUri, options).pipe(
+            expand(obs => {
+                return obs.json().nextLink ?
+                    this.azure.get(subscription, obs.json().nextLink, options) : empty();
+            }),
+            reduce((batchAccounts, response: Response) => {
+                return [...batchAccounts, ...response.json().value];
+            }, []),
+        );
 
-        return Observable.forkJoin([getQuotaObs, batchAccountObs]).map(results => {
-            if (!results[0] || !Array.isArray(results[1])) {
-                return null;
-            }
-            return {
-                used: results[1].length,
-                quota: results[0].accountQuota,
-            };
-        });
+        return forkJoin([getQuotaObs, batchAccountObs]).pipe(
+            map(results => {
+                if (!results[0] || !Array.isArray(results[1])) {
+                    return null;
+                }
+                return {
+                    used: results[1].length,
+                    quota: results[0].accountQuota,
+                };
+            }),
+        );
     }
 
     private _loadFavoriteAccounts(): Observable<List<AccountResource>> {
-        return this.storage.get(this._accountJsonFileName).map((data) => {
-            if (Array.isArray(data)) {
-                return List(data.map(x => new AccountResource(x)));
-            } else {
-                return List([]);
-            }
-        }).share();
+        return this.storage.get(this._accountJsonFileName).pipe(
+            map((data) => {
+                if (Array.isArray(data)) {
+                    return List(data.map(x => new AccountResource(x)));
+                } else {
+                    return List([]);
+                }
+            }),
+            share(),
+        );
     }
 
     private _saveAccountFavorites(accounts: List<AccountResource> = null): Observable<any> {
@@ -404,15 +425,17 @@ export class AccountService {
     }
 
     private _getAccount(accountId: string): Observable<BatchAccountAttributes> {
-        return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(accountId))
-            .flatMap((subscription) => {
-                return this.azure.get(subscription, accountId)
-                    .map(response => {
+        return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(accountId)).pipe(
+            flatMap((subscription) => {
+                return this.azure.get(subscription, accountId).pipe(
+                    map(response => {
                         const data = response.json();
                         return this._createAccount(subscription, data);
-                    });
-            })
-            .share();
+                    }),
+                );
+            }),
+            share(),
+        );
     }
 
     private _createAccount(subscription: Subscription, data: any): BatchAccountAttributes {

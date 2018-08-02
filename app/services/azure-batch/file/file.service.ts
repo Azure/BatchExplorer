@@ -18,7 +18,7 @@ import { FileLoader, FileNavigator, FileSource } from "app/services/file";
 import { FileSystemService } from "app/services/fs.service";
 import * as fs from "fs";
 import * as path from "path";
-import { Observable } from "rxjs";
+import { Observable, from } from "rxjs";
 import { flatMap, map, share } from "rxjs/operators";
 import { AzureBatchHttpService } from "../core";
 
@@ -296,7 +296,7 @@ export class FileService {
         );
     }
 
-    private async _readContent(response: HttpResponse<ArrayBuffer>) {
+    private async _readContent(response: HttpResponse<ArrayBuffer>): Promise<{ content: string }> {
         const buffer = response.body;
 
         const { encoding } = await EncodingUtils.detectEncodingFromBuffer({
@@ -333,11 +333,13 @@ export class FileService {
             query.recursive = Boolean(options.original.recursive);
             httpOptions = { params: new HttpParams({ fromObject: query }) };
         }
-        return this.http.get<any>(uri, httpOptions).map(x => {
-            return {
-                data: x.value,
-                nextLink: x["odata.nextLink"],
-            };
-        });
+        return this.http.get<any>(uri, httpOptions).pipe(
+            map(x => {
+                return {
+                    data: x.value,
+                    nextLink: x["odata.nextLink"],
+                };
+            }),
+        );
     }
 }

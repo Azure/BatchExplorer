@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
-import { RequestOptionsArgs } from "@angular/http";
-import { Observable } from "rxjs";
+import { RequestOptionsArgs, Response } from "@angular/http";
+import { Observable, of, empty } from "rxjs";
 
 import { Permission } from "@batch-flask/ui/permission";
 import { AccountService } from "../account.service";
 import { ArmHttpService } from "../arm-http.service";
+import { flatMap, map, expand, reduce, take, shareReplay } from "rxjs/operators";
 
 export interface RoleDefinitionPermission {
     actions: string[];
@@ -27,11 +28,14 @@ export class AuthorizationHttpService {
     constructor(
         private accountService: AccountService,
         private armService: ArmHttpService) {
-        this._permission = this.accountService.currentAccount.take(1)
-            .flatMap(account => {
+        this._permission = this.accountService.currentAccount.pipe(
+            take(1),
+            flatMap(account => {
                 const resourceId = account && account.id;
                 return this.getPermission(resourceId);
-            }).shareReplay(1);
+            }),
+            shareReplay(1),
+        );
     }
 
     /**
@@ -43,10 +47,12 @@ export class AuthorizationHttpService {
             return of(Permission.None);
         }
         const url = this._getPermissionUrl(resourceId);
-        return this._recursiveRequest(url).flatMap(permissions => {
-            const permission = this.checkResoucePermissions(permissions);
-            return of(permission);
-        });
+        return this._recursiveRequest(url).pipe(
+            flatMap(permissions => {
+                const permission = this.checkResoucePermissions(permissions);
+                return of(permission);
+            }),
+        );
     }
 
     /**
@@ -60,10 +66,12 @@ export class AuthorizationHttpService {
      * Check if you have the @param permission with the current account
      */
     public hasPermission(permission: Permission): Observable<boolean> {
-        return this.getResourcePermission().map((userPermission) => {
-            if (permission === Permission.Read) { return userPermission !== Permission.None; }
-            return userPermission === Permission.Write;
-        });
+        return this.getResourcePermission().pipe(
+            map((userPermission) => {
+                if (permission === Permission.Read) { return userPermission !== Permission.None; }
+                return userPermission === Permission.Write;
+            })
+        );
     }
 
     public checkResoucePermissions(permissions: RoleDefinitionPermission[]): Permission {
@@ -93,11 +101,14 @@ export class AuthorizationHttpService {
     }
 
     private _recursiveRequest(uri: string, options?: RequestOptionsArgs): Observable<any> {
-        return this.armService.get(uri, options).expand(obs => {
-            return obs.json().nextLink ? this.armService.get(obs.json().nextLink, options) : Observable.empty();
-        }).reduce((permission, response) => {
-            return [...permission, ...response.json().value];
-        }, []);
+        return this.armService.get(uri, options).pipe(
+            expand(obs => {
+                return obs.json().nextLink ? this.armService.get(obs.json().nextLink, options) : empty();
+            }),
+            reduce((permission, response: Response) => {
+                return [...permission, ...response.json().value];
+            }, []),
+        );
     }
 
     private _getPermissionUrl(resourceId: string) {

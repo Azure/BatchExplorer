@@ -3,13 +3,14 @@ import { Injectable } from "@angular/core";
 import {
     Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response, URLSearchParams,
 } from "@angular/http";
-import { Observable } from "rxjs";
+import { Observable, range, of, throwError, timer, zip } from "rxjs";
 
 import { AccessToken, RetryableHttpCode, ServerError } from "@batch-flask/core";
 import { Subscription } from "app/models";
 import { Constants } from "common";
 import { AdalService } from "./adal";
 import { BatchExplorerService } from "./batch-labs.service";
+import { flatMap, share, retryWhen, catchError, switchMap, mergeMap } from "rxjs/operators";
 
 const apiVersionParams = "api-version";
 const apiVersion = Constants.ApiVersion.arm;
@@ -52,16 +53,19 @@ export class AzureHttpService {
         uri: string,
         options: RequestOptionsArgs): Observable<Response> {
 
-        return this.adal.accessTokenData(this._getTenantId(subscriptionOrTenant, uri))
-            .flatMap((accessToken) => {
+        return this.adal.accessTokenData(this._getTenantId(subscriptionOrTenant, uri)).pipe(
+            flatMap((accessToken) => {
                 options = this._setupRequestOptions(uri, options, accessToken);
-                return this.http.request(this._computeUrl(uri), options)
-                    .retryWhen(attempts => this._retryWhen(attempts))
-                    .catch((error) => {
+                return this.http.request(this._computeUrl(uri), options).pipe(
+                    retryWhen(attempts => this._retryWhen(attempts)),
+                    catchError((error) => {
                         const err = ServerError.fromARM(error);
                         return Observable.throw(err);
-                    });
-            }).share();
+                    }),
+                );
+            }),
+            share(),
+        );
     }
 
     public get baseUrl() {
@@ -140,22 +144,20 @@ export class AzureHttpService {
     }
 
     private _retryWhen(attempts: Observable<Response>) {
-        const retryRange = Observable.range(0, Constants.badHttpCodeMaxRetryCount + 1);
-        return attempts
-            .switchMap((x: any) => {
-                if (RetryableHttpCode.has(x.status)) {
-                    return of(x);
+        return attempts.pipe(
+            mergeMap((error, i) => {
+                const retryAttempt = i + 1;
+                // if maximum number of retries have been met
+                // or response is a status code we don't wish to retry, throw error
+                if (
+                    retryAttempt > Constants.badHttpCodeMaxRetryCount ||
+                    !RetryableHttpCode.has(error.status)
+                ) {
+                    return throwError(error);
                 }
-                return Observable.throw(x);
-            })
-            .zip(retryRange, (attempt, retryCount) => {
-                if (retryCount >= Constants.badHttpCodeMaxRetryCount) {
-                    throw attempt;
-                }
-                return retryCount;
-            })
-            .flatMap((retryCount) => {
-                return Observable.timer(100 * Math.pow(3, retryCount));
-            });
+                // retry after 1s, 2s, etc...
+                return timer(100 * Math.pow(3, retryAttempt));
+            }),
+        );
     }
 }

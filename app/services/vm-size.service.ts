@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, combineLatest } from "rxjs";
 
 import { AccountResource, VmSize } from "app/models";
 import { StringUtils, log } from "app/utils";
@@ -8,6 +8,7 @@ import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
 import { computeUrl } from "./compute.service";
 import { GithubDataService } from "./github-data";
+import { shareReplay, map, filter, take, share } from "rxjs/operators";
 
 const excludedVmsSizesPath = "data/vm-sizes.json";
 
@@ -57,22 +58,28 @@ export class VmSizeService {
         private arm: ArmHttpService,
         private githubData: GithubDataService, private accountService: AccountService) {
 
-        const obs = Observable.combineLatest(this._sizes, this._excludedSizes);
-        this.sizes = this._sizes.filter(x => x !== null);
+        const obs = combineLatest(this._sizes, this._excludedSizes);
+        this.sizes = this._sizes.pipe(filter(x => x !== null));
 
-        this.cloudServiceSizes = obs.map(([sizes, excluded]) => {
-            if (!excluded) {
-                return sizes;
-            }
-            return this._filterSizes(sizes, excluded.all.concat(excluded.paas));
-        }).shareReplay(1);
+        this.cloudServiceSizes = obs.pipe(
+            map(([sizes, excluded]) => {
+                if (!excluded) {
+                    return sizes;
+                }
+                return this._filterSizes(sizes, excluded.all.concat(excluded.paas));
+            }),
+            shareReplay(1),
+        );
 
-        this.virtualMachineSizes = obs.map(([sizes, excluded]) => {
-            if (!excluded) {
-                return sizes;
-            }
-            return this._filterSizes(sizes, excluded.all.concat(excluded.iaas));
-        }).shareReplay(1);
+        this.virtualMachineSizes = obs.pipe(
+            map(([sizes, excluded]) => {
+                if (!excluded) {
+                    return sizes;
+                }
+                return this._filterSizes(sizes, excluded.all.concat(excluded.iaas));
+            }),
+            shareReplay(1),
+        );
 
         this.vmSizeCategories = this._vmSizeCategories.asObservable();
     }
@@ -114,9 +121,13 @@ export class VmSizeService {
     }
 
     public get(vmSize: string): Observable<VmSize> {
-        return this.sizes.map(sizes => {
-            return sizes.filter(x => x.name.toLowerCase() === vmSize.toLowerCase()).first();
-        }).take(1).share();
+        return this.sizes.pipe(
+            map(sizes => {
+                return sizes.filter(x => x.name.toLowerCase() === vmSize.toLowerCase()).first();
+            }),
+            take(1),
+            share(),
+        );
     }
     /**
      * Filter the given list of vm sizes by excluding any patching the given patterns.

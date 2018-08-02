@@ -1,10 +1,11 @@
 import { Type } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 import { HttpCode, ServerError } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { DataCache } from "app/services/core/data-cache";
 import { GenericGetter, GenericGetterConfig } from "./generic-getter";
+import { map, catchError, share } from "rxjs/operators";
 
 export interface FetchOptions {
     cached?: boolean;
@@ -33,12 +34,16 @@ export abstract class EntityGetter<TEntity, TParams> extends GenericGetter<TEnti
             }
         }
 
-        return this.getData(params).map((data) => {
-            return this._processItem(cache, data, params);
-        }).catch((error) => {
-            this._processError(cache, params, error);
-            return Observable.throw(error);
-        }).share();
+        return this.getData(params).pipe(
+            map((data) => {
+                return this._processItem(cache, data, params);
+            }),
+            catchError((error) => {
+                this._processError(cache, params, error);
+                return Observable.throw(error);
+            }),
+            share(),
+        );
     }
 
     /**

@@ -1,7 +1,8 @@
 import { fakeAsync, tick } from "@angular/core/testing";
 import { BasicListGetter, DataCache } from "app/services/core";
-import { Observable } from "rxjs";
+import { Observable, of, timer } from "rxjs";
 import { FakeModel } from "test/app/services/core/data/fake-model";
+import { flatMap, map } from "rxjs/operators";
 
 const firstPage = [
     { id: "1", state: "active", name: "Fake1" },
@@ -49,9 +50,9 @@ describe("ListGetter", () => {
     });
 
     it("It retrieve the next batch of items", (done) => {
-        getter.fetch({}).flatMap(({ nextLink }) => {
+        getter.fetch({}).pipe(flatMap(({ nextLink }) => {
             return getter.fetch(nextLink);
-        }).subscribe(({ items, nextLink }) => {
+        })).subscribe(({ items, nextLink }) => {
             expect(items.toJS()).toEqual(secondPage);
             expect(dataSpy).toHaveBeenCalledTimes(2);
             expect(nextLink).toBeFalsy();
@@ -99,10 +100,10 @@ describe("ListGetter", () => {
 
     it("cancel the request when unsubscribing fetchall", fakeAsync(() => {
         dataSpy = jasmine.createSpy("supplyDataSpy").and.callFake(() => {
-            return Observable.timer(100).map(x => ({
+            return timer(100).pipe(map(x => ({
                 data: [{ id: "1", state: "active", name: "Fake1" }],
                 nextLink: "more-to-load",
-            }));
+            })));
         });
 
         getter = new BasicListGetter(FakeModel, {

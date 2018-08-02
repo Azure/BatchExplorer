@@ -12,7 +12,7 @@ import { LocalFileStorage } from "app/services/local-file-storage.service";
 import { SecureUtils, log } from "app/utils";
 import { List } from "immutable";
 import * as loadJsonFile from "load-json-file";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, from } from "rxjs";
 import { flatMap, map, share, shareReplay } from "rxjs/operators";
 import { GithubDataService } from "./github-data";
 
@@ -115,9 +115,12 @@ export class NcjTemplateService {
     }
 
     public listActions(applicationId: string): Observable<List<ApplicationAction>> {
-        return this.get(`${applicationId}/index.json`).map((apps) => {
-            return List<ApplicationAction>(apps.map(x => new ApplicationAction(x)));
-        }).share();
+        return this.get(`${applicationId}/index.json`).pipe(
+            map((apps) => {
+                return List<ApplicationAction>(apps.map(x => new ApplicationAction(x)));
+            }),
+            share(),
+        );
     }
 
     public getJobTemplate(applicationId: string, actionId: string): Observable<NcjJobTemplate> {

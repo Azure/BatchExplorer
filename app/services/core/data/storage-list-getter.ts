@@ -1,10 +1,10 @@
 import { Type } from "@angular/core";
-import { Observable } from "rxjs";
-
+import { Observable, from } from "rxjs";
 import { ServerError } from "@batch-flask/core";
 import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
 import { StorageClientService } from "app/services/storage/storage-client.service";
 import { ContinuationToken } from "./list-options";
+import { share, map, catchError, flatMap } from "rxjs/operators";
 
 export interface StorageBaseParams {
     storageAccountId: string;
@@ -35,19 +35,29 @@ export class StorageListGetter<TEntity, TParams extends StorageBaseParams> exten
     }
 
     protected list(params: TParams, options: any): Observable<any> {
-        return this._clientProxy(params, options, null).flatMap((client) => {
-            return from(client);
-        }).map(response => this._processStorageResponse(response)).catch((error) => {
-            return Observable.throw(ServerError.fromStorage(error));
-        }).share();
+        return this._clientProxy(params, options, null).pipe(
+            flatMap((client) => {
+                return from(client);
+            }),
+            map(response => this._processStorageResponse(response)),
+            catchError((error) => {
+                return Observable.throw(ServerError.fromStorage(error));
+            }),
+            share(),
+        );
     }
 
     protected listNext(token: ContinuationToken): Observable<any> {
-        return this._clientProxy(token.params, token.options, token.nextLink).flatMap((client) => {
-            return from(client);
-        }).map(response => this._processStorageResponse(response)).catch((error) => {
-            return Observable.throw(ServerError.fromStorage(error));
-        }).share();
+        return this._clientProxy(token.params, token.options, token.nextLink).pipe(
+            flatMap((client) => {
+                return from(client);
+            }),
+            map(response => this._processStorageResponse(response)),
+            catchError((error) => {
+                return Observable.throw(ServerError.fromStorage(error));
+            }),
+            share(),
+        );
     }
 
     private _processStorageResponse(response) {
@@ -58,8 +68,11 @@ export class StorageListGetter<TEntity, TParams extends StorageBaseParams> exten
     }
 
     private _clientProxy(params, options, nextLink) {
-        return this.storageClient.getFor(params.storageAccountId).map((client) => {
-            return this._getData(client, params, options, nextLink);
-        }).share();
+        return this.storageClient.getFor(params.storageAccountId).pipe(
+            map((client) => {
+                return this._getData(client, params, options, nextLink);
+            }),
+            share(),
+        );
     }
 }
