@@ -15,26 +15,26 @@ export class SecureUtils {
 
     public static username(length: number = 6): string {
         const charset = "abcdefghijklmnopqrstuvwxyz";
-        let retVal = "";
+        const stringBuffer = [];
         // create an array and fill with random integer
         const randomArray = new Uint32Array(length);
         window.crypto.getRandomValues(randomArray);
         for (let i = 0; i < length; i++) {
-            retVal += charset.charAt(randomArray[i] % charset.length);
-        }        
-        return retVal;
+            stringBuffer.push(charset.charAt(randomArray[i] % charset.length));
+        }
+        return stringBuffer.join("");
     }
 
     public static password(length: number = 15): string {
         const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]\:;?><,./-=";
-        let retVal = "";
+        const stringBuffer = [];
         // create an array and fill with random integer
         const randomArray = new Uint32Array(length);
         window.crypto.getRandomValues(randomArray);
         for (let i = 0; i < length; i++) {
-            retVal += charset.charAt(randomArray[i] % charset.length);
+            stringBuffer.push(charset.charAt(randomArray[i] % charset.length));
         }
-        return retVal;
+        return stringBuffer.join("");
     }
 
     public static generateWindowsPassword(length: number = 15): string {
@@ -47,12 +47,12 @@ export class SecureUtils {
         const charsetJoined = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
             + "!@#$%^&*()_+~`|}{[]\\:;?><,./-=";
 
-        let retVal = "";
+        const stringBuffer = [];
         // generate a random symbol from each charset
         const randomPrimary = new Uint32Array(4);
         window.crypto.getRandomValues(randomPrimary);
         for (let i = 0; i < 4; i++) {
-            retVal += charsets[i].charAt(randomPrimary[i] % charsets[i].length);
+            stringBuffer.push(charsets[i].charAt(randomPrimary[i] % charsets[i].length));
         }
 
         // fill the rest of the password with random characters from any charset
@@ -60,9 +60,9 @@ export class SecureUtils {
         const randomSecondary = new Uint32Array(remainingLength);
         window.crypto.getRandomValues(randomSecondary);
         for (let i = 0; i < remainingLength; i++) {
-            retVal += charsetJoined.charAt(randomSecondary[i] % charsetJoined.length);
+            stringBuffer.push(charsetJoined.charAt(randomSecondary[i] % charsetJoined.length));
         }
-        return retVal;
+        return stringBuffer.join("");
     }
 
     /**
