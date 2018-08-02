@@ -1,8 +1,8 @@
 import { Input, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { Observable } from "rxjs";
-
 import { log } from "@batch-flask/utils";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { AbstractListBase } from "./abstract-list-base";
 
 /**
@@ -48,7 +48,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         protected list: AbstractListBase,
         private router: Router) {
 
-        this.isFocused = this.list.focusedItem.map(x => x === this.key);
+        this.isFocused = this.list.focusedItem.pipe(map(x => x === this.key));
     }
 
     public ngOnInit() {

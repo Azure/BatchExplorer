@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { ArmHttpService } from "app/services/arm-http.service";
-import { Observable } from "rxjs";
+import { of } from "rxjs";
 
 import { StorageKeys } from "app/models";
+import { map, shareReplay } from "rxjs/operators";
 
 @Injectable()
 export class StorageAccountKeysService {
@@ -16,7 +17,7 @@ export class StorageAccountKeysService {
             throw new Error(`Cannot get keys for storage account id ${storageAccountId}`);
         }
         if (this._cache.has(storageAccountId)) {
-            return Observable.of(this._cache.get(storageAccountId));
+            return of(this._cache.get(storageAccountId));
         } else {
             return this._loadKeys(storageAccountId);
         }
@@ -24,16 +25,18 @@ export class StorageAccountKeysService {
 
     private _loadKeys(storageAccountId: string) {
         const url = `${storageAccountId}/listkeys`;
-        return this.arm.post(url)
-            .map(response => this._parseKeysReponse(response.json()))
-            .map((keys: StorageKeys) => {
+        return this.arm.post(url).pipe(
+            map(response => this._parseKeysReponse(response.json())),
+            map((keys: StorageKeys) => {
                 // bail out if we didn't get any keys
                 if (!keys.primaryKey && !keys.secondaryKey) {
                     throw new Error(`Failed to load storage keys for: ${storageAccountId}`);
                 }
                 this._cache.set(storageAccountId, keys);
                 return keys;
-            }).shareReplay(1);
+            }),
+            shareReplay(1),
+        );
     }
 
     /**

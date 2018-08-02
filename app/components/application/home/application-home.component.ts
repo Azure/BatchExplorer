@@ -1,8 +1,8 @@
 import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
-
 import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { ApplicationCreateDialogComponent } from "../action";
 
 @Component({
@@ -15,7 +15,10 @@ export class ApplicationHomeComponent {
     public quickFilter: Filter = FilterBuilder.none();
 
     constructor(private sidebarManager: SidebarManager) {
-        this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
+        this.quickSearchQuery.valueChanges.pipe(
+            debounceTime(400),
+            distinctUntilChanged(),
+        ).subscribe((query: string) => {
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
             } else {

@@ -1,7 +1,5 @@
 import { Component, Input } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import { List } from "immutable";
-
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditMetadataFormComponent } from "app/components/common/edit-metadata-form";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
@@ -9,6 +7,8 @@ import { ApplicationPackageReference, CertificateReference, Metadata, Pool, Star
 import { PoolDecorator } from "app/models/decorators";
 import { PoolPatchDto } from "app/models/dtos";
 import { PoolService } from "app/services";
+import { List } from "immutable";
+import { flatMap } from "rxjs/operators";
 
 // tslint:disable:trackBy-function
 @Component({
@@ -42,7 +42,9 @@ export class PoolConfigurationComponent {
         ref.component.metadata = this.pool.metadata;
         ref.component.save = (metadata) => {
             const data = new PoolPatchDto({ metadata });
-            return this.poolService.patch(id, data).flatMap(() => this.poolService.get(id));
+            return this.poolService.patch(id, data).pipe(
+                flatMap(() => this.poolService.get(id)),
+            );
         };
     }
 

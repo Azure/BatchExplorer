@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
 import { autobind } from "@batch-flask/core";
-import { Observable } from "rxjs";
+import { of } from "rxjs";
 
 @Component({
     selector: "bl-delete-selected-items-dialog",
@@ -17,7 +17,7 @@ export class DeleteSelectedItemsDialogComponent {
 
     @autobind()
     public destroyEntities() {
-        return Observable.of(this.dialogRef.close(true));
+        return of(this.dialogRef.close(true));
     }
 
     public trackByFn(index, item: string) {

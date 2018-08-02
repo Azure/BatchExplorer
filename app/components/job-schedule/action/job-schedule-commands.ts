@@ -3,7 +3,7 @@ import { COMMAND_LABEL_ICON, ElectronRemote, EntityCommand, EntityCommands, Perm
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { JobSchedule, JobScheduleState } from "app/models";
 import { FileSystemService, JobScheduleService, PinnedEntityService } from "app/services";
-import { Observable } from "rxjs";
+import { from } from "rxjs";
 import { JobScheduleCreateBasicDialogComponent, PatchJobScheduleComponent } from "./add";
 
 @Injectable()
@@ -170,7 +170,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
 
         if (localPath) {
             const content = JSON.stringify(jobSchedule._original, null, 2);
-            return Observable.fromPromise(this.fs.saveFile(localPath, content));
+            return from(this.fs.saveFile(localPath, content));
         }
     }
 }

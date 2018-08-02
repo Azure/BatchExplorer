@@ -3,6 +3,7 @@ import { AutoscaleFormula } from "app/models";
 import { Constants, log } from "app/utils";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 import { LocalFileStorage } from "./local-file-storage.service";
 
 const filename = Constants.SavedDataFilename.autosacleFormula;
@@ -37,12 +38,13 @@ export class AutoscaleFormulaService {
     }
 
     public loadInitialData(): Observable<List<AutoscaleFormula>> {
-        return this.localFileStorage.get(filename).map(data => {
-            return Array.isArray(data) ? List(data) : List([]);
-        }).catch<any, any>((error) => {
-            log.error("Error retrieving autoscale formulas");
-            return null;
-        });
+        return this.localFileStorage.get(filename).pipe(
+            map(data => Array.isArray(data) ? List(data) : List([])),
+            catchError<any, any>((error) => {
+                log.error("Error retrieving autoscale formulas");
+                return null;
+            }),
+        );
     }
 
     private _saveAutoscaleFormulas(formulas: List<AutoscaleFormula> = null): Observable<any> {

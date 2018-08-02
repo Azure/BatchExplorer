@@ -6,7 +6,7 @@ import {
 } from "@batch-flask/ui";
 import { Task, TaskState } from "app/models";
 import { FileSystemService, TaskService } from "app/services";
-import { Observable } from "rxjs";
+import { from } from "rxjs";
 import { TaskCreateBasicDialogComponent } from "../action";
 
 export interface TaskParams {
@@ -103,7 +103,7 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
 
         if (localPath) {
             const content = JSON.stringify(task._original, null, 2);
-            return Observable.fromPromise(this.fs.saveFile(localPath, content));
+            return from(this.fs.saveFile(localPath, content));
         }
     }
 }

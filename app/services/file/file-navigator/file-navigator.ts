@@ -6,8 +6,8 @@ import { DataCache, ListGetter } from "app/services/core";
 import { FileLoader } from "app/services/file";
 import { CloudPathUtils, StringUtils } from "app/utils";
 import { List } from "immutable";
-import { AsyncSubject, BehaviorSubject, Observable, Subscription } from "rxjs";
-import { map, mergeMap, shareReplay } from "rxjs/operators";
+import { AsyncSubject, BehaviorSubject, Observable, Subscription, interval, of } from "rxjs";
+import { catchError, flatMap, map, mergeMap, share, shareReplay, take, tap } from "rxjs/operators";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 
 export interface DeleteProgress {
@@ -152,13 +152,16 @@ export class FileNavigator<TParams = any> {
     public getNode(path: string): Observable<FileTreeNode> {
         const node = this._tree.value.getNode(path);
         if (node.isUnknown) {
-            return this._checkIfDirectory(node).map(() => {
-                return this._tree.value.getNode(path);
-            }).catch(() => {
-                return Observable.of(null);
-            });
+            return this._checkIfDirectory(node).pipe(
+                map(() => {
+                    return this._tree.value.getNode(path);
+                }),
+                catchError(() => {
+                    return of(null);
+                }),
+            );
         } else {
-            return Observable.of(node);
+            return of(node);
         }
     }
 
@@ -179,7 +182,7 @@ export class FileNavigator<TParams = any> {
                 return this._loadFilesInPath(path);
             }
         }
-        return Observable.of(node);
+        return of(node);
     }
 
     public isDirectory(path: string): Observable<boolean> {
@@ -210,12 +213,16 @@ export class FileNavigator<TParams = any> {
             log.error("Cannot delete file with this file navigator has delete is not implemented");
             return;
         }
-        return Observable.interval(100).take(files.length).flatMap((i) => {
-            return this._deleteFile(files[i]).map(() => {
-                this._removeFile(files[i]);
-                return { deleted: i, total: files.length, current: files[i] };
-            });
-        }).share();
+        return interval(100).pipe(
+            take(files.length),
+            flatMap((i) => {
+                return this._deleteFile(files[i]).pipe(map(() => {
+                    this._removeFile(files[i]);
+                    return { deleted: i, total: files.length, current: files[i] };
+                }));
+            }),
+            share(),
+        );
     }
 
     public deleteFolder(folder: string): Observable<DeleteProgress> {
@@ -223,11 +230,15 @@ export class FileNavigator<TParams = any> {
             log.error("Cannot delete file with this file navigator has delete is not implemented");
             return;
         }
-        return this.listAllFiles(CloudPathUtils.asBaseDirectory(folder)).flatMap((files) => {
-            return this.deleteFiles(files.map(x => x.name).toArray());
-        }).do(() => {
-            this._removeFile(folder);
-        }).share();
+        return this.listAllFiles(CloudPathUtils.asBaseDirectory(folder)).pipe(
+            flatMap((files) => {
+                return this.deleteFiles(files.map(x => x.name).toArray());
+            }),
+            tap(() => {
+                this._removeFile(folder);
+            }),
+            share(),
+        );
     }
 
     public dispose() {
@@ -272,7 +283,7 @@ export class FileNavigator<TParams = any> {
     }
 
     private _checkIfDirectory(node: FileTreeNode): Observable<boolean> {
-        if (!node.isUnknown) { return Observable.of(node.isDirectory); }
+        if (!node.isUnknown) { return of(node.isDirectory); }
         const subject = new AsyncSubject<boolean>();
         this._loadPath(this._getFolderToLoad(node.path, false)).subscribe({
             next: (files: List<File>) => {
@@ -294,7 +305,7 @@ export class FileNavigator<TParams = any> {
         const tree = this._tree.value;
         const node = tree.getNode(path);
         if (node.loadingStatus === LoadingStatus.Loading && !node.virtual) {
-            return Observable.of(null);
+            return of(null);
         }
         node.markAsLoading();
         const output = new AsyncSubject<FileTreeNode>();

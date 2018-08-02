@@ -5,7 +5,8 @@ import { SecureUtils } from "@batch-flask/utils";
 import { RoleAssignment, RoleDefinition } from "app/models";
 import { ArmListGetter, TargetedDataCache } from "app/services/core";
 import { List } from "immutable";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
+import { flatMap, map, share, shareReplay, take } from "rxjs/operators";
 import { AccountService } from "../account.service";
 import { ArmHttpService } from "../arm-http.service";
 
@@ -44,9 +45,13 @@ export class ResourceAccessService {
      * List roles for the currently selected batch account
      */
     public listRolesForCurrentAccount(): Observable<List<RoleAssignment>> {
-        return this.accountService.currentAccount.take(1).flatMap((account) => {
-            return this.listRolesFor(account.id);
-        }).shareReplay(1);
+        return this.accountService.currentAccount.pipe(
+            take(1),
+            flatMap((account) => {
+                return this.listRolesFor(account.id);
+            }),
+            shareReplay(1),
+        );
     }
 
     public listRolesFor(resourceId: string): Observable<List<RoleAssignment>> {
@@ -60,9 +65,9 @@ export class ResourceAccessService {
     public getRoleByName(scope: string, name: string): Observable<RoleDefinition> {
         return this._rolesListGetter.fetch({ scope }, {
             filter: FilterBuilder.prop("roleName").eq(name),
-        }, true).map(x => {
+        }, true).pipe(map(x => {
             return x.items.first();
-        });
+        }));
     }
 
     /**
@@ -73,8 +78,10 @@ export class ResourceAccessService {
     public getRoleAssignmentFor(resourceId: string, principalId: string): Observable<RoleAssignment> {
         const filter = FilterBuilder.prop("principalId").eq(principalId);
 
-        return this._rolesAssignmentListGetter.fetch({ resourceId }, { filter }, true)
-            .map(x => x.items.first()).share();
+        return this._rolesAssignmentListGetter.fetch({ resourceId }, { filter }, true).pipe(
+            map(x => x.items.first()),
+            share(),
+        );
     }
 
     /**
@@ -85,13 +92,16 @@ export class ResourceAccessService {
     public getRoleFor(resourceId: string, principalId: string)
         : Observable<{ role: RoleDefinition, roleAssignment: RoleAssignment }> {
 
-        return this.getRoleAssignmentFor(resourceId, principalId).flatMap((roleAssignment) => {
-            if (!roleAssignment) { return Observable.of({ role: null, roleAssignment: null }); }
-            return this.arm.get(roleAssignment.properties.roleDefinitionId).map(x => {
-                const role = new RoleDefinition(x.json());
-                return { role, roleAssignment };
-            });
-        }).share();
+        return this.getRoleAssignmentFor(resourceId, principalId).pipe(
+            flatMap((roleAssignment) => {
+                if (!roleAssignment) { return of({ role: null, roleAssignment: null }); }
+                return this.arm.get(roleAssignment.properties.roleDefinitionId).pipe(map(x => {
+                    const role = new RoleDefinition(x.json());
+                    return { role, roleAssignment };
+                }));
+            }),
+            share(),
+        );
     }
 
     /**
@@ -100,10 +110,14 @@ export class ResourceAccessService {
      * @param principalId Principal id(User or Service Principal)
      */
     public getRoleDefinitionFor(resourceId: string, principalId: string): Observable<RoleDefinition> {
-        return this.getRoleAssignmentFor(resourceId, principalId).flatMap((roleAssignment) => {
-            if (!roleAssignment) { return Observable.of(null); }
-            return this.arm.get(roleAssignment.properties.roleDefinitionId);
-        }).map(x => new RoleDefinition(x.json())).share();
+        return this.getRoleAssignmentFor(resourceId, principalId).pipe(
+            flatMap((roleAssignment) => {
+                if (!roleAssignment) { return of(null); }
+                return this.arm.get(roleAssignment.properties.roleDefinitionId);
+            }),
+            map(x => new RoleDefinition(x.json())),
+            share(),
+        );
     }
 
     public createAssignment(resourceId: string, principalId: string, roleDefinitionId: string): Observable<any> {

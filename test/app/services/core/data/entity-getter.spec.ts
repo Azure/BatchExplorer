@@ -1,6 +1,6 @@
 import { BasicEntityGetter, DataCache } from "app/services/core";
 import { EntityGetter } from "app/services/core/data/entity-getter";
-import { Observable } from "rxjs";
+import { of } from "rxjs";
 import { FakeModel, FakeParams } from "./fake-model";
 
 const data = [
@@ -17,7 +17,7 @@ describe("EntityGetter", () => {
     beforeEach(() => {
         cache = new DataCache<FakeModel>();
         dataSpy = jasmine.createSpy("supplyDataSpy")
-            .and.returnValues(...data.map(x => Observable.of(x)));
+            .and.returnValues(...data.map(x => of(x)));
         getter = new BasicEntityGetter(FakeModel, {
             cache: () => cache,
             supplyData: dataSpy,

@@ -3,7 +3,7 @@ import {
 } from "@angular/core";
 import { DateUtils } from "@batch-flask/utils";
 import * as moment from "moment";
-import { Observable, Subscription } from "rxjs";
+import { Subscription, interval } from "rxjs";
 
 export enum TimespanDisplayType {
     humanized = "humanized",
@@ -64,7 +64,7 @@ export class TimespanComponent implements OnChanges, OnDestroy {
         this._clearInterval();
         if (this.startTime && this.endTime) { return; }
         if (!this.startTime && !this.endTime) { return; }
-        this._intervalSub = Observable.interval(1000).subscribe(() => {
+        this._intervalSub = interval(1000).subscribe(() => {
             this._updateElapsedTime();
         });
     }

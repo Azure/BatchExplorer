@@ -4,9 +4,9 @@ import {
 import { FormControl } from "@angular/forms";
 import { AsyncTask, Dto, ServerError, autobind } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
-
 import { validJsonConfig } from "@batch-flask/utils/validators";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, of } from "rxjs";
+import { filter, first, flatMap, share, shareReplay, tap } from "rxjs/operators";
 import { FormBase } from "../form-base";
 import { FormPageComponent } from "../form-page";
 import { FormActionConfig } from "./footer";
@@ -109,21 +109,29 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
         let ready;
         if (this._hasAsyncTask) {
             this.waitingForAsyncTask = true;
-            ready = this.asyncTasks.filter(x => [...x].length === 0).first().do(() => {
-                this.waitingForAsyncTask = false;
-            }).share();
+            ready = this.asyncTasks.pipe(
+                filter(x => [...x].length === 0),
+                first(),
+                tap(() => {
+                    this.waitingForAsyncTask = false;
+                }),
+                share(),
+            );
         } else {
-            ready = Observable.of(null);
+            ready = of(null);
         }
         this.loading = true;
-        const obs = ready.flatMap(() => {
-            const submitResult = this.submit(this.getCurrentDto());
-            if (!submitResult) {
-                return Observable.of(null);
-            } else {
-                return submitResult;
-            }
-        }).shareReplay(1);
+        const obs = ready.pipe(
+            flatMap(() => {
+                const submitResult = this.submit(this.getCurrentDto());
+                if (!submitResult) {
+                    return of(null);
+                } else {
+                    return submitResult;
+                }
+            }),
+            shareReplay(1),
+        );
         obs.subscribe({
             next: () => {
                 this.loading = false;

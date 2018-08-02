@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, timer } from "rxjs";
 
 import { ObjectUtils, SecureUtils } from "@batch-flask/utils";
 
@@ -116,7 +116,7 @@ class PollTracker {
     }
 
     private _waitForNextPoll() {
-        this._currentTimeout = Observable.timer(this.interval).subscribe(() => {
+        this._currentTimeout = timer(this.interval).subscribe(() => {
             this._currentTimeout = null;
             const output = this.callback();
             if (output && output instanceof Observable) {

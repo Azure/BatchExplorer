@@ -5,15 +5,16 @@ import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { UrlUtils } from "@batch-flask/utils";
-import { List } from "immutable";
-import * as moment from "moment";
-import { Subscription } from "rxjs";
-
 import { BlobContainer } from "app/models";
 import { ListView } from "app/services/core";
 import {
     AutoStorageService, ListContainerParams, StorageContainerService,
 } from "app/services/storage";
+import { List } from "immutable";
+import * as moment from "moment";
+import { Subscription } from "rxjs";
+import { debounceTime, distinctUntilChanged, flatMap } from "rxjs/operators";
+
 import "./blob-container-picker.scss";
 
 export enum BlobContainerPickerOutput {
@@ -67,23 +68,25 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnIni
             changeDetector.markForCheck();
         });
 
-        this._subscriptions.push(this.container.valueChanges.debounceTime(400)
-            .distinctUntilChanged().subscribe((value) => {
-                this._checkValid(value);
-                if (value
-                    && this.output === BlobContainerPickerOutput.SasUrl
-                    && !this._isSasUrl()
-                    && this.containers.map(x => x.name).includes(value)
-                ) {
-                    this._createSasUrl(value).subscribe((url) => {
-                        this.container.setValue(url);
-                    });
-                } else {
-                    if (this._propagateChange) {
-                        this._propagateChange(value);
-                    }
+        this._subscriptions.push(this.container.valueChanges.pipe(
+            debounceTime(400),
+            distinctUntilChanged(),
+        ).subscribe((value) => {
+            this._checkValid(value);
+            if (value
+                && this.output === BlobContainerPickerOutput.SasUrl
+                && !this._isSasUrl()
+                && this.containers.map(x => x.name).includes(value)
+            ) {
+                this._createSasUrl(value).subscribe((url) => {
+                    this.container.setValue(url);
+                });
+            } else {
+                if (this._propagateChange) {
+                    this._propagateChange(value);
                 }
-            }));
+            }
+        }));
     }
 
     public ngOnInit() {
@@ -139,8 +142,10 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnIni
             },
         };
 
-        return this.autoStorageService.get().flatMap((storageAccountId) => {
-            return this.storageContainerService.generateSharedAccessUrl(storageAccountId, container, accessPolicy);
-        });
+        return this.autoStorageService.get().pipe(
+            flatMap((storageAccountId) => {
+                return this.storageContainerService.generateSharedAccessUrl(storageAccountId, container, accessPolicy);
+            }),
+        );
     }
 }

@@ -1,10 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { Observable } from "rxjs";
+import { forkJoin, of } from "rxjs";
 
 import { log } from "@batch-flask/utils";
 import { NcjJobTemplate, NcjPoolTemplate, NcjTemplateMode } from "app/models";
 import { NcjTemplateService } from "app/services";
+import { catchError } from "rxjs/operators";
 import "./submit-market-application.scss";
 
 @Component({
@@ -43,15 +44,17 @@ export class SubmitMarketApplicationComponent implements OnInit {
     }
 
     private _updateTemplates() {
-        const job = this.templateService.getJobTemplate(this.applicationId, this.actionId).catch((error) => {
+        const job = this.templateService.getJobTemplate(this.applicationId, this.actionId).pipe(catchError((error) => {
             log.error(`Error loading the job template for ${this.applicationId}>${this.actionId}`, error);
-            return Observable.of(null);
-        });
-        const pool = this.templateService.getPoolTemplate(this.applicationId, this.actionId).catch((error) => {
-            log.error(`Error loading the pool template for ${this.applicationId}>${this.actionId}`, error);
-            return Observable.of(null);
-        });
-        Observable.forkJoin(job, pool).subscribe(([job, pool]) => {
+            return of(null);
+        }));
+        const pool = this.templateService.getPoolTemplate(this.applicationId, this.actionId).pipe(
+            catchError((error) => {
+                log.error(`Error loading the pool template for ${this.applicationId}>${this.actionId}`, error);
+                return of(null);
+            }),
+        );
+        forkJoin(job, pool).subscribe(([job, pool]) => {
             this.jobTemplate = job;
             this.poolTemplate = pool;
             this.loaded = true;

@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, ViewChild } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import * as path from "path";
-import { Observable, Subscription } from "rxjs";
+import { Subscription, from } from "rxjs";
 
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -12,6 +12,7 @@ import { BlobContainer } from "app/models";
 import { FileSystemService } from "app/services";
 import { StorageBlobService, StorageContainerService } from "app/services/storage";
 import { CloudPathUtils } from "app/utils";
+import { flatMap, shareReplay } from "rxjs/operators";
 
 @Component({
     selector: "bl-data-container-files",
@@ -46,33 +47,36 @@ export class DataContainerFilesComponent implements OnDestroy {
     @autobind()
     public handleFileUpload(event: FileDropEvent) {
         const container = this.container.name;
-        return Observable.fromPromise(this._getFilesToUpload(event.files)).flatMap((files) => {
-            const message = `Uploading ${files.length} files to ${container}`;
-            return this.backgroundTaskService.startTask(message, (task) => {
-                const observable = this.storageBlobService.uploadFiles(this.storageAccountId,
-                    this.container.name, files, event.path);
-                let lastData;
-                observable.subscribe({
-                    next: (data) => {
-                        lastData = data;
-                        const { uploaded, total, current } = data;
-                        const name = path.basename(current.localPath);
-                        task.name.next(`Uploading ${name} to ${container} (${uploaded}/${total})`);
-                        task.progress.next(data.uploaded / data.total * 100);
-                    },
-                    complete: () => {
-                        task.progress.next(100);
-                        const message = `${lastData.uploaded} files were successfully uploaded to the file group`;
-                        this.notificationService.success("Added files to group", message);
-                    },
-                    error: (error) => {
-                        log.error("Failed to create form group", error);
-                    },
-                });
+        return from(this._getFilesToUpload(event.files)).pipe(
+            flatMap((files) => {
+                const message = `Uploading ${files.length} files to ${container}`;
+                return this.backgroundTaskService.startTask(message, (task) => {
+                    const observable = this.storageBlobService.uploadFiles(this.storageAccountId,
+                        this.container.name, files, event.path);
+                    let lastData;
+                    observable.subscribe({
+                        next: (data) => {
+                            lastData = data;
+                            const { uploaded, total, current } = data;
+                            const name = path.basename(current.localPath);
+                            task.name.next(`Uploading ${name} to ${container} (${uploaded}/${total})`);
+                            task.progress.next(data.uploaded / data.total * 100);
+                        },
+                        complete: () => {
+                            task.progress.next(100);
+                            const message = `${lastData.uploaded} files were successfully uploaded to the file group`;
+                            this.notificationService.success("Added files to group", message);
+                        },
+                        error: (error) => {
+                            log.error("Failed to create form group", error);
+                        },
+                    });
 
-                return observable;
-            });
-        }).shareReplay(1);
+                    return observable;
+                });
+            }),
+            shareReplay(1),
+        );
 
     }
 

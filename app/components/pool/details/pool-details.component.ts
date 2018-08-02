@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Subscription, from } from "rxjs";
 
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
@@ -11,6 +11,7 @@ import { EntityView } from "app/services/core/data";
 import { NumberUtils } from "app/utils";
 import { PoolCommands } from "../action";
 
+import { flatMap } from "rxjs/operators";
 import "./pool-details.scss";
 
 @Component({
@@ -89,9 +90,9 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public updateTags(newTags: List<string>) {
-        return this.poolService.updateTags(this.pool, newTags).flatMap(() => {
-            return this.data.refresh();
-        });
+        return this.poolService.updateTags(this.pool, newTags).pipe(
+            flatMap(() => this.data.refresh()),
+        );
     }
 
     @autobind()
@@ -99,7 +100,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         const link = `ms-batch-explorer://route/standalone/pools/${this.pool.id}/graphs?fullscreen=true`;
         const window = this.batchExplorer.openNewWindow(link);
 
-        return Observable.fromPromise(window.appReady);
+        return from(window.appReady);
     }
 
     private _updatePrice() {
