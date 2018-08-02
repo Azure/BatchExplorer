@@ -2,7 +2,7 @@ import { Injectable, NgZone } from "@angular/core";
 import { AsyncSubject, Observable, from, of, throwError } from "rxjs";
 
 import { HttpCode, ServerError } from "@batch-flask/core";
-import { File, FileLoadOptions, FileLoader, FileNavigator, FileSource, FileSystemService } from "@batch-flask/ui";
+import { File, FileLoadOptions, FileLoader, FileNavigator, FileSystemService } from "@batch-flask/ui";
 import {
     DataCache,
     EntityView,
@@ -187,7 +187,7 @@ export class StorageBlobService {
 
         return new FileLoader({
             filename: blobName,
-            source: FileSource.blob,
+            source: "blob",
             groupId: blobPrefix,
             fs: this.fs,
             properties: () => {

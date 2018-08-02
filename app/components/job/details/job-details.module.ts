@@ -1,9 +1,9 @@
 import { NgModule } from "@angular/core";
 
 import { BaseModule } from "@batch-flask/ui";
+import { FileDetailsModule } from "@batch-flask/ui/file/details";
 import { commonModules } from "app/common";
 import { FileBrowseModule } from "app/components/file/browse";
-import { FileDetailsModule } from "app/components/file/details";
 import { TaskBrowseModule } from "app/components/task/browse";
 import { JobActionModule } from "../action";
 import { JobGraphsModule } from "../graphs";

@@ -11,7 +11,7 @@ export type DownloadFunc = (destination: string) => Observable<boolean>;
 
 export interface FileLoaderConfig {
     filename: string;
-    source: FileSource;
+    source: string;
     groupId?: string;
     fs: FileSystemService;
     properties: PropertiesFunc;
@@ -37,15 +37,9 @@ export interface FileLoadResult {
     content: string;
 }
 
-export enum FileSource {
-    task = "task",
-    node = "node",
-    blob = "blob",
-}
-
 export class FileLoader {
     public readonly filename: string;
-    public readonly source: FileSource;
+    public readonly source: string;
     /**
      * Optional name of subfolder to prevent collision with caches
      */

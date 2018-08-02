@@ -5,9 +5,9 @@ import { BackgroundTaskService, DialogService, LoadingStatus } from "@batch-flas
 import { FileNavigator, FileTreeNode } from "@batch-flask/ui/file/file-navigator";
 import { SplitPaneConfig } from "@batch-flask/ui/split-pane";
 import { log } from "@batch-flask/utils";
-import { CurrentNode, FileExplorerWorkspace, FileSource, OpenedFile } from "app/components/file/browse/file-explorer";
 import { FileUrlUtils } from "app/utils";
 import { Subscription } from "rxjs";
+import { CurrentNode, FileExplorerWorkspace, FileSource, OpenedFile } from "./file-explorer-workspace";
 
 import "./file-explorer.scss";
 

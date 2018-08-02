@@ -1,7 +1,5 @@
 import { NgModule } from "@angular/core";
-
-import { commonModules } from "app/common";
-import { FileDetailsModule } from "app/components/file/details";
+import { FileDetailsModule } from "@batch-flask/ui/file/details";
 import { FileExplorerTabsComponent } from "./file-explorer-tabs";
 import { FileExplorerComponent } from "./file-explorer.component";
 import { FileTableViewComponent } from "./file-table-view";
@@ -16,7 +14,7 @@ const publicComponents = [
 ];
 
 @NgModule({
-    imports: [FileDetailsModule, ...commonModules],
+    imports: [FileDetailsModule],
     declarations: [...privateComponents, publicComponents],
     exports: publicComponents,
 })

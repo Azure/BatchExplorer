@@ -1,9 +1,12 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { HttpCode, ServerError } from "@batch-flask/core";
-import { FileLoader } from "@batch-flask/ui";
 import {
-    FileExplorerConfig, FileExplorerWorkspace, FileNavigatorEntry, FileSource,
-} from "app/components/file/browse/file-explorer";
+    FileExplorerConfig,
+    FileExplorerWorkspace,
+    FileLoader,
+    FileNavigatorEntry,
+    FileSource,
+} from "@batch-flask/ui";
 import { Task, TaskState } from "app/models";
 import { FileService } from "app/services";
 import { AutoStorageService, StorageBlobService } from "app/services/storage";

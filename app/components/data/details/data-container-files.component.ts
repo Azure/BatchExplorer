@@ -1,11 +1,10 @@
 import { Component, Input, OnDestroy, ViewChild } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import { FileSystemService } from "@batch-flask/ui";
+import { FileSystemService, FileDropEvent } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { log } from "@batch-flask/utils";
 import { BlobFilesBrowserComponent } from "app/components/file/browse";
-import { FileDropEvent } from "app/components/file/browse/file-explorer";
 import { BlobContainer } from "app/models";
 import { StorageBlobService, StorageContainerService } from "app/services/storage";
 import { CloudPathUtils } from "app/utils";

@@ -1,12 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { MatCheckboxChange, MatDialogRef } from "@angular/material";
 import { ServerError, autobind } from "@batch-flask/core";
-import { AsyncSubject, of } from "rxjs";
-
-import { FileExplorerConfig, FileExplorerSelectable } from "app/components/file/browse/file-explorer";
+import { FileExplorerConfig, FileExplorerSelectable } from "@batch-flask/ui";
 import { BlobContainer } from "app/models";
 import { EntityView } from "app/services/core";
 import { GetContainerParams, StorageContainerService } from "app/services/storage";
+import { AsyncSubject, of } from "rxjs";
+
 import "./cloud-file-picker-dialog.scss";
 
 @Component({
