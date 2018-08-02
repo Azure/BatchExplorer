@@ -1,14 +1,13 @@
 import { Injector, Type } from "@angular/core";
-import { DialogService } from "@batch-flask/ui/dialogs";
-import { NotificationService } from "@batch-flask/ui/notifications";
-import { Observable, of, forkJoin } from "rxjs";
-
 import { ListSelection } from "@batch-flask/core/list/list-selection";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
+import { DialogService } from "@batch-flask/ui/dialogs";
+import { NotificationService } from "@batch-flask/ui/notifications";
 import { log } from "@batch-flask/utils";
-import { EntityCommand, EntityCommandAttributes } from "./entity-command";
+import { Observable, forkJoin, of } from "rxjs";
 import { map } from "rxjs/operators";
+import { EntityCommand, EntityCommandAttributes } from "./entity-command";
 
 export interface ActionableEntity {
     id: string;

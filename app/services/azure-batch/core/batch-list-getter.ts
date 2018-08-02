@@ -42,7 +42,7 @@ export class BatchListGetter<TEntity, TParams> extends ListGetter<TEntity, TPara
         return this.http.get<any>(token.nextLink).pipe(
             map(x => this._processResponse(x)),
             share(),
-        );;
+        );
     }
 
     private _processResponse(response: BatchListResponse<TEntity>) {

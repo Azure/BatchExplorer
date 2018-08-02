@@ -1,16 +1,16 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { BehaviorSubject, Observable, Subscription, merge, forkJoin, of } from "rxjs";
+import { BehaviorSubject, Observable, Subscription, forkJoin, merge, of } from "rxjs";
 
 import { FilterBuilder } from "@batch-flask/core";
 import { AccountResource, BatchQuotas, JobState, Pool } from "app/models";
 import { List } from "immutable";
+import { flatMap, map, shareReplay } from "rxjs/operators";
 import { AccountService } from "./account.service";
 import { ApplicationService } from "./application.service";
 import { JobService } from "./azure-batch/job";
 import { PoolService } from "./azure-batch/pool";
 import { ComputeService } from "./compute.service";
 import { VmSizeService } from "./vm-size.service";
-import { flatMap, shareReplay, map } from "rxjs/operators";
 
 /**
  * Service grouping all quotas needed

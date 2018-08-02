@@ -1,8 +1,8 @@
 import { AsyncSubject, BehaviorSubject, Observable, from } from "rxjs";
 
 import { log } from "@batch-flask/utils";
-import { BackgroundTaskService } from "./background-task.service";
 import { concatMap, shareReplay } from "rxjs/operators";
+import { BackgroundTaskService } from "./background-task.service";
 
 /**
  * Function that run the task.

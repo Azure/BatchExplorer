@@ -3,17 +3,16 @@ import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { MatCheckboxChange } from "@angular/material";
 import { DynamicForm, autobind } from "@batch-flask/core";
 import { BackgroundTaskService, NotificationService, SidebarRef } from "@batch-flask/ui";
-import { Observable, Subscription, from } from "rxjs";
-
 import { BlobContainer } from "app/models";
 import { FileGroupCreateDto, FileOrDirectoryDto } from "app/models/dtos";
 import { CreateFileGroupModel, createFileGroupFormToJsonData, fileGroupToFormModel } from "app/models/forms";
 import { FileSystemService, NcjFileGroupService } from "app/services";
 import { StorageContainerService } from "app/services/storage";
 import { Constants, log } from "app/utils";
+import { Observable, Subscription, from } from "rxjs";
+import { debounceTime, distinctUntilChanged, finalize, flatMap, share } from "rxjs/operators";
 
 import "./file-group-create-form.scss";
-import { distinctUntilChanged, debounceTime, flatMap, share, finalize } from "rxjs/operators";
 
 interface DataTotals {
     uploaded?: number;

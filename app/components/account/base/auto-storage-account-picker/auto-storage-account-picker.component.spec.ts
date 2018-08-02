@@ -8,10 +8,10 @@ import { List } from "immutable";
 
 import { AccountResource, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
+import { of } from "rxjs";
 import { ElectronTestingModule } from "test/utils/mocks";
 import { LoadingMockComponent, TableTestingModule } from "test/utils/mocks/components";
 import { AutoStorageAccountPickerComponent } from "./auto-storage-account-picker.component";
-import { of } from "rxjs";
 
 const account = new AccountResource({
     id: "acc-1", location: "westus",

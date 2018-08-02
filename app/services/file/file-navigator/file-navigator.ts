@@ -6,8 +6,8 @@ import { DataCache, ListGetter } from "app/services/core";
 import { FileLoader } from "app/services/file";
 import { CloudPathUtils, StringUtils } from "app/utils";
 import { List } from "immutable";
-import { AsyncSubject, BehaviorSubject, Observable, Subscription, of, interval } from "rxjs";
-import { map, mergeMap, shareReplay, catchError, flatMap, tap, share, take } from "rxjs/operators";
+import { AsyncSubject, BehaviorSubject, Observable, Subscription, interval, of } from "rxjs";
+import { catchError, flatMap, map, mergeMap, share, shareReplay, take, tap } from "rxjs/operators";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 
 export interface DeleteProgress {

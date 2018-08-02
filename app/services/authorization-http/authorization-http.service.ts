@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
 import { RequestOptionsArgs, Response } from "@angular/http";
-import { Observable, of, empty } from "rxjs";
+import { Observable, empty, of } from "rxjs";
 
 import { Permission } from "@batch-flask/ui/permission";
+import { expand, flatMap, map, reduce, shareReplay, take } from "rxjs/operators";
 import { AccountService } from "../account.service";
 import { ArmHttpService } from "../arm-http.service";
-import { flatMap, map, expand, reduce, take, shareReplay } from "rxjs/operators";
 
 export interface RoleDefinitionPermission {
     actions: string[];
@@ -70,7 +70,7 @@ export class AuthorizationHttpService {
             map((userPermission) => {
                 if (permission === Permission.Read) { return userPermission !== Permission.None; }
                 return userPermission === Permission.Write;
-            })
+            }),
         );
     }
 

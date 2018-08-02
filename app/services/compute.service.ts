@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
-import { RequestOptions, URLSearchParams, Response } from "@angular/http";
+import { RequestOptions, Response, URLSearchParams } from "@angular/http";
 import { Observable, empty } from "rxjs";
 
 import { Resource } from "app/models";
+import { expand, flatMap, map, reduce, share } from "rxjs/operators";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
 import { AzureHttpService } from "./azure-http.service";
 import { SubscriptionService } from "./subscription.service";
-import { flatMap, map, share, expand, reduce } from "rxjs/operators";
 
 export function computeUrl(subscriptionId: string) {
     return `subscriptions/${subscriptionId}/providers/Microsoft.Compute`;
@@ -33,9 +33,9 @@ const computeImageProvider = computeProvider + "/images";
 @Injectable()
 export class ComputeService {
     constructor(private arm: ArmHttpService,
-        private accountService: AccountService,
-        private azure: AzureHttpService,
-        private subscriptionService: SubscriptionService) {
+                private accountService: AccountService,
+                private azure: AzureHttpService,
+                private subscriptionService: SubscriptionService) {
     }
 
     public getQuotas(): Observable<ComputeUsage[]> {

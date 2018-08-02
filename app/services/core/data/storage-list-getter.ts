@@ -1,10 +1,10 @@
 import { Type } from "@angular/core";
-import { Observable, from, throwError } from "rxjs";
 import { ServerError } from "@batch-flask/core";
 import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
 import { StorageClientService } from "app/services/storage/storage-client.service";
+import { Observable, from, throwError } from "rxjs";
+import { catchError, flatMap, map, share } from "rxjs/operators";
 import { ContinuationToken } from "./list-options";
-import { share, map, catchError, flatMap } from "rxjs/operators";
 
 export interface StorageBaseParams {
     storageAccountId: string;

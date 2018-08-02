@@ -5,9 +5,9 @@ import { By } from "@angular/platform-browser";
 import { FileContentComponent } from "app/components/file/details";
 import { File } from "app/models";
 import { FileService } from "app/services";
+import { of } from "rxjs";
 import { click } from "test/utils/helpers";
 import { MockSettingsService } from "test/utils/mocks";
-import { of } from "rxjs";
 
 @Component({
     template: `<bl-file-content [fileLoader]="fileLoader"></bl-file-content>`,

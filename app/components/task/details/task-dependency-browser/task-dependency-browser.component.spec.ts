@@ -9,10 +9,10 @@ import { ContextMenuService, I18nUIModule } from "@batch-flask/ui";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
+import { of } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { NoItemMockComponent, TableTestingModule } from "test/utils/mocks/components";
 import { TaskDependencyBrowserComponent } from "./task-dependency-browser.component";
-import { of } from "rxjs";
 
 const taskMap: Map<string, Task> = new Map()
     .set("1", new Task({ id: "1", dependsOn: { taskIds: ["1", "2"] } } as any))

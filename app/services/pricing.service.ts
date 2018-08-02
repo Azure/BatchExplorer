@@ -5,11 +5,11 @@ import { BehaviorSubject, Observable, forkJoin, of } from "rxjs";
 import { AccountResource, BatchSoftwareLicense, Pool, RateCardMeter } from "app/models";
 import { BatchPricing, OSPricing, OsType, SoftwarePricing, VMPrices } from "app/services/pricing";
 import { PoolPrice, PoolPriceOptions, PoolUtils, log } from "app/utils";
+import { catchError, filter, flatMap, map, share, take } from "rxjs/operators";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
 import { LocalFileStorage } from "./local-file-storage.service";
 import { VmSizeService } from "./vm-size.service";
-import { filter, map, flatMap, share, catchError, take } from "rxjs/operators";
 
 const pricingFilename = "pricing.json";
 

@@ -9,10 +9,11 @@ import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
 import { ListSelection } from "@batch-flask/core/list";
 import { DeleteSelectedItemsDialogComponent } from "@batch-flask/ui/list-and-show-layout";
 import { Subscription } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-filter";
 import { BrowseLayoutListDirective } from "./browse-layout-list";
+
 import "./browse-layout.scss";
-import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 export interface BrowseLayoutConfig {
     /**

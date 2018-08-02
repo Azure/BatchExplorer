@@ -6,9 +6,9 @@ import { RoleAssignment, RoleDefinition } from "app/models";
 import { ArmListGetter, TargetedDataCache } from "app/services/core";
 import { List } from "immutable";
 import { Observable, of } from "rxjs";
+import { flatMap, map, share, shareReplay, take } from "rxjs/operators";
 import { AccountService } from "../account.service";
 import { ArmHttpService } from "../arm-http.service";
-import { take, flatMap, shareReplay, map, share } from "rxjs/operators";
 
 interface RoleAssignmentListParams {
     resourceId: string;

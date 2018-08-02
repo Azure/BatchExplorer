@@ -6,12 +6,12 @@ import { Metric, MetricValue, MonitoringMetricList } from "app/models/monitoring
 import { AccountService } from "app/services/account.service";
 import { ArmHttpService } from "app/services/arm-http.service";
 import { ThemeService } from "app/services/themes";
+import { flatMap, map, share } from "rxjs/operators";
 import { CoreCountMetrics } from "./core-count-metrics";
 import { FailedTaskMetrics } from "./failed-task-metrics";
 import { MonitorChartTimeFrame, MonitoringMetricDefinition } from "./monitor-metrics-base";
 import { NodeStatesMetrics } from "./node-states-metrics";
 import { TaskStatesMetrics } from "./task-states-metrics";
-import { flatMap, share, map } from "rxjs/operators";
 
 /**
  * Wrapper around the http service so call the azure ARM monitor api.

@@ -6,9 +6,9 @@ import { NavigableRecord, PinnableEntity, PinnedEntityType } from "@batch-flask/
 import {
     BatchApplication, BlobContainer, Certificate, Job, JobSchedule, Pool,
 } from "app/models";
+import { map, share } from "rxjs/operators";
 import { AccountService } from "./account.service";
 import { LocalFileStorage } from "./local-file-storage.service";
-import { map, share } from "rxjs/operators";
 
 const pinnedTypeMap = new Map();
 pinnedTypeMap.set(PinnedEntityType.Application, BatchApplication);

@@ -2,7 +2,7 @@ import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatDialogRef } from "@angular/material";
 import { By } from "@angular/platform-browser";
-import {  of, throwError } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";

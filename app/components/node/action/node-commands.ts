@@ -6,8 +6,8 @@ import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Node, Pool } from "app/models";
 import { NodeService, PoolParams } from "app/services";
 import { EntityView } from "app/services/core";
-import { NodeConnectComponent } from "../connect";
 import { flatMap } from "rxjs/operators";
+import { NodeConnectComponent } from "../connect";
 
 @Injectable()
 export class NodeCommands extends EntityCommands<Node> {

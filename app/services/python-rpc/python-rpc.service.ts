@@ -8,9 +8,9 @@ import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } fro
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { SecureUtils, log } from "app/utils";
 import { PythonRpcServerProcess } from "client/python-process";
+import { catchError, first, flatMap, share } from "rxjs/operators";
 import { AccountService } from "../account.service";
 import { AdalService } from "../adal";
-import { catchError, first, flatMap, share } from "rxjs/operators";
 
 @Injectable()
 export class PythonRpcService {

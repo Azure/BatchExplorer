@@ -9,9 +9,9 @@ import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { RoleAssignment, RoleDefinition } from "app/models";
 import { ResourceAccessService } from "app/services";
+import { of } from "rxjs";
 import { click } from "test/utils/helpers";
 import { ResourcePermissionButtonComponent } from "./resource-permission-button.component";
-import { of } from "rxjs";
 
 const contributorRole = new RoleDefinition({
     id: "roleDefinitions/contributor",

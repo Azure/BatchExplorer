@@ -15,15 +15,14 @@ import {
     NG_ASYNC_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { Subscription, from } from "rxjs";
-
-import { FileOrDirectoryDto } from "app/models/dtos";
-import { DragUtils } from "app/utils";
-
 import { autobind } from "@batch-flask/core";
+import { FileOrDirectoryDto } from "app/models/dtos";
 import { FileSystemService } from "app/services";
-import "./file-or-directory-picker.scss";
+import { DragUtils } from "app/utils";
+import { Subscription, from } from "rxjs";
 import { map } from "rxjs/operators";
+
+import "./file-or-directory-picker.scss";
 
 @Component({
     selector: "bl-file-or-directory-picker",

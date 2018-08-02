@@ -1,14 +1,13 @@
 import { Injectable } from "@angular/core";
-import { List } from "immutable";
-import { BehaviorSubject, Observable, combineLatest } from "rxjs";
-
 import { AccountResource, VmSize } from "app/models";
 import { StringUtils, log } from "app/utils";
+import { List } from "immutable";
+import { BehaviorSubject, Observable, combineLatest } from "rxjs";
+import { filter, map, share, shareReplay, take } from "rxjs/operators";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
 import { computeUrl } from "./compute.service";
 import { GithubDataService } from "./github-data";
-import { shareReplay, map, filter, take, share } from "rxjs/operators";
 
 const excludedVmsSizesPath = "data/vm-sizes.json";
 

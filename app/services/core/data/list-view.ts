@@ -4,10 +4,10 @@ import { BehaviorSubject, Observable, combineLatest, of } from "rxjs";
 import { FilterMatcher } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { log } from "@batch-flask/utils";
+import { distinctUntilChanged, map, switchAll, takeUntil } from "rxjs/operators";
 import { GenericView, GenericViewConfig } from "./generic-view";
 import { ListGetter, ListResponse } from "./list-getter";
 import { ContinuationToken, ListOptions, ListOptionsAttributes } from "./list-options";
-import { distinctUntilChanged, map, takeUntil, switchAll } from "rxjs/operators";
 
 export interface ListViewConfig<TEntity, TParams> extends GenericViewConfig<TEntity, TParams> {
     getter: ListGetter<TEntity, TParams>;

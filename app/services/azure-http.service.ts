@@ -3,13 +3,13 @@ import { Injectable } from "@angular/core";
 import {
     Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response, URLSearchParams,
 } from "@angular/http";
-import { Observable, throwError, timer } from "rxjs";
 import { AccessToken, RetryableHttpCode, ServerError } from "@batch-flask/core";
 import { Subscription } from "app/models";
 import { Constants } from "common";
+import { Observable, throwError, timer } from "rxjs";
+import { catchError, flatMap, mergeMap, retryWhen, share } from "rxjs/operators";
 import { AdalService } from "./adal";
 import { BatchExplorerService } from "./batch-labs.service";
-import { flatMap, share, retryWhen, catchError, mergeMap } from "rxjs/operators";
 
 const apiVersionParams = "api-version";
 const apiVersion = Constants.ApiVersion.arm;

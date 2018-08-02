@@ -5,8 +5,8 @@ import { ClickableComponent } from "@batch-flask/ui";
 import { TagsComponent } from "@batch-flask/ui/tags";
 import { TagListComponent } from "@batch-flask/ui/tags/tag-list";
 import { List } from "immutable";
-import { click } from "test/utils/helpers";
 import { of } from "rxjs";
+import { click } from "test/utils/helpers";
 
 @Component({
     template: `<bl-tags [tags]="tags" [editable]="editable" [save]="save"></bl-tags>`,

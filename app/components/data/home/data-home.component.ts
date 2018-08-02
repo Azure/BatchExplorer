@@ -1,20 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { MatMenuTrigger } from "@angular/material";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, FilterBuilder, Property, autobind } from "@batch-flask/core";
 import { BrowseLayoutComponent, BrowseLayoutConfig } from "@batch-flask/ui/browse-layout";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
-
 import { BlobContainer } from "app/models";
 import { AutoStorageService, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
+import { of } from "rxjs";
+import { catchError, debounceTime, flatMap, map } from "rxjs/operators";
 import { FileGroupCreateFormComponent } from "../action";
 
-import { ActivatedRoute, Router } from "@angular/router";
 import "./data-home.scss";
-import { of } from "rxjs";
-import { debounceTime, flatMap, map, catchError } from "rxjs/operators";
 
 @Component({
     selector: "bl-data-home",

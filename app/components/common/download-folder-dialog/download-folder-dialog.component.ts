@@ -4,7 +4,7 @@ import { MatDialogRef } from "@angular/material";
 import { ElectronShell } from "@batch-flask/ui";
 import { List } from "immutable";
 import * as path from "path";
-import { AsyncSubject, Observable, of, forkJoin } from "rxjs";
+import { AsyncSubject, Observable, forkJoin, of } from "rxjs";
 
 import { autobind } from "@batch-flask/core";
 import { BackgroundTask, BackgroundTaskService } from "@batch-flask/ui/background-task";
@@ -13,8 +13,8 @@ import { SecureUtils } from "@batch-flask/utils";
 import { FileSystemService } from "app/services";
 import { FileNavigator } from "app/services/file";
 import * as minimatch from "minimatch";
+import { map, tap } from "rxjs/operators";
 import "./download-folder-dialog.scss";
-import { tap, map } from "rxjs/operators";
 
 @Component({
     selector: "bl-download-folder-dialog",

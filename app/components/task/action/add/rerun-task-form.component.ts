@@ -1,14 +1,14 @@
 import { Component } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
-import { Observable, of } from "rxjs";
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { TaskCreateDto } from "app/models/dtos";
 import { JobService, PoolService, TaskService } from "app/services";
 import { ObservableUtils } from "app/utils";
-import { TaskCreateBasicDialogComponent } from "./task-create-basic-dialog.component";
+import { Observable, of } from "rxjs";
 import { catchError } from "rxjs/operators";
+import { TaskCreateBasicDialogComponent } from "./task-create-basic-dialog.component";
 
 @Component({
     selector: "bl-rerun-task-form",

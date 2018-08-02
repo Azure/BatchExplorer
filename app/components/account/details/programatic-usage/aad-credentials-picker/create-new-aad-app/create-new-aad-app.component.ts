@@ -7,7 +7,7 @@ import { AccountResource, RoleDefinition } from "app/models";
 import { AADApplication, PasswordCredential, ServicePrincipal } from "app/models/ms-graph";
 import { ResourceAccessService } from "app/services";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
-import { Observable, forkJoin, from, of, timer, throwError } from "rxjs";
+import { Observable, forkJoin, from, of, throwError, timer } from "rxjs";
 import {
     catchError,
     concatMap, delay,

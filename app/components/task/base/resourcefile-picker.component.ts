@@ -5,16 +5,16 @@ import {
 import * as path from "path";
 import { Observable, Subscription } from "rxjs";
 
-import { ResourceFileAttributes } from "app/models";
-import { CloudPathUtils, DragUtils } from "app/utils";
-import { BlobUtilities } from "azure-storage";
-import * as moment from "moment";
 import { SecureUtils, UrlUtils } from "@batch-flask/utils";
+import { ResourceFileAttributes } from "app/models";
 import { FileSystemService, SettingsService } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { SharedAccessPolicy } from "app/services/storage/models";
+import { CloudPathUtils, DragUtils } from "app/utils";
+import { BlobUtilities } from "azure-storage";
+import * as moment from "moment";
+import { flatMap, share, tap } from "rxjs/operators";
 import "./resourcefile-picker.scss";
-import { flatMap, tap, share } from "rxjs/operators";
 
 export interface UploadResourceFileEvent {
     filename: string;

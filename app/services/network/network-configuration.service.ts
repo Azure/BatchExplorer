@@ -1,8 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
-
+import { first, flatMap } from "rxjs/operators";
 import { ArmHttpService } from "../arm-http.service";
-import { flatMap, first } from "rxjs/operators";
 
 export enum ProviderType {
     Network = "Network",

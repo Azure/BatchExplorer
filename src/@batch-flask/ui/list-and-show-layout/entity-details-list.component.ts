@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { Observable } from "rxjs";
-
 import { FilterBuilder } from "@batch-flask/core";
+import { Observable } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import "./entity-details-list.scss";
-import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 /**
  * Wrapper for a list that should be displayed in the detailed area

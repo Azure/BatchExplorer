@@ -11,9 +11,9 @@ import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { AccountListComponent } from "app/components/account/browse";
 import { AccountService, SubscriptionService } from "app/services";
+import { of } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { NoItemMockComponent } from "test/utils/mocks/components";
-import { of } from "rxjs";
 
 const sub1 = Fixtures.subscription.create({
     id: "/subsccriptions/sub-1",

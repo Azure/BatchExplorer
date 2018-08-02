@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
 import { RequestOptions, URLSearchParams } from "@angular/http";
+import { StorageAccount } from "app/models";
 import { List } from "immutable";
 import { Observable } from "rxjs";
-import { StorageAccount } from "app/models";
+import { flatMap, map, share } from "rxjs/operators";
 import { AzureHttpService } from "./azure-http.service";
 import { SubscriptionService } from "./subscription.service";
-import { map, flatMap, share } from "rxjs/operators";
 
 function getSubscriptionIdFromAccountId(accountId: string) {
     const regex = /subscriptions\/(.*)\/resourceGroups/;

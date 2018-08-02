@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
-import { List } from "immutable";
 import { RoleAssignment, RoleDefinition } from "app/models";
 import { ResourceAccessService } from "app/services";
+import { List } from "immutable";
 import { Observable, of } from "rxjs";
 import { flatMap } from "rxjs/operators";
 
@@ -74,7 +74,7 @@ export class ResourcePermissionButtonComponent implements OnChanges {
             obs = this._deleteAssignment().pipe(
                 flatMap(() => {
                     return this.resourceAccessService.createAssignment(this.resourceId, this.principalId, role.id);
-                })
+                }),
             );
         }
 

@@ -4,11 +4,11 @@ import { Location, ResourceGroup, Subscription, TenantDetails } from "app/models
 import { Constants, StringUtils, log } from "app/utils";
 import { List, Set } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable, combineLatest, empty } from "rxjs";
+import { expand, filter, first, flatMap, map, reduce, shareReplay } from "rxjs/operators";
 import { AdalService } from "./adal";
 import { AzureHttpService } from "./azure-http.service";
 import { SettingsService } from "./settings.service";
 import { TenantDetailsService } from "./tenant-details.service";
-import { flatMap, map, shareReplay, expand, reduce, filter, first } from "rxjs/operators";
 
 @Injectable()
 export class SubscriptionService {

@@ -1,5 +1,5 @@
-import { EntityCommand, EntityCommandNotify } from "./entity-command";
 import { of } from "rxjs";
+import { EntityCommand, EntityCommandNotify } from "./entity-command";
 
 interface MyModel {
     id: string;
