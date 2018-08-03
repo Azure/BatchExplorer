@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?><xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="Batch" datatype="plaintext" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="duration-picker.unit.unlimited">
+        <source>Unlimited</source>
+        <target state="translated">Неограниченно</target>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.days">
+        <source>Days</source>
+        <target state="translated">Дни</target>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.minutes">
+        <source>Minutes</source>
+        <target state="translated">Минуты</target>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.hours">
+        <source>Hours</source>
+        <target state="translated">Часы</target>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.seconds">
+        <source>Seconds</source>
+        <target state="translated">Секунды</target>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.custom">
+        <source>Custom (ISO format)</source>
+      </trans-unit>
+      <trans-unit id="main-navigation.dashboard">
+        <source>Dash</source>
+      </trans-unit>
+      <trans-unit id="main-navigation.jobs">
+        <source>Jobs</source>
+        <target state="translated">Задания</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.jobschedules">
+        <source>Job schedules</source>
+        <target state="translated">Расписания заданий</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.pools">
+        <source>Pools</source>
+        <target state="translated">Пулы</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.packages">
+        <source>Packages</source>
+        <target state="translated">Пакеты</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.certificates">
+        <source>Certificates</source>
+        <target state="translated">Сертификаты</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.data">
+        <source>Data</source>
+        <target state="translated">Данные</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.gallery">
+        <source>Gallery</source>
+      </trans-unit>
+      <trans-unit id="main-navigation.profile">
+        <source>Profile</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

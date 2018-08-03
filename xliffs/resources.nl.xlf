@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?><xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="Batch" datatype="plaintext" source-language="en" target-language="nl">
+    <body>
+      <trans-unit id="duration-picker.unit.unlimited">
+        <source>Unlimited</source>
+        <target state="translated">Onbeperkt</target>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.days">
+        <source>Days</source>
+        <target state="translated">Dagen</target>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.minutes">
+        <source>Minutes</source>
+        <target state="translated">Minuten</target>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.hours">
+        <source>Hours</source>
+        <target state="translated">Uur</target>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.seconds">
+        <source>Seconds</source>
+        <target state="translated">Seconden</target>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.custom">
+        <source>Custom (ISO format)</source>
+      </trans-unit>
+      <trans-unit id="main-navigation.dashboard">
+        <source>Dash</source>
+      </trans-unit>
+      <trans-unit id="main-navigation.jobs">
+        <source>Jobs</source>
+        <target state="translated">Taken</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.jobschedules">
+        <source>Job schedules</source>
+        <target state="translated">Taakplanningen</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.pools">
+        <source>Pools</source>
+        <target state="translated">Groepen</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.packages">
+        <source>Packages</source>
+        <target state="translated">Pakketten</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.certificates">
+        <source>Certificates</source>
+        <target state="translated">Certificaten</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.data">
+        <source>Data</source>
+        <target state="translated">Gegevens</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.gallery">
+        <source>Gallery</source>
+        <target state="translated">Galerie</target>
+      </trans-unit>
+      <trans-unit id="main-navigation.profile">
+        <source>Profile</source>
+        <target state="translated">Profiel</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
