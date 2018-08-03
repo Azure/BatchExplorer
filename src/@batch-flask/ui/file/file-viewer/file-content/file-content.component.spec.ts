@@ -28,6 +28,14 @@ describe("FileContentComponent", () => {
                 BatchFlaskSettingsService,
             ],
         });
+        const settingsService: BatchFlaskSettingsService = TestBed.get(BatchFlaskSettingsService);
+        settingsService.updateSettings({
+            fileTypes: {
+                log: ["log"],
+                image: ["png"],
+                code: ["py"],
+            },
+        });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-file-content"));

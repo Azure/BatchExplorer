@@ -37,6 +37,7 @@ export class FileContentComponent implements OnChanges {
 
     public openAs(type: FileType) {
         this.fileType = type;
+        this.changeDetector.markForCheck();
     }
 
     private _findFileType() {
@@ -51,6 +52,7 @@ export class FileContentComponent implements OnChanges {
             for (const ext of extensions) {
                 if (name.endsWith(`.${ext}`)) {
                     this.fileType = type as any;
+                    this.changeDetector.markForCheck();
                     return;
                 }
             }

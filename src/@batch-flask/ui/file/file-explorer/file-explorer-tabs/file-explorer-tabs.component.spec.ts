@@ -5,7 +5,7 @@ import { MouseButton } from "@batch-flask/core";
 import { ClickableComponent, File } from "@batch-flask/ui";
 import { click, mouseup } from "test/utils/helpers";
 import { ContextMenuServiceMock, MockFileNavigator } from "test/utils/mocks";
-import { CurrentNode, FileExplorerWorkspace } from "..";
+import { CurrentNode, FileExplorerWorkspace } from "../file-explorer-workspace";
 import { FileExplorerTabsComponent } from "./file-explorer-tabs.component";
 
 @Component({
