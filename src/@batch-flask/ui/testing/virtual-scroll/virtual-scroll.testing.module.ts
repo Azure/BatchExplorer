@@ -24,8 +24,6 @@ export class VirtualScrollTailMockComponent {
     @Input() public height: number;
 }
 
-export const virtualScrollMockComponents = [VirtualScrollMockComponent, VirtualScrollTailMockComponent];
-
 @NgModule({
     declarations: [
         VirtualScrollMockComponent,

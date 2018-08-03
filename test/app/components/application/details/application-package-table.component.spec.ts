@@ -4,17 +4,17 @@ import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Property } from "@batch-flask/core";
+import { ContextMenuService } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { TableTestingModule } from "@batch-flask/ui/testing";
 import { ApplicationPackageTableComponent } from "app/components/application/details";
 import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
-import * as Fixtures from "test/fixture";
-import { NoItemMockComponent, TableTestingModule } from "test/utils/mocks/components";
-
-import { ContextMenuService } from "@batch-flask/ui";
-import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { of } from "rxjs";
+import * as Fixtures from "test/fixture";
+import { NoItemMockComponent } from "test/utils/mocks/components";
 
 const appWithPackagesId: string = "app-2";
 const appWithoutPackagesId: string = "app-1";
