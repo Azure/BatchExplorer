@@ -2,7 +2,7 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { SelectModule, FileSystemService } from "@batch-flask/ui";
+import { FileSystemService, SelectModule } from "@batch-flask/ui";
 import { PermissionService } from "@batch-flask/ui/permission";
 
 import { ButtonsModule } from "@batch-flask/ui/buttons";

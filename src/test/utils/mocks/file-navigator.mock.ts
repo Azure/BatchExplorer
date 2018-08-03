@@ -1,4 +1,4 @@
-import { DataCache, BasicListGetter } from "@batch-flask/core";
+import { BasicListGetter, DataCache } from "@batch-flask/core";
 import { File, FileLoader, FileNavigator } from "@batch-flask/ui";
 import { Observable, of } from "rxjs";
 

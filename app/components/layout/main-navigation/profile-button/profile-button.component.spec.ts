@@ -8,8 +8,8 @@ import {
     ClickableComponent,
     ElectronRemote,
     ElectronShell,
-    UpdateStatus,
     FileSystemService,
+    UpdateStatus,
 } from "@batch-flask/ui";
 import { AdalService, BatchExplorerService } from "app/services";
 import { BehaviorSubject } from "rxjs";

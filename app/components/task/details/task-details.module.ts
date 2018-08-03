@@ -6,13 +6,13 @@ import { TaskBrowseModule } from "app/components/task/browse";
 import { JobActionModule } from "../../job/action";
 import { TaskBaseModule } from "../base";
 import { TaskOutputsComponent } from "./output";
+import { TaskResourceFilesComponent } from "./resource-files";
 import { SubTaskDisplayListComponent, SubTaskPropertiesComponent } from "./sub-tasks";
 import { TaskConfigurationComponent } from "./task-configuration.component";
 import { TaskDefaultComponent } from "./task-default.component";
 import { TaskDependencyBrowserComponent } from "./task-dependency-browser";
 import { TaskDetailsComponent } from "./task-details.component";
 import { TaskErrorDisplayComponent } from "./task-error-display.component";
-import { TaskResourceFilesComponent } from "./task-resource-files.component";
 import { TaskSubTasksTabComponent } from "./task-sub-tasks-tab.component";
 import { TaskTimelineComponent, TaskTimelineStateComponent } from "./task-timeline";
 

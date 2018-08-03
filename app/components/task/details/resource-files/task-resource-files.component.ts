@@ -27,7 +27,10 @@ export class TaskResourceFilesComponent implements OnChanges {
         return task.blobSource;
     }
 
-    public openResourceFile(resourceFile: ResourceFile) {
-        this.cloudFileService.openFile(resourceFile.blobSource);
+    public openResourceFile(id: string) {
+        const resourceFile = this.resourceFiles.filter(x => x.id === id).first();
+        if (resourceFile) {
+            this.cloudFileService.openFile(resourceFile.blobSource);
+        }
     }
 }

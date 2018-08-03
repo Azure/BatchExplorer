@@ -17,7 +17,6 @@ import {
     TableHeadComponent,
 } from "@batch-flask/ui/table";
 import { TableRowRenderComponent } from "@batch-flask/ui/table/table-row-render";
-import { VirtualScrollMockModule } from "test/utils/mocks/components/virtual-scroll.component.mock";
 
 const privateComponents = [
     TableRowRenderComponent,
@@ -44,7 +43,7 @@ const publicComponents = [
         ContextMenuModule,
 
         // Mock modules
-        VirtualScrollMockModule,
+        VirtualScrollTestingModule,
     ],
     exports: publicComponents,
     declarations: [...privateComponents, publicComponents],
