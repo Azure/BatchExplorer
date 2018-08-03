@@ -2,7 +2,8 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
-import { ButtonsModule, CloudFileService, NoItemComponent } from "@batch-flask/ui";
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { ButtonsModule, CloudFileService, I18nUIModule, NoItemComponent } from "@batch-flask/ui";
 import { TableTestingModule } from "@batch-flask/ui/testing";
 import { Task } from "app/models";
 import { click } from "test/utils/helpers";
@@ -27,7 +28,14 @@ describe("TaskResourceFilesComponent", () => {
             openFile: jasmine.createSpy("openFile"),
         };
         TestBed.configureTestingModule({
-            imports: [TableTestingModule, ButtonsModule, ElectronTestingModule, RouterTestingModule],
+            imports: [
+                TableTestingModule,
+                ButtonsModule,
+                ElectronTestingModule,
+                RouterTestingModule,
+                I18nTestingModule,
+                I18nUIModule,
+            ],
             declarations: [TaskResourceFilesComponent, TestComponent, NoItemComponent],
             providers: [
                 { provide: CloudFileService, useValue: cloudFileServiceSpy },
@@ -42,7 +50,7 @@ describe("TaskResourceFilesComponent", () => {
     it("it diplay no  file when no resource files", () => {
         testComponent.task = new Task({ id: "task-no-files" });
         fixture.detectChanges();
-        expect(de.nativeElement.textContent).toContain("This task contains no resource files");
+        expect(de.nativeElement.textContent).toContain("task-resource-files.none");
     });
 
     describe("when there is files", () => {
@@ -60,7 +68,7 @@ describe("TaskResourceFilesComponent", () => {
         it("it diplay the files", () => {
             const rows = de.queryAll(By.css("bl-row-render"));
             expect(rows.length).toBe(3);
-            expect(de.nativeElement.textContent).not.toContain("This task contains no resource files");
+            expect(de.nativeElement.textContent).not.toContain("task-resource-files.none");
 
             expect(rows[0].nativeElement.textContent).toContain("http://batch.blob.net.windows/some/file/foo.txt");
             expect(rows[1].nativeElement.textContent).toContain("http://batch.blob.net.windows/some/file/bar.png");
