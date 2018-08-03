@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
 import { ServerError, autobind } from "@batch-flask/core";
-import { ElectronShell } from "@batch-flask/ui";
-import { clipboard } from "electron";
+import { ClipboardService, ElectronShell } from "@batch-flask/ui";
 import * as moment from "moment";
 import * as path from "path";
 
@@ -32,6 +31,7 @@ export class NodeConnectComponent implements OnInit {
     public loading: boolean = false;
     public credentials: AddNodeUserAttributes;
     public publicKeyFile: string;
+    public passwordCopied: boolean = false;
 
     // NOTE: using linux does not necessarily mean using SSH! (user can still use password)
     public linux = false;
@@ -75,16 +75,17 @@ export class NodeConnectComponent implements OnInit {
         private shell: ElectronShell,
         private changeDetector: ChangeDetectorRef,
         private fs: FileSystemService,
+        private clipboardService: ClipboardService,
     ) { }
 
     public ngOnInit() {
         this.credentials = {
             name: this.settingsService.settings["node-connect.default-username"],
-            password: "",
             expiryTime: null,
             isAdmin: true,
             sshPublicKey: "",
         };
+        this.generatePassword();
         this.publicKeyFile = path.join(this.fs.commonFolders.home, ".ssh", "id_rsa.pub");
 
         this.linux = PoolUtils.isLinux(this.pool);
@@ -106,17 +107,21 @@ export class NodeConnectComponent implements OnInit {
     }
 
     @autobind()
+    public generatePassword(): void {
+        this.credentials.password = SecureUtils.generateWindowsPassword();
+    }
+
+    @autobind()
     public autoConnect(): Observable<any> {
         this.loading = true;
+
+        if (!this.credentials.password) {
+            this.generatePassword();
+        }
 
         const credentials = {...this.credentials};
         if (!credentials.expiryTime) {
             credentials.expiryTime = moment().add(moment.duration({days: 1})).toDate();
-        }
-
-        // generate a password if the user didn't provide one
-        if (!credentials.password) {
-            credentials.password = SecureUtils.generateWindowsPassword();
         }
 
         if (this.linux) {
@@ -132,7 +137,9 @@ export class NodeConnectComponent implements OnInit {
                 next: (pid) => {
                     // if using password, save it to clipboard
                     if (!this.usingSSHKeys) {
-                        clipboard.writeText(credentials.password);
+                        this.clipboardService.writeText(credentials.password);
+                        this.passwordCopied = true;
+                        this.changeDetector.markForCheck();
                     }
                     this.loading = false;
                     this.error = null;
@@ -257,7 +264,9 @@ export class NodeConnectComponent implements OnInit {
                 this.error = null;
 
                 // save password to clipboard
-                clipboard.writeText(credentials.password);
+                this.clipboardService.writeText(credentials.password);
+                this.passwordCopied = true;
+                this.changeDetector.markForCheck();
 
                 // create and launch the rdp program
                 return this.nodeConnectService.saveRdpFile(this.connectionSettings, this.credentials, this.node.id);
