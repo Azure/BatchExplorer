@@ -2,16 +2,16 @@ import { Injectable } from "@angular/core";
 
 @Injectable()
 export class ClipboardService {
-    private _clipbard: Electron.Clipboard;
+    private _clipboard: Electron.Clipboard;
     constructor() {
-        this._clipbard = require("electron").clipboard;
+        this._clipboard = require("electron").clipboard;
     }
 
     public writeText(text: string) {
-        this._clipbard.writeText(text);
+        this._clipboard.writeText(text);
     }
 
     public writeHTML(html: string) {
-        this._clipbard.writeHTML(html);
+        this._clipboard.writeHTML(html);
     }
 }

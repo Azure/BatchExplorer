@@ -4,6 +4,7 @@
 ### Bug fixes:
 * Task outputs is broken when not using autostorage account [\#1522](https://github.com/Azure/BatchExplorer/issues/1522)
 * Cannot connect to Windows Cloud Service node [\#1529](https://github.com/Azure/BatchExplorer/issues/1529)
+* Users should be able to see password used to connect to remote node [\#1532](https://github.com/Azure/BatchExplorer/issues/1532)
 
 ### Other
 * Task properties pool and node should be links [\#1523](https://github.com/Azure/BatchExplorer/issues/1523)
@@ -34,7 +35,6 @@
 * Uncaught exception for container pools with no container images and/or registries specified [\#1512](https://github.com/Azure/BatchExplorer/issues/1512)
 * Task timeline doesn't cancel requests when leaving component [\#1472](https://github.com/Azure/BatchExplorer/issues/1472)
 * Pool from Windows managed image displays as Linux [\#1436](https://github.com/Azure/BatchExplorer/issues/1436)
-
 
 ### Accessibility:
 * Server error component is not keyboard accessible [\#1426](https://github.com/Azure/BatchExplorer/issues/1426)
