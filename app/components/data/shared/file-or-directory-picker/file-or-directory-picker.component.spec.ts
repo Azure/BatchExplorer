@@ -2,10 +2,9 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule, By } from "@angular/platform-browser";
-
 import { EditableTableColumnComponent, EditableTableComponent } from "@batch-flask/ui/form/editable-table";
-import { FileSystemService } from "app/services";
 import { FileOrDirectoryPickerComponent } from "./file-or-directory-picker.component";
+import { FileSystemService } from "@batch-flask/ui";
 
 @Component({
     template: `<bl-file-or-directory-picker [formControl]="paths"></bl-file-or-directory-picker>`,

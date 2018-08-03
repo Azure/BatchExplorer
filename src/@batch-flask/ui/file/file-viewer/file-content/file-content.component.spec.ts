@@ -1,8 +1,8 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { BatchFlaskSettingsService } from "@batch-flask/ui";
 import { click } from "test/utils/helpers";
-import { MockSettingsService } from "test/utils/mocks";
 import { FileContentComponent } from "./file-content.component";
 
 @Component({
@@ -25,7 +25,7 @@ describe("FileContentComponent", () => {
             declarations: [FileContentComponent, TestComponent],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
-                MockSettingsService.asProvider(),
+                BatchFlaskSettingsService,
             ],
         });
         fixture = TestBed.createComponent(TestComponent);
