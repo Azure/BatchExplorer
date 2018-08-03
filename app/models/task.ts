@@ -3,12 +3,12 @@ import * as moment from "moment";
 
 import { ListProp, Model, Prop, Record } from "@batch-flask/core";
 import { AffinityInformation } from "./affinity-information";
-import { ApplicationPackageReference } from "./application-package-reference";
+import { ApplicationPackageReference, ApplicationPackageReferenceAttributes } from "./application-package-reference";
 import { ComputeNodeInformation } from "./compute-node-information";
 import { TaskContainerSettings } from "./container-setup";
 import { MultiInstanceSettings } from "./multi-instance-settings";
-import { NameValuePair } from "./name-value-pair";
-import { ResourceFile } from "./resource-file";
+import { NameValuePair, NameValuePairAttributes } from "./name-value-pair";
+import { ResourceFile, ResourceFileAttributes } from "./resource-file";
 import { TaskConstraints } from "./task-constraints";
 import { TaskDependencies } from "./task-dependencies";
 import { TaskExecutionInformation } from "./task-execution-information";
@@ -31,8 +31,8 @@ export interface TaskAttributes {
     commandLine: string;
     runElevated: boolean;
     exitConditions: TaskExitConditions;
-    resourceFiles: ResourceFile[];
-    environmentSettings: NameValuePair[];
+    resourceFiles: ResourceFileAttributes[];
+    environmentSettings: NameValuePairAttributes[];
     affinityInfo: AffinityInformation;
     containerSettings: TaskContainerSettings;
     constraints: TaskConstraints;
@@ -41,7 +41,7 @@ export interface TaskAttributes {
     multiInstanceSettings: MultiInstanceSettings;
     stats: any; // TaskStatistics
     dependsOn: TaskDependencies;
-    applicationPackageReferences: ApplicationPackageReference[];
+    applicationPackageReferences: ApplicationPackageReferenceAttributes[];
 }
 /**
  * Class for displaying Batch task information.

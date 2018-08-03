@@ -30,6 +30,7 @@ export class FileViewerComponent implements OnChanges {
     public filename: string;
     public file: File;
     public fileNotFound = false;
+    public forbidden = false;
     public contentSize: string = "-";
     public lastModified: string = "-";
     public downloadEnabled: boolean;
@@ -103,6 +104,7 @@ export class FileViewerComponent implements OnChanges {
         this.contentSize = "-";
         this.lastModified = "-";
         this.fileNotFound = false;
+        this.forbidden = false;
         const obs = this.fileLoader.getProperties(forceNew);
         obs.subscribe({
             next: (file: File) => {
@@ -114,8 +116,11 @@ export class FileViewerComponent implements OnChanges {
             error: (error: ServerError) => {
                 if (error.status === HttpCode.NotFound) {
                     this.fileNotFound = true;
-                    this.changeDetector.markForCheck();
                 }
+                if(error.status === HttpCode.Forbidden) {
+                    this.forbidden = true;
+                }
+                this.changeDetector.markForCheck();
             },
         });
 

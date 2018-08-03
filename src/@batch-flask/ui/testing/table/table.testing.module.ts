@@ -4,10 +4,10 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
-
-import { LoadingModule } from "@batch-flask/ui";
+import { BreadcrumbModule } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuModule } from "@batch-flask/ui/context-menu";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";
+import { LoadingModule } from "@batch-flask/ui/loading";
 import {
     TableCellDefDirective,
     TableColumnComponent,
@@ -17,6 +17,7 @@ import {
     TableHeadComponent,
 } from "@batch-flask/ui/table";
 import { TableRowRenderComponent } from "@batch-flask/ui/table/table-row-render";
+import { VirtualScrollTestingModule } from "@batch-flask/ui/testing/virtual-scroll";
 
 const privateComponents = [
     TableRowRenderComponent,
@@ -41,6 +42,7 @@ const publicComponents = [
         MaterialModule,
         LoadingModule,
         ContextMenuModule,
+        BreadcrumbModule,
 
         // Mock modules
         VirtualScrollTestingModule,

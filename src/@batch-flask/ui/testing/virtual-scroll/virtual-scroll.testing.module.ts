@@ -36,6 +36,6 @@ export const virtualScrollMockComponents = [VirtualScrollMockComponent, VirtualS
         VirtualScrollTailMockComponent,
     ],
 })
-export class VirtualScrollMockModule {
+export class VirtualScrollTestingModule {
 
 }
