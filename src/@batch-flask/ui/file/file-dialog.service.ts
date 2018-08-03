@@ -18,20 +18,25 @@ export class FileDialogService {
 
     public openFile(url: string) {
         const ref = this.dialogService.open(FileDialogViewerComponent);
-        ref.componentInstance.fileLoader = new FileLoader({
-            filename: "foo.txt",
+        ref.componentInstance.fileLoader = this.getFileLoader(url);
+    }
+
+    public getFileLoader(url: string) {
+        const filename = this._getFilenameFromUrl(url);
+        return new FileLoader({
+            filename,
             source: "url",
             fs: this.fs,
-            properties: () => this._getFileProperties(url),
+            properties: () => this._getFileProperties(url, filename),
             content: (options: FileLoadOptions) => this._getFileContent(url),
         });
     }
 
-    private _getFileProperties(url: string): Observable<File> {
+    private _getFileProperties(url: string, filename: string): Observable<File> {
         return this.http.head(url, { observe: "response" }).pipe(
             map((response: HttpResponse<void>) => {
                 return new File({
-                    name: "foo.txt",
+                    name: filename,
                     url: url,
                     isDirectory: false,
                     properties: {
@@ -58,5 +63,15 @@ export class FileDialogService {
             bytesRead: buffer.byteLength,
         });
         return { content: new TextDecoder(encoding || "utf-8").decode(buffer) };
+    }
+
+    private _getFilenameFromUrl(url: string) {
+        const parsedUrl = new URL(url);
+        const filename = parsedUrl.pathname;
+        if (filename[0] === "/") {
+            return filename.slice(1);
+        } else {
+            return filename;
+        }
     }
 }

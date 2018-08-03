@@ -1,6 +1,7 @@
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ElementRef,
     Input,
@@ -64,6 +65,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
     private _lastScroll: number = 0;
 
     constructor(
+        private changeDetector: ChangeDetectorRef,
         private scrollableService: ScrollableService,
         private element: ElementRef) {
     }
@@ -110,6 +112,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
 
     public toggleFollowLog() {
         this.followingLog = !this.followingLog;
+        this.changeDetector.markForCheck();
         if (this.followingLog) {
             this._scrollToBottom();
         }
@@ -118,6 +121,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
     public handleScroll(event) {
         if (this._lastScroll > event.target.scrollTop) {
             this.followingLog = false;
+            this.changeDetector.markForCheck();
         }
         this._lastScroll = event.target.scrollTop;
     }
@@ -137,6 +141,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
 
     private _updateFileContent() {
         this.fileTooLarge = false;
+        this.changeDetector.markForCheck();
         this.currentSubscription = this.fileLoader.getProperties(true).subscribe({
             next: (file: File) => {
                 this._processProperties(file);
@@ -190,6 +195,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
         } else if (contentLength !== this.lastContentLength && !this._loadingNext) {
             this._loadUpTo(contentLength);
         }
+        this.changeDetector.markForCheck();
     }
 
     private _processFileContent(result: any, newContentLength: number) {
@@ -205,6 +211,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
         this.loading = false;
         this._loadingNext = false;
         this.currentSubscription = null;
+        this.changeDetector.markForCheck();
     }
 
     private _processError(e: ServerError) {
@@ -225,6 +232,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
         }
 
         log.error(`[FileContent.component] Error is ${e.status}`, e);
+        this.changeDetector.markForCheck();
     }
 
     private _scrollToBottom() {
