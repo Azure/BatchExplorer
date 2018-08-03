@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    Output,
+} from "@angular/core";
 import { HttpCode, ServerError, autobind } from "@batch-flask/core";
 import { ElectronRemote, ElectronShell } from "@batch-flask/ui/electron";
 import { FileLoader } from "@batch-flask/ui/file/file-loader";

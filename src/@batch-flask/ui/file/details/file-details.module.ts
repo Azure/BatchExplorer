@@ -6,7 +6,7 @@ import { CardModule } from "@batch-flask/ui/card";
 import { EditorModule } from "@batch-flask/ui/editor";
 import { LoadingModule } from "@batch-flask/ui/loading";
 import { CodeFileViewerComponent } from "./code-file-viewer";
-import { FileContentComponent } from "./file-content.component";
+import { FileContentComponent } from "./file-content";
 import { FileDetailsViewComponent } from "./file-details-view";
 import { FileTooLargeComponent } from "./file-too-large";
 import { ImageFileViewerComponent } from "./image-file-viewer";

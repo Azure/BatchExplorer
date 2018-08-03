@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild } from "@angular/core";
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    Input,
+    OnChanges,
+    OnDestroy,
+    ViewChild,
+} from "@angular/core";
 import { HttpCode, ServerError } from "@batch-flask/core";
 import { FileLoader } from "@batch-flask/ui/file/file-loader";
 import { File } from "@batch-flask/ui/file/file.model";
@@ -14,6 +23,7 @@ const maxSize = 10000000; // 10MB
 @Component({
     selector: "bl-log-file-viewer",
     templateUrl: "log-file-viewer.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewInit {
     @Input() public fileLoader: FileLoader;
