@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "@batch-flask/core";
+import { Model, Prop, Record } from "@batch-flask/core/record";
 
 export interface FakeModelAttributes {
     id: string;

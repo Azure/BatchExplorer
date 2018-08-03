@@ -28,7 +28,6 @@ export class TaskResourceFilesComponent implements OnChanges {
     }
 
     public openResourceFile(resourceFile: ResourceFile) {
-        console.log("OPen", resourceFile.blobSource);
         this.fileDialogService.openFile(resourceFile.blobSource);
     }
 }
