@@ -1,13 +1,12 @@
-import { List, OrderedSet } from "immutable";
-import { BehaviorSubject, Observable, combineLatest, of } from "rxjs";
-
 import { FilterMatcher } from "@batch-flask/core/filter-builder";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { log } from "@batch-flask/utils";
+import { List, OrderedSet } from "immutable";
+import { BehaviorSubject, Observable, combineLatest, of } from "rxjs";
 import { distinctUntilChanged, map, switchAll, takeUntil } from "rxjs/operators";
-import { GenericView, GenericViewConfig } from "./generic-view";
-import { ListGetter, ListResponse } from "./list-getter";
-import { ContinuationToken, ListOptions, ListOptionsAttributes } from "./list-options";
+import { GenericView, GenericViewConfig } from "../generic-view";
+import { ListGetter, ListResponse } from "../list-getter";
+import { ContinuationToken, ListOptions, ListOptionsAttributes } from "../list-options";
 
 export interface ListViewConfig<TEntity, TParams> extends GenericViewConfig<TEntity, TParams> {
     getter: ListGetter<TEntity, TParams>;

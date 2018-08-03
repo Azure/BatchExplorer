@@ -4,8 +4,8 @@ import { ServerError } from "@batch-flask/core/server-error";
 import { log } from "@batch-flask/utils";
 import { Observable, of, throwError } from "rxjs";
 import { catchError, map, share } from "rxjs/operators";
-import { DataCache } from "./data-cache";
-import { GenericGetter, GenericGetterConfig } from "./generic-getter";
+import { DataCache } from "../data-cache";
+import { GenericGetter, GenericGetterConfig } from "../generic-getter";
 
 export interface FetchOptions {
     cached?: boolean;

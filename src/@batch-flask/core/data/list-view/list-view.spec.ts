@@ -3,7 +3,7 @@ import { LoadingStatus } from "@batch-flask/ui/loading";
 import { List, OrderedSet } from "immutable";
 import { from, of } from "rxjs";
 import { flatMap } from "rxjs/operators";
-import { FakeModel } from "./fake-model";
+import { FakeModel } from "../test/fake-model";
 
 const firstPage = [
     { id: "1", state: "active", name: "Fake1" },

@@ -2,8 +2,8 @@ import { Map } from "immutable";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 
 import { ObjectUtils, SecureUtils } from "@batch-flask/utils";
-import { PollService } from "./poll.service";
-import { QueryCache } from "./query-cache";
+import { PollService } from "../poll.service";
+import { QueryCache } from "../query-cache";
 
 export class DataCacheTracker {
 

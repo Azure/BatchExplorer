@@ -1,5 +1,5 @@
-import { DataCache } from "app/services/core/data-cache";
 import { Map, Record } from "immutable";
+import { DataCache } from "./data-cache";
 
 // tslint:disable-next-line:variable-name
 const FakeRecord = Record({

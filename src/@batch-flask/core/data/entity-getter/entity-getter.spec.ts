@@ -1,7 +1,7 @@
 import { BasicEntityGetter, DataCache } from "@batch-flask/core";
-import { EntityGetter } from "app/services/core/data/entity-getter";
 import { of } from "rxjs";
-import { FakeModel, FakeParams } from "./fake-model";
+import { FakeModel, FakeParams } from "../test/fake-model";
+import { EntityGetter } from "./entity-getter";
 
 const data = [
     { id: "1", state: "active", name: "Fake1" },

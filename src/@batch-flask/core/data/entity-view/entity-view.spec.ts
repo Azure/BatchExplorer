@@ -1,7 +1,7 @@
 import { fakeAsync, tick } from "@angular/core/testing";
 import { BasicEntityGetter, DataCache, EntityGetter, EntityView, ServerError } from "@batch-flask/core";
 import { from, throwError } from "rxjs";
-import { FakeModel, FakeParams } from "./fake-model";
+import { FakeModel, FakeParams } from "../test/fake-model";
 
 const data = [
     { id: "1", state: "active", name: "Fake1" },

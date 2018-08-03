@@ -1,6 +1,5 @@
 import { Map, Record } from "immutable";
-
-import { TargetedDataCache } from "app/services/core/targeted-data-cache";
+import { TargetedDataCache } from "./targeted-data-cache";
 
 // tslint:disable:variable-name
 const FakeRecord = Record({
