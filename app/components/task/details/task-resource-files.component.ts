@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/core";
 import { List } from "immutable";
 
+import { FileDialogService } from "@batch-flask/ui";
 import { ResourceFile, Task } from "app/models";
 
 @Component({
@@ -13,6 +14,9 @@ export class TaskResourceFilesComponent implements OnChanges {
 
     public resourceFiles: List<ResourceFile> = List([]);
 
+    constructor(private fileDialogService: FileDialogService) {
+
+    }
     public ngOnChanges(changes) {
         if (changes.task && this.task) {
             this.resourceFiles = this.task.resourceFiles;
@@ -25,5 +29,6 @@ export class TaskResourceFilesComponent implements OnChanges {
 
     public openResourceFile(resourceFile: ResourceFile) {
         console.log("OPen", resourceFile.blobSource);
+        this.fileDialogService.openFile(resourceFile.blobSource);
     }
 }

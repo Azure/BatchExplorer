@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import { HttpCode, ServerError, autobind } from "@batch-flask/core";
 import { ElectronRemote, ElectronShell } from "@batch-flask/ui/electron";
 import { FileLoader } from "@batch-flask/ui/file/file-loader";
@@ -12,6 +12,7 @@ import "./file-details-view.scss";
 @Component({
     selector: "bl-file-details-view",
     templateUrl: "file-details-view.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileDetailsViewComponent implements OnChanges {
     @Input() public fileLoader: FileLoader;
@@ -28,6 +29,7 @@ export class FileDetailsViewComponent implements OnChanges {
     constructor(
         private shell: ElectronShell,
         private remote: ElectronRemote,
+        private changeDetector: ChangeDetectorRef,
         private notificationService: NotificationService) {
         this.downloadEnabled = true;
     }
@@ -99,10 +101,12 @@ export class FileDetailsViewComponent implements OnChanges {
                 this.file = file;
                 this.contentSize = prettyBytes(file.properties.contentLength);
                 this.lastModified = DateUtils.prettyDate(file.properties.lastModified);
+                this.changeDetector.markForCheck();
             },
             error: (error: ServerError) => {
                 if (error.status === HttpCode.NotFound) {
                     this.fileNotFound = true;
+                    this.changeDetector.markForCheck();
                 }
             },
         });
