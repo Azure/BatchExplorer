@@ -5,12 +5,12 @@ import { FileSystemService } from "@batch-flask/ui/electron";
 import { EncodingUtils } from "@batch-flask/utils";
 import { Observable, from } from "rxjs";
 import { flatMap, map, share } from "rxjs/operators";
-import { FileDialogViewerComponent } from "./file-dialog-viewer";
 import { FileLoadOptions, FileLoadResult, FileLoader } from "./file-loader";
+import { FileDialogViewerComponent } from "./file-viewer";
 import { File } from "./file.model";
 
 @Injectable()
-export class FileDialogService {
+export class CloudFileService {
     constructor(
         private dialogService: DialogService,
         private http: HttpClient,

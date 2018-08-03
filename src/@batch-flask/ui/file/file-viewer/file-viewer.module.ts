@@ -7,6 +7,7 @@ import { EditorModule } from "@batch-flask/ui/editor";
 import { LoadingModule } from "@batch-flask/ui/loading";
 import { CodeFileViewerComponent } from "./code-file-viewer";
 import { FileContentComponent } from "./file-content";
+import { FileDialogViewerComponent } from "./file-dialog-viewer";
 import { FileTooLargeComponent } from "./file-too-large";
 import { FileViewerComponent } from "./file-viewer";
 import { ImageFileViewerComponent } from "./image-file-viewer";
@@ -19,12 +20,16 @@ const components = [
     LogFileViewerComponent,
     ImageFileViewerComponent,
     CodeFileViewerComponent,
+    FileDialogViewerComponent,
 ];
 
 @NgModule({
     declarations: components,
     exports: components,
     imports: [BrowserModule, FormsModule, ReactiveFormsModule, CardModule, ButtonsModule, LoadingModule, EditorModule],
+    entryComponents: [
+        FileDialogViewerComponent,
+    ],
 })
 export class FileViewerModule {
 
