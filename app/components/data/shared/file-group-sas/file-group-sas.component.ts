@@ -2,9 +2,8 @@ import { Component, Input, OnChanges, OnDestroy, OnInit, forwardRef } from "@ang
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { autobind } from "@batch-flask/core";
+import { ListView, autobind } from "@batch-flask/core";
 import { BlobContainer } from "app/models";
-import { ListView } from "app/services/core";
 import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 import { List } from "immutable";

@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { FileSystemService } from "@batch-flask/ui";
 import {
     Application,
     ApplicationAction,
@@ -7,7 +8,6 @@ import {
     NcjTemplateMode,
     NcjTemplateType,
 } from "app/models";
-import { FileSystemService } from "app/services/fs.service";
 import { LocalFileStorage } from "app/services/local-file-storage.service";
 import { SecureUtils, log } from "app/utils";
 import { List } from "immutable";

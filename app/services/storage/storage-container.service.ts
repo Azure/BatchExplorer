@@ -1,18 +1,17 @@
 import { Injectable, NgZone } from "@angular/core";
-import { Observable, Subject, from, throwError } from "rxjs";
-
-import { HttpCode, ServerError } from "@batch-flask/core";
-import { BlobContainer } from "app/models";
 import {
     EntityView,
+    HttpCode,
     ListView,
-    StorageEntityGetter,
-    StorageListGetter,
+    ServerError,
     TargetedDataCache,
-} from "app/services/core";
+} from "@batch-flask/core";
+import { BlobContainer } from "app/models";
+import { StorageEntityGetter, StorageListGetter } from "app/services/core";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { log } from "app/utils";
 import { Constants } from "common";
+import { Observable, Subject, from, throwError } from "rxjs";
 import { catchError, flatMap, map, share } from "rxjs/operators";
 import { BlobStorageClientProxy } from "./blob-storage-client-proxy";
 import { StorageClientService } from "./storage-client.service";

@@ -1,7 +1,6 @@
 import { Type } from "@angular/core";
-
+import { EntityGetter, EntityGetterConfig } from "@batch-flask/core";
 import { ArmHttpService } from "app/services/arm-http.service";
-import { EntityGetter, EntityGetterConfig } from "app/services/core/data/entity-getter";
 import { Observable } from "rxjs";
 import { map, share } from "rxjs/operators";
 

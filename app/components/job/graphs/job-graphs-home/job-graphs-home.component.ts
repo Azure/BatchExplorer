@@ -4,12 +4,11 @@ import { List } from "immutable";
 import * as path from "path";
 import { Observable, Subscription, from, of } from "rxjs";
 
-import { FilterBuilder, autobind } from "@batch-flask/core";
-import { ElectronShell } from "@batch-flask/ui";
+import { EntityView, FilterBuilder, autobind } from "@batch-flask/core";
+import { ElectronShell, FileSystemService } from "@batch-flask/ui";
 import { tasksToCsv } from "app/components/job/graphs/job-graphs-home/helpers";
 import { Job, Task, TaskState } from "app/models";
-import { CacheDataService, FileSystemService, JobParams, JobService, TaskService } from "app/services";
-import { EntityView } from "app/services/core";
+import { CacheDataService, JobParams, JobService, TaskService } from "app/services";
 import { flatMap, share, tap } from "rxjs/operators";
 import "./job-graphs-home.scss";
 

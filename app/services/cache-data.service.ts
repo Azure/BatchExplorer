@@ -1,8 +1,7 @@
 import { Injectable } from "@angular/core";
-import * as path from "path";
-
+import { FileSystemService } from "@batch-flask/ui";
 import { DateUtils } from "app/utils";
-import { FileSystemService } from "./fs.service";
+import * as path from "path";
 
 /**
  * Service used to cache large set of data to be reused

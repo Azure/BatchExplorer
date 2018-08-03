@@ -16,8 +16,8 @@ import {
     TableHeadComponent,
 } from "@batch-flask/ui/table";
 import { TableRowRenderComponent } from "@batch-flask/ui/table/table-row-render";
+import { VirtualScrollTestingModule } from "@batch-flask/ui/testing";
 import { click, dblclick, mousedown } from "test/utils/helpers";
-import { virtualScrollMockComponents } from "test/utils/mocks/components";
 
 const sizeA = { id: "size_a", name: "Size A", numberOfCores: 1, resourceDiskSizeInMB: 1000 };
 const sizeB = { id: "size_b", name: "Size B", numberOfCores: 8, resourceDiskSizeInMB: 2000 };
@@ -70,7 +70,7 @@ describe("TableComponent", () => {
 
     function setup(component) {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, BrowserModule, MaterialModule],
+            imports: [RouterTestingModule, BrowserModule, MaterialModule, VirtualScrollTestingModule],
             declarations: [
                 TableColumnComponent,
                 TableComponent,
@@ -79,7 +79,6 @@ describe("TableComponent", () => {
                 TableRowRenderComponent,
                 TableHeadCellComponent,
                 TableHeadComponent,
-                ...virtualScrollMockComponents,
                 component,
             ],
             providers: [

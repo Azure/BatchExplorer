@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { ElectronRemote } from "@batch-flask/ui";
-import { BatchExplorerApplication, FileSystem, LocalFileStorage } from "client/core";
+import { BatchExplorerApplication, LocalFileStorage } from "client/core";
 import { AADService, AuthenticationWindow } from "client/core/aad";
 import { PythonRpcServerProcess } from "client/python-process";
 import { SplashScreen } from "client/splash-screen";
@@ -59,7 +59,7 @@ export class BatchExplorerService {
     }
 
     public async launchApplication(name: string, args: any): Promise<any> {
-        return this.remote.send(IpcEvent.launchApplication, {name, args});
+        return this.remote.send(IpcEvent.launchApplication, { name, args });
     }
 
     /**
@@ -75,10 +75,6 @@ export class BatchExplorerService {
 
     public getAuthenticationWindow(): AuthenticationWindow {
         return (this.getCurrentWindow() as any).authenticationWindow;
-    }
-
-    public getFileSystem(): FileSystem {
-        return (this.getCurrentWindow() as any).fs;
     }
 
     public getLocalFileStorage(): LocalFileStorage {

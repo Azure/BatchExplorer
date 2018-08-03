@@ -8,9 +8,10 @@ import {
     ClickableComponent,
     ElectronRemote,
     ElectronShell,
+    FileSystemService,
     UpdateStatus,
 } from "@batch-flask/ui";
-import { AdalService, BatchExplorerService, FileSystemService } from "app/services";
+import { AdalService, BatchExplorerService } from "app/services";
 import { BehaviorSubject } from "rxjs";
 import { click } from "test/utils/helpers";
 import { ContextMenuServiceMock, NotificationServiceMock } from "test/utils/mocks";

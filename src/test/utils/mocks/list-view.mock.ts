@@ -1,7 +1,7 @@
 import { Type } from "@angular/core";
 import { of } from "rxjs";
 
-import { BasicListGetter, DataCache, ListView } from "app/services/core";
+import { BasicListGetter, DataCache, ListView } from "@batch-flask/core";
 
 export interface MockListViewConfig<TEntity, TParams> {
     initialParams?: TParams;

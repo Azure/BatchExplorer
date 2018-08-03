@@ -2,17 +2,17 @@ import { ChangeDetectorRef, Component, EventEmitter, HostListener, OnDestroy, Ou
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import * as path from "path";
-import { Observable, Subscription } from "rxjs";
-
+import { FileSystemService } from "@batch-flask/ui";
 import { SecureUtils, UrlUtils } from "@batch-flask/utils";
 import { ResourceFileAttributes } from "app/models";
-import { FileSystemService, SettingsService } from "app/services";
+import { SettingsService } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { CloudPathUtils, DragUtils } from "app/utils";
 import { BlobUtilities } from "azure-storage";
 import * as moment from "moment";
+import * as path from "path";
+import { Observable, Subscription } from "rxjs";
 import { flatMap, share, tap } from "rxjs/operators";
 import "./resourcefile-picker.scss";
 

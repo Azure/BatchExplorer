@@ -3,11 +3,11 @@ import { from } from "rxjs";
 
 import {
     COMMAND_LABEL_ICON, ElectronRemote, EntityCommand,
-    EntityCommands, Permission,
+    EntityCommands, FileSystemService, Permission,
 } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, JobSchedule, JobState } from "app/models";
-import { FileSystemService, JobService, PinnedEntityService } from "app/services";
+import { JobService, PinnedEntityService } from "app/services";
 
 import { JobScheduleCreateBasicDialogComponent } from "../../job-schedule/action";
 import { TaskCreateBasicDialogComponent } from "../../task/action";

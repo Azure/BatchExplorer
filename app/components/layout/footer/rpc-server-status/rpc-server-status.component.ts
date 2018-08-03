@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, OnDestroy } from "@angular/core";
-import { ElectronShell } from "@batch-flask/ui";
+import { ElectronShell, FileSystemService } from "@batch-flask/ui";
 import {
     ContextMenu,
     ContextMenuItem,
     ContextMenuSeparator,
     ContextMenuService,
 } from "@batch-flask/ui/context-menu";
-import { FileSystemService, PythonRpcService } from "app/services";
+import { PythonRpcService } from "app/services";
 import * as path from "path";
 import { Subscription } from "rxjs";
 

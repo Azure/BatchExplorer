@@ -2,13 +2,11 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
-
-import { FileSource } from "app/components/file/browse/file-explorer";
+import { DataCache } from "@batch-flask/core";
+import { FileNavigator, FileSource } from "@batch-flask/ui";
 import { TaskOutputsComponent } from "app/components/task/details/output";
-import { File, Task, TaskState } from "app/models";
+import { Task, TaskState } from "app/models";
 import { FileService } from "app/services";
-import { DataCache } from "app/services/core";
-import { FileNavigator } from "app/services/file";
 import { AutoStorageService, ListBlobParams, NavigateBlobsOptions, StorageBlobService } from "app/services/storage";
 import { StorageUtils } from "app/utils";
 import { of } from "rxjs";

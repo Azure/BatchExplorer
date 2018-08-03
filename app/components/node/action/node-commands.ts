@@ -1,11 +1,11 @@
 import { Injectable, Injector } from "@angular/core";
 import { COMMAND_LABEL_ICON, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
 
+import { EntityView } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Node, Pool } from "app/models";
 import { NodeService, PoolParams } from "app/services";
-import { EntityView } from "app/services/core";
 import { flatMap } from "rxjs/operators";
 import { NodeConnectComponent } from "../connect";
 

@@ -10,8 +10,8 @@ import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import {
     QuickListComponent, QuickListItemComponent, QuickListItemStatusComponent,
 } from "@batch-flask/ui/quick-list";
+import { VirtualScrollTestingModule } from "@batch-flask/ui/testing";
 import { ButtonClickEvents, click, sendEvent } from "test/utils/helpers";
-import { virtualScrollMockComponents } from "test/utils/mocks/components";
 
 interface TestItem {
     id: string;
@@ -54,10 +54,9 @@ describe("QuickListComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [BreadcrumbModule, RouterTestingModule],
+            imports: [BreadcrumbModule, RouterTestingModule, VirtualScrollTestingModule],
             declarations: [
                 TestComponent, FocusSectionComponent,
-                ...virtualScrollMockComponents,
                 QuickListComponent,
                 QuickListItemComponent,
                 QuickListItemStatusComponent,

@@ -1,21 +1,21 @@
 import { HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { HttpCode, HttpRequestOptions, ServerError } from "@batch-flask/core";
-import { EncodingUtils, exists } from "@batch-flask/utils";
-import { File } from "app/models";
 import {
     BasicEntityGetter,
     BasicListGetter,
     ContinuationToken,
     DataCache,
+    HttpCode,
+    HttpRequestOptions,
     ListOptions,
     ListOptionsAttributes,
     ListResponse,
     ListView,
+    ServerError,
     TargetedDataCache,
-} from "app/services/core";
-import { FileLoader, FileNavigator, FileSource } from "app/services/file";
-import { FileSystemService } from "app/services/fs.service";
+} from "@batch-flask/core";
+import { File, FileLoader, FileNavigator, FileSystemService } from "@batch-flask/ui";
+import { EncodingUtils, exists } from "@batch-flask/utils";
 import * as fs from "fs";
 import * as path from "path";
 import { Observable, from } from "rxjs";
@@ -189,7 +189,7 @@ export class FileService {
     public fileFromNode(poolId: string, nodeId: string, filename: string): FileLoader {
         return new FileLoader({
             filename: filename,
-            source: FileSource.node,
+            source: "node",
             fs: this.fs,
             properties: () => {
                 return this.getFilePropertiesFromComputeNode(poolId, nodeId, filename);
@@ -219,7 +219,7 @@ export class FileService {
     public fileFromTask(jobId: string, taskId: string, filename: string): FileLoader {
         return new FileLoader({
             filename: filename,
-            source: FileSource.task,
+            source: "task",
             groupId: path.join(jobId, taskId),
             fs: this.fs,
             properties: () => {

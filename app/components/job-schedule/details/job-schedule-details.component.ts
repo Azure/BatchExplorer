@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "@batch-flask/core";
+import { EntityView, autobind } from "@batch-flask/core";
 import { Job, JobSchedule, JobScheduleState, Pool } from "app/models";
 import { JobScheduleDecorator } from "app/models/decorators";
 import { JobScheduleParams, JobScheduleService } from "app/services";
-import { EntityView } from "app/services/core";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 import { flatMap } from "rxjs/operators";

@@ -1,24 +1,21 @@
 import { Component, Input, OnDestroy, ViewChild } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import * as path from "path";
-import { Subscription, from } from "rxjs";
-
+import { FileDropEvent, FileSystemService } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { log } from "@batch-flask/utils";
 import { BlobFilesBrowserComponent } from "app/components/file/browse";
-import { FileDropEvent } from "app/components/file/browse/file-explorer";
 import { BlobContainer } from "app/models";
-import { FileSystemService } from "app/services";
 import { StorageBlobService, StorageContainerService } from "app/services/storage";
 import { CloudPathUtils } from "app/utils";
+import * as path from "path";
+import { Subscription, from } from "rxjs";
 import { flatMap, shareReplay } from "rxjs/operators";
 
 @Component({
     selector: "bl-data-container-files",
     templateUrl: "data-container-files.html",
 })
-
 export class DataContainerFilesComponent implements OnDestroy {
     @ViewChild("blobExplorer")
     public blobExplorer: BlobFilesBrowserComponent;

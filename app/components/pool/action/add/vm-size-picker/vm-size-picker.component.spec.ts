@@ -8,13 +8,13 @@ import { List } from "immutable";
 import { RouterTestingModule } from "@angular/router/testing";
 import { ElectronModule } from "@batch-flask/ui";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
+import { TableTestingModule } from "@batch-flask/ui/testing";
 import { VmSizePickerComponent } from "app/components/pool/action/add";
 import { AccountResource, VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
 import { AccountService, PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
 import { of } from "rxjs";
-import { TableTestingModule } from "test/utils/mocks/components";
 
 @Component({
     template: `<bl-vm-size-picker [(ngModel)]="vmSize" [osSource]="osSource"></bl-vm-size-picker>`,
