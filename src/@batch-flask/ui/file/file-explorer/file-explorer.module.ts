@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
-import { FileDetailsModule } from "@batch-flask/ui/file/details";
+import { FileViewerModule } from "@batch-flask/ui/file/file-viewer";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";
 import { LoadingModule } from "@batch-flask/ui/loading";
 import { QuickListModule } from "@batch-flask/ui/quick-list";
@@ -29,7 +29,7 @@ const publicComponents = [
         LoadingModule,
         TableModule,
         QuickListModule,
-        FileDetailsModule,
+        FileViewerModule,
     ],
     declarations: [...privateComponents, publicComponents],
     exports: publicComponents,

@@ -1,6 +1,6 @@
 @import "app/styles/variables";
 
-bl-file-details-view {
+bl-file-viewer {
     $file-header-height: 40px;
     $separator-height: 0;
     &:not([hidden]) {display: block;}

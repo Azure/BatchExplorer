@@ -15,14 +15,14 @@ import { NotificationService } from "@batch-flask/ui/notifications";
 import { DateUtils, prettyBytes } from "@batch-flask/utils";
 import { Observable } from "rxjs";
 
-import "./file-details-view.scss";
+import "./file-viewer.scss";
 
 @Component({
-    selector: "bl-file-details-view",
-    templateUrl: "file-details-view.html",
+    selector: "bl-file-viewer",
+    templateUrl: "file-viewer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileDetailsViewComponent implements OnChanges {
+export class FileViewerComponent implements OnChanges {
     @Input() public fileLoader: FileLoader;
     @Input() public tailable: boolean = false;
     @Output() public back = new EventEmitter();
