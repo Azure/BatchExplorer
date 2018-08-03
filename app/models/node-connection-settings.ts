@@ -28,6 +28,8 @@ export interface NodeConnectionSettingsAttributes {
 @Model()
 export class NodeConnectionSettings extends IaasNodeConnectionSettings {
     @Prop() public remoteLoginType: ConnectionType;
+    @Prop() public remoteLoginLoadBalanceInfo: string;
 
     public get type() { return this.remoteLoginType; }
+    public get loadBalanceInfo() { return this.remoteLoginLoadBalanceInfo; }
 }
