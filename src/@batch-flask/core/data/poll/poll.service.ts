@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Observable, Subscription, timer } from "rxjs";
-
 import { ObjectUtils, SecureUtils } from "@batch-flask/utils";
+import { Observable, Subscription, timer } from "rxjs";
 
 @Injectable()
 export class PollService {

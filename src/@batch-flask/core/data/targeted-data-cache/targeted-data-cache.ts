@@ -1,5 +1,5 @@
 import { DataCache } from "../data-cache";
-import { PollService } from "../poll.service";
+import { PollService } from "../poll";
 
 export interface TargetedDataCacheOptions<TParams> {
     /**

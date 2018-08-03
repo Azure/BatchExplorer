@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { distinctUntilChanged, map, switchAll, takeUntil } from "rxjs/operators";
 import { EntityGetter } from "../entity-getter";
 import { GenericView, GenericViewConfig } from "../generic-view";
-import { PollObservable } from "../poll.service";
+import { PollObservable } from "../poll";
 
 export interface EntityViewConfig<TEntity, TParams> extends GenericViewConfig<TEntity, TParams> {
     /**
