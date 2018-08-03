@@ -7,9 +7,9 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { MaterialModule } from "@batch-flask/core";
 import { ListSelection } from "@batch-flask/core/list";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
+import { TableTestingModule } from "@batch-flask/ui/testing";
 import { AppLicensePickerComponent } from "app/components/pool/action/add";
 import { ElectronTestingModule } from "test/utils/mocks";
-import { TableTestingModule } from "@batch-flask/ui/testing";
 
 @Component({
     template: `<bl-app-license-picker [(ngModel)]="appLicenses"></bl-app-license-picker>`,

@@ -10,8 +10,8 @@ import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import {
     QuickListComponent, QuickListItemComponent, QuickListItemStatusComponent,
 } from "@batch-flask/ui/quick-list";
-import { ButtonClickEvents, click, sendEvent } from "test/utils/helpers";
 import { VirtualScrollTestingModule } from "@batch-flask/ui/testing";
+import { ButtonClickEvents, click, sendEvent } from "test/utils/helpers";
 
 interface TestItem {
     id: string;

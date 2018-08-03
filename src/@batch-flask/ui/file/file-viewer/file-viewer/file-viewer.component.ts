@@ -117,7 +117,7 @@ export class FileViewerComponent implements OnChanges {
                 if (error.status === HttpCode.NotFound) {
                     this.fileNotFound = true;
                 }
-                if(error.status === HttpCode.Forbidden) {
+                if (error.status === HttpCode.Forbidden) {
                     this.forbidden = true;
                 }
                 this.changeDetector.markForCheck();
