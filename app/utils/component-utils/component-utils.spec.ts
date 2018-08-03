@@ -1,9 +1,25 @@
 import { SimpleChange } from "@angular/core";
-import { BasicListGetter, DataCache, ListView } from "@batch-flask/core";
+import { BasicListGetter, DataCache, ListView , Model, Prop, Record } from "@batch-flask/core";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
 import { BehaviorSubject, of } from "rxjs";
-import { FakeModel } from "test/app/services/core/data/fake-model";
+
+export interface FakeModelAttributes {
+    id: string;
+    state: string;
+    name: string;
+}
+
+@Model()
+export class FakeModel extends Record<FakeModelAttributes> {
+    @Prop() public id: string;
+    @Prop() public state: string;
+    @Prop() public name: string;
+}
+
+export interface FakeParams {
+    id: string;
+}
 
 describe("ComponentUtils", () => {
     describe("#recordChanged", () => {
