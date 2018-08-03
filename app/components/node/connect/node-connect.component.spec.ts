@@ -20,7 +20,6 @@ import {
     SettingsService,
 } from "app/services";
 import { PoolUtils, SecureUtils } from "app/utils";
-import { clipboard } from "electron";
 import * as Fixtures from "test/fixture";
 
 @Component({
@@ -44,6 +43,7 @@ describe("NodeConnectComponent", () => {
     let electronShellSpy;
     let secureUtilsSpy;
     let nodeConnectServiceSpy;
+    let clipboardServiceSpy;
 
     beforeEach(() => {
         nodeUserServiceSpy = {
@@ -98,6 +98,10 @@ describe("NodeConnectComponent", () => {
             }),
         };
 
+        clipboardServiceSpy = {
+            writeText: jasmine.createSpy("writeText"),
+        };
+
         TestBed.configureTestingModule({
             declarations: [
                 NodeConnectComponent, ButtonComponent,
@@ -114,6 +118,7 @@ describe("NodeConnectComponent", () => {
                 { provide: ElectronShell, useValue: electronShellSpy },
                 { provide: SecureUtils, useValue: secureUtilsSpy },
                 { provide: NodeConnectService, useValue: nodeConnectServiceSpy },
+                { provide: ClipboardService, useValue: clipboardServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -220,7 +225,7 @@ describe("NodeConnectComponent", () => {
                     expect(openItemArgs.length).toBe(1);
                     expect(openItemArgs[0]).toContain("path/to/file");
 
-                    expect(clipboard.readText()).toEqual(updateUserArgs[2].password);
+                    expect(clipboardServiceSpy.writeText).toHaveBeenCalledWith(updateUserArgs[2].password);
 
                     done();
                 });
