@@ -48,8 +48,8 @@
         </bl-property-group>
 
         <bl-property-group label="Compute node" class="wide" [collapsed]="true">
-            <bl-text-property label="Pool" [value]="nodeInfo.poolId"></bl-text-property>
-            <bl-text-property label="Compute node ID" [value]="nodeInfo.nodeId"></bl-text-property>
+            <bl-link-property label="Pool" [value]="nodeInfo.poolId" [link]="['/pools/', nodeInfo.poolId]"></bl-link-property>
+            <bl-link-property label="Compute node ID" [value]="nodeInfo.nodeId" [link]="['/pools/', nodeInfo.poolId, 'nodes', nodeInfo.nodeId]"></bl-link-property>
             <bl-text-property label="Node URL" [value]="nodeInfo.nodeUrl"></bl-text-property>
             <bl-text-property label="Affinity ID" [value]="nodeInfo.affinityId"></bl-text-property>
             <bl-text-property label="Task root directory" [value]="nodeInfo.taskRootDirectory"></bl-text-property>
