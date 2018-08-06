@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from "@angular/core";
 
 import { ElectronRemote } from "@batch-flask/ui/electron";
-import { ContextMenu, ContextMenuItem, ContextMenuSeparator } from "./context-menu.model";
+import { ContextMenu, ContextMenuItem, ContextMenuSeparator, MultiContextMenuItem } from "./context-menu.model";
 
 @Injectable()
 export class ContextMenuService {
@@ -19,6 +19,8 @@ export class ContextMenuService {
         for (const item of menu.items) {
             if (item instanceof ContextMenuItem) {
                 electronMenu.append(this._buildMenuItem(item));
+            } else if (item instanceof MultiContextMenuItem) {
+                electronMenu.append(this._buildMutliMenuItem(item));
             } else if (item instanceof ContextMenuSeparator) {
                 electronMenu.append(new this.remote.MenuItem({
                     type: "separator",
@@ -35,6 +37,14 @@ export class ContextMenuService {
             click: () => {
                 this.zone.run(() => item.click());
             },
+            enabled: item.enabled,
+        });
+    }
+
+    private _buildMutliMenuItem(item: MultiContextMenuItem) {
+        return new this.remote.MenuItem({
+            label: item.label,
+            submenu: item.subitems.map(x => this._buildMenuItem(x as any)) as any,
             enabled: item.enabled,
         });
     }

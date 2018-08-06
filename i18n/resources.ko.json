@@ -1,0 +1,11 @@
+{
+  "duration-picker.unit.unlimited": "제한 없음",
+  "duration-picker.unit.days": "일",
+  "duration-picker.unit.minutes": "분",
+  "duration-picker.unit.hours": "시간",
+  "duration-picker.unit.seconds": "초",
+  "main-navigation.jobs": "작업",
+  "main-navigation.packages": "패키지",
+  "main-navigation.certificates": "인증서",
+  "main-navigation.data": "데이터"
+}

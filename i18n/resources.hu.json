@@ -1,0 +1,15 @@
+{
+  "duration-picker.unit.unlimited": "Korlátlan",
+  "duration-picker.unit.days": "Nap",
+  "duration-picker.unit.minutes": "Perc",
+  "duration-picker.unit.hours": "Óra",
+  "duration-picker.unit.seconds": "Másodperc",
+  "main-navigation.jobs": "Feladatok",
+  "main-navigation.jobschedules": "Feladatütemezések",
+  "main-navigation.pools": "Készletek",
+  "main-navigation.packages": "Csomagok",
+  "main-navigation.certificates": "Tanúsítványok",
+  "main-navigation.data": "Adatok",
+  "main-navigation.gallery": "Galéria",
+  "main-navigation.profile": "Profil"
+}

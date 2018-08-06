@@ -1,0 +1,16 @@
+{
+  "duration-picker.unit.unlimited": "Ilimitado",
+  "duration-picker.unit.days": "dias",
+  "duration-picker.unit.minutes": "Minutos",
+  "duration-picker.unit.hours": "Horas",
+  "duration-picker.unit.seconds": "Segundos",
+  "main-navigation.dashboard": "Travessão",
+  "main-navigation.jobs": "Tarefas",
+  "main-navigation.jobschedules": "Agendas de trabalhos",
+  "main-navigation.pools": "Conjuntos",
+  "main-navigation.packages": "Pacotes",
+  "main-navigation.certificates": "Certificados",
+  "main-navigation.data": "Dados",
+  "main-navigation.gallery": "Galeria",
+  "main-navigation.profile": "Perfil"
+}

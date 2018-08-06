@@ -1,0 +1,14 @@
+{
+  "duration-picker.unit.unlimited": "Ilimitado",
+  "duration-picker.unit.days": "Dias",
+  "duration-picker.unit.minutes": "Minutos",
+  "duration-picker.unit.hours": "Horas",
+  "duration-picker.unit.seconds": "Segundos",
+  "main-navigation.dashboard": "Traço",
+  "main-navigation.jobs": "Trabalhos",
+  "main-navigation.jobschedules": "Planos de trabalho",
+  "main-navigation.pools": "Pools",
+  "main-navigation.packages": "Pacotes",
+  "main-navigation.certificates": "Certificados",
+  "main-navigation.data": "Dados"
+}
