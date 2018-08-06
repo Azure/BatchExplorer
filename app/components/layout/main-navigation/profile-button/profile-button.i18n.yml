@@ -1,4 +1,5 @@
 profile-button:
+  profile: Profile
   settings: Settings
   about: About
   thirdPartyNotices: Third party notices
