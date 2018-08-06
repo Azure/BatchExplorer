@@ -1,13 +1,13 @@
 import { Injectable, OnDestroy } from "@angular/core";
+import { FileSystemService } from "@batch-flask/ui";
+import { OS } from "@batch-flask/utils";
+import { ConnectionType, IaasNodeConnectionSettings, Node, NodeConnectionSettings, Pool } from "app/models";
+import { AddNodeUserAttributes, SSHKeyService, SettingsService } from "app/services";
+import { AzureBatchHttpService } from "app/services/azure-batch/core";
+import { PoolUtils } from "app/utils";
 import * as path from "path";
 import { Observable, Subscription, from, of } from "rxjs";
 import { flatMap, map, share } from "rxjs/operators";
-
-import { OS } from "@batch-flask/utils";
-import { ConnectionType, IaasNodeConnectionSettings, Node, NodeConnectionSettings, Pool } from "app/models";
-import { AddNodeUserAttributes, FileSystemService, SSHKeyService, SettingsService } from "app/services";
-import { AzureBatchHttpService } from "app/services/azure-batch/core";
-import { PoolUtils } from "app/utils";
 
 @Injectable()
 export class NodeConnectService implements OnDestroy {
@@ -51,10 +51,12 @@ export class NodeConnectService implements OnDestroy {
         if (PoolUtils.isPaas(pool)) {
             return this._getRemoteDesktop(pool.id, node.id).pipe(
                 flatMap((rdp) => {
+                    const settings = this._rdpToNodeConnectionSettings(rdp);
                     return of({
-                        ip: rdp.match(/[0-9.]{7,}/)[0],
-                        port: null,
+                        ip: settings.remoteLoginIPAddress,
+                        port: settings.remoteLoginPort,
                         type: ConnectionType.RDP,
+                        loadBalanceInfo: settings.remoteLoginLoadBalanceInfo || null,
                     } as NodeConnectionSettings);
                 }),
             );
@@ -65,6 +67,7 @@ export class NodeConnectService implements OnDestroy {
                         ip: settings.ip,
                         port: settings.port,
                         type: PoolUtils.isLinux(pool) ? ConnectionType.SSH : ConnectionType.RDP,
+                        loadBalanceInfo: null,
                     } as NodeConnectionSettings);
                 }),
             );
@@ -74,9 +77,14 @@ export class NodeConnectService implements OnDestroy {
     private _computeFullRdpFile(connectionSettings: NodeConnectionSettings,
                                 credentials: AddNodeUserAttributes): string {
         const rdpBaseContent = this._buildRdpFromConnection(connectionSettings);
-        return `${rdpBaseContent}\n
-                username:s:.\\${credentials.name || this._defaultUsername}\n
-                prompt for credentials:i:1`;
+        let rdpfile = `${rdpBaseContent}`
+            + `\nusername:s:.\\${credentials.name || this._defaultUsername}`
+            + "\nprompt for credentials:i:1";
+
+        if (connectionSettings.loadBalanceInfo) {
+            rdpfile += `\nLoadBalanceInfo:s:${connectionSettings.loadBalanceInfo}`;
+        }
+        return rdpfile;
     }
 
     private _buildRdpFromConnection(connectionSettings: NodeConnectionSettings): string {
@@ -92,9 +100,9 @@ export class NodeConnectService implements OnDestroy {
         return this.http.get(`/pools/${poolId}/nodes/${nodeId}/rdp`, {
             observe: "response",
             responseType: "text",
-        }).map((data) => {
-            return data.body as any;
-        });
+        }).pipe(
+            map((data) =>   data.body as any),
+        );
     }
 
     // tslint:disable-next-line:max-line-length
@@ -103,5 +111,32 @@ export class NodeConnectService implements OnDestroy {
             map(data => new IaasNodeConnectionSettings(data)),
             share(),
         );
+    }
+
+    private _rdpToNodeConnectionSettings(rdp: string): any {
+        const lines = rdp.split("\n").filter(line => {
+            line = line.toLowerCase();
+            return (line.includes("loadbalanceinfo") || line.includes("full address"));
+        });
+
+        const obj = {
+            remoteLoginIPAddress: null,
+            remoteLoginPort: null,
+            remoteLoginLoadBalanceInfo: null,
+            remoteLoginType: ConnectionType.RDP,
+        } as NodeConnectionSettings;
+
+        lines.forEach(line => {
+            const segments = line.split(":");
+            segments[0] = segments[0].toLowerCase();
+            if (segments[0] === "loadbalanceinfo") {
+                obj.remoteLoginLoadBalanceInfo = segments.slice(2).join(":");
+            } else if (segments[0] === "full address") {
+                obj.remoteLoginIPAddress = segments[2];
+                obj.remoteLoginPort = +segments[3] || null;
+            }
+        });
+
+        return obj;
     }
 }

@@ -1,9 +1,9 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Subscription, from } from "rxjs";
 
-import {  autobind } from "@batch-flask/core";
+import { ListView, PollObservable, PollService, autobind } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { PerformanceData } from "app/components/pool/graphs/performance-graph";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
@@ -11,7 +11,6 @@ import { Job, Node, NodeState, Pool, Task } from "app/models";
 import {
     AppInsightsQueryService, BatchExplorerService, NodeListParams, NodeService,
 } from "app/services";
-import { ListView, PollObservable, PollService } from "app/services/core";
 import { ComponentUtils } from "app/utils";
 import { StateCounter } from "./heatmap";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
@@ -155,7 +154,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         const link = `ms-batch-explorer://route/standalone/pools/${this.pool.id}/graphs?fullscreen=true`;
         const window = this.batchExplorer.openNewWindow(link);
 
-        return Observable.fromPromise(window.domReady);
+        return from(window.domReady);
     }
 
     public get appInsightsEnabled() {

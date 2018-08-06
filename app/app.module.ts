@@ -32,12 +32,11 @@ import { BatchExplorerErrorHandler } from "app/error-handler";
 
 // services
 import { HttpModule } from "@angular/http";
-import { MaterialModule, TranslationsLoaderService } from "@batch-flask/core";
+import { LocaleService, MaterialModule, PollService, TranslationsLoaderService } from "@batch-flask/core";
 import { CommonModule } from "app/components/common";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
 import { AzureBatchHttpService } from "app/services/azure-batch/core";
-import { PollService } from "app/services/core";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 import { AADGraphHttpService, MsGraphHttpService } from "app/services/ms-graph/core";
 import {
@@ -48,6 +47,7 @@ import {
     AdalService,
     AppInsightsApiService,
     AppInsightsQueryService,
+    AppLocaleService,
     AppTranslationsLoaderService,
     ApplicationService,
     ArmHttpService,
@@ -60,7 +60,6 @@ import {
     CommandService,
     ComputeService,
     FileService,
-    FileSystemService,
     GithubDataService,
     HttpUploadService,
     InsightsMetricsService,
@@ -129,6 +128,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         { provide: TranslationsLoaderService, useClass: AppTranslationsLoaderService },
+        { provide: LocaleService, useClass: AppLocaleService },
         AccountService,
         AdalService,
         AppInsightsApiService,
@@ -147,7 +147,6 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         ComputeService,
         NodeConnectService,
         FileService,
-        FileSystemService,
         GithubDataService,
         HttpUploadService,
         InsightsMetricsService,

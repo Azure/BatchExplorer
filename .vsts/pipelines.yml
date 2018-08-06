@@ -6,7 +6,7 @@ phases:
     - script: |
         set -e
         apt-get update
-        apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 dbus xvfb libgtk-3-0
+        apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 dbus xvfb libgtk-3-0 rpm
       displayName: Install Linux packages
     - template: ./dependencies.yml
     - template: ./pyenv.yml
@@ -34,6 +34,8 @@ phases:
         codeCoverageTool: cobertura
         summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura.xml
         reportDirectory: $(System.DefaultWorkingDirectory)/coverage/html
+    - script: codecov -t $(codecov.uploadToken)
+      displayName: Upload code coverage to codecov
 
     - script: npm run build-and-pack
       displayName: Build and pack

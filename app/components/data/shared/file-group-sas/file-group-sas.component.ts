@@ -2,15 +2,14 @@ import { Component, Input, OnChanges, OnDestroy, OnInit, forwardRef } from "@ang
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { autobind } from "@batch-flask/core";
+import { ListView, autobind } from "@batch-flask/core";
+import { BlobContainer } from "app/models";
+import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
+import { Constants } from "common";
 import { List } from "immutable";
 import * as moment from "moment";
 import { Subscription } from "rxjs";
-
-import { BlobContainer } from "app/models";
-import { ListView } from "app/services/core";
-import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
-import { Constants } from "common";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import "./file-group-sas.scss";
 
@@ -45,8 +44,9 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
     private _propagateChange: (value: any[]) => void = null;
     private _subscriptions: Subscription[] = [];
 
-    constructor(private autoStorageService: AutoStorageService,
-                private storageContainerService: StorageContainerService) {
+    constructor(
+        private autoStorageService: AutoStorageService,
+        private storageContainerService: StorageContainerService) {
 
         this.fileGroupsData = this.storageContainerService.listView();
 
@@ -54,7 +54,10 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
             this.fileGroups = fileGroups;
         });
 
-        this._subscriptions.push(this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
+        this._subscriptions.push(this.value.valueChanges.pipe(
+            debounceTime(400),
+            distinctUntilChanged(),
+        ).subscribe((value) => {
             this._checkValid(value);
             if (this._propagateChange) {
                 this._propagateChange(value);

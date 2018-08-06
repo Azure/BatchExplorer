@@ -2,9 +2,9 @@ import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
-import { Subscription } from "rxjs";
-
 import { Pool } from "app/models";
+import { Subscription } from "rxjs";
+import { distinctUntilChanged } from "rxjs/operators";
 
 import "./pool-scale-picker.scss";
 
@@ -47,7 +47,7 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
 
         this._updateValidators(this._enableAutoScaleControl.value);
 
-        this._subs.push(this.form.valueChanges.distinctUntilChanged().subscribe((value) => {
+        this._subs.push(this.form.valueChanges.pipe(distinctUntilChanged()).subscribe((value) => {
             if (this._propagateChange) {
                 this._propagateChange(value);
             }

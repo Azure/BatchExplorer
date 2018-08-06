@@ -5,13 +5,12 @@ import {
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { ServerError } from "@batch-flask/core";
+import { ListView, ServerError } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { ApplicationPackage, BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService } from "app/services";
 
 import "@batch-flask/ui/form/editable-table/editable-table.scss";
-import { ListView } from "app/services/core";
 
 interface PackageReference {
     applicationId?: string;

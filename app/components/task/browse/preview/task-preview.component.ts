@@ -14,11 +14,9 @@ import "./task-preview.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskPreviewComponent {
-    public elapsedTime = "";
     public taskStates = TaskState;
 
-    @Input()
-    public task: any;
+    @Input() public task: any;
 
     public get exitCode() {
         const code = this.task.executionInfo ? this.task.executionInfo.exitCode : this.task.exitCode;
@@ -32,13 +30,5 @@ export class TaskPreviewComponent {
         } else {
             return `Task completed with exit code ${code}`;
         }
-    }
-
-    public get startTime() {
-        return this.task.startTime || this.task.executionInfo.startTime;
-    }
-
-    public get endTime() {
-        return this.task.endTime || this.task.executionInfo.endTime;
     }
 }

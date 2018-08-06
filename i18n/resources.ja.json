@@ -1,0 +1,13 @@
+{
+  "duration-picker.unit.unlimited": "無制限",
+  "duration-picker.unit.days": "日数",
+  "duration-picker.unit.minutes": "分",
+  "duration-picker.unit.hours": "時間",
+  "duration-picker.unit.seconds": "秒",
+  "main-navigation.jobs": "ジョブ",
+  "main-navigation.jobschedules": "ジョブ スケジュール",
+  "main-navigation.pools": "プール",
+  "main-navigation.packages": "パッケージ",
+  "main-navigation.certificates": "証明書",
+  "main-navigation.data": "データ"
+}

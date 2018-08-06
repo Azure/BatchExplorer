@@ -20,12 +20,12 @@ export class MyComponent {
 
     @autobind()
     public rerun() {
-        return Observable.of(true); // Do your quickfix here
+        return of(true); // Do your quickfix here
     }
 
     @autobind()
     public rerunDifferent() {
-        return Observable.of(true); // Do your quickfix here
+        return of(true); // Do your quickfix here
     }
 }
 ```

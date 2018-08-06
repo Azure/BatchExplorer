@@ -102,6 +102,7 @@ function loadDependency(name: string) {
 
 function getRepoUrl(dependency) {
     const repo = dependency.repository;
+    if (!repo) { return null; }
     if (typeof repo === "string") {
         return `https://github.com/${repo}`;
     }
@@ -110,7 +111,8 @@ function getRepoUrl(dependency) {
     return `https://github.com/${match[2]}`;
 }
 
-function getRepoName(repoUrl: string): string {
+function getRepoName(repoUrl: string | null): string {
+    if (!repoUrl) { return null; }
     const match = repoNameRegex.exec(repoUrl);
     if (!match) {
         console.error("Couldn't get repo name for ", repoUrl);
@@ -142,7 +144,7 @@ function getHeader() {
 
 function getLicenseContent(dependency, license) {
     if (!license.content) {
-        const licenseType = dependency.licenseType.toLowerCase();
+        const licenseType = dependency.licenseType && dependency.licenseType.toLowerCase();
         if (licenseType in defaultLicenses) {
             return defaultLicenses[licenseType];
         } else {

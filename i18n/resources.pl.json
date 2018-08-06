@@ -1,0 +1,17 @@
+{
+  "duration-picker.unit.unlimited": "Bez ograniczeń",
+  "duration-picker.unit.days": "Dni",
+  "duration-picker.unit.minutes": "Minuty",
+  "duration-picker.unit.hours": "Godziny",
+  "duration-picker.unit.seconds": "Sekundy",
+  "duration-picker.unit.custom": "Niestandardowe (format ISO)",
+  "main-navigation.dashboard": "Kreska",
+  "main-navigation.jobs": "Zadania",
+  "main-navigation.jobschedules": "Harmonogramy zadań",
+  "main-navigation.pools": "Pule",
+  "main-navigation.packages": "Pakiety",
+  "main-navigation.certificates": "Certyfikaty",
+  "main-navigation.data": "Dane",
+  "main-navigation.gallery": "Galeria",
+  "main-navigation.profile": "Profil"
+}

@@ -1,24 +1,24 @@
 import { HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { HttpCode, HttpRequestOptions, ServerError } from "@batch-flask/core";
-import { EncodingUtils, exists } from "@batch-flask/utils";
-import { File } from "app/models";
 import {
     BasicEntityGetter,
     BasicListGetter,
     ContinuationToken,
     DataCache,
+    HttpCode,
+    HttpRequestOptions,
     ListOptions,
     ListOptionsAttributes,
     ListResponse,
     ListView,
+    ServerError,
     TargetedDataCache,
-} from "app/services/core";
-import { FileLoader, FileNavigator, FileSource } from "app/services/file";
-import { FileSystemService } from "app/services/fs.service";
+} from "@batch-flask/core";
+import { File, FileLoader, FileNavigator, FileSystemService } from "@batch-flask/ui";
+import { EncodingUtils, exists } from "@batch-flask/utils";
 import * as fs from "fs";
 import * as path from "path";
-import { Observable } from "rxjs";
+import { Observable, from } from "rxjs";
 import { flatMap, map, share } from "rxjs/operators";
 import { AzureBatchHttpService } from "../core";
 
@@ -189,7 +189,7 @@ export class FileService {
     public fileFromNode(poolId: string, nodeId: string, filename: string): FileLoader {
         return new FileLoader({
             filename: filename,
-            source: FileSource.node,
+            source: "node",
             fs: this.fs,
             properties: () => {
                 return this.getFilePropertiesFromComputeNode(poolId, nodeId, filename);
@@ -219,7 +219,7 @@ export class FileService {
     public fileFromTask(jobId: string, taskId: string, filename: string): FileLoader {
         return new FileLoader({
             filename: filename,
-            source: FileSource.task,
+            source: "task",
             groupId: path.join(jobId, taskId),
             fs: this.fs,
             properties: () => {
@@ -265,7 +265,7 @@ export class FileService {
 
     private _download(uri: string, dest: string) {
         return this.http.get(uri, { observe: "response", responseType: "blob" }).pipe(
-            flatMap((response) => Observable.fromPromise(this._downloadContent(response, dest))),
+            flatMap((response) => from(this._downloadContent(response, dest))),
             share(),
         );
     }
@@ -276,7 +276,7 @@ export class FileService {
             const output = fs.createWriteStream(destination);
 
             reader.onload = () => {
-                const buffer = new Buffer(reader.result);
+                const buffer = new Buffer(reader.result as any);
                 output.write(buffer);
                 output.close();
                 resolve(true);
@@ -291,12 +291,12 @@ export class FileService {
 
     private _getContent(uri: string): Observable<{ content: string }> {
         return this.http.get(uri, { observe: "response", responseType: "arraybuffer" }).pipe(
-            flatMap((response) => Observable.fromPromise(this._readContent(response))),
+            flatMap((response) => from(this._readContent(response))),
             share(),
         );
     }
 
-    private async _readContent(response: HttpResponse<ArrayBuffer>) {
+    private async _readContent(response: HttpResponse<ArrayBuffer>): Promise<{ content: string }> {
         const buffer = response.body;
 
         const { encoding } = await EncodingUtils.detectEncodingFromBuffer({
@@ -333,11 +333,13 @@ export class FileService {
             query.recursive = Boolean(options.original.recursive);
             httpOptions = { params: new HttpParams({ fromObject: query }) };
         }
-        return this.http.get<any>(uri, httpOptions).map(x => {
-            return {
-                data: x.value,
-                nextLink: x["odata.nextLink"],
-            };
-        });
+        return this.http.get<any>(uri, httpOptions).pipe(
+            map(x => {
+                return {
+                    data: x.value,
+                    nextLink: x["odata.nextLink"],
+                };
+            }),
+        );
     }
 }

@@ -1,0 +1,17 @@
+<div [ngSwitch]="task.state">
+    <div *ngSwitchDefault matTooltip="Task is waiting to start">
+        <i class="fa fa-hourglass-half" aria-hidden="true"></i>
+    </div>
+
+    <div *ngSwitchCase="taskStates.running">
+        <i class="fa fa-clock-o" aria-hidden="true"></i>
+        <bl-timespan [startTime]="startTime"></bl-timespan>
+    </div>
+
+    <div *ngSwitchCase="taskStates.completed">
+        <div class="running-time" [class.success]="!failed" [class.failure]="failed">
+            <bl-timespan [startTime]="startTime" [endTime]="endTime" *ngIf="startTime"></bl-timespan>
+            <span *ngIf="!startTime">-</span>
+        </div>
+    </div>
+</div>

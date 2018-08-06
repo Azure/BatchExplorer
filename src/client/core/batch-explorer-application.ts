@@ -4,7 +4,7 @@ import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
 import { Inject, Injectable, InjectionToken, Injector } from "@angular/core";
-import { TranslationsLoaderService } from "@batch-flask/core";
+import { LocaleService, TranslationsLoaderService } from "@batch-flask/core";
 import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
@@ -14,7 +14,7 @@ import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-config
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { ProxySettingsManager } from "client/proxy/proxy-settings";
 import { BatchExplorerLink, Constants, Deferred } from "common";
-import {  IpcEvent } from "common/constants";
+import { IpcEvent } from "common/constants";
 import { ProxyCredentials, ProxySettings } from "get-proxy-settings";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants as ClientConstants } from "../client-constants";
@@ -57,6 +57,7 @@ export class BatchExplorerApplication {
     constructor(
         @Inject(AUTO_UPDATER) public autoUpdater: AppUpdater,
         public translationLoader: TranslationsLoaderService,
+        public localeService: LocaleService,
         private localStorage: LocalDataStore,
         private injector: Injector,
         private ipcMain: BlIpcMain) {

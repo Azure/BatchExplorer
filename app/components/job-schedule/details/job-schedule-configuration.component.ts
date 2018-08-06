@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from "@angular/core";
 import { List } from "immutable";
+import { Subscription } from "rxjs";
 
+import { WorkspaceService } from "@batch-flask/ui";
 import { JobSchedule, Metadata } from "app/models";
 import { JobScheduleDecorator } from "app/models/decorators";
 
@@ -10,7 +12,7 @@ import { JobScheduleDecorator } from "app/models/decorators";
     templateUrl: "job-schedule-configuration.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class JobScheduleConfigurationComponent {
+export class JobScheduleConfigurationComponent implements OnDestroy {
     @Input()
     public set jobSchedule(jobSchedule: JobSchedule) {
         this._jobSchedule = jobSchedule;
@@ -22,8 +24,24 @@ export class JobScheduleConfigurationComponent {
     public executionInfo: any = {};
     public schedule: any = {};
     public jobScheduleMetadata: List<Metadata> = List([]);
+    public jsonViewEnabled = true;
 
     private _jobSchedule: JobSchedule;
+    private _sub: Subscription;
+
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private workspaceService: WorkspaceService) {
+
+        this._sub = this.workspaceService.currentWorkspace.subscribe((ws) => {
+            this.jsonViewEnabled = ws.isFeatureEnabled("schedule.view.configuration.json");
+            this.changeDetector.markForCheck();
+        });
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
+    }
 
     public refresh(jobSchedule: JobSchedule) {
         if (this.jobSchedule) {

@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { List } from "immutable";
-import { Subscription } from "rxjs";
-
 import { autobind } from "@batch-flask/core";
 import { Application } from "app/models";
 import { GithubDataService, NcjTemplateService } from "app/services";
 import { AutoStorageService } from "app/services/storage";
+import { List } from "immutable";
+import { Subscription } from "rxjs";
+import { flatMap } from "rxjs/operators";
 import "./market.scss";
 
 @Component({
@@ -49,9 +49,9 @@ export class MarketComponent implements OnInit, OnDestroy {
 
     @autobind()
     public refreshApplications() {
-        const obs = this.githubDataService.reloadData().flatMap(() => {
+        const obs = this.githubDataService.reloadData().pipe(flatMap(() => {
             return this.templateService.listApplications();
-        });
+        }));
 
         obs.subscribe((applications) => {
             this.applications = applications;

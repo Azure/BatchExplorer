@@ -1,9 +1,8 @@
 import { Type } from "@angular/core";
-import { Observable } from "rxjs";
-
-import { ServerError } from "@batch-flask/core";
-import { EntityGetter, EntityGetterConfig } from "app/services/core/data/entity-getter";
+import { EntityGetter, EntityGetterConfig, ServerError } from "@batch-flask/core";
 import { StorageClientService } from "app/services/storage/storage-client.service";
+import { Observable, from, throwError } from "rxjs";
+import { catchError, flatMap, map, share } from "rxjs/operators";
 import { StorageBaseParams } from "./storage-list-getter";
 
 export interface StorageGetResponse {
@@ -32,11 +31,15 @@ export class StorageEntityGetter<TEntity, TParams extends StorageBaseParams> ext
     }
 
     protected getData(params: TParams): Observable<any> {
-        return this.storageClient.getFor(params.storageAccountId).flatMap((client) => {
-            return Observable.fromPromise(this._getMethod(client, params));
-        }).map(x => x.data)
-            .catch((error) => {
-                return Observable.throw(ServerError.fromStorage(error));
-            }).share();
+        return this.storageClient.getFor(params.storageAccountId).pipe(
+            flatMap((client) => {
+                return from(this._getMethod(client, params));
+            }),
+            map(x => x.data),
+            catchError((error) => {
+                return throwError(ServerError.fromStorage(error));
+            }),
+            share(),
+        );
     }
 }

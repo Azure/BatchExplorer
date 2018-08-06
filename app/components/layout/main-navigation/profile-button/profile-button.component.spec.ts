@@ -3,14 +3,18 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatTooltip, MatTooltipModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
+import { LocaleService } from "@batch-flask/core";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 import {
     AutoUpdateService,
     ClickableComponent,
     ElectronRemote,
     ElectronShell,
+    FileSystemService,
+    I18nUIModule,
     UpdateStatus,
 } from "@batch-flask/ui";
-import { AdalService, BatchExplorerService, FileSystemService } from "app/services";
+import { AdalService, BatchExplorerService } from "app/services";
 import { BehaviorSubject } from "rxjs";
 import { click } from "test/utils/helpers";
 import { ContextMenuServiceMock, NotificationServiceMock } from "test/utils/mocks";
@@ -45,7 +49,7 @@ describe("ProfileButtonComponent", () => {
 
         batchExplorerServiceSpy = {};
         TestBed.configureTestingModule({
-            imports: [MatTooltipModule, RouterTestingModule],
+            imports: [MatTooltipModule, RouterTestingModule, I18nTestingModule, I18nUIModule],
             declarations: [ProfileButtonComponent, ClickableComponent, TestComponent],
             providers: [
                 { provide: AdalService, useValue: adalServiceSpy },
@@ -54,6 +58,7 @@ describe("ProfileButtonComponent", () => {
                 { provide: ElectronShell, useValue: null },
                 { provide: ElectronRemote, useValue: null },
                 { provide: FileSystemService, useValue: null },
+                { provide: LocaleService, useValue: null },
                 contextMenuServiceSpy.asProvider(),
                 notificationServiceSpy.asProvider(),
             ],
@@ -119,6 +124,6 @@ describe("ProfileButtonComponent", () => {
         fixture.detectChanges();
         expect(contextMenuServiceSpy.openMenu).toHaveBeenCalledOnce();
         const items = contextMenuServiceSpy.lastMenu.items;
-        expect(items.length).toBe(11);
+        expect(items.length).toBe(12);
     });
 });

@@ -1,9 +1,10 @@
 import { fakeAsync, tick } from "@angular/core/testing";
-import { AsyncSubject, Observable, Subscription } from "rxjs";
+import { AsyncSubject, Subscription, of } from "rxjs";
 
+import { DataCache } from "@batch-flask/core";
 import { AccountResource } from "app/models";
 import { AccountService } from "app/services";
-import { DataCache } from "app/services/core";
+import { first } from "rxjs/operators";
 
 describe("AccountService", () => {
     let accountService: AccountService;
@@ -23,8 +24,8 @@ describe("AccountService", () => {
         storageSpy = {};
 
         accountService = new AccountService(storageSpy, {} as any, subscriptionServiceSpy);
-        accountService.get = jasmine.createSpy("get").and.returnValue(Observable.of(account1));
-        accountService.getAccountKeys = jasmine.createSpy("getAccountKeys").and.returnValue(Observable.of({}));
+        accountService.get = jasmine.createSpy("get").and.returnValue(of(account1));
+        accountService.getAccountKeys = jasmine.createSpy("getAccountKeys").and.returnValue(of({}));
         subs.push(accountService.currentAccountId.subscribe(x => currentAccountId = x));
         subs.push(accountService.currentAccount.subscribe(x => currentAccount = x));
     });
@@ -40,7 +41,7 @@ describe("AccountService", () => {
      */
     it("currentAccount should not return anything until a value has been loaded", () => {
         const accountSubscriptionSpy = jasmine.createSpy("currentAccount");
-        accountService.currentAccount.first().subscribe(accountSubscriptionSpy);
+        accountService.currentAccount.pipe(first()).subscribe(accountSubscriptionSpy);
         expect(accountSubscriptionSpy).not.toHaveBeenCalled();
         expect(currentAccount).toBeUndefined();
 

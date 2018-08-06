@@ -34,6 +34,7 @@ export class BatchAccountCommands extends EntityCommands<AccountResource> {
 
     private _buildCommands() {
         this.showKeys = this.simpleCommand({
+            name: "showKeys",
             ...COMMAND_LABEL_ICON.Credentials,
             action: (account) => this._showKeys(account),
             multiple: false,
@@ -42,6 +43,7 @@ export class BatchAccountCommands extends EntityCommands<AccountResource> {
         });
 
         this.delete = this.simpleCommand({
+            name: "delete",
             ...COMMAND_LABEL_ICON.Delete,
             action: (account: AccountResource) => {
                 this.accountService.deleteBatchAccount(account.id);

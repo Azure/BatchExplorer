@@ -1,11 +1,12 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { PermissionService } from "@batch-flask/ui";
+import { PermissionService, Workspace, WorkspaceService } from "@batch-flask/ui";
 import { ButtonComponent, ButtonsModule } from "@batch-flask/ui/buttons";
-import { Observable } from "rxjs";
+import { BehaviorSubject, of } from "rxjs";
+
+import * as Fixtures from "test/fixture";
 import { click } from "test/utils/helpers";
 import { EntityCommandButtonComponent } from "./entity-command-button.component";
 
@@ -59,7 +60,10 @@ describe("EntityCommandButtonComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
+
     let permissionServiceSpy;
+    let currentWorkspace: BehaviorSubject<Workspace>;
+    let wsServiceSpy;
 
     function getButton(): ButtonComponent {
         const el = de.query(By.css("bl-button"));
@@ -69,20 +73,27 @@ describe("EntityCommandButtonComponent", () => {
     beforeEach(() => {
         permissionServiceSpy = {
             hasPermission: jasmine.createSpy("hasPermission").and.callFake((permission) => {
-                return Observable.of(permission !== "admin");
+                return of(permission !== "admin");
             }),
         };
+
+        currentWorkspace = new BehaviorSubject(Fixtures.workspace.create());
+        wsServiceSpy = {
+            currentWorkspace: currentWorkspace.asObservable(),
+        };
+
         TestBed.configureTestingModule({
             imports: [ButtonsModule, NoopAnimationsModule],
             declarations: [EntityCommandButtonComponent, TestComponent],
             providers: [
                 { provide: PermissionService, useValue: permissionServiceSpy },
+                { provide: WorkspaceService, useValue: wsServiceSpy },
             ],
         });
+
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-entity-command-button"));
-
         fixture.detectChanges();
     });
 

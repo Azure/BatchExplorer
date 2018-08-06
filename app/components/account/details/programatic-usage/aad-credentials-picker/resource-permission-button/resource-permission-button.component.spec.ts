@@ -3,13 +3,13 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { List } from "immutable";
-import { Observable } from "rxjs";
 
 import { MaterialModule } from "@batch-flask/core";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { RoleAssignment, RoleDefinition } from "app/models";
 import { ResourceAccessService } from "app/services";
+import { of } from "rxjs";
 import { click } from "test/utils/helpers";
 import { ResourcePermissionButtonComponent } from "./resource-permission-button.component";
 
@@ -51,8 +51,8 @@ describe("ResourcePermissionButtonComponent", () => {
 
     beforeEach(() => {
         resourceAccessServiceSpy = {
-            getRoleFor: jasmine.createSpy("getRoleFor").and.callFake(() => Observable.of(currentRole)),
-            listRoleDefinitions: () => Observable.of([contributorRole, readerRole, customRole]),
+            getRoleFor: jasmine.createSpy("getRoleFor").and.callFake(() => of(currentRole)),
+            listRoleDefinitions: () => of([contributorRole, readerRole, customRole]),
         };
         TestBed.configureTestingModule({
             imports: [MaterialModule, NoopAnimationsModule],

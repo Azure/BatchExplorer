@@ -1,12 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { MatCheckboxChange, MatDialogRef } from "@angular/material";
-import { ServerError, autobind } from "@batch-flask/core";
-import { AsyncSubject, Observable } from "rxjs";
-
-import { FileExplorerConfig, FileExplorerSelectable } from "app/components/file/browse/file-explorer";
+import { EntityView, ServerError, autobind } from "@batch-flask/core";
+import { FileExplorerConfig, FileExplorerSelectable } from "@batch-flask/ui";
 import { BlobContainer } from "app/models";
-import { EntityView } from "app/services/core";
 import { GetContainerParams, StorageContainerService } from "app/services/storage";
+import { AsyncSubject, of } from "rxjs";
+
 import "./cloud-file-picker-dialog.scss";
 
 @Component({
@@ -72,7 +71,7 @@ export class CloudFilePickerDialogComponent implements OnInit {
     @autobind()
     public submit() {
         this._saved = true;
-        return Observable.of(null);
+        return of(null);
     }
 
     public trackFilterOption(index, option: any) {

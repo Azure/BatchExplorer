@@ -1,10 +1,9 @@
 import { Type } from "@angular/core";
 import { RequestOptions, Response, URLSearchParams } from "@angular/http";
+import { ContinuationToken, ListGetter, ListGetterConfig, ListOptions } from "@batch-flask/core";
 import { Observable } from "rxjs";
-
+import { map, share } from "rxjs/operators";
 import { ArmHttpService } from "../../arm-http.service";
-import { ListGetter, ListGetterConfig } from "./list-getter";
-import { ContinuationToken, ListOptions } from "./list-options";
 
 export interface ArmListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
     uri: (params: TParams, options: any) => string;
@@ -25,11 +24,17 @@ export class ArmListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams
     protected list(params: TParams, options: ListOptions): Observable<any> {
         return this.arm.get(
             this._provideUri(params, options),
-            this._requestOptions(options)).map(x => this._processArmResponse(x)).share();
+            this._requestOptions(options)).pipe(
+                map(x => this._processArmResponse(x)),
+                share(),
+            );
     }
 
     protected listNext(token: ContinuationToken): Observable<any> {
-        return this.arm.get(token.nextLink).map(x => this._processArmResponse(x)).share();
+        return this.arm.get(token.nextLink).pipe(
+            map(x => this._processArmResponse(x)),
+            share(),
+        );
     }
 
     private _processArmResponse(response: Response) {

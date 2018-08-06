@@ -1,0 +1,15 @@
+{
+  "duration-picker.unit.unlimited": "Obegränsad",
+  "duration-picker.unit.days": "Dagar",
+  "duration-picker.unit.minutes": "Minuter",
+  "duration-picker.unit.hours": "Timmar",
+  "duration-picker.unit.seconds": "Sekunder",
+  "main-navigation.jobs": "Jobb",
+  "main-navigation.jobschedules": "Jobbscheman",
+  "main-navigation.pools": "Pooler",
+  "main-navigation.packages": "Paket",
+  "main-navigation.certificates": "Certifikat",
+  "main-navigation.data": "Data",
+  "main-navigation.gallery": "Galleri",
+  "main-navigation.profile": "Profil"
+}

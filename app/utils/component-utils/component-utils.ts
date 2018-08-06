@@ -1,7 +1,7 @@
 import { SimpleChange } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
-import { ListView } from "app/services/core";
+import { ListView } from "@batch-flask/core";
 
 export class ComponentUtils {
     /**
@@ -9,9 +9,17 @@ export class ComponentUtils {
      * @param change Simple change from ngOnChanges
      */
     public static recordChangedId(change: SimpleChange): boolean {
+        return this.recordChangedAttr(change, "id");
+    }
+
+    /**
+     * Return true if the record changed id
+     * @param change Simple change from ngOnChanges
+     */
+    public static recordChangedAttr(change: SimpleChange, attr: string): boolean {
         if (!change) { return false; }
         const { previousValue, currentValue } = change;
-        const same = previousValue && currentValue && previousValue.id === currentValue.id;
+        const same = previousValue && currentValue && previousValue[attr] === currentValue[attr];
         return !same;
     }
 

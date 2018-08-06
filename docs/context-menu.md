@@ -215,7 +215,7 @@ In `job-commands.ts`
 
         if (localPath) {
             const content = JSON.stringify(job._original, null, 2);
-            return Observable.fromPromise(this.fs.saveFile(localPath, content));
+            return from(this.fs.saveFile(localPath, content));
         }
     }
 }

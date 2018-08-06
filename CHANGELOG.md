@@ -1,3 +1,54 @@
+# 0.17.1
+[All items](https://github.com/Azure/BatchExplorer/milestone/25?closed=1)
+
+### Bug fixes:
+* Task outputs is broken when not using autostorage account [\#1522](https://github.com/Azure/BatchExplorer/issues/1522)
+* Cannot connect to Windows Cloud Service node [\#1529](https://github.com/Azure/BatchExplorer/issues/1529)
+* Users should be able to see password used to connect to remote node [\#1532](https://github.com/Azure/BatchExplorer/issues/1532)
+
+### Other
+* Task properties pool and node should be links [\#1523](https://github.com/Azure/BatchExplorer/issues/1523)
+
+# 0.17.0
+[All items](https://github.com/Azure/BatchExplorer/milestone/21?closed=1)
+
+### Feature:
+* Improve experience for finding failed task [\#829](https://github.com/Azure/BatchExplorer/issues/829)
+* Make title bar inline with app [\#162](https://github.com/Azure/BatchExplorer/issues/162)
+* Add ability to remove pinned items from drop down [\#1379](https://github.com/Azure/BatchExplorer/issues/1379)
+* Create a job-id advanced type that validates the job-id doesn't exist.  [\#1330](https://github.com/Azure/BatchExplorer/issues/1330)
+* Task Dependencies show task state with icon and color [\#1503](https://github.com/Azure/BatchExplorer/issues/1503)
+* Pool bar charts for node states [\#1502](https://github.com/Azure/BatchExplorer/issues/1502)
+* Add task runtime to task grid [\#1501](https://github.com/Azure/BatchExplorer/issues/1501)
+* Support internationalization [\#1499](https://github.com/Azure/BatchExplorer/issues/1499)
+* Duration picker v2 [\#1431](https://github.com/Azure/BatchExplorer/issues/1431)
+* Node Connect redesign to unify windows and linux experience [\#1492](https://github.com/Azure/BatchExplorer/issues/1492)
+* Task progress not exposing validity of task count api [\#1475](https://github.com/Azure/BatchExplorer/issues/1475)
+* Ability to override the BatchLabs-data  branch that we pull templates from [\#1474](https://github.com/Azure/BatchExplorer/issues/1474)
+* Use select query for task list to improve performance [\#1468](https://github.com/Azure/BatchExplorer/issues/1468)
+* Batch Account URI should have https:// prefix [\#1435](https://github.com/Azure/BatchExplorer/issues/1435)
+* Task table column layout a little funky [\#1422](https://github.com/Azure/BatchExplorer/issues/1422)
+* BatchLabs: App splited in features that are can be enabled and disabled [\#1449](https://github.com/Azure/BatchExplorer/issues/1449)
+* BatchLabs one click node connect [\#1452](https://github.com/Azure/BatchExplorer/issues/1452)
+
+### Bug fixes:
+* Uncaught exception for container pools with no container images and/or registries specified [\#1512](https://github.com/Azure/BatchExplorer/issues/1512)
+* Task timeline doesn't cancel requests when leaving component [\#1472](https://github.com/Azure/BatchExplorer/issues/1472)
+* Pool from Windows managed image displays as Linux [\#1436](https://github.com/Azure/BatchExplorer/issues/1436)
+
+### Accessibility:
+* Server error component is not keyboard accessible [\#1426](https://github.com/Azure/BatchExplorer/issues/1426)
+* Images tags are missing alt attributes [\#1482](https://github.com/Azure/BatchExplorer/issues/1482)
+* Tags are not accessible via keyboard [\#1420](https://github.com/Azure/BatchExplorer/issues/1420)
+* Notification not keyboard accessible [\#1424](https://github.com/Azure/BatchExplorer/issues/1424)
+
+### Other:
+* Rename BatchLabs to BatchExplorer [\#1497](https://github.com/Azure/BatchExplorer/issues/1497)
+* CSS quicklist error notice in incorrect place for pools, schedules and certs [\#1510](https://github.com/Azure/BatchExplorer/issues/1510)
+* Add some dependency injection logic in client process [\#1470](https://github.com/Azure/BatchExplorer/issues/1470)
+* Monaco editor switch to webpack [\#1156](https://github.com/Azure/BatchExplorer/issues/1156)
+
+
 # 0.16.2
 [All items](https://github.com/Azure/BatchExplorer/milestone/23closed=1)
 

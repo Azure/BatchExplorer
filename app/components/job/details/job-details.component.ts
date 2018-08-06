@@ -1,20 +1,20 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "@batch-flask/core";
-import { List } from "immutable";
-import { Subscription } from "rxjs";
-
+import { EntityView, autobind } from "@batch-flask/core";
 import { Job } from "app/models";
 import { JobDecorator } from "app/models/decorators";
 import { JobParams, JobService } from "app/services";
-import { EntityView } from "app/services/core";
+import { List } from "immutable";
+import { Subscription } from "rxjs";
 import { JobCommands } from "../action";
 
+import { flatMap } from "rxjs/operators";
 import "./job-details.scss";
 
 @Component({
     selector: "bl-job-details",
     templateUrl: "job-details.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [JobCommands],
 })
 export class JobDetailsComponent implements OnInit, OnDestroy {
@@ -38,6 +38,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     constructor(
         public commands: JobCommands,
         private activatedRoute: ActivatedRoute,
+        private changeDetector: ChangeDetectorRef,
         private jobService: JobService,
         private router: Router) {
 
@@ -47,6 +48,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
             this.hasHookTask = Boolean(job && job.jobPreparationTask);
             if (job) {
                 this.decorator = new JobDecorator(job);
+                this.changeDetector.markForCheck();
             }
         });
 
@@ -81,8 +83,8 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public updateTags(tags: List<string>) {
-        return this.jobService.updateTags(this.job, tags).flatMap(() => {
-            return this.data.refresh();
-        });
+        return this.jobService.updateTags(this.job, tags).pipe(
+            flatMap(() => this.data.refresh()),
+        );
     }
 }

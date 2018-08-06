@@ -2,27 +2,41 @@
     <bl-clickable routerLink="/accounts" routerLinkActive="active" title="Dashboard">
         <i class="fa fa-th fa-lg"></i><div class="label">{{'main-navigation.dashboard' | i18n}}</div>
     </bl-clickable>
-    <bl-clickable *blHiddenIfNoAccount routerLink="/jobs" routerLinkActive="active">
-        <i class="fa fa-tasks fa-lg"></i><div class="label">{{'main-navigation.jobs' | i18n}}</div>
-    </bl-clickable>
-    <bl-clickable *blHiddenIfNoAccount routerLink="/jobschedules" routerLinkActive="active" title="Job schedules">
-        <i class="fa fa-calendar fa-lg"></i><div class="label">{{'main-navigation.jobschedules' | i18n}}</div>
-    </bl-clickable>
-    <bl-clickable *blHiddenIfNoAccount routerLink="/pools" routerLinkActive="active">
-        <i class="fa fa-database fa-lg"></i><div class="label">{{'main-navigation.pools' | i18n}}</div>
-    </bl-clickable>
-    <bl-clickable *blHiddenIfNoAccount routerLink="/applications" routerLinkActive="active" title="Application packages">
-        <i class="fa fa-file-archive-o fa-lg"></i><div class="label">{{'main-navigation.packages' | i18n}}</div>
-    </bl-clickable>
-    <bl-clickable *blHiddenIfNoAccount routerLink="/certificates" routerLinkActive="active" title="Certificates">
-        <i class="fa fa-certificate fa-lg"></i><div class="label">{{'main-navigation.certificates' | i18n}}</div>
-    </bl-clickable>
-    <bl-clickable *blHiddenIfNoAccount routerLink="/data" routerLinkActive="active" title="File groups">
-        <i class="fa fa-cloud-upload fa-lg"></i><div class="label">{{'main-navigation.data' | i18n}}</div>
-    </bl-clickable>
-    <bl-clickable *blHiddenIfNoAccount href="#" routerLink="market" routerLinkActive="active" title="Gallery">
-        <i class="fa fa-cubes" aria-hidden="true"></i><div class="label">{{'main-navigation.gallery' | i18n}}</div>
-    </bl-clickable>
+    <div *blHiddenIfNoAccount>
+        <bl-clickable *blFeatureOn="'job'" routerLink="/jobs" routerLinkActive="active">
+            <i class="fa fa-tasks fa-lg"></i><div class="label">{{'main-navigation.jobs' | i18n}}</div>
+        </bl-clickable>
+    </div>
+    <ng-container *blHiddenIfNoAccount>
+        <bl-clickable *blFeatureOn="'schedule'" routerLink="/jobschedules" routerLinkActive="active" title="Job schedules">
+            <i class="fa fa-calendar fa-lg"></i><div class="label">{{'main-navigation.jobschedules' | i18n}}</div>
+        </bl-clickable>
+    </ng-container>
+    <ng-container *blHiddenIfNoAccount>
+        <bl-clickable *blFeatureOn="'pool'" routerLink="/pools" routerLinkActive="active">
+            <i class="fa fa-database fa-lg"></i><div class="label">{{'main-navigation.pools' | i18n}}</div>
+        </bl-clickable>
+    </ng-container>
+    <ng-container *blHiddenIfNoAccount>
+        <bl-clickable *blFeatureOn="'package'" routerLink="/applications" routerLinkActive="active" title="Application packages">
+            <i class="fa fa-file-archive-o fa-lg"></i><div class="label">{{'main-navigation.packages' | i18n}}</div>
+        </bl-clickable>
+    </ng-container>
+    <ng-container *blHiddenIfNoAccount>
+        <bl-clickable *blFeatureOn="'certificate'" routerLink="/certificates" routerLinkActive="active" title="Certificates">
+            <i class="fa fa-certificate fa-lg"></i><div class="label">{{'main-navigation.certificates' | i18n}}</div>
+        </bl-clickable>
+    </ng-container>
+    <ng-container *blHiddenIfNoAccount>
+        <bl-clickable *blFeatureOn="'data'" routerLink="/data" routerLinkActive="active" title="File groups">
+            <i class="fa fa-cloud-upload fa-lg"></i><div class="label">{{'main-navigation.data' | i18n}}</div>
+        </bl-clickable>
+    </ng-container>
+    <ng-container *blHiddenIfNoAccount>
+        <bl-clickable *blFeatureOn="'gallery'" href="#" routerLink="market" routerLinkActive="active" title="Gallery">
+            <i class="fa fa-cubes" aria-hidden="true"></i><div class="label">{{'main-navigation.gallery' | i18n}}</div>
+        </bl-clickable>
+    </ng-container>
 </ul>
 <div class="flex-separator"></div>
 <ul class="bottom">

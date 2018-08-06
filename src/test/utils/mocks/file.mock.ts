@@ -1,5 +1,3 @@
-import { Partial } from "app/utils";
-
 export interface MockedFileAttributes {
     name: string;
     path: string;
@@ -23,7 +21,7 @@ export class MockedFile implements File {
     }
 
     public slice(start: number, end: number) {
-        return new Blob([end - start]);
+        return new Blob([end - start] as any);
     }
 
     public msClose(): void {

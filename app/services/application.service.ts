@@ -1,18 +1,22 @@
 import { Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
-
-import { HttpCode, ServerError } from "@batch-flask/core";
+import {
+    DataCache,
+    EntityView,
+    HttpCode,
+    ListOptionsAttributes,
+    ListView,
+    ServerError,
+} from "@batch-flask/core";
 import { ApplicationPackage, BatchApplication } from "app/models";
 import { Constants } from "app/utils";
+import { Observable, Subject } from "rxjs";
+import { map } from "rxjs/operators";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
 import {
     ArmEntityGetter,
     ArmListGetter,
-    DataCache,
-    EntityView,
-    ListOptionsAttributes,
-    ListView,
+
 } from "./core";
 
 export interface ApplicationListParams {
@@ -115,7 +119,9 @@ export class ApplicationService {
 
         return this.arm
             .put(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`)
-            .map(response => new ApplicationPackage(response.json()));
+            .pipe(
+                map(response => new ApplicationPackage(response.json())),
+            );
     }
 
     /**
@@ -165,9 +171,9 @@ export class ApplicationService {
      * @param version: selected package version
      */
     public getPackage(applicationId: string, version: string): Observable<ApplicationPackage> {
-        return this.arm
-            .get(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`)
-            .map(response => new ApplicationPackage(response.json()));
+        return this.arm.get(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`).pipe(
+            map(response => new ApplicationPackage(response.json())),
+        );
     }
 
     /**

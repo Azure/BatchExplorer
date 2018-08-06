@@ -3,18 +3,17 @@ import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { MatOptionSelectionChange } from "@angular/material";
-import { FilterBuilder } from "@batch-flask/core";
-import { List } from "immutable";
-import { Subscription } from "rxjs";
-
+import { FilterBuilder, ListView } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { BlobContainer } from "app/models";
-import { ListView } from "app/services/core";
+import { NcjFileGroupService } from "app/services";
 import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
+import { List } from "immutable";
+import { Subscription } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
-import { NcjFileGroupService } from "app/services";
 import "./file-group-picker.scss";
 
 // tslint:disable:no-forward-ref
@@ -62,7 +61,10 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
             });
         }));
 
-        this._subscriptions.push(this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
+        this._subscriptions.push(this.value.valueChanges.pipe(
+            debounceTime(400),
+            distinctUntilChanged(),
+        ).subscribe((value) => {
             this._checkValid(value);
             if (this._propagateChange) {
                 this._propagateChange(value && this.fileGroupService.removeFileGroupPrefix(value));

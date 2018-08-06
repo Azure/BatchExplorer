@@ -3,7 +3,6 @@ import { List } from "immutable";
 import * as forge from "node-forge";
 import { AsyncSubject, Observable, Subject } from "rxjs";
 
-import { Certificate } from "app/models";
 import {
     ContinuationToken,
     DataCache,
@@ -11,7 +10,8 @@ import {
     ListOptionsAttributes,
     ListResponse,
     ListView,
-} from "app/services/core";
+} from "@batch-flask/core";
+import { Certificate } from "app/models";
 import { Constants, FileUrlUtils } from "app/utils";
 import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "../core";
 
@@ -142,7 +142,7 @@ export class CertificateService {
             // try catch potential error when get thumbprint
             try {
                 const certificateFormat = FileUrlUtils.getFileExtension(file.name);
-                const binaryEncodedData = reader.result;
+                const binaryEncodedData = reader.result as any;
                 const base64EncodedData = btoa(binaryEncodedData);
                 const isCer = certificateFormat === CertificateFormat.cer;
                 const data = isCer ? binaryEncodedData : base64EncodedData;

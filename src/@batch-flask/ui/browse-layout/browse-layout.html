@@ -9,7 +9,7 @@
                     <div class="flex-separator"></div>
                     <div class="actions">
                         <bl-button icon="fa fa-trash" type="plain" color="light" *ngIf="deleteSelectionIsEnabled && selection.hasAny()" [skipSuccess]="true"
-                            [action]="deleteSelection">
+                            [action]="deleteSelection" title="Delete">
                         </bl-button>
                         <bl-refresh-btn [refresh]="refresh" *ngIf="refreshEnabled" type="plain" color="light"></bl-refresh-btn>
                         <ng-content select="[blBrowseLayoutButtons]"></ng-content>

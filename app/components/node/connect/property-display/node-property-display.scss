@@ -1,5 +1,14 @@
 @import "app/styles/variables";
 
+@keyframes flash {
+    0%, 50%, 100% {
+    }
+
+    25%, 75% {
+        background: map-get($warn, 300);
+    }
+}
+
 bl-node-property-display {
 
     bl-property-group {
@@ -18,13 +27,39 @@ bl-node-property-display {
                 font-size: 13px;
                 flex-basis: 200px;
                 font-weight: bold;
-                line-height: 20px;
+                line-height: 25px;
                 margin-right: 5px;
+
+                .regenerate-password {
+                    font-weight: normal;
+                    position: absolute;
+                    top: 20px;
+                    left: 0;
+
+                    i {
+                        margin-left: 5px;
+                    }
+                }
             }
 
             > input {
                 flex: 1;
-                max-width: 349px;
+                max-width: 350px;
+            }
+
+            > .password-input-container {
+                input {
+                    flex: 1;
+                    width: 350px;
+                }
+
+                .set-visible {
+                    position: absolute;
+                    line-height: 25px;
+                    right: 38px;
+                    font-size: 12pt;
+                    cursor: pointer;
+                }
             }
 
             > .display-field {
@@ -56,6 +91,10 @@ bl-node-property-display {
                 top: 28px;
                 left: 210px;
                 color: $secondary-text;
+            }
+
+            .flash {
+                animation: flash 1s 1;
             }
         }
     }

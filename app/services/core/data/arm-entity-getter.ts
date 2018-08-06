@@ -1,8 +1,8 @@
 import { Type } from "@angular/core";
-
+import { EntityGetter, EntityGetterConfig } from "@batch-flask/core";
 import { ArmHttpService } from "app/services/arm-http.service";
-import { EntityGetter, EntityGetterConfig } from "app/services/core/data/entity-getter";
 import { Observable } from "rxjs";
+import { map, share } from "rxjs/operators";
 
 export interface ArmEntityGetterConfig<TEntity, TParams> extends EntityGetterConfig<TEntity, TParams> {
     /**
@@ -24,9 +24,10 @@ export class ArmEntityGetter<TEntity, TParams> extends EntityGetter<TEntity, TPa
     }
 
     protected getData(params: TParams): Observable<any> {
-        return this.arm.get(this._computeURI(params))
-            .map(x => x.json())
-            .share();
+        return this.arm.get(this._computeURI(params)).pipe(
+            map(x => x.json()),
+            share(),
+        );
     }
 
     private _computeURI(params: TParams): string {

@@ -1,5 +1,5 @@
 <bl-clickable (do)="openSettingsContextMenu()" [matTooltip]="currentUserName" class="profile" matTooltipPosition="right">
-    <i class="fa fa-user fa-lg"></i><div class="label">Profile</div>
+    <i class="fa fa-user fa-lg"></i><div class="label">{{'profile-button.profile' | i18n}}</div>
     <ng-container [ngSwitch]="updateStatus">
         <div *ngSwitchCase="UpdateStatus.Checking" class="notification-overlay checking" >
             <i class="fa fa-circle-o-notch fa-spin"></i>

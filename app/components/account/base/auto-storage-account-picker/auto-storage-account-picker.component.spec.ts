@@ -5,12 +5,13 @@ import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { List } from "immutable";
-import { Observable } from "rxjs";
 
+import { TableTestingModule } from "@batch-flask/ui/testing";
 import { AccountResource, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
+import { of } from "rxjs";
 import { ElectronTestingModule } from "test/utils/mocks";
-import { LoadingMockComponent, TableTestingModule } from "test/utils/mocks/components";
+import { LoadingMockComponent } from "test/utils/mocks/components";
 import { AutoStorageAccountPickerComponent } from "./auto-storage-account-picker.component";
 
 const account = new AccountResource({
@@ -40,7 +41,7 @@ describe("AutoStorageAccountPickerComponent", () => {
 
     beforeEach(() => {
         storageServiceSpy = {
-            list: () => Observable.of(List([
+            list: () => of(List([
                 new StorageAccount({ id: "sub-1/storage-1", name: "storage-1", location: "westus" } as any),
                 new StorageAccount({ id: "sub-1/storage-2", name: "storage-2", location: "brazilsouth" } as any),
                 new StorageAccount({ id: "sub-1/storage-3", name: "storage-3", location: "westus" } as any),

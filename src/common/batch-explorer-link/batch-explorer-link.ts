@@ -8,7 +8,7 @@ export enum BatchExplorerLinkAction {
 export interface BatchExplorerLinkAttributes {
     action: BatchExplorerLinkAction;
     path: string;
-    queryParams: URLSearchParams;
+    queryParams: Url.URLSearchParams;
     session: string;
     accountId: string;
 }
@@ -25,7 +25,7 @@ export class BatchExplorerInvalidLinkError extends Error {
 export class BatchExplorerLink implements BatchExplorerLinkAttributes {
     public action: BatchExplorerLinkAction;
     public path: string;
-    public queryParams: URLSearchParams;
+    public queryParams: Url.URLSearchParams;
 
     /**
      * Session that can be used by the application

@@ -34,6 +34,9 @@ const colors = [
 ];
 
 const lowPriColor = colors.map(x => pattern.draw("diagonal", x));
+
+const emptyNodeCount = new NodeCounts().toJS();
+
 @Component({
     selector: "bl-pool-state-graph",
     templateUrl: "pool-state-graph.html",
@@ -97,7 +100,6 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
     private _updateDataSets() {
         const counts = this._getCounts();
         if (this.interactive) {
-
             this.datasets = [
                 {
                     label: "Dedicated nodes",
@@ -131,8 +133,8 @@ export class PoolStateGraphComponent implements OnChanges, OnDestroy {
             return this._counts.get(this.pool.id);
         }
 
-        const dedicatedCounts: NodeCountsAttributes = new NodeCounts().toJS();
-        const lowPriorityCounts: NodeCountsAttributes = new NodeCounts().toJS();
+        const dedicatedCounts: NodeCountsAttributes = {...emptyNodeCount};
+        const lowPriorityCounts: NodeCountsAttributes = {...emptyNodeCount};
 
         for (const count of this._counts.values()) {
             this._addToSum(dedicatedCounts, count.dedicated);
