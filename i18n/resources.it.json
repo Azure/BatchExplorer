@@ -1,0 +1,15 @@
+{
+  "duration-picker.unit.unlimited": "Senza limiti",
+  "duration-picker.unit.days": "Giorni",
+  "duration-picker.unit.minutes": "Minuti",
+  "duration-picker.unit.hours": "Ore",
+  "duration-picker.unit.seconds": "Secondi",
+  "main-navigation.jobs": "Processi",
+  "main-navigation.jobschedules": "Pianificazioni processi",
+  "main-navigation.pools": "Pool",
+  "main-navigation.packages": "Pacchetti",
+  "main-navigation.certificates": "Certificati",
+  "main-navigation.data": "Dati",
+  "main-navigation.gallery": "Galleria",
+  "main-navigation.profile": "Profilo"
+}

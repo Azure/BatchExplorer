@@ -1,4 +1,7 @@
+import { promisify } from "util";
 import * as xml2js from "xml2js";
+
+const parseString: any = promisify(xml2js.parseString);
 
 // tslint:disable:max-line-length
 const rootAttributes = {
@@ -8,6 +11,11 @@ const rootAttributes = {
     "version": "1.2",
 };
 // tslint:enable:max-line-length
+
+export interface XLiffDecodeResult {
+    translations: StringMap<string>;
+    targetLanguage: string;
+}
 
 export class XliffSerializer {
     /**
@@ -44,5 +52,28 @@ export class XliffSerializer {
         return builder.buildObject({
             xliff: root,
         });
+    }
+
+    public static async decode(xliff: string): Promise<XLiffDecodeResult> {
+        const xml = await parseString(xliff);
+        const file = xml.xliff.file[0];
+        const targetLanguage = file["$"]["target-language"];
+
+        const transUnits = file.body[0]["trans-unit"];
+        const translations = {};
+        for (const unit of transUnits) {
+            if (!unit.target || unit.target.length === 0) { continue; }
+            const target = unit.target[0];
+            const translated = target.$.state === "translated";
+
+            if (translated) {
+                translations[unit.$.id] = target["_"];
+            }
+        }
+
+        return {
+            targetLanguage,
+            translations,
+        };
     }
 }

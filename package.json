@@ -31,6 +31,7 @@
     "build-python": "pyinstaller python/main.spec -y --distpath=python/dist --workpath=python/build",
     "build-i18n": "npm run -s ts -- scripts/i18n/generate.ts",
     "build-i18n-xliff": "npm run -s ts -- scripts/i18n/create-xliff.ts",
+    "build-i18n-digest": "npm run -s ts -- scripts/i18n/digest-xliff.ts",
     "build": "npm run -s clean && npm run -s build-client && npm run -s build-app && npm run build-i18n",
     "build:prod": "cross-env NODE_ENV=production npm run -s build",
     "watch": "npm run webpack -- --watch --progress --profile --colors --display-error-details --display-cached",
