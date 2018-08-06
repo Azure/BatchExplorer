@@ -1,18 +1,19 @@
 import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
-import { List } from "immutable";
-import * as path from "path";
-import { Observable, forkJoin, from, of } from "rxjs";
-
 import { autobind } from "@batch-flask/core";
-import { Activity, ActivityService, ElectronShell, FileSystemService } from "@batch-flask/ui";
+import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
+import { ElectronShell, FileSystemService } from "@batch-flask/ui/electron";
 import { FileNavigator } from "@batch-flask/ui/file/file-navigator";
 import { SecureUtils } from "@batch-flask/utils";
+import { List } from "immutable";
 import * as minimatch from "minimatch";
+import * as path from "path";
+import { Observable, forkJoin, from, of } from "rxjs";
 import { flatMap, map, reduce } from "rxjs/operators";
 
 import "./download-folder-dialog.scss";
+
 @Component({
     selector: "bl-download-folder-dialog",
     templateUrl: "download-folder-dialog.html",

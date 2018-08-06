@@ -1,6 +1,7 @@
 import { BehaviorSubject, Observable, combineLatest, merge } from "rxjs";
 
-import { Activity, ActivityStatus } from "@batch-flask/ui/activity-monitor/activity";
+import { ActivityStatus } from "./activity-types.model";
+import { Activity } from "./activity.model";
 
 export class ActivityProcessor {
     public activities: Activity[];

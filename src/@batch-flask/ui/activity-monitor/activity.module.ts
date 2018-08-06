@@ -1,5 +1,5 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
-import { ActivityService } from "@batch-flask/ui/activity-monitor";
+import { ActivityService } from "./activity.service";
 
 @NgModule({
     providers: [

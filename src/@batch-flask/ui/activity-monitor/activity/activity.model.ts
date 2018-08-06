@@ -1,6 +1,7 @@
-import { ActivityProcessor, ActivityStatus } from "@batch-flask/ui/activity-monitor/activity";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 import { tap } from "rxjs/operators";
+import { ActivityProcessor } from "./activity-processor.model";
+import { ActivityStatus } from "./activity-types.model";
 
 export class ActivityCounters {
     public completed: number;

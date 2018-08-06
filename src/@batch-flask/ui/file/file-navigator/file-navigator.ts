@@ -1,4 +1,5 @@
 import { DataCache, ListGetter, ServerError } from "@batch-flask/core";
+import { Activity } from "@batch-flask/ui/activity-monitor";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { CloudPathUtils, StringUtils, log } from "@batch-flask/utils";
 import { List } from "immutable";
@@ -236,6 +237,32 @@ export class FileNavigator<TParams = any> {
                 this._removeFile(folder);
             }),
             share(),
+        );
+    }
+
+    public createFolderDeletionActivityInitializer(folder: string): Observable<Activity[]> {
+        return this.listAllFiles(CloudPathUtils.asBaseDirectory(folder)).pipe(
+            map(fileList => {
+                return fileList.toArray().map(file => {
+                    let name;
+                    let obs;
+
+                    // check whether the given filepath is to a file or a directory
+                    if (file.isDirectory) {
+                        name = `Deleting folder ${file.name}`;
+                        obs = this.createFolderDeletionActivityInitializer(file.name);
+                    } else {
+                        name = `Deleting file ${file.name}`;
+                        obs = this.deleteFile(file.name);
+                    }
+
+                    // map the file/folder to a file/folder deletion activity
+                    const initializer = () => {
+                        return obs;
+                    };
+                    return new Activity(name, initializer);
+                });
+            }),
         );
     }
 

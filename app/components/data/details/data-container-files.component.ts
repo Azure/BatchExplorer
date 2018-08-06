@@ -46,7 +46,7 @@ export class DataContainerFilesComponent implements OnDestroy {
                 map(fileList => {
                     return fileList.map(file => {
                         const filename = path.basename(file.localPath);
-                        return new Activity(`Uploading ${filename} to ${container}`, () => {
+                        const activity = new Activity(`Uploading ${filename} to ${container}`, () => {
                             return this.storageBlobService.uploadFile(
                                 this.storageAccountId,
                                 container,
@@ -54,15 +54,22 @@ export class DataContainerFilesComponent implements OnDestroy {
                                 file.remotePath,
                             );
                         });
+                        activity.done.subscribe(() => this.blobExplorer.refresh());
+                        return activity;
                     });
                 }),
             );
         };
 
-        const name = `Uploading ${event.files.length} files to ${container}`;
-        const activity = new Activity(name, initializer);
-        this.activityService.loadAndRun(activity);
-        return activity.done;
+        return from(this._getFilesToUpload(event.files)).pipe(
+            map(fileList => {
+                const name = `Uploading ${fileList.length} items to ${container}`;
+                const activity = new Activity(name, initializer);
+                this.activityService.loadAndRun(activity);
+                activity.done.subscribe(() => this.blobExplorer.refresh());
+                return activity.done;
+            }),
+        );
     }
 
     private async _getFilesToUpload(files: any[]) {
