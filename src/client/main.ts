@@ -15,7 +15,7 @@ import "./init";
 
 // 2. Update electron user data folder
 import { app } from "electron";
-app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
+app.setPath("userData", path.join(app.getPath("appData"), "BatchExplorer"));
 
 // 3. Initialize the logger
 import { initLogger } from "client/logger";

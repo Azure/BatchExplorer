@@ -1,12 +1,13 @@
 import { Injectable } from "@angular/core";
 import { Locale, LocaleService } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
+import { app } from "electron";
 import * as path from "path";
 import { FileSystem } from "./fs";
 
 @Injectable()
 export class ClientLocaleService extends LocaleService {
-    public locale: Locale = Locale.EN;
+    public locale: Locale = Locale.English;
 
     constructor(private fs: FileSystem) {
         super();
@@ -18,9 +19,12 @@ export class ClientLocaleService extends LocaleService {
     }
 
     public async setLocale(locale: Locale) {
+        this.locale = locale;
         const localeFile = this._localeFile;
         const content = JSON.stringify({ locale: this.locale });
         await this.fs.saveFile(localeFile, content);
+        app.relaunch();
+        app.exit();
     }
 
     private get _localeFile() {
@@ -49,6 +53,6 @@ export class ClientLocaleService extends LocaleService {
             log.error("Fail to load local files. Will default to english", e);
         }
 
-        return Locale.EN;
+        return Locale.English;
     }
 }

@@ -32,7 +32,7 @@ import { BatchExplorerErrorHandler } from "app/error-handler";
 
 // services
 import { HttpModule } from "@angular/http";
-import { MaterialModule, PollService, TranslationsLoaderService } from "@batch-flask/core";
+import { LocaleService, MaterialModule, PollService, TranslationsLoaderService } from "@batch-flask/core";
 import { CommonModule } from "app/components/common";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
@@ -47,6 +47,7 @@ import {
     AdalService,
     AppInsightsApiService,
     AppInsightsQueryService,
+    AppLocaleService,
     AppTranslationsLoaderService,
     ApplicationService,
     ArmHttpService,
@@ -127,6 +128,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         { provide: TranslationsLoaderService, useClass: AppTranslationsLoaderService },
+        { provide: LocaleService, useClass: AppLocaleService },
         AccountService,
         AdalService,
         AppInsightsApiService,

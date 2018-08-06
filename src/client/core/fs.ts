@@ -25,7 +25,7 @@ export class FileSystem {
         this._fileUtils = new FileUtils();
         if (process.env.NODE_ENV !== "test") { // App is not defined in the test
             this.commonFolders = {
-                temp: path.join(app.getPath("temp"), "batch-labs"),
+                temp: path.join(app.getPath("temp"), "batch-explorer"),
                 downloads: app.getPath("downloads"),
                 appData: app.getPath("appData"),
                 userData: app.getPath("userData"),
