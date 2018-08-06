@@ -11,7 +11,7 @@ export class AuthenticationWindow extends UniqueWindow {
             webPreferences: {
                 nodeIntegration: false,
             },
-            title: `BatchLabs: Login to ${this.batchLabsApp.azureEnvironment.name}`,
+            title: `BatchExplorer: Login to ${this.batchExplorerApp.azureEnvironment.name}`,
         });
 
         window.on("page-title-updated", (e, title) => {

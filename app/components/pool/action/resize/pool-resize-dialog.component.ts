@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import * as moment from "moment";
-import { Observable } from "rxjs";
 
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
@@ -10,6 +9,8 @@ import { Pool } from "app/models";
 import { NodeDeallocationOption, PoolEnableAutoScaleDto, PoolResizeDto } from "app/models/dtos";
 import { PoolScaleModel } from "app/models/forms";
 import { PoolService } from "app/services";
+import { of } from "rxjs";
+import { delay, flatMap, share } from "rxjs/operators";
 
 @Component({
     selector: "bl-pool-resize-dialog",
@@ -67,16 +68,17 @@ export class PoolResizeDialogComponent {
         } else {
             const targetDedicatedNodes = value.targetDedicatedNodes;
             const targetLowPriorityNodes = value.targetLowPriorityNodes;
-            obs = this._disableAutoScale()
-                .flatMap(() => this.poolService.resize(this.pool.id, new PoolResizeDto({
+            obs = this._disableAutoScale().pipe(
+                flatMap(() => this.poolService.resize(this.pool.id, new PoolResizeDto({
                     nodeDeallocationOption: this.taskAction.value.nodeDeallocationOption,
                     resizeTimeout: moment.duration(value.resizeTimeout, "minutes") as any,
                     targetDedicatedNodes: targetDedicatedNodes,
                     targetLowPriorityNodes: targetLowPriorityNodes,
-                })));
+                }))),
+            );
         }
 
-        const finalObs = obs.flatMap(() => this.poolService.get(this.pool.id)).share();
+        const finalObs = obs.pipe(flatMap(() => this.poolService.get(this.pool.id)), share());
         finalObs.subscribe({
             next: (pool) => {
                 this.notificationService.success("Pool resize started!",
@@ -99,9 +101,9 @@ export class PoolResizeDialogComponent {
 
     private _disableAutoScale() {
         if (this.pool.enableAutoScale) {
-            return this.poolService.disableAutoScale(this.pool.id).delay(1000);
+            return this.poolService.disableAutoScale(this.pool.id).pipe(delay(1000));
         } else {
-            return Observable.of({});
+            return of({});
         }
     }
 }

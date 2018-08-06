@@ -1,7 +1,7 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { ClipboardService, ElectronShell } from "@batch-flask/ui";
+import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/ui";
 import { of } from "rxjs";
 
 import { ButtonComponent } from "@batch-flask/ui/buttons";
@@ -13,14 +13,12 @@ import { ConnectionType, Node, Pool } from "app/models";
 
 import {
     AddNodeUserAttributes,
-    BatchLabsService,
-    FileSystemService,
+    BatchExplorerService,
     NodeConnectService,
     NodeUserService,
     SettingsService,
 } from "app/services";
 import { PoolUtils, SecureUtils } from "app/utils";
-import { clipboard } from "electron";
 import * as Fixtures from "test/fixture";
 
 @Component({
@@ -39,11 +37,12 @@ describe("NodeConnectComponent", () => {
 
     let nodeUserServiceSpy;
     let settingsServiceSpy;
-    let batchLabsServiceSpy;
+    let batchExplorerServiceSpy;
     let fsServiceSpy;
     let electronShellSpy;
     let secureUtilsSpy;
     let nodeConnectServiceSpy;
+    let clipboardServiceSpy;
 
     beforeEach(() => {
         nodeUserServiceSpy = {
@@ -56,7 +55,7 @@ describe("NodeConnectComponent", () => {
             },
         };
 
-        batchLabsServiceSpy = {
+        batchExplorerServiceSpy = {
             launchApplication: jasmine.createSpy("").and.returnValue(
                 new Promise((resolve, reject) => {
                     resolve({ name: "banana" });
@@ -98,6 +97,10 @@ describe("NodeConnectComponent", () => {
             }),
         };
 
+        clipboardServiceSpy = {
+            writeText: jasmine.createSpy("writeText"),
+        };
+
         TestBed.configureTestingModule({
             declarations: [
                 NodeConnectComponent, ButtonComponent,
@@ -109,11 +112,12 @@ describe("NodeConnectComponent", () => {
                 { provide: FileSystemService, useValue: fsServiceSpy },
                 { provide: PermissionService, useValue: null },
                 { provide: SettingsService, useValue: settingsServiceSpy },
-                { provide: BatchLabsService, useValue: batchLabsServiceSpy },
+                { provide: BatchExplorerService, useValue: batchExplorerServiceSpy },
                 { provide: ClipboardService, useValue: {} },
                 { provide: ElectronShell, useValue: electronShellSpy },
                 { provide: SecureUtils, useValue: secureUtilsSpy },
                 { provide: NodeConnectService, useValue: nodeConnectServiceSpy },
+                { provide: ClipboardService, useValue: clipboardServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -170,8 +174,8 @@ describe("NodeConnectComponent", () => {
                     expect(updateUserArgs[2]).toEqual(jasmine.objectContaining({ sshPublicKey: "baz" }));
 
                     // validate calls to launchApplication
-                    expect(batchLabsServiceSpy.launchApplication).toHaveBeenCalledOnce();
-                    const launchApplicationArgs = batchLabsServiceSpy.launchApplication.calls.mostRecent().args;
+                    expect(batchExplorerServiceSpy.launchApplication).toHaveBeenCalledOnce();
+                    const launchApplicationArgs = batchExplorerServiceSpy.launchApplication.calls.mostRecent().args;
                     expect(launchApplicationArgs.length).toBe(2);
                     expect(Object.keys(launchApplicationArgs[1])).toContain("command");
                     expect(launchApplicationArgs[1].command).toContain("ssh");
@@ -220,7 +224,7 @@ describe("NodeConnectComponent", () => {
                     expect(openItemArgs.length).toBe(1);
                     expect(openItemArgs[0]).toContain("path/to/file");
 
-                    expect(clipboard.readText()).toEqual(updateUserArgs[2].password);
+                    expect(clipboardServiceSpy.writeText).toHaveBeenCalledWith(updateUserArgs[2].password);
 
                     done();
                 });

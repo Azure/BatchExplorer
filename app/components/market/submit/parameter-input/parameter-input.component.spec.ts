@@ -1,5 +1,5 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
@@ -10,7 +10,7 @@ import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { FormModule } from "@batch-flask/ui/form";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { Observable, Subject } from "rxjs";
+import { Subject, of, throwError } from "rxjs";
 
 import { FileGroupPickerComponent } from "app/components/data/shared";
 import { CloudFilePickerComponent } from "app/components/data/shared/cloud-file-picker";
@@ -85,21 +85,21 @@ describe("ParameterInputComponent", () => {
             listView: () => listProxy,
             onContainerAdded: new Subject(),
             generateSharedAccessUrl: (containerId, accessPolicy) => {
-                return Observable.of(`https://${containerId}.com?sastoken`);
+                return of(`https://${containerId}.com?sastoken`);
             },
         };
 
         jobServiceSpy = {
             get: jasmine.createSpy("get").and.callFake((jobId, ...args) => {
                 if (jobId === "good") {
-                    return Observable.throw(ServerError.fromBatch({
+                    return throwError(ServerError.fromBatch({
                         statusCode: 404,
                         code: "RandomTestErrorCode",
                         message: { value: "Try again ..." },
                     }));
                 }
 
-                return Observable.of(Fixtures.job.create({ id: jobId }));
+                return of(Fixtures.job.create({ id: jobId }));
             }),
         };
 
@@ -113,7 +113,7 @@ describe("ParameterInputComponent", () => {
         };
 
         autoStorageServiceSpy = {
-            get: () => Observable.of("storage-acc-1"),
+            get: () => of("storage-acc-1"),
         };
 
         sidebarSpy = {
@@ -576,18 +576,22 @@ describe("ParameterInputComponent", () => {
             expect(jobIdComponent.value.value).toBe(initialInput);
         });
 
-        it("should show updated input and validate", () => {
+        it("should show updated input and validate", fakeAsync(() => {
             testComponent.paramControl.setValue(goodJobId);
             fixture.detectChanges();
+            tick(250);
+
             expect(jobIdComponent.value.value).toBe(goodJobId);
             expect(component.parameterValue.valid).toBe(true);
-        });
+        }));
 
-        it("should update but fail validation with non existant job-id", () => {
+        it("should update but fail validation with non-existent job-id", fakeAsync(() => {
             testComponent.paramControl.setValue(badJobId);
             fixture.detectChanges();
+            tick(250);
+
             expect(jobIdComponent.value.value).toBe(badJobId);
             expect(component.parameterValue.valid).toBe(false);
-        });
+        }));
     });
 });

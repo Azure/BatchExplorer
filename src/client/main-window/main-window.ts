@@ -3,7 +3,7 @@ import { BrowserWindow, app, ipcMain } from "electron";
 import { log } from "@batch-flask/utils";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants } from "../client-constants";
-import { BatchLabsApplication, FileSystem, GenericWindow, LocalFileStorage } from "../core";
+import { BatchExplorerApplication, FileSystem, GenericWindow, LocalFileStorage } from "../core";
 import { renderLogger } from "../logger";
 
 // Webpack dev server url when using HOT=1
@@ -37,8 +37,8 @@ export class MainWindow extends GenericWindow {
     private _state = new BehaviorSubject<WindowState>(WindowState.Closed);
     private _resolveAppReady: () => void;
 
-    constructor(batchLabsApp: BatchLabsApplication) {
-        super(batchLabsApp);
+    constructor(batchExplorerApp: BatchExplorerApplication) {
+        super(batchExplorerApp);
         this.state = this._state.asObservable();
         this.appReady = new Promise((resolve) => {
             this._resolveAppReady = resolve;
@@ -83,9 +83,10 @@ export class MainWindow extends GenericWindow {
         const anyWindow = window as any;
         anyWindow.windowHandler = this;
         anyWindow.logger = renderLogger;
-        anyWindow.batchLabsApp = this.batchLabsApp;
-        anyWindow.autoUpdater = this.batchLabsApp.autoUpdater;
-        anyWindow.authenticationWindow = this.batchLabsApp.authenticationWindow;
+        anyWindow.batchExplorerApp = this.batchExplorerApp;
+        anyWindow.autoUpdater = this.batchExplorerApp.autoUpdater;
+        anyWindow.authenticationWindow = this.batchExplorerApp.authenticationWindow;
+        anyWindow.translationsLoader = this.batchExplorerApp.translationLoader;
         const fs = anyWindow.fs = new FileSystem();
         anyWindow.localFileStorage = new LocalFileStorage(fs);
         anyWindow.clientConstants = Constants;
@@ -113,7 +114,7 @@ export class MainWindow extends GenericWindow {
     private _setupEvents(window: Electron.BrowserWindow) {
         window.webContents.on("crashed", (event: Electron.Event, killed: boolean) => {
             log.error("There was a crash", { event, killed });
-            this.batchLabsApp.recoverWindow.createWithError(event.returnValue);
+            this.batchExplorerApp.recoverWindow.createWithError(event.returnValue);
         });
 
         ipcMain.once("app-ready", (event) => {
@@ -123,7 +124,7 @@ export class MainWindow extends GenericWindow {
         });
 
         ipcMain.once("initializing", (event) => {
-            if (this._window &&  event.sender.id === this._window.webContents.id) {
+            if (this._window && event.sender.id === this._window.webContents.id) {
                 this._state.next(WindowState.Initializing);
             }
         });
@@ -135,7 +136,7 @@ export class MainWindow extends GenericWindow {
 
         window.on("unresponsive", (error: Error) => {
             log.error("There was a crash", error);
-            this.batchLabsApp.recoverWindow.createWithError(error.message);
+            this.batchExplorerApp.recoverWindow.createWithError(error.message);
         });
     }
 }

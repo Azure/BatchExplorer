@@ -1,13 +1,12 @@
 import { HttpHandler } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-
 import { HttpService, ServerError } from "@batch-flask/core";
 import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
-import { BatchLabsService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-labs.service";
 import { AADUser } from "client/core/aad/adal/aad-user";
-import { flatMap, shareReplay, take } from "rxjs/operators";
+import { Observable, throwError } from "rxjs";
+import { catchError, flatMap, retryWhen, shareReplay, take } from "rxjs/operators";
 
 /**
  * Class wrapping around the http service to call Microsoft Graph api
@@ -15,7 +14,7 @@ import { flatMap, shareReplay, take } from "rxjs/operators";
 @Injectable()
 export class MsGraphHttpService extends HttpService {
     public get serviceUrl() {
-        return this.batchLabs.azureEnvironment.msGraph;
+        return this.batchExplorer.azureEnvironment.msGraph;
     }
 
     private _currentUser: AADUser;
@@ -23,7 +22,7 @@ export class MsGraphHttpService extends HttpService {
         httpHandler: HttpHandler,
         private adal: AdalService,
         private accountService: AccountService,
-        private batchLabs: BatchLabsService) {
+        private batchExplorer: BatchExplorerService) {
 
         super(httpHandler);
         this.adal.currentUser.subscribe(x => this._currentUser = x);
@@ -37,12 +36,13 @@ export class MsGraphHttpService extends HttpService {
             }),
             flatMap((accessToken) => {
                 options = this.addAuthorizationHeader(options, accessToken);
-                return super.request(method, this.computeUrl(uri), options)
-                    .retryWhen(attempts => this.retryWhen(attempts))
-                    .catch((error) => {
+                return super.request(method, this.computeUrl(uri), options).pipe(
+                    retryWhen(attempts => this.retryWhen(attempts)),
+                    catchError((error) => {
                         const err = ServerError.fromMsGraph(error);
-                        return Observable.throw(err);
-                    });
+                        return throwError(err);
+                    }),
+                );
             }),
             shareReplay(1),
         );

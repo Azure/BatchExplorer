@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-
+import { DataCache, ListOptionsAttributes, ListView } from "@batch-flask/core";
 import { SecureUtils } from "@batch-flask/utils";
 import { AADApplication, PasswordCredential, PasswordCredentialAttributes } from "app/models/ms-graph";
-import { DataCache, ListOptionsAttributes, ListView } from "app/services/core";
+import { Observable } from "rxjs";
+import { flatMap, map, shareReplay } from "rxjs/operators";
 import {
     AADGraphEntityGetter, AADGraphHttpService, AADGraphListGetter,
 } from "./core";
@@ -24,7 +24,7 @@ export interface ApplicationCreateParams {
 export interface SecretParams {
     /**
      * Description for the secret.
-     * @default "BatchLabs secret"
+     * @default "BatchExplorer secret"
      */
     name?: string;
 
@@ -94,21 +94,27 @@ export class AADApplicationService {
             passwordCredentials: [
                 this._secretToParams(secretAttributes),
             ],
-        }).map(response => new AADApplication({ ...response, passwordCredentials: [secretAttributes] }));
+        }).pipe(
+            map(response => new AADApplication({ ...response, passwordCredentials: [secretAttributes] })),
+        );
     }
 
     public createSecret(appId: string, secret: SecretParams = {}, reset = false): Observable<PasswordCredential> {
         const secretAttributes = this._builtSecret(secret);
-        return this.get(appId).flatMap((app) => {
-            const existingKeys = reset ? [] : app.passwordCredentials.map((cred) => {
-                return cred._original;
-            }).toJS();
-            return this.aadGraph.patch(`/applicationsByAppId/${appId}`, {
-                passwordCredentials: [...existingKeys, this._secretToParams(secretAttributes)],
-            });
-        }).map(() => {
-            return new PasswordCredential(secretAttributes);
-        }).shareReplay(1);
+        return this.get(appId).pipe(
+            flatMap((app) => {
+                const existingKeys = reset ? [] : app.passwordCredentials.map((cred) => {
+                    return cred._original;
+                }).toJS();
+                return this.aadGraph.patch(`/applicationsByAppId/${appId}`, {
+                    passwordCredentials: [...existingKeys, this._secretToParams(secretAttributes)],
+                });
+            }),
+            map(() => {
+                return new PasswordCredential(secretAttributes);
+            }),
+            shareReplay(1),
+        );
     }
 
     private _secretToParams(secret: PasswordCredentialAttributes) {
@@ -124,7 +130,7 @@ export class AADApplicationService {
     private _builtSecret(secret: SecretParams): PasswordCredentialAttributes {
         const startDate = new Date();
         const endDate = secret.endDate || new Date(2299, 12, 31);
-        const name = secret.name || "BatchLabs secret";
+        const name = secret.name || "BatchExplorer secret";
         const value = secret.value || SecureUtils.token();
         const customKeyIdentifier = btoa(name);
         const keyId = SecureUtils.uuid();

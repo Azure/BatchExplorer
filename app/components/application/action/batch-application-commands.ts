@@ -37,6 +37,7 @@ export class BatchApplicationCommands extends EntityCommands<BatchApplication> {
 
     private _buildCommands() {
         this.add = this.simpleCommand({
+            name: "add",
             ...COMMAND_LABEL_ICON.AddApplication,
             action: (application) => this._addPackage(application),
             multiple: false,
@@ -46,6 +47,7 @@ export class BatchApplicationCommands extends EntityCommands<BatchApplication> {
         });
 
         this.edit = this.simpleCommand({
+            name: "edit",
             ...COMMAND_LABEL_ICON.Edit,
             action: (application) => this._editApplication(application),
             multiple: false,
@@ -55,12 +57,14 @@ export class BatchApplicationCommands extends EntityCommands<BatchApplication> {
         });
 
         this.delete = this.simpleCommand({
+            name: "delete",
             ...COMMAND_LABEL_ICON.Delete,
             action: (application: BatchApplication) => this.applicationService.delete(application.id),
             permission: Permission.Write,
         });
 
         this.pin = this.simpleCommand({
+            name: "pin",
             label: (application: BatchApplication) => {
                 return this.pinnedEntityService.isFavorite(application)
                 ? COMMAND_LABEL_ICON.UnpinFavoriteLabel : COMMAND_LABEL_ICON.PinFavoriteLabel;

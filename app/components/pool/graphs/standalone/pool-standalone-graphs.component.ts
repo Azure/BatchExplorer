@@ -3,8 +3,8 @@ import { ActivatedRoute } from "@angular/router";
 
 import { Pool } from "app/models";
 
+import { EntityView } from "@batch-flask/core";
 import { PoolParams, PoolService } from "app/services";
-import { EntityView } from "app/services/core";
 import "./pool-standalone-graphs.scss";
 
 @Component({

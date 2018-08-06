@@ -1,9 +1,8 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
-
-import { FileExplorerConfig } from "app/components/file/browse/file-explorer";
+import { FileExplorerConfig, FileLoader, FileNavigator } from "@batch-flask/ui";
 import { Node, NodeState } from "app/models";
 import { FileService } from "app/services";
-import { FileLoader, FileNavigator } from "app/services/file";
+
 import "./node-file-browse.scss";
 
 const availableStates = new Set([

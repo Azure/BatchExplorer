@@ -1,21 +1,21 @@
 import { Location } from "@angular/common";
 import { HttpHandler, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
 
 import { HttpRequestOptions, HttpService, ServerError } from "@batch-flask/core";
 import { UrlUtils } from "@batch-flask/utils";
 import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
-import { BatchLabsService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-labs.service";
 import { AADUser } from "client/core/aad/adal/aad-user";
 import { Constants } from "common";
-import { flatMap, shareReplay, take } from "rxjs/operators";
+import { catchError, flatMap, retryWhen, shareReplay, take } from "rxjs/operators";
 
 @Injectable()
 export class AADGraphHttpService extends HttpService {
     public get serviceUrl() {
-        return this.batchLabs.azureEnvironment.aadGraph;
+        return this.batchExplorer.azureEnvironment.aadGraph;
     }
 
     private _currentUser: AADUser;
@@ -23,7 +23,7 @@ export class AADGraphHttpService extends HttpService {
         httpHandler: HttpHandler,
         private adal: AdalService,
         private accountService: AccountService,
-        private batchLabs: BatchLabsService) {
+        private batchExplorer: BatchExplorerService) {
         super(httpHandler);
         this.adal.currentUser.subscribe(x => this._currentUser = x);
     }
@@ -40,12 +40,13 @@ export class AADGraphHttpService extends HttpService {
                         return super.request(
                             method,
                             this._computeUrl(uri, tenantId),
-                            options)
-                            .retryWhen(attempts => this.retryWhen(attempts))
-                            .catch((error) => {
-                                const err = ServerError.fromAADGraph(error);
-                                return Observable.throw(err);
-                            });
+                            options).pipe(
+                                retryWhen(attempts => this.retryWhen(attempts)),
+                                catchError((error) => {
+                                    const err = ServerError.fromAADGraph(error);
+                                    return throwError(err);
+                                }),
+                            );
                     }));
             }),
             shareReplay(1),

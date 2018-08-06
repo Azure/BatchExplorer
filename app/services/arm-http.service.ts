@@ -3,7 +3,7 @@ import {
     RequestMethod, RequestOptions, RequestOptionsArgs, Response,
 } from "@angular/http";
 import { Observable } from "rxjs";
-
+import { first, flatMap, share } from "rxjs/operators";
 import { AccountService } from "./account.service";
 import { AdalService } from "./adal";
 import { AzureHttpService } from "./azure-http.service";
@@ -27,9 +27,11 @@ export class ArmHttpService {
     }
 
     public request(uri: string, options: RequestOptionsArgs): Observable<Response> {
-        return this.accountService.currentAccount.first()
-            .flatMap(account => this.http.request(account.subscription, uri, options))
-            .share();
+        return this.accountService.currentAccount.pipe(
+            first(),
+            flatMap(account => this.http.request(account.subscription, uri, options)),
+            share(),
+        );
     }
 
     public get(uri: string, options?: RequestOptionsArgs) {

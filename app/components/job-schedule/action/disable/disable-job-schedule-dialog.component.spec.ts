@@ -1,7 +1,7 @@
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatDialogRef } from "@angular/material";
-import { Observable } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { DisableJobScheduleDialogComponent } from "app/components/job-schedule/action";
@@ -23,14 +23,14 @@ describe("DisableJobScheduleDialogComponent ", () => {
         jobScheduleServiceSpy = {
             disable: jasmine.createSpy("DisableJobSchedule").and.callFake((jobScheduleId, ...args) => {
                 if (jobScheduleId === "bad-job-schedule-id") {
-                    return Observable.throw(ServerError.fromBatch({
+                    return throwError(ServerError.fromBatch({
                         statusCode: 408,
                         code: "RandomTestErrorCode",
                         message: { value: "Some random test error happened disabling job schedule" },
                     }));
                 }
 
-                return Observable.of({});
+                return of({});
             }),
         };
 

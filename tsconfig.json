@@ -54,6 +54,9 @@
     "src/**/*.ts",
     "test/**/*.ts",
   ],
+  "exclude": [
+    "**/testing/**/*",
+  ],
   "awesomeTypescriptLoaderOptions": {
     "forkChecker": true,
     "useCache": true,

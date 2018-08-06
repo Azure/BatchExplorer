@@ -1,13 +1,13 @@
 import { Location } from "@angular/common";
 import { Injectable } from "@angular/core";
 import { Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response } from "@angular/http";
-import { Observable } from "rxjs";
-
 import { AccessToken, RetryableHttpCode, ServerError } from "@batch-flask/core";
 import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
-import { BatchLabsService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-labs.service";
 import { Constants } from "app/utils";
+import { Observable, throwError, timer } from "rxjs";
+import { catchError, flatMap, mergeMap, retryWhen, share, take } from "rxjs/operators";
 
 function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
     const options = original || new RequestOptions();
@@ -25,32 +25,36 @@ export class AppInsightsApiService {
         private http: Http,
         private adal: AdalService,
         private accountService: AccountService,
-        private batchLabs: BatchLabsService) {
+        private batchExplorer: BatchExplorerService) {
     }
 
     public get resourceUrl() {
-        return this.batchLabs.azureEnvironment.appInsights;
+        return this.batchExplorer.azureEnvironment.appInsights;
     }
 
     public get baseUrl() {
-        return this.batchLabs.azureEnvironment.appInsights + "v1/";
+        return this.batchExplorer.azureEnvironment.appInsights + "v1/";
     }
 
     public request(
         uri: string,
         options: RequestOptionsArgs): Observable<Response> {
 
-        return this.accountService.currentAccount.take(1)
-            .flatMap((account) => this.adal.accessTokenData(account.subscription.tenantId, this.resourceUrl))
-            .flatMap((accessToken) => {
-                options = this._setupRequestOptions(uri, options, accessToken);
-                return this.http.request(this._computeUrl(uri), options)
-                    .retryWhen(attempts => this._retryWhen(attempts))
-                    .catch((error) => {
+        return this.accountService.currentAccount.pipe(
+            take(1),
+            flatMap((account) => this.adal.accessTokenData(account.subscription.tenantId, this.resourceUrl)),
+            flatMap((accessToken) => {
+                options = this._setupRequestOptions(options, accessToken);
+                return this.http.request(this._computeUrl(uri), options).pipe(
+                    retryWhen(attempts => this._retryWhen(attempts)),
+                    catchError((error) => {
                         const err = ServerError.fromARM(error);
-                        return Observable.throw(err);
-                    });
-            }).share();
+                        return throwError(err);
+                    }),
+                );
+            }),
+            share(),
+        );
     }
 
     public get(uri: string, options?: RequestOptionsArgs) {
@@ -74,7 +78,6 @@ export class AppInsightsApiService {
     }
 
     private _setupRequestOptions(
-        uri: string,
         originalOptions: RequestOptionsArgs,
         accessToken: AccessToken): RequestOptionsArgs {
 
@@ -94,23 +97,21 @@ export class AppInsightsApiService {
     }
 
     private _retryWhen(attempts: Observable<Response>) {
-        const retryRange = Observable.range(0, Constants.badHttpCodeMaxRetryCount + 1);
-        return attempts
-            .switchMap((x: any) => {
-                if (RetryableHttpCode.has(x.status)) {
-                    return Observable.of(x);
+        return attempts.pipe(
+            mergeMap((error, i) => {
+                const retryAttempt = i + 1;
+                // if maximum number of retries have been met
+                // or response is a status code we don't wish to retry, throw error
+                if (
+                    retryAttempt > Constants.badHttpCodeMaxRetryCount ||
+                    !RetryableHttpCode.has(error.status)
+                ) {
+                    return throwError(error);
                 }
-                return Observable.throw(x);
-            })
-            .zip(retryRange, (attempt, retryCount) => {
-                if (retryCount >= Constants.badHttpCodeMaxRetryCount) {
-                    throw attempt;
-                }
-                return retryCount;
-            })
-            .flatMap((retryCount) => {
-                return Observable.timer(100 * Math.pow(3, retryCount));
-            });
+                // retry after 1s, 2s, etc...
+                return timer(100 * Math.pow(3, retryAttempt));
+            }),
+        );
     }
 
 }

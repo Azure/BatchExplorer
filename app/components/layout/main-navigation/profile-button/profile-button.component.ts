@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { AutoUpdateService, ElectronRemote, ElectronShell, UpdateStatus } from "@batch-flask/ui";
+import { AutoUpdateService, ElectronRemote, ElectronShell, FileSystemService, UpdateStatus } from "@batch-flask/ui";
 import { OS } from "@batch-flask/utils";
 import * as path from "path";
 import { Subscription } from "rxjs";
@@ -10,7 +10,7 @@ import {
 } from "@batch-flask/ui/context-menu";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import {
-    AdalService, BatchLabsService, FileSystemService,
+    AdalService, BatchExplorerService,
 } from "app/services";
 
 import "./profile-button.scss";
@@ -33,7 +33,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
         adalService: AdalService,
         private changeDetector: ChangeDetectorRef,
         private autoUpdateService: AutoUpdateService,
-        private batchLabs: BatchLabsService,
+        private batchExplorer: BatchExplorerService,
         private shell: ElectronShell,
         private remote: ElectronRemote,
         private contextMenuService: ContextMenuService,
@@ -93,7 +93,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     }
 
     private _openThirdPartyNotices() {
-        this.shell.openItem(path.join(this.batchLabs.resourcesFolder, "ThirdPartyNotices.txt"));
+        this.shell.openItem(path.join(this.batchExplorer.resourcesFolder, "ThirdPartyNotices.txt"));
     }
 
     private _openLogFolder() {
@@ -101,23 +101,23 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     }
 
     private _openGithubIssues() {
-        this.shell.openExternal("https://github.com/Azure/BatchLabs/issues");
+        this.shell.openExternal("https://github.com/Azure/BatchExplorer/issues");
     }
 
     private _showAboutPage() {
         this.remote.dialog.showMessageBox({
             type: "info",
-            title: "BatchLabs",
+            title: "BatchExplorer",
             message: [
-                `Version: ${this.batchLabs.version}`,
-                `Batch labs is licensed under MIT`,
+                `Version: ${this.batchExplorer.version}`,
+                `Batch Explorer is licensed under MIT`,
                 `Some icons are under Creative Commons Attribution-ShareAlike 3.0 Unported`,
             ].join("\n"),
         });
     }
 
     private _logout() {
-        this.batchLabs.logoutAndLogin();
+        this.batchExplorer.logoutAndLogin();
     }
 
     private async _checkForUpdates(showNotification = true) {
@@ -128,7 +128,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
                 action: () => this._update(),
             });
         } else {
-            this._notify("There are no updates currently available.", `You  have the latest BatchLabs version.`);
+            this._notify("There are no updates currently available.", `You  have the latest BatchExplorer version.`);
         }
 
     }
@@ -141,7 +141,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
                 this.remote.getCurrentWindow().close();
             });
         } else {
-            this.shell.openExternal("https://azure.github.io/BatchLabs/");
+            this.shell.openExternal("https://azure.github.io/BatchExplorer/");
         }
     }
 

@@ -1,24 +1,6 @@
 // tslint:disable:variable-name
 
-export const caching = {
-    /**
-     * Max number of filtered query that it should remember.
-     * It will always keep the query for no query and that last n queries with a filter
-     */
-    maxQuery: 1,
-    /**
-     * Max number of cache a targeted cache would keep at the same time
-     */
-    maxTargetedCache: 2,
-};
-
 export const badHttpCodeMaxRetryCount = 5;
-
-export const FileUrlStrings = {
-    Job: "jobs",
-    Pool: "pools",
-    Separator: "/",
-};
 
 export const FileSourceTypes = {
     Job: "job",
@@ -186,13 +168,14 @@ export const ExternalApplication = {
     terminal: "TERMINAL",
 };
 
-export const customProtocolName = "ms-batchlabs";
+export const legacyProtocolName = "ms-batchlabs";
+export const customProtocolName = "ms-batch-explorer";
 
 /**
  * Name of events that needs to be passed between rendered and main
  */
 export const rendererEvents = {
-    batchlabsLink: "batchlabs-link",
+    batchExplorerLink: "batchExplorer-link",
 };
 
 export const isRenderer = (process && process.type === "renderer");

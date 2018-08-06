@@ -7,10 +7,16 @@ import { StartTaskModule } from "app/components/pool/start-task";
 import { TaskBaseModule } from "../base";
 import { TaskListDisplayComponent } from "./display";
 import { TaskAdvancedFilterComponent } from "./filter";
-import { TaskPreviewComponent } from "./preview";
+import { TaskPreviewComponent, TaskRuntimeComponent } from "./preview";
 import { TaskListComponent } from "./task-list.component";
 
-const components = [TaskListComponent, TaskListDisplayComponent, TaskAdvancedFilterComponent, TaskPreviewComponent];
+const components = [
+    TaskAdvancedFilterComponent,
+    TaskListComponent,
+    TaskListDisplayComponent,
+    TaskPreviewComponent,
+    TaskRuntimeComponent,
+];
 
 @NgModule({
     declarations: components,

@@ -8,9 +8,10 @@ import {
     ClickableComponent,
     ElectronRemote,
     ElectronShell,
+    FileSystemService,
     UpdateStatus,
 } from "@batch-flask/ui";
-import { AdalService, BatchLabsService, FileSystemService } from "app/services";
+import { AdalService, BatchExplorerService } from "app/services";
 import { BehaviorSubject } from "rxjs";
 import { click } from "test/utils/helpers";
 import { ContextMenuServiceMock, NotificationServiceMock } from "test/utils/mocks";
@@ -28,7 +29,7 @@ describe("ProfileButtonComponent", () => {
     let clickableEl: DebugElement;
     let adalServiceSpy;
     let autoUpdateServiceSpy;
-    let batchLabsServiceSpy;
+    let batchExplorerServiceSpy;
     let contextMenuServiceSpy: ContextMenuServiceMock;
     let notificationServiceSpy: NotificationServiceMock;
 
@@ -43,14 +44,14 @@ describe("ProfileButtonComponent", () => {
             status: new BehaviorSubject<UpdateStatus>(null),
         };
 
-        batchLabsServiceSpy = {};
+        batchExplorerServiceSpy = {};
         TestBed.configureTestingModule({
             imports: [MatTooltipModule, RouterTestingModule],
             declarations: [ProfileButtonComponent, ClickableComponent, TestComponent],
             providers: [
                 { provide: AdalService, useValue: adalServiceSpy },
                 { provide: AutoUpdateService, useValue: autoUpdateServiceSpy },
-                { provide: BatchLabsService, useValue: batchLabsServiceSpy },
+                { provide: BatchExplorerService, useValue: batchExplorerServiceSpy },
                 { provide: ElectronShell, useValue: null },
                 { provide: ElectronRemote, useValue: null },
                 { provide: FileSystemService, useValue: null },

@@ -10,18 +10,26 @@ bl-app-license-picker {
         }
     }
 
-    .form-element {
-        mat-checkbox {
-            margin-left: 15px;
+    mat-checkbox {
+        padding-left: 5px;
+        line-height: 12px;
 
-            .mat-checkbox-inner-container {
-                margin-top: 3px;
-            }
+        .mat-checkbox-inner-container {
+            margin-top: 3px;
+        }
 
+        .mat-checkbox-layout {
             .mat-checkbox-label {
                 line-height: 18px;
+                white-space: initial;
             }
         }
+    }
+
+    .note {
+        font-size: 11px;
+        font-weight: bold;
+        padding-top: 5px;
     }
 }
 

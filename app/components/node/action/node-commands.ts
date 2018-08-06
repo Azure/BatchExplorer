@@ -1,11 +1,12 @@
 import { Injectable, Injector } from "@angular/core";
 import { COMMAND_LABEL_ICON, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
 
+import { EntityView } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Node, Pool } from "app/models";
 import { NodeService, PoolParams } from "app/services";
-import { EntityView } from "app/services/core";
+import { flatMap } from "rxjs/operators";
 import { NodeConnectComponent } from "../connect";
 
 @Injectable()
@@ -40,6 +41,7 @@ export class NodeCommands extends EntityCommands<Node> {
 
     private _buildCommands() {
         this.connect = this.simpleCommand({
+            name: "connect",
             ...COMMAND_LABEL_ICON.ConnectToNode,
             action: (node) => this._connect(node),
             multiple: false,
@@ -49,18 +51,21 @@ export class NodeCommands extends EntityCommands<Node> {
         });
 
         this.delete = this.simpleCommand({
+            name: "delete",
             ...COMMAND_LABEL_ICON.Delete,
             action: (node: Node) => this._delete(node),
             permission: Permission.Write,
         });
 
         this.reboot = this.simpleCommand({
+            name: "reboot",
             ...COMMAND_LABEL_ICON.RebootNode,
             action: (node: Node) => this._reboot(node),
             permission: Permission.Write,
         });
 
         this.editStartTask = this.simpleCommand({
+            name: "editStartTask",
             ...COMMAND_LABEL_ICON.EditStartTask,
             action: (node) => this._editStartTask(node),
             multiple: false,
@@ -84,13 +89,15 @@ export class NodeCommands extends EntityCommands<Node> {
     }
 
     private _reboot(node: Node) {
-        return this.nodeService.reboot(this.pool.id, node.id)
-            .flatMap(() => this.nodeService.get(this.pool.id, node.id));
+        return this.nodeService.reboot(this.pool.id, node.id).pipe(
+            flatMap(() => this.nodeService.get(this.pool.id, node.id)),
+        );
     }
 
     private _delete(node: Node) {
-        return this.nodeService.delete(this.pool.id, node.id)
-            .flatMap(() => this.nodeService.get(this.pool.id, node.id));
+        return this.nodeService.delete(this.pool.id, node.id).pipe(
+            flatMap(() => this.nodeService.get(this.pool.id, node.id)),
+        );
     }
 
     private _editStartTask(node: Node) {

@@ -1,13 +1,14 @@
 import { Injectable, NgZone } from "@angular/core";
-import { AsyncSubject, BehaviorSubject, Observable, Subject } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { ElectronRemote } from "@batch-flask/ui";
 import { AccountResource } from "app/models";
 import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";
-import { BatchLabsService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-labs.service";
 import { SecureUtils, log } from "app/utils";
 import { PythonRpcServerProcess } from "client/python-process";
+import { catchError, first, flatMap, share } from "rxjs/operators";
 import { AccountService } from "../account.service";
 import { AdalService } from "../adal";
 
@@ -26,9 +27,9 @@ export class PythonRpcService {
         private accountService: AccountService,
         private adalService: AdalService,
         private _zone: NgZone,
-        private batchLabs: BatchLabsService,
+        private batchExplorer: BatchExplorerService,
     ) {
-        this._serverProcess = batchLabs.pythonServer;
+        this._serverProcess = batchExplorer.pythonServer;
         this.connected = this._connected.asObservable();
     }
     /**
@@ -109,9 +110,11 @@ export class PythonRpcService {
         const request = this._buildRequest(method, params, options);
         const container = this._registerRequest(request);
 
-        this._ready.catch(() => {
-            return this.resetConnection(); // Tries once to reset the connection right away.
-        }).subscribe({
+        this._ready.pipe(
+            catchError(() => {
+                return this.resetConnection(); // Tries once to reset the connection right away.
+            }),
+        ).subscribe({
             next: () => {
                 this._socket.send(JSON.stringify(request));
             },
@@ -124,17 +127,24 @@ export class PythonRpcService {
     }
 
     public callWithAuth(method: string, params: any[]): Observable<any> {
-        const resourceUrl = this.batchLabs.azureEnvironment;
-        return this.accountService.currentAccount.first().flatMap((account: AccountResource) => {
-            const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.batchUrl);
-            const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.armUrl);
-            return Observable.combineLatest(batchToken, armToken).first().flatMap(([batchToken, armToken]) => {
-                const authParam = { batchToken, armToken, account: account.toJS() };
-                return this.call(method, params, {
-                    authentication: authParam,
-                });
-            });
-        }).share();
+        const resourceUrl = this.batchExplorer.azureEnvironment;
+        return this.accountService.currentAccount.pipe(
+            first(),
+            flatMap((account: AccountResource) => {
+                const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.batchUrl);
+                const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.armUrl);
+                return combineLatest(batchToken, armToken).pipe(
+                    first(),
+                    flatMap(([batchToken, armToken]) => {
+                        const authParam = { batchToken, armToken, account: account.toJS() };
+                        return this.call(method, params, {
+                            authentication: authParam,
+                        });
+                    }),
+                );
+            }),
+            share(),
+        );
     }
 
     /**

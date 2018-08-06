@@ -2,13 +2,13 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { I18nUIModule, SelectComponent } from "@batch-flask/ui";
 import { FormModule } from "@batch-flask/ui/form";
-import { SelectComponent } from "@batch-flask/ui/select";
 import * as moment from "moment";
 import { click, updateInput } from "test/utils/helpers";
 import { DurationPickerComponent, DurationUnit } from "./duration-picker.component";
 import { DurationPickerModule } from "./duration-picker.module";
-
 @Component({
     template: `
         <bl-duration-picker label="My duration picker"
@@ -46,7 +46,7 @@ describe("DurationPickerComponent", () => {
 
     async function setupFor(type) {
         TestBed.configureTestingModule({
-            imports: [FormModule, DurationPickerModule, ReactiveFormsModule],
+            imports: [FormModule, DurationPickerModule, ReactiveFormsModule, I18nTestingModule, I18nUIModule],
             declarations: [type],
         });
         fixture = TestBed.createComponent(type);

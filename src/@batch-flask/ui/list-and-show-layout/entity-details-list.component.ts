@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { Observable } from "rxjs";
-
 import { FilterBuilder } from "@batch-flask/core";
+import { Observable } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import "./entity-details-list.scss";
 
@@ -62,7 +62,7 @@ export class EntityDetailsListComponent {
     public searchQuery = new FormControl();
 
     constructor(changeDetector: ChangeDetectorRef) {
-        this.searchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
+        this.searchQuery.valueChanges.pipe(debounceTime(400), distinctUntilChanged()).subscribe((query: string) => {
             if (query === "") {
                 this.filter = FilterBuilder.none();
             } else {

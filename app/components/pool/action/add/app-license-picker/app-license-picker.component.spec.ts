@@ -7,10 +7,9 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { MaterialModule } from "@batch-flask/core";
 import { ListSelection } from "@batch-flask/core/list";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
-
+import { TableTestingModule } from "@batch-flask/ui/testing";
 import { AppLicensePickerComponent } from "app/components/pool/action/add";
 import { ElectronTestingModule } from "test/utils/mocks";
-import { TableTestingModule } from "test/utils/mocks/components";
 
 @Component({
     template: `<bl-app-license-picker [(ngModel)]="appLicenses"></bl-app-license-picker>`,
@@ -52,7 +51,7 @@ describe("AppLicensePickerComponent", () => {
         fixture.detectChanges();
     });
 
-    it("Should show 3 licenses for now", () => {
+    it("Should show 4 licenses", () => {
         const tableRows = debugElement.queryAll(By.css("bl-row-render"));
         expect(tableRows.length).toBe(4);
 
@@ -60,22 +59,22 @@ describe("AppLicensePickerComponent", () => {
         expect(row1Columns.length).toBe(3, "Row has 3 columns");
         expect(row1Columns[0].nativeElement.textContent).toContain("Autodesk Maya");
         expect(row1Columns[1].nativeElement.textContent).toContain("EULA");
-        expect(row1Columns[2].nativeElement.textContent).toContain("62.5c USD/node/hour");
+        expect(row1Columns[2].nativeElement.textContent).toContain("$0.18 USD/node/hour");
 
         const row2Columns = tableRows[1].queryAll(By.css(".bl-table-cell"));
         expect(row2Columns[0].nativeElement.textContent).toContain("Autodesk 3ds Max");
         expect(row2Columns[1].nativeElement.textContent).toContain("EULA");
-        expect(row2Columns[2].nativeElement.textContent).toContain("62.5c USD/node/hour");
+        expect(row2Columns[2].nativeElement.textContent).toContain("$0.18 USD/node/hour");
 
         const row3Columns = tableRows[2].queryAll(By.css(".bl-table-cell"));
         expect(row3Columns[0].nativeElement.textContent).toContain("Autodesk Arnold");
         expect(row3Columns[1].nativeElement.textContent).toContain("EULA");
-        expect(row3Columns[2].nativeElement.textContent).toContain("2.5c USD/core/hour");
+        expect(row3Columns[2].nativeElement.textContent).toContain("$0.025 USD/core/hour");
 
         const row4Columns = tableRows[3].queryAll(By.css(".bl-table-cell"));
         expect(row4Columns[0].nativeElement.textContent).toContain("Chaos Group V-Ray");
         expect(row4Columns[1].nativeElement.textContent).toContain("EULA");
-        expect(row4Columns[2].nativeElement.textContent).toContain("TBD");
+        expect(row4Columns[2].nativeElement.textContent).toContain("$0.025 USD/core/hour");
     });
 
     it("Should select license by checking checkbox", () => {

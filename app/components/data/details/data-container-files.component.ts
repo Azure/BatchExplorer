@@ -3,12 +3,9 @@ import { autobind } from "@batch-flask/core";
 import * as path from "path";
 import { Observable, Subscription, from } from "rxjs";
 
-import { Activity, ActivityService } from "@batch-flask/ui";
-import { NotificationService } from "@batch-flask/ui/notifications";
+import { Activity, ActivityService, FileDropEvent, FileSystemService } from "@batch-flask/ui";
 import { BlobFilesBrowserComponent } from "app/components/file/browse";
-import { FileDropEvent } from "app/components/file/browse/file-explorer";
 import { BlobContainer } from "app/models";
-import { FileSystemService } from "app/services";
 import { StorageBlobService, StorageContainerService } from "app/services/storage";
 import { CloudPathUtils } from "app/utils";
 import { map } from "rxjs/operators";
@@ -17,7 +14,6 @@ import { map } from "rxjs/operators";
     selector: "bl-data-container-files",
     templateUrl: "data-container-files.html",
 })
-
 export class DataContainerFilesComponent implements OnDestroy {
     @ViewChild("blobExplorer")
     public blobExplorer: BlobFilesBrowserComponent;
@@ -31,7 +27,6 @@ export class DataContainerFilesComponent implements OnDestroy {
         private fs: FileSystemService,
         private storageContainerService: StorageContainerService,
         private storageBlobService: StorageBlobService,
-        private notificationService: NotificationService,
         private activityService: ActivityService) {
 
         this._onGroupUpdatedSub = this.storageContainerService.onContainerAdded.subscribe(() => {

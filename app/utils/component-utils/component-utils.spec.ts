@@ -1,9 +1,25 @@
 import { SimpleChange } from "@angular/core";
-import { BasicListGetter, DataCache, ListView } from "app/services/core";
+import { BasicListGetter, DataCache, ListView , Model, Prop, Record } from "@batch-flask/core";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
-import { FakeModel } from "test/app/services/core/data/fake-model";
+import { BehaviorSubject, of } from "rxjs";
+
+export interface FakeModelAttributes {
+    id: string;
+    state: string;
+    name: string;
+}
+
+@Model()
+export class FakeModel extends Record<FakeModelAttributes> {
+    @Prop() public id: string;
+    @Prop() public state: string;
+    @Prop() public name: string;
+}
+
+export interface FakeParams {
+    id: string;
+}
 
 describe("ComponentUtils", () => {
     describe("#recordChanged", () => {
@@ -63,7 +79,7 @@ describe("ComponentUtils", () => {
             cache.addItems([pool1, pool2, pool3]);
             getter = new BasicListGetter(FakeModel, {
                 cache: () => cache,
-                supplyData: () => Observable.of({ data: [pool1.toJS(), pool2.toJS()] }),
+                supplyData: () => of({ data: [pool1.toJS(), pool2.toJS()] }),
             });
             view = new ListView({
                 cache: () => cache,

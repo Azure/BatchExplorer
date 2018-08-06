@@ -1,9 +1,9 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule, By } from "@angular/platform-browser";
 import { ServerError } from "@batch-flask/core";
-import { Observable } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { JobService } from "app/services";
 import { JobIdComponent } from "./job-id.component";
@@ -29,14 +29,14 @@ describe("JobIdComponent", () => {
         jobServiceSpy = {
             get: jasmine.createSpy("get").and.callFake((jobId, ...args) => {
                 if (jobId === "not-found") {
-                    return Observable.throw(ServerError.fromBatch({
+                    return throwError(ServerError.fromBatch({
                         statusCode: 404,
                         code: "RandomTestErrorCode",
                         message: { value: "Try again ..." },
                     }));
                 }
 
-                return Observable.of(Fixtures.job.create({ id: jobId }));
+                return of(Fixtures.job.create({ id: jobId }));
             }),
         };
 
@@ -61,21 +61,25 @@ describe("JobIdComponent", () => {
         fixture.detectChanges();
     });
 
-    it("Validate success when job not found", () => {
+    it("Validate success when job not found", fakeAsync(() => {
         testComponent.jobId.setValue("not-found");
+        testComponent.jobId.updateValueAndValidity();
         fixture.detectChanges();
+        tick(250);
 
         expect(testComponent.jobId.valid).toBe(true);
         expect(testComponent.jobId.status).toBe("VALID");
         expect(de.nativeElement.textContent).not.toContain(error);
-    });
+    }));
 
-    it("Validate fail when existing job found", () => {
+    it("Validate fail when existing job found", fakeAsync(() => {
         testComponent.jobId.setValue("found");
+        fixture.detectChanges();
+        tick(250);
         fixture.detectChanges();
 
         expect(testComponent.jobId.valid).toBe(false);
         expect(testComponent.jobId.status).toBe("INVALID");
         expect(de.nativeElement.textContent).toContain(error);
-    });
+    }));
 });

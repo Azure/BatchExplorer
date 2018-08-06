@@ -3,7 +3,7 @@ import * as mkdirp from "mkdirp";
 import * as net from "net";
 import * as path from "path";
 /**
- * Root of BatchLabs(This is relative to where this file is when in the build folder)
+ * Root of BatchExplorer(This is relative to where this file is when in the build folder)
  */
 const root = path.join(__dirname, "../..");
 

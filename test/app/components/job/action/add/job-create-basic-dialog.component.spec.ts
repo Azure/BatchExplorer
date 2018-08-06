@@ -1,7 +1,7 @@
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
-import { Observable, Subject } from "rxjs";
+import { Subject, of, throwError } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -46,14 +46,14 @@ describe("JobCreateBasicDialogComponent ", () => {
         jobServiceSpy = {
             add: jasmine.createSpy("add").and.callFake((newJobJson, ...args) => {
                 if (newJobJson.id === "bad-job-id") {
-                    return Observable.throw(ServerError.fromBatch({
+                    return throwError(ServerError.fromBatch({
                         statusCode: 408,
                         code: "RandomTestErrorCode",
                         message: { value: "error, error, error" },
                     }));
                 }
 
-                return Observable.of({});
+                return of({});
             }),
 
             onJobAdded: new Subject(),
@@ -61,7 +61,7 @@ describe("JobCreateBasicDialogComponent ", () => {
 
         poolServiceSpy = {
             listView: () => poolListProxy,
-            get: (poolId) => Observable.of(Fixtures.pool.create({
+            get: (poolId) => of(Fixtures.pool.create({
                 id: poolId,
                 virtualMachineConfiguration: {
                     containerConfiguration: {

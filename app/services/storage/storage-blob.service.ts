@@ -1,23 +1,21 @@
 import { Injectable, NgZone } from "@angular/core";
-import { AsyncSubject, Observable } from "rxjs";
-
-import { HttpCode, ServerError } from "@batch-flask/core";
-import { File } from "app/models";
 import {
     DataCache,
     EntityView,
+    HttpCode,
     ListResponse,
     ListView,
-    StorageEntityGetter,
-    StorageListGetter,
+    ServerError,
     TargetedDataCache,
-} from "app/services/core";
-import { FileLoadOptions, FileLoader, FileNavigator, FileSource } from "app/services/file";
-import { FileSystemService } from "app/services/fs.service";
+} from "@batch-flask/core";
+import { File, FileLoadOptions, FileLoader, FileNavigator, FileSystemService } from "@batch-flask/ui";
+import { StorageEntityGetter, StorageListGetter } from "app/services/core";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { CloudPathUtils, log } from "app/utils";
 import { BlobService, createBlobServiceWithSas } from "azure-storage";
 import { Constants } from "common";
+import { AsyncSubject, Observable, from, of, throwError } from "rxjs";
+import { catchError, concat, concatMap, flatMap, map, share, take } from "rxjs/operators";
 import { BlobStorageClientProxy, ListBlobOptions } from "./blob-storage-client-proxy";
 import { StorageClientService } from "./storage-client.service";
 
@@ -188,7 +186,7 @@ export class StorageBlobService {
 
         return new FileLoader({
             filename: blobName,
-            source: FileSource.blob,
+            source: "blob",
             groupId: blobPrefix,
             fs: this.fs,
             properties: () => {
@@ -324,20 +322,25 @@ export class StorageBlobService {
         remotePath?: string): Observable<BulkUploadStatus> {
 
         const total = files.length;
-        return Observable.from(files).concatMap((file, index) => {
-            const status: BulkUploadStatus = {
-                uploaded: index,
-                total,
-                current: file,
-            };
-            const blob = remotePath ? CloudPathUtils.join(remotePath, file.remotePath) : file.remotePath;
-            const uploadObs = this.uploadFile(storageAccountId, container, file.localPath, blob).map(x => ({
-                uploaded: index + 1,
-                total,
-                current: file,
-            }));
-            return Observable.of(status).concat(uploadObs);
-        }).share();
+        return from(files).pipe(
+            concatMap((file, index) => {
+                const status: BulkUploadStatus = {
+                    uploaded: index,
+                    total,
+                    current: file,
+                };
+                const blob = remotePath ? CloudPathUtils.join(remotePath, file.remotePath) : file.remotePath;
+                const uploadObs = this.uploadFile(storageAccountId, container, file.localPath, blob).pipe(
+                    map(x => ({
+                        uploaded: index + 1,
+                        total,
+                        current: file,
+                    })),
+                );
+                return of(status).pipe(concat(uploadObs));
+            }),
+            share(),
+        );
     }
 
     /**
@@ -372,16 +375,22 @@ export class StorageBlobService {
         promise: (client: BlobStorageClientProxy) => Promise<any>,
         errorCallback?: (error: any) => void): Observable<T> {
 
-        return this.storageClient.getFor(storageAccountId).take(1).flatMap((client) => {
-            return Observable.fromPromise<T>(promise(client)).catch((err) => {
+        return this.storageClient.getFor(storageAccountId).pipe(
+            take(1),
+            flatMap((client) => {
+                return from<T>(promise(client));
+            }),
+            catchError((err) => {
                 const serverError = ServerError.fromStorage(err);
                 if (errorCallback) {
                     errorCallback(serverError);
                 }
 
-                return Observable.throw(serverError);
-            }).map((x) => this.zone.run(() => x));
-        }).share();
+                return throwError(serverError);
+            }),
+            map((x) => this.zone.run(() => x)),
+            share(),
+        );
     }
 
     private _parseSasUrl(sasUrl: string) {

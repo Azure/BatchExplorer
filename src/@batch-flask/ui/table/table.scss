@@ -108,6 +108,7 @@ bl-table {
 
     .bl-table-cell,
     bl-table-head-cell {
+        position: relative;
         vertical-align: middle;
         padding: 0 5px;
         overflow: hidden;

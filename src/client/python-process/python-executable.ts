@@ -59,7 +59,7 @@ export function tryMultiplePythons(paths: string[]): Promise<string> {
 }
 
 /**
- * Retrieve the python path that should be used for batch labs.
+ * Retrieve the python path that should be used for Batch Explorer.
  * It will only look for the python executable on the first run. It will then used the cached value
  */
 export function getPythonPath(): Promise<string> {
@@ -106,7 +106,7 @@ function parsePythonVersion(str: string): SemVersion {
 }
 
 /**
- * Check if the version is the right for batchlabs.
+ * Check if the version is the right for Batch Explorer.
  * @param version Python version
  */
 function isValidVersion(version: SemVersion) {

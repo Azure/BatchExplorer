@@ -37,7 +37,7 @@
                 </bl-tab>
                 <bl-tab key="dependencies" [disabled]="!hasDependencies">
                     <bl-tab-label>Dependencies</bl-tab-label>
-                    <bl-task-dependencies [jobId]="job.id" [task]="task"></bl-task-dependencies>
+                    <bl-task-dependency-browser [jobId]="job.id" [task]="task"></bl-task-dependency-browser>
                 </bl-tab>
             </bl-tab-group>
         </bl-card>

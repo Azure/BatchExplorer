@@ -23,7 +23,7 @@ const baseConfig = {
 
     resolve: {
         extensions: [".ts", ".js", ".json", ".scss", ".css", ".html"],
-        modules: [helpers.root(), helpers.root("src"), helpers.root("node_modules")],
+        modules: [helpers.root(), helpers.root("src"), "node_modules"],
     },
 
     module: {

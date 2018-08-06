@@ -2,10 +2,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
-
-import { Filter, autobind } from "@batch-flask/core";
+import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
@@ -13,8 +10,9 @@ import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { TableConfig } from "@batch-flask/ui/table";
 import { Pool } from "app/models";
 import { PoolListParams, PoolService } from "app/services";
-import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
+import { List } from "immutable";
+import { Observable, Subscription } from "rxjs";
 import { DeletePoolTask, PoolCommands } from "../action";
 
 import "./pool-list.scss";

@@ -11,6 +11,7 @@ export enum HttpCode {
     Accepted = 201,
     NotFound = 404,
     BadRequest = 400,
+    Forbidden = 403,
     RequestTimeout = 408,
     Conflict = 409,
     InteralServerError = 500,
@@ -29,7 +30,12 @@ export const RetryableHttpCode = new Set([
 
 export const DataStoreKeys = {
     /**
-     * LocalStorage key for storing the access token(For AAD request)
+     * LocalStorage key for storing the access token (For AAD request)
      */
     currentAccessToken: "current_access_token",
+
+    /**
+     * LocalStorage key for storing the current selected workspace ID
+     */
+    selectedWorkspaceId: "selected-workspace-id",
 };

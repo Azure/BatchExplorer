@@ -36,7 +36,7 @@ test_script:
 
 artifacts:
   - path: release\*Setup*.exe
-    name: Batchlabs-windows-setup.exe
+    name: BatchExplorer-windows-setup.exe
   - path: release\*win.zip
-    name: Batchlabs-windows.zip
+    name: BatchExplorer-windows.zip
 

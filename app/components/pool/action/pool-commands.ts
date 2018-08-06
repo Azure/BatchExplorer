@@ -1,13 +1,12 @@
 import { Injectable, Injector } from "@angular/core";
 import {
     COMMAND_LABEL_ICON, DialogService, ElectronRemote,
-    EntityCommand, EntityCommands, Permission, SidebarManager,
+    EntityCommand, EntityCommands, FileSystemService, Permission, SidebarManager,
 } from "@batch-flask/ui";
-import { Observable } from "rxjs";
-
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";
-import { FileSystemService, JobService, PinnedEntityService, PoolService } from "app/services";
+import { JobService, PinnedEntityService, PoolService } from "app/services";
+import { from } from "rxjs";
 import { PoolCreateBasicDialogComponent } from "./add/pool-create-basic-dialog.component";
 import { DeletePoolDialogComponent, DeletePoolOutput } from "./delete";
 import { PoolResizeDialogComponent } from "./resize";
@@ -30,9 +29,13 @@ export class PoolCommands extends EntityCommands<Pool> {
         private pinnedEntityService: PinnedEntityService,
         private remote: ElectronRemote,
         private sidebarManager: SidebarManager) {
+
         super(
             injector,
             "Pool",
+            {
+                feature: "pool.action",
+            },
         );
         this._buildCommands();
     }
@@ -47,6 +50,7 @@ export class PoolCommands extends EntityCommands<Pool> {
 
     private _buildCommands() {
         this.addJob = this.simpleCommand({
+            name: "add",
             ...COMMAND_LABEL_ICON.AddJob,
             action: (pool) => this._addJob(pool),
             multiple: false,
@@ -56,6 +60,7 @@ export class PoolCommands extends EntityCommands<Pool> {
         });
 
         this.resize = this.simpleCommand({
+            name: "resize",
             ...COMMAND_LABEL_ICON.Resize,
             action: (pool) => this._resizePool(pool),
             multiple: false,
@@ -65,6 +70,7 @@ export class PoolCommands extends EntityCommands<Pool> {
         });
 
         this.clone = this.simpleCommand({
+            name: "clone",
             ...COMMAND_LABEL_ICON.Clone,
             action: (pool) => this._clonePool(pool),
             multiple: false,
@@ -74,6 +80,7 @@ export class PoolCommands extends EntityCommands<Pool> {
         });
 
         this.delete = this.simpleCommand<DeletePoolOutput>({
+            name: "delete",
             ...COMMAND_LABEL_ICON.Delete,
             action: (pool: Pool, options) => this._deletePool(pool, options),
             confirm: (entities) => this._confirmDeletePool(entities),
@@ -81,6 +88,7 @@ export class PoolCommands extends EntityCommands<Pool> {
         });
 
         this.exportAsJSON = this.simpleCommand({
+            name: "exportAsJson",
             ...COMMAND_LABEL_ICON.ExportAsJSON,
             action: (pool) => this._exportAsJSON(pool),
             multiple: false,
@@ -89,6 +97,7 @@ export class PoolCommands extends EntityCommands<Pool> {
         });
 
         this.pin = this.simpleCommand({
+            name: "pin",
             label: (pool: Pool) => {
                 return this.pinnedEntityService.isFavorite(pool)
                     ? COMMAND_LABEL_ICON.UnpinFavoriteLabel : COMMAND_LABEL_ICON.PinFavoriteLabel;
@@ -139,7 +148,7 @@ export class PoolCommands extends EntityCommands<Pool> {
 
         if (localPath) {
             const content = JSON.stringify(pool._original, null, 2);
-            return Observable.fromPromise(this.fs.saveFile(localPath, content));
+            return from(this.fs.saveFile(localPath, content));
         }
     }
 

@@ -1,0 +1,2 @@
+task-dependency-browser:
+  no-dependency: This task doesn't depend on any other tasks

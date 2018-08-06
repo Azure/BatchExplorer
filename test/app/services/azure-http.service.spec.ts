@@ -2,11 +2,11 @@ import { Injector, ReflectiveInjector } from "@angular/core";
 import { fakeAsync, tick } from "@angular/core/testing";
 import { BaseRequestOptions, ConnectionBackend, Http, RequestOptions, Response, ResponseOptions } from "@angular/http";
 import { MockBackend, MockConnection } from "@angular/http/testing";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 import { HttpCode, ServerError } from "@batch-flask/core";
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
-import { AdalService, AzureHttpService, BatchLabsService } from "app/services";
+import { AdalService, AzureHttpService, BatchExplorerService } from "app/services";
 
 describe("AzureHttpService", () => {
     let service: AzureHttpService;
@@ -27,7 +27,7 @@ describe("AzureHttpService", () => {
     beforeEach(() => {
 
         adalSpy = {
-            accessTokenData: () => Observable.of({ accessToken: "abc" }),
+            accessTokenData: () => of({ accessToken: "abc" }),
         };
 
         appServiceSpy = {
@@ -38,7 +38,7 @@ describe("AzureHttpService", () => {
             { provide: ConnectionBackend, useClass: MockBackend },
             { provide: RequestOptions, useClass: BaseRequestOptions },
             { provide: AdalService, useValue: adalSpy },
-            { provide: BatchLabsService, useValue: appServiceSpy },
+            { provide: BatchExplorerService, useValue: appServiceSpy },
             Http,
             AzureHttpService,
         ]);

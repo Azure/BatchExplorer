@@ -1,0 +1,29 @@
+
+@import "app/styles/variables";
+
+bl-workspace-dropdown {
+    [bl-dropdown-btn] {
+        min-width: 125px;
+    }
+
+    [bl-dropdown-content] {
+        min-width: 250px;
+        max-width: 400px;
+    }
+
+    .dropdown-item.workspace {
+        &.selected {
+            cursor: not-allowed;
+
+            .main {
+                opacity: 0.3;
+            }
+        }
+    }
+
+    .dropdown-item.manage {
+        i.fa {
+            margin-right: 5px;
+        }
+    }
+}

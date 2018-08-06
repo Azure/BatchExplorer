@@ -3,19 +3,17 @@ import {
     OnChanges, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Filter, autobind } from "@batch-flask/core";
+import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import {
     Activity, ActivityService, LoadingStatus, QuickListItemStatus,
 } from "@batch-flask/ui";
-import { List } from "immutable";
-import { Observable, Subscription, of } from "rxjs";
-
 import { BlobContainer, LeaseStatus } from "app/models";
-import { ListView } from "app/services/core";
 import { ListContainerParams, StorageContainerService } from "app/services/storage";
 import { ComponentUtils } from "app/utils";
 import { Constants } from "common";
+import { List } from "immutable";
+import { Observable, Subscription, of } from "rxjs";
 import { BlobContainerCommands } from "../action";
 
 import "./data-container-list.scss";
@@ -101,7 +99,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
             return this.data.refresh();
         }
 
-        return Observable.of(null);
+        return of(null);
     }
 
     public handleFilter(filter: Filter) {

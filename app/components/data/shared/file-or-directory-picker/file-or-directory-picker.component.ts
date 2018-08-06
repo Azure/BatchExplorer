@@ -15,13 +15,13 @@ import {
     NG_ASYNC_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { Observable, Subscription } from "rxjs";
-
+import { autobind } from "@batch-flask/core";
+import { FileSystemService } from "@batch-flask/ui";
 import { FileOrDirectoryDto } from "app/models/dtos";
 import { DragUtils } from "app/utils";
+import { Subscription, from } from "rxjs";
+import { map } from "rxjs/operators";
 
-import { autobind } from "@batch-flask/core";
-import { FileSystemService } from "app/services";
 import "./file-or-directory-picker.scss";
 
 @Component({
@@ -124,14 +124,14 @@ export class FileOrDirectoryPickerComponent implements AsyncValidator, ControlVa
 
     @autobind()
     private _validatePaths(control: FormControl) {
-        return Observable.fromPromise(this._validatePathsAsync(control.value)).map((path) => {
+        return from(this._validatePathsAsync(control.value)).pipe(map((path) => {
             if (path) {
                 return {
                     invalidFileOrPath: false,
                 };
             }
             return null;
-        });
+        }));
     }
 
     private async _validatePathsAsync(paths: Array<{ path: string }>) {
