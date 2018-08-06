@@ -1,6 +1,6 @@
 FROM microsoft/nanoserver
 
-ENV node_version=10.4.0
+ENV node_version=10.8.0
 
 ENV PYTHON_VERSION 3.6.5
 ENV PYTHON27_VERSION 2.7.15

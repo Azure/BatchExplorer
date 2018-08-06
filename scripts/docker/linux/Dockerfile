@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
 # Environement
-ENV NODE_VERSION 10.2.1
+ENV NODE_VERSION 10.8.0
 ENV PYTHON_VERSION 3.6.5
 
 # replace shell with bash so we can source files
