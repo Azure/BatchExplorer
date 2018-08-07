@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/
 import { MatDialogRef } from "@angular/material";
 
 import { autobind } from "@batch-flask/core";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
-import { DeleteCertificateAction } from "app/components/certificate/action/delete/delete-certificate-action";
+import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { CertificateService } from "app/services";
+import { flatMap } from "rxjs/operators";
+import { WaitForDeletePoller } from "../../../core/pollers";
 
 @Component({
     selector: "bl-delete-certificate-dialog",
@@ -23,14 +24,26 @@ export class DeleteCertificateDialogComponent {
     constructor(
         public dialogRef: MatDialogRef<DeleteCertificateDialogComponent>,
         private certificateService: CertificateService,
-        private taskManager: BackgroundTaskService,
+        private activityService: ActivityService,
         private changeDetector: ChangeDetectorRef) {
     }
 
     @autobind()
     public destroyCertificate() {
-        const task = new DeleteCertificateAction(this.certificateService, [this.certificateThumbprint]);
-        task.startAndWaitAsync(this.taskManager);
-        return task.actionDone;
+        const initializer = () => {
+            return this.certificateService.delete(this.certificateThumbprint).pipe(
+                flatMap(obs => {
+                    const poller = new WaitForDeletePoller(() => {
+                        return this.certificateService.get(this.certificateThumbprint);
+                    });
+                    return poller.start();
+                }),
+            );
+        };
+
+        const name = `Deleting Certificate ${this.certificateThumbprint}`;
+        const activity = new Activity(name, initializer);
+        this.activityService.loadAndRun(activity);
+        return activity.done;
     }
 }

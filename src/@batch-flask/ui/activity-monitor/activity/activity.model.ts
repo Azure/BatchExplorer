@@ -107,6 +107,7 @@ export class Activity {
      * Runs the function to be run upon completion of the activity
      */
     private _markAsCompleted(): void {
+        console.log(this.name, "COMPLETED");
         // emit a completed status to the statusSubject
         this.statusSubject.next(ActivityStatus.Completed);
 

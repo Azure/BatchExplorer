@@ -12,6 +12,7 @@ export class WaitForDeletePoller {
             this.getFunction().subscribe({
                 error: (e) => {
                     clearInterval(interval);
+                    obs.next("DONE");
                     obs.complete();
                 },
             });

@@ -2,19 +2,21 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component,
     Input, OnDestroy, OnInit, ViewChild, forwardRef,
 } from "@angular/core";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, of } from "rxjs";
 
 import { TaskListDisplayComponent } from "./display";
 
 import { ActivatedRoute } from "@angular/router";
 import { Filter, ListView,  autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Task } from "app/models";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
 import { ComponentUtils } from "app/utils";
-import { DeleteTaskAction, TaskCommands } from "../action";
+import { flatMap, map } from "rxjs/operators";
+import { WaitForDeletePoller } from "../../core/pollers";
+import { TaskCommands } from "../action";
 
 @Component({
     selector: "bl-task-list",
@@ -50,7 +52,7 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
         private taskService: TaskService,
         activatedRoute: ActivatedRoute,
         private changeDetectorRef: ChangeDetectorRef,
-        private taskManager: BackgroundTaskService) {
+        private activityService: ActivityService) {
         super(changeDetectorRef);
         this.data = this.taskService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
@@ -98,10 +100,38 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
     }
 
     public deleteSelection(selection: ListSelection) {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteTaskAction(this.taskService, this.jobId, [...selection.keys]);
-            task.start(backgroundTask);
-            return task.waitingDone;
-        });
+        const selectionArr = Array.from(selection.keys);
+
+        const initializer = () => {
+            return of(selectionArr).pipe(
+                map(containerIDs => {
+                    // map each selected job id to a job deletion activity
+                    return containerIDs.map(id => {
+                        const name = `Deleting Task '${id}'`;
+                        const activity = new Activity(name, () => {
+                            return this.taskService.delete(this.jobId, id).pipe(
+                                flatMap(obs => {
+                                    const poller = new WaitForDeletePoller(() => {
+                                        return this.taskService.get(this.jobId, id);
+                                    });
+                                    return poller.start();
+                                }),
+                            );
+                        });
+                        activity.done.subscribe(() => this.refresh());
+                        return activity;
+                    });
+                }),
+            );
+        };
+
+        let mainName = `Deleting ${selectionArr.length} Task`;
+        if (selectionArr.length > 1) {
+            mainName += "s";
+        }
+        const deleteActivity = new Activity(mainName, initializer);
+        this.activityService.loadAndRun(deleteActivity);
+        deleteActivity.done.subscribe(() => this.refresh());
+        return deleteActivity.done;
     }
 }

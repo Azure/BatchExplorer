@@ -3,7 +3,7 @@ import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
@@ -12,9 +12,10 @@ import { FailureInfoDecorator } from "app/models/decorators";
 import { JobListParams, JobService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, of } from "rxjs";
+import { flatMap, map } from "rxjs/operators";
+import { WaitForDeletePoller } from "../../core/pollers";
 import {
-    DeleteJobAction,
     JobCommands,
     PatchJobComponent,
 } from "../action";
@@ -45,7 +46,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         public commands: JobCommands,
         private sidebarManager: SidebarManager,
         private jobService: JobService,
-        private taskManager: BackgroundTaskService) {
+        private activityService: ActivityService) {
         super(changeDetector);
         this.data = this.jobService.listView(this._baseOptions);
         ComponentUtils.setActiveItem(activatedRoute, this.data);
@@ -135,11 +136,37 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     }
 
     public deleteSelection(selection: ListSelection) {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteJobAction(this.jobService, [...this.selection.keys]);
-            task.start(backgroundTask);
-            return task.waitingDone;
-        });
+        const selectionArr = Array.from(selection.keys);
+
+        const initializer = () => {
+            return of(selectionArr).pipe(
+                map(jobIDs => {
+                    // map each selected job id to a job deletion activity
+                    return jobIDs.map(id => {
+                        const name = `Deleting Job '${id}'`;
+                        const activity = new Activity(name, () => {
+                            return this.jobService.delete(id).pipe(
+                                flatMap(obs => {
+                                    const poller = new WaitForDeletePoller(() => this.jobService.get(id));
+                                    return poller.start();
+                                }),
+                            );
+                        });
+                        activity.done.subscribe(() => this.refresh());
+                        return activity;
+                    });
+                }),
+            );
+        };
+
+        let mainName = `Deleting ${selectionArr.length} Job`;
+        if (selectionArr.length > 1) {
+            mainName += "s";
+        }
+        const deleteActivity = new Activity(mainName, initializer);
+        this.activityService.loadAndRun(deleteActivity);
+        deleteActivity.done.subscribe(() => this.refresh());
+        return deleteActivity.done;
     }
 
     public trackByFn(index: number, job: Job) {

@@ -5,17 +5,17 @@ import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, FilterMatcher, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { Certificate, CertificateState } from "app/models";
 import { CertificateListParams, CertificateService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
-import {
-    CertificateCommands, DeleteCertificateAction,
-} from "../action";
+import { Observable, Subscription, of } from "rxjs";
+import { flatMap, map } from "rxjs/operators";
+import { WaitForDeletePoller } from "../../core/pollers";
+import { CertificateCommands } from "../action";
 
 @Component({
     selector: "bl-certificate-list",
@@ -41,7 +41,7 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
         changeDetector: ChangeDetectorRef,
         public commands: CertificateCommands,
         private certificateService: CertificateService,
-        private taskManager: BackgroundTaskService,
+        private activityService: ActivityService,
     ) {
         super(changeDetector);
 
@@ -107,28 +107,37 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
     }
 
     public deleteSelection(selection: ListSelection) {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteCertificateAction(this.certificateService, [...selection.keys]);
-            task.start(backgroundTask);
-            return task.waitingDone;
-        });
+        const selectionArr = Array.from(selection.keys);
 
-        // // ActivityService Code
-        // const initializer = () => {
-        //     return of(Array.from(selection.keys)).pipe(
-        //         map(keyList => {
-        //             return keyList.map(key => {
-        //                 return new Activity(`Deleting Certificate '${key}'`, () => {
-        //                     return this.certificateService.delete(key);
-        //                 }, () => {
-        //                     this.refresh();
-        //                 });
-        //             });
-        //         }),
-        //     );
-        // };
+        const initializer = () => {
+            return of(selectionArr).pipe(
+                map(certificateIDs => {
+                    // map each selected job id to a job deletion activity
+                    return certificateIDs.map(id => {
+                        const name = `Deleting Certificate '${id}'`;
+                        const activity = new Activity(name, () => {
+                            return this.certificateService.delete(id).pipe(
+                                flatMap(obs => {
+                                    const poller = new WaitForDeletePoller(() => this.certificateService.get(id));
+                                    return poller.start();
+                                }),
+                            );
+                        });
+                        activity.done.subscribe(() => this.refresh());
+                        return activity;
+                    });
+                }),
+            );
+        };
 
-        // this.activityService.loadAndRun(new Activity("Deleting Certificates", initializer));
+        let mainName = `Deleting ${selectionArr.length} Certificate`;
+        if (selectionArr.length > 1) {
+            mainName += "s";
+        }
+        const deleteActivity = new Activity(mainName, initializer);
+        this.activityService.loadAndRun(deleteActivity);
+        deleteActivity.done.subscribe(() => this.refresh());
+        return deleteActivity.done;
     }
 
     public trackByFn(index: number, certificate: Certificate) {

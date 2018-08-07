@@ -4,7 +4,6 @@ import {
 import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { TableConfig } from "@batch-flask/ui/table";
@@ -12,9 +11,12 @@ import { Pool } from "app/models";
 import { PoolListParams, PoolService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
-import { DeletePoolTask, PoolCommands } from "../action";
+import { Observable, Subscription, of } from "rxjs";
+import { PoolCommands } from "../action";
 
+import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
+import { flatMap, map } from "rxjs/operators";
+import { WaitForDeletePoller } from "../../core/pollers";
 import "./pool-list.scss";
 
 @Component({
@@ -43,7 +45,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         router: Router,
         public commands: PoolCommands,
         changeDetector: ChangeDetectorRef,
-        private taskManager: BackgroundTaskService) {
+        private activityService: ActivityService) {
         super(changeDetector);
         this.data = this.poolService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
@@ -102,11 +104,39 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     }
 
     public deleteSelection(selection: ListSelection) {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeletePoolTask(this.poolService, [...this.selection.keys]);
-            task.start(backgroundTask);
-            return task.waitingDone;
-        });
+        const selectionArr = Array.from(selection.keys);
+
+        const initializer = () => {
+            return of(selectionArr).pipe(
+                map(poolIDs => {
+                    // map each selected job id to a job deletion activity
+                    return poolIDs.map(id => {
+                        const name = `Deleting Pool '${id}'`;
+                        const activity = new Activity(name, () => {
+                            return this.poolService.delete(id).pipe(
+                                flatMap(obs => {
+                                    const poller = new WaitForDeletePoller(() => {
+                                        return this.poolService.get(id);
+                                    });
+                                    return poller.start();
+                                }),
+                            );
+                        });
+                        activity.done.subscribe(() => this.refresh());
+                        return activity;
+                    });
+                }),
+            );
+        };
+
+        let mainName = `Deleting ${selectionArr.length} Pool`;
+        if (selectionArr.length > 1) {
+            mainName += "s";
+        }
+        const deleteActivity = new Activity(mainName, initializer);
+        this.activityService.loadAndRun(deleteActivity);
+        deleteActivity.done.subscribe(() => this.refresh());
+        return deleteActivity.done;
     }
 
     public trackById(index, pool) {

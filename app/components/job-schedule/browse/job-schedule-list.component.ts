@@ -5,15 +5,17 @@ import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { JobSchedule, JobScheduleState } from "app/models";
 import { JobScheduleListParams, JobScheduleService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
-import { DeleteJobScheduleAction, JobScheduleCommands } from "../action";
+import { Observable, Subscription, of } from "rxjs";
+import { flatMap, map } from "rxjs/operators";
+import { WaitForDeletePoller } from "../../core/pollers";
+import { JobScheduleCommands } from "../action";
 
 @Component({
     selector: "bl-job-schedule-list",
@@ -40,7 +42,7 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
         changeDetector: ChangeDetectorRef,
         public commands: JobScheduleCommands,
         private jobScheduleService: JobScheduleService,
-        private taskManager: BackgroundTaskService) {
+        private activityService: ActivityService) {
         super(changeDetector);
 
         this.data = this.jobScheduleService.listView();
@@ -101,11 +103,39 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
     }
 
     public deleteSelection(selection: ListSelection) {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteJobScheduleAction(this.jobScheduleService, [...selection.keys]);
-            task.start(backgroundTask);
-            return task.waitingDone;
-        });
+        const selectionArr = Array.from(selection.keys);
+
+        const initializer = () => {
+            return of(selectionArr).pipe(
+                map(jobScheduleIDs => {
+                    // map each selected job id to a job deletion activity
+                    return jobScheduleIDs.map(id => {
+                        const name = `Deleting Job Schedule '${id}'`;
+                        const activity = new Activity(name, () => {
+                            return this.jobScheduleService.delete(id).pipe(
+                                flatMap(obs => {
+                                    const poller = new WaitForDeletePoller(() => {
+                                        return this.jobScheduleService.get(id);
+                                    });
+                                    return poller.start();
+                                }),
+                            );
+                        });
+                        activity.done.subscribe(() => this.refresh());
+                        return activity;
+                    });
+                }),
+            );
+        };
+
+        let mainName = `Deleting ${selectionArr.length} Job Schedule`;
+        if (selectionArr.length > 1) {
+            mainName += "s";
+        }
+        const deleteActivity = new Activity(mainName, initializer);
+        this.activityService.loadAndRun(deleteActivity);
+        deleteActivity.done.subscribe(() => this.refresh());
+        return deleteActivity.done;
     }
 
     public jobScheduleStatusText(jobSchedule: JobSchedule): string {

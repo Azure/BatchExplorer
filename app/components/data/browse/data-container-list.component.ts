@@ -16,6 +16,8 @@ import { List } from "immutable";
 import { Observable, Subscription, of } from "rxjs";
 import { BlobContainerCommands } from "../action";
 
+import { flatMap, map } from "rxjs/operators";
+import { WaitForDeletePoller } from "../../core/pollers";
 import "./data-container-list.scss";
 
 const defaultListOptions = {
@@ -130,21 +132,46 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
     }
 
     public deleteSelection(selection: ListSelection) {
-        const initializer = () => {
-            const arr = Array.from(selection.keys).map(id => {
-                const activity = new Activity(`Deleting container: ${id}`, () => {
-                    return this.storageContainerService.delete(this.storageAccountId, id);
-                });
-                activity.done.subscribe(() => {
-                    this.refresh();
-                });
-                return activity;
-            });
+        const selectionArr = Array.from(selection.keys);
 
-            return of(arr);
+        // ******************************************
+        // TODO test all open tabs
+        // verify that each component works as expected
+        // exception of certificate list which seems to be buggy
+        // Also delete any associated actions if they are not used, and if they still exist
+        // ******************************************
+
+        const initializer = () => {
+            return of(selectionArr).pipe(
+                map(containerIDs => {
+                    // map each selected job id to a job deletion activity
+                    return containerIDs.map(id => {
+                        const name = `Deleting Container '${id}'`;
+                        const activity = new Activity(name, () => {
+                            return this.storageContainerService.delete(this.storageAccountId, id).pipe(
+                                flatMap(obs => {
+                                    const poller = new WaitForDeletePoller(() => {
+                                        return this.storageContainerService.get(this.storageAccountId, id);
+                                    });
+                                    return poller.start();
+                                }),
+                            );
+                        });
+                        activity.done.subscribe(() => this.refresh());
+                        return activity;
+                    });
+                }),
+            );
         };
 
-        this.activityService.loadAndRun(new Activity("Deleting containers", initializer));
+        let mainName = `Deleting ${selectionArr.length} Container`;
+        if (selectionArr.length > 1) {
+            mainName += "s";
+        }
+        const deleteActivity = new Activity(mainName, initializer);
+        this.activityService.loadAndRun(deleteActivity);
+        deleteActivity.done.subscribe(() => this.refresh());
+        return deleteActivity.done;
     }
 
     public trackFileGroup(index, fileGroup: BlobContainer) {
