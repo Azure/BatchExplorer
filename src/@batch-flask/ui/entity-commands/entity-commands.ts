@@ -1,6 +1,5 @@
 import { Injector, Type } from "@angular/core";
 import { ListSelection } from "@batch-flask/core/list/list-selection";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { ContextMenu, ContextMenuItem } from "@batch-flask/ui/context-menu";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -23,7 +22,6 @@ export interface EntityCommandsConfig {
 export abstract class EntityCommands<TEntity extends ActionableEntity, TParams = {}> {
     public dialogService: DialogService;
     public notificationService: NotificationService;
-    public backgroundTaskService: BackgroundTaskService;
     public params: TParams = {} as TParams;
 
     public commands: Array<EntityCommand<TEntity, any>>;
@@ -31,7 +29,6 @@ export abstract class EntityCommands<TEntity extends ActionableEntity, TParams =
     constructor(private injector: Injector, public typeName: string, public config: EntityCommandsConfig = {}) {
         this.notificationService = injector.get(NotificationService);
         this.dialogService = injector.get(DialogService);
-        this.backgroundTaskService = injector.get(BackgroundTaskService);
     }
 
     public abstract get(id: string): Observable<TEntity>;

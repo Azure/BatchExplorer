@@ -3,14 +3,15 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
 import { Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { BackgroundTaskService, NotificationService } from "@batch-flask/ui";
+import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
+import { NotificationService } from "@batch-flask/ui/notifications";
 import { Node, Pool } from "app/models";
 import { AccountService, NodeService } from "app/services";
 import { AutoStorageService, StorageBlobService } from "app/services/storage";
 import { CloudPathUtils, StorageUtils } from "app/utils";
 import * as moment from "moment";
-import { AsyncSubject, interval } from "rxjs";
-import { distinctUntilChanged, first, flatMap } from "rxjs/operators";
+import { AsyncSubject, interval, of } from "rxjs";
+import { distinctUntilChanged, first, flatMap, map } from "rxjs/operators";
 
 import "./upload-node-logs-dialog.scss";
 
@@ -48,7 +49,7 @@ export class UploadNodeLogsDialogComponent {
     constructor(
         public dialogRef: MatDialogRef<UploadNodeLogsDialogComponent>,
         private changeDetector: ChangeDetectorRef,
-        private backgroundTaskService: BackgroundTaskService,
+        private activityService: ActivityService,
         private nodeService: NodeService,
         private accountService: AccountService,
         private autoStorageService: AutoStorageService,
@@ -111,31 +112,68 @@ export class UploadNodeLogsDialogComponent {
         return obs;
     }
 
+    /**
+     * Watch the specified container for log file uploads from the node,
+     * and continuously report status to the activity service
+     * N.B. This hacky method is a little annoying, but we don't have access to the individual
+     * upload files via this api call, so we have to do it this way.
+     * @param container the Azure Storage container url that we are uploading files to
+     * @param folder the name of the virtual directory where these files are being stored
+     * @param numberOfFiles the number of files we are uploading
+     */
     private _watchUpload(container: string, folder: string, numberOfFiles: number) {
-        this.backgroundTaskService.startTask("Node logs uploading", (task) => {
-            const done = new AsyncSubject();
-            const sub = interval(5000).pipe(
-                flatMap(() => this.autoStorageService.get()),
-                flatMap((storageAccountId) => {
-                    return this.storageBlobService.list(storageAccountId, container, {
-                        folder: CloudPathUtils.asBaseDirectory(folder),
-                    }, true);
-                }),
-            ).subscribe((blobs) => {
-                const uploaded = blobs.items.size;
-                if (uploaded >= numberOfFiles) {
-                    task.progress.next(100);
-                    done.complete();
-                    sub.unsubscribe();
-                    this._notifyLogUploaded(container, folder, numberOfFiles);
-                } else {
-                    task.name.next(`Node logs uploading (${uploaded}/${numberOfFiles})`);
-                    task.progress.next(uploaded / numberOfFiles * 100);
-                }
-            });
+        // create a "loading bar" of async subjects that will complete when each file is uploaded
+        const progressSubjects: Array<AsyncSubject<any>> = new Array(numberOfFiles).fill(new AsyncSubject());
+        let subjectsCompleted: number = 0;
 
-            return done;
+        // the initializer simply returns activities subscribed to these progress subjects
+        const initializer = () => {
+            return of(progressSubjects).pipe(
+                map(subjects => {
+                    return subjects.map((subject, index) => {
+                        const name = `Uploading log file ${index + 1} of ${numberOfFiles}`;
+                        return new Activity(name, () => {
+                            return subject.asObservable();
+                        });
+                    });
+                }),
+            );
+        };
+
+        // every 5 seconds, fetch uploaded files from the service
+        const sub = interval(5000).pipe(
+            flatMap(() => this.autoStorageService.get()),
+            flatMap((storageAccountId) => {
+                return this.storageBlobService.list(storageAccountId, container, {
+                    folder: CloudPathUtils.asBaseDirectory(folder),
+                }, true);
+            }),
+        // check how many files have been uploaded,
+        // and complete that number of subjects to advance the "loading bar"
+        ).subscribe((blobs) => {
+            const uploaded = blobs.items.size;
+
+            // complete all required subjects that have not yet been completed
+            for (let i = subjectsCompleted; i < uploaded; i++) {
+                progressSubjects[i].next("DONE");
+                progressSubjects[i].complete();
+            }
+            subjectsCompleted = uploaded;
+
+            // if all files have been uploaded, notify and stop listening to the blobService
+            if (uploaded >= numberOfFiles) {
+                this._notifyLogUploaded(container, folder, numberOfFiles);
+                sub.unsubscribe();
+            }
         });
+
+        // create the main listening activity
+        const mainName = `Uploading ${numberOfFiles} log files ` +
+            `for node '${this.node.id}' of pool '${this.pool.id}' to '${container}'`;
+        const mainActivity = new Activity(mainName, initializer);
+        this.activityService.loadAndRun(mainActivity);
+
+        return mainActivity.done;
     }
 
     private _notifyLogUploaded(container: string, folder: string, numberOfFiles: number) {
