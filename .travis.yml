@@ -14,7 +14,7 @@ sudo: false
 #       - bsdtar
 
 node_js:
-  - 9.6.1
+  - 10.8.0
 python:
   - "3.6"
 
