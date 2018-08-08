@@ -1,6 +1,5 @@
 import { Injector } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
@@ -9,6 +8,7 @@ import { exists, log, nil } from "@batch-flask/utils";
 import * as inflection from "inflection";
 import { Observable, of } from "rxjs";
 
+import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { ActionableEntity, EntityCommands } from "./entity-commands";
 
 export enum EntityCommandNotify {
@@ -54,13 +54,13 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     // Services
     private dialogService: DialogService;
     private notificationService: NotificationService;
-    private backgroundTaskService: BackgroundTaskService;
+    private activityService: ActivityService;
     private workspaceService: WorkspaceService;
 
     constructor(injector: Injector, attributes: EntityCommandAttributes<TEntity, TOptions>) {
         this.notificationService = injector.get(NotificationService);
         this.dialogService = injector.get(DialogService);
-        this.backgroundTaskService = injector.get(BackgroundTaskService);
+        this.activityService = injector.get(ActivityService);
         this.workspaceService = injector.get(WorkspaceService);
 
         this.name = attributes.name;
@@ -182,15 +182,26 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         const label = this.label(entities[0]);
         const enabledEntities = entities.filter(x => this.enabled(x));
         const type = inflection.pluralize(this.definition.typeName.toLowerCase());
-        this.backgroundTaskService.startTasks(`${label} ${type}`, enabledEntities.map((entity) => {
-            return {
-                name: `${label} ${entity.id}`,
-                func: () => this.performActionAndRefresh(entity, options),
-            };
-        })).subscribe((result) => {
-            this._notifySuccess(`${label} was successful.`,
-                `${result.succeeded}/${entities.length}`);
+
+        // create an activity that creates a list of subactivities
+        const activity = new Activity(`${label} ${type}`, () => {
+            // create a subactivity for each enabled entity
+            const subActivities = enabledEntities.map((entity) => {
+                return new Activity(`${label} ${entity.id}`, () => {
+                    // each subactivity should perform an action and refresh
+                    return this.performActionAndRefresh(entity, options);
+                });
+            });
+            return of(subActivities);
         });
+
+        // notify success after the parent activity completes
+        activity.done.subscribe((result) => {
+            this._notifySuccess(`${label} was successful.`, "");
+        });
+
+        // run the parent activity
+        this.activityService.loadAndRun(activity);
     }
 
     private _notifySuccess(message: string, description: string) {
