@@ -9,12 +9,12 @@ import {
     ListView,
     TargetedDataCache,
 } from "@batch-flask/core";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { Node, NodeState } from "app/models";
-import { ArrayUtils, Constants, ObservableUtils } from "app/utils";
+import { Constants } from "app/utils";
 import { List } from "immutable";
-import { Observable, zip } from "rxjs";
-import { delay, flatMap } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import {
     AzureBatchHttpService, BatchEntityGetter, BatchListGetter,
 } from "../core";
@@ -41,7 +41,7 @@ export class NodeService {
     private _getter: BatchEntityGetter<Node, NodeParams>;
     private _listGetter: BatchListGetter<Node, NodeListParams>;
 
-    constructor(private taskManager: BackgroundTaskService, private http: AzureBatchHttpService) {
+    constructor(private activityService: ActivityService, private http: AzureBatchHttpService) {
         this._getter = new BatchEntityGetter(Node, this.http, {
             cache: ({ poolId }) => this.getCache(poolId),
             uri: (params: NodeParams) => `/pools/${params.poolId}/nodes/${params.id}`,
@@ -116,7 +116,7 @@ export class NodeService {
      * @param states [Optional] list of the states the nodes should have to be rebooted
      */
     public rebootAll(poolId: string, states?: NodeState[]) {
-        this.performOnEachNode(`Reboot pool '${poolId}' nodes`, poolId, states, (node) => {
+        this.performOnEachNode(`Rebooting nodes in pool '${poolId}'`, poolId, states, (node) => {
             return this.reboot(poolId, node.id);
         });
     }
@@ -127,7 +127,7 @@ export class NodeService {
      * @param states [Optional] list of the states the nodes should have to be rebooted
      */
     public reimageAll(poolId: string, states?: NodeState[]) {
-        this.performOnEachNode(`Reboot pool '${poolId}' nodes`, poolId, states, (node) => {
+        this.performOnEachNode(`Reimaging nodes in pool '${poolId}'`, poolId, states, (node) => {
             return this.reimage(poolId, node.id);
         });
     }
@@ -138,28 +138,30 @@ export class NodeService {
         states: NodeState[],
         callback: (node: Node) => Observable<any>) {
 
-        this.taskManager.startTask(taskName, (bTask) => {
-            const options: any = {
-                pageSize: 1000,
-            };
-            if (states) {
-                options.filter = FilterBuilder.or(...states.map(x => FilterBuilder.prop("state").eq(x)));
-            }
-            bTask.progress.next(1);
-            return this.listAll(poolId, options).pipe(
-                flatMap((nodes) => {
-                    const chunks = ArrayUtils.chunk<Node>(nodes.toJS(), 100);
-                    const chunkFuncs = chunks.map((chunk, i) => {
-                        return () => {
-                            bTask.progress.next(10 + (i + 1 / chunks.length * 100));
-                            return this._performOnNodeChunk(chunk, callback);
-                        };
-                    });
+        const options: any = {
+            pageSize: 1000,
+        };
+        if (states) {
+            options.filter = FilterBuilder.or(...states.map(x => FilterBuilder.prop("state").eq(x)));
+        }
 
-                    return ObservableUtils.queue(...chunkFuncs);
+        const initializer = () => {
+            // list all nodes in this pool
+            return this.listAll(poolId, options).pipe(
+                // map the list of nodes to a list of activities to run on the nodes
+                map(nodes => {
+                    return nodes.toArray().map(node => {
+                        const name = `Running on node '${node.id}'`;
+                        return new Activity(name, () => callback(node));
+                    });
                 }),
             );
-        });
+        };
+
+        const activity = new Activity(taskName, initializer);
+        this.activityService.loadAndRun(activity);
+
+        return activity.done;
     }
 
     public reimage(poolId: string, nodeId: string): Observable<any> {
@@ -175,13 +177,5 @@ export class NodeService {
 
     public uploadLogs(poolId: string, nodeId: string, params: any): Observable<any> {
         return this.http.post(`/pools/${poolId}/nodes/${nodeId}/uploadbatchservicelogs`, params);
-    }
-
-    private _performOnNodeChunk(nodes: Node[], callback: any) {
-        const waitFor = [];
-        nodes.forEach((node, i) => {
-            waitFor.push(callback(node));
-        });
-        return zip(...waitFor).pipe(delay(1000));
     }
 }

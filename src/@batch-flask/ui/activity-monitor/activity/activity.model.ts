@@ -1,7 +1,7 @@
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 import { ActivityProcessor } from "./activity-processor.model";
-import { ActivityStatus } from "./activity-types.model";
+import { ActivitySnapshot, ActivityStatus } from "./activity-types.model";
 
 export class ActivityCounters {
     public completed: number;
@@ -20,20 +20,28 @@ export class ActivityCounters {
 }
 
 export class Activity {
+    public static idCounter: number = 0;
+
+    public id: string;
     public name: string;
     public statusSubject: BehaviorSubject<ActivityStatus>;
-    public statusList: ActivityStatus[];
+    public snapshots: ActivitySnapshot[];
     public done: AsyncSubject<ActivityStatus>; // only emits on completion
+    public pending: boolean;
 
+    private progressSubject: BehaviorSubject<number>;
     private initializer: () => Observable<any>;
     private processor: ActivityProcessor;
     private counters: ActivityCounters;
 
     constructor(name: string, initializerFn: () => Observable<any>) {
+        this.id = (Activity.idCounter++).toString();
         this.name = name;
-        this.statusList = [];
+        this.snapshots = [];
 
+        this.pending = true;
         this.done = new AsyncSubject<ActivityStatus>();
+        this.progressSubject = new BehaviorSubject(-1);
 
         this.initializer = initializerFn;
 
@@ -46,12 +54,18 @@ export class Activity {
         this._listenToProcessor();
     }
 
+    public get progress() {
+        return this.progressSubject.asObservable();
+    }
+
     /**
      * Executes the function supplied in the constructor on this activity
      */
     public run(): void {
         // update status to InProgress
         this.statusSubject.next(ActivityStatus.InProgress);
+        this.pending = false;
+        this.progressSubject.next(0);
 
         // run the initializer
         this.initializer().pipe(
@@ -68,8 +82,8 @@ export class Activity {
     }
 
     private _listenToProcessor(): void {
-        this.processor.statusListSubject.subscribe(statusList => {
-            this.statusList = statusList;
+        this.processor.snapshotsSubject.subscribe(statusList => {
+            this.snapshots = statusList;
         });
 
         // every time a status is emitted, check against the total number and emit completed if necessary
@@ -95,6 +109,8 @@ export class Activity {
                     break;
             }
 
+            this.progressSubject.next((this.counters.total / numSubActivities) * 100);
+
             // in all cases, check the total; if it is equal to the number of subactivities, emit completed
             if (this.counters.total === numSubActivities) {
                 this._markAsCompleted();
@@ -107,7 +123,8 @@ export class Activity {
      * Runs the function to be run upon completion of the activity
      */
     private _markAsCompleted(): void {
-        console.log(this.name, "COMPLETED");
+        // console.log(this.name, "COMPLETED");
+
         // emit a completed status to the statusSubject
         this.statusSubject.next(ActivityStatus.Completed);
 

@@ -1,17 +1,26 @@
 import { Injectable } from "@angular/core";
 import { Activity, ActivityProcessor, ActivityStatus } from "@batch-flask/ui/activity-monitor/activity";
 import { Observable, forkJoin, of } from "rxjs";
-import { flatMap } from "rxjs/operators";
+import { flatMap, map } from "rxjs/operators";
 
 @Injectable()
 export class ActivityService {
-    public statusList: any[];
-
     private masterProcessor: ActivityProcessor;
 
     constructor() {
         this.masterProcessor = new ActivityProcessor();
-        this.statusList = [];
+    }
+
+    public get activities() {
+        return this.masterProcessor.activities;
+    }
+
+    public get incompleteSnapshots() {
+        return this.masterProcessor.snapshotsSubject.pipe(
+            map(snapshots => {
+                return snapshots.filter(snapshot => !this._isCompleted(snapshot.status));
+            }),
+        );
     }
 
     /**
@@ -27,9 +36,15 @@ export class ActivityService {
     public done(): Observable<ActivityStatus> {
         const doneObservables = this.masterProcessor.activities.map(activity => activity.done.asObservable());
         return forkJoin(...doneObservables).pipe(
-            flatMap(obs => {
+            flatMap(() => {
                 return of(ActivityStatus.Completed);
             }),
         );
+    }
+
+    private _isCompleted(status): boolean {
+        return status === ActivityStatus.Completed
+            || status === ActivityStatus.Canceled
+            || status === ActivityStatus.Failed;
     }
 }

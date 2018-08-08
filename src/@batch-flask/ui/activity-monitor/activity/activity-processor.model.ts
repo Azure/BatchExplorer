@@ -1,17 +1,17 @@
 import { BehaviorSubject, Observable, combineLatest, merge } from "rxjs";
 
-import { ActivityStatus } from "./activity-types.model";
+import { ActivitySnapshot, ActivityStatus } from "./activity-types.model";
 import { Activity } from "./activity.model";
 
 export class ActivityProcessor {
     public activities: Activity[];
     public completionSubject: BehaviorSubject<ActivityStatus>;
-    public statusListSubject: BehaviorSubject<ActivityStatus[]>;
+    public snapshotsSubject: BehaviorSubject<ActivitySnapshot[]>;
 
     constructor() {
         this.activities = [];
         this.completionSubject = new BehaviorSubject(null);
-        this.statusListSubject = new BehaviorSubject([]);
+        this.snapshotsSubject = new BehaviorSubject([]);
     }
 
     /**
@@ -31,7 +31,8 @@ export class ActivityProcessor {
         // compile and run all activities
         const statuses: Array<Observable<ActivityStatus>> = [];
         const completions: Array<Observable<ActivityStatus>> = [];
-        for (const activity of this.activities) {
+        const pendingActivities = this.activities.filter(activity => activity.pending);
+        for (const activity of pendingActivities) {
             statuses.push(activity.statusSubject);
             activity.run();
 
@@ -45,7 +46,12 @@ export class ActivityProcessor {
 
         // on any status change, emit the entire status list to the parent activity
         combineLatest(...statuses).subscribe(statusList => {
-            this.statusListSubject.next(statusList);
+            const snapshots = statusList.map((status, index) => ({
+                activity: pendingActivities[index],
+                status,
+            } as ActivitySnapshot));
+
+            this.snapshotsSubject.next(snapshots);
         });
     }
 

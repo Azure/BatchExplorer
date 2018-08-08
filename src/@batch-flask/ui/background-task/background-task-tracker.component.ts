@@ -1,9 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
-import { List } from "immutable";
+import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { Subscription } from "rxjs";
-
-import { BackgroundTask } from "./background-task.model";
-import { BackgroundTaskService } from "./background-task.service";
 
 import "./background-task-tracker.scss";
 
@@ -14,8 +11,8 @@ import "./background-task-tracker.scss";
 })
 export class BackgroundTaskTrackerComponent implements OnDestroy {
 
-    public currentTask: BackgroundTask;
-    public otherTasks: List<BackgroundTask>;
+    public currentActivity: Activity;
+    public otherActivities: Activity[];
 
     /**
      * When adding a new task we should flash to tell the user a new task is running
@@ -25,14 +22,15 @@ export class BackgroundTaskTrackerComponent implements OnDestroy {
     private _lastTaskCount = 0;
     private _sub: Subscription;
 
-    constructor(public taskManager: BackgroundTaskService, private changeDetector: ChangeDetectorRef) {
-        this._sub = taskManager.runningTasks.subscribe((tasks) => {
-            this.currentTask = tasks.first();
-            this.otherTasks = tasks.shift();
-            if (this._lastTaskCount < tasks.size) {
+    constructor(public activityService: ActivityService, private changeDetector: ChangeDetectorRef) {
+
+        this._sub = activityService.incompleteSnapshots.subscribe((snapshots) => {
+            this.currentActivity = snapshots.first() ? snapshots.first().activity : null;
+            this.otherActivities = snapshots.slice(1).map(snapshot => snapshot.activity);
+            if (this._lastTaskCount < snapshots.length) {
                 this.flash();
             }
-            this._lastTaskCount = tasks.size;
+            this._lastTaskCount = snapshots.length;
             this.changeDetector.markForCheck();
         });
     }
@@ -50,7 +48,7 @@ export class BackgroundTaskTrackerComponent implements OnDestroy {
         }, 1000);
     }
 
-    public trackByFn(index, task: BackgroundTask) {
-        return task.id;
+    public trackByFn(index, activity: Activity) {
+        return activity.id;
     }
 }

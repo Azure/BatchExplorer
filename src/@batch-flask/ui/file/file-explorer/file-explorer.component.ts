@@ -177,7 +177,6 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
                     // create a folder deletion activity, and run it
                     const activity = new Activity (name, initializer);
                     this.activityService.loadAndRun(activity);
-                    return activity.done.asObservable();
                 } else {
                     const name = `Deleting file ${event.path}`;
 
@@ -189,7 +188,6 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
                     // run the activity
                     const activity = new Activity(name, initializer);
                     this.activityService.loadAndRun(activity);
-                    return activity.done.asObservable();
                 }
             },
         });
