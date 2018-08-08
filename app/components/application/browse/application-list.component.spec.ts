@@ -5,9 +5,11 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { Subject } from "rxjs";
 
 import { FilterBuilder } from "@batch-flask/core";
-import { DialogService, NotificationService, WorkspaceService } from "@batch-flask/ui";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { ActivityService } from "@batch-flask/ui/activity-monitor";
+import { DialogService } from "@batch-flask/ui/dialogs";
+import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { ApplicationListComponent } from "app/components/application/browse";
 import { BatchApplication } from "app/models";
 import { ApplicationService, PinnedEntityService } from "app/services";
@@ -49,7 +51,7 @@ describe("ApplicationListComponent", () => {
                 { provide: NotificationService, useValue: null },
                 { provide: ApplicationService, useValue: applicationServiceSpy },
                 { provide: PinnedEntityService, useValue: pinServiceSpy },
-                { provide: BackgroundTaskService, useValue: null },
+                { provide: ActivityService, useValue: null },
                 { provide: SidebarManager, useValue: null },
                 { provide: WorkspaceService, useValue: null },
             ],

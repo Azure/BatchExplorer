@@ -4,9 +4,9 @@ import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Property } from "@batch-flask/core";
-import { ContextMenuService } from "@batch-flask/ui";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { ActivityService } from "@batch-flask/ui/activity-monitor";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
+import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { TableTestingModule } from "@batch-flask/ui/testing";
 import { ApplicationPackageTableComponent } from "app/components/application/details";
@@ -74,7 +74,7 @@ describe("ApplicationPackageTableComponent", () => {
             providers: [
                 { provide: MatDialog, useValue: null },
                 { provide: ApplicationService, useValue: applicationServiceSpy },
-                { provide: BackgroundTaskService, useValue: null },
+                { provide: ActivityService, useValue: null },
                 { provide: ContextMenuService, useValue: null },
                 { provide: SidebarManager, useValue: null },
                 { provide: BreadcrumbService, useValue: null },

@@ -3,8 +3,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
-import { BackgroundTaskService, DialogService, NotificationService, WorkspaceService } from "@batch-flask/ui";
+import { ActivityService } from "@batch-flask/ui/activity-monitor";
+import { DialogService } from "@batch-flask/ui/dialogs";
+import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { ApplicationDetailsComponent } from "app/components/application/details";
 import { BatchApplication } from "app/models";
 import { ApplicationService, PinnedEntityService } from "app/services";
@@ -101,7 +104,7 @@ describe("ApplicationDetailsComponent", () => {
                 { provide: SidebarManager, useValue: null },
                 { provide: PinnedEntityService, useValue: null },
                 { provide: NotificationService, useValue: null },
-                { provide: BackgroundTaskService, useValue: null },
+                { provide: ActivityService, useValue: null },
                 { provide: ApplicationService, useValue: applicationServiceSpy },
                 { provide: WorkspaceService, useValue: null },
             ],

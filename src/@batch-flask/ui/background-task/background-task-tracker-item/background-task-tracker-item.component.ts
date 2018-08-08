@@ -29,7 +29,6 @@ export class BackgroundTaskTrackerItemComponent implements OnInit {
         });
 
         this.activity.progress.subscribe((progress) => {
-            console.log(progress);
             this.progress = progress;
             this.changeDetector.markForCheck();
         });
