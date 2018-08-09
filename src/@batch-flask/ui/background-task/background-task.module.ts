@@ -5,20 +5,9 @@ import { MaterialModule } from "@batch-flask/core";
 
 import { DropdownModule } from "../dropdown";
 import { NotificationModule } from "../notifications";
-import { BackgroundTaskTrackerItemComponent } from "./background-task-tracker-item";
-import {
-    BackgroundTaskTrackerComponent,
-} from "./background-task-tracker.component";
 import { BackgroundTaskService } from "./background-task.service";
 
 @NgModule({
-    declarations: [
-        BackgroundTaskTrackerComponent,
-        BackgroundTaskTrackerItemComponent,
-    ],
-    exports: [
-        BackgroundTaskTrackerComponent,
-    ],
     imports: [
         BrowserModule,
         FormsModule,

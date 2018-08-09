@@ -1,31 +1,36 @@
 import { ComponentFixture, TestBed, fakeAsync, inject, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
-import { Subject } from "rxjs";
-
 import {
-    BackgroundTaskModule, BackgroundTaskService, BackgroundTaskTrackerComponent,
-} from "@batch-flask/ui/background-task";
+    Activity,
+    ActivityModule,
+    ActivityMonitorFooterComponent,
+    ActivityService,
+} from "@batch-flask/ui/activity-monitor";
+import { AsyncSubject } from "rxjs";
 
-describe("BackgroundTaskTrackerComponent", () => {
-    let fixture: ComponentFixture<BackgroundTaskTrackerComponent>;
-    let taskManager: BackgroundTaskService;
+describe("ActivityMonitorFooterComponent", () => {
+    let fixture: ComponentFixture<ActivityMonitorFooterComponent>;
+    let activityService: ActivityService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MaterialModule, BackgroundTaskModule],
+            imports: [MaterialModule, ActivityModule],
             declarations: [
             ],
         });
 
         TestBed.compileComponents();
-        fixture = TestBed.createComponent(BackgroundTaskTrackerComponent);
+        fixture = TestBed.createComponent(ActivityMonitorFooterComponent);
         fixture.detectChanges();
     });
 
-    beforeEach(inject([BackgroundTaskService], (d: BackgroundTaskService) => {
-        taskManager = d;
+    beforeEach(inject([ActivityService], (d: ActivityService) => {
+        activityService = d;
     }));
+
+    // TODO reimplement tests for activity-monitor-footer
+    // currently tests footer as the background task tracker, needs to be updated to work with activity service
 
     it("Should have the dropdown elements", () => {
         const dropdownEl = fixture.debugElement.query(By.css("bl-dropdown"));
@@ -42,31 +47,20 @@ describe("BackgroundTaskTrackerComponent", () => {
         // There is not current running task yet
         expect(dropdownBtnEl.nativeElement.textContent).toContain(noTaskMessage);
 
-        const obs1 = new Subject();
-        const obs2 = new Subject();
+        const subj = new AsyncSubject();
 
         // Add 1 task
-        taskManager.startTask("Task1", () => obs1);
-        fixture.detectChanges();
-        expect(dropdownBtnEl.nativeElement.textContent).not.toContain(noTaskMessage);
-
-        // Add a 2nd task
-        taskManager.startTask("Task2", () => obs2);
+        activityService.loadAndRun(new Activity("Task1", () => subj));
         fixture.detectChanges();
 
         expect(dropdownBtnEl.nativeElement.textContent).not.toContain(noTaskMessage);
-        expect(dropdownBtnEl.query(By.css("bl-background-task-tracker-item"))).not.toBeNull();
+        expect(dropdownBtnEl.nativeElement.textContent).toContain("Task1");
 
-        const otherTaskCountel = dropdownBtnEl.query(By.css(".other-task-count"));
-        expect(otherTaskCountel).not.toBeNull();
-        expect(otherTaskCountel.nativeElement.textContent).toContain("+1");
-
-        expect(dropdownBtnEl.nativeElement.textContent).not.toContain(noTaskMessage);
-
-        obs1.complete();
-        obs2.complete();
+        subj.next(null);
+        subj.complete();
         tick(1000);
         fixture.detectChanges();
+
         expect(dropdownBtnEl.nativeElement.textContent).toContain(noTaskMessage);
     }));
 });

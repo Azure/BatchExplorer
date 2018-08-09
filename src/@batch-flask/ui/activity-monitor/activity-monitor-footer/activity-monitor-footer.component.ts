@@ -2,14 +2,14 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from
 import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { Subscription } from "rxjs";
 
-import "./background-task-tracker.scss";
+import "./activity-monitor-footer.scss";
 
 @Component({
-    selector: "bl-background-task-tracker",
-    templateUrl: "background-task-tracker.html",
+    selector: "bl-activity-monitor-footer",
+    templateUrl: "activity-monitor-footer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BackgroundTaskTrackerComponent implements OnDestroy {
+export class ActivityMonitorFooterComponent implements OnDestroy {
 
     public currentActivity: Activity;
     public otherActivities: Activity[];

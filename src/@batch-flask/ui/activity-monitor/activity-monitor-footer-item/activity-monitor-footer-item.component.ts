@@ -8,11 +8,11 @@ import {
 import { Activity } from "@batch-flask/ui/activity-monitor";
 
 @Component({
-    selector: "bl-background-task-tracker-item",
-    templateUrl: "background-task-tracker-item.html",
+    selector: "bl-activity-monitor-footer-item",
+    templateUrl: "activity-monitor-footer-item.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BackgroundTaskTrackerItemComponent implements OnInit {
+export class ActivityMonitorFooterItemComponent implements OnInit {
     @Input() public activity: Activity;
     public done: boolean;
     public progress: number;

@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Activity, ActivityProcessor, ActivityStatus } from "@batch-flask/ui/activity-monitor/activity";
+import { NotificationService } from "@batch-flask/ui/notifications";
 import { Observable, forkJoin, of } from "rxjs";
 import { flatMap, map } from "rxjs/operators";
 
@@ -7,7 +8,7 @@ import { flatMap, map } from "rxjs/operators";
 export class ActivityService {
     private masterProcessor: ActivityProcessor;
 
-    constructor() {
+    constructor(notificationService: NotificationService) {
         this.masterProcessor = new ActivityProcessor();
     }
 
