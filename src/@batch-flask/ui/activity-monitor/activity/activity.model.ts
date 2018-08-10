@@ -1,7 +1,7 @@
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 import { tap } from "rxjs/operators";
+import { ActivityResponse, ActivitySnapshot, ActivityStatus } from "./activity-datatypes";
 import { ActivityProcessor } from "./activity-processor.model";
-import { ActivitySnapshot, ActivityStatus } from "./activity-types.model";
 
 export class ActivityCounters {
     public completed: number;
@@ -29,8 +29,8 @@ export class Activity {
     public done: AsyncSubject<ActivityStatus>; // only emits on completion
     public pending: boolean;
 
+    private initializer: () => Observable<ActivityResponse | Activity[] | any>;
     private progressSubject: BehaviorSubject<number>;
-    private initializer: () => Observable<any>;
     private processor: ActivityProcessor;
     private counters: ActivityCounters;
 
@@ -73,6 +73,12 @@ export class Activity {
                 // if we need to run subtasks, load and run the subtasks
                 if (Array.isArray(result)) {
                     this.processor.loadAndRun(result);
+                } else if (result instanceof ActivityResponse) {
+                    // update the activity's progress with the response
+                    this.progressSubject.next(result.progress);
+                    if (result.progress === 100) {
+                        this._markAsCompleted();
+                    }
                 } else {
                     // we're done, mark activity as completed
                     this._markAsCompleted();
@@ -123,8 +129,6 @@ export class Activity {
      * Runs the function to be run upon completion of the activity
      */
     private _markAsCompleted(): void {
-        // console.log(this.name, "COMPLETED");
-
         // emit a completed status to the statusSubject
         this.statusSubject.next(ActivityStatus.Completed);
 

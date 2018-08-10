@@ -18,3 +18,11 @@ export interface ActivitySnapshot {
     activity: Activity;
     status: ActivityStatus;
 }
+
+export class ActivityResponse {
+    public progress: number;
+
+    constructor(initialProgress?: number) {
+        this.progress = initialProgress || 0;
+    }
+}

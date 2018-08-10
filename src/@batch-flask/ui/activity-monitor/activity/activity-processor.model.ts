@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable, combineLatest, merge } from "rxjs";
 
-import { ActivitySnapshot, ActivityStatus } from "./activity-types.model";
+import { ActivitySnapshot, ActivityStatus } from "./activity-datatypes";
 import { Activity } from "./activity.model";
 
 export class ActivityProcessor {

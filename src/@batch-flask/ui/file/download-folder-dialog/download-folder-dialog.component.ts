@@ -127,18 +127,6 @@ export class DownloadFolderComponent {
         return fileLoader.download(filePath);
     }
 
-    // private _downloadFiles(task: BackgroundTask, folder: string, files: List<File>): Array<Observable<any>> {
-    //     const progressStep = 90 / files.size;
-    //     return files.map((file) => {
-    //         const fileLoader = this.navigator.getFile(file.name);
-    //         const fileName = this._getSubdirectoryPath(file.name);
-    //         const filePath = path.join(folder, fileName);
-    //         return fileLoader.download(filePath).do(() => {
-    //             task.progress.next(task.progress.value + progressStep);
-    //         });
-    //     }).toArray();
-    // }
-
     private _getListOfFilesToDownload(): Observable<List<File>> {
         const patterns = this._getPatterns();
         return this.navigator.listAllFiles(this.folder).pipe(map((items) => {
