@@ -1,17 +1,27 @@
-import { BehaviorSubject, Observable, combineLatest, merge } from "rxjs";
+import { BehaviorSubject, Observable, Subscription, combineLatest, merge } from "rxjs";
 
-import { ActivitySnapshot, ActivityStatus } from "./activity-datatypes";
+import { ActivityStatus } from "./activity-datatypes";
 import { Activity } from "./activity.model";
 
 export class ActivityProcessor {
     public activities: Activity[];
     public completionSubject: BehaviorSubject<ActivityStatus>;
-    public snapshotsSubject: BehaviorSubject<ActivitySnapshot[]>;
+    public subActivitiesSubject: BehaviorSubject<Activity[]>;
+
+    private completionSubscription: Subscription;
+    private subActivitiesSubscription: Subscription;
 
     constructor() {
         this.activities = [];
         this.completionSubject = new BehaviorSubject(null);
-        this.snapshotsSubject = new BehaviorSubject([]);
+        this.subActivitiesSubject = new BehaviorSubject([]);
+
+        this.subActivitiesSubject.subscribe(subactivities => {
+            this.activities = subactivities;
+        });
+
+        this.completionSubscription = null;
+        this.subActivitiesSubscription = null;
     }
 
     /**
@@ -19,8 +29,20 @@ export class ActivityProcessor {
      * @param activities A list of Activity objects
      */
     public loadAndRun(activities: Activity[]): void {
-        this._load(activities);
+        const actList = this.activities.concat(activities);
+        this.subActivitiesSubject.next(actList);
         return this._startProcessor();
+    }
+
+    /**
+     * Removes an activity from the processor
+     * @param activity the activity to be removed
+     */
+    public remove(activity: Activity): void {
+        const activities = this.activities.filter(a => a.id !== activity.id);
+        this.subActivitiesSubject.next(activities);
+
+        this._startProcessor();
     }
 
     /**
@@ -31,35 +53,31 @@ export class ActivityProcessor {
         // compile and run all activities
         const statuses: Array<Observable<ActivityStatus>> = [];
         const completions: Array<Observable<ActivityStatus>> = [];
-        const pendingActivities = this.activities.filter(activity => activity.pending);
+
+        const pendingActivities = this.activities.filter(activity => !activity.isComplete);
         for (const activity of pendingActivities) {
             statuses.push(activity.statusSubject);
-            activity.run();
 
+            if (activity.pending) {
+                activity.run();
+            }
             completions.push(activity.done.asObservable());
         }
 
         // On each activity completion, emit the status to the parent activity
-        merge(...completions).subscribe(status => {
+        if (this.completionSubscription && !this.completionSubscription.closed) {
+            this.completionSubscription.unsubscribe();
+        }
+        this.completionSubscription = merge(...completions).subscribe(status => {
             this.completionSubject.next(status);
         });
 
-        // on any status change, emit the entire status list to the parent activity
-        combineLatest(...statuses).subscribe(statusList => {
-            const snapshots = statusList.map((status, index) => ({
-                activity: pendingActivities[index],
-                status,
-            } as ActivitySnapshot));
-
-            this.snapshotsSubject.next(snapshots);
+        // on any status change, re-emit the entire activity list to the parent activity
+        if (this.subActivitiesSubscription && !this.subActivitiesSubscription.closed) {
+            this.subActivitiesSubscription.unsubscribe();
+        }
+        this.subActivitiesSubscription = combineLatest(...statuses).subscribe(statusList => {
+            this.subActivitiesSubject.next(pendingActivities);
         });
-    }
-
-    /**
-     * Pushes the given activities onto the processor's activity list
-     * @param activities An array of activities
-     */
-    private _load(activities: Activity[]): void {
-        this.activities = activities;
     }
 }

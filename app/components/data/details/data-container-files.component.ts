@@ -15,6 +15,7 @@ import { map } from "rxjs/operators";
     templateUrl: "data-container-files.html",
 })
 export class DataContainerFilesComponent implements OnDestroy {
+
     @ViewChild("blobExplorer")
     public blobExplorer: BlobFilesBrowserComponent;
 

@@ -1,5 +1,3 @@
-import { Activity } from "@batch-flask/ui/activity-monitor";
-
 export enum ActivityStatus {
     Failed = -1,
     Pending,
@@ -12,11 +10,6 @@ export enum ActivityAction {
     Start,
     Cancel,
     Finish,
-}
-
-export interface ActivitySnapshot {
-    activity: Activity;
-    status: ActivityStatus;
 }
 
 export class ActivityResponse {

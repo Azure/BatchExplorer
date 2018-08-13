@@ -1,6 +1,5 @@
-import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
-import { tap } from "rxjs/operators";
-import { ActivityResponse, ActivitySnapshot, ActivityStatus } from "./activity-datatypes";
+import { AsyncSubject, BehaviorSubject, Observable, Subscription } from "rxjs";
+import { ActivityResponse, ActivityStatus } from "./activity-datatypes";
 import { ActivityProcessor } from "./activity-processor.model";
 
 export class ActivityCounters {
@@ -25,20 +24,23 @@ export class Activity {
     public id: string;
     public name: string;
     public statusSubject: BehaviorSubject<ActivityStatus>;
-    public snapshots: ActivitySnapshot[];
+    public subactivities: Activity[];
     public done: AsyncSubject<ActivityStatus>; // only emits on completion
+    public isComplete: boolean;
     public pending: boolean;
 
     private initializer: () => Observable<ActivityResponse | Activity[] | any>;
     private progressSubject: BehaviorSubject<number>;
     private processor: ActivityProcessor;
     private counters: ActivityCounters;
+    private subscription: Subscription;
 
     constructor(name: string, initializerFn: () => Observable<any>) {
         this.id = (Activity.idCounter++).toString();
         this.name = name;
-        this.snapshots = [];
+        this.subactivities = [];
 
+        this.isComplete = false;
         this.pending = true;
         this.done = new AsyncSubject<ActivityStatus>();
         this.progressSubject = new BehaviorSubject(-1);
@@ -50,6 +52,8 @@ export class Activity {
 
         // default all activity progress to pending before executing
         this.statusSubject = new BehaviorSubject(ActivityStatus.Pending);
+
+        this.subscription = null;
 
         this._listenToProcessor();
     }
@@ -64,38 +68,43 @@ export class Activity {
     public run(): void {
         // update status to InProgress
         this.statusSubject.next(ActivityStatus.InProgress);
+        this.isComplete = false;
         this.pending = false;
         this.progressSubject.next(0);
 
         // run the initializer
-        this.initializer().pipe(
-            tap((result) => {
-                // if we need to run subtasks, load and run the subtasks
-                if (Array.isArray(result)) {
-                    this.processor.loadAndRun(result);
-                } else if (result instanceof ActivityResponse) {
-                    // update the activity's progress with the response
-                    this.progressSubject.next(result.progress);
-                    if (result.progress === 100) {
-                        this._markAsCompleted();
-                    }
+        this.subscription = this.initializer().subscribe(result => {
+            // if we need to run subtasks, load and run the subtasks
+            if (Array.isArray(result)) {
+                // if there is only one activity here, unbox it
+                if (result.length === 1) {
+                    this._unboxActivity(result[0]);
                 } else {
-                    // we're done, mark activity as completed
+                    // otherwise, load and run the processor
+                    this.processor.loadAndRun(result);
+                }
+            } else if (result instanceof ActivityResponse) {
+                // update the activity's progress with the response
+                this.progressSubject.next(result.progress);
+                if (result.progress === 100) {
                     this._markAsCompleted();
                 }
-            }),
-        ).subscribe();
+            } else {
+                // we're done, mark activity as completed
+                this._markAsCompleted();
+            }
+        });
     }
 
     private _listenToProcessor(): void {
-        this.processor.snapshotsSubject.subscribe(statusList => {
-            this.snapshots = statusList;
+        this.processor.subActivitiesSubject.subscribe(subactivityList => {
+            this.subactivities = subactivityList;
         });
 
         // every time a status is emitted, check against the total number and emit completed if necessary
         this.processor.completionSubject.subscribe(status => {
             // get the number of subactivities for comparison
-            const numSubActivities = this.processor.activities.length;
+            const numSubActivities = this.subactivities.length;
 
             if (numSubActivities <= 0) {
                 return;
@@ -125,10 +134,29 @@ export class Activity {
     }
 
     /**
+     * Sets this activity to be the given activity
+     * This is useful when an activity's initializer emits a singleton array of activities
+     * We can move that activity "up" in the chain, bypassing the processor for efficiency and better information
+     * @param activity the activity to unbox up to this activity
+     */
+    private _unboxActivity(activity: Activity) {
+        // unsubscribe from the initializer
+        this.subscription.unsubscribe();
+
+        // set the name and initializer of this activity to be the given activity
+        this.name = activity.name;
+        this.initializer = activity.initializer;
+
+        this.run();
+    }
+
+    /**
      * Marks the activity as completed by emitting completed to the statusSubject
      * Runs the function to be run upon completion of the activity
      */
     private _markAsCompleted(): void {
+        this.isComplete = true;
+
         // emit a completed status to the statusSubject
         this.statusSubject.next(ActivityStatus.Completed);
 

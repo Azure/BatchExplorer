@@ -144,7 +144,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     }
 
     private _uploadFileGroupData(formData: FileGroupCreateDto) {
-        let filesUploaded = 0;
+        let totalUploads = 0;
 
         const initializer = () => {
             return from(this._getValidPaths(formData.paths)).pipe(
@@ -152,6 +152,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                     // convert each path into a file upload activity
                     return validPaths.map(fileOrDirPath => {
                         return new Activity(`Syncing ${fileOrDirPath}`, () => {
+                            let filesUploaded = 0;
                             // subject will only emit when the entire file is uploaded
                             const response: BehaviorSubject<ActivityResponse> =
                                 new BehaviorSubject(new ActivityResponse());
@@ -163,20 +164,22 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                                 formData.options,
                                 formData.includeSubDirectories).subscribe({
                                     next: (data) => {
-                                        filesUploaded += data.uploaded;
+                                        filesUploaded = data.uploaded;
                                         let progress;
                                         if (data.partial) {
                                             // the dividend is the files uploaded
                                             // plus the fractional portion of the partially uploaded file
                                             const dividend = data.uploaded + (data.partial / 100);
-                                            progress = dividend / data.total;
+                                            progress = dividend / data.total * 100;
                                         } else {
-                                            progress = data.uploaded / data.total;
+                                            progress = data.uploaded / data.total * 100;
+                                        }
+                                        if (progress === 100) {
+                                            totalUploads += filesUploaded;
                                         }
                                         response.next(new ActivityResponse(progress));
                                     },
                                     complete: () => {
-                                        response.next({ progress: 100 });
                                         response.complete();
                                     },
                                 });
@@ -195,7 +198,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
             this.storageContainerService.onContainerAdded.next(fileGroupName);
             this.notificationService.success(
                 "Create file group",
-                `${filesUploaded} files were successfully uploaded to the file group`,
+                `${totalUploads} files were successfully uploaded to the file group`,
             );
         });
         return activity.done;

@@ -1,6 +1,7 @@
 import { fakeAsync } from "@angular/core/testing";
 import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
-import { AsyncSubject, of } from "rxjs";
+import { ActivityResponse } from "@batch-flask/ui/activity-monitor/activity/activity-datatypes";
+import { AsyncSubject, BehaviorSubject, of } from "rxjs";
 import { NotificationServiceMock } from "test/utils/mocks";
 
 describe("ActivityService ", () => {
@@ -10,8 +11,8 @@ describe("ActivityService ", () => {
     beforeEach(() => {
         notificationServiceSpy = new NotificationServiceMock();
         activityService = new ActivityService(notificationServiceSpy as any);
-        activityService.incompleteSnapshots.subscribe((snapshots) => {
-            runningActivities = snapshots.map(snapshot => snapshot.activity);
+        activityService.incompleteActivities.subscribe((activities) => {
+            runningActivities = activities;
         });
     });
 
@@ -57,6 +58,10 @@ describe("ActivityService ", () => {
             progress = prog;
         });
 
+        // subscribe to activity completion
+        const doneSpy = jasmine.createSpy("Activity is done");
+        activity.done.subscribe(doneSpy);
+
         expect(progress).toBe(0, "Progress should initially be set to 0");
 
         // complete subject1 and expect half the activity to be done
@@ -64,11 +69,47 @@ describe("ActivityService ", () => {
         subj1.complete();
 
         expect(progress).toBe(50, "Progress should advance to 50% when half of the subactivities complete");
+        expect(doneSpy).not.toHaveBeenCalled();
 
         // complete subject2 and expect the full activity to be done
         subj2.next(null);
         subj2.complete();
 
         expect(progress).toBe(100, "Progress should advance to completion when all subtasks are complete");
+        expect(doneSpy).toHaveBeenCalledOnce();
+    });
+
+    it("Should update the progress of a large activity that is broken into chunks", () => {
+        let progress: number;
+        const subj: BehaviorSubject<ActivityResponse> = new BehaviorSubject(new ActivityResponse(0));
+
+        const initializerSpy = jasmine.createSpy("Initializer spy").and.returnValue(subj);
+
+        const activity = new Activity("large activity", initializerSpy);
+        activityService.loadAndRun(activity);
+
+        expect(initializerSpy).toHaveBeenCalledOnce();
+        expect(runningActivities.length).toBe(1);
+
+        // subscribe to the activity progress
+        activity.progress.subscribe(prog => {
+            progress = prog;
+        });
+
+        // subscribe to activity completion
+        const doneSpy = jasmine.createSpy("Activity is done");
+        activity.done.subscribe(doneSpy);
+
+        expect(progress).toBe(0, "Progress should initially be set to 0");
+
+        subj.next(new ActivityResponse(49));
+
+        expect(progress).toBe(49, "Progress should move to 49%");
+        expect(doneSpy).not.toHaveBeenCalled();
+
+        subj.next(new ActivityResponse(100));
+
+        expect(progress).toBe(100, "Progress should move to 100% and complete");
+        expect(doneSpy).toHaveBeenCalledOnce();
     });
 });

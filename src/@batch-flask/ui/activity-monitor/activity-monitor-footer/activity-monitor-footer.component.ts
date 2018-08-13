@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { Subscription } from "rxjs";
 
@@ -9,7 +9,7 @@ import "./activity-monitor-footer.scss";
     templateUrl: "activity-monitor-footer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ActivityMonitorFooterComponent implements OnDestroy {
+export class ActivityMonitorFooterComponent implements OnInit, OnDestroy {
 
     public currentActivity: Activity;
     public otherActivities: Activity[];
@@ -22,15 +22,16 @@ export class ActivityMonitorFooterComponent implements OnDestroy {
     private _lastTaskCount = 0;
     private _sub: Subscription;
 
-    constructor(public activityService: ActivityService, private changeDetector: ChangeDetectorRef) {
+    constructor(private activityService: ActivityService, private changeDetector: ChangeDetectorRef) {}
 
-        this._sub = activityService.incompleteSnapshots.subscribe((snapshots) => {
-            this.currentActivity = snapshots.first() ? snapshots.first().activity : null;
-            this.otherActivities = snapshots.slice(1).map(snapshot => snapshot.activity);
-            if (this._lastTaskCount < snapshots.length) {
+    public ngOnInit() {
+        this._sub = this.activityService.incompleteActivities.subscribe(activities => {
+            this.currentActivity = activities.first() ? activities.first() : null;
+            this.otherActivities = activities.slice(1);
+            if (this._lastTaskCount < activities.length) {
                 this.flash();
             }
-            this._lastTaskCount = snapshots.length;
+            this._lastTaskCount = activities.length;
             this.changeDetector.markForCheck();
         });
     }

@@ -27,10 +27,14 @@ bl-activity-monitor-footer {
         > bl-activity-monitor-footer-item  {flex: 1;};
 
         > .other-task-count {
-            width: 20px;
+            width: 21px;
+            height: 21px;
             margin: 0 10px;
             background: $whiteSmoke;
             border-radius: 10px;
+            color: $primary-color;
+            font-weight: bold;
+            line-height: 21px;
         }
     }
 

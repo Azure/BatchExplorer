@@ -2,7 +2,7 @@
     <div bl-dropdown-btn [class.flash]="showFlash">
         <div *ngIf="currentActivity" class="current-task">
             <bl-activity-monitor-footer-item [activity]="currentActivity"></bl-activity-monitor-footer-item>
-            <div class="other-task-count" *ngIf="otherActivities.size > 0">+{{otherActivities.size}}</div>
+            <div class="other-task-count" *ngIf="otherActivities.length > 0">+{{otherActivities.length}}</div>
         </div>
         <div *ngIf="!currentActivity">
             No current background tasks

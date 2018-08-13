@@ -1,27 +1,25 @@
 import { Injectable } from "@angular/core";
-import { Activity, ActivityProcessor, ActivityStatus } from "@batch-flask/ui/activity-monitor/activity";
+import { Activity, ActivityHistoryQueue, ActivityProcessor, ActivityStatus } from "@batch-flask/ui/activity-monitor";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Observable, forkJoin, of } from "rxjs";
-import { flatMap, map } from "rxjs/operators";
+import { flatMap } from "rxjs/operators";
 
 @Injectable()
 export class ActivityService {
     private masterProcessor: ActivityProcessor;
+    private historyQueue: ActivityHistoryQueue;
 
     constructor(notificationService: NotificationService) {
         this.masterProcessor = new ActivityProcessor();
+        this.historyQueue = new ActivityHistoryQueue();
     }
 
     public get activities() {
         return this.masterProcessor.activities;
     }
 
-    public get incompleteSnapshots() {
-        return this.masterProcessor.snapshotsSubject.pipe(
-            map(snapshots => {
-                return snapshots.filter(snapshot => !this._isCompleted(snapshot.status));
-            }),
-        );
+    public get incompleteActivities() {
+        return this.masterProcessor.subActivitiesSubject.asObservable();
     }
 
     /**
@@ -31,6 +29,12 @@ export class ActivityService {
      */
     public loadAndRun(activity: Activity): ActivityService {
         this.masterProcessor.loadAndRun([activity]);
+
+        // when an activity completes, we should remove it from the masterprocessor
+        activity.done.subscribe(() => {
+            this.moveToHistory(activity);
+        });
+
         return this;
     }
 
@@ -43,9 +47,8 @@ export class ActivityService {
         );
     }
 
-    private _isCompleted(status): boolean {
-        return status === ActivityStatus.Completed
-            || status === ActivityStatus.Canceled
-            || status === ActivityStatus.Failed;
+    private moveToHistory(activity) {
+        this.masterProcessor.remove(activity);
+        this.historyQueue.enqueue(activity);
     }
 }
