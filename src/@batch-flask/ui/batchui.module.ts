@@ -8,7 +8,6 @@ import { MaterialModule } from "@batch-flask/core";
 import { WorkspaceModule } from "@batch-flask/ui/workspace";
 import { ActivityModule } from "./activity-monitor";
 import { AdvancedFilterModule } from "./advanced-filter";
-import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
 import { BatchFlaskSettingsModule } from "./batch-flask-settings";
 import { BreadcrumbModule } from "./breadcrumbs";
@@ -61,7 +60,6 @@ const modules = [
     BreadcrumbModule,
     BrowseLayoutModule,
     ButtonsModule,
-    BackgroundTaskModule,
     CardModule,
     ChartsModule,
     ContextMenuModule,

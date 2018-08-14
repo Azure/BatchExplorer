@@ -16,9 +16,6 @@ describe("ActivityService ", () => {
         });
     });
 
-    // TODO implement new tests for the service
-    // (these are copied over from the background-task-service.spec)
-
     it("Should start and complete a simple activity", fakeAsync(() => {
         const subject = new AsyncSubject();
         const initializerSpy = jasmine.createSpy("Initializer spy").and.returnValue(subject);
