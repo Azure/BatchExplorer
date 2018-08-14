@@ -1,5 +1,5 @@
 <div class="status-icon">
-    <div *ngIf="!done">
+    <div *ngIf="!isComplete">
         <mat-progress-spinner [diameter]="18" [strokeWidth]="3" mode="indeterminate" color="accent" *ngIf="progress === -1"></mat-progress-spinner>
         <mat-progress-spinner [diameter]="18" [strokeWidth]="3" mode="determinate" color="accent" [value]="progress" *ngIf="progress !== -1"></mat-progress-spinner>
     </div>
