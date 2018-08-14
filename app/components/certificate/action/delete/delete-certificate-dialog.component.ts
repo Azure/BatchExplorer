@@ -3,9 +3,9 @@ import { MatDialogRef } from "@angular/material";
 
 import { autobind } from "@batch-flask/core";
 import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
+import { WaitForDeletePoller } from "app/components/core/pollers";
 import { CertificateService } from "app/services";
 import { flatMap } from "rxjs/operators";
-import { WaitForDeletePoller } from "../../../core/pollers";
 
 @Component({
     selector: "bl-delete-certificate-dialog",

@@ -58,7 +58,7 @@ export class ApplicationPackageTableComponent extends ListBaseComponent implemen
     public deleteSelection(): Observable<any[]> {
         const observables = Array.from(this.selection.keys).map((version) => {
             return this.applicationService.deletePackage(this.application.id, version).pipe(
-                flatMap(result => this.refresh()),
+                flatMap(() => this.refresh()),
             );
         });
 

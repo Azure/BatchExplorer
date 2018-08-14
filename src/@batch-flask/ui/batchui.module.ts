@@ -31,9 +31,7 @@ import { GraphsModule } from "./graphs";
 import { I18nUIModule } from "./i18n";
 import { IconComponent } from "./icon";
 import { InfoBoxModule } from "./info-box";
-import {
-    DeleteSelectedItemsDialogComponent, EntityDetailsListComponent,
-} from "./list-and-show-layout";
+import { EntityDetailsListComponent } from "./list-and-show-layout";
 import { LoadingModule } from "./loading";
 import { MetricsMonitorModule } from "./metrics-monitor";
 import { NotificationModule } from "./notifications";
@@ -109,13 +107,11 @@ const components = [
     DatetimePickerComponent,
     IconComponent,
     SimpleDialogComponent,
-    DeleteSelectedItemsDialogComponent,
 ];
 
 @NgModule({
     declarations: components,
     entryComponents: [
-        DeleteSelectedItemsDialogComponent,
         SimpleDialogComponent,
     ],
     exports: [...modules, ...components],

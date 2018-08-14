@@ -5,9 +5,7 @@ import {
 import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import {
-    Activity, ActivityService, LoadingStatus, QuickListItemStatus,
-} from "@batch-flask/ui";
+import { LoadingStatus, QuickListItemStatus } from "@batch-flask/ui";
 import { BlobContainer, LeaseStatus } from "app/models";
 import { ListContainerParams, StorageContainerService } from "app/services/storage";
 import { ComponentUtils } from "app/utils";
@@ -16,8 +14,6 @@ import { List } from "immutable";
 import { Observable, Subscription, of } from "rxjs";
 import { BlobContainerCommands } from "../action";
 
-import { flatMap, map } from "rxjs/operators";
-import { WaitForDeletePoller } from "../../core/pollers";
 import "./data-container-list.scss";
 
 const defaultListOptions = {
@@ -48,8 +44,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         changeDetector: ChangeDetectorRef,
         public commands: BlobContainerCommands,
         private activeRoute: ActivatedRoute,
-        private storageContainerService: StorageContainerService,
-        private activityService: ActivityService) {
+        private storageContainerService: StorageContainerService) {
 
         super(changeDetector);
         this.data = this.storageContainerService.listView();
@@ -131,47 +126,8 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         }
     }
 
-    public deleteSelection(selection: ListSelection) {
-        const selectionArr = Array.from(selection.keys);
-
-        // ******************************************
-        // TODO test all open tabs
-        // verify that each component works as expected
-        // exception of certificate list which seems to be buggy
-        // Also delete any associated actions if they are not used, and if they still exist
-        // ******************************************
-
-        const initializer = () => {
-            return of(selectionArr).pipe(
-                map(containerIDs => {
-                    // map each selected job id to a job deletion activity
-                    return containerIDs.map(id => {
-                        const name = `Deleting Container '${id}'`;
-                        const activity = new Activity(name, () => {
-                            return this.storageContainerService.delete(this.storageAccountId, id).pipe(
-                                flatMap(obs => {
-                                    const poller = new WaitForDeletePoller(() => {
-                                        return this.storageContainerService.get(this.storageAccountId, id);
-                                    });
-                                    return poller.start();
-                                }),
-                            );
-                        });
-                        activity.done.subscribe(() => this.refresh());
-                        return activity;
-                    });
-                }),
-            );
-        };
-
-        let mainName = `Deleting ${selectionArr.length} Container`;
-        if (selectionArr.length > 1) {
-            mainName += "s";
-        }
-        const deleteActivity = new Activity(mainName, initializer);
-        this.activityService.loadAndRun(deleteActivity);
-        deleteActivity.done.subscribe(() => this.refresh());
-        return deleteActivity.done;
+    public deleteSelection(selection: ListSelection): void {
+        this.commands.delete.executeFromSelection(selection).subscribe();
     }
 
     public trackFileGroup(index, fileGroup: BlobContainer) {

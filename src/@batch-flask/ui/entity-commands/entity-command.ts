@@ -6,9 +6,11 @@ import { Permission } from "@batch-flask/ui/permission";
 import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { exists, log, nil } from "@batch-flask/utils";
 import * as inflection from "inflection";
-import { Observable, of } from "rxjs";
+import { Observable, forkJoin, of } from "rxjs";
 
+import { ListSelection } from "@batch-flask/core/list";
 import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
+import { map, share } from "rxjs/operators";
 import { ActionableEntity, EntityCommands } from "./entity-commands";
 
 export enum EntityCommandNotify {
@@ -163,6 +165,18 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         } else {
             this._executeMultiple(entities);
         }
+    }
+
+    public executeMultipleByIds(ids: string[]) {
+        const obs = ids.map(id => this.definition.getFromCache(id));
+        return forkJoin(obs).pipe(
+            map(entities => this.executeMultiple(entities)),
+            share(),
+        );
+    }
+
+    public executeFromSelection(selection: ListSelection) {
+        return this.executeMultipleByIds([...selection.keys]);
     }
 
     private _executeCommand(entity: TEntity, options?: any) {

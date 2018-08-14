@@ -35,7 +35,7 @@ export class Activity {
     private counters: ActivityCounters;
     private subscription: Subscription;
 
-    constructor(name: string, initializerFn: () => Observable<any>) {
+    constructor(name: string, initializerFn: () => Observable<ActivityResponse | Activity[] | any>) {
         this.id = (Activity.idCounter++).toString();
         this.name = name;
         this.subactivities = [];
@@ -141,7 +141,9 @@ export class Activity {
      */
     private _unboxActivity(activity: Activity) {
         // unsubscribe from the initializer
-        this.subscription.unsubscribe();
+        if (this.subscription && !this.subscription.closed) {
+            this.subscription.unsubscribe();
+        }
 
         // set the name and initializer of this activity to be the given activity
         this.name = activity.name;

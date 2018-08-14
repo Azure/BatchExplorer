@@ -5,16 +5,13 @@ import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, FilterMatcher, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { Certificate, CertificateState } from "app/models";
 import { CertificateListParams, CertificateService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
-import { Observable, Subscription, of } from "rxjs";
-import { flatMap, map } from "rxjs/operators";
-import { WaitForDeletePoller } from "../../core/pollers";
+import { Observable, Subscription } from "rxjs";
 import { CertificateCommands } from "../action";
 
 @Component({
@@ -41,7 +38,6 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
         changeDetector: ChangeDetectorRef,
         public commands: CertificateCommands,
         private certificateService: CertificateService,
-        private activityService: ActivityService,
     ) {
         super(changeDetector);
 
@@ -107,37 +103,7 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
     }
 
     public deleteSelection(selection: ListSelection) {
-        const selectionArr = Array.from(selection.keys);
-
-        const initializer = () => {
-            return of(selectionArr).pipe(
-                map(certificateIDs => {
-                    // map each selected job id to a job deletion activity
-                    return certificateIDs.map(id => {
-                        const name = `Deleting Certificate '${id}'`;
-                        const activity = new Activity(name, () => {
-                            return this.certificateService.delete(id).pipe(
-                                flatMap(obs => {
-                                    const poller = new WaitForDeletePoller(() => this.certificateService.get(id));
-                                    return poller.start();
-                                }),
-                            );
-                        });
-                        activity.done.subscribe(() => this.refresh());
-                        return activity;
-                    });
-                }),
-            );
-        };
-
-        let mainName = `Deleting ${selectionArr.length} Certificate`;
-        if (selectionArr.length > 1) {
-            mainName += "s";
-        }
-        const deleteActivity = new Activity(mainName, initializer);
-        this.activityService.loadAndRun(deleteActivity);
-        deleteActivity.done.subscribe(() => this.refresh());
-        return deleteActivity.done;
+        this.commands.delete.executeFromSelection(selection).subscribe();
     }
 
     public trackByFn(index: number, certificate: Certificate) {
