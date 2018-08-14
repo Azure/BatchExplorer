@@ -1,5 +1,15 @@
 {
+  "duration-picker.unit.unlimited": "Illimité",
+  "duration-picker.unit.days": "Jours",
+  "duration-picker.unit.minutes": "Minutes",
+  "duration-picker.unit.hours": "Heures",
+  "duration-picker.unit.seconds": "Secondes",
   "main-navigation.jobs": "Travaux",
+  "main-navigation.jobschedules": "Planifications de travail",
   "main-navigation.pools": "Pools",
-  "main-navigation.jobschedules": "Planifications"
+  "main-navigation.packages": "Packages",
+  "main-navigation.certificates": "Certificats",
+  "main-navigation.data": "Données",
+  "main-navigation.gallery": "Galerie",
+  "main-navigation.profile": "Profil"
 }

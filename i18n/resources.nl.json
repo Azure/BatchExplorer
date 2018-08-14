@@ -1,0 +1,15 @@
+{
+  "duration-picker.unit.unlimited": "Onbeperkt",
+  "duration-picker.unit.days": "Dagen",
+  "duration-picker.unit.minutes": "Minuten",
+  "duration-picker.unit.hours": "Uur",
+  "duration-picker.unit.seconds": "Seconden",
+  "main-navigation.jobs": "Taken",
+  "main-navigation.jobschedules": "Taakplanningen",
+  "main-navigation.pools": "Groepen",
+  "main-navigation.packages": "Pakketten",
+  "main-navigation.certificates": "Certificaten",
+  "main-navigation.data": "Gegevens",
+  "main-navigation.gallery": "Galerie",
+  "main-navigation.profile": "Profiel"
+}

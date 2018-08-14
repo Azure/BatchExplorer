@@ -32,7 +32,7 @@
         "src/*",
         "app/scripts/*"
       ],
-      "@angular/*": ["../node_modules/@angular/*"]
+      // "@angular/*": ["../node_modules/@angular/*"]
     },
     "types": [
       "node",

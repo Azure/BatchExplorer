@@ -1,0 +1,17 @@
+{
+  "duration-picker.unit.unlimited": "Neomezené",
+  "duration-picker.unit.days": "Dny",
+  "duration-picker.unit.minutes": "Minuty",
+  "duration-picker.unit.hours": "Hodiny",
+  "duration-picker.unit.seconds": "Sekundy",
+  "duration-picker.unit.custom": "Vlastní (formát ISO)",
+  "main-navigation.dashboard": "Pomlčka",
+  "main-navigation.jobs": "Úlohy",
+  "main-navigation.jobschedules": "Plány úlohy",
+  "main-navigation.pools": "Fondy",
+  "main-navigation.packages": "Balíčky",
+  "main-navigation.certificates": "Certifikáty",
+  "main-navigation.data": "Data",
+  "main-navigation.gallery": "Galerie",
+  "main-navigation.profile": "Profil"
+}

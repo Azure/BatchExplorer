@@ -34,6 +34,12 @@ export interface ContextMenuItemConfig {
     enabled?: boolean;
 }
 
+export interface MultiContextMenuItemConfig {
+    label: string;
+    enabled?: boolean;
+    subitems: ContextMenuEntry[];
+}
+
 export interface ContextMenuEntry {
 
 }
@@ -72,6 +78,19 @@ export class ContextMenuItem implements ContextMenuEntry {
         });
         clone.callbackArgs = args;
         return clone;
+    }
+}
+
+export class MultiContextMenuItem implements ContextMenuEntry {
+    public id: string;
+    public label: string;
+    public enabled: boolean = true;
+    public subitems: ContextMenuEntry[];
+
+    constructor(config: MultiContextMenuItemConfig) {
+        this.id = SecureUtils.uuid();
+        this.label = config.label;
+        this.subitems = config.subitems;
     }
 }
 

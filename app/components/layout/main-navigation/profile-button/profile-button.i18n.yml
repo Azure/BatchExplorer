@@ -1,0 +1,9 @@
+profile-button:
+  profile: Profile
+  settings: Settings
+  about: About
+  thirdPartyNotices: Third party notices
+  viewLogs: View logs
+  report: Report a bug or feature request
+  viewTheme: View theme colors
+  logout: Logout
