@@ -1,4 +1,4 @@
-import { Activity } from "@batch-flask/ui/activity-monitor";
+import { Activity } from "@batch-flask/ui/activity-monitor/activity";
 
 export class ActivityHistoryQueue {
     private queue: Activity[];

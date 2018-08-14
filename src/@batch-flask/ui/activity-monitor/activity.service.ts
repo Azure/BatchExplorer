@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Activity, ActivityHistoryQueue, ActivityProcessor, ActivityStatus } from "@batch-flask/ui/activity-monitor";
+import { Activity, ActivityProcessor, ActivityStatus } from "@batch-flask/ui/activity-monitor/activity";
+import { ActivityHistoryQueue } from "@batch-flask/ui/activity-monitor/activity-history-queue";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Observable, forkJoin, of } from "rxjs";
 import { flatMap } from "rxjs/operators";

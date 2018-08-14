@@ -5,7 +5,7 @@ import {
     Input,
     OnChanges,
 } from "@angular/core";
-import { Activity } from "@batch-flask/ui/activity-monitor";
+import { Activity } from "@batch-flask/ui/activity-monitor/activity";
 import { Subscription } from "rxjs";
 
 @Component({

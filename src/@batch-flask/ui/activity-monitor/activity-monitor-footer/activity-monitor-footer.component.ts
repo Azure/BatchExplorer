@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
-import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
+import { Activity } from "@batch-flask/ui/activity-monitor/activity";
+import { ActivityService } from "@batch-flask/ui/activity-monitor/activity.service";
 import { Subscription } from "rxjs";
 
 import "./activity-monitor-footer.scss";
