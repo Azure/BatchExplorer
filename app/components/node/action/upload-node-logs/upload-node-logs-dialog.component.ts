@@ -3,15 +3,15 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
 import { Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
+import { Activity, ActivityResponse, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Node, Pool } from "app/models";
 import { AccountService, NodeService } from "app/services";
 import { AutoStorageService, StorageBlobService } from "app/services/storage";
 import { CloudPathUtils, StorageUtils } from "app/utils";
 import * as moment from "moment";
-import { AsyncSubject, interval, of } from "rxjs";
-import { distinctUntilChanged, first, flatMap, map } from "rxjs/operators";
+import { AsyncSubject, interval } from "rxjs";
+import { distinctUntilChanged, first, flatMap, map, share, takeUntil, tap } from "rxjs/operators";
 
 import "./upload-node-logs-dialog.scss";
 
@@ -115,55 +115,38 @@ export class UploadNodeLogsDialogComponent {
     /**
      * Watch the specified container for log file uploads from the node,
      * and continuously report status to the activity service
-     * N.B. This hacky method is a little annoying, but we don't have access to the individual
-     * upload files via this api call, so we have to do it this way.
      * @param container the Azure Storage container url that we are uploading files to
      * @param folder the name of the virtual directory where these files are being stored
      * @param numberOfFiles the number of files we are uploading
      */
     private _watchUpload(container: string, folder: string, numberOfFiles: number) {
-        // create a "loading bar" of async subjects that will complete when each file is uploaded
-        const progressSubjects: Array<AsyncSubject<any>> = new Array(numberOfFiles).fill(new AsyncSubject());
-        let subjectsCompleted: number = 0;
+        // the notifier will be used to stop the interval used in the initializer
+        const notifier = new AsyncSubject();
+        notifier.next(null);
 
-        // the initializer simply returns activities subscribed to these progress subjects
+        // the initializer calls the storage service, lists the uploaded files
+        // and maps this to a progress number to report to the activity
         const initializer = () => {
-            return of(progressSubjects).pipe(
-                map(subjects => {
-                    return subjects.map((subject, index) => {
-                        const name = `Uploading log file ${index + 1} of ${numberOfFiles}`;
-                        return new Activity(name, () => {
-                            return subject.asObservable();
-                        });
+            return interval(5000).pipe(
+                flatMap(() => this.autoStorageService.get()),
+                flatMap((storageAccountId) => {
+                    return this.storageBlobService.list(storageAccountId, container, {
+                        folder: CloudPathUtils.asBaseDirectory(folder),
                     });
                 }),
+                map((blobs) => {
+                    const progress = (blobs.items.size / numberOfFiles) * 100;
+                    return new ActivityResponse(progress);
+                }),
+                takeUntil(notifier),
+                share(),
             );
         };
 
-        // every 5 seconds, fetch uploaded files from the service
-        const sub = interval(5000).pipe(
-            flatMap(() => this.autoStorageService.get()),
-            flatMap((storageAccountId) => {
-                return this.storageBlobService.list(storageAccountId, container, {
-                    folder: CloudPathUtils.asBaseDirectory(folder),
-                }, true);
-            }),
-        // check how many files have been uploaded,
-        // and complete that number of subjects to advance the "loading bar"
-        ).subscribe((blobs) => {
-            const uploaded = blobs.items.size;
-
-            // complete all required subjects that have not yet been completed
-            for (let i = subjectsCompleted; i < uploaded; i++) {
-                progressSubjects[i].next("DONE");
-                progressSubjects[i].complete();
-            }
-            subjectsCompleted = uploaded;
-
-            // if all files have been uploaded, notify and stop listening to the blobService
-            if (uploaded >= numberOfFiles) {
+        initializer().subscribe(response => {
+            if (response.progress >= 100) {
                 this._notifyLogUploaded(container, folder, numberOfFiles);
-                sub.unsubscribe();
+                notifier.complete();
             }
         });
 
