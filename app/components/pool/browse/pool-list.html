@@ -1,12 +1,13 @@
 <bl-focus-section>
     <bl-quick-list *ngIf="quicklist"
+        [data]="pools"
         [status]="status"
         [(activeItem)]="activeItem"
         [(selection)]="selection"
         [commands]="commands"
         (scrollBottom)="onScrollToBottom()">
 
-        <bl-quick-list-item *ngFor="let pool of pools, trackBy: trackById" [link]="pool.routerLink" [key]="pool.id">
+        <ng-container *blQuickListRowDef="let pool">
             <bl-quick-list-item-status [status]="poolStatus(pool)" [tooltip]="poolStatusText(pool)">
             </bl-quick-list-item-status>
             <div bl-quick-list-item-title>{{pool.id}}</div>
@@ -20,7 +21,7 @@
                 <bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>
                 <bl-pool-state-graph [pool]="pool" [interactive]="false"></bl-pool-state-graph>
             </div>
-        </bl-quick-list-item>
+        </ng-container>
     </bl-quick-list>
 
     <bl-table *ngIf="!quicklist"

@@ -1,6 +1,8 @@
 <div class="scroll-shadow" *ngIf="showScrollShadow"></div>
 <bl-virtual-scroll [items]="displayItems" [childHeight]="48" (update)="updateViewPortItems($event)" (scroll)="handleScrollChange($event)">
-    <ng-template *ngFor="let item of viewPortItems; trackBy: trackItem" [ngTemplateOutlet]="item.content"></ng-template>
+    <div class="quick-list-row" *ngFor="let item of viewPortItems; trackBy: trackItem">
+        <ng-template [ngTemplateOutlet]="rowDef" [ngTemplateOutletContext]="{$implicit: item}"></ng-template>
+    </div>
     <bl-virtual-scroll-tail [height]="120" *ngIf="status === LoadingStatus.Loading">
         <bl-loading [status]="status"></bl-loading>
     </bl-virtual-scroll-tail>
