@@ -4,18 +4,20 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
-    ContentChildren,
     Input,
     OnChanges,
     Optional,
-    QueryList,
     TemplateRef,
 } from "@angular/core";
 
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { AbstractListBase } from "../abstract-list";
 import { FocusSectionComponent } from "../focus-section";
-import { QuickListRowDefDirective } from "./quick-list-row-def";
+import {
+    QuickListRowExtraDirective,
+    QuickListRowStateDirective,
+    QuickListRowTitleDirective,
+} from "./quick-list-row-def";
 
 import { Router } from "@angular/router";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
@@ -30,7 +32,9 @@ import "./quick-list.scss";
 })
 export class QuickListComponent extends AbstractListBase implements OnChanges {
     @Input() public data: List<any> | any[] = List([]);
-    @ContentChild(QuickListRowDefDirective, { read: TemplateRef }) public rowDef: TemplateRef<any>;
+    @ContentChild(QuickListRowTitleDirective, { read: TemplateRef }) public titleDef: TemplateRef<any>;
+    @ContentChild(QuickListRowStateDirective, { read: TemplateRef }) public stateDef: TemplateRef<any>;
+    @ContentChild(QuickListRowExtraDirective, { read: TemplateRef }) public extraDef: TemplateRef<any>;
 
     constructor(
         contextMenuService: ContextMenuService,

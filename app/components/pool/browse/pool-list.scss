@@ -5,9 +5,9 @@ bl-pool-list {
         margin-right: 4px;
     }
 
-    [bl-quick-list-item-preview] {
+    .quick-list-row-extra {
         position: relative;
-        > bl-pool-state-graph {
+        bl-pool-state-graph {
             position: absolute;
             height: 100%;
             width: 40px;

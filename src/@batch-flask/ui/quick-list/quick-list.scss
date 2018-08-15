@@ -9,7 +9,6 @@ bl-quick-list {
         height: 100%;
     }
 
-
     .quick-list-row {
         cursor: pointer;
         display: flex;
@@ -20,12 +19,12 @@ bl-quick-list {
         &.selected {
             background-color: $primary-color-light;
 
-            [bl-quick-list-item-title] {
+            .quick-list-row-title {
                 font-size: 14px;
                 color: $card-background;
             }
 
-            [bl-quick-list-item-field] {
+            .quick-list-row-state {
                 color: $card-background;
             }
         }
@@ -38,12 +37,12 @@ bl-quick-list {
             background-color: $selection-color;
         }
 
-        [bl-quick-list-item-title] {
+        .quick-list-row-title {
             font-size: 14px;
             color: $primary-text;
         }
 
-        [bl-quick-list-item-field] {
+        .quick-list-row-state {
             color: $secondary-text;
         }
 
@@ -55,7 +54,7 @@ bl-quick-list {
             min-width: 0;
 
 
-            [bl-quick-list-item-title], [bl-quick-list-item-field] {
+            .quick-list-row-title, .quick-list-row-state {
                 display: flex;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -66,7 +65,7 @@ bl-quick-list {
             }
         }
 
-        [bl-quick-list-item-preview] {
+        .quick-list-row-extra {
             padding: 5px;
 
             i {
@@ -124,13 +123,13 @@ bl-quick-list {
             text-overflow: ellipsis;
             min-width: 0;
 
-            [bl-quick-list-item-title], [bl-quick-list-item-field] {
+            .quick-list-row-title, .quick-list-row-state {
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
         }
 
-        [bl-quick-list-item-preview] {
+        .quick-list-row-extra {
             padding: 3px 10px 0 0;
         }
 

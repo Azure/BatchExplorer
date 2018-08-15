@@ -3,8 +3,22 @@ import {
 } from "@angular/core";
 
 @Directive({
-    selector: "[blQuickListRowDef]",
+    selector: "[blQuickListRowTitle]",
 })
-export class QuickListRowDefDirective {
+export class QuickListRowTitleDirective {
+
+}
+
+@Directive({
+    selector: "[blQuickListRowState]",
+})
+export class QuickListRowStateDirective {
+
+}
+
+@Directive({
+    selector: "[blQuickListRowExtra]",
+})
+export class QuickListRowExtraDirective {
 
 }

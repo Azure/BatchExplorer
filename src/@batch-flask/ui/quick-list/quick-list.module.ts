@@ -10,7 +10,11 @@ import { ContextMenuModule } from "../context-menu";
 import { NoItemComponent } from "./no-item.component";
 import { QuickListItemComponent } from "./quick-list-item";
 import { QuickListItemStatusComponent } from "./quick-list-item-status";
-import { QuickListRowDefDirective } from "./quick-list-row-def";
+import {
+    QuickListRowExtraDirective,
+    QuickListRowStateDirective,
+    QuickListRowTitleDirective,
+} from "./quick-list-row-def";
 import { QuickListComponent } from "./quick-list.component";
 
 const publicComponents = [
@@ -18,7 +22,10 @@ const publicComponents = [
     QuickListComponent,
     QuickListItemComponent,
     QuickListItemStatusComponent,
-    QuickListRowDefDirective,
+    QuickListRowTitleDirective,
+    QuickListRowStateDirective,
+    QuickListRowExtraDirective,
+
 ];
 
 @NgModule({
