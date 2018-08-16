@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, HostListener, Inject, Input, forwardRef } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    HostBinding,
+    HostListener,
+    Inject,
+    Input,
+    forwardRef,
+} from "@angular/core";
 import {
     QuickListRowExtraDirective,
     QuickListRowStateDirective,
