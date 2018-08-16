@@ -206,7 +206,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
                     return this.performActionAndRefresh(entity, options);
                 });
             });
-            return new BehaviorSubject<Activity[]>(subActivities);
+            return of(subActivities);
         });
 
         // notify success after the parent activity completes

@@ -76,7 +76,7 @@ export class ActivityProcessor {
         if (this.subActivitiesSubscription && !this.subActivitiesSubscription.closed) {
             this.subActivitiesSubscription.unsubscribe();
         }
-        this.subActivitiesSubscription = combineLatest(...statuses).subscribe(statusList => {
+        this.subActivitiesSubscription = combineLatest(...statuses).subscribe(() => {
             this.subActivitiesSubject.next(pendingActivities);
         });
     }

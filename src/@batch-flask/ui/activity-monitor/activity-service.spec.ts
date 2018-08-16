@@ -43,10 +43,7 @@ describe("ActivityService ", () => {
         const subj2 = new AsyncSubject();
 
         const initializer = () => {
-            return new BehaviorSubject<Activity[]>([
-                new Activity("subtask1", () => subj1),
-                new Activity("subtask2", () => subj2)],
-            );
+            return of([new Activity("subtask1", () => subj1), new Activity("subtask2", () => subj2)]);
         };
         const activity = new Activity("task1", initializer);
         activityService.exec(activity);
@@ -108,6 +105,7 @@ describe("ActivityService ", () => {
         expect(doneSpy).not.toHaveBeenCalled();
 
         subj.next(new ActivityResponse(100));
+        subj.complete();
 
         expect(progress).toBe(100, "Progress should move to 100% and complete");
         expect(doneSpy).toHaveBeenCalledOnce();

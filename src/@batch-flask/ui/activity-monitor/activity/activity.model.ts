@@ -1,4 +1,4 @@
-import { AsyncSubject, BehaviorSubject, Observable, Subscription } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable, Subject, Subscription, combineLatest } from "rxjs";
 import { ActivityResponse, ActivityStatus } from "./activity-datatypes";
 import { ActivityProcessor } from "./activity-processor.model";
 
@@ -35,6 +35,9 @@ export class Activity {
     private counters: ActivityCounters;
     private subscription: Subscription;
 
+    private progressComplete: Subject<null>;
+    private subtasksComplete: Subject<null>;
+
     constructor(name: string, initializerFn: () => Observable<ActivityResponse | Activity[] | any>) {
         this.id = (Activity.idCounter++).toString();
         this.name = name;
@@ -54,6 +57,9 @@ export class Activity {
         this.statusSubject = new BehaviorSubject(ActivityStatus.Pending);
 
         this.subscription = null;
+
+        this.progressComplete = new Subject();
+        this.subtasksComplete = new Subject();
 
         this._listenToProcessor();
     }
@@ -77,6 +83,9 @@ export class Activity {
             next: result => {
                 // if we need to run subtasks, load and run the subtasks
                 if (Array.isArray(result)) {
+                    // there is no progress to track, so close this observable stream
+                    this.progressComplete.complete();
+
                     // if there is only one activity here, unbox it
                     if (result.length === 1) {
                         this._unboxActivity(result[0]);
@@ -84,17 +93,27 @@ export class Activity {
                         // otherwise, load and run the processor
                         this.processor.exec(result);
                     }
-                } else if (result instanceof ActivityResponse) {
-                    // update the activity's progress with the response
-                    this.progressSubject.next(result.progress);
-                    if (result.progress === 100) {
-                        this._markAsCompleted();
-                    }
                 } else {
-                    // we're done, mark activity as completed
-                    this._markAsCompleted();
+                    // there are no subtasks to track, so close this observable stream
+                    this.subtasksComplete.complete();
+
+                    if (result instanceof ActivityResponse) {
+                        // update the activity's progress with the response
+                        this.progressSubject.next(result.progress);
+                    } else {
+                        // we're done, mark activity as completed
+                        this.progressComplete.complete();
+                    }
                 }
             },
+            complete: () => {
+                if (!this.progressComplete.isStopped) {
+                    this.progressComplete.complete();
+                }
+            },
+        });
+
+        combineLatest(this.progressComplete, this.subtasksComplete).subscribe({
             complete: () => {
                 this._markAsCompleted();
             },
@@ -133,7 +152,7 @@ export class Activity {
 
             // in all cases, check the total; if it is equal to the number of subactivities, emit completed
             if (this.counters.total === numSubActivities) {
-                this._markAsCompleted();
+                this.subtasksComplete.complete();
             }
         });
     }
@@ -166,6 +185,9 @@ export class Activity {
 
         // emit a completed status to the statusSubject
         this.statusSubject.next(ActivityStatus.Completed);
+
+        // complete the progress subject
+        this.progressSubject.next(100);
 
         // signal completion of this activity
         this.done.next(ActivityStatus.Completed);
