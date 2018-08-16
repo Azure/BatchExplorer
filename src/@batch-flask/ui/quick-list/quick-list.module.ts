@@ -15,6 +15,7 @@ import {
     QuickListRowStateDirective,
     QuickListRowTitleDirective,
 } from "./quick-list-row-def";
+import { QuickListRowRenderComponent } from "./quick-list-row-render";
 import { QuickListComponent } from "./quick-list.component";
 
 const publicComponents = [
@@ -25,6 +26,7 @@ const publicComponents = [
     QuickListRowTitleDirective,
     QuickListRowStateDirective,
     QuickListRowExtraDirective,
+    QuickListRowRenderComponent,
 
 ];
 
