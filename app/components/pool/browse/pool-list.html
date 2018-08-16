@@ -7,8 +7,9 @@
         [commands]="commands"
         (scrollBottom)="onScrollToBottom()">
 
-            <!-- <bl-quick-list-item-status [status]="poolStatus(pool)" [tooltip]="poolStatusText(pool)">
-            </bl-quick-list-item-status> -->
+        <ng-container *blQuickListRowStatus="let pool">
+            <bl-quick-list-item-status [status]="poolStatus(pool)" [tooltip]="poolStatusText(pool)"></bl-quick-list-item-status>
+        </ng-container>
         <ng-container *blQuickListRowTitle="let pool">{{pool.id}}</ng-container>
         <ng-container *blQuickListRowState="let pool">
             <bl-pool-os-icon [pool]="pool"></bl-pool-os-icon>

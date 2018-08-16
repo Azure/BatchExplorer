@@ -15,6 +15,7 @@ import { FocusSectionComponent } from "../focus-section";
 import {
     QuickListRowExtraDirective,
     QuickListRowStateDirective,
+    QuickListRowStatusDirective,
     QuickListRowTitleDirective,
 } from "./quick-list-row-def";
 
@@ -31,6 +32,7 @@ import "./quick-list.scss";
 })
 export class QuickListComponent extends AbstractListBase implements OnChanges {
     @Input() public data: List<any> | any[] = List([]);
+    @ContentChild(QuickListRowStatusDirective, { read: TemplateRef }) public statusDef: TemplateRef<any>;
     @ContentChild(QuickListRowTitleDirective, { read: TemplateRef }) public titleDef: TemplateRef<any>;
     @ContentChild(QuickListRowStateDirective, { read: TemplateRef }) public stateDef: TemplateRef<any>;
     @ContentChild(QuickListRowExtraDirective, { read: TemplateRef }) public extraDef: TemplateRef<any>;

@@ -10,6 +10,7 @@ import {
 import {
     QuickListRowExtraDirective,
     QuickListRowStateDirective,
+    QuickListRowStatusDirective,
     QuickListRowTitleDirective,
 } from "../quick-list-row-def";
 
@@ -26,6 +27,7 @@ export class QuickListRowRenderComponent {
     @Input() public titleDef: QuickListRowTitleDirective;
     @Input() public stateDef: QuickListRowStateDirective;
     @Input() public extraDef: QuickListRowExtraDirective;
+    @Input() public statusDef: QuickListRowStatusDirective;
     @Input() @HostBinding("class.focused") public focused: boolean;
     @Input() @HostBinding("class.selected") public selected: boolean;
 

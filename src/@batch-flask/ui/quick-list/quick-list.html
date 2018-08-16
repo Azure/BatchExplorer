@@ -2,6 +2,7 @@
 <bl-virtual-scroll [items]="displayItems" [childHeight]="48" (update)="updateViewPortItems($event)" (scroll)="handleScrollChange($event)">
     <bl-quick-list-row-render *ngFor="let item of viewPortItems; trackBy: trackItem"
         [item]="item"
+        [statusDef]="statusDef"
         [titleDef]="titleDef"
         [stateDef]="stateDef"
         [extraDef]="extraDef"
