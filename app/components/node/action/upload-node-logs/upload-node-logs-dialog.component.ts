@@ -10,8 +10,8 @@ import { AccountService, NodeService } from "app/services";
 import { AutoStorageService, StorageBlobService } from "app/services/storage";
 import { CloudPathUtils, StorageUtils } from "app/utils";
 import * as moment from "moment";
-import { AsyncSubject, interval } from "rxjs";
-import { distinctUntilChanged, first, flatMap, map, share, takeUntil, tap } from "rxjs/operators";
+import { interval } from "rxjs";
+import { distinctUntilChanged, first, flatMap, map, share, takeWhile } from "rxjs/operators";
 
 import "./upload-node-logs-dialog.scss";
 
@@ -120,10 +120,6 @@ export class UploadNodeLogsDialogComponent {
      * @param numberOfFiles the number of files we are uploading
      */
     private _watchUpload(container: string, folder: string, numberOfFiles: number) {
-        // the notifier will be used to stop the interval used in the initializer
-        const notifier = new AsyncSubject();
-        notifier.next(null);
-
         // the initializer calls the storage service, lists the uploaded files
         // and maps this to a progress number to report to the activity
         const initializer = () => {
@@ -134,20 +130,19 @@ export class UploadNodeLogsDialogComponent {
                         folder: CloudPathUtils.asBaseDirectory(folder),
                     });
                 }),
+                takeWhile((blobs) => blobs.items.size < numberOfFiles),
                 map((blobs) => {
                     const progress = (blobs.items.size / numberOfFiles) * 100;
                     return new ActivityResponse(progress);
                 }),
-                takeUntil(notifier),
                 share(),
             );
         };
 
-        initializer().subscribe(response => {
-            if (response.progress >= 100) {
+        initializer().subscribe({
+            complete: () => {
                 this._notifyLogUploaded(container, folder, numberOfFiles);
-                notifier.complete();
-            }
+            },
         });
 
         // create the main listening activity

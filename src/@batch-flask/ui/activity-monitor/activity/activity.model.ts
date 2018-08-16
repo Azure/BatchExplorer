@@ -73,26 +73,31 @@ export class Activity {
         this.progressSubject.next(0);
 
         // run the initializer
-        this.subscription = this.initializer().subscribe(result => {
-            // if we need to run subtasks, load and run the subtasks
-            if (Array.isArray(result)) {
-                // if there is only one activity here, unbox it
-                if (result.length === 1) {
-                    this._unboxActivity(result[0]);
+        this.subscription = this.initializer().subscribe({
+            next: result => {
+                // if we need to run subtasks, load and run the subtasks
+                if (Array.isArray(result)) {
+                    // if there is only one activity here, unbox it
+                    if (result.length === 1) {
+                        this._unboxActivity(result[0]);
+                    } else {
+                        // otherwise, load and run the processor
+                        this.processor.exec(result);
+                    }
+                } else if (result instanceof ActivityResponse) {
+                    // update the activity's progress with the response
+                    this.progressSubject.next(result.progress);
+                    if (result.progress === 100) {
+                        this._markAsCompleted();
+                    }
                 } else {
-                    // otherwise, load and run the processor
-                    this.processor.exec(result);
-                }
-            } else if (result instanceof ActivityResponse) {
-                // update the activity's progress with the response
-                this.progressSubject.next(result.progress);
-                if (result.progress === 100) {
+                    // we're done, mark activity as completed
                     this._markAsCompleted();
                 }
-            } else {
-                // we're done, mark activity as completed
+            },
+            complete: () => {
                 this._markAsCompleted();
-            }
+            },
         });
     }
 
