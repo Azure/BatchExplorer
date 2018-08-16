@@ -3,16 +3,18 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
-import { List } from "immutable";
-
 import { FilterBuilder } from "@batch-flask/core";
 import { DialogService, NotificationService, WorkspaceService } from "@batch-flask/ui";
 import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { QuickListTestingModule } from "@batch-flask/ui/testing";
 import { AccountListComponent } from "app/components/account/browse";
 import { AccountService, SubscriptionService } from "app/services";
+import { List } from "immutable";
 import { of } from "rxjs";
 import * as Fixtures from "test/fixture";
+import { ElectronTestingModule } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 
 const sub1 = Fixtures.subscription.create({
@@ -58,7 +60,7 @@ describe("AccountListComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
+            imports: [RouterTestingModule, QuickListTestingModule, ElectronTestingModule],
             declarations: [AccountListComponent, NoItemMockComponent],
             providers: [
                 { provide: AccountService, useValue: accountService },
@@ -69,6 +71,7 @@ describe("AccountListComponent", () => {
                 { provide: NotificationService, useValue: null },
                 { provide: DialogService, useValue: null },
                 { provide: WorkspaceService, useValue: null },
+                { provide: BreadcrumbService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -78,7 +81,7 @@ describe("AccountListComponent", () => {
         de = fixture.debugElement;
         fixture.detectChanges();
 
-        accountsElList = de.queryAll(By.css("bl-quick-list-item"));
+        accountsElList = de.queryAll(By.css("bl-quick-list-row-render"));
     });
 
     it("Should list all accounts sorted alphabetically", () => {
@@ -99,7 +102,7 @@ describe("AccountListComponent", () => {
     it("should filter by name", () => {
         component.filter = FilterBuilder.and(FilterBuilder.prop("name").startswith("zoO"));
         fixture.detectChanges();
-        accountsElList = de.queryAll(By.css("bl-quick-list-item"));
+        accountsElList = de.queryAll(By.css("bl-quick-list-row-render"));
 
         expect(accountsElList.length).toBe(1);
 
@@ -109,7 +112,7 @@ describe("AccountListComponent", () => {
     it("should filter by subscription", () => {
         component.filter = FilterBuilder.and(FilterBuilder.prop("subscriptionId").eq("sub-1"));
         fixture.detectChanges();
-        accountsElList = de.queryAll(By.css("bl-quick-list-item"));
+        accountsElList = de.queryAll(By.css("bl-quick-list-row-render"));
 
         expect(accountsElList.length).toBe(2);
 
@@ -123,7 +126,7 @@ describe("AccountListComponent", () => {
             FilterBuilder.prop("subscriptionId").eq("sub-1"),
         );
         fixture.detectChanges();
-        accountsElList = de.queryAll(By.css("bl-quick-list-item"));
+        accountsElList = de.queryAll(By.css("bl-quick-list-row-render"));
 
         expect(accountsElList.length).toBe(1);
 
