@@ -6,7 +6,7 @@ import { Permission } from "@batch-flask/ui/permission";
 import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { exists, log, nil } from "@batch-flask/utils";
 import * as inflection from "inflection";
-import { Observable, forkJoin, of } from "rxjs";
+import { BehaviorSubject, Observable, forkJoin, of } from "rxjs";
 
 import { ListSelection } from "@batch-flask/core/list";
 import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
@@ -206,7 +206,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
                     return this.performActionAndRefresh(entity, options);
                 });
             });
-            return of(subActivities);
+            return new BehaviorSubject<Activity[]>(subActivities);
         });
 
         // notify success after the parent activity completes

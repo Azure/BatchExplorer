@@ -43,7 +43,10 @@ describe("ActivityService ", () => {
         const subj2 = new AsyncSubject();
 
         const initializer = () => {
-            return of([new Activity("subtask1", () => subj1), new Activity("subtask2", () => subj2)]);
+            return new BehaviorSubject<Activity[]>([
+                new Activity("subtask1", () => subj1),
+                new Activity("subtask2", () => subj2)],
+            );
         };
         const activity = new Activity("task1", initializer);
         activityService.exec(activity);
