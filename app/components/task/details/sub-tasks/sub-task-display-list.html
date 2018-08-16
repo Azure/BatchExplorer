@@ -1,15 +1,22 @@
 <bl-focus-section>
-    <bl-quick-list [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="scrollBottom.emit()">
-        <bl-quick-list-item *ngFor="let task of subTasks;trackBy: trackByFn" [key]="task.id">
-            <bl-quick-list-item-status [status]="taskStatus(task)" [tooltip]="taskStatusText(task)">
-            </bl-quick-list-item-status>
+    <bl-quick-list
+        [data]="subTasks"
+        [status]="status"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        (scrollBottom)="scrollBottom.emit()">
 
-            <div bl-quick-list-item-title>{{task.id}}</div>
-            <p bl-quick-list-item-field>{{task.state}}</p>
-            <div bl-quick-list-item-preview>
-                <bl-task-preview [task]="task"></bl-task-preview>
-            </div>
-        </bl-quick-list-item>
+        <ng-container *blQuickListRowStatus="let task">
+            <bl-quick-list-item-status [status]="taskStatus(task)" [tooltip]="taskStatusText(task)"></bl-quick-list-item-status>
+        </ng-container>
+        <ng-container *blQuickListRowTitle="let task">{{task.id}}</ng-container>
+        <ng-container *blQuickListRowState="let task">
+            <bl-task-state [task]="task"></bl-task-state>
+        </ng-container>
+
+        <ng-container *blQuickListRowExtra="let task">
+            <bl-task-preview [task]="task"></bl-task-preview>
+        </ng-container>
     </bl-quick-list>
 </bl-focus-section>
 <bl-no-item [itemCount]="subTasks.size" [status]="status">
