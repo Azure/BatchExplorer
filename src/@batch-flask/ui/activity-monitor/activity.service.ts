@@ -28,8 +28,8 @@ export class ActivityService {
      * N.B. this method is cascadable, in case it needs to be chained with done()
      * @param activity the activity to load into the master processor
      */
-    public loadAndRun(activity: Activity): ActivityService {
-        this.masterProcessor.loadAndRun([activity]);
+    public exec(activity: Activity): ActivityService {
+        this.masterProcessor.exec([activity]);
 
         // when an activity completes, we should remove it from the masterprocessor
         activity.done.subscribe(() => {

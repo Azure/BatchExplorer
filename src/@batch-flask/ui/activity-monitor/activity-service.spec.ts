@@ -20,7 +20,7 @@ describe("ActivityService ", () => {
         const subject = new AsyncSubject();
         const initializerSpy = jasmine.createSpy("Initializer spy").and.returnValue(subject);
         const activity = new Activity("Spy on service", initializerSpy);
-        activityService.loadAndRun(activity);
+        activityService.exec(activity);
 
         expect(initializerSpy).toHaveBeenCalledTimes(1);
         expect(runningActivities.length).toBe(1);
@@ -46,7 +46,7 @@ describe("ActivityService ", () => {
             return of([new Activity("subtask1", () => subj1), new Activity("subtask2", () => subj2)]);
         };
         const activity = new Activity("task1", initializer);
-        activityService.loadAndRun(activity);
+        activityService.exec(activity);
 
         expect(runningActivities.length).toBe(1);
 
@@ -83,7 +83,7 @@ describe("ActivityService ", () => {
         const initializerSpy = jasmine.createSpy("Initializer spy").and.returnValue(subj);
 
         const activity = new Activity("large activity", initializerSpy);
-        activityService.loadAndRun(activity);
+        activityService.exec(activity);
 
         expect(initializerSpy).toHaveBeenCalledOnce();
         expect(runningActivities.length).toBe(1);

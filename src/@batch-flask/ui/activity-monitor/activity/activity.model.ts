@@ -81,7 +81,7 @@ export class Activity {
                     this._unboxActivity(result[0]);
                 } else {
                     // otherwise, load and run the processor
-                    this.processor.loadAndRun(result);
+                    this.processor.exec(result);
                 }
             } else if (result instanceof ActivityResponse) {
                 // update the activity's progress with the response

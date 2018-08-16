@@ -66,7 +66,7 @@ export class DataContainerFilesComponent implements OnDestroy {
             map(fileList => {
                 const name = `Uploading ${fileList.length} items to ${container}`;
                 const activity = new Activity(name, initializer);
-                this.activityService.loadAndRun(activity);
+                this.activityService.exec(activity);
                 activity.done.subscribe(() => this.blobExplorer.refresh());
                 return activity.done;
             }),

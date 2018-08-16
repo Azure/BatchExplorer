@@ -154,7 +154,7 @@ export class UploadNodeLogsDialogComponent {
         const mainName = `Uploading ${numberOfFiles} log files ` +
             `for node '${this.node.id}' of pool '${this.pool.id}' to '${container}'`;
         const mainActivity = new Activity(mainName, initializer);
-        this.activityService.loadAndRun(mainActivity);
+        this.activityService.exec(mainActivity);
 
         return mainActivity.done;
     }

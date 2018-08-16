@@ -192,7 +192,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         };
 
         const activity = new Activity("Uploading files to file group", initializer);
-        this.activityService.loadAndRun(activity);
+        this.activityService.exec(activity);
         activity.done.subscribe(() => {
             const fileGroupName = this.fileGroupService.addFileGroupPrefix(formData.name);
             this.storageContainerService.onContainerAdded.next(fileGroupName);

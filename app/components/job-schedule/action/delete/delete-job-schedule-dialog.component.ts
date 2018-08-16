@@ -33,7 +33,7 @@ export class DeleteJobScheduleDialogComponent {
         };
 
         const activity = new Activity(`Deleting Job Schedule: '${this.jobScheduleId}'`, initializer);
-        this.activityService.loadAndRun(activity);
+        this.activityService.exec(activity);
         return activity.done;
     }
 }

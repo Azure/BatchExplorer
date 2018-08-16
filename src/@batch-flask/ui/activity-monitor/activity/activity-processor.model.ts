@@ -28,7 +28,7 @@ export class ActivityProcessor {
      * Load the processor with activities and run the processor
      * @param activities A list of Activity objects
      */
-    public loadAndRun(activities: Activity[]): void {
+    public exec(activities: Activity[]): void {
         const actList = this.activities.concat(activities);
         this.subActivitiesSubject.next(actList);
         return this._startProcessor();

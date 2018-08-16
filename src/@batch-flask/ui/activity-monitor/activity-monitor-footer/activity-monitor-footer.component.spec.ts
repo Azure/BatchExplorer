@@ -50,7 +50,7 @@ describe("ActivityMonitorFooterComponent", () => {
         const subj = new AsyncSubject();
 
         // Add 1 task
-        activityService.loadAndRun(new Activity("Task1", () => subj));
+        activityService.exec(new Activity("Task1", () => subj));
         fixture.detectChanges();
 
         expect(dropdownBtnEl.nativeElement.textContent).not.toContain(noTaskMessage);

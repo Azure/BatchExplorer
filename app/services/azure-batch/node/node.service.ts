@@ -159,7 +159,7 @@ export class NodeService {
         };
 
         const activity = new Activity(taskName, initializer);
-        this.activityService.loadAndRun(activity);
+        this.activityService.exec(activity);
 
         return activity.done;
     }

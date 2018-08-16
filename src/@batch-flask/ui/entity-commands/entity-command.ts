@@ -215,7 +215,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         });
 
         // run the parent activity
-        this.activityService.loadAndRun(activity);
+        this.activityService.exec(activity);
     }
 
     private _notifySuccess(message: string, description: string) {

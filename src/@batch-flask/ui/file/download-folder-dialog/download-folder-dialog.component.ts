@@ -100,7 +100,7 @@ export class DownloadFolderComponent {
         });
 
         // load and run a new file download activity with the declared function
-        this.activityService.loadAndRun(activity);
+        this.activityService.exec(activity);
     }
 
     private _getPatterns(): string[] {
