@@ -13,6 +13,7 @@ import { ListKeyNavigator, ListView, autobind } from "@batch-flask/core";
 import { ENTER, SPACE } from "@batch-flask/core/keys";
 import { ListSelection, SelectableList } from "@batch-flask/core/list";
 import { ListDataProvider } from "@batch-flask/ui/abstract-list/list-data-provider";
+import { ListDataSorter } from "@batch-flask/ui/abstract-list/list-data-sorter";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { EntityCommands } from "@batch-flask/ui/entity-commands";
@@ -332,17 +333,18 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         });
     }
 
-    /**
-     * Implement this to apply some sorting or other logic
-     */
-    protected computeDisplayedItems?(): AbstractListItem[];
+    private _computeDisplayedItems() {
+        return this._sortItems(this.items);
+    }
+
+    private _sortItems(items: AbstractListItem[]): AbstractListItem[] {
+        const sorter = new ListDataSorter(this.config as any);
+
+        return sorter.sortBy(items, "targetLowPriorityNodes");
+    }
 
     private _updateDisplayItems() {
-        if (this.computeDisplayedItems) {
-            this.displayItems = this.computeDisplayedItems();
-        } else {
-            this.displayItems = this.items;
-        }
+        this.displayItems = this._computeDisplayedItems();
         this._keyNavigator.items = this.displayItems;
         this._updateSelectedItems();
     }

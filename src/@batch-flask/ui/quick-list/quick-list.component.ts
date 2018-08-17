@@ -3,8 +3,6 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
-    Input,
-    OnChanges,
     Optional,
     TemplateRef,
 } from "@angular/core";

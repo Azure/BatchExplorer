@@ -19,10 +19,10 @@ import { Router } from "@angular/router";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
-import { DragUtils, log } from "@batch-flask/utils";
+import { DragUtils } from "@batch-flask/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
 import { TableColumnComponent } from "./table-column";
-import { SortDirection, SortingInfo, TableColumnManager, TableColumnRef } from "./table-column-manager";
+import { SortDirection, SortingInfo, TableColumnManager } from "./table-column-manager";
 import { TableHeadComponent } from "./table-head";
 
 import "./table.scss";
@@ -173,54 +173,5 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     public sort(column: string, direction: SortDirection = SortDirection.Asc) {
         this.columnManager.sortBy(column, direction);
         this.updateDisplayedItems();
-    }
-
-    protected updateDisplayedItems() {
-        this.displayItems = this.computeDisplayedItems();
-        this.changeDetector.markForCheck();
-    }
-
-    protected computeDisplayedItems() {
-        const sortingInfo = this._sortingInfo;
-        const items = [];
-        if (!sortingInfo) {
-            return items;
-        }
-        const column = this.columnManager.columnMap.get(sortingInfo.column);
-        if (!column) {
-            const keys = [...this.columnManager.columnMap.keys()];
-            log.error(`Cannot sort. There is no column with name ${column.name} in the list of columns ${keys}`);
-            return items;
-        }
-        return this._sortItems(items, column, sortingInfo.direction);
-    }
-
-    private _sortItems(items: any[], column: TableColumnRef, direction: SortDirection): any[] {
-        const getColumnValue = this._columnValueFn(column);
-
-        const sortedRows = [...items].sort((a, b) => {
-            const aValue = getColumnValue(a);
-            const bValue = getColumnValue(b);
-            if (aValue < bValue) {
-                return -1;
-            } else if (aValue > bValue) {
-                return 1;
-            }
-            return 0;
-        });
-
-        const desc = direction === SortDirection.Desc;
-        if (desc) {
-            return sortedRows.reverse();
-        }
-        return sortedRows;
-    }
-
-    private _columnValueFn(column: TableColumnRef) {
-        if (this.config.values && column.name in this.config.values) {
-            return this.config.values[column.name];
-        } else {
-            return (item) => item[column.name];
-        }
     }
 }
