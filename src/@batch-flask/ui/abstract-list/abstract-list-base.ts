@@ -344,7 +344,6 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             .withWrap();
 
         this._keyNavigator.change.subscribe(() => {
-            console.log("Key navigator", this._keyNavigator.focusedItem);
             this.focusedItem.next(this._keyNavigator.focusedItem && this._keyNavigator.focusedItem.id);
             this.changeDetector.markForCheck();
         });
