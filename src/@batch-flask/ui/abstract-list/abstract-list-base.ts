@@ -242,7 +242,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     @autobind()
     public keyPressed(event: KeyboardEvent) {
         if (event.key === SPACE || event.key === ENTER) {
-            this.activateItem(this.focusedItem);
+            this.activateItem(this.displayItems.find(x => x.id === this.focusedItem.value));
             event.preventDefault();
         } else {
             this._keyNavigator.onKeydown(event);
