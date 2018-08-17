@@ -1,3 +1,6 @@
+import { DOWN_ARROW, END, ENTER, ESCAPE, HOME, SPACE, UP_ARROW } from "@angular/cdk/keycodes";
+import { ConnectionPositionPair, Overlay, OverlayConfig, OverlayRef } from "@angular/cdk/overlay";
+import { ComponentPortal } from "@angular/cdk/portal";
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -19,16 +22,12 @@ import {
     ViewChild,
 } from "@angular/core";
 import { ControlValueAccessor, NgControl } from "@angular/forms";
-
-import { SelectOptionComponent } from "./option";
-
-import { DOWN_ARROW, END, ENTER, ESCAPE, HOME, SPACE, UP_ARROW } from "@angular/cdk/keycodes";
-import { ConnectionPositionPair, Overlay, OverlayConfig, OverlayRef } from "@angular/cdk/overlay";
-import { ComponentPortal } from "@angular/cdk/portal";
 import { FlagInput, ListKeyNavigator, coerceBooleanProperty } from "@batch-flask/core";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import { SelectDropdownComponent } from "@batch-flask/ui/select/select-dropdown";
 import { Subject, Subscription } from "rxjs";
+import { SelectOptionComponent } from "./option";
+
 import "./select.scss";
 
 /** Custom injector type specifically for instantiating components with a dialog. */
