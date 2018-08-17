@@ -48,7 +48,7 @@ export class QuickListComponent extends AbstractListBase implements OnChanges {
 
     public ngOnChanges(changes) {
         if (changes.data) {
-            this.displayItems = this._getItems();
+            this.items = this._getItems();
         }
     }
 
