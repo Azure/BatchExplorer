@@ -138,8 +138,4 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
             return task.waitingDone;
         });
     }
-
-    public trackFileGroup(index, fileGroup: BlobContainer) {
-        return fileGroup.id;
-    }
 }

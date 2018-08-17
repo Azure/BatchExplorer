@@ -108,8 +108,4 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
             return task.waitingDone;
         });
     }
-
-    public trackById(index, pool) {
-        return pool.id;
-    }
 }

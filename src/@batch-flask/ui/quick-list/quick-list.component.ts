@@ -46,8 +46,8 @@ export class QuickListComponent extends AbstractListBase implements OnChanges {
         super(contextMenuService, router, breadcrumbService, changeDetector, focusSection);
     }
 
-    public ngOnChanges() {
-        if (this.data) {
+    public ngOnChanges(changes) {
+        if (changes.data) {
             this.displayItems = this._getItems();
         }
     }

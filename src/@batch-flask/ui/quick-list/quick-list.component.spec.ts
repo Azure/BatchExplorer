@@ -39,7 +39,7 @@ class TestComponent {
     @ViewChild("focusSection")
     public focusSection: FocusSectionComponent;
 
-    public items: TestItem[] = [
+    public items: Iterable<TestItem> = [
         { id: "item-1", name: "Item 1" },
         { id: "item-2", name: "Item 2" },
         { id: "item-3", name: "Item 3" },
@@ -112,6 +112,29 @@ describe("QuickListComponent", () => {
         click(item.nativeElement);
         fixture.detectChanges();
         expect(quicklist.focusedItem.value).toEqual("item-2");
+    });
+
+    it("show no items when data is not set", async () => {
+        testComponent.items = undefined;
+        fixture.detectChanges();
+        await fixture.whenStable();
+        items = de.queryAll(By.css("bl-quick-list-row-render"));
+        expect(items.length).toBe(0);
+    });
+
+    it("show items when data is a set", async () => {
+        testComponent.items = new Set([
+            { id: "item-2", name: "Item 2" },
+            { id: "item-3", name: "Item 3" },
+            { id: "item-5", name: "Item 5" },
+        ]);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        items = de.queryAll(By.css("bl-quick-list-row-render"));
+        expect(items.length).toBe(3);
+        expect(items[0].nativeElement.textContent).toContain("Item 2");
+        expect(items[1].nativeElement.textContent).toContain("Item 3");
+        expect(items[2].nativeElement.textContent).toContain("Item 5");
     });
 
     describe("When an item is active", () => {

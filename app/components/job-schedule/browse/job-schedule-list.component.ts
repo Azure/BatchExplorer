@@ -120,8 +120,4 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
     public onScrollToBottom() {
         this.data.fetchNext();
     }
-
-    public trackByFn(index: number, jobSchedule: JobSchedule) {
-        return jobSchedule.id;
-    }
 }
