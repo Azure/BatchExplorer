@@ -92,10 +92,6 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
             : QuickListItemStatus.normal;
     }
 
-    public trackByFn(index, account: AccountResource) {
-        return account.id;
-    }
-
     private _updateDisplayedAccounts() {
         const matcher = new FilterMatcher<AccountResource>();
 

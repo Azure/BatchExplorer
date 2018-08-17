@@ -58,8 +58,4 @@ export class TaskListDisplayComponent extends ListBaseComponent implements OnCha
     public formatDate(date: Date) {
         return DateUtils.prettyDate(date, 7);
     }
-
-    public trackByFn(index, task: Task) {
-        return task.id;
-    }
 }

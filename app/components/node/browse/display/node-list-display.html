@@ -1,17 +1,14 @@
 <bl-focus-section>
     <bl-quick-list *ngIf="quicklist"
+        [data]="nodes"
         [status]="status"
         [commands]="commands"
         [(activeItem)]="activeItem"
         [(selection)]="selection"
         (scrollBottom)="scrollBottom.emit()">
-        <bl-quick-list-item *ngFor="let node of nodes;trackBy: trackNode" [link]="['/pools', poolId, 'nodes', node.id]" [key]="node.id">
-            <bl-quick-list-item-status [status]="" [tooltip]="">
-            </bl-quick-list-item-status>
 
-            <div bl-quick-list-item-title>{{node.id}}</div>
-            <p bl-quick-list-item-field>{{node.state}}</p>
-        </bl-quick-list-item>
+        <ng-container *blQuickListRowTitle="let node">{{node.id}}</ng-container>
+        <ng-container *blQuickListRowState="let node">{{node.state}}</ng-container>
     </bl-quick-list>
 
     <bl-table *ngIf="!quicklist"

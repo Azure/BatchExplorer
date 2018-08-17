@@ -87,10 +87,6 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
         this.data.fetchNext();
     }
 
-    public trackByFn(index, application: BatchApplication) {
-        return application.id;
-    }
-
     private _filterApplications() {
         let text: string = null;
         if (this.filter && this.filter.properties.length > 0) {

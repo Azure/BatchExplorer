@@ -46,8 +46,4 @@ export class SubTaskDisplayListComponent extends ListBaseComponent {
             return `Subtask failed with exitCode:  ${task.exitCode}`;
         }
     }
-
-    public trackByFn(index, task) {
-        return task.id;
-    }
 }

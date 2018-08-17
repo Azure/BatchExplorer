@@ -1,13 +1,15 @@
 <bl-focus-section>
-    <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()"  [commands]="commands">
-        <bl-quick-list-item *ngFor="let certificate of displayedCertificates; trackBy: trackByFn" [link]="['/certificates/', certificate.thumbprint]" [key]="certificate.thumbprint">
-            <bl-quick-list-item-status [status]="certificateStatus(certificate)" [tooltip]="certificateStatusText(certificate)">
-            </bl-quick-list-item-status>
-            <div bl-quick-list-item-title>{{certificate.thumbprint}}</div>
-            <div bl-quick-list-item-field>
-                {{certificate.state}}
-            </div>
-        </bl-quick-list-item>
+    <bl-quick-list *ngIf="quicklist"
+        [status]="status"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        [commands]="commands"
+        (scrollBottom)="onScrollToBottom()">
+        <ng-container *blQuickListRowStatus="let certificate">
+            <bl-quick-list-item-status [status]="certificateStatus(certificate)" [tooltip]="certificateStatusText(certificate)"></bl-quick-list-item-status>
+        </ng-container>
+        <ng-container *blQuickListRowTitle="let certificate">{{certificate.thumbprint}}</ng-container>
+        <ng-container *blQuickListRowState="let certificate">{{certificate.state}}</ng-container>
     </bl-quick-list>
 
     <bl-table *ngIf="!quicklist"

@@ -3,20 +3,20 @@ import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
-
+import { BreadcrumbModule } from "@batch-flask/ui/breadcrumbs";
+import { ContextMenuModule } from "@batch-flask/ui/context-menu";
 import { LoadingModule } from "@batch-flask/ui/loading";
-import { VirtualScrollModule } from "@batch-flask/ui/virtual-scroll";
-import { ContextMenuModule } from "../context-menu";
-import { NoItemComponent } from "./no-item.component";
-import { QuickListItemStatusComponent } from "./quick-list-item-status";
 import {
+    NoItemComponent,
+    QuickListComponent,
+    QuickListItemStatusComponent,
     QuickListRowExtraDirective,
     QuickListRowStateDirective,
     QuickListRowStatusDirective,
     QuickListRowTitleDirective,
-} from "./quick-list-row-def";
-import { QuickListRowRenderComponent } from "./quick-list-row-render";
-import { QuickListComponent } from "./quick-list.component";
+} from "@batch-flask/ui/quick-list";
+import { QuickListRowRenderComponent } from "@batch-flask/ui/quick-list/quick-list-row-render";
+import { VirtualScrollTestingModule } from "@batch-flask/ui/testing/virtual-scroll";
 
 const publicComponents = [
     NoItemComponent,
@@ -38,9 +38,12 @@ const publicComponents = [
         RouterModule,
         MaterialModule,
         ContextMenuModule,
-        VirtualScrollModule,
         LoadingModule,
+        BreadcrumbModule,
+
+        // Mock modules
+        VirtualScrollTestingModule,
     ],
 })
-export class QuickListModule {
+export class QuickListTestingModule {
 }

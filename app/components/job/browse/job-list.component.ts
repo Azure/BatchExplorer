@@ -141,8 +141,4 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
             return task.waitingDone;
         });
     }
-
-    public trackByFn(index: number, job: Job) {
-        return job.id;
-    }
 }
