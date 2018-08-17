@@ -2,7 +2,7 @@ import {
     ChangeDetectorRef, EventEmitter,
     HostBinding, Input, OnDestroy, Output, ViewChild,
 } from "@angular/core";
-import { BehaviorSubject, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 
 import { Router } from "@angular/router";
 import { ListKeyNavigator, autobind } from "@batch-flask/core";
@@ -86,7 +86,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public get selection() { return super.selection; }
 
     public listFocused: boolean = false;
-    public focusedItem = new BehaviorSubject<string>(null);
+    public focusedItem: AbstractListItem | null;
     public showScrollShadow: boolean;
 
     protected _config: AbstractListBaseConfig = abstractListDefaultConfig;
@@ -216,7 +216,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     @autobind()
     public onFocus(event: FocusEvent) {
         this.listFocused = true;
-        if (!this.focusedItem.value) {
+        if (!this._keyNavigator.focusedItem) {
             if (this.activeItem) {
                 this._keyNavigator.focusItem(this.items.find(x => x.id === this.activateItem));
             } else {
@@ -229,20 +229,19 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     @autobind()
     public onBlur(event) {
         this.listFocused = false;
-        this.focusedItem.next(null);
+        this._keyNavigator.focusItem(null);
         this.changeDetector.markForCheck();
     }
 
-    public setFocusedItem(key: string) {
-        this._keyNavigator.focusItem(this.items.find(x => x.id === key));
-        this.focusedItem.next(key);
+    public setFocusedItem(item: AbstractListItem) {
+        this._keyNavigator.focusItem(item);
         this.changeDetector.markForCheck();
     }
 
     @autobind()
     public keyPressed(event: KeyboardEvent) {
         if (event.key === SPACE || event.key === ENTER) {
-            this.activateItem(this.displayItems.find(x => x.id === this.focusedItem.value));
+            this.activateItem(this.focusedItem);
             event.preventDefault();
         } else {
             this._keyNavigator.onKeydown(event);
@@ -250,13 +249,13 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     }
 
     public handleClick(event: MouseEvent, item, activate = true) {
-        this.setFocusedItem(item.id);
+        this.setFocusedItem(item);
 
         const shiftKey = event.shiftKey;
         const ctrlKey = event.ctrlKey || event.metaKey;
         // Prevent the routerlink from being activated if we have shift or ctrl
         if (shiftKey || ctrlKey) {
-            const focusedItem = this.focusedItem.value;
+            const focusedItem = this.focusedItem;
             if (!focusedItem) { return; }
 
             if (shiftKey) {
@@ -284,8 +283,9 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         return item.id;
     }
 
-    public activateItem(item: any) {
-        this.activeItem = item.id;
+    public activateItem(item: AbstractListItem) {
+        this.activeItem = item && item.id;
+        if (!item) { return; }
         const link = item.routerLink;
         if (link) {
             if (this.forceBreadcrumb) {
@@ -344,7 +344,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             .withWrap();
 
         this._keyNavigator.change.subscribe(() => {
-            this.focusedItem.next(this._keyNavigator.focusedItem && this._keyNavigator.focusedItem.id);
+            this.focusedItem = this._keyNavigator.focusedItem;
             this.changeDetector.markForCheck();
         });
     }
