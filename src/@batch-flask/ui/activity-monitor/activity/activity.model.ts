@@ -58,8 +58,8 @@ export class Activity {
 
         this.subscription = null;
 
-        this.progressComplete = new Subject();
-        this.subtasksComplete = new Subject();
+        this.progressComplete = new AsyncSubject();
+        this.subtasksComplete = new AsyncSubject();
 
         this._listenToProcessor();
     }
@@ -83,9 +83,6 @@ export class Activity {
             next: result => {
                 // if we need to run subtasks, load and run the subtasks
                 if (Array.isArray(result)) {
-                    // there is no progress to track, so close this observable stream
-                    this.progressComplete.complete();
-
                     // if there is only one activity here, unbox it
                     if (result.length === 1) {
                         this._unboxActivity(result[0]);
@@ -100,16 +97,11 @@ export class Activity {
                     if (result instanceof ActivityResponse) {
                         // update the activity's progress with the response
                         this.progressSubject.next(result.progress);
-                    } else {
-                        // we're done, mark activity as completed
-                        this.progressComplete.complete();
                     }
                 }
             },
             complete: () => {
-                if (!this.progressComplete.isStopped) {
-                    this.progressComplete.complete();
-                }
+                this.progressComplete.complete();
             },
         });
 
