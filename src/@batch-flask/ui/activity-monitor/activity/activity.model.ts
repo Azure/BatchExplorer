@@ -1,4 +1,4 @@
-import { AsyncSubject, BehaviorSubject, Observable, Subject, Subscription, combineLatest } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable, Subscription, merge } from "rxjs";
 import { ActivityResponse, ActivityStatus } from "./activity-datatypes";
 import { ActivityProcessor } from "./activity-processor.model";
 
@@ -35,8 +35,7 @@ export class Activity {
     private counters: ActivityCounters;
     private subscription: Subscription;
 
-    private progressComplete: Subject<null>;
-    private subtasksComplete: Subject<null>;
+    private subtasksComplete: AsyncSubject<null>;
 
     constructor(name: string, initializerFn: () => Observable<ActivityResponse | Activity[] | any>) {
         this.id = (Activity.idCounter++).toString();
@@ -58,7 +57,6 @@ export class Activity {
 
         this.subscription = null;
 
-        this.progressComplete = new AsyncSubject();
         this.subtasksComplete = new AsyncSubject();
 
         this._listenToProcessor();
@@ -79,17 +77,12 @@ export class Activity {
         this.progressSubject.next(0);
 
         // run the initializer
-        this.subscription = this.initializer().subscribe({
+        const initializerObs = this.initializer();
+        this.subscription = initializerObs.subscribe({
             next: result => {
-                // if we need to run subtasks, load and run the subtasks
+                // if we need to run subtasks, execute the subtasks
                 if (Array.isArray(result)) {
-                    // if there is only one activity here, unbox it
-                    if (result.length === 1) {
-                        this._unboxActivity(result[0]);
-                    } else {
-                        // otherwise, load and run the processor
                         this.processor.exec(result);
-                    }
                 } else {
                     // there are no subtasks to track, so close this observable stream
                     this.subtasksComplete.complete();
@@ -100,12 +93,9 @@ export class Activity {
                     }
                 }
             },
-            complete: () => {
-                this.progressComplete.complete();
-            },
         });
 
-        combineLatest(this.progressComplete, this.subtasksComplete).subscribe({
+        merge(initializerObs, this.subtasksComplete).subscribe({
             complete: () => {
                 this._markAsCompleted();
             },

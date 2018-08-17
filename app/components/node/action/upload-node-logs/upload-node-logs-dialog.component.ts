@@ -10,7 +10,7 @@ import { AccountService, NodeService } from "app/services";
 import { AutoStorageService, StorageBlobService } from "app/services/storage";
 import { CloudPathUtils, StorageUtils } from "app/utils";
 import * as moment from "moment";
-import { interval } from "rxjs";
+import { concat, of, timer } from "rxjs";
 import { distinctUntilChanged, first, flatMap, map, share, takeWhile } from "rxjs/operators";
 
 import "./upload-node-logs-dialog.scss";
@@ -123,7 +123,7 @@ export class UploadNodeLogsDialogComponent {
         // the initializer calls the storage service, lists the uploaded files
         // and maps this to a progress number to report to the activity
         const initializer = () => {
-            return interval(5000).pipe(
+            const watch = timer(0, 5000).pipe(
                 flatMap(() => this.autoStorageService.get()),
                 flatMap((storageAccountId) => {
                     return this.storageBlobService.list(storageAccountId, container, {
@@ -137,6 +137,10 @@ export class UploadNodeLogsDialogComponent {
                 }),
                 share(),
             );
+
+            const firstTick = of(new ActivityResponse());
+
+            return concat(firstTick, watch);
         };
 
         initializer().subscribe({
