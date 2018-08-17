@@ -1,4 +1,4 @@
-import { AsyncSubject, BehaviorSubject, Observable, Subscription, merge } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable, merge } from "rxjs";
 import { ActivityResponse, ActivityStatus } from "./activity-datatypes";
 import { ActivityProcessor } from "./activity-processor.model";
 
@@ -33,7 +33,6 @@ export class Activity {
     private progressSubject: BehaviorSubject<number>;
     private processor: ActivityProcessor;
     private counters: ActivityCounters;
-    private subscription: Subscription;
 
     private subtasksComplete: AsyncSubject<null>;
 
@@ -54,8 +53,6 @@ export class Activity {
 
         // default all activity progress to pending before executing
         this.statusSubject = new BehaviorSubject(ActivityStatus.Pending);
-
-        this.subscription = null;
 
         this.subtasksComplete = new AsyncSubject();
 
@@ -78,7 +75,7 @@ export class Activity {
 
         // run the initializer
         const initializerObs = this.initializer();
-        this.subscription = initializerObs.subscribe({
+        initializerObs.subscribe({
             next: result => {
                 // if we need to run subtasks, execute the subtasks
                 if (Array.isArray(result)) {
@@ -137,25 +134,6 @@ export class Activity {
                 this.subtasksComplete.complete();
             }
         });
-    }
-
-    /**
-     * Sets this activity to be the given activity
-     * This is useful when an activity's initializer emits a singleton array of activities
-     * We can move that activity "up" in the chain, bypassing the processor for efficiency and better information
-     * @param activity the activity to unbox up to this activity
-     */
-    private _unboxActivity(activity: Activity) {
-        // unsubscribe from the initializer
-        if (this.subscription && !this.subscription.closed) {
-            this.subscription.unsubscribe();
-        }
-
-        // set the name and initializer of this activity to be the given activity
-        this.name = activity.name;
-        this.initializer = activity.initializer;
-
-        this.run();
     }
 
     /**
