@@ -1,6 +1,7 @@
 // tslint:disable: object-literal-sort-keys
 import { Routes } from "@angular/router";
 
+import { ActivityMonitorComponent } from "app/components/activity-monitor";
 import { NavigationGuard } from "app/components/common/guards";
 import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
 import { ChooseActionComponent } from "app/components/market/application-action";
@@ -47,6 +48,10 @@ export const routes: Routes = [
     {
         component: SettingsComponent,
         path: "settings",
+    },
+    {
+        component: ActivityMonitorComponent,
+        path: "activitymonitor",
     },
     {
         path: "jobs",

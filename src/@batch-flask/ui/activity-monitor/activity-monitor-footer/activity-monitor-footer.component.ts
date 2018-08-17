@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { Activity } from "@batch-flask/ui/activity-monitor/activity";
 import { ActivityService } from "@batch-flask/ui/activity-monitor/activity.service";
 import { Subscription } from "rxjs";
@@ -23,7 +24,11 @@ export class ActivityMonitorFooterComponent implements OnInit, OnDestroy {
     private _lastTaskCount = 0;
     private _sub: Subscription;
 
-    constructor(private activityService: ActivityService, private changeDetector: ChangeDetectorRef) {}
+    constructor(
+        private activityService: ActivityService,
+        private changeDetector: ChangeDetectorRef,
+        private router: Router,
+    ) {}
 
     public ngOnInit() {
         this._sub = this.activityService.incompleteActivities.subscribe(activities => {
@@ -52,5 +57,9 @@ export class ActivityMonitorFooterComponent implements OnInit, OnDestroy {
 
     public trackByFn(index, activity: Activity) {
         return activity.id;
+    }
+
+    public openMonitor(): void {
+        this.router.navigate(["/activitymonitor"]);
     }
 }
