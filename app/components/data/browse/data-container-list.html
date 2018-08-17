@@ -7,7 +7,7 @@
         [commands]="commands"
         (scrollBottom)="onScrollToBottom()">
         <ng-container *blQuickListRowStatus="let container">
-            <bl-quick-list-item-status [status]="containerStatus(container)" [tooltip]="containerStatusText(container)"></bl-quick-list-item-status>
+            <bl-quick-list-item-status [status]="containerStatus(container)"></bl-quick-list-item-status>
         </ng-container>
         <ng-container *blQuickListRowTitle="let container">{{container.id}}</ng-container>
         <ng-container *blQuickListRowState="let container">{{container.lease?.state}}</ng-container>
