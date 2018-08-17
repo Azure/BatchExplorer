@@ -4,7 +4,6 @@ import {
 import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { TableConfig } from "@batch-flask/ui/table";
@@ -13,7 +12,7 @@ import { PoolListParams, PoolService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
-import { DeletePoolTask, PoolCommands } from "../action";
+import { PoolCommands } from "../action";
 
 import "./pool-list.scss";
 
@@ -42,8 +41,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         activatedRoute: ActivatedRoute,
         router: Router,
         public commands: PoolCommands,
-        changeDetector: ChangeDetectorRef,
-        private taskManager: BackgroundTaskService) {
+        changeDetector: ChangeDetectorRef) {
         super(changeDetector);
         this.data = this.poolService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
@@ -102,10 +100,6 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     }
 
     public deleteSelection(selection: ListSelection) {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeletePoolTask(this.poolService, [...this.selection.keys]);
-            task.start(backgroundTask);
-            return task.waitingDone;
-        });
+        this.commands.delete.executeFromSelection(selection).subscribe();
     }
 }

@@ -2,16 +2,15 @@ import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
 import { autobind } from "@batch-flask/core";
-import { BackgroundTask, BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { ElectronShell, FileSystemService } from "@batch-flask/ui/electron";
 import { FileNavigator } from "@batch-flask/ui/file/file-navigator";
-import { NotificationService } from "@batch-flask/ui/notifications";
 import { SecureUtils } from "@batch-flask/utils";
 import { List } from "immutable";
 import * as minimatch from "minimatch";
 import * as path from "path";
-import { AsyncSubject, Observable, forkJoin, of } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { Observable, forkJoin, from, of } from "rxjs";
+import { flatMap, map, reduce } from "rxjs/operators";
 
 import "./download-folder-dialog.scss";
 
@@ -41,10 +40,9 @@ export class DownloadFolderComponent {
 
     constructor(
         public dialogRef: MatDialogRef<DownloadFolderComponent>,
-        private backgroundTaskService: BackgroundTaskService,
         private fs: FileSystemService,
+        private activityService: ActivityService,
         private shell: ElectronShell,
-        private notificationService: NotificationService,
     ) { }
 
     public get title() {
@@ -65,33 +63,44 @@ export class DownloadFolderComponent {
         this.downloadFolder.setValue(folder);
     }
 
-    private async _startDownloadAsync() {
-        const folder = await this._getDownloadFolder();
+    /**
+     * Start a new asynchronous storage folder download
+     * Gets the list of files to download from information in the component
+     * Creates a file download activity which creates a single file download subactivity for each file
+     */
+    private _startDownloadAsync(): void {
+        // prepare the initializer function
+        const initializer = () => {
+            // get the download folder and a list of files to download
+            return forkJoin(from(this._getDownloadFolder()), this._getListOfFilesToDownload()).pipe(
+                // map the list of files to a list of file download activities
+                map(result => {
+                    const [folder, files] = result;
+                    return files.map(file => {
+                        // each file becomes a new activity whose initializer is to download one file
+                        return new Activity("Downloading One File", () => {
+                            return this._downloadFile(folder, file);
+                        });
+                    }).toArray();
+                }),
+                // reduce the output to contain only activities and not the
+                reduce((folder, activities) => {
+                    return activities;
+                }),
+            );
+        };
 
-        this.backgroundTaskService.startTask(this.title, (task: BackgroundTask) => {
-            const subject = new AsyncSubject();
-            task.progress.next(1);
-            this._getListOfFilesToDownload().subscribe((files) => {
-                if (files.size === 0) {
-                    this.notificationService.warn(
-                        "Pattern not found",
-                        `Failed to find pattern: ${this._getPatterns()}`,
-                    );
-                    task.progress.next(100);
-                    subject.complete();
-                } else {
-                    task.progress.next(10);
-                    const downloadObs = this._downloadFiles(task, folder, files);
-                    forkJoin(downloadObs).subscribe(() => {
-                        this.shell.showItemInFolder(folder);
-                        task.progress.next(100);
-                        subject.complete();
-                    });
-                }
-            });
-
-            return subject.asObservable();
+        const activity = new Activity("Downloading Files", initializer);
+        activity.done.pipe(
+            flatMap(obs => {
+                return from(this._getDownloadFolder());
+            }),
+        ).subscribe(folder => {
+            this.shell.showItemInFolder(folder);
         });
+
+        // load and run a new file download activity with the declared function
+        this.activityService.exec(activity);
     }
 
     private _getPatterns(): string[] {
@@ -111,18 +120,11 @@ export class DownloadFolderComponent {
         });
     }
 
-    private _downloadFiles(task: BackgroundTask, folder: string, files: List<File>): Array<Observable<any>> {
-        const progressStep = 90 / files.size;
-        return files.map((file) => {
-            const fileLoader = this.navigator.getFile(file.name);
-            const fileName = this._getSubdirectoryPath(file.name);
-            const filePath = path.join(folder, fileName);
-            return fileLoader.download(filePath).pipe(
-                tap(() => {
-                    task.progress.next(task.progress.value + progressStep);
-                }),
-            );
-        }).toArray();
+    private _downloadFile(folder: string, file: File): Observable<any> {
+        const fileLoader = this.navigator.getFile(file.name);
+        const fileName = this._getSubdirectoryPath(file.name);
+        const filePath = path.join(folder, fileName);
+        return fileLoader.download(filePath);
     }
 
     private _getListOfFilesToDownload(): Observable<List<File>> {

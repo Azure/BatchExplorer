@@ -3,14 +3,15 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
 import { Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { BackgroundTaskService, NotificationService } from "@batch-flask/ui";
+import { Activity, ActivityResponse, ActivityService } from "@batch-flask/ui/activity-monitor";
+import { NotificationService } from "@batch-flask/ui/notifications";
 import { Node, Pool } from "app/models";
 import { AccountService, NodeService } from "app/services";
 import { AutoStorageService, StorageBlobService } from "app/services/storage";
 import { CloudPathUtils, StorageUtils } from "app/utils";
 import * as moment from "moment";
-import { AsyncSubject, interval } from "rxjs";
-import { distinctUntilChanged, first, flatMap } from "rxjs/operators";
+import { concat, of, timer } from "rxjs";
+import { distinctUntilChanged, first, flatMap, map, share, takeWhile } from "rxjs/operators";
 
 import "./upload-node-logs-dialog.scss";
 
@@ -48,7 +49,7 @@ export class UploadNodeLogsDialogComponent {
     constructor(
         public dialogRef: MatDialogRef<UploadNodeLogsDialogComponent>,
         private changeDetector: ChangeDetectorRef,
-        private backgroundTaskService: BackgroundTaskService,
+        private activityService: ActivityService,
         private nodeService: NodeService,
         private accountService: AccountService,
         private autoStorageService: AutoStorageService,
@@ -111,31 +112,50 @@ export class UploadNodeLogsDialogComponent {
         return obs;
     }
 
+    /**
+     * Watch the specified container for log file uploads from the node,
+     * and continuously report status to the activity service
+     * @param container the Azure Storage container url that we are uploading files to
+     * @param folder the name of the virtual directory where these files are being stored
+     * @param numberOfFiles the number of files we are uploading
+     */
     private _watchUpload(container: string, folder: string, numberOfFiles: number) {
-        this.backgroundTaskService.startTask("Node logs uploading", (task) => {
-            const done = new AsyncSubject();
-            const sub = interval(5000).pipe(
+        // the initializer calls the storage service, lists the uploaded files
+        // and maps this to a progress number to report to the activity
+        const initializer = () => {
+            const watch = timer(0, 5000).pipe(
                 flatMap(() => this.autoStorageService.get()),
                 flatMap((storageAccountId) => {
                     return this.storageBlobService.list(storageAccountId, container, {
                         folder: CloudPathUtils.asBaseDirectory(folder),
-                    }, true);
+                    });
                 }),
-            ).subscribe((blobs) => {
-                const uploaded = blobs.items.size;
-                if (uploaded >= numberOfFiles) {
-                    task.progress.next(100);
-                    done.complete();
-                    sub.unsubscribe();
-                    this._notifyLogUploaded(container, folder, numberOfFiles);
-                } else {
-                    task.name.next(`Node logs uploading (${uploaded}/${numberOfFiles})`);
-                    task.progress.next(uploaded / numberOfFiles * 100);
-                }
-            });
+                takeWhile((blobs) => blobs.items.size < numberOfFiles),
+                map((blobs) => {
+                    const progress = (blobs.items.size / numberOfFiles) * 100;
+                    return new ActivityResponse(progress);
+                }),
+                share(),
+            );
 
-            return done;
+            const firstTick = of(new ActivityResponse());
+
+            return concat(firstTick, watch);
+        };
+
+        initializer().subscribe({
+            complete: () => {
+                this._notifyLogUploaded(container, folder, numberOfFiles);
+            },
         });
+
+        // create the main listening activity
+        const mainName = `Uploading ${numberOfFiles} log files ` +
+            `for node '${this.node.id}' of pool '${this.pool.id}' to '${container}'`;
+        const mainActivity = new Activity(mainName, initializer);
+        this.activityService.exec(mainActivity);
+
+        return mainActivity.done;
     }
 
     private _notifyLogUploaded(container: string, folder: string, numberOfFiles: number) {

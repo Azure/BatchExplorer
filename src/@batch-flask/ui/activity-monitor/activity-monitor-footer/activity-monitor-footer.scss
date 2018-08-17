@@ -9,7 +9,7 @@
     }
 }
 
-bl-background-task-tracker {
+bl-activity-monitor-footer {
     [bl-dropdown-btn] {
         width: 340px;
         padding: 0 5px;
@@ -24,13 +24,17 @@ bl-background-task-tracker {
         display: flex;
         align-items: center;
 
-        > bl-background-task-tracker-item  {flex: 1;};
+        > bl-activity-monitor-footer-item  {flex: 1;};
 
         > .other-task-count {
-            width: 20px;
+            width: 21px;
+            height: 21px;
             margin: 0 10px;
             background: $whiteSmoke;
             border-radius: 10px;
+            color: $primary-color;
+            font-weight: bold;
+            line-height: 21px;
         }
     }
 
@@ -38,7 +42,7 @@ bl-background-task-tracker {
         animation: flash 1s infinite;
     }
 
-    bl-background-task-tracker-item {
+    bl-activity-monitor-footer-item {
         display: flex;
         align-items: center;
         width: 100%;

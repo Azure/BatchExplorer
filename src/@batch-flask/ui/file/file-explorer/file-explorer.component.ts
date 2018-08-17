@@ -1,12 +1,12 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output,
 } from "@angular/core";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { FileNavigator, FileTreeNode } from "@batch-flask/ui/file/file-navigator";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { SplitPaneConfig } from "@batch-flask/ui/split-pane";
-import { FileUrlUtils, log } from "@batch-flask/utils";
+import { FileUrlUtils } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
 import { CurrentNode, FileExplorerWorkspace, FileSource, OpenedFile } from "./file-explorer-workspace";
 
@@ -105,8 +105,8 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
 
     constructor(
         private changeDetector: ChangeDetectorRef,
-        private backgroundTaskService: BackgroundTaskService,
-        private dialogService: DialogService) {
+        private dialogService: DialogService,
+        private activityService: ActivityService) {
         this._updateSplitPanelConfig();
     }
 
@@ -167,26 +167,27 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
             description: description,
             yes: () => {
                 if (event.isDirectory) {
-                    const taskTitle = `Deleting folder ${event.path}`;
-                    this.backgroundTaskService.startTask(taskTitle, (task) => {
-                        const obs = event.navigator.deleteFolder(event.path);
-                        obs.subscribe({
-                            next: (progress) => {
-                                task.name.next(`${taskTitle} (${progress.deleted + 1}/${progress.total})`);
-                                task.progress.next((progress.deleted + 1) / progress.total * 100);
-                            },
-                            error: (error) => {
-                                log.error("Failed to delete blob", error);
-                            },
-                            complete: () => {
-                                task.progress.next(100);
-                            },
-                        });
-                        return obs;
-                    });
-                    return null;
+                    const name = `Deleting folder ${event.path}`;
+
+                    // get the initializer for a folder deletion activity from the FileNavigator
+                    const initializer = () => {
+                        return event.navigator.createFolderDeletionActivityInitializer(event.path);
+                    };
+
+                    // create a folder deletion activity, and run it
+                    const activity = new Activity (name, initializer);
+                    this.activityService.exec(activity);
                 } else {
-                    return event.navigator.deleteFile(event.path);
+                    const name = `Deleting file ${event.path}`;
+
+                    // if the event is not a directory, create a simple file deletion activity
+                    const initializer = () => {
+                        return event.navigator.deleteFile(event.path);
+                    };
+
+                    // run the activity
+                    const activity = new Activity(name, initializer);
+                    this.activityService.exec(activity);
                 }
             },
         });

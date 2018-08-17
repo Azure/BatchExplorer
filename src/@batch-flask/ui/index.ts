@@ -1,6 +1,5 @@
 export * from "./electron";
 export * from "./batch-flask-settings";
-export * from "./background-task";
 export * from "./buttons";
 export * from "./charts";
 export * from "./dialogs";
@@ -20,4 +19,5 @@ export * from "./permission";
 export * from "./vtabs";
 export * from "./entity-commands";
 export * from "./table";
+export * from "./activity-monitor";
 export * from "./workspace";

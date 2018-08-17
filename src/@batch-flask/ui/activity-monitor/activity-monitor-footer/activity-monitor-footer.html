@@ -1,0 +1,16 @@
+<bl-dropdown [footer]="true" align="right">
+    <div bl-dropdown-btn [class.flash]="showFlash">
+        <div *ngIf="currentActivity" class="current-task">
+            <bl-activity-monitor-footer-item [activity]="currentActivity"></bl-activity-monitor-footer-item>
+            <div class="other-task-count" *ngIf="otherActivities.length > 0">+{{otherActivities.length}}</div>
+        </div>
+        <div *ngIf="!currentActivity">
+            No current background tasks
+        </div>
+    </div>
+    <div bl-dropdown-content>
+        <div *ngFor="let task of otherActivities;trackBy: trackByFn" class="dropdown-item">
+            <bl-activity-monitor-footer-item [activity]="currentActivity"></bl-activity-monitor-footer-item>
+        </div>
+    </div>
+</bl-dropdown>

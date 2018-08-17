@@ -3,7 +3,6 @@ import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
@@ -14,7 +13,6 @@ import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 import {
-    DeleteJobAction,
     JobCommands,
     PatchJobComponent,
 } from "../action";
@@ -44,8 +42,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         changeDetector: ChangeDetectorRef,
         public commands: JobCommands,
         private sidebarManager: SidebarManager,
-        private jobService: JobService,
-        private taskManager: BackgroundTaskService) {
+        private jobService: JobService) {
         super(changeDetector);
         this.data = this.jobService.listView(this._baseOptions);
         ComponentUtils.setActiveItem(activatedRoute, this.data);
@@ -135,10 +132,6 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     }
 
     public deleteSelection(selection: ListSelection) {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteJobAction(this.jobService, [...this.selection.keys]);
-            task.start(backgroundTask);
-            return task.waitingDone;
-        });
+        this.commands.delete.executeFromSelection(selection).subscribe();
     }
 }

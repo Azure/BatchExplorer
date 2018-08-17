@@ -1,22 +1,21 @@
 import { Component, Input, OnDestroy, ViewChild } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import { FileDropEvent, FileSystemService } from "@batch-flask/ui";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
-import { NotificationService } from "@batch-flask/ui/notifications";
-import { log } from "@batch-flask/utils";
+import * as path from "path";
+import { Observable, Subscription, from } from "rxjs";
+
+import { Activity, ActivityService, FileDropEvent, FileSystemService } from "@batch-flask/ui";
 import { BlobFilesBrowserComponent } from "app/components/file/browse";
 import { BlobContainer } from "app/models";
 import { StorageBlobService, StorageContainerService } from "app/services/storage";
 import { CloudPathUtils } from "app/utils";
-import * as path from "path";
-import { Subscription, from } from "rxjs";
-import { flatMap, shareReplay } from "rxjs/operators";
+import { map } from "rxjs/operators";
 
 @Component({
     selector: "bl-data-container-files",
     templateUrl: "data-container-files.html",
 })
 export class DataContainerFilesComponent implements OnDestroy {
+
     @ViewChild("blobExplorer")
     public blobExplorer: BlobFilesBrowserComponent;
 
@@ -29,8 +28,7 @@ export class DataContainerFilesComponent implements OnDestroy {
         private fs: FileSystemService,
         private storageContainerService: StorageContainerService,
         private storageBlobService: StorageBlobService,
-        private backgroundTaskService: BackgroundTaskService,
-        private notificationService: NotificationService) {
+        private activityService: ActivityService) {
 
         this._onGroupUpdatedSub = this.storageContainerService.onContainerAdded.subscribe(() => {
             this.blobExplorer.refresh();
@@ -42,39 +40,37 @@ export class DataContainerFilesComponent implements OnDestroy {
     }
 
     @autobind()
-    public handleFileUpload(event: FileDropEvent) {
+    public handleFileUpload(event: FileDropEvent): Observable<any> {
         const container = this.container.name;
-        return from(this._getFilesToUpload(event.files)).pipe(
-            flatMap((files) => {
-                const message = `Uploading ${files.length} files to ${container}`;
-                return this.backgroundTaskService.startTask(message, (task) => {
-                    const observable = this.storageBlobService.uploadFiles(this.storageAccountId,
-                        this.container.name, files, event.path);
-                    let lastData;
-                    observable.subscribe({
-                        next: (data) => {
-                            lastData = data;
-                            const { uploaded, total, current } = data;
-                            const name = path.basename(current.localPath);
-                            task.name.next(`Uploading ${name} to ${container} (${uploaded}/${total})`);
-                            task.progress.next(data.uploaded / data.total * 100);
-                        },
-                        complete: () => {
-                            task.progress.next(100);
-                            const message = `${lastData.uploaded} files were successfully uploaded to the file group`;
-                            this.notificationService.success("Added files to group", message);
-                        },
-                        error: (error) => {
-                            log.error("Failed to create form group", error);
-                        },
+        const initializer = () => {
+            return from(this._getFilesToUpload(event.files)).pipe(
+                map(fileList => {
+                    return fileList.map(file => {
+                        const filename = path.basename(file.localPath);
+                        const activity = new Activity(`Uploading ${filename} to ${container}`, () => {
+                            return this.storageBlobService.uploadFile(
+                                this.storageAccountId,
+                                container,
+                                file.localPath,
+                                file.remotePath,
+                            );
+                        });
+                        activity.done.subscribe(() => this.blobExplorer.refresh());
+                        return activity;
                     });
+                }),
+            );
+        };
 
-                    return observable;
-                });
+        return from(this._getFilesToUpload(event.files)).pipe(
+            map(fileList => {
+                const name = `Uploading ${fileList.length} items to ${container}`;
+                const activity = new Activity(name, initializer);
+                this.activityService.exec(activity);
+                activity.done.subscribe(() => this.blobExplorer.refresh());
+                return activity.done;
             }),
-            shareReplay(1),
         );
-
     }
 
     private async _getFilesToUpload(files: any[]) {

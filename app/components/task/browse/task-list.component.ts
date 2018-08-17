@@ -9,12 +9,11 @@ import { TaskListDisplayComponent } from "./display";
 import { ActivatedRoute } from "@angular/router";
 import { Filter, ListView,  autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Task } from "app/models";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
 import { ComponentUtils } from "app/utils";
-import { DeleteTaskAction, TaskCommands } from "../action";
+import { TaskCommands } from "../action";
 
 @Component({
     selector: "bl-task-list",
@@ -49,8 +48,7 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
         public commands: TaskCommands,
         private taskService: TaskService,
         activatedRoute: ActivatedRoute,
-        private changeDetectorRef: ChangeDetectorRef,
-        private taskManager: BackgroundTaskService) {
+        private changeDetectorRef: ChangeDetectorRef) {
         super(changeDetectorRef);
         this.data = this.taskService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
@@ -98,10 +96,6 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
     }
 
     public deleteSelection(selection: ListSelection) {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteTaskAction(this.taskService, this.jobId, [...selection.keys]);
-            task.start(backgroundTask);
-            return task.waitingDone;
-        });
+        this.commands.delete.executeFromSelection(selection).subscribe();
     }
 }

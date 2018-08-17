@@ -6,8 +6,8 @@ import { MaterialModule } from "@batch-flask/core";
 
 // components
 import { WorkspaceModule } from "@batch-flask/ui/workspace";
+import { ActivityModule } from "./activity-monitor";
 import { AdvancedFilterModule } from "./advanced-filter";
-import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
 import { BatchFlaskSettingsModule } from "./batch-flask-settings";
 import { BreadcrumbModule } from "./breadcrumbs";
@@ -30,9 +30,7 @@ import { GraphsModule } from "./graphs";
 import { I18nUIModule } from "./i18n";
 import { IconComponent } from "./icon";
 import { InfoBoxModule } from "./info-box";
-import {
-    DeleteSelectedItemsDialogComponent, EntityDetailsListComponent,
-} from "./list-and-show-layout";
+import { EntityDetailsListComponent } from "./list-and-show-layout";
 import { LoadingModule } from "./loading";
 import { MetricsMonitorModule } from "./metrics-monitor";
 import { NotificationModule } from "./notifications";
@@ -56,12 +54,12 @@ import { VTabsModule } from "./vtabs";
 
 // Add submodules there
 const modules = [
+    ActivityModule,
     AdvancedFilterModule,
     BatchFlaskSettingsModule,
     BreadcrumbModule,
     BrowseLayoutModule,
     ButtonsModule,
-    BackgroundTaskModule,
     CardModule,
     ChartsModule,
     ContextMenuModule,
@@ -107,13 +105,11 @@ const components = [
     DatetimePickerComponent,
     IconComponent,
     SimpleDialogComponent,
-    DeleteSelectedItemsDialogComponent,
 ];
 
 @NgModule({
     declarations: components,
     entryComponents: [
-        DeleteSelectedItemsDialogComponent,
         SimpleDialogComponent,
     ],
     exports: [...modules, ...components],

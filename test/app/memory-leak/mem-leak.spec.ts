@@ -21,8 +21,6 @@ export function main() {
                         //     NotificationModule,
                         // ],
                         declarations: [
-                            // BackgroundTaskTrackerComponent,
-                            // BackgroundTaskTrackerItemComponent,
                             TestBigComponent,
                             TestComponent,
                         ],
