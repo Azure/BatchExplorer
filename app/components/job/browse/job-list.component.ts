@@ -134,8 +134,4 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     public deleteSelection(selection: ListSelection) {
         this.commands.delete.executeFromSelection(selection).subscribe();
     }
-
-    public trackByFn(index: number, job: Job) {
-        return job.id;
-    }
 }

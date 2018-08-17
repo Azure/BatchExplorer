@@ -1,16 +1,21 @@
 <bl-focus-section>
-    <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()"  [commands]="commands">
-        <bl-quick-list-item *ngFor="let application of displayedApplications;trackBy: trackByFn" [link]="['/applications/', application.id]"
-            [key]="application.id">
-            <bl-quick-list-item-status [status]="appStatus(application)">
-            </bl-quick-list-item-status>
+    <bl-quick-list *ngIf="quicklist"
+        [data]="displayedApplications"
+        [status]="status"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        [commands]="commands"
+        (scrollBottom)="onScrollToBottom()">
 
-            <div bl-quick-list-item-title>{{application.id}}</div>
-            <p bl-quick-list-item-field>{{application.packages?.size}} packages</p>
-            <div bl-quick-list-item-preview>
-                <bl-application-preview [application]="application"></bl-application-preview>
-            </div>
-        </bl-quick-list-item>
+        <ng-container *blQuickListRowStatus="let application">
+            <bl-quick-list-item-status [status]="appStatus(application)"></bl-quick-list-item-status>
+        </ng-container>
+        <ng-container *blQuickListRowTitle="let application">{{application.id}}</ng-container>
+        <ng-container *blQuickListRowState="let application">{{application.packages?.size}} packages</ng-container>
+
+        <ng-container *blQuickListRowExtra="let application">
+            <bl-application-preview [application]="application"></bl-application-preview>
+        </ng-container>
     </bl-quick-list>
 
     <bl-table *ngIf="!quicklist"

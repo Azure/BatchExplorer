@@ -129,8 +129,4 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
     public deleteSelection(selection: ListSelection): void {
         this.commands.delete.executeFromSelection(selection).subscribe();
     }
-
-    public trackFileGroup(index, fileGroup: BlobContainer) {
-        return fileGroup.id;
-    }
 }

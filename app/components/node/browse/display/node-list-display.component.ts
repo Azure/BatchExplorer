@@ -44,8 +44,4 @@ export class NodeListDisplayComponent extends ListBaseComponent {
         }
         return false;
     }
-
-    public trackNode(index, node: Node) {
-        return node.id;
-    }
 }

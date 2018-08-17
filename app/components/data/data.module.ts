@@ -9,7 +9,7 @@ import {
 } from "app/components/data/action";
 import { DataSharedModule } from "app/components/data/shared";
 import { FileBrowseModule } from "app/components/file/browse";
-import { DataContainerListComponent, FileGroupPreviewComponent } from "./browse";
+import { DataContainerListComponent } from "./browse";
 import {
     DataContainerConfigurationComponent,
     DataContainerFilesComponent,
@@ -27,7 +27,6 @@ const components = [
     DeleteContainerDialogComponent,
     DataContainerListComponent,
     FileGroupOptionsPickerComponent,
-    FileGroupPreviewComponent,
 ];
 
 @NgModule({

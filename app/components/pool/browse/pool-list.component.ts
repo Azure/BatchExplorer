@@ -102,8 +102,4 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     public deleteSelection(selection: ListSelection) {
         this.commands.delete.executeFromSelection(selection).subscribe();
     }
-
-    public trackById(index, pool) {
-        return pool.id;
-    }
 }

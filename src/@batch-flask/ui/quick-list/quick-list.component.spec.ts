@@ -8,10 +8,18 @@ import { BreadcrumbModule } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import {
-    QuickListComponent, QuickListItemComponent, QuickListItemStatusComponent,
+    QuickListComponent,
+    QuickListItemStatusComponent,
 } from "@batch-flask/ui/quick-list";
 import { VirtualScrollTestingModule } from "@batch-flask/ui/testing";
 import { ButtonClickEvents, click, sendEvent } from "test/utils/helpers";
+import {
+    QuickListRowExtraDirective,
+    QuickListRowStateDirective,
+    QuickListRowStatusDirective,
+    QuickListRowTitleDirective,
+} from "./quick-list-row-def";
+import { QuickListRowRenderComponent } from "./quick-list-row-render";
 
 interface TestItem {
     id: string;
@@ -21,10 +29,8 @@ interface TestItem {
 @Component({
     template: `
         <bl-focus-section #focusSection style="height: 1000px">
-            <bl-quick-list>
-                <bl-quick-list-item *ngFor="let item of items" [key]="item.id">
-                    <div bl-quick-list-item-title>{{item.name}}</div>
-                </bl-quick-list-item>
+            <bl-quick-list [data]="items">
+                <ng-container *blQuickListRowTitle="let item">{{item.name}}</ng-container>
             </bl-quick-list>
         </bl-focus-section>
     `,
@@ -33,7 +39,7 @@ class TestComponent {
     @ViewChild("focusSection")
     public focusSection: FocusSectionComponent;
 
-    public items: TestItem[] = [
+    public items: Iterable<TestItem> = [
         { id: "item-1", name: "Item 1" },
         { id: "item-2", name: "Item 2" },
         { id: "item-3", name: "Item 3" },
@@ -58,7 +64,11 @@ describe("QuickListComponent", () => {
             declarations: [
                 TestComponent, FocusSectionComponent,
                 QuickListComponent,
-                QuickListItemComponent,
+                QuickListRowTitleDirective,
+                QuickListRowRenderComponent,
+                QuickListRowStatusDirective,
+                QuickListRowStateDirective,
+                QuickListRowExtraDirective,
                 QuickListItemStatusComponent,
             ],
             providers: [
@@ -73,7 +83,7 @@ describe("QuickListComponent", () => {
         quicklist.activeItemChange.subscribe(x => activeItemKey = x);
         quicklist.selectionChange.subscribe(x => selection = x);
         fixture.detectChanges();
-        items = de.queryAll(By.css(".quick-list-item"));
+        items = de.queryAll(By.css("bl-quick-list-row-render"));
     });
 
     it("should display all the content", () => {
@@ -89,7 +99,7 @@ describe("QuickListComponent", () => {
         click(items[1]);
         fixture.detectChanges();
         expect(activeItemKey).toEqual("item-2");
-        expect(items[1].componentInstance.active).toBe(true);
+        expect(items[1].componentInstance.selected).toBe(true);
 
         expect(selection.keys.size).toBe(1, "Should also select the item");
         expect(selection.keys.has("item-2")).toBe(true, "Should also select the item");
@@ -104,6 +114,29 @@ describe("QuickListComponent", () => {
         expect(quicklist.focusedItem.value).toEqual("item-2");
     });
 
+    it("show no items when data is not set", async () => {
+        testComponent.items = undefined;
+        fixture.detectChanges();
+        await fixture.whenStable();
+        items = de.queryAll(By.css("bl-quick-list-row-render"));
+        expect(items.length).toBe(0);
+    });
+
+    it("show items when data is a set", async () => {
+        testComponent.items = new Set([
+            { id: "item-2", name: "Item 2" },
+            { id: "item-3", name: "Item 3" },
+            { id: "item-5", name: "Item 5" },
+        ]);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        items = de.queryAll(By.css("bl-quick-list-row-render"));
+        expect(items.length).toBe(3);
+        expect(items[0].nativeElement.textContent).toContain("Item 2");
+        expect(items[1].nativeElement.textContent).toContain("Item 3");
+        expect(items[2].nativeElement.textContent).toContain("Item 5");
+    });
+
     describe("When an item is active", () => {
         beforeEach(() => {
             quicklist.activeItem = "item-2";
@@ -111,7 +144,7 @@ describe("QuickListComponent", () => {
         });
 
         it("Should have item initialy active", () => {
-            expect(items[1].componentInstance.active).toBe(true);
+            expect(items[1].componentInstance.selected).toBe(true);
         });
 
         it("Shift click should select all items between current active and clicked", () => {

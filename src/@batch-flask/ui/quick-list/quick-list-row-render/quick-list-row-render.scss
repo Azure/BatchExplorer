@@ -1,9 +1,6 @@
 @import "app/styles/variables";
 
-//
-// outline: none;
-
-.quick-list-item {
+bl-quick-list-row-render {
     cursor: pointer;
     display: flex;
     width: 100%;
@@ -13,12 +10,12 @@
     &.selected {
         background-color: $primary-color-light;
 
-        [bl-quick-list-item-title] {
+        .quick-list-row-title {
             font-size: 14px;
             color: $card-background;
         }
 
-        [bl-quick-list-item-field] {
+        .quick-list-row-state {
             color: $card-background;
         }
     }
@@ -31,12 +28,12 @@
         background-color: $selection-color;
     }
 
-    [bl-quick-list-item-title] {
+    .quick-list-row-title {
         font-size: 14px;
         color: $primary-text;
     }
 
-    [bl-quick-list-item-field] {
+    .quick-list-row-state {
         color: $secondary-text;
     }
 
@@ -48,7 +45,7 @@
         min-width: 0;
 
 
-        [bl-quick-list-item-title], [bl-quick-list-item-field] {
+        .quick-list-row-title, .quick-list-row-state {
             display: flex;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -59,7 +56,7 @@
         }
     }
 
-    [bl-quick-list-item-preview] {
+    .quick-list-row-extra {
         padding: 5px;
 
         i {
@@ -117,13 +114,13 @@
         text-overflow: ellipsis;
         min-width: 0;
 
-        [bl-quick-list-item-title], [bl-quick-list-item-field] {
+        .quick-list-row-title, .quick-list-row-state {
             overflow: hidden;
             text-overflow: ellipsis;
         }
     }
 
-    [bl-quick-list-item-preview] {
+    .quick-list-row-extra {
         padding: 3px 10px 0 0;
     }
 
