@@ -7,14 +7,12 @@ import {
     HostBinding,
     HostListener,
     Input,
-    OnChanges,
     OnDestroy,
     Optional,
     Output,
     QueryList,
     ViewChild,
 } from "@angular/core";
-import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { Router } from "@angular/router";
@@ -72,15 +70,13 @@ export interface DropEvent {
     templateUrl: "table.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent extends AbstractListBase implements AfterContentInit, OnChanges, OnDestroy {
+export class TableComponent extends AbstractListBase implements AfterContentInit, OnDestroy {
     @Input() public set config(config: TableConfig) {
         this._config = { ...tableDefaultConfig, ...config };
     }
     public get config() { return this._config; }
 
     @Output() public dropOnRow = new EventEmitter<DropEvent>();
-
-    @Input() public data: List<any> | any[] = List([]);
 
     @ViewChild(TableHeadComponent) public head: TableHeadComponent;
     @ContentChildren(TableColumnComponent) public columnComponents: QueryList<TableColumnComponent>;
@@ -119,12 +115,6 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
             this._sortingInfo = sortingInfo;
         });
         this.changeDetector.markForCheck();
-    }
-
-    public ngOnChanges(changes) {
-        if (changes.data) {
-            this.updateDisplayedItems();
-        }
     }
 
     public ngOnDestroy() {
@@ -192,7 +182,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
 
     protected computeDisplayedItems() {
         const sortingInfo = this._sortingInfo;
-        const items = this._getItems();
+        const items = [];
         if (!sortingInfo) {
             return items;
         }
@@ -203,18 +193,6 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
             return items;
         }
         return this._sortItems(items, column, sortingInfo.direction);
-    }
-
-    private _getItems() {
-        if (!this.data) {
-            return [];
-        } else if (this.data instanceof List) {
-            return (this.data as List<any>).toArray();
-        } else if (Array.isArray(this.data)) {
-            return this.data;
-        } else {
-            return [...this.data as any];
-        }
     }
 
     private _sortItems(items: any[], column: TableColumnRef, direction: SortDirection): any[] {

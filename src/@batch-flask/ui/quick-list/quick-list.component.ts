@@ -21,7 +21,6 @@ import {
 
 import { Router } from "@angular/router";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
-import { List } from "immutable";
 
 import "./quick-list.scss";
 
@@ -30,8 +29,7 @@ import "./quick-list.scss";
     templateUrl: "quick-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class QuickListComponent extends AbstractListBase implements OnChanges {
-    @Input() public data: List<any> | any[] = List([]);
+export class QuickListComponent extends AbstractListBase {
     @ContentChild(QuickListRowStatusDirective, { read: TemplateRef }) public statusDef: TemplateRef<any>;
     @ContentChild(QuickListRowTitleDirective, { read: TemplateRef }) public titleDef: TemplateRef<any>;
     @ContentChild(QuickListRowStateDirective, { read: TemplateRef }) public stateDef: TemplateRef<any>;
@@ -46,21 +44,4 @@ export class QuickListComponent extends AbstractListBase implements OnChanges {
         super(contextMenuService, router, breadcrumbService, changeDetector, focusSection);
     }
 
-    public ngOnChanges(changes) {
-        if (changes.data) {
-            this.items = this._getItems();
-        }
-    }
-
-    private _getItems() {
-        if (!this.data) {
-            return [];
-        } else if (this.data instanceof List) {
-            return (this.data as List<any>).toArray();
-        } else if (Array.isArray(this.data)) {
-            return this.data;
-        } else {
-            return [...this.data as any];
-        }
-    }
 }

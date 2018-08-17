@@ -1,19 +1,24 @@
 import {
-    ChangeDetectorRef, EventEmitter,
-    HostBinding, Input, OnDestroy, Output, ViewChild,
+    ChangeDetectorRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    OnDestroy,
+    Output,
 } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { Router } from "@angular/router";
-import { ListKeyNavigator, autobind } from "@batch-flask/core";
+import { ListKeyNavigator, ListView, autobind } from "@batch-flask/core";
 import { ENTER, SPACE } from "@batch-flask/core/keys";
 import { ListSelection, SelectableList } from "@batch-flask/core/list";
+import { ListDataProvider } from "@batch-flask/ui/abstract-list/list-data-provider";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { EntityCommands } from "@batch-flask/ui/entity-commands";
 import { LoadingStatus } from "@batch-flask/ui/loading";
+import { List } from "immutable";
 import { FocusSectionComponent } from "../focus-section";
-import { VirtualScrollComponent } from "../virtual-scroll";
 import { AbstractListItem } from "./abstract-list-item";
 
 export interface AbstractListBaseConfig {
@@ -28,11 +33,17 @@ export interface AbstractListBaseConfig {
      * @default 0
      */
     scrollBottomBuffer?: number;
+
+    /**
+     * Force breadcrumb to be appended
+     */
+    forceBreadcrumb: boolean;
 }
 
 export const abstractListDefaultConfig: AbstractListBaseConfig = {
     activable: true,
     scrollBottomBuffer: 0,
+    forceBreadcrumb: false,
 };
 
 /**
@@ -44,17 +55,19 @@ export const abstractListDefaultConfig: AbstractListBaseConfig = {
  */
 export class AbstractListBase extends SelectableList implements OnDestroy {
     public LoadingStatus = LoadingStatus;
-    @Output() public scrollBottom = new EventEmitter();
     @Input() public commands: EntityCommands<any>;
-    @Input() public forceBreadcrumb = false;
+
+    @Input() public set data(
+        data: ListView<AbstractListItem, any> | List<AbstractListItem> | Iterable<AbstractListItem>) {
+        this._dataProvider.data = data;
+    }
+    @Input() public status: LoadingStatus;
 
     public set items(items: any[]) {
         this._items = items;
         this._updateDisplayItems();
     }
     public get items() { return this._items; }
-
-    @ViewChild(VirtualScrollComponent) public virtualScrollComponent: VirtualScrollComponent;
 
     /**
      * List of items to display(Which might be different from the full items list because of sorting and other)
@@ -71,7 +84,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     }
     public get config() { return this._config; }
 
-    @Input() public status: LoadingStatus;
+    @Output() public scrollBottom = new EventEmitter();
 
     @HostBinding("style.display")
     public get showComponent() {
@@ -93,6 +106,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     private _subs: Subscription[] = [];
     private _items: any[] = [];
+    private _dataProvider: ListDataProvider;
     private _keyNavigator: ListKeyNavigator<AbstractListItem>;
 
     constructor(
@@ -102,19 +116,24 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         changeDetection: ChangeDetectorRef,
         focusSection: FocusSectionComponent) {
         super(changeDetection);
+        this._initKeyNavigator();
 
+        this._dataProvider = new ListDataProvider();
         if (focusSection) {
             this._subs.push(focusSection.keypress.subscribe(this.keyPressed));
             this._subs.push(focusSection.onFocus.subscribe(this.onFocus));
             this._subs.push(focusSection.onBlur.subscribe(this.onBlur));
         }
 
-        this._initKeyNavigator();
+        this._dataProvider.items.subscribe((items) => {
+            this.items = items;
+        });
+
     }
 
     public ngOnDestroy() {
         this._subs.forEach((x) => x.unsubscribe());
-
+        this._dataProvider.dispose();
         if (this._keyNavigator) {
             this._keyNavigator.dispose();
         }
@@ -288,7 +307,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         if (!item) { return; }
         const link = item.routerLink;
         if (link) {
-            if (this.forceBreadcrumb) {
+            if (this.config.forceBreadcrumb) {
                 this.breadcrumbService.navigate(link);
             } else {
                 this.router.navigate(link);
@@ -348,4 +367,5 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             this.changeDetector.markForCheck();
         });
     }
+
 }
