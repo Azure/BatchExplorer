@@ -1,0 +1,12 @@
+bl-activity-monitor-item {
+    .item-container {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        min-height: 10px;
+
+        .icon-container {
+            margin: 0 20px;
+        }
+    }
+}

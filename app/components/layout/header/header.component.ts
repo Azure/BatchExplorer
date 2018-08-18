@@ -6,8 +6,8 @@ import {
     HostBinding,
     OnDestroy,
 } from "@angular/core";
-import { CurrentBrowserWindow, OSService } from "@batch-flask/ui";
-import { Subscription } from "rxjs";
+import { Activity, ActivityService, CurrentBrowserWindow, OSService } from "@batch-flask/ui";
+import { AsyncSubject, Subscription, of } from "rxjs";
 
 import "./header.scss";
 
@@ -30,7 +30,8 @@ export class HeaderComponent implements OnDestroy {
         private location: Location,
         window: CurrentBrowserWindow,
         os: OSService,
-        private changeDetector: ChangeDetectorRef) {
+        private changeDetector: ChangeDetectorRef,
+        private activityService: ActivityService) {
 
         this._isOsx = os.isOSX();
         this._sub = window.fullScreen.subscribe((fullScreen) => {
@@ -49,5 +50,18 @@ export class HeaderComponent implements OnDestroy {
 
     public goForward() {
         this.location.forward();
+    }
+
+    // TODO DELETE BEFORE PR
+    public newFakeActivity() {
+        const name = `Fake activity ${Math.floor(Math.random() * 1000)}`;
+        const activity = new Activity(name, () => {
+            return of([
+                new Activity("fake child 1", () => of(null)),
+                new Activity("fake child 2", () => new AsyncSubject()),
+            ]);
+        });
+
+        this.activityService.exec(activity);
     }
 }

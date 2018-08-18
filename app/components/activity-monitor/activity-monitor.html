@@ -12,6 +12,11 @@
         <div class="section-header">
             <div class="label">Running Activities</div>
         </div>
+        <div class="activity-list">
+            <div class="single-activity" *ngFor="let activity of runningActivities; trackBy: trackByFn">
+                <bl-activity-monitor-item [activity]="activity"></bl-activity-monitor-item>
+            </div>
+        </div>
     </div>
     <div class="completed-activities">
         <div class="section-header">

@@ -23,9 +23,10 @@ bl-activity-monitor {
         flex-direction: column;
         height: $activity-monitor-content-height;
         width: 98%;
+        overflow-y: scroll;
+        overflow-x: hidden;
 
         > .running-activities, > .completed-activities {
-            flex: 1;
             margin: 0 10px;
             min-height: 100px;
             width: 100%;

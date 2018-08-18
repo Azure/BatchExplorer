@@ -1,0 +1,15 @@
+<div class="item-container">
+    <div class="icon-container">
+        <i class="fa fa-ellipsis-h" *ngIf="status===statusOptions.Pending"></i>
+        <i class="fa fa-spinner fa-pulse" *ngIf="status===statusOptions.InProgress"></i>
+        <i class="fa fa-check" *ngIf="status===statusOptions.Completed"></i>
+    </div>
+    <div class="name">{{activity.name}}</div>
+    <div class="icon-container" *ngIf="subactivities.length">
+        <i class="fa fa-angle-right"></i>
+    </div>
+    <div class="icon-container">
+        <i class="fa fa-times" *ngIf="!completed"></i>
+        <i class="fa fa-refresh" *ngIf="completed"></i>
+    </div>
+</div>
