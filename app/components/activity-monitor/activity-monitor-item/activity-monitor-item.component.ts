@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output } from "@angular/core";
 import { Activity, ActivityStatus } from "@batch-flask/ui/activity-monitor";
 
 import "./activity-monitor-item.scss";
@@ -23,6 +23,8 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges {
         this._status = null;
     }
 
+    /* Angular Life Cycle Functions*/
+
     public ngOnInit() {
         this.activity.statusSubject.subscribe(status => {
             this._status = status;
@@ -37,6 +39,8 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges {
             this.hovering = changes.hovering.currentValue;
         }
     }
+
+    /* Template Getters */
 
     public get subactivities() {
         return this.activity.subactivities;
@@ -64,8 +68,43 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges {
         return (this.indent * 30) + "px";
     }
 
+    /* Key Navigation */
+    @HostListener("window:keydown", ["$event"])
+    public handleKeyDown(event: KeyboardEvent) {
+        switch (event.keyCode) {
+            case 37:                // left arrow
+                this._collapse();
+                break;
+            case 39:                // right arrow
+                this._expand();
+                break;
+            // case 38:                // up arrow
+            //     this.focusPrev(this.activity.id);
+            //     break;
+            // case 40:                // down arrow
+            //     this.focusNext(this.activity.id);
+            //     break;
+            case 13:                // Enter key
+                event.preventDefault();
+                event.stopPropagation();
+                this.toggleExpand();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /* Change-of-state Functions */
+
     public toggleExpand() {
-        this.showSubactivities = !this.showSubactivities;
+        if (this.selectedId === this.activity.id) {
+            this.showSubactivities = !this.showSubactivities;
+            if (this.showSubactivities) {
+                this._expand();
+            } else {
+                this._collapse();
+            }
+        }
     }
 
     public hover() {
@@ -76,6 +115,8 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges {
         this.hovering = false;
     }
 
+    /* Event Emitters */
+
     public select() {
         this.selectedIdChange.emit(this.activity.id);
     }
@@ -85,5 +126,19 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges {
     public updateSelected(selectedId) {
         this.selectedId = selectedId;
         this.selectedIdChange.emit(selectedId);
+    }
+
+    /* Private Helper Methods */
+
+    private _expand() {
+        if (this.selectedId === this.activity.id) {
+            this.showSubactivities = true;
+        }
+    }
+
+    private _collapse() {
+        if (this.selectedId === this.activity.id) {
+            this.showSubactivities = false;
+        }
     }
 }
