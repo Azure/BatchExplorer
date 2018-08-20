@@ -1,30 +1,35 @@
-<div
-    [ngStyle]="{'padding-left': getIndent()}"
-    [ngClass]="{'item-container': true, 'selected': selected}"
-    (mouseenter)="select()"
-    (mouseleave)="unselect()"
->
-    <div class="icon-container pos-1">
-        <i class="fa fa-ellipsis-h" *ngIf="status===statusOptions.Pending"></i>
-        <i class="fa fa-spinner fa-pulse" *ngIf="status===statusOptions.InProgress"></i>
-        <i class="fa fa-check" *ngIf="status===statusOptions.Completed"></i>
+<div [ngClass]="{'activity-monitor-item-container': true, 'selected': selected}">
+    <div
+        [ngStyle]="{'padding-left': getIndent()}"
+        [ngClass]="{'item-container': true, 'hovering': !selected && hovering}"
+        (mouseenter)="hover()"
+        (mouseleave)="unhover()"
+        (click)="select()"
+    >
+        <div class="icon-container pos-1">
+            <i class="fa fa-ellipsis-h" *ngIf="status===statusOptions.Pending"></i>
+            <i class="fa fa-spinner fa-pulse" *ngIf="status===statusOptions.InProgress"></i>
+            <i class="fa fa-check" *ngIf="status===statusOptions.Completed"></i>
+        </div>
+        <div class="icon-container pos-2" *ngIf="subactivities.length" (click)="toggleExpand()">
+            <i class="fa fa-angle-right" *ngIf="!showSubactivities"></i>
+            <i class="fa fa-angle-down" *ngIf="showSubactivities"></i>
+        </div>
+        <div class="name pos-3">{{activity.name}}</div>
+        <div class="icon-container pos-4">
+            <i class="fa fa-times" *ngIf="!completed"></i>
+            <i class="fa fa-refresh" *ngIf="completed"></i>
+        </div>
     </div>
-    <div class="icon-container pos-2" *ngIf="subactivities.length" (click)="toggleExpand()">
-        <i class="fa fa-angle-right" *ngIf="!showSubactivities"></i>
-        <i class="fa fa-angle-down" *ngIf="showSubactivities"></i>
-    </div>
-    <div class="name pos-3">{{activity.name}}</div>
-    <div class="icon-container pos-4">
-        <i class="fa fa-times" *ngIf="!completed"></i>
-        <i class="fa fa-refresh" *ngIf="completed"></i>
-    </div>
-</div>
-<div class="subactivities" *ngIf="showSubactivities">
-    <div class="single-subactivity" *ngFor="let subactivity of subactivities; trackBy: trackByFn">
-        <bl-activity-monitor-item
-            [activity]="subactivity"
-            [indent]="indent+1"
-            [selected]="selected"
-        ></bl-activity-monitor-item>
+    <div class="subactivities" *ngIf="showSubactivities">
+        <div class="single-subactivity" *ngFor="let subactivity of subactivities; trackBy: trackByFn">
+            <bl-activity-monitor-item
+                [activity]="subactivity"
+                [indent]="indent+1"
+                [selectedId]="selectedId"
+                (selectedIdChange)="updateSelected($event)"
+                [hovering]="!selected && hovering"
+            ></bl-activity-monitor-item>
+        </div>
     </div>
 </div>

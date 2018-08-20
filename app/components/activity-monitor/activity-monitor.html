@@ -16,6 +16,7 @@
             <div class="single-activity" *ngFor="let activity of runningActivities; trackBy: trackByFn">
                 <bl-activity-monitor-item
                     [activity]="activity"
+                    [(selectedId)]="selectedId"
                 ></bl-activity-monitor-item>
             </div>
         </div>

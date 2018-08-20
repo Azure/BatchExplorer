@@ -21,7 +21,7 @@ export class ActivityCounters {
 export class Activity {
     public static idCounter: number = 0;
 
-    public id: string;
+    public id: number;
     public name: string;
     public statusSubject: BehaviorSubject<ActivityStatus>;
     public subactivities: Activity[];
@@ -37,7 +37,7 @@ export class Activity {
     private subtasksComplete: AsyncSubject<null>;
 
     constructor(name: string, initializerFn: () => Observable<ActivityResponse | Activity[] | any>) {
-        this.id = (Activity.idCounter++).toString();
+        this.id = Activity.idCounter++;
         this.name = name;
         this.subactivities = [];
 

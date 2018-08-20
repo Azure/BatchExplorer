@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
 import { Activity, ActivityStatus } from "@batch-flask/ui/activity-monitor";
 
 import "./activity-monitor-item.scss";
@@ -9,8 +9,10 @@ import "./activity-monitor-item.scss";
 })
 export class ActivityMonitorItemComponent implements OnInit, OnChanges {
     @Input() public activity: Activity;
+    @Input() public selectedId: number;
     @Input() public indent: number = 0;
-    @Input() public selected: boolean = false;
+    @Input() public hovering: boolean = false;
+    @Output() public selectedIdChange = new EventEmitter<number>();
 
     public statusOptions = ActivityStatus;
     public showSubactivities: boolean;
@@ -31,8 +33,8 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges {
         if (changes.indent) {
             this.indent = changes.indent.currentValue;
         }
-        if (changes.selected) {
-            this.selected = changes.selected.currentValue;
+        if (changes.hovering) {
+            this.hovering = changes.hovering.currentValue;
         }
     }
 
@@ -50,6 +52,10 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges {
             this.status === ActivityStatus.Canceled;
     }
 
+    public get selected() {
+        return this.activity.id === this.selectedId;
+    }
+
     public trackByFn(index, activity: Activity) {
         return activity.id;
     }
@@ -62,12 +68,22 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges {
         this.showSubactivities = !this.showSubactivities;
     }
 
-    public select() {
-        console.log("Hi");
-        this.selected = true;
+    public hover() {
+        this.hovering = true;
     }
 
-    public unselect() {
-        this.selected = false;
+    public unhover() {
+        this.hovering = false;
+    }
+
+    public select() {
+        this.selectedIdChange.emit(this.activity.id);
+    }
+
+    // N.B. this extra step seems to be needed, because event propagation
+    // doesn't work as expected with multiple layers of two-way binding
+    public updateSelected(selectedId) {
+        this.selectedId = selectedId;
+        this.selectedIdChange.emit(selectedId);
     }
 }

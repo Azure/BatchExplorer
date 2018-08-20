@@ -13,11 +13,11 @@ export class ActivityMonitorComponent implements OnInit {
     }
 
     public runningActivities: Activity[];
-    public activeId: number;
+    public selectedId: number;
 
     constructor(private activityService: ActivityService) {
         this.runningActivities = [];
-        this.activeId = 0;
+        this.selectedId = 0;
     }
 
     public ngOnInit() {
@@ -30,7 +30,5 @@ export class ActivityMonitorComponent implements OnInit {
         return activity.id;
     }
 
-    public setActive(activity) {
-        this.activeId = activity.id;
-    }
+    // TODO figure out why the event propagation pipeline is broken
 }

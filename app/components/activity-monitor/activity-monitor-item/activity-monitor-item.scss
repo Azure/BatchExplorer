@@ -1,55 +1,61 @@
 @import "app/styles/variables";
 
 bl-activity-monitor-item {
-    box-sizing: border-box;
-
-    .item-container {
-        display: flex;
-        align-items: center;
-        padding: 10px;
-        height: 40px;
-        position: relative;
-
+    .activity-monitor-item-container {
         &.selected {
-            background-color: $primary-color-light;
-            color: $primary-text;
+            background-color: $primary-color;
+            color: $primary-contrast-color;
         }
 
-        div {
-            position: absolute;
-        }
+        .item-container {
+            cursor: default;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            height: 40px;
+            position: relative;
 
-        .icon-container {
-            margin: 0 20px;
-
-            i {
-                font-size: 11pt;
+            &.hovering {
+                background-color: $primary-color-light;
+                color: $primary-text;
             }
 
-            .fa-angle-right, .fa-angle-down {
-                font-size: 14pt;
-                padding: 5px 10px;
+            div {
+                position: absolute;
             }
-        }
 
-        .pos-1 {
-            margin-left: 10px;
-        }
+            .icon-container {
+                margin: 0 20px;
 
-        .pos-2 {
-            margin-left: 40px;
+                i {
+                    font-size: 11pt;
+                }
 
-            .fa-angle-down {
-                padding-left: 6px;
+                .fa-angle-right, .fa-angle-down {
+                    font-size: 14pt;
+                    padding: 5px 10px;
+                }
             }
-        }
 
-        .pos-3 {
-            margin-left: 90px;
-        }
+            .pos-1 {
+                margin-left: 10px;
+            }
 
-        .pos-4 {
-            right: 0;
+            .pos-2 {
+                margin-left: 40px;
+
+                .fa-angle-down {
+                    padding-left: 6px;
+                }
+            }
+
+            .pos-3 {
+                margin-left: 90px;
+            }
+
+            .pos-4 {
+                right: 0;
+            }
         }
     }
 }
