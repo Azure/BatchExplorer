@@ -7,6 +7,7 @@ const defaultSettings: BatchFlaskSettings = {
         defaultView: EntityConfigurationView.pretty,
     },
     autoUpdateOnQuit: true,
+    fileTypes: {},
 };
 
 @Injectable()

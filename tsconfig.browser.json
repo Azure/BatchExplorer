@@ -3,7 +3,8 @@
   "exclude": [
     "**/*.spec.ts",
     "src/test/**/*.ts",
-    "test/**/*.ts"
+    "test/**/*.ts",
+    "**/testing**/*"
   ],
   "angularCompilerOptions": {
     "disableTypeScriptVersionCheck": true

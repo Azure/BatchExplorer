@@ -2,20 +2,17 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
-
-import { Filter, autobind } from "@batch-flask/core";
+import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { TableConfig } from "@batch-flask/ui/table";
 import { Pool } from "app/models";
 import { PoolListParams, PoolService } from "app/services";
-import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import { DeletePoolTask, PoolCommands } from "../action";
+import { List } from "immutable";
+import { Observable, Subscription } from "rxjs";
+import { PoolCommands } from "../action";
 
 import "./pool-list.scss";
 
@@ -44,8 +41,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         activatedRoute: ActivatedRoute,
         router: Router,
         public commands: PoolCommands,
-        changeDetector: ChangeDetectorRef,
-        private taskManager: BackgroundTaskService) {
+        changeDetector: ChangeDetectorRef) {
         super(changeDetector);
         this.data = this.poolService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
@@ -104,14 +100,6 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     }
 
     public deleteSelection(selection: ListSelection) {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeletePoolTask(this.poolService, [...this.selection.keys]);
-            task.start(backgroundTask);
-            return task.waitingDone;
-        });
-    }
-
-    public trackById(index, pool) {
-        return pool.id;
+        this.commands.delete.executeFromSelection(selection).subscribe();
     }
 }

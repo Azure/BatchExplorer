@@ -1,6 +1,7 @@
 export * from "./azure-batch";
 export * from "./account.service";
 export * from "./app-translation-loader.service";
+export * from "./app-locale.service";
 export * from "./authorization-http";
 export * from "./application.service";
 export * from "./app-insights";
@@ -10,7 +11,6 @@ export * from "./arm-http.service";
 export * from "./batch-labs.service";
 export * from "./cache-data.service";
 export * from "./compute.service";
-export * from "./fs.service";
 export * from "./github-data";
 export * from "./http-upload-service";
 export * from "./local-file-storage.service";

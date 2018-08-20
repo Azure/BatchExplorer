@@ -30,8 +30,11 @@ Table and quicklist support the context menu you just have to pass the menu as i
 In the template
 ```html
     <bl-quick-list [commands]="commands">
-        <bl-quick-list-item *ngFor="let item of items"></bl-quick-list-item>
+        ...
     </bl-quick-list>
+    <bl-table [commands]="commands">
+        ...
+    </bl-table>
 ```
 
 In the model

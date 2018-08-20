@@ -1,22 +1,18 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Observable, Subscription } from "rxjs";
-
-import { Filter, autobind } from "@batch-flask/core";
+import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, JobState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
 import { JobListParams, JobService } from "app/services";
-import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
+import { Observable, Subscription } from "rxjs";
 import {
-    DeleteJobAction,
     JobCommands,
     PatchJobComponent,
 } from "../action";
@@ -46,8 +42,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         changeDetector: ChangeDetectorRef,
         public commands: JobCommands,
         private sidebarManager: SidebarManager,
-        private jobService: JobService,
-        private taskManager: BackgroundTaskService) {
+        private jobService: JobService) {
         super(changeDetector);
         this.data = this.jobService.listView(this._baseOptions);
         ComponentUtils.setActiveItem(activatedRoute, this.data);
@@ -137,14 +132,6 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     }
 
     public deleteSelection(selection: ListSelection) {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteJobAction(this.jobService, [...this.selection.keys]);
-            task.start(backgroundTask);
-            return task.waitingDone;
-        });
-    }
-
-    public trackByFn(index: number, job: Job) {
-        return job.id;
+        this.commands.delete.executeFromSelection(selection).subscribe();
     }
 }

@@ -1,11 +1,11 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, OnDestroy } from "@angular/core";
+import { FileSystemService } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { Constants, DateUtils } from "app/utils";
 import * as path from "path";
 import { AsyncSubject, Observable, Subscription, from } from "rxjs";
 import { flatMap, share, take } from "rxjs/operators";
-import { FileSystemService } from "../fs.service";
 import { SettingsService } from "../settings.service";
 
 const repo = "BatchExplorer-data";

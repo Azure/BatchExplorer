@@ -3,12 +3,11 @@ import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { MatOptionSelectionChange } from "@angular/material";
-import { FilterBuilder } from "@batch-flask/core";
+import { FilterBuilder, ListView } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { BlobContainer } from "app/models";
 import { NcjFileGroupService } from "app/services";
-import { ListView } from "app/services/core";
 import { AutoStorageService, ListContainerParams, StorageContainerService } from "app/services/storage";
 import { Constants } from "common";
 import { List } from "immutable";

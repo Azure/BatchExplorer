@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "@batch-flask/core";
-import { Subscription } from "rxjs";
-
+import { EntityView, autobind } from "@batch-flask/core";
 import { Certificate, CertificateState } from "app/models";
 import { CertificateDecorator } from "app/models/decorators";
 import { CertificateParams, CertificateService } from "app/services";
-import { EntityView } from "app/services/core";
+import { Subscription } from "rxjs";
 import { CertificateCommands } from "../action";
 
 import "./certificate-details.scss";

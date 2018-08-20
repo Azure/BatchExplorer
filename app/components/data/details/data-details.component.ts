@@ -1,14 +1,12 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "@batch-flask/core";
-import { Subscription } from "rxjs";
-
+import { EntityView, autobind } from "@batch-flask/core";
 import { BlobContainer } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
-import { EntityView } from "app/services/core";
 import {
     AutoStorageService, GetContainerParams, StorageContainerService,
 } from "app/services/storage";
+import { Subscription } from "rxjs";
 import { BlobContainerCommands } from "../action";
 
 @Component({

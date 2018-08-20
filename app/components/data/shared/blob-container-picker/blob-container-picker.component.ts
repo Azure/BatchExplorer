@@ -4,9 +4,9 @@ import {
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+import { ListView } from "@batch-flask/core";
 import { UrlUtils } from "@batch-flask/utils";
 import { BlobContainer } from "app/models";
-import { ListView } from "app/services/core";
 import {
     AutoStorageService, ListContainerParams, StorageContainerService,
 } from "app/services/storage";

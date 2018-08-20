@@ -8,7 +8,8 @@
     "app/**/*.ts",
     "app/**/*.spec.ts",
     "src/common/**/*.ts",
-    "test/**/*.ts"
+    "test/**/*.ts",
+    "**/testing/**/*",
   ],
   "exclude": []
 }

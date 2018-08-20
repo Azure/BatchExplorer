@@ -51,7 +51,7 @@ export class ClientTranslationsLoaderService extends TranslationsLoaderService {
      */
     private async _loadLocaleTranslations() {
         const locale = this.localeService.locale;
-        if (locale === Locale.EN) { return; }
+        if (locale === Locale.English) { return; }
         const localeTranslationFile = path.join(ClientConstants.resourcesFolder, `./i18n/resources.${locale}.json`);
         if (await this.fs.exists(localeTranslationFile)) {
             await this._loadProductionTranslationFile(localeTranslationFile);

@@ -1,7 +1,7 @@
 import { SimpleChange } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
-import { ListView } from "app/services/core";
+import { ListView } from "@batch-flask/core";
 
 export class ComponentUtils {
     /**

@@ -1,9 +1,8 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-
+import { DataCache, ListOptionsAttributes, ListView } from "@batch-flask/core";
 import { SecureUtils } from "@batch-flask/utils";
 import { AADApplication, PasswordCredential, PasswordCredentialAttributes } from "app/models/ms-graph";
-import { DataCache, ListOptionsAttributes, ListView } from "app/services/core";
+import { Observable } from "rxjs";
 import { flatMap, map, shareReplay } from "rxjs/operators";
 import {
     AADGraphEntityGetter, AADGraphHttpService, AADGraphListGetter,

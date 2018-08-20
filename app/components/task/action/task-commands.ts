@@ -2,10 +2,10 @@ import { Injectable, Injector } from "@angular/core";
 
 import {
     COMMAND_LABEL_ICON, ElectronRemote, EntityCommand,
-    EntityCommands, Permission, SidebarManager,
+    EntityCommands, FileSystemService, Permission, SidebarManager,
 } from "@batch-flask/ui";
 import { Task, TaskState } from "app/models";
-import { FileSystemService, TaskService } from "app/services";
+import { TaskService } from "app/services";
 import { from } from "rxjs";
 import { TaskCreateBasicDialogComponent } from "../action";
 

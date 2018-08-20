@@ -1,11 +1,10 @@
 import { Injectable } from "@angular/core";
-import { List } from "immutable";
-
+import { FileSystemService } from "@batch-flask/ui";
 import { SSHPublicKey } from "app/models";
 import { Constants } from "app/utils";
+import { List } from "immutable";
 import { BehaviorSubject, Observable, from } from "rxjs";
 import { map } from "rxjs/operators";
-import { FileSystemService } from "./fs.service";
 import { LocalFileStorage } from "./local-file-storage.service";
 
 const filename = Constants.SavedDataFilename.sshPublicKeys;

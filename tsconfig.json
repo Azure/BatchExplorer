@@ -32,7 +32,7 @@
         "src/*",
         "app/scripts/*"
       ],
-      "@angular/*": ["../node_modules/@angular/*"]
+      // "@angular/*": ["../node_modules/@angular/*"]
     },
     "types": [
       "node",
@@ -53,6 +53,9 @@
     "app/**/*.ts",
     "src/**/*.ts",
     "test/**/*.ts",
+  ],
+  "exclude": [
+    "**/testing/**/*",
   ],
   "awesomeTypescriptLoaderOptions": {
     "forkChecker": true,

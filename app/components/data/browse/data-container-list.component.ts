@@ -3,20 +3,16 @@ import {
     OnChanges, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Filter, autobind } from "@batch-flask/core";
+import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import {
-    BackgroundTaskService, LoadingStatus, QuickListItemStatus,
-} from "@batch-flask/ui";
-import { List } from "immutable";
-import { Observable, Subscription, of } from "rxjs";
-
+import { LoadingStatus, QuickListItemStatus } from "@batch-flask/ui";
 import { BlobContainer, LeaseStatus } from "app/models";
-import { ListView } from "app/services/core";
 import { ListContainerParams, StorageContainerService } from "app/services/storage";
 import { ComponentUtils } from "app/utils";
 import { Constants } from "common";
-import { BlobContainerCommands, DeleteContainerAction } from "../action";
+import { List } from "immutable";
+import { Observable, Subscription, of } from "rxjs";
+import { BlobContainerCommands } from "../action";
 
 import "./data-container-list.scss";
 
@@ -48,7 +44,6 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         changeDetector: ChangeDetectorRef,
         public commands: BlobContainerCommands,
         private activeRoute: ActivatedRoute,
-        private taskManager: BackgroundTaskService,
         private storageContainerService: StorageContainerService) {
 
         super(changeDetector);
@@ -131,17 +126,7 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         }
     }
 
-    public deleteSelection(selection: ListSelection) {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteContainerAction(this.storageContainerService, this.storageAccountId,
-                [...selection.keys]);
-            task.start(backgroundTask);
-
-            return task.waitingDone;
-        });
-    }
-
-    public trackFileGroup(index, fileGroup: BlobContainer) {
-        return fileGroup.id;
+    public deleteSelection(selection: ListSelection): void {
+        this.commands.delete.executeFromSelection(selection).subscribe();
     }
 }

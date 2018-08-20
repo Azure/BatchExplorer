@@ -2,15 +2,15 @@ import { ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { autobind } from "@batch-flask/core";
 import { List } from "immutable";
-import { Observable } from "rxjs";
+import { Observable, forkJoin } from "rxjs";
 
 import { ListBaseComponent } from "@batch-flask/core/list";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationPackage, BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import { DateUtils } from "app/utils";
-import { ActivatePackageDialogComponent, ApplicationCreateDialogComponent, DeletePackageAction } from "../action";
+import { flatMap } from "rxjs/operators";
+import { ActivatePackageDialogComponent, ApplicationCreateDialogComponent } from "../action";
 
 @Component({
     selector: "bl-application-package-table",
@@ -26,8 +26,7 @@ export class ApplicationPackageTableComponent extends ListBaseComponent implemen
         protected dialog: MatDialog,
         private applicationService: ApplicationService,
         private sidebarManager: SidebarManager,
-        changeDetector: ChangeDetectorRef,
-        private taskManager: BackgroundTaskService) {
+        changeDetector: ChangeDetectorRef) {
         super(changeDetector);
     }
 
@@ -56,19 +55,17 @@ export class ApplicationPackageTableComponent extends ListBaseComponent implemen
     }
 
     @autobind()
-    public deleteSelection() {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeletePackageAction(this.applicationService, this.application.id,
-                [...this.selection.keys]);
-            task.start(backgroundTask);
-            return task.waitingDone;
-        }).subscribe((done) => {
-            if (done) {
-                this.refresh();
-            }
+    public deleteSelection(): Observable<any[]> {
+        const observables = Array.from(this.selection.keys).map((version) => {
+            return this.applicationService.deletePackage(this.application.id, version).pipe(
+                flatMap(() => this.refresh()),
+            );
         });
+
+        return forkJoin(observables);
     }
 
+    @autobind()
     public refresh(): Observable<any> {
         return this.applicationService.get(this.application.id);
     }

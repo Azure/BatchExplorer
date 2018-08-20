@@ -1,0 +1,72 @@
+@import "app/styles/variables";
+
+bl-file-viewer {
+    $file-header-height: 40px;
+    $separator-height: 0;
+    &:not([hidden]) {display: block;}
+
+    .file-details-container {
+        height: 100%;
+
+        > .details {
+            height: calc(100% - #{$file-header-height + $separator-height});
+
+            > bl-file-content {
+                height: 100%;
+                display: block;
+            }
+        }
+    }
+
+    .file-header {
+        display: flex;
+        height: $file-header-height;
+        align-items: stretch;
+        color: $primary-text;
+        border-bottom: 1px solid $border-color;
+        margin-bottom: $separator-height;
+        > * {
+            padding: 0 10px;
+            &:not(:last-child) {
+                border-right: 1px solid $border-color;
+            }
+        }
+
+        .go-back {
+            font-size: 24px;
+            line-height: $file-header-height;
+            vertical-align: middle;
+
+            &:hover {
+                background: $selection-color;
+            }
+            .fa {
+                color: $primary-color;
+            }
+        }
+
+        > .content-length, > .last-modified {
+            > .label {
+                color: $primary-color;
+            }
+
+            > .value {
+                font-size: 16px;
+            }
+        }
+
+        .filename {
+            font-size: 16px;
+            flex: 1;
+            vertical-align: middle;
+            line-height: $file-header-height;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .actions {
+            padding: 4px 5px;
+        }
+    }
+}

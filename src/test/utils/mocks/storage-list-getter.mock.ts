@@ -1,6 +1,5 @@
 import { Type } from "@angular/core";
-import { ServerError } from "@batch-flask/core";
-import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
+import { ListGetter,  ListGetterConfig, ServerError } from "@batch-flask/core";
 import { Observable, from, of, throwError } from "rxjs";
 import { catchError, map, share } from "rxjs/operators";
 

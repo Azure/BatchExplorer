@@ -1,0 +1,14 @@
+{
+  "duration-picker.unit.unlimited": "无限制",
+  "duration-picker.unit.days": "天",
+  "duration-picker.unit.minutes": "分钟",
+  "duration-picker.unit.hours": "小时",
+  "duration-picker.unit.seconds": "秒",
+  "main-navigation.jobs": "作业",
+  "main-navigation.jobschedules": "作业计划",
+  "main-navigation.pools": "池",
+  "main-navigation.packages": "包",
+  "main-navigation.certificates": "证书",
+  "main-navigation.data": "数据",
+  "main-navigation.profile": "配置 文件"
+}

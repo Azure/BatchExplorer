@@ -1,13 +1,11 @@
 import { Injectable, Injector } from "@angular/core";
 import {
     COMMAND_LABEL_ICON, DialogService, ElectronRemote,
-    EntityCommand, EntityCommands, Permission, SidebarManager,
+    EntityCommand, EntityCommands, FileSystemService, Permission, SidebarManager,
 } from "@batch-flask/ui";
-
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
-
 import { Pool } from "app/models";
-import { FileSystemService, JobService, PinnedEntityService, PoolService } from "app/services";
+import { JobService, PinnedEntityService, PoolService } from "app/services";
 import { from } from "rxjs";
 import { PoolCreateBasicDialogComponent } from "./add/pool-create-basic-dialog.component";
 import { DeletePoolDialogComponent, DeletePoolOutput } from "./delete";

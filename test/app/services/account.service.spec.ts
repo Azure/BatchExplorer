@@ -1,9 +1,9 @@
 import { fakeAsync, tick } from "@angular/core/testing";
 import { AsyncSubject, Subscription, of } from "rxjs";
 
+import { DataCache } from "@batch-flask/core";
 import { AccountResource } from "app/models";
 import { AccountService } from "app/services";
-import { DataCache } from "app/services/core";
 import { first } from "rxjs/operators";
 
 describe("AccountService", () => {

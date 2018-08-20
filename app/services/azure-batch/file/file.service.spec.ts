@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { File } from "app/models";
+import { File } from "@batch-flask/ui";
 import { FileService } from "./file.service";
 
 const creationTime = new Date(2018, 4, 20);

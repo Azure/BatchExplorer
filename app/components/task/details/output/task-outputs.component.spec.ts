@@ -2,13 +2,11 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
-
-import { FileSource } from "app/components/file/browse/file-explorer";
+import { DataCache } from "@batch-flask/core";
+import { FileNavigator, FileSource } from "@batch-flask/ui";
 import { TaskOutputsComponent } from "app/components/task/details/output";
-import { File, Task, TaskState } from "app/models";
+import { Task, TaskState } from "app/models";
 import { FileService } from "app/services";
-import { DataCache } from "app/services/core";
-import { FileNavigator } from "app/services/file";
 import { AutoStorageService, ListBlobParams, NavigateBlobsOptions, StorageBlobService } from "app/services/storage";
 import { StorageUtils } from "app/utils";
 import { of } from "rxjs";
@@ -34,8 +32,10 @@ describe("TaskOutputsComponent", () => {
     let mockBlobGetter: any;
     let cache: DataCache<File>;
     let autoStorageServiceSpy;
+    let currentStorageAccount;
 
     beforeEach(() => {
+        currentStorageAccount = "storage-acc-1";
         cache = new DataCache<File>("url");
         mockBlobGetter = new MockStorageListGetter(File, {
             cache: (params) => cache,
@@ -87,7 +87,7 @@ describe("TaskOutputsComponent", () => {
         };
 
         autoStorageServiceSpy = {
-            get: () => of("storage-acc-1"),
+            get: () => of(currentStorageAccount),
         };
 
         TestBed.configureTestingModule({
@@ -152,6 +152,16 @@ describe("TaskOutputsComponent", () => {
 
         fixture.detectChanges();
         expect(component.workspace.sources.length).toBe(2);
+    }));
+
+    it("when storage account id is not provided we remove teh workspace source", fakeAsync(() => {
+        currentStorageAccount = null;
+        testComponent.task = new Task({ id: "task-1", state: TaskState.running });
+        fixture.detectChanges();
+        tick();
+
+        fixture.detectChanges();
+        expect(component.workspace.sources.length).toBe(1);
     }));
 
     it("when storage call returns 404 we remove the workspace source", fakeAsync(() => {

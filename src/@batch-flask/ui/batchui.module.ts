@@ -6,14 +6,14 @@ import { MaterialModule } from "@batch-flask/core";
 
 // components
 import { WorkspaceModule } from "@batch-flask/ui/workspace";
+import { ActivityModule } from "./activity-monitor";
 import { AdvancedFilterModule } from "./advanced-filter";
-import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
 import { BatchFlaskSettingsModule } from "./batch-flask-settings";
 import { BreadcrumbModule } from "./breadcrumbs";
 import { BrowseLayoutModule } from "./browse-layout";
 import { ButtonsModule } from "./buttons";
-import { CardComponent } from "./card";
+import { CardModule } from "./card";
 import { ChartsModule } from "./charts";
 import { ContextMenuModule } from "./context-menu";
 import { DatetimePickerComponent } from "./datetime-picker";
@@ -23,15 +23,14 @@ import { DurationPickerModule } from "./duration-picker";
 import { EditorModule } from "./editor";
 import { ElectronModule } from "./electron";
 import { EntityCommandsListModule } from "./entity-commands-list";
+import { FileModule } from "./file";
 import { FocusSectionModule } from "./focus-section";
 import { FormModule } from "./form";
 import { GraphsModule } from "./graphs";
 import { I18nUIModule } from "./i18n";
 import { IconComponent } from "./icon";
 import { InfoBoxModule } from "./info-box";
-import {
-    DeleteSelectedItemsDialogComponent, EntityDetailsListComponent,
-} from "./list-and-show-layout";
+import { EntityDetailsListComponent } from "./list-and-show-layout";
 import { LoadingModule } from "./loading";
 import { MetricsMonitorModule } from "./metrics-monitor";
 import { NotificationModule } from "./notifications";
@@ -55,12 +54,13 @@ import { VTabsModule } from "./vtabs";
 
 // Add submodules there
 const modules = [
+    ActivityModule,
     AdvancedFilterModule,
     BatchFlaskSettingsModule,
     BreadcrumbModule,
     BrowseLayoutModule,
     ButtonsModule,
-    BackgroundTaskModule,
+    CardModule,
     ChartsModule,
     ContextMenuModule,
     DialogsModule,
@@ -75,6 +75,7 @@ const modules = [
     MetricsMonitorModule,
     NotificationModule,
     PermissionModule,
+    FileModule,
     PropertyListModule,
     GraphsModule,
     QuickListModule,
@@ -99,19 +100,16 @@ const modules = [
 const components = [
     BannerComponent,
     BannerOtherFixDirective,
-    CardComponent,
     TimespanComponent,
     EntityDetailsListComponent,
     DatetimePickerComponent,
     IconComponent,
     SimpleDialogComponent,
-    DeleteSelectedItemsDialogComponent,
 ];
 
 @NgModule({
     declarations: components,
     entryComponents: [
-        DeleteSelectedItemsDialogComponent,
         SimpleDialogComponent,
     ],
     exports: [...modules, ...components],

@@ -1,23 +1,20 @@
 import { Injectable, NgZone } from "@angular/core";
-import { AsyncSubject, Observable, from, of, throwError } from "rxjs";
-
-import { HttpCode, ServerError } from "@batch-flask/core";
-import { File } from "app/models";
 import {
     DataCache,
     EntityView,
+    HttpCode,
     ListResponse,
     ListView,
-    StorageEntityGetter,
-    StorageListGetter,
+    ServerError,
     TargetedDataCache,
-} from "app/services/core";
-import { FileLoadOptions, FileLoader, FileNavigator, FileSource } from "app/services/file";
-import { FileSystemService } from "app/services/fs.service";
+} from "@batch-flask/core";
+import { File, FileLoadOptions, FileLoader, FileNavigator, FileSystemService } from "@batch-flask/ui";
+import { StorageEntityGetter, StorageListGetter } from "app/services/core";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { CloudPathUtils, log } from "app/utils";
 import { BlobService, createBlobServiceWithSas } from "azure-storage";
 import { Constants } from "common";
+import { AsyncSubject, Observable, from, of, throwError } from "rxjs";
 import { catchError, concat, concatMap, flatMap, map, share, take } from "rxjs/operators";
 import { BlobStorageClientProxy, ListBlobOptions } from "./blob-storage-client-proxy";
 import { StorageClientService } from "./storage-client.service";
@@ -189,7 +186,7 @@ export class StorageBlobService {
 
         return new FileLoader({
             filename: blobName,
-            source: FileSource.blob,
+            source: "blob",
             groupId: blobPrefix,
             fs: this.fs,
             properties: () => {
