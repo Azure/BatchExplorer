@@ -16,6 +16,10 @@ bl-activity-monitor {
         > h1 {
             flex: 1;
         }
+
+        .actions i {
+            color: $primary-contrast-color;
+        }
     }
 
     .main-content {

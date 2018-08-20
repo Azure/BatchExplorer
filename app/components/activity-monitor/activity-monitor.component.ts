@@ -13,9 +13,11 @@ export class ActivityMonitorComponent implements OnInit {
     }
 
     public runningActivities: Activity[];
+    public activeId: number;
 
     constructor(private activityService: ActivityService) {
         this.runningActivities = [];
+        this.activeId = 0;
     }
 
     public ngOnInit() {
@@ -26,5 +28,9 @@ export class ActivityMonitorComponent implements OnInit {
 
     public trackByFn(index, activity: Activity) {
         return activity.id;
+    }
+
+    public setActive(activity) {
+        this.activeId = activity.id;
     }
 }

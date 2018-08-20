@@ -1,15 +1,30 @@
-<div class="item-container">
-    <div class="icon-container">
+<div
+    [ngStyle]="{'padding-left': getIndent()}"
+    [ngClass]="{'item-container': true, 'selected': selected}"
+    (mouseenter)="select()"
+    (mouseleave)="unselect()"
+>
+    <div class="icon-container pos-1">
         <i class="fa fa-ellipsis-h" *ngIf="status===statusOptions.Pending"></i>
         <i class="fa fa-spinner fa-pulse" *ngIf="status===statusOptions.InProgress"></i>
         <i class="fa fa-check" *ngIf="status===statusOptions.Completed"></i>
     </div>
-    <div class="name">{{activity.name}}</div>
-    <div class="icon-container" *ngIf="subactivities.length">
-        <i class="fa fa-angle-right"></i>
+    <div class="icon-container pos-2" *ngIf="subactivities.length" (click)="toggleExpand()">
+        <i class="fa fa-angle-right" *ngIf="!showSubactivities"></i>
+        <i class="fa fa-angle-down" *ngIf="showSubactivities"></i>
     </div>
-    <div class="icon-container">
+    <div class="name pos-3">{{activity.name}}</div>
+    <div class="icon-container pos-4">
         <i class="fa fa-times" *ngIf="!completed"></i>
         <i class="fa fa-refresh" *ngIf="completed"></i>
+    </div>
+</div>
+<div class="subactivities" *ngIf="showSubactivities">
+    <div class="single-subactivity" *ngFor="let subactivity of subactivities; trackBy: trackByFn">
+        <bl-activity-monitor-item
+            [activity]="subactivity"
+            [indent]="indent+1"
+            [selected]="selected"
+        ></bl-activity-monitor-item>
     </div>
 </div>

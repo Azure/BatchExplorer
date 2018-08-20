@@ -1,12 +1,55 @@
+@import "app/styles/variables";
+
 bl-activity-monitor-item {
+    box-sizing: border-box;
+
     .item-container {
         display: flex;
         align-items: center;
         padding: 10px;
-        min-height: 10px;
+        height: 40px;
+        position: relative;
+
+        &.selected {
+            background-color: $primary-color-light;
+            color: $primary-text;
+        }
+
+        div {
+            position: absolute;
+        }
 
         .icon-container {
             margin: 0 20px;
+
+            i {
+                font-size: 11pt;
+            }
+
+            .fa-angle-right, .fa-angle-down {
+                font-size: 14pt;
+                padding: 5px 10px;
+            }
+        }
+
+        .pos-1 {
+            margin-left: 10px;
+        }
+
+        .pos-2 {
+            margin-left: 40px;
+
+            .fa-angle-down {
+                padding-left: 6px;
+            }
+        }
+
+        .pos-3 {
+            margin-left: 90px;
+        }
+
+        .pos-4 {
+            right: 0;
         }
     }
 }
