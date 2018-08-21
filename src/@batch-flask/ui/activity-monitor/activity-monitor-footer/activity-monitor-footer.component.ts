@@ -33,7 +33,7 @@ export class ActivityMonitorFooterComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this._sub = this.activityService.incompleteActivities.subscribe(activities => {
             this.currentActivity = activities.first() ? activities.first() : null;
-            this.otherActivities = activities.slice(1);
+            this.otherActivities = activities.slice(1).reverse();
             if (this._lastTaskCount < activities.length) {
                 this.flash();
             }

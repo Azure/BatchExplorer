@@ -9,7 +9,7 @@
         </div>
     </div>
     <div bl-dropdown-content>
-        <div *ngFor="let activity of otherActivities.reverse();trackBy: trackByFn" class="dropdown-item">
+        <div *ngFor="let activity of otherActivities;trackBy: trackByFn" class="dropdown-item">
             <bl-activity-monitor-footer-item [activity]="activity" (click)="openMonitor(activity.id)"></bl-activity-monitor-footer-item>
         </div>
     </div>

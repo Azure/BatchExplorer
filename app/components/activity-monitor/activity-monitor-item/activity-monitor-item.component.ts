@@ -1,4 +1,14 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+} from "@angular/core";
 import { Activity, ActivityStatus } from "@batch-flask/ui/activity-monitor";
 import { BehaviorSubject, Subscription } from "rxjs";
 
@@ -7,6 +17,7 @@ import "./activity-monitor-item.scss";
 @Component({
     selector: "bl-activity-monitor-item",
     templateUrl: "activity-monitor-item.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public activity: Activity;
@@ -26,7 +37,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     private _flashId: number;
     private _sub: Subscription;
 
-    constructor() {
+    constructor(private changeDetector: ChangeDetectorRef) {
         this._status = null;
     }
 
@@ -35,13 +46,15 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     public ngOnInit() {
         this._sub = this.activity.statusSubject.subscribe(status => {
             this._status = status;
+            this.changeDetector.markForCheck();
         });
         this._sub.add(this.selectSubject.subscribe(id => {
             this._selectedId = id;
+            this.changeDetector.markForCheck();
         }));
         this._sub.add(this.flashSubject.subscribe(id => {
-            console.log(id);
             this._flashId = id;
+            this.changeDetector.markForCheck();
         }));
         this._sub.add(this.keyDownSubject.subscribe(event => {
             if (event && this.selected) {
@@ -53,9 +66,11 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     public ngOnChanges(changes) {
         if (changes.indent) {
             this.indent = changes.indent.currentValue;
+            this.changeDetector.markForCheck();
         }
         if (changes.hovering) {
             this.hovering = changes.hovering.currentValue;
+            this.changeDetector.markForCheck();
         }
     }
 
@@ -110,10 +125,12 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
 
     public hover() {
         this.hovering = true;
+        this.changeDetector.markForCheck();
     }
 
     public unhover() {
         this.hovering = false;
+        this.changeDetector.markForCheck();
     }
 
     /* Event Emitters */
@@ -158,10 +175,12 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     private _expand() {
         if (this.subactivities.length === 0) { return; }
         this.showSubactivities = true;
+        this.changeDetector.markForCheck();
     }
 
     private _collapse() {
         this.showSubactivities = false;
+        this.changeDetector.markForCheck();
     }
 
     private _focusPrev() {
