@@ -1,5 +1,6 @@
-import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
 import { Activity, ActivityStatus } from "@batch-flask/ui/activity-monitor";
+import { BehaviorSubject } from "rxjs";
 
 import "./activity-monitor-item.scss";
 
@@ -9,15 +10,18 @@ import "./activity-monitor-item.scss";
 })
 export class ActivityMonitorItemComponent implements OnInit, OnChanges {
     @Input() public activity: Activity;
-    @Input() public selectedId: number;
+    @Input() public selectSubject: BehaviorSubject<number>;
+    @Input() public keyDownSubject: BehaviorSubject<KeyboardEvent>;
+    @Input() public siblings: Activity[];
     @Input() public indent: number = 0;
     @Input() public hovering: boolean = false;
-    @Output() public selectedIdChange = new EventEmitter<number>();
+    @Output() public focusParent = new EventEmitter<void>();
 
     public statusOptions = ActivityStatus;
     public showSubactivities: boolean;
 
     private _status: ActivityStatus;
+    private _selectedId: number;
 
     constructor() {
         this._status = null;
@@ -28,6 +32,14 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges {
     public ngOnInit() {
         this.activity.statusSubject.subscribe(status => {
             this._status = status;
+        });
+        this.selectSubject.subscribe(id => {
+            this._selectedId = id;
+        });
+        this.keyDownSubject.subscribe(event => {
+            if (event && this.selected) {
+                this._handleKeyDown(event);
+            }
         });
     }
 
@@ -57,7 +69,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges {
     }
 
     public get selected() {
-        return this.activity.id === this.selectedId;
+        return this.activity.id === this._selectedId;
     }
 
     public trackByFn(index, activity: Activity) {
@@ -68,42 +80,16 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges {
         return (this.indent * 30) + "px";
     }
 
-    /* Key Navigation */
-    @HostListener("window:keydown", ["$event"])
-    public handleKeyDown(event: KeyboardEvent) {
-        switch (event.keyCode) {
-            case 37:                // left arrow
-                this._collapse();
-                break;
-            case 39:                // right arrow
-                this._expand();
-                break;
-            // case 38:                // up arrow
-            //     this.focusPrev(this.activity.id);
-            //     break;
-            // case 40:                // down arrow
-            //     this.focusNext(this.activity.id);
-            //     break;
-            case 13:                // Enter key
-                event.preventDefault();
-                event.stopPropagation();
-                this.toggleExpand();
-                break;
-            default:
-                break;
-        }
-    }
-
     /* Change-of-state Functions */
 
     public toggleExpand() {
-        if (this.selectedId === this.activity.id) {
-            this.showSubactivities = !this.showSubactivities;
-            if (this.showSubactivities) {
-                this._expand();
-            } else {
-                this._collapse();
-            }
+        if (this.subactivities.length === 0) { return; }
+
+        this.showSubactivities = !this.showSubactivities;
+        if (this.showSubactivities) {
+            this._expand();
+        } else {
+            this._collapse();
         }
     }
 
@@ -117,28 +103,75 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges {
 
     /* Event Emitters */
 
-    public select() {
-        this.selectedIdChange.emit(this.activity.id);
-    }
-
-    // N.B. this extra step seems to be needed, because event propagation
-    // doesn't work as expected with multiple layers of two-way binding
-    public updateSelected(selectedId) {
-        this.selectedId = selectedId;
-        this.selectedIdChange.emit(selectedId);
+    public select(id: number = this.activity.id) {
+        // TODO look for cleaner way to handle propagation issue
+        setTimeout(() => this.selectSubject.next(id), 10);
     }
 
     /* Private Helper Methods */
 
-    private _expand() {
-        if (this.selectedId === this.activity.id) {
-            this.showSubactivities = true;
+    private _handleKeyDown(event: KeyboardEvent) {
+        switch (event.keyCode) {
+            case 37:                // left arrow
+                if (!this.showSubactivities) {
+                    this._focusParent();
+                } else {
+                    this._collapse();
+                }
+                break;
+            case 39:                // right arrow
+                if (this.showSubactivities) {
+                    this._focusChild();
+                } else {
+                    this._expand();
+                }
+                break;
+            case 38:                // up arrow
+                this._focusPrev();
+                break;
+            case 40:                // down arrow
+                this._focusNext();
+                break;
+            case 13:                // Enter key
+                this.toggleExpand();
+                break;
+            default:
+                break;
         }
     }
 
+    private _expand() {
+        if (this.subactivities.length === 0) { return; }
+        this.showSubactivities = true;
+    }
+
     private _collapse() {
-        if (this.selectedId === this.activity.id) {
-            this.showSubactivities = false;
+        this.showSubactivities = false;
+    }
+
+    private _focusPrev() {
+        const sibIds = this.siblings.map(act => act.id);
+        const index = sibIds.indexOf(this.activity.id);
+        if (index === 0) { return; }
+
+        this.select(sibIds[index - 1]);
+    }
+
+    private _focusNext() {
+        const sibIds = this.siblings.map(act => act.id);
+        const index = sibIds.indexOf(this.activity.id);
+        if (index === sibIds.length - 1) { return; }
+
+        this.select(sibIds[index + 1]);
+    }
+
+    private _focusParent() {
+        this.focusParent.emit();
+    }
+
+    private _focusChild() {
+        if (this.subactivities.length > 0) {
+            this.select(this.subactivities[0].id);
         }
     }
 }

@@ -25,7 +25,6 @@ bl-activity-monitor {
     .main-content {
         display: flex;
         flex-direction: column;
-        height: $activity-monitor-content-height;
         width: 98%;
         overflow-y: scroll;
         overflow-x: hidden;

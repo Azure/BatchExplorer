@@ -141,6 +141,7 @@
     "@angular/platform-server": "6.1.2",
     "@angular/router": "6.1.2",
     "@tweenjs/tween.js": "^17.1.1",
+    "@types/lodash": "^4.14.116",
     "azure-storage": "^2.10.1",
     "bunyan": "^1.8.4",
     "chart.js": "^2.7.2",

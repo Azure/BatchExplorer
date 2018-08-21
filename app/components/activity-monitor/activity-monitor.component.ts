@@ -1,5 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, HostListener, OnInit } from "@angular/core";
 import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
+import { BehaviorSubject } from "rxjs";
 
 import "./activity-monitor.scss";
 
@@ -13,20 +14,13 @@ export class ActivityMonitorComponent implements OnInit {
     }
 
     public runningActivities: Activity[];
-    public selectedId: number;
-
-    // /**
-    //  * tracks the visible state of the monitor
-    //  * if two activities are visible (ids 1 and 4)
-    //  * and if activity 1 has two subactivities visible (ids 2 and 3)
-    //  * then monitor state is [1, [2, 3], 4]
-    //  */
-    // private monitorState: any[];
+    public selectSubject: BehaviorSubject<number>;
+    public keyDownSubject: BehaviorSubject<KeyboardEvent>;
 
     constructor(private activityService: ActivityService) {
         this.runningActivities = [];
-        this.selectedId = 0;
-        // this.monitorState = [];
+        this.selectSubject = new BehaviorSubject(0);
+        this.keyDownSubject = new BehaviorSubject(null);
     }
 
     public ngOnInit() {
@@ -37,5 +31,11 @@ export class ActivityMonitorComponent implements OnInit {
 
     public trackByFn(index, activity: Activity) {
         return activity.id;
+    }
+
+    /* Key Navigation */
+    @HostListener("window:keydown", ["$event"])
+    public onKeyDown(event: KeyboardEvent) {
+        this.keyDownSubject.next(event);
     }
 }

@@ -26,9 +26,11 @@
             <bl-activity-monitor-item
                 [activity]="subactivity"
                 [indent]="indent+1"
-                [selectedId]="selectedId"
-                (selectedIdChange)="updateSelected($event)"
                 [hovering]="!selected && hovering"
+                [selectSubject]="selectSubject"
+                [keyDownSubject]="keyDownSubject"
+                [siblings]="subactivities"
+                (focusParent)="select()"
             ></bl-activity-monitor-item>
         </div>
     </div>

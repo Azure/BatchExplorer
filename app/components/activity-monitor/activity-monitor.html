@@ -16,8 +16,13 @@
             <div class="single-activity" *ngFor="let activity of runningActivities; trackBy: trackByFn">
                 <bl-activity-monitor-item
                     [activity]="activity"
-                    [(selectedId)]="selectedId"
+                    [selectSubject]="selectSubject"
+                    [keyDownSubject]="keyDownSubject"
+                    [siblings]="runningActivities"
                 ></bl-activity-monitor-item>
+            </div>
+            <div class="single-activity" *ngIf="runningActivities.length === 0">
+                No Running Activities to Show
             </div>
         </div>
     </div>
