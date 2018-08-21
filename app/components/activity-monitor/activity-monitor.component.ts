@@ -1,7 +1,8 @@
-import { Component, HostListener, OnInit, OnDestroy } from "@angular/core";
+import { Component, HostListener, OnDestroy, OnInit } from "@angular/core";
 import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { BehaviorSubject, Subscription } from "rxjs";
 
+import { ActivatedRoute } from "@angular/router";
 import "./activity-monitor.scss";
 
 @Component({
@@ -15,13 +16,18 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
 
     public runningActivities: Activity[];
     public selectSubject: BehaviorSubject<number>;
+    public flashSubject: BehaviorSubject<number>;
     public keyDownSubject: BehaviorSubject<KeyboardEvent>;
 
     private _sub: Subscription;
 
-    constructor(private activityService: ActivityService) {
+    constructor(
+        private activityService: ActivityService,
+        private route: ActivatedRoute,
+    ) {
         this.runningActivities = [];
         this.selectSubject = new BehaviorSubject(0);
+        this.flashSubject = new BehaviorSubject(null);
         this.keyDownSubject = new BehaviorSubject(null);
     }
 
@@ -29,6 +35,9 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
         this._sub = this.activityService.incompleteActivities.subscribe(activities => {
             this.runningActivities = activities;
         });
+        this._sub.add(this.route.params.subscribe(params => {
+            this._flash(params.id);
+        }));
     }
 
     public ngOnDestroy() {
@@ -46,5 +55,12 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
         event.stopImmediatePropagation();
         event.stopPropagation();
         this.keyDownSubject.next(event);
+    }
+
+    private _flash(id) {
+        if (id !== null) {
+            this.selectSubject.next(id);
+            this.flashSubject.next(id);
+        }
     }
 }

@@ -1,4 +1,4 @@
-<div [ngClass]="{'activity-monitor-item-container': true, 'selected': selected}">
+<div [ngClass]="{'activity-monitor-item-container': true, 'selected': selected, 'flash': shouldFlash}">
     <div
         [ngStyle]="{'padding-left': getIndent()}"
         [ngClass]="{'item-container': true, 'hovering': !selected && hovering}"
@@ -28,6 +28,7 @@
                 [indent]="indent+1"
                 [hovering]="!selected && hovering"
                 [selectSubject]="selectSubject"
+                [flashSubject]="flashSubject"
                 [keyDownSubject]="keyDownSubject"
                 [siblings]="subactivities"
                 (focusParent)="select()"

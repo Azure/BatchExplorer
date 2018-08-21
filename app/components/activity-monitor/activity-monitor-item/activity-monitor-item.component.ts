@@ -11,6 +11,7 @@ import "./activity-monitor-item.scss";
 export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public activity: Activity;
     @Input() public selectSubject: BehaviorSubject<number>;
+    @Input() public flashSubject: BehaviorSubject<number>;
     @Input() public keyDownSubject: BehaviorSubject<KeyboardEvent>;
     @Input() public siblings: Activity[];
     @Input() public indent: number = 0;
@@ -22,6 +23,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
 
     private _status: ActivityStatus;
     private _selectedId: number;
+    private _flashId: number;
     private _sub: Subscription;
 
     constructor() {
@@ -36,6 +38,10 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
         });
         this._sub.add(this.selectSubject.subscribe(id => {
             this._selectedId = id;
+        }));
+        this._sub.add(this.flashSubject.subscribe(id => {
+            console.log(id);
+            this._flashId = id;
         }));
         this._sub.add(this.keyDownSubject.subscribe(event => {
             if (event && this.selected) {
@@ -75,6 +81,10 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
 
     public get selected() {
         return this.activity.id === this._selectedId;
+    }
+
+    public get shouldFlash() {
+        return this.activity.id === this._flashId;
     }
 
     public trackByFn(index, activity: Activity) {

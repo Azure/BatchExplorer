@@ -1,10 +1,23 @@
 @import "app/styles/variables";
 
+@keyframes flash {
+    0%, 50%, 100% {
+    }
+
+    25%, 75% {
+        background: map-get($warn, 300);
+    }
+}
+
 bl-activity-monitor-item {
     .activity-monitor-item-container {
         &.selected {
             background-color: $primary-color;
             color: $primary-contrast-color;
+        }
+
+        &.flash {
+            animation: flash 1s 1;
         }
 
         .item-container {

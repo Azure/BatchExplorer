@@ -52,6 +52,11 @@ export const routes: Routes = [
     {
         component: ActivityMonitorComponent,
         path: "activitymonitor",
+        pathMatch: "full",
+    },
+    {
+        component: ActivityMonitorComponent,
+        path: "activitymonitor/:id",
     },
     {
         path: "jobs",

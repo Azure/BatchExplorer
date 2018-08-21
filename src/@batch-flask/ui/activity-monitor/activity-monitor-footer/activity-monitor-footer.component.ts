@@ -59,7 +59,11 @@ export class ActivityMonitorFooterComponent implements OnInit, OnDestroy {
         return activity.id;
     }
 
-    public openMonitor(): void {
-        this.router.navigate(["/activitymonitor"]);
+    public openMonitor(id?: number): void {
+        if (id !== null && id !== undefined) {
+            this.router.navigate(["/activitymonitor", id]);
+        } else {
+            this.router.navigate(["/activitymonitor"]);
+        }
     }
 }
