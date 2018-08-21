@@ -1,17 +1,25 @@
+@import "app/styles/variables";
+
 bl-account-home {
 }
 
 bl-account-list {
+    bl-quick-list-row-render:hover {
+        .fa-star {
+            color: $athensGrey;
+        }
+    }
+
     .fa-star {
         font-size: 2em;
-        color: #d5d5d5;
+        color: $alto;
 
         &:hover {
-            color: map-get($primary, 100);
+            color: map-get($primary, 100) !important;
         }
 
         &.favorite {
-            color: map-get($primary, 400);
+            color: map-get($primary, 400) !important;
         }
     }
 }
