@@ -85,4 +85,8 @@ export class AccountResource extends ArmRecord<BatchAccountAttributes> {
     public get subscriptionId(): string {
         return this.subscription && this.subscription.subscriptionId;
     }
+
+    public get routerLink(): string[] {
+        return ["/accounts", this.id];
+    }
 }
