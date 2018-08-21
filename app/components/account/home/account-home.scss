@@ -1,0 +1,15 @@
+@import "app/styles/variables";
+
+bl-account-home {
+    display: block;
+    height: $contentview-height;
+    width: 100%;
+
+    .quicksearch {
+        margin: 0 10px;
+    }
+
+    .pre-quicksearch {
+        width: 200px;
+    }
+}
