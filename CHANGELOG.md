@@ -1,3 +1,8 @@
+# 0.17.2
+
+### Bug fixes:
+* Cannot login to GOVT cloud [\#1548](https://github.com/Azure/BatchExplorer/issues/1548)
+
 # 0.17.1
 [All items](https://github.com/Azure/BatchExplorer/milestone/25?closed=1)
 
