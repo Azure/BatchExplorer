@@ -1,6 +1,6 @@
-import { Component, HostListener, OnInit } from "@angular/core";
+import { Component, HostListener, OnInit, OnDestroy } from "@angular/core";
 import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Subscription } from "rxjs";
 
 import "./activity-monitor.scss";
 
@@ -8,7 +8,7 @@ import "./activity-monitor.scss";
     selector: "bl-activity-monitor",
     templateUrl: "activity-monitor.html",
 })
-export class ActivityMonitorComponent implements OnInit {
+export class ActivityMonitorComponent implements OnInit, OnDestroy {
     public static breadcrumb(params, queryParams) {
         return { name: "Activity Monitor" };
     }
@@ -17,6 +17,8 @@ export class ActivityMonitorComponent implements OnInit {
     public selectSubject: BehaviorSubject<number>;
     public keyDownSubject: BehaviorSubject<KeyboardEvent>;
 
+    private _sub: Subscription;
+
     constructor(private activityService: ActivityService) {
         this.runningActivities = [];
         this.selectSubject = new BehaviorSubject(0);
@@ -24,9 +26,13 @@ export class ActivityMonitorComponent implements OnInit {
     }
 
     public ngOnInit() {
-        this.activityService.incompleteActivities.subscribe(activities => {
+        this._sub = this.activityService.incompleteActivities.subscribe(activities => {
             this.runningActivities = activities;
         });
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 
     public trackByFn(index, activity: Activity) {
@@ -36,6 +42,9 @@ export class ActivityMonitorComponent implements OnInit {
     /* Key Navigation */
     @HostListener("window:keydown", ["$event"])
     public onKeyDown(event: KeyboardEvent) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        event.stopPropagation();
         this.keyDownSubject.next(event);
     }
 }

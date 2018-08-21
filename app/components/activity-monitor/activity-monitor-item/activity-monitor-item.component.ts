@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from "@angular/core";
 import { Activity, ActivityStatus } from "@batch-flask/ui/activity-monitor";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Subscription } from "rxjs";
 
 import "./activity-monitor-item.scss";
 
@@ -8,7 +8,7 @@ import "./activity-monitor-item.scss";
     selector: "bl-activity-monitor-item",
     templateUrl: "activity-monitor-item.html",
 })
-export class ActivityMonitorItemComponent implements OnInit, OnChanges {
+export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public activity: Activity;
     @Input() public selectSubject: BehaviorSubject<number>;
     @Input() public keyDownSubject: BehaviorSubject<KeyboardEvent>;
@@ -22,6 +22,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges {
 
     private _status: ActivityStatus;
     private _selectedId: number;
+    private _sub: Subscription;
 
     constructor() {
         this._status = null;
@@ -30,17 +31,17 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges {
     /* Angular Life Cycle Functions*/
 
     public ngOnInit() {
-        this.activity.statusSubject.subscribe(status => {
+        this._sub = this.activity.statusSubject.subscribe(status => {
             this._status = status;
         });
-        this.selectSubject.subscribe(id => {
+        this._sub.add(this.selectSubject.subscribe(id => {
             this._selectedId = id;
-        });
-        this.keyDownSubject.subscribe(event => {
+        }));
+        this._sub.add(this.keyDownSubject.subscribe(event => {
             if (event && this.selected) {
                 this._handleKeyDown(event);
             }
-        });
+        }));
     }
 
     public ngOnChanges(changes) {
@@ -50,6 +51,10 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges {
         if (changes.hovering) {
             this.hovering = changes.hovering.currentValue;
         }
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 
     /* Template Getters */
