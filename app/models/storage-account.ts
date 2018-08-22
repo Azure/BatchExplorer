@@ -1,5 +1,12 @@
 import { ArmRecord, ArmRecordAttributes, Model, Prop, Record } from "@batch-flask/core";
 
+interface PrimaryEndpointsAttributes {
+    blob: string;
+    file: string;
+    queue: string;
+    table: string;
+}
+
 interface StorageAccountPropertiesAttributes {
     creationTime: Date;
     primaryLocation: string;
@@ -8,6 +15,7 @@ interface StorageAccountPropertiesAttributes {
     statusOfPrimary: string;
     statusOfSecondary: string;
     supportsHttpsTrafficOnly: boolean;
+    primaryEndpoints: PrimaryEndpointsAttributes;
 }
 
 @Model()
@@ -25,6 +33,8 @@ class StorageAccountProperties extends Record<StorageAccountPropertiesAttributes
     @Prop() public statusOfSecondary: string;
 
     @Prop() public supportsHttpsTrafficOnly: boolean;
+
+    @Prop() public primaryEndpoints: PrimaryEndpointsAttributes;
 }
 
 export interface StorageAccountAttributes extends ArmRecordAttributes {
