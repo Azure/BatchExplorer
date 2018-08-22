@@ -30,6 +30,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     public tableConfig: TableConfig = {
         resizableColumn: false,
+        hideHeader: true,
     };
 
     public account: AccountResource;
