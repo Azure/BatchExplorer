@@ -17,8 +17,8 @@
         </div>
         <div class="name pos-3">{{activity.name}}</div>
         <div class="icon-container pos-4">
-            <i class="fa fa-times" *ngIf="!completed"></i>
-            <i class="fa fa-refresh" *ngIf="completed"></i>
+            <i class="fa fa-refresh" *ngIf="activity.isComplete"></i>
+            <i class="fa fa-times" *ngIf="!activity.isComplete"></i>
         </div>
     </div>
     <div class="subactivities" *ngIf="showSubactivities">

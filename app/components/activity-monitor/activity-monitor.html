@@ -31,5 +31,19 @@
         <div class="section-header">
             <div class="label">History</div>
         </div>
+        <div class="activity-list">
+            <div class="single-activity" *ngFor="let activity of pastActivities; trackBy: trackByFn">
+                <bl-activity-monitor-item
+                    [activity]="activity"
+                    [selectSubject]="selectSubject"
+                    [flashSubject]="flashSubject"
+                    [keyDownSubject]="keyDownSubject"
+                    [siblings]="pastActivities"
+                ></bl-activity-monitor-item>
+            </div>
+            <div class="single-activity" *ngIf="pastActivities.length === 0">
+                No Past Activities to Show
+            </div>
+        </div>
     </div>
 </div>

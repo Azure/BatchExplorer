@@ -1,10 +1,13 @@
 import { Activity } from "@batch-flask/ui/activity-monitor/activity";
+import { BehaviorSubject } from "rxjs";
 
 export class ActivityHistoryQueue {
-    private queue: Activity[];
+    public queueSubject: BehaviorSubject<Activity[]>;
+    private _queue: Activity[];
 
     constructor() {
-        this.queue = [];
+        this._queue = [];
+        this.queueSubject = new BehaviorSubject(this._queue);
     }
 
     /**
@@ -13,6 +16,7 @@ export class ActivityHistoryQueue {
      * @param activity the activity to push onto the queue
      */
     public enqueue(activity) {
-        this.queue.push(activity);
+        this._queue.push(activity);
+        this.queueSubject.next(this._queue);
     }
 }

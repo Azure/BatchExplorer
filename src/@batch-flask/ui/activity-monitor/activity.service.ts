@@ -23,6 +23,10 @@ export class ActivityService {
         return this.masterProcessor.subActivitiesSubject.asObservable();
     }
 
+    public get history() {
+        return this.historyQueue.queueSubject.asObservable();
+    }
+
     /**
      * Loads a single activity into the master processor, and runs the processor
      * N.B. this method is cascadable, in case it needs to be chained with done()
