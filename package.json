@@ -10,7 +10,7 @@
     "name": "Microsoft Corporation",
     "email": "tiguerin@microsoft.com"
   },
-  "version": "0.17.2",
+  "version": "0.17.3",
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json",
