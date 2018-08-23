@@ -56,6 +56,12 @@ export class ActivityService {
         activity.cancel();
     }
 
+    public cancelMultiple(activities: Activity[]) {
+        for (const activity of activities) {
+            this.cancel(activity);
+        }
+    }
+
     private moveToHistory(activity) {
         this.masterProcessor.remove(activity);
         this.historyQueue.enqueue(activity);

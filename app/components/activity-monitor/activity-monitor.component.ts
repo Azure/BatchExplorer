@@ -63,6 +63,10 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
         this.keyDownSubject.next(event);
     }
 
+    public cancelAll() {
+        this.activityService.cancelMultiple(this.runningActivities);
+    }
+
     private _flash(id) {
         if (id !== null) {
             this.selectSubject.next(+id);
