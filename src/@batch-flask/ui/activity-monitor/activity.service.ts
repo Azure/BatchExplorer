@@ -1,9 +1,7 @@
 import { Injectable } from "@angular/core";
-import { Activity, ActivityProcessor, ActivityStatus } from "@batch-flask/ui/activity-monitor/activity";
+import { Activity, ActivityProcessor } from "@batch-flask/ui/activity-monitor/activity";
 import { ActivityHistoryQueue } from "@batch-flask/ui/activity-monitor/activity-history-queue";
 import { NotificationService } from "@batch-flask/ui/notifications";
-import { Observable, forkJoin, of } from "rxjs";
-import { flatMap } from "rxjs/operators";
 
 @Injectable()
 export class ActivityService {
@@ -45,17 +43,17 @@ export class ActivityService {
         return this;
     }
 
-    public cancel(activity: Activity): void {
-        activity.cancel();
+    /**
+     * Reruns the given activity by creating a clone of it and reexecuting it on the master processor
+     * @param activity the activity to rerun
+     */
+    public rerun(activity: Activity): void {
+        const copy = new Activity(activity.name, activity.initializer);
+        this.exec(copy);
     }
 
-    public done(): Observable<ActivityStatus> {
-        const doneObservables = this.masterProcessor.activities.map(activity => activity.done.asObservable());
-        return forkJoin(...doneObservables).pipe(
-            flatMap(() => {
-                return of(ActivityStatus.Completed);
-            }),
-        );
+    public cancel(activity: Activity): void {
+        activity.cancel();
     }
 
     private moveToHistory(activity) {

@@ -21,7 +21,6 @@ export class ActivityCounters {
 export class Activity {
     public static idCounter: number = 0;
 
-    // public instance variables for access by dependent classes
     public id: number;
     public name: string;
     public statusSubject: BehaviorSubject<ActivityStatus>;
@@ -30,13 +29,11 @@ export class Activity {
     public done: AsyncSubject<ActivityStatus>;
     public isComplete: boolean;
     public pending: boolean;
+    public initializer: () => Observable<ActivityResponse | Activity[] | any>;
 
-    // private instance variables necessary for tracking progress
-    private initializer: () => Observable<ActivityResponse | Activity[] | any>;
     private progressSubject: BehaviorSubject<number>;
     private processor: ActivityProcessor;
     private counters: ActivityCounters;
-
     private subtasksComplete: AsyncSubject<null>;
     private awaitCompletionSub: Subscription;
 

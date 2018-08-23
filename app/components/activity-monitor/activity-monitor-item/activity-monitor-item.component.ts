@@ -141,7 +141,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     }
 
     public rerun() {
-        console.log(`Should rerun ${this.activity.id}`);
+        this.activityService.rerun(this.activity);
     }
 
     /* Event Emitters */
