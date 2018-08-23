@@ -36,11 +36,17 @@ export class ActivityService {
         this.masterProcessor.exec([activity]);
 
         // when an activity completes, we should remove it from the masterprocessor
-        activity.done.subscribe(() => {
-            this.moveToHistory(activity);
+        activity.done.subscribe({
+            next: () => {
+                this.moveToHistory(activity);
+            },
         });
 
         return this;
+    }
+
+    public cancel(activity: Activity): void {
+        activity.cancel();
     }
 
     public done(): Observable<ActivityStatus> {

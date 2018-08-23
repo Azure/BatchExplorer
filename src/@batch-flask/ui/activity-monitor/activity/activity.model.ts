@@ -1,4 +1,4 @@
-import { AsyncSubject, BehaviorSubject, Observable, merge } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable, Subscription, merge } from "rxjs";
 import { ActivityResponse, ActivityStatus } from "./activity-datatypes";
 import { ActivityProcessor } from "./activity-processor.model";
 
@@ -21,20 +21,24 @@ export class ActivityCounters {
 export class Activity {
     public static idCounter: number = 0;
 
+    // public instance variables for access by dependent classes
     public id: number;
     public name: string;
     public statusSubject: BehaviorSubject<ActivityStatus>;
     public subactivities: Activity[];
-    public done: AsyncSubject<ActivityStatus>; // only emits on completion
+    /** Emits on completion, with the status of the activity after completion */
+    public done: AsyncSubject<ActivityStatus>;
     public isComplete: boolean;
     public pending: boolean;
 
+    // private instance variables necessary for tracking progress
     private initializer: () => Observable<ActivityResponse | Activity[] | any>;
     private progressSubject: BehaviorSubject<number>;
     private processor: ActivityProcessor;
     private counters: ActivityCounters;
 
     private subtasksComplete: AsyncSubject<null>;
+    private awaitCompletionSub: Subscription;
 
     constructor(name: string, initializerFn: () => Observable<ActivityResponse | Activity[] | any>) {
         this.id = Activity.idCounter++;
@@ -92,11 +96,27 @@ export class Activity {
             },
         });
 
-        merge(initializerObs, this.subtasksComplete).subscribe({
+        this.awaitCompletionSub = merge(initializerObs, this.subtasksComplete).subscribe({
             complete: () => {
                 this._markAsCompleted();
             },
         });
+    }
+
+    /**
+     * Immediately stops the running function and completes the activity
+     */
+    public cancel(): void {
+        // if we have an awaitCompletionSub active subscription, unsubscribe from it
+        // so we don't get an automatic Completed when the subactivities finish
+        if (this.awaitCompletionSub && !this.awaitCompletionSub.closed) {
+            this.awaitCompletionSub.unsubscribe();
+        }
+
+        this._markAsCancelled();
+        for (const activity of this.subactivities) {
+            activity.cancel();
+        }
     }
 
     private _listenToProcessor(): void {
@@ -120,7 +140,7 @@ export class Activity {
                 case ActivityStatus.Failed:
                     this.counters.failed++;
                     break;
-                case ActivityStatus.Canceled:
+                case ActivityStatus.Cancelled:
                     this.counters.canceled++;
                     break;
                 default:
@@ -137,8 +157,8 @@ export class Activity {
     }
 
     /**
-     * Marks the activity as completed by emitting completed to the statusSubject
-     * Runs the function to be run upon completion of the activity
+     * Marks the activity as completed by emitting Completed to the statusSubject
+     * Also marks the activity as done by completing its done async subject
      */
     private _markAsCompleted(): void {
         this.isComplete = true;
@@ -151,6 +171,23 @@ export class Activity {
 
         // signal completion of this activity
         this.done.next(ActivityStatus.Completed);
+        this.done.complete();
+    }
+
+    /**
+     * Marks the activity as cancelled (a type of completion) by emitting Cancelled to the statusSubject
+     * Also marks the activity as done by completing its done async subject
+     */
+    private _markAsCancelled() {
+        this.isComplete = true;
+
+        // emit a cancelled status to the statusSubject
+        this.statusSubject.next(ActivityStatus.Cancelled);
+
+        // leave the progress subject as is
+
+        // signal completion of the activity
+        this.done.next(ActivityStatus.Cancelled);
         this.done.complete();
     }
 }

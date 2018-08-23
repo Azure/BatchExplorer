@@ -38,6 +38,9 @@ bl-activity-monitor-item {
             }
 
             .icon-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 margin: 0 20px;
 
                 i {
@@ -68,6 +71,14 @@ bl-activity-monitor-item {
 
             .pos-4 {
                 right: 0;
+
+                .cancel {
+                    padding: 4px;
+                }
+
+                .rerun {
+                    padding: 4px;
+                }
             }
         }
     }

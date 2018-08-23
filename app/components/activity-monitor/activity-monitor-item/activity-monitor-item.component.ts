@@ -9,7 +9,7 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
-import { Activity, ActivityStatus } from "@batch-flask/ui/activity-monitor";
+import { Activity, ActivityService, ActivityStatus } from "@batch-flask/ui/activity-monitor";
 import { BehaviorSubject, Subscription } from "rxjs";
 
 import "./activity-monitor-item.scss";
@@ -37,7 +37,10 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     private _flashId: number;
     private _sub: Subscription;
 
-    constructor(private changeDetector: ChangeDetectorRef) {
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private activityService: ActivityService,
+    ) {
         this._status = null;
     }
 
@@ -90,8 +93,8 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
 
     public get finished() {
         return this._status === ActivityStatus.Completed ||
-            this.status === ActivityStatus.Failed ||
-            this.status === ActivityStatus.Canceled;
+            this._status === ActivityStatus.Failed ||
+            this._status === ActivityStatus.Cancelled;
     }
 
     public get selected() {
@@ -131,6 +134,14 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     public unhover() {
         this.hovering = false;
         this.changeDetector.markForCheck();
+    }
+
+    public cancel() {
+        this.activityService.cancel(this.activity);
+    }
+
+    public rerun() {
+        console.log(`Should rerun ${this.activity.id}`);
     }
 
     /* Event Emitters */

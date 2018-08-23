@@ -6,6 +6,7 @@ import {
     Activity,
     ActivityResponse,
     ActivityService,
+    ActivityStatus,
     FileSystemService,
     NotificationService,
     SidebarRef,
@@ -193,13 +194,15 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
 
         const activity = new Activity("Uploading files to file group", initializer);
         this.activityService.exec(activity);
-        activity.done.subscribe(() => {
-            const fileGroupName = this.fileGroupService.addFileGroupPrefix(formData.name);
-            this.storageContainerService.onContainerAdded.next(fileGroupName);
-            this.notificationService.success(
-                "Create file group",
-                `${totalUploads} files were successfully uploaded to the file group`,
-            );
+        activity.done.subscribe(status => {
+            if (status === ActivityStatus.Completed) {
+                const fileGroupName = this.fileGroupService.addFileGroupPrefix(formData.name);
+                this.storageContainerService.onContainerAdded.next(fileGroupName);
+                this.notificationService.success(
+                    "Create file group",
+                    `${totalUploads} files were successfully uploaded to the file group`,
+                );
+            }
         });
         return activity.done;
     }
