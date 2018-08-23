@@ -56,7 +56,7 @@ async def upload_files(
     total_files = count_files_in_paths(paths)
     uploaded_files = 0
 
-    def __uploadCallback(current, file_size):
+    def __uploadCallback(current, file_size, filename):
         """
             Callback from file upload.
         """

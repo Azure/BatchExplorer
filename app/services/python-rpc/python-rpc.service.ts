@@ -129,7 +129,13 @@ export class PythonRpcService {
             const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.batchUrl);
             const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.armUrl);
             return Observable.combineLatest(batchToken, armToken).first().flatMap(([batchToken, armToken]) => {
-                const authParam = { batchToken, armToken, account: account.toJS() };
+                const authParam = {
+                    batchToken,
+                    armToken,
+                    armUrl: resourceUrl.armUrl,
+                    storageEndpoint: resourceUrl.storageEndpoint,
+                    account: account.toJS(),
+                };
                 return this.call(method, params, {
                     authentication: authParam,
                 });
