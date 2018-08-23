@@ -20,12 +20,13 @@ class BatchAccount:
 
 
 class AADAuth:
-    def __init__(self, batchToken: str, armToken: str, armUrl: str, account: BatchAccount):
+    def __init__(self, batchToken: str, armToken: str, armUrl: str, storage_endpoint: str, account: BatchAccount):
         self.batchCreds = AdalAuthentication(
             lambda: {'accessToken': batchToken, 'tokenType': 'Bearer'})
         self.armCreds = AdalAuthentication(
             lambda: {'accessToken': armToken, 'tokenType': 'Bearer'})
         self.armUrl = armUrl
+        self.storage_endpoint = storage_endpoint
         self.account = account
 
         self.client = batch.BatchExtensionsClient(
@@ -34,7 +35,8 @@ class AADAuth:
             base_url='https://{0}'.format(account.account_endpoint),
             subscription_id=account.subscription_id,
             mgmt_credentials=self.armCreds,
-            mgmt_base_uri=self.armUrl)
+            mgmt_base_url=self.armUrl,
+            storage_endpoint=self.storage_endpoint)
 
     @staticmethod
     def from_dict(data: dict):
@@ -42,5 +44,6 @@ class AADAuth:
             batchToken=data['batchToken'],
             armToken=data['armToken'],
             armUrl=data['armUrl'],
+            storage_endpoint=data['storageEndpoint'],
             account=BatchAccount.from_dict(data['account']),
         )
