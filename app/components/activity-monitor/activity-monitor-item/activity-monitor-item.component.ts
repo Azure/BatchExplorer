@@ -28,6 +28,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     @Input() public indent: number = 0;
     @Input() public hovering: boolean = false;
     @Output() public focusParent = new EventEmitter<void>();
+    @Output() public jumpQueues = new EventEmitter<number>();
 
     public statusOptions = ActivityStatus;
     public showSubactivities: boolean;
@@ -197,17 +198,21 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     private _focusPrev() {
         const sibIds = this.siblings.map(act => act.id);
         const index = sibIds.indexOf(this.activity.id);
-        if (index === 0) { return; }
-
-        this.select(sibIds[index - 1]);
+        if (index === 0) {
+            this.jumpQueues.emit(this.activity.id);
+        } else {
+            this.select(sibIds[index - 1]);
+        }
     }
 
     private _focusNext() {
         const sibIds = this.siblings.map(act => act.id);
         const index = sibIds.indexOf(this.activity.id);
-        if (index === sibIds.length - 1) { return; }
-
-        this.select(sibIds[index + 1]);
+        if (index === sibIds.length - 1) {
+            this.jumpQueues.emit(this.activity.id);
+        } else {
+            this.select(sibIds[index + 1]);
+        }
     }
 
     private _focusParent() {

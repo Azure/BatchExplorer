@@ -67,6 +67,21 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
         this.activityService.cancelMultiple(this.runningActivities);
     }
 
+    public select(id: number) {
+        // TODO look for cleaner way to handle propagation issue
+        setTimeout(() => this.selectSubject.next(id), 10);
+    }
+
+    public jumpQueues(id: number) {
+        if (this.pastActivities.length === 0 || this.runningActivities.length === 0) { return; }
+        const len = this.runningActivities.length;
+        if (this.runningActivities[len - 1].id === id) {
+            this.select(this.pastActivities[0].id);
+        } else if (this.pastActivities[0].id === id) {
+            this.select(this.runningActivities[len - 1].id);
+        }
+    }
+
     private _flash(id) {
         if (id !== null) {
             this.selectSubject.next(+id);
