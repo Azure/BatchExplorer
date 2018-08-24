@@ -30,6 +30,7 @@ export class Activity {
     public isComplete: boolean;
     public pending: boolean;
     public initializer: () => Observable<ActivityResponse | Activity[] | any>;
+    public isCancellable: boolean;
 
     private progressSubject: BehaviorSubject<number>;
     private processor: ActivityProcessor;
@@ -57,6 +58,8 @@ export class Activity {
 
         this.subtasksComplete = new AsyncSubject();
 
+        this.isCancellable = true;
+
         this._listenToProcessor();
     }
 
@@ -80,7 +83,12 @@ export class Activity {
             next: result => {
                 // if we need to run subtasks, execute the subtasks
                 if (Array.isArray(result)) {
-                        this.processor.exec(result);
+                    // check if any children are not cancellable
+                    // (this will also make the current activity uncancellable)
+                    if (result.filter(act => !act.isCancellable).length > 0) {
+                        this.setUncancellable();
+                    }
+                    this.processor.exec(result);
                 } else {
                     // there are no subtasks to track, so close this observable stream
                     this.subtasksComplete.complete();
@@ -101,9 +109,20 @@ export class Activity {
     }
 
     /**
+     * Sets an activity as not cancellable
+     * Chainable; can be used with constructors
+     */
+    public setUncancellable(): Activity {
+        this.isCancellable = false;
+
+        return this;
+    }
+
+    /**
      * Immediately stops the running function and completes the activity
      */
     public cancel(): void {
+        if (!this.isCancellable) { return; }
         // if we have an awaitCompletionSub active subscription, unsubscribe from it
         // so we don't get an automatic Completed when the subactivities finish
         if (this.awaitCompletionSub && !this.awaitCompletionSub.closed) {

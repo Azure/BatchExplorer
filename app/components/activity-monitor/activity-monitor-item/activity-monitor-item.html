@@ -21,7 +21,7 @@
             <div class="rerun" title="Rerun" *ngIf="activity.isComplete" (click)="rerun()">
                 <i class="fa fa-refresh"></i>
             </div>
-            <div class="cancel" title="Cancel" *ngIf="!activity.isComplete" (click)="cancel()">
+            <div class="cancel" title="Cancel" *ngIf="activity.isCancellable && !activity.isComplete" (click)="cancel()">
                 <i class="fa fa-times"></i>
             </div>
         </div>

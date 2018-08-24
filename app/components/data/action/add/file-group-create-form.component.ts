@@ -186,7 +186,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                                 });
 
                             return response.asObservable();
-                        });
+                        }).setUncancellable();
                     });
                 }),
             );
@@ -204,6 +204,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                 );
             }
         });
+        activity.setUncancellable();
         return activity.done;
     }
 
