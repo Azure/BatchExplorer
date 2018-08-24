@@ -5,20 +5,20 @@ import { NotificationService } from "@batch-flask/ui/notifications";
 
 @Injectable()
 export class ActivityService {
-    private masterProcessor: ActivityProcessor;
+    private processor: ActivityProcessor;
     private historyQueue: ActivityHistoryQueue;
 
     constructor(notificationService: NotificationService) {
-        this.masterProcessor = new ActivityProcessor();
+        this.processor = new ActivityProcessor();
         this.historyQueue = new ActivityHistoryQueue();
     }
 
     public get activities() {
-        return this.masterProcessor.activities;
+        return this.processor.activities;
     }
 
     public get incompleteActivities() {
-        return this.masterProcessor.subActivitiesSubject.asObservable();
+        return this.processor.subActivitiesSubject.asObservable();
     }
 
     public get history() {
@@ -31,7 +31,7 @@ export class ActivityService {
      * @param activity the activity to load into the master processor
      */
     public exec(activity: Activity): ActivityService {
-        this.masterProcessor.exec([activity]);
+        this.processor.exec([activity]);
 
         // when an activity completes, we should remove it from the masterprocessor
         activity.done.subscribe({
@@ -63,7 +63,7 @@ export class ActivityService {
     }
 
     private moveToHistory(activity) {
-        this.masterProcessor.remove(activity);
+        this.processor.remove(activity);
         this.historyQueue.enqueue(activity);
     }
 }
