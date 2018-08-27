@@ -12,11 +12,15 @@
             <i class="fa fa-check" *ngIf="status===statusOptions.Completed" title="Completed"></i>
             <i class="fa fa-times" *ngIf="status===statusOptions.Cancelled" title="Cancelled"></i>
         </div>
-        <div class="icon-container pos-2" *ngIf="subactivities.length" (click)="toggleExpand()">
+        <div class="icon-container pos-2" *ngIf="activity.subactivities.length" (click)="toggleExpand()">
             <i class="fa fa-angle-right" title="Expand" *ngIf="!showSubactivities"></i>
             <i class="fa fa-angle-down" title="Collapse" *ngIf="showSubactivities"></i>
         </div>
-        <div class="name pos-3">{{activity.name}}</div>
+        <div class="pos-3">
+            <span>{{activity.name}}</span>
+            <bl-clickable (do)="showLess()" [disabled]="subactivitiesShown <= 10" *ngIf="showSubactivities">Show Less</bl-clickable>
+            <bl-clickable (do)="showMore()" *ngIf="showSubactivities">Show More</bl-clickable>
+        </div>
         <div class="icon-container pos-4">
             <div class="rerun" title="Rerun" *ngIf="activity.isComplete" (click)="rerun()">
                 <i class="fa fa-refresh"></i>

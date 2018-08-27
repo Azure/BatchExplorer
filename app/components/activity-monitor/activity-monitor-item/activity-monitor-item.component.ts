@@ -32,6 +32,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
 
     public statusOptions = ActivityStatus;
     public showSubactivities: boolean;
+    public subactivitiesShown: number;
 
     private _status: ActivityStatus;
     private _selectedId: number;
@@ -43,6 +44,9 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
         private activityService: ActivityService,
     ) {
         this._status = null;
+
+        // default to 10 visible subactivities
+        this.subactivitiesShown = 10;
     }
 
     /* Angular Life Cycle Functions*/
@@ -85,7 +89,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     /* Template Getters */
 
     public get subactivities() {
-        return this.activity.subactivities;
+        return this.activity.subactivities.slice(0, this.subactivitiesShown);
     }
 
     public get status() {
@@ -117,7 +121,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     /* Change-of-state Functions */
 
     public toggleExpand() {
-        if (this.subactivities.length === 0) { return; }
+        if (this.activity.subactivities.length === 0) { return; }
 
         this.showSubactivities = !this.showSubactivities;
         if (this.showSubactivities) {
@@ -143,6 +147,21 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
 
     public rerun() {
         this.activityService.rerun(this.activity);
+    }
+
+    public showLess() {
+        if (this.subactivitiesShown > 0) {
+            this.subactivitiesShown = Math.max(this.subactivitiesShown - 10, 0);
+        }
+        if (this.subactivitiesShown === 0) {
+            this._collapse();
+        }
+    }
+
+    public showMore() {
+        if (this.subactivitiesShown < this.activity.subactivities.length) {
+            this.subactivitiesShown = Math.min(this.subactivitiesShown + 10, this.activity.subactivities.length);
+        }
     }
 
     /* Event Emitters */
@@ -185,7 +204,8 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     }
 
     private _expand() {
-        if (this.subactivities.length === 0) { return; }
+        if (this.activity.subactivities.length === 0) { return; }
+        this.subactivitiesShown = 10;
         this.showSubactivities = true;
         this.changeDetector.markForCheck();
     }
@@ -220,7 +240,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     }
 
     private _focusChild() {
-        if (this.subactivities.length > 0) {
+        if (this.activity.subactivities.length > 0) {
             this.select(this.subactivities[0].id);
         }
     }
