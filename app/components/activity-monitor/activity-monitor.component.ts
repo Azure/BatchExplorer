@@ -63,6 +63,12 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
         this.keyDownSubject.next(event);
     }
 
+    /* Key Navigation */
+    @HostListener("window:click", ["$event"])
+    public onClick(event: MouseEvent) {
+        this.selectSubject.next(-1);
+    }
+
     public cancelAll() {
         this.activityService.cancelMultiple(this.runningActivities);
     }
@@ -84,8 +90,10 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
 
     private _flash(id) {
         if (id !== null) {
-            this.selectSubject.next(+id);
-            this.flashSubject.next(+id);
+            setTimeout(() => {
+                this.selectSubject.next(+id);
+                this.flashSubject.next(+id);
+            }, 10);
         }
     }
 }
