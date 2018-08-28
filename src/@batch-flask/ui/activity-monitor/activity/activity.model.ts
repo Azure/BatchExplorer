@@ -37,6 +37,7 @@ export class Activity {
     private counters: ActivityCounters;
     private subtasksComplete: AsyncSubject<null>;
     private awaitCompletionSub: Subscription;
+    private error: string;
 
     constructor(name: string, initializerFn: () => Observable<ActivityResponse | Activity[] | any>) {
         this.id = Activity.idCounter++;
@@ -59,6 +60,8 @@ export class Activity {
         this.subtasksComplete = new AsyncSubject();
 
         this.isCancellable = true;
+
+        this.error = "";
 
         this._listenToProcessor();
     }
@@ -98,6 +101,9 @@ export class Activity {
                         this.progressSubject.next(result.progress);
                     }
                 }
+            },
+            error: (err) => {
+                this._markAsFailed(err);
             },
         });
 
@@ -204,6 +210,26 @@ export class Activity {
 
         // signal completion of the activity
         this.done.next(ActivityStatus.Cancelled);
+        this.done.complete();
+    }
+
+    /**
+     * Marks the activity as failed (a type of completion) by emitting Failed to the statusSubject
+     * Also marks the activity as done by completing its done async subject
+     */
+    private _markAsFailed(withError: Error) {
+        this.isComplete = true;
+
+        // emit a cancelled status to the statusSubject
+        this.statusSubject.next(ActivityStatus.Failed);
+
+        // leave the progress subject as is
+
+        // attach the reported error to this activity
+        this.error = `Activity Failed During Initializer with Error: ${withError.message}`;
+
+        // signal completion of the activity
+        this.done.next(ActivityStatus.Failed);
         this.done.complete();
     }
 }

@@ -11,6 +11,7 @@
             <i class="fa fa-spinner fa-pulse" *ngIf="status===statusOptions.InProgress" title="Running"></i>
             <i class="fa fa-check" *ngIf="status===statusOptions.Completed" title="Completed"></i>
             <i class="fa fa-times" *ngIf="status===statusOptions.Cancelled" title="Cancelled"></i>
+            <i class="fa fa-exclamation-triangle" *ngIf="status===statusOptions.Failed" title="Failed" (click)="toggleShowError()"></i>
         </div>
         <div class="icon-container pos-2" *ngIf="activity.subactivities.length" (click)="toggleExpand()">
             <i class="fa fa-angle-right" title="Expand" *ngIf="!showSubactivities"></i>
@@ -30,7 +31,10 @@
             </div>
         </div>
     </div>
-    <div class="subactivities" *ngIf="showSubactivities">
+    <div class="error" *ngIf="activity.error && showError">
+        {{activity.error}}
+    </div>
+    <div class="subactivities" *ngIf="activity.subactivities && showSubactivities">
         <div class="single-subactivity" *ngFor="let subactivity of subactivities; trackBy: trackByFn">
             <bl-activity-monitor-item
                 [activity]="subactivity"

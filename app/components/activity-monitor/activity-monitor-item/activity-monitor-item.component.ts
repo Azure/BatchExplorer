@@ -33,6 +33,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     public statusOptions = ActivityStatus;
     public showSubactivities: boolean;
     public subactivitiesShown: number;
+    public showError: boolean;
 
     private _status: ActivityStatus;
     private _selectedId: number;
@@ -44,9 +45,9 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
         private activityService: ActivityService,
     ) {
         this._status = null;
-
         // default to 10 visible subactivities
         this.subactivitiesShown = 10;
+        this.showError = false;
     }
 
     /* Angular Life Cycle Functions*/
@@ -129,6 +130,10 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
         } else {
             this._collapse();
         }
+    }
+
+    public toggleShowError() {
+        this.showError = !this.showError;
     }
 
     public hover() {
