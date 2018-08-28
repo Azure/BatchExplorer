@@ -4,7 +4,6 @@ import {
     Component,
     EventEmitter,
     Input,
-    OnChanges,
     OnDestroy,
     OnInit,
     Output,
@@ -19,7 +18,7 @@ import "./activity-monitor-item.scss";
     templateUrl: "activity-monitor-item.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestroy {
+export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
     @Input() public activity: Activity;
     @Input() public selectSubject: BehaviorSubject<number>;
     @Input() public flashSubject: BehaviorSubject<number>;
@@ -43,16 +42,15 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     constructor(
         private changeDetector: ChangeDetectorRef,
         private activityService: ActivityService,
-    ) {
-        this._status = null;
-        // default to 10 visible subactivities
-        this.subactivitiesShown = 10;
-        this.showError = false;
-    }
+    ) {}
 
     /* Angular Life Cycle Functions*/
 
     public ngOnInit() {
+        this._status = null;
+        // default to 10 visible subactivities
+        this.subactivitiesShown = 10;
+        this.showError = false;
         this._sub = this.activity.statusSubject.subscribe(status => {
             this._status = status;
             this.changeDetector.markForCheck();
@@ -70,17 +68,6 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
                 this._handleKeyDown(event);
             }
         }));
-    }
-
-    public ngOnChanges(changes) {
-        if (changes.indent) {
-            this.indent = changes.indent.currentValue;
-            this.changeDetector.markForCheck();
-        }
-        if (changes.hovering) {
-            this.hovering = changes.hovering.currentValue;
-            this.changeDetector.markForCheck();
-        }
     }
 
     public ngOnDestroy() {

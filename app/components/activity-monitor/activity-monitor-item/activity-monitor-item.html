@@ -1,7 +1,14 @@
-<div [ngClass]="{'activity-monitor-item-container': true, 'selected': selected, 'flash': shouldFlash}">
+<div
+    [ngClass]="{
+                'activity-monitor-item-container': true,
+                'selected': selected,
+                'hovering': !selected && hovering,
+                'flash': shouldFlash
+            }"
+>
     <div
         [ngStyle]="{'padding-left': getIndent()}"
-        [ngClass]="{'item-container': true, 'hovering': !selected && hovering}"
+        class="item-container"
         (mouseenter)="hover()"
         (mouseleave)="unhover()"
         (click)="select()"

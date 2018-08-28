@@ -20,6 +20,12 @@ bl-activity-monitor-item {
             animation: flash 1s 1;
         }
 
+
+        &.hovering {
+            background-color: $primary-color-light;
+            color: $primary-text;
+        }
+
         .item-container {
             cursor: default;
             display: flex;
@@ -27,11 +33,6 @@ bl-activity-monitor-item {
             padding: 10px;
             height: 40px;
             position: relative;
-
-            &.hovering {
-                background-color: $primary-color-light;
-                color: $primary-text;
-            }
 
             div {
                 position: absolute;
@@ -88,6 +89,7 @@ bl-activity-monitor-item {
 
         .error {
             padding: 0 10px 5px;
+            color: $danger-contrast-color;
         }
     }
 }

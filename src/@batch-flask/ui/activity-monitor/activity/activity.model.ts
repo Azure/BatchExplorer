@@ -31,13 +31,13 @@ export class Activity {
     public pending: boolean;
     public initializer: () => Observable<ActivityResponse | Activity[] | any>;
     public isCancellable: boolean;
+    public error: string;
 
     private progressSubject: BehaviorSubject<number>;
     private processor: ActivityProcessor;
     private counters: ActivityCounters;
     private subtasksComplete: AsyncSubject<null>;
     private awaitCompletionSub: Subscription;
-    private error: string;
 
     constructor(name: string, initializerFn: () => Observable<ActivityResponse | Activity[] | any>) {
         this.id = Activity.idCounter++;
