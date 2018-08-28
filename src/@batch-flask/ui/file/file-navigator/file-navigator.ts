@@ -263,6 +263,9 @@ export class FileNavigator<TParams = any> {
                     return new Activity(name, initializer);
                 });
             }),
+            tap(() => {
+                this._removeFile(folder);
+            }),
         );
     }
 
