@@ -50,7 +50,7 @@ export class StorageUtils {
     private static _singleDashChar = "-";
     private static _maxUsableJobIdLength = 63 - StorageUtils._jobPrefix.length;
     private static _regexPermittedContainerNamePattern = /^[a-z0-9][a-z0-9-]*$/i;
-    private static _regexUnderscoresAndMultipleDashes = /[_-]{1,}/g;
+    private static _regexInvalidCharacters = /[:_-]{1,}/g;
     private static _regexTrimStartAndEnd = /^[-]|[-]+$/g;
 
     // Must be <= 63 - "job-".Length - 1 (hyphen before hash) - length of hash string (40 for SHA1)
@@ -84,7 +84,7 @@ export class StorageUtils {
     private static async _mungeToContainerName(jobId: string): Promise<string> {
         const hash = await this._getJobIdHash(jobId);
         const hashText = hash;
-        let safeString = jobId.replace(this._regexUnderscoresAndMultipleDashes, this._singleDashChar);
+        let safeString = jobId.replace(this._regexInvalidCharacters, this._singleDashChar);
         safeString = safeString.replace(this._regexTrimStartAndEnd, "");
 
         if (safeString.length > this._maxJobIdLengthInMungedContainerName) {
