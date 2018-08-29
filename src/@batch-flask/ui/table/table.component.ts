@@ -53,6 +53,11 @@ export interface TableConfig extends AbstractListBaseConfig {
      * If the table should allow column to be resized. Default true.
      */
     resizableColumn?: boolean;
+
+    /**
+     * If the table should hide the header. Default false.
+     */
+    hideHeader?: boolean;
 }
 
 export const tableDefaultConfig = {

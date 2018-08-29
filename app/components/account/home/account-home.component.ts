@@ -9,6 +9,8 @@ import { Set } from "immutable";
 import { distinctUntilChanged } from "rxjs/operators";
 import { BatchAccountCreateComponent } from "../action/add";
 
+import "./account-home.scss";
+
 @Component({
     selector: "bl-account-home",
     templateUrl: "account-home.html",

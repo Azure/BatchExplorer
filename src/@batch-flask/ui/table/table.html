@@ -1,4 +1,4 @@
-<div class="table-head" [class.no-scroll]="!showScrollShadow">
+<div *ngIf="!config.hideHeader" class="table-head" [class.no-scroll]="!showScrollShadow">
     <bl-thead [columns]="columnManager.columns"></bl-thead>
 </div>
 <div class="table-body">

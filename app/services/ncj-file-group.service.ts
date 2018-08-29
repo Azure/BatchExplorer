@@ -59,10 +59,11 @@ export class NcjFileGroupService {
     public get(name: string): Observable<BlobContainer> {
         const prefixedName = this.addFileGroupPrefix(name);
         return this.autoStorageService.get().pipe(
-            flatMap((storageAccountId) =>  this.storageContainerService.create(storageAccountId, prefixedName)),
+            flatMap((storageAccountId) => this.storageContainerService.get(storageAccountId, prefixedName)),
             share(),
         );
     }
+
     /**
      * Return the container name from a file group name
      * @param fileGroupName Name of the file group

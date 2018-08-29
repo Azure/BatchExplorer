@@ -4,18 +4,23 @@ import { ActivityStatus } from "./activity-datatypes";
 import { Activity } from "./activity.model";
 
 export class ActivityProcessor {
+
+    public static maxCalculableActivities = 10;
     public activities: Activity[];
     public completionSubject: BehaviorSubject<ActivityStatus>;
     public subActivitiesSubject: BehaviorSubject<Activity[]>;
+    public combinedProgressSubject: BehaviorSubject<number>;
 
     private completionSubscription: Subscription;
     private subActivitiesSubscription: Subscription;
     private activityFifoQueue: ActivityFifoQueue;
+    private combinedProgressSubscription: Subscription;
 
     constructor() {
         this.activities = [];
         this.completionSubject = new BehaviorSubject(null);
         this.subActivitiesSubject = new BehaviorSubject([]);
+        this.combinedProgressSubject = new BehaviorSubject(-1);
 
         // NOTE: ActivityFifoQueue is a singleton class, so this will be the same
         // instance of the class in ANY instance of ActivityProcessor
@@ -27,6 +32,7 @@ export class ActivityProcessor {
 
         this.completionSubscription = null;
         this.subActivitiesSubscription = null;
+        this.combinedProgressSubscription = null;
     }
 
     /**
@@ -58,10 +64,12 @@ export class ActivityProcessor {
         // compile and run all activities
         const statuses: Array<Observable<ActivityStatus>> = [];
         const completions: Array<Observable<ActivityStatus>> = [];
+        const progresses: Array<Observable<number>> = [];
 
         const pendingActivities = this.activities.filter(activity => !activity.isComplete);
         for (const activity of pendingActivities) {
             statuses.push(activity.statusSubject);
+            progresses.push(activity.progressSubject);
 
             if (activity.pending) {
                 this.activityFifoQueue.enqueue(activity);
@@ -84,5 +92,22 @@ export class ActivityProcessor {
         this.subActivitiesSubscription = combineLatest(...statuses).subscribe(() => {
             this.subActivitiesSubject.next(pendingActivities);
         });
+
+        if (pendingActivities.length < ActivityProcessor.maxCalculableActivities) {
+            // on any status change, re-emit the entire activity list to the parent activity
+            if (this.combinedProgressSubscription && !this.combinedProgressSubscription.closed) {
+                this.combinedProgressSubscription.unsubscribe();
+            }
+            this.combinedProgressSubscription = combineLatest(...progresses).subscribe((progs) => {
+                let numerator = 0;
+                for (const prog of progs) {
+                    numerator += prog;
+                }
+
+                const summaryProgress = (numerator / (100 * progs.length)) * 100;
+
+                this.combinedProgressSubject.next(summaryProgress);
+            });
+        }
     }
 }

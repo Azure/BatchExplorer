@@ -24,6 +24,7 @@ export class Activity {
     public id: number;
     public name: string;
     public statusSubject: BehaviorSubject<ActivityStatus>;
+    public progressSubject: BehaviorSubject<number>;
     public subactivities: Activity[];
     /** Emits on completion, with the status of the activity after completion */
     public done: AsyncSubject<ActivityStatus>;
@@ -33,7 +34,6 @@ export class Activity {
     public isCancellable: boolean;
     public error: string;
 
-    private progressSubject: BehaviorSubject<number>;
     private processor: ActivityProcessor;
     private counters: ActivityCounters;
     private subtasksComplete: AsyncSubject<null>;
@@ -175,6 +175,10 @@ export class Activity {
             if (this.counters.total === numSubActivities) {
                 this.subtasksComplete.complete();
             }
+        });
+
+        this.processor.combinedProgressSubject.subscribe(progress => {
+            this.progressSubject.next(progress);
         });
     }
 
