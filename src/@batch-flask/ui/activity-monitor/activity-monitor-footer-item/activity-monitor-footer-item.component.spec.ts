@@ -1,13 +1,9 @@
 import { Component, DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
-import {
-    Activity,
-    ActivityModule,
-    ActivityMonitorFooterItemComponent,
-} from "@batch-flask/ui/activity-monitor";
-import { AsyncSubject, BehaviorSubject } from "rxjs";
+import { ActivityMonitorFooterItemComponent } from "@batch-flask/ui/activity-monitor";
+import { BehaviorSubject } from "rxjs";
 
 @Component({
     template: `
@@ -17,51 +13,77 @@ import { AsyncSubject, BehaviorSubject } from "rxjs";
 })
 class TestComponent {
     public subj: BehaviorSubject<any>;
-    public activity: Activity;
+    public activity: MockActivity;
 
     constructor() {
         this.subj = new BehaviorSubject(null);
-        this.activity = new Activity("Test activity", () => this.subj);
+        this.activity = new MockActivity("Test activity", this.subj);
+    }
+}
+
+class MockActivity {
+    public name: string;
+    public progress: BehaviorSubject<number>;
+
+    constructor(n: string, p: BehaviorSubject<number>) {
+        this.name = n;
+        this.progress = p;
     }
 }
 
 describe("ActivityMonitorFooterItemComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
-    let TestComponent: TestComponent;
+    let testComponent: TestComponent;
     let de: DebugElement;
+    let component: ActivityMonitorFooterItemComponent;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MaterialModule, ActivityModule],
-            declarations: [
-            ],
+            imports: [MaterialModule],
+            declarations: [ActivityMonitorFooterItemComponent, TestComponent],
         });
 
         fixture = TestBed.createComponent(TestComponent);
+        testComponent = fixture.componentInstance;
+        de = fixture.debugElement.query(By.css("bl-activity-monitor-footer-item"));
+        component = de.componentInstance;
         fixture.detectChanges();
     });
 
-    it("dropdown button should have the right value", fakeAsync(() => {
-        const dropdownBtnEl = fixture.debugElement.query(By.css("[bl-dropdown-btn]"));
+    it("should display the activity name", () => {
+        const nameEl = de.query(By.css(".name"));
 
-        const noTaskMessage = "No current background tasks";
-        // There is not current running task yet
-        expect(dropdownBtnEl.nativeElement.textContent).toContain(noTaskMessage);
+        expect(nameEl.nativeElement.textContent).toContain("Test activity");
+        expect(nameEl.nativeElement.textContent).not.toContain("...");
+    });
 
-        const subj = new AsyncSubject();
+    it("should display the activity name trucated to 20 characters", () => {
+        const nameEl = de.query(By.css(".name"));
 
-        // Add 1 task
-        activityService.exec(new Activity("Task1", () => subj));
+        testComponent.activity = new MockActivity(
+            "Test activity but it's longer than 20 characters",
+            testComponent.subj,
+        );
         fixture.detectChanges();
 
-        expect(dropdownBtnEl.nativeElement.textContent).not.toContain(noTaskMessage);
-        expect(dropdownBtnEl.nativeElement.textContent).toContain("Task1");
+        expect(nameEl.nativeElement.textContent).toContain("Test activity but it...");
+    });
 
-        subj.next(null);
-        subj.complete();
-        tick(1000);
+    it("should display the percentage if an activity is emitting progress", () => {
+        const nameEl = de.query(By.css(".name"));
+
+        const progressSubj = new BehaviorSubject(0);
+
+        testComponent.activity = new MockActivity("Test activity with progress subject", progressSubj);
         fixture.detectChanges();
 
-        expect(dropdownBtnEl.nativeElement.textContent).toContain(noTaskMessage);
-    }));
+        expect(component.progress).toBe(0);
+        expect(nameEl.nativeElement.textContent).toContain("(0%)");
+
+        progressSubj.next(50);
+        fixture.detectChanges();
+
+        expect(component.progress).toBe(50);
+        expect(nameEl.nativeElement.textContent).toContain("(50%)");
+    });
 });

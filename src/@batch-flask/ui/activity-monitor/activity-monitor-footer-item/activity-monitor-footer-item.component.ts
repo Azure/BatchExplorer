@@ -37,7 +37,11 @@ export class ActivityMonitorFooterItemComponent implements OnChanges {
     }
 
     public prettyPrint() {
-        return `${this.name.slice(0, 20)}... ${this._progressString}`;
+        if (this.name.length < 20) {
+            return `${this.name} ${this._progressString}`;
+        } else {
+            return `${this.name.slice(0, 20)}... ${this._progressString}`;
+        }
     }
 
     private _subscribeToProgress() {
