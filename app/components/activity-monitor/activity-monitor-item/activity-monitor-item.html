@@ -13,26 +13,30 @@
         (mouseleave)="unhover()"
         (click)="select()"
     >
-        <div class="icon-container pos-1">
+        <div class="icon-container progress-icon">
             <i class="fa fa-ellipsis-h" *ngIf="status===statusOptions.Pending" title="Pending"></i>
             <i class="fa fa-spinner fa-pulse" *ngIf="status===statusOptions.InProgress" title="Running"></i>
             <i class="fa fa-check" *ngIf="status===statusOptions.Completed" title="Completed"></i>
             <i class="fa fa-times" *ngIf="status===statusOptions.Cancelled" title="Cancelled"></i>
             <i class="fa fa-exclamation-triangle" *ngIf="status===statusOptions.Failed" title="Failed" (click)="toggleShowError()"></i>
         </div>
-        <div class="icon-container pos-2" *ngIf="activity.subactivities.length" (click)="toggleExpand()">
-            <i class="fa fa-angle-right" title="Expand" *ngIf="!showSubactivities"></i>
-            <i class="fa fa-angle-down" title="Collapse" *ngIf="showSubactivities"></i>
+        <div class="icon-container">
+            <div class="expand-icon" *ngIf="activity.subactivities.length" (click)="toggleExpand()">
+                <i class="fa fa-angle-right" title="Expand" *ngIf="!showSubactivities"></i>
+                <i class="fa fa-angle-down" title="Collapse" *ngIf="showSubactivities"></i>
+            </div>
         </div>
-        <div class="pos-3">
-            <span>{{activity.name}}</span>
-            <bl-clickable (do)="showLess()" [disabled]="subactivitiesShown <= 10" *ngIf="showSubactivities">Show Less</bl-clickable>
-            <bl-clickable (do)="showMore()" *ngIf="showSubactivities">Show More</bl-clickable>
+        <div class="activity-info">
+            <div class="activity-info-upper">
+                <span>{{prettyPrint()}}</span>
+                <bl-clickable (do)="showLess()" [disabled]="subactivitiesShown <= 10" *ngIf="showSubactivities">Show Less</bl-clickable>
+                <bl-clickable (do)="showMore()" *ngIf="showSubactivities">Show More</bl-clickable>
+            </div>
             <div class="progress-bar" *ngIf="!activity.isComplete">
                 <mat-progress-bar mode="determinate" [value]="progress" *ngIf="progress !== -1"></mat-progress-bar>
             </div>
         </div>
-        <div class="icon-container pos-4">
+        <div class="icon-container action-icon">
             <div class="rerun" title="Rerun" *ngIf="activity.isComplete" (click)="rerun()">
                 <i class="fa fa-refresh"></i>
             </div>

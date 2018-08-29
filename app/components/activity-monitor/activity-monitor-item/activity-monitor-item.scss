@@ -32,17 +32,13 @@ bl-activity-monitor-item {
             align-items: center;
             padding: 10px;
             height: 40px;
-            position: relative;
-
-            div {
-                position: absolute;
-            }
 
             .icon-container {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                margin: 0 20px;
+                flex: 1;
+                flex-basis: 20px;
 
                 i {
                     font-size: 11pt;
@@ -54,46 +50,19 @@ bl-activity-monitor-item {
                 }
             }
 
-            .pos-1 {
-                margin-left: 10px;
-            }
+            .activity-info {
+                flex: 40;
 
-            .pos-2 {
-                margin-left: 40px;
+                .activity-info-upper {
+                    display: flex;
+                    justify-content: flex-start;
 
-                .fa-angle-down {
-                    padding-left: 6px;
-                }
-            }
-
-            .pos-3 {
-                margin-left: 90px;
-                height: inherit;
-                display: flex;
-
-                > * {
-                    margin-top: 15px;
-                }
-
-                bl-clickable {
-                    margin-left: 20px;
-                }
-
-                .progress-bar {
-                    width: 80vw;
-                    margin-top: 10px;
-                }
-            }
-
-            .pos-4 {
-                right: 0;
-
-                .cancel {
-                    padding: 4px;
-                }
-
-                .rerun {
-                    padding: 4px;
+                    bl-clickable {
+                        display: flex;
+                        justify-content: flex-end;
+                        align-items: center;
+                        flex-basis: 90px;
+                    }
                 }
             }
         }

@@ -29,6 +29,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
     @Output() public focusParent = new EventEmitter<void>();
     @Output() public jumpQueues = new EventEmitter<number>();
 
+    public progress: number;
     public statusOptions = ActivityStatus;
     public showSubactivities: boolean;
     public subactivitiesShown: number;
@@ -38,6 +39,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
     private _selectedId: number;
     private _flashId: number;
     private _sub: Subscription;
+    private _progressString: string;
 
     constructor(
         private changeDetector: ChangeDetectorRef,
@@ -67,6 +69,12 @@ export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
             if (event && this.selected) {
                 this._handleKeyDown(event);
             }
+        }));
+        this._sub.add(this.activity.progress.subscribe((progress) => {
+
+            this.progress = progress;
+            this._progressString = `(${Math.floor(progress)}%)`;
+            this.changeDetector.markForCheck();
         }));
     }
 
@@ -104,6 +112,14 @@ export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
 
     public getIndent() {
         return (this.indent * 30) + "px";
+    }
+
+    public prettyPrint() {
+        if (this.activity.name.length < 200) {
+            return `${this.activity.name} ${this._progressString}`;
+        } else {
+            return `${this.activity.name.slice(0, 200)}... ${this._progressString}`;
+        }
     }
 
     /* Change-of-state Functions */
