@@ -68,9 +68,20 @@ bl-activity-monitor-item {
 
             .pos-3 {
                 margin-left: 90px;
+                height: inherit;
+                display: flex;
+
+                > * {
+                    margin-top: 15px;
+                }
 
                 bl-clickable {
                     margin-left: 20px;
+                }
+
+                .progress-bar {
+                    width: 80vw;
+                    margin-top: 10px;
                 }
             }
 

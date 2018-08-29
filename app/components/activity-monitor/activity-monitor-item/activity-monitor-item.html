@@ -28,6 +28,9 @@
             <span>{{activity.name}}</span>
             <bl-clickable (do)="showLess()" [disabled]="subactivitiesShown <= 10" *ngIf="showSubactivities">Show Less</bl-clickable>
             <bl-clickable (do)="showMore()" *ngIf="showSubactivities">Show More</bl-clickable>
+            <div class="progress-bar" *ngIf="!activity.isComplete">
+                <mat-progress-bar mode="determinate" [value]="progress" *ngIf="progress !== -1"></mat-progress-bar>
+            </div>
         </div>
         <div class="icon-container pos-4">
             <div class="rerun" title="Rerun" *ngIf="activity.isComplete" (click)="rerun()">

@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 
+import { MaterialModule } from "@batch-flask/core";
 import { commonModules } from "app/common";
 import { ActivityMonitorItemComponent } from "./activity-monitor-item";
 import { ActivityMonitorComponent } from "./activity-monitor.component";
@@ -10,6 +11,7 @@ const components = [
 ];
 
 const modules = [
+    MaterialModule,
 ];
 
 @NgModule({
