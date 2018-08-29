@@ -140,11 +140,9 @@ export class BatchExplorerApplication {
     public async updateAzureEnvironment(env: AzureEnvironment) {
         await this.aadService.logout();
         this.windows.closeAll();
-        log.debug("LOCal storage", this.windows.size);
         await this.localStorage.setItem(Constants.localStorageKey.azureEnvironment, env.id);
         this._azureEnvironment.next(env);
         await this.aadService.login();
-        log.debug("windows", this.windows.size);
         this.windows.openNewWindow();
     }
 
