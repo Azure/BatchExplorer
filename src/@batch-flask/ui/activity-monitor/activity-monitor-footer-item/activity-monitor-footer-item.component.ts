@@ -17,6 +17,7 @@ export class ActivityMonitorFooterItemComponent implements OnChanges {
     @Input() public activity: Activity;
     public progress: number;
 
+    private _progressString: string;
     private _sub: Subscription;
 
     constructor(private changeDetector: ChangeDetectorRef) {}
@@ -35,13 +36,23 @@ export class ActivityMonitorFooterItemComponent implements OnChanges {
         return this.activity.isComplete;
     }
 
+    public prettyPrint() {
+        if (this.name.length < 20) {
+            return `${this.name} ${this._progressString}`;
+        } else {
+            return `${this.name.slice(0, 20)}... ${this._progressString}`;
+        }
+    }
+
     private _subscribeToProgress() {
         if (this._sub && this._sub.closed) {
             this._sub.unsubscribe();
         }
 
         this._sub = this.activity.progress.subscribe((progress) => {
+
             this.progress = progress;
+            this._progressString = `(${Math.floor(progress)}%)`;
             this.changeDetector.markForCheck();
         });
     }
