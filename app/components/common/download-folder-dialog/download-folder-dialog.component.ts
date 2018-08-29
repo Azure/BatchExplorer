@@ -141,7 +141,7 @@ export class DownloadFolderComponent {
     }
 
     private get _defaultDownloadFolder() {
-        return path.join(this.fs.commonFolders.downloads, "batch-labs");
+        return path.join(this.fs.commonFolders.downloads, "batch-explorer");
     }
 
     private _getSubdirectoryPath(filePath: string) {
