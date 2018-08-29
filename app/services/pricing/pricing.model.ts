@@ -122,7 +122,7 @@ export class NodePricing {
             lowpri = true;
             name = name.replace(" Low Priority", "");
         }
-        const vmSizes = name.split("/").map(x => x.replace(/ /g, "_");
+        const vmSizes = name.split("/").map(x => x.replace(/ /g, "_"));
         const os = category.includes("Windows") ? "windows" : "linux";
         return { os, lowpri, vmSizes };
     }
