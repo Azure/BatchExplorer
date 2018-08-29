@@ -151,7 +151,10 @@ export class PricingService {
                     && meter.MeterRegion in regionMapping
                     && !meter.MeterSubCategory.includes("VM_Promo")) {
                     pricing.nodes.add(
-                        regionMapping[meter.MeterRegion], meter.MeterSubCategory, meter.MeterName, meter.MeterRates["0"]);
+                        regionMapping[meter.MeterRegion], 
+                        meter.MeterSubCategory, 
+                        meter.MeterName, 
+                        meter.MeterRates["0"]);
                 }
             }
         }
