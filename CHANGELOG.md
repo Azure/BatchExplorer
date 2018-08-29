@@ -1,12 +1,10 @@
 # 0.17.3
 
-### Bug fixes:
+### Minor feature:
 * Display storage account URL in the Credentials and code samples dialog [\#1556](https://github.com/Azure/BatchExplorer/issues/1556)
-* Cannot upload files to file group in govt cloud [\#1557](https://github.com/Azure/BatchExplorer/issues/1557)
-
-# 0.17.2
 
 ### Bug fixes:
+* Cannot upload files to file group in govt cloud [\#1557](https://github.com/Azure/BatchExplorer/issues/1557)
 * Cannot login to GOVT cloud [\#1548](https://github.com/Azure/BatchExplorer/issues/1548)
 
 # 0.17.1
