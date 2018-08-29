@@ -1,14 +1,6 @@
 import { StorageUtils } from "app/utils";
 
-describe("StorageUtils", () => {
-    let multipleCharRegex: RegExp;
-    let startAndEndRegex: RegExp;
-
-    beforeEach(() => {
-        multipleCharRegex = (StorageUtils as any)._regexInvalidCharacters;
-        startAndEndRegex = (StorageUtils as any)._regexTrimStartAndEnd;
-    });
-
+fdescribe("StorageUtils", () => {
     it("Throws error if no jobId supplied", (done) => {
         StorageUtils.getSafeContainerName(null).catch((error) => {
             expect(error.message).toEqual("No jobId supplied to getSafeContainerName(jobId: string)");
@@ -16,14 +8,14 @@ describe("StorageUtils", () => {
         });
     });
 
-    it("Generates safe container name", () => {
+    it("Generates safe container name", async () => {
         assertName("job-15", "job-job-15");
         assertName("MyTerrificJob", "job-myterrificjob");
         assertName("J", "job-j");
         assertName("j", "job-j");
     });
 
-    it("Replaces invalid characters", () => {
+    it("Replaces invalid characters", async () => {
         assertName("my_job-bob", "job-my-job-bob-e04620bc2add214df74e158ba60d24273a0e0927");
         assertName("-my_job-sam--", "job-my-job-sam-47f54d840815af2592a12213db05f8a8277a098d");
         assertName("my-_EVEN_MORE_-terrific-job", "job-my-even-more-te-68b05a7d8aa6aa65b9a6892c667a6c406a16ad65");
@@ -37,20 +29,9 @@ describe("StorageUtils", () => {
         // tslint:disable-next-line
         assertName("myverylongjobnameallinonewordreallystartingtogetreallysillynow", "job-myverylongjobna-a8700e4947d0c8c621e53b24246aa0349d830e41");
     });
-
-    it("Regex replace duplicates does what it is suposed to", () => {
-        expect("-my_job-sam--".replace(multipleCharRegex, "-")).toEqual("-my-job-sam-");
-        expect("my-_EVEN_MORE_-terrific-job".replace(multipleCharRegex, "-")).toEqual("my-EVEN-MORE-terrific-job");
-        expect("-my___job-sam--".replace(multipleCharRegex, "-")).toEqual("-my-job-sam-");
-    });
-
-    it("Regex trim start and end does what it is suposed to", () => {
-        expect("-my-job-sam-".replace(startAndEndRegex, "")).toEqual("my-job-sam");
-    });
 });
 
-function assertName(jobId: string, expected: string) {
-    StorageUtils.getSafeContainerName(jobId).then((containerName: string) => {
-        expect(containerName).toEqual(expected, "expected: " + expected + " ok");
-    });
+async function assertName(jobId: string, expected: string) {
+    const containerName = await StorageUtils.getSafeContainerName(jobId);
+    expect(containerName).toEqual(expected, "expected: " + expected + " ok");
 }
