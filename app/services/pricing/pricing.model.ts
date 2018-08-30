@@ -10,8 +10,6 @@ export interface VMPrices {
     lowpri: number;
 }
 
-const missingCategoryRegex = /^a[0-9]+$/;
-
 export class OSPricing {
     public static fromJS(name, os, data: any[]): OSPricing {
         const pricing = new OSPricing(name, os);
@@ -24,7 +22,7 @@ export class OSPricing {
 
     public add(vmsize: string, lowpri: boolean, price: number) {
         vmsize = vmsize.toLowerCase().replace(/\./g, "_");
-        if (missingCategoryRegex.exec(vmsize)) {
+        if (!vmsize.startsWith("standard_")) {
             vmsize = `standard_${vmsize}`;
         }
         if (!this._map.has(vmsize)) {
@@ -73,7 +71,7 @@ export class NodePricing {
 
     private _map: Map<string, RegionPrices> = new Map();
 
-    public add(region: string, vmName: string, price: number) {
+    public add(region: string, category: string, vmName: string, price: number) {
         if (!this._map.has(region)) {
             this._map.set(region, {
                 linux: new OSPricing(region, "linux"),
@@ -81,8 +79,10 @@ export class NodePricing {
             });
         }
         const regionPricing = this._map.get(region);
-        const { os, lowpri, vmsize } = this._parseVmName(vmName);
-        regionPricing[os].add(vmsize, lowpri, price);
+        const { os, lowpri, vmSizes } = this._parseVmName(category, vmName);
+        for (const vmSize of vmSizes) {
+            regionPricing[os].add(vmSize, lowpri, price);
+        }
     }
 
     public getPrice(region: string, os: OsType, vmsize: string, lowpri = false): number {
@@ -116,12 +116,15 @@ export class NodePricing {
         });
     }
 
-    private _parseVmName(name: string): { os: OsType, lowpri: boolean, vmsize: string } {
-        const segments = name.split(" ", 2);
-        const vmsize = segments[0];
-        const os = name.includes("(Windows)") ? "windows" : "linux";
-        const lowpri = name.includes("Low Priority");
-        return { os, lowpri, vmsize };
+    private _parseVmName(category: string, name: string): { os: OsType, lowpri: boolean, vmSizes: string[] } {
+        let lowpri = false;
+        if (name.endsWith(" Low Priority")) {
+            lowpri = true;
+            name = name.replace(" Low Priority", "");
+        }
+        const vmSizes = name.split("/").map(x => x.replace(/ /g, "_"));
+        const os = category.includes("Windows") ? "windows" : "linux";
+        return { os, lowpri, vmSizes };
     }
 }
 

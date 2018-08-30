@@ -24,13 +24,13 @@ export class Activity {
     public id: string;
     public name: string;
     public statusSubject: BehaviorSubject<ActivityStatus>;
+    public progressSubject: BehaviorSubject<number>;
     public subactivities: Activity[];
     public done: AsyncSubject<ActivityStatus>; // only emits on completion
     public isComplete: boolean;
     public pending: boolean;
 
     private initializer: () => Observable<ActivityResponse | Activity[] | any>;
-    private progressSubject: BehaviorSubject<number>;
     private processor: ActivityProcessor;
     private counters: ActivityCounters;
 
@@ -79,7 +79,7 @@ export class Activity {
             next: result => {
                 // if we need to run subtasks, execute the subtasks
                 if (Array.isArray(result)) {
-                        this.processor.exec(result);
+                    this.processor.exec(result);
                 } else {
                     // there are no subtasks to track, so close this observable stream
                     this.subtasksComplete.complete();
@@ -133,6 +133,10 @@ export class Activity {
             if (this.counters.total === numSubActivities) {
                 this.subtasksComplete.complete();
             }
+        });
+
+        this.processor.combinedProgressSubject.subscribe(progress => {
+            this.progressSubject.next(progress);
         });
     }
 

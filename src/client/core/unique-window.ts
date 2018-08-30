@@ -48,9 +48,6 @@ export abstract class GenericWindow {
      * @param focus If we should focus on the window if it is already visible. @default false
      */
     public show(focus: boolean = false) {
-        if (!this._window) {
-            this.create();
-        }
         if (focus || !this._window.isVisible()) {
             this._window.show();
         }
@@ -100,5 +97,16 @@ export abstract class UniqueWindow extends GenericWindow {
             log.info(`Window ${this.constructor.name} closed. Quiting the app.`);
             this.batchExplorerApp.quit();
         });
+    }
+
+    /**
+     * Display the window only if not already visible
+     * @param focus If we should focus on the window if it is already visible. @default false
+     */
+    public show(focus: boolean = false) {
+        if (!this._window) {
+            this.create();
+        }
+        super.show(focus);
     }
 }
