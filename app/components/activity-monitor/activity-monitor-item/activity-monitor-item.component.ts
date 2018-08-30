@@ -52,6 +52,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
         this._status = null;
         // default to 10 visible subactivities
         this.subactivitiesShown = 10;
+        this.showSubactivities = false;
         this.showError = false;
         this._sub = this.activity.statusSubject.subscribe(status => {
             this._status = status;
@@ -71,7 +72,6 @@ export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
             }
         }));
         this._sub.add(this.activity.progress.subscribe((progress) => {
-
             this.progress = progress;
             this._progressString = `(${Math.floor(progress)}%)`;
             this.changeDetector.markForCheck();
@@ -90,12 +90,6 @@ export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
 
     public get status() {
         return this._status;
-    }
-
-    public get finished() {
-        return this._status === ActivityStatus.Completed ||
-            this._status === ActivityStatus.Failed ||
-            this._status === ActivityStatus.Cancelled;
     }
 
     public get selected() {

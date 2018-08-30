@@ -28,7 +28,7 @@
         </div>
         <div class="activity-info">
             <div class="activity-info-upper">
-                <span>{{prettyPrint()}}</span>
+                <span class="name">{{prettyPrint()}}</span>
                 <bl-clickable (do)="showLess()" [disabled]="subactivitiesShown <= 10" *ngIf="showSubactivities">Show Less</bl-clickable>
                 <bl-clickable (do)="showMore()" *ngIf="showSubactivities">Show More</bl-clickable>
             </div>
