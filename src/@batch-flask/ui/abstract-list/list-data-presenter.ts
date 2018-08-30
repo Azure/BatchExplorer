@@ -1,9 +1,11 @@
-import { ListDataSorter, ListSortConfig, SortDirection, SortingStatus } from "@batch-flask/ui/abstract-list/list-data-sorter";
 import { nil } from "@batch-flask/utils";
-import { BehaviorSubject, Observable, Subscription } from "rxjs";
+import { BehaviorSubject, Observable, Subscription, combineLatest } from "rxjs";
 import { map } from "rxjs/operators";
 import { AbstractListItem } from "./abstract-list-item";
 import { ListDataProvider } from "./list-data-provider";
+import {
+    ListDataSorter, ListSortConfig, SortDirection, SortingStatus,
+} from "./list-data-sorter";
 
 export interface SortingInfo {
     key: string | null;
@@ -34,8 +36,11 @@ export class ListDataPresenter {
             this._updateDisplayedItems();
         });
 
-        this.sortingStatus = dataProvider.hasMore.pipe(
-            map(hasMore => hasMore ? SortingStatus.Partial : SortingStatus.Valid),
+        this.sortingStatus = combineLatest(dataProvider.hasMore, this._sortingBy).pipe(
+            map(([hasMore, sortingBy]) => {
+                if (!sortingBy.key) { return SortingStatus.Valid; }
+                return hasMore ? SortingStatus.Partial : SortingStatus.Valid;
+            }),
         );
     }
 

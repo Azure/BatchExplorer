@@ -43,6 +43,8 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnCh
     public listConfig: AbstractListBaseConfig = {
         sorting: {
             state: true,
+            runtime: true,
+            creationTime: true,
         },
     };
 

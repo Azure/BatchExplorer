@@ -1,7 +1,7 @@
 <div *ngIf="!config.hideHeader" class="table-head" [class.no-scroll]="!showScrollShadow">
     <bl-thead [columns]="columnManager.columns"></bl-thead>
 </div>
-<div class="error" *ngIf="sortingStatus === SortingStatus.Partial">
+<div class="warning" *ngIf="sortingStatus === SortingStatus.Partial">
     All entities have not been loaded, this is showing a partial sorting.
 </div>
 <div class="table-body">

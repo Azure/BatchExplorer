@@ -2,6 +2,7 @@
     <bl-quick-list
         *ngIf="quicklist"
         [data]="data"
+        [config]="listConfig"
         [commands]="commands"
         [(activeItem)]="activeItem"
         [(selection)]="selection"
@@ -22,6 +23,7 @@
 
     <bl-table *ngIf="!quicklist"
         [data]="data"
+        [config]="listConfig"
         [commands]="commands"
         [(activeItem)]="activeItem"
         [(selection)]="selection"
@@ -39,7 +41,7 @@
             </div>
         </bl-column>
 
-        <bl-column name="runTime" [defaultWidth]="120">
+        <bl-column name="runtime" [defaultWidth]="120">
             <div *blHeadCellDef>Runtime</div>
             <div *blCellDef="let task"><bl-task-runtime [task]="task"></bl-task-runtime></div>
         </bl-column>

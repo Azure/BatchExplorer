@@ -93,6 +93,12 @@ export class Task extends Record<TaskAttributes> {
         return maxTime - runningTime < 0;
     }
 
+    public get runtime(): number {
+        const info = this.executionInfo;
+        if (!info) { return null; }
+        return info.endTime.getTime() - info.startTime.getTime();
+    }
+
     /**
      * Return if the task is being rescheduled because the prep task failed
      */

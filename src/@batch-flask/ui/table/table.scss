@@ -29,10 +29,13 @@ bl-table {
         }
     }
 
-    > .error {
+    > .warning {
         height: 30px;
-        color: $danger-contrast-color;
-        background: $danger-color;
+        color: $warn-contrast-color;
+        background: $warn-color;
+        display: flex;
+        align-items: center;
+        padding: 5px;
     }
 
     > .table-body {
