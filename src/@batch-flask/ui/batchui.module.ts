@@ -16,6 +16,7 @@ import { ButtonsModule } from "./buttons";
 import { CardModule } from "./card";
 import { ChartsModule } from "./charts";
 import { ContextMenuModule } from "./context-menu";
+import { DateModule } from "./date";
 import { DatetimePickerComponent } from "./datetime-picker";
 import { DialogsModule } from "./dialogs";
 import { DropdownModule } from "./dropdown";
@@ -63,6 +64,7 @@ const modules = [
     CardModule,
     ChartsModule,
     ContextMenuModule,
+    DateModule,
     DialogsModule,
     DropdownModule,
     DurationPickerModule,

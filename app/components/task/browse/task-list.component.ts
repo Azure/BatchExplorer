@@ -1,6 +1,12 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component,
-    Input, OnChanges, OnDestroy, OnInit, ViewChild, forwardRef,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+     Component,
+    Input,
+     OnChanges,
+     OnDestroy,
+      OnInit,
+      forwardRef,
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
@@ -15,7 +21,6 @@ import { ComponentUtils, DateUtils } from "app/utils";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 import { TaskCommands } from "../action";
-import { TaskListDisplayComponent } from "./display";
 
 import "./task-list.scss";
 
@@ -32,9 +37,6 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnCh
     public LoadingStatus = LoadingStatus;
 
     @Input() public jobId: string;
-
-    @ViewChild(TaskListDisplayComponent)
-    public list: TaskListDisplayComponent;
 
     public data: ListView<Task, TaskListParams>;
 

@@ -46,17 +46,17 @@
 
         <bl-column name="creationTime" [defaultWidth]="120">
             <div *blHeadCellDef>Created</div>
-            <div *blCellDef="let task">{{formatDate(task.creationTime)}}</div>
+            <div *blCellDef="let task"><bl-date [date]="task.creationTime"></bl-date></div>
         </bl-column>
 
         <bl-column name="startTime" [defaultWidth]="120">
             <div *blHeadCellDef>Started</div>
-            <div *blCellDef="let task">{{formatDate(task.executionInfo?.startTime)}}</div>
+            <div *blCellDef="let task"><bl-date [date]="task.executionInfo?.startTime"></bl-date></div>
         </bl-column>
 
         <bl-column name="endTime"  [defaultWidth]="120">
             <div *blHeadCellDef>Completed</div>
-            <div *blCellDef="let task">{{formatDate(task.executionInfo?.endTime)}}</div>
+            <div *blCellDef="let task"><bl-date [date]="task.executionInfo?.endTime"></bl-date></div>
         </bl-column>
 
         <bl-column name="exitCode"  [defaultWidth]="70">

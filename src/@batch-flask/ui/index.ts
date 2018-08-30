@@ -2,6 +2,7 @@ export * from "./electron";
 export * from "./batch-flask-settings";
 export * from "./buttons";
 export * from "./charts";
+export * from "./date";
 export * from "./dialogs";
 export * from "./dropdown";
 export * from "./file";
