@@ -14,7 +14,7 @@ export class ListDataPresenter {
     private _sub: Subscription;
     private _items = new BehaviorSubject<AbstractListItem[]>([]);
     private _input: AbstractListItem[];
-    private _sortingBy: { key: string | null, direction?: SortDirection } = { key: null };
+    private _sortingBy: { key: string | null, direction: SortDirection } = { key: null, direction: SortDirection.Asc };
 
     constructor(dataProvider: ListDataProvider) {
         this.items = this._items.asObservable();
@@ -29,19 +29,19 @@ export class ListDataPresenter {
         this._items.complete();
     }
 
-    public get sortingBy(): { key: string | null, direction?: SortDirection } {
+    public get sortingBy(): { key: string | null, direction: SortDirection } {
         return this._sortingBy;
     }
 
     public sortBy(key: string, direction?: SortDirection) {
-        this._sortingBy = { key, direction };
+        this._sortingBy = { key, direction: direction || this._sortingBy.direction };
         this._updateDisplayedItems();
     }
 
     public updateSortDirection(direction?: SortDirection) {
         if (direction !== this._sortingBy.direction) {
             this._sortingBy = { key: this._sortingBy.key, direction };
-            this._items.next(this._items.value.reverse());
+            this._items.next([...this._items.value].reverse());
         }
     }
 

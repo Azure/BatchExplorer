@@ -19,12 +19,12 @@ import {
 } from "@batch-flask/ui/context-menu";
 import { EntityCommands } from "@batch-flask/ui/entity-commands";
 import { LoadingStatus } from "@batch-flask/ui/loading";
+import { SortDirection } from "@batch-flask/ui/table/table-column-manager";
 import { List } from "immutable";
 import { FocusSectionComponent } from "../focus-section";
 import { AbstractListItem } from "./abstract-list-item";
 import { ListDataProvider } from "./list-data-provider";
 import { ListSortConfig } from "./list-data-sorter";
-import { SortDirection } from "@batch-flask/ui/table/table-column-manager";
 
 export interface AbstractListBaseConfig {
     /**
@@ -380,14 +380,14 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             });
         });
 
-        const descending = this._dataPresenter.sortingBy.direction === SortDirection.Desc;
+        const ascending = this._dataPresenter.sortingBy.direction === SortDirection.Asc;
         const sortDirections = [
             new ContextMenuItem({
                 label: "Ascending",
                 click: () => {
                     this._dataPresenter.updateSortDirection(SortDirection.Asc);
                 },
-                checked: !descending,
+                checked: ascending,
                 type: "checkbox",
             }),
             new ContextMenuItem({
@@ -395,10 +395,10 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
                 click: () => {
                     this._dataPresenter.updateSortDirection(SortDirection.Desc);
                 },
-                checked: descending,
+                checked: !ascending,
                 type: "checkbox",
             }),
-        ]
+        ];
         return new MultiContextMenuItem({
             label: "Sort by",
             subitems: [
@@ -406,7 +406,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
                 new ContextMenuSeparator(),
                 ...sortDirections,
             ],
-        })
+        });
     }
 
 }

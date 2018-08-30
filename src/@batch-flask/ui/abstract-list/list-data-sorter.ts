@@ -15,7 +15,7 @@ export class ListDataSorter<TEntity> {
 
     }
 
-    public sortBy(items: AbstractListItem[], attribute: string, direction: SortDirection = SortDirection.Desc) {
+    public sortBy(items: AbstractListItem[], attribute: string, direction: SortDirection) {
         const getColumnValue = this._columnValueFn(attribute);
 
         const sortedRows = [...items].sort((a, b) => {
