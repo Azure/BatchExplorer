@@ -136,7 +136,13 @@ export class PythonRpcService {
                 return combineLatest(batchToken, armToken).pipe(
                     first(),
                     flatMap(([batchToken, armToken]) => {
-                        const authParam = { batchToken, armToken, account: account.toJS() };
+                        const authParam = {
+                            batchToken,
+                            armToken,
+                            armUrl: resourceUrl.armUrl,
+                            storageEndpoint: resourceUrl.storageEndpoint,
+                            account: account.toJS(),
+                        };
                         return this.call(method, params, {
                             authentication: authParam,
                         });
