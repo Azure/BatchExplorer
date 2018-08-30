@@ -4,6 +4,7 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnChanges,
     OnDestroy,
     OnInit,
     Output,
@@ -18,10 +19,11 @@ import "./activity-monitor-item.scss";
     templateUrl: "activity-monitor-item.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
+export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public activity: Activity;
     @Input() public focused: boolean;
     @Input() public indent: number;
+    @Input() public expanded: boolean;
     @Output() public toggleExpanded = new EventEmitter<void>();
 
     public progress: number;
@@ -29,11 +31,10 @@ export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
     public showSubactivities: boolean;
     public subactivitiesShown: number;
     public showError: boolean;
-    public expanded: boolean;
 
     private _status: ActivityStatus;
     private _flashId: number;
-    private _sub: Subscription;
+    private _subs: Subscription[];
     private _progressString: string;
 
     constructor(
@@ -49,19 +50,19 @@ export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
         this.subactivitiesShown = 10;
         this.showSubactivities = false;
         this.showError = false;
-        this._sub = this.activity.statusSubject.subscribe(status => {
-            this._status = status;
-            this.changeDetector.markForCheck();
-        });
-        this._sub.add(this.activity.progress.subscribe((progress) => {
-            this.progress = progress;
-            this._progressString = `(${Math.floor(progress)}%)`;
-            this.changeDetector.markForCheck();
-        }));
+        this._subscribeToSubjects();
+    }
+
+    public ngOnChanges(changes) {
+        // on changes, clear subscriptions and reset them
+        if (this._subs) {
+            this._unsubscribeFromSubjects();
+        }
+        this._subscribeToSubjects();
     }
 
     public ngOnDestroy() {
-        this._sub.unsubscribe();
+        this._unsubscribeFromSubjects();
     }
 
     /* Template Getters */
@@ -138,5 +139,22 @@ export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
     private _collapse() {
         this.showSubactivities = false;
         this.changeDetector.markForCheck();
+    }
+
+    private _subscribeToSubjects() {
+        this._subs = [];
+        this._subs.push(this.activity.statusSubject.subscribe(status => {
+            this._status = status;
+            this.changeDetector.markForCheck();
+        }));
+        this._subs.push(this.activity.progress.subscribe((progress) => {
+            this.progress = progress;
+            this._progressString = `(${Math.floor(progress)}%)`;
+            this.changeDetector.markForCheck();
+        }));
+    }
+
+    private _unsubscribeFromSubjects() {
+        this._subs.forEach(sub => sub.unsubscribe());
     }
 }

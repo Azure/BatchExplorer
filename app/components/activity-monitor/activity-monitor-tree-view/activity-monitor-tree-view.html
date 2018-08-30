@@ -14,6 +14,7 @@
             [activity]="treeRow.activity"
             [focused]="isFocused && shouldFocus(i)"
             [indent]="treeRow.indent"
+            [expanded]="isExpanded(treeRow.id)"
             (click)="focusRow(treeRow)"
             (mouseover)="hoverRow(treeRow)"
             (toggleExpanded)="toggleExpanded(treeRow)">

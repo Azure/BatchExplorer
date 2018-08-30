@@ -44,7 +44,7 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
     }
 
     public focusRow(treeRow: TreeRow) {
-        const isExpanded = this.expanded.has(treeRow.id);
+        const isExpanded = this.isExpanded(treeRow.id);
 
         if (isExpanded) {
             const nextIndex = this.activities.map(act => act.id).indexOf(treeRow.id) + 1;
@@ -54,7 +54,6 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
                 focusedIndices.add(i);
             }
             this.focusedIndices = focusedIndices;
-            console.log(this.focusedIndices);
         } else {
             this.focusedIndices = new Set([treeRow.index]);
         }
@@ -66,6 +65,10 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
 
     public shouldFocus(index: number) {
         return this.focusedIndices.has(index);
+    }
+
+    public isExpanded(id: number) {
+        return this.expanded.has(id);
     }
 
     public handleKeyboardNavigation(event) {
@@ -120,7 +123,7 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
      * @returns boolean if the row is now expanded or not
      */
     public toggleExpanded(treeRow: TreeRow): boolean {
-        const isExpanded = this.expanded.has(treeRow.id);
+        const isExpanded = this.isExpanded(treeRow.id);
         if (isExpanded) {
             this.expanded.delete(treeRow.id);
         } else {
@@ -149,7 +152,7 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
     private _getTreeRowsForActivities(activities: Activity[], indent = 0): TreeRow[] {
         const rows = [];
         for (const activity of activities) {
-            const expanded = this.expanded.has(activity.id);
+            const expanded = this.isExpanded(activity.id);
             const row = {
                 activity,
                 id: activity.id,
@@ -165,12 +168,14 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
                     }
                 }
             } else {
+                row["hasChildren"] = false;
                 rows.push(row);
             }
         }
         for (const [index, row] of rows.entries()) {
             row.index = index;
         }
+        console.log(rows);
         return rows;
     }
 }
