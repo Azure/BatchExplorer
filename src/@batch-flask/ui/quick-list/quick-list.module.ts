@@ -3,7 +3,7 @@ import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
-
+import { AbstractListModule } from "@batch-flask/ui";
 import { LoadingModule } from "@batch-flask/ui/loading";
 import { VirtualScrollModule } from "@batch-flask/ui/virtual-scroll";
 import { ContextMenuModule } from "../context-menu";
@@ -40,6 +40,7 @@ const publicComponents = [
         ContextMenuModule,
         VirtualScrollModule,
         LoadingModule,
+        AbstractListModule,
     ],
 })
 export class QuickListModule {

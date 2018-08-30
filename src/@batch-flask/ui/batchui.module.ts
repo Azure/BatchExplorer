@@ -6,6 +6,7 @@ import { MaterialModule } from "@batch-flask/core";
 
 // components
 import { WorkspaceModule } from "@batch-flask/ui/workspace";
+import { AbstractListModule } from "./abstract-list";
 import { ActivityModule } from "./activity-monitor";
 import { AdvancedFilterModule } from "./advanced-filter";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
@@ -56,6 +57,7 @@ import { VTabsModule } from "./vtabs";
 // Add submodules there
 const modules = [
     ActivityModule,
+    AbstractListModule,
     AdvancedFilterModule,
     BatchFlaskSettingsModule,
     BreadcrumbModule,

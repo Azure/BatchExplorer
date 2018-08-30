@@ -14,6 +14,7 @@ import { TableHeadCellComponent, TableHeadComponent } from "./table-head";
 import { TableHeadCellDefDirective } from "./table-head-cell-def";
 import { TableRowRenderComponent } from "./table-row-render";
 import { TableComponent } from "./table.component";
+import { AbstractListModule } from "@batch-flask/ui";
 
 const privateComponents = [
     TableRowRenderComponent,
@@ -39,6 +40,7 @@ const publicComponents = [
         VirtualScrollModule,
         LoadingModule,
         ContextMenuModule,
+        AbstractListModule,
     ],
     exports: publicComponents,
     declarations: [...privateComponents, publicComponents],

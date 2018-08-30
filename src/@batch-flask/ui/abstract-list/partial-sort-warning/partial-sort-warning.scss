@@ -1,0 +1,10 @@
+@import "app/styles/variables";
+
+bl-partial-sort-warning {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    color: $warn-contrast-color;
+    background: $warn-color;
+    padding: 5px;
+}

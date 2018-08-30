@@ -29,15 +29,6 @@ bl-table {
         }
     }
 
-    > .warning {
-        height: 30px;
-        color: $warn-contrast-color;
-        background: $warn-color;
-        display: flex;
-        align-items: center;
-        padding: 5px;
-    }
-
     > .table-body {
         position: relative;
         flex: 1 1 auto;

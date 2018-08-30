@@ -1,0 +1,3 @@
+partial-sort-warning:
+  message: All entities have not been loaded, this is showing a partial sorting.
+  loadAll: Load all(This might take a long time)
