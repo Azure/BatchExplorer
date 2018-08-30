@@ -1,11 +1,18 @@
 # New release
 
-## Prerequistie: Millestone
+There is 2 types of releases:
+* **Major releases**: This is for a release that contains new features
+* **Hot fix releases**: This should **ONLY** be for patching major bugs that prevent usage
+
+## Major release process
+This is the steps to create a major release
+
+### Prerequistie: Millestone
 Every release should have a millestone with the list of issues fixed in that new version.
 
 You can use the command `npm run publish -- <millestoneid>` to do step 1&2 and skip to step 3
 
-## Step 1: Create a release issue
+### Step 1: Create a release issue
 
 Create a new issue in the millestone with the title `Prepare version x.y.z` and the following description:
 
@@ -18,7 +25,7 @@ Create a new issue in the millestone with the title `Prepare version x.y.z` and 
 
 This will help with tracking the required task for a new release.
 
-## Step 2: Perform above task
+### Step 2: Update repo
 
 Create a branch called release/prepare-<milestone>, i.e. release/prepare-0.10.0
 
@@ -77,11 +84,11 @@ npm run build-and-pack
 ```
 
 
-## Step: 3 Merge those changes
+### Step: 3 Merge those changes
 Create a PR against master with the changelog, package.json changes and reference the issue created in step 1(.i.e fix \#123).
 
 
-## Step 4: Create a PR against stable.
+### Step 4: Create a PR against stable.
 Now create a pull request against stable. Wait for the CI to pass.
 
 **Important:** DO NOT squash merge the changes.(Go in BatchExplorer [settings](https://github.com/Azure/BatchExplorer/settings) and renenable "Allow merge commits")
@@ -92,12 +99,16 @@ Then click on merge commit(Make sure it is not squash merge)
 All the commits in master should now be in stable with the merge commit.
 Now disable the "Allow merge commit" again to prevent mistake when merging to master.
 
-## Step 5: Publish the release
-* Wait for the CI to test and build stable branch [Travis](https://travis-ci.org/Azure/BatchExplorer/branches).
-* Go to github [release](https://github.com/Azure/BatchExplorer/releases).
-* You should see a new draft release with the new version.
-* Double check every platform executable and installer is present (exe, app, zip, dmg, deb, rpm).
-* Download and install one of the versions to make sure it runs and validate that the Python server is correctly running by creating an empty file-group or kicking off an NCJ job.
-* Copy the changelog(only for the version) in the description in MD format.
-* Change the "Target: master" to "Target: stable" if applicable by the "create a new tag on publish".
-* Click publish release (Mark as pre-release for now).
+
+## Hot fix release
+
+For a hot fix release you'll want to create a PR with your fix directly against `stable`.
+In your changes include the bump of the patch in the version if needs be(Only increase once if you have multiple hot fixes in different PR)
+Update `Changelog.md` with the list of the fixes.
+
+When ready squash merge your PR in stable.
+
+
+## Deploy the release
+
+Check the wiki in msazure VSTS https://msazure.visualstudio.com/AzureBatch/_wiki/wikis/AzureBatch.wiki?wikiVersion=GBwikiMaster&pagePath=%2FBatch%20Explorer%2FDeploy%20new%20version%20of%20Batch%20Explorer
