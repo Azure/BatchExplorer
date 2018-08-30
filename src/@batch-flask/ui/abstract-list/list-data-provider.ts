@@ -9,10 +9,12 @@ import { BehaviorSubject, Observable, Subscription, of } from "rxjs";
 export class ListDataProvider {
     public items: Observable<AbstractListItem[]>;
     public status: Observable<LoadingStatus>;
+    public newDataStatus: Observable<LoadingStatus>;
     public hasMore: Observable<boolean>;
 
     private _items = new BehaviorSubject<AbstractListItem[]>([]);
     private _status = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
+    private _newDataStatus = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
     private _hasMore = new BehaviorSubject<boolean>(true);
     private _dataSubs: Subscription[] = [];
     private _data: ListView<AbstractListItem, any> | List<AbstractListItem> | Iterable<AbstractListItem>;
@@ -20,6 +22,7 @@ export class ListDataProvider {
     constructor() {
         this.items = this._items.asObservable();
         this.status = this._status.asObservable();
+        this.newDataStatus = this._newDataStatus.asObservable();
         this.hasMore = this._hasMore.asObservable();
     }
 
@@ -67,6 +70,9 @@ export class ListDataProvider {
         }));
         this._dataSubs.push(data.status.subscribe((status) => {
             this._status.next(status);
+        }));
+        this._dataSubs.push(data.newDataStatus.subscribe((status) => {
+            this._newDataStatus.next(status);
         }));
         this._dataSubs.push(data.hasMore.subscribe((hasMore) => {
             this._hasMore.next(hasMore);

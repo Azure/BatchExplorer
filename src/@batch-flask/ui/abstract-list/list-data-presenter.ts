@@ -1,3 +1,4 @@
+import { LoadingStatus } from "@batch-flask/ui/loading";
 import { nil } from "@batch-flask/utils";
 import { BehaviorSubject, Observable, Subscription, combineLatest } from "rxjs";
 import { map } from "rxjs/operators";
@@ -36,9 +37,9 @@ export class ListDataPresenter {
             this._updateDisplayedItems();
         });
 
-        this.sortingStatus = combineLatest(dataProvider.hasMore, this._sortingBy).pipe(
-            map(([hasMore, sortingBy]) => {
-                if (!sortingBy.key) { return SortingStatus.Valid; }
+        this.sortingStatus = combineLatest(dataProvider.newDataStatus, dataProvider.hasMore, this._sortingBy).pipe(
+            map(([status, hasMore, sortingBy]) => {
+                if (status !== LoadingStatus.Ready || !sortingBy.key) { return SortingStatus.Valid; }
                 return hasMore ? SortingStatus.Partial : SortingStatus.Valid;
             }),
         );

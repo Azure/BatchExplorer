@@ -28,6 +28,8 @@ export class PartialSortWarningComponent implements OnDestroy {
     }
 
     public ngOnDestroy() {
-        this._sub.unsubscribe();
+        if (this._sub) {
+            this._sub.unsubscribe();
+        }
     }
 }
