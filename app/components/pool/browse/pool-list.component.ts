@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import { AbstractListBaseConfig } from "@batch-flask/ui/abstract-list";
@@ -50,7 +50,6 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     constructor(
         private poolService: PoolService,
         activatedRoute: ActivatedRoute,
-        router: Router,
         public commands: PoolCommands,
         changeDetector: ChangeDetectorRef) {
         super(changeDetector);

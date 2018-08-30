@@ -6,8 +6,6 @@ import {
     OnDestroy,
     Output,
 } from "@angular/core";
-import { Subscription } from "rxjs";
-
 import { Router } from "@angular/router";
 import { ListKeyNavigator, ListView, autobind } from "@batch-flask/core";
 import { ENTER, SPACE } from "@batch-flask/core/keys";
@@ -19,12 +17,13 @@ import {
 } from "@batch-flask/ui/context-menu";
 import { EntityCommands } from "@batch-flask/ui/entity-commands";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { SortDirection } from "@batch-flask/ui/table/table-column-manager";
 import { List } from "immutable";
+import * as inflection from "inflection";
+import { Subscription } from "rxjs";
 import { FocusSectionComponent } from "../focus-section";
 import { AbstractListItem } from "./abstract-list-item";
 import { ListDataProvider } from "./list-data-provider";
-import { ListSortConfig } from "./list-data-sorter";
+import { ListSortConfig, SortDirection } from "./list-data-sorter";
 
 export interface AbstractListBaseConfig {
     /**
@@ -110,11 +109,11 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public showScrollShadow: boolean;
 
     protected _config: AbstractListBaseConfig = abstractListDefaultConfig;
+    protected _dataPresenter: ListDataPresenter;
 
     private _subs: Subscription[] = [];
     private _items: any[] = [];
     private _dataProvider: ListDataProvider;
-    private _dataPresenter: ListDataPresenter;
     private _keyNavigator: ListKeyNavigator<AbstractListItem>;
 
     constructor(
@@ -136,6 +135,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
         this._dataPresenter.items.subscribe((items) => {
             this.items = items;
+            this.changeDetector.markForCheck();
         });
 
     }
@@ -371,7 +371,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     private _createSortByMenu() {
         const sortOptions = Object.keys(this.config.sorting).map((key) => {
             return new ContextMenuItem({
-                label: key,
+                label: inflection.humanize(inflection.underscore(key)),
                 click: () => {
                     this._dataPresenter.sortBy(key);
                 },

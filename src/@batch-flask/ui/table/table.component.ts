@@ -7,14 +7,11 @@ import {
     HostBinding,
     HostListener,
     Input,
-    OnDestroy,
     Optional,
     Output,
     QueryList,
     ViewChild,
 } from "@angular/core";
-import { Subscription } from "rxjs";
-
 import { Router } from "@angular/router";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
@@ -22,7 +19,7 @@ import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import { DragUtils } from "@batch-flask/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
 import { TableColumnComponent } from "./table-column";
-import { SortDirection, SortingInfo, TableColumnManager } from "./table-column-manager";
+import { TableColumnManager } from "./table-column-manager";
 import { TableHeadComponent } from "./table-head";
 
 import "./table.scss";
@@ -68,9 +65,10 @@ export interface DropEvent {
     templateUrl: "table.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent extends AbstractListBase implements AfterContentInit, OnDestroy {
+export class TableComponent extends AbstractListBase implements AfterContentInit {
     @Input() public set config(config: TableConfig) {
         this._config = { ...tableDefaultConfig, ...config };
+        this._dataPresenter.config = this._config.sorting;
     }
     public get config() { return this._config; }
 
@@ -84,11 +82,9 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     }
     public dropTargetRowKey: string = null;
 
-    public columnManager = new TableColumnManager();
+    public columnManager: TableColumnManager;
 
     protected _config: TableConfig = tableDefaultConfig;
-    private _sortingInfo: SortingInfo;
-    private _sub: Subscription;
 
     /**
      * To enable keyboard navigation in the list it must be inside a focus section
@@ -100,6 +96,8 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         breadcrumbService: BreadcrumbService,
         @Optional() focusSection?: FocusSectionComponent) {
         super(contextmenuService, router, breadcrumbService, changeDetection, focusSection);
+
+        this.columnManager = new TableColumnManager(this._dataPresenter);
     }
 
     public ngAfterContentInit() {
@@ -109,16 +107,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
             this.changeDetector.markForCheck();
         });
 
-        this._sub = this.columnManager.sorting.subscribe((sortingInfo) => {
-            this._sortingInfo = sortingInfo;
-        });
         this.changeDetector.markForCheck();
-    }
-
-    public ngOnDestroy() {
-        if (this._sub) {
-            this._sub.unsubscribe();
-        }
     }
 
     @HostListener("dragover", ["$event"])
@@ -162,15 +151,5 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         this.isDraging = 0;
 
         this.dropOnRow.emit({ key: item.id, data: event.dataTransfer });
-    }
-
-    /**
-     * Sort the table by the column name
-     * @param column
-     */
-    public sort(column: string, direction: SortDirection = SortDirection.Asc) {
-        this.columnManager.sortBy(column, direction);
-        // this.updateDisplayedItems();
-        // TODO-TIM
     }
 }

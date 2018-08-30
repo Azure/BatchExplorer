@@ -1,5 +1,7 @@
 import { TemplateRef } from "@angular/core";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { ListDataPresenter, SortingInfo } from "@batch-flask/ui/abstract-list/list-data-presenter";
+import { SortDirection } from "@batch-flask/ui/abstract-list/list-data-sorter";
+import { Observable, Subject } from "rxjs";
 
 export interface TableColumnRef {
     name: string;
@@ -11,16 +13,6 @@ export interface TableColumnRef {
     cellTemplate: TemplateRef<any>;
 }
 
-export interface SortingInfo {
-    column: string;
-    direction: SortDirection;
-}
-
-export enum SortDirection {
-    Asc,
-    Desc,
-}
-
 export class TableColumnManager {
     public sorting: Observable<SortingInfo>;
     public dimensionsChange = new Subject();
@@ -28,15 +20,13 @@ export class TableColumnManager {
     public columnMap = new Map<string, TableColumnRef>();
     public columnOrder = [];
     private _columns = [];
-    private _sorting = new BehaviorSubject<SortingInfo>(null);
     private _dimensions = new Map<string, number>();
 
-    constructor() {
-        this.sorting = this._sorting.asObservable();
+    constructor(private dataPresenter: ListDataPresenter) {
+        this.sorting = dataPresenter.sortingByObs;
     }
 
     public dispose() {
-        this._sorting.complete();
         this.dimensionsChange.complete();
     }
 
@@ -100,7 +90,8 @@ export class TableColumnManager {
     }
 
     public sortBy(column: string, direction: SortDirection = SortDirection.Asc) {
-        this._sorting.next({ column, direction });
+        console.log("Sort by", column, direction);
+        this.dataPresenter.sortBy(column, direction);
     }
 
     private _computeColumns() {
