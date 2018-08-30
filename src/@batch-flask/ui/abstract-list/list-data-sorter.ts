@@ -5,6 +5,23 @@ export enum SortDirection {
     Desc,
 }
 
+export enum SortingStatus {
+    /**
+     * Status when not all the items are loaded from the server.
+     */
+    Partial,
+
+    /**
+     * Status when there is too many items and it won't resort sort unless manually triggered
+     */
+    OutOfDate,
+
+    /**
+     * Displaying the items sorted
+     */
+    Valid,
+}
+
 export interface ListSortConfig<TEntity> {
     [key: string]: boolean | ((item: TEntity) => any);
 }

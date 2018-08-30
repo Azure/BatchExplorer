@@ -23,7 +23,7 @@ import { Subscription } from "rxjs";
 import { FocusSectionComponent } from "../focus-section";
 import { AbstractListItem } from "./abstract-list-item";
 import { ListDataProvider } from "./list-data-provider";
-import { ListSortConfig, SortDirection } from "./list-data-sorter";
+import { ListSortConfig, SortDirection, SortingStatus } from "./list-data-sorter";
 
 export interface AbstractListBaseConfig {
     /**
@@ -64,6 +64,8 @@ export const abstractListDefaultConfig: AbstractListBaseConfig = {
  */
 export class AbstractListBase extends SelectableList implements OnDestroy {
     public LoadingStatus = LoadingStatus;
+    public SortingStatus = SortingStatus;
+
     @Input() public commands: EntityCommands<any>;
 
     @Input() public set data(
@@ -95,7 +97,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     @HostBinding("style.display")
     public get showComponent() {
         const hide = this.items.length === 0 && this.status === LoadingStatus.Ready;
-        return hide ? "none" : "block";
+        return hide ? "none" : null;
     }
 
     public set selection(selection: ListSelection) {
@@ -107,6 +109,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public listFocused: boolean = false;
     public focusedItem: AbstractListItem | null;
     public showScrollShadow: boolean;
+    public sortingStatus: SortingStatus;
 
     protected _config: AbstractListBaseConfig = abstractListDefaultConfig;
     protected _dataPresenter: ListDataPresenter;
@@ -135,6 +138,11 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
         this._dataPresenter.items.subscribe((items) => {
             this.items = items;
+            this.changeDetector.markForCheck();
+        });
+
+        this._dataPresenter.sortingStatus.subscribe((sortingStatus) => {
+            this.sortingStatus = sortingStatus;
             this.changeDetector.markForCheck();
         });
 

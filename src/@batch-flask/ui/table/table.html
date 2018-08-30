@@ -1,6 +1,9 @@
 <div *ngIf="!config.hideHeader" class="table-head" [class.no-scroll]="!showScrollShadow">
     <bl-thead [columns]="columnManager.columns"></bl-thead>
 </div>
+<div class="error" *ngIf="sortingStatus === SortingStatus.Partial">
+    All entities have not been loaded, this is showing a partial sorting.
+</div>
 <div class="table-body">
     <div class="scroll-shadow" *ngIf="showScrollShadow"></div>
     <bl-virtual-scroll [items]="items" [childHeight]="28" (update)="updateViewPortItems($event)" (scroll)="handleScrollChange($event)">

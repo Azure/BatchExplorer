@@ -1,6 +1,7 @@
-import { ListDataSorter, ListSortConfig, SortDirection } from "@batch-flask/ui/abstract-list/list-data-sorter";
+import { ListDataSorter, ListSortConfig, SortDirection, SortingStatus } from "@batch-flask/ui/abstract-list/list-data-sorter";
 import { nil } from "@batch-flask/utils";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
+import { map } from "rxjs/operators";
 import { AbstractListItem } from "./abstract-list-item";
 import { ListDataProvider } from "./list-data-provider";
 
@@ -14,21 +15,28 @@ export interface SortingInfo {
  */
 export class ListDataPresenter {
     public items: Observable<AbstractListItem[]>;
+    public sortingStatus: Observable<SortingStatus>;
     public sortingByObs: Observable<SortingInfo>;
     public config: ListSortConfig<AbstractListItem> | null | false;
 
     private _sub: Subscription;
     private _items = new BehaviorSubject<AbstractListItem[]>([]);
     private _input: AbstractListItem[];
+    private _sortingStatus = new BehaviorSubject<SortingStatus>(SortingStatus.Valid);
     private _sortingBy = new BehaviorSubject<SortingInfo>({ key: null, direction: SortDirection.Asc });
 
     constructor(dataProvider: ListDataProvider) {
         this.items = this._items.asObservable();
+        this.sortingStatus = this._sortingStatus.asObservable();
         this.sortingByObs = this._sortingBy.asObservable();
         this._sub = dataProvider.items.subscribe((items) => {
             this._input = items;
             this._updateDisplayedItems();
         });
+
+        this.sortingStatus = dataProvider.hasMore.pipe(
+            map(hasMore => hasMore ? SortingStatus.Partial : SortingStatus.Valid),
+        );
     }
 
     public dispose() {
@@ -58,7 +66,6 @@ export class ListDataPresenter {
     }
 
     private _sortItems(items: AbstractListItem[]): AbstractListItem[] {
-        console.log("Sorting dis", this.sortingBy, this.config);
         if (this.sortingBy.key && this.config) {
             const sorter = new ListDataSorter(this.config);
             return sorter.sortBy(items, this.sortingBy.key, this.sortingBy.direction);

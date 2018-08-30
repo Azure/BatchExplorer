@@ -9,27 +9,33 @@ import { BehaviorSubject, Observable, Subscription } from "rxjs";
 export class ListDataProvider {
     public items: Observable<AbstractListItem[]>;
     public status: Observable<LoadingStatus>;
+    public hasMore: Observable<boolean>;
 
     private _items = new BehaviorSubject<AbstractListItem[]>([]);
     private _status = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
+    private _hasMore = new BehaviorSubject<boolean>(true);
     private _dataSubs: Subscription[] = [];
 
     constructor() {
         this.items = this._items.asObservable();
         this.status = this._status.asObservable();
+        this.hasMore = this._hasMore.asObservable();
     }
 
     public dispose() {
         this._items.complete();
         this._status.complete();
+        this._hasMore.complete();
         this._clearDataSubs();
     }
 
     public set data(data: ListView<AbstractListItem, any> | List<AbstractListItem> | Iterable<AbstractListItem>) {
         this._clearDataSubs();
+        let ready = true;
         if (!data) {
             this._items.next([]);
         } else if (data instanceof ListView) {
+            ready = false;
             this._watchListView(data);
         } else if (data instanceof List) {
             this._items.next((data as List<any>).toArray());
@@ -37,6 +43,11 @@ export class ListDataProvider {
             this._items.next(data);
         } else {
             this._items.next([...data as any]);
+        }
+
+        if (ready) {
+            this._status.next(LoadingStatus.Ready);
+            this._hasMore.next(false);
         }
     }
 
@@ -46,6 +57,9 @@ export class ListDataProvider {
         }));
         this._dataSubs.push(data.status.subscribe((status) => {
             this._status.next(status);
+        }));
+        this._dataSubs.push(data.hasMore.subscribe((hasMore) => {
+            this._hasMore.next(hasMore);
         }));
     }
 
