@@ -11,7 +11,7 @@
 
 bl-activity-monitor-item {
     .activity-monitor-item-container {
-        &.selected {
+        &.focused {
             background-color: $primary-color;
             color: $primary-contrast-color;
         }

@@ -9,20 +9,11 @@
 </div>
 <div class="main-content">
     <div class="running-activities">
-        <div class="section-header">
-            <div class="label">Running Activities</div>
-        </div>
         <div class="activity-list">
-            <div class="single-activity" *ngFor="let activity of runningActivities; trackBy: trackByFn">
-                <bl-activity-monitor-item
-                    [activity]="activity"
-                    [selectSubject]="selectSubject"
-                    [flashSubject]="flashSubject"
-                    [keyDownSubject]="keyDownSubject"
-                    [siblings]="runningActivities"
-                    (jumpQueues)="jumpQueues($event)"
-                ></bl-activity-monitor-item>
-            </div>
+            <bl-activity-monitor-tree-view
+                [activities]="runningActivities"
+                name="Running Activities"
+            ></bl-activity-monitor-tree-view>
             <div class="single-activity" *ngIf="runningActivities.length === 0">
                 No Running Activities to Show
             </div>
@@ -34,14 +25,14 @@
         </div>
         <div class="activity-list">
             <div class="single-activity" *ngFor="let activity of pastActivities; trackBy: trackByFn">
-                <bl-activity-monitor-item
+                <!-- <bl-activity-monitor-item
                     [activity]="activity"
                     [selectSubject]="selectSubject"
                     [flashSubject]="flashSubject"
                     [keyDownSubject]="keyDownSubject"
                     [siblings]="pastActivities"
                     (jumpQueues)="jumpQueues($event)"
-                ></bl-activity-monitor-item>
+                ></bl-activity-monitor-item> -->
             </div>
             <div class="single-activity" *ngIf="pastActivities.length === 0">
                 No Past Activities to Show

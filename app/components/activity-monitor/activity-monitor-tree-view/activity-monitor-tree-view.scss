@@ -1,0 +1,67 @@
+@import "app/styles/variables";
+
+bl-file-tree-view {
+    $tree-view-header-height: 24px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    .tree-view-header {
+        background: $secondary-background;
+        display: flex;
+        align-items: stretch;
+        height: $tree-view-header-height;
+        cursor: pointer;
+
+        > * {
+            vertical-align: middle;
+            line-height: $tree-view-header-height;
+        }
+
+        .name {
+            display: inline-block;
+            flex: 1;
+            font-size: 11px;
+            color: $secondary-text;
+            font-weight: 700;
+            user-select: none;
+            text-transform: uppercase;
+        }
+    }
+
+
+    .caret, .file-icon {
+        width: 16px;
+        font-size: 16px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .caret {
+        color: $secondary-text;
+
+        &:hover {
+            color: $selection-color;
+        }
+    }
+
+    .label {
+        margin-left: 3px;
+    }
+
+    .tree-view-content {
+        position: relative;
+        height: calc(100% - #{$tree-view-header-height});
+    }
+
+    .tree-rows-container {
+        height: 100%;
+        &.drop-target {
+            background: $main-background;
+        }
+    }
+
+    .tree-view-error {
+        white-space: pre-line;
+    }
+}

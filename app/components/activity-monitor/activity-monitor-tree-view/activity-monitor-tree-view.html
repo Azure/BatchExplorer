@@ -1,0 +1,22 @@
+<div class="tree-view-header">
+    <bl-clickable class="name">{{name}}</bl-clickable>
+</div>
+<bl-focus-section *ngIf="expanded"
+    class="tree-view-content"
+    (focus)="setFocus(true)"
+    (blur)="setFocus(false)"
+    (keypress)="handleKeyboardNavigation($event)"
+    (contextmenu)="showContextMenu($event)">
+
+    <div *ngIf="error" class="tree-view-error">{{error.message}}</div>
+    <div class="tree-rows-container">
+        <bl-activity-monitor-item *ngFor="let treeRow of treeRows; let i = index; trackBy: treeRowTrackBy"
+            [activity]="treeRow.activity"
+            [focused]="isFocused && shouldFocus(i)"
+            [indent]="treeRow.indent"
+            (click)="focusRow(treeRow)"
+            (mouseover)="hoverRow(treeRow)"
+            (toggleExpanded)="toggleExpanded(treeRow)">
+        </bl-activity-monitor-item>
+    </div>
+</bl-focus-section>

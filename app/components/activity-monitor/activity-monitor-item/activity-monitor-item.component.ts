@@ -9,7 +9,7 @@ import {
     Output,
 } from "@angular/core";
 import { Activity, ActivityService, ActivityStatus } from "@batch-flask/ui/activity-monitor";
-import { BehaviorSubject, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 
 import "./activity-monitor-item.scss";
 
@@ -20,23 +20,18 @@ import "./activity-monitor-item.scss";
 })
 export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
     @Input() public activity: Activity;
-    @Input() public selectSubject: BehaviorSubject<number>;
-    @Input() public flashSubject: BehaviorSubject<number>;
-    @Input() public keyDownSubject: BehaviorSubject<KeyboardEvent>;
-    @Input() public siblings: Activity[];
-    @Input() public indent: number = 0;
-    @Input() public hovering: boolean = false;
-    @Output() public focusParent = new EventEmitter<void>();
-    @Output() public jumpQueues = new EventEmitter<number>();
+    @Input() public focused: boolean;
+    @Input() public indent: number;
+    @Output() public toggleExpanded = new EventEmitter<void>();
 
     public progress: number;
     public statusOptions = ActivityStatus;
     public showSubactivities: boolean;
     public subactivitiesShown: number;
     public showError: boolean;
+    public expanded: boolean;
 
     private _status: ActivityStatus;
-    private _selectedId: number;
     private _flashId: number;
     private _sub: Subscription;
     private _progressString: string;
@@ -58,19 +53,6 @@ export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
             this._status = status;
             this.changeDetector.markForCheck();
         });
-        this._sub.add(this.selectSubject.subscribe(id => {
-            this._selectedId = id;
-            this.changeDetector.markForCheck();
-        }));
-        this._sub.add(this.flashSubject.subscribe(id => {
-            this._flashId = id;
-            this.changeDetector.markForCheck();
-        }));
-        this._sub.add(this.keyDownSubject.subscribe(event => {
-            if (event && this.selected) {
-                this._handleKeyDown(event);
-            }
-        }));
         this._sub.add(this.activity.progress.subscribe((progress) => {
             this.progress = progress;
             this._progressString = `(${Math.floor(progress)}%)`;
@@ -84,6 +66,10 @@ export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
 
     /* Template Getters */
 
+    public get paddingLeft() {
+        return `${this.indent * 30}px`;
+    }
+
     public get subactivities() {
         return this.activity.subactivities.slice(0, this.subactivitiesShown);
     }
@@ -92,20 +78,12 @@ export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
         return this._status;
     }
 
-    public get selected() {
-        return this.activity.id === this._selectedId;
-    }
-
     public get shouldFlash() {
         return this.activity.id === this._flashId;
     }
 
     public trackByFn(index, activity: Activity) {
         return activity.id;
-    }
-
-    public getIndent() {
-        return (this.indent * 30) + "px";
     }
 
     public prettyPrint() {
@@ -119,28 +97,12 @@ export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
     /* Change-of-state Functions */
 
     public toggleExpand() {
-        if (this.activity.subactivities.length === 0) { return; }
-
-        this.showSubactivities = !this.showSubactivities;
-        if (this.showSubactivities) {
-            this._expand();
-        } else {
-            this._collapse();
-        }
+        this.expanded = !this.expanded;
+        this.toggleExpanded.emit();
     }
 
     public toggleShowError() {
         this.showError = !this.showError;
-    }
-
-    public hover() {
-        this.hovering = true;
-        this.changeDetector.markForCheck();
-    }
-
-    public unhover() {
-        this.hovering = false;
-        this.changeDetector.markForCheck();
     }
 
     public cancel() {
@@ -166,45 +128,6 @@ export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
         }
     }
 
-    /* Event Emitters */
-
-    public select(id: number = this.activity.id) {
-        // TODO look for cleaner way to handle propagation issue
-        setTimeout(() => this.selectSubject.next(id), 10);
-    }
-
-    /* Private Helper Methods */
-
-    private _handleKeyDown(event: KeyboardEvent) {
-        switch (event.keyCode) {
-            case 37:                // left arrow
-                if (!this.showSubactivities) {
-                    this._focusParent();
-                } else {
-                    this._collapse();
-                }
-                break;
-            case 39:                // right arrow
-                if (this.showSubactivities) {
-                    this._focusChild();
-                } else {
-                    this._expand();
-                }
-                break;
-            case 38:                // up arrow
-                this._focusPrev();
-                break;
-            case 40:                // down arrow
-                this._focusNext();
-                break;
-            case 13:                // Enter key
-                this.toggleExpand();
-                break;
-            default:
-                break;
-        }
-    }
-
     private _expand() {
         if (this.activity.subactivities.length === 0) { return; }
         this.subactivitiesShown = 10;
@@ -215,35 +138,5 @@ export class ActivityMonitorItemComponent implements OnInit, OnDestroy {
     private _collapse() {
         this.showSubactivities = false;
         this.changeDetector.markForCheck();
-    }
-
-    private _focusPrev() {
-        const sibIds = this.siblings.map(act => act.id);
-        const index = sibIds.indexOf(this.activity.id);
-        if (index === 0) {
-            this.jumpQueues.emit(this.activity.id);
-        } else {
-            this.select(sibIds[index - 1]);
-        }
-    }
-
-    private _focusNext() {
-        const sibIds = this.siblings.map(act => act.id);
-        const index = sibIds.indexOf(this.activity.id);
-        if (index === sibIds.length - 1) {
-            this.jumpQueues.emit(this.activity.id);
-        } else {
-            this.select(sibIds[index + 1]);
-        }
-    }
-
-    private _focusParent() {
-        this.focusParent.emit();
-    }
-
-    private _focusChild() {
-        if (this.activity.subactivities.length > 0) {
-            this.select(this.subactivities[0].id);
-        }
     }
 }

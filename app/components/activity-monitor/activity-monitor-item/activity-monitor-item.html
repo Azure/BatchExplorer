@@ -1,18 +1,5 @@
-<div
-    [ngClass]="{
-                'activity-monitor-item-container': true,
-                'selected': selected,
-                'hovering': !selected && hovering,
-                'flash': shouldFlash
-            }"
->
-    <div
-        [ngStyle]="{'padding-left': getIndent()}"
-        class="item-container"
-        (mouseenter)="hover()"
-        (mouseleave)="unhover()"
-        (click)="select()"
-    >
+<div class="activity-monitor-item-container" [ngClass]="{'focused': focused}">
+    <div class="item-container" [ngStyle]="{'padding-left': paddingLeft}">
         <div class="icon-container progress-icon">
             <i class="fa fa-ellipsis-h" *ngIf="status===statusOptions.Pending" title="Pending"></i>
             <i class="fa fa-spinner fa-pulse" *ngIf="status===statusOptions.InProgress" title="Running"></i>
@@ -22,8 +9,8 @@
         </div>
         <div class="icon-container">
             <div class="expand-icon" *ngIf="activity.subactivities.length" (click)="toggleExpand()">
-                <i class="fa fa-angle-right" title="Expand" *ngIf="!showSubactivities"></i>
-                <i class="fa fa-angle-down" title="Collapse" *ngIf="showSubactivities"></i>
+                <i class="fa fa-angle-right" title="Expand" *ngIf="!expanded"></i>
+                <i class="fa fa-angle-down" title="Collapse" *ngIf="expanded"></i>
             </div>
         </div>
         <div class="activity-info">
@@ -47,19 +34,5 @@
     </div>
     <div class="error" *ngIf="activity.error && showError">
         {{activity.error}}
-    </div>
-    <div class="subactivities" *ngIf="activity.subactivities && showSubactivities">
-        <div class="single-subactivity" *ngFor="let subactivity of subactivities; trackBy: trackByFn">
-            <bl-activity-monitor-item
-                [activity]="subactivity"
-                [indent]="indent+1"
-                [hovering]="!selected && hovering"
-                [selectSubject]="selectSubject"
-                [flashSubject]="flashSubject"
-                [keyDownSubject]="keyDownSubject"
-                [siblings]="subactivities"
-                (focusParent)="select()"
-            ></bl-activity-monitor-item>
-        </div>
     </div>
 </div>
