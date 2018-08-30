@@ -1,2 +1,7 @@
-<span>{{'partial-sort-warning.message' | i18n}}</span>
-<bl-clickable>{{'partial-sort-warning.loadAll' | i18n}}</bl-clickable>
+<span class="message">{{'partial-sort-warning.message' | i18n}}</span>
+<bl-clickable class="load-all" (do)="loadAll()" *ngIf="!loadingAll">
+    {{'partial-sort-warning.loadAll' | i18n}}
+</bl-clickable>
+<span class="loading-all" *ngIf="loadingAll">
+    {{'partial-sort-warning.loadingAll' | i18n}}
+</span>

@@ -60,7 +60,7 @@ export const abstractListDefaultConfig: AbstractListBaseConfig = {
  *
  * Usage:
  * 1. Extend class
- * 2. Refefine items with @ContentChildren and the class that inherit SelectableListItemBase
+ * 2. Refefine items with @ContentChildren and the class that inherit fSelectableListItemBase
  */
 export class AbstractListBase extends SelectableList implements OnDestroy {
     public LoadingStatus = LoadingStatus;
@@ -70,7 +70,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     @Input() public set data(
         data: ListView<AbstractListItem, any> | List<AbstractListItem> | Iterable<AbstractListItem>) {
-        this._dataProvider.data = data;
+        this.dataProvider.data = data;
     }
     @Input() public status: LoadingStatus;
 
@@ -110,13 +110,13 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public focusedItem: AbstractListItem | null;
     public showScrollShadow: boolean;
     public sortingStatus: SortingStatus;
+    public dataProvider: ListDataProvider;
 
     protected _config: AbstractListBaseConfig = abstractListDefaultConfig;
     protected _dataPresenter: ListDataPresenter;
 
     private _subs: Subscription[] = [];
     private _items: any[] = [];
-    private _dataProvider: ListDataProvider;
     private _keyNavigator: ListKeyNavigator<AbstractListItem>;
 
     constructor(
@@ -128,8 +128,8 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         super(changeDetection);
         this._initKeyNavigator();
 
-        this._dataProvider = new ListDataProvider();
-        this._dataPresenter = new ListDataPresenter(this._dataProvider);
+        this.dataProvider = new ListDataProvider();
+        this._dataPresenter = new ListDataPresenter(this.dataProvider);
         if (focusSection) {
             this._subs.push(focusSection.keypress.subscribe(this.keyPressed));
             this._subs.push(focusSection.onFocus.subscribe(this.onFocus));
@@ -150,7 +150,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     public ngOnDestroy() {
         this._subs.forEach((x) => x.unsubscribe());
-        this._dataProvider.dispose();
+        this.dataProvider.dispose();
         this._dataPresenter.dispose();
         if (this._keyNavigator) {
             this._keyNavigator.dispose();

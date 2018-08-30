@@ -3,8 +3,23 @@
 bl-partial-sort-warning {
     display: flex;
     align-items: center;
-    height: 30px;
+    height: 40px;
     color: $warn-contrast-color;
     background: $warn-color;
-    padding: 5px;
+    padding: 10px;
+
+    .message {
+        flex: 1;
+    }
+
+    .load-all {
+        margin-right: 10px;
+        padding: 3px 5px;
+        border: 2px solid $warn-contrast-color;
+
+        &:hover {
+            background-color: $warn-contrast-color;
+            color: $warn-color;
+        }
+    }
 }

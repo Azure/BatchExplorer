@@ -1,7 +1,7 @@
 <div *ngIf="!config.hideHeader" class="table-head" [class.no-scroll]="!showScrollShadow">
     <bl-thead [columns]="columnManager.columns"></bl-thead>
 </div>
-<bl-partial-sort-warning *ngIf="sortingStatus === SortingStatus.Partial"></bl-partial-sort-warning>
+<bl-partial-sort-warning *ngIf="sortingStatus === SortingStatus.Partial" [data]="dataProvider"></bl-partial-sort-warning>
 <div class="table-body">
     <div class="scroll-shadow" *ngIf="showScrollShadow"></div>
     <bl-virtual-scroll [items]="items" [childHeight]="28" (update)="updateViewPortItems($event)" (scroll)="handleScrollChange($event)">

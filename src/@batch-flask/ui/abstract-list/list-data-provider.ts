@@ -1,7 +1,7 @@
 import { ListView, LoadingStatus } from "@batch-flask/core";
 import { AbstractListItem } from "@batch-flask/ui/abstract-list";
 import { List } from "immutable";
-import { BehaviorSubject, Observable, Subscription } from "rxjs";
+import { BehaviorSubject, Observable, Subscription, of } from "rxjs";
 
 /**
  * Class handling different types of data inputs and unify them
@@ -15,6 +15,7 @@ export class ListDataProvider {
     private _status = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
     private _hasMore = new BehaviorSubject<boolean>(true);
     private _dataSubs: Subscription[] = [];
+    private _data: ListView<AbstractListItem, any> | List<AbstractListItem> | Iterable<AbstractListItem>;
 
     constructor() {
         this.items = this._items.asObservable();
@@ -31,6 +32,7 @@ export class ListDataProvider {
 
     public set data(data: ListView<AbstractListItem, any> | List<AbstractListItem> | Iterable<AbstractListItem>) {
         this._clearDataSubs();
+        this._data = data;
         let ready = true;
         if (!data) {
             this._items.next([]);
@@ -48,6 +50,14 @@ export class ListDataProvider {
         if (ready) {
             this._status.next(LoadingStatus.Ready);
             this._hasMore.next(false);
+        }
+    }
+
+    public fetchAll() {
+        if (this._data instanceof ListView) {
+            return this._data.fetchAll();
+        } else {
+            return of(null);
         }
     }
 
