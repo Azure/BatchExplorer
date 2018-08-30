@@ -24,6 +24,7 @@ import { FocusSectionComponent } from "../focus-section";
 import { AbstractListItem } from "./abstract-list-item";
 import { ListDataProvider } from "./list-data-provider";
 import { ListSortConfig } from "./list-data-sorter";
+import { SortDirection } from "@batch-flask/ui/table/table-column-manager";
 
 export interface AbstractListBaseConfig {
     /**
@@ -337,14 +338,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         this.commands.contextMenuFromSelection(selection).subscribe((menu) => {
             if (this.config.sorting) {
                 menu.addItem(new ContextMenuSeparator());
-                menu.addItem(new MultiContextMenuItem({
-                    label: "Sort by",
-                    subitems: Object.keys(this.config.sorting).map((key) => {
-                        return new ContextMenuItem(key, () => {
-                            this._dataPresenter.sortBy(key);
-                        });
-                    }),
-                }));
+                menu.addItem(this._createSortByMenu());
             }
 
             if (menu) {
@@ -372,6 +366,47 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             this.focusedItem = this._keyNavigator.focusedItem;
             this.changeDetector.markForCheck();
         });
+    }
+
+    private _createSortByMenu() {
+        const sortOptions = Object.keys(this.config.sorting).map((key) => {
+            return new ContextMenuItem({
+                label: key,
+                click: () => {
+                    this._dataPresenter.sortBy(key);
+                },
+                checked: this._dataPresenter.sortingBy.key === key,
+                type: "checkbox",
+            });
+        });
+
+        const descending = this._dataPresenter.sortingBy.direction === SortDirection.Desc;
+        const sortDirections = [
+            new ContextMenuItem({
+                label: "Ascending",
+                click: () => {
+                    this._dataPresenter.updateSortDirection(SortDirection.Asc);
+                },
+                checked: !descending,
+                type: "checkbox",
+            }),
+            new ContextMenuItem({
+                label: "Descending",
+                click: () => {
+                    this._dataPresenter.updateSortDirection(SortDirection.Desc);
+                },
+                checked: descending,
+                type: "checkbox",
+            }),
+        ]
+        return new MultiContextMenuItem({
+            label: "Sort by",
+            subitems: [
+                ...sortOptions,
+                new ContextMenuSeparator(),
+                ...sortDirections,
+            ],
+        })
     }
 
 }

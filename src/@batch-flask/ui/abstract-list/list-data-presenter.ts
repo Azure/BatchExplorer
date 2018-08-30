@@ -38,6 +38,13 @@ export class ListDataPresenter {
         this._updateDisplayedItems();
     }
 
+    public updateSortDirection(direction?: SortDirection) {
+        if (direction !== this._sortingBy.direction) {
+            this._sortingBy = { key: this._sortingBy.key, direction };
+            this._items.next(this._items.value.reverse());
+        }
+    }
+
     private _updateDisplayedItems() {
         this._items.next(this._sortItems(this._input));
     }
