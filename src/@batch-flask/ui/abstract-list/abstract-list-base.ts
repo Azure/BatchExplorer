@@ -12,15 +12,18 @@ import { Router } from "@angular/router";
 import { ListKeyNavigator, ListView, autobind } from "@batch-flask/core";
 import { ENTER, SPACE } from "@batch-flask/core/keys";
 import { ListSelection, SelectableList } from "@batch-flask/core/list";
-import { ListDataProvider } from "@batch-flask/ui/abstract-list/list-data-provider";
-import { ListDataSorter } from "@batch-flask/ui/abstract-list/list-data-sorter";
+import { ListDataPresenter } from "@batch-flask/ui/abstract-list/list-data-presenter";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
-import { ContextMenuService } from "@batch-flask/ui/context-menu";
+import {
+    ContextMenuItem, ContextMenuSeparator, ContextMenuService, MultiContextMenuItem,
+} from "@batch-flask/ui/context-menu";
 import { EntityCommands } from "@batch-flask/ui/entity-commands";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { List } from "immutable";
 import { FocusSectionComponent } from "../focus-section";
 import { AbstractListItem } from "./abstract-list-item";
+import { ListDataProvider } from "./list-data-provider";
+import { ListSortConfig } from "./list-data-sorter";
 
 export interface AbstractListBaseConfig {
     /**
@@ -38,7 +41,12 @@ export interface AbstractListBaseConfig {
     /**
      * Force breadcrumb to be appended
      */
-    forceBreadcrumb: boolean;
+    forceBreadcrumb?: boolean;
+
+    /**
+     * Sorting definition. Specify here what column can be sorted and how
+     */
+    sorting?: ListSortConfig<any> | null | false;
 }
 
 export const abstractListDefaultConfig: AbstractListBaseConfig = {
@@ -66,14 +74,10 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     public set items(items: any[]) {
         this._items = items;
-        this._updateDisplayItems();
+        this._keyNavigator.items = this.items;
+        this._updateSelectedItems();
     }
     public get items() { return this._items; }
-
-    /**
-     * List of items to display(Which might be different from the full items list because of sorting and other)
-     */
-    public displayItems: any[] = [];
 
     /**
      * List of items that are currently being displayed with the virtual scroll
@@ -82,6 +86,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     @Input() public set config(config: AbstractListBaseConfig) {
         this._config = { ...abstractListDefaultConfig, ...config };
+        this._dataPresenter.config = this._config.sorting;
     }
     public get config() { return this._config; }
 
@@ -89,7 +94,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     @HostBinding("style.display")
     public get showComponent() {
-        const hide = this.displayItems.length === 0 && this.status === LoadingStatus.Ready;
+        const hide = this.items.length === 0 && this.status === LoadingStatus.Ready;
         return hide ? "none" : "block";
     }
 
@@ -108,6 +113,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     private _subs: Subscription[] = [];
     private _items: any[] = [];
     private _dataProvider: ListDataProvider;
+    private _dataPresenter: ListDataPresenter;
     private _keyNavigator: ListKeyNavigator<AbstractListItem>;
 
     constructor(
@@ -120,13 +126,14 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         this._initKeyNavigator();
 
         this._dataProvider = new ListDataProvider();
+        this._dataPresenter = new ListDataPresenter(this._dataProvider);
         if (focusSection) {
             this._subs.push(focusSection.keypress.subscribe(this.keyPressed));
             this._subs.push(focusSection.onFocus.subscribe(this.onFocus));
             this._subs.push(focusSection.onBlur.subscribe(this.onBlur));
         }
 
-        this._dataProvider.items.subscribe((items) => {
+        this._dataPresenter.items.subscribe((items) => {
             this.items = items;
         });
 
@@ -135,6 +142,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public ngOnDestroy() {
         this._subs.forEach((x) => x.unsubscribe());
         this._dataProvider.dispose();
+        this._dataPresenter.dispose();
         if (this._keyNavigator) {
             this._keyNavigator.dispose();
         }
@@ -142,7 +150,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     public updateViewPortItems(items) {
         this.viewPortItems = items;
-        if (items.length === this.displayItems.length) {
+        if (items.length === this.items.length) {
             this.scrollBottom.emit();
         }
         this.changeDetector.markForCheck();
@@ -217,7 +225,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         let foundStart = false;
         const activeKey = this.activeItem;
         const selection = new ListSelection(this.selection);
-        this.displayItems.some((item) => {
+        this.items.some((item) => {
             const id = item.id || item.key;
             if (!foundStart && (id === activeKey || id === key)) {
                 foundStart = true;
@@ -327,33 +335,29 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         }
 
         this.commands.contextMenuFromSelection(selection).subscribe((menu) => {
+            if (this.config.sorting) {
+                menu.addItem(new ContextMenuSeparator());
+                menu.addItem(new MultiContextMenuItem({
+                    label: "Sort by",
+                    subitems: Object.keys(this.config.sorting).map((key) => {
+                        return new ContextMenuItem(key, () => {
+                            this._dataPresenter.sortBy(key);
+                        });
+                    }),
+                }));
+            }
+
             if (menu) {
                 this.contextmenuService.openMenu(menu);
             }
         });
     }
 
-    private _computeDisplayedItems() {
-        return this._sortItems(this.items);
-    }
-
-    private _sortItems(items: AbstractListItem[]): AbstractListItem[] {
-        const sorter = new ListDataSorter(this.config as any);
-
-        return sorter.sortBy(items, "targetLowPriorityNodes");
-    }
-
-    private _updateDisplayItems() {
-        this.displayItems = this._computeDisplayedItems();
-        this._keyNavigator.items = this.displayItems;
-        this._updateSelectedItems();
-    }
-
     /**
      * Update the items to mark which ones are selected
      */
     private _updateSelectedItems() {
-        this.displayItems.forEach((item) => {
+        this.items.forEach((item) => {
             item.selected = Boolean(this.selection.has(item.id));
         });
         this.changeDetector.markForCheck();

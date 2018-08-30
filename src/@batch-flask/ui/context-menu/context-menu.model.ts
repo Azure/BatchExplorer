@@ -26,6 +26,11 @@ export class ContextMenu {
             }
         }));
     }
+
+    public addItem(item: ContextMenuEntry): ContextMenu {
+        this.items.push(item);
+        return this;
+    }
 }
 
 export interface ContextMenuItemConfig {

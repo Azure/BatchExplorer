@@ -41,13 +41,6 @@ export interface TableConfig extends AbstractListBaseConfig {
     droppable?: boolean;
 
     /**
-     * If the column name don't map to a value of the object
-     * this allows you to return the path this column should map to.
-     * This is used for sorting.
-     */
-    values?: StringMap<(item: any) => any>;
-
-    /**
      * If the table should allow column to be resized. Default true.
      */
     resizableColumn?: boolean;
@@ -177,6 +170,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
      */
     public sort(column: string, direction: SortDirection = SortDirection.Asc) {
         this.columnManager.sortBy(column, direction);
-        this.updateDisplayedItems();
+        // this.updateDisplayedItems();
+        // TODO-TIM
     }
 }

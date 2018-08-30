@@ -1,5 +1,6 @@
 <bl-focus-section>
     <bl-quick-list *ngIf="quicklist"
+        [config]="tableConfig"
         [data]="pools"
         [status]="status"
         [(activeItem)]="activeItem"

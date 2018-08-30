@@ -5,17 +5,16 @@ export enum SortDirection {
     Desc,
 }
 
-export interface SortConfig<TEntity> {
+export interface ListSortConfig<TEntity> {
     [key: string]: boolean | ((item: TEntity) => any);
 }
 
-export class ListDataSorter {
+export class ListDataSorter<TEntity> {
 
-    constructor(public config: {
-        values: StringMap<(item: AbstractListItem) => any>;
-    }) {
+    constructor(public config: ListSortConfig<TEntity>) {
 
     }
+
     public sortBy(items: AbstractListItem[], attribute: string, direction: SortDirection = SortDirection.Desc) {
         const getColumnValue = this._columnValueFn(attribute);
 
@@ -38,7 +37,7 @@ export class ListDataSorter {
     }
 
     private _columnValueFn(attribute: string) {
-        if (this.config.values && attribute in this.config.values) {
+        if (attribute in this.config && typeof this.config[attribute] === "function") {
             return this.config.values[attribute];
         } else {
             return (item) => item[attribute];
