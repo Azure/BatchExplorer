@@ -2,7 +2,7 @@ import { ListProp, Model, Prop, Record } from "@batch-flask/core";
 import { List } from "immutable";
 
 export enum ContainerType {
-    Docker = "docker",
+    DockerCompatible = "dockerCompatible",
 }
 
 export interface ContainerConfigurationAttributes {
