@@ -22,10 +22,8 @@
     </div>
 </div>
 <div class="warning-container">
-    <div class="invalidated-data"
-        [matTooltip]="taskCountUnvalidatedTooltip"
-        *ngIf="!taskCountValidated">
-        <i class="fa fa-warning"></i>Task count might not be accurate
+    <div class="invalidated-data" *ngIf="taskCountTooHigh">
+        <i class="fa fa-warning"></i>{{'job-progress-status.inaccurate' | i18n}}
     </div>
 </div>
 <div class="progress-container">

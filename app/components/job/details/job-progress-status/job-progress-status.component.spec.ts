@@ -2,7 +2,7 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { PollService } from "@batch-flask/core";
-import { Job, JobTaskCounts, JobTaskCountsValidationStatus, Node, Pool } from "app/models";
+import { Job, JobTaskCounts, Node, Pool } from "app/models";
 import { JobService, NodeService, PoolService } from "app/services";
 import { of } from "rxjs";
 import { click } from "test/utils/helpers";
@@ -49,17 +49,12 @@ describe("JobProgressStatusComponent", () => {
 
         jobServiceSpy = {
             getTaskCounts: jasmine.createSpy("getTaskCounts").and.callFake((jobId) => {
-                const valid = jobId === "large-job"
-                    ? JobTaskCountsValidationStatus.unvalidated
-                    : JobTaskCountsValidationStatus.validated;
-
                 return of(new JobTaskCounts({
                     running: 4,
                     completed: 8,
                     active: 12,
                     failed: 2,
                     succeeded: 6,
-                    validationStatus: valid,
                 }));
             }),
         };
