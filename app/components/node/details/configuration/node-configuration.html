@@ -1,43 +1,43 @@
 <bl-entity-configuration [value]="node">
     <bl-property-list>
         <bl-property-group label="General" class="wide">
-            <bl-text-property [label]="'node-configuration.id' | i18n" [value]="decorator.id"></bl-text-property>
-            <bl-text-property [label]="'node-configuration.label' | i18n" [value]="decorator.url"></bl-text-property>
-            <bl-text-property [label]="'node-configuration.state' | i18n" [value]="decorator.state"></bl-text-property>
-            <bl-text-property [label]="'node-configuration.state-transition-time' | i18n" [value]="decorator.stateTransitionTime"></bl-text-property>
-            <bl-text-property [label]="'node-configuration.scheduling-state' | i18n" [value]="decorator.schedulingState"></bl-text-property>
-            <bl-text-property [label]="'node-configuration.node-size' | i18n" [value]="decorator.vmSize"></bl-text-property>
-            <bl-text-property [label]="'node-configuration.last-boot-time' | i18n" [value]="decorator.lastBootTime"></bl-text-property>
-            <bl-text-property [label]="'node-configuration.allocation-time' | i18n" [value]="decorator.allocationTime"></bl-text-property>
-            <bl-text-property [label]="'node-configuration.running-tasks-count' | i18n" [value]="decorator.runningTasksCount"></bl-text-property>
-            <bl-text-property [label]="'node-configuration.total-tasks-run' | i18n" [value]="decorator.totalTasksRun"></bl-text-property>
-            <bl-text-property [label]="'node-configuration.total-tasks-succeeded' | i18n" [value]="decorator.totalTasksSucceeded"></bl-text-property>
-            <bl-text-property [label]="'node-configuration.internal-ip' | i18n" [value]="decorator.ipAddress"></bl-text-property>
-            <bl-text-property [label]="'node-configuration.external-ip' | i18n" [value]="externalIpAddress" *ngIf="externalIpAddress"></bl-text-property>
-            <bl-bool-property [label]="'node-configuration.is-dedicated' | i18n" [value]="node.isDedicated" [yesNo]="true"></bl-bool-property>
-            <bl-text-property *ngIf="node.nodeAgentInfo" [label]="'node-configuration.node-agent-version' | i18n" value="{{node.nodeAgentInfo?.version}} (Last updated {{node.nodeAgentInfo?.lastUpdateTime}})">
+            <bl-text-property [label]="'id' | i18n" [value]="decorator.id"></bl-text-property>
+            <bl-text-property [label]="'label' | i18n" [value]="decorator.url"></bl-text-property>
+            <bl-text-property [label]="'state' | i18n" [value]="decorator.state"></bl-text-property>
+            <bl-text-property [label]="'state-transition-time' | i18n" [value]="decorator.stateTransitionTime"></bl-text-property>
+            <bl-text-property [label]="'scheduling-state' | i18n" [value]="decorator.schedulingState"></bl-text-property>
+            <bl-text-property [label]="'node-size' | i18n" [value]="decorator.vmSize"></bl-text-property>
+            <bl-text-property [label]="'last-boot-time' | i18n" [value]="decorator.lastBootTime"></bl-text-property>
+            <bl-text-property [label]="'allocation-time' | i18n" [value]="decorator.allocationTime"></bl-text-property>
+            <bl-text-property [label]="'running-tasks-count' | i18n" [value]="decorator.runningTasksCount"></bl-text-property>
+            <bl-text-property [label]="'total-tasks-run' | i18n" [value]="decorator.totalTasksRun"></bl-text-property>
+            <bl-text-property [label]="'total-tasks-succeeded' | i18n" [value]="decorator.totalTasksSucceeded"></bl-text-property>
+            <bl-text-property [label]="'internal-ip' | i18n" [value]="decorator.ipAddress"></bl-text-property>
+            <bl-text-property [label]="'external-ip' | i18n" [value]="externalIpAddress" *ngIf="externalIpAddress"></bl-text-property>
+            <bl-bool-property [label]="'is-dedicated' | i18n" [value]="node.isDedicated" [yesNo]="true"></bl-bool-property>
+            <bl-text-property *ngIf="node.nodeAgentInfo" [label]="'node-agent-version' | i18n" value="{{node.nodeAgentInfo?.version}} (Last updated {{node.nodeAgentInfo?.lastUpdateTime}})">
             </bl-text-property>
             <!-- If pool was created before this functionality was added. -->
-            <bl-text-property *ngIf="!node.nodeAgentInfo" [label]="'node-configuration.node-agent-version' | i18n" value="Cannot get exact version(Before 1.3.0.6)">
+            <bl-text-property *ngIf="!node.nodeAgentInfo" [label]="'node-agent-version' | i18n" value="Cannot get exact version(Before 1.3.0.6)">
             </bl-text-property>
         </bl-property-group>
 
-        <bl-property-group [label]="'node-configuration.start-task-execution' | i18n" class="wide" [collapsed]="true" *ngIf="node.startTaskInfo">
+        <bl-property-group [label]="'start-task-execution' | i18n" class="wide" [collapsed]="true" *ngIf="node.startTaskInfo">
             <div collapsed-preview>
-                <span *ngIf="!decorator.startTaskInfo.runtime">{{'node-configuration.start-task-not-started' | i18n}}</span>
-                <span *ngIf="decorator.startTaskInfo.runtime && !node?.startTaskInfo?.endTime">{{'node-configuration.start-task-running' | i18n}}
+                <span *ngIf="!node.startTaskInfo?.startTime">{{'start-task-not-started' | i18n}}</span>
+                <span *ngIf="node.startTaskInfo?.startTime && !node?.startTaskInfo?.endTime">{{'start-task-running' | i18n}}
                     <bl-timespan [startTime]="node?.startTaskInfo?.startTime" [endTime]="node?.startTaskInfo?.endTime"></bl-timespan>
                 </span>
 
-                <span *ngIf="node?.startTaskInfo?.endTime">{{'node-configuration.start-task-completed' | i18n}}: {{ decorator.startTaskInfo.runtime }}</span>
+                <span *ngIf="node?.startTaskInfo?.endTime">{{'start-task-completed' | i18n}}: {{ decorator.startTaskInfo.runtime }}</span>
             </div>
 
-            <bl-text-property [label]="'node-configuration.state' | i18n" [value]="decorator.startTaskInfo.state"></bl-text-property>
-            <bl-text-property [label]="'node-configuration.start-time' | i18n" [value]="decorator.startTaskInfo.startTime"></bl-text-property>
-            <bl-text-property [label]="'node-configuration.end-time' | i18n" [value]="decorator.startTaskInfo.endTime"></bl-text-property>
-            <bl-text-property [label]="'node-configuration.run-time' | i18n" [value]="decorator.startTaskInfo.runtime"></bl-text-property>
-            <bl-text-property [label]="'node-configuration.exit-code' | i18n" [value]="decorator.startTaskInfo.exitCode"></bl-text-property>
-            <bl-text-property [label]="'node-configuration.retry-count' | i18n" [value]="decorator.startTaskInfo.retryCount"></bl-text-property>
+            <bl-text-property [label]="'state' | i18n" [value]="decorator.startTaskInfo.state"></bl-text-property>
+            <bl-text-property [label]="'start-time' | i18n" [value]="decorator.startTaskInfo.startTime"></bl-text-property>
+            <bl-text-property [label]="'end-time' | i18n" [value]="decorator.startTaskInfo.endTime"></bl-text-property>
+            <bl-text-property [label]="'run-time' | i18n" [value]="decorator.startTaskInfo.runtime"></bl-text-property>
+            <bl-text-property [label]="'exit-code' | i18n" [value]="decorator.startTaskInfo.exitCode"></bl-text-property>
+            <bl-text-property [label]="'retry-count' | i18n" [value]="decorator.startTaskInfo.retryCount"></bl-text-property>
         </bl-property-group>
     </bl-property-list>
 </bl-entity-configuration>
