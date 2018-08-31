@@ -22,11 +22,11 @@ bl-activity-monitor-footer-item {
     }
 
     > .name {
-        flex: 1;
         min-width: 0;
         text-align: left;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
+        padding-right: 5px;
     }
 }
