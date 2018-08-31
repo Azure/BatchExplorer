@@ -54,23 +54,10 @@ describe("ActivityMonitorFooterItemComponent", () => {
         const nameEl = de.query(By.css(".name"));
 
         expect(nameEl.nativeElement.textContent).toContain("Test activity");
-        expect(nameEl.nativeElement.textContent).not.toContain("...");
-    });
-
-    it("should display the activity name trucated to 20 characters", () => {
-        const nameEl = de.query(By.css(".name"));
-
-        testComponent.activity = new MockActivity(
-            "Test activity but it's longer than 20 characters",
-            testComponent.subj,
-        );
-        fixture.detectChanges();
-
-        expect(nameEl.nativeElement.textContent).toContain("Test activity but it...");
     });
 
     it("should display the percentage if an activity is emitting progress", () => {
-        const nameEl = de.query(By.css(".name"));
+        const progressEl = de.query(By.css(".progress-percent"));
 
         const progressSubj = new BehaviorSubject(0);
 
@@ -78,12 +65,12 @@ describe("ActivityMonitorFooterItemComponent", () => {
         fixture.detectChanges();
 
         expect(component.progress).toBe(0);
-        expect(nameEl.nativeElement.textContent).toContain("(0%)");
+        expect(progressEl.nativeElement.textContent).toContain("(0%)");
 
         progressSubj.next(50);
         fixture.detectChanges();
 
         expect(component.progress).toBe(50);
-        expect(nameEl.nativeElement.textContent).toContain("(50%)");
+        expect(progressEl.nativeElement.textContent).toContain("(50%)");
     });
 });
