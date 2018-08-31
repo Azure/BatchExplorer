@@ -1,20 +1,18 @@
 import { Component, Input, OnChanges } from "@angular/core";
-
+import { log } from "@batch-flask/utils";
 import { Node, Pool } from "app/models";
 import { NodeDecorator } from "app/models/decorators";
 import { NodeConnectService } from "app/services";
-import { PoolUtils } from "app/utils";
+import { ComponentUtils, PoolUtils } from "app/utils";
 
 @Component({
     selector: "bl-node-configuration",
     templateUrl: "node-configuration.html",
 })
 export class NodeConfigurationComponent implements OnChanges {
-    @Input()
-    public pool: Pool;
+    @Input() public pool: Pool;
 
-    @Input()
-    public set node(value: Node) {
+    @Input() public set node(value: Node) {
         this._node = value;
         this.decorator = new NodeDecorator(this._node);
     }
@@ -28,7 +26,7 @@ export class NodeConfigurationComponent implements OnChanges {
     constructor(private nodeConnectService: NodeConnectService) { }
 
     public ngOnChanges(inputs) {
-        if (inputs.node && inputs.pool) {
+        if (ComponentUtils.recordChangedId(inputs.pool) || ComponentUtils.recordChangedId(inputs.node)) {
             if (PoolUtils.isIaas(this.pool)) {
                 this.externalIpAddress = "Loading...";
                 this.nodeConnectService.getConnectionSettings(this.pool, this.node).subscribe({
@@ -37,6 +35,7 @@ export class NodeConfigurationComponent implements OnChanges {
                     },
                     error: (error) => {
                         this.externalIpAddress = "Error occured retrieving public IP Address";
+                        log.error("Error retrieving public IP address", error);
                     },
                 });
             } else {
