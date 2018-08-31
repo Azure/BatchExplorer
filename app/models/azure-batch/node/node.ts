@@ -5,6 +5,7 @@ import { CertificateReference } from "app/models/certificate-reference";
 import { NodeRecentTask } from "app/models/node-recent-task";
 import { StartTaskInfo } from "app/models/start-task-info";
 import { ComputeNodeError, ComputeNodeErrorAttributes } from "./compute-node-error";
+import { NodeAgentInformation, NodeAgentInformationAttributes } from "./node-agent-information";
 
 export interface NodeAttributes {
     id: string;
@@ -26,6 +27,7 @@ export interface NodeAttributes {
     certificateReferences: Array<Partial<CertificateReference>>;
     startTaskInfo: Partial<StartTaskInfo>;
     errors: ComputeNodeErrorAttributes[];
+    nodeAgentInfo: NodeAgentInformationAttributes;
 }
 
 /**
@@ -49,6 +51,7 @@ export class Node extends Record<NodeAttributes> {
     @Prop() public runningTasksCount: number = 0;
     @Prop() public isDedicated: boolean;
     @Prop() public startTaskInfo: StartTaskInfo;
+    @Prop() public nodeAgentInfo: NodeAgentInformation;
 
     @ListProp(NodeRecentTask) public recentTasks: List<NodeRecentTask> = List([]);
     @ListProp(CertificateReference) public certificateReferences: List<CertificateReference> = List([]);

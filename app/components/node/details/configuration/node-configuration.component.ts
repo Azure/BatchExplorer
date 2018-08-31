@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges } from "@angular/core";
+import { I18N_NAMESPACE } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { Node, Pool } from "app/models";
 import { NodeDecorator } from "app/models/decorators";
@@ -8,6 +9,9 @@ import { ComponentUtils, PoolUtils } from "app/utils";
 @Component({
     selector: "bl-node-configuration",
     templateUrl: "node-configuration.html",
+    providers: [
+        { provide: I18N_NAMESPACE, useValue: "node-configuration" },
+    ],
 })
 export class NodeConfigurationComponent implements OnChanges {
     @Input() public pool: Pool;

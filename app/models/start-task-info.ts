@@ -1,4 +1,5 @@
 import { Model, Prop, Record } from "@batch-flask/core";
+import { TaskExecutionResult } from "./azure-batch/task-execution-result";
 import { FailureInfo, FailureInfoAttributes } from "./failure-info";
 import { TaskState } from "./task";
 
@@ -9,6 +10,7 @@ export interface StartTaskInfoAttributes {
     exitCode: number;
     failureInfo?: FailureInfoAttributes;
     retryCount: number;
+    result: TaskExecutionResult;
 }
 
 /**
@@ -22,4 +24,5 @@ export class StartTaskInfo extends Record<StartTaskInfoAttributes> {
     @Prop() public exitCode: number;
     @Prop() public failureInfo: FailureInfo;
     @Prop() public retryCount: number;
+    @Prop() public result: TaskExecutionResult;
 }
