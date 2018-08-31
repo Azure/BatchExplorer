@@ -25,8 +25,4 @@ export class StartTaskInfo extends Record<StartTaskInfoAttributes> {
     @Prop() public failureInfo: FailureInfo;
     @Prop() public retryCount: number;
     @Prop() public result: TaskExecutionResult;
-    constructor(data) {
-        super(data);
-        console.log("Data", data);
-    }
 }
