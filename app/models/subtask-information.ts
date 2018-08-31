@@ -1,6 +1,6 @@
 import { Model, Prop, Record } from "@batch-flask/core";
 
-import { ComputeNodeInformation } from "./compute-node-information";
+import { ComputeNodeInformation } from "./azure-batch/compute-node-information";
 import { FailureInfo } from "./failure-info";
 import { TaskState } from "./task";
 
