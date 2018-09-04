@@ -32,6 +32,10 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
 
     public listConfig: AbstractListBaseConfig = {
         sorting: {
+            id: true,
+            state: true,
+            allocationState: true,
+            vmSize: true,
             targetDedicatedNodes: true,
             currentDedicatedNodes: true,
             currentLowPriorityNodes: true,

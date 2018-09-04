@@ -1,6 +1,7 @@
 <bl-focus-section>
     <bl-quick-list *ngIf="quicklist"
         [data]="data"
+        [config]="listConfig"
         [(activeItem)]="activeItem"
         [(selection)]="selection"
         [commands]="commands"
@@ -18,6 +19,7 @@
 
     <bl-table *ngIf="!quicklist"
         [data]="data"
+        [config]="listConfig"
         [(activeItem)]="activeItem"
         [(selection)]="selection"
         [commands]="commands"
