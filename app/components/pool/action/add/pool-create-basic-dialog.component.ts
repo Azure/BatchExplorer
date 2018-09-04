@@ -9,7 +9,7 @@ import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Certificate, NodeFillType, Pool } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
 import { CreatePoolModel, PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
-import { AccountService, CertificateService, PoolService, PricingService, VmSizeService } from "app/services";
+import { AccountService, CertificateService, PoolService, PricingService } from "app/services";
 import { Constants, NumberUtils } from "app/utils";
 
 @Component({
@@ -40,7 +40,6 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         private accountService: AccountService,
         private certificateService: CertificateService,
         private pricingService: PricingService,
-        vmSizeService: VmSizeService,
         changeDetector: ChangeDetectorRef,
         private notificationService: NotificationService) {
         super(PoolCreateDto);
