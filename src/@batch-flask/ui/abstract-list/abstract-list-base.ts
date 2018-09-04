@@ -13,13 +13,13 @@ import { ListSelection, SelectableList } from "@batch-flask/core/list";
 import { ListDataPresenter } from "@batch-flask/ui/abstract-list/list-data-presenter";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import {
-    ContextMenuItem, ContextMenuSeparator, ContextMenuService, MultiContextMenuItem,
+    ContextMenuItem, ContextMenuSeparator, ContextMenuService, MultiContextMenuItem, ContextMenu,
 } from "@batch-flask/ui/context-menu";
 import { EntityCommands } from "@batch-flask/ui/entity-commands";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { List } from "immutable";
 import * as inflection from "inflection";
-import { Subscription } from "rxjs";
+import { Subscription, of } from "rxjs";
 import { FocusSectionComponent } from "../focus-section";
 import { AbstractListItem } from "./abstract-list-item";
 import { ListDataProvider } from "./list-data-provider";
@@ -339,7 +339,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     }
 
     public openContextMenu(target?: any) {
-        if (!this.commands) { return; }
+        if (!this.commands && !this.config.sorting) { return; }
 
         let selection = this.selection;
 
@@ -348,11 +348,20 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             selection = new ListSelection({ keys: [target.id] });
         }
 
-        this.commands.contextMenuFromSelection(selection).subscribe((menu) => {
+        let obs;
+        if (this.commands) {
+            obs = this.commands.contextMenuFromSelection(selection);
+        } else {
+            obs = of(new ContextMenu([]));
+        }
+        obs.subscribe((menu) => {
             if (!menu) { return; }
 
+
             if (this.config.sorting) {
-                menu.addItem(new ContextMenuSeparator());
+                if (this.commands) {
+                    menu.addItem(new ContextMenuSeparator());
+                }
                 menu.addItem(this._createSortByMenu());
             }
 

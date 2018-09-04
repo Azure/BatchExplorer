@@ -1,8 +1,8 @@
 import { Model, Prop, Record } from "@batch-flask/core";
 
 import { ComputeNodeInformation } from "./azure-batch/compute-node-information";
+import { TaskState } from "./azure-batch/task";
 import { FailureInfo } from "./failure-info";
-import { TaskState } from "./task";
 
 export interface SubtaskInformationAttributes {
     id?: number;

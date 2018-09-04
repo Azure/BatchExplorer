@@ -1,7 +1,7 @@
 import { Model, Prop, Record } from "@batch-flask/core";
 import { TaskExecutionResult } from "./azure-batch/task-execution-result";
 import { FailureInfo, FailureInfoAttributes } from "./failure-info";
-import { TaskState } from "./task";
+import { TaskState } from "./azure-batch/task";
 
 export interface StartTaskInfoAttributes {
     state: TaskState;
