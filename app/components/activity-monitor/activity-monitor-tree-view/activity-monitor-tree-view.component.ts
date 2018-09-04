@@ -1,5 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component,
+    EventEmitter, HostListener, Input, OnChanges, Output, QueryList, ViewChildren,
+} from "@angular/core";
 import { Activity } from "@batch-flask/ui";
+import { ActivityMonitorItemComponent } from "../activity-monitor-item";
 
 import "./activity-monitor-tree-view.scss";
 
@@ -10,6 +14,7 @@ export interface TreeRow {
     hasChildren: boolean;
     indent: number;
     index: number;
+    parent: TreeRow;
 }
 
 @Component({
@@ -20,12 +25,17 @@ export interface TreeRow {
 export class ActivityMonitorTreeViewComponent implements OnChanges {
     @Input() public activities: Activity[];
     @Input() public name: string;
+    @Output() public focus = new EventEmitter<boolean>();
 
     public expanded = new Set<number>();
     public treeRows: TreeRow[] = [];
     public dropTargetPath: string = null;
     public isFocused = false;
-    public focusedIndices: Set<number> = new Set([0]);
+    public focusedIndex: number;
+    public hoveredIndex: number;
+    public focusedAction: number = null;
+
+    @ViewChildren(ActivityMonitorItemComponent) private _itemComponents: QueryList<ActivityMonitorItemComponent>;
 
     constructor(private changeDetector: ChangeDetectorRef) { }
 
@@ -35,74 +45,83 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
         }
     }
 
-    public activateRow(treeRow: TreeRow) {
-        if (treeRow.hasChildren && !treeRow.expanded) {
+    public toggleRowExpand(treeRow: TreeRow) {
+        if (treeRow.hasChildren) {
             this.toggleExpanded(treeRow);
         }
-        this.focusedIndices = new Set([treeRow.index]);
-        this.changeDetector.markForCheck();
+        this.focusRow(treeRow);
     }
 
     public focusRow(treeRow: TreeRow) {
-        const isExpanded = this.isExpanded(treeRow.id);
-
-        if (isExpanded) {
-            const nextIndex = this.activities.map(act => act.id).indexOf(treeRow.id) + 1;
-            const nextId = this.activities[nextIndex] ? this.activities[nextIndex].id : -1;
-            const focusedIndices = new Set<number>();
-            for (let i = treeRow.index; i < this.treeRows.length && this.treeRows[i].id !== nextId; i++) {
-                focusedIndices.add(i);
-            }
-            this.focusedIndices = focusedIndices;
-        } else {
-            this.focusedIndices = new Set([treeRow.index]);
-        }
+        this.focusedIndex = treeRow.index;
+        this.focusedAction = null;
+        this.changeDetector.markForCheck();
     }
 
     public hoverRow(treeRow: TreeRow) {
-
+        this.hoveredIndex = treeRow.index;
+        this.changeDetector.markForCheck();
     }
 
-    public shouldFocus(index: number) {
-        return this.focusedIndices.has(index);
+    public clearHover() {
+        this.hoveredIndex = -1;
     }
 
     public isExpanded(id: number) {
         return this.expanded.has(id);
     }
 
-    public handleKeyboardNavigation(event) {
-        const curTreeRow = this.treeRows[this.focusedIndices[0]];
+    @HostListener("keydown", ["$event"])
+    public handleKeyboardNavigation(event: KeyboardEvent) {
+        event.stopImmediatePropagation();
+        if (!this.isFocused) { return; }
+        const curTreeRow = this.treeRows[this.focusedIndex];
         switch (event.code) {
             case "ArrowDown": // Move focus down
-                // this.focusedIndex++;
+                this.focusedIndex++;
+                this.focusedAction = null;
                 event.preventDefault();
                 break;
             case "ArrowUp":   // Move focus up
-                // this.focusedIndex--;
+                this.focusedIndex--;
+                this.focusedAction = null;
                 event.preventDefault();
                 break;
             case "ArrowRight": // Expand current row if applicable
-                this.expand(curTreeRow);
+                this._onRightPress(curTreeRow);
                 event.preventDefault();
                 break;
             case "ArrowLeft": // Expand current row if applicable
-                this.collapse(curTreeRow);
+                this._onLeftPress(curTreeRow);
                 event.preventDefault();
                 break;
             case "Space":
             case "Enter":
-                this.activateRow(curTreeRow);
+                if (this.focusedAction === null) {
+                    this.toggleRowExpand(curTreeRow);
+                } else {
+                    this._execItemAction(curTreeRow);
+                }
                 event.preventDefault();
                 return;
+            case "Tab":
+                if (event.shiftKey) {
+                    this._tabBackward(curTreeRow);
+                } else {
+                    this._tabForward(curTreeRow);
+                }
+                event.preventDefault();
+                break;
             default:
+                break;
         }
-        // this.focusedIndex = (this.focusedIndex + this.treeRows.length) % this.treeRows.length;
+        this.focusedIndex = (this.focusedIndex + this.treeRows.length) % this.treeRows.length;
         this.changeDetector.markForCheck();
     }
 
     public setFocus(focus: boolean) {
         this.isFocused = focus;
+        this.focus.emit(true);
         this.changeDetector.markForCheck();
     }
 
@@ -149,8 +168,8 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
         this.changeDetector.markForCheck();
     }
 
-    private _getTreeRowsForActivities(activities: Activity[], indent = 0): TreeRow[] {
-        const rows = [];
+    private _getTreeRowsForActivities(activities: Activity[], indent = 0, parent = null): TreeRow[] {
+        const tree = [];
         for (const activity of activities) {
             const expanded = this.isExpanded(activity.id);
             const row = {
@@ -158,24 +177,65 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
                 id: activity.id,
                 expanded,
                 indent,
+                parent,
             };
             if (activity.subactivities.length > 0) {
                 row["hasChildren"] = true;
-                rows.push(row);
+                tree.push(row);
                 if (expanded) {
-                    for (const row of this._getTreeRowsForActivities(activity.subactivities, indent + 1)) {
-                        rows.push(row);
+                    for (const childRow of this._getTreeRowsForActivities(activity.subactivities, indent + 1, row)) {
+                        tree.push(childRow);
                     }
                 }
             } else {
                 row["hasChildren"] = false;
-                rows.push(row);
+                tree.push(row);
             }
         }
-        for (const [index, row] of rows.entries()) {
+        for (const [index, row] of tree.entries()) {
             row.index = index;
         }
-        console.log(rows);
-        return rows;
+        return tree;
+    }
+
+    /* Key Navigation Helpers */
+    private _onRightPress(treeRow: TreeRow) {
+        if (this.isExpanded(treeRow.id)) {
+            this.focusedIndex++;
+        } else {
+            this.expand(treeRow);
+        }
+    }
+
+    private _onLeftPress(treeRow: TreeRow) {
+        if (this.isExpanded(treeRow.id)) {
+            this.collapse(treeRow);
+        } else if (treeRow.parent) {
+            this.focusedIndex = treeRow.parent.index;
+        }
+    }
+
+    private _tabForward(treeRow: TreeRow) {
+        if (this.focusedAction === null) {
+            this.focusedAction = 0;
+        } else {
+            this.focusedAction++;
+        }
+        this.changeDetector.markForCheck();
+    }
+
+    private _tabBackward(treeRow: TreeRow) {
+        if (this.focusedAction === null) { return; }
+
+        this.focusedAction--;
+        if (this.focusedAction < 0) {
+            this.focusedAction = null;
+        }
+        this.changeDetector.markForCheck();
+    }
+
+    private _execItemAction(treeRow: TreeRow) {
+        const arr = this._itemComponents.toArray();
+        arr[treeRow.index].execAction();
     }
 }

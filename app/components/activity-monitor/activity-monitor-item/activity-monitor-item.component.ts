@@ -8,9 +8,12 @@ import {
     OnDestroy,
     OnInit,
     Output,
+    ViewChild,
+    ViewChildren,
 } from "@angular/core";
 import { Activity, ActivityService, ActivityStatus } from "@batch-flask/ui/activity-monitor";
 import { Subscription } from "rxjs";
+import { ActivityAction } from "./activity-monitor-item-action";
 
 import "./activity-monitor-item.scss";
 
@@ -22,15 +25,19 @@ import "./activity-monitor-item.scss";
 export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public activity: Activity;
     @Input() public focused: boolean;
+    @Input() public hovered: boolean;
     @Input() public indent: number;
     @Input() public expanded: boolean;
+    @Input() public focusedAction: number;
     @Output() public toggleExpanded = new EventEmitter<void>();
+    @Output() public focusedActionChange = new EventEmitter<number>();
 
     public progress: number;
     public statusOptions = ActivityStatus;
     public showSubactivities: boolean;
     public subactivitiesShown: number;
     public showError: boolean;
+    public actions: ActivityAction[];
 
     private _status: ActivityStatus;
     private _flashId: number;
@@ -59,10 +66,30 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
             this._unsubscribeFromSubjects();
         }
         this._subscribeToSubjects();
+
+        this._setActions();
+
+        // clamp focusedAction to the max number of actions
+        if (changes.focusedAction && this.focused && changes.focusedAction.currentValue > this.actions.length - 1) {
+            this.focusedAction = this.actions.length - 1;
+            this.focusedActionChange.emit(this.actions.length - 1);
+        }
     }
 
     public ngOnDestroy() {
         this._unsubscribeFromSubjects();
+    }
+
+    public trackByFn(index, activity: Activity) {
+        return activity.id;
+    }
+
+    public prettyPrint() {
+        if (this.activity.name.length < 200) {
+            return `${this.activity.name} ${this._progressString}`;
+        } else {
+            return `${this.activity.name.slice(0, 200)}... ${this._progressString}`;
+        }
     }
 
     /* Template Getters */
@@ -81,18 +108,6 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
 
     public get shouldFlash() {
         return this.activity.id === this._flashId;
-    }
-
-    public trackByFn(index, activity: Activity) {
-        return activity.id;
-    }
-
-    public prettyPrint() {
-        if (this.activity.name.length < 200) {
-            return `${this.activity.name} ${this._progressString}`;
-        } else {
-            return `${this.activity.name.slice(0, 200)}... ${this._progressString}`;
-        }
     }
 
     /* Change-of-state Functions */
@@ -129,12 +144,17 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
         }
     }
 
-    private _expand() {
-        if (this.activity.subactivities.length === 0) { return; }
-        this.subactivitiesShown = 10;
-        this.showSubactivities = true;
-        this.changeDetector.markForCheck();
+    public execAction() {
+        // execute the focused action
+        this.actions[this.focusedAction].action();
     }
+
+    // private _expand() {
+    //     if (this.activity.subactivities.length === 0) { return; }
+    //     this.subactivitiesShown = 10;
+    //     this.showSubactivities = true;
+    //     this.changeDetector.markForCheck();
+    // }
 
     private _collapse() {
         this.showSubactivities = false;
@@ -156,5 +176,27 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
 
     private _unsubscribeFromSubjects() {
         this._subs.forEach(sub => sub.unsubscribe());
+    }
+
+    private _setActions(): void {
+        // TODO find a more extensible way to do this
+        const actions: ActivityAction[] = [
+            {
+                title: "Cancel",
+                className: "cancel",
+                action: () => this.cancel(),
+                active: this.activity.isCancellable && !this.activity.isComplete,
+                faClass: "fa-times",
+            },
+            {
+                title: "Rerun",
+                className: "rerun",
+                action: () => this.rerun(),
+                active: this.activity.isComplete,
+                faClass: "fa-refresh",
+            },
+        ];
+
+        this.actions = actions.filter(action => action.active);
     }
 }

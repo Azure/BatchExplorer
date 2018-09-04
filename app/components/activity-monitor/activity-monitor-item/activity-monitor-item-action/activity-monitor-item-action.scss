@@ -1,0 +1,25 @@
+@import "app/styles/variables";
+
+bl-activity-monitor-item-action {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .action-container {
+        width: calc(100% - 10px);
+        height: calc(100% - 10px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .selected {
+        background-color: $primary-color-dark;
+
+        .fa {
+            color: $primary-contrast-color;
+        }
+    }
+}

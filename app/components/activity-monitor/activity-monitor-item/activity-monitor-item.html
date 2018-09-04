@@ -1,4 +1,4 @@
-<div class="activity-monitor-item-container" [ngClass]="{'focused': focused}">
+<div class="activity-monitor-item-container" [ngClass]="{'focused': focused, 'hovered': !focused && hovered}">
     <div class="item-container" [ngStyle]="{'padding-left': paddingLeft}">
         <div class="icon-container progress-icon">
             <i class="fa fa-ellipsis-h" *ngIf="status===statusOptions.Pending" title="Pending"></i>
@@ -23,13 +23,11 @@
                 <mat-progress-bar mode="determinate" [value]="progress" *ngIf="progress !== -1"></mat-progress-bar>
             </div>
         </div>
-        <div class="icon-container action-icon">
-            <div class="rerun" title="Rerun" *ngIf="activity.isComplete" (click)="rerun()">
-                <i class="fa fa-refresh"></i>
-            </div>
-            <div class="cancel" title="Cancel" *ngIf="activity.isCancellable && !activity.isComplete" (click)="cancel()">
-                <i class="fa fa-times"></i>
-            </div>
+        <div class="icon-container action-icon" *ngFor="let action of actions; let i = index">
+            <bl-activity-monitor-item-action
+                [action]="action"
+                [selected]="focused && focusedAction === i"
+            ></bl-activity-monitor-item-action>
         </div>
     </div>
     <div class="error" *ngIf="activity.error && showError">

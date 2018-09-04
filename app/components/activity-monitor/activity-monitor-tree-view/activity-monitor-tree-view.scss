@@ -1,52 +1,24 @@
 @import "app/styles/variables";
 
-bl-file-tree-view {
+bl-activity-monitor-tree-view {
     $tree-view-header-height: 24px;
     position: relative;
     display: flex;
     flex-direction: column;
 
     .tree-view-header {
-        background: $secondary-background;
-        display: flex;
-        align-items: stretch;
         height: $tree-view-header-height;
-        cursor: pointer;
-
-        > * {
-            vertical-align: middle;
-            line-height: $tree-view-header-height;
-        }
+        line-height: $tree-view-header-height;
+        padding-left: 10px;
+        background: $secondary-background;
+        vertical-align: middle;
 
         .name {
-            display: inline-block;
-            flex: 1;
             font-size: 11px;
-            color: $secondary-text;
-            font-weight: 700;
-            user-select: none;
             text-transform: uppercase;
+            font-weight: 700;
+            display: inline-block;
         }
-    }
-
-
-    .caret, .file-icon {
-        width: 16px;
-        font-size: 16px;
-        display: inline-block;
-        vertical-align: middle;
-    }
-
-    .caret {
-        color: $secondary-text;
-
-        &:hover {
-            color: $selection-color;
-        }
-    }
-
-    .label {
-        margin-left: 3px;
     }
 
     .tree-view-content {

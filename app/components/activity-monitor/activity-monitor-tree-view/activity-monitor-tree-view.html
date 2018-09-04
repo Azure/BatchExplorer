@@ -12,11 +12,14 @@
     <div class="tree-rows-container">
         <bl-activity-monitor-item *ngFor="let treeRow of treeRows; let i = index; trackBy: treeRowTrackBy"
             [activity]="treeRow.activity"
-            [focused]="isFocused && shouldFocus(i)"
+            [focused]="isFocused && focusedIndex == i"
+            [hovered]="hoveredIndex == i"
             [indent]="treeRow.indent"
             [expanded]="isExpanded(treeRow.id)"
+            [(focusedAction)]="focusedAction"
             (click)="focusRow(treeRow)"
             (mouseover)="hoverRow(treeRow)"
+            (mouseleave)="clearHover()"
             (toggleExpanded)="toggleExpanded(treeRow)">
         </bl-activity-monitor-item>
     </div>
