@@ -136,6 +136,11 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             this._subs.push(focusSection.onBlur.subscribe(this.onBlur));
         }
 
+        this.dataProvider.status.subscribe((status) => {
+            this.status = status;
+            this.changeDetector.markForCheck();
+        });
+
         this.dataPresenter.items.subscribe((items) => {
             this.items = items;
             this.changeDetector.markForCheck();

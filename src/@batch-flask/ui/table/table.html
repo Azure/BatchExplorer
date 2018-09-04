@@ -16,7 +16,6 @@
             (dragleave)="dragLeave(item, $event)"
             (drop)="handleDropOnRow(item, $event)">
         </bl-row-render>
-
         <bl-virtual-scroll-tail [height]="120" *ngIf="status === LoadingStatus.Loading">
             <bl-loading [status]="status"></bl-loading>
         </bl-virtual-scroll-tail>
