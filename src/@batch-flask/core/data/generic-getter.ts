@@ -1,10 +1,11 @@
 import { Type } from "@angular/core";
 import { HttpCode } from "@batch-flask/core/constants";
+import { Record } from "@batch-flask/core/record";
 import { ServerError } from "@batch-flask/core/server-error";
 import { exists, log } from "@batch-flask/utils";
 import { DataCache } from "./data-cache";
 
-export interface GenericGetterConfig<TEntity, TParams> {
+export interface GenericGetterConfig<TEntity extends Record<any>, TParams> {
     /**
      *  Method that return the cache given the params.
      * This allow the use of targeted data cache which depends on some params.
@@ -25,7 +26,7 @@ export interface GenericGetterConfig<TEntity, TParams> {
     onError?: (error: ServerError) => boolean;
 }
 
-export class GenericGetter<TEntity, TParams> {
+export class GenericGetter<TEntity extends Record<any>, TParams> {
     protected getCache: (params: TParams) => DataCache<TEntity>;
     private _logIgnoreError: number[];
 

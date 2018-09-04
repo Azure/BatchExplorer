@@ -1,15 +1,15 @@
 import { Type } from "@angular/core";
 import { RequestOptions, Response, URLSearchParams } from "@angular/http";
-import { ContinuationToken, ListGetter, ListGetterConfig, ListOptions } from "@batch-flask/core";
+import { ContinuationToken, ListGetter, ListGetterConfig, ListOptions, Record } from "@batch-flask/core";
 import { Observable } from "rxjs";
 import { map, share } from "rxjs/operators";
 import { ArmHttpService } from "../../arm-http.service";
 
-export interface ArmListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
+export interface ArmListConfig<TEntity extends Record<any>, TParams> extends ListGetterConfig<TEntity, TParams> {
     uri: (params: TParams, options: any) => string;
 }
 
-export class ArmListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams> {
+export class ArmListGetter<TEntity extends Record<any>, TParams> extends ListGetter<TEntity, TParams> {
     private _provideUri: (params: TParams, options: any) => string;
 
     constructor(

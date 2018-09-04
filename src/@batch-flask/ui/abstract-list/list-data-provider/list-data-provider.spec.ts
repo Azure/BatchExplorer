@@ -1,13 +1,16 @@
+import { Model, Record } from "@batch-flask/core";
 import { AbstractListItem } from "@batch-flask/ui/abstract-list/abstract-list-item";
 import { List } from "immutable";
 import { MockListView } from "test/utils/mocks";
 import { ListDataProvider } from "./list-data-provider";
 
-class Model implements AbstractListItem {
+@Model()
+class FakeModel extends Record<any> implements AbstractListItem {
     public disabled: false;
     public routerLink: any[];
 
     constructor(public id: string) {
+        super();
         this.routerLink = ["/items", id];
     }
 
@@ -16,11 +19,11 @@ class Model implements AbstractListItem {
     }
 }
 
-const item1 = new Model("i-1");
-const item2 = new Model("i-2");
-const item3 = new Model("i-3");
-const item4 = new Model("i-4");
-const item5 = new Model("i-5");
+const item1 = new FakeModel("i-1");
+const item2 = new FakeModel("i-2");
+const item3 = new FakeModel("i-3");
+const item4 = new FakeModel("i-4");
+const item5 = new FakeModel("i-5");
 
 describe("ListDataProvider", () => {
     let provider: ListDataProvider;
@@ -52,7 +55,7 @@ describe("ListDataProvider", () => {
         let view: MockListView<any, any>;
 
         beforeEach(() => {
-            view = new MockListView(Object, { items: [item1, item3, item4] });
+            view = new MockListView(Record, { items: [item1, item3, item4] });
             provider.data = view;
         });
 

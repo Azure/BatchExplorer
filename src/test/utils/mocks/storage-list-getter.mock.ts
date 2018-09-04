@@ -1,13 +1,14 @@
 import { Type } from "@angular/core";
-import { ListGetter,  ListGetterConfig, ServerError } from "@batch-flask/core";
+import { ListGetter,  ListGetterConfig, Record, ServerError } from "@batch-flask/core";
 import { Observable, from, of, throwError } from "rxjs";
 import { catchError, map, share } from "rxjs/operators";
 
-export interface MockStorageListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
+export interface MockStorageListConfig<TEntity extends Record<any>, TParams>
+    extends ListGetterConfig<TEntity, TParams> {
     getData: (params: TParams, options: any) => any;
 }
 
-export class MockStorageListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams> {
+export class MockStorageListGetter<TEntity  extends Record<any>, TParams> extends ListGetter<TEntity, TParams> {
     private _getData: (params: TParams, options: any) => any;
 
     constructor(

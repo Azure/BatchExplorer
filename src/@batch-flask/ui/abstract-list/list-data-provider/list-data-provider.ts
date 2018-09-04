@@ -17,7 +17,7 @@ export class ListDataProvider {
     private _newDataStatus = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
     private _hasMore = new BehaviorSubject<boolean>(true);
     private _dataSubs: Subscription[] = [];
-    private _data: ListView<AbstractListItem, any> | List<AbstractListItem> | Iterable<AbstractListItem>;
+    private _data: ListView<any, any> | List<AbstractListItem> | Iterable<AbstractListItem>;
 
     constructor() {
         this.items = this._items.asObservable();
@@ -33,7 +33,7 @@ export class ListDataProvider {
         this._clearDataSubs();
     }
 
-    public set data(data: ListView<AbstractListItem, any> | List<AbstractListItem> | Iterable<AbstractListItem>) {
+    public set data(data: ListView<any, any> | List<AbstractListItem> | Iterable<AbstractListItem>) {
         this._clearDataSubs();
         this._data = data;
         let ready = true;
@@ -64,7 +64,7 @@ export class ListDataProvider {
         }
     }
 
-    private _watchListView(data: ListView<AbstractListItem, any>) {
+    private _watchListView(data: ListView<any, any>) {
         this._dataSubs.push(data.items.subscribe((items) => {
             this._items.next(items.toArray());
         }));

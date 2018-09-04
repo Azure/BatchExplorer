@@ -1,7 +1,7 @@
+import { Record } from "@batch-flask/core/record";
+import { ObjectUtils, SecureUtils } from "@batch-flask/utils";
 import { Map } from "immutable";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
-
-import { ObjectUtils, SecureUtils } from "@batch-flask/utils";
 import { PollService } from "../poll";
 import { QueryCache } from "../query-cache";
 
@@ -38,7 +38,7 @@ export class DataCacheTracker {
  * Cache storage for entity and list of items.
  * Supports partial updates(OData select)
  */
-export class DataCache<T> {
+export class DataCache<T extends Record<any>> {
     /**
      * Datacache id. Every datacache is assigned a unique guid
      */
@@ -90,8 +90,14 @@ export class DataCache<T> {
      */
     public addItem(item: T, select?: string): string {
         const key = this.getItemKey(item);
-        const newItems = this._items.getValue().merge({ [key]: this._computeNewItem(item, key, select) });
-        this._items.next(newItems);
+        const computedItem = this._computeNewItem(item, key, select);
+        const existingItem = this._items.value.get(key);
+
+        // Only update the cache if the item is different
+        if (!existingItem || !existingItem.equals(computedItem)) {
+            const newItems = this._items.value.merge({ [key]: computedItem });
+            this._items.next(newItems);
+        }
 
         return key;
     }
@@ -110,7 +116,7 @@ export class DataCache<T> {
             newItems[key] = this._computeNewItem(item, key, select);
         }
 
-        this._items.next(this._items.getValue().merge(newItems));
+        this._items.next(this._items.value.merge(newItems));
         return keys;
     }
 
@@ -119,7 +125,7 @@ export class DataCache<T> {
      * @param key Unique key of the item
      */
     public has(key: string): boolean {
-        return this._items.getValue().has(key);
+        return this._items.value.has(key);
     }
 
     /**
@@ -164,7 +170,7 @@ export class DataCache<T> {
 
     private _computeNewItem(item: T, key: string, select?: string): T {
         if (!select) { return item; }
-        const oldItem = this._items.getValue().get(key);
+        const oldItem = this._items.value.get(key);
         if (!oldItem) { return item; }
         const attributes = ObjectUtils.slice((item as any).toJS(), this._getAttributesList(select));
         return (oldItem as any).merge(attributes);

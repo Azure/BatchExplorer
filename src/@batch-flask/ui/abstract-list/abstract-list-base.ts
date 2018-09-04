@@ -69,7 +69,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     @Input() public commands: EntityCommands<any>;
 
     @Input() public set data(
-        data: ListView<AbstractListItem, any> | List<AbstractListItem> | Iterable<AbstractListItem>) {
+        data: ListView<any, any> | List<AbstractListItem> | Iterable<AbstractListItem>) {
         this.dataProvider.data = data;
     }
     @Input() public status: LoadingStatus;

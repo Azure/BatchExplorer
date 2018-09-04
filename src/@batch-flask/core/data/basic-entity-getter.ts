@@ -1,15 +1,17 @@
 import { Type } from "@angular/core";
+import { Record } from "@batch-flask/core/record";
 import { Observable } from "rxjs";
 import { EntityGetter, EntityGetterConfig } from "./entity-getter";
 
-export interface BasicEntityGetterConfig<TEntity, TParams> extends EntityGetterConfig<TEntity, TParams> {
+export interface BasicEntityGetterConfig<TEntity extends Record<any>, TParams>
+    extends EntityGetterConfig<TEntity, TParams> {
     /**
      * Get function(usually call the client proxy)
      */
     supplyData: (params: TParams) => any;
 }
 
-export class BasicEntityGetter<TEntity, TParams> extends EntityGetter<TEntity, TParams> {
+export class BasicEntityGetter<TEntity extends Record<any>, TParams> extends EntityGetter<TEntity, TParams> {
     private _supplyData: (params: TParams) => any;
 
     constructor(

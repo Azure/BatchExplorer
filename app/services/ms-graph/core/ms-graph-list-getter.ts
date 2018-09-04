@@ -1,15 +1,17 @@
 import { HttpParams } from "@angular/common/http";
 import { Type } from "@angular/core";
-import { ContinuationToken, HttpRequestOptions, ListGetter, ListGetterConfig, ListOptions } from "@batch-flask/core";
+import {
+    ContinuationToken, HttpRequestOptions, ListGetter, ListGetterConfig, ListOptions, Record,
+} from "@batch-flask/core";
 import { Observable } from "rxjs";
 import { map, share } from "rxjs/operators";
 import { MsGraphHttpService } from "./ms-graph-http.service";
 
-export interface MsGraphListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
+export interface MsGraphListConfig<TEntity extends Record<any>, TParams> extends ListGetterConfig<TEntity, TParams> {
     uri: (params: TParams, options: any) => string;
 }
 
-export class MsGraphListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams> {
+export class MsGraphListGetter<TEntity extends Record<any>, TParams> extends ListGetter<TEntity, TParams> {
     private _provideUri: (params: TParams, options: any) => string;
 
     constructor(
