@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
 import { ActivityMonitorFooterItemComponent } from "@batch-flask/ui/activity-monitor";
-import { BehaviorSubject } from "rxjs";
+import { AsyncSubject, BehaviorSubject } from "rxjs";
 
 @Component({
     template: `
@@ -31,7 +31,7 @@ class MockActivity {
     }
 }
 
-describe("ActivityMonitorFooterItemComponent", () => {
+fdescribe("ActivityMonitorFooterItemComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
@@ -54,6 +54,22 @@ describe("ActivityMonitorFooterItemComponent", () => {
         const nameEl = de.query(By.css(".name"));
 
         expect(nameEl.nativeElement.textContent).toContain("Test activity");
+    });
+
+    it("should not truncate the activity name if it is short enough to fit", () => {
+        const nameEl = de.query(By.css(".name"));
+        expect(nameEl.nativeElement.offsetWidth).toBe(nameEl.nativeElement.scrollWidth);
+    });
+
+    it("should truncate the activity name if it is too long to fit", () => {
+        testComponent.activity = new MockActivity(
+            "loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong name",
+            testComponent.subj,
+        );
+        fixture.detectChanges();
+
+        const nameEl = de.query(By.css(".name"));
+        expect(nameEl.nativeElement.offsetWidth < nameEl.nativeElement.scrollWidth).toBe(true);
     });
 
     it("should display the percentage if an activity is emitting progress", () => {
