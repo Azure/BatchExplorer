@@ -13,7 +13,7 @@ export interface SortingInfo {
     direction: SortDirection;
 }
 
-export const SORTING_AUTO_UPDATE_THRESHOLD = 5000;
+export const SORTING_AUTO_UPDATE_THRESHOLD = 20000;
 
 /**
  * Class that given items input handle sorting and filtering them
