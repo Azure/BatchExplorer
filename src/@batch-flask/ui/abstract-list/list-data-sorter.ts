@@ -53,9 +53,9 @@ export class ListDataSorter<TEntity> {
         return sortedRows;
     }
 
-    private _columnValueFn(attribute: string) {
+    private _columnValueFn(attribute: string): (item: AbstractListItem) => any {
         if (attribute in this.config && typeof this.config[attribute] === "function") {
-            return this.config.values[attribute];
+            return this.config[attribute] as any;
         } else {
             return (item) => item[attribute];
         }

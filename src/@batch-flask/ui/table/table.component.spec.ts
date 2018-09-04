@@ -39,11 +39,11 @@ class BaseTestComponent {
                 <div *blHeadCellDef>Name</div>
                 <div *blCellDef="let size">{{size.name}}</div>
             </bl-column>
-            <bl-column name="cores" [sortable]="true">
+            <bl-column name="cores">
                 <div *blHeadCellDef>Cores</div>
                 <div *blCellDef="let size">{{size.numberOfCores}}</div>
             </bl-column>
-            <bl-column name="resourceDiskSizeInMB" [sortable]="true">
+            <bl-column name="resourceDiskSizeInMB">
                 <div *blHeadCellDef>Disk</div>
                 <div *blCellDef="let size">{{size.resourceDiskSizeInMB}}MB</div>
             </bl-column>
@@ -54,6 +54,7 @@ class TestComponent extends BaseTestComponent {
     public tableConfig = {
         sorting: {
             cores: (size) => size.numberOfCores,
+            resourceDiskSizeInMB: true,
         },
     };
 }
