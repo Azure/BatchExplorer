@@ -3,7 +3,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
-
+import { AbstractListModule } from "@batch-flask/ui/abstract-list";
 import { ContextMenuModule } from "@batch-flask/ui/context-menu";
 import { FocusSectionModule } from "../focus-section";
 import { LoadingModule } from "../loading";
@@ -14,7 +14,6 @@ import { TableHeadCellComponent, TableHeadComponent } from "./table-head";
 import { TableHeadCellDefDirective } from "./table-head-cell-def";
 import { TableRowRenderComponent } from "./table-row-render";
 import { TableComponent } from "./table.component";
-import { AbstractListModule } from "@batch-flask/ui";
 
 const privateComponents = [
     TableRowRenderComponent,

@@ -90,7 +90,6 @@ export class TableColumnManager {
     }
 
     public sortBy(column: string, direction: SortDirection = SortDirection.Asc) {
-        console.log("Sort by", column, direction);
         this.dataPresenter.sortBy(column, direction);
     }
 
