@@ -40,6 +40,10 @@ export class MockListView<TEntity, TParams> extends ListView<TEntity, TParams> {
         }
     }
 
+    public updateItems(items: TEntity[]) {
+        this._items = () => items as TEntity[];
+    }
+
     private _getItems(params) {
         return this._items(params).map((item) => {
             if ((item as any).toJS) {

@@ -18,6 +18,7 @@ import {
 } from "@batch-flask/ui/table";
 import { TableRowRenderComponent } from "@batch-flask/ui/table/table-row-render";
 import { VirtualScrollTestingModule } from "@batch-flask/ui/testing/virtual-scroll";
+import { AbstractListModule } from "@batch-flask/ui/abstract-list";
 
 const privateComponents = [
     TableRowRenderComponent,
@@ -43,6 +44,7 @@ const publicComponents = [
         LoadingModule,
         ContextMenuModule,
         BreadcrumbModule,
+        AbstractListModule,
 
         // Mock modules
         VirtualScrollTestingModule,

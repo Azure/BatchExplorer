@@ -17,6 +17,7 @@ import {
 } from "@batch-flask/ui/quick-list";
 import { QuickListRowRenderComponent } from "@batch-flask/ui/quick-list/quick-list-row-render";
 import { VirtualScrollTestingModule } from "@batch-flask/ui/testing/virtual-scroll";
+import { AbstractListModule } from "@batch-flask/ui/abstract-list";
 
 const publicComponents = [
     NoItemComponent,
@@ -40,7 +41,7 @@ const publicComponents = [
         ContextMenuModule,
         LoadingModule,
         BreadcrumbModule,
-
+        AbstractListModule,
         // Mock modules
         VirtualScrollTestingModule,
     ],
