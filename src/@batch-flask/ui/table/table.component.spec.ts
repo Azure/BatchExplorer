@@ -52,7 +52,7 @@ class BaseTestComponent {
 })
 class TestComponent extends BaseTestComponent {
     public tableConfig = {
-        values: {
+        sorting: {
             cores: (size) => size.numberOfCores,
         },
     };

@@ -111,7 +111,7 @@ describe("QuickListComponent", () => {
 
         click(item.nativeElement);
         fixture.detectChanges();
-        expect(quicklist.focusedItem.value).toEqual("item-2");
+        expect(quicklist.focusedItem.id).toEqual("item-2");
     });
 
     it("show no items when data is not set", async () => {
