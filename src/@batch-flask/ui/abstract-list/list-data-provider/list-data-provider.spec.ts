@@ -1,4 +1,4 @@
-import { Model, Record } from "@batch-flask/core";
+import { Model, Prop, Record } from "@batch-flask/core";
 import { AbstractListItem } from "@batch-flask/ui/abstract-list/abstract-list-item";
 import { List } from "immutable";
 import { MockListView } from "test/utils/mocks";
@@ -7,23 +7,25 @@ import { ListDataProvider } from "./list-data-provider";
 @Model()
 class FakeModel extends Record<any> implements AbstractListItem {
     public disabled: false;
-    public routerLink: any[];
+    @Prop() public id: string;
 
-    constructor(public id: string) {
-        super();
-        this.routerLink = ["/items", id];
+    public get routerLink() {
+        return ["/items", this.id];
     }
-
     public getLabel() {
         return this.id;
     }
 }
 
-const item1 = new FakeModel("i-1");
-const item2 = new FakeModel("i-2");
-const item3 = new FakeModel("i-3");
-const item4 = new FakeModel("i-4");
-const item5 = new FakeModel("i-5");
+function newModel(id: string) {
+    return new FakeModel({ id });
+}
+
+const item1 = newModel("i-1");
+const item2 = newModel("i-2");
+const item3 = newModel("i-3");
+const item4 = newModel("i-4");
+const item5 = newModel("i-5");
 
 describe("ListDataProvider", () => {
     let provider: ListDataProvider;
@@ -55,7 +57,7 @@ describe("ListDataProvider", () => {
         let view: MockListView<any, any>;
 
         beforeEach(() => {
-            view = new MockListView(Record, { items: [item1, item3, item4] });
+            view = new MockListView(FakeModel, { items: [item1, item3, item4] });
             provider.data = view;
         });
 
