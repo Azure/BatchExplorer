@@ -7,11 +7,14 @@ import {
     ActivityModule,
     ActivityService,
 } from "@batch-flask/ui/activity-monitor";
+import { FocusSectionModule } from "@batch-flask/ui/focus-section";
 import { AsyncSubject, BehaviorSubject } from "rxjs";
 import { ActivityMonitorItemComponent } from "./activity-monitor-item";
+import { ActivityMonitorItemActionComponent } from "./activity-monitor-item/activity-monitor-item-action";
+import { ActivityMonitorTreeViewComponent } from "./activity-monitor-tree-view";
 import { ActivityMonitorComponent } from "./activity-monitor.component";
 
-describe("ActivityMonitorFooterComponent", () => {
+describe("ActivityMonitorComponent", () => {
     let fixture: ComponentFixture<ActivityMonitorComponent>;
     let component: ActivityMonitorComponent;
     let activityService: ActivityService;
@@ -24,8 +27,11 @@ describe("ActivityMonitorFooterComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [ActivityModule, ButtonsModule, MaterialModule],
-            declarations: [ActivityMonitorComponent, ActivityMonitorItemComponent],
+            imports: [ActivityModule, ButtonsModule, MaterialModule, FocusSectionModule],
+            declarations: [
+                ActivityMonitorComponent, ActivityMonitorTreeViewComponent,
+                ActivityMonitorItemComponent, ActivityMonitorItemActionComponent,
+            ],
             providers: [
                 { provide: ActivatedRoute, useValue: activatedRouteSpy },
             ],
@@ -71,23 +77,16 @@ describe("ActivityMonitorFooterComponent", () => {
         expect(component.pastActivities.length).toBe(1);
     });
 
-    it("should flash and select the activity specified on creation", fakeAsync(() => {
-        const expected = 2;
-        activatedRouteSubject.next({id: expected});
+    it("should cancel all activities", () => {
+        const activity1 = new Activity("Test activity", () => new AsyncSubject());
+        const activity2 = new Activity("Test activity", () => new AsyncSubject());
+        activityService.exec(activity1);
+        activityService.exec(activity2);
 
-        TestBed.compileComponents();
-        fixture = TestBed.createComponent(ActivityMonitorComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
+        expect(component.runningActivities.length).toBe(2);
 
-        let flashId;
-        let selectId;
-        component.flashSubject.subscribe(id => flashId = id);
-        component.selectSubject.subscribe(id => selectId = id);
+        component.cancelAll();
 
-        tick(50);
-
-        expect(flashId).toBe(expected);
-        expect(selectId).toBe(expected);
-    }));
+        expect(component.runningActivities.length).toBe(0);
+    });
 });

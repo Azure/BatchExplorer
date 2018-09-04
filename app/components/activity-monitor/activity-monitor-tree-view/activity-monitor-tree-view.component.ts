@@ -47,7 +47,7 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
 
     public toggleRowExpand(treeRow: TreeRow) {
         if (treeRow.hasChildren) {
-            this.toggleExpanded(treeRow);
+            this._toggleExpanded(treeRow);
         }
         this.focusRow(treeRow);
     }
@@ -137,11 +137,20 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
         this._buildTreeRows();
     }
 
+    public collapseAll() {
+        this.expanded.clear();
+        this._buildTreeRows();
+    }
+
+    public treeRowTrackBy(treeRow: TreeRow) {
+        return treeRow.id;
+    }
+
     /**
      * @param treeRow Tree row that should toggle the expansion
      * @returns boolean if the row is now expanded or not
      */
-    public toggleExpanded(treeRow: TreeRow): boolean {
+    private _toggleExpanded(treeRow: TreeRow): boolean {
         const isExpanded = this.isExpanded(treeRow.id);
         if (isExpanded) {
             this.expanded.delete(treeRow.id);
@@ -152,15 +161,6 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
         this._buildTreeRows();
         this.changeDetector.markForCheck();
         return !isExpanded;
-    }
-
-    public collapseAll() {
-        this.expanded.clear();
-        this._buildTreeRows();
-    }
-
-    public treeRowTrackBy(treeRow: TreeRow) {
-        return treeRow.id;
     }
 
     private _buildTreeRows() {

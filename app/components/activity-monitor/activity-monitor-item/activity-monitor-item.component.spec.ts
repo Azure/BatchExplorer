@@ -52,7 +52,7 @@ class MockActivity {
     }
 }
 
-fdescribe("ActivityMonitorItemComponent", () => {
+describe("ActivityMonitorItemComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;

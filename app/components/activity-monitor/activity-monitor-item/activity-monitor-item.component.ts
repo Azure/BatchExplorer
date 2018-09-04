@@ -8,8 +8,6 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    ViewChild,
-    ViewChildren,
 } from "@angular/core";
 import { Activity, ActivityService, ActivityStatus } from "@batch-flask/ui/activity-monitor";
 import { Subscription } from "rxjs";
@@ -29,7 +27,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     @Input() public indent: number;
     @Input() public expanded: boolean;
     @Input() public focusedAction: number;
-    @Output() public toggleExpanded = new EventEmitter<void>();
+    @Output() public toggleRowExpand = new EventEmitter<void>();
     @Output() public focusedActionChange = new EventEmitter<number>();
 
     public progress: number;
@@ -114,7 +112,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
 
     public toggleExpand() {
         this.expanded = !this.expanded;
-        this.toggleExpanded.emit();
+        this.toggleRowExpand.emit();
     }
 
     public toggleShowError() {

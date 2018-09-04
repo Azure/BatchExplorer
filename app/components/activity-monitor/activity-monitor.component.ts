@@ -5,10 +5,10 @@ import { BehaviorSubject, Subscription } from "rxjs";
 import { ActivatedRoute } from "@angular/router";
 import "./activity-monitor.scss";
 
-enum FocusedMonitor {
-    Running,
-    History,
-}
+// enum FocusedMonitor {
+//     Running,
+//     History,
+// }
 
 @Component({
     selector: "bl-activity-monitor",
@@ -26,7 +26,7 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
     public keyDownSubject: BehaviorSubject<KeyboardEvent>;
 
     private _sub: Subscription;
-    private _focusedMonitor: FocusedMonitor;
+    // private _focusedMonitor: FocusedMonitor;
 
     constructor(
         private activityService: ActivityService,
@@ -39,7 +39,7 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
         this.selectSubject = new BehaviorSubject(-1);
         this.flashSubject = new BehaviorSubject(-1);
         this.keyDownSubject = new BehaviorSubject(null);
-        this._focusedMonitor = null;
+        // this._focusedMonitor = null;
         this._sub = this.activityService.incompleteActivities.subscribe(activities => {
             this.runningActivities = activities;
         });
@@ -61,11 +61,11 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
         this.activityService.cancelMultiple(this.runningActivities);
     }
 
-    public focusRunning() {
-        this._focusedMonitor = FocusedMonitor.Running;
-    }
+    // public focusRunning() {
+    //     this._focusedMonitor = FocusedMonitor.Running;
+    // }
 
-    public focusHistory() {
-        this._focusedMonitor = FocusedMonitor.History;
-    }
+    // public focusHistory() {
+    //     this._focusedMonitor = FocusedMonitor.History;
+    // }
 }
