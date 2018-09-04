@@ -11,12 +11,34 @@ Create a file with the name `[my-component].i18n.yml` next to the `[my-component
 
 ## Usage
 ### `i18n` Pipe
+
 ```html
 <div>
-    {{'my-key.my-sub-key' | i18n}}
+    {{'my-component.my-sub-key' | i18n}}
 </div>
 ```
 
+#### Use a namespace
+Repeating the same starting namespace for all of the i18n pipes can get repetivie and make it hard to read the template.
+So you can define a namespace for the component and the pipe will try to load translation under that namespace as well as from the root.
+
+To do so
+```ts
+@Component({
+    selector: "my-component",
+    providers: [
+        {provide: I18N_NAMESPACE, value: "my-component"},
+    ]
+})
+```
+
+then you can just use
+```html
+<!-- This -->
+<div>{{my-sub-key' | i18n}}</div>
+<!-- Instead of -->
+<div>{{'my-component.my-sub-key' | i18n}}</div>
+```
 
 ### I18nService
 ```ts

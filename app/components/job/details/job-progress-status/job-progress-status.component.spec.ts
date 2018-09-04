@@ -2,7 +2,9 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { PollService } from "@batch-flask/core";
-import { Job, JobTaskCounts, JobTaskCountsValidationStatus, Node, Pool } from "app/models";
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { I18nUIModule } from "@batch-flask/ui";
+import { Job, JobTaskCounts, Node, Pool } from "app/models";
 import { JobService, NodeService, PoolService } from "app/services";
 import { of } from "rxjs";
 import { click } from "test/utils/helpers";
@@ -49,17 +51,12 @@ describe("JobProgressStatusComponent", () => {
 
         jobServiceSpy = {
             getTaskCounts: jasmine.createSpy("getTaskCounts").and.callFake((jobId) => {
-                const valid = jobId === "large-job"
-                    ? JobTaskCountsValidationStatus.unvalidated
-                    : JobTaskCountsValidationStatus.validated;
-
                 return of(new JobTaskCounts({
                     running: 4,
                     completed: 8,
-                    active: 12,
+                    active: jobId === "large-job" ? 234000 : 12,
                     failed: 2,
                     succeeded: 6,
-                    validationStatus: valid,
                 }));
             }),
         };
@@ -69,7 +66,10 @@ describe("JobProgressStatusComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            declarations: [JobProgressStatusComponent, GaugeMockComponent, TestComponent],
+            imports: [I18nTestingModule, I18nUIModule],
+            declarations: [
+                JobProgressStatusComponent, GaugeMockComponent, TestComponent,
+            ],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
                 { provide: PoolService, useValue: poolServiceSpy },
@@ -132,16 +132,16 @@ describe("JobProgressStatusComponent", () => {
     });
 
     it("doesn't show warning if data is validated", () => {
-        const warning =  de.query(By.css(".invalidated-data"));
+        const warning = de.query(By.css(".invalidated-data"));
         expect(warning).toBeFalsy();
     });
 
-    it("show warning about task count validity if count is unvalidated", () => {
+    it("show warning about task count accuracy if large number of tasks", () => {
         testComponent.job = new Job({ id: "large-job" });
         fixture.detectChanges();
 
-        const warning =  de.query(By.css(".invalidated-data"));
+        const warning = de.query(By.css(".unaccurate-data"));
         expect(warning).not.toBeFalsy();
-        expect(warning.nativeElement.textContent).toContain("Task count might not be accurate");
+        expect(warning.nativeElement.textContent).toContain("job-progress-status.inaccurate");
     });
 });

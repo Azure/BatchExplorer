@@ -1258,14 +1258,14 @@
           "type": "string",
           "title": "The container technology to be used.",
           "enum": [
-            "docker"
+            "dockerCompatible"
           ],
           "x-ms-enum": {
             "name": "ContainerType",
             "modelAsString": false,
             "values": [
               {
-                "value": "docker",
+                "value": "dockerCompatible",
                 "description": "Docker will be used to launch the containers."
               }
             ]

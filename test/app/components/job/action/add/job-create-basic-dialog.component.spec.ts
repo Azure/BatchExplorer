@@ -65,7 +65,7 @@ describe("JobCreateBasicDialogComponent ", () => {
                 id: poolId,
                 virtualMachineConfiguration: {
                     containerConfiguration: {
-                        type: "docker",
+                        type: "dockerCompatible",
                         containerImageNames: [
                             "busybox",
                         ],

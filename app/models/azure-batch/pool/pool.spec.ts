@@ -7,7 +7,7 @@ describe("Pool Model", () => {
         const pool = new Pool({
             virtualMachineConfiguration: {
                 containerConfiguration: {
-                    type: ContainerType.Docker,
+                    type: ContainerType.DockerCompatible,
                     containerRegistries: [
                         {
                             username: "abc",
