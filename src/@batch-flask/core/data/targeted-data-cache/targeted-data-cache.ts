@@ -1,4 +1,4 @@
-import { Record } from "@batch-flask/core";
+import { Record } from "@batch-flask/core/record";
 import { DataCache } from "../data-cache";
 import { PollService } from "../poll";
 

@@ -1,5 +1,5 @@
 import { Type } from "@angular/core";
-import { ContinuationToken, ListGetter, ListGetterConfig, ServerError, Record } from "@batch-flask/core";
+import { ContinuationToken, ListGetter, ListGetterConfig, Record, ServerError } from "@batch-flask/core";
 import { StorageClientService } from "app/services/storage/storage-client.service";
 import { Observable, from, throwError } from "rxjs";
 import { catchError, flatMap, map, share } from "rxjs/operators";
