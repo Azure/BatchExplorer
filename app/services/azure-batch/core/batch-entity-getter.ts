@@ -1,11 +1,12 @@
 import { HttpResponse } from "@angular/common/http";
 import { Type } from "@angular/core";
-import { EntityGetter, EntityGetterConfig } from "@batch-flask/core";
+import { EntityGetter, EntityGetterConfig, Record } from "@batch-flask/core";
 import { Observable } from "rxjs";
 import { map, share } from "rxjs/operators";
 import { AzureBatchHttpService } from "./batch-http.service";
 
-export interface BatchEntityGetterConfig<TEntity, TParams> extends EntityGetterConfig<TEntity, TParams> {
+export interface BatchEntityGetterConfig<TEntity extends Record<any>, TParams>
+    extends EntityGetterConfig<TEntity, TParams> {
     /**
      * Get function(usually call the client proxy)
      */
@@ -13,7 +14,7 @@ export interface BatchEntityGetterConfig<TEntity, TParams> extends EntityGetterC
 
     processResponse?: (response: HttpResponse<any>, params: TParams) => any;
 }
-export class BatchEntityGetter<TEntity, TParams> extends EntityGetter<TEntity, TParams> {
+export class BatchEntityGetter<TEntity extends Record<any>, TParams> extends EntityGetter<TEntity, TParams> {
     private _provideUri: string | ((params: TParams) => string);
     private _processResponse: (response: HttpResponse<any>, params: TParams) => any;
 

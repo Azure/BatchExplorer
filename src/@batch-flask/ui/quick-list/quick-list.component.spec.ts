@@ -4,15 +4,19 @@ import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 
 import { ListSelection } from "@batch-flask/core/list";
+import { AbstractListBaseConfig } from "@batch-flask/ui/abstract-list";
 import { BreadcrumbModule } from "@batch-flask/ui/breadcrumbs";
-import { ContextMenuService } from "@batch-flask/ui/context-menu";
+import {
+    ContextMenuItem, ContextMenuSeparator, ContextMenuService, MultiContextMenuItem,
+} from "@batch-flask/ui/context-menu";
 import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import {
     QuickListComponent,
     QuickListItemStatusComponent,
 } from "@batch-flask/ui/quick-list";
 import { VirtualScrollTestingModule } from "@batch-flask/ui/testing";
-import { ButtonClickEvents, click, sendEvent } from "test/utils/helpers";
+import { ButtonClickEvents, click, rightClick, sendEvent } from "test/utils/helpers";
+import { ContextMenuServiceMock } from "test/utils/mocks";
 import {
     QuickListRowExtraDirective,
     QuickListRowStateDirective,
@@ -29,7 +33,7 @@ interface TestItem {
 @Component({
     template: `
         <bl-focus-section #focusSection style="height: 1000px">
-            <bl-quick-list [data]="items">
+            <bl-quick-list [data]="items" [config]="config">
                 <ng-container *blQuickListRowTitle="let item">{{item.name}}</ng-container>
             </bl-quick-list>
         </bl-focus-section>
@@ -39,6 +43,9 @@ class TestComponent {
     @ViewChild("focusSection")
     public focusSection: FocusSectionComponent;
 
+    public config: AbstractListBaseConfig = {
+
+    };
     public items: Iterable<TestItem> = [
         { id: "item-1", name: "Item 1" },
         { id: "item-2", name: "Item 2" },
@@ -57,8 +64,10 @@ describe("QuickListComponent", () => {
 
     let activeItemKey: string = null;
     let selection: ListSelection;
+    let contextMenuServiceSpy: ContextMenuServiceMock;
 
     beforeEach(() => {
+        contextMenuServiceSpy = new ContextMenuServiceMock();
         TestBed.configureTestingModule({
             imports: [BreadcrumbModule, RouterTestingModule, VirtualScrollTestingModule],
             declarations: [
@@ -72,7 +81,7 @@ describe("QuickListComponent", () => {
                 QuickListItemStatusComponent,
             ],
             providers: [
-                { provide: ContextMenuService, useValue: null },
+                { provide: ContextMenuService, useValue: contextMenuServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -111,7 +120,7 @@ describe("QuickListComponent", () => {
 
         click(item.nativeElement);
         fixture.detectChanges();
-        expect(quicklist.focusedItem.value).toEqual("item-2");
+        expect(quicklist.focusedItem.id).toEqual("item-2");
     });
 
     it("show no items when data is not set", async () => {
@@ -137,6 +146,39 @@ describe("QuickListComponent", () => {
         expect(items[2].nativeElement.textContent).toContain("Item 5");
     });
 
+    describe("when defining config for sorting", () => {
+        beforeEach(() => {
+            testComponent.config = {
+                sorting: {
+                    id: true,
+                    name: true,
+                },
+            };
+            fixture.detectChanges();
+        });
+
+        it("show context menu", async () => {
+            rightClick(items[2]);
+            fixture.detectChanges();
+
+            expect(contextMenuServiceSpy.openMenu).toHaveBeenCalledOnce();
+            const menu = contextMenuServiceSpy.lastMenu;
+
+            expect(menu.items.length).toBe(1);
+            const sortByMenu = menu.items[0] as MultiContextMenuItem;
+            expect(sortByMenu instanceof MultiContextMenuItem).toBe(true);
+            expect(sortByMenu.subitems.length).toBe(5);
+            expect((sortByMenu.subitems[0] as ContextMenuItem).label).toEqual("Id");
+            expect((sortByMenu.subitems[1] as ContextMenuItem).label).toEqual("Name");
+            expect(sortByMenu.subitems[2] instanceof ContextMenuSeparator).toBe(true);
+            expect((sortByMenu.subitems[3] as ContextMenuItem).label).toEqual("Ascending");
+            expect((sortByMenu.subitems[3] as ContextMenuItem).checked).toBe(true);
+            expect((sortByMenu.subitems[4] as ContextMenuItem).label).toEqual("Descending");
+            expect((sortByMenu.subitems[4] as ContextMenuItem).checked).toBe(false);
+
+        });
+
+    });
     describe("When an item is active", () => {
         beforeEach(() => {
             quicklist.activeItem = "item-2";

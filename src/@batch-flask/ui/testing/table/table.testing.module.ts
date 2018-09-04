@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { AbstractListModule } from "@batch-flask/ui/abstract-list";
 import { BreadcrumbModule } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuModule } from "@batch-flask/ui/context-menu";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";
@@ -43,8 +45,10 @@ const publicComponents = [
         LoadingModule,
         ContextMenuModule,
         BreadcrumbModule,
+        AbstractListModule,
 
         // Mock modules
+        I18nTestingModule,
         VirtualScrollTestingModule,
     ],
     exports: publicComponents,

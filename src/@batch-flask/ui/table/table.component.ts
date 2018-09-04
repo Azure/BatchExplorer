@@ -7,24 +7,19 @@ import {
     HostBinding,
     HostListener,
     Input,
-    OnChanges,
-    OnDestroy,
     Optional,
     Output,
     QueryList,
     ViewChild,
 } from "@angular/core";
-import { List } from "immutable";
-import { Subscription } from "rxjs";
-
 import { Router } from "@angular/router";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
-import { DragUtils, log } from "@batch-flask/utils";
+import { DragUtils } from "@batch-flask/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
 import { TableColumnComponent } from "./table-column";
-import { SortDirection, SortingInfo, TableColumnManager, TableColumnRef } from "./table-column-manager";
+import { TableColumnManager } from "./table-column-manager";
 import { TableHeadComponent } from "./table-head";
 
 import "./table.scss";
@@ -41,13 +36,6 @@ export interface TableConfig extends AbstractListBaseConfig {
      * @default false
      */
     droppable?: boolean;
-
-    /**
-     * If the column name don't map to a value of the object
-     * this allows you to return the path this column should map to.
-     * This is used for sorting.
-     */
-    values?: StringMap<(item: any) => any>;
 
     /**
      * If the table should allow column to be resized. Default true.
@@ -77,15 +65,14 @@ export interface DropEvent {
     templateUrl: "table.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent extends AbstractListBase implements AfterContentInit, OnChanges, OnDestroy {
+export class TableComponent extends AbstractListBase implements AfterContentInit {
     @Input() public set config(config: TableConfig) {
         this._config = { ...tableDefaultConfig, ...config };
+        this.dataPresenter.config = this._config.sorting;
     }
     public get config() { return this._config; }
 
     @Output() public dropOnRow = new EventEmitter<DropEvent>();
-
-    @Input() public data: List<any> | any[] = List([]);
 
     @ViewChild(TableHeadComponent) public head: TableHeadComponent;
     @ContentChildren(TableColumnComponent) public columnComponents: QueryList<TableColumnComponent>;
@@ -95,11 +82,9 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     }
     public dropTargetRowKey: string = null;
 
-    public columnManager = new TableColumnManager();
+    public columnManager: TableColumnManager;
 
     protected _config: TableConfig = tableDefaultConfig;
-    private _sortingInfo: SortingInfo;
-    private _sub: Subscription;
 
     /**
      * To enable keyboard navigation in the list it must be inside a focus section
@@ -111,6 +96,8 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         breadcrumbService: BreadcrumbService,
         @Optional() focusSection?: FocusSectionComponent) {
         super(contextmenuService, router, breadcrumbService, changeDetection, focusSection);
+
+        this.columnManager = new TableColumnManager(this.dataPresenter);
     }
 
     public ngAfterContentInit() {
@@ -120,22 +107,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
             this.changeDetector.markForCheck();
         });
 
-        this._sub = this.columnManager.sorting.subscribe((sortingInfo) => {
-            this._sortingInfo = sortingInfo;
-        });
         this.changeDetector.markForCheck();
-    }
-
-    public ngOnChanges(changes) {
-        if (changes.data) {
-            this.updateDisplayedItems();
-        }
-    }
-
-    public ngOnDestroy() {
-        if (this._sub) {
-            this._sub.unsubscribe();
-        }
     }
 
     @HostListener("dragover", ["$event"])
@@ -179,75 +151,5 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         this.isDraging = 0;
 
         this.dropOnRow.emit({ key: item.id, data: event.dataTransfer });
-    }
-
-    /**
-     * Sort the table by the column name
-     * @param column
-     */
-    public sort(column: string, direction: SortDirection = SortDirection.Asc) {
-        this.columnManager.sortBy(column, direction);
-        this.updateDisplayedItems();
-    }
-
-    protected updateDisplayedItems() {
-        this.displayItems = this.computeDisplayedItems();
-        this.changeDetector.markForCheck();
-    }
-
-    protected computeDisplayedItems() {
-        const sortingInfo = this._sortingInfo;
-        const items = this._getItems();
-        if (!sortingInfo) {
-            return items;
-        }
-        const column = this.columnManager.columnMap.get(sortingInfo.column);
-        if (!column) {
-            const keys = [...this.columnManager.columnMap.keys()];
-            log.error(`Cannot sort. There is no column with name ${column.name} in the list of columns ${keys}`);
-            return items;
-        }
-        return this._sortItems(items, column, sortingInfo.direction);
-    }
-
-    private _getItems() {
-        if (!this.data) {
-            return [];
-        } else if (this.data instanceof List) {
-            return (this.data as List<any>).toArray();
-        } else if (Array.isArray(this.data)) {
-            return this.data;
-        } else {
-            return [...this.data as any];
-        }
-    }
-
-    private _sortItems(items: any[], column: TableColumnRef, direction: SortDirection): any[] {
-        const getColumnValue = this._columnValueFn(column);
-
-        const sortedRows = [...items].sort((a, b) => {
-            const aValue = getColumnValue(a);
-            const bValue = getColumnValue(b);
-            if (aValue < bValue) {
-                return -1;
-            } else if (aValue > bValue) {
-                return 1;
-            }
-            return 0;
-        });
-
-        const desc = direction === SortDirection.Desc;
-        if (desc) {
-            return sortedRows.reverse();
-        }
-        return sortedRows;
-    }
-
-    private _columnValueFn(column: TableColumnRef) {
-        if (this.config.values && column.name in this.config.values) {
-            return this.config.values[column.name];
-        } else {
-            return (item) => item[column.name];
-        }
     }
 }

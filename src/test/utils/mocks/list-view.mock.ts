@@ -1,9 +1,8 @@
 import { Type } from "@angular/core";
+import { BasicListGetter, DataCache, ListView, Record } from "@batch-flask/core";
 import { of } from "rxjs";
 
-import { BasicListGetter, DataCache, ListView } from "@batch-flask/core";
-
-export interface MockListViewConfig<TEntity, TParams> {
+export interface MockListViewConfig<TEntity  extends Record<any>, TParams> {
     initialParams?: TParams;
     items: TEntity[] | ((params: TParams) => TEntity[]);
 
@@ -17,7 +16,7 @@ export interface MockListViewConfig<TEntity, TParams> {
 /**
  * Mock list proxy where you pass the list of data to return
  */
-export class MockListView<TEntity, TParams> extends ListView<TEntity, TParams> {
+export class MockListView<TEntity extends Record<any>, TParams> extends ListView<TEntity, TParams> {
     private _items: (params: TParams) => TEntity[];
 
     constructor(type: Type<TEntity>, config: MockListViewConfig<TEntity, TParams>) {
@@ -38,6 +37,10 @@ export class MockListView<TEntity, TParams> extends ListView<TEntity, TParams> {
         } else {
             this._items = () => config.items as TEntity[];
         }
+    }
+
+    public updateItems(items: TEntity[]) {
+        this._items = () => items as TEntity[];
     }
 
     private _getItems(params) {

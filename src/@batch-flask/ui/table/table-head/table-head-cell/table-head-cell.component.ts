@@ -2,10 +2,11 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef,
     HostBinding, HostListener, Inject, Input, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
-
-import { SortDirection, TableColumnRef } from "@batch-flask/ui/table/table-column-manager";
+import { SortDirection } from "@batch-flask/ui/abstract-list";
+import { TableColumnRef } from "@batch-flask/ui/table/table-column-manager";
 import { TableComponent } from "@batch-flask/ui/table/table.component";
 import { Subscription } from "rxjs";
+
 import "./table-head-cell.scss";
 
 @Component({
@@ -21,7 +22,7 @@ export class TableHeadCellComponent implements OnInit, OnDestroy {
 
     @HostBinding("class.sortable")
     public get sortable() {
-        return this.column.sortable;
+        return this.column.sortable || (this.table.config.sorting && this.column.name in this.table.config.sorting);
     }
 
     @HostBinding("class.fixed-size")
@@ -56,8 +57,13 @@ export class TableHeadCellComponent implements OnInit, OnDestroy {
         public elementRef: ElementRef,
         private changeDetector: ChangeDetectorRef) {
 
-        this._subs.push(table.columnManager.sorting.subscribe((sortingInfo) => {
-            this.isSorting = sortingInfo && sortingInfo.column === this.column.name;
+    }
+
+    public ngOnInit() {
+        this.width = this.table.columnManager.getColumnWidth(this.column.name);
+
+        this._subs.push(this.table.columnManager.sorting.subscribe((sortingInfo) => {
+            this.isSorting = sortingInfo.key === this.column.name;
             if (this.isSorting) {
                 this.sortDirection = sortingInfo.direction;
             } else {
@@ -65,10 +71,7 @@ export class TableHeadCellComponent implements OnInit, OnDestroy {
             }
             this.changeDetector.markForCheck();
         }));
-    }
 
-    public ngOnInit() {
-        this.width = this.table.columnManager.getColumnWidth(this.column.name);
         this._subs.push(this.table.columnManager.dimensionsChange.subscribe(() => {
             this.width = this.table.columnManager.getColumnWidth(this.column.name);
             this.changeDetector.markForCheck();
@@ -81,14 +84,14 @@ export class TableHeadCellComponent implements OnInit, OnDestroy {
 
     @HostListener("click")
     public onClick() {
-        if (!this.column.sortable) {
+        if (!this.sortable) {
             return;
         }
 
         if (this.isSorting) {
             this._invertOrder();
         } else {
-            this.table.sort(this.column.name);
+            this.table.columnManager.sortBy(this.column.name);
         }
     }
 
@@ -100,6 +103,6 @@ export class TableHeadCellComponent implements OnInit, OnDestroy {
             invertedDirection = SortDirection.Desc;
         }
 
-        this.table.sort(this.column.name, invertedDirection);
+        this.table.columnManager.sortBy(this.column.name, invertedDirection);
     }
 }
