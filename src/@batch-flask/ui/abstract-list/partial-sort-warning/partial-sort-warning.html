@@ -1,7 +1,17 @@
-<span class="message">{{'partial-sort-warning.message' | i18n}}</span>
-<bl-clickable class="load-all" (do)="loadAll()" *ngIf="!loadingAll">
-    {{'partial-sort-warning.loadAll' | i18n}}
-</bl-clickable>
-<span class="loading-all" *ngIf="loadingAll">
-    {{'partial-sort-warning.loadingAll' | i18n}}
-</span>
+<div class="partial-sort-warning" *ngIf="sortingStatus === SortingStatus.Partial">
+    <span class="message">{{'partial-sort-warning.message' | i18n}}</span>
+    <bl-clickable class="action" (do)="loadAll()" *ngIf="!loadingAll">
+        {{'partial-sort-warning.load-all' | i18n}}
+    </bl-clickable>
+    <span class="loading-all" *ngIf="loadingAll">
+        {{'partial-sort-warning.loading-all' | i18n}}
+    </span>
+</div>
+<div class="auto-update-warning" *ngIf="!autoUpdating && !loadingAll">
+    <span class="message">
+        {{'partial-sort-warning.manual-update' | i18n}}
+    </span>
+    <bl-clickable class="action" (do)="update()" *ngIf="!loadingAll">
+        {{'partial-sort-warning.update' | i18n}}
+    </bl-clickable>
+</div>

@@ -68,7 +68,7 @@ export interface DropEvent {
 export class TableComponent extends AbstractListBase implements AfterContentInit {
     @Input() public set config(config: TableConfig) {
         this._config = { ...tableDefaultConfig, ...config };
-        this._dataPresenter.config = this._config.sorting;
+        this.dataPresenter.config = this._config.sorting;
     }
     public get config() { return this._config; }
 
@@ -97,7 +97,7 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         @Optional() focusSection?: FocusSectionComponent) {
         super(contextmenuService, router, breadcrumbService, changeDetection, focusSection);
 
-        this.columnManager = new TableColumnManager(this._dataPresenter);
+        this.columnManager = new TableColumnManager(this.dataPresenter);
     }
 
     public ngAfterContentInit() {

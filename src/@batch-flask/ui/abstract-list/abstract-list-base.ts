@@ -88,7 +88,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     @Input() public set config(config: AbstractListBaseConfig) {
         this._config = { ...abstractListDefaultConfig, ...config };
-        this._dataPresenter.config = this._config.sorting;
+        this.dataPresenter.config = this._config.sorting;
     }
     public get config() { return this._config; }
 
@@ -111,9 +111,9 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public showScrollShadow: boolean;
     public sortingStatus: SortingStatus;
     public dataProvider: ListDataProvider;
+    public dataPresenter: ListDataPresenter;
 
     protected _config: AbstractListBaseConfig = abstractListDefaultConfig;
-    protected _dataPresenter: ListDataPresenter;
 
     private _subs: Subscription[] = [];
     private _items: any[] = [];
@@ -129,19 +129,19 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         this._initKeyNavigator();
 
         this.dataProvider = new ListDataProvider();
-        this._dataPresenter = new ListDataPresenter(this.dataProvider);
+        this.dataPresenter = new ListDataPresenter(this.dataProvider);
         if (focusSection) {
             this._subs.push(focusSection.keypress.subscribe(this.keyPressed));
             this._subs.push(focusSection.onFocus.subscribe(this.onFocus));
             this._subs.push(focusSection.onBlur.subscribe(this.onBlur));
         }
 
-        this._dataPresenter.items.subscribe((items) => {
+        this.dataPresenter.items.subscribe((items) => {
             this.items = items;
             this.changeDetector.markForCheck();
         });
 
-        this._dataPresenter.sortingStatus.subscribe((sortingStatus) => {
+        this.dataPresenter.sortingStatus.subscribe((sortingStatus) => {
             this.sortingStatus = sortingStatus;
             this.changeDetector.markForCheck();
         });
@@ -151,7 +151,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public ngOnDestroy() {
         this._subs.forEach((x) => x.unsubscribe());
         this.dataProvider.dispose();
-        this._dataPresenter.dispose();
+        this.dataPresenter.dispose();
         if (this._keyNavigator) {
             this._keyNavigator.dispose();
         }
@@ -381,19 +381,19 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             return new ContextMenuItem({
                 label: inflection.humanize(inflection.underscore(key)),
                 click: () => {
-                    this._dataPresenter.sortBy(key);
+                    this.dataPresenter.sortBy(key);
                 },
-                checked: this._dataPresenter.sortingBy.key === key,
+                checked: this.dataPresenter.sortingBy.key === key,
                 type: "checkbox",
             });
         });
 
-        const ascending = this._dataPresenter.sortingBy.direction === SortDirection.Asc;
+        const ascending = this.dataPresenter.sortingBy.direction === SortDirection.Asc;
         const sortDirections = [
             new ContextMenuItem({
                 label: "Ascending",
                 click: () => {
-                    this._dataPresenter.updateSortDirection(SortDirection.Asc);
+                    this.dataPresenter.updateSortDirection(SortDirection.Asc);
                 },
                 checked: ascending,
                 type: "checkbox",
@@ -401,7 +401,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             new ContextMenuItem({
                 label: "Descending",
                 click: () => {
-                    this._dataPresenter.updateSortDirection(SortDirection.Desc);
+                    this.dataPresenter.updateSortDirection(SortDirection.Desc);
                 },
                 checked: !ascending,
                 type: "checkbox",

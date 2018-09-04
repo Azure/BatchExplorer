@@ -13,6 +13,8 @@ export interface SortingInfo {
     direction: SortDirection;
 }
 
+export const SORTING_AUTO_UPDATE_THRESHOLD = 5000;
+
 /**
  * Class that given items input handle sorting and filtering them
  */
@@ -20,6 +22,7 @@ export class ListDataPresenter {
     public items: Observable<AbstractListItem[]>;
     public sortingStatus: Observable<SortingStatus>;
     public sortingByObs: Observable<SortingInfo>;
+    public autoUpdating: Observable<boolean>;
     public config: ListSortConfig<AbstractListItem> | null | false;
 
     private _sub: Subscription;
@@ -32,9 +35,15 @@ export class ListDataPresenter {
         this.items = this._items.asObservable();
         this.sortingStatus = this._sortingStatus.asObservable();
         this.sortingByObs = this._sortingBy.asObservable();
+        this.autoUpdating = combineLatest(this._sortingBy, dataProvider.items).pipe(
+            map(([sortingBy, items]) => !sortingBy.key || items.length < SORTING_AUTO_UPDATE_THRESHOLD),
+        );
         this._sub = dataProvider.items.subscribe((items) => {
             this._input = items;
-            this._updateDisplayedItems();
+            if (!this._sortingBy.value.key || items.length < SORTING_AUTO_UPDATE_THRESHOLD) {
+                // Update if there is no sorting happening or there is less than 1000 items(For performance)
+                this.update();
+            }
         });
 
         this.sortingStatus = combineLatest(dataProvider.newDataStatus, dataProvider.hasMore, this._sortingBy).pipe(
@@ -57,7 +66,7 @@ export class ListDataPresenter {
 
     public sortBy(key: string, direction?: SortDirection) {
         this._sortingBy.next({ key, direction: nil(direction) ? this.sortingBy.direction : direction });
-        this._updateDisplayedItems();
+        this.update();
     }
 
     public updateSortDirection(direction?: SortDirection) {
@@ -67,7 +76,7 @@ export class ListDataPresenter {
         }
     }
 
-    private _updateDisplayedItems() {
+    public update() {
         this._items.next(this._sortItems(this._input));
     }
 

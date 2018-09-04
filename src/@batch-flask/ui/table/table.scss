@@ -159,11 +159,12 @@ bl-table {
             cursor: pointer;
 
             .sort-icon {
+                margin-left: 3px;
                 color: $main-background;
             }
 
             &:hover:not(.sorting) > .sort-icon {
-                color: $genericGray;
+                color: $selection-color;
             }
         }
 
