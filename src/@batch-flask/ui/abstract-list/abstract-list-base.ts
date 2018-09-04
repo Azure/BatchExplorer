@@ -349,14 +349,14 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         }
 
         this.commands.contextMenuFromSelection(selection).subscribe((menu) => {
+            if (!menu) { return; }
+
             if (this.config.sorting) {
                 menu.addItem(new ContextMenuSeparator());
                 menu.addItem(this._createSortByMenu());
             }
 
-            if (menu) {
-                this.contextmenuService.openMenu(menu);
-            }
+            this.contextmenuService.openMenu(menu);
         });
     }
 
