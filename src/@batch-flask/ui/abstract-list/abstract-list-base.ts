@@ -13,7 +13,7 @@ import { ListSelection, SelectableList } from "@batch-flask/core/list";
 import { ListDataPresenter } from "@batch-flask/ui/abstract-list/list-data-presenter";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import {
-    ContextMenuItem, ContextMenuSeparator, ContextMenuService, MultiContextMenuItem, ContextMenu,
+    ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService, MultiContextMenuItem,
 } from "@batch-flask/ui/context-menu";
 import { EntityCommands } from "@batch-flask/ui/entity-commands";
 import { LoadingStatus } from "@batch-flask/ui/loading";
@@ -356,7 +356,6 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         }
         obs.subscribe((menu) => {
             if (!menu) { return; }
-
 
             if (this.config.sorting) {
                 if (this.commands) {
