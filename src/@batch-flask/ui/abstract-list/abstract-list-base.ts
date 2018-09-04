@@ -25,7 +25,7 @@ import { AbstractListItem } from "./abstract-list-item";
 import { ListDataProvider } from "./list-data-provider";
 import { ListSortConfig, SortDirection, SortingStatus } from "./list-data-sorter";
 
-export interface AbstractListBaseConfig {
+export interface AbstractListBaseConfig<TEntity = any> {
     /**
      * If it should allow the user to activate an item(And the routerlink if applicable)
      * @default true
@@ -46,7 +46,7 @@ export interface AbstractListBaseConfig {
     /**
      * Sorting definition. Specify here what column can be sorted and how
      */
-    sorting?: ListSortConfig<any> | null | false;
+    sorting?: ListSortConfig<TEntity> | null | false;
 }
 
 export const abstractListDefaultConfig: AbstractListBaseConfig = {

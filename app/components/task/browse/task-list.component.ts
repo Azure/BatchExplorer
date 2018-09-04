@@ -17,7 +17,7 @@ import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Task, TaskState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
-import { ComponentUtils, DateUtils } from "app/utils";
+import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 import { TaskCommands } from "../action";
@@ -40,11 +40,15 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnCh
 
     public data: ListView<Task, TaskListParams>;
 
-    public listConfig: AbstractListBaseConfig = {
+    public listConfig: AbstractListBaseConfig<Task> = {
         sorting: {
+            id: true,
             state: true,
             runtime: true,
             creationTime: true,
+            startTime: (task) => task.executionInfo && task.executionInfo.startTime,
+            endTime: (task) => task.executionInfo && task.executionInfo.endTime,
+            exitCode: (task) => task.executionInfo && task.executionInfo.exitCode,
         },
     };
 
@@ -53,6 +57,7 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnCh
     private _baseOptions = {
         select: "id,state,creationTime,lastModified,executionInfo",
     };
+
     private _onTaskAddedSub: Subscription;
 
     constructor(
@@ -135,10 +140,5 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnCh
         } else if (task.executionInfo && task.executionInfo.exitCode !== 0) {
             return `Task failed with exitCode:  ${task.executionInfo.exitCode}`;
         }
-    }
-
-    public formatDate(date: Date) {
-        console.log("Formatdate");
-        return DateUtils.prettyDate(date, 7);
     }
 }
