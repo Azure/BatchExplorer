@@ -29,4 +29,18 @@ export class I18nService {
             return translations;
         }
     }
+
+    /**
+     * Resolve the key. Try to use the namespace.key then key.
+     * @param namespace
+     * @param key
+     */
+    public resolveKey(namespace: string, key: string) {
+        const namespacedKey = `${namespace}.${key}`;
+        if (this._translations.has(namespacedKey)) {
+            return namespacedKey;
+        } else {
+            return key;
+        }
+    }
 }

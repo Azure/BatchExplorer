@@ -15,6 +15,7 @@ export * from "./select";
 export * from "./batchui.module";
 export * from "./quick-list";
 export * from "./context-menu";
+export * from "./property-list";
 export * from "./sidebar";
 export * from "./scrollable";
 export * from "./permission";

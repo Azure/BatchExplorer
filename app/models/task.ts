@@ -4,7 +4,7 @@ import * as moment from "moment";
 import { ListProp, Model, Prop, Record } from "@batch-flask/core";
 import { AffinityInformation } from "./affinity-information";
 import { ApplicationPackageReference, ApplicationPackageReferenceAttributes } from "./application-package-reference";
-import { ComputeNodeInformation } from "./compute-node-information";
+import { ComputeNodeInformation } from "./azure-batch/compute-node-information";
 import { TaskContainerSettings } from "./container-setup";
 import { MultiInstanceSettings } from "./multi-instance-settings";
 import { NameValuePair, NameValuePairAttributes } from "./name-value-pair";

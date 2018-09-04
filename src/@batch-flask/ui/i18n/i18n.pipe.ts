@@ -1,5 +1,7 @@
-import { Pipe, PipeTransform } from "@angular/core";
+import { Inject, InjectionToken, Optional, Pipe, PipeTransform } from "@angular/core";
 import { I18nService } from "@batch-flask/core";
+
+export const I18N_NAMESPACE = new InjectionToken("I18N_NAMESPACE");
 
 @Pipe({
     name: "i18n",
@@ -7,11 +9,16 @@ import { I18nService } from "@batch-flask/core";
 })
 export class I18nPipe implements PipeTransform {
 
-    constructor(private i18n: I18nService) {
+    constructor(private i18n: I18nService, @Optional() @Inject(I18N_NAMESPACE) private namespace?: string) {
 
     }
 
-    public transform(value: string) {
-        return this.i18n.translate(value);
+    public transform(key: string) {
+        if (this.namespace) {
+            const namespacedKey = this.i18n.resolveKey(this.namespace, key);
+            return this.i18n.translate(namespacedKey);
+        } else {
+            return this.i18n.translate(key);
+        }
     }
 }
