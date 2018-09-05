@@ -132,7 +132,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
             this.subactivitiesShown = Math.max(this.subactivitiesShown - 10, 0);
         }
         if (this.subactivitiesShown === 0) {
-            this._collapse();
+            // this._collapse();
         }
     }
 
@@ -145,18 +145,6 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     public execAction() {
         // execute the focused action
         this.actions[this.focusedAction].action();
-    }
-
-    // private _expand() {
-    //     if (this.activity.subactivities.length === 0) { return; }
-    //     this.subactivitiesShown = 10;
-    //     this.showSubactivities = true;
-    //     this.changeDetector.markForCheck();
-    // }
-
-    private _collapse() {
-        this.showSubactivities = false;
-        this.changeDetector.markForCheck();
     }
 
     private _subscribeToSubjects() {

@@ -4,31 +4,38 @@ import { By } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
 import { ActivityService, ActivityStatus, ButtonsModule } from "@batch-flask/ui";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
+import { ActivityMonitorItemActionComponent } from "./activity-monitor-item-action";
 import { ActivityMonitorItemComponent } from "./activity-monitor-item.component";
 
 @Component({
     template: `
-        <bl-activity-monitor-item
-            [activity]="activity"
-            [selectSubject]="selectSubj"
-            [flashSubject]="flashSubj"
-            [keyDownSubject]="keyDownSubj"
-        ></bl-activity-monitor-item>
+    <bl-activity-monitor-item
+        [activity]="activity"
+        [focused]="focused"
+        [hovered]="hovered"
+        [indent]="indent"
+        [expanded]="expanded"
+        [(focusedAction)]="focusedAction"
+        (toggleRowExpand)="toggleRowExpand()"
+    ></bl-activity-monitor-item>
     `,
 })
 class TestComponent {
     public activity: MockActivity;
-    public progressSubj: BehaviorSubject<number>;
-    public selectSubj: BehaviorSubject<number>;
-    public flashSubj: BehaviorSubject<number>;
-    public keyDownSubj: BehaviorSubject<KeyboardEvent>;
+    public focused: boolean;
+    public hovered: boolean;
+    public indent: number;
+    public expanded: boolean;
+    public focusedAction: number;
+    public toggleRowExpand = jasmine.createSpy("toggleRowExpand");
 
     constructor() {
-        this.progressSubj = new BehaviorSubject(0);
-        this.selectSubj = new BehaviorSubject(-1);
-        this.flashSubj = new BehaviorSubject(-1);
-        this.keyDownSubj = new BehaviorSubject(null);
-        this.activity = new MockActivity("Test activity", this.progressSubj);
+        this.activity = new MockActivity("Test activity", new BehaviorSubject(0));
+        this.focused = false;
+        this.hovered = false;
+        this.indent = 0;
+        this.expanded = false;
+        this.focusedAction = null;
     }
 }
 
@@ -68,7 +75,9 @@ describe("ActivityMonitorItemComponent", () => {
 
         TestBed.configureTestingModule({
             imports: [ButtonsModule, MaterialModule],
-            declarations: [ActivityMonitorItemComponent, TestComponent],
+            declarations: [
+                ActivityMonitorItemComponent, ActivityMonitorItemActionComponent, TestComponent,
+            ],
             providers: [
                 { provide: ActivityService, useValue: activityServiceSpy },
             ],
@@ -85,37 +94,23 @@ describe("ActivityMonitorItemComponent", () => {
         const nameEl = de.query(By.css(".name"));
 
         expect(nameEl.nativeElement.textContent).toContain("Test activity");
-        expect(nameEl.nativeElement.textContent).not.toContain("...");
     });
 
     it("should display the percentage if an activity is emitting progress", () => {
-        const nameEl = de.query(By.css(".name"));
-
-        testComponent.activity = new MockActivity("Test activity with progress subject", testComponent.progressSubj);
+        const subj = new BehaviorSubject(0);
+        testComponent.activity = new MockActivity("Test activity", subj);
         fixture.detectChanges();
+
+        const nameEl = de.query(By.css(".name"));
 
         expect(component.progress).toBe(0);
         expect(nameEl.nativeElement.textContent).toContain("(0%)");
 
-        testComponent.progressSubj.next(50);
+        subj.next(50);
         fixture.detectChanges();
 
         expect(component.progress).toBe(50);
         expect(nameEl.nativeElement.textContent).toContain("(50%)");
-    });
-
-    it("should select the activity", () => {
-        testComponent.selectSubj.next(testComponent.activity.id);
-        fixture.detectChanges();
-
-        expect(component.selected).toBeTruthy();
-    });
-
-    it("should flash the activity", () => {
-        testComponent.flashSubj.next(testComponent.activity.id);
-        fixture.detectChanges();
-
-        expect(component.shouldFlash).toBeTruthy();
     });
 
     it("should update the status of an activity", () => {
@@ -132,75 +127,6 @@ describe("ActivityMonitorItemComponent", () => {
         fixture.detectChanges();
 
         expect(de.query(By.css(".error"))).not.toBeFalsy();
-    });
-
-    it("should show subactivities when prompted and then hide them", () => {
-        testComponent.activity = new MockActivity("Test activity with subtasks", testComponent.progressSubj, [
-            new MockActivity("Subtask 1", new AsyncSubject()),
-            new MockActivity("Subtask 2", new AsyncSubject()),
-            new MockActivity("Subtask 3", new AsyncSubject()),
-        ]);
-        fixture.detectChanges();
-
-        component.toggleExpand();
-        fixture.detectChanges();
-
-        let subs = de.queryAll(By.css("bl-activity-monitor-item"));
-        expect(subs.length).toBe(3);
-
-        component.toggleExpand();
-        fixture.detectChanges();
-
-        subs = de.queryAll(By.css("bl-activity-monitor-item"));
-        expect(subs.length).toBe(0);
-    });
-
-    it("should show only ten activities at first, and then more if prompted", () => {
-        testComponent.activity = new MockActivity("Test activity with subtasks", testComponent.progressSubj, [
-            new MockActivity("Subtask 1", new AsyncSubject()),
-            new MockActivity("Subtask 2", new AsyncSubject()),
-            new MockActivity("Subtask 3", new AsyncSubject()),
-            new MockActivity("Subtask 4", new AsyncSubject()),
-            new MockActivity("Subtask 5", new AsyncSubject()),
-            new MockActivity("Subtask 6", new AsyncSubject()),
-            new MockActivity("Subtask 7", new AsyncSubject()),
-            new MockActivity("Subtask 8", new AsyncSubject()),
-            new MockActivity("Subtask 9", new AsyncSubject()),
-            new MockActivity("Subtask 10", new AsyncSubject()),
-            new MockActivity("Subtask 11", new AsyncSubject()),
-        ]);
-
-        fixture.detectChanges();
-
-        component.toggleExpand();
-        fixture.detectChanges();
-
-        expect(component.subactivities.length).toBe(10);
-
-        // show up to ten more (total 11 shown, which is all)
-        component.showMore();
-        fixture.detectChanges();
-
-        expect(component.subactivities.length).toBe(11);
-
-        // show more again (should stay at 11 with no error)
-        component.showMore();
-        fixture.detectChanges();
-
-        expect(component.subactivities.length).toBe(11);
-
-        // show ten fewer
-        component.showLess();
-        fixture.detectChanges();
-
-        expect(component.subactivities.length).toBe(1);
-
-        // show less again, expect to show zero subactivites and have the menu collapsed
-        component.showLess();
-        fixture.detectChanges();
-
-        expect(component.subactivities.length).toBe(0);
-        expect(component.showSubactivities).toBeFalsy();
     });
 
     it("should rerun an activity when prompted", () => {
