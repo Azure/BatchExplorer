@@ -5,6 +5,7 @@ import { PinnedEntityType } from "@batch-flask/core";
 import { File, Workspace } from "@batch-flask/ui";
 import {
     ApplicationPackage,
+    ArmBatchAccount,
     BatchAccount,
     BatchApplication,
     BlobContainer,
@@ -220,7 +221,7 @@ export const subscription = new FixtureFactory<Subscription>(Subscription, {
     state: "ready",
 });
 
-export const account = new FixtureFactory<BatchAccount>(BatchAccount, {
+export const account = new FixtureFactory<BatchAccount>(ArmBatchAccount, {
     id: "account-1",
     name: "account-test",
     location: "westus",

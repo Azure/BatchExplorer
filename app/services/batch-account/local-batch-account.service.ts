@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { LocalBatchAccount } from "app/models";
+import { LOCAL_BATCH_ACCOUNT_PREFIX, LocalBatchAccount } from "app/models";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 import { filter, map, take } from "rxjs/operators";
@@ -48,7 +48,7 @@ export class LocalBatchAccountService implements OnDestroy {
         const match = regex.exec(id);
 
         if (!match) {
-            return "N/A";
+            return id.replace(LOCAL_BATCH_ACCOUNT_PREFIX, "");
         }
 
         return match[1];
