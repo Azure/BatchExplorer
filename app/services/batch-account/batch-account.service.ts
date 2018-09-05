@@ -1,16 +1,18 @@
 import { Injectable } from "@angular/core";
-import { RequestOptions, Response, URLSearchParams } from "@angular/http";
+import { RequestOptions, URLSearchParams } from "@angular/http";
 import { BasicEntityGetter, DataCache, DataCacheTracker, EntityView } from "@batch-flask/core";
-import { AccountKeys, ArmBatchAccount, BatchAccount, BatchAccountAttributes, Subscription } from "app/models";
-import { AccountPatchDto } from "app/models/dtos";
+import {
+    AccountKeys, ArmBatchAccount, BatchAccount, LOCAL_BATCH_ACCOUNT_PREFIX, LocalBatchAccount,
+} from "app/models";
 import { ArmResourceUtils, log } from "app/utils";
 import { Constants } from "common";
 import { List } from "immutable";
-import { AsyncSubject, BehaviorSubject, Observable, combineLatest, empty, forkJoin, of } from "rxjs";
-import { expand, filter, flatMap, map, reduce, share } from "rxjs/operators";
+import { AsyncSubject, BehaviorSubject, Observable, combineLatest, of } from "rxjs";
+import { filter, flatMap, map, share } from "rxjs/operators";
 import { AzureHttpService } from "../azure-http.service";
 import { LocalFileStorage } from "../local-file-storage.service";
 import { SubscriptionService } from "../subscription.service";
+import { ArmBatchAccountService } from "./arm-batch-account.service";
 import { LocalBatchAccountService } from "./local-batch-account.service";
 
 const batchProvider = "Microsoft.Batch";
@@ -22,27 +24,8 @@ export enum AccountStatus {
     Loading,
 }
 
-export interface AccountListParams {
-    subscriptionId: string;
-}
-
-export interface AccountParams {
-    id: string;
-}
-
 export interface SelectedAccount {
     account: BatchAccount;
-}
-
-export interface AvailabilityResult {
-    nameAvailable: boolean;
-    reason?: string;
-    message?: string;
-}
-
-export interface QuotaResult {
-    used: number;
-    quota: number;
 }
 
 @Injectable()
@@ -74,9 +57,9 @@ export class BatchAccountService {
     private _accounts = new BehaviorSubject<List<BatchAccount>>(List([]));
     private _accountsLoaded = new AsyncSubject<boolean>();
     private _cache = new DataCache<BatchAccount>();
-    private _getter: BasicEntityGetter<BatchAccount, AccountParams>;
 
     constructor(
+        private armBatchAccountService: ArmBatchAccountService,
         private localBatchAccountService: LocalBatchAccountService,
         private storage: LocalFileStorage,
         private azure: AzureHttpService,
@@ -88,11 +71,6 @@ export class BatchAccountService {
         this.accounts = combineLatest(this._accounts.asObservable(), this.localBatchAccountService.accounts).pipe(
             map(([a, b]) => List(b.concat(a))),
         );
-
-        this._getter = new BasicEntityGetter(ArmBatchAccount, {
-            cache: () => this._cache,
-            supplyData: ({ id }) => this._getAccount(id),
-        });
 
         this._currentAccount.subscribe((selection) => {
             if (selection) {
@@ -153,6 +131,7 @@ export class BatchAccountService {
 
         const obs = this.get(accountId);
         DataCacheTracker.clearAllCaches(this._cache);
+
         obs.subscribe({
             next: (account) => {
                 this._currentAccount.next({ account });
@@ -169,6 +148,16 @@ export class BatchAccountService {
         });
 
         return obs;
+    }
+
+    public view(): EntityView<BatchAccount, { id: string }> {
+        return new EntityView({
+            cache: () => this._cache,
+            getter: new BasicEntityGetter(Object as any, {
+                cache: () => this._cache,
+                supplyData: (params) => this.get(params.id),
+            }),
+        });
     }
 
     public load() {
@@ -218,19 +207,20 @@ export class BatchAccountService {
         );
     }
 
-    public view(): EntityView<BatchAccount, AccountParams> {
-        return new EntityView({
-            cache: () => this._cache,
-            getter: this._getter,
-        });
-    }
-
     public get(accountId: string): Observable<BatchAccount> {
-        return this._getter.fetch({ id: accountId });
+        if (accountId.startsWith(LOCAL_BATCH_ACCOUNT_PREFIX)) {
+            return this.localBatchAccountService.get(accountId);
+        } else {
+            return this.armBatchAccountService.get(accountId);
+        }
     }
 
     public getFromCache(accountId: string): Observable<BatchAccount> {
-        return this._getter.fetch({ id: accountId }, { cached: true });
+        if (accountId.startsWith(LOCAL_BATCH_ACCOUNT_PREFIX)) {
+            return this.localBatchAccountService.get(accountId);
+        } else {
+            return this.armBatchAccountService.getFromCache(accountId);
+        }
     }
 
     public getNameFromAccountId(accountId: string): string {
@@ -308,104 +298,24 @@ export class BatchAccountService {
         });
     }
 
-    public patch(accountId: string, properties: AccountPatchDto): Observable<any> {
-        return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(accountId)).pipe(
-            flatMap((subscription) => {
-                return this.azure.patch(subscription, accountId, { properties: properties.toJS() });
-            }),
-        );
-    }
-
-    public putResourcGroup(sub: Subscription, resourceGroup: string, body: any) {
-        const rgUri = this.getResoureGroupId(sub, resourceGroup);
-        return this.azure.put(sub, rgUri, { body: body });
-    }
-
-    public putBatchAccount(sub: Subscription, resourceGroup: string, accountName: string, body: any): Observable<any> {
-        const accountUri = this.getAccountId(sub, resourceGroup, accountName);
-        return this.azure.put(sub, accountUri, { body: body });
-    }
-
-    public deleteBatchAccount(accountId: string): Observable<any> {
-        return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(accountId)).pipe(
-            flatMap((subscription) => {
-                return this.azure.delete(subscription, accountId);
-            }),
-        );
-    }
-
-    public getAccountId(sub: Subscription, resourceGroup: string, accountName: string): string {
-        const uriPrefix = this.getResoureGroupId(sub, resourceGroup);
-        return `${uriPrefix}/providers/${batchProvider}/batchAccounts/${accountName}`;
-    }
-
-    public getResoureGroupId(sub: Subscription, resourceGroup: string): string {
-        return `subscriptions/${sub.subscriptionId}/resourceGroups/${resourceGroup}`;
-    }
-
-    /**
-     * Call nameAvailability api to get account conflict info per location
-     * @param subscriptionId
-     */
-    public nameAvailable(name: string, subscription: Subscription, location: string): Observable<AvailabilityResult> {
-        if (!name || !subscription || !location) {
-            return of(null);
-        }
-        const uri = `subscriptions/${subscription.subscriptionId}/providers/${batchProvider}`
-            + `/locations/${location}/checkNameAvailability`;
-        return this.azure.post(subscription, uri, {
-            name: name,
-            type: batchResourceProvider,
-        }).pipe(
-            map(response => {
-                return response.json();
-            }),
-        );
-    }
-
-    /**
-     * Call quota api and resource api to get result of whether current subscription quota reached or not
-     * @param subscription
-     * @param location
-     */
-    public accountQuota(subscription: Subscription, location: string): Observable<QuotaResult> {
-        if (!subscription || !location) {
-            return of(null);
-        }
-
-        // get current subscription account quota
-        const quotaUri = `subscriptions/${subscription.subscriptionId}/providers/${batchProvider}`
-            + `/locations/${location}/quotas`;
-        const getQuotaObs = this.azure.get(subscription, quotaUri).pipe(map(response => {
-            return response.json();
-        }));
-
-        // get current batch accounts number
-        const resourceUri = `/subscriptions/${subscription.subscriptionId}/resources`;
-        const search = new URLSearchParams();
-        search.set("$filter", `resourceType eq '${batchResourceProvider}' and location eq '${location}'`);
-        const options = new RequestOptions({ search });
-        const batchAccountObs = this.azure.get(subscription, resourceUri, options).pipe(
-            expand(obs => {
-                return obs.json().nextLink ?
-                    this.azure.get(subscription, obs.json().nextLink, options) : empty();
-            }),
-            reduce((batchAccounts, response: Response) => {
-                return [...batchAccounts, ...response.json().value];
-            }, []),
-        );
-
-        return forkJoin([getQuotaObs, batchAccountObs]).pipe(
-            map(results => {
-                if (!results[0] || !Array.isArray(results[1])) {
-                    return null;
+    public deleteBatchAccount(accountId: string) {
+        return this.getFromCache(accountId).pipe(
+            flatMap((account) => {
+                if (account instanceof ArmBatchAccount) {
+                    return this.armBatchAccountService.delete(accountId);
+                } else if (account instanceof LocalBatchAccount) {
+                    // TODO-TIM
                 }
-                return {
-                    used: results[1].length,
-                    quota: results[0].accountQuota,
-                };
             }),
         );
+    }
+
+    public getAccountNameFromId(accountId: string): any {
+        if (accountId.startsWith(LOCAL_BATCH_ACCOUNT_PREFIX)) {
+            return "FOO_LOCAL"; // TODO-TIM
+        } else {
+            return ArmResourceUtils.getAccountNameFromResourceId(accountId);
+        }
     }
 
     private _loadFavoriteAccounts(): Observable<List<BatchAccount>> {
@@ -424,24 +334,6 @@ export class BatchAccountService {
     private _saveAccountFavorites(accounts: List<BatchAccount> = null): Observable<any> {
         accounts = accounts === null ? this._accountFavorites.getValue() : accounts;
         return this.storage.set(this._accountJsonFileName, accounts.toJS());
-    }
-
-    private _getAccount(accountId: string): Observable<BatchAccountAttributes> {
-        return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(accountId)).pipe(
-            flatMap((subscription) => {
-                return this.azure.get(subscription, accountId).pipe(
-                    map(response => {
-                        const data = response.json();
-                        return this._createAccount(subscription, data);
-                    }),
-                );
-            }),
-            share(),
-        );
-    }
-
-    private _createAccount(subscription: Subscription, data: any): BatchAccountAttributes {
-        return { ...data, subscription };
     }
 
     private _markAccountsAsLoaded() {

@@ -4,7 +4,7 @@ import { autobind } from "@batch-flask/core";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { ArmBatchAccount } from "app/models";
 import { AccountPatchDto } from "app/models/dtos";
-import { BatchAccountService } from "app/services";
+import { ArmBatchAccountService } from "app/services";
 import { Observable } from "rxjs";
 
 import "./edit-storage-account-form.scss";
@@ -28,7 +28,7 @@ export class EditStorageAccountFormComponent {
     private _account: ArmBatchAccount;
 
     constructor(
-        private accountService: BatchAccountService,
+        private accountService: ArmBatchAccountService,
         public sidebarRef: SidebarRef<EditStorageAccountFormComponent>,
     ) { }
 
@@ -37,7 +37,7 @@ export class EditStorageAccountFormComponent {
         const dto = new AccountPatchDto({ autoStorage: { storageAccountId: this.storageAccountId.value } });
         const obs = this.accountService.patch(this.account.id, dto);
         obs.subscribe(() => {
-            this.accountService.refresh();
+            this.accountService.get(this.account.id);
         });
         return obs;
     }

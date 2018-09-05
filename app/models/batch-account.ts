@@ -21,6 +21,8 @@ export interface AutoStorageAccountAttributes {
     lastKeySync: Date;
 }
 
+export const LOCAL_BATCH_ACCOUNT_PREFIX = "local/";
+
 @Model()
 export class AutoStorageAccount extends Record<AutoStorageAccountAttributes> {
     @Prop() public storageAccountId: string;
@@ -62,6 +64,7 @@ export interface BatchAccountAttributes {
 export interface BatchAccount extends Record<any> {
     id: string;
     name: string;
+    displayName: string;
     url: string;
     provisioningState: AccountProvisingState;
     armEnabled: boolean;
@@ -85,6 +88,10 @@ export class ArmBatchAccount extends ArmRecord<BatchAccountAttributes> implement
 
     public get autoStorage() {
         return this.properties && this.properties.autoStorage;
+    }
+
+    public get displayName() {
+        return this.name;
     }
 
     public hasArmAutoStorage(): boolean {
@@ -112,6 +119,7 @@ export class ArmBatchAccount extends ArmRecord<BatchAccountAttributes> implement
 @Model()
 export class LocalBatchAccount extends Record<any> implements BatchAccount {
     @Prop() public name: string;
+    @Prop() public displayName: string;
     @Prop() public url: string;
     @Prop() public key: string;
 
@@ -120,7 +128,7 @@ export class LocalBatchAccount extends Record<any> implements BatchAccount {
     public autoStorage = null;
 
     public get id(): string {
-        return `local/${this.url}`;
+        return `${LOCAL_BATCH_ACCOUNT_PREFIX}${this.url}`;
     }
 
     public get routerLink(): string[] {

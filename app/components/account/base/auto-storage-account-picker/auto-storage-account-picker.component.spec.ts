@@ -7,14 +7,14 @@ import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { List } from "immutable";
 
 import { TableTestingModule } from "@batch-flask/ui/testing";
-import { BatchAccount, StorageAccount } from "app/models";
+import { ArmBatchAccount, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
 import { of } from "rxjs";
 import { ElectronTestingModule } from "test/utils/mocks";
 import { LoadingMockComponent } from "test/utils/mocks/components";
 import { AutoStorageAccountPickerComponent } from "./auto-storage-account-picker.component";
 
-const account = new BatchAccount({
+const account = new ArmBatchAccount({
     id: "acc-1", location: "westus",
     subscription: { subscriptionId: "sub-1" },
 } as any);

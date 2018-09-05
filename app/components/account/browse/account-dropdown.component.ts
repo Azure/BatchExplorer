@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { BatchAccount } from "app/models";
 import { AccountStatus, BatchAccountService } from "app/services";
-import { ArmResourceUtils } from "app/utils";
 import { Subscription } from "rxjs";
 
 import "./account-dropdown.scss";
@@ -30,7 +29,8 @@ export class AccountDropDownComponent implements OnDestroy {
         this._subs.push(accountService.currentAccountId.subscribe((accountId) => {
             if (accountId) {
                 this.selectedId = accountId;
-                this.selectedAccountAlias = ArmResourceUtils.getAccountNameFromResourceId(accountId);
+
+                this.selectedAccountAlias = this.accountService.getAccountNameFromId(accountId);
             } else {
                 this.selectedId = null;
                 this.selectedAccountAlias = "No account selected!";

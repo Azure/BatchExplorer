@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { LocalBatchAccount } from "app/models";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, of } from "rxjs";
 import { map } from "rxjs/operators";
 import { LocalFileStorage } from "../local-file-storage.service";
 
@@ -32,5 +32,9 @@ export class LocalBatchAccountService implements OnDestroy {
                 }
             }),
         );
+    }
+
+    public get(id: string): Observable<LocalBatchAccount> {
+        return of(this._accounts.value.filter(x => x.id === id).first());
     }
 }
