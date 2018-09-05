@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
 import { ActivityService, ActivityStatus, ButtonsModule } from "@batch-flask/ui";
-import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { ActivityMonitorItemActionComponent } from "./activity-monitor-item-action";
 import { ActivityMonitorItemComponent } from "./activity-monitor-item.component";
 
