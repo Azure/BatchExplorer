@@ -96,7 +96,6 @@ describe("PinnedDropDownComponent", () => {
     describe("when there are no favorites", () => {
         it("should show no favorites title", () => {
             expect(component.title).toBe("No favorite items pinned");
-            expect((component as any)._accountEndpoint).toBe("myaccount.westus.batch.com");
             expect(dropDownButton.nativeElement.textContent).toContain("No favorite items pinned");
         });
 
