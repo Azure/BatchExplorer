@@ -8,7 +8,7 @@ import { BatchExplorerService } from "app/services/batch-labs.service";
 import { Constants } from "app/utils";
 import { Observable, throwError, timer } from "rxjs";
 import { catchError, flatMap, mergeMap, retryWhen, share, take, tap } from "rxjs/operators";
-import { BatchAccountService } from "../batch-account.service";
+import { BatchAccountService } from "../batch-account";
 
 function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
     const options = original || new RequestOptions();

@@ -5,7 +5,7 @@ import { List } from "immutable";
 import { BehaviorSubject, Observable, combineLatest } from "rxjs";
 import { filter, map, share, shareReplay, take } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
-import { BatchAccountService } from "./batch-account.service";
+import { BatchAccountService } from "./batch-account";
 import { computeUrl } from "./compute.service";
 import { GithubDataService } from "./github-data";
 

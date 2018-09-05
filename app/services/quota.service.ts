@@ -7,7 +7,7 @@ import { filter, flatMap, map, shareReplay } from "rxjs/operators";
 import { ApplicationService } from "./application.service";
 import { JobService } from "./azure-batch/job";
 import { PoolService } from "./azure-batch/pool";
-import { BatchAccountService } from "./batch-account.service";
+import { BatchAccountService } from "./batch-account";
 import { ComputeService } from "./compute.service";
 import { VmSizeService } from "./vm-size.service";
 

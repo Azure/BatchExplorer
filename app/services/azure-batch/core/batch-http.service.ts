@@ -3,13 +3,13 @@ import { HttpHandler, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { HttpRequestOptions, HttpService, ServerError } from "@batch-flask/core";
 import { UrlUtils } from "@batch-flask/utils";
-import { BatchAccount, ArmBatchAccount, LocalBatchAccount } from "app/models";
+import { ArmBatchAccount, BatchAccount, LocalBatchAccount } from "app/models";
 import { AdalService } from "app/services/adal";
-import { BatchAccountService } from "app/services/batch-account.service";
+import { BatchAccountService } from "app/services/batch-account";
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { Constants } from "common";
 import { Observable, from, throwError } from "rxjs";
-import { catchError, flatMap, retryWhen, shareReplay, take, map } from "rxjs/operators";
+import { catchError, flatMap, map, retryWhen, shareReplay, take } from "rxjs/operators";
 import { BatchSharedKeyCredentials } from "./shared-key-utils";
 
 @Injectable()

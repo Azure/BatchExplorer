@@ -8,7 +8,7 @@ import { List } from "immutable";
 import { Observable, of } from "rxjs";
 import { flatMap, map, share, shareReplay, take } from "rxjs/operators";
 import { ArmHttpService } from "../arm-http.service";
-import { BatchAccountService } from "../batch-account.service";
+import { BatchAccountService } from "../batch-account";
 
 interface RoleAssignmentListParams {
     resourceId: string;

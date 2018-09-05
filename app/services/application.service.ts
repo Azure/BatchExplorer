@@ -12,7 +12,7 @@ import { Constants } from "app/utils";
 import { Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
-import { BatchAccountService } from "./batch-account.service";
+import { BatchAccountService } from "./batch-account";
 import {
     ArmEntityGetter,
     ArmListGetter,

@@ -7,7 +7,7 @@ import {
     BatchApplication, BlobContainer, Certificate, Job, JobSchedule, Pool,
 } from "app/models";
 import { map, share } from "rxjs/operators";
-import { BatchAccountService } from "./batch-account.service";
+import { BatchAccountService } from "./batch-account";
 import { LocalFileStorage } from "./local-file-storage.service";
 
 const pinnedTypeMap = new Map();

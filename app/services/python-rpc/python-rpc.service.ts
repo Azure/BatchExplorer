@@ -9,7 +9,7 @@ import { PythonRpcServerProcess } from "client/python-process";
 import { AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
 import { catchError, first, flatMap, share, tap } from "rxjs/operators";
 import { AdalService } from "../adal";
-import { BatchAccountService } from "../batch-account.service";
+import { BatchAccountService } from "../batch-account";
 
 @Injectable()
 export class PythonRpcService {

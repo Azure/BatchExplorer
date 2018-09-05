@@ -8,7 +8,7 @@ import { first, flatMap, share, tap } from "rxjs/operators";
 import { ArmBatchAccount } from "../models";
 import { AdalService } from "./adal";
 import { AzureHttpService } from "./azure-http.service";
-import { BatchAccountService } from "./batch-account.service";
+import { BatchAccountService } from "./batch-account";
 
 function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
     const options = original || new RequestOptions();

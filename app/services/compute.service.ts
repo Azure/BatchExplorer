@@ -6,7 +6,7 @@ import { Observable, empty } from "rxjs";
 import { expand, flatMap, map, reduce, share, tap } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
 import { AzureHttpService } from "./azure-http.service";
-import { BatchAccountService } from "./batch-account.service";
+import { BatchAccountService } from "./batch-account";
 import { SubscriptionService } from "./subscription.service";
 
 export function computeUrl(subscriptionId: string) {

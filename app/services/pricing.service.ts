@@ -6,7 +6,7 @@ import * as moment from "moment";
 import { BehaviorSubject, Observable, forkJoin, of } from "rxjs";
 import { catchError, filter, flatMap, map, share, take } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
-import { BatchAccountService } from "./batch-account.service";
+import { BatchAccountService } from "./batch-account";
 import { LocalFileStorage } from "./local-file-storage.service";
 import { VmSizeService } from "./vm-size.service";
 
