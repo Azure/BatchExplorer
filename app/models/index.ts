@@ -1,7 +1,6 @@
 export * from "./account";
 export * from "./azure-batch";
 export * from "./account-keys";
-export * from "./affinity-information";
 export * from "./batch-application";
 export * from "./batch-software-license";
 export * from "./app-insights";
@@ -67,7 +66,6 @@ export * from "./storage-account";
 export * from "./storage-keys";
 export * from "./subscription";
 export * from "./subtask-information";
-export * from "./task";
 export * from "./task-container-execution-information";
 export * from "./task-constraints";
 export * from "./task-dependencies";

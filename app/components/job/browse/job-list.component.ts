@@ -3,6 +3,7 @@ import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
+import { AbstractListBaseConfig } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
@@ -32,6 +33,14 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
 
     public data: ListView<Job, JobListParams>;
     public searchQuery = new FormControl();
+
+    public listConfig: AbstractListBaseConfig<Job> = {
+        sorting: {
+            id: true,
+            state: true,
+            pool: job => job.executionInfo && job.executionInfo.poolId,
+        },
+    };
 
     // todo: ask tim about setting difference select options for list and details.
     private _baseOptions = { };

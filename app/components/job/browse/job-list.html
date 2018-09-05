@@ -1,7 +1,7 @@
 <bl-focus-section>
     <bl-quick-list *ngIf="quicklist"
-        [data]="jobs"
-        [status]="status"
+        [data]="data"
+        [config]="listConfig"
         [(activeItem)]="activeItem"
         [(selection)]="selection"
         [commands]="commands"
@@ -18,8 +18,8 @@
     </bl-quick-list>
 
     <bl-table *ngIf="!quicklist"
-        [data]="jobs"
-        [status]="status"
+        [data]="data"
+        [config]="listConfig"
         [(activeItem)]="activeItem"
         [(selection)]="selection"
         [commands]="commands"

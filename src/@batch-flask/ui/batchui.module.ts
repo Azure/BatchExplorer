@@ -6,6 +6,7 @@ import { MaterialModule } from "@batch-flask/core";
 
 // components
 import { WorkspaceModule } from "@batch-flask/ui/workspace";
+import { AbstractListModule } from "./abstract-list";
 import { ActivityModule } from "./activity-monitor";
 import { AdvancedFilterModule } from "./advanced-filter";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
@@ -16,6 +17,7 @@ import { ButtonsModule } from "./buttons";
 import { CardModule } from "./card";
 import { ChartsModule } from "./charts";
 import { ContextMenuModule } from "./context-menu";
+import { DateModule } from "./date";
 import { DatetimePickerComponent } from "./datetime-picker";
 import { DialogsModule } from "./dialogs";
 import { DropdownModule } from "./dropdown";
@@ -55,6 +57,7 @@ import { VTabsModule } from "./vtabs";
 // Add submodules there
 const modules = [
     ActivityModule,
+    AbstractListModule,
     AdvancedFilterModule,
     BatchFlaskSettingsModule,
     BreadcrumbModule,
@@ -63,6 +66,7 @@ const modules = [
     CardModule,
     ChartsModule,
     ContextMenuModule,
+    DateModule,
     DialogsModule,
     DropdownModule,
     DurationPickerModule,

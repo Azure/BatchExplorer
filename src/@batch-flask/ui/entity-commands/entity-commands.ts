@@ -59,16 +59,12 @@ export abstract class EntityCommands<TEntity extends ActionableEntity, TParams =
     public contextMenuFromIds(ids: string[]): Observable<ContextMenu> {
         const obs = ids.map(id => this.getFromCache(id));
         return forkJoin(obs).pipe(
-            map((entities) =>  this.contextMenuFromEntities(entities)),
+            map((entities) => this.contextMenuFromEntities(entities)),
         );
     }
 
     public contextMenuFromEntity(entity: TEntity): ContextMenu {
-        return new ContextMenu(this.commands.map((command) => {
-            if (!command.visible(entity)) {
-                return null;
-            }
-
+        return new ContextMenu(this.commands.filter(x => x.visible(entity)).map((command) => {
             return new ContextMenuItem({
                 label: command.label(entity),
                 click: () => {

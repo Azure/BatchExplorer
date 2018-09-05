@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testin
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { DataCache } from "@batch-flask/core";
-import { FileNavigator, FileSource } from "@batch-flask/ui";
+import { File, FileNavigator, FileSource } from "@batch-flask/ui";
 import { TaskOutputsComponent } from "app/components/task/details/output";
 import { Task, TaskState } from "app/models";
 import { FileService } from "app/services";

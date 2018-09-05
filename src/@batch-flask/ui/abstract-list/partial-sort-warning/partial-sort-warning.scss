@@ -1,0 +1,50 @@
+@import "app/styles/variables";
+
+bl-partial-sort-warning {
+
+    .partial-sort-warning, .auto-update-warning {
+        display: flex;
+        align-items: center;
+        height: 40px;
+
+        padding: 10px;
+
+        .message {
+            flex: 1;
+        }
+
+        .action {
+            margin-right: 10px;
+            padding: 3px 5px;
+            border: 2px solid;
+        }
+    }
+
+    .partial-sort-warning {
+        color: $warn-contrast-color;
+        background: $warn-color;
+
+        .action {
+            border-color: $warn-contrast-color;
+
+            &:hover {
+                background-color: $warn-contrast-color;
+                color: $warn-color;
+            }
+        }
+    }
+
+    .auto-update-warning {
+        color: $primary-color;
+        background: $main-background;
+
+        .action {
+            border-color: $primary-color;
+
+            &:hover {
+                background-color: $primary-color;
+                color: $primary-contrast-color;
+            }
+        }
+    }
+}

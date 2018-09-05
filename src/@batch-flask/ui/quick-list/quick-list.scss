@@ -1,11 +1,19 @@
 @import "app/styles/variables";
 
 bl-quick-list {
-    display: block;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
 
-    > bl-virtual-scroll {
+    > .list-body {
+        flex: 1;
+        min-height: 0;
         height: 100%;
+        position: relative;
+
+        > bl-virtual-scroll {
+            height: 100%;
+        }
     }
 }
