@@ -6,7 +6,6 @@ import { File, Workspace } from "@batch-flask/ui";
 import {
     ApplicationPackage,
     ArmBatchAccount,
-    BatchAccount,
     BatchApplication,
     BlobContainer,
     Job,
@@ -221,7 +220,7 @@ export const subscription = new FixtureFactory<Subscription>(Subscription, {
     state: "ready",
 });
 
-export const account = new FixtureFactory<BatchAccount>(ArmBatchAccount, {
+export const account = new FixtureFactory<ArmBatchAccount>(ArmBatchAccount, {
     id: "account-1",
     name: "account-test",
     location: "westus",
