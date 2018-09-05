@@ -81,6 +81,7 @@ export class FileService {
         this._taskFileGetter = new BasicEntityGetter(File, {
             cache: (params) => this.getTaskFileCache(params),
             supplyData: ({ jobId, taskId, name }) => {
+                name = encodeURIComponent(name);
                 const uri = `/jobs/${jobId}/tasks/${taskId}/files/${name}`;
                 return this.http.head(uri, { observe: "response" }).pipe(
                     map((response) => {
@@ -94,6 +95,7 @@ export class FileService {
         this._nodeFileGetter = new BasicEntityGetter(File, {
             cache: (params) => this.getNodeFileCache(params),
             supplyData: ({ poolId, nodeId, name }) => {
+                name = encodeURIComponent(name);
                 const uri = `/pools/${poolId}/nodes/${nodeId}/files/${name}`;
                 return this.http.head(uri, { observe: "response" }).pipe(
                     map((response) => {
@@ -257,9 +259,11 @@ export class FileService {
 
     }
     public getComputeNodeFile(poolId: string, nodeId: string, filename: string, options) {
+        filename = encodeURIComponent(filename);
         return this._getContent(`/pools/${poolId}/nodes/${nodeId}/files/${filename}`);
     }
     public getTaskFile(jobId: string, taskId: string, filename: string, options) {
+        filename = encodeURIComponent(filename);
         return this._getContent(`/jobs/${jobId}/tasks/${taskId}/files/${filename}`);
     }
 
