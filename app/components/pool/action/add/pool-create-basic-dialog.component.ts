@@ -40,7 +40,6 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         private accountService: BatchAccountService,
         private certificateService: CertificateService,
         private pricingService: PricingService,
-        vmSizeService: VmSizeService,
         changeDetector: ChangeDetectorRef,
         private notificationService: NotificationService) {
         super(PoolCreateDto);
