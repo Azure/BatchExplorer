@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { RequestOptions, URLSearchParams } from "@angular/http";
 import { BasicEntityGetter, DataCache, DataCacheTracker, EntityView } from "@batch-flask/core";
 import {
-    AccountKeys, ArmBatchAccount, BatchAccount, LOCAL_BATCH_ACCOUNT_PREFIX, LocalBatchAccount,
+    AccountKeys, ArmBatchAccount, BatchAccount, LOCAL_BATCH_ACCOUNT_PREFIX,
 } from "app/models";
 import { ArmResourceUtils, log } from "app/utils";
 import { Constants } from "common";
@@ -267,16 +267,12 @@ export class BatchAccountService implements OnDestroy {
         });
     }
 
-    public deleteBatchAccount(accountId: string) {
-        return this.getFromCache(accountId).pipe(
-            flatMap((account) => {
-                if (account instanceof ArmBatchAccount) {
-                    return this.armBatchAccountService.delete(accountId);
-                } else if (account instanceof LocalBatchAccount) {
-                    // TODO-TIM
-                }
-            }),
-        );
+    public delete(accountId: string) {
+        if (accountId.startsWith(LOCAL_BATCH_ACCOUNT_PREFIX)) {
+            return this.localBatchAccountService.delete(accountId);
+        } else {
+            return this.armBatchAccountService.delete(accountId);
+        }
     }
 
     public getAccountNameFromId(accountId: string): any {

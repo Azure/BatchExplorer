@@ -9,7 +9,12 @@
         <ng-container *blQuickListRowStatus="let account">
             <bl-quick-list-item-status [status]="accountStatus(account.id)"></bl-quick-list-item-status>
         </ng-container>
-        <ng-container *blQuickListRowTitle="let account">{{account.name}}</ng-container>
+        <ng-container *blQuickListRowTitle="let account">
+            {{account.displayName}}
+            <ng-container *ngIf="account.name !== account.displayName">
+                ({{account.name}})
+            </ng-container>
+        </ng-container>
         <ng-container *blQuickListRowState="let account">
             <ng-container *ngIf="account.armEnabled">
                 {{account.location}}

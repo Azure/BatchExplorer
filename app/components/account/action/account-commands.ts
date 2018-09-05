@@ -46,7 +46,7 @@ export class BatchAccountCommands extends EntityCommands<BatchAccount> {
             name: "delete",
             ...COMMAND_LABEL_ICON.Delete,
             action: (account: BatchAccount) => {
-                this.accountService.deleteBatchAccount(account.id);
+                this.accountService.delete(account.id);
             },
             enabled: (account: BatchAccount) => {
                 const accountState = account && account.provisioningState;

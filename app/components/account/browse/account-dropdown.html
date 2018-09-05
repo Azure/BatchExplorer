@@ -16,7 +16,12 @@
              [class.selected]="account.id === selectedId"
              [title]="account.id">
             <div class="main">
-                <div class="alias">{{account.name}}</div>
+                <div class="alias">
+                    {{account.displayName}}
+                    <ng-container *ngIf="account.name !== account.displayName">
+                        ({{account.name}})
+                    </ng-container>
+                </div>
                 <div class="url">{{account.properties.accountEndpoint}}</div>
             </div>
             <div *ngIf="account.id === selectedId" class="extra">
