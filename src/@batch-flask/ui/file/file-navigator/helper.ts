@@ -47,9 +47,10 @@ export function prettyFileSize(size: string): string {
 export function fileToTreeNode(file: File, basePath: string = ""): FileTreeNode {
     const fullPath = CloudPathUtils.normalize(file.name);
     const relativePath = StringUtils.removePrefix(fullPath, basePath);
-
+    console.log("Original path", file.name);
     return new FileTreeNode({
         path: relativePath,
+        originalPath: file.name,
         isDirectory: file.isDirectory,
         loadingStatus: LoadingStatus.Ready,
         contentLength: !file.isDirectory && file.properties.contentLength,
