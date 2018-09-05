@@ -72,10 +72,8 @@ export class BatchAccountService implements OnDestroy {
                 // localStorage.setItem(Constants.localStorageKey.selectedAccountId, id);
             }),
             flatMap((id) => {
-                console.log("Get by id", id);
                 return this.getFromCache(id);
             }),
-            tap(x => console.log("X?", x)),
             filter(x => Boolean(x)),
             shareReplay(1),
         );
@@ -283,7 +281,7 @@ export class BatchAccountService implements OnDestroy {
 
     public getAccountNameFromId(accountId: string): any {
         if (accountId.startsWith(LOCAL_BATCH_ACCOUNT_PREFIX)) {
-            return "FOO_LOCAL"; // TODO-TIM
+            return this.localBatchAccountService.getNameFromId(accountId);
         } else {
             return ArmResourceUtils.getAccountNameFromResourceId(accountId);
         }

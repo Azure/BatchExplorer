@@ -3,7 +3,7 @@ import { FilterBuilder } from "@batch-flask/core";
 import { ArmBatchAccount, BatchQuotas, JobState, Pool } from "app/models";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, Subscription, forkJoin, merge, of } from "rxjs";
-import { filter, flatMap, map, shareReplay } from "rxjs/operators";
+import { filter, flatMap, map, share, shareReplay, take } from "rxjs/operators";
 import { ApplicationService } from "./application.service";
 import { JobService } from "./azure-batch/job";
 import { PoolService } from "./azure-batch/pool";
@@ -64,10 +64,21 @@ export class QuotaService implements OnDestroy {
     }
 
     public updateUsages() {
-        return forkJoin(
-            this.updatePoolUsage(),
-            this.updateJobUsage(),
-            this.updateApplicationUsage());
+        return this.accountService.currentAccount.pipe(
+            take(1),
+            flatMap((account) => {
+                if (account instanceof ArmBatchAccount) {
+                    return forkJoin(
+                        this.updatePoolUsage(),
+                        this.updateJobUsage(),
+                        this.updateApplicationUsage());
+                } else {
+                    this._usage.next(new BatchQuotas({}));
+                    return of(null);
+                }
+            }),
+            share(),
+        );
     }
 
     public updatePoolUsage() {

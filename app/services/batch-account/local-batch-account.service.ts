@@ -42,4 +42,15 @@ export class LocalBatchAccountService implements OnDestroy {
             map(accounts => accounts.filter(x => x.id === id).first()),
         );
     }
+
+    public getNameFromId(id: string): string {
+        const regex = /https:\/\/([0-9a-zA-Z-]+)\.([0-9a-zA-Z-]+)\.batch\.azure\.com/;
+        const match = regex.exec(id);
+
+        if (!match) {
+            return "N/A";
+        }
+
+        return match[1];
+    }
 }
