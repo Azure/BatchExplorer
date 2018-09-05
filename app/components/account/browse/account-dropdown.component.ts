@@ -18,7 +18,6 @@ export class AccountDropDownComponent implements OnDestroy {
     public selectedAccountAlias: string = "";
     public showDropdown = false;
     public currentAccountValid = AccountStatus.Loading;
-    public currentAccountInvalidError: any = null;
     private _subs: Subscription[] = [];
 
     constructor(
@@ -40,11 +39,6 @@ export class AccountDropDownComponent implements OnDestroy {
 
         this._subs.push(this.accountService.currentAccountValid.subscribe((status) => {
             this.currentAccountValid = status;
-            this.changeDetector.markForCheck();
-        }));
-
-        this._subs.push(this.accountService.currentAccountInvalidError.subscribe((error) => {
-            this.currentAccountInvalidError = error;
             this.changeDetector.markForCheck();
         }));
     }

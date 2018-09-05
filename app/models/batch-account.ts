@@ -108,7 +108,7 @@ export class ArmBatchAccount extends ArmRecord<BatchAccountAttributes> implement
     }
 
     public get url() {
-        return this.properties && this.properties.accountEndpoint;
+        return `https://${this.properties && this.properties.accountEndpoint}`;
     }
 
     public get provisioningState() {

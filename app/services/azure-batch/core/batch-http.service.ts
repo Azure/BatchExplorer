@@ -51,7 +51,7 @@ export class AzureBatchHttpService extends HttpService {
                                     return throwError(err);
                                 }),
                             );
-                    })
+                    }),
                 );
             }),
             shareReplay(1),
@@ -66,7 +66,7 @@ export class AzureBatchHttpService extends HttpService {
     }
 
     private _setupRequestForSharedKey(account: LocalBatchAccount, method: string, uri: string, options) {
-        const sharedKey = new BatchSharedKeyCredentials("", "");
+        const sharedKey = new BatchSharedKeyCredentials(account.name, account.key);
         return from(sharedKey.signRequest(method, uri, options));
     }
     private _addApiVersion(uri: string, options: HttpRequestOptions): HttpRequestOptions {
@@ -91,7 +91,7 @@ export class AzureBatchHttpService extends HttpService {
         if (UrlUtils.isHttpUrl(uri)) {
             return uri;
         } else {
-            return Location.joinWithSlash(`https://${account.url}`, uri);
+            return Location.joinWithSlash(account.url, uri);
         }
     }
 }

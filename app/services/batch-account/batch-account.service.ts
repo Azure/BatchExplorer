@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { RequestOptions, URLSearchParams } from "@angular/http";
 import { BasicEntityGetter, DataCache, DataCacheTracker, EntityView } from "@batch-flask/core";
 import {
@@ -8,7 +8,7 @@ import { ArmResourceUtils, log } from "app/utils";
 import { Constants } from "common";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable, combineLatest, of } from "rxjs";
-import { filter, flatMap, map, share } from "rxjs/operators";
+import { filter, flatMap, map, share, shareReplay, tap } from "rxjs/operators";
 import { AzureHttpService } from "../azure-http.service";
 import { LocalFileStorage } from "../local-file-storage.service";
 import { SubscriptionService } from "../subscription.service";
@@ -24,12 +24,8 @@ export enum AccountStatus {
     Loading,
 }
 
-export interface SelectedAccount {
-    account: BatchAccount;
-}
-
 @Injectable()
-export class BatchAccountService {
+export class BatchAccountService implements OnDestroy {
     public accountLoaded: Observable<boolean>;
     public accountsLoaded: Observable<boolean>;
     public accounts: Observable<List<BatchAccount>>;
@@ -49,9 +45,6 @@ export class BatchAccountService {
 
     private _accountJsonFileName: string = "account-favorites";
     private _accountFavorites: BehaviorSubject<List<BatchAccount>> = new BehaviorSubject(List([]));
-    private _currentAccount: BehaviorSubject<SelectedAccount> = new BehaviorSubject(null);
-    private _currentAccountValid: BehaviorSubject<AccountStatus> = new BehaviorSubject(AccountStatus.Invalid);
-    private _currentAccountInvalidError: BehaviorSubject<string> = new BehaviorSubject(null);
     private _accountLoaded = new BehaviorSubject<boolean>(false);
     private _currentAccountId = new BehaviorSubject<string>(null);
     private _accounts = new BehaviorSubject<List<BatchAccount>>(List([]));
@@ -72,27 +65,24 @@ export class BatchAccountService {
             map(([a, b]) => List(b.concat(a))),
         );
 
-        this._currentAccount.subscribe((selection) => {
-            if (selection) {
-                const { account } = selection;
-                localStorage.setItem(Constants.localStorageKey.selectedAccountId, account.id);
-                this.validateCurrentAccount();
-            } else {
-                this._currentAccountValid.next(AccountStatus.Invalid);
-                this._currentAccountInvalidError.next(null);
-            }
-        });
-
         this.currentAccountId = this._currentAccountId.asObservable();
 
         this.currentAccount = this._currentAccountId.pipe(
-            flatMap((id) => {
-                return this._currentAccount.pipe(
-                    filter(x => x && id && x.account && x.account.id.toLowerCase() === id.toLowerCase()),
-                    map(x => x && x.account),
-                );
+            tap((id) => {
+                // localStorage.setItem(Constants.localStorageKey.selectedAccountId, id);
             }),
+            flatMap((id) => {
+                console.log("Get by id", id);
+                return this.getFromCache(id);
+            }),
+            tap(x => console.log("X?", x)),
+            filter(x => Boolean(x)),
+            shareReplay(1),
         );
+    }
+
+    public ngOnDestroy() {
+        this._currentAccountId.complete();
     }
 
     public get accountFavorites(): Observable<List<BatchAccount>> {
@@ -100,11 +90,7 @@ export class BatchAccountService {
     }
 
     public get currentAccountValid(): Observable<AccountStatus> {
-        return this._currentAccountValid.asObservable();
-    }
-
-    public get currentAccountInvalidError(): Observable<string> {
-        return this._currentAccountInvalidError.asObservable();
+        return of(AccountStatus.Valid);
     }
 
     public selectAccount(accountId: string) {
@@ -126,28 +112,15 @@ export class BatchAccountService {
      */
     public refresh(): Observable<any> {
         const accountId = this._currentAccountId.value;
-        this._currentAccountValid.next(AccountStatus.Loading);
-        this._currentAccountInvalidError.next(null);
 
-        const obs = this.get(accountId);
         DataCacheTracker.clearAllCaches(this._cache);
-
-        obs.subscribe({
-            next: (account) => {
-                this._currentAccount.next({ account });
+        return this.get(accountId).pipe(
+            tap(() => {
                 if (!this._accountLoaded.value) {
                     this._accountLoaded.next(true);
                 }
-                this._currentAccountValid.next(AccountStatus.Valid);
-            },
-            error: (error) => {
-                log.error(`Error Loading account ${accountId}`, error);
-                this._currentAccountValid.next(AccountStatus.Invalid);
-                this._currentAccountInvalidError.next(error && error.message);
-            },
-        });
-
-        return obs;
+            }),
+        );
     }
 
     public view(): EntityView<BatchAccount, { id: string }> {
@@ -207,7 +180,9 @@ export class BatchAccountService {
         );
     }
 
-    public get(accountId: string): Observable<BatchAccount> {
+    public get(accountId: string): Observable<BatchAccount | null> {
+        if (!accountId) { return of(null); }
+
         if (accountId.startsWith(LOCAL_BATCH_ACCOUNT_PREFIX)) {
             return this.localBatchAccountService.get(accountId);
         } else {
@@ -215,7 +190,8 @@ export class BatchAccountService {
         }
     }
 
-    public getFromCache(accountId: string): Observable<BatchAccount> {
+    public getFromCache(accountId: string): Observable<BatchAccount | null> {
+        if (!accountId) { return of(null); }
         if (accountId.startsWith(LOCAL_BATCH_ACCOUNT_PREFIX)) {
             return this.localBatchAccountService.get(accountId);
         } else {
@@ -279,11 +255,6 @@ export class BatchAccountService {
         const account = favorites.filter(x => x.id === accountId).first();
 
         return Boolean(account);
-    }
-
-    public validateCurrentAccount() {
-        this._currentAccountValid.next(AccountStatus.Valid);
-        this._currentAccountInvalidError.next(null);
     }
 
     public loadInitialData() {
