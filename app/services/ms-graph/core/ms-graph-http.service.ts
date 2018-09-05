@@ -36,7 +36,7 @@ export class MsGraphHttpService extends HttpService {
                 if (!(account instanceof ArmBatchAccount)) {
                     throw new ServerError({
                         code: "LocalBatchAccount",
-                        message: "Cannot use this functionality with a local batch account",
+                        message: "Cannot use GRAPH with a local batch account",
                         status: 406,
                     });
                 }

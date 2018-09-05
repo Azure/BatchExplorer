@@ -47,7 +47,7 @@ export class AppInsightsApiService {
                 if (!(account instanceof ArmBatchAccount)) {
                     throw new ServerError({
                         code: "LocalBatchAccount",
-                        message: "Cannot use this functionality with a local batch account",
+                        message: "Cannot use APP INSIGHTS functionality with a local batch account",
                         status: 406,
                     });
                 }

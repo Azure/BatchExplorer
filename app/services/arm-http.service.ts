@@ -35,7 +35,10 @@ export class ArmHttpService {
                 if (!(account instanceof ArmBatchAccount)) {
                     throw new ServerError({
                         code: "LocalBatchAccount",
-                        message: "Cannot use this functionality with a local batch account",
+                        message: "Cannot use ARM functionalities with a local batch account",
+                        details: [
+                            {key: "Url", value: uri},
+                        ],
                         status: 406,
                     });
                 }

@@ -67,8 +67,9 @@ export class AzureBatchHttpService extends HttpService {
 
     private _setupRequestForSharedKey(account: LocalBatchAccount, method: string, uri: string, options) {
         const sharedKey = new BatchSharedKeyCredentials(account.name, account.key);
-        return from(sharedKey.signRequest(method, uri, options));
+        return from(sharedKey.signRequest(method, uri, options)).pipe(map(() => options));
     }
+
     private _addApiVersion(uri: string, options: HttpRequestOptions): HttpRequestOptions {
         if (!(options.params instanceof HttpParams)) {
             options.params = new HttpParams({ fromObject: options.params });

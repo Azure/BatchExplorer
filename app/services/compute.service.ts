@@ -44,7 +44,7 @@ export class ComputeService {
                 if (!(account instanceof ArmBatchAccount)) {
                     throw new ServerError({
                         code: "LocalBatchAccount",
-                        message: "Cannot use this functionality with a local batch account",
+                        message: "Cannot get quotas for a local batch account",
                         status: 406,
                     });
                 }

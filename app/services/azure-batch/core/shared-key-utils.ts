@@ -85,9 +85,7 @@ export class BatchSharedKeyCredentials {
         const encoder = new TextEncoder();
         const key = await this.signer.getKey(this.key);
         const buffer = await this.signer.sign(key, encoder.encode(stringToSign));
-        console.log("Sign", stringToSign);
         const signature = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
-        console.log("Sig", this.name, signature);
         // Add authrization header
         headers = headers.set("Authorization", `SharedKey ${this.name}:${signature}`);
 
