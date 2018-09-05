@@ -30,6 +30,7 @@ bl-activity-monitor-item {
             cursor: default;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             padding: 10px;
             height: 40px;
 
@@ -37,8 +38,7 @@ bl-activity-monitor-item {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                flex: 1;
-                flex-basis: 20px;
+                flex-basis: 3%;
 
                 i {
                     font-size: 11pt;
@@ -51,17 +51,20 @@ bl-activity-monitor-item {
             }
 
             .activity-info {
-                flex: 40;
+                flex-basis: 90%;
+                min-width: 0;
 
                 .activity-info-upper {
                     display: flex;
                     justify-content: flex-start;
 
-                    bl-clickable {
-                        display: flex;
-                        justify-content: flex-end;
-                        align-items: center;
-                        flex-basis: 90px;
+                    .name {
+                        min-width: 0;
+                        text-align: left;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        padding-right: 5px;
                     }
                 }
             }

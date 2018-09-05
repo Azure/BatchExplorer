@@ -93,7 +93,22 @@ describe("ActivityMonitorItemComponent", () => {
     it("should display the activity name", () => {
         const nameEl = de.query(By.css(".name"));
 
-        expect(nameEl.nativeElement.textContent).toContain("Test activity");
+        expect(nameEl.nativeElement.textContent).toBe("Test activity");
+        expect(nameEl.nativeElement.offsetWidth).toEqual(nameEl.nativeElement.scrollWidth);
+    });
+
+    it("should truncate the activity name if it is too long to fit", () => {
+        testComponent.activity = new MockActivity(
+            "loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo" +
+            "ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo" +
+            "ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo" +
+            "oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong name",
+            new BehaviorSubject(0),
+        );
+        fixture.detectChanges();
+
+        const nameEl = de.query(By.css(".name"));
+        expect(nameEl.nativeElement.offsetWidth < nameEl.nativeElement.scrollWidth).toBe(true);
     });
 
     it("should display the percentage if an activity is emitting progress", () => {
@@ -101,16 +116,16 @@ describe("ActivityMonitorItemComponent", () => {
         testComponent.activity = new MockActivity("Test activity", subj);
         fixture.detectChanges();
 
-        const nameEl = de.query(By.css(".name"));
+        const nameEl = de.query(By.css(".progress-percent"));
 
         expect(component.progress).toBe(0);
-        expect(nameEl.nativeElement.textContent).toContain("(0%)");
+        expect(nameEl.nativeElement.textContent).toBe("(0%)");
 
         subj.next(50);
         fixture.detectChanges();
 
         expect(component.progress).toBe(50);
-        expect(nameEl.nativeElement.textContent).toContain("(50%)");
+        expect(nameEl.nativeElement.textContent).toBe("(50%)");
     });
 
     it("should update the status of an activity", () => {

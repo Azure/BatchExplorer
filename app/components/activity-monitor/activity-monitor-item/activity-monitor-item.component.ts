@@ -31,6 +31,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     @Output() public focusedActionChange = new EventEmitter<number>();
 
     public progress: number;
+    public progressString: string;
     public statusOptions = ActivityStatus;
     public showSubactivities: boolean;
     public subactivitiesShown: number;
@@ -40,7 +41,6 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     private _status: ActivityStatus;
     private _flashId: number;
     private _subs: Subscription[];
-    private _progressString: string;
 
     constructor(
         private changeDetector: ChangeDetectorRef,
@@ -80,14 +80,6 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
 
     public trackByFn(index, activity: Activity) {
         return activity.id;
-    }
-
-    public prettyPrint() {
-        if (this.activity.name.length < 200) {
-            return `${this.activity.name} ${this._progressString}`;
-        } else {
-            return `${this.activity.name.slice(0, 200)}... ${this._progressString}`;
-        }
     }
 
     /* Template Getters */
@@ -155,7 +147,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
         }));
         this._subs.push(this.activity.progress.subscribe((progress) => {
             this.progress = progress;
-            this._progressString = `(${Math.floor(progress)}%)`;
+            this.progressString = `(${Math.floor(progress)}%)`;
             this.changeDetector.markForCheck();
         }));
     }
