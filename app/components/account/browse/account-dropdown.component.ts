@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { BatchAccount } from "app/models";
-import { BatchAccountService, AccountStatus } from "app/services";
+import { AccountStatus, BatchAccountService } from "app/services";
 import { ArmResourceUtils } from "app/utils";
 import { Subscription } from "rxjs";
 

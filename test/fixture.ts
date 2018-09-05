@@ -4,8 +4,8 @@ import * as moment from "moment";
 import { PinnedEntityType } from "@batch-flask/core";
 import { File, Workspace } from "@batch-flask/ui";
 import {
-    BatchAccount,
     ApplicationPackage,
+    BatchAccount,
     BatchApplication,
     BlobContainer,
     Job,

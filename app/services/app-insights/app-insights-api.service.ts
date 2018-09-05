@@ -2,12 +2,12 @@ import { Location } from "@angular/common";
 import { Injectable } from "@angular/core";
 import { Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response } from "@angular/http";
 import { AccessToken, RetryableHttpCode, ServerError } from "@batch-flask/core";
-import { BatchAccountService } from "../batch-account.service";
 import { AdalService } from "app/services/adal";
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { Constants } from "app/utils";
 import { Observable, throwError, timer } from "rxjs";
 import { catchError, flatMap, mergeMap, retryWhen, share, take } from "rxjs/operators";
+import { BatchAccountService } from "../batch-account.service";
 
 function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
     const options = original || new RequestOptions();

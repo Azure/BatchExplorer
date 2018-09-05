@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { EntityView, ListView, ServerError, autobind } from "@batch-flask/core";
 import { BatchAccount, BatchApplication, Job, Pool } from "app/models";
 import {
-    AccountParams, BatchAccountService, ApplicationListParams, ApplicationService,
+    AccountParams, ApplicationListParams, ApplicationService, BatchAccountService,
     InsightsMetricsService, JobListParams, JobService, PoolListParams, PoolService,
 } from "app/services";
 import { Subscription } from "rxjs";
