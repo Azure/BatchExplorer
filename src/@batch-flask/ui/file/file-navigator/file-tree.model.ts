@@ -1,11 +1,15 @@
 import { File } from "@batch-flask/ui/file/file.model";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
-import { CloudPathUtils } from "@batch-flask/utils";
+import { CloudPathUtils, exists } from "@batch-flask/utils";
 import { List } from "immutable";
 import { fileToTreeNode, generateDir, sortTreeNodes } from "./helper";
 
 export interface FileTreeNodeParams {
     path: string;
+    /**
+     * Original path before normalizing if different
+     */
+    originalPath?: string;
     isDirectory: boolean;
     children?: Map<string, FileTreeNode>;
     loadingStatus?: LoadingStatus;
@@ -17,6 +21,8 @@ export interface FileTreeNodeParams {
 
 export class FileTreeNode {
     public path: string;
+    // Original path before normalizing backslash
+    public originalPath: string;
     public isDirectory: boolean;
     public children: Map<string, FileTreeNode>;
     public loadingStatus: LoadingStatus;
@@ -36,6 +42,7 @@ export class FileTreeNode {
 
     constructor(params: FileTreeNodeParams) {
         this.path = params.path;
+        this.originalPath = exists(params.originalPath) ? params.originalPath :  params.path;
         this.isDirectory = params.isDirectory;
         this.children = params.children || new Map();
         this.loadingStatus = params.loadingStatus || (this.isDirectory ? LoadingStatus.Loading : LoadingStatus.Ready);
