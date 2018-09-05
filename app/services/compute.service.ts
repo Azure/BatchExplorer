@@ -4,7 +4,7 @@ import { Observable, empty } from "rxjs";
 
 import { Resource } from "app/models";
 import { expand, flatMap, map, reduce, share } from "rxjs/operators";
-import { AccountService } from "./account.service";
+import { AccountService } from "./batch-account.service";
 import { ArmHttpService } from "./arm-http.service";
 import { AzureHttpService } from "./azure-http.service";
 import { SubscriptionService } from "./subscription.service";

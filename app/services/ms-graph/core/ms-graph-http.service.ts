@@ -1,8 +1,8 @@
 import { HttpHandler } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { HttpService, ServerError } from "@batch-flask/core";
-import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
+import { AccountService } from "app/services/batch-account.service";
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { AADUser } from "client/core/aad/adal/aad-user";
 import { Observable, throwError } from "rxjs";

@@ -6,7 +6,7 @@ import { AccountResource, BatchSoftwareLicense, Pool, RateCardMeter } from "app/
 import { BatchPricing, OSPricing, OsType, SoftwarePricing, VMPrices } from "app/services/pricing";
 import { PoolPrice, PoolPriceOptions, PoolUtils, log } from "app/utils";
 import { catchError, filter, flatMap, map, share, take } from "rxjs/operators";
-import { AccountService } from "./account.service";
+import { AccountService } from "./batch-account.service";
 import { ArmHttpService } from "./arm-http.service";
 import { LocalFileStorage } from "./local-file-storage.service";
 import { VmSizeService } from "./vm-size.service";

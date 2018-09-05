@@ -1,5 +1,5 @@
 export * from "./azure-batch";
-export * from "./account.service";
+export * from "./batch-account.service";
 export * from "./app-translation-loader.service";
 export * from "./app-locale.service";
 export * from "./authorization-http";

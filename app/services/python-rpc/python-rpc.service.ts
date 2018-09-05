@@ -1,6 +1,4 @@
 import { Injectable, NgZone } from "@angular/core";
-import { AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
-
 import { ServerError } from "@batch-flask/core";
 import { ElectronRemote } from "@batch-flask/ui";
 import { AccountResource } from "app/models";
@@ -8,9 +6,10 @@ import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } fro
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { SecureUtils, log } from "app/utils";
 import { PythonRpcServerProcess } from "client/python-process";
+import { AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
 import { catchError, first, flatMap, share } from "rxjs/operators";
-import { AccountService } from "../account.service";
 import { AdalService } from "../adal";
+import { AccountService } from "../batch-account.service";
 
 @Injectable()
 export class PythonRpcService {

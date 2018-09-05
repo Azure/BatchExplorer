@@ -11,7 +11,7 @@ import { ApplicationPackage, BatchApplication } from "app/models";
 import { Constants } from "app/utils";
 import { Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
-import { AccountService } from "./account.service";
+import { AccountService } from "./batch-account.service";
 import { ArmHttpService } from "./arm-http.service";
 import {
     ArmEntityGetter,

@@ -4,7 +4,7 @@ import { StringUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, combineLatest } from "rxjs";
 import { filter, map, share, shareReplay, take } from "rxjs/operators";
-import { AccountService } from "./account.service";
+import { AccountService } from "./batch-account.service";
 import { ArmHttpService } from "./arm-http.service";
 import { computeUrl } from "./compute.service";
 import { GithubDataService } from "./github-data";

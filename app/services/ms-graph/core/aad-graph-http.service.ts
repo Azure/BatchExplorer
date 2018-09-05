@@ -5,8 +5,8 @@ import { Observable, throwError } from "rxjs";
 
 import { HttpRequestOptions, HttpService, ServerError } from "@batch-flask/core";
 import { UrlUtils } from "@batch-flask/utils";
-import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
+import { AccountService } from "app/services/batch-account.service";
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { AADUser } from "client/core/aad/adal/aad-user";
 import { Constants } from "common";

@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
 import { StorageKeys } from "app/models";
-import { AccountService } from "app/services/account.service";
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { ArmResourceUtils } from "app/utils";
 import { Observable, throwError } from "rxjs";
 import { first, flatMap, map, share } from "rxjs/operators";
+import { AccountService } from "../batch-account.service";
 import { BlobStorageClientProxy } from "./blob-storage-client-proxy";
 import { StorageAccountKeysService } from "./storage-account-keys.service";
 import { StorageClientProxyFactory } from "./storage-client-proxy-factory";

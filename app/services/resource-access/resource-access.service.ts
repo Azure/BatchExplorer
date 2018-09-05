@@ -7,8 +7,8 @@ import { ArmListGetter } from "app/services/core";
 import { List } from "immutable";
 import { Observable, of } from "rxjs";
 import { flatMap, map, share, shareReplay, take } from "rxjs/operators";
-import { AccountService } from "../account.service";
 import { ArmHttpService } from "../arm-http.service";
+import { AccountService } from "../batch-account.service";
 
 interface RoleAssignmentListParams {
     resourceId: string;

@@ -5,7 +5,7 @@ import { Constants } from "app/utils";
 import { BatchExplorerLink, BatchExplorerLinkAction } from "common";
 import * as decodeUriComponent from "decode-uri-component";
 import { URLSearchParams } from "url";
-import { AccountService } from "./account.service";
+import { AccountService } from "./batch-account.service";
 
 export interface GotoOptions {
     /**

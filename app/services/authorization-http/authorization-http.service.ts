@@ -4,7 +4,7 @@ import { Observable, empty, of } from "rxjs";
 
 import { Permission } from "@batch-flask/ui/permission";
 import { expand, flatMap, map, reduce, shareReplay, take } from "rxjs/operators";
-import { AccountService } from "../account.service";
+import { AccountService } from "../batch-account.service";
 import { ArmHttpService } from "../arm-http.service";
 
 export interface RoleDefinitionPermission {

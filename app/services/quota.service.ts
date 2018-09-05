@@ -5,7 +5,7 @@ import { FilterBuilder } from "@batch-flask/core";
 import { AccountResource, BatchQuotas, JobState, Pool } from "app/models";
 import { List } from "immutable";
 import { flatMap, map, shareReplay } from "rxjs/operators";
-import { AccountService } from "./account.service";
+import { AccountService } from "./batch-account.service";
 import { ApplicationService } from "./application.service";
 import { JobService } from "./azure-batch/job";
 import { PoolService } from "./azure-batch/pool";

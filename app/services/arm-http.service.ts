@@ -4,7 +4,7 @@ import {
 } from "@angular/http";
 import { Observable } from "rxjs";
 import { first, flatMap, share } from "rxjs/operators";
-import { AccountService } from "./account.service";
+import { AccountService } from "./batch-account.service";
 import { AdalService } from "./adal";
 import { AzureHttpService } from "./azure-http.service";
 

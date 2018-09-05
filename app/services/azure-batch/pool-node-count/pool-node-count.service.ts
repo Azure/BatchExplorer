@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { Model, Prop, Record } from "@batch-flask/core";
-import { AccountService } from "app/services/account.service";
+import { AccountService } from "app/services/batch-account.service";
 import { BehaviorSubject, Observable, combineLatest, empty, timer } from "rxjs";
 import { expand, flatMap, map, publishReplay, reduce, refCount, share, tap } from "rxjs/operators";
 import { AzureBatchHttpService, BatchListResponse } from "../core";
