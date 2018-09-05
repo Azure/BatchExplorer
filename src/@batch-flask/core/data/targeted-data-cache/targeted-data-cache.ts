@@ -1,3 +1,4 @@
+import { Record } from "@batch-flask/core/record";
 import { DataCache } from "../data-cache";
 import { PollService } from "../poll";
 
@@ -12,7 +13,7 @@ const defaultOptions: TargetedDataCacheOptions<any> = {
     key: (params) => JSON.stringify(params),
 };
 
-export class TargetedDataCache<TParams, TEntity> {
+export class TargetedDataCache<TParams, TEntity extends Record<any>> {
     private _caches = new Map<string, DataCache<TEntity>>();
     private _options: TargetedDataCacheOptions<TParams>;
 

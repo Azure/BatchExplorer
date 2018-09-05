@@ -84,9 +84,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             } else {
                 const config = value.virtualMachineConfiguration;
                 const agentId: string = config && config.nodeAgentSKUId;
-                this._renderingSkuSelected = config && config.imageReference
-                    && config.imageReference.publisher === "batch";
-
+                this._renderingSkuSelected = this._canShowLicensePicker(config);
                 if (agentId && agentId.toLowerCase().indexOf("windows") !== -1) {
                     this.osType = "windows";
                 } else {
@@ -171,6 +169,12 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
     public get virtualMachineConfiguration() {
         return this._osControl.value && this._osControl.value.virtualMachineConfiguration;
+    }
+
+    private _canShowLicensePicker(config: any): boolean {
+        if (!config || !config.imageReference) { return false; }
+        return config.imageReference.publisher === "batch"
+            || Boolean(config.imageReference.virtualMachineImageId);
     }
 
     private _updateEstimatedPrice() {

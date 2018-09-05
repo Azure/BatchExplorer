@@ -1,16 +1,18 @@
 import { HttpParams } from "@angular/common/http";
 import { Type } from "@angular/core";
-import { ContinuationToken, HttpRequestOptions, ListGetter, ListGetterConfig, ListOptions } from "@batch-flask/core";
+import {
+    ContinuationToken, HttpRequestOptions, ListGetter, ListGetterConfig, ListOptions, Record,
+} from "@batch-flask/core";
 import { Observable } from "rxjs";
 import { map, share } from "rxjs/operators";
 import { AADGraphHttpService } from "./aad-graph-http.service";
 
-export interface AADGraphListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
+export interface AADGraphListConfig<TEntity extends Record<any>, TParams> extends ListGetterConfig<TEntity, TParams> {
     uri: (params: TParams, options: any) => string;
     filter?: (item: TEntity) => boolean;
 }
 
-export class AADGraphListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams> {
+export class AADGraphListGetter<TEntity extends Record<any>, TParams> extends ListGetter<TEntity, TParams> {
     private _filter: (item: TEntity) => boolean;
     private _provideUri: (params: TParams, options: any) => string;
 

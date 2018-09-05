@@ -1,8 +1,8 @@
-import { AsyncSubject, BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
-
+import { Record } from "@batch-flask/core/record";
 import { ServerError } from "@batch-flask/core/server-error";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { ObjectUtils } from "@batch-flask/utils";
+import { AsyncSubject, BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
 import { DataCache } from "./data-cache";
 import { PollObservable } from "./poll";
 import { ProxyOptions } from "./proxy-options";
@@ -13,7 +13,7 @@ export interface FetchDataOptions {
     error?: (error: any) => void;
 }
 
-export interface GenericViewConfig<TEntity, TParams> {
+export interface GenericViewConfig<TEntity extends Record<any>, TParams> {
     /**
      *  Method that return the cache given the params.
      * This allow the use of targeted data cache which depends on some params.
@@ -21,7 +21,7 @@ export interface GenericViewConfig<TEntity, TParams> {
     cache: (params: TParams) => DataCache<TEntity>;
 }
 
-export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOptions> {
+export abstract class GenericView<TEntity extends Record<any>, TParams, TOptions extends ProxyOptions> {
     /**
      * Status that keep track of any loading
      */

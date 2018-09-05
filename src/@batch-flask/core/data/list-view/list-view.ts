@@ -1,5 +1,6 @@
 import { FilterMatcher } from "@batch-flask/core/filter-builder";
-import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
+import { LoadingStatus } from "@batch-flask/core/loading-status";
+import { Record } from "@batch-flask/core/record";
 import { log } from "@batch-flask/utils";
 import { List, OrderedSet } from "immutable";
 import { BehaviorSubject, Observable, combineLatest, of } from "rxjs";
@@ -8,12 +9,12 @@ import { GenericView, GenericViewConfig } from "../generic-view";
 import { ListGetter, ListResponse } from "../list-getter";
 import { ContinuationToken, ListOptions, ListOptionsAttributes } from "../list-options";
 
-export interface ListViewConfig<TEntity, TParams> extends GenericViewConfig<TEntity, TParams> {
+export interface ListViewConfig<TEntity extends Record<any>, TParams> extends GenericViewConfig<TEntity, TParams> {
     getter: ListGetter<TEntity, TParams>;
     initialOptions?: ListOptions | ListOptionsAttributes;
 }
 
-export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, ListOptions> {
+export class ListView<TEntity extends Record<any>, TParams> extends GenericView<TEntity, TParams, ListOptions> {
     public readonly items: Observable<List<TEntity>>;
     public readonly hasMore: Observable<boolean>;
 
@@ -38,35 +39,35 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         this.items = combineLatest(
             this._itemKeys.pipe(distinctUntilChanged()),
             this._prepend.pipe(distinctUntilChanged())).pipe(
-            map(([itemKeys, prependKeys]) => {
-                prependKeys = prependKeys.filter(x => !itemKeys.has(x)) as any;
+                map(([itemKeys, prependKeys]) => {
+                    prependKeys = prependKeys.filter(x => !itemKeys.has(x)) as any;
 
-                const allKeys = prependKeys.concat(itemKeys.toJS());
+                    const allKeys = prependKeys.concat(itemKeys.toJS());
 
-                return this.cache.items.pipe(map((items) => {
-                    let keys = allKeys;
-                    if (this._options.maxItems) {
-                        keys = allKeys.slice(0, this._options.maxItems);
-                    }
-                    return List<TEntity>(keys.map((x) => {
-                        const item = items.get(x);
-                        if (!item && prependKeys.has(x)) {
-                            return new this._getter.type({ [this.cache.uniqueField]: x });
+                    return this.cache.items.pipe(map((items) => {
+                        let keys = allKeys;
+                        if (this._options.maxItems) {
+                            keys = allKeys.slice(0, this._options.maxItems);
                         }
-                        return item;
-                    }).filter((item) => {
-                        const matcher = new FilterMatcher<TEntity>();
-                        if (this._options.filter && prependKeys.has(item[this.cache.uniqueField])) {
-                            return matcher.test(this._options.filter, item);
-                        }
-                        return true;
+                        return List<TEntity>(keys.map((x) => {
+                            const item = items.get(x);
+                            if (!item && prependKeys.has(x)) {
+                                return new this._getter.type({ [this.cache.uniqueField]: x });
+                            }
+                            return item;
+                        }).filter((item) => {
+                            const matcher = new FilterMatcher<TEntity>();
+                            if (this._options.filter && prependKeys.has(item[this.cache.uniqueField])) {
+                                return matcher.test(this._options.filter, item);
+                            }
+                            return true;
+                        }));
                     }));
-                }));
-            }),
-            switchAll(),
-            distinctUntilChanged((a, b) => a.equals(b)),
-            takeUntil(this.isDisposed),
-        );
+                }),
+                switchAll(),
+                distinctUntilChanged((a, b) => a.equals(b)),
+                takeUntil(this.isDisposed),
+            );
         this.hasMore = this._hasMore.asObservable();
 
         this.deleted.subscribe((deletedKey) => {

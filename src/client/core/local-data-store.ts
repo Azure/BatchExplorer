@@ -47,6 +47,10 @@ export class LocalDataStore extends InMemoryDataStore implements DataStore {
     }
 
     private async _save(): Promise<void> {
-        await this.localFileStorage.set(fileKey, this._data);
+        const obj = {};
+        for (const [key, value] of this._data.entries()) {
+            obj[key] = value;
+        }
+        await this.localFileStorage.set(fileKey, obj);
     }
 }

@@ -1,19 +1,28 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component,
-    Input, OnDestroy, OnInit, ViewChild, forwardRef,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+     Component,
+    Input,
+     OnChanges,
+     OnDestroy,
+      OnInit,
+      forwardRef,
 } from "@angular/core";
-import { Observable, Subscription } from "rxjs";
-
-import { TaskListDisplayComponent } from "./display";
-
 import { ActivatedRoute } from "@angular/router";
-import { Filter, ListView,  autobind } from "@batch-flask/core";
+import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
+import { QuickListItemStatus } from "@batch-flask/ui";
+import { AbstractListBaseConfig } from "@batch-flask/ui/abstract-list";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { Task } from "app/models";
+import { Task, TaskState } from "app/models";
+import { FailureInfoDecorator } from "app/models/decorators";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
 import { ComponentUtils } from "app/utils";
+import { List } from "immutable";
+import { Observable, Subscription } from "rxjs";
 import { TaskCommands } from "../action";
+
+import "./task-list.scss";
 
 @Component({
     selector: "bl-task-list",
@@ -24,24 +33,31 @@ import { TaskCommands } from "../action";
     }],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskListComponent extends ListBaseComponent implements OnInit, OnDestroy {
+export class TaskListComponent extends ListBaseComponent implements OnInit, OnChanges, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
-    @Input() public set jobId(value: string) {
-        this._jobId = (value && value.trim());
-        this.refresh();
-    }
-    public get jobId() { return this._jobId; }
-
-    @ViewChild(TaskListDisplayComponent)
-    public list: TaskListDisplayComponent;
+    @Input() public jobId: string;
 
     public data: ListView<Task, TaskListParams>;
 
-    private _jobId: string;
+    public listConfig: AbstractListBaseConfig<Task> = {
+        sorting: {
+            id: true,
+            state: true,
+            runtime: true,
+            creationTime: true,
+            startTime: (task) => task.executionInfo && task.executionInfo.startTime,
+            endTime: (task) => task.executionInfo && task.executionInfo.endTime,
+            exitCode: (task) => task.executionInfo && task.executionInfo.exitCode,
+        },
+    };
+
+    public tasks: List<Task> = List([]);
+
     private _baseOptions = {
         select: "id,state,creationTime,lastModified,executionInfo",
     };
+
     private _onTaskAddedSub: Subscription;
 
     constructor(
@@ -58,9 +74,22 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
             this.changeDetector.markForCheck();
         });
 
+        this.data.items.subscribe((items) => {
+            this.tasks = items;
+            this.changeDetector.markForCheck();
+        });
+
         this._onTaskAddedSub = taskService.onTaskAdded.subscribe((item: TaskParams) => {
             this.data.loadNewItem(taskService.get(item.jobId, item.id));
         });
+    }
+
+    public ngOnChanges(changes) {
+        if (changes.jobId) {
+            this.commands.params = { jobId: this.jobId };
+            this.data.params = { jobId: this.jobId };
+            this.data.refresh();
+        }
     }
 
     public ngOnInit() {
@@ -97,5 +126,19 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnDe
 
     public deleteSelection(selection: ListSelection) {
         this.commands.delete.executeFromSelection(selection).subscribe();
+    }
+
+    public taskStatus(task: Task): QuickListItemStatus {
+        if (task.state === TaskState.completed && task.executionInfo.exitCode !== 0) {
+            return QuickListItemStatus.warning;
+        }
+    }
+
+    public taskStatusText(task: Task): string {
+        if (task.executionInfo && task.executionInfo.failureInfo) {
+            return new FailureInfoDecorator(task.executionInfo.failureInfo).summary;
+        } else if (task.executionInfo && task.executionInfo.exitCode !== 0) {
+            return `Task failed with exitCode:  ${task.executionInfo.exitCode}`;
+        }
     }
 }

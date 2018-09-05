@@ -144,7 +144,6 @@ export class JobCommands extends EntityCommands<Job> {
             confirm: false,
             multiple: false,
         });
-
         this.commands = [
             this.edit,
             this.addTask,

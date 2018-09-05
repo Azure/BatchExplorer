@@ -1,7 +1,6 @@
 import { SimpleChange } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-
-import { ListView } from "@batch-flask/core";
+import { ListView, Record } from "@batch-flask/core";
 
 export class ComponentUtils {
     /**
@@ -35,7 +34,7 @@ export class ComponentUtils {
      * @param route Angular Activated Route
      * @param view ListView used in the componenent
      */
-    public static setActiveItem<TEntity>(route: ActivatedRoute, view: ListView<TEntity, any>) {
+    public static setActiveItem<TEntity extends Record<any>>(route: ActivatedRoute, view: ListView<TEntity, any>) {
         route.url.subscribe((url) => {
             const child = route.snapshot.firstChild;
             if (child) {

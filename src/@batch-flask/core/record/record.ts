@@ -11,18 +11,20 @@ export class Record<TInput> {
     public _original: Partial<TInput>;
     private _map: Map<string, any> = Map({});
     private _defaultValues = {};
+    // Stringify version of the properties to use to compare efficiently
+    private _originalStr: string;
     // @ts-ignore
     private _initialized = false;
     // @ts-ignore
     private _keys: Set<string>;
-
     constructor(data: Partial<TInput> = {}) {
         this._original = data;
+        this._originalStr = JSON.stringify(data);
         this._init(data);
     }
 
     public equals(other: this) {
-        return this === other || this._map.equals(other._map);
+        return this === other || this._originalStr === other._originalStr;
     }
 
     public get(key: string) {
