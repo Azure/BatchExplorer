@@ -67,12 +67,11 @@ export class BatchAccountService implements OnDestroy {
             shareReplay(1),
         );
 
-        this.accountFavorites = combineLatest(this._accountFavorites, this.accounts).pipe(
-            map(([favourites, accounts]) => {
-                return List<BatchAccount>(favourites
-                    .map(x => accounts.filter(account => account.id === x.id).first())
-                    .filter(x => Boolean(x)));
+        this.accountFavorites = this._accountFavorites.pipe(
+            flatMap((favourites) => {
+                return forkJoin(...favourites.map(x => this.getFromCache(x.id)).toArray());
             }),
+            map((items: BatchAccount[]) => List(items.filter(x => Boolean(x)))),
             shareReplay(1),
         );
     }
