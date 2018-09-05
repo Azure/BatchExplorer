@@ -1,1 +1,1 @@
-export * from "./batch-account-create.component";
+export * from "./add-local-batch-account.component";

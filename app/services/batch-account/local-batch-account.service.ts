@@ -54,6 +54,12 @@ export class LocalBatchAccountService implements OnDestroy {
         return match[1];
     }
 
+    public create(account: LocalBatchAccount) {
+        const newAccounts = this._accounts.value.push(account);
+        this._accounts.next(List(newAccounts));
+        return this._save();
+    }
+
     public delete(id: string) {
         const newAccounts = this._accounts.value.filter(x => x.id !== id);
         this._accounts.next(List(newAccounts));

@@ -4,7 +4,7 @@ import { SidebarManager } from "@batch-flask/ui";
 import { Subscription } from "rxjs";
 
 import { BatchAccountService } from "app/services";
-import { BatchAccountCreateComponent } from "../action/add";
+import { BatchAccountCreateComponent } from "../action/create";
 
 @Component({
     selector: "bl-account-details-home",

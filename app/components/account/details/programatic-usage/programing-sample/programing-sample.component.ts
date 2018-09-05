@@ -52,8 +52,7 @@ export class ProgramingSampleComponent implements OnChanges {
     }
 
     private get accountUrl() {
-        const url = this.account && this.account.url;
-        return url ? `https://${url}` : "";
+        return this.account && this.account.url;
     }
 
     private _updateContent() {
