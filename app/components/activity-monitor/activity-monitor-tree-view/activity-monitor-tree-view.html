@@ -1,7 +1,7 @@
 <div class="tree-view-header">
     <bl-clickable class="name">{{name}}</bl-clickable>
 </div>
-<bl-focus-section *ngIf="expanded"
+<bl-focus-section *ngIf="activities.length > 0"
     class="tree-view-content"
     (focus)="setFocus(true)"
     (blur)="setFocus(false)"
@@ -10,17 +10,22 @@
 
     <div *ngIf="error" class="tree-view-error">{{error.message}}</div>
     <div class="tree-rows-container">
-        <bl-activity-monitor-item *ngFor="let treeRow of treeRows; let i = index; trackBy: treeRowTrackBy"
-            [activity]="treeRow.activity"
-            [focused]="isFocused && focusedIndex == i"
-            [hovered]="hoveredIndex == i"
-            [indent]="treeRow.indent"
-            [expanded]="isExpanded(treeRow.id)"
-            [(focusedAction)]="focusedAction"
-            (click)="focusRow(treeRow)"
-            (mouseover)="hoverRow(treeRow)"
-            (mouseleave)="clearHover()"
-            (toggleRowExpand)="toggleRowExpand(treeRow)">
-        </bl-activity-monitor-item>
+        <bl-virtual-scroll [items]="treeRows" [childHeight]="40" (update)="updateViewPortItems($event)" (change)="onViewScroll($event)">
+            <bl-activity-monitor-item *ngFor="let row of viewPortRows; let i = index; trackBy: treeRowTrackBy"
+                [activity]="row.activity"
+                [focused]="isFocused && focusedIndex === i + viewPortStart"
+                [hovered]="hoveredIndex === i + viewPortStart"
+                [indent]="row.indent"
+                [expanded]="isExpanded(row.id)"
+                [(focusedAction)]="focusedAction"
+                (click)="focusRow(row)"
+                (mouseover)="hoverRow(row)"
+                (mouseleave)="clearHover()"
+                (toggleRowExpand)="toggleRowExpand(row)">
+            </bl-activity-monitor-item>
+        </bl-virtual-scroll>
     </div>
 </bl-focus-section>
+<div *ngIf="activities.length === 0">
+    No activities to show
+</div>

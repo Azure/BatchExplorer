@@ -26,13 +26,12 @@ bl-activity-monitor {
         display: flex;
         flex-direction: column;
         width: 100%;
-        overflow-y: scroll;
-        overflow-x: hidden;
+        height: $activity-monitor-content-height;
 
         > .running-activities, > .completed-activities {
             margin: 0 10px;
-            min-height: 100px;
-            width: 100%;
+            width: calc(100% - 20px);
+            height: 50%;
 
             .section-header {
                 height: $activity-monitor-label-height;
@@ -48,6 +47,10 @@ bl-activity-monitor {
                     font-weight: 700;
                     display: inline-block;
                 }
+            }
+
+            .activity-list {
+                height: 100%;
             }
         }
     }

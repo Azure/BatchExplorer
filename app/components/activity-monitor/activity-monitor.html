@@ -13,11 +13,7 @@
             <bl-activity-monitor-tree-view
                 [activities]="runningActivities"
                 name="Running Activities"
-                (focus)="focusRunning()"
             ></bl-activity-monitor-tree-view>
-            <div class="single-activity" *ngIf="runningActivities.length === 0">
-                No Running Activities to Show
-            </div>
         </div>
     </div>
     <div class="completed-activities">
@@ -25,11 +21,7 @@
             <bl-activity-monitor-tree-view
                 [activities]="pastActivities"
                 name="History"
-                (focus)="focusHistory()"
             ></bl-activity-monitor-tree-view>
-            <div class="single-activity" *ngIf="pastActivities.length === 0">
-                No Past Activities to Show
-            </div>
         </div>
     </div>
 </div>

@@ -5,6 +5,7 @@ import {
 import { Activity } from "@batch-flask/ui";
 import { ActivityMonitorItemComponent } from "../activity-monitor-item";
 
+import { ChangeEvent } from "@batch-flask/ui/virtual-scroll";
 import "./activity-monitor-tree-view.scss";
 
 export interface TreeRow {
@@ -31,9 +32,11 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
     public treeRows: TreeRow[] = [];
     public dropTargetPath: string = null;
     public isFocused = false;
-    public focusedIndex: number;
+    public focusedIndex: number = -1;
     public hoveredIndex: number;
     public focusedAction: number = null;
+    public viewPortRows: TreeRow[] = [];
+    public viewPortStart: number = 0;
 
     @ViewChildren(ActivityMonitorItemComponent) private _itemComponents: QueryList<ActivityMonitorItemComponent>;
 
@@ -144,6 +147,15 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
 
     public treeRowTrackBy(treeRow: TreeRow) {
         return treeRow.id;
+    }
+
+    public updateViewPortItems(items: TreeRow[]) {
+        this.viewPortRows = items;
+        this.changeDetector.markForCheck();
+    }
+
+    public onViewScroll(event: ChangeEvent) {
+        this.viewPortStart = event.start;
     }
 
     /**

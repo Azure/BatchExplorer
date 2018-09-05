@@ -2,9 +2,11 @@
 
 bl-activity-monitor-tree-view {
     $tree-view-header-height: 24px;
+    $tree-view-content-height: calc(100% - 24px);
     position: relative;
     display: flex;
     flex-direction: column;
+    height: 100%;
 
     .tree-view-header {
         height: $tree-view-header-height;
@@ -23,13 +25,14 @@ bl-activity-monitor-tree-view {
 
     .tree-view-content {
         position: relative;
-        height: calc(100% - #{$tree-view-header-height});
+        height: $tree-view-content-height;
     }
 
     .tree-rows-container {
         height: 100%;
-        &.drop-target {
-            background: $main-background;
+
+        bl-virtual-scroll {
+            height: 100%;
         }
     }
 
