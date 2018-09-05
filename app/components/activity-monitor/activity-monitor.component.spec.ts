@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, inject, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed, inject } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 import { ButtonsModule } from "@batch-flask/ui";
@@ -8,6 +8,7 @@ import {
     ActivityService,
 } from "@batch-flask/ui/activity-monitor";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";
+import { VirtualScrollModule } from "@batch-flask/ui/virtual-scroll";
 import { AsyncSubject, BehaviorSubject } from "rxjs";
 import { ActivityMonitorItemComponent } from "./activity-monitor-item";
 import { ActivityMonitorItemActionComponent } from "./activity-monitor-item/activity-monitor-item-action";
@@ -27,7 +28,7 @@ describe("ActivityMonitorComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [ActivityModule, ButtonsModule, MaterialModule, FocusSectionModule],
+            imports: [ActivityModule, ButtonsModule, MaterialModule, FocusSectionModule, VirtualScrollModule],
             declarations: [
                 ActivityMonitorComponent, ActivityMonitorTreeViewComponent,
                 ActivityMonitorItemComponent, ActivityMonitorItemActionComponent,
