@@ -42,7 +42,6 @@ export class ArmBatchAccountService implements OnDestroy {
     private _getter: BasicEntityGetter<ArmBatchAccount, ArmBatchAccountParams>;
 
     constructor(
-        // private storage: LocalFileStorage,
         private azure: AzureHttpService,
         private subscriptionService: SubscriptionService) {
         this.accounts = this._accounts.pipe(filter(x => x !== null));
