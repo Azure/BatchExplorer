@@ -1,5 +1,5 @@
 import { Type } from "@angular/core";
-import { ContinuationToken, ListGetter, ListGetterConfig, ServerError } from "@batch-flask/core";
+import { ContinuationToken, ListGetter, ListGetterConfig, Record, ServerError } from "@batch-flask/core";
 import { StorageClientService } from "app/services/storage/storage-client.service";
 import { Observable, from, throwError } from "rxjs";
 import { catchError, flatMap, map, share } from "rxjs/operators";
@@ -13,13 +13,15 @@ export interface StorageListResponse {
     continuationToken?: string;
 }
 
-export interface StorageListConfig<TEntity, TParams extends StorageBaseParams>
+export interface StorageListConfig<TEntity extends Record<any>, TParams extends StorageBaseParams>
     extends ListGetterConfig<TEntity, TParams> {
 
     getData: (client: any, params: TParams, options: any, token: any) => Promise<StorageListResponse>;
 }
 
-export class StorageListGetter<TEntity, TParams extends StorageBaseParams> extends ListGetter<TEntity, TParams> {
+export class StorageListGetter<TEntity extends Record<any>, TParams extends StorageBaseParams>
+    extends ListGetter<TEntity, TParams> {
+
     private _getData: (client: any, params: TParams, options: any, token: any) => Promise<StorageListResponse>;
 
     constructor(

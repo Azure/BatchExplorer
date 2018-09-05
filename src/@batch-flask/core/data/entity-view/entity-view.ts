@@ -1,4 +1,5 @@
 import { HttpCode } from "@batch-flask/core/constants";
+import { Record } from "@batch-flask/core/record";
 import { ServerError } from "@batch-flask/core/server-error";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -7,7 +8,7 @@ import { EntityGetter } from "../entity-getter";
 import { GenericView, GenericViewConfig } from "../generic-view";
 import { PollObservable } from "../poll";
 
-export interface EntityViewConfig<TEntity, TParams> extends GenericViewConfig<TEntity, TParams> {
+export interface EntityViewConfig<TEntity extends Record<any>, TParams> extends GenericViewConfig<TEntity, TParams> {
     /**
      * If you want to have the entity proxy poll automatically for you every given milliseconds.
      * @default Disabled
@@ -17,7 +18,7 @@ export interface EntityViewConfig<TEntity, TParams> extends GenericViewConfig<TE
     getter: EntityGetter<TEntity, TParams>;
 }
 
-export class EntityView<TEntity, TParams> extends GenericView<TEntity, TParams, any> {
+export class EntityView<TEntity  extends Record<any>, TParams> extends GenericView<TEntity, TParams, any> {
     /**
      * Contains the observable of the item you want to load.
      * Subscribe to this or use the async pipe on this attribute.

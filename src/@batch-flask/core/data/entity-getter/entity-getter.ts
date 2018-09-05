@@ -1,5 +1,6 @@
 import { Type } from "@angular/core";
 import { HttpCode } from "@batch-flask/core/constants";
+import { Record } from "@batch-flask/core/record";
 import { ServerError } from "@batch-flask/core/server-error";
 import { log } from "@batch-flask/utils";
 import { Observable, of, throwError } from "rxjs";
@@ -11,14 +12,15 @@ export interface FetchOptions {
     cached?: boolean;
 }
 
-export interface EntityGetterConfig<TEntity, TParams> extends GenericGetterConfig<TEntity, TParams> {
+export interface EntityGetterConfig<TEntity extends Record<any>, TParams>
+    extends GenericGetterConfig<TEntity, TParams> {
 }
 
 const defaultFetchOptions = {
     cached: false,
 };
 
-export abstract class EntityGetter<TEntity, TParams> extends GenericGetter<TEntity, TParams>  {
+export abstract class EntityGetter<TEntity extends Record<any>, TParams> extends GenericGetter<TEntity, TParams>  {
     constructor(type: Type<TEntity>, config: EntityGetterConfig<TEntity, TParams>) {
         super(type, config);
     }

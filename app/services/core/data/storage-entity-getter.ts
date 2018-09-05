@@ -1,5 +1,5 @@
 import { Type } from "@angular/core";
-import { EntityGetter, EntityGetterConfig, ServerError } from "@batch-flask/core";
+import { EntityGetter, EntityGetterConfig, Record, ServerError } from "@batch-flask/core";
 import { StorageClientService } from "app/services/storage/storage-client.service";
 import { Observable, from, throwError } from "rxjs";
 import { catchError, flatMap, map, share } from "rxjs/operators";
@@ -9,7 +9,7 @@ export interface StorageGetResponse {
     data: any;
 }
 
-export interface StorageEntityGetterConfig<TEntity, TParams extends StorageBaseParams>
+export interface StorageEntityGetterConfig<TEntity extends Record<any>, TParams extends StorageBaseParams>
     extends EntityGetterConfig<TEntity, TParams> {
 
     /**
@@ -18,7 +18,9 @@ export interface StorageEntityGetterConfig<TEntity, TParams extends StorageBaseP
     getFn: (client: any, params: TParams) => Promise<StorageGetResponse>;
 }
 
-export class StorageEntityGetter<TEntity, TParams extends StorageBaseParams> extends EntityGetter<TEntity, TParams> {
+export class StorageEntityGetter<TEntity extends Record<any>, TParams extends StorageBaseParams>
+    extends EntityGetter<TEntity, TParams> {
+
     private _getMethod: (client: any, params: TParams) => Promise<StorageGetResponse>;
 
     constructor(

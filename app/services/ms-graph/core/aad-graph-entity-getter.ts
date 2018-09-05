@@ -1,15 +1,16 @@
 import { Type } from "@angular/core";
-import { EntityGetter, EntityGetterConfig } from "@batch-flask/core";
+import { EntityGetter, EntityGetterConfig, Record } from "@batch-flask/core";
 import { Observable } from "rxjs";
 import { AADGraphHttpService } from "./aad-graph-http.service";
 
-export interface AADGraphEntityGetterConfig<TEntity, TParams> extends EntityGetterConfig<TEntity, TParams> {
+export interface AADGraphEntityGetterConfig<TEntity extends Record<any>, TParams>
+    extends EntityGetterConfig<TEntity, TParams> {
     /**
      * Get function(usually call the client proxy)
      */
     uri: string | ((params: TParams) => string);
 }
-export class AADGraphEntityGetter<TEntity, TParams> extends EntityGetter<TEntity, TParams> {
+export class AADGraphEntityGetter<TEntity extends Record<any>, TParams> extends EntityGetter<TEntity, TParams> {
     private _provideUri: string | ((params: TParams) => string);
 
     constructor(

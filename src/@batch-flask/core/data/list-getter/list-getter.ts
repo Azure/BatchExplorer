@@ -1,7 +1,7 @@
 import { Type } from "@angular/core";
+import { Record } from "@batch-flask/core/record";
 import { List, OrderedSet } from "immutable";
 import { Observable, empty, of } from "rxjs";
-
 import { expand, map, reduce, share } from "rxjs/operators";
 import { DataCache } from "../data-cache";
 import { GenericGetter, GenericGetterConfig } from "../generic-getter";
@@ -14,10 +14,10 @@ export interface ListResponse<TEntity> {
     nextLink: ContinuationToken;
 }
 
-export interface ListGetterConfig<TEntity, TParams> extends GenericGetterConfig<TEntity, TParams> {
+export interface ListGetterConfig<TEntity extends Record<any>, TParams> extends GenericGetterConfig<TEntity, TParams> {
 }
 
-export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity, TParams>  {
+export abstract class ListGetter<TEntity extends Record<any>, TParams> extends GenericGetter<TEntity, TParams>  {
 
     constructor(type: Type<TEntity>, config: ListGetterConfig<TEntity, TParams>) {
         super(type, config);

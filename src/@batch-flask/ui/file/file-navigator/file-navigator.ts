@@ -165,7 +165,8 @@ export class FileNavigator<TParams = any> {
     }
 
     public getFile(path: string): FileLoader {
-        const loader = this._getFileLoader(CloudPathUtils.join(this.basePath, path));
+        const node = this._tree.value.getNode(path);
+        const loader = this._getFileLoader(CloudPathUtils.join(this.basePath, node.originalPath));
         loader.basePath = this.basePath;
         return loader;
     }

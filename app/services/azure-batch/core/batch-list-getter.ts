@@ -1,6 +1,8 @@
 import { HttpParams } from "@angular/common/http";
 import { Type } from "@angular/core";
-import { ContinuationToken, HttpRequestOptions, ListGetter, ListGetterConfig, ListOptions } from "@batch-flask/core";
+import {
+    ContinuationToken, HttpRequestOptions, ListGetter, ListGetterConfig, ListOptions, Record,
+} from "@batch-flask/core";
 import { Observable } from "rxjs";
 import { map, share } from "rxjs/operators";
 import { AzureBatchHttpService } from "./batch-http.service";
@@ -10,11 +12,11 @@ export interface BatchListResponse<TEntity> {
     "odata.nextLink": string;
 }
 
-export interface BatchListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
+export interface BatchListConfig<TEntity extends Record<any>, TParams> extends ListGetterConfig<TEntity, TParams> {
     uri: (params: TParams, options: any) => string;
 }
 
-export class BatchListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams> {
+export class BatchListGetter<TEntity extends Record<any>, TParams> extends ListGetter<TEntity, TParams> {
     private _provideUri: (params: TParams, options: any) => string;
 
     constructor(

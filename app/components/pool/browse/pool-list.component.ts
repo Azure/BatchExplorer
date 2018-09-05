@@ -1,9 +1,10 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
+import { AbstractListBaseConfig } from "@batch-flask/ui/abstract-list";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { TableConfig } from "@batch-flask/ui/table";
@@ -29,7 +30,21 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     public LoadingStatus = LoadingStatus;
     public data: ListView<Pool, PoolListParams>;
 
+    public listConfig: AbstractListBaseConfig = {
+        sorting: {
+            id: true,
+            state: true,
+            allocationState: true,
+            vmSize: true,
+            targetDedicatedNodes: true,
+            currentDedicatedNodes: true,
+            currentLowPriorityNodes: true,
+            targetLowPriorityNodes: true,
+        },
+    };
+
     public tableConfig: TableConfig = {
+        ...this.listConfig,
         showCheckbox: true,
     };
 
@@ -39,7 +54,6 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     constructor(
         private poolService: PoolService,
         activatedRoute: ActivatedRoute,
-        router: Router,
         public commands: PoolCommands,
         changeDetector: ChangeDetectorRef) {
         super(changeDetector);
