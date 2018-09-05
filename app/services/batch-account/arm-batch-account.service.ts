@@ -1,13 +1,13 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { RequestOptions, Response } from "@angular/http";
 import { BasicEntityGetter, DataCache, EntityView } from "@batch-flask/core";
 import { ArmBatchAccount, BatchAccountAttributes, Subscription } from "app/models";
 import { AccountPatchDto } from "app/models/dtos";
-import { ArmResourceUtils } from "app/utils";
-import { Observable, empty, forkJoin, of } from "rxjs";
-import { expand, flatMap, map, reduce, share } from "rxjs/operators";
+import { ArmResourceUtils, Constants, log } from "app/utils";
+import { List } from "immutable";
+import { BehaviorSubject, Observable, combineLatest, empty, forkJoin, of } from "rxjs";
+import { expand, filter, flatMap, map, reduce, share } from "rxjs/operators";
 import { AzureHttpService } from "../azure-http.service";
-// import { LocalFileStorage } from "../local-file-storage.service";
 import { SubscriptionService } from "../subscription.service";
 
 const batchProvider = "Microsoft.Batch";
@@ -33,23 +33,32 @@ export interface ArmBatchAccountParams {
 }
 
 @Injectable()
-export class ArmBatchAccountService {
-    public cache = new DataCache<ArmBatchAccount>();
+export class ArmBatchAccountService implements OnDestroy {
+    public accounts: Observable<List<ArmBatchAccount>>;
+    private _accounts = new BehaviorSubject<List<ArmBatchAccount>>(null);
+
+    private _cache = new DataCache<ArmBatchAccount>();
     private _getter: BasicEntityGetter<ArmBatchAccount, ArmBatchAccountParams>;
 
     constructor(
         // private storage: LocalFileStorage,
         private azure: AzureHttpService,
         private subscriptionService: SubscriptionService) {
+        this.accounts = this._accounts.pipe(filter(x => x !== null));
 
         this._getter = new BasicEntityGetter(ArmBatchAccount, {
-            cache: () => this.cache,
+            cache: () => this._cache,
             supplyData: ({ id }) => this._loadAccount(id),
         });
     }
+
+    public ngOnDestroy() {
+        this._accounts.complete();
+    }
+
     public view(): EntityView<ArmBatchAccount, ArmBatchAccountParams> {
         return new EntityView({
-            cache: () => this.cache,
+            cache: () => this._cache,
             getter: this._getter,
         });
     }
@@ -161,6 +170,52 @@ export class ArmBatchAccountService {
         );
     }
 
+    public list(subscriptionId: string): Observable<List<ArmBatchAccount>> {
+        const search = new URLSearchParams();
+        search.set("$filter", `resourceType eq '${batchResourceProvider}'`);
+        const options = new RequestOptions({ search });
+
+        return this.subscriptionService.get(subscriptionId).pipe(
+            flatMap((subscription) => {
+                return this.azure.get(subscription, `/subscriptions/${subscriptionId}/resources`, options).pipe(
+                    map(response => {
+                        return List<ArmBatchAccount>(response.json().value.map((data) => {
+                            return new ArmBatchAccount(Object.assign({}, data, { subscription }));
+                        }));
+                    }),
+                );
+            }),
+            share(),
+        );
+    }
+
+    public load() {
+        this._loadCachedAccounts();
+        return of(null);
+        // const obs = this.subscriptionService.subscriptions.pipe(
+        //     flatMap((subscriptions) => {
+        //         const accountObs = subscriptions.map((subscription) => {
+        //             return this.list(subscription.subscriptionId);
+        //         }).toArray();
+
+        //         return combineLatest(...accountObs);
+        //     }),
+        // );
+
+        // obs.subscribe({
+        //     next: (accountsPerSubscriptions) => {
+        //         const accounts = accountsPerSubscriptions.map(x => x.toArray()).flatten();
+        //         this._accounts.next(List(accounts));
+        //         this._cacheAccounts();
+        //     },
+        //     error: (error) => {
+        //         log.error("Error loading accounts", error);
+        //     },
+        // });
+
+        // return obs;
+    }
+
     private _loadAccount(accountId: string): Observable<BatchAccountAttributes> {
         return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(accountId)).pipe(
             flatMap((subscription) => {
@@ -177,5 +232,30 @@ export class ArmBatchAccountService {
 
     private _createAccount(subscription: Subscription, data: any): BatchAccountAttributes {
         return { ...data, subscription };
+    }
+
+    private _cacheAccounts() {
+        localStorage.setItem(Constants.localStorageKey.batchAccounts, JSON.stringify(this._accounts.value.toJS()));
+    }
+
+    private _loadCachedAccounts() {
+        const str = localStorage.getItem(Constants.localStorageKey.batchAccounts);
+
+        try {
+            const data = JSON.parse(str);
+
+            if (data.length === 0) {
+                this._clearCachedAccounts();
+            } else {
+                const accounts = data.map(x => new ArmBatchAccount(x));
+                this._accounts.next(List(accounts));
+            }
+        } catch (e) {
+            this._clearCachedAccounts();
+        }
+    }
+
+    private _clearCachedAccounts() {
+        localStorage.removeItem(Constants.localStorageKey.batchAccounts);
     }
 }

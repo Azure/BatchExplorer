@@ -47,7 +47,6 @@ describe("AccountListComponent", () => {
 
     beforeEach(() => {
         accountService = {
-            accountsLoaded: of(true),
             accounts: of(List([
                 Fixtures.account.create({ id: "acc-1", name: "Batch 1", location: "westus", subscription: sub1 }),
                 Fixtures.account.create({ id: "acc-2", name: "Account 2", location: "eastus", subscription: sub1 }),

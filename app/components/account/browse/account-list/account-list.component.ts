@@ -41,11 +41,6 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
         super(changeDetector);
         this._updateDisplayedAccounts();
 
-        this.accountService.accountsLoaded.subscribe(() => {
-            this.loadingStatus = LoadingStatus.Ready;
-            changeDetector.markForCheck();
-        });
-
         this._accountSub = this.accountService.accounts.subscribe((accounts) => {
             this.accounts = accounts;
             this._updateDisplayedAccounts();

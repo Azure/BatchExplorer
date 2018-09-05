@@ -9,7 +9,7 @@ import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { Certificate, NodeFillType, Pool } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
 import { CreatePoolModel, PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
-import { BatchAccountService, CertificateService, PoolService, PricingService, VmSizeService } from "app/services";
+import { BatchAccountService, CertificateService, PoolService, PricingService } from "app/services";
 import { Constants, NumberUtils } from "app/utils";
 
 @Component({

@@ -1,22 +1,18 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { RequestOptions, URLSearchParams } from "@angular/http";
 import { BasicEntityGetter, DataCache, DataCacheTracker, EntityView } from "@batch-flask/core";
 import {
     AccountKeys, ArmBatchAccount, BatchAccount, LOCAL_BATCH_ACCOUNT_PREFIX,
 } from "app/models";
-import { ArmResourceUtils, log } from "app/utils";
+import { ArmResourceUtils } from "app/utils";
 import { Constants } from "common";
 import { List } from "immutable";
-import { AsyncSubject, BehaviorSubject, Observable, combineLatest, of } from "rxjs";
-import { filter, flatMap, map, share, shareReplay, tap } from "rxjs/operators";
+import { AsyncSubject, BehaviorSubject, Observable, combineLatest, forkJoin, of } from "rxjs";
+import { filter, flatMap, map, share, shareReplay } from "rxjs/operators";
 import { AzureHttpService } from "../azure-http.service";
 import { LocalFileStorage } from "../local-file-storage.service";
 import { SubscriptionService } from "../subscription.service";
 import { ArmBatchAccountService } from "./arm-batch-account.service";
 import { LocalBatchAccountService } from "./local-batch-account.service";
-
-const batchProvider = "Microsoft.Batch";
-const batchResourceProvider = batchProvider + "/batchAccounts";
 
 export enum AccountStatus {
     Valid,
@@ -27,7 +23,6 @@ export enum AccountStatus {
 @Injectable()
 export class BatchAccountService implements OnDestroy {
     public accountLoaded: Observable<boolean>;
-    public accountsLoaded: Observable<boolean>;
     public accounts: Observable<List<BatchAccount>>;
 
     /**
@@ -45,10 +40,7 @@ export class BatchAccountService implements OnDestroy {
 
     private _accountJsonFileName: string = "account-favorites";
     private _accountFavorites: BehaviorSubject<List<BatchAccount>> = new BehaviorSubject(List([]));
-    private _accountLoaded = new BehaviorSubject<boolean>(false);
     private _currentAccountId = new BehaviorSubject<string>(null);
-    private _accounts = new BehaviorSubject<List<BatchAccount>>(List([]));
-    private _accountsLoaded = new AsyncSubject<boolean>();
     private _cache = new DataCache<BatchAccount>();
 
     constructor(
@@ -58,22 +50,18 @@ export class BatchAccountService implements OnDestroy {
         private azure: AzureHttpService,
         private subscriptionService: SubscriptionService) {
 
-        this.accountLoaded = this._accountLoaded.asObservable();
-        this.accountsLoaded = this._accountsLoaded.asObservable();
-        this._accountLoaded.next(true);
-        this.accounts = combineLatest(this._accounts.asObservable(), this.localBatchAccountService.accounts).pipe(
+        this.accounts = combineLatest(
+            this.armBatchAccountService.accounts,
+            this.localBatchAccountService.accounts,
+        ).pipe(
             map(([a, b]) => List(b.concat(a))),
         );
 
         this.currentAccountId = this._currentAccountId.asObservable();
 
         this.currentAccount = this._currentAccountId.pipe(
-            tap((id) => {
-                // localStorage.setItem(Constants.localStorageKey.selectedAccountId, id);
-            }),
-            flatMap((id) => {
-                return this.getFromCache(id);
-            }),
+            filter(x => Boolean(x)),
+            flatMap((id) => this.getFromCache(id)),
             filter(x => Boolean(x)),
             shareReplay(1),
         );
@@ -96,6 +84,7 @@ export class BatchAccountService implements OnDestroy {
         if (current === accountId) {
             return;
         }
+        localStorage.setItem(Constants.localStorageKey.selectedAccountId, accountId);
         this._currentAccountId.next(accountId);
         // Clear last selected storage account
         const lastSelectedAccount = localStorage.getItem(Constants.localStorageKey.lastStorageAccount);
@@ -112,13 +101,7 @@ export class BatchAccountService implements OnDestroy {
         const accountId = this._currentAccountId.value;
 
         DataCacheTracker.clearAllCaches(this._cache);
-        return this.get(accountId).pipe(
-            tap(() => {
-                if (!this._accountLoaded.value) {
-                    this._accountLoaded.next(true);
-                }
-            }),
-        );
+        return this.get(accountId);
     }
 
     public view(): EntityView<BatchAccount, { id: string }> {
@@ -132,49 +115,9 @@ export class BatchAccountService implements OnDestroy {
     }
 
     public load() {
-        this.localBatchAccountService.load().subscribe();
-        this._loadCachedAccounts();
-        const obs = this.subscriptionService.subscriptions.pipe(
-            flatMap((subscriptions) => {
-                const accountObs = subscriptions.map((subscription) => {
-                    return this.list(subscription.subscriptionId);
-                }).toArray();
-
-                return combineLatest(...accountObs);
-            }),
-        );
-
-        obs.subscribe({
-            next: (accountsPerSubscriptions) => {
-                const accounts = accountsPerSubscriptions.map(x => x.toArray()).flatten();
-                this._accounts.next(List(accounts));
-                this._cacheAccounts();
-                this._markAccountsAsLoaded();
-            },
-            error: (error) => {
-                log.error("Error loading accounts", error);
-            },
-        });
-
-        return obs;
-    }
-
-    public list(subscriptionId: string): Observable<List<BatchAccount>> {
-        const search = new URLSearchParams();
-        search.set("$filter", `resourceType eq '${batchResourceProvider}'`);
-        const options = new RequestOptions({ search });
-
-        return this.subscriptionService.get(subscriptionId).pipe(
-            flatMap((subscription) => {
-                return this.azure.get(subscription, `/subscriptions/${subscriptionId}/resources`, options).pipe(
-                    map(response => {
-                        return List<BatchAccount>(response.json().value.map((data) => {
-                            return new ArmBatchAccount(Object.assign({}, data, { subscription }));
-                        }));
-                    }),
-                );
-            }),
-            share(),
+        return forkJoin(
+            this.localBatchAccountService.load(),
+            this.armBatchAccountService.load(),
         );
     }
 
@@ -263,7 +206,6 @@ export class BatchAccountService implements OnDestroy {
 
         this._loadFavoriteAccounts().subscribe((accounts) => {
             this._accountFavorites.next(accounts);
-            this._accountLoaded.next(true);
         });
     }
 
@@ -300,36 +242,4 @@ export class BatchAccountService implements OnDestroy {
         accounts = accounts === null ? this._accountFavorites.getValue() : accounts;
         return this.storage.set(this._accountJsonFileName, accounts.toJS());
     }
-
-    private _markAccountsAsLoaded() {
-        this._accountsLoaded.next(true);
-        this._accountsLoaded.complete();
-    }
-
-    private _cacheAccounts() {
-        localStorage.setItem(Constants.localStorageKey.batchAccounts, JSON.stringify(this._accounts.value.toJS()));
-    }
-
-    private _loadCachedAccounts() {
-        const str = localStorage.getItem(Constants.localStorageKey.batchAccounts);
-
-        try {
-            const data = JSON.parse(str);
-
-            if (data.length === 0) {
-                this._clearCachedAccounts();
-            } else {
-                const accounts = data.map(x => new ArmBatchAccount(x));
-                this._accounts.next(List<BatchAccount>(accounts));
-                this._markAccountsAsLoaded();
-            }
-        } catch (e) {
-            this._clearCachedAccounts();
-        }
-    }
-
-    private _clearCachedAccounts() {
-        localStorage.removeItem(Constants.localStorageKey.batchAccounts);
-    }
-
 }
