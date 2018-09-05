@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
 import { ActivityMonitorFooterItemComponent } from "@batch-flask/ui/activity-monitor";
-import { BehaviorSubject } from "rxjs";
+import { AsyncSubject, BehaviorSubject } from "rxjs";
 
 @Component({
     template: `
@@ -54,23 +54,26 @@ describe("ActivityMonitorFooterItemComponent", () => {
         const nameEl = de.query(By.css(".name"));
 
         expect(nameEl.nativeElement.textContent).toContain("Test activity");
-        expect(nameEl.nativeElement.textContent).not.toContain("...");
     });
 
-    it("should display the activity name trucated to 20 characters", () => {
+    it("should not truncate the activity name if it is short enough to fit", () => {
         const nameEl = de.query(By.css(".name"));
+        expect(nameEl.nativeElement.offsetWidth).toBe(nameEl.nativeElement.scrollWidth);
+    });
 
+    it("should truncate the activity name if it is too long to fit", () => {
         testComponent.activity = new MockActivity(
-            "Test activity but it's longer than 20 characters",
+            "loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong name",
             testComponent.subj,
         );
         fixture.detectChanges();
 
-        expect(nameEl.nativeElement.textContent).toContain("Test activity but it...");
+        const nameEl = de.query(By.css(".name"));
+        expect(nameEl.nativeElement.offsetWidth < nameEl.nativeElement.scrollWidth).toBe(true);
     });
 
     it("should display the percentage if an activity is emitting progress", () => {
-        const nameEl = de.query(By.css(".name"));
+        const progressEl = de.query(By.css(".progress-percent"));
 
         const progressSubj = new BehaviorSubject(0);
 
@@ -78,12 +81,12 @@ describe("ActivityMonitorFooterItemComponent", () => {
         fixture.detectChanges();
 
         expect(component.progress).toBe(0);
-        expect(nameEl.nativeElement.textContent).toContain("(0%)");
+        expect(progressEl.nativeElement.textContent).toContain("(0%)");
 
         progressSubj.next(50);
         fixture.detectChanges();
 
         expect(component.progress).toBe(50);
-        expect(nameEl.nativeElement.textContent).toContain("(50%)");
+        expect(progressEl.nativeElement.textContent).toContain("(50%)");
     });
 });
