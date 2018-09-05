@@ -1,0 +1,32 @@
+@import "app/styles/variables";
+
+bl-activity-monitor-footer-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    > .status-icon {
+        width: 18px;
+        height: 18px;
+        margin-right: 10px;
+        .mat-progress-spinner {
+            path {
+                stroke: $whiteSmoke;
+            }
+        }
+        .fa {
+            vertical-align: middle;
+            line-height: 24px;
+            font-size: 18px;
+        }
+    }
+
+    > .name {
+        min-width: 0;
+        text-align: left;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        padding-right: 5px;
+    }
+}
