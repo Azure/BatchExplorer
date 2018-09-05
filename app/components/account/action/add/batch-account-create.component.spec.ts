@@ -11,7 +11,7 @@ import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { BatchAccountCreateComponent } from "app/components/account/action/add";
-import { AccountService, AuthorizationHttpService, SubscriptionService } from "app/services";
+import { BatchAccountService, AuthorizationHttpService, SubscriptionService } from "app/services";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
 import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
@@ -164,7 +164,7 @@ describe("BatchAccountCreateComponent ", () => {
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: SidebarRef, useValue: null },
-                { provide: AccountService, useValue: accountServiceSpy },
+                { provide: BatchAccountService, useValue: accountServiceSpy },
                 { provide: AuthorizationHttpService, useValue: authServiceSpy },
                 { provide: SubscriptionService, useValue: subscriptionServiceSpy },
                 { provide: NotificationService, useValue: notificationServiceSpy },

@@ -43,7 +43,6 @@ import {
     AutoStorageService, StorageAccountKeysService, StorageBlobService, StorageClientService, StorageContainerService,
 } from "app/services/storage";
 import {
-    AccountService,
     AdalService,
     AppInsightsApiService,
     AppInsightsQueryService,
@@ -54,6 +53,7 @@ import {
     AuthorizationHttpService,
     AutoscaleFormulaService,
     AzureHttpService,
+    BatchAccountService,
     BatchExplorerService,
     CacheDataService,
     CertificateService,
@@ -129,7 +129,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         { provide: TranslationsLoaderService, useClass: AppTranslationsLoaderService },
         { provide: LocaleService, useClass: AppLocaleService },
-        AccountService,
+        BatchAccountService,
         AdalService,
         AppInsightsApiService,
         AppInsightsQueryService,

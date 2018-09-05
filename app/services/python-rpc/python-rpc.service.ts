@@ -9,7 +9,7 @@ import { PythonRpcServerProcess } from "client/python-process";
 import { AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
 import { catchError, first, flatMap, share } from "rxjs/operators";
 import { AdalService } from "../adal";
-import { AccountService } from "../batch-account.service";
+import { BatchAccountService } from "../batch-account.service";
 
 @Injectable()
 export class PythonRpcService {
@@ -23,7 +23,7 @@ export class PythonRpcService {
 
     constructor(
         remote: ElectronRemote,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private adalService: AdalService,
         private _zone: NgZone,
         private batchExplorer: BatchExplorerService,

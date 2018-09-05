@@ -1,12 +1,11 @@
 import { Injectable } from "@angular/core";
 import { RequestOptions, Response, URLSearchParams } from "@angular/http";
-import { Observable, empty } from "rxjs";
-
 import { Resource } from "app/models";
+import { Observable, empty } from "rxjs";
 import { expand, flatMap, map, reduce, share } from "rxjs/operators";
-import { AccountService } from "./batch-account.service";
 import { ArmHttpService } from "./arm-http.service";
 import { AzureHttpService } from "./azure-http.service";
+import { BatchAccountService } from "./batch-account.service";
 import { SubscriptionService } from "./subscription.service";
 
 export function computeUrl(subscriptionId: string) {
@@ -33,7 +32,7 @@ const computeImageProvider = computeProvider + "/images";
 @Injectable()
 export class ComputeService {
     constructor(private arm: ArmHttpService,
-                private accountService: AccountService,
+                private accountService: BatchAccountService,
                 private azure: AzureHttpService,
                 private subscriptionService: SubscriptionService) {
     }

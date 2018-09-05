@@ -8,7 +8,7 @@ import { IpcService, Workspace, WorkspaceService } from "@batch-flask/ui";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
-    AccountService, AuthorizationHttpService, AutoscaleFormulaService,
+    AuthorizationHttpService, AutoscaleFormulaService, BatchAccountService,
     BatchExplorerService, CommandService, GithubDataService, NavigatorService,
     NcjTemplateService, PoolOsService, PredefinedFormulaService, PricingService,
     PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
         private autoscaleFormulaService: AutoscaleFormulaService,
         private settingsService: SettingsService,
         private commandService: CommandService,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
         private githubDataService: GithubDataService,

@@ -4,9 +4,9 @@ import {
 } from "@angular/http";
 import { Observable } from "rxjs";
 import { first, flatMap, share } from "rxjs/operators";
-import { AccountService } from "./batch-account.service";
 import { AdalService } from "./adal";
 import { AzureHttpService } from "./azure-http.service";
+import { BatchAccountService } from "./batch-account.service";
 
 function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
     const options = original || new RequestOptions();
@@ -23,7 +23,7 @@ function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?
  */
 @Injectable()
 export class ArmHttpService {
-    constructor(private http: AzureHttpService, adal: AdalService, private accountService: AccountService) {
+    constructor(private http: AzureHttpService, adal: AdalService, private accountService: BatchAccountService) {
     }
 
     public request(uri: string, options: RequestOptionsArgs): Observable<Response> {

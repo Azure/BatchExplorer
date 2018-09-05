@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { EntityView, ListView, ServerError, autobind } from "@batch-flask/core";
 import { AccountResource, BatchApplication, Job, Pool } from "app/models";
 import {
-    AccountParams, AccountService, ApplicationListParams, ApplicationService,
+    AccountParams, BatchAccountService, ApplicationListParams, ApplicationService,
     InsightsMetricsService, JobListParams, JobService, PoolListParams, PoolService,
 } from "app/services";
 import { Subscription } from "rxjs";
@@ -52,7 +52,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         public commands: BatchAccountCommands,
         private changeDetector: ChangeDetectorRef,
         private activatedRoute: ActivatedRoute,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private applicationService: ApplicationService,
         private jobService: JobService,
         private poolService: PoolService,

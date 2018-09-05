@@ -7,7 +7,7 @@ import {
     BatchApplication, BlobContainer, Certificate, Job, JobSchedule, Pool,
 } from "app/models";
 import { map, share } from "rxjs/operators";
-import { AccountService } from "./batch-account.service";
+import { BatchAccountService } from "./batch-account.service";
 import { LocalFileStorage } from "./local-file-storage.service";
 
 const pinnedTypeMap = new Map();
@@ -30,7 +30,7 @@ export class PinnedEntityService {
 
     constructor(
         private localFileStorage: LocalFileStorage,
-        private accountService: AccountService) {
+        private accountService: BatchAccountService) {
 
         this.loaded = this._loaded.asObservable();
         this.accountService.currentAccount.subscribe((account) => {

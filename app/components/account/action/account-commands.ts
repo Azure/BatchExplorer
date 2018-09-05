@@ -3,7 +3,7 @@ import { COMMAND_LABEL_ICON, DialogService, EntityCommand, EntityCommands, Permi
 
 import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
 import { AccountProvisingState, AccountResource } from "app/models";
-import { AccountService } from "app/services";
+import { BatchAccountService } from "app/services";
 import { DeleteAccountDialogComponent } from "./delete";
 
 @Injectable()
@@ -15,7 +15,7 @@ export class BatchAccountCommands extends EntityCommands<AccountResource> {
 
     constructor(
         injector: Injector,
-        private accountService: AccountService) {
+        private accountService: BatchAccountService) {
         super(
             injector,
             "BatchAccount",

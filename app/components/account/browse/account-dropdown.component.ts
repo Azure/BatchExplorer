@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { AccountResource } from "app/models";
-import { AccountService, AccountStatus } from "app/services";
+import { BatchAccountService, AccountStatus } from "app/services";
 import { ArmResourceUtils } from "app/utils";
 import { Subscription } from "rxjs";
 
@@ -23,7 +23,7 @@ export class AccountDropDownComponent implements OnDestroy {
     private _subs: Subscription[] = [];
 
     constructor(
-        public accountService: AccountService,
+        public accountService: BatchAccountService,
         private changeDetector: ChangeDetectorRef,
         private contextMenuService: ContextMenuService) {
 

@@ -4,8 +4,8 @@ import { StringUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, combineLatest } from "rxjs";
 import { filter, map, share, shareReplay, take } from "rxjs/operators";
-import { AccountService } from "./batch-account.service";
 import { ArmHttpService } from "./arm-http.service";
+import { BatchAccountService } from "./batch-account.service";
 import { computeUrl } from "./compute.service";
 import { GithubDataService } from "./github-data";
 
@@ -55,7 +55,7 @@ export class VmSizeService {
 
     constructor(
         private arm: ArmHttpService,
-        private githubData: GithubDataService, private accountService: AccountService) {
+        private githubData: GithubDataService, private accountService: BatchAccountService) {
 
         const obs = combineLatest(this._sizes, this._excludedSizes);
         this.sizes = this._sizes.pipe(filter(x => x !== null));

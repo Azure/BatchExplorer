@@ -5,7 +5,7 @@ import { BatchExplorerService } from "app/services/batch-labs.service";
 import { ArmResourceUtils } from "app/utils";
 import { Observable, throwError } from "rxjs";
 import { first, flatMap, map, share } from "rxjs/operators";
-import { AccountService } from "../batch-account.service";
+import { BatchAccountService } from "../batch-account.service";
 import { BlobStorageClientProxy } from "./blob-storage-client-proxy";
 import { StorageAccountKeysService } from "./storage-account-keys.service";
 import { StorageClientProxyFactory } from "./storage-client-proxy-factory";
@@ -33,7 +33,7 @@ export class StorageClientService {
 
     constructor(
         private batchExplorer: BatchExplorerService,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private storageKeysService: StorageAccountKeysService) {
 
         this._storageClientFactory = new StorageClientProxyFactory();

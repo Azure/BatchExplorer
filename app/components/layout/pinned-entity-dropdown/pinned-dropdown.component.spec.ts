@@ -8,7 +8,7 @@ import { BehaviorSubject, of } from "rxjs";
 import { NavigableRecord, PinnableEntity, PinnedEntityType } from "@batch-flask/core";
 import { ContextMenuService } from "@batch-flask/ui";
 import { DropdownModule } from "@batch-flask/ui/dropdown";
-import { AccountService, PinnedEntityService } from "app/services";
+import { BatchAccountService, PinnedEntityService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { PinnedDropDownComponent } from "./pinned-dropdown.component";
 
@@ -57,7 +57,7 @@ describe("PinnedDropDownComponent", () => {
             imports: [DropdownModule, RouterTestingModule],
             declarations: [PinnedDropDownComponent, TestComponent],
             providers: [
-                { provide: AccountService, useValue: accountServiceSpy },
+                { provide: BatchAccountService, useValue: accountServiceSpy },
                 { provide: PinnedEntityService, useValue: pinServiceSpy },
                 { provide: ContextMenuService, useValue: null },
             ],

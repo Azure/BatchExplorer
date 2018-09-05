@@ -3,7 +3,7 @@ import { autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/ui";
 import { NameValuePair, Pool, ResizeError, ResizeErrorCode } from "app/models";
 import { NodeDeallocationOption, PoolResizeDto } from "app/models/dtos";
-import { AccountService, PoolService } from "app/services";
+import { BatchAccountService, PoolService } from "app/services";
 import { ExternalLinks } from "common/constants";
 import { map } from "rxjs/operators";
 
@@ -19,7 +19,7 @@ export class PoolErrorDisplayComponent {
 
     constructor(
         private poolService: PoolService,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private shell: ElectronShell) {
     }
 

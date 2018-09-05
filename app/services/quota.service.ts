@@ -1,14 +1,13 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { BehaviorSubject, Observable, Subscription, forkJoin, merge, of } from "rxjs";
-
 import { FilterBuilder } from "@batch-flask/core";
 import { AccountResource, BatchQuotas, JobState, Pool } from "app/models";
 import { List } from "immutable";
+import { BehaviorSubject, Observable, Subscription, forkJoin, merge, of } from "rxjs";
 import { flatMap, map, shareReplay } from "rxjs/operators";
-import { AccountService } from "./batch-account.service";
 import { ApplicationService } from "./application.service";
 import { JobService } from "./azure-batch/job";
 import { PoolService } from "./azure-batch/pool";
+import { BatchAccountService } from "./batch-account.service";
 import { ComputeService } from "./compute.service";
 import { VmSizeService } from "./vm-size.service";
 
@@ -25,7 +24,7 @@ export class QuotaService implements OnDestroy {
     private _subs: Subscription[] = [];
 
     constructor(
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private computeService: ComputeService,
         private applicationService: ApplicationService,
         private poolService: PoolService,

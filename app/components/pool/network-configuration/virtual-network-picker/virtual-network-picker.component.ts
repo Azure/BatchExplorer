@@ -8,7 +8,7 @@ import {
 import { Subscription } from "rxjs";
 
 import { autobind } from "@batch-flask/core";
-import { AccountService, NetworkConfigurationService, Subnet, VirtualNetwork } from "app/services";
+import { BatchAccountService, NetworkConfigurationService, Subnet, VirtualNetwork } from "app/services";
 import { ArmResourceUtils } from "app/utils";
 
 import "./virtual-network-picker.scss";
@@ -40,7 +40,7 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
 
     constructor(
         private changeDetector: ChangeDetectorRef,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private networkService: NetworkConfigurationService) {
 
         this._subs.push(this.subnetControl.valueChanges.subscribe((subnetId: string) => {

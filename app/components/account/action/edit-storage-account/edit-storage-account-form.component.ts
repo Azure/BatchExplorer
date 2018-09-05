@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { AccountResource } from "app/models";
 import { AccountPatchDto } from "app/models/dtos";
-import { AccountService } from "app/services";
+import { BatchAccountService } from "app/services";
 
 import "./edit-storage-account-form.scss";
 
@@ -29,7 +29,7 @@ export class EditStorageAccountFormComponent {
     private _account: AccountResource;
 
     constructor(
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         public sidebarRef: SidebarRef<EditStorageAccountFormComponent>,
     ) { }
 

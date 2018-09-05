@@ -2,7 +2,7 @@ import { Location } from "@angular/common";
 import { Injectable } from "@angular/core";
 import { Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response } from "@angular/http";
 import { AccessToken, RetryableHttpCode, ServerError } from "@batch-flask/core";
-import { AccountService } from "../batch-account.service";
+import { BatchAccountService } from "../batch-account.service";
 import { AdalService } from "app/services/adal";
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { Constants } from "app/utils";
@@ -24,7 +24,7 @@ export class AppInsightsApiService {
     constructor(
         private http: Http,
         private adal: AdalService,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private batchExplorer: BatchExplorerService) {
     }
 

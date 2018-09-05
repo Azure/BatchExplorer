@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from "@angular/core";
 import { VTabGroupComponent } from "@batch-flask/ui";
 import { AccountResource } from "app/models";
-import { AccountService, StorageAccountService } from "app/services";
+import { BatchAccountService, StorageAccountService } from "app/services";
 import { SharedKeyCredentials } from "./shared-key-credentials.model";
 
 import { StorageAccountKeysService } from "app/services/storage";
@@ -47,7 +47,7 @@ export class ProgramaticUsageComponent {
     constructor(
         private storageAccountService: StorageAccountService,
         private storageAccountKeysService: StorageAccountKeysService,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private changeDetector: ChangeDetectorRef) {
     }
 

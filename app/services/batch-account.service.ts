@@ -45,7 +45,7 @@ export interface QuotaResult {
 }
 
 @Injectable()
-export class AccountService {
+export class BatchAccountService {
     public accountLoaded: Observable<boolean>;
     public accountsLoaded: Observable<boolean>;
     public accounts: Observable<List<AccountResource>>;

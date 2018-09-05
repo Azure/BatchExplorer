@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
 import { map, take } from "rxjs/operators";
-import { AccountService } from "../batch-account.service";
+import { BatchAccountService } from "../batch-account.service";
 
 export type StorageDataSource = string | "file-groups";
 
@@ -11,7 +11,7 @@ export class AutoStorageService {
     public hasArmAutoStorage: Observable<boolean>;
     public hasAutoStorage: Observable<boolean>;
 
-    constructor(private accountService: AccountService) {
+    constructor(private accountService: BatchAccountService) {
         this.storageAccountId = this.accountService.currentAccount.pipe(map((account) => {
             return account.autoStorage && account.autoStorage.storageAccountId;
         }));

@@ -6,7 +6,7 @@ import { autobind } from "@batch-flask/core";
 import { Activity, ActivityResponse, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Node, Pool } from "app/models";
-import { AccountService, NodeService } from "app/services";
+import { BatchAccountService, NodeService } from "app/services";
 import { AutoStorageService, StorageBlobService } from "app/services/storage";
 import { CloudPathUtils, StorageUtils } from "app/utils";
 import * as moment from "moment";
@@ -51,7 +51,7 @@ export class UploadNodeLogsDialogComponent {
         private changeDetector: ChangeDetectorRef,
         private activityService: ActivityService,
         private nodeService: NodeService,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private autoStorageService: AutoStorageService,
         private storageBlobService: StorageBlobService,
         private notificationService: NotificationService,

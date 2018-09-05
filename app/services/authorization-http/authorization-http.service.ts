@@ -4,7 +4,7 @@ import { Observable, empty, of } from "rxjs";
 
 import { Permission } from "@batch-flask/ui/permission";
 import { expand, flatMap, map, reduce, shareReplay, take } from "rxjs/operators";
-import { AccountService } from "../batch-account.service";
+import { BatchAccountService } from "../batch-account.service";
 import { ArmHttpService } from "../arm-http.service";
 
 export interface RoleDefinitionPermission {
@@ -26,7 +26,7 @@ export enum BatchAccountPermission {
 export class AuthorizationHttpService {
     private _permission: Observable<Permission>;
     constructor(
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private armService: ArmHttpService) {
         this._permission = this.accountService.currentAccount.pipe(
             take(1),

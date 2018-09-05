@@ -12,7 +12,7 @@ import { TableTestingModule } from "@batch-flask/ui/testing";
 import { VmSizePickerComponent } from "app/components/pool/action/add";
 import { AccountResource, VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
-import { AccountService, PricingService, VmSizeService } from "app/services";
+import { BatchAccountService, PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
 import { of } from "rxjs";
 
@@ -71,7 +71,7 @@ describe("VmSizePickerComponent", () => {
             declarations: [VmSizePickerComponent, TestComponent],
             providers: [
                 { provide: VmSizeService, useValue: vmSizeServiceSpy },
-                { provide: AccountService, useValue: accountServiceSpy },
+                { provide: BatchAccountService, useValue: accountServiceSpy },
                 { provide: PricingService, useValue: pricingServiceSpy },
                 { provide: BreadcrumbService, useValue: null },
             ],

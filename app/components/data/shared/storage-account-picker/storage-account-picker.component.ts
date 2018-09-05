@@ -4,7 +4,7 @@ import {
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { SelectOptionComponent } from "@batch-flask/ui";
-import { AccountService, StorageAccountService } from "app/services";
+import { BatchAccountService, StorageAccountService } from "app/services";
 import { List } from "immutable";
 
 import { StorageAccount } from "app/models";
@@ -36,7 +36,7 @@ export class StorageAccountPickerComponent implements OnInit, AfterContentInit, 
 
     constructor(
         private autoStorageService: AutoStorageService,
-        private batchAccountService: AccountService,
+        private batchAccountService: BatchAccountService,
         private storageAccountService: StorageAccountService,
         private changeDetector: ChangeDetectorRef) {
 

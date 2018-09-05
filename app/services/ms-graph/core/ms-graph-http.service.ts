@@ -2,7 +2,7 @@ import { HttpHandler } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { HttpService, ServerError } from "@batch-flask/core";
 import { AdalService } from "app/services/adal";
-import { AccountService } from "app/services/batch-account.service";
+import { BatchAccountService } from "app/services/batch-account.service";
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { AADUser } from "client/core/aad/adal/aad-user";
 import { Observable, throwError } from "rxjs";
@@ -21,7 +21,7 @@ export class MsGraphHttpService extends HttpService {
     constructor(
         httpHandler: HttpHandler,
         private adal: AdalService,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private batchExplorer: BatchExplorerService) {
 
         super(httpHandler);

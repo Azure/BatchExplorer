@@ -4,7 +4,7 @@ import { autobind } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
 import { AccountResource, BatchApplication } from "app/models";
-import { AccountService } from "app/services";
+import { BatchAccountService } from "app/services";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -24,7 +24,7 @@ export class ApplicationErrorDisplayComponent implements OnInit, OnDestroy {
     private _sub: Subscription;
 
     constructor(
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private changeDetector: ChangeDetectorRef,
         private sidebarManager: SidebarManager) {
     }

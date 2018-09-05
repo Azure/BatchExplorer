@@ -6,7 +6,7 @@ import { BehaviorSubject } from "rxjs";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationErrorDisplayComponent } from "app/components/application/errors";
 import { AccountResource, BatchApplication } from "app/models";
-import { AccountService } from "app/services";
+import { BatchAccountService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { BannerMockComponent } from "test/utils/mocks/components";
 
@@ -46,7 +46,7 @@ describe("ApplicationErrorDisplayComponent", () => {
         TestBed.configureTestingModule({
             declarations: [ApplicationErrorDisplayComponent, BannerMockComponent, TestApplicationErrorDisplayComponent],
             providers: [
-                { provide: AccountService, useValue: accountServiceSpy },
+                { provide: BatchAccountService, useValue: accountServiceSpy },
                 { provide: SidebarManager, useValue: sidebarSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],

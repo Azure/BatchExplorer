@@ -9,7 +9,7 @@ import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { AccountResource, Location, ResourceGroup, Subscription as ArmSubscription } from "app/models";
 import { createAccountFormToJsonData } from "app/models/forms/create-account-model";
 import {
-    AccountService, AuthorizationHttpService, AvailabilityResult,
+    BatchAccountService, AuthorizationHttpService, AvailabilityResult,
     QuotaResult, SubscriptionService,
 } from "app/services";
 import { Constants, log } from "app/utils";
@@ -34,7 +34,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
     private _locationSub: Subscription;
 
     constructor(
-        public accountService: AccountService,
+        public accountService: BatchAccountService,
         public authService: AuthorizationHttpService,
         public subscriptionService: SubscriptionService,
         public sidebarRef: SidebarRef<BatchAccountCreateComponent>,

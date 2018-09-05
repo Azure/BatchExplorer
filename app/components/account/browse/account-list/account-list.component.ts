@@ -10,7 +10,7 @@ import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { BatchAccountCommands } from "app/components/account/action";
 import { AccountResource } from "app/models";
-import { AccountService, SubscriptionService } from "app/services";
+import { BatchAccountService, SubscriptionService } from "app/services";
 import { flatMap, shareReplay } from "rxjs/operators";
 
 @Component({
@@ -35,7 +35,7 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
 
     constructor(
         public commands: BatchAccountCommands,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         activatedRoute: ActivatedRoute,
         sidebarManager: SidebarManager,
         changeDetector: ChangeDetectorRef,

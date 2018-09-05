@@ -5,7 +5,7 @@ import { HttpRequestOptions, HttpService, ServerError } from "@batch-flask/core"
 import { UrlUtils } from "@batch-flask/utils";
 import { AccountResource } from "app/models";
 import { AdalService } from "app/services/adal";
-import { AccountService } from "app/services/batch-account.service";
+import { BatchAccountService } from "app/services/batch-account.service";
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { Constants } from "common";
 import { Observable, from, throwError } from "rxjs";
@@ -21,7 +21,7 @@ export class AzureBatchHttpService extends HttpService {
     constructor(
         httpHandler: HttpHandler,
         private adal: AdalService,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private batchExplorer: BatchExplorerService) {
         super(httpHandler);
     }

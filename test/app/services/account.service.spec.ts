@@ -3,11 +3,11 @@ import { AsyncSubject, Subscription, of } from "rxjs";
 
 import { DataCache } from "@batch-flask/core";
 import { AccountResource } from "app/models";
-import { AccountService } from "app/services";
+import { BatchAccountService } from "app/services";
 import { first } from "rxjs/operators";
 
 describe("AccountService", () => {
-    let accountService: AccountService;
+    let accountService: BatchAccountService;
     let currentAccount: AccountResource;
     let currentAccountId: string;
     const account1 = new AccountResource({ id: "account-1" } as any);
@@ -23,7 +23,7 @@ describe("AccountService", () => {
 
         storageSpy = {};
 
-        accountService = new AccountService(storageSpy, {} as any, subscriptionServiceSpy);
+        accountService = new BatchAccountService(storageSpy, {} as any, subscriptionServiceSpy);
         accountService.get = jasmine.createSpy("get").and.returnValue(of(account1));
         accountService.getAccountKeys = jasmine.createSpy("getAccountKeys").and.returnValue(of({}));
         subs.push(accountService.currentAccountId.subscribe(x => currentAccountId = x));

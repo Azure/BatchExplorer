@@ -1,13 +1,12 @@
 import { Injectable } from "@angular/core";
-import * as moment from "moment";
-import { BehaviorSubject, Observable, forkJoin, of } from "rxjs";
-
 import { AccountResource, BatchSoftwareLicense, Pool, RateCardMeter } from "app/models";
 import { BatchPricing, OSPricing, OsType, SoftwarePricing, VMPrices } from "app/services/pricing";
 import { PoolPrice, PoolPriceOptions, PoolUtils, log } from "app/utils";
+import * as moment from "moment";
+import { BehaviorSubject, Observable, forkJoin, of } from "rxjs";
 import { catchError, filter, flatMap, map, share, take } from "rxjs/operators";
-import { AccountService } from "./batch-account.service";
 import { ArmHttpService } from "./arm-http.service";
+import { BatchAccountService } from "./batch-account.service";
 import { LocalFileStorage } from "./local-file-storage.service";
 import { VmSizeService } from "./vm-size.service";
 
@@ -70,7 +69,7 @@ export class PricingService {
         private arm: ArmHttpService,
         private vmSizeService: VmSizeService,
         private localFileStorage: LocalFileStorage,
-        private accountService: AccountService) {
+        private accountService: BatchAccountService) {
 
         this.pricing = this._pricingMap.pipe(filter(x => x !== null));
     }
