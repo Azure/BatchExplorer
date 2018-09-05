@@ -1,9 +1,10 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { RequestOptions, Response } from "@angular/http";
+import { RequestOptions, Response, URLSearchParams } from "@angular/http";
 import { BasicEntityGetter, DataCache, EntityView } from "@batch-flask/core";
+import { log } from "@batch-flask/utils";
 import { ArmBatchAccount, BatchAccountAttributes, Subscription } from "app/models";
 import { AccountPatchDto } from "app/models/dtos";
-import { ArmResourceUtils, Constants, log } from "app/utils";
+import { ArmResourceUtils, Constants } from "app/utils";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, combineLatest, empty, forkJoin, of } from "rxjs";
 import { expand, filter, flatMap, map, reduce, share } from "rxjs/operators";
@@ -191,29 +192,28 @@ export class ArmBatchAccountService implements OnDestroy {
 
     public load() {
         this._loadCachedAccounts();
-        return of(null);
-        // const obs = this.subscriptionService.subscriptions.pipe(
-        //     flatMap((subscriptions) => {
-        //         const accountObs = subscriptions.map((subscription) => {
-        //             return this.list(subscription.subscriptionId);
-        //         }).toArray();
+        const obs = this.subscriptionService.subscriptions.pipe(
+            flatMap((subscriptions) => {
+                const accountObs = subscriptions.map((subscription) => {
+                    return this.list(subscription.subscriptionId);
+                }).toArray();
 
-        //         return combineLatest(...accountObs);
-        //     }),
-        // );
+                return forkJoin(...accountObs);
+            }),
+        );
 
-        // obs.subscribe({
-        //     next: (accountsPerSubscriptions) => {
-        //         const accounts = accountsPerSubscriptions.map(x => x.toArray()).flatten();
-        //         this._accounts.next(List(accounts));
-        //         this._cacheAccounts();
-        //     },
-        //     error: (error) => {
-        //         log.error("Error loading accounts", error);
-        //     },
-        // });
+        obs.subscribe({
+            next: (accountsPerSubscriptions) => {
+                const accounts = accountsPerSubscriptions.map(x => x.toArray()).flatten();
+                this._accounts.next(List(accounts));
+                this._cacheAccounts();
+            },
+            error: (error) => {
+                log.error("Error loading accounts", error);
+            },
+        });
 
-        // return obs;
+        return obs;
     }
 
     private _loadAccount(accountId: string): Observable<BatchAccountAttributes> {
@@ -234,10 +234,6 @@ export class ArmBatchAccountService implements OnDestroy {
         return { ...data, subscription };
     }
 
-    private _cacheAccounts() {
-        localStorage.setItem(Constants.localStorageKey.batchAccounts, JSON.stringify(this._accounts.value.toJS()));
-    }
-
     private _loadCachedAccounts() {
         const str = localStorage.getItem(Constants.localStorageKey.batchAccounts);
 
@@ -253,6 +249,10 @@ export class ArmBatchAccountService implements OnDestroy {
         } catch (e) {
             this._clearCachedAccounts();
         }
+    }
+
+    private _cacheAccounts() {
+        localStorage.setItem(Constants.localStorageKey.batchAccounts, JSON.stringify(this._accounts.value.toJS()));
     }
 
     private _clearCachedAccounts() {

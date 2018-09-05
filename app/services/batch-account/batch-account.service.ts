@@ -6,7 +6,7 @@ import {
 import { ArmResourceUtils } from "app/utils";
 import { Constants } from "common";
 import { List } from "immutable";
-import { AsyncSubject, BehaviorSubject, Observable, combineLatest, forkJoin, of } from "rxjs";
+import { BehaviorSubject, Observable, combineLatest, forkJoin, of } from "rxjs";
 import { filter, flatMap, map, share, shareReplay } from "rxjs/operators";
 import { AzureHttpService } from "../azure-http.service";
 import { LocalFileStorage } from "../local-file-storage.service";
@@ -24,6 +24,7 @@ export enum AccountStatus {
 export class BatchAccountService implements OnDestroy {
     public accountLoaded: Observable<boolean>;
     public accounts: Observable<List<BatchAccount>>;
+    public accountFavorites: Observable<List<BatchAccount>>;
 
     /**
      * @returns the current account.
@@ -39,7 +40,7 @@ export class BatchAccountService implements OnDestroy {
     public currentAccountId: Observable<string>;
 
     private _accountJsonFileName: string = "account-favorites";
-    private _accountFavorites: BehaviorSubject<List<BatchAccount>> = new BehaviorSubject(List([]));
+    private _accountFavorites: BehaviorSubject<List<{ id: string }>> = new BehaviorSubject(List([]));
     private _currentAccountId = new BehaviorSubject<string>(null);
     private _cache = new DataCache<BatchAccount>();
 
@@ -65,14 +66,19 @@ export class BatchAccountService implements OnDestroy {
             filter(x => Boolean(x)),
             shareReplay(1),
         );
+
+        this.accountFavorites = combineLatest(this._accountFavorites, this.accounts).pipe(
+            map(([favourites, accounts]) => {
+                return List<BatchAccount>(favourites
+                    .map(x => accounts.filter(account => account.id === x.id).first())
+                    .filter(x => Boolean(x)));
+            }),
+            shareReplay(1),
+        );
     }
 
     public ngOnDestroy() {
         this._currentAccountId.complete();
-    }
-
-    public get accountFavorites(): Observable<List<BatchAccount>> {
-        return this._accountFavorites.asObservable();
     }
 
     public get currentAccountValid(): Observable<AccountStatus> {
@@ -164,19 +170,10 @@ export class BatchAccountService implements OnDestroy {
         if (this.isAccountFavorite(accountId)) {
             return of(true);
         }
-
-        const subject = new AsyncSubject();
-        this.get(accountId).subscribe({
-            next: (account) => {
-                this._accountFavorites.next(this._accountFavorites.getValue().push(account));
-                this._saveAccountFavorites();
-                subject.complete();
-            }, error: (e) => {
-                subject.error(e);
-            },
-        });
-
-        return subject.asObservable();
+        this._accountFavorites.next(this._accountFavorites.value.push({
+            id: accountId,
+        }));
+        return this._saveAccountFavorites();
     }
 
     public unFavoriteAccount(accountId: string) {
@@ -185,14 +182,14 @@ export class BatchAccountService implements OnDestroy {
             return;
         }
 
-        const newAccounts = this._accountFavorites.getValue().filter(account => account.id.toLowerCase() !== accountId);
+        const newAccounts = this._accountFavorites.value.filter(account => account.id.toLowerCase() !== accountId);
         this._accountFavorites.next(List<BatchAccount>(newAccounts));
-        this._saveAccountFavorites();
+        return this._saveAccountFavorites();
     }
 
     public isAccountFavorite(accountId: string): boolean {
         accountId = accountId.toLowerCase();
-        const favorites = this._accountFavorites.getValue();
+        const favorites = this._accountFavorites.value;
         const account = favorites.filter(x => x.id === accountId).first();
 
         return Boolean(account);
@@ -238,8 +235,8 @@ export class BatchAccountService implements OnDestroy {
         );
     }
 
-    private _saveAccountFavorites(accounts: List<BatchAccount> = null): Observable<any> {
-        accounts = accounts === null ? this._accountFavorites.getValue() : accounts;
+    private _saveAccountFavorites(accounts: List<{ id: string }> = null): Observable<any> {
+        accounts = accounts === null ? this._accountFavorites.value : accounts;
         return this.storage.set(this._accountJsonFileName, accounts.toJS());
     }
 }
