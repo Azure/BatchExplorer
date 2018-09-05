@@ -6,7 +6,7 @@ import { ArmBatchAccount, BatchAccountAttributes, Subscription } from "app/model
 import { AccountPatchDto } from "app/models/dtos";
 import { ArmResourceUtils, Constants } from "app/utils";
 import { List } from "immutable";
-import { BehaviorSubject, Observable, combineLatest, empty, forkJoin, of } from "rxjs";
+import { BehaviorSubject, Observable, empty, forkJoin, of } from "rxjs";
 import { expand, filter, flatMap, map, reduce, share } from "rxjs/operators";
 import { AzureHttpService } from "../azure-http.service";
 import { SubscriptionService } from "../subscription.service";
