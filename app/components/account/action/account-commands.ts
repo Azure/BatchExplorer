@@ -49,10 +49,9 @@ export class BatchAccountCommands extends EntityCommands<BatchAccount> {
                 this.accountService.deleteBatchAccount(account.id);
             },
             enabled: (account: BatchAccount) => {
-                const accountState = account && account.properties && account.properties.provisioningState;
-                const accountProvisioningState = AccountProvisingState;
-                return accountState !== accountProvisioningState.Creating
-                    && accountState !== accountProvisioningState.Deleting;
+                const accountState = account && account.provisioningState;
+                return accountState !== AccountProvisingState.Creating
+                    && accountState !== AccountProvisingState.Deleting;
             },
             confirm: (accounts) => this._confirmDeletion(accounts),
             permission: Permission.Write,

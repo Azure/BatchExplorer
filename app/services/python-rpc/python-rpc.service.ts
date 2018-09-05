@@ -1,13 +1,13 @@
 import { Injectable, NgZone } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
 import { ElectronRemote } from "@batch-flask/ui";
-import { BatchAccount } from "app/models";
+import { ArmBatchAccount } from "app/models";
 import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { SecureUtils, log } from "app/utils";
 import { PythonRpcServerProcess } from "client/python-process";
 import { AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
-import { catchError, first, flatMap, share } from "rxjs/operators";
+import { catchError, first, flatMap, share, tap } from "rxjs/operators";
 import { AdalService } from "../adal";
 import { BatchAccountService } from "../batch-account.service";
 
@@ -129,7 +129,16 @@ export class PythonRpcService {
         const resourceUrl = this.batchExplorer.azureEnvironment;
         return this.accountService.currentAccount.pipe(
             first(),
-            flatMap((account: BatchAccount) => {
+            tap((account) => {
+                if (!(account instanceof ArmBatchAccount)) {
+                    throw new ServerError({
+                        code: "LocalBatchAccount",
+                        message: "Cannot use this functionality with a local batch account",
+                        status: 406,
+                    });
+                }
+            }),
+            flatMap((account: ArmBatchAccount) => {
                 const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.batchUrl);
                 const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.armUrl);
                 return combineLatest(batchToken, armToken).pipe(

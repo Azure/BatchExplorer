@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BatchAccount, VmSize } from "app/models";
+import { ArmBatchAccount, BatchAccount, VmSize } from "app/models";
 import { StringUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, combineLatest } from "rxjs";
@@ -92,6 +92,7 @@ export class VmSizeService {
     }
 
     public load() {
+        if (!(this._currentAccount instanceof ArmBatchAccount)) { return; }
         const { subscription, location } = this._currentAccount;
         const url = `${computeUrl(subscription.subscriptionId)}/locations/${location}/vmSizes`;
         this.arm.get(url).subscribe({

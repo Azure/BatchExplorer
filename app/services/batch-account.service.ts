@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { RequestOptions, Response, URLSearchParams } from "@angular/http";
 import { BasicEntityGetter, DataCache, DataCacheTracker, EntityView } from "@batch-flask/core";
-import { AccountKeys, BatchAccount, BatchAccountAttributes, Subscription } from "app/models";
+import { AccountKeys, ArmBatchAccount, BatchAccount, BatchAccountAttributes, Subscription } from "app/models";
 import { AccountPatchDto } from "app/models/dtos";
 import { ArmResourceUtils, log } from "app/utils";
 import { Constants } from "common";
@@ -85,7 +85,7 @@ export class BatchAccountService {
         this._accountLoaded.next(true);
         this.accounts = this._accounts.asObservable();
 
-        this._getter = new BasicEntityGetter(BatchAccount, {
+        this._getter = new BasicEntityGetter(ArmBatchAccount, {
             cache: () => this._cache,
             supplyData: ({ id }) => this._getAccount(id),
         });
@@ -204,7 +204,7 @@ export class BatchAccountService {
                 return this.azure.get(subscription, `/subscriptions/${subscriptionId}/resources`, options).pipe(
                     map(response => {
                         return List<BatchAccount>(response.json().value.map((data) => {
-                            return new BatchAccount(Object.assign({}, data, { subscription }));
+                            return new ArmBatchAccount(Object.assign({}, data, { subscription }));
                         }));
                     }),
                 );
@@ -407,7 +407,7 @@ export class BatchAccountService {
         return this.storage.get(this._accountJsonFileName).pipe(
             map((data) => {
                 if (Array.isArray(data)) {
-                    return List(data.map(x => new BatchAccount(x)));
+                    return List(data.map(x => new ArmBatchAccount(x)));
                 } else {
                     return List([]);
                 }
@@ -457,7 +457,7 @@ export class BatchAccountService {
             if (data.length === 0) {
                 this._clearCachedAccounts();
             } else {
-                const accounts = data.map(x => new BatchAccount(x));
+                const accounts = data.map(x => new ArmBatchAccount(x));
                 this._accounts.next(List<BatchAccount>(accounts));
                 this._markAccountsAsLoaded();
             }

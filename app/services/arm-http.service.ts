@@ -2,8 +2,10 @@ import { Injectable } from "@angular/core";
 import {
     RequestMethod, RequestOptions, RequestOptionsArgs, Response,
 } from "@angular/http";
+import { ServerError } from "@batch-flask/core";
 import { Observable } from "rxjs";
-import { first, flatMap, share } from "rxjs/operators";
+import { first, flatMap, share, tap } from "rxjs/operators";
+import { ArmBatchAccount } from "../models";
 import { AdalService } from "./adal";
 import { AzureHttpService } from "./azure-http.service";
 import { BatchAccountService } from "./batch-account.service";
@@ -29,7 +31,16 @@ export class ArmHttpService {
     public request(uri: string, options: RequestOptionsArgs): Observable<Response> {
         return this.accountService.currentAccount.pipe(
             first(),
-            flatMap(account => this.http.request(account.subscription, uri, options)),
+            tap((account) => {
+                if (!(account instanceof ArmBatchAccount)) {
+                    throw new ServerError({
+                        code: "LocalBatchAccount",
+                        message: "Cannot use this functionality with a local batch account",
+                        status: 406,
+                    });
+                }
+            }),
+            flatMap((account: ArmBatchAccount) => this.http.request(account.subscription, uri, options)),
             share(),
         );
     }

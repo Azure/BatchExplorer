@@ -1,16 +1,15 @@
 import { fakeAsync, tick } from "@angular/core/testing";
-import { AsyncSubject, Subscription, of } from "rxjs";
-
 import { DataCache } from "@batch-flask/core";
-import { BatchAccount } from "app/models";
+import { ArmBatchAccount, BatchAccount } from "app/models";
 import { BatchAccountService } from "app/services";
+import { AsyncSubject, Subscription, of } from "rxjs";
 import { first } from "rxjs/operators";
 
 describe("AccountService", () => {
     let accountService: BatchAccountService;
     let currentAccount: BatchAccount;
     let currentAccountId: string;
-    const account1 = new BatchAccount({ id: "account-1" } as any);
+    const account1 = new ArmBatchAccount({ id: "account-1" } as any);
     let subscriptionServiceSpy;
     const subs: Subscription[] = [];
     let storageSpy;
@@ -65,7 +64,7 @@ describe("AccountService", () => {
         expect(currentAccountId).toEqual("account-2", "Account id should have been updated immediately");
         expect(currentAccount).toBeUndefined();
 
-        accountSubject.next(new BatchAccount({ id: "account-2" } as any));
+        accountSubject.next(new ArmBatchAccount({ id: "account-2" } as any));
         accountSubject.complete();
         tick();
 

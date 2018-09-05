@@ -10,7 +10,8 @@ import { BatchAccountService } from "app/services/batch-account.service";
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { AADUser } from "client/core/aad/adal/aad-user";
 import { Constants } from "common";
-import { catchError, flatMap, retryWhen, shareReplay, take } from "rxjs/operators";
+import { catchError, flatMap, retryWhen, shareReplay, take, tap } from "rxjs/operators";
+import { ArmBatchAccount } from "app/models";
 
 @Injectable()
 export class AADGraphHttpService extends HttpService {
@@ -31,7 +32,16 @@ export class AADGraphHttpService extends HttpService {
     public request(method: any, uri?: any, options?: any): Observable<any> {
         return this.accountService.currentAccount.pipe(
             take(1),
-            flatMap((account) => {
+            tap((account) => {
+                if (!(account instanceof ArmBatchAccount)) {
+                    throw new ServerError({
+                        code: "LocalBatchAccount",
+                        message: "Cannot use this functionality with a local batch account",
+                        status: 406,
+                    });
+                }
+            }),
+            flatMap((account: ArmBatchAccount) => {
                 const tenantId = account.subscription.tenantId;
                 return this.adal.accessTokenData(tenantId, this.serviceUrl).pipe(
                     flatMap((accessToken) => {

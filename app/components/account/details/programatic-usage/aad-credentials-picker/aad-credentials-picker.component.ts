@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
 
-import { BatchAccount } from "app/models";
+import { ArmBatchAccount } from "app/models";
 import { AADApplication, PasswordCredential } from "app/models/ms-graph";
 
 import { AADCredential, AppCreatedEvent } from "app/components/account/details/programatic-usage";
@@ -20,7 +20,7 @@ enum Step {
 })
 export class AADCredentialsPickerComponent {
     public Step = Step;
-    @Input() public account: BatchAccount;
+    @Input() public account: ArmBatchAccount;
     @Output() public credentialsChange = new EventEmitter<AADCredential>();
 
     public pickedApplication: AADApplication;

@@ -59,16 +59,26 @@ export interface BatchAccountAttributes {
     subscription: Subscription;
 }
 
+export interface BatchAccount extends Record<any> {
+    id: string;
+    name: string;
+    url: string;
+    provisioningState: AccountProvisingState;
+    armEnabled: boolean;
+    autoStorage: AutoStorageAccount | null;
+    hasArmAutoStorage: () => boolean;
+}
+
 @Model()
-export class BatchAccount extends ArmRecord<BatchAccountAttributes> {
+export class ArmBatchAccount extends ArmRecord<BatchAccountAttributes> implements BatchAccount {
     public type: "Microsoft.Batch/batchAccounts";
+    public armEnabled = true;
 
     @Prop() public id: string;
     @Prop() public name: string;
     @Prop() public location: string;
     @Prop() public properties: BatchAccountProperties;
     @Prop() public subscription: Subscription;
-
     public get isBatchManaged() {
         return this.properties && this.properties.poolAllocationMode === PoolAllocationMode.BatchService;
     }
@@ -88,5 +98,36 @@ export class BatchAccount extends ArmRecord<BatchAccountAttributes> {
 
     public get routerLink(): string[] {
         return ["/accounts", this.id];
+    }
+
+    public get url() {
+        return this.properties && this.properties.accountEndpoint;
+    }
+
+    public get provisioningState() {
+        return this.properties && this.properties.provisioningState;
+    }
+}
+
+@Model()
+export class LocalBatchAccount extends Record<any> implements BatchAccount {
+    @Prop() public name: string;
+    @Prop() public url: string;
+    @Prop() public key: string;
+
+    public armEnabled = false;
+    public provisioningState = AccountProvisingState.Succeeded;
+    public autoStorage = null;
+
+    public get id(): string {
+        return `local/${this.url}`;
+    }
+
+    public get routerLink(): string[] {
+        return ["/accounts", this.id];
+    }
+
+    public hasArmAutoStorage() {
+        return false;
     }
 }

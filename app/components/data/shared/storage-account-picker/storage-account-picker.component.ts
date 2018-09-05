@@ -6,8 +6,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { SelectOptionComponent } from "@batch-flask/ui";
 import { BatchAccountService, StorageAccountService } from "app/services";
 import { List } from "immutable";
-
-import { StorageAccount } from "app/models";
+import { ArmBatchAccount, StorageAccount } from "app/models";
 import { AutoStorageService } from "app/services/storage";
 import { Subscription } from "rxjs";
 import { first } from "rxjs/operators";
@@ -48,11 +47,14 @@ export class StorageAccountPickerComponent implements OnInit, AfterContentInit, 
 
     public ngOnInit() {
         this.batchAccountService.currentAccount.pipe(first()).subscribe((currentAccount) => {
-            this.storageAccountService.list(currentAccount.subscription.subscriptionId).subscribe((storageAccounts) => {
-                this._storageAccounts = storageAccounts;
-                this.loading = false;
-                this._updateStorageAccounts();
-            });
+            if (currentAccount instanceof ArmBatchAccount) {
+                this.storageAccountService.list(currentAccount.subscription.subscriptionId)
+                    .subscribe((storageAccounts) => {
+                        this._storageAccounts = storageAccounts;
+                        this.loading = false;
+                        this._updateStorageAccounts();
+                    });
+            }
         });
     }
 

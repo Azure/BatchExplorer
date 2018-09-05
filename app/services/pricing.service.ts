@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BatchAccount, BatchSoftwareLicense, Pool, RateCardMeter } from "app/models";
+import { ArmBatchAccount, BatchSoftwareLicense, Pool, RateCardMeter } from "app/models";
 import { BatchPricing, OSPricing, OsType, SoftwarePricing, VMPrices } from "app/services/pricing";
 import { PoolPrice, PoolPriceOptions, PoolUtils, log } from "app/utils";
 import * as moment from "moment";
@@ -133,10 +133,14 @@ export class PricingService {
     private _loadRateCardMeters(): Observable<RateCardMeter[]> {
         return this.accountService.currentAccount.pipe(
             flatMap((account) => {
-                const { subscription } = account;
+                if (account instanceof ArmBatchAccount) {
+                    const { subscription } = account;
 
-                const url = `${commerceUrl(subscription.subscriptionId)}/RateCard?$filter=${rateCardFilter()}`;
-                return this.arm.get(url).pipe(map((response) => response.json().Meters));
+                    const url = `${commerceUrl(subscription.subscriptionId)}/RateCard?$filter=${rateCardFilter()}`;
+                    return this.arm.get(url).pipe(map((response) => response.json().Meters));
+                } else {
+                    return of([]);
+                }
             }),
             share(),
         );
@@ -225,14 +229,18 @@ export class PricingService {
      * Wait for the prices and account to be loaded and returns callback
      * @param callback Callback when account and prices are loaded
      */
-    private _getPrice<T>(callback: (account: BatchAccount, pricing: BatchPricing) => T) {
+    private _getPrice<T>(callback: (account: ArmBatchAccount, pricing: BatchPricing) => T) {
         return this.accountService.currentAccount.pipe(
             take(1),
             flatMap((account) => {
-                return this.pricing.pipe(
-                    take(1),
-                    map(map => callback(account, map)),
-                );
+                if (account instanceof ArmBatchAccount) {
+                    return this.pricing.pipe(
+                        take(1),
+                        map(map => callback(account, map)),
+                    );
+                } else {
+                    return of(null);
+                }
             }),
             share(),
         );

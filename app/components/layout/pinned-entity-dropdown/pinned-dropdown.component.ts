@@ -38,7 +38,7 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
         }));
 
         this._subscriptions.push(this.accountService.currentAccount.subscribe((account) => {
-            this._accountEndpoint = account.properties.accountEndpoint;
+            this._accountEndpoint = account.url;
         }));
     }
 

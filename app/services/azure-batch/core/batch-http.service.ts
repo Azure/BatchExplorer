@@ -3,13 +3,13 @@ import { HttpHandler, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { HttpRequestOptions, HttpService, ServerError } from "@batch-flask/core";
 import { UrlUtils } from "@batch-flask/utils";
-import { BatchAccount } from "app/models";
+import { BatchAccount, ArmBatchAccount, LocalBatchAccount } from "app/models";
 import { AdalService } from "app/services/adal";
 import { BatchAccountService } from "app/services/batch-account.service";
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { Constants } from "common";
 import { Observable, from, throwError } from "rxjs";
-import { catchError, flatMap, retryWhen, shareReplay, take } from "rxjs/operators";
+import { catchError, flatMap, retryWhen, shareReplay, take, map } from "rxjs/operators";
 import { BatchSharedKeyCredentials } from "./shared-key-utils";
 
 @Injectable()
@@ -31,15 +31,16 @@ export class AzureBatchHttpService extends HttpService {
         return this.accountService.currentAccount.pipe(
             take(1),
             flatMap((account) => {
-                const tenantId = account.subscription.tenantId;
-                return this.adal.accessTokenData(tenantId, this.serviceUrl).pipe(
-                    flatMap(() => {
-                        // TODO-TIM remove
-                        const sharedKey = new BatchSharedKeyCredentials("", "");
-                        return from(sharedKey.signRequest(method, uri, options));
-                    }),
-                    flatMap((accessToken) => {
-                        // options = this.addAuthorizationHeader(options, accessToken);
+                let obs;
+                if (account instanceof ArmBatchAccount) {
+                    obs = this._setupRequestForArm(account, options);
+                } else if (account instanceof LocalBatchAccount) {
+                    obs = this._setupRequestForSharedKey(account, method, uri, options);
+                } else {
+                    throw new Error(`Invalid account type ${account}`);
+                }
+                return obs.pipe(
+                    flatMap((options) => {
                         return super.request(
                             method,
                             this._computeUrl(uri, account),
@@ -50,13 +51,24 @@ export class AzureBatchHttpService extends HttpService {
                                     return throwError(err);
                                 }),
                             );
-                    }),
+                    })
                 );
             }),
             shareReplay(1),
         );
     }
 
+    private _setupRequestForArm(account: ArmBatchAccount, options) {
+        const tenantId = account.subscription.tenantId;
+        return this.adal.accessTokenData(tenantId, this.serviceUrl).pipe(
+            map((accessToken) => this.addAuthorizationHeader(options, accessToken)),
+        );
+    }
+
+    private _setupRequestForSharedKey(account: LocalBatchAccount, method: string, uri: string, options) {
+        const sharedKey = new BatchSharedKeyCredentials("", "");
+        return from(sharedKey.signRequest(method, uri, options));
+    }
     private _addApiVersion(uri: string, options: HttpRequestOptions): HttpRequestOptions {
         if (!(options.params instanceof HttpParams)) {
             options.params = new HttpParams({ fromObject: options.params });
@@ -79,7 +91,7 @@ export class AzureBatchHttpService extends HttpService {
         if (UrlUtils.isHttpUrl(uri)) {
             return uri;
         } else {
-            return Location.joinWithSlash(`https://${account.properties.accountEndpoint}`, uri);
+            return Location.joinWithSlash(`https://${account.url}`, uri);
         }
     }
 }

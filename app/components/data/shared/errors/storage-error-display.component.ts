@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import { Subscription } from "rxjs";
-
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
-import { BatchAccount } from "app/models";
+import { ArmBatchAccount, BatchAccount } from "app/models";
 import { BatchAccountService } from "app/services";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: "bl-storage-error-display",
@@ -46,7 +45,9 @@ export class StorageErrorDisplayComponent implements OnInit, OnDestroy {
 
     @autobind()
     public setupLinkedStorage() {
-        const sidebarRef = this.sidebarManager.open("edit-storage-account", EditStorageAccountFormComponent);
-        sidebarRef.component.account = this._batchAccount;
+        if (this._batchAccount instanceof ArmBatchAccount) {
+            const sidebarRef = this.sidebarManager.open("edit-storage-account", EditStorageAccountFormComponent);
+            sidebarRef.component.account = this._batchAccount;
+        }
     }
 }

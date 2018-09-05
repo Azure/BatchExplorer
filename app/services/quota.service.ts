@@ -1,9 +1,9 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { FilterBuilder } from "@batch-flask/core";
-import { BatchAccount, BatchQuotas, JobState, Pool } from "app/models";
+import { ArmBatchAccount, BatchQuotas, JobState, Pool } from "app/models";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, Subscription, forkJoin, merge, of } from "rxjs";
-import { flatMap, map, shareReplay } from "rxjs/operators";
+import { filter, flatMap, map, shareReplay } from "rxjs/operators";
 import { ApplicationService } from "./application.service";
 import { JobService } from "./azure-batch/job";
 import { PoolService } from "./azure-batch/pool";
@@ -44,7 +44,8 @@ export class QuotaService implements OnDestroy {
         }));
 
         this.quotas = this.accountService.currentAccount.pipe(
-            flatMap((account) => {
+            filter(x => x instanceof ArmBatchAccount),
+            flatMap((account: ArmBatchAccount) => {
                 return this._computeQuotas(account);
             }),
             shareReplay(1),
@@ -121,7 +122,7 @@ export class QuotaService implements OnDestroy {
         return this._usage.value || new BatchQuotas();
     }
 
-    private _computeQuotas(account: BatchAccount): Observable<BatchQuotas> {
+    private _computeQuotas(account: ArmBatchAccount): Observable<BatchQuotas> {
         if (account.isBatchManaged) {
             return of(new BatchQuotas({
                 dedicatedCores: account.properties.dedicatedCoreQuota,

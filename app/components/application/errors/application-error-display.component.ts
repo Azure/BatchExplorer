@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
-import { BatchAccount, BatchApplication } from "app/models";
+import { ArmBatchAccount, BatchAccount, BatchApplication } from "app/models";
 import { BatchAccountService } from "app/services";
 import { Subscription } from "rxjs";
 
@@ -33,9 +32,8 @@ export class ApplicationErrorDisplayComponent implements OnInit, OnDestroy {
         if (!this._batchAccount) {
             return false;
         }
-        return !this._batchAccount.properties
-            || !this._batchAccount.properties.autoStorage
-            || !this._batchAccount.properties.autoStorage.storageAccountId;
+        return !this._batchAccount.autoStorage
+            || !this._batchAccount.autoStorage.storageAccountId;
     }
 
     public ngOnInit() {
@@ -51,7 +49,9 @@ export class ApplicationErrorDisplayComponent implements OnInit, OnDestroy {
 
     @autobind()
     public setupLinkedStorage() {
-        const sidebarRef = this.sidebarManager.open("edit-storage-account", EditStorageAccountFormComponent);
-        sidebarRef.component.account = this._batchAccount;
+        if (this._batchAccount instanceof ArmBatchAccount) {
+            const sidebarRef = this.sidebarManager.open("edit-storage-account", EditStorageAccountFormComponent);
+            sidebarRef.component.account = this._batchAccount;
+        }
     }
 }

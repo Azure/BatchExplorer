@@ -56,7 +56,7 @@ export class StorageClientService {
         return this.accountService.currentAccount.pipe(
             first(),
             flatMap((account) => {
-                const settings = account.properties && account.properties.autoStorage;
+                const settings = account.autoStorage;
                 if (!settings) {
                     return throwError(new ServerError({
                         status: 404,

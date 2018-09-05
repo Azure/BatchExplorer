@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { autobind } from "@batch-flask/core";
 import { ElectronShell } from "@batch-flask/ui";
-import { NameValuePair, Pool, ResizeError, ResizeErrorCode } from "app/models";
+import { ArmBatchAccount, NameValuePair, Pool, ResizeError, ResizeErrorCode } from "app/models";
 import { NodeDeallocationOption, PoolResizeDto } from "app/models/dtos";
 import { BatchAccountService, PoolService } from "app/services";
 import { ExternalLinks } from "common/constants";
@@ -24,11 +24,15 @@ export class PoolErrorDisplayComponent {
     }
 
     public get dedicatedQuota() {
-        return this.accountService.currentAccount.pipe(map(x => x.properties.dedicatedCoreQuota));
+        return this.accountService.currentAccount.pipe(map(x => {
+            return x instanceof ArmBatchAccount && x.properties.dedicatedCoreQuota;
+        }));
     }
 
     public get lowPriorityQuota() {
-        return this.accountService.currentAccount.pipe(map(x => x.properties.lowPriorityCoreQuota));
+        return this.accountService.currentAccount.pipe(map(x => {
+            return x instanceof ArmBatchAccount && x.properties.lowPriorityCoreQuota;
+        }));
     }
 
     @autobind()

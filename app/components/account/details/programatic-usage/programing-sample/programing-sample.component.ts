@@ -52,7 +52,7 @@ export class ProgramingSampleComponent implements OnChanges {
     }
 
     private get accountUrl() {
-        const url = this.account && this.account.properties.accountEndpoint;
+        const url = this.account && this.account.url;
         return url ? `https://${url}` : "";
     }
 

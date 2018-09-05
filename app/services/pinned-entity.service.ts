@@ -34,7 +34,7 @@ export class PinnedEntityService {
 
         this.loaded = this._loaded.asObservable();
         this.accountService.currentAccount.subscribe((account) => {
-            this._currentAccountEndpoint = account.properties.accountEndpoint;
+            this._currentAccountEndpoint = account.url;
             this._favorites.next(List<PinnableEntity>());
             this._loadInitialData();
         });
