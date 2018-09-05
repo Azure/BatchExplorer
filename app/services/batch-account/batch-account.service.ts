@@ -11,6 +11,7 @@ import { expand, filter, flatMap, map, reduce, share } from "rxjs/operators";
 import { AzureHttpService } from "../azure-http.service";
 import { LocalFileStorage } from "../local-file-storage.service";
 import { SubscriptionService } from "../subscription.service";
+import { LocalBatchAccountService } from "./local-batch-account.service";
 
 const batchProvider = "Microsoft.Batch";
 const batchResourceProvider = batchProvider + "/batchAccounts";
@@ -76,6 +77,7 @@ export class BatchAccountService {
     private _getter: BasicEntityGetter<BatchAccount, AccountParams>;
 
     constructor(
+        private localBatchAccountService: LocalBatchAccountService,
         private storage: LocalFileStorage,
         private azure: AzureHttpService,
         private subscriptionService: SubscriptionService) {
@@ -83,7 +85,9 @@ export class BatchAccountService {
         this.accountLoaded = this._accountLoaded.asObservable();
         this.accountsLoaded = this._accountsLoaded.asObservable();
         this._accountLoaded.next(true);
-        this.accounts = this._accounts.asObservable();
+        this.accounts = combineLatest(this._accounts.asObservable(), this.localBatchAccountService.accounts).pipe(
+            map(([a, b]) => List(b.concat(a))),
+        );
 
         this._getter = new BasicEntityGetter(ArmBatchAccount, {
             cache: () => this._cache,
@@ -168,6 +172,7 @@ export class BatchAccountService {
     }
 
     public load() {
+        this.localBatchAccountService.load().subscribe();
         this._loadCachedAccounts();
         const obs = this.subscriptionService.subscriptions.pipe(
             flatMap((subscriptions) => {

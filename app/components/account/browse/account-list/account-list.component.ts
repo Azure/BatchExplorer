@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, forwardRef } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
@@ -7,11 +6,12 @@ import { Filter, FilterMatcher, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/core/list";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
-import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { BatchAccountCommands } from "app/components/account/action";
 import { BatchAccount } from "app/models";
 import { BatchAccountService, SubscriptionService } from "app/services";
 import { flatMap, shareReplay } from "rxjs/operators";
+
+import "./account-list.scss";
 
 @Component({
     selector: "bl-account-list",
@@ -36,8 +36,6 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
     constructor(
         public commands: BatchAccountCommands,
         private accountService: BatchAccountService,
-        activatedRoute: ActivatedRoute,
-        sidebarManager: SidebarManager,
         changeDetector: ChangeDetectorRef,
         private subscriptionService: SubscriptionService) {
         super(changeDetector);

@@ -1,13 +1,9 @@
-
 @import "app/styles/variables";
-
-bl-account-home {
-}
 
 bl-account-list {
     bl-quick-list-row-render:hover {
         .fa-star {
-            color: $athensGrey;
+            color: $main-background;
         }
     }
 
@@ -22,5 +18,11 @@ bl-account-list {
         &.favorite {
             color: map-get($primary, 400) !important;
         }
+    }
+
+    .account-type {
+        background: $primary-color;
+        color: $primary-contrast-color;
+        padding: 2px 5px;
     }
 }
