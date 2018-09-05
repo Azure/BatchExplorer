@@ -10,7 +10,7 @@ import { ElectronModule } from "@batch-flask/ui";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { TableTestingModule } from "@batch-flask/ui/testing";
 import { VmSizePickerComponent } from "app/components/pool/action/add";
-import { AccountResource, VmSize } from "app/models";
+import { BatchAccount, VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
 import { BatchAccountService, PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
@@ -58,7 +58,7 @@ describe("VmSizePickerComponent", () => {
         };
 
         accountServiceSpy = {
-            currentAccount: of(new AccountResource({ location: "westus" } as any)),
+            currentAccount: of(new BatchAccount({ location: "westus" } as any)),
         };
 
         pricingServiceSpy = {

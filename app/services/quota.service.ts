@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { FilterBuilder } from "@batch-flask/core";
-import { AccountResource, BatchQuotas, JobState, Pool } from "app/models";
+import { BatchAccount, BatchQuotas, JobState, Pool } from "app/models";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, Subscription, forkJoin, merge, of } from "rxjs";
 import { flatMap, map, shareReplay } from "rxjs/operators";
@@ -121,7 +121,7 @@ export class QuotaService implements OnDestroy {
         return this._usage.value || new BatchQuotas();
     }
 
-    private _computeQuotas(account: AccountResource): Observable<BatchQuotas> {
+    private _computeQuotas(account: BatchAccount): Observable<BatchQuotas> {
         if (account.isBatchManaged) {
             return of(new BatchQuotas({
                 dedicatedCores: account.properties.dedicatedCoreQuota,

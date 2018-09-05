@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { RequestOptions, Response, URLSearchParams } from "@angular/http";
 import { BasicEntityGetter, DataCache, DataCacheTracker, EntityView } from "@batch-flask/core";
-import { AccountKeys, AccountResource, BatchAccountAttributes, Subscription } from "app/models";
+import { AccountKeys, BatchAccount, BatchAccountAttributes, Subscription } from "app/models";
 import { AccountPatchDto } from "app/models/dtos";
 import { ArmResourceUtils, log } from "app/utils";
 import { Constants } from "common";
@@ -30,7 +30,7 @@ export interface AccountParams {
 }
 
 export interface SelectedAccount {
-    account: AccountResource;
+    account: BatchAccount;
 }
 
 export interface AvailabilityResult {
@@ -48,14 +48,14 @@ export interface QuotaResult {
 export class BatchAccountService {
     public accountLoaded: Observable<boolean>;
     public accountsLoaded: Observable<boolean>;
-    public accounts: Observable<List<AccountResource>>;
+    public accounts: Observable<List<BatchAccount>>;
 
     /**
      * @returns the current account.
      * If the current loaded account match the currentAccountId it will return immediately
      * otherwise this will wait for the account with currentAccountId to be loaded
      */
-    public currentAccount: Observable<AccountResource>;
+    public currentAccount: Observable<BatchAccount>;
 
     /**
      * This represent the value of the current accountId.
@@ -64,16 +64,16 @@ export class BatchAccountService {
     public currentAccountId: Observable<string>;
 
     private _accountJsonFileName: string = "account-favorites";
-    private _accountFavorites: BehaviorSubject<List<AccountResource>> = new BehaviorSubject(List([]));
+    private _accountFavorites: BehaviorSubject<List<BatchAccount>> = new BehaviorSubject(List([]));
     private _currentAccount: BehaviorSubject<SelectedAccount> = new BehaviorSubject(null);
     private _currentAccountValid: BehaviorSubject<AccountStatus> = new BehaviorSubject(AccountStatus.Invalid);
     private _currentAccountInvalidError: BehaviorSubject<string> = new BehaviorSubject(null);
     private _accountLoaded = new BehaviorSubject<boolean>(false);
     private _currentAccountId = new BehaviorSubject<string>(null);
-    private _accounts = new BehaviorSubject<List<AccountResource>>(List([]));
+    private _accounts = new BehaviorSubject<List<BatchAccount>>(List([]));
     private _accountsLoaded = new AsyncSubject<boolean>();
-    private _cache = new DataCache<AccountResource>();
-    private _getter: BasicEntityGetter<AccountResource, AccountParams>;
+    private _cache = new DataCache<BatchAccount>();
+    private _getter: BasicEntityGetter<BatchAccount, AccountParams>;
 
     constructor(
         private storage: LocalFileStorage,
@@ -85,7 +85,7 @@ export class BatchAccountService {
         this._accountLoaded.next(true);
         this.accounts = this._accounts.asObservable();
 
-        this._getter = new BasicEntityGetter(AccountResource, {
+        this._getter = new BasicEntityGetter(BatchAccount, {
             cache: () => this._cache,
             supplyData: ({ id }) => this._getAccount(id),
         });
@@ -113,7 +113,7 @@ export class BatchAccountService {
         );
     }
 
-    public get accountFavorites(): Observable<List<AccountResource>> {
+    public get accountFavorites(): Observable<List<BatchAccount>> {
         return this._accountFavorites.asObservable();
     }
 
@@ -194,7 +194,7 @@ export class BatchAccountService {
         return obs;
     }
 
-    public list(subscriptionId: string): Observable<List<AccountResource>> {
+    public list(subscriptionId: string): Observable<List<BatchAccount>> {
         const search = new URLSearchParams();
         search.set("$filter", `resourceType eq '${batchResourceProvider}'`);
         const options = new RequestOptions({ search });
@@ -203,8 +203,8 @@ export class BatchAccountService {
             flatMap((subscription) => {
                 return this.azure.get(subscription, `/subscriptions/${subscriptionId}/resources`, options).pipe(
                     map(response => {
-                        return List<AccountResource>(response.json().value.map((data) => {
-                            return new AccountResource(Object.assign({}, data, { subscription }));
+                        return List<BatchAccount>(response.json().value.map((data) => {
+                            return new BatchAccount(Object.assign({}, data, { subscription }));
                         }));
                     }),
                 );
@@ -213,18 +213,18 @@ export class BatchAccountService {
         );
     }
 
-    public view(): EntityView<AccountResource, AccountParams> {
+    public view(): EntityView<BatchAccount, AccountParams> {
         return new EntityView({
             cache: () => this._cache,
             getter: this._getter,
         });
     }
 
-    public get(accountId: string): Observable<AccountResource> {
+    public get(accountId: string): Observable<BatchAccount> {
         return this._getter.fetch({ id: accountId });
     }
 
-    public getFromCache(accountId: string): Observable<AccountResource> {
+    public getFromCache(accountId: string): Observable<BatchAccount> {
         return this._getter.fetch({ id: accountId }, { cached: true });
     }
 
@@ -274,7 +274,7 @@ export class BatchAccountService {
         }
 
         const newAccounts = this._accountFavorites.getValue().filter(account => account.id.toLowerCase() !== accountId);
-        this._accountFavorites.next(List<AccountResource>(newAccounts));
+        this._accountFavorites.next(List<BatchAccount>(newAccounts));
         this._saveAccountFavorites();
     }
 
@@ -403,11 +403,11 @@ export class BatchAccountService {
         );
     }
 
-    private _loadFavoriteAccounts(): Observable<List<AccountResource>> {
+    private _loadFavoriteAccounts(): Observable<List<BatchAccount>> {
         return this.storage.get(this._accountJsonFileName).pipe(
             map((data) => {
                 if (Array.isArray(data)) {
-                    return List(data.map(x => new AccountResource(x)));
+                    return List(data.map(x => new BatchAccount(x)));
                 } else {
                     return List([]);
                 }
@@ -416,7 +416,7 @@ export class BatchAccountService {
         );
     }
 
-    private _saveAccountFavorites(accounts: List<AccountResource> = null): Observable<any> {
+    private _saveAccountFavorites(accounts: List<BatchAccount> = null): Observable<any> {
         accounts = accounts === null ? this._accountFavorites.getValue() : accounts;
         return this.storage.set(this._accountJsonFileName, accounts.toJS());
     }
@@ -457,8 +457,8 @@ export class BatchAccountService {
             if (data.length === 0) {
                 this._clearCachedAccounts();
             } else {
-                const accounts = data.map(x => new AccountResource(x));
-                this._accounts.next(List<AccountResource>(accounts));
+                const accounts = data.map(x => new BatchAccount(x));
+                this._accounts.next(List<BatchAccount>(accounts));
                 this._markAccountsAsLoaded();
             }
         } catch (e) {

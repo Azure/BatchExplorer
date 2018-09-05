@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from "@angular/core";
 import { VTabGroupComponent } from "@batch-flask/ui";
-import { AccountResource } from "app/models";
+import { BatchAccount } from "app/models";
 import { BatchAccountService, StorageAccountService } from "app/services";
 import { SharedKeyCredentials } from "./shared-key-credentials.model";
 
@@ -26,7 +26,7 @@ export interface AADCredential {
 export class ProgramaticUsageComponent {
     @ViewChild("tabs") public tabs: VTabGroupComponent;
     public CredentialType = CredentialType;
-    public account: AccountResource;
+    public account: BatchAccount;
     public sharedKeyCredentials: SharedKeyCredentials;
     public aadCredentials: AADCredential;
 

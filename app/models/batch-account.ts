@@ -60,7 +60,7 @@ export interface BatchAccountAttributes {
 }
 
 @Model()
-export class AccountResource extends ArmRecord<BatchAccountAttributes> {
+export class BatchAccount extends ArmRecord<BatchAccountAttributes> {
     public type: "Microsoft.Batch/batchAccounts";
 
     @Prop() public id: string;

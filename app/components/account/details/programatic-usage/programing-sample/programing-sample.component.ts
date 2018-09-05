@@ -3,7 +3,7 @@ import { prerequisites, sampleTemplates } from "./samples";
 
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { AADCredential, CredentialType } from "app/components/account/details/programatic-usage";
-import { AccountResource } from "app/models";
+import { BatchAccount } from "app/models";
 import { BatchExplorerService } from "app/services";
 import { SharedKeyCredentials } from "../shared-key-credentials.model";
 import "./programing-sample.scss";
@@ -30,7 +30,7 @@ const engineLanguages = {
 export class ProgramingSampleComponent implements OnChanges {
     public CredentialType = CredentialType;
     @Input() public target: SampleTarget;
-    @Input() public account: AccountResource;
+    @Input() public account: BatchAccount;
     @Input() public sharedKeyCredentials: SharedKeyCredentials;
     @Input() public aadCredentials: AADCredential;
     @Input() public credentialType: CredentialType;

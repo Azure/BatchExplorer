@@ -4,7 +4,7 @@ import { Subscription } from "rxjs";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
-import { AccountResource } from "app/models";
+import { BatchAccount } from "app/models";
 import { BatchAccountService } from "app/services";
 
 @Component({
@@ -18,7 +18,7 @@ export class StorageErrorDisplayComponent implements OnInit, OnDestroy {
     public hasAutoStorage: boolean;
     public isClassic: boolean;
 
-    private _batchAccount: AccountResource;
+    private _batchAccount: BatchAccount;
     private _currentAccountSub: Subscription;
 
     // TODO: make this the default auto storage error display.

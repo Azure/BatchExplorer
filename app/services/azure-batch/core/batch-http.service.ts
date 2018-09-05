@@ -3,7 +3,7 @@ import { HttpHandler, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { HttpRequestOptions, HttpService, ServerError } from "@batch-flask/core";
 import { UrlUtils } from "@batch-flask/utils";
-import { AccountResource } from "app/models";
+import { BatchAccount } from "app/models";
 import { AdalService } from "app/services/adal";
 import { BatchAccountService } from "app/services/batch-account.service";
 import { BatchExplorerService } from "app/services/batch-labs.service";
@@ -75,7 +75,7 @@ export class AzureBatchHttpService extends HttpService {
         return options;
     }
 
-    private _computeUrl(uri: string, account: AccountResource) {
+    private _computeUrl(uri: string, account: BatchAccount) {
         if (UrlUtils.isHttpUrl(uri)) {
             return uri;
         } else {

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AccountResource, VmSize } from "app/models";
+import { BatchAccount, VmSize } from "app/models";
 import { StringUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, combineLatest } from "rxjs";
@@ -51,7 +51,7 @@ export class VmSizeService {
     private _excludedSizes = new BehaviorSubject<ExcludedSizes>(null);
     private _vmSizeCategories = new BehaviorSubject<StringMap<string[]>>(null);
 
-    private _currentAccount: AccountResource;
+    private _currentAccount: BatchAccount;
 
     constructor(
         private arm: ArmHttpService,
@@ -84,7 +84,7 @@ export class VmSizeService {
     }
 
     public init() {
-        this.accountService.currentAccount.subscribe((account: AccountResource) => {
+        this.accountService.currentAccount.subscribe((account: BatchAccount) => {
             this._currentAccount = account;
             this.load();
         });

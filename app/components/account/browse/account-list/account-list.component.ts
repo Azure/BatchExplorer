@@ -9,7 +9,7 @@ import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { BatchAccountCommands } from "app/components/account/action";
-import { AccountResource } from "app/models";
+import { BatchAccount } from "app/models";
 import { BatchAccountService, SubscriptionService } from "app/services";
 import { flatMap, shareReplay } from "rxjs/operators";
 
@@ -27,8 +27,8 @@ import { flatMap, shareReplay } from "rxjs/operators";
 })
 export class AccountListComponent extends ListBaseComponent implements OnDestroy {
 
-    public accounts: List<AccountResource> = List([]);
-    public displayedAccounts: List<AccountResource> = List([]);
+    public accounts: List<BatchAccount> = List([]);
+    public displayedAccounts: List<BatchAccount> = List([]);
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
 
     private _accountSub: Subscription;
@@ -93,9 +93,9 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
     }
 
     private _updateDisplayedAccounts() {
-        const matcher = new FilterMatcher<AccountResource>();
+        const matcher = new FilterMatcher<BatchAccount>();
 
-        this.displayedAccounts = List<AccountResource>(this.accounts.filter((x) => {
+        this.displayedAccounts = List<BatchAccount>(this.accounts.filter((x) => {
             return matcher.test(this.filter, x);
         }).sortBy(x => x.name));
 

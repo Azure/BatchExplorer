@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
 import { ElectronRemote } from "@batch-flask/ui";
-import { AccountResource } from "app/models";
+import { BatchAccount } from "app/models";
 import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { SecureUtils, log } from "app/utils";
@@ -129,7 +129,7 @@ export class PythonRpcService {
         const resourceUrl = this.batchExplorer.azureEnvironment;
         return this.accountService.currentAccount.pipe(
             first(),
-            flatMap((account: AccountResource) => {
+            flatMap((account: BatchAccount) => {
                 const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.batchUrl);
                 const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.armUrl);
                 return combineLatest(batchToken, armToken).pipe(

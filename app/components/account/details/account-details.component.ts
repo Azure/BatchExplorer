@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { EntityView, ListView, ServerError, autobind } from "@batch-flask/core";
-import { AccountResource, BatchApplication, Job, Pool } from "app/models";
+import { BatchAccount, BatchApplication, Job, Pool } from "app/models";
 import {
     AccountParams, BatchAccountService, ApplicationListParams, ApplicationService,
     InsightsMetricsService, JobListParams, JobService, PoolListParams, PoolService,
@@ -33,12 +33,12 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         hideHeader: true,
     };
 
-    public account: AccountResource;
+    public account: BatchAccount;
     public accountId: string;
     public loadingError: any;
     public noLinkedStorage: boolean = false;
 
-    public data: EntityView<AccountResource, AccountParams>;
+    public data: EntityView<BatchAccount, AccountParams>;
 
     public applicationData: ListView<BatchApplication, ApplicationListParams>;
     public jobData: ListView<Job, JobListParams>;

@@ -4,7 +4,7 @@ import { autobind } from "@batch-flask/core";
 import { Observable } from "rxjs";
 
 import { SidebarRef } from "@batch-flask/ui/sidebar";
-import { AccountResource } from "app/models";
+import { BatchAccount } from "app/models";
 import { AccountPatchDto } from "app/models/dtos";
 import { BatchAccountService } from "app/services";
 
@@ -15,7 +15,7 @@ import "./edit-storage-account-form.scss";
     templateUrl: "edit-storage-account-form.html",
 })
 export class EditStorageAccountFormComponent {
-    public set account(account: AccountResource) {
+    public set account(account: BatchAccount) {
         this._account = account;
         if (account) {
             const props = account.properties;
@@ -26,7 +26,7 @@ export class EditStorageAccountFormComponent {
 
     public storageAccountId = new FormControl();
 
-    private _account: AccountResource;
+    private _account: BatchAccount;
 
     constructor(
         private accountService: BatchAccountService,

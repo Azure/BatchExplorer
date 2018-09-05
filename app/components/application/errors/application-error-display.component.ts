@@ -3,7 +3,7 @@ import { autobind } from "@batch-flask/core";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
-import { AccountResource, BatchApplication } from "app/models";
+import { BatchAccount, BatchApplication } from "app/models";
 import { BatchAccountService } from "app/services";
 import { Subscription } from "rxjs";
 
@@ -20,7 +20,7 @@ export class ApplicationErrorDisplayComponent implements OnInit, OnDestroy {
         return this._batchAccount;
     }
 
-    private _batchAccount: AccountResource;
+    private _batchAccount: BatchAccount;
     private _sub: Subscription;
 
     constructor(

@@ -4,7 +4,7 @@ import * as moment from "moment";
 import { PinnedEntityType } from "@batch-flask/core";
 import { File, Workspace } from "@batch-flask/ui";
 import {
-    AccountResource,
+    BatchAccount,
     ApplicationPackage,
     BatchApplication,
     BlobContainer,
@@ -220,7 +220,7 @@ export const subscription = new FixtureFactory<Subscription>(Subscription, {
     state: "ready",
 });
 
-export const account = new FixtureFactory<AccountResource>(AccountResource, {
+export const account = new FixtureFactory<BatchAccount>(BatchAccount, {
     id: "account-1",
     name: "account-test",
     location: "westus",

@@ -3,7 +3,7 @@ import { ServerError, autobind } from "@batch-flask/core";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
-import { AccountResource, StorageAccount } from "app/models";
+import { BatchAccount, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
 
 import "./storage-account-card.scss";
@@ -14,7 +14,7 @@ import "./storage-account-card.scss";
 })
 export class StorageAccountCardComponent implements OnChanges {
     @Input()
-    public account: AccountResource;
+    public account: BatchAccount;
     public storageAccountId: string;
 
     public error: ServerError;

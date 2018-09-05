@@ -3,7 +3,7 @@ import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } f
 import { List } from "immutable";
 
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { AccountResource, StorageAccount } from "app/models";
+import { BatchAccount, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
 
 import "./auto-storage-account-picker.scss";
@@ -20,7 +20,7 @@ import "./auto-storage-account-picker.scss";
 export class AutoStorageAccountPickerComponent implements OnInit, ControlValueAccessor {
     public noSelectionKey = "-1";
 
-    @Input() public account: AccountResource;
+    @Input() public account: BatchAccount;
 
     public preferedAccounts: List<StorageAccount> = List([]);
     public otherAccounts: List<StorageAccount> = List([]);

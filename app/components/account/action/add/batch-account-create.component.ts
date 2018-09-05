@@ -6,7 +6,7 @@ import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
-import { AccountResource, Location, ResourceGroup, Subscription as ArmSubscription } from "app/models";
+import { BatchAccount, Location, ResourceGroup, Subscription as ArmSubscription } from "app/models";
 import { createAccountFormToJsonData } from "app/models/forms/create-account-model";
 import {
     BatchAccountService, AuthorizationHttpService, AvailabilityResult,
@@ -69,9 +69,9 @@ export class BatchAccountCreateComponent implements OnDestroy {
         return `.${this.selectedLocation.name}${accountIdSuffix}`;
     }
 
-    public get account(): AccountResource {
+    public get account(): BatchAccount {
         if (this.selectedSubscription && this.selectedLocation) {
-            const account = new AccountResource({
+            const account = new BatchAccount({
                 subscription: this.selectedSubscription,
                 location: this.selectedLocation.name,
             } as any);
