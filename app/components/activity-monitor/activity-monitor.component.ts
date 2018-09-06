@@ -38,10 +38,12 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
         this.pastActivities = [];
         // this._focusedMonitor = null;
         this._sub = this.activityService.incompleteActivities.subscribe(activities => {
-            this.runningActivities = activities;
+            // copy the array to ensure change detection fires
+            this.runningActivities = activities.slice(0);
         });
         this._sub.add(this.activityService.history.subscribe(history => {
-            this.pastActivities = history;
+            // copy the array to ensure change detection fires
+            this.pastActivities = history.slice(0);
         }));
         this._sub.add(this.route.params.subscribe(params => {
             if (params && params.id !== undefined) {
