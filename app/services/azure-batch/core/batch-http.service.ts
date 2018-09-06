@@ -10,7 +10,7 @@ import { BatchExplorerService } from "app/services/batch-labs.service";
 import { Constants } from "common";
 import { Observable, from, throwError } from "rxjs";
 import { catchError, flatMap, map, retryWhen, shareReplay, take } from "rxjs/operators";
-import { BatchSharedKeyCredentials } from "./shared-key-utils";
+import { BatchSharedKeyAuthenticator } from "./batch-shared-key-authenticator";
 
 @Injectable()
 export class AzureBatchHttpService extends HttpService {
@@ -66,7 +66,7 @@ export class AzureBatchHttpService extends HttpService {
     }
 
     private _setupRequestForSharedKey(account: LocalBatchAccount, method: string, uri: string, options) {
-        const sharedKey = new BatchSharedKeyCredentials(account.name, account.key);
+        const sharedKey = new BatchSharedKeyAuthenticator(account.name, account.key);
         return from(sharedKey.signRequest(method, uri, options)).pipe(map(() => options));
     }
 

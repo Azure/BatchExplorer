@@ -4,8 +4,18 @@ import { UrlUtils } from "@batch-flask/utils";
 import * as url from "url";
 
 class HmacSha256Sign {
-    public async getKey(key: string): Promise<CryptoKey> {
-        const base64UrlKey = key.replace(/\//g, "_").replace(/\+/g, "-").replace(/\=/g, "");
+    private _importKeyPromise: Promise<CryptoKey>;
+    constructor(public key: string) {
+        this._importKeyPromise = this._importKey();
+    }
+
+    public async sign(stringToSign: any) {
+        const key = await this._importKeyPromise;
+        return crypto.subtle.sign(({ name: "hmac", hash: { name: "sha-256" } }), key, new Buffer(stringToSign));
+    }
+
+    private async _importKey(): Promise<CryptoKey> {
+        const base64UrlKey = this.key.replace(/\//g, "_").replace(/\+/g, "-").replace(/\=/g, "");
         const hmckKeyObject = {
             kty: "oct",
             alg: "HS256",
@@ -17,10 +27,6 @@ class HmacSha256Sign {
             { name: "hmac", hash: { name: "sha-256" } },
             false,
             ["sign"]);
-    }
-
-    public async sign(key: CryptoKey, stringToSign: any) {
-        return crypto.subtle.sign(({ name: "hmac", hash: { name: "sha-256" } }), key, new Buffer(stringToSign));
     }
 }
 
@@ -49,11 +55,11 @@ function getContentLengthToAppend(value, method: string, body: string) {
     }
 }
 
-export class BatchSharedKeyCredentials {
+export class BatchSharedKeyAuthenticator {
     public signer: HmacSha256Sign;
 
     constructor(public name: string, public key: string) {
-        this.signer = new HmacSha256Sign();
+        this.signer = new HmacSha256Sign(key);
     }
 
     public async signRequest(method: string, uri: string, request: HttpRequestOptions) {
@@ -83,8 +89,7 @@ export class BatchSharedKeyCredentials {
 
         // Signed with sha256
         const encoder = new TextEncoder();
-        const key = await this.signer.getKey(this.key);
-        const buffer = await this.signer.sign(key, encoder.encode(stringToSign));
+        const buffer = await this.signer.sign(encoder.encode(stringToSign));
         const signature = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
         // Add authrization header
         headers = headers.set("Authorization", `SharedKey ${this.name}:${signature}`);
