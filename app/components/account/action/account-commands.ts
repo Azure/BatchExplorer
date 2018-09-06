@@ -1,8 +1,7 @@
 import { Injectable, Injector } from "@angular/core";
 import { COMMAND_LABEL_ICON, DialogService, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
-
 import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
-import { BatchAccountProvisingState, BatchAccount } from "app/models";
+import { BatchAccount, BatchAccountProvisingState } from "app/models";
 import { BatchAccountService } from "app/services";
 import { DeleteAccountDialogComponent } from "./delete";
 
