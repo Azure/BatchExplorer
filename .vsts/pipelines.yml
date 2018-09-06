@@ -95,6 +95,48 @@ phases:
       - powershell: npm run build-and-pack
         displayName: Build and pack
 
+      - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+        inputs:
+          ConnectedServiceName: 'ESRP CodeSign'
+          FolderPath: ./release
+          Pattern: '*.dll,*.exe'
+          signConfigType: inlineSignParams
+          inlineOperation: |
+            [
+              {
+                  "keyCode": "CP-230012",
+                  "operationSetCode": "SigntoolSign",
+                  "parameters": [
+                  {
+                      "parameterName": "OpusName",
+                      "parameterValue": "Microsoft"
+                  },
+                  {
+                      "parameterName": "OpusInfo",
+                      "parameterValue": "http://www.microsoft.com"
+                  },
+                  {
+                      "parameterName": "PageHash",
+                      "parameterValue": "/NPH"
+                  },
+                  {
+                      "parameterName": "TimeStamp",
+                      "parameterValue": "/t \"http://ts4096.gtm.microsoft.com/TSS/AuthenticodeTS\""
+                  }
+                  ],
+                  "toolName": "sign",
+                  "toolVersion": "1.0"
+              },
+              {
+                  "keyCode": "CP-230012",
+                  "operationSetCode": "SigntoolVerify",
+                  "parameters": [ ],
+                  "toolName": "sign",
+                  "toolVersion": "1.0"
+              }
+          ]
+          SessionTimeout: 120
+
       - task: PublishBuildArtifacts@1
         displayName: Publish artifacts
         inputs:
