@@ -1,8 +1,7 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { RequestOptions, Response, URLSearchParams } from "@angular/http";
-import { BasicEntityGetter, DataCache, EntityView } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
-import { ArmBatchAccount, BatchAccountAttributes, Subscription } from "app/models";
+import { ArmBatchAccount, Subscription } from "app/models";
 import { AccountPatchDto } from "app/models/dtos";
 import { ArmResourceUtils, Constants } from "app/utils";
 import { List } from "immutable";
@@ -38,38 +37,30 @@ export class ArmBatchAccountService implements OnDestroy {
     public accounts: Observable<List<ArmBatchAccount>>;
     private _accounts = new BehaviorSubject<List<ArmBatchAccount>>(null);
 
-    private _cache = new DataCache<ArmBatchAccount>();
-    private _getter: BasicEntityGetter<ArmBatchAccount, ArmBatchAccountParams>;
-
     constructor(
         private azure: AzureHttpService,
         private subscriptionService: SubscriptionService) {
         this.accounts = this._accounts.pipe(filter(x => x !== null));
-
-        this._getter = new BasicEntityGetter(ArmBatchAccount, {
-            cache: () => this._cache,
-            supplyData: ({ id }) => this._loadAccount(id),
-        });
     }
 
     public ngOnDestroy() {
         this._accounts.complete();
     }
 
-    public view(): EntityView<ArmBatchAccount, ArmBatchAccountParams> {
-        return new EntityView({
-            cache: () => this._cache,
-            getter: this._getter,
-        });
+    public get(id: string): Observable<ArmBatchAccount> {
+        return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(id)).pipe(
+            flatMap((subscription) => {
+                return this.azure.get(subscription, id).pipe(
+                    map(response => {
+                        const data = response.json();
+                        return this._createAccount(subscription, data);
+                    }),
+                );
+            }),
+            share(),
+        );
     }
 
-    public get(accountId: string): Observable<ArmBatchAccount> {
-        return this._getter.fetch({ id: accountId });
-    }
-
-    public getFromCache(accountId: string): Observable<ArmBatchAccount> {
-        return this._getter.fetch({ id: accountId }, { cached: true });
-    }
     public patch(accountId: string, properties: AccountPatchDto): Observable<any> {
         return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(accountId)).pipe(
             flatMap((subscription) => {
@@ -217,22 +208,8 @@ export class ArmBatchAccountService implements OnDestroy {
         return obs;
     }
 
-    private _loadAccount(accountId: string): Observable<BatchAccountAttributes> {
-        return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(accountId)).pipe(
-            flatMap((subscription) => {
-                return this.azure.get(subscription, accountId).pipe(
-                    map(response => {
-                        const data = response.json();
-                        return this._createAccount(subscription, data);
-                    }),
-                );
-            }),
-            share(),
-        );
-    }
-
-    private _createAccount(subscription: Subscription, data: any): BatchAccountAttributes {
-        return { ...data, subscription };
+    private _createAccount(subscription: Subscription, data: any): ArmBatchAccount {
+        return new ArmBatchAccount({ ...data, subscription });
     }
 
     private _loadCachedAccounts() {

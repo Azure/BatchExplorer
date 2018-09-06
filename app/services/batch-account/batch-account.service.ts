@@ -43,6 +43,7 @@ export class BatchAccountService implements OnDestroy {
     private _accountFavorites: BehaviorSubject<List<{ id: string }>> = new BehaviorSubject(List([]));
     private _currentAccountId = new BehaviorSubject<string>(null);
     private _cache = new DataCache<BatchAccount>();
+    private _getter: BasicEntityGetter<BatchAccount, { id: string }>;
 
     constructor(
         private armBatchAccountService: ArmBatchAccountService,
@@ -50,6 +51,10 @@ export class BatchAccountService implements OnDestroy {
         private storage: LocalFileStorage,
         private azure: AzureHttpService,
         private subscriptionService: SubscriptionService) {
+        this._getter = new BasicEntityGetter<BatchAccount, { id: string }>(Object as any, {
+            cache: () => this._cache,
+            supplyData: (params) => this._fetchAccount(params.id),
+        });
 
         this.accounts = combineLatest(
             this.armBatchAccountService.accounts,
@@ -112,10 +117,7 @@ export class BatchAccountService implements OnDestroy {
     public view(): EntityView<BatchAccount, { id: string }> {
         return new EntityView({
             cache: () => this._cache,
-            getter: new BasicEntityGetter(Object as any, {
-                cache: () => this._cache,
-                supplyData: (params) => this.get(params.id),
-            }),
+            getter: this._getter,
         });
     }
 
@@ -126,23 +128,14 @@ export class BatchAccountService implements OnDestroy {
         );
     }
 
-    public get(accountId: string): Observable<BatchAccount | null> {
-        if (!accountId) { return of(null); }
-
-        if (accountId.startsWith(LOCAL_BATCH_ACCOUNT_PREFIX)) {
-            return this.localBatchAccountService.get(accountId);
-        } else {
-            return this.armBatchAccountService.get(accountId);
-        }
+    public get(id: string): Observable<BatchAccount | null> {
+        if (!id) { return of(null); }
+        return this._getter.fetch({id});
     }
 
-    public getFromCache(accountId: string): Observable<BatchAccount | null> {
-        if (!accountId) { return of(null); }
-        if (accountId.startsWith(LOCAL_BATCH_ACCOUNT_PREFIX)) {
-            return this.localBatchAccountService.get(accountId);
-        } else {
-            return this.armBatchAccountService.getFromCache(accountId);
-        }
+    public getFromCache(id: string): Observable<BatchAccount | null> {
+        if (!id) { return of(null); }
+        return this._getter.fetch({id}, {cached: true});
     }
 
     public getNameFromAccountId(accountId: string): string {
@@ -237,5 +230,13 @@ export class BatchAccountService implements OnDestroy {
     private _saveAccountFavorites(accounts: List<{ id: string }> = null): Observable<any> {
         accounts = accounts === null ? this._accountFavorites.value : accounts;
         return this.storage.set(this._accountJsonFileName, accounts.toJS());
+    }
+
+    private _fetchAccount(id: string) {
+        if (id.startsWith(LOCAL_BATCH_ACCOUNT_PREFIX)) {
+            return this.localBatchAccountService.get(id);
+        } else {
+            return this.armBatchAccountService.get(id);
+        }
     }
 }
