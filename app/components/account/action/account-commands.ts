@@ -2,7 +2,7 @@ import { Injectable, Injector } from "@angular/core";
 import { COMMAND_LABEL_ICON, DialogService, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
 
 import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
-import { AccountProvisingState, BatchAccount } from "app/models";
+import { BatchAccountProvisingState, BatchAccount } from "app/models";
 import { BatchAccountService } from "app/services";
 import { DeleteAccountDialogComponent } from "./delete";
 
@@ -50,8 +50,8 @@ export class BatchAccountCommands extends EntityCommands<BatchAccount> {
             },
             enabled: (account: BatchAccount) => {
                 const accountState = account && account.provisioningState;
-                return accountState !== AccountProvisingState.Creating
-                    && accountState !== AccountProvisingState.Deleting;
+                return accountState !== BatchAccountProvisingState.Creating
+                    && accountState !== BatchAccountProvisingState.Deleting;
             },
             confirm: (accounts) => this._confirmDeletion(accounts),
             permission: Permission.Write,

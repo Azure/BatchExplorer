@@ -29,7 +29,7 @@ export class AccountDropDownComponent implements OnDestroy {
             if (accountId) {
                 this.selectedId = accountId;
 
-                this.selectedAccountAlias = this.accountService.getAccountNameFromId(accountId);
+                this.selectedAccountAlias = this.accountService.getNameFromId(accountId);
             } else {
                 this.selectedId = null;
                 this.selectedAccountAlias = "No account selected!";

@@ -138,17 +138,6 @@ export class BatchAccountService implements OnDestroy {
         return this._getter.fetch({id}, {cached: true});
     }
 
-    public getNameFromAccountId(accountId: string): string {
-        const regex = /batchAccounts\/(.*)/;
-        const out = regex.exec(accountId);
-
-        if (!out || out.length < 2) {
-            return null;
-        } else {
-            return out[1];
-        }
-    }
-
     public getAccountKeys(accountId: string): Observable<AccountKeys> {
         const subId = ArmResourceUtils.getSubscriptionIdFromResourceId(accountId);
         return this.subscriptionService.get(subId).pipe(
@@ -206,7 +195,7 @@ export class BatchAccountService implements OnDestroy {
         }
     }
 
-    public getAccountNameFromId(accountId: string): any {
+    public getNameFromId(accountId: string): any {
         if (accountId.startsWith(LOCAL_BATCH_ACCOUNT_PREFIX)) {
             return this.localBatchAccountService.getNameFromId(accountId);
         } else {

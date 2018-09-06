@@ -3,7 +3,7 @@ import { Record } from "./record";
 
 export interface ArmRecordAttributes {
     id: string;
-    type: string;
+    type?: string;
 }
 
 /**

@@ -7,7 +7,7 @@ export enum PoolAllocationMode {
     UserSubscription = "usersubscription",
 }
 
-export enum AccountProvisingState {
+export enum BatchAccountProvisingState {
     Invalid = "Invalid",
     Creating = "Creating",
     Deleting = "Deleting",
@@ -31,7 +31,7 @@ export class AutoStorageAccount extends Record<AutoStorageAccountAttributes> {
 
 export interface BatchAccountPropertiesAttributes {
     accountEndpoint: string;
-    provisioningState: AccountProvisingState;
+    provisioningState: BatchAccountProvisingState;
     dedicatedCoreQuota: number;
     lowPriorityCoreQuota: number;
     poolQuota: number;
@@ -43,7 +43,7 @@ export interface BatchAccountPropertiesAttributes {
 @Model()
 export class BatchAccountProperties extends Record<BatchAccountPropertiesAttributes> {
     @Prop() public accountEndpoint: string;
-    @Prop() public provisioningState: AccountProvisingState;
+    @Prop() public provisioningState: BatchAccountProvisingState;
     @Prop() public dedicatedCoreQuota: number = 20;
     @Prop() public lowPriorityCoreQuota: number = 100;
     @Prop() public poolQuota: number = 20;
@@ -56,7 +56,7 @@ export interface BatchAccountAttributes {
     id: string;
     name: string;
     location: string;
-    type: string;
+    type?: string;
     properties: BatchAccountPropertiesAttributes;
     subscription: Subscription;
 }
@@ -66,7 +66,7 @@ export interface BatchAccount extends Record<any> {
     name: string;
     displayName: string;
     url: string;
-    provisioningState: AccountProvisingState;
+    provisioningState: BatchAccountProvisingState;
     armEnabled: boolean;
     autoStorage: AutoStorageAccount | null;
     hasArmAutoStorage: () => boolean;
@@ -124,7 +124,7 @@ export class LocalBatchAccount extends Record<any> implements BatchAccount {
     @Prop() public key: string;
 
     public armEnabled = false;
-    public provisioningState = AccountProvisingState.Succeeded;
+    public provisioningState = BatchAccountProvisingState.Succeeded;
     public autoStorage = null;
 
     public get id(): string {
