@@ -134,7 +134,7 @@ phases:
                   "toolName": "sign",
                   "toolVersion": "1.0"
               }
-          ]
+            ]
           SessionTimeout: 120
 
       - task: PublishBuildArtifacts@1
