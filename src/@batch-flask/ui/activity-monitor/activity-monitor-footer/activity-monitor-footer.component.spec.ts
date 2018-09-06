@@ -16,8 +16,7 @@ describe("ActivityMonitorFooterComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [MaterialModule, ActivityModule],
-            declarations: [
-            ],
+            declarations: [],
         });
 
         TestBed.compileComponents();

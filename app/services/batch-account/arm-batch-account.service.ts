@@ -7,7 +7,7 @@ import { AccountPatchDto } from "app/models/dtos";
 import { ArmResourceUtils, Constants } from "app/utils";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, empty, forkJoin, of } from "rxjs";
-import { expand, filter, flatMap, map, reduce, share } from "rxjs/operators";
+import { expand, filter, flatMap, map, reduce, share, shareReplay, take } from "rxjs/operators";
 import { AzureHttpService } from "../azure-http.service";
 import { SubscriptionService } from "../subscription.service";
 
@@ -180,7 +180,7 @@ export class ArmBatchAccountService implements OnDestroy {
                 return this.azure.get(subscription, `/subscriptions/${subscriptionId}/resources`, options).pipe(
                     map(response => {
                         return List<ArmBatchAccount>(response.json().value.map((data) => {
-                            return new ArmBatchAccount(Object.assign({}, data, { subscription }));
+                            return new ArmBatchAccount({ ...data, subscription });
                         }));
                     }),
                 );
@@ -192,6 +192,7 @@ export class ArmBatchAccountService implements OnDestroy {
     public load() {
         this._loadCachedAccounts();
         const obs = this.subscriptionService.subscriptions.pipe(
+            take(1),
             flatMap((subscriptions) => {
                 const accountObs = subscriptions.map((subscription) => {
                     return this.list(subscription.subscriptionId);
@@ -199,6 +200,7 @@ export class ArmBatchAccountService implements OnDestroy {
 
                 return forkJoin(...accountObs);
             }),
+            shareReplay(1),
         );
 
         obs.subscribe({
