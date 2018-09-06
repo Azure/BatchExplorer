@@ -147,7 +147,8 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
         }));
         this._subs.push(this.activity.progress.subscribe((progress) => {
             this.progress = progress;
-            this.progressString = `(${Math.floor(progress)}%)`;
+            const nonnegative = progress > 0 ? progress : 0;
+            this.progressString = `(${Math.floor(nonnegative)}%)`;
             this.changeDetector.markForCheck();
         }));
     }

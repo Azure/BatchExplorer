@@ -36,9 +36,6 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this.runningActivities = [];
         this.pastActivities = [];
-        this.selectSubject = new BehaviorSubject(-1);
-        this.flashSubject = new BehaviorSubject(-1);
-        this.keyDownSubject = new BehaviorSubject(null);
         // this._focusedMonitor = null;
         this._sub = this.activityService.incompleteActivities.subscribe(activities => {
             this.runningActivities = activities;
