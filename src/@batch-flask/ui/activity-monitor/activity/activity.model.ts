@@ -169,7 +169,7 @@ export class Activity {
                     break;
             }
 
-            this.progressSubject.next((this.counters.total / numSubActivities) * 100);
+            this.progressSubject.next((this.counters.completed / numSubActivities) * 100);
 
             // in all cases, check the total; if it is equal to the number of subactivities, emit completed
             if (this.counters.total === numSubActivities) {
