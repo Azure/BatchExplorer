@@ -1,5 +1,3 @@
-import { SharedKeyUtils } from "./shared-key-utils";
-
 export class StorageUtils {
     public static containerUrlRegex = /https?:\/\/(.*)\.blob\.core\.windows\.net\/(.*)\?.*/;
 
@@ -100,8 +98,7 @@ export class StorageUtils {
     }
 
     private static async _getJobIdHash(jobId: string): Promise<string> {
-        const crypto = SharedKeyUtils.getSubtleCrypto();
-        const jobIdBytes = SharedKeyUtils.toSupportedArray(jobId);
+        const jobIdBytes = new TextEncoder().encode(jobId);
 
         const hash = await crypto.subtle.digest("SHA-1", jobIdBytes);
         return this._hex(hash);
