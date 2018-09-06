@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { filter, map, take } from "rxjs/operators";
 import { LocalFileStorage } from "../local-file-storage.service";
 
-const LOCAL_BATCH_ACCOUNT_KEY = "local-batch-accounts";
+export const LOCAL_BATCH_ACCOUNT_KEY = "local-batch-accounts";
 
 /**
  * Service that handle loading, adding and updating local back accounts
