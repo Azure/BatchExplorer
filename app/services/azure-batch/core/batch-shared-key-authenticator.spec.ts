@@ -2,7 +2,7 @@ import { HttpParams } from "@angular/common/http";
 import { HttpRequestOptions } from "@batch-flask/core";
 import { BatchSharedKeyAuthenticator } from "./batch-shared-key-authenticator";
 
-const testDate = new Date(2018, 9, 5, 2, 5, 6);
+const testDate = new Date("2018-10-05T09:05:06.000Z");
 
 describe("BatchSharedKeyAuthenticator", () => {
     let authenticator: BatchSharedKeyAuthenticator;
