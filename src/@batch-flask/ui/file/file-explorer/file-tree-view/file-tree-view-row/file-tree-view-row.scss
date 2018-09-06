@@ -22,7 +22,7 @@ bl-file-tree-view-row {
 
     &.focused {
         background: $primary-color-light;
-        color: $whitesmoke // TODO-TIM change to primary color contrast
+        color: $primary-contrast-color;
     }
 
     &.drop-target {

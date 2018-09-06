@@ -44,7 +44,7 @@ bl-pool-picker {
         }
 
         &.active {
-            color: $whitesmoke; // TODO-tim change to primary-contrast when merged
+            color: $primary-contrast-color;
             border-color: $primary-color;
             background:  $primary-color;
 
