@@ -1,5 +1,11 @@
+import { Injector } from "@angular/core";
+import { TestBed } from "@angular/core/testing";
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { ActionableEntity, ActivityService, WorkspaceService } from "@batch-flask/ui";
+import { DialogService } from "@batch-flask/ui/dialogs";
 import { of } from "rxjs";
-import { EntityCommand, EntityCommandNotify } from "./entity-command";
+import { NotificationServiceMock } from "test/utils/mocks";
+import { EntityCommand, EntityCommandAttributes, EntityCommandNotify } from "./entity-command";
 
 interface MyModel {
     id: string;
@@ -9,14 +15,45 @@ const entity1: MyModel = {
     id: "entity-1",
 };
 
-const injector = {
-    get: () => null,
+const entity2: MyModel = {
+    id: "entity-2",
+};
+
+const definition: any = {
+    typeName: "Job",
 };
 
 describe("EntityCommand", () => {
+    let dialogServiceSpy;
+    let notificationServiceSpy: NotificationServiceMock;
+    let injector;
+
+    beforeEach(() => {
+        dialogServiceSpy = {
+            confirm: jasmine.createSpy("dialog.confirm"),
+        };
+        notificationServiceSpy = new NotificationServiceMock();
+        TestBed.configureTestingModule({
+            imports: [I18nTestingModule],
+            providers: [
+                { provide: DialogService, useValue: dialogServiceSpy },
+                { provide: ActivityService, useValue: null },
+                { provide: WorkspaceService, useValue: null },
+                notificationServiceSpy.asProvider(),
+            ],
+        });
+
+        injector = TestBed.get(Injector);
+    });
+
+    function newCommand<TEntity extends ActionableEntity>(options: EntityCommandAttributes<TEntity>) {
+        const command = new EntityCommand<TEntity>(injector, options);
+        command.definition = definition;
+        return command;
+    }
 
     it("label should allow fixed string", () => {
-        const command = new EntityCommand<MyModel>(injector, {
+        const command = newCommand({
             label: "my-fixed-label",
             action: () => null,
             name: "my-fixed-label",
@@ -26,7 +63,7 @@ describe("EntityCommand", () => {
     });
 
     it("label should allow custom function", () => {
-        const command = new EntityCommand<MyModel>(injector, {
+        const command = newCommand({
             label: () => "my-dynamic-label",
             action: () => null,
             name: "my-dynamic-label",
@@ -36,7 +73,7 @@ describe("EntityCommand", () => {
     });
 
     it("should be enabled by default", () => {
-        const command = new EntityCommand<MyModel>(injector, {
+        const command = newCommand({
             label: "my-label",
             action: () => null,
             name: "my-label",
@@ -47,7 +84,7 @@ describe("EntityCommand", () => {
     });
 
     it("should allow to specify enabled", () => {
-        const command = new EntityCommand<MyModel>(injector, {
+        const command = newCommand({
             label: "my-label",
             action: () => null,
             enabled: () => false,
@@ -59,7 +96,7 @@ describe("EntityCommand", () => {
     });
 
     it("should  allow multiple by default", () => {
-        const command = new EntityCommand<MyModel>(injector, {
+        const command = newCommand({
             label: "my-label",
             action: () => null,
             name: "my-label",
@@ -69,7 +106,7 @@ describe("EntityCommand", () => {
     });
 
     it("should allow to specify enabled", () => {
-        const command = new EntityCommand<MyModel>(injector, {
+        const command = newCommand({
             label: "my-label",
             action: () => null,
             multiple: false,
@@ -80,7 +117,7 @@ describe("EntityCommand", () => {
     });
 
     it("notify should be always by default", () => {
-        const command = new EntityCommand<MyModel>(injector, {
+        const command = newCommand({
             label: "my-label",
             action: () => null,
             name: "my-label",
@@ -90,7 +127,7 @@ describe("EntityCommand", () => {
     });
 
     it("should allow to disable notify by setting to false", () => {
-        const command = new EntityCommand<MyModel>(injector, {
+        const command = newCommand({
             label: "my-label",
             action: () => null,
             notify: false,
@@ -101,7 +138,7 @@ describe("EntityCommand", () => {
     });
 
     it("should allow to disable notify by setting to exact value", () => {
-        const command = new EntityCommand<MyModel>(injector, {
+        const command = newCommand({
             label: "my-label",
             action: () => null,
             notify: EntityCommandNotify.OnFailure,
@@ -114,7 +151,7 @@ describe("EntityCommand", () => {
     describe("#performAction", () => {
         it("Works when action return observable", (done) => {
             const actionSpy = jasmine.createSpy("action").and.returnValue(of("some-obs-value"));
-            const command = new EntityCommand<MyModel>(injector, {
+            const command = newCommand({
                 label: "my-label",
                 action: actionSpy,
                 notify: EntityCommandNotify.OnFailure,
@@ -131,7 +168,7 @@ describe("EntityCommand", () => {
 
         it("Works when action doesn't return observable", (done) => {
             const actionSpy = jasmine.createSpy("action").and.returnValue(null);
-            const command = new EntityCommand<MyModel>(injector, {
+            const command = newCommand({
                 label: "my-label",
                 action: actionSpy,
                 notify: EntityCommandNotify.OnFailure,
@@ -144,6 +181,25 @@ describe("EntityCommand", () => {
                 expect(actionSpy).toHaveBeenCalledWith(entity1, null);
                 done();
             });
+        });
+    });
+
+    fdescribe("#executeMultiple", () => {
+        it("calls the generic confirmation dialog by default", () => {
+            const actionSpy = jasmine.createSpy("action").and.returnValue(of("some-obs-value"));
+            const command = newCommand({
+                label: "my-label",
+                action: actionSpy,
+                notify: EntityCommandNotify.OnFailure,
+                name: "my-label",
+            });
+            command.executeMultiple([entity1, entity2]);
+
+            expect(dialogServiceSpy.confirm).toHaveBeenCalledOnce();
+            expect(dialogServiceSpy.confirm).toHaveBeenCalledWith(
+                "entity-command.confirm.multiple.title(action:my-label, count:2, type:jobs)",
+                jasmine.anything(),
+            );
         });
     });
 
