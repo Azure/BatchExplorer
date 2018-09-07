@@ -46,10 +46,10 @@ export class DevTranslationsLoader {
                     : key;
 
                 if (!isString && Object.keys(value).length) {
-                    return step(value, newKey, currentDepth + 1);
+                    output[newKey] = step(value, newKey, currentDepth + 1);
+                } else {
+                    output[newKey] = value;
                 }
-
-                output[newKey] = value;
             }
         }
 
