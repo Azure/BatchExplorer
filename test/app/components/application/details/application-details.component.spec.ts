@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ActivityService } from "@batch-flask/ui/activity-monitor";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -93,7 +94,7 @@ describe("ApplicationDetailsComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
+            imports: [RouterTestingModule, I18nTestingModule],
             declarations: [
                 ApplicationDetailsComponent, ApplicationPackagesMockComponent, ApplicationPropertiesMockComponent,
                 ApplicationErrorDisplayMockComponent, LoadingMockComponent,
