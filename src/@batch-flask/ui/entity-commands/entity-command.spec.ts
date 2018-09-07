@@ -184,7 +184,7 @@ describe("EntityCommand", () => {
         });
     });
 
-    fdescribe("#executeMultiple", () => {
+    describe("#executeMultiple", () => {
         it("calls the generic confirmation dialog by default", () => {
             const actionSpy = jasmine.createSpy("action").and.returnValue(of("some-obs-value"));
             const command = newCommand({
