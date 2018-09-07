@@ -12,12 +12,16 @@
         <bl-activity-monitor-tree-view
             [activities]="runningActivities"
             name="Running Activities"
+            xButtonTitle="Cancel All"
+            (xButton)="cancelAll()"
         ></bl-activity-monitor-tree-view>
     </div>
     <div class="completed-activities activity-list">
         <bl-activity-monitor-tree-view
             [activities]="pastActivities"
             name="History"
+            xButtonTitle="Clear"
+            (xButton)="clearHistory()"
         ></bl-activity-monitor-tree-view>
     </div>
 </div>

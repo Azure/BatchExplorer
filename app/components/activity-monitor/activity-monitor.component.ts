@@ -60,6 +60,10 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
         this.activityService.cancelSelection(this.runningActivities);
     }
 
+    public clearHistory() {
+        this.activityService.clearHistory();
+    }
+
     // public focusRunning() {
     //     this._focusedMonitor = FocusedMonitor.Running;
     // }

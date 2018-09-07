@@ -26,7 +26,9 @@ export interface TreeRow {
 export class ActivityMonitorTreeViewComponent implements OnChanges {
     @Input() public activities: Activity[];
     @Input() public name: string;
+    @Input() public xButtonTitle: string;
     @Output() public focus = new EventEmitter<boolean>();
+    @Output() public xButton = new EventEmitter<void>();
 
     public expanded = new Set<number>();
     public treeRows: TreeRow[] = [];
@@ -143,6 +145,10 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
     public collapseAll() {
         this.expanded.clear();
         this._buildTreeRows();
+    }
+
+    public xButtonClicked() {
+        this.xButton.emit();
     }
 
     public treeRowTrackBy(treeRow: TreeRow) {
