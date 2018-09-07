@@ -1,13 +1,16 @@
-paraneters:
+parameters:
+  # Display name for the step
   name: 'Code sign'
+  # Pattern to include
   pattern: ''
+
 steps:
   - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-    displayName: $(name)
+    displayName: $(parameters.name)
     inputs:
       ConnectedServiceName: 'ESRP CodeSign'
       FolderPath: ./release
-      Pattern: $(pattern)
+      Pattern: $(parameters.pattern)
       UseMinimatch: true
       signConfigType: inlineSignParams
       inlineOperation: |
