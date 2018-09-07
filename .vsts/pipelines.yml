@@ -124,7 +124,7 @@ phases:
           Pattern: |
             **/*.exe
             **/*.dll
-            **/!python36.dll
+            !**/python36.dll
           UseMinimatch: true
           signConfigType: inlineSignParams
           inlineOperation: |
