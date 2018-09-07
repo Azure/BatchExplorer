@@ -1,7 +1,7 @@
 import { Injector } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
 import { ListSelection } from "@batch-flask/core/list";
-import { Activity, ActivityService, ActivityStatus } from "@batch-flask/ui/activity-monitor";
+import { Activity, ActivityService, ActivityStatus } from "@batch-flask/ui/activity";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";

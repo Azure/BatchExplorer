@@ -2,13 +2,13 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component,
     EventEmitter, HostListener, Input, OnChanges, Output, QueryList, ViewChildren,
 } from "@angular/core";
-import { Activity } from "@batch-flask/ui";
+import { ChangeEvent } from "@batch-flask/ui/virtual-scroll";
+import { Activity } from "../../activity-types";
 import { ActivityMonitorItemComponent } from "../activity-monitor-item";
 
-import { ChangeEvent } from "@batch-flask/ui/virtual-scroll";
 import "./activity-monitor-tree-view.scss";
 
-export interface TreeRow {
+interface TreeRow {
     activity: Activity;
     id: number;
     expanded: boolean;

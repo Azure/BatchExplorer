@@ -1,4 +1,4 @@
-import { Activity } from "@batch-flask/ui/activity-monitor/activity";
+import { Activity } from "@batch-flask/ui/activity/activity-types";
 import { BehaviorSubject } from "rxjs";
 
 export class ActivityHistoryQueue {

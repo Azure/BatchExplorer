@@ -1,4 +1,4 @@
-import { ActivityFifoQueue } from "@batch-flask/ui/activity-monitor/activity-fifo-queue";
+import { ActivityFifoQueue } from "@batch-flask/ui/activity/activity-fifo-queue";
 import { BehaviorSubject, Observable, Subscription, combineLatest, merge } from "rxjs";
 import { ActivityStatus } from "./activity-datatypes";
 import { Activity } from "./activity.model";

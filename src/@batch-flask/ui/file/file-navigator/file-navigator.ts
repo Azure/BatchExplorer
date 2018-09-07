@@ -1,5 +1,5 @@
 import { DataCache, ListGetter, ServerError } from "@batch-flask/core";
-import { Activity } from "@batch-flask/ui/activity-monitor";
+import { Activity } from "@batch-flask/ui/activity";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { CloudPathUtils, StringUtils, log } from "@batch-flask/utils";
 import { List } from "immutable";

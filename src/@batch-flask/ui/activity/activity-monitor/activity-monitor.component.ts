@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
+import { ActivatedRoute } from "@angular/router";
+import { Activity } from "@batch-flask/ui/activity/activity-types";
+import { ActivityService } from "@batch-flask/ui/activity/activity.service";
 import { BehaviorSubject, Subscription } from "rxjs";
 
-import { ActivatedRoute } from "@angular/router";
 import "./activity-monitor.scss";
 
 // enum FocusedMonitor {

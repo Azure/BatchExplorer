@@ -6,7 +6,7 @@ import {
     Activity,
     ActivityModule,
     ActivityService,
-} from "@batch-flask/ui/activity-monitor";
+} from "@batch-flask/ui/activity";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";
 import { VirtualScrollModule } from "@batch-flask/ui/virtual-scroll";
 import { AsyncSubject, BehaviorSubject } from "rxjs";

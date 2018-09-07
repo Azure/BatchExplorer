@@ -1,4 +1,4 @@
-import { Activity } from "@batch-flask/ui/activity-monitor";
+import { Activity } from "./activity-types";
 
 /**
  * Keeps track of a fifo queue of activities to process such that only a given number are executing at once

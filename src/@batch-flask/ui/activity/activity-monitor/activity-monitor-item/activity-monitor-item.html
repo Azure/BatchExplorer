@@ -22,7 +22,7 @@
                 <mat-progress-bar mode="determinate" [value]="progress" *ngIf="progress !== -1"></mat-progress-bar>
             </div>
         </div>
-        <div class="icon-container action-icon" *ngFor="let action of actions; let i = index">
+        <div class="icon-container action-icon" *ngFor="let action of actions; let i = index; trackBy: actionTrackBy">
             <bl-activity-monitor-item-action
                 [action]="action"
                 [selected]="focused && focusedAction === i"

@@ -9,8 +9,9 @@ import {
     OnInit,
     Output,
 } from "@angular/core";
-import { Activity, ActivityService, ActivityStatus } from "@batch-flask/ui/activity-monitor";
 import { Subscription } from "rxjs";
+import { Activity, ActivityStatus } from "../../activity-types";
+import { ActivityService } from "../../activity.service";
 import { ActivityAction } from "./activity-monitor-item-action";
 
 import "./activity-monitor-item.scss";
@@ -139,6 +140,10 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
         this.actions[this.focusedAction].action();
     }
 
+    public actionTrackBy(action: ActivityAction) {
+        return action.id;
+    }
+
     private _subscribeToSubjects() {
         this._subs = [];
         this._subs.push(this.activity.statusSubject.subscribe(status => {
@@ -158,6 +163,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
     }
 
     private _setActions(): void {
+        let idCounter = 0;
         // TODO find a more extensible way to do this
         const actions: ActivityAction[] = [
             {
@@ -166,6 +172,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
                 action: () => this.cancel(),
                 active: this.activity.isCancellable && !this.activity.isComplete,
                 faClass: "fa-times",
+                id: idCounter++,
             },
             {
                 title: "Rerun",
@@ -173,6 +180,7 @@ export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestro
                 action: () => this.rerun(),
                 active: this.activity.isComplete,
                 faClass: "fa-refresh",
+                id: idCounter++,
             },
         ];
 

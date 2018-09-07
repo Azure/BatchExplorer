@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { Activity, ActivityProcessor } from "@batch-flask/ui/activity-monitor/activity";
-import { ActivityFifoQueue } from "@batch-flask/ui/activity-monitor/activity-fifo-queue";
-import { ActivityHistoryQueue } from "@batch-flask/ui/activity-monitor/activity-history-queue";
+import { ActivityFifoQueue } from "@batch-flask/ui/activity/activity-fifo-queue";
+import { ActivityHistoryQueue } from "@batch-flask/ui/activity/activity-history-queue";
+import { Activity, ActivityProcessor } from "@batch-flask/ui/activity/activity-types";
 import { NotificationService } from "@batch-flask/ui/notifications";
 
 @Injectable()

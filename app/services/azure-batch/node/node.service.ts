@@ -9,7 +9,7 @@ import {
     ListView,
     TargetedDataCache,
 } from "@batch-flask/core";
-import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
+import { Activity, ActivityService } from "@batch-flask/ui/activity";
 import { Node, NodeState } from "app/models";
 import { Constants } from "app/utils";
 import { List } from "immutable";

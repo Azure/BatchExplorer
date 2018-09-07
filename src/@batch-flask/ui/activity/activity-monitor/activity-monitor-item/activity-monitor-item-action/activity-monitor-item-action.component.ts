@@ -8,6 +8,7 @@ export interface ActivityAction {
     action: () => void;
     faClass: string;
     active: boolean;
+    id: number;
 }
 
 @Component({

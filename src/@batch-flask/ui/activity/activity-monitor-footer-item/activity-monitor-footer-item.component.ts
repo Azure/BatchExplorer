@@ -6,7 +6,7 @@ import {
     Input,
     OnChanges,
 } from "@angular/core";
-import { Activity } from "@batch-flask/ui/activity-monitor/activity";
+import { Activity } from "@batch-flask/ui/activity/activity-types";
 import { Subscription } from "rxjs";
 
 import "./activity-monitor-footer-item.scss";

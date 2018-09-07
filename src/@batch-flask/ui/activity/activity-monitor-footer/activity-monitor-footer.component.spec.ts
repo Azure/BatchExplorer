@@ -6,7 +6,7 @@ import {
     ActivityModule,
     ActivityMonitorFooterComponent,
     ActivityService,
-} from "@batch-flask/ui/activity-monitor";
+} from "@batch-flask/ui/activity";
 import { AsyncSubject } from "rxjs";
 
 describe("ActivityMonitorFooterComponent", () => {

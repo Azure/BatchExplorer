@@ -15,7 +15,6 @@ import { AppComponent } from "app/app.component";
 // extenal modules
 import { BaseModule } from "@batch-flask/ui";
 import { AccountModule } from "app/components/account/account.module";
-import { ActivityMonitorModule } from "app/components/activity-monitor";
 import { ApplicationModule } from "app/components/application/application.module";
 import { CertificateModule } from "app/components/certificate/certificate.module";
 import { DataModule } from "app/components/data/data.module";
@@ -96,7 +95,7 @@ import {
 } from "./services";
 
 const modules = [
-    AccountModule, ActivityMonitorModule, ApplicationModule, CertificateModule,
+    AccountModule, ApplicationModule, CertificateModule,
     DataModule, FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
     SettingsModule, TaskModule, MarketModule, LayoutModule,
     MiscModule,
