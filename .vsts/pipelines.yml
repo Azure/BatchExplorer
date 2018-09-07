@@ -111,14 +111,17 @@ phases:
           pip install -r python/requirements.txt
         displayName: Install dependencies
 
-      - powershell: npm run build-and-pack
-        displayName: Build and pack
+      - powershell: |
+          npm run -s build:prod
+          npm run -s build-python
+          npm run -s package -- --win --dir
+        displayName: Build executable
 
       - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
         inputs:
           ConnectedServiceName: 'ESRP CodeSign'
           FolderPath: ./release
-          Pattern: '*.dll,*.exe'
+          Pattern: '*.exe,*.dll,!python36.dll'
           signConfigType: inlineSignParams
           inlineOperation: |
             [
@@ -155,6 +158,8 @@ phases:
               }
             ]
           SessionTimeout: 120
+      - powershell: npm run -s package -- --prepackaged ./release/win-unpacked --projectDir . --win nsis zip
+        displayName: Build installer
 
       - task: PublishBuildArtifacts@1
         displayName: Publish artifacts
