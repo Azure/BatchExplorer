@@ -21,9 +21,6 @@ steps:
       name: "Sign installer"
       pattern: |
         **/BatchExplorer*Setup*.exe
-  - task: PublishBuildArtifacts@1
-    displayName: Publish artifacts
-    inputs:
-      pathtoPublish: ./release
-      artifactName: windows
-      artifactType: Container
+  - template: ../common/publish-artifacts
+    parameters:
+      folder: windows

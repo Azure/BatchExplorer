@@ -24,9 +24,6 @@ steps:
   - script: npm run lint
     displayName: Lint
 
-  - task: PublishBuildArtifacts@1
-    displayName: Publish artifacts
-    inputs:
-      pathtoPublish: ./release
-      artifactName: linux
-      artifactType: Container
+  - template: ../common/publish-artifacts
+    parameters:
+      folder: darwin
