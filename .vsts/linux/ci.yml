@@ -24,6 +24,6 @@ steps:
   - script: npm run lint
     displayName: Lint
 
-  - template: ../common/publish-artifacts
+  - template: ../common/publish-artifacts.yml
     parameters:
       folder: darwin

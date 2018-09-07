@@ -3,6 +3,6 @@ steps:
   - script: npm run build-and-pack
     displayName: Build and pack
   - template: ./sign.yml
-  - template: ../common/publish-artifacts
+  - template: ../common/publish-artifacts.yml
     parameters:
       folder: darwin
