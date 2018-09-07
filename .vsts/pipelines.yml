@@ -6,7 +6,7 @@ phases:
     - template: ./linux/ci.yml
 
   # Mac os build
-  - phase: macOS
+  - phase: MacOS
     queue: Hosted macOS Preview
     steps:
     - template: ./linux/ci.yml
