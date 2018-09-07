@@ -1,0 +1,78 @@
+@import "app/styles/variables";
+
+@keyframes flash {
+    0%, 50%, 100% {
+    }
+
+    25%, 75% {
+        background: map-get($warn, 300);
+    }
+}
+
+bl-activity-monitor-item {
+    .activity-monitor-item-container {
+        &.focused {
+            background-color: $primary-color;
+            color: $primary-contrast-color;
+        }
+
+        &.flash {
+            animation: flash 1s 1;
+        }
+
+
+        &.hovered {
+            background-color: $primary-color-light;
+            color: $primary-text;
+        }
+
+        .item-container {
+            cursor: default;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            height: 40px;
+
+            .icon-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-basis: 3%;
+
+                i {
+                    font-size: 11pt;
+                }
+
+                .fa-angle-right, .fa-angle-down {
+                    font-size: 14pt;
+                    padding: 5px 10px;
+                }
+            }
+
+            .activity-info {
+                flex-basis: 90%;
+                min-width: 0;
+
+                .activity-info-upper {
+                    display: flex;
+                    justify-content: flex-start;
+
+                    .name {
+                        min-width: 0;
+                        text-align: left;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        padding-right: 5px;
+                    }
+                }
+            }
+        }
+
+        .error {
+            padding: 0 10px 5px;
+            color: $danger-contrast-color;
+        }
+    }
+}

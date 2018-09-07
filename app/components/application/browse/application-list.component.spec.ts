@@ -4,7 +4,7 @@ import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { FilterBuilder } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
-import { ActivityService } from "@batch-flask/ui/activity-monitor";
+import { ActivityService } from "@batch-flask/ui/activity";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarManager } from "@batch-flask/ui/sidebar";

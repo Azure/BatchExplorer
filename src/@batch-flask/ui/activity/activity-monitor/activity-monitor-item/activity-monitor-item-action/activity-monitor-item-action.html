@@ -1,0 +1,3 @@
+<div [ngClass]="{'action-container': true, 'selected': selected || hovered}" title="{{action.title}}" (click)="action.action()" (mouseover)="hover()" (mouseout)="unhover()">
+    <i class="fa {{action.faClass}}"></i>
+</div>

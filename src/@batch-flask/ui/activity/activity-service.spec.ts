@@ -1,6 +1,6 @@
 import { fakeAsync } from "@angular/core/testing";
-import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
-import { ActivityResponse } from "@batch-flask/ui/activity-monitor/activity/activity-datatypes";
+import { Activity, ActivityService } from "@batch-flask/ui/activity";
+import { ActivityResponse } from "@batch-flask/ui/activity/activity-types/activity-datatypes";
 import { AsyncSubject, BehaviorSubject, of } from "rxjs";
 import { NotificationServiceMock } from "test/utils/mocks";
 

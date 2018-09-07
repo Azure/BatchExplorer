@@ -2,7 +2,7 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
-import { ActivityMonitorFooterItemComponent } from "@batch-flask/ui/activity-monitor";
+import { ActivityMonitorFooterItemComponent } from "@batch-flask/ui/activity";
 import { BehaviorSubject } from "rxjs";
 
 @Component({

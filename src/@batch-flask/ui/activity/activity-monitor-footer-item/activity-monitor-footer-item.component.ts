@@ -6,7 +6,7 @@ import {
     Input,
     OnChanges,
 } from "@angular/core";
-import { Activity } from "@batch-flask/ui/activity-monitor/activity";
+import { Activity } from "@batch-flask/ui/activity/activity-types";
 import { Subscription } from "rxjs";
 
 import "./activity-monitor-footer-item.scss";
@@ -47,7 +47,11 @@ export class ActivityMonitorFooterItemComponent implements OnChanges {
 
         this._sub = this.activity.progress.subscribe((progress) => {
             this.progress = progress;
-            this.progressString = `(${Math.floor(progress)}%)`;
+
+            // progress might be negative because this helps us track whether it is pending or not
+            // but it does us no good to display it that way, because it's unintuitive
+            const nonnegative = progress > 0 ? progress : 0;
+            this.progressString = `(${Math.floor(nonnegative)}%)`;
             this.changeDetector.markForCheck();
         });
     }

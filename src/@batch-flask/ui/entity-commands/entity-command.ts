@@ -1,5 +1,7 @@
 import { Injector } from "@angular/core";
 import { I18nService, ServerError } from "@batch-flask/core";
+import { ListSelection } from "@batch-flask/core/list";
+import { Activity, ActivityService, ActivityStatus } from "@batch-flask/ui/activity";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
@@ -7,9 +9,6 @@ import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { exists, log, nil } from "@batch-flask/utils";
 import * as inflection from "inflection";
 import { Observable, forkJoin, of } from "rxjs";
-
-import { ListSelection } from "@batch-flask/core/list";
-import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
 import { map, share } from "rxjs/operators";
 import { ActionableEntity, EntityCommands } from "./entity-commands";
 
@@ -233,8 +232,10 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         });
 
         // notify success after the parent activity completes
-        activity.done.subscribe((result) => {
-            this._notifySuccess(`${label} was successful.`, "");
+        activity.done.subscribe((status) => {
+            if (status === ActivityStatus.Completed) {
+                this._notifySuccess(`${label} was successful.`, "");
+            }
         });
 
         // run the parent activity

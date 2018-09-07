@@ -95,8 +95,8 @@ import {
 } from "./services";
 
 const modules = [
-    AccountModule, ApplicationModule, CertificateModule, DataModule,
-    FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
+    AccountModule, ApplicationModule, CertificateModule,
+    DataModule, FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
     SettingsModule, TaskModule, MarketModule, LayoutModule,
     MiscModule,
 ];

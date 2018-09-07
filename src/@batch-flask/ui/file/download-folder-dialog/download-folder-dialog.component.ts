@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
 import { autobind } from "@batch-flask/core";
-import { Activity, ActivityService } from "@batch-flask/ui/activity-monitor";
+import { Activity, ActivityService } from "@batch-flask/ui/activity";
 import { ElectronShell, FileSystemService } from "@batch-flask/ui/electron";
 import { FileNavigator } from "@batch-flask/ui/file/file-navigator";
 import { SecureUtils } from "@batch-flask/utils";
