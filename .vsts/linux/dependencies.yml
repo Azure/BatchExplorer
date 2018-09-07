@@ -1,0 +1,16 @@
+steps:
+  - script: |
+        set -e
+        apt-get update
+        apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 dbus xvfb libgtk-3-0 rpm
+      displayName: Install Linux packages
+    - template: ./dependencies.yml
+    - template: ./pyenv.yml
+    - script: |
+        set -e
+        python --version
+        npm install -g codecov
+        npm install -g npm
+        npm ci
+        pip3 install -r python/requirements.txt
+      displayName: Install dependencies

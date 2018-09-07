@@ -1,0 +1,10 @@
+steps:
+  - template: ./dependencies.yml
+  - script: npm run build-and-pack
+    displayName: Build and pack
+  - task: PublishBuildArtifacts@1
+    displayName: Publish artifacts
+    inputs:
+      pathtoPublish: ./release
+      artifactName: osx
+      artifactType: Container

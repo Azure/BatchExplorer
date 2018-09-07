@@ -1,0 +1,16 @@
+# This contains the steps used when building the app(Include signing)
+jobs:
+  - job: Linux
+    pool: Hosted Linux Preview
+    steps:
+       - template: ./win/distribution.yml
+
+  - job: Mac OS
+    pool: Hosted macOS Preview
+    steps:
+       - template: ./win/distribution.yml
+
+  - phase: Windows
+    queue: Hosted VS2017
+    steps:
+      - template: ./win/distribution.yml

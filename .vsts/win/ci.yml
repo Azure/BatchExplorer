@@ -1,0 +1,12 @@
+steps:
+  - template: ./win/dependencies.yml
+
+  - powershell: npm run build-and-pack
+    displayName: Build and package
+
+  - task: PublishBuildArtifacts@1
+    displayName: Publish artifacts
+    inputs:
+      pathtoPublish: ./release
+      artifactName: windows
+      artifactType: Container

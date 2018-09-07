@@ -1,0 +1,29 @@
+steps:
+  - template: ./dependencies.yml
+  - powershell: |
+      npm run -s build:prod
+      npm run -s build-python
+      npm run -s package -- --win --dir
+    displayName: Build executable
+
+  - template: ./win/sign.yml
+    parameters:
+      name: "Sign executable and dll"
+      pattern: |
+        **/*.exe
+        **/*.dll
+        !**/python36.dll
+  - powershell: npm run -s package -- --prepackaged ./release/win-unpacked --projectDir . --win nsis zip
+    displayName: Build installer
+
+  - template: ./win/sign.yml
+    parameters:
+      name: "Sign installer"
+      pattern: |
+        **/BatchExplorer*Setup*.exe
+  - task: PublishBuildArtifacts@1
+    displayName: Publish artifacts
+    inputs:
+      pathtoPublish: ./release
+      artifactName: windows
+      artifactType: Container
