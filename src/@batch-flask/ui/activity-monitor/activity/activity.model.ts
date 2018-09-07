@@ -38,6 +38,7 @@ export class Activity {
     private counters: ActivityCounters;
     private subtasksComplete: AsyncSubject<null>;
     private awaitCompletionSub: Subscription;
+    private _cancelled: boolean;
 
     constructor(name: string, initializerFn: () => Observable<ActivityResponse | Activity[] | any>) {
         this.id = Activity.idCounter++;
@@ -60,6 +61,7 @@ export class Activity {
         this.subtasksComplete = new AsyncSubject();
 
         this.isCancellable = true;
+        this._cancelled = false;
 
         this.error = "";
 
@@ -74,9 +76,11 @@ export class Activity {
      * Executes the function supplied in the constructor on this activity
      */
     public run(): void {
+        if (this._cancelled) {
+            return;
+        }
         // update status to InProgress
         this.statusSubject.next(ActivityStatus.InProgress);
-        this.isComplete = false;
         this.pending = false;
         this.progressSubject.next(0);
 
@@ -122,6 +126,10 @@ export class Activity {
         this.isCancellable = false;
 
         return this;
+    }
+
+    public set cancelled(cancelled: boolean) {
+        this._cancelled = cancelled;
     }
 
     /**

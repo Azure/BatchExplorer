@@ -36,6 +36,20 @@ export class ActivityFifoQueue {
         }
     }
 
+    public remove(activity: Activity) {
+        // remove the activity if it's enqueued
+        const fifoIndex = this.fifoQueue.indexOf(activity);
+        if (fifoIndex >= 0) {
+            this.fifoQueue.splice(fifoIndex, 1);
+            return;
+        }
+    }
+
+    public clear() {
+        this.fifoQueue = [];
+        this.running = [];
+    }
+
     private _dequeue() {
         if (this.fifoQueue.length === 0) { return; }
         this._run(this.fifoQueue.shift());

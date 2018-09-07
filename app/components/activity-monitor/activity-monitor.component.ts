@@ -57,7 +57,7 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
     }
 
     public cancelAll() {
-        this.activityService.cancelMultiple(this.runningActivities);
+        this.activityService.cancelSelection(this.runningActivities);
     }
 
     // public focusRunning() {

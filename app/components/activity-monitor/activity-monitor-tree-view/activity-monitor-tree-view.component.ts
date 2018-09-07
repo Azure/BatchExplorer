@@ -44,7 +44,6 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
 
     public ngOnChanges(changes) {
         if (changes.activities) {
-            console.log(changes.activities);
             this._buildTreeRows();
         }
     }

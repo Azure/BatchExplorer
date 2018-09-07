@@ -19,4 +19,9 @@ export class ActivityHistoryQueue {
         this._queue.push(activity);
         this.queueSubject.next(this._queue);
     }
+
+    public clear() {
+        this._queue = [];
+        this.queueSubject.next(this._queue);
+    }
 }

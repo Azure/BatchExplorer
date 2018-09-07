@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Activity, ActivityProcessor } from "@batch-flask/ui/activity-monitor/activity";
+import { ActivityFifoQueue } from "@batch-flask/ui/activity-monitor/activity-fifo-queue";
 import { ActivityHistoryQueue } from "@batch-flask/ui/activity-monitor/activity-history-queue";
 import { NotificationService } from "@batch-flask/ui/notifications";
 
@@ -7,10 +8,12 @@ import { NotificationService } from "@batch-flask/ui/notifications";
 export class ActivityService {
     private processor: ActivityProcessor;
     private historyQueue: ActivityHistoryQueue;
+    private pendingQueue: ActivityFifoQueue;
 
     constructor(notificationService: NotificationService) {
         this.processor = new ActivityProcessor();
         this.historyQueue = new ActivityHistoryQueue();
+        this.pendingQueue = new ActivityFifoQueue();
     }
 
     public get activities() {
@@ -56,10 +59,18 @@ export class ActivityService {
         activity.cancel();
     }
 
-    public cancelMultiple(activities: Activity[]) {
+    public cancelSelection(activities: Activity[]) {
         for (const activity of activities) {
-            this.cancel(activity);
+            activity.cancelled = true;
+            this.pendingQueue.remove(activity);
         }
+        for (const activity of activities) {
+            activity.cancel();
+        }
+    }
+
+    public clearHistory() {
+        this.historyQueue.clear();
     }
 
     private moveToHistory(activity) {
