@@ -1,12 +1,12 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
-import { EntityView, Filter, ListView, autobind } from "@batch-flask/core";
+import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/core/list";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { Node, Pool } from "app/models";
-import { NodeListParams, NodeService, PoolParams, PoolService } from "app/services";
+import { Node } from "app/models";
+import { NodeListParams, NodeService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { NodeCommands } from "../action";
 
@@ -18,25 +18,18 @@ import { NodeCommands } from "../action";
         useExisting: forwardRef(() => NodeListComponent),
     }],
 })
-export class NodeListComponent extends ListBaseComponent implements OnInit, OnDestroy {
+export class NodeListComponent extends ListBaseComponent implements OnChanges, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
-    @Input() public set poolId(value: string) {
-        this._poolId = (value && value.trim());
-        this.refresh();
-    }
-    public get poolId() { return this._poolId; }
+    @Input() public poolId: string;
 
     public data: ListView<Node, NodeListParams>;
-    public poolData: EntityView<Pool, PoolParams>;
 
-    private _poolId: string;
-
-    constructor(public commands: NodeCommands,
-                private nodeService: NodeService,
-                private poolService: PoolService,
-                activatedRoute: ActivatedRoute,
-                changeDetector: ChangeDetectorRef) {
+    constructor(
+        public commands: NodeCommands,
+        private nodeService: NodeService,
+        activatedRoute: ActivatedRoute,
+        changeDetector: ChangeDetectorRef) {
         super(changeDetector);
         this.data = this.nodeService.listView();
 
@@ -44,33 +37,24 @@ export class NodeListComponent extends ListBaseComponent implements OnInit, OnDe
             this.status = status;
         });
         ComponentUtils.setActiveItem(activatedRoute, this.data);
-
-        this.poolData = this.poolService.view();
-        this.poolData.item.subscribe((pool) => {
-            if (pool) {
-                this.commands.pool = pool;
-                this.commands.params["poolId"] = pool.id;
-            }
-        });
     }
 
-    public ngOnInit() {
-        this.data.fetchNext();
-        this.poolData.params = { id: this.poolId };
-        this.poolData.fetch();
+    public ngOnChanges(changes) {
+        if (changes.poolId) {
+            this.commands.params = { poolId: this.poolId };
+            this.data.params = { poolId: this.poolId };
+            this.data.refresh();
+        }
     }
 
     public ngOnDestroy() {
         this.data.dispose();
-        this.poolData.dispose();
     }
 
     @autobind()
     public refresh(): Observable<any> {
         this.data.params = { poolId: this.poolId };
-        this.data.setOptions({}); // This clears the previous list objects
-
-        return this.data.fetchNext(true);
+        return this.data.refresh();
     }
 
     public handleFilter(filter: Filter) {
@@ -79,8 +63,9 @@ export class NodeListComponent extends ListBaseComponent implements OnInit, OnDe
         } else {
             this.data.setOptions({ filter });
         }
-
-        this.data.fetchNext();
+        if (this.poolId) {
+            this.data.fetchNext();
+        }
     }
 
     public onScrollToBottom(): Observable<any> {

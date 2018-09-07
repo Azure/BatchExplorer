@@ -5,7 +5,7 @@ import { Subscription } from "rxjs";
 import { EntityView, autobind } from "@batch-flask/core";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { Node, Pool } from "app/models";
-import { FileService, NodeParams, NodeService, PoolParams, PoolService } from "app/services";
+import { NodeParams, NodeService, PoolParams, PoolService } from "app/services";
 import { NodeCommands, UploadNodeLogsDialogComponent } from "../action";
 
 import "./node-details.scss";
@@ -40,7 +40,6 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
         private nodeService: NodeService,
         private poolService: PoolService,
         private dialog: DialogService,
-        fileService: FileService,
         changeDetector: ChangeDetectorRef) {
 
         this.data = this.nodeService.view();
@@ -56,7 +55,6 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
         this.poolData.item.subscribe((pool) => {
             if (pool) {
                 this.pool = pool;
-                this.commands.pool = pool;
             }
         });
     }
@@ -69,7 +67,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
 
         this._paramsSubscribers.push(this.route.parent.params.subscribe((params) => {
             this.poolId = params["poolId"];
-            this.commands.params = params;
+            this.commands.params = { poolId: params["poolId"] };
             this.update();
         }));
     }
