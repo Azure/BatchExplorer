@@ -1,2 +1,2 @@
 steps:
-  - template: ./dependencies.yml
+  - template: ./linux-dependencies.yml

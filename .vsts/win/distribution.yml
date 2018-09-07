@@ -1,5 +1,5 @@
 steps:
-  - template: ./dependencies.yml
+  - template: ./win-dependencies.yml
   - powershell: |
       npm run -s build:prod
       npm run -s build-python

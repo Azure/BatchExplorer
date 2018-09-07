@@ -1,17 +1,17 @@
 name: $(SourceBranch)$(Rev:.r)
-phases:
-  - phase: Linux
-    queue: Hosted Linux Preview
+jobs:
+  - job: Linux
+    pool: Hosted Linux Preview
     steps:
     - template: ./linux/ci.yml
 
   # Mac os build
-  - phase: MacOS
-    queue: Hosted macOS Preview
+  - job: MacOS
+    pool: Hosted macOS Preview
     steps:
     - template: ./linux/ci.yml
 
-  - phase: Windows
-    queue: Hosted VS2017
+  - job: Windows
+    pool: Hosted VS2017
     steps:
       - template: ./windows/ci.yml

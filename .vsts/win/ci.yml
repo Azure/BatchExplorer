@@ -1,5 +1,5 @@
 steps:
-  - template: ./win/dependencies.yml
+  - template: ./win-dependencies.yml
 
   - powershell: npm run build-and-pack
     displayName: Build and package

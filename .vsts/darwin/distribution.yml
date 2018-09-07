@@ -1,2 +1,2 @@
 steps:
-  - template: ./dependencies.yml
+  - template: ./darwin-dependencies.yml
