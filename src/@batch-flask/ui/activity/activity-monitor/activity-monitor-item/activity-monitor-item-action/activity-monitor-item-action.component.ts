@@ -21,6 +21,7 @@ export class ActivityMonitorItemActionComponent {
 
     public hovered: boolean = false;
 
+    // tslint:disable-next-line:no-empty
     constructor() {}
 
     public hover() {
