@@ -6,7 +6,7 @@ jobs:
        - template: ./win/distribution.yml
 
   - job: Mac OS
-    pool: Hosted macOS Preview
+    pool: Hosted macOS
     steps:
        - template: ./win/distribution.yml
 
