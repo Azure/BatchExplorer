@@ -9,9 +9,9 @@ jobs:
   - job: MacOS
     pool: Hosted macOS Preview
     steps:
-    - template: ./linux/ci.yml
+    - template: ./darwin/ci.yml
 
   - job: Windows
     pool: Hosted VS2017
     steps:
-      - template: ./windows/ci.yml
+      - template: ./win/ci.yml
