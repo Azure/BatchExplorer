@@ -122,6 +122,7 @@ phases:
           ConnectedServiceName: 'ESRP CodeSign'
           FolderPath: ./release
           Pattern: '*.exe,*.dll,!python36.dll'
+          UseMinimatch: true
           signConfigType: inlineSignParams
           inlineOperation: |
             [
