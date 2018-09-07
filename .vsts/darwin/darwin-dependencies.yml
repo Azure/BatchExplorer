@@ -2,7 +2,7 @@ steps:
   - template: ../dependencies.yml
   - script: npm config set python $(which python)
     displayName: Set npm python2 path
-  - template: ./pyenv.yml
+  - template: ../pyenv.yml
   - script: |
       set -e
       node --version
