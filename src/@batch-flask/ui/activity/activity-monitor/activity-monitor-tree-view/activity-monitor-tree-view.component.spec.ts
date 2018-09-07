@@ -222,11 +222,42 @@ describe("ActivityMonitorTreeViewComponent", () => {
         expect(component.focusedAction).toBe(null);
     });
 
-    it("should test right and left arrow key navigation", () => {
+    it("should test right and left arrow navigation", () => {
+        const activity = new MockActivity("1", new AsyncSubject());
+        activity.isComplete = true;
+
+        testComponent.runningActivities = [activity];
+        fixture.detectChanges();
+
+        // focus the first row
+        component.setFocus(true);
+        component.focusRow(component.treeRows[0]);
+        fixture.detectChanges();
+
+        expect(component.focusedAction).toBe(null);
+
+        // test right arrow moves the selected action to the first action
+        let keydown = new KeyboardEvent("ArrowRight", { code: "ArrowRight", ctrlKey: false });
+        component.handleKeyboardNavigation(keydown);
+        fixture.detectChanges();
+        expect(component.focusedAction).toBe(0, "Right arrow should select the first action");
+
+        // test left arrow unselects all actions
+        keydown = new KeyboardEvent("ArrowLeft", { code: "ArrowLeft", ctrlKey: false });
+        component.handleKeyboardNavigation(keydown);
+        fixture.detectChanges();
+        expect(component.focusedAction).toBe(null, "Left arrow should unselect all actions");
+
+        // test left arrow does nothing if no action is selected
+        component.handleKeyboardNavigation(keydown);
+        fixture.detectChanges();
+        expect(component.focusedAction).toBe(null, "Left arrow should do nothing if no acton is selected");
+    });
+
+    it("should test right and left arrow key navigation with control key", () => {
         testComponent.runningActivities = [
             new MockActivity("1", new AsyncSubject(), [
                 new MockActivity("1.1", new AsyncSubject()),
-                new MockActivity("1.2", new AsyncSubject()),
             ]),
         ];
         fixture.detectChanges();
@@ -236,51 +267,36 @@ describe("ActivityMonitorTreeViewComponent", () => {
         component.focusRow(component.treeRows[0]);
         fixture.detectChanges();
 
-        // test right arrow expands row with children
-        let keydown = new KeyboardEvent("ArrowRight", { code: "ArrowRight" });
+        // test ctrl + right arrow expands row with children
+        let keydown = new KeyboardEvent("ArrowRight", { code: "ArrowRight", ctrlKey: true });
         component.handleKeyboardNavigation(keydown);
         fixture.detectChanges();
-        expect(component.focusedIndex).toBe(0, "Right arrow should expand and not change focus");
+        expect(component.focusedIndex).toBe(0, "Ctrl + Right arrow should expand and not change focus");
         expect(component.isExpanded(component.treeRows[0].id)).toBe(
-            true, "Right arrow should expand a row with children",
+            true, "Ctrl + Right arrow should expand a row with children",
         );
 
-        // test right arrow focuses first of expanded row
-        component.handleKeyboardNavigation(keydown);
+        // move down one
+        component.focusedIndex++;
         fixture.detectChanges();
-        expect(component.focusedIndex).toBe(1, "Right arrow should focus first of expanded row children");
 
-        // test right arrow does nothing if pressed on row with no children
+        // test ctrl + right arrow does nothing if pressed on row with no children
         component.handleKeyboardNavigation(keydown);
         fixture.detectChanges();
         expect(component.focusedIndex).toBe(
-            1, "Right arrow should do nothing if pressed on focused row with no children",
+            1, "Ctrl + Right arrow should do nothing if pressed on focused row with no children",
         );
         expect(component.isExpanded(component.treeRows[1].id)).toBe(false);
 
-        // move down one row, still in children of activity 1
-        keydown = new KeyboardEvent("ArrowDown", { code: "ArrowDown" });
-        component.handleKeyboardNavigation(keydown);
+        // move up one
+        component.focusedIndex--;
         fixture.detectChanges();
-        expect(component.focusedIndex).toBe(2, "Down arrow should move down focus by 1");
 
-        // test that left arrow jumps to immediate parent
-        keydown = new KeyboardEvent("ArrowLeft", { code: "ArrowLeft" });
+        // test that ctrl + left arrow collapses an expanded row
+        keydown = new KeyboardEvent("ArrowLeft", { code: "ArrowLeft", ctrlKey: true });
         component.handleKeyboardNavigation(keydown);
         fixture.detectChanges();
-        expect(component.focusedIndex).toBe(0, "Left arrow should jump focus to immediate parent");
-        expect(component.isExpanded(component.treeRows[0].id)).toBe(true, "Left arrow should not collapse if moving");
-
-        // test that left arrow collapses an expanded row
-        component.handleKeyboardNavigation(keydown);
-        fixture.detectChanges();
-        expect(component.focusedIndex).toBe(0, "Left arrow should collapse without changing focus");
-        expect(component.isExpanded(component.treeRows[0].id)).toBe(false);
-
-        // test that left arrow does nothing on a collapsed row with no parents
-        component.handleKeyboardNavigation(keydown);
-        fixture.detectChanges();
-        expect(component.focusedIndex).toBe(0, "Left arrow should do nothing if a row is collapse with no parents");
+        expect(component.focusedIndex).toBe(0, "Ctrl + Left arrow should collapse without changing focus");
         expect(component.isExpanded(component.treeRows[0].id)).toBe(false);
     });
 
@@ -362,37 +378,5 @@ describe("ActivityMonitorTreeViewComponent", () => {
         expect(component.isExpanded(component.treeRows[0].id)).toBe(
             false, "Enter should collapse an expanded row",
         );
-    });
-
-    it("should test tab events", () => {
-        const activity = new MockActivity("1", new AsyncSubject());
-        activity.isComplete = true;
-
-        testComponent.runningActivities = [activity];
-        fixture.detectChanges();
-
-        // focus the first row
-        component.setFocus(true);
-        component.focusRow(component.treeRows[0]);
-        fixture.detectChanges();
-
-        expect(component.focusedAction).toBe(null);
-
-        // test tab moves the selected action to the first action
-        let keydown = new KeyboardEvent("Tab", { code: "Tab", shiftKey: false });
-        component.handleKeyboardNavigation(keydown);
-        fixture.detectChanges();
-        expect(component.focusedAction).toBe(0, "Tab should select the first action");
-
-        // test shift-tab unselects all actions
-        keydown = new KeyboardEvent("Tab", { code: "Tab", shiftKey: true });
-        component.handleKeyboardNavigation(keydown);
-        fixture.detectChanges();
-        expect(component.focusedAction).toBe(null, "Shift-Tab should unselect all actions");
-
-        // test shift-tab does nothing if no action is selected
-        component.handleKeyboardNavigation(keydown);
-        fixture.detectChanges();
-        expect(component.focusedAction).toBe(null, "Shift-Tab should do nothing if no acton is selected");
     });
 });

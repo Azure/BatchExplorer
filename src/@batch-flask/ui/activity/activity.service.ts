@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { ActivityFifoQueue } from "@batch-flask/ui/activity/activity-fifo-queue";
 import { ActivityHistoryQueue } from "@batch-flask/ui/activity/activity-history-queue";
 import { Activity, ActivityProcessor } from "@batch-flask/ui/activity/activity-types";
-import { NotificationService } from "@batch-flask/ui/notifications";
 
 @Injectable()
 export class ActivityService {
@@ -10,7 +9,7 @@ export class ActivityService {
     private historyQueue: ActivityHistoryQueue;
     private pendingQueue: ActivityFifoQueue;
 
-    constructor(notificationService: NotificationService) {
+    constructor() {
         this.processor = new ActivityProcessor();
         this.historyQueue = new ActivityHistoryQueue();
         this.pendingQueue = new ActivityFifoQueue();

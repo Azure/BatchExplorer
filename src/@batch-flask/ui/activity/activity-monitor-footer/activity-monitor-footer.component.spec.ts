@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, inject, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { Router } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 import {
     Activity,
@@ -11,18 +12,28 @@ import { AsyncSubject } from "rxjs";
 
 describe("ActivityMonitorFooterComponent", () => {
     let fixture: ComponentFixture<ActivityMonitorFooterComponent>;
+    let component: ActivityMonitorFooterComponent;
     let activityService: ActivityService;
+    let routerSpy;
 
     beforeEach(() => {
+        routerSpy = {
+            navigate: jasmine.createSpy("navigate"),
+        };
+
         TestBed.configureTestingModule({
             imports: [MaterialModule, ActivityModule],
             declarations: [
+            ],
+            providers: [
+                { provide: Router, useValue: routerSpy },
             ],
         });
 
         TestBed.compileComponents();
         fixture = TestBed.createComponent(ActivityMonitorFooterComponent);
         fixture.detectChanges();
+        component = fixture.componentInstance;
     });
 
     beforeEach(inject([ActivityService], (d: ActivityService) => {
@@ -63,4 +74,18 @@ describe("ActivityMonitorFooterComponent", () => {
 
         expect(dropdownBtnEl.nativeElement.textContent).toContain(noTaskMessage);
     }));
+
+    it("should tell the router to navigate", () => {
+        component.openMonitor();
+
+        expect(routerSpy.navigate).toHaveBeenCalledOnce();
+        expect(routerSpy.navigate).toHaveBeenCalledWith(["/activitymonitor"]);
+    });
+
+    it("should tell the router to navigate to a given activity", () => {
+        component.openMonitor(3);
+
+        expect(routerSpy.navigate).toHaveBeenCalledOnce();
+        expect(routerSpy.navigate).toHaveBeenCalledWith(["/activitymonitor", 3]);
+    });
 });

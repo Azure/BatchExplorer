@@ -1,15 +1,12 @@
-import { ComponentFixture, TestBed, inject } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 import { ButtonsModule } from "@batch-flask/ui";
-import {
-    Activity,
-    ActivityModule,
-    ActivityService,
-} from "@batch-flask/ui/activity";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";
 import { VirtualScrollModule } from "@batch-flask/ui/virtual-scroll";
 import { AsyncSubject, BehaviorSubject } from "rxjs";
+import { Activity } from "../activity-types";
+import { ActivityService } from "../activity.service";
 import { ActivityMonitorItemComponent } from "./activity-monitor-item";
 import { ActivityMonitorItemActionComponent } from "./activity-monitor-item/activity-monitor-item-action";
 import { ActivityMonitorTreeViewComponent } from "./activity-monitor-tree-view";
@@ -28,13 +25,14 @@ describe("ActivityMonitorComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [ActivityModule, ButtonsModule, MaterialModule, FocusSectionModule, VirtualScrollModule],
+            imports: [ButtonsModule, MaterialModule, FocusSectionModule, VirtualScrollModule],
             declarations: [
                 ActivityMonitorComponent, ActivityMonitorTreeViewComponent,
                 ActivityMonitorItemComponent, ActivityMonitorItemActionComponent,
             ],
             providers: [
                 { provide: ActivatedRoute, useValue: activatedRouteSpy },
+                ActivityService,
             ],
         });
 
@@ -42,11 +40,9 @@ describe("ActivityMonitorComponent", () => {
         fixture = TestBed.createComponent(ActivityMonitorComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-    });
 
-    beforeEach(inject([ActivityService], (d: ActivityService) => {
-        activityService = d;
-    }));
+        activityService = TestBed.get(ActivityService);
+    });
 
     it("should receive a new activity and display it", () => {
         const activity = new Activity("Test activity", () => new AsyncSubject());
