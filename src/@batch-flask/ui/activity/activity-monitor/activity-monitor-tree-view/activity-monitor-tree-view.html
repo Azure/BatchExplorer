@@ -1,5 +1,5 @@
 <div class="tree-view-header">
-    <bl-clickable class="name">{{name}}</bl-clickable>
+    <div class="name">{{name}}</div>
     <bl-clickable class="clear-all" [title]="xButtonTitle" (do)="xButtonClicked()">
         <i class="fa fa-times"></i>
     </bl-clickable>
@@ -9,7 +9,8 @@
     (focus)="setFocus(true)"
     (blur)="setFocus(false)"
     (keypress)="handleKeyboardNavigation($event)"
-    (contextmenu)="showContextMenu($event)">
+    (contextmenu)="showContextMenu($event)"
+    tabindex="0">
 
     <div *ngIf="error" class="tree-view-error">{{error.message}}</div>
     <div class="tree-rows-container">

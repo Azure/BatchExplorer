@@ -15,7 +15,6 @@ interface TreeRow {
     hasChildren: boolean;
     indent: number;
     index: number;
-    parent: TreeRow;
 }
 
 @Component({
@@ -92,12 +91,12 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
                 this.focusedAction = null;
                 event.preventDefault();
                 break;
-            case "ArrowRight": // Expand current row if applicable
-                this._onRightPress(curTreeRow);
+            case "ArrowRight":
+                this._onRightPress(curTreeRow, event.ctrlKey);
                 event.preventDefault();
                 break;
-            case "ArrowLeft": // Expand current row if applicable
-                this._onLeftPress(curTreeRow);
+            case "ArrowLeft":
+                this._onLeftPress(curTreeRow, event.ctrlKey);
                 event.preventDefault();
                 break;
             case "Space":
@@ -109,14 +108,6 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
                 }
                 event.preventDefault();
                 return;
-            case "Tab":
-                if (event.shiftKey) {
-                    this._tabBackward(curTreeRow);
-                } else {
-                    this._tabForward(curTreeRow);
-                }
-                event.preventDefault();
-                break;
             default:
                 break;
         }
@@ -186,7 +177,7 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
         this.changeDetector.markForCheck();
     }
 
-    private _getTreeRowsForActivities(activities: Activity[], indent = 0, parent = null): TreeRow[] {
+    private _getTreeRowsForActivities(activities: Activity[], indent = 0): TreeRow[] {
         const tree = [];
         for (const activity of activities) {
             const expanded = this.isExpanded(activity.id);
@@ -195,13 +186,12 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
                 id: activity.id,
                 expanded,
                 indent,
-                parent,
             };
             if (activity.subactivities.length > 0) {
                 row["hasChildren"] = true;
                 tree.push(row);
                 if (expanded) {
-                    for (const childRow of this._getTreeRowsForActivities(activity.subactivities, indent + 1, row)) {
+                    for (const childRow of this._getTreeRowsForActivities(activity.subactivities, indent + 1)) {
                         tree.push(childRow);
                     }
                 }
@@ -217,39 +207,35 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
     }
 
     /* Key Navigation Helpers */
-    private _onRightPress(treeRow: TreeRow) {
-        if (this.isExpanded(treeRow.id)) {
-            this.focusedIndex++;
-        } else {
+    private _onRightPress(treeRow: TreeRow, ctrlKey: boolean) {
+        // if the control key was pressed, expand the folder
+        if (ctrlKey) {
             this.expand(treeRow);
-        }
-    }
-
-    private _onLeftPress(treeRow: TreeRow) {
-        if (this.isExpanded(treeRow.id)) {
-            this.collapse(treeRow);
-        } else if (treeRow.parent) {
-            this.focusedIndex = treeRow.parent.index;
-        }
-    }
-
-    private _tabForward(treeRow: TreeRow) {
-        if (this.focusedAction === null) {
-            this.focusedAction = 0;
         } else {
-            this.focusedAction++;
+            // otherwise, navigate through the actions
+            if (this.focusedAction === null) {
+                this.focusedAction = 0;
+            } else {
+                this.focusedAction++;
+            }
+            this.changeDetector.markForCheck();
         }
-        this.changeDetector.markForCheck();
     }
 
-    private _tabBackward(treeRow: TreeRow) {
-        if (this.focusedAction === null) { return; }
+    private _onLeftPress(treeRow: TreeRow, ctrlKey: boolean) {
+        // if the control key was pressed, collapse the folder
+        if (ctrlKey) {
+            this.collapse(treeRow);
+        } else {
+            // otherwise, navigate through the actionsz
+            if (this.focusedAction === null) { return; }
 
-        this.focusedAction--;
-        if (this.focusedAction < 0) {
-            this.focusedAction = null;
+            this.focusedAction--;
+            if (this.focusedAction < 0) {
+                this.focusedAction = null;
+            }
+            this.changeDetector.markForCheck();
         }
-        this.changeDetector.markForCheck();
     }
 
     private _execItemAction(treeRow: TreeRow) {
