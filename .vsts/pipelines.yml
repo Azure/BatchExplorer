@@ -117,54 +117,21 @@ phases:
           npm run -s package -- --win --dir
         displayName: Build executable
 
-      - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-        inputs:
-          ConnectedServiceName: 'ESRP CodeSign'
-          FolderPath: ./release
-          Pattern: |
+      - template: ./win/sign.yml
+        parameters:
+          name: "Sign executable and dll"
+          pattern: |
             **/*.exe
             **/*.dll
             !**/python36.dll
-          UseMinimatch: true
-          signConfigType: inlineSignParams
-          inlineOperation: |
-            [
-              {
-                  "keyCode": "CP-230012",
-                  "operationSetCode": "SigntoolSign",
-                  "parameters": [
-                  {
-                      "parameterName": "OpusName",
-                      "parameterValue": "Microsoft"
-                  },
-                  {
-                      "parameterName": "OpusInfo",
-                      "parameterValue": "http://www.microsoft.com"
-                  },
-                  {
-                      "parameterName": "PageHash",
-                      "parameterValue": "/NPH"
-                  },
-                  {
-                      "parameterName": "TimeStamp",
-                      "parameterValue": "/t \"http://ts4096.gtm.microsoft.com/TSS/AuthenticodeTS\""
-                  }
-                  ],
-                  "toolName": "sign",
-                  "toolVersion": "1.0"
-              },
-              {
-                  "keyCode": "CP-230012",
-                  "operationSetCode": "SigntoolVerify",
-                  "parameters": [ ],
-                  "toolName": "sign",
-                  "toolVersion": "1.0"
-              }
-            ]
-          SessionTimeout: 120
       - powershell: npm run -s package -- --prepackaged ./release/win-unpacked --projectDir . --win nsis zip
         displayName: Build installer
 
+      - template: ./win/sign.yml
+        parameters:
+          name: "Sign installer"
+          pattern: |
+            **/BatchExplorer*Setup*.exe
       - task: PublishBuildArtifacts@1
         displayName: Publish artifacts
         inputs:
