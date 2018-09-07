@@ -6,11 +6,11 @@ parameters:
 
 steps:
   - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-    displayName: $(parameters.name)
+    displayName: ${{ parameters.name }}
     inputs:
       ConnectedServiceName: 'ESRP CodeSign'
       FolderPath: ./release
-      Pattern: $(parameters.pattern)
+      Pattern: ${{ parameters.pattern }}
       UseMinimatch: true
       signConfigType: inlineSignParams
       inlineOperation: |
