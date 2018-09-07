@@ -11,6 +11,6 @@ jobs:
        - template: ./win/distribution.yml
 
   - job: Windows
-    queue: Hosted VS2017
+    pool: Hosted VS2017
     steps:
       - template: ./win/distribution.yml
