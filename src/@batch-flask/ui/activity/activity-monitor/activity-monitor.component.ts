@@ -2,14 +2,9 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Activity } from "@batch-flask/ui/activity/activity-types";
 import { ActivityService } from "@batch-flask/ui/activity/activity.service";
-import { BehaviorSubject, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 
 import "./activity-monitor.scss";
-
-// enum FocusedMonitor {
-//     Running,
-//     History,
-// }
 
 @Component({
     selector: "bl-activity-monitor",
@@ -22,12 +17,9 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
 
     public runningActivities: Activity[];
     public pastActivities: Activity[];
-    public selectSubject: BehaviorSubject<number>;
-    public flashSubject: BehaviorSubject<number>;
-    public keyDownSubject: BehaviorSubject<KeyboardEvent>;
+    public flashId = null;
 
     private _sub: Subscription;
-    // private _focusedMonitor: FocusedMonitor;
 
     constructor(
         private activityService: ActivityService,
@@ -37,7 +29,6 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this.runningActivities = [];
         this.pastActivities = [];
-        // this._focusedMonitor = null;
         this._sub = this.activityService.incompleteActivities.subscribe(activities => {
             // copy the array to ensure change detection fires
             this.runningActivities = activities.slice(0);
@@ -48,7 +39,7 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
         }));
         this._sub.add(this.route.params.subscribe(params => {
             if (params && params.id !== undefined) {
-                // this._flash(params.id);
+                this.flashId = params.id;
             }
         }));
     }
@@ -64,12 +55,4 @@ export class ActivityMonitorComponent implements OnInit, OnDestroy {
     public clearHistory() {
         this.activityService.clearHistory();
     }
-
-    // public focusRunning() {
-    //     this._focusedMonitor = FocusedMonitor.Running;
-    // }
-
-    // public focusHistory() {
-    //     this._focusedMonitor = FocusedMonitor.History;
-    // }
 }

@@ -11,6 +11,7 @@
     <div class="running-activities activity-list">
         <bl-activity-monitor-tree-view
             [activities]="runningActivities"
+            [flashId]="flashId"
             name="Running Activities"
             xButtonTitle="Cancel All"
             (xButton)="cancelAll()"

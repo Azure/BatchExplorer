@@ -1,4 +1,4 @@
-<div class="activity-monitor-item-container" [ngClass]="{'focused': focused, 'hovered': !focused && hovered}">
+<div class="activity-monitor-item-container" [ngClass]="{'focused': focused, 'hovered': !focused && hovered, 'flash': flash}">
     <div class="item-container" [ngStyle]="{'padding-left': paddingLeft}">
         <div class="icon-container progress-icon">
             <i class="fa fa-ellipsis-h" *ngIf="status===statusOptions.Pending" title="Pending"></i>

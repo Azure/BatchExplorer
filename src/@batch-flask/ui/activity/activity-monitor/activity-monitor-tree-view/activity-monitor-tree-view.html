@@ -18,6 +18,7 @@
             <bl-activity-monitor-item *ngFor="let row of viewPortRows; let i = index; trackBy: treeRowTrackBy"
                 [activity]="row.activity"
                 [focused]="isFocused && focusedIndex === i + viewPortStart"
+                [flash]="flashIndex === i + viewPortStart"
                 [hovered]="hoveredIndex === i + viewPortStart"
                 [indent]="row.indent"
                 [expanded]="isExpanded(row.id)"

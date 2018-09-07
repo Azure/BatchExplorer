@@ -1,11 +1,12 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component,
-    EventEmitter, HostListener, Input, OnChanges, Output, QueryList, ViewChildren,
+    EventEmitter, HostListener, Input, OnChanges, Output, QueryList, ViewChild, ViewChildren,
 } from "@angular/core";
 import { ChangeEvent } from "@batch-flask/ui/virtual-scroll";
 import { Activity } from "../../activity-types";
 import { ActivityMonitorItemComponent } from "../activity-monitor-item";
 
+import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import "./activity-monitor-tree-view.scss";
 
 interface TreeRow {
@@ -24,6 +25,7 @@ interface TreeRow {
 })
 export class ActivityMonitorTreeViewComponent implements OnChanges {
     @Input() public activities: Activity[];
+    @Input() public flashId: number;
     @Input() public name: string;
     @Input() public xButtonTitle: string;
     @Output() public focus = new EventEmitter<boolean>();
@@ -38,14 +40,27 @@ export class ActivityMonitorTreeViewComponent implements OnChanges {
     public focusedAction: number = null;
     public viewPortRows: TreeRow[] = [];
     public viewPortStart: number = 0;
+    public flashIndex: number = -1;
 
     @ViewChildren(ActivityMonitorItemComponent) private _itemComponents: QueryList<ActivityMonitorItemComponent>;
+    @ViewChild(FocusSectionComponent) private _focusSectionComponent: FocusSectionComponent;
 
     constructor(private changeDetector: ChangeDetectorRef) { }
 
     public ngOnChanges(changes) {
         if (changes.activities) {
             this._buildTreeRows();
+        }
+        if (changes.flashId) {
+            const candidates = this.treeRows.filter(row => row.id === +changes.flashId.currentValue);
+            if (candidates.length > 0) {
+                // give some time for the focus section to render
+                setTimeout(() => {
+                    this._focusSectionComponent.focus();
+                    this.flashIndex = candidates[0].index;
+                    this.focusedIndex = candidates[0].index;
+                }, 50);
+            }
         }
     }
 

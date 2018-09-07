@@ -24,6 +24,7 @@ import "./activity-monitor-item.scss";
 export class ActivityMonitorItemComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public activity: Activity;
     @Input() public focused: boolean;
+    @Input() public flash: boolean;
     @Input() public hovered: boolean;
     @Input() public indent: number;
     @Input() public expanded: boolean;
