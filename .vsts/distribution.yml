@@ -3,12 +3,12 @@ jobs:
   - job: Linux
     pool: Hosted Linux Preview
     steps:
-       - template: ./win/distribution.yml
+       - template: ./linux/distribution.yml
 
   - job: MacOS
     pool: Hosted macOS
     steps:
-       - template: ./win/distribution.yml
+       - template: ./darwin/distribution.yml
 
   - job: Windows
     pool: Hosted VS2017
