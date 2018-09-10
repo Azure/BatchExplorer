@@ -1,11 +1,9 @@
 import { Injectable, Injector } from "@angular/core";
 import { COMMAND_LABEL_ICON, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
-
-import { EntityView } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
-import { Node, Pool } from "app/models";
-import { NodeService, PoolParams } from "app/services";
+import { Node } from "app/models";
+import { NodeService, PoolService } from "app/services";
 import { flatMap } from "rxjs/operators";
 import { NodeConnectComponent } from "../connect";
 
@@ -17,11 +15,9 @@ export class NodeCommands extends EntityCommands<Node> {
     public editStartTask: EntityCommand<Node, void>;
     public uploadLog: EntityCommand<Node, void>;
 
-    public pool: Pool;
-    public poolData: EntityView<Pool, PoolParams>;
-
     constructor(
         injector: Injector,
+        private poolService: PoolService,
         private nodeService: NodeService,
         private sidebarManager: SidebarManager) {
         super(
@@ -83,26 +79,31 @@ export class NodeCommands extends EntityCommands<Node> {
     }
 
     private _connect(node: Node) {
-        const ref = this.sidebarManager.open(`connect-node-${node.id}`, NodeConnectComponent);
-        ref.component.node = node;
-        ref.component.pool = this.pool;
+        this.poolService.getFromCache(this.params["poolId"]).subscribe((pool) => {
+            const ref = this.sidebarManager.open(`connect-node-${node.id}`, NodeConnectComponent);
+            ref.component.node = node;
+            ref.component.pool = pool;
+        });
     }
 
     private _reboot(node: Node) {
-        return this.nodeService.reboot(this.pool.id, node.id).pipe(
-            flatMap(() => this.nodeService.get(this.pool.id, node.id)),
+        return this.nodeService.reboot(this.params["poolId"], node.id).pipe(
+            flatMap(() => this.nodeService.get(this.params["poolId"], node.id)),
         );
     }
 
     private _delete(node: Node) {
-        return this.nodeService.delete(this.pool.id, node.id).pipe(
-            flatMap(() => this.nodeService.get(this.pool.id, node.id)),
+        return this.nodeService.delete(this.params["poolId"], node.id).pipe(
+            flatMap(() => this.nodeService.get(this.params["poolId"], node.id)),
         );
     }
 
     private _editStartTask(node: Node) {
-        const ref = this.sidebarManager.open(`edit-start-task-${this.pool.id}`, StartTaskEditFormComponent);
-        ref.component.pool = this.pool;
-        ref.component.fromNode = node.id;
+        this.poolService.getFromCache(this.params["poolId"]).subscribe((pool) => {
+            const ref = this.sidebarManager.open(`edit-start-task-${this.params["poolId"]}`,
+                StartTaskEditFormComponent);
+            ref.component.pool = pool;
+            ref.component.fromNode = node.id;
+        });
     }
 }

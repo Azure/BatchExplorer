@@ -1,16 +1,16 @@
 import { Location } from "@angular/common";
 import { HttpHandler, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, throwError } from "rxjs";
-
 import { HttpRequestOptions, HttpService, ServerError } from "@batch-flask/core";
 import { UrlUtils } from "@batch-flask/utils";
-import { AccountService } from "app/services/account.service";
+import { ArmBatchAccount } from "app/models";
 import { AdalService } from "app/services/adal";
+import { BatchAccountService } from "app/services/batch-account";
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { AADUser } from "client/core/aad/adal/aad-user";
 import { Constants } from "common";
-import { catchError, flatMap, retryWhen, shareReplay, take } from "rxjs/operators";
+import { Observable, throwError } from "rxjs";
+import { catchError, flatMap, retryWhen, shareReplay, take, tap } from "rxjs/operators";
 
 @Injectable()
 export class AADGraphHttpService extends HttpService {
@@ -22,7 +22,7 @@ export class AADGraphHttpService extends HttpService {
     constructor(
         httpHandler: HttpHandler,
         private adal: AdalService,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private batchExplorer: BatchExplorerService) {
         super(httpHandler);
         this.adal.currentUser.subscribe(x => this._currentUser = x);
@@ -31,7 +31,16 @@ export class AADGraphHttpService extends HttpService {
     public request(method: any, uri?: any, options?: any): Observable<any> {
         return this.accountService.currentAccount.pipe(
             take(1),
-            flatMap((account) => {
+            tap((account) => {
+                if (!(account instanceof ArmBatchAccount)) {
+                    throw new ServerError({
+                        code: "LocalBatchAccount",
+                        message: "Cannot use AAD with a local batch account",
+                        status: 406,
+                    });
+                }
+            }),
+            flatMap((account: ArmBatchAccount) => {
                 const tenantId = account.subscription.tenantId;
                 return this.adal.accessTokenData(tenantId, this.serviceUrl).pipe(
                     flatMap((accessToken) => {

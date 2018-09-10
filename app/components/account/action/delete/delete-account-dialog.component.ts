@@ -3,7 +3,7 @@ import { MatDialogRef } from "@angular/material";
 
 import { autobind } from "@batch-flask/core";
 import { ConfirmationDialog } from "@batch-flask/ui/dialogs";
-import { AccountResource } from "app/models";
+import { BatchAccount } from "app/models";
 
 @Component({
     selector: "bl-delete-account-dialog",
@@ -11,12 +11,12 @@ import { AccountResource } from "app/models";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeleteAccountDialogComponent extends ConfirmationDialog<any> {
-    public set accounts(accounts: AccountResource[]) {
+    public set accounts(accounts: BatchAccount[]) {
         this._accounts = accounts;
         this.changeDetector.detectChanges();
     }
     public get accounts() { return this._accounts; }
-    private _accounts: AccountResource[] = [];
+    private _accounts: BatchAccount[] = [];
 
     constructor(
         public dialogRef: MatDialogRef<DeleteAccountDialogComponent>,
@@ -29,7 +29,7 @@ export class DeleteAccountDialogComponent extends ConfirmationDialog<any> {
         this.markAsConfirmed();
     }
 
-    public trackAccount(index, account: AccountResource) {
+    public trackAccount(index, account: BatchAccount) {
         return account.id;
     }
 }

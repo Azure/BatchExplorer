@@ -22,5 +22,5 @@ export * from "./permission";
 export * from "./vtabs";
 export * from "./entity-commands";
 export * from "./table";
-export * from "./activity-monitor";
+export * from "./activity";
 export * from "./workspace";

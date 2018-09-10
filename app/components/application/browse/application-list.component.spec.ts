@@ -2,10 +2,9 @@ import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
-import { Subject } from "rxjs";
-
 import { FilterBuilder } from "@batch-flask/core";
-import { ActivityService } from "@batch-flask/ui/activity-monitor";
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { ActivityService } from "@batch-flask/ui/activity";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
@@ -13,6 +12,7 @@ import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { ApplicationListComponent } from "app/components/application/browse";
 import { BatchApplication } from "app/models";
 import { ApplicationService, PinnedEntityService } from "app/services";
+import { Subject } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";
@@ -44,7 +44,7 @@ describe("ApplicationListComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
+            imports: [RouterTestingModule, I18nTestingModule],
             declarations: [ApplicationListComponent, NoItemMockComponent],
             providers: [
                 { provide: DialogService, useValue: null },

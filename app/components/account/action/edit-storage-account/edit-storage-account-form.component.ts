@@ -1,12 +1,11 @@
 import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
-import { Observable } from "rxjs";
-
 import { SidebarRef } from "@batch-flask/ui/sidebar";
-import { AccountResource } from "app/models";
+import { ArmBatchAccount } from "app/models";
 import { AccountPatchDto } from "app/models/dtos";
-import { AccountService } from "app/services";
+import { ArmBatchAccountService } from "app/services";
+import { Observable } from "rxjs";
 
 import "./edit-storage-account-form.scss";
 
@@ -15,7 +14,7 @@ import "./edit-storage-account-form.scss";
     templateUrl: "edit-storage-account-form.html",
 })
 export class EditStorageAccountFormComponent {
-    public set account(account: AccountResource) {
+    public set account(account: ArmBatchAccount) {
         this._account = account;
         if (account) {
             const props = account.properties;
@@ -26,10 +25,10 @@ export class EditStorageAccountFormComponent {
 
     public storageAccountId = new FormControl();
 
-    private _account: AccountResource;
+    private _account: ArmBatchAccount;
 
     constructor(
-        private accountService: AccountService,
+        private accountService: ArmBatchAccountService,
         public sidebarRef: SidebarRef<EditStorageAccountFormComponent>,
     ) { }
 
@@ -38,7 +37,7 @@ export class EditStorageAccountFormComponent {
         const dto = new AccountPatchDto({ autoStorage: { storageAccountId: this.storageAccountId.value } });
         const obs = this.accountService.patch(this.account.id, dto);
         obs.subscribe(() => {
-            this.accountService.refresh();
+            this.accountService.get(this.account.id);
         });
         return obs;
     }

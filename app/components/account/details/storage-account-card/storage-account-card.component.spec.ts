@@ -8,18 +8,18 @@ import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StorageAccountCardComponent } from "app/components/account/details";
-import { AccountResource, StorageAccount } from "app/models";
+import { ArmBatchAccount, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
 
-const accountNoStorage = new AccountResource({ id: "acc-1", location: "westus", properties: {} } as any);
-const accountWithStorage = new AccountResource({
+const accountNoStorage = new ArmBatchAccount({ id: "acc-1", location: "westus", properties: {} } as any);
+const accountWithStorage = new ArmBatchAccount({
     id: "acc-1",
     location: "westus",
     properties: {
         autoStorage: { storageAccountId: "sub-1/storage-1" },
     },
 } as any);
-const accountWithInvalidStorage = new AccountResource({
+const accountWithInvalidStorage = new ArmBatchAccount({
     id: "acc-1",
     location: "westus",
     properties: {

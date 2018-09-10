@@ -1,0 +1,28 @@
+@import "app/styles/variables";
+
+bl-account-list {
+    bl-quick-list-row-render:hover {
+        .fa-star {
+            color: $main-background;
+        }
+    }
+
+    .fa-star {
+        font-size: 2em;
+        color: $alto;
+
+        &:hover {
+            color: map-get($primary, 100) !important;
+        }
+
+        &.favorite {
+            color: map-get($primary, 400) !important;
+        }
+    }
+
+    .account-type {
+        background: $primary-color;
+        color: $primary-contrast-color;
+        padding: 2px 5px;
+    }
+}

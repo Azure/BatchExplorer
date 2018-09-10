@@ -53,8 +53,6 @@ export function initializeServices(injector) {
         AADService,
         BlIpcMain,
         FileSystem,
-
-        // TODO-TIM move
         OSService,
 
         ...servicesToInitialize,

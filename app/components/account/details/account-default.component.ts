@@ -3,8 +3,8 @@ import { Router } from "@angular/router";
 import { SidebarManager } from "@batch-flask/ui";
 import { Subscription } from "rxjs";
 
-import { AccountService } from "app/services";
-import { BatchAccountCreateComponent } from "../action/add";
+import { BatchAccountService } from "app/services";
+import { BatchAccountCreateComponent } from "../action/create";
 
 @Component({
     selector: "bl-account-details-home",
@@ -28,7 +28,7 @@ export class AccountDefaultComponent implements OnInit, OnDestroy {
     private accountChangeSubscription: Subscription;
 
     constructor(
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private sidebarManager: SidebarManager,
         private router: Router) {
     }

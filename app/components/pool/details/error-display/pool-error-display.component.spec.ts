@@ -6,7 +6,7 @@ import { of } from "rxjs";
 
 import { PoolErrorDisplayComponent } from "app/components/pool/details";
 import { Pool, ResizeErrorCode } from "app/models";
-import { AccountService, PoolService } from "app/services";
+import { BatchAccountService, PoolService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { BannerMockComponent } from "test/utils/mocks/components";
 
@@ -32,7 +32,7 @@ describe("PoolErrorDisplayComponent", () => {
                 BannerMockComponent, PoolErrorDisplayComponent, TestPoolErrorDisplayComponent,
             ],
             providers: [
-                { provide: AccountService, useValue: accountServiceSpy },
+                { provide: BatchAccountService, useValue: accountServiceSpy },
                 { provide: PoolService, useValue: null },
                 { provide: ElectronShell, useValue: {} },
             ],

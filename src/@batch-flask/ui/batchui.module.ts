@@ -7,7 +7,7 @@ import { MaterialModule } from "@batch-flask/core";
 // components
 import { WorkspaceModule } from "@batch-flask/ui/workspace";
 import { AbstractListModule } from "./abstract-list";
-import { ActivityModule } from "./activity-monitor";
+import { ActivityModule } from "./activity";
 import { AdvancedFilterModule } from "./advanced-filter";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
 import { BatchFlaskSettingsModule } from "./batch-flask-settings";

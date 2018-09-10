@@ -5,8 +5,8 @@ import { BehaviorSubject } from "rxjs";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationErrorDisplayComponent } from "app/components/application/errors";
-import { AccountResource, BatchApplication } from "app/models";
-import { AccountService } from "app/services";
+import { BatchAccount, BatchApplication } from "app/models";
+import { BatchAccountService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { BannerMockComponent } from "test/utils/mocks/components";
 
@@ -21,12 +21,12 @@ describe("ApplicationErrorDisplayComponent", () => {
     let fixture: ComponentFixture<TestApplicationErrorDisplayComponent>;
     let testComponent: TestApplicationErrorDisplayComponent;
     let component: ApplicationErrorDisplayComponent;
-    let accountUnderTest: BehaviorSubject<AccountResource>;
+    let accountUnderTest: BehaviorSubject<BatchAccount>;
     let accountServiceSpy: any;
     let sidebarSpy;
 
     beforeEach(() => {
-        accountUnderTest = new BehaviorSubject<AccountResource>(Fixtures.account.create({
+        accountUnderTest = new BehaviorSubject<BatchAccount>(Fixtures.account.create({
             id: "account-1",
             properties: {
                 autoStorage: {
@@ -46,7 +46,7 @@ describe("ApplicationErrorDisplayComponent", () => {
         TestBed.configureTestingModule({
             declarations: [ApplicationErrorDisplayComponent, BannerMockComponent, TestApplicationErrorDisplayComponent],
             providers: [
-                { provide: AccountService, useValue: accountServiceSpy },
+                { provide: BatchAccountService, useValue: accountServiceSpy },
                 { provide: SidebarManager, useValue: sidebarSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],

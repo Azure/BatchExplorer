@@ -11,8 +11,8 @@ import { ApplicationPackage, BatchApplication } from "app/models";
 import { Constants } from "app/utils";
 import { Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
-import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
+import { BatchAccountService } from "./batch-account";
 import {
     ArmEntityGetter,
     ArmListGetter,
@@ -53,7 +53,7 @@ export class ApplicationService {
 
     constructor(
         private arm: ArmHttpService,
-        accountService: AccountService) {
+        accountService: BatchAccountService) {
 
         accountService.currentAccountId.subscribe((accountId) => {
             this._currentAccountId = accountId;

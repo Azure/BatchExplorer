@@ -1,14 +1,17 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, forwardRef } from "@angular/core";
+import { List } from "immutable";
+import { Observable, Subscription } from "rxjs";
+
 import { Filter, FilterMatcher, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/core/list";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { BatchAccountCommands } from "app/components/account/action";
-import { AccountResource } from "app/models";
-import { AccountService, SubscriptionService } from "app/services";
-import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { BatchAccount } from "app/models";
+import { BatchAccountService, SubscriptionService } from "app/services";
 import { flatMap, shareReplay } from "rxjs/operators";
+
+import "./account-list.scss";
 
 @Component({
     selector: "bl-account-list",
@@ -24,24 +27,19 @@ import { flatMap, shareReplay } from "rxjs/operators";
 })
 export class AccountListComponent extends ListBaseComponent implements OnDestroy {
 
-    public accounts: List<AccountResource> = List([]);
-    public displayedAccounts: List<AccountResource> = List([]);
+    public accounts: List<BatchAccount> = List([]);
+    public displayedAccounts: List<BatchAccount> = List([]);
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
 
     private _accountSub: Subscription;
 
     constructor(
         public commands: BatchAccountCommands,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         changeDetector: ChangeDetectorRef,
         private subscriptionService: SubscriptionService) {
         super(changeDetector);
         this._updateDisplayedAccounts();
-
-        this.accountService.accountsLoaded.subscribe(() => {
-            this.loadingStatus = LoadingStatus.Ready;
-            changeDetector.markForCheck();
-        });
 
         this._accountSub = this.accountService.accounts.subscribe((accounts) => {
             this.accounts = accounts;
@@ -88,9 +86,9 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
     }
 
     private _updateDisplayedAccounts() {
-        const matcher = new FilterMatcher<AccountResource>();
+        const matcher = new FilterMatcher<BatchAccount>();
 
-        this.displayedAccounts = List<AccountResource>(this.accounts.filter((x) => {
+        this.displayedAccounts = List<BatchAccount>(this.accounts.filter((x) => {
             return matcher.test(this.filter, x);
         }).sortBy(x => x.name));
 

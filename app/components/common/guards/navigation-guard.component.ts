@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot } from "@angular/router";
 
-import { AccountService } from "app/services";
+import { BatchAccountService } from "app/services";
 import { map } from "rxjs/operators";
 
 @Injectable()
 export class NavigationGuard implements CanActivate {
     constructor(
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
     ) {
     }
 

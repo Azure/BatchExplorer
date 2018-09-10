@@ -43,17 +43,18 @@ import {
     AutoStorageService, StorageAccountKeysService, StorageBlobService, StorageClientService, StorageContainerService,
 } from "app/services/storage";
 import {
-    AccountService,
     AdalService,
     AppInsightsApiService,
     AppInsightsQueryService,
     AppLocaleService,
     AppTranslationsLoaderService,
     ApplicationService,
+    ArmBatchAccountService,
     ArmHttpService,
     AuthorizationHttpService,
     AutoscaleFormulaService,
     AzureHttpService,
+    BatchAccountService,
     BatchExplorerService,
     CacheDataService,
     CertificateService,
@@ -66,6 +67,7 @@ import {
     JobHookTaskService,
     JobScheduleService,
     JobService,
+    LocalBatchAccountService,
     LocalFileStorage,
     NavigatorService,
     NcjFileGroupService,
@@ -95,8 +97,8 @@ import {
 } from "./services";
 
 const modules = [
-    AccountModule, ApplicationModule, CertificateModule, DataModule,
-    FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
+    AccountModule, ApplicationModule, CertificateModule,
+    DataModule, FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
     SettingsModule, TaskModule, MarketModule, LayoutModule,
     MiscModule,
 ];
@@ -129,7 +131,9 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         { provide: TranslationsLoaderService, useClass: AppTranslationsLoaderService },
         { provide: LocaleService, useClass: AppLocaleService },
-        AccountService,
+        ArmBatchAccountService,
+        BatchAccountService,
+        LocalBatchAccountService,
         AdalService,
         AppInsightsApiService,
         AppInsightsQueryService,

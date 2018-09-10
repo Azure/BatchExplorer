@@ -1,13 +1,12 @@
 import { Injectable } from "@angular/core";
-import * as moment from "moment";
-import { BehaviorSubject, Observable, forkJoin, of } from "rxjs";
-
-import { AccountResource, BatchSoftwareLicense, Pool, RateCardMeter } from "app/models";
+import { ArmBatchAccount, BatchSoftwareLicense, Pool, RateCardMeter } from "app/models";
 import { BatchPricing, OSPricing, OsType, SoftwarePricing, VMPrices } from "app/services/pricing";
 import { PoolPrice, PoolPriceOptions, PoolUtils, log } from "app/utils";
+import * as moment from "moment";
+import { BehaviorSubject, Observable, forkJoin, of } from "rxjs";
 import { catchError, filter, flatMap, map, share, take } from "rxjs/operators";
-import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
+import { BatchAccountService } from "./batch-account";
 import { LocalFileStorage } from "./local-file-storage.service";
 import { VmSizeService } from "./vm-size.service";
 
@@ -70,7 +69,7 @@ export class PricingService {
         private arm: ArmHttpService,
         private vmSizeService: VmSizeService,
         private localFileStorage: LocalFileStorage,
-        private accountService: AccountService) {
+        private accountService: BatchAccountService) {
 
         this.pricing = this._pricingMap.pipe(filter(x => x !== null));
     }
@@ -134,10 +133,14 @@ export class PricingService {
     private _loadRateCardMeters(): Observable<RateCardMeter[]> {
         return this.accountService.currentAccount.pipe(
             flatMap((account) => {
-                const { subscription } = account;
+                if (account instanceof ArmBatchAccount) {
+                    const { subscription } = account;
 
-                const url = `${commerceUrl(subscription.subscriptionId)}/RateCard?$filter=${rateCardFilter()}`;
-                return this.arm.get(url).pipe(map((response) => response.json().Meters));
+                    const url = `${commerceUrl(subscription.subscriptionId)}/RateCard?$filter=${rateCardFilter()}`;
+                    return this.arm.get(url).pipe(map((response) => response.json().Meters));
+                } else {
+                    return of([]);
+                }
             }),
             share(),
         );
@@ -226,14 +229,18 @@ export class PricingService {
      * Wait for the prices and account to be loaded and returns callback
      * @param callback Callback when account and prices are loaded
      */
-    private _getPrice<T>(callback: (account: AccountResource, pricing: BatchPricing) => T) {
+    private _getPrice<T>(callback: (account: ArmBatchAccount, pricing: BatchPricing) => T) {
         return this.accountService.currentAccount.pipe(
             take(1),
             flatMap((account) => {
-                return this.pricing.pipe(
-                    take(1),
-                    map(map => callback(account, map)),
-                );
+                if (account instanceof ArmBatchAccount) {
+                    return this.pricing.pipe(
+                        take(1),
+                        map(map => callback(account, map)),
+                    );
+                } else {
+                    return of(null);
+                }
             }),
             share(),
         );

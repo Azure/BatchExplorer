@@ -9,7 +9,6 @@ export * from "./model-utils";
 export * from "./number-utils";
 export * from "./pool-utils";
 export * from "./arm-resource-utils";
-export * from "./shared-key-utils";
 export * from "./storage-utils";
 export * from "./constants";
 

@@ -6,16 +6,22 @@
                 <th>Subscription</th>
                 <th>Location</th>
                 <th>Name</th>
+                <th>Type</th>
             </tr>
             <tr *ngFor="let account of accounts;trackBy: trackAccount">
-                <td>{{account.subscription.subscriptionId}}</td>
+                <td>{{account.subscription?.subscriptionId}}</td>
                 <td>{{account.location}}</td>
                 <td>{{account.name}}</td>
+                <td>{{account.armEnabled ? "Arm" : "Local"}}</td>
             </tr>
         </table>
         <p style="word-wrap: break-word;">
             Warning! Deleting batch account is irreversible. The action you're about to take can't be undone. Clicking
             OK will delete this batch account and any related resources permanently.
+        </p>
+
+        <p>
+           Local account will only be removed localy. The account won't actually be removed from the batch service.
         </p>
     </div>
 </bl-simple-form>

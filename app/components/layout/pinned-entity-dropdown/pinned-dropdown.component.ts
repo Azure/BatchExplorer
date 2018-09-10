@@ -5,7 +5,7 @@ import { Observable, Subscription } from "rxjs";
 
 import { MouseButton, PinnableEntity, PinnedEntityType } from "@batch-flask/core";
 import { ContextMenu, ContextMenuItem, ContextMenuService, DropdownComponent } from "@batch-flask/ui";
-import { AccountService, PinnedEntityService } from "app/services";
+import { BatchAccountService, PinnedEntityService } from "app/services";
 
 import { filter } from "rxjs/operators";
 import "./pinned-dropdown.scss";
@@ -29,7 +29,7 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
         private changeDetector: ChangeDetectorRef,
         private contextMenuService: ContextMenuService,
         private pinnedEntityService: PinnedEntityService,
-        private accountService: AccountService) {
+        private accountService: BatchAccountService) {
 
         this.favorites = this.pinnedEntityService.favorites;
         this._subscriptions.push(this.favorites.subscribe((items) => {
@@ -38,7 +38,7 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
         }));
 
         this._subscriptions.push(this.accountService.currentAccount.subscribe((account) => {
-            this._accountEndpoint = account.properties.accountEndpoint;
+            this._accountEndpoint = account.url;
         }));
     }
 
