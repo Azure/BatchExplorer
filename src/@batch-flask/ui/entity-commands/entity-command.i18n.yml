@@ -1,0 +1,7 @@
+entity-command:
+  confirm:
+    single:
+      title: Are you sure you want to {action} this {type}
+      description: You are about to {action} {entityId}
+    multiple:
+      title: Are you sure you want to {action} these {count} {type}

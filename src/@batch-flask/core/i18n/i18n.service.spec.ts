@@ -22,7 +22,7 @@ describe("I18nService", () => {
 
     it("returns key if translation not found", () => {
         expect(i18n.translate("foo.unkown")).toEqual("foo.unkown");
-        expect(i18n.translate("foo.unkown", { some: "not used" })).toEqual("foo.unkown");
+        expect(i18n.translate("foo.unkown", { some: "not used" })).toEqual("foo.unkown(some:not used)");
     });
 
     it("translate by key with params", () => {
