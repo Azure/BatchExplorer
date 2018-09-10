@@ -4,7 +4,7 @@ import { By } from "@angular/platform-browser";
 
 import { MatDialog } from "@angular/material";
 import { ListSelection } from "@batch-flask/core/list";
-import { ActivityService } from "@batch-flask/ui/activity-monitor";
+import { ActivityService } from "@batch-flask/ui/activity";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationPackageTableComponent, ApplicationPackagesComponent } from "app/components/application/details";
 import { BatchApplication, PackageState } from "app/models";

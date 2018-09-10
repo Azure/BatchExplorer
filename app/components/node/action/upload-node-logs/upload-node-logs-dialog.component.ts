@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
 import { Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { Activity, ActivityResponse, ActivityService } from "@batch-flask/ui/activity-monitor";
+import { Activity, ActivityResponse, ActivityService } from "@batch-flask/ui";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Node, Pool } from "app/models";
 import { BatchAccountService, NodeService } from "app/services";

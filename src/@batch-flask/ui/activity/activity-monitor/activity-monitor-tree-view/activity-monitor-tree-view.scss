@@ -1,0 +1,49 @@
+@import "app/styles/variables";
+
+bl-activity-monitor-tree-view {
+    $tree-view-header-height: 24px;
+    $tree-view-content-height: calc(100% - 24px);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .tree-view-header {
+        height: $tree-view-header-height;
+        line-height: $tree-view-header-height;
+        padding-left: 10px;
+        background: $secondary-background;
+        vertical-align: middle;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .name {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .clear-all {
+            padding:  0 10px;
+        }
+    }
+
+    .tree-view-content {
+        position: relative;
+        height: $tree-view-content-height;
+    }
+
+    .tree-rows-container {
+        height: 100%;
+
+        bl-virtual-scroll {
+            height: 100%;
+        }
+    }
+
+    .tree-view-error {
+        white-space: pre-line;
+    }
+}

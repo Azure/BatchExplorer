@@ -4,7 +4,7 @@ import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Property } from "@batch-flask/core";
-import { ActivityService } from "@batch-flask/ui/activity-monitor";
+import { ActivityService } from "@batch-flask/ui/activity";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { SidebarManager } from "@batch-flask/ui/sidebar";

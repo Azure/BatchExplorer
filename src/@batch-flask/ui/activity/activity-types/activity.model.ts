@@ -1,4 +1,4 @@
-import { AsyncSubject, BehaviorSubject, Observable, merge } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable, Subscription, merge } from "rxjs";
 import { ActivityResponse, ActivityStatus } from "./activity-datatypes";
 import { ActivityProcessor } from "./activity-processor.model";
 
@@ -21,23 +21,27 @@ export class ActivityCounters {
 export class Activity {
     public static idCounter: number = 0;
 
-    public id: string;
+    public id: number;
     public name: string;
     public statusSubject: BehaviorSubject<ActivityStatus>;
     public progressSubject: BehaviorSubject<number>;
     public subactivities: Activity[];
-    public done: AsyncSubject<ActivityStatus>; // only emits on completion
+    /** Emits on completion, with the status of the activity after completion */
+    public done: AsyncSubject<ActivityStatus>;
     public isComplete: boolean;
     public pending: boolean;
+    public initializer: () => Observable<ActivityResponse | Activity[] | any>;
+    public isCancellable: boolean;
+    public error: string;
 
-    private initializer: () => Observable<ActivityResponse | Activity[] | any>;
     private processor: ActivityProcessor;
     private counters: ActivityCounters;
-
     private subtasksComplete: AsyncSubject<null>;
+    private awaitCompletionSub: Subscription;
+    private _cancelled: boolean;
 
     constructor(name: string, initializerFn: () => Observable<ActivityResponse | Activity[] | any>) {
-        this.id = (Activity.idCounter++).toString();
+        this.id = Activity.idCounter++;
         this.name = name;
         this.subactivities = [];
 
@@ -56,6 +60,11 @@ export class Activity {
 
         this.subtasksComplete = new AsyncSubject();
 
+        this.isCancellable = true;
+        this._cancelled = false;
+
+        this.error = "";
+
         this._listenToProcessor();
     }
 
@@ -67,9 +76,11 @@ export class Activity {
      * Executes the function supplied in the constructor on this activity
      */
     public run(): void {
+        if (this._cancelled) {
+            return;
+        }
         // update status to InProgress
         this.statusSubject.next(ActivityStatus.InProgress);
-        this.isComplete = false;
         this.pending = false;
         this.progressSubject.next(0);
 
@@ -79,6 +90,11 @@ export class Activity {
             next: result => {
                 // if we need to run subtasks, execute the subtasks
                 if (Array.isArray(result)) {
+                    // check if any children are not cancellable
+                    // (this will also make the current activity uncancellable)
+                    if (result.filter(act => !act.isCancellable).length > 0) {
+                        this.setUncancellable();
+                    }
                     this.processor.exec(result);
                 } else {
                     // there are no subtasks to track, so close this observable stream
@@ -90,13 +106,47 @@ export class Activity {
                     }
                 }
             },
+            error: (err) => {
+                this._markAsFailed(err);
+            },
         });
 
-        merge(initializerObs, this.subtasksComplete).subscribe({
+        this.awaitCompletionSub = merge(initializerObs, this.subtasksComplete).subscribe({
             complete: () => {
                 this._markAsCompleted();
             },
         });
+    }
+
+    /**
+     * Sets an activity as not cancellable
+     * Chainable; can be used with constructors
+     */
+    public setUncancellable(): Activity {
+        this.isCancellable = false;
+
+        return this;
+    }
+
+    public set cancelled(cancelled: boolean) {
+        this._cancelled = cancelled;
+    }
+
+    /**
+     * Immediately stops the running function and completes the activity
+     */
+    public cancel(): void {
+        if (!this.isCancellable) { return; }
+        // if we have an awaitCompletionSub active subscription, unsubscribe from it
+        // so we don't get an automatic Completed when the subactivities finish
+        if (this.awaitCompletionSub && !this.awaitCompletionSub.closed) {
+            this.awaitCompletionSub.unsubscribe();
+        }
+
+        this._markAsCancelled();
+        for (const activity of this.subactivities) {
+            activity.cancel();
+        }
     }
 
     private _listenToProcessor(): void {
@@ -120,14 +170,14 @@ export class Activity {
                 case ActivityStatus.Failed:
                     this.counters.failed++;
                     break;
-                case ActivityStatus.Canceled:
+                case ActivityStatus.Cancelled:
                     this.counters.canceled++;
                     break;
                 default:
                     break;
             }
 
-            this.progressSubject.next((this.counters.total / numSubActivities) * 100);
+            this.progressSubject.next((this.counters.completed / numSubActivities) * 100);
 
             // in all cases, check the total; if it is equal to the number of subactivities, emit completed
             if (this.counters.total === numSubActivities) {
@@ -141,8 +191,8 @@ export class Activity {
     }
 
     /**
-     * Marks the activity as completed by emitting completed to the statusSubject
-     * Runs the function to be run upon completion of the activity
+     * Marks the activity as completed by emitting Completed to the statusSubject
+     * Also marks the activity as done by completing its done async subject
      */
     private _markAsCompleted(): void {
         this.isComplete = true;
@@ -155,6 +205,43 @@ export class Activity {
 
         // signal completion of this activity
         this.done.next(ActivityStatus.Completed);
+        this.done.complete();
+    }
+
+    /**
+     * Marks the activity as cancelled (a type of completion) by emitting Cancelled to the statusSubject
+     * Also marks the activity as done by completing its done async subject
+     */
+    private _markAsCancelled() {
+        this.isComplete = true;
+
+        // emit a cancelled status to the statusSubject
+        this.statusSubject.next(ActivityStatus.Cancelled);
+
+        // leave the progress subject as is
+
+        // signal completion of the activity
+        this.done.next(ActivityStatus.Cancelled);
+        this.done.complete();
+    }
+
+    /**
+     * Marks the activity as failed (a type of completion) by emitting Failed to the statusSubject
+     * Also marks the activity as done by completing its done async subject
+     */
+    private _markAsFailed(withError: Error) {
+        this.isComplete = true;
+
+        // emit a cancelled status to the statusSubject
+        this.statusSubject.next(ActivityStatus.Failed);
+
+        // leave the progress subject as is
+
+        // attach the reported error to this activity
+        this.error = `Activity Failed During Initializer with Error: ${withError.message}`;
+
+        // signal completion of the activity
+        this.done.next(ActivityStatus.Failed);
         this.done.complete();
     }
 }

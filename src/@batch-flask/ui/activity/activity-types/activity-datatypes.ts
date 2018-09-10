@@ -2,14 +2,8 @@ export enum ActivityStatus {
     Failed = -1,
     Pending,
     InProgress,
-    Canceled,
+    Cancelled,
     Completed,
-}
-
-export enum ActivityAction {
-    Start,
-    Cancel,
-    Finish,
 }
 
 export class ActivityResponse {

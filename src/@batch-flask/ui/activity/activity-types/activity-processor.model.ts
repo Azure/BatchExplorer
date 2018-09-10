@@ -1,5 +1,5 @@
+import { ActivityFifoQueue } from "@batch-flask/ui/activity/activity-fifo-queue";
 import { BehaviorSubject, Observable, Subscription, combineLatest, merge } from "rxjs";
-
 import { ActivityStatus } from "./activity-datatypes";
 import { Activity } from "./activity.model";
 
@@ -13,6 +13,7 @@ export class ActivityProcessor {
 
     private completionSubscription: Subscription;
     private subActivitiesSubscription: Subscription;
+    private activityFifoQueue: ActivityFifoQueue;
     private combinedProgressSubscription: Subscription;
 
     constructor() {
@@ -20,6 +21,10 @@ export class ActivityProcessor {
         this.completionSubject = new BehaviorSubject(null);
         this.subActivitiesSubject = new BehaviorSubject([]);
         this.combinedProgressSubject = new BehaviorSubject(-1);
+
+        // NOTE: ActivityFifoQueue is a singleton class, so this will be the same
+        // instance of the class in ANY instance of ActivityProcessor
+        this.activityFifoQueue = new ActivityFifoQueue();
 
         this.subActivitiesSubject.subscribe(subactivities => {
             this.activities = subactivities;
@@ -67,7 +72,7 @@ export class ActivityProcessor {
             progresses.push(activity.progressSubject);
 
             if (activity.pending) {
-                activity.run();
+                this.activityFifoQueue.enqueue(activity);
             }
             completions.push(activity.done.asObservable());
         }
