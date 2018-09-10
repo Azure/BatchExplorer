@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
 import { RequestOptions, Response, URLSearchParams } from "@angular/http";
+import { ServerError } from "@batch-flask/core";
+import { ArmBatchAccount, Resource } from "app/models";
 import { Observable, empty } from "rxjs";
-
-import { Resource } from "app/models";
-import { expand, flatMap, map, reduce, share } from "rxjs/operators";
-import { AccountService } from "./account.service";
+import { expand, flatMap, map, reduce, share, tap } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
 import { AzureHttpService } from "./azure-http.service";
+import { BatchAccountService } from "./batch-account";
 import { SubscriptionService } from "./subscription.service";
 
 export function computeUrl(subscriptionId: string) {
@@ -33,14 +33,23 @@ const computeImageProvider = computeProvider + "/images";
 @Injectable()
 export class ComputeService {
     constructor(private arm: ArmHttpService,
-                private accountService: AccountService,
+                private accountService: BatchAccountService,
                 private azure: AzureHttpService,
                 private subscriptionService: SubscriptionService) {
     }
 
     public getQuotas(): Observable<ComputeUsage[]> {
         return this.accountService.currentAccount.pipe(
-            flatMap((account) => {
+            tap((account) => {
+                if (!(account instanceof ArmBatchAccount)) {
+                    throw new ServerError({
+                        code: "LocalBatchAccount",
+                        message: "Cannot get quotas for a local batch account",
+                        status: 406,
+                    });
+                }
+            }),
+            flatMap((account: ArmBatchAccount) => {
                 const { subscription, location } = account;
 
                 const url = `${computeUrl(subscription.subscriptionId)}/locations/${location}/usages`;

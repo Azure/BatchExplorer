@@ -12,7 +12,7 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { QuickListTestingModule } from "@batch-flask/ui/testing";
 import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { AccountListComponent } from "app/components/account/browse";
-import { AccountService, SubscriptionService } from "app/services";
+import { BatchAccountService, SubscriptionService } from "app/services";
 import { List } from "immutable";
 import { of } from "rxjs";
 import * as Fixtures from "test/fixture";
@@ -47,7 +47,6 @@ describe("AccountListComponent", () => {
 
     beforeEach(() => {
         accountService = {
-            accountsLoaded: of(true),
             accounts: of(List([
                 Fixtures.account.create({ id: "acc-1", name: "Batch 1", location: "westus", subscription: sub1 }),
                 Fixtures.account.create({ id: "acc-2", name: "Account 2", location: "eastus", subscription: sub1 }),
@@ -65,7 +64,7 @@ describe("AccountListComponent", () => {
             imports: [RouterTestingModule, QuickListTestingModule, ElectronTestingModule],
             declarations: [AccountListComponent, NoItemMockComponent],
             providers: [
-                { provide: AccountService, useValue: accountService },
+                { provide: BatchAccountService, useValue: accountService },
                 { provide: SidebarManager, useValue: null },
                 { provide: SubscriptionService, useValue: subscriptionService },
                 { provide: MatDialog, useValue: null },

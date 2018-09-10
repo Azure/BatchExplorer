@@ -1,8 +1,8 @@
-import { AccountResource, StorageAccount } from "app/models";
+import { BatchAccount, StorageAccount } from "app/models";
 
 export interface SharedKeyCredentials {
     batchAccount: {
-        resource: AccountResource;
+        resource: BatchAccount;
         primary: string;
         secondary: string;
     };

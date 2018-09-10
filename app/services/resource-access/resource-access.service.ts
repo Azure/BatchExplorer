@@ -7,8 +7,8 @@ import { ArmListGetter } from "app/services/core";
 import { List } from "immutable";
 import { Observable, of } from "rxjs";
 import { flatMap, map, share, shareReplay, take } from "rxjs/operators";
-import { AccountService } from "../account.service";
 import { ArmHttpService } from "../arm-http.service";
+import { BatchAccountService } from "../batch-account";
 
 interface RoleAssignmentListParams {
     resourceId: string;
@@ -29,7 +29,7 @@ export class ResourceAccessService {
         key: ({ scope }) => scope,
     });
 
-    constructor(private accountService: AccountService, private arm: ArmHttpService) {
+    constructor(private accountService: BatchAccountService, private arm: ArmHttpService) {
         this._rolesAssignmentListGetter = new ArmListGetter<RoleAssignment, RoleAssignmentListParams>(RoleAssignment,
             this.arm, {
                 cache: (params) => this._roleAssignmentsCache.getCache(params),

@@ -1,12 +1,13 @@
 import { HttpHandler } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { HttpService, ServerError } from "@batch-flask/core";
-import { AccountService } from "app/services/account.service";
 import { AdalService } from "app/services/adal";
+import { BatchAccountService } from "app/services/batch-account";
 import { BatchExplorerService } from "app/services/batch-labs.service";
 import { AADUser } from "client/core/aad/adal/aad-user";
 import { Observable, throwError } from "rxjs";
-import { catchError, flatMap, retryWhen, shareReplay, take } from "rxjs/operators";
+import { catchError, flatMap, retryWhen, shareReplay, take, tap } from "rxjs/operators";
+import { ArmBatchAccount } from "../../../models";
 
 /**
  * Class wrapping around the http service to call Microsoft Graph api
@@ -21,7 +22,7 @@ export class MsGraphHttpService extends HttpService {
     constructor(
         httpHandler: HttpHandler,
         private adal: AdalService,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private batchExplorer: BatchExplorerService) {
 
         super(httpHandler);
@@ -31,7 +32,16 @@ export class MsGraphHttpService extends HttpService {
     public request(method: any, uri?: any, options?: any): Observable<any> {
         return this.accountService.currentAccount.pipe(
             take(1),
-            flatMap((account) => {
+            tap((account) => {
+                if (!(account instanceof ArmBatchAccount)) {
+                    throw new ServerError({
+                        code: "LocalBatchAccount",
+                        message: "Cannot use GRAPH with a local batch account",
+                        status: 406,
+                    });
+                }
+            }),
+            flatMap((account: ArmBatchAccount) => {
                 return this.adal.accessTokenData(account.subscription.tenantId, this.serviceUrl);
             }),
             flatMap((accessToken) => {

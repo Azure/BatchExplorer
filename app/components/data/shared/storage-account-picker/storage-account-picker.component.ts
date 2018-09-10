@@ -4,11 +4,10 @@ import {
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { SelectOptionComponent } from "@batch-flask/ui";
-import { AccountService, StorageAccountService } from "app/services";
-import { List } from "immutable";
-
-import { StorageAccount } from "app/models";
+import { ArmBatchAccount, StorageAccount } from "app/models";
+import { BatchAccountService, StorageAccountService } from "app/services";
 import { AutoStorageService } from "app/services/storage";
+import { List } from "immutable";
 import { Subscription } from "rxjs";
 import { first } from "rxjs/operators";
 
@@ -36,7 +35,7 @@ export class StorageAccountPickerComponent implements OnInit, AfterContentInit, 
 
     constructor(
         private autoStorageService: AutoStorageService,
-        private batchAccountService: AccountService,
+        private batchAccountService: BatchAccountService,
         private storageAccountService: StorageAccountService,
         private changeDetector: ChangeDetectorRef) {
 
@@ -48,11 +47,14 @@ export class StorageAccountPickerComponent implements OnInit, AfterContentInit, 
 
     public ngOnInit() {
         this.batchAccountService.currentAccount.pipe(first()).subscribe((currentAccount) => {
-            this.storageAccountService.list(currentAccount.subscription.subscriptionId).subscribe((storageAccounts) => {
-                this._storageAccounts = storageAccounts;
-                this.loading = false;
-                this._updateStorageAccounts();
-            });
+            if (currentAccount instanceof ArmBatchAccount) {
+                this.storageAccountService.list(currentAccount.subscription.subscriptionId)
+                    .subscribe((storageAccounts) => {
+                        this._storageAccounts = storageAccounts;
+                        this.loading = false;
+                        this._updateStorageAccounts();
+                    });
+            }
         });
     }
 

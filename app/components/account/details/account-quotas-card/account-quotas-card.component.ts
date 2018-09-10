@@ -4,7 +4,7 @@ import {
 import { ElectronShell } from "@batch-flask/ui";
 import { Subscription } from "rxjs";
 
-import { AccountResource, BatchQuotas } from "app/models";
+import { BatchAccount, BatchQuotas } from "app/models";
 import { QuotaService } from "app/services";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
@@ -17,7 +17,7 @@ import "./account-quotas-card.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountQuotasCardComponent implements OnDestroy, OnInit {
-    @Input() public account: AccountResource;
+    @Input() public account: BatchAccount;
 
     public bufferValue = 100;
 

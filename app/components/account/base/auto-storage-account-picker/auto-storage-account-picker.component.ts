@@ -1,10 +1,9 @@
 import { Component, Input, OnInit, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { List } from "immutable";
-
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { AccountResource, StorageAccount } from "app/models";
+import { ArmBatchAccount, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
+import { List } from "immutable";
 
 import "./auto-storage-account-picker.scss";
 
@@ -20,7 +19,7 @@ import "./auto-storage-account-picker.scss";
 export class AutoStorageAccountPickerComponent implements OnInit, ControlValueAccessor {
     public noSelectionKey = "-1";
 
-    @Input() public account: AccountResource;
+    @Input() public account: ArmBatchAccount;
 
     public preferedAccounts: List<StorageAccount> = List([]);
     public otherAccounts: List<StorageAccount> = List([]);

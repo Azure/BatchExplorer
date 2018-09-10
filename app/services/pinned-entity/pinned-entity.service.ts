@@ -7,8 +7,8 @@ import {
     BatchApplication, BlobContainer, Certificate, Job, JobSchedule, Pool,
 } from "app/models";
 import { map, share } from "rxjs/operators";
-import { AccountService } from "./account.service";
-import { LocalFileStorage } from "./local-file-storage.service";
+import { BatchAccountService } from "../batch-account";
+import { LocalFileStorage } from "../local-file-storage.service";
 
 const pinnedTypeMap = new Map();
 pinnedTypeMap.set(PinnedEntityType.Application, BatchApplication);
@@ -30,11 +30,11 @@ export class PinnedEntityService {
 
     constructor(
         private localFileStorage: LocalFileStorage,
-        private accountService: AccountService) {
+        private accountService: BatchAccountService) {
 
         this.loaded = this._loaded.asObservable();
         this.accountService.currentAccount.subscribe((account) => {
-            this._currentAccountEndpoint = account.properties.accountEndpoint;
+            this._currentAccountEndpoint = account.url;
             this._favorites.next(List<PinnableEntity>());
             this._loadInitialData();
         });
@@ -139,7 +139,7 @@ export class PinnedEntityService {
      */
     private _fudgeArmUrl(favorite: NavigableRecord) {
         return !favorite.url
-            ? `https://${this._currentAccountEndpoint}${favorite.routerLink.join("/")}`
+            ? `${this._currentAccountEndpoint}${favorite.routerLink.join("/")}`
             : favorite.url;
     }
 

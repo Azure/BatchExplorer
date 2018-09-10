@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
-import { AccountResource } from "app/models";
-import { AccountService, AccountStatus } from "app/services";
-import { ArmResourceUtils } from "app/utils";
+import { BatchAccount } from "app/models";
+import { AccountStatus, BatchAccountService } from "app/services";
 import { Subscription } from "rxjs";
 
 import "./account-dropdown.scss";
@@ -19,18 +18,18 @@ export class AccountDropDownComponent implements OnDestroy {
     public selectedAccountAlias: string = "";
     public showDropdown = false;
     public currentAccountValid = AccountStatus.Loading;
-    public currentAccountInvalidError: any = null;
     private _subs: Subscription[] = [];
 
     constructor(
-        public accountService: AccountService,
+        public accountService: BatchAccountService,
         private changeDetector: ChangeDetectorRef,
         private contextMenuService: ContextMenuService) {
 
         this._subs.push(accountService.currentAccountId.subscribe((accountId) => {
             if (accountId) {
                 this.selectedId = accountId;
-                this.selectedAccountAlias = ArmResourceUtils.getAccountNameFromResourceId(accountId);
+
+                this.selectedAccountAlias = this.accountService.getNameFromId(accountId);
             } else {
                 this.selectedId = null;
                 this.selectedAccountAlias = "No account selected!";
@@ -42,14 +41,9 @@ export class AccountDropDownComponent implements OnDestroy {
             this.currentAccountValid = status;
             this.changeDetector.markForCheck();
         }));
-
-        this._subs.push(this.accountService.currentAccountInvalidError.subscribe((error) => {
-            this.currentAccountInvalidError = error;
-            this.changeDetector.markForCheck();
-        }));
     }
 
-    public selectAccount(account: AccountResource): void {
+    public selectAccount(account: BatchAccount): void {
         this.accountService.selectAccount(account.id);
     }
 
@@ -57,7 +51,7 @@ export class AccountDropDownComponent implements OnDestroy {
         this._subs.forEach(x => x.unsubscribe());
     }
 
-    public openContextMenu(account: AccountResource) {
+    public openContextMenu(account: BatchAccount) {
         if (this.selectedId === account.id) {
             return;
         }
@@ -74,11 +68,11 @@ export class AccountDropDownComponent implements OnDestroy {
         this.contextMenuService.openMenu(new ContextMenu(items));
     }
 
-    public trackByFn(index, account: AccountResource) {
+    public trackByFn(index, account: BatchAccount) {
         return account.id;
     }
 
-    private _unFavoriteAccount(account: AccountResource) {
+    private _unFavoriteAccount(account: BatchAccount) {
         this.accountService.unFavoriteAccount(account.id);
     }
 }

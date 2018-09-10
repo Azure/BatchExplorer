@@ -5,7 +5,8 @@ import { EditStorageAccountFormComponent } from "app/components/account/action/e
 import { AutoStorageAccountPickerComponent } from "app/components/account/base/auto-storage-account-picker";
 import { PoolBaseModule } from "app/components/pool/base";
 import { PoolGraphsModule } from "../pool/graphs";
-import { BatchAccountCreateComponent } from "./action/add";
+import { AddLocalBatchAccountComponent } from "./action/add";
+import { BatchAccountCreateComponent } from "./action/create";
 import { DeleteAccountDialogComponent } from "./action/delete/delete-account-dialog.component";
 import { AccountBrowseModule } from "./browse";
 import { AccountDefaultComponent, AccountDetailsComponent, GettingStartedCardComponent } from "./details";
@@ -19,7 +20,7 @@ const components = [
     AccountDefaultComponent, AccountDetailsComponent, AccountHomeComponent,
     BatchAccountCreateComponent, DeleteAccountDialogComponent, StorageAccountCardComponent,
     EditStorageAccountFormComponent, AutoStorageAccountPickerComponent, AccountQuotasCardComponent,
-    GettingStartedCardComponent,
+    GettingStartedCardComponent, AddLocalBatchAccountComponent,
 ];
 
 const modules = [
@@ -36,6 +37,7 @@ const modules = [
     exports: [...modules, ...components],
     imports: [...modules],
     entryComponents: [
+        AddLocalBatchAccountComponent,
         BatchAccountCreateComponent,
         DeleteAccountDialogComponent,
         EditStorageAccountFormComponent,

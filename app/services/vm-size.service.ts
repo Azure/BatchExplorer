@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
-import { AccountResource, VmSize } from "app/models";
+import { ArmBatchAccount, BatchAccount, VmSize } from "app/models";
 import { StringUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, combineLatest } from "rxjs";
 import { filter, map, share, shareReplay, take } from "rxjs/operators";
-import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
+import { BatchAccountService } from "./batch-account";
 import { computeUrl } from "./compute.service";
 import { GithubDataService } from "./github-data";
 
@@ -51,11 +51,11 @@ export class VmSizeService {
     private _excludedSizes = new BehaviorSubject<ExcludedSizes>(null);
     private _vmSizeCategories = new BehaviorSubject<StringMap<string[]>>(null);
 
-    private _currentAccount: AccountResource;
+    private _currentAccount: BatchAccount;
 
     constructor(
         private arm: ArmHttpService,
-        private githubData: GithubDataService, private accountService: AccountService) {
+        private githubData: GithubDataService, private accountService: BatchAccountService) {
 
         const obs = combineLatest(this._sizes, this._excludedSizes);
         this.sizes = this._sizes.pipe(filter(x => x !== null));
@@ -84,7 +84,7 @@ export class VmSizeService {
     }
 
     public init() {
-        this.accountService.currentAccount.subscribe((account: AccountResource) => {
+        this.accountService.currentAccount.subscribe((account: BatchAccount) => {
             this._currentAccount = account;
             this.load();
         });
@@ -92,6 +92,7 @@ export class VmSizeService {
     }
 
     public load() {
+        if (!(this._currentAccount instanceof ArmBatchAccount)) { return; }
         const { subscription, location } = this._currentAccount;
         const url = `${computeUrl(subscription.subscriptionId)}/locations/${location}/vmSizes`;
         this.arm.get(url).subscribe({

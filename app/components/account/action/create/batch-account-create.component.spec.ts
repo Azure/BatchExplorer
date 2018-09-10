@@ -10,11 +10,11 @@ import { MaterialModule, ServerError } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
-import { BatchAccountCreateComponent } from "app/components/account/action/add";
-import { AccountService, AuthorizationHttpService, SubscriptionService } from "app/services";
+import { ArmBatchAccountService, AuthorizationHttpService, SubscriptionService } from "app/services";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
 import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
+import { BatchAccountCreateComponent } from "./batch-account-create.component";
 
 describe("BatchAccountCreateComponent ", () => {
     let fixture: ComponentFixture<BatchAccountCreateComponent>;
@@ -164,7 +164,7 @@ describe("BatchAccountCreateComponent ", () => {
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: SidebarRef, useValue: null },
-                { provide: AccountService, useValue: accountServiceSpy },
+                { provide: ArmBatchAccountService, useValue: accountServiceSpy },
                 { provide: AuthorizationHttpService, useValue: authServiceSpy },
                 { provide: SubscriptionService, useValue: subscriptionServiceSpy },
                 { provide: NotificationService, useValue: notificationServiceSpy },

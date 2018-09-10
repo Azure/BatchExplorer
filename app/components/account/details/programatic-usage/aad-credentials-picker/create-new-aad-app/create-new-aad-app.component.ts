@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 import { HttpCode, ServerError, autobind } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
-import { AccountResource, RoleDefinition } from "app/models";
+import { BatchAccount, RoleDefinition } from "app/models";
 import { AADApplication, PasswordCredential, ServicePrincipal } from "app/models/ms-graph";
 import { ResourceAccessService } from "app/services";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
@@ -31,7 +31,7 @@ const maxRetry = 36;
     templateUrl: "create-new-aad-app.html",
 })
 export class CreateNewAadAppComponent {
-    @Input() public account: AccountResource;
+    @Input() public account: BatchAccount;
     @Output() public appCreated = new EventEmitter<AppCreatedEvent>();
     @Output() public cancel = new EventEmitter<void>();
 

@@ -1,19 +1,22 @@
-import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui";
 import { BrowseLayoutComponent, BrowseLayoutConfig } from "@batch-flask/ui/browse-layout";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Subscription } from "app/models";
 import { SubscriptionService } from "app/services";
 import { Set } from "immutable";
 import { distinctUntilChanged } from "rxjs/operators";
-import { BatchAccountCreateComponent } from "../action/add";
+import { AddLocalBatchAccountComponent } from "../action/add";
+import { BatchAccountCreateComponent } from "../action/create";
 
 import "./account-home.scss";
 
 @Component({
     selector: "bl-account-home",
     templateUrl: "account-home.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountHomeComponent implements OnInit, OnDestroy {
     public layoutConfig: BrowseLayoutConfig = {
@@ -27,7 +30,10 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
 
     private _subs = [];
 
-    constructor(public subscriptionService: SubscriptionService, private sidebarManager: SidebarManager) {
+    constructor(
+        public subscriptionService: SubscriptionService,
+        private contextMenuService: ContextMenuService,
+        private sidebarManager: SidebarManager) {
     }
 
     public ngOnInit() {
@@ -50,9 +56,19 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
         return subscription.id;
     }
 
+    public addContextMenu() {
+        this.contextMenuService.openMenu(new ContextMenu([
+            new ContextMenuItem("Add local batch account", () => this.addLocalBatchAccount()),
+        ]));
+    }
     @autobind()
     public addBatchAccount() {
         this.sidebarManager.open("add-batch-account", BatchAccountCreateComponent);
+    }
+
+    @autobind()
+    public addLocalBatchAccount() {
+        this.sidebarManager.open("add--local-batch-account", AddLocalBatchAccountComponent);
     }
 
     private _buildSubscriptionFilter(subscriptionIds: Set<string>): Filter {

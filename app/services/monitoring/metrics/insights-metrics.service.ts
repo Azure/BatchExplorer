@@ -3,8 +3,8 @@ import { Response } from "@angular/http";
 import { Observable, of } from "rxjs";
 
 import { Metric, MetricValue, MonitoringMetricList } from "app/models/monitoring";
-import { AccountService } from "app/services/account.service";
 import { ArmHttpService } from "app/services/arm-http.service";
+import { BatchAccountService } from "app/services/batch-account";
 import { ThemeService } from "app/services/themes";
 import { flatMap, map, share } from "rxjs/operators";
 import { CoreCountMetrics } from "./core-count-metrics";
@@ -21,7 +21,7 @@ export class InsightsMetricsService {
 
     constructor(
         themeService: ThemeService,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private armService: ArmHttpService) {
     }
 

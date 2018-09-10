@@ -1,10 +1,9 @@
-import { List } from "immutable";
-import { Subscription, of } from "rxjs";
-
 import { PinnableEntity, PinnedEntityType } from "@batch-flask/core";
 import { BatchApplication, Job } from "app/models";
-import { PinnedEntityService } from "app/services";
+import { List } from "immutable";
+import { Subscription, of } from "rxjs";
 import * as Fixtures from "test/fixture";
+import { PinnedEntityService } from "./pinned-entity.service";
 
 describe("PinnedEntityService", () => {
     let pinService: PinnedEntityService;
@@ -66,7 +65,7 @@ describe("PinnedEntityService", () => {
 
         it("saves to local storage", () => {
             expect(localFileStorageSpy.set).toHaveBeenCalledTimes(1);
-            expect(jsonFilename).toEqual("myaccount.westus.batch.com.pinned");
+            expect(jsonFilename).toEqual("https://myaccount.westus.batch.com.pinned");
             expect(favourites.size).toEqual(1);
         });
 

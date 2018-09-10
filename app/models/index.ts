@@ -1,4 +1,4 @@
-export * from "./account";
+export * from "./batch-account";
 export * from "./azure-batch";
 export * from "./account-keys";
 export * from "./batch-application";

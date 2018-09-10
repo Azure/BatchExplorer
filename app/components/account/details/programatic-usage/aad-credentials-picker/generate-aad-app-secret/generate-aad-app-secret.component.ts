@@ -4,7 +4,7 @@ import {
 import { FormControl } from "@angular/forms";
 
 import { autobind } from "@batch-flask/core";
-import { AccountResource } from "app/models";
+import { BatchAccount } from "app/models";
 import { AADApplication } from "app/models/ms-graph";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 import "./generate-aad-app-secret.scss";
@@ -15,7 +15,7 @@ import "./generate-aad-app-secret.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GenerateAADAppSecretComponent implements OnChanges {
-    @Input() public account: AccountResource;
+    @Input() public account: BatchAccount;
     @Input() public application: AADApplication;
     @Output() public secretPicked = new EventEmitter();
     @Output() public cancel = new EventEmitter();
