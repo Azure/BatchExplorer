@@ -58,6 +58,10 @@ function getContentLengthToAppend(value, method: string, body: string) {
 export class BatchSharedKeyAuthenticator {
     public signer: HmacSha256Sign;
 
+    /**
+     * @param name Account Name
+     * @param key Account shared key
+     */
     constructor(public name: string, public key: string) {
         this.signer = new HmacSha256Sign(key);
     }

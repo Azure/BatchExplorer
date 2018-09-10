@@ -31,11 +31,12 @@ export class AzureBatchHttpService extends HttpService {
         return this.accountService.currentAccount.pipe(
             take(1),
             flatMap((account) => {
+                const url = this._computeUrl(uri, account);
                 let obs;
                 if (account instanceof ArmBatchAccount) {
                     obs = this._setupRequestForArm(account, options);
                 } else if (account instanceof LocalBatchAccount) {
-                    obs = this._setupRequestForSharedKey(account, method, uri, options);
+                    obs = this._setupRequestForSharedKey(account, method, url, options);
                 } else {
                     throw new Error(`Invalid account type ${account}`);
                 }
@@ -43,7 +44,7 @@ export class AzureBatchHttpService extends HttpService {
                     flatMap((options) => {
                         return super.request(
                             method,
-                            this._computeUrl(uri, account),
+                            url,
                             options).pipe(
                                 retryWhen(attempts => this.retryWhen(attempts)),
                                 catchError((error) => {
