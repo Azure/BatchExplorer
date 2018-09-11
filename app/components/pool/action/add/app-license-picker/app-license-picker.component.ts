@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
@@ -7,10 +7,10 @@ import { ListSelection } from "@batch-flask/core/list";
 import { TableConfig } from "@batch-flask/ui/table";
 import { ApplicationLicense } from "app/models";
 import { PricingService } from "app/services";
+import { SoftwarePricing } from "app/services/pricing";
 import { List } from "immutable";
 import { LicenseEulaDialogComponent } from "../license-eula-dialog";
 
-import { SoftwarePricing } from "app/services/pricing";
 import "./app-license-picker.scss";
 
 const softwares = [
@@ -87,6 +87,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     public updateSelection(selection: ListSelection) {
         if (this.pickedLicenses === selection) { return; }
         this.pickedLicenses = selection;
+        this.changeDetector.markForCheck();
         this._emitChangeAndTouchedEvents();
     }
 
