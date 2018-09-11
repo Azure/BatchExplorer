@@ -1,17 +1,19 @@
 name: $(SourceBranch)$(Rev:.r)
 jobs:
   - job: Linux
-    pool: Hosted Linux Preview
+    pool:
+      vmImage: ubuntu-16.04
     steps:
-    - template: ./linux/ci.yml
+       - template: ./linux/ci.yml
 
-  # Mac os build
   - job: MacOS
-    pool: Hosted macOS Preview
+    pool:
+      vmImage: xcode9-macos10.13
     steps:
-    - template: ./darwin/ci.yml
+       - template: ./darwin/ci.yml
 
   - job: Windows
-    pool: Hosted VS2017
+    pool:
+      vmImage: vs2017-win2016
     steps:
       - template: ./win/ci.yml
