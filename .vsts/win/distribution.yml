@@ -3,7 +3,7 @@ steps:
   - powershell: |
       npm run -s build:prod
       npm run -s build-python
-      npm run -s package -- --win --dir
+      npm run -s package win-exe
     displayName: Build executable
 
   - template: ./sign.yml
@@ -13,7 +13,7 @@ steps:
         **/*.exe
         **/*.dll
         !**/python36.dll
-  - powershell: npm run -s package -- --prepackaged ./release/win-unpacked --projectDir . --win nsis zip
+  - powershell: npm run -s package win-installer
     displayName: Build installer
 
   - template: ./sign.yml
