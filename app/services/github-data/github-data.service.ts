@@ -8,7 +8,6 @@ import { AsyncSubject, Observable, Subscription, from } from "rxjs";
 import { flatMap, share, take } from "rxjs/operators";
 import { SettingsService } from "../settings.service";
 
-const repo = "BatchExplorer-data";
 const cacheTime = 1; // In days
 
 interface SyncFile {
@@ -22,6 +21,7 @@ export class GithubDataService implements OnDestroy {
     private _ready = new AsyncSubject();
 
     private _branch = null;
+    private _repo = null;
     private _settingsSub: Subscription;
     private _settingsLoaded: Observable<any>;
 
@@ -37,8 +37,10 @@ export class GithubDataService implements OnDestroy {
         this._settingsLoaded = obs.pipe(take(1));
         this._settingsSub = obs.subscribe((settings) => {
             const branch = settings["github-data.source.branch"];
-            if (!branch || branch === this._branch) { return; }
+            const repo = settings["github-data.source.repo"];
+            if (!branch || !repo || (branch === this._branch && repo === this._repo)) { return; }
             this._branch = branch;
+            this._repo = repo;
             this._updateLocalData();
         });
     }
@@ -76,7 +78,7 @@ export class GithubDataService implements OnDestroy {
     }
 
     private get _repoUrl() {
-        return `${Constants.ServiceUrl.githubRaw}/Azure/${repo}/${this._branch}`;
+        return `${Constants.ServiceUrl.githubRaw}/${this._repo}/${this._branch}`;
     }
 
     private async _checkIfDataNeedReload(): Promise<boolean> {
@@ -97,7 +99,7 @@ export class GithubDataService implements OnDestroy {
     }
 
     private async _downloadRepo() {
-        const tmpZip = path.join(this.fs.commonFolders.temp, "batch-labs-data.zip");
+        const tmpZip = path.join(this.fs.commonFolders.temp, "batch-explorer-data.zip");
         const dest = this._repoDownloadRoot;
         await this.fs.download(this._zipUrl, tmpZip);
         await this.fs.unzip(tmpZip, dest);
@@ -118,15 +120,16 @@ export class GithubDataService implements OnDestroy {
     }
 
     private get _repoDownloadRoot() {
-        return path.join(this.fs.commonFolders.temp, "batch-labs-data");
+        return path.join(this.fs.commonFolders.temp, "batch-explorer-data");
     }
 
     private get _dataRoot() {
+        const repo = this._repo && this._repo.split("/")[1];
         return path.join(this._repoDownloadRoot, `${repo}-${this._branch}`, "ncj");
     }
 
     private get _zipUrl() {
-        return `https://github.com/Azure/${repo}/archive/${this._branch}.zip`;
+        return `https://github.com/${this._repo}/archive/${this._branch}.zip`;
     }
 
     private get _syncFile() {

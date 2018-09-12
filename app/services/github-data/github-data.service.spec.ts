@@ -13,7 +13,10 @@ describe("GithubDataService", () => {
 
     beforeEach(() => {
         settingsSpy = {
-            settingsObs: new BehaviorSubject({ "github-data.source.branch": "master" }),
+            settingsObs: new BehaviorSubject({
+                "github-data.source.branch": "master",
+                "github-data.source.repo": "Azure/BatchLabs-data",
+            }),
         };
 
         fsSpy = {
@@ -45,6 +48,7 @@ describe("GithubDataService", () => {
         expect(readySpy).not.toHaveBeenCalled();
         settingsSpy.settingsObs.next({
             "github-data.source.branch": "master",
+            "github-data.source.repo": "Azure/BatchLabs-data",
         });
 
         tick();
