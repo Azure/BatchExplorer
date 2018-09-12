@@ -45,9 +45,6 @@ bl-no-item {
     display: flex;
     flex-direction: column;
 
-    > bl-list-loading {
-    }
-
     > .list {
         flex: 1;
         min-height: 50px;

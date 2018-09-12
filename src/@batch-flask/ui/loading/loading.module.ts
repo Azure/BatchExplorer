@@ -2,12 +2,11 @@ import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
 import { ButtonsModule } from "../buttons/buttons.module";
-import { ListLoadingComponent } from "./list-loading";
 import { LoadingComponent } from "./loading.component";
 import { SimpleLoadingComponent } from "./simple-loading.component";
 
 const privateComponents = [];
-const publicComponents = [ListLoadingComponent, LoadingComponent, SimpleLoadingComponent];
+const publicComponents = [LoadingComponent, SimpleLoadingComponent];
 
 @NgModule({
     imports: [BrowserModule, ButtonsModule],

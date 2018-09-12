@@ -23,6 +23,7 @@ describe("AdalService spec", () => {
     let remoteSpy;
     let batchExplorerSpy;
     let notificationServiceSpy;
+    let zoneSpy;
 
     beforeEach(() => {
         aadServiceSpy = {
@@ -38,7 +39,16 @@ describe("AdalService spec", () => {
         notificationServiceSpy = {
             error: jasmine.createSpy("notify.error"),
         };
-        service = new AdalService(remoteSpy, batchExplorerSpy, notificationServiceSpy);
+
+        zoneSpy = {
+            run: jasmine.createSpy("zone.run").and.callFake(callback => callback()),
+        };
+        service = new AdalService(zoneSpy, remoteSpy, batchExplorerSpy, notificationServiceSpy);
+    });
+
+    afterEach(() => {
+        aadServiceSpy.tenantsIds.complete();
+        service.ngOnDestroy();
     });
 
     it("It notify of error if tenants ids fail", () => {
@@ -95,5 +105,14 @@ describe("AdalService spec", () => {
             expect(tokenA).toEqual(token1);
             expect(tokenB).toEqual(token1);
         }));
+    });
+
+    it("updates the tenants ids when updated by the adal service", () => {
+        let tenantIds;
+        service.tenantsIds.subscribe(x => tenantIds = x);
+        expect(zoneSpy.run).toHaveBeenCalledTimes(1);
+        aadServiceSpy.tenantsIds.next(["foo-1", "foo-2"]);
+        expect(zoneSpy.run).toHaveBeenCalledTimes(2);
+        expect(tenantIds).toEqual(["foo-1", "foo-2"]);
     });
 });
