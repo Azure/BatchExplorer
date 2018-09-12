@@ -15,7 +15,7 @@ describe("GithubDataService", () => {
         settingsSpy = {
             settingsObs: new BehaviorSubject({
                 "github-data.source.branch": "master",
-                "github-data.source.repo": "Azure/BatchLabs-data",
+                "github-data.source.repo": "Azure/BatchExplorer-data",
             }),
         };
 
@@ -48,7 +48,7 @@ describe("GithubDataService", () => {
         expect(readySpy).not.toHaveBeenCalled();
         settingsSpy.settingsObs.next({
             "github-data.source.branch": "master",
-            "github-data.source.repo": "Azure/BatchLabs-data",
+            "github-data.source.repo": "Azure/BatchExplorer-data",
         });
 
         tick();
@@ -57,8 +57,8 @@ describe("GithubDataService", () => {
 
     it("download, unzip and save sync settings", (done) => {
         githubDataService.init();
-        const zipFile = path.join("path/to/temp", "batch-labs-data.zip");
-        const downloadDir = path.join("path/to/temp", "batch-labs-data");
+        const zipFile = path.join("path/to/temp", "batch-explorer-data.zip");
+        const downloadDir = path.join("path/to/temp", "batch-explorer-data");
         githubDataService.ready.subscribe(() => {
             expect(fsSpy.download).toHaveBeenCalledOnce();
             expect(fsSpy.download).toHaveBeenCalledWith(
