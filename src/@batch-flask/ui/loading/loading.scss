@@ -1,6 +1,6 @@
 @import "app/styles/variables";
 
-$spinner-color: map-get($primary, 600);
+$spinner-color: $primary-color;
 
 bl-loading {
     display: block;
@@ -89,9 +89,8 @@ bl-loading {
 .entity-not-found {
     width: 600px;
     margin: 50px auto;
-    background: map-get($warn, 300);
+    background: $warn-color-light;
     padding: 10px;
-    color: $whitesmoke;
+    color: $warn-contrast-color;
     white-space: pre;
-    font-family: $main-font;
 }
