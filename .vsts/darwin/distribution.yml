@@ -10,7 +10,7 @@ steps:
   - template: ./sign.yml
 
   - powershell: |
-      unzip -a ./relesdr/BatchExplorer*.zip
+      unzip -a ./release/BatchExplorer*.zip -d ./release/mac
       npm run -s pacakge darwin-dmg
     displayName: Build .dmg
 

@@ -66,6 +66,7 @@ async function createWindowsInstaller() {
 async function createDarwinApp() {
     await baseBuild({
         targets: electronBuilder.Platform.MAC.createTarget(["dir", "zip"]),
+        prepackaged: "./release/mac",
     });
 }
 
