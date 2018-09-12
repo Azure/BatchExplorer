@@ -28,5 +28,5 @@
   "github-data.source.branch": "master",
 
   // Github repository to be used when loading data from github(This is mostly for experimenting with new NCJ templates)
-  "github-data.source.repo": "Azure/BatchLabs-data"
+  "github-data.source.repo": "Azure/BatchExplorer-data"
 }

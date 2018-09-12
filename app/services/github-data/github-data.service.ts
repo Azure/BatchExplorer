@@ -1,11 +1,11 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, OnDestroy } from "@angular/core";
-import { FileSystemService } from "@batch-flask/ui";
+import { FileSystemService, LoadingStatus } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { Constants, DateUtils } from "app/utils";
 import * as path from "path";
-import { AsyncSubject, Observable, Subscription, from } from "rxjs";
-import { flatMap, share, take } from "rxjs/operators";
+import { BehaviorSubject, Observable, Subscription, from } from "rxjs";
+import { filter, flatMap, share, take } from "rxjs/operators";
 import { SettingsService } from "../settings.service";
 
 const cacheTime = 1; // In days
@@ -17,19 +17,30 @@ interface SyncFile {
 
 @Injectable()
 export class GithubDataService implements OnDestroy {
-    public ready: Observable<any>;
-    private _ready = new AsyncSubject();
-
     private _branch = null;
     private _repo = null;
     private _settingsSub: Subscription;
     private _settingsLoaded: Observable<any>;
+    private _loadingStatus = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
 
     constructor(
         private http: HttpClient,
         private fs: FileSystemService,
         private settingsService: SettingsService) {
-        this.ready = this._ready.asObservable();
+    }
+
+    public ngOnDestroy() {
+        if (this._settingsSub) {
+            this._settingsSub.unsubscribe();
+        }
+        this._loadingStatus.complete();
+    }
+
+    public get ready(): Observable<any> {
+        return this._loadingStatus.pipe(
+            filter(x => x === LoadingStatus.Ready),
+            take(1),
+        );
     }
 
     public init() {
@@ -46,12 +57,8 @@ export class GithubDataService implements OnDestroy {
     }
 
     public reloadData(): Observable<any> {
-        this._ready = new AsyncSubject();
+        this._loadingStatus.next(LoadingStatus.Loading);
         return from(this._downloadRepo());
-    }
-
-    public ngOnDestroy() {
-        this._settingsSub.unsubscribe();
     }
 
     /**
@@ -105,8 +112,7 @@ export class GithubDataService implements OnDestroy {
         await this.fs.unzip(tmpZip, dest);
         await this._saveSyncData(this._zipUrl);
 
-        this._ready.next(true);
-        this._ready.complete();
+        this._loadingStatus.next(LoadingStatus.Ready);
     }
 
     private _saveSyncData(source: string): Promise<string> {
@@ -137,10 +143,10 @@ export class GithubDataService implements OnDestroy {
     }
 
     private async _updateLocalData() {
+        this._loadingStatus.next(LoadingStatus.Loading);
         const needReload = await this._checkIfDataNeedReload();
         if (!needReload) {
-            this._ready.next(true);
-            this._ready.complete();
+            this._loadingStatus.next(LoadingStatus.Ready);
             return null;
         }
         await this._downloadRepo();

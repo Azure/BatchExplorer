@@ -36,6 +36,10 @@ describe("GithubDataService", () => {
         httpMock = TestBed.get(HttpTestingController);
     });
 
+    afterEach(() => {
+        githubDataService.ngOnDestroy();
+    });
+
     it("is not ready until settings are loaded", fakeAsync(() => {
         settingsSpy.settingsObs.next({
             "github-data.source.branch": null,
@@ -91,5 +95,45 @@ describe("GithubDataService", () => {
         const response = httpMock.expectOne(
             "https://raw.githubusercontent.com/Azure/BatchExplorer-data/master/some/file/on/github.json");
         response.flush(`{some: "content"}`);
+    });
+
+    describe("#ready()", () => {
+        it("only returns ready when not loading", fakeAsync(() => {
+            const spy = jasmine.createSpy();
+            githubDataService.ready.subscribe(spy);
+            expect(spy).toHaveBeenCalledTimes(0);
+            githubDataService.init();
+            tick();
+            expect(spy).toHaveBeenCalledTimes(1);
+
+            const spy2 = jasmine.createSpy();
+            githubDataService.ready.subscribe(spy2);
+            expect(spy2).toHaveBeenCalledTimes(1);
+
+        }));
+
+        it("asking for ready while reloading data waits until loaded", fakeAsync(() => {
+            const spy = jasmine.createSpy();
+            githubDataService.reloadData();
+            githubDataService.ready.subscribe(spy);
+            expect(spy).toHaveBeenCalledTimes(0);
+            tick();
+            expect(spy).toHaveBeenCalledTimes(1);
+        }));
+
+        it("asking for ready after updating the settings which require a reload", fakeAsync(() => {
+            const spy = jasmine.createSpy();
+            githubDataService.init();
+            tick();
+
+            settingsSpy.settingsObs.next({
+                "github-data.source.branch": "develop",
+                "github-data.source.repo": "Azure/BatchExplorer-data",
+            });
+            githubDataService.ready.subscribe(spy);
+            expect(spy).toHaveBeenCalledTimes(0);
+            tick();
+            expect(spy).toHaveBeenCalledTimes(1);
+        }));
     });
 });
