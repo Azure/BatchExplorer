@@ -95,15 +95,16 @@ function getWindowMenu(batchExplorerApp: BatchExplorerApplication): MenuItemCons
     };
 }
 
-function environmentMenu(app: BatchExplorerApplication) {
-
+function environmentMenu(app: BatchExplorerApplication): MenuItemConstructorOptions {
     return {
         label: "Environment",
         submenu: [{
             label: "Azure Environment",
-            submenu: Object.values(SupportedEnvironments).map((env) => {
+            submenu: Object.values(SupportedEnvironments).map((env): MenuItemConstructorOptions => {
                 return {
                     label: env.name,
+                    type: "radio",
+                    checked: app.azureEnvironment.id === env.id,
                     click: () => app.updateAzureEnvironment(env).catch((error) => {
                         log.error("Error updating the azure environment", error);
                     }),
