@@ -1,8 +1,18 @@
 steps:
   - template: ./darwin-dependencies.yml
-  - script: npm run build-and-pack
-    displayName: Build and pack
+  - powershell: |
+      npm run -s build:prod
+      npm run -s build-python
+      npm run -s package darwin-app
+    displayName: Build .app
+
   - template: ./sign.yml
+
+  - powershell: |
+      npm run -s pacakge darwin-dmg
+    displayName: Build .dmg
+
+
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: darwin

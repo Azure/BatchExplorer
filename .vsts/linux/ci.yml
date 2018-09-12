@@ -26,4 +26,4 @@ steps:
 
   - template: ../common/publish-artifacts.yml
     parameters:
-      folder: darwin
+      folder: linux

@@ -4,4 +4,4 @@ steps:
     displayName: Build and pack
   - template: ../common/publish-artifacts.yml
     parameters:
-      folder: windows
+      folder: linux

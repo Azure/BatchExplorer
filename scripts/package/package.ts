@@ -59,6 +59,26 @@ async function createWindowsInstaller() {
     });
 }
 
+/**
+ * Just create the mac os app file.
+ * This is so app can be signed before creating the dmg
+ */
+async function createDarwinApp() {
+    await baseBuild({
+        mac: ["app", "zip"],
+    });
+}
+
+/**
+ * Just create the mac os app file.
+ * This is so app can be signed before creating the dmg
+ */
+async function createDarwinDmg() {
+    await baseBuild({
+        mac: ["dmg"],
+    });
+}
+
 async function buildDefault() {
     await baseBuild();
 }
@@ -71,6 +91,10 @@ async function build() {
             return createWindowsExecutable();
         case "win-installer":
             return createWindowsInstaller();
+        case "darwin-app":
+            return createDarwinApp();
+        case "darwin-dmg":
+            return createDarwinDmg();
         default:
             return buildDefault();
     }
