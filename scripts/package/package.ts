@@ -65,7 +65,7 @@ async function createWindowsInstaller() {
  */
 async function createDarwinApp() {
     await baseBuild({
-        mac: ["app", "zip"],
+        targets: electronBuilder.Platform.MAC.createTarget(["dir", "zip"]),
     });
 }
 
@@ -75,7 +75,7 @@ async function createDarwinApp() {
  */
 async function createDarwinDmg() {
     await baseBuild({
-        mac: ["dmg"],
+        targets: electronBuilder.Platform.MAC.createTarget(["dmg"]),
     });
 }
 
