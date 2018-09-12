@@ -1,9 +1,9 @@
 name: $(SourceBranch)$(Rev:.r)
 jobs:
   - job: Linux
-    pool:
+    queue: Hosted Linux Preview
+    # pool:
       # vmImage: ubuntu-16.04
-      vmImage: Hosted Linux Preview
     steps:
        - template: ./linux/ci.yml
 

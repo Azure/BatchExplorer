@@ -1,9 +1,9 @@
 # This contains the steps used when building the app(Include signing)
 jobs:
   - job: Linux
-    pool:
+    queue: Hosted Linux Preview
+    # pool:
       # vmImage: ubuntu-16.04
-      vmImage: Hosted Linux Preview
     steps:
        - template: ./linux/distribution.yml
 
