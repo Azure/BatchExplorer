@@ -4,11 +4,13 @@ steps:
       npm run -s build:prod
       npm run -s build-python
       npm run -s package darwin-app
+      rm -rf ./release/mac/*.app
     displayName: Build .app
 
   - template: ./sign.yml
 
   - powershell: |
+      unzip -a ./relesdr/BatchExplorer*.zip
       npm run -s pacakge darwin-dmg
     displayName: Build .dmg
 
