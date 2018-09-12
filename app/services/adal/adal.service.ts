@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone, OnDestroy } from "@angular/core";
 import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
 import { ElectronRemote, NotificationService } from "@batch-flask/ui";
 import { BehaviorSubject, Observable, from } from "rxjs";
@@ -8,7 +8,7 @@ import { AADService } from "client/core/aad";
 import { Constants } from "common";
 
 @Injectable()
-export class AdalService {
+export class AdalService implements OnDestroy {
     public tenantsIds: Observable<string[]>;
 
     private aadService: AADService;
@@ -17,6 +17,7 @@ export class AdalService {
     private _tenantsIds = new BehaviorSubject<string[]>([]);
 
     constructor(
+        private zone: NgZone,
         private remote: ElectronRemote,
         batchExplorer: BatchExplorerService,
         private notificationService: NotificationService) {
@@ -24,7 +25,9 @@ export class AdalService {
         // Need to do this as aadService.tenantIds is in the node processs and electron lose information in the transfer
         this.aadService.tenantsIds.subscribe({
             next: (val) => {
-                this._tenantsIds.next(val);
+                this.zone.run(() => {
+                    this._tenantsIds.next(val);
+                });
             },
             error: (error) => {
                 const serverError = new ServerError(error);
@@ -35,6 +38,10 @@ export class AdalService {
             },
         });
         this.tenantsIds = this._tenantsIds.asObservable();
+    }
+
+    public ngOnDestroy() {
+        this._tenantsIds.complete();
     }
 
     public logout() {

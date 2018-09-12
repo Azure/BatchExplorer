@@ -43,6 +43,7 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
 
         this._accountSub = this.accountService.accounts.subscribe((accounts) => {
             this.accounts = accounts;
+            this.loadingStatus = LoadingStatus.Ready;
             this._updateDisplayedAccounts();
         });
     }
