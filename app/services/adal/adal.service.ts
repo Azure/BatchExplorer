@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from "@angular/core";
+import { Injectable, NgZone, OnDestroy } from "@angular/core";
 import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
 import { ElectronRemote, NotificationService } from "@batch-flask/ui";
 import { BehaviorSubject, Observable, from } from "rxjs";
@@ -8,7 +8,7 @@ import { AADService } from "client/core/aad";
 import { Constants } from "common";
 
 @Injectable()
-export class AdalService {
+export class AdalService implements OnDestroy {
     public tenantsIds: Observable<string[]>;
 
     private aadService: AADService;
@@ -38,6 +38,10 @@ export class AdalService {
             },
         });
         this.tenantsIds = this._tenantsIds.asObservable();
+    }
+
+    public ngOnDestroy() {
+        this._tenantsIds.complete();
     }
 
     public logout() {
