@@ -1,9 +1,9 @@
 import * as electronBuilder from "electron-builder";
+import { createDarwinManifest, createLinuxManifest, createWindowsManifest } from "./manifest";
+import { version } from "./package-utils";
 import {
     createDarwinIndexFile, createLinuxIndexFile, createWindowsIndexFile,
-} from "./create-latest";
-import { createDarwinManifest, createLinuxManifest, createWindowsManifest } from "./create-manifest";
-import { version } from "./package-utils";
+} from "./update-info";
 
 /**
  * Base build function which will update common attributes to all platforms

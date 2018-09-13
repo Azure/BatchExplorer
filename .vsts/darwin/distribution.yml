@@ -16,7 +16,7 @@ steps:
       rm -rf ./release/mac/*
     displayName: Build dmg
   - script: npm run package darwin-manifest
-    displayName: Update index file
+    displayName: Create manifest
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: darwin

@@ -3,7 +3,7 @@ steps:
   - script: npm run build-and-pack
     displayName: Build and pack
   - script: npm run package linux-manifest
-    displayName: Update index file
+    displayName: Create manifest
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: linux

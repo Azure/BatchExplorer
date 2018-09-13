@@ -22,7 +22,7 @@ steps:
       pattern: |
         **/BatchExplorer*Setup*.exe
   - script: npm run package win-manifest
-    displayName: Update index file
+    displayName: Create manifest
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: windows

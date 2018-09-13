@@ -1,15 +1,16 @@
+// tslint:disable:no-console
 import * as crypto from "crypto";
 import * as fs from "fs";
 import * as yaml from "js-yaml";
 import * as util from "util";
 import { artifactsNames, buildType, getLocalPath, getRemotePath, version } from "./package-utils";
 
-const shasum = crypto.createHash("sha512");
 const readFile = util.promisify(fs.readFile);
 const stat = util.promisify(fs.stat);
 
 async function createSha512(file) {
     const content = await readFile(file);
+    const shasum = crypto.createHash("sha512");
     shasum.update(content);
     return shasum.digest("base64");
 }
@@ -23,7 +24,6 @@ function saveContent(content: any, suffix?: string) {
     }
     const filename = getLocalPath(`${name}.yml`);
     fs.writeFileSync(filename, str);
-    // tslint:disable-next-line:no-console
     console.log(`Created ${filename} index file for version ${version}`);
     return filename;
 }
