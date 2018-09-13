@@ -81,7 +81,8 @@ async function updateLatest(os) {
     const latestFile = getLatestFile(os);
     const orgiginalBlob = `${manifest.version}/${latestFile}`;
     const sourceUrl = blobService.getUrl(container, orgiginalBlob);
-    copyBlob(sourceUrl, container, latestFile);
+    console.log("Copying", sourceUrl, container, latestFile);
+    return copyBlob(sourceUrl, container, latestFile);
 }
 
 async function run() {
