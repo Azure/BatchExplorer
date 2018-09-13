@@ -5,10 +5,18 @@ const path = require("path");
 const yaml = require("js-yaml");
 const azureStorage = require("azure-storage");
 
-const containerName = "releases";
 const storageAccountName = process.env.AZURE_STORAGE_ACCOUNT;
 const storageAccountKey = process.argv[2];
 const buildType = process.env.BUILD_TYPE;
+
+let containerName = "test";
+
+if (buildType === "stable") {
+    containerName = "stable";
+} else if (buildType === "insider") {
+    containerName = "insider";
+}
+
 const version = getVersion();
 
 console.log("Uploading for build type", buildType);
