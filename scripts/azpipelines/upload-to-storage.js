@@ -3,6 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const azureStorage = require("azure-storage");
+const { getManifest, getContainerName } = require("./utils");
 
 const storageAccountName = process.env.AZURE_STORAGE_ACCOUNT;
 const storageAccountKey = process.argv[2];
@@ -36,20 +37,6 @@ async function uploadToBlob(container, filename, blobName, override = false) {
     });
 }
 
-function getManifest(os) {
-    return JSON.parse(fs.readFileSync(path.join(os, "manifest.json")).toString());
-}
-
-function getContainerName(buildType) {
-    switch (buildType) {
-        case "stable":
-            return "stable";
-        case "insider":
-            return "insider";
-        default:
-            return "test";
-    }
-}
 async function uploadFiles(os) {
     const manifest = getManifest(os);
     console.log(`Uploading ${manifest.files.length} files for os: ${os}`);
