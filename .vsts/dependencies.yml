@@ -1,6 +1,8 @@
 steps:
   - powershell: |
-      $buildType=""
+      $buildType="dev"
+      Write-Host "Branch is $(Build.SourceBranch)"
+
       If ("$(Build.SourceBranch)" -like "refs/heads/master") {
         $buildType="insider"
       }
