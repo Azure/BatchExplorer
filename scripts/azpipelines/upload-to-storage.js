@@ -1,9 +1,12 @@
+
 // tslint:disable:no-console
 // @ts-check
 const fs = require("fs");
 const path = require("path");
-const azureStorage = require("azure-storage");
 
+const {
+    ServiceURL, SharedKeyCredential, uploadFileToBlockBlob, Aborter, StorageURL, ContainerURL, BlobURL, BlockBlobURL,
+} = require("@azure/storage-blob");
 const storageAccountName = process.env.AZURE_STORAGE_ACCOUNT;
 const storageAccountKey = process.argv[2];
 
@@ -13,26 +16,30 @@ if (!storageAccountKey) {
 }
 
 console.log("Uploading to storage account:", storageAccountName);
-const blobService = azureStorage.createBlobService(storageAccountName, storageAccountKey);
+const pipeline = StorageURL.newPipeline(
+    new SharedKeyCredential(storageAccountName, storageAccountKey),
+);
+
+// List containers
+const serviceURL = new ServiceURL(
+    `https://${storageAccountName}.blob.core.windows.net`,
+    pipeline,
+);
 
 async function uploadToBlob(container, filename, blobName, override = false) {
     console.log(`Uploading ${filename} ====> Container=${container}, Blobname=${blobName}`);
 
     const options = {};
     if (!override) {
-        options.accessConditions = azureStorage.AccessCondition.generateIfNotExistsCondition();
+        // options.accessConditions = AccessCondition.generateIfNotExistsCondition();
     }
+    const containerURL = ContainerURL.fromServiceURL(serviceURL, container);
+    const blobURL = BlobURL.fromContainerURL(containerURL, blobName);
+    const blockBlobURL = BlockBlobURL.fromBlobURL(blobURL);
+    return uploadFileToBlockBlob(Aborter.None, filename, blockBlobURL, {
+        blobAccessConditions: {
 
-    return new Promise((resolve, reject) => {
-        blobService.createBlockBlobFromLocalFile(container, blobName, filename, options,
-            (error, result, response) => {
-                if (error) {
-                    reject(error);
-                }
-
-                console.log("Uploaded", result, response);
-                resolve(result);
-            });
+        }
     });
 }
 
@@ -50,6 +57,7 @@ function getContainerName(buildType) {
             return "test";
     }
 }
+
 async function uploadFiles(os) {
     const manifest = getManifest(os);
     console.log(`Uploading ${manifest.files.length} files for os: ${os}`);

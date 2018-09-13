@@ -18,7 +18,7 @@ interface Manifest {
 function saveManifest(content: Manifest) {
     const str = JSON.stringify(content, null, 2);
 
-    const filename = getLocalPath(`manifest.yml`);
+    const filename = getLocalPath(`manifest.json`);
     fs.writeFileSync(filename, str);
     // tslint:disable-next-line:no-console
     console.log(`Created ${filename} manifest file for version ${version}`);
