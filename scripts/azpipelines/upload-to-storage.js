@@ -2,24 +2,10 @@
 // @ts-check
 const fs = require("fs");
 const path = require("path");
-const yaml = require("js-yaml");
 const azureStorage = require("azure-storage");
 
 const storageAccountName = process.env.AZURE_STORAGE_ACCOUNT;
 const storageAccountKey = process.argv[2];
-const buildType = process.env.BUILD_TYPE;
-
-let containerName = "test";
-
-if (buildType === "stable") {
-    containerName = "stable";
-} else if (buildType === "insider") {
-    containerName = "insider";
-}
-
-const version = getVersion();
-
-console.log("Uploading for build type", buildType);
 
 if (!storageAccountKey) {
     console.error("No storage account key passed");
@@ -29,8 +15,8 @@ if (!storageAccountKey) {
 console.log("Uploading to storage account:", storageAccountName);
 const blobService = azureStorage.createBlobService(storageAccountName, storageAccountKey);
 
-async function uploadToBlob(filename, blobName, override = false) {
-    console.log(`Uploading ${filename} ====> Container=${containerName}, Blobname=${blobName}`);
+async function uploadToBlob(container, filename, blobName, override = false) {
+    console.log(`Uploading ${filename} ====> Container=${container}, Blobname=${blobName}`);
 
     const options = {};
     if (!override) {
@@ -38,7 +24,7 @@ async function uploadToBlob(filename, blobName, override = false) {
     }
 
     return new Promise((resolve, reject) => {
-        blobService.createBlockBlobFromLocalFile(containerName, blobName, filename, options,
+        blobService.createBlockBlobFromLocalFile(container, blobName, filename, options,
             (error, result, response) => {
                 if (error) {
                     reject(error);
@@ -50,48 +36,34 @@ async function uploadToBlob(filename, blobName, override = false) {
     });
 }
 
-const artifactsNames = {
-    windowsInstaller: `BatchExplorer Setup ${version}.exe`,
-    linuxAppImage: `batch-explorer-${version}-x86_64.AppImage`,
-    linuxRpm: `batch-explorer-${version}.x86_64.rpm`,
-    linuxDeb: `batch-explorer_${version}_amd64.deb`,
-    darwinZip: `BatchExplorer-${version}-mac.zip`,
-    darwinDmg: `BatchExplorer-${version}.dmg`,
-};
-
-function getRemotePath(file) {
-    return `${version}/${file}`;
+function getManifest(os) {
+    return JSON.parse(fs.readFileSync(path.join(os, "manifest.json")).toString());
 }
 
-async function upload(folder, file) {
-    await uploadToBlob(path.join(folder, file), getRemotePath(file));
+function getContainerName(buildType) {
+    switch (buildType) {
+        case "stable":
+            return "stable";
+        case "insider":
+            return "insider";
+        default:
+            return "test";
+    }
 }
-async function uploadWindows() {
-    await upload("./windows", artifactsNames.windowsInstaller);
-    await upload("./windows", artifactsNames.windowsZip);
-}
-
-async function uploadLinux() {
-    await upload("./linux", artifactsNames.linuxAppImage);
-    await upload("./linux", artifactsNames.linuxDeb);
-    await upload("./linux", artifactsNames.linuxRpm);
-}
-
-async function uploadDawin() {
-    await upload("./darwin", artifactsNames.darwinDmg);
-    await upload("./darwin", artifactsNames.darwinZip);
-}
-
-function getVersion() {
-    const data = yaml.load(fs.readFileSync(`./windows/${buildType}.yml`).toString());
-    return data.version;
+async function uploadFiles(os) {
+    const manifest = getManifest(os);
+    console.log(`Uploading ${manifest.files.length} files for os: ${os}`);
+    const container = manifest.buildType;
+    for (const file of manifest.files) {
+        uploadToBlob(container, path.join(os, file.path), file.remotePath);
+    }
 }
 
 async function run() {
     console.log(`Starting uploading artifacts`);
-    await uploadWindows();
-    await uploadLinux();
-    await uploadDawin();
+    await uploadFiles("windows");
+    await uploadFiles("linux");
+    await uploadFiles("darwin");
 }
 
 run().then(() => {
