@@ -1,4 +1,16 @@
 steps:
+  - powershell: |
+      If ("$(Build.SourceBranch)" -like "refs/heads/master") {
+        $buildType=insider
+      }
+
+      If ("$(Build.SourceBranch)" -like "refs/heads/stable") {
+        $buildType=stable
+      }
+
+      Write-Host "##vso[build.addbuildtag]$buildType"
+      Write-Host "##vso[task.setvariable variable=BUILD_TYPE]$buildType"
+    displayName: Resolve build type
   - task: NodeTool@0
     inputs:
       versionSpec: '10.8.x'
