@@ -10,7 +10,7 @@ steps:
   - template: ./sign.yml
   - script: |
       unzip ./release/BatchExplorer*.zip -d ./release/mac
-      find ./release/mac ! -name '*.app' -type f -exec rm -f {} +
+      rm -f ./release/mac/*.pkg
       rm -rf ./release/*.zip
       npm run -s package darwin-dmg
       rm -rf ./release/mac/*
