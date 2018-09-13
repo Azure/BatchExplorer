@@ -1,13 +1,18 @@
 # This compute the build type for VSTS build
 $buildType="dev"
-Write-Host "Branch is $env:Build_SourceBranch"
+Write-Host "Branch is $env:BUILD_SOURCEBRANCH"
 
-If ("$env:Build_SourceBranch" -like "refs/heads/master") {
-$buildType="insider"
+If ("$env:BUILD_SOURCEBRANCH" -like "refs/heads/master") {
+    $buildType="insider"
 }
 
-If ("$env:Build_SourceBranch" -like "refs/heads/stable") {
-$buildType="stable"
+If ("$env:BUILD_SOURCEBRANCH" -like "refs/heads/stable") {
+    $buildType="stable"
+}
+
+# TODO-TIM revert
+If ("$env:BUILD_SOURCEBRANCH" -like "refs/heads/feature/signing-vsts") {
+    $buildType="testing"
 }
 
 Write-Host "Build type is $buildType"
