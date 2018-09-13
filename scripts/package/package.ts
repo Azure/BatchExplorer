@@ -75,7 +75,7 @@ async function createDarwinApp() {
  */
 async function createDarwinDmg() {
     return baseBuild({
-        targets: electronBuilder.Platform.MAC.createTarget(["dmg"]),
+        targets: electronBuilder.Platform.MAC.createTarget(["zip", "dmg"]),
         prepackaged: "./release/mac",
     });
 }

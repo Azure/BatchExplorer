@@ -10,7 +10,9 @@ steps:
   - template: ./sign.yml
   - script: |
       unzip ./release/BatchExplorer*.zip -d ./release/mac
+      rm -rf ./release/*.zip
       npm run -s package darwin-dmg
+      rm -rf ./release/mac/*.app
     displayName: Build .dmg
 
 
