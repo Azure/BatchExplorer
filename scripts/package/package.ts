@@ -1,6 +1,4 @@
 import * as electronBuilder from "electron-builder";
-import * as fs from "fs";
-import * as path from "path";
 import {
     createDarwinIndexFile, createLinuxIndexFile, createWindowsIndexFile,
 } from "./create-latest";
