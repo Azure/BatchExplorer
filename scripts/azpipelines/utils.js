@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 function getManifest(os) {
     return JSON.parse(fs.readFileSync(path.join(os, "manifest.json")).toString());
 }
