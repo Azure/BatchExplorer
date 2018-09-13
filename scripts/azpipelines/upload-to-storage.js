@@ -61,7 +61,7 @@ function getContainerName(buildType) {
 async function uploadFiles(os) {
     const manifest = getManifest(os);
     console.log(`Uploading ${manifest.files.length} files for os: ${os}`);
-    const container = manifest.buildType;
+    const container = getContainerName(manifest.buildType);
     for (const file of manifest.files) {
         uploadToBlob(container, path.join(os, file.path), file.remotePath);
     }
