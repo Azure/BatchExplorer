@@ -1,5 +1,6 @@
 steps:
   - powershell: |
+      $buildType=""
       If ("$(Build.SourceBranch)" -like "refs/heads/master") {
         $buildType="insider"
       }
