@@ -2,9 +2,6 @@ steps:
   - powershell: ./scripts/azpipelines/build-type.ps1 "$(Build.SourceBranch)"
     displayName: Resolve build type
 
-  - powershell: ./scripts/azpipelines/update-build-name.ps1
-    displayName: Resolve version
-
   - task: NodeTool@0
     inputs:
       versionSpec: '10.8.x'
