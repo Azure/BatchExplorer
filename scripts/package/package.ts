@@ -82,7 +82,7 @@ async function build() {
             return createDarwinApp();
         case "darwin-dmg":
             return createDarwinDmg();
-        case "dawin-index":
+        case "darwin-index":
             return createDarwinIndexFile();
         case "linux-index":
             return createLinuxIndexFile();
