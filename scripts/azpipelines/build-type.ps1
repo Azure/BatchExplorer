@@ -1,17 +1,21 @@
+param (
+    $branch
+)
 # This compute the build type for VSTS build
 $buildType="dev"
-Write-Host "Branch is $env:BUILD_SOURCEBRANCH"
 
-If ("$env:BUILD_SOURCEBRANCH" -like "refs/heads/master") {
+Write-Host "Branch is $branch"
+
+If ($branch -like "refs/heads/master") {
     $buildType="insider"
 }
 
-If ("$env:BUILD_SOURCEBRANCH" -like "refs/heads/stable") {
+If ($branch -like "refs/heads/stable") {
     $buildType="stable"
 }
 
 # TODO-TIM revert
-If ("$env:BUILD_SOURCEBRANCH" -like "refs/heads/feature/signing-vsts") {
+If ($branch -like "refs/heads/feature/signing-vsts") {
     $buildType="testing"
 }
 
