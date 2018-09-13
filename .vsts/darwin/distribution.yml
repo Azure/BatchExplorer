@@ -1,5 +1,3 @@
-variables:
-  BUILD_NUMBER:  $[counter('versioncounter', 1)]
 steps:
   - template: ./darwin-dependencies.yml
   - script: |
