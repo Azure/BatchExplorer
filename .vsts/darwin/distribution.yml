@@ -8,9 +8,12 @@ steps:
     displayName: Build .app
 
   - template: ./sign.yml
-
   - script: |
-      unzip -a ./release/BatchExplorer*.zip -d ./release/mac
+    mkdir -p ./release/mac
+    unzip ./release/BatchExplorer*.zip -d ./release/mac
+    displayName: unzip
+  - script: |
+
       npm run -s pacakge darwin-dmg
     displayName: Build .dmg
 
