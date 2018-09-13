@@ -1,19 +1,5 @@
 steps:
-  - powershell: |
-      $buildType="dev"
-      Write-Host "Branch is $(Build.SourceBranch)"
-
-      If ("$(Build.SourceBranch)" -like "refs/heads/master") {
-        $buildType="insider"
-      }
-
-      If ("$(Build.SourceBranch)" -like "refs/heads/stable") {
-        $buildType="stable"
-      }
-
-      Write-Host "Build type is $buildType"
-      Write-Host "##vso[build.addbuildtag]$buildType"
-      Write-Host "##vso[task.setvariable variable=BUILD_TYPE]$buildType"
+  - powershell: ./scripts/azpiplines/build-type.ps1
     displayName: Resolve build type
   - task: NodeTool@0
     inputs:
