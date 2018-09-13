@@ -28,5 +28,10 @@
   "github-data.source.branch": "master",
 
   // Github repository to be used when loading data from github(This is mostly for experimenting with new NCJ templates)
-  "github-data.source.repo": "Azure/BatchExplorer-data"
+  "github-data.source.repo": "Azure/BatchExplorer-data",
+
+  // Which channel to use for auto update. Can be:
+  //  - stable: Recommended
+  //  - insider: This is the latest build from master. Use at your own risk.
+  "update.channel": null
 }

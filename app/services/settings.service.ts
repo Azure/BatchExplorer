@@ -4,8 +4,10 @@ import { BehaviorSubject, Observable, Subscription } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
+import { AutoUpdateService } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { KeyBindings, Settings, defaultKeybindings } from "app/models";
+import { Constants } from "common";
 import { catchError, filter } from "rxjs/operators";
 import { LocalFileStorage } from "./local-file-storage.service";
 
@@ -32,6 +34,7 @@ export class SettingsService implements OnDestroy {
     constructor(
         private zone: NgZone,
         private storage: LocalFileStorage,
+        private autoUpdateService: AutoUpdateService,
         batchFlaskSettings: BatchFlaskSettingsService) {
         this.settingsObs = this._settingsSubject.pipe(filter(x => Boolean(x)));
         this.keybindings = this._keybindings.pipe(filter(x => Boolean(x)));
@@ -44,6 +47,7 @@ export class SettingsService implements OnDestroy {
                 autoUpdateOnQuit: settings["auto-update-on-quit"],
                 fileTypes: settings.fileTypes,
             });
+            this._updateAutoUpdateChannel(settings["update.channel"]);
         });
     }
 
@@ -60,6 +64,22 @@ export class SettingsService implements OnDestroy {
         this.settings = { ...defaultSettings, ...this._parseUserSettings(userSettings) };
         this._settingsSubject.next(this.settings);
         return this.storage.write(this._filename, userSettings);
+    }
+
+    private _updateAutoUpdateChannel(channel: string | null) {
+        this.autoUpdateService.setFeedUrl(this._getAutoUpdateChannel(channel));
+    }
+
+    private _getAutoUpdateChannel(channel: string | null) {
+        switch (channel) {
+            case "insider":
+                return Constants.AutoUpdateUrls.insider;
+            case "test":
+                return Constants.AutoUpdateUrls.test;
+            case "stable":
+            default:
+                return Constants.AutoUpdateUrls.stable;
+        }
     }
 
     private loadSettings() {

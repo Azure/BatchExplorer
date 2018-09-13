@@ -72,6 +72,17 @@ export class AutoUpdateService implements OnDestroy {
         return this._autoUpdater.quitAndInstall();
     }
 
+    /**
+     * Set the feed url and trigger a refresh
+     * @param url Url
+     */
+    public async setFeedUrl(url: string) {
+        const current = this._autoUpdater.getFeedURL();
+        if (current === url) { return; }
+        this._autoUpdater.setFeedURL(url);
+        return this.checkForUpdates();
+    }
+
     public set autoInstallOnAppQuit(value: boolean) {
         this._autoUpdater.autoInstallOnAppQuit = value;
     }

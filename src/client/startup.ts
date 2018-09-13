@@ -13,9 +13,8 @@ import { BatchExplorerApplication } from "./core/batch-explorer-application";
 function initAutoUpdate() {
     autoUpdater.allowPrerelease = true;
     autoUpdater.autoDownload = true;
+    autoUpdater.allowDowngrade = true;
     autoUpdater.logger = log;
-    // autoUpdater.setFeedURL("https://batchlabsdist.blob.core.windows.net/releases");
-    autoUpdater.setFeedURL("https://batchexplorer.azureedge.net/test");
 }
 
 function setupSingleInstance(batchExplorerApp: BatchExplorerApplication) {
