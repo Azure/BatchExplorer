@@ -63,7 +63,7 @@ async function copyBlob(source, container, blob) {
     return waitCopy(container, blob);
 }
 
-async function getLatestFile(os) {
+function getLatestFile(os) {
     switch (os) {
         case "darwin":
             return "latest-mac.yml";
