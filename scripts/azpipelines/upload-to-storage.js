@@ -63,7 +63,7 @@ async function uploadFiles(os) {
     console.log(`Uploading ${manifest.files.length} files for os: ${os}`);
     const container = getContainerName(manifest.buildType);
     for (const file of manifest.files) {
-        uploadToBlob(container, path.join(os, file.path), file.remotePath);
+        await uploadToBlob(container, path.join(os, file.path), file.remotePath);
     }
 }
 
@@ -78,5 +78,5 @@ run().then(() => {
     console.log("Done uploading...");
 }).catch(e => {
     console.error(`Error in node`, e);
-    process.exit(3);
+    process.exit(1);
 });
