@@ -20,7 +20,7 @@ function sleep(ms) {
 
 async function getProperties(container, blob) {
     return new Promise((resolve, reject) => {
-        blobService.getBlobProperties(container, blob, (result, error) => {
+        blobService.getBlobProperties(container, blob, (error, result) => {
             if (error) { return reject(error); }
             resolve(result);
         });
@@ -47,11 +47,8 @@ async function waitCopy(container, blob) {
 
 async function startCopyBlob(source, container, blob) {
     return new Promise((resolve, reject) => {
-        blobService.startCopyBlob(source, container, blob, (result, error) => {
-            if (error) {
-                reject(error);
-                return;
-            }
+        blobService.startCopyBlob(source, container, blob, (error, result) => {
+            if (error) { return reject(error); }
 
             resolve(result);
         });
@@ -94,6 +91,6 @@ async function run() {
 run().then(() => {
     console.log("Done uploading...");
 }).catch(e => {
-    console.error(`Error in node`, e);
+    console.error(`Error in`, e);
     process.exit(1);
 });
