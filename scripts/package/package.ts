@@ -26,7 +26,7 @@ async function baseBuild(options?: electronBuilder.CliOptions) {
         version += `.${buildVersion}`;
     }
 
-    await electronBuilder.build({
+    return electronBuilder.build({
         config: {
             extraMetadata: {
                 version,
@@ -41,7 +41,7 @@ async function baseBuild(options?: electronBuilder.CliOptions) {
  * This is so exe can be signed before creating installer
  */
 async function createWindowsExecutable() {
-    await baseBuild({
+    return baseBuild({
         dir: true,
         platform: "windows",
     });
@@ -52,7 +52,7 @@ async function createWindowsExecutable() {
  * This is so exe can be signed before creating installer
  */
 async function createWindowsInstaller() {
-    await baseBuild({
+    return baseBuild({
         win: ["nsis", "zip"],
         prepackaged: "./release/win-unpacked",
         projectDir: ".",
@@ -64,9 +64,8 @@ async function createWindowsInstaller() {
  * This is so app can be signed before creating the dmg
  */
 async function createDarwinApp() {
-    await baseBuild({
+    return baseBuild({
         targets: electronBuilder.Platform.MAC.createTarget(["dir", "zip"]),
-        prepackaged: "./release/mac",
     });
 }
 
@@ -75,13 +74,14 @@ async function createDarwinApp() {
  * This is so app can be signed before creating the dmg
  */
 async function createDarwinDmg() {
-    await baseBuild({
+    return baseBuild({
         targets: electronBuilder.Platform.MAC.createTarget(["dmg"]),
+        prepackaged: "./release/mac",
     });
 }
 
 async function buildDefault() {
-    await baseBuild();
+    return baseBuild();
 }
 
 async function build() {
