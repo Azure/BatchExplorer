@@ -50,7 +50,7 @@ async function uploadToBlob(filename, blobName, override = false) {
     });
 }
 
-export const artifactsNames = {
+const artifactsNames = {
     windowsInstaller: `BatchExplorer Setup ${version}.exe`,
     linuxAppImage: `batch-explorer-${version}-x86_64.AppImage`,
     linuxRpm: `batch-explorer-${version}.x86_64.rpm`,
