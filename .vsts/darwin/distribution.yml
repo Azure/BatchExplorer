@@ -10,11 +10,11 @@ steps:
   - template: ./sign.yml
   - script: |
       unzip ./release/BatchExplorer*.zip -d ./release/mac
+      find ./release/mac ! -name '*.app' -type f -exec rm -f {} +
       rm -rf ./release/*.zip
       npm run -s package darwin-dmg
-      rm -rf ./release/mac/*.app
-    displayName: Build .dmg
-
+      rm -rf ./release/mac/*
+    displayName: Build dmg
 
   - template: ../common/publish-artifacts.yml
     parameters:
