@@ -21,7 +21,7 @@ steps:
       name: "Sign installer"
       pattern: |
         **/BatchExplorer*Setup*.exe
-  - script: npm run package win-index
+  - script: npm run package win-manifest
     displayName: Update index file
   - template: ../common/publish-artifacts.yml
     parameters:

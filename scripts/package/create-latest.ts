@@ -17,7 +17,7 @@ async function createSha512(file) {
 function saveContent(content: any, suffix?: string) {
     const str = yaml.safeDump(content, { lineWidth: 8000 });
 
-    let name = buildType;
+    let name = "latest";
     if (suffix) {
         name = `${name}-${suffix}`;
     }

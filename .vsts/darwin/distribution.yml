@@ -15,7 +15,7 @@ steps:
       npm run -s package darwin-dmg
       rm -rf ./release/mac/*
     displayName: Build dmg
-  - script: npm run package darwin-index
+  - script: npm run package darwin-manifest
     displayName: Update index file
   - template: ../common/publish-artifacts.yml
     parameters:

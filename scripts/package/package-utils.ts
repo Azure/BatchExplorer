@@ -6,7 +6,7 @@ export const releasePath = path.join(root, "release");
 const packageDef = JSON.parse(fs.readFileSync(path.join(root, "package.json")).toString());
 
 const buildVersion = process.env.BUILD_NUMBER;
-export const buildType = process.env.BUILD_TYPE || "dev";
+export const buildType: BuildType = process.env.BUILD_TYPE || "dev" as any;
 
 export enum BuildType {
     // When building locally or from a pull request(Not signed)
@@ -20,9 +20,12 @@ export enum BuildType {
 export const version = computeVersion();
 export const artifactsNames = {
     windowsInstaller: `BatchExplorer Setup ${version}.exe`,
+    windowsZip: `BatchExplorer-${version}-win.zip`,
     linuxAppImage: `batch-explorer-${version}-x86_64.AppImage`,
     darwinZip: `BatchExplorer-${version}-mac.zip`,
     darwinDmg: `BatchExplorer-${version}.dmg`,
+    linuxRpm: `batch-explorer-${version}.x86_64.rpm`,
+    linuxDeb: `batch-explorer_${version}_amd64.deb`,
 };
 
 export function getLocalPath(file: string) {

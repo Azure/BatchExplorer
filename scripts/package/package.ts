@@ -2,6 +2,7 @@ import * as electronBuilder from "electron-builder";
 import {
     createDarwinIndexFile, createLinuxIndexFile, createWindowsIndexFile,
 } from "./create-latest";
+import { createDarwinManifest, createLinuxManifest, createWindowsManifest } from "./create-manifest";
 import { version } from "./package-utils";
 
 /**
@@ -74,16 +75,19 @@ async function build() {
             return createWindowsExecutable();
         case "win-installer":
             return createWindowsInstaller();
-        case "win-index":
-            return createWindowsIndexFile();
+        case "win-manifest":
+            await createWindowsIndexFile();
+            return createWindowsManifest();
         case "darwin-app":
             return createDarwinApp();
         case "darwin-dmg":
             return createDarwinDmg();
-        case "darwin-index":
-            return createDarwinIndexFile();
-        case "linux-index":
-            return createLinuxIndexFile();
+        case "darwin-manifest":
+            await createDarwinIndexFile();
+            return createDarwinManifest();
+        case "linux-manifest":
+            await createLinuxIndexFile();
+            return createLinuxManifest();
         default:
             return buildDefault();
     }
