@@ -6,10 +6,10 @@ import { UrlUtils } from "@batch-flask/utils";
 import { ArmBatchAccount, BatchAccount, LocalBatchAccount } from "app/models";
 import { AdalService } from "app/services/adal";
 import { BatchAccountService } from "app/services/batch-account";
-import { BatchExplorerService } from "app/services/batch-labs.service";
 import { Constants } from "common";
 import { Observable, from, throwError } from "rxjs";
 import { catchError, flatMap, map, retryWhen, shareReplay, take } from "rxjs/operators";
+import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { BatchSharedKeyAuthenticator } from "./batch-shared-key-authenticator";
 
 @Injectable()

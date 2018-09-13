@@ -4,11 +4,11 @@ import { Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Respo
 import { AccessToken, RetryableHttpCode, ServerError } from "@batch-flask/core";
 import { ArmBatchAccount } from "app/models";
 import { AdalService } from "app/services/adal";
-import { BatchExplorerService } from "app/services/batch-labs.service";
 import { Constants } from "app/utils";
 import { Observable, throwError, timer } from "rxjs";
 import { catchError, flatMap, mergeMap, retryWhen, share, take, tap } from "rxjs/operators";
 import { BatchAccountService } from "../batch-account";
+import { BatchExplorerService } from "app/services/batch-explorer.service";
 
 function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
     const options = original || new RequestOptions();

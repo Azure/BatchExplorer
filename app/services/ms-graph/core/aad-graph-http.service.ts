@@ -6,7 +6,7 @@ import { UrlUtils } from "@batch-flask/utils";
 import { ArmBatchAccount } from "app/models";
 import { AdalService } from "app/services/adal";
 import { BatchAccountService } from "app/services/batch-account";
-import { BatchExplorerService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { AADUser } from "client/core/aad/adal/aad-user";
 import { Constants } from "common";
 import { Observable, throwError } from "rxjs";
