@@ -2,6 +2,8 @@ steps:
   - template: ./linux-dependencies.yml
   - script: npm run build-and-pack
     displayName: Build and pack
+  - script: npm run package linux-index
+    displayName: Update index file
   - template: ../common/publish-artifacts.yml
     parameters:
       folder: linux

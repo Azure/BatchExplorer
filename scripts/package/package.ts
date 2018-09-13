@@ -1,31 +1,15 @@
 import * as electronBuilder from "electron-builder";
 import * as fs from "fs";
 import * as path from "path";
-
-const root = path.resolve(path.join(__dirname, "../.."));
-const packageDef = JSON.parse(fs.readFileSync(path.join(root, "package.json")).toString());
-
-enum BuildType {
-    // When building locally or from a pull request(Not signed)
-    Dev = "dev",
-    // Official build release
-    Stable = "stable",
-    // Build off master
-    Insider = "insider",
-}
+import {
+    createDarwinIndexFile, createLinuxIndexFile, createWindowsIndexFile,
+} from "./create-latest";
+import { version } from "./package-utils";
 
 /**
  * Base build function which will update common attributes to all platforms
  */
 async function baseBuild(options?: electronBuilder.CliOptions) {
-    const buildVersion = process.env.BUILD_NUMBER;
-    const buildType = process.env.BUILD_TYPE || "dev";
-
-    let version = `${packageDef.version}-${buildType}`;
-    if (buildVersion) {
-        version += `.${buildVersion}`;
-    }
-
     return electronBuilder.build({
         config: {
             extraMetadata: {
@@ -92,10 +76,16 @@ async function build() {
             return createWindowsExecutable();
         case "win-installer":
             return createWindowsInstaller();
+        case "win-index":
+            return createWindowsIndexFile();
         case "darwin-app":
             return createDarwinApp();
         case "darwin-dmg":
             return createDarwinDmg();
+        case "dawin-index":
+            return createDarwinIndexFile();
+        case "linux-index":
+            return createLinuxIndexFile();
         default:
             return buildDefault();
     }
