@@ -6,9 +6,9 @@ import { BehaviorSubject, Observable, Subscription } from "rxjs";
 const stripJsonComments = require("strip-json-comments");
 
 import { FileSystemService, NotificationService } from "@batch-flask/ui";
+import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { log } from "app/utils";
 import { filter } from "rxjs/operators";
-import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { SettingsService } from "../settings.service";
 import { Theme } from "./theme.model";
 
