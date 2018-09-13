@@ -1,12 +1,12 @@
 # This compute the build type for VSTS build
 $buildType="dev"
-Write-Host "Branch is $(Build.SourceBranch)"
+Write-Host "Branch is $env:Build_SourceBranch"
 
-If ("$(Build.SourceBranch)" -like "refs/heads/master") {
+If ("$env:Build_SourceBranch" -like "refs/heads/master") {
 $buildType="insider"
 }
 
-If ("$(Build.SourceBranch)" -like "refs/heads/stable") {
+If ("$env:Build_SourceBranch" -like "refs/heads/stable") {
 $buildType="stable"
 }
 
