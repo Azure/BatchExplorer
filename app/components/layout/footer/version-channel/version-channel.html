@@ -1,0 +1,9 @@
+<div *ngIf="versionType === VersionType.Test" class="build-type test-build" matTooltip="Danger! This is a test build">
+    Test
+</div>
+<div  *ngIf="versionType  === VersionType.Insider" class="build-type insider-build" matTooltip="Insider build">
+    Insider
+</div>
+<div  *ngIf="versionType  === VersionType.Dev" class="build-type dev-build" matTooltip="Dev build">
+    Dev
+</div>

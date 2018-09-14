@@ -1,0 +1,24 @@
+@import "app/styles/variables";
+
+bl-version-channel {
+    .build-type {
+        padding: 0 10px;
+        width: $navigationbar-width;
+        text-align: center;
+    }
+
+    .test-build {
+        background: $danger-color;
+        color: $danger-contrast-color;
+    }
+
+    .insider-build {
+        background: $warn-color;
+        color: $warn-contrast-color;
+    }
+
+    .dev-build {
+        background: $success-color;
+        color: $success-contrast-color;
+    }
+}
