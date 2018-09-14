@@ -7,7 +7,7 @@ let versionEl;
 
 const feedUrls = {
     stable: "https://batchexplorer.azureedge.net/stable",
-    insider: "https://batchexplorer.blob.core.windows.net/insider",
+    insider: "https://batchexplorer.blob.core.windows.net/test",
 }
 
 const feedUrl = feedUrls[buildType];
@@ -68,23 +68,23 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     getWindowsLatest().then((version) => {
         versionEl.textContent = version;
-        downloadLinks["windowsInstaller"] = `${feedUrl}/${version}/BatchExplorer Setup.exe`
-        downloadLinks["windowsZip"] = `${feedUrl}/${version}/BatchExplorer-win.zip`
+        downloadLinks["windowsInstaller"] = `${feedUrl}/${version}/BatchExplorer Setup ${version}.exe`
+        downloadLinks["windowsZip"] = `${feedUrl}/${version}/BatchExplorer-${version}-win.zip`
         updateDownloadLinks()
     });
 
     getLinuxLatest().then((version) => {
         versionEl.textContent = version;
-        downloadLinks["linuxDeb"] = `${feedUrl}/${version}/BatchExplorer.deb`;
-        downloadLinks["linuxRpm"] = `${feedUrl}/${version}/BatchExplorer.rpm`;
-        downloadLinks["linuxAppimage"] = `${feedUrl}/${version}/BatchExplorer.AppImage`;
+        downloadLinks["linuxDeb"] = `${feedUrl}/${version}/batch-explorer_${version}_amd64.deb`;
+        downloadLinks["linuxRpm"] = `${feedUrl}/${version}/batch-explorer-${version}.x86_64.rpm`;
+        downloadLinks["linuxAppimage"] = `${feedUrl}/${version}/batch-explorer-${version}-x86_64.AppImage`;
         updateDownloadLinks()
     });
 
     getMacLatest().then((version) => {
         versionEl.textContent = version;
-        downloadLinks["osxDmg"] = `${feedUrl}/${version}/BatchExplorer.dmg`;
-        downloadLinks["osxZip"] = `${feedUrl}/${version}/BatchExplorer-osx.zip`;
+        downloadLinks["osxDmg"] = `${feedUrl}/${version}/BatchExplorer-${version}.dmg`;
+        downloadLinks["osxZip"] = `${feedUrl}/${version}/BatchExplorer-${version}-mac.zip`;
         updateDownloadLinks()
     });
 
