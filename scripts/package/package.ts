@@ -59,7 +59,7 @@ async function createDarwinApp() {
 async function createDarwinDmg() {
     return baseBuild({
         targets: electronBuilder.Platform.MAC.createTarget(["zip", "dmg"]),
-        prepackaged: "./release/mac",
+        prepackaged: "./release/mac/BatchExplorer.app",
         projectDir: ".",
     });
 }
