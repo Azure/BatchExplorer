@@ -1,16 +1,14 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges, forwardRef } from "@angular/core";
+import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
+    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { Subscription } from "rxjs";
-
 import { ContainerConfigurationDto, TaskContainerSettingsDto } from "app/models/dtos";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: "bl-container-settings-picker",
     templateUrl: "container-settings-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => ContainerSettingsPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => ContainerSettingsPickerComponent), multi: true },
     ],
@@ -35,7 +33,6 @@ export class ContainerSettingsPickerComponent implements ControlValueAccessor, O
             }
         });
     }
-
 
     public ngOnDestroy() {
         this._sub.unsubscribe();
