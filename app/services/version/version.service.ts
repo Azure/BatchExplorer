@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable, Subscription } from "rxjs";
 export enum VersionType {
     Stable = "stable",
     Insider = "insider",
-    Test = "test",
+    Testing = "testing",
     Dev = "dev",
 }
 
@@ -59,7 +59,7 @@ export class VersionService implements OnDestroy {
         switch (channel) {
             case VersionType.Insider:
                 return Constants.AutoUpdateUrls.insider;
-            case VersionType.Test:
+            case VersionType.Testing:
                 return Constants.AutoUpdateUrls.test;
             default:
                 return Constants.AutoUpdateUrls.stable;
