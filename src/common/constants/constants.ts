@@ -198,5 +198,5 @@ const cdn = "https://batchexplorer.azureedge.net";
 export const AutoUpdateUrls = {
     stable: `${cdn}/stable`,
     insider: `${cdn}/insider`,
-    test: `${cdn}/test`,
+    testing: `${cdn}/test`,
 };
