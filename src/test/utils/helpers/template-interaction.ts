@@ -114,6 +114,9 @@ export function updateInput(el: DebugElement | HTMLInputElement, value: any) {
     if (el instanceof DebugElement) {
         updateInput(el.nativeElement, value);
     } else {
+        el.focus();
+        el.dispatchEvent(new Event("focus"));
+        el.dispatchEvent(new Event("focusin"));
         el.value = value;
         el.dispatchEvent(new Event("input"));
     }

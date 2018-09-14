@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
@@ -12,6 +12,7 @@ import { Subscription } from "rxjs";
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => ContainerSettingsPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => ContainerSettingsPickerComponent), multi: true },
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContainerSettingsPickerComponent implements ControlValueAccessor, OnDestroy {
     @Input() public containerConfiguration: ContainerConfigurationDto = null;
@@ -29,7 +30,11 @@ export class ContainerSettingsPickerComponent implements ControlValueAccessor, O
 
         this._sub = this.containerSettings.valueChanges.subscribe((containerSettings) => {
             if (this._propagateChange) {
-                this._propagateChange(containerSettings);
+                if (containerSettings.imageName) {
+                    this._propagateChange(containerSettings);
+                } else {
+                    this._propagateChange(null);
+                }
             }
         });
     }
