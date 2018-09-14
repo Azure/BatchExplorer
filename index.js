@@ -5,10 +5,16 @@ let downloadLinkEls;
 let downloadLinks = {};
 let versionEl;
 
-const feedUrl = "https://batchlabsdist.blob.core.windows.net/releases";
+const feedUrls = {
+    stable: "https://batchexplorer.azureedge.net/stable",
+    insider: "https://batchexplorer.blob.core.windows.net/insider",
+}
+
+const feedUrl = feedUrls[buildType];
 
 function getLatest(source) {
-    const url = `${feedUrl}/${source}`;
+    const rand = Math.floor(Math.random() * 100000);
+    const url = `${feedUrl}/${source}?noCache=${rand}`;
     return fetch(url, { cache: "no-cache" }).then((res) => {
         return res.text();
     }).then(content => {
