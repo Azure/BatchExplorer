@@ -67,14 +67,27 @@ describe("BatchSharedKeyAuthenticator", () => {
 
     it("sign simple POST request correctly with body", async () => {
         const request: HttpRequestOptions = {
-            body: `{"id": "some"}`,
+            body: JSON.stringify({ id: "some" }),
         };
         await authenticator.signRequest("post", "/pools", request);
 
         expect(request.headers).not.toBeFalsy();
         expect(getHeaders(request)).toEqual({
             "ocp-date": "Fri, 05 Oct 2018 09:05:06 GMT",
-            "Authorization": "SharedKey testaccount:5piTPgmUVhSIrInh354FV+fgh9O3jLi2QNa/NgBf85c=",
+            "Authorization": "SharedKey testaccount:GgI/PPSZVqHRx3U4A+QbkXY0FdMv/2bUzxfBI5c2x+s=",
+        });
+    });
+
+    it("sign simple POST request correctly with as object", async () => {
+        const request: HttpRequestOptions = {
+            body: { id: "some" },
+        };
+        await authenticator.signRequest("post", "/pools", request);
+
+        expect(request.headers).not.toBeFalsy();
+        expect(getHeaders(request)).toEqual({
+            "ocp-date": "Fri, 05 Oct 2018 09:05:06 GMT",
+            "Authorization": "SharedKey testaccount:GgI/PPSZVqHRx3U4A+QbkXY0FdMv/2bUzxfBI5c2x+s=",
         });
     });
 });
