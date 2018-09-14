@@ -1,3 +1,4 @@
+import { ServerError } from "@batch-flask/core";
 import { LocalBatchAccount } from "app/models";
 import { of } from "rxjs";
 import { LOCAL_BATCH_ACCOUNT_KEY, LocalBatchAccountService } from "./local-batch-account.service";
@@ -82,7 +83,18 @@ describe("LocalBatchAccountService", () => {
         expect(data).toEqual([account1, account2, account3]);
     });
 
-    it("Get accoutn name from id", () => {
+    it("fails to create a new account when using same url as existing one", async () => {
+        try {
+            await service.create(new LocalBatchAccount(account2)).toPromise();
+            fail("Should have thrown error");
+        } catch (e) {
+            expect(e instanceof ServerError).toBe(true);
+            expect(e.status).toBe(400);
+            expect(e.code).toBe("AccountAlreadyExist");
+        }
+    });
+
+    it("Get account name from id", () => {
         let name = service.getNameFromId("local/https://testaccount2.westus2.batch.azure.com");
         expect(name).toEqual("testaccount2");
         name = service.getNameFromId("local/https://other.format");
