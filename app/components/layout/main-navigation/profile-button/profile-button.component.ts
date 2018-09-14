@@ -151,7 +151,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     }
 
     private _update() {
-        if (OS.isWindows()) {
+        if (!OS.isLinux()) {
             setImmediate(() => {
                 this.remote.electronApp.removeAllListeners("window-all-closed");
                 this.autoUpdateService.quitAndInstall();
