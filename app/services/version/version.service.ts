@@ -36,6 +36,10 @@ export class VersionService implements OnDestroy {
         this.versionType = this._resolveVersionChannel();
         this.updateChannel = this._updateChannel.asObservable();
 
+        if (this.versionType === VersionType.Dev) {
+            this.autoUpdateService.disable();
+        }
+
         this._sub = settingsService.settingsObs.subscribe((settings) => {
             this._updateAutoUpdateChannel(settings["update.channel"]);
         });
@@ -48,9 +52,7 @@ export class VersionService implements OnDestroy {
 
     private _updateAutoUpdateChannel(channel: string | null) {
         // Don't try to set update url when in dev mode
-        if (this.versionType !== VersionType.Dev) {
-            this.autoUpdateService.setFeedUrl(this._getAutoUpdateChannel(channel));
-        }
+        this.autoUpdateService.setFeedUrl(this._getAutoUpdateChannel(channel));
     }
 
     private _getAutoUpdateChannel(channel: string | null) {
