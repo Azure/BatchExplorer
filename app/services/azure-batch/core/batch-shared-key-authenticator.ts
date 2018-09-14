@@ -42,10 +42,13 @@ function getContentLengthToAppend(value, method: string, body: string) {
     if (!Boolean(value) || !Boolean(value["Content-Length"])) {
         // Get content length from body if available
         if (body) {
+            if (typeof body === "object") {
+                body = JSON.stringify(body);
+            }
             return Buffer.byteLength(body) + "\n";
         }
-        // For GET verb, do not add content-length
-        if (method === "GET") {
+        // For GET, DELETE verb, do not add content-length
+        if (method === "GET" || method === "DELETE" || method === "HEAD") {
             return "\n";
         } else {
             return "0\n";

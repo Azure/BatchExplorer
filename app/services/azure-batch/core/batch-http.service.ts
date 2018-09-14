@@ -83,7 +83,7 @@ export class AzureBatchHttpService extends HttpService {
             options.headers = new HttpHeaders();
         }
         options.headers = (options.headers as any)
-            .set("Content-Type", "application/json; odata=minimalmetadata; charset=utf-8")
+            .set("Content-Type", "application/json; odata=minimalmetadata; charset=UTF-8")
             .set("Cache-Control", "no-cache");
 
         return options;
