@@ -5,7 +5,7 @@ steps:
       npm run -s build-python
       npm run -s package darwin-app
       rm -rf ./release/mac/*.app
-      mkdir -rp ./release/keep
+      mkdir ./release/keep
       cp ./release/*.zip ./release/keep/before-code-sign.zip
     displayName: Build .app
 
