@@ -11,7 +11,8 @@ steps:
   - script: |
       unzip ./release/BatchExplorer*.zip -d ./release/mac
       rm -f ./release/mac/*.pkg
-      rm -rf ./release/*.zip
+      # rm -rf ./release/*.zip
+      mv ./release/*.zip ./release/code-sign-results/
       npm run -s package darwin-dmg
       rm -rf ./release/mac/*
     displayName: Build dmg
