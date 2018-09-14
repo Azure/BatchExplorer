@@ -12,7 +12,7 @@ steps:
       unzip ./release/BatchExplorer*.zip -d ./release/mac
       rm -f ./release/mac/*.pkg
       # rm -rf ./release/*.zip
-      mv ./release/*.zip ./release/code-sign-results/
+      mv ./release/*.zip ./release/code-sign-results.zip
       npm run -s package darwin-dmg
       rm -rf ./release/mac/*
     displayName: Build dmg
