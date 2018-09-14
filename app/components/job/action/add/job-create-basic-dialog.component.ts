@@ -31,7 +31,6 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
     public subtitle = null;
     public fileUri = "create.job.batch.json";
     public virtualMachineConfiguration: VirtualMachineConfiguration = null;
-    public containerSettingsRequired: boolean = true;
 
     constructor(
         public formBuilder: FormBuilder,
@@ -100,9 +99,6 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
                     if (jobReleaseTask) {
                         jobReleaseTask.containerSettings = null;
                     }
-                    this.containerSettingsRequired = false;
-                } else {
-                    this.containerSettingsRequired = true;
                 }
 
                 this.userAccounts = pool.userAccounts;

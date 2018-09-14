@@ -39,7 +39,6 @@ export class JobScheduleJobSpecificationComponent implements ControlValueAccesso
     public form: FormGroup;
     public constraintsGroup: FormGroup;
     public virtualMachineConfiguration: VirtualMachineConfiguration = null;
-    public containerSettingsRequired: boolean = true;
     public showJobReleaseTask: boolean;
 
     private _propagateChange: (value: any) => void = null;
@@ -109,9 +108,6 @@ export class JobScheduleJobSpecificationComponent implements ControlValueAccesso
                 if (jobReleaseTask) {
                     jobReleaseTask.containerSettings = null;
                 }
-                this.containerSettingsRequired = false;
-            } else {
-                this.containerSettingsRequired = true;
             }
             this.changeDetector.markForCheck();
         }));

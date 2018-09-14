@@ -72,8 +72,7 @@
         <bl-form-section *ngIf="virtualMachineConfiguration?.containerConfiguration" title="Task container settings" subtitle="The settings for the container under which the task runs.">
             <bl-container-settings-picker
                 formControlName="containerSettings"
-                [containerConfiguration]="virtualMachineConfiguration.containerConfiguration"
-                [required]="true">
+                [containerConfiguration]="virtualMachineConfiguration.containerConfiguration">
             </bl-container-settings-picker>
         </bl-form-section>
     </bl-form-page>

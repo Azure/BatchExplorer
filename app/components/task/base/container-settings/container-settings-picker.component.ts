@@ -1,23 +1,21 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
+    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { Subscription } from "rxjs";
-
 import { ContainerConfigurationDto, TaskContainerSettingsDto } from "app/models/dtos";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: "bl-container-settings-picker",
     templateUrl: "container-settings-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => ContainerSettingsPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => ContainerSettingsPickerComponent), multi: true },
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContainerSettingsPickerComponent implements ControlValueAccessor, OnChanges, OnDestroy {
+export class ContainerSettingsPickerComponent implements ControlValueAccessor, OnDestroy {
     @Input() public containerConfiguration: ContainerConfigurationDto = null;
-    @Input() public required: boolean = true;
     public containerSettings: FormGroup;
 
     private _propagateChange: (value: TaskContainerSettingsDto) => void = null;
@@ -32,16 +30,13 @@ export class ContainerSettingsPickerComponent implements ControlValueAccessor, O
 
         this._sub = this.containerSettings.valueChanges.subscribe((containerSettings) => {
             if (this._propagateChange) {
-                this._propagateChange(containerSettings);
+                if (containerSettings.imageName) {
+                    this._propagateChange(containerSettings);
+                } else {
+                    this._propagateChange(null);
+                }
             }
         });
-    }
-
-    public ngOnChanges(changes: SimpleChanges) {
-        if (changes.required && changes.required.currentValue !== changes.required.previousValue) {
-            const validators = changes.required.currentValue ? [Validators.required] : [];
-            this.containerSettings.get("imageName").setValidators(validators);
-        }
     }
 
     public ngOnDestroy() {
