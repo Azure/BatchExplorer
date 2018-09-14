@@ -7,7 +7,7 @@ let versionEl;
 
 const feedUrls = {
     stable: "https://batchexplorer.azureedge.net/stable",
-    insider: "https://batchexplorer.blob.core.windows.net/test",
+    insider: "https://batchexplorer.blob.core.windows.net/insider",
 }
 
 const feedUrl = feedUrls[buildType];
@@ -66,6 +66,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
         linuxAppimage: document.getElementById("download-linux-appimage"),
     }
 
+    
+
+    if(buildType === "stable") {
+        getLinksOld(versionEl, downloadLinks);
+    } else {
+        getLinks(versionEl, downloadLinks);
+    }
+});
+
+function getLinks(versionEl, downloadLinks) {
     getWindowsLatest().then((version) => {
         versionEl.textContent = version;
         downloadLinks["windowsInstaller"] = `${feedUrl}/${version}/BatchExplorer Setup ${version}.exe`
@@ -87,5 +97,28 @@ document.addEventListener("DOMContentLoaded", (event) => {
         downloadLinks["osxZip"] = `${feedUrl}/${version}/BatchExplorer-${version}-mac.zip`;
         updateDownloadLinks()
     });
+}
 
-});
+function getLinksOld(versionEl, downloadLinks) {
+    getWindowsLatest().then((version) => {
+        versionEl.textContent = version;
+        downloadLinks["windowsInstaller"] = `${feedUrl}/${version}/BatchExplorer Setup.exe`
+        downloadLinks["windowsZip"] = `${feedUrl}/${version}/BatchExplorer-win.zip`
+        updateDownloadLinks()
+    });
+
+    getLinuxLatest().then((version) => {
+        versionEl.textContent = version;
+        downloadLinks["linuxDeb"] = `${feedUrl}/${version}/BatchExplorer.deb`;
+        downloadLinks["linuxRpm"] = `${feedUrl}/${version}/BatchExplorer.rpm`;
+        downloadLinks["linuxAppimage"] = `${feedUrl}/${version}/BatchExplorer.AppImage`;
+        updateDownloadLinks()
+    });
+
+    getMacLatest().then((version) => {
+        versionEl.textContent = version;
+        downloadLinks["osxDmg"] = `${feedUrl}/${version}/BatchExplorer.dmg`;
+        downloadLinks["osxZip"] = `${feedUrl}/${version}/BatchExplorer-osx.zip`;
+        updateDownloadLinks()
+    });
+}
