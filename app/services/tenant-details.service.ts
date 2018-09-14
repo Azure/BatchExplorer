@@ -5,7 +5,7 @@ import { Constants } from "common";
 import { Observable } from "rxjs";
 import { flatMap, map, share } from "rxjs/operators";
 import { AdalService } from "./adal";
-import { BatchExplorerService } from "./batch-labs.service";
+import { BatchExplorerService } from "./batch-explorer.service";
 
 @Injectable()
 export class TenantDetailsService {

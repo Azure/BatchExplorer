@@ -53,6 +53,7 @@
     "app/**/*.ts",
     "src/**/*.ts",
     "test/**/*.ts",
+    "package.json",
   ],
   "exclude": [
     "**/testing/**/*",

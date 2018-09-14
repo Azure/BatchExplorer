@@ -1,0 +1,29 @@
+steps:
+  - template: ./linux-dependencies.yml
+  - script: |
+      export DISPLAY=:99
+      xvfb-run npm run test
+    displayName: Run tests
+
+  - task: PublishTestResults@2
+    inputs:
+      testRunner: 'JUnit'
+      testResultsFiles: $(System.DefaultWorkingDirectory)/coverage/TESTS*.xml
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: cobertura
+      summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura.xml
+      reportDirectory: $(System.DefaultWorkingDirectory)/coverage/html
+  - script: codecov -t $(codecov.uploadToken)
+    displayName: Upload code coverage to codecov
+
+  - script: npm run build-and-pack
+    displayName: Build and pack
+
+  - script: npm run lint
+    displayName: Lint
+
+  - template: ../common/publish-artifacts.yml
+    parameters:
+      folder: linux

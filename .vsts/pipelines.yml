@@ -1,103 +1,20 @@
 name: $(SourceBranch)$(Rev:.r)
-phases:
-  - phase: Linux
-    queue: Hosted Linux Preview
+jobs:
+  - job: Linux
+    pool: Hosted Linux Preview
+    # pool:
+      # vmImage: ubuntu-16.04
     steps:
-    - script: |
-        set -e
-        apt-get update
-        apt-get install -y libxkbfile-dev pkg-config libsecret-1-dev libxss1 libgconf-2-4 dbus xvfb libgtk-3-0 rpm
-      displayName: Install Linux packages
-    - template: ./dependencies.yml
-    - template: ./pyenv.yml
-    - script: |
-        set -e
-        python --version
-        npm install -g codecov
-        npm install -g npm
-        npm ci
-        pip3 install -r python/requirements.txt
-      displayName: Install dependencies
+       - template: ./linux/ci.yml
 
-    - script: |
-        export DISPLAY=:99
-        xvfb-run npm run test
-      displayName: Run tests
-
-    - task: PublishTestResults@2
-      inputs:
-        testRunner: 'JUnit'
-        testResultsFiles: $(System.DefaultWorkingDirectory)/coverage/TESTS*.xml
-
-    - task: PublishCodeCoverageResults@1
-      inputs:
-        codeCoverageTool: cobertura
-        summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura.xml
-        reportDirectory: $(System.DefaultWorkingDirectory)/coverage/html
-    - script: codecov -t $(codecov.uploadToken)
-      displayName: Upload code coverage to codecov
-
-    - script: npm run build-and-pack
-      displayName: Build and pack
-
-    - script: npm run lint
-      displayName: Lint
-
-    - task: PublishBuildArtifacts@1
-      displayName: Publish artifacts
-      inputs:
-        pathtoPublish: ./release
-        artifactName: linux
-        artifactType: Container
-
-  # Mac os build
-  - phase: macOS
-    queue: Hosted macOS Preview
+  - job: MacOS
+    pool:
+      vmImage: xcode9-macos10.13
     steps:
-    - template: ./dependencies.yml
-    - script: npm config set python $(which python)
-      displayName: Set npm python2 path
-    - template: ./pyenv.yml
-    - script: |
-        set -e
-        node --version
-        npm config list
-        npm install -g npm@latest
-        npm --version
-        npm install
-        pip install -r python/requirements.txt
-      displayName: Install dependencies
+       - template: ./darwin/ci.yml
 
-    - script: npm run build-and-pack
-      displayName: Build and pack
-
-    - task: PublishBuildArtifacts@1
-      displayName: Publish artifacts
-      inputs:
-        pathtoPublish: ./release
-        artifactName: osx
-        artifactType: Container
-
-  - phase: Windows
-    queue: Hosted VS2017
+  - job: Windows
+    pool:
+      vmImage: vs2017-win2016
     steps:
-      - template: ./dependencies.yml
-      - task: UsePythonVersion@0
-        inputs:
-          versionSpec: '3.6.x'
-      - powershell: |
-          node --version
-          npm install -g npm
-          npm ci
-          pip install -r python/requirements.txt
-        displayName: Install dependencies
-
-      - powershell: npm run build-and-pack
-        displayName: Build and pack
-
-      - task: PublishBuildArtifacts@1
-        displayName: Publish artifacts
-        inputs:
-          pathtoPublish: ./release
-          artifactName: windows
-          artifactType: Container
+      - template: ./win/ci.yml

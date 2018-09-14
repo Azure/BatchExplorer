@@ -1,0 +1,9 @@
+steps:
+  - template: ./linux-dependencies.yml
+  - script: npm run build-and-pack
+    displayName: Build and pack
+  - script: npm run package linux-manifest
+    displayName: Create manifest
+  - template: ../common/publish-artifacts.yml
+    parameters:
+      folder: linux

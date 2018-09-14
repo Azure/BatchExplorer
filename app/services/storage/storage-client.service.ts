@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
 import { StorageKeys } from "app/models";
-import { BatchExplorerService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { ArmResourceUtils } from "app/utils";
 import { Observable, throwError } from "rxjs";
 import { first, flatMap, map, share } from "rxjs/operators";

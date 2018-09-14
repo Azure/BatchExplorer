@@ -1,11 +1,10 @@
 import { Injectable, NgZone, OnDestroy } from "@angular/core";
 import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
 import { ElectronRemote, NotificationService } from "@batch-flask/ui";
-import { BehaviorSubject, Observable, from } from "rxjs";
-
-import { BatchExplorerService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { AADService } from "client/core/aad";
 import { Constants } from "common";
+import { BehaviorSubject, Observable, from } from "rxjs";
 
 @Injectable()
 export class AdalService implements OnDestroy {

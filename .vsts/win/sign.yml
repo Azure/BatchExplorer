@@ -1,0 +1,50 @@
+parameters:
+  # Display name for the step
+  name: 'Code sign'
+  # Pattern to include
+  pattern: ''
+
+steps:
+  - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+    displayName: ${{ parameters.name }}
+    inputs:
+      ConnectedServiceName: 'ESRP CodeSign'
+      FolderPath: ./release
+      Pattern: ${{ parameters.pattern }}
+      UseMinimatch: true
+      signConfigType: inlineSignParams
+      inlineOperation: |
+        [
+          {
+              "keyCode": "CP-230012",
+              "operationSetCode": "SigntoolSign",
+              "parameters": [
+              {
+                  "parameterName": "OpusName",
+                  "parameterValue": "Microsoft"
+              },
+              {
+                  "parameterName": "OpusInfo",
+                  "parameterValue": "http://www.microsoft.com"
+              },
+              {
+                  "parameterName": "PageHash",
+                  "parameterValue": "/NPH"
+              },
+              {
+                  "parameterName": "TimeStamp",
+                  "parameterValue": "/t \"http://ts4096.gtm.microsoft.com/TSS/AuthenticodeTS\""
+              }
+              ],
+              "toolName": "sign",
+              "toolVersion": "1.0"
+          },
+          {
+              "keyCode": "CP-230012",
+              "operationSetCode": "SigntoolVerify",
+              "parameters": [ ],
+              "toolName": "sign",
+              "toolVersion": "1.0"
+          }
+        ]
+      SessionTimeout: 120

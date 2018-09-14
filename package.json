@@ -43,8 +43,8 @@
     "tslint": "node -r ts-node/register node_modules/tslint/bin/tslint -p tsconfig.json -c tslint.json \"app/**/*.ts\" \"src/**/*.ts\" \"test/**/*.ts\" \"./*.js\" \"config/**/*.js\" -t verbose",
     "stylelint": "stylelint --syntax scss \"app/**/*.scss\"",
     "lint": "npm run -s tslint && npm run -s stylelint",
-    "package": "electron-builder",
-    "publish": "npm run -s ts -- scripts/publish/publish.ts",
+    "package": "npm run -s ts scripts/package/package.ts",
+    "publish": "npm run -s ts scripts/publish/publish.ts",
     "build-and-pack": "npm run -s build:prod && npm run -s build-python && npm run -s package",
     "webpack": "node --trace-deprecation --max_old_space_size=4096 node_modules/webpack/bin/webpack.js",
     "webpack-dev-server": "node --trace-deprecation --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js"
@@ -139,6 +139,7 @@
     "@angular/platform-browser-dynamic": "6.1.6",
     "@angular/platform-server": "6.1.6",
     "@angular/router": "6.1.6",
+    "@azure/storage-blob": "^10.0.0-preview",
     "@tweenjs/tween.js": "^17.1.1",
     "azure-storage": "^2.10.1",
     "bunyan": "^1.8.4",

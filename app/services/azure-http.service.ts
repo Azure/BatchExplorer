@@ -9,7 +9,7 @@ import { Constants } from "common";
 import { Observable, throwError, timer } from "rxjs";
 import { catchError, flatMap, mergeMap, retryWhen, share } from "rxjs/operators";
 import { AdalService } from "./adal";
-import { BatchExplorerService } from "./batch-labs.service";
+import { BatchExplorerService } from "./batch-explorer.service";
 
 const apiVersionParams = "api-version";
 const apiVersion = Constants.ApiVersion.arm;

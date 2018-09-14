@@ -1,9 +1,8 @@
 import { Injectable } from "@angular/core";
-import { Observable, from } from "rxjs";
-
 import { log } from "@batch-flask/utils";
-import { BatchExplorerService } from "app/services/batch-labs.service";
 import { LocalFileStorage as NodeLocalFileStorage } from "client/core";
+import { Observable, from } from "rxjs";
+import { BatchExplorerService } from "./batch-explorer.service";
 
 /**
  * This service is used to read/write files to the user data folder.

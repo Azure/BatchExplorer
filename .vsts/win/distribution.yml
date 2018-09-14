@@ -1,0 +1,28 @@
+steps:
+  - template: ./win-dependencies.yml
+  - powershell: |
+      npm run build:prod
+      npm run build-python
+      npm run package win-exe
+    displayName: Build executable
+
+  - template: ./sign.yml
+    parameters:
+      name: "Sign executable and dll"
+      pattern: |
+        **/*.exe
+        **/*.dll
+        !**/python36.dll
+  - powershell: npm run package win-installer
+    displayName: Build installer
+
+  - template: ./sign.yml
+    parameters:
+      name: "Sign installer"
+      pattern: |
+        **/BatchExplorer*Setup*.exe
+  - script: npm run package win-manifest
+    displayName: Create manifest
+  - template: ../common/publish-artifacts.yml
+    parameters:
+      folder: windows

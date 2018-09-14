@@ -13,8 +13,8 @@ import { BatchExplorerApplication } from "./core/batch-explorer-application";
 function initAutoUpdate() {
     autoUpdater.allowPrerelease = true;
     autoUpdater.autoDownload = true;
+    autoUpdater.allowDowngrade = true;
     autoUpdater.logger = log;
-    autoUpdater.setFeedURL("https://batchlabsdist.blob.core.windows.net/releases");
 }
 
 function setupSingleInstance(batchExplorerApp: BatchExplorerApplication) {

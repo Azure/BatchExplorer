@@ -14,4 +14,5 @@ export interface Settings {
     "node-connect.default-username": string;
     "github-data.source.branch": string;
     "github-data.source.repo": string;
+    "update.channel": string;
 }

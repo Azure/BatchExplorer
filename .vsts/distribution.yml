@@ -1,0 +1,20 @@
+# This contains the steps used when building the app(Include signing)
+jobs:
+  - job: Linux
+    pool: Hosted Linux Preview
+    # pool:
+      # vmImage: ubuntu-16.04
+    steps:
+       - template: ./linux/distribution.yml
+
+  - job: MacOS
+    pool:
+      vmImage: xcode9-macos10.13
+    steps:
+       - template: ./darwin/distribution.yml
+
+  - job: Windows
+    pool:
+      vmImage: vs2017-win2016
+    steps:
+      - template: ./win/distribution.yml

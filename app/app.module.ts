@@ -93,6 +93,7 @@ import {
     TaskService,
     TenantDetailsService,
     ThemeService,
+    VersionService,
     VmSizeService,
 } from "./services";
 
@@ -186,6 +187,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         TaskService,
         TenantDetailsService,
         ThemeService,
+        VersionService,
         VmSizeService,
         PredefinedFormulaService,
         ...graphApiServices,

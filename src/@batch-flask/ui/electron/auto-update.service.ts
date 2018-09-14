@@ -14,6 +14,10 @@ export enum UpdateStatus {
 
 @Injectable()
 export class AutoUpdateService implements OnDestroy {
+
+    public set autoInstallOnAppQuit(value: boolean) {
+        this._autoUpdater.autoInstallOnAppQuit = value;
+    }
     /**
      * Will be set to true if there is an update available
      */
@@ -24,13 +28,22 @@ export class AutoUpdateService implements OnDestroy {
      */
     public updateReady: Observable<boolean>;
     public updateInfo: UpdateInfo = null;
+    public disabled: boolean = false;
     private _status = new BehaviorSubject(UpdateStatus.Checking);
     private _autoUpdater: AppUpdater;
     private _settingsSub: Subscription;
 
     constructor(batchFlaskSettings: BatchFlaskSettingsService, remote: ElectronRemote) {
         this._autoUpdater = remote.getCurrentWindow().autoUpdater;
-        this.status = this._status.asObservable();
+        this.status = this._status.pipe(
+            map((status) => {
+                if (this.disabled) {
+                    return UpdateStatus.NotAvailable;
+                } else {
+                    return status;
+                }
+            }),
+        );
         this.updateReady = this._status.pipe(map(x => x === UpdateStatus.Ready));
 
         this._autoUpdater.on("checking-for-update", (info) => {
@@ -64,15 +77,28 @@ export class AutoUpdateService implements OnDestroy {
     }
 
     public async checkForUpdates(): Promise<UpdateCheckResult | null> {
+        if (this.disabled) { return; }
         const info = await this._autoUpdater.checkForUpdates();
         return this._status.value === UpdateStatus.Ready ? info : null;
+    }
+
+    public disable() {
+        this.disabled = true;
+        this._status.next(UpdateStatus.NotAvailable);
     }
 
     public quitAndInstall() {
         return this._autoUpdater.quitAndInstall();
     }
 
-    public set autoInstallOnAppQuit(value: boolean) {
-        this._autoUpdater.autoInstallOnAppQuit = value;
+    /**
+     * Set the feed url and trigger a refresh
+     * @param url Url
+     */
+    public async setFeedUrl(url: string) {
+        const current = this._autoUpdater.getFeedURL();
+        if (current === url) { return; }
+        this._autoUpdater.setFeedURL(url);
+        return this.checkForUpdates();
     }
 }

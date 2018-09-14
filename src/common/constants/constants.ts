@@ -192,3 +192,11 @@ export const KnownQueryParameters = {
     assetContainer: "asset-container",
     assetPaths: "asset-paths",
 };
+
+const cdn = "https://batchexplorer.azureedge.net";
+
+export const AutoUpdateUrls = {
+    stable: `${cdn}/stable`,
+    insider: `${cdn}/insider`,
+    testing: `${cdn}/test`,
+};

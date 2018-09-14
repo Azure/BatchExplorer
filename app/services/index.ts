@@ -8,7 +8,7 @@ export * from "./app-insights";
 export * from "./autoscale-formula.service";
 export * from "./azure-http.service";
 export * from "./arm-http.service";
-export * from "./batch-labs.service";
+export * from "./batch-explorer.service";
 export * from "./cache-data.service";
 export * from "./compute.service";
 export * from "./github-data";
@@ -35,6 +35,7 @@ export * from "./node-connect";
 export * from "./themes";
 export * from "./tenant-details.service";
 export * from "./network";
+export * from "./version";
 
 // This needs to be last(as it does dynamic inject which problably have dependencies on above services)
 export * from "./command-service";

@@ -1,0 +1,9 @@
+steps:
+  - template: ./win-dependencies.yml
+
+  - powershell: npm run build-and-pack
+    displayName: Build and package
+
+  - template: ../common/publish-artifacts.yml
+    parameters:
+      folder: windows
