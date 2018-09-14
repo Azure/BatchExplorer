@@ -5,15 +5,16 @@ steps:
       npm run -s build-python
       npm run -s package darwin-app
       rm -rf ./release/mac/*.app
-      # cp ./release/*.zip ./release/keep/before-code-sign.zip
+      mkdir -rp ./release/keep
+      cp ./release/*.zip ./release/keep/before-code-sign.zip
     displayName: Build .app
 
   - template: ./sign.yml
   - script: |
       unzip ./release/BatchExplorer*.zip -d ./release/mac
       rm -f ./release/mac/*.pkg
-      rm -rf ./release/*.zip
-      # mv ./release/*.zip ./release/code-sign-results.zip
+      # rm -rf ./release/*.zip
+      mv ./release/*.zip ./release/code-sign-results.zip
       npm run -s package darwin-dmg
       rm -rf ./release/mac/*
     displayName: Build dmg
