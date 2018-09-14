@@ -1,1 +1,1 @@
-export * from "./version-channel.component";
+export * from "./version-type.component";

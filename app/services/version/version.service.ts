@@ -51,18 +51,35 @@ export class VersionService implements OnDestroy {
     }
 
     private _updateAutoUpdateChannel(channel: string | null) {
+        this._updateChannel.next(this._getAutoUpdateChannel(channel));
         // Don't try to set update url when in dev mode
-        this.autoUpdateService.setFeedUrl(this._getAutoUpdateChannel(channel));
+        this.autoUpdateService.setFeedUrl(this._getChannelUrl());
     }
 
-    private _getAutoUpdateChannel(channel: string | null) {
+    private _getChannelUrl() {
+        const type = this._updateChannel.value;
+        return Constants.AutoUpdateUrls[type] || Constants.AutoUpdateUrls.stable;
+    }
+
+    private _getAutoUpdateChannel(channel: string | null): VersionType {
         switch (channel) {
             case VersionType.Insider:
-                return Constants.AutoUpdateUrls.insider;
             case VersionType.Testing:
-                return Constants.AutoUpdateUrls.test;
+            case VersionType.Stable:
+                return channel;
             default:
-                return Constants.AutoUpdateUrls.stable;
+                return this._getDefaultChannel();
+        }
+    }
+
+    private _getDefaultChannel() {
+        switch (this.versionType) {
+            case VersionType.Stable:
+            case VersionType.Insider:
+            case VersionType.Testing:
+                return this.versionType;
+            default:
+                return VersionType.Stable;
         }
     }
 
