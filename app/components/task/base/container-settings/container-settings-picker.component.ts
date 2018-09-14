@@ -15,9 +15,8 @@ import { ContainerConfigurationDto, TaskContainerSettingsDto } from "app/models/
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => ContainerSettingsPickerComponent), multi: true },
     ],
 })
-export class ContainerSettingsPickerComponent implements ControlValueAccessor, OnChanges, OnDestroy {
+export class ContainerSettingsPickerComponent implements ControlValueAccessor, OnDestroy {
     @Input() public containerConfiguration: ContainerConfigurationDto = null;
-    @Input() public required: boolean = true;
     public containerSettings: FormGroup;
 
     private _propagateChange: (value: TaskContainerSettingsDto) => void = null;
@@ -37,12 +36,6 @@ export class ContainerSettingsPickerComponent implements ControlValueAccessor, O
         });
     }
 
-    public ngOnChanges(changes: SimpleChanges) {
-        if (changes.required && changes.required.currentValue !== changes.required.previousValue) {
-            const validators = changes.required.currentValue ? [Validators.required] : [];
-            this.containerSettings.get("imageName").setValidators(validators);
-        }
-    }
 
     public ngOnDestroy() {
         this._sub.unsubscribe();
