@@ -44,16 +44,16 @@ describe("VersionService", () => {
         });
 
         it("Returns stable when version is stable", () => {
-            version = "1.2.3-stable";
+            version = "125.2.3-stable";
             createService();
             expect(service.versionType).toEqual(VersionType.Stable);
-            version = "1.2.3-stable.234";
+            version = "0.2.3-stable.234";
             createService();
             expect(service.versionType).toEqual(VersionType.Stable);
         });
 
         it("Returns insider when version is stable", () => {
-            version = "1.2.3-insider";
+            version = "1.2.32-insider";
             createService();
             expect(service.versionType).toEqual(VersionType.Insider);
             version = "1.2.3-insider.234";
@@ -62,7 +62,7 @@ describe("VersionService", () => {
         });
 
         it("Returns Testing when version is stable", () => {
-            version = "1.2.3-testing";
+            version = "1.25.3-testing";
             createService();
             expect(service.versionType).toEqual(VersionType.Testing);
             version = "1.2.3-testing.234";

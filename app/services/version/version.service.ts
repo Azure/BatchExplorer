@@ -11,7 +11,7 @@ export enum VersionType {
     Dev = "dev",
 }
 
-const versionRegex = /\d\.\d\.\d\-([a-z]+)(\.\d+)?/;
+const versionRegex = /\d+\.\d+\.\d+\-([a-z]+)(\.\d+)?/;
 
 @Injectable()
 export class VersionService implements OnDestroy {
