@@ -5,10 +5,16 @@ let downloadLinkEls;
 let downloadLinks = {};
 let versionEl;
 
-const feedUrl = "https://batchlabsdist.blob.core.windows.net/releases";
+const feedUrls = {
+    stable: "https://batchexplorer.azureedge.net/stable",
+    insider: "https://batchexplorer.blob.core.windows.net/insider",
+}
+
+const feedUrl = feedUrls[buildType];
 
 function getLatest(source) {
-    const url = `${feedUrl}/${source}`;
+    const rand = Math.floor(Math.random() * 100000);
+    const url = `${feedUrl}/${source}?noCache=${rand}`;
     return fetch(url, { cache: "no-cache" }).then((res) => {
         return res.text();
     }).then(content => {
@@ -60,6 +66,40 @@ document.addEventListener("DOMContentLoaded", (event) => {
         linuxAppimage: document.getElementById("download-linux-appimage"),
     }
 
+    
+
+    if(buildType === "stable") {
+        getLinksOld(versionEl, downloadLinks);
+    } else {
+        getLinks(versionEl, downloadLinks);
+    }
+});
+
+function getLinks(versionEl, downloadLinks) {
+    getWindowsLatest().then((version) => {
+        versionEl.textContent = version;
+        downloadLinks["windowsInstaller"] = `${feedUrl}/${version}/BatchExplorer Setup ${version}.exe`
+        downloadLinks["windowsZip"] = `${feedUrl}/${version}/BatchExplorer-${version}-win.zip`
+        updateDownloadLinks()
+    });
+
+    getLinuxLatest().then((version) => {
+        versionEl.textContent = version;
+        downloadLinks["linuxDeb"] = `${feedUrl}/${version}/batch-explorer_${version}_amd64.deb`;
+        downloadLinks["linuxRpm"] = `${feedUrl}/${version}/batch-explorer-${version}.x86_64.rpm`;
+        downloadLinks["linuxAppimage"] = `${feedUrl}/${version}/batch-explorer-${version}-x86_64.AppImage`;
+        updateDownloadLinks()
+    });
+
+    getMacLatest().then((version) => {
+        versionEl.textContent = version;
+        downloadLinks["osxDmg"] = `${feedUrl}/${version}/BatchExplorer-${version}.dmg`;
+        downloadLinks["osxZip"] = `${feedUrl}/${version}/BatchExplorer-${version}-mac.zip`;
+        updateDownloadLinks()
+    });
+}
+
+function getLinksOld(versionEl, downloadLinks) {
     getWindowsLatest().then((version) => {
         versionEl.textContent = version;
         downloadLinks["windowsInstaller"] = `${feedUrl}/${version}/BatchExplorer Setup.exe`
@@ -81,5 +121,4 @@ document.addEventListener("DOMContentLoaded", (event) => {
         downloadLinks["osxZip"] = `${feedUrl}/${version}/BatchExplorer-osx.zip`;
         updateDownloadLinks()
     });
-
-});
+}

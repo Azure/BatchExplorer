@@ -146,6 +146,11 @@ a {
     color:grey;
 }
 
+.insider-builds-link  {
+    margin-top: 10px;
+    text-align: center;
+}
+
 .swimlane {
     padding: 6rem 0 6rem;
     min-height: 30rem;
@@ -195,4 +200,8 @@ footer .links li a {
 
 footer .links li:not(:last-child) {
     padding-right: 20px;
+}
+
+.warning {
+    color: orange;
 }

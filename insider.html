@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Batch Explorer - insider</title>
+    <meta name="viewport" content="initial-scale=.75">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/3.11.0/js-yaml.js" integrity="sha256-tXpwsPxJo9kMzr6AxcfMzlbqY6YahrPZO9GVquGU0YA=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/outdatedbrowser/outdatedbrowser.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="icon" href="assets/font-awesome/ico/favicon-flask.ico" sizes="16x16">
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script>
+        window.buildType = "insider";
+    </script>
+    <script src="index.js"></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-dark" style="background-color:#333333">
+        <span class="navbar-brand mb-0 h1"> <i class="fa fa-flask"></i> Batch Explorer insider</span>
+    </nav>
+    <div class="navbar navbar-light" style="display: block; background-color:#e3e3e3">
+        <div class="text-center">Latest insider version is <span id="batch-labs-version">Loading...</span></div>
+    </div>
+    <div class="jumbotron">
+        <div class="row">
+            <div style="width: 800px;margin: auto">
+                <h1 class="text-center">Batch Explorer insider</h1>
+                <h4 class="text-center">Get the latest release each day.</h4>
+                <p class="text-center warning">Insiders has the most recent code pushes and may lead to the occasional broken build.</p>
+                <p class="text-center warning">Use at your own risk.</p>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-5 col-lg-12 text-center">
+                        <a
+                            class="btn btn-link" 
+                            id="primary-download-btn">
+                            Download
+                        </a>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-7 col-lg-12 text-center">
+                        <a class="btn btn-success btn-link" 
+                            style="background-color:gray !important; border-color: gray !important;"
+                            href="https://github.com/Azure/BatchExplorer">
+                            View on GitHub
+                        </a>
+                    </div>
+                </div>
+                <p class="text-center" style="font-size: small; padding-top:8px; color:grey">
+                    By using Batch Explorer, you agree to its <a href="EULA.html" >license</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="download-content">
+        <div class="downloads">
+            <div class="os-download">
+                <div class="type">
+                    <i class="fa fa-windows"></i>
+                </div>
+                <a
+                    class="btn btn-success btn-link os-download-btn" 
+                    id="download-windows-installer-btn">
+                    Windows
+                </a>
+                <div class="alternate-downloads">
+                    <span><a href="#" id="download-windows-installer">Installer</a> | <a href="#" id="download-windows-zip">zip</a></span>
+                </div>
+            </div>
+
+            <div class="os-download">
+                <div class="type">
+                    <i class="fa fa-apple"></i>
+                </div>
+                <a 
+                    class="btn btn-success btn-link btn-link os-download-btn"
+                    id="download-osx-app-btn">
+                        OSX
+                </a>
+                <div class="alternate-downloads">
+                    <span><a href="#" id="download-osx-dmg">dmg</a></span>
+                    | <span><a href="#" id="download-osx-zip">zip</a></span>
+                </div>
+                    
+            </div>
+
+            <div class="os-download">
+                <div class="type">
+                    <i class="fa fa-linux"></i>
+                </div>
+                <a class="btn btn-success btn-link btn-link os-download-btn" 
+                    id="download-linux-deb-btn">
+                        Linux
+                </a>
+                <div class="alternate-downloads">
+                    <span><a href="#" id="download-linux-deb">deb</a> 
+                        | <a href="#" id="download-linux-rpm">rpm</a> 
+                        | <a href="#" id="download-linux-appimage">AppImage</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                    <div class="left col-md-8">
+                            <ul class="links">
+                                <li>
+                                    <span class="message">Hello from Seattle.</span>
+                                </li>
+                                <li>
+                                    <a 
+                                        class="github-button" 
+                                        href="https://github.com/Azure/BatchExplorer" 
+                                        data-show-count="true"
+                                        data-icon="octicon-star"
+                                        aria-label="Star Azure/BatchExplorer on GitHub">Star
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                <div class="right col-md-4">
+                        <ul class="links">
+                            <li><a id="footer-issues-link" href="https://github.com/Azure/BatchExplorer/issues">Issues</a></li>
+                            <li><a id="footer-license-link" href="EULA.html">License</a></li>
+                        </ul>
+                    </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
