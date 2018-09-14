@@ -1,8 +1,9 @@
 import { Injectable, OnDestroy } from "@angular/core";
+import { ServerError } from "@batch-flask/core";
 import { LOCAL_BATCH_ACCOUNT_PREFIX, LocalBatchAccount } from "app/models";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
-import { filter, map, take } from "rxjs/operators";
+import { BehaviorSubject, Observable, throwError } from "rxjs";
+import { filter, flatMap, map, take } from "rxjs/operators";
 import { LocalFileStorage } from "../local-file-storage.service";
 
 export const LOCAL_BATCH_ACCOUNT_KEY = "local-batch-accounts";
@@ -43,6 +44,14 @@ export class LocalBatchAccountService implements OnDestroy {
         );
     }
 
+    public exists(id: string): Observable<boolean> {
+        return this.accounts.pipe(
+            take(1),
+            map(accounts => accounts.find(x => x.id === id)),
+            map(x => Boolean(x)),
+        );
+    }
+
     public getNameFromId(id: string): string {
         const regex = /https:\/\/([0-9a-zA-Z-]+)\.([0-9a-zA-Z-]+)\.batch\.azure\.com/;
         const match = regex.exec(id);
@@ -54,10 +63,23 @@ export class LocalBatchAccountService implements OnDestroy {
         return match[1];
     }
 
-    public create(account: LocalBatchAccount) {
-        const newAccounts = this._accounts.value.push(account);
-        this._accounts.next(List(newAccounts));
-        return this._save();
+    public create(account: LocalBatchAccount): Observable<any> {
+        return this.exists(account.id).pipe(
+            flatMap((exists) => {
+                if (exists) {
+                    return throwError(new ServerError({
+                        status: 400,
+                        code: "AccountAlreadyExist",
+                        statusText: "Account already exist",
+                        message: "Batch account with this url already exists",
+                    }));
+                }
+                const newAccounts = this._accounts.value.push(account);
+                this._accounts.next(List(newAccounts));
+                return this._save();
+            }),
+        );
+
     }
 
     public delete(id: string) {
