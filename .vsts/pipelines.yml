@@ -23,7 +23,7 @@ jobs:
     displayName: Register dependencies
     pool:
       vmImage: vs2017-win2016
-
+    condition: ne(variables['Build.Reason'], 'PullRequest')
     steps:
       - template: ./dependencies.yml
       - script: npm ci
