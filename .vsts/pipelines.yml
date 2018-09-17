@@ -18,3 +18,17 @@ jobs:
       vmImage: vs2017-win2016
     steps:
       - template: ./win/ci.yml
+
+  - job: RegisterDependencies
+    displayName: Register dependencies
+    pool:
+      vmImage: vs2017-win2016
+    condition: ne(variables['Build.Reason'], 'PullRequest')
+    steps:
+      - template: ./dependencies.yml
+      - script: npm ci
+      - task: ms.vss-governance-buildtask.governance-build-task-component-detection.ComponentGovernanceComponentDetection@0
+        displayName: 'Component Detection'
+        inputs:
+          governanceProduct: '395dd579-66b8-e811-af11-00155d7ffd9f'
+
