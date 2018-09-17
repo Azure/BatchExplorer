@@ -19,7 +19,8 @@ jobs:
     steps:
       - template: ./win/ci.yml
 
-  - job: Register dependencies
+  - job: RegisterDependencies
+    displayName: Register dependencies
     pool:
       vmImage: vs2017-win2016
 
