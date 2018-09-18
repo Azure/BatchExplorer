@@ -9,7 +9,7 @@ export interface ExceptionTelemetry extends Telemetry {
 
 export interface EventTelemetry extends Telemetry {
     name: string;
-    measurements: {
+    measurements?: {
         [key: string]: any,
     };
 }

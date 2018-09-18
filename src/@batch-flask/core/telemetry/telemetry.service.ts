@@ -2,24 +2,24 @@ import { Inject, Injectable, InjectionToken } from "@angular/core";
 import { EventTelemetry, ExceptionTelemetry, MetricTelemetry } from "./telemetry.model";
 
 export interface TelemetryUploader {
+    init(enabled: boolean);
+
     trackException(exception: ExceptionTelemetry);
     trackEvent(event: EventTelemetry);
     trackMetric(event: MetricTelemetry);
 }
 
-const TELEMETRY_UPLOADER = new InjectionToken("TELEMETRY_UPLOADER");
+export const TELEMETRY_UPLOADER = new InjectionToken("TELEMETRY_UPLOADER");
 
 @Injectable()
 export class TelemetryService {
-    private _enable = true;
+    private _enable = false;
+
     constructor(@Inject(TELEMETRY_UPLOADER) private _uploader: TelemetryUploader) { }
 
-    public disable() {
-        this._enable = false;
-    }
-
-    public enable() {
-        this._enable = true;
+    public init(enabled: boolean) {
+        this._enable = enabled;
+        this._uploader.init(enabled);
     }
 
     public trackError(error: Error) {

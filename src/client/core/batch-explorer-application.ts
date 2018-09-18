@@ -1,10 +1,5 @@
-import * as commander from "commander";
-import { app, dialog, ipcMain, session } from "electron";
-import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
-import * as os from "os";
-
 import { Inject, Injectable, InjectionToken, Injector } from "@angular/core";
-import { LocaleService, TranslationsLoaderService } from "@batch-flask/core";
+import { LocaleService, TelemetryService, TranslationsLoaderService } from "@batch-flask/core";
 import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
@@ -13,9 +8,13 @@ import { setMenu } from "client/menu";
 import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-configuration-window";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { ProxySettingsManager } from "client/proxy/proxy-settings";
+import * as commander from "commander";
 import { BatchExplorerLink, Constants, Deferred } from "common";
 import { IpcEvent } from "common/constants";
+import { app, dialog, ipcMain, session } from "electron";
+import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import { ProxyCredentials, ProxySettings } from "get-proxy-settings";
+import * as os from "os";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants as ClientConstants } from "../client-constants";
 import { MainWindow, WindowState } from "../main-window";
@@ -60,6 +59,7 @@ export class BatchExplorerApplication {
         public localeService: LocaleService,
         private localStorage: LocalDataStore,
         private injector: Injector,
+        private telemetryService: TelemetryService,
         private ipcMain: BlIpcMain) {
         this.state = this._state.asObservable();
 
@@ -71,6 +71,8 @@ export class BatchExplorerApplication {
     }
 
     public async init() {
+        await this._initTelemetry();
+
         this._initializer = this.injector.get(BatchExplorerInitializer);
         this.aadService = this.injector.get(AADService);
         this.proxySettings = this.injector.get(ProxySettingsManager);
@@ -337,5 +339,18 @@ export class BatchExplorerApplication {
         if (initialEnv in SupportedEnvironments) {
             this._azureEnvironment.next(SupportedEnvironments[initialEnv]);
         }
+    }
+
+    private async _initTelemetry() {
+        const userTelemetryEnabled = await this.localStorage.getItem(Constants.localStorageKey.telemetryEnabled)
+            || true;
+        // const dev = ClientConstants.isDev;
+        const dev = false;
+        const telemetryEnabled = userTelemetryEnabled && !dev;
+        this.telemetryService.init(telemetryEnabled);
+
+        this.telemetryService.trackEvent({
+            name: "Application start",
+        });
     }
 }

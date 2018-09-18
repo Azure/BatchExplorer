@@ -77,6 +77,11 @@ export const localStorageKey = {
      * Last selected storage account
      */
     lastStorageAccount: "last_storage_account",
+
+    /**
+     * Telemetry enabled
+     */
+    telemetryEnabled: "telemetry_enabled",
 };
 
 export const ApiVersion = {
