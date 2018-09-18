@@ -28,6 +28,8 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
             .setAutoDependencyCorrelation(false)
             .start();
         this._client = appinsights.defaultClient;
+
+        // Prevent application insights from recording the device name
         this._client.context.tags[this._client.context.keys.cloudRoleInstance] = null;
     }
 

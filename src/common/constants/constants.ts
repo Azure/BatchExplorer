@@ -205,3 +205,10 @@ export const AutoUpdateUrls = {
     insider: `${cdn}/insider`,
     testing: `${cdn}/test`,
 };
+
+/**
+ * All telemetry event should be here to keep track of it
+ */
+export const TelemetryEvents = {
+    applicationStart: "Application start",
+};

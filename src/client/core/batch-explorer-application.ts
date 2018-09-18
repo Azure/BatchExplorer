@@ -350,7 +350,7 @@ export class BatchExplorerApplication {
         this.telemetryService.init(telemetryEnabled);
 
         this.telemetryService.trackEvent({
-            name: "Application start",
+            name: Constants.TelemetryEvents.applicationStart,
         });
     }
 }
