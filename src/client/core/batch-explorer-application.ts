@@ -1,7 +1,7 @@
 import { Inject, Injectable, InjectionToken, Injector } from "@angular/core";
 import { LocaleService, TelemetryService, TranslationsLoaderService } from "@batch-flask/core";
 import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
-import { log } from "@batch-flask/utils";
+import { exists, log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { LocalDataStore } from "client/core/local-data-store";
 import { setMenu } from "client/menu";
@@ -44,6 +44,7 @@ export class BatchExplorerApplication {
     public aadService: AADService;
     public state: Observable<BatchExplorerState>;
     public proxySettings: ProxySettingsManager;
+    public telemetryEnabled: boolean;
 
     public get azureEnvironment(): AzureEnvironment { return this._azureEnvironment.value; }
     public azureEnvironmentObs: Observable<AzureEnvironment>;
@@ -251,6 +252,22 @@ export class BatchExplorerApplication {
         return app.getVersion();
     }
 
+    public enableTelemetry() {
+        this.telemetryEnabled = true;
+        this.localStorage.setItem(Constants.localStorageKey.telemetryEnabled, true);
+        this.restart();
+    }
+
+    /**
+     * Disable telemetry and save the setting. Then restart the application
+     */
+    public disableTelemetry() {
+        this.telemetryEnabled = false;
+        this.telemetryService.trackEvent({ name: Constants.TelemetryEvents.disableTelemetry });
+        this.localStorage.setItem(Constants.localStorageKey.telemetryEnabled, false);
+        this.restart();
+    }
+
     private _setupProcessEvents() {
         ipcMain.on("reload", () => {
             // Destroy window and error window if applicable
@@ -342,12 +359,12 @@ export class BatchExplorerApplication {
     }
 
     private async _initTelemetry() {
-        const userTelemetryEnabled = await this.localStorage.getItem(Constants.localStorageKey.telemetryEnabled)
-            || true;
+        const userSetting = await this.localStorage.getItem(Constants.localStorageKey.telemetryEnabled);
+        const userTelemetryEnabled = exists(userSetting) ? userSetting : true;
         // const dev = ClientConstants.isDev;
         const dev = false;
-        const telemetryEnabled = userTelemetryEnabled && !dev;
-        this.telemetryService.init(telemetryEnabled);
+        this.telemetryEnabled = userTelemetryEnabled && !dev;
+        this.telemetryService.init(this.telemetryEnabled);
 
         this.telemetryService.trackEvent({
             name: Constants.TelemetryEvents.applicationStart,

@@ -22,6 +22,27 @@ function getEditMenu(app: BatchExplorerApplication): MenuItemConstructorOptions 
                     app.proxySettings.configureManualy();
                 },
             },
+            {
+                label: "Telemetry settings",
+                submenu: [
+                    {
+                        label: "Enabled (Restart required)",
+                        type: "radio",
+                        checked: app.telemetryEnabled,
+                        click: () => {
+                            app.enableTelemetry();
+                        },
+                    },
+                    {
+                        label: "Disabled (Restart required)",
+                        type: "radio",
+                        checked: !app.telemetryEnabled,
+                        click: () => {
+                            app.disableTelemetry();
+                        },
+                    },
+                ],
+            },
         ],
     };
 }
