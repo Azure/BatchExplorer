@@ -57,13 +57,14 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
         this._client.trackMetric(event);
     }
 
-    public flush(): Promise<void> {
+    public flush(isAppCrashing?: boolean): Promise<void> {
         if (!this._client) {
             this._logUseTooSoon();
             return Promise.resolve();
         }
         return new Promise<void>((resolve) => {
             return this._client.flush({
+                isAppCrashing: true,
                 callback: () => resolve(),
             });
         });

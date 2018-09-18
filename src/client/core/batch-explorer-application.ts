@@ -276,10 +276,14 @@ export class BatchExplorerApplication {
         process.on("uncaughtException" as any, (error: Error) => {
             log.error("There was a uncaught exception", error);
             this.recoverWindow.createWithError(error.message);
+            this.telemetryService.trackError(error);
+            this.telemetryService.flush(true);
         });
 
         process.on("unhandledRejection", r => {
             log.error("Unhandled promise error:", r);
+            this.telemetryService.trackError(r);
+            this.telemetryService.flush(true);
         });
         app.on("window-all-closed", () => {
             // Required or electron will close when closing last open window before next one open

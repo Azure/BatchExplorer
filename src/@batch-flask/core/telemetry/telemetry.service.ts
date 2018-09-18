@@ -8,7 +8,7 @@ export interface TelemetryUploader {
     trackEvent(event: EventTelemetry);
     trackMetric(event: MetricTelemetry);
 
-    flush(): Promise<void>;
+    flush(isAppCrashing?: boolean): Promise<void>;
 }
 
 export const TELEMETRY_UPLOADER = new InjectionToken("TELEMETRY_UPLOADER");
@@ -45,7 +45,12 @@ export class TelemetryService {
         this._uploader.trackMetric(event);
     }
 
-    public flush(): Promise<void> {
-        return this._uploader.flush();
+    /**
+     *
+     * @param isAppCrashing If the app is about to crash and will close before flushing is done.
+     * This make sure the data is saved to disk and will be uploaded on next opening
+     */
+    public flush(isAppCrashing?: boolean): Promise<void> {
+        return this._uploader.flush(isAppCrashing);
     }
 }
