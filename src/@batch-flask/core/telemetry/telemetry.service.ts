@@ -7,12 +7,15 @@ export interface TelemetryUploader {
     trackException(exception: ExceptionTelemetry);
     trackEvent(event: EventTelemetry);
     trackMetric(event: MetricTelemetry);
+
+    flush();
 }
 
 export const TELEMETRY_UPLOADER = new InjectionToken("TELEMETRY_UPLOADER");
 
 @Injectable()
 export class TelemetryService {
+
     private _enable = false;
 
     constructor(@Inject(TELEMETRY_UPLOADER) private _uploader: TelemetryUploader) { }
@@ -40,5 +43,9 @@ export class TelemetryService {
     public trackMetric(event: MetricTelemetry) {
         if (!this._enable) { return; }
         this._uploader.trackMetric(event);
+    }
+
+    public flush() {
+        this._uploader.flush();
     }
 }

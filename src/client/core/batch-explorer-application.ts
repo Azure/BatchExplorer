@@ -1,9 +1,10 @@
 import { Inject, Injectable, InjectionToken, Injector } from "@angular/core";
 import { LocaleService, TelemetryService, TranslationsLoaderService } from "@batch-flask/core";
 import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
-import { exists, log } from "@batch-flask/utils";
+import { log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { LocalDataStore } from "client/core/local-data-store";
+import { TelemetryManager } from "client/core/telemetry/telemetry-manager";
 import { setMenu } from "client/menu";
 import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-configuration-window";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
@@ -44,7 +45,6 @@ export class BatchExplorerApplication {
     public aadService: AADService;
     public state: Observable<BatchExplorerState>;
     public proxySettings: ProxySettingsManager;
-    public telemetryEnabled: boolean;
 
     public get azureEnvironment(): AzureEnvironment { return this._azureEnvironment.value; }
     public azureEnvironmentObs: Observable<AzureEnvironment>;
@@ -61,6 +61,7 @@ export class BatchExplorerApplication {
         private localStorage: LocalDataStore,
         private injector: Injector,
         private telemetryService: TelemetryService,
+        private telemetryManager: TelemetryManager,
         private ipcMain: BlIpcMain) {
         this.state = this._state.asObservable();
 
@@ -72,7 +73,9 @@ export class BatchExplorerApplication {
     }
 
     public async init() {
-        await this._initTelemetry();
+        await this.telemetryManager.init();
+
+        this.telemetryService.trackEvent({ name: Constants.TelemetryEvents.applicationStart });
 
         this._initializer = this.injector.get(BatchExplorerInitializer);
         this.aadService = this.injector.get(AADService);
@@ -252,22 +255,6 @@ export class BatchExplorerApplication {
         return app.getVersion();
     }
 
-    public enableTelemetry() {
-        this.telemetryEnabled = true;
-        this.localStorage.setItem(Constants.localStorageKey.telemetryEnabled, true);
-        this.restart();
-    }
-
-    /**
-     * Disable telemetry and save the setting. Then restart the application
-     */
-    public disableTelemetry() {
-        this.telemetryEnabled = false;
-        this.telemetryService.trackEvent({ name: Constants.TelemetryEvents.disableTelemetry });
-        this.localStorage.setItem(Constants.localStorageKey.telemetryEnabled, false);
-        this.restart();
-    }
-
     private _setupProcessEvents() {
         ipcMain.on("reload", () => {
             // Destroy window and error window if applicable
@@ -356,18 +343,5 @@ export class BatchExplorerApplication {
         if (initialEnv in SupportedEnvironments) {
             this._azureEnvironment.next(SupportedEnvironments[initialEnv]);
         }
-    }
-
-    private async _initTelemetry() {
-        const userSetting = await this.localStorage.getItem(Constants.localStorageKey.telemetryEnabled);
-        const userTelemetryEnabled = exists(userSetting) ? userSetting : true;
-        // const dev = ClientConstants.isDev;
-        const dev = false;
-        this.telemetryEnabled = userTelemetryEnabled && !dev;
-        this.telemetryService.init(this.telemetryEnabled);
-
-        this.telemetryService.trackEvent({
-            name: Constants.TelemetryEvents.applicationStart,
-        });
     }
 }

@@ -57,6 +57,14 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
         this._client.trackMetric(event);
     }
 
+    public flush() {
+        if (!this._client) {
+            this._logUseTooSoon();
+            return;
+        }
+        this._client.flush();
+    }
+
     /**
      * This is to get feedback in case some telemtry is trying to be used before service is initialize
      * and knows to enable or not telemetry.
