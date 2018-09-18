@@ -218,11 +218,6 @@ export class BatchExplorerApplication {
         return autoUpdater.checkForUpdates();
     }
 
-    public restart() {
-        app.relaunch();
-        app.exit();
-    }
-
     public askUserForProxyCredentials(): Promise<ProxyCredentials> {
         log.warn("Asking for proxy credentials");
         if (this._currentlyAskingForCredentials) { return this._currentlyAskingForCredentials; }

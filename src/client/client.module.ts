@@ -6,6 +6,7 @@ import { OSService } from "@batch-flask/ui/electron/os.service";
 import { ClientLocaleService } from "client/core";
 import { AADService } from "client/core/aad";
 import { BatchExplorerInitializer } from "client/core/batch-explorer-initializer";
+import { BatchExplorerProcess } from "client/core/batch-explorer-process";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { FileSystem } from "client/core/fs";
 import { ClientTranslationsLoaderService } from "client/core/i18n";
@@ -48,6 +49,7 @@ export function initializeServices(injector) {
         { provide: TranslationsLoaderService, useClass: ClientTranslationsLoaderService },
         DevTranslationsLoader,
         BatchExplorerApplication,
+        BatchExplorerProcess,
         BatchExplorerInitializer,
         ProxySettingsManager,
         LocalDataStore,

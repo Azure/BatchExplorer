@@ -76,3 +76,6 @@ export const Constants = {
     pythonServerPort,
     version: packageConfig.version,
 };
+
+// tslint:disable-next-line:variable-name
+export const ClientConstants = Constants;

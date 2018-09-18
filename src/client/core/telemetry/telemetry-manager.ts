@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
 import { TelemetryService } from "@batch-flask/core";
 import { exists } from "@batch-flask/utils";
+import { ClientConstants } from "client/client-constants";
+import { BatchExplorerProcess } from "client/core/batch-explorer-process";
 import { LocalDataStore } from "client/core/local-data-store";
 import { Constants } from "common";
-import { app } from "electron";
 
 @Injectable()
 export class TelemetryManager {
@@ -15,44 +16,43 @@ export class TelemetryManager {
     /**
      * Event if the user has telemetry enabled, we disable telemtry in the dev version.
      */
-    public telemetryEnabled: boolean;
+    public get telemetryEnabled() {
+        const dev = ClientConstants.isDev;
+        // const dev = false;
+        return this.userTelemetryEnabled && !dev;
+    }
 
-    constructor(private telemetryService: TelemetryService, private dataStore: LocalDataStore) {
+    constructor(
+        private telemetryService: TelemetryService,
+        private dataStore: LocalDataStore,
+        private batchExplorerProcess: BatchExplorerProcess) {
 
     }
 
     public async init() {
         await this._loadUserSettings();
+        this.telemetryService.init(this.telemetryEnabled);
     }
 
     public enableTelemetry() {
-        this.telemetryEnabled = true;
+        this.userTelemetryEnabled = true;
         this.dataStore.setItem(Constants.localStorageKey.telemetryEnabled, true);
-        this._restart();
+        this.batchExplorerProcess.restart();
     }
 
     /**
      * Disable telemetry and save the setting. Then restart the application
      */
     public async disableTelemetry() {
-        this.telemetryEnabled = false;
+        this.userTelemetryEnabled = false;
         this.telemetryService.trackEvent({ name: Constants.TelemetryEvents.disableTelemetry });
         await this.telemetryService.flush();
         this.dataStore.setItem(Constants.localStorageKey.telemetryEnabled, false);
-        this._restart();
-    }
-
-    private _restart() {
-        app.relaunch();
-        app.quit();
+        this.batchExplorerProcess.restart();
     }
 
     private async _loadUserSettings() {
         const userSetting = await this.dataStore.getItem<boolean>(Constants.localStorageKey.telemetryEnabled);
         this.userTelemetryEnabled = exists(userSetting) ? userSetting : true;
-        // const dev = ClientConstants.isDev;
-        const dev = false;
-        this.telemetryEnabled = this.userTelemetryEnabled && !dev;
-        this.telemetryService.init(this.telemetryEnabled);
     }
 }

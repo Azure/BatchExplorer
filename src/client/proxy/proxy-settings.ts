@@ -5,6 +5,7 @@ import {
 import { Inject, Injectable, forwardRef } from "@angular/core";
 import { log } from "@batch-flask/utils";
 import { BatchExplorerApplication } from "client/core/batch-explorer-application";
+import { BatchExplorerProcess } from "client/core/batch-explorer-process";
 import { LocalDataStore } from "client/core/local-data-store";
 import { Constants } from "common";
 import { BehaviorSubject } from "rxjs";
@@ -25,6 +26,7 @@ export class ProxySettingsManager {
     private _settings = new BehaviorSubject<ProxySettingConfiguration>(undefined);
     constructor(
         @Inject(forwardRef(() => BatchExplorerApplication)) private batchExplorerApp: BatchExplorerApplication,
+        private batchExplorerProcess: BatchExplorerProcess,
         private storage: LocalDataStore) {
     }
 
@@ -48,7 +50,7 @@ export class ProxySettingsManager {
             credentials: null,
         });
         await this._saveProxySettings();
-        this.batchExplorerApp.restart();
+        this.batchExplorerProcess.restart();
         return settings;
     }
 
