@@ -5,7 +5,7 @@ import * as path from "path";
 /**
  * Root of BatchExplorer(This is relative to where this file is when in the build folder)
  */
-const root = path.join(__dirname, "../..");
+const root = path.resolve(path.join(__dirname, "../.."));
 
 const portrange = 45032;
 function getPort(port = portrange): Promise<number> {

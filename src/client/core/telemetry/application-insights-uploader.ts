@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { EventTelemetry, ExceptionTelemetry, MetricTelemetry, TelemetryUploader } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import * as appinsights from "applicationinsights";
+import { ClientConstants } from "client/client-constants";
 
 const APPLICATION_INSIGHTS_KEY = "a7a73aa4-a7b0-4681-9612-f7191189d5b8";
 
@@ -38,6 +39,11 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
             this._logUseTooSoon();
             return;
         }
+
+        this._client.trackException(exception);
+        if (exception.exception) {
+            exception.exception = this._sanitizeError(exception.exception);
+        }
         this._client.trackException(exception);
     }
 
@@ -64,7 +70,7 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
         }
         return new Promise<void>((resolve) => {
             return this._client.flush({
-                isAppCrashing: true,
+                isAppCrashing: isAppCrashing,
                 callback: () => resolve(),
             });
         });
@@ -76,5 +82,18 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
      */
     private _logUseTooSoon() {
         log.error("Trying to trace telemetry before the telemetry service was initialized.");
+    }
+
+    private _sanitizeError(error: Error): any {
+        error.message = null;
+        if (error.stack) {
+            error.stack = this._sanitizeStack(error.stack);
+        }
+        return error;
+    }
+
+    private _sanitizeStack(stack: string) {
+        console.log("ROo", ClientConstants.root);
+        return stack.replace(new RegExp(ClientConstants.root, "gi"), "[install]");
     }
 }

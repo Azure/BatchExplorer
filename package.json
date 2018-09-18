@@ -24,7 +24,7 @@
     "test-app-watch:time": "cross-env DEBUG_TIME=1 npm run -s test-app-watch",
     "test-browser": "npm run -s test-app",
     "test-browser-watch": "npm run -s test-app-watch",
-    "test-client": "cross-env  NODE_ENV=test node test/client/run-jasmine.js",
+    "test-client": "cross-env  NODE_ENV=test istanbul cover test/client/run-jasmine.js",
     "test-client-watch": "npm run -s test-client -- --watch",
     "build-client": " tsc -p tsconfig.node.json",
     "build-app": "npm run webpack -- --profile --colors --display-error-details --display-cached",
