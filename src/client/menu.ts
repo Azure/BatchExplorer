@@ -1,9 +1,10 @@
 import { SupportedEnvironments } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
 import { BatchExplorerApplication } from "client/core";
+import { TelemetryManager } from "client/core/telemetry/telemetry-manager";
 import { BrowserWindow, Menu, MenuItemConstructorOptions, app } from "electron";
 
-function getEditMenu(app: BatchExplorerApplication): MenuItemConstructorOptions {
+function getEditMenu(app: BatchExplorerApplication, telemetryManager: TelemetryManager): MenuItemConstructorOptions {
     return {
         label: "Edit",
         submenu: [
@@ -28,17 +29,17 @@ function getEditMenu(app: BatchExplorerApplication): MenuItemConstructorOptions 
                     {
                         label: "Enabled (Restart required)",
                         type: "radio",
-                        checked: app.telemetryEnabled,
+                        checked: telemetryManager.telemetryEnabled,
                         click: () => {
-                            app.enableTelemetry();
+                            telemetryManager.enableTelemetry();
                         },
                     },
                     {
                         label: "Disabled (Restart required)",
                         type: "radio",
-                        checked: !app.telemetryEnabled,
+                        checked: !telemetryManager.telemetryEnabled,
                         click: () => {
-                            app.disableTelemetry();
+                            telemetryManager.disableTelemetry();
                         },
                     },
                 ],
@@ -171,9 +172,9 @@ function setupOSXSpecificMenu(template) {
     }
 }
 
-export function setMenu(app: BatchExplorerApplication) {
+export function setMenu(app: BatchExplorerApplication, telemetryManager: TelemetryManager) {
     const template = [
-        getEditMenu(app),
+        getEditMenu(app, telemetryManager),
         viewMenu,
         getWindowMenu(app),
         environmentMenu(app),

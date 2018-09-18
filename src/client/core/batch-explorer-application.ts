@@ -92,7 +92,7 @@ export class BatchExplorerApplication {
      * Start the app by showing the splash screen
      */
     public async start() {
-        setMenu(this);
+        setMenu(this, this.telemetryManager);
         const appReady = new Deferred();
         const loggedIn = new Deferred();
         this.pythonServer.start();
