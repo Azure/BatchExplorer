@@ -141,6 +141,7 @@
     "@angular/router": "6.1.6",
     "@azure/storage-blob": "^10.0.0-preview",
     "@tweenjs/tween.js": "^17.1.1",
+    "applicationinsights": "^1.0.4",
     "azure-storage": "^2.10.1",
     "bunyan": "^1.8.4",
     "chart.js": "^2.7.2",
