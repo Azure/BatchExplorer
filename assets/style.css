@@ -205,3 +205,10 @@ footer .links li:not(:last-child) {
 .warning {
     color: orange;
 }
+
+.license-and-privacy {
+    padding: 30px;
+    margin: auto;
+    text-align: center;
+    width: 800px;
+}
