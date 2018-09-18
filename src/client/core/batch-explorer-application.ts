@@ -76,7 +76,6 @@ export class BatchExplorerApplication {
         await this.telemetryManager.init();
 
         this.telemetryService.trackEvent({ name: Constants.TelemetryEvents.applicationStart });
-        this.telemetryService.trackException({ exception: new Error("Test error nowy") });
 
         this._initializer = this.injector.get(BatchExplorerInitializer);
         this.aadService = this.injector.get(AADService);

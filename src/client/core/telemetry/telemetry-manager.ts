@@ -34,9 +34,9 @@ export class TelemetryManager {
         this.telemetryService.init(this.telemetryEnabled);
     }
 
-    public enableTelemetry() {
+    public async enableTelemetry() {
         this.userTelemetryEnabled = true;
-        this.dataStore.setItem(Constants.localStorageKey.telemetryEnabled, true);
+        await this.dataStore.setItem(Constants.localStorageKey.telemetryEnabled, true);
         this.batchExplorerProcess.restart();
     }
 
@@ -47,7 +47,7 @@ export class TelemetryManager {
         this.userTelemetryEnabled = false;
         this.telemetryService.trackEvent({ name: Constants.TelemetryEvents.disableTelemetry });
         await this.telemetryService.flush();
-        this.dataStore.setItem(Constants.localStorageKey.telemetryEnabled, false);
+        await this.dataStore.setItem(Constants.localStorageKey.telemetryEnabled, false);
         this.batchExplorerProcess.restart();
     }
 
