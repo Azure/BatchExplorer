@@ -40,7 +40,6 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
             return;
         }
 
-        this._client.trackException(exception);
         if (exception.exception) {
             exception.exception = this._sanitizeError(exception.exception);
         }
@@ -85,7 +84,8 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
     }
 
     private _sanitizeError(error: Error): any {
-        error.message = null;
+        // Message could contain user information
+        error.message = "[sanitized]";
         if (error.stack) {
             error.stack = this._sanitizeStack(error.stack);
         }
@@ -93,7 +93,11 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
     }
 
     private _sanitizeStack(stack: string) {
-        console.log("ROo", ClientConstants.root);
-        return stack.replace(new RegExp(ClientConstants.root, "gi"), "[install]");
+        const root = ClientConstants.root;
+        return stack.replace(new RegExp(this._escapeRegExp(root), "gi"), "[install]");
     }
+
+    private _escapeRegExp(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+      }
 }
