@@ -34,10 +34,10 @@ export class TelemetryManager {
     /**
      * Disable telemetry and save the setting. Then restart the application
      */
-    public disableTelemetry() {
+    public async disableTelemetry() {
         this.telemetryEnabled = false;
         this.telemetryService.trackEvent({ name: Constants.TelemetryEvents.disableTelemetry });
-        this.telemetryService.flush();
+        await this.telemetryService.flush();
         this.dataStore.setItem(Constants.localStorageKey.telemetryEnabled, false);
         this._restart();
     }

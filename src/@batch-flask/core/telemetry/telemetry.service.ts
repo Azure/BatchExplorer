@@ -8,7 +8,7 @@ export interface TelemetryUploader {
     trackEvent(event: EventTelemetry);
     trackMetric(event: MetricTelemetry);
 
-    flush();
+    flush(): Promise<void>;
 }
 
 export const TELEMETRY_UPLOADER = new InjectionToken("TELEMETRY_UPLOADER");
@@ -45,7 +45,7 @@ export class TelemetryService {
         this._uploader.trackMetric(event);
     }
 
-    public flush() {
-        this._uploader.flush();
+    public flush(): Promise<void> {
+        return this._uploader.flush();
     }
 }
