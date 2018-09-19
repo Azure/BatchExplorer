@@ -1,4 +1,4 @@
-import { InMemoryDataStore } from "@batch-flask/core";
+import { InMemoryDataStore, TelemetryType } from "@batch-flask/core";
 import { ClientConstants } from "client/client-constants";
 import { TelemetryManager } from "client/core/telemetry/telemetry-manager";
 import { Constants } from "common";
@@ -11,11 +11,13 @@ describe("TelemetryManager", () => {
     let manager: TelemetryManager;
     let ipcMainSpy;
     let _isDev: boolean;
+    let ipcMainCallback;
 
     beforeEach(() => {
         telemetryServiceSpy = {
             init: jasmine.createSpy("init").and.returnValue(Promise.resolve()),
             trackEvent: jasmine.createSpy(),
+            track: jasmine.createSpy(),
             flush: jasmine.createSpy("flush").and.returnValue(Promise.resolve()),
         };
 
@@ -26,7 +28,9 @@ describe("TelemetryManager", () => {
         };
 
         ipcMainSpy = {
-            on: jasmine.createSpy("ipcMain.on"),
+            on: jasmine.createSpy("ipcMain.on").and.callFake((event, callback) => {
+                ipcMainCallback = callback;
+            }),
         };
         manager = new TelemetryManager(telemetryServiceSpy, dataStore as any, processSpy, ipcMainSpy);
         _isDev = ClientConstants.isDev;
@@ -100,4 +104,49 @@ describe("TelemetryManager", () => {
         const dataStoreValue = await dataStore.getItem(Constants.localStorageKey.telemetryEnabled);
         expect(dataStoreValue).toBe(true);
     });
+
+    describe("when event is sent from the renderer", () => {
+        it("pass through events", () => {
+            ipcMainCallback({
+                telemetry: {
+                    name: "My event",
+                    properties: {
+                        some: "value",
+                    },
+                },
+                type: TelemetryType.Event,
+            });
+
+            expect(telemetryServiceSpy.track).toHaveBeenCalledTimes(1);
+            expect(telemetryServiceSpy.track).toHaveBeenCalledWith({
+                name: "My event",
+                properties: {
+                    some: "value",
+                },
+            }, TelemetryType.Event);
+        });
+        it("reserialize exception", () => {
+            ipcMainCallback({
+                telemetry: {
+                    exception: {
+                        name: "MyCustomError",
+                        message: "My super message",
+                        stack: "some-stack.js",
+                    },
+                },
+                type: TelemetryType.Exception,
+            });
+
+            expect(telemetryServiceSpy.track).toHaveBeenCalledTimes(1);
+            const args = (telemetryServiceSpy.track as jasmine.Spy).calls.mostRecent().args;
+
+            expect(args.length).toBe(2);
+            expect(args[0].exception instanceof Error).toBe(true);
+            expect(args[0].exception.name).toEqual("MyCustomError");
+            expect(args[0].exception.message).toEqual("My super message");
+            expect(args[0].exception.stack).toEqual("some-stack.js");
+            expect(args[1]).toBe(TelemetryType.Exception);
+        });
+    });
+
 });
