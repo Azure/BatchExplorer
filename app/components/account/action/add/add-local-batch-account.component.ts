@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
 import { SidebarRef } from "@batch-flask/ui";
+import { UrlUtils } from "@batch-flask/utils";
 import { LocalBatchAccount } from "app/models";
 import { LocalBatchAccountService } from "app/services";
 
@@ -18,14 +19,13 @@ export class AddLocalBatchAccountComponent {
 
     constructor(
         public sidebarRef: SidebarRef<any>,
-        // private changeDetector: ChangeDetectorRef,
         private localAccountService: LocalBatchAccountService,
         formBuilder: FormBuilder) {
 
         this.form = formBuilder.group({
             displayName: [""],
             name: ["", Validators.required],
-            url: ["", Validators.required],
+            url: ["", [Validators.required, Validators.pattern(UrlUtils.URL_REGEX)]],
             key: ["", Validators.required],
         });
     }

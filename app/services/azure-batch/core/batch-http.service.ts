@@ -48,6 +48,14 @@ export class AzureBatchHttpService extends HttpService {
                             options).pipe(
                                 retryWhen(attempts => this.retryWhen(attempts)),
                                 catchError((error) => {
+                                    if (error.status === 0) {
+                                        return throwError(new ServerError({
+                                            status: error.status,
+                                            statusText: error.statusText,
+                                            message: error.message,
+                                            code: error.name,
+                                        }));
+                                    }
                                     const err = ServerError.fromBatchHttp(error);
                                     return throwError(err);
                                 }),
