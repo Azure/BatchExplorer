@@ -19,7 +19,7 @@ export class RouterTelemetryService {
     public init() {
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd),
-        ).subscribe((e) => {
+        ).subscribe(() => {
             const component: any = this.activatedRoute.root.component;
 
             this.telemetryService.trackEvent({

@@ -1,3 +1,4 @@
+import { TelemetryType } from "@batch-flask/core";
 import { TelemetryService } from "@batch-flask/core/telemetry/telemetry.service";
 
 describe("TelemetryService", () => {
@@ -7,9 +8,7 @@ describe("TelemetryService", () => {
     beforeEach(() => {
         uploader = {
             init: jasmine.createSpy("init"),
-            trackEvent: jasmine.createSpy("trackEvent"),
-            trackMetric: jasmine.createSpy("trackMetric"),
-            trackException: jasmine.createSpy("trackException"),
+            track: jasmine.createSpy("track"),
         };
 
         service = new TelemetryService(uploader);
@@ -22,17 +21,17 @@ describe("TelemetryService", () => {
 
         it("shouldn't emit event", () => {
             service.trackEvent({ name: "some-event" });
-            expect(uploader.trackEvent).not.toHaveBeenCalled();
+            expect(uploader.track).not.toHaveBeenCalled();
         });
 
         it("shouldn't emit metric", () => {
             service.trackMetric({ name: "some-metric", value: 124 });
-            expect(uploader.trackEvent).not.toHaveBeenCalled();
+            expect(uploader.track).not.toHaveBeenCalled();
         });
 
         it("shouldn't emit exceptions", () => {
             service.trackException({ exception: new Error() });
-            expect(uploader.trackEvent).not.toHaveBeenCalled();
+            expect(uploader.track).not.toHaveBeenCalled();
         });
     });
 
@@ -48,17 +47,17 @@ describe("TelemetryService", () => {
 
         it("shouldn't emit event", () => {
             service.trackEvent({ name: "some-event" });
-            expect(uploader.trackEvent).not.toHaveBeenCalled();
+            expect(uploader.track).not.toHaveBeenCalled();
         });
 
         it("shouldn't emit metric", () => {
             service.trackMetric({ name: "some-metric", value: 124 });
-            expect(uploader.trackEvent).not.toHaveBeenCalled();
+            expect(uploader.track).not.toHaveBeenCalled();
         });
 
         it("shouldn't emit exceptions", () => {
             service.trackException({ exception: new Error() });
-            expect(uploader.trackEvent).not.toHaveBeenCalled();
+            expect(uploader.track).not.toHaveBeenCalled();
         });
     });
 
@@ -74,21 +73,21 @@ describe("TelemetryService", () => {
 
         it("emit event", () => {
             service.trackEvent({ name: "some-event" });
-            expect(uploader.trackEvent).toHaveBeenCalledOnce();
-            expect(uploader.trackEvent).toHaveBeenCalledWith({ name: "some-event" });
+            expect(uploader.track).toHaveBeenCalledOnce();
+            expect(uploader.track).toHaveBeenCalledWith({ name: "some-event" }, TelemetryType.Event);
         });
 
         it("emit metric", () => {
             service.trackMetric({ name: "some-metric", value: 124 });
-            expect(uploader.trackMetric).toHaveBeenCalledOnce();
-            expect(uploader.trackMetric).toHaveBeenCalledWith({ name: "some-metric", value: 124 });
+            expect(uploader.track).toHaveBeenCalledOnce();
+            expect(uploader.track).toHaveBeenCalledWith({ name: "some-metric", value: 124 }, TelemetryType.Metric);
         });
 
         it("emit exceptions", () => {
             const error = new Error("My error");
             service.trackException({ exception: error });
-            expect(uploader.trackException).toHaveBeenCalledOnce();
-            expect(uploader.trackException).toHaveBeenCalledWith({ exception: error });
+            expect(uploader.track).toHaveBeenCalledOnce();
+            expect(uploader.track).toHaveBeenCalledWith({ exception: error }, TelemetryType.Exception);
         });
     });
 });

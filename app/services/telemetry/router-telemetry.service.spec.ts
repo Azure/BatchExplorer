@@ -1,5 +1,5 @@
 import { Component, NgZone } from "@angular/core";
-import { TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Router } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
 import { TelemetryService } from "@batch-flask/core";
@@ -44,7 +44,7 @@ describe("RouterTelemetryService", () => {
     let service: RouterTelemetryService;
     let telemetryServiceSpy;
     let router: Router;
-
+    let fixture: ComponentFixture<LayoutComponent>;
     beforeEach(() => {
         telemetryServiceSpy = {
             trackEvent: jasmine.createSpy("trackEvent"),
@@ -57,7 +57,7 @@ describe("RouterTelemetryService", () => {
                 { provide: TelemetryService, useValue: telemetryServiceSpy },
             ],
         });
-        const fixture = TestBed.createComponent(LayoutComponent);
+        fixture = TestBed.createComponent(LayoutComponent);
         fixture.detectChanges();
 
         router = TestBed.get(Router);
@@ -71,6 +71,7 @@ describe("RouterTelemetryService", () => {
         await TestBed.get(NgZone).run(() => {
             return router.navigateByUrl("/pools");
         });
+        fixture.detectChanges();
         expect(telemetryServiceSpy.trackEvent).toHaveBeenCalledOnce();
         expect(telemetryServiceSpy.trackEvent).toHaveBeenCalledWith({
             name: Constants.TelemetryEvents.navigate,
