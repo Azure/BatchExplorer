@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Telemetry, TelemetryType, TelemetryUploader } from "@batch-flask/core";
+import { ExceptionTelemetry, Telemetry, TelemetryType, TelemetryUploader } from "@batch-flask/core";
 import { ElectronRemote } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { Constants } from "common";
@@ -18,11 +18,21 @@ export class RendererTelemetryUploader implements TelemetryUploader {
     }
 
     public track(telemetry: Telemetry, type: TelemetryType) {
-        console.log("track here", telemetry, type, this._enabled, this._initialized);
         if (!this._enabled) { return; }
 
         if (!this._initialized) {
             log.error("Trying to send telemetry before initialized");
+        }
+
+        if (type === TelemetryType.Exception) {
+            const exception = telemetry as ExceptionTelemetry;
+            if (exception.exception) {
+                exception.exception = {
+                    message: exception.exception.message,
+                    name: exception.exception.name,
+                    stack: exception.exception.stack,
+                };
+            }
         }
         this.remote.send(Constants.IpcEvent.sendTelemetry, { telemetry, type });
     }

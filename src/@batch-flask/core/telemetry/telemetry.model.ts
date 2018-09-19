@@ -9,6 +9,10 @@ export enum TelemetryType {
 
 export interface Telemetry {
     time?: Date;
+
+    properties?: {
+        [key: string]: any,
+    };
 }
 
 export interface ExceptionTelemetry extends Telemetry {
@@ -18,7 +22,7 @@ export interface ExceptionTelemetry extends Telemetry {
 export interface EventTelemetry extends Telemetry {
     name: string;
     measurements?: {
-        [key: string]: any,
+        [key: string]: number,
     };
 }
 

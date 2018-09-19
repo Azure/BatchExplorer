@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { TelemetryService } from "@batch-flask/core";
 import { exists } from "@batch-flask/utils";
-import { ClientConstants } from "client/client-constants";
+import { TelemetryType } from "applicationinsights/out/Declarations/Contracts";
 import { BatchExplorerProcess } from "client/core/batch-explorer-process";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { LocalDataStore } from "client/core/local-data-store";
@@ -32,6 +32,17 @@ export class TelemetryManager implements OnDestroy {
         ipcMain: BlIpcMain) {
 
         this._subs.push(ipcMain.on(Constants.IpcEvent.sendTelemetry, ({ telemetry, type }) => {
+            // We need to deserialize the error otherwise appinsights will do it and will lose the stacktrace
+            if (type === TelemetryType.Exception) {
+                if (telemetry.exception) {
+                    const error = new Error();
+                    error.name = telemetry.exception.name;
+                    error.stack = telemetry.exception.stack;
+                    error.message = telemetry.exception.stack;
+                    telemetry.exception = error;
+                }
+            }
+
             this.telemetryService.track(telemetry, type);
             return Promise.resolve();
         }));

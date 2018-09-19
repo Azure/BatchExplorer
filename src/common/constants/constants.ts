@@ -213,5 +213,5 @@ export const AutoUpdateUrls = {
 export const TelemetryEvents = {
     applicationStart: "Application start",
     disableTelemetry: "Disable telemetry",
-    navigationStart: "Navigation start",
+    navigate: "Navigate",
 };
