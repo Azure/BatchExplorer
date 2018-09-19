@@ -21,14 +21,6 @@ export class PoolsComponent {
 export class HomeComponent {
 
 }
-
-@Component({
-    selector: "bl-layout",
-    template: "<router-outlet></router-outlet>",
-})
-export class LayoutComponent {
-
-}
 const routes = [
     {
         component: PoolsComponent,
@@ -44,21 +36,18 @@ describe("RouterTelemetryService", () => {
     let service: RouterTelemetryService;
     let telemetryServiceSpy;
     let router: Router;
-    let fixture: ComponentFixture<LayoutComponent>;
     beforeEach(() => {
         telemetryServiceSpy = {
             trackEvent: jasmine.createSpy("trackEvent"),
         };
         TestBed.configureTestingModule({
             imports: [RouterTestingModule.withRoutes(routes)],
-            declarations: [HomeComponent, PoolsComponent, LayoutComponent],
+            declarations: [HomeComponent, PoolsComponent],
             providers: [
                 RouterTelemetryService,
                 { provide: TelemetryService, useValue: telemetryServiceSpy },
             ],
         });
-        fixture = TestBed.createComponent(LayoutComponent);
-        fixture.detectChanges();
 
         router = TestBed.get(Router);
         service = TestBed.get(RouterTelemetryService);
@@ -71,13 +60,11 @@ describe("RouterTelemetryService", () => {
         await TestBed.get(NgZone).run(() => {
             return router.navigateByUrl("/pools");
         });
-        fixture.detectChanges();
         expect(telemetryServiceSpy.trackEvent).toHaveBeenCalledOnce();
         expect(telemetryServiceSpy.trackEvent).toHaveBeenCalledWith({
             name: Constants.TelemetryEvents.navigate,
             properties: {
-                // componentName: "PoolsComponent",
-                componentName: null,
+                componentName: "PoolsComponent",
             },
         });
     });

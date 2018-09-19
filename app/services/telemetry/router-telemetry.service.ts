@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
+import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from "@angular/router";
 import { TelemetryService } from "@batch-flask/core";
 import { Constants } from "common";
 import { filter } from "rxjs/operators";
@@ -20,14 +20,30 @@ export class RouterTelemetryService {
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd),
         ).subscribe(() => {
-            const component: any = this.activatedRoute.root.component;
-
             this.telemetryService.trackEvent({
                 name: Constants.TelemetryEvents.navigate,
                 properties: {
-                    componentName: component && component.name,
+                    componentName: this._getComponent(),
                 },
             });
         });
+    }
+
+    private _getComponent() {
+        let current = this.activatedRoute.snapshot;
+
+        while (current.firstChild) {
+            current = current.firstChild;
+        }
+
+        return this._getComponentName(current);
+    }
+
+    private _getComponentName(route: ActivatedRouteSnapshot): string | null {
+        if (route.component) {
+            return (route.component as any).name;
+        } else {
+            return null;
+        }
     }
 }
