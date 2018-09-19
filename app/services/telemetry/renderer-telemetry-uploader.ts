@@ -18,6 +18,7 @@ export class RendererTelemetryUploader implements TelemetryUploader {
     }
 
     public track(telemetry: Telemetry, type: TelemetryType) {
+        console.log("track here", telemetry, type, this._enabled, this._initialized);
         if (!this._enabled) { return; }
 
         if (!this._initialized) {

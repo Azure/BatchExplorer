@@ -20,8 +20,8 @@ export class TelemetryManager implements OnDestroy {
      * Event if the user has telemetry enabled, we disable telemtry in the dev version.
      */
     public get telemetryEnabled() {
-        const dev = ClientConstants.isDev;
-        // const dev = false;
+        // const dev = ClientConstants.isDev;
+        const dev = false;
         return this.userTelemetryEnabled && !dev;
     }
 
@@ -30,11 +30,6 @@ export class TelemetryManager implements OnDestroy {
         private dataStore: LocalDataStore,
         private batchExplorerProcess: BatchExplorerProcess,
         ipcMain: BlIpcMain) {
-
-        this._subs.push(ipcMain.on(Constants.IpcEvent.sendTelemetry, ({ telemetry, type }) => {
-            this.telemetryService.track(telemetry, type);
-            return Promise.resolve();
-        }));
 
         this._subs.push(ipcMain.on(Constants.IpcEvent.sendTelemetry, ({ telemetry, type }) => {
             this.telemetryService.track(telemetry, type);
