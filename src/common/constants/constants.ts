@@ -82,6 +82,11 @@ export const localStorageKey = {
      * Telemetry enabled
      */
     telemetryEnabled: "telemetry_enabled",
+
+    /**
+     * Save a randomly generated machine id
+     */
+    machineId: "machine_id",
 };
 
 export const ApiVersion = {
