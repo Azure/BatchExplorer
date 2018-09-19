@@ -9,7 +9,7 @@ describe("TelemetryManager", () => {
     let telemetryServiceSpy;
     let dataStore: InMemoryDataStore;
     let manager: TelemetryManager;
-
+    let ipcMainSpy;
     let _isDev: boolean;
 
     beforeEach(() => {
@@ -24,7 +24,11 @@ describe("TelemetryManager", () => {
         processSpy = {
             restart: jasmine.createSpy("restart"),
         };
-        manager = new TelemetryManager(telemetryServiceSpy, dataStore as any, processSpy);
+
+        ipcMainSpy = {
+            on: jasmine.createSpy("ipcMain.on"),
+        };
+        manager = new TelemetryManager(telemetryServiceSpy, dataStore as any, processSpy, ipcMainSpy);
         _isDev = ClientConstants.isDev;
     });
 

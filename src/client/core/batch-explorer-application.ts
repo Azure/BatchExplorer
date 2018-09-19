@@ -40,7 +40,7 @@ export const AUTO_UPDATER = new InjectionToken("AUTO_UPDATER");
 export class BatchExplorerApplication {
     public authenticationWindow = new AuthenticationWindow(this);
     public recoverWindow = new RecoverWindow(this);
-    public windows = new MainWindowManager(this);
+    public windows: MainWindowManager;
     public pythonServer = new PythonRpcServerProcess();
     public aadService: AADService;
     public state: Observable<BatchExplorerState>;
@@ -63,6 +63,8 @@ export class BatchExplorerApplication {
         private telemetryService: TelemetryService,
         private telemetryManager: TelemetryManager,
         private ipcMain: BlIpcMain) {
+
+        this.windows = new MainWindowManager(this, this.telemetryManager);
         this.state = this._state.asObservable();
 
         ipcMain.on(IpcEvent.logoutAndLogin, () => {

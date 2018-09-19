@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { EventTelemetry, ExceptionTelemetry, MetricTelemetry, TelemetryUploader } from "@batch-flask/core";
+import { ExceptionTelemetry, Telemetry, TelemetryType, TelemetryUploader } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import * as appinsights from "applicationinsights";
 import { ClientConstants } from "client/client-constants";
@@ -34,32 +34,20 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
         this._client.context.tags[this._client.context.keys.cloudRoleInstance] = null;
     }
 
-    public trackException(exception: ExceptionTelemetry) {
+    public track(telemetry: Telemetry, type: TelemetryType) {
         if (!this._client) {
             this._logUseTooSoon();
             return;
         }
 
-        if (exception.exception) {
-            exception.exception = this._sanitizeError(exception.exception);
+        if (type === TelemetryType.Exception) {
+            const exception = telemetry as ExceptionTelemetry;
+            if (exception.exception) {
+                exception.exception = this._sanitizeError(exception.exception);
+            }
+            this._client.trackException(exception);
         }
-        this._client.trackException(exception);
-    }
-
-    public trackEvent(event: EventTelemetry) {
-        if (!this._client) {
-            this._logUseTooSoon();
-            return;
-        }
-        this._client.trackEvent(event);
-    }
-
-    public trackMetric(event: MetricTelemetry) {
-        if (!this._client) {
-            this._logUseTooSoon();
-            return;
-        }
-        this._client.trackMetric(event);
+        this._client.track(telemetry, type);
     }
 
     public flush(isAppCrashing?: boolean): Promise<void> {
@@ -99,5 +87,5 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
 
     private _escapeRegExp(str) {
         return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
-      }
+    }
 }

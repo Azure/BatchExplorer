@@ -167,6 +167,8 @@ export const IpcEvent = {
     },
     launchApplication: "LAUNCH_APPLICATION",
     logoutAndLogin: "LOGOUT_AND_LOGIN",
+    sendTelemetry: "SEND_TELEMETRY",
+    isTelemetryEnabled: "IS_TELEMETRY_ENABLED",
 };
 
 export const ExternalApplication = {

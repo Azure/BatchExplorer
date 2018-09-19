@@ -4,14 +4,27 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { combineLatest } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
-import { IpcService, Workspace, WorkspaceService } from "@batch-flask/ui";
+import { TelemetryService } from "@batch-flask/core";
+import { ElectronRemote, IpcService, Workspace, WorkspaceService } from "@batch-flask/ui";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
-    AuthorizationHttpService, AutoscaleFormulaService, BatchAccountService,
-    BatchExplorerService, CommandService, GithubDataService, NavigatorService,
-    NcjTemplateService, PoolOsService, PredefinedFormulaService, PricingService,
-    PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
+    AuthorizationHttpService,
+    AutoscaleFormulaService,
+    BatchAccountService,
+    CommandService,
+    GithubDataService,
+    NavigatorService,
+    NcjTemplateService,
+    PoolOsService,
+    PredefinedFormulaService,
+    PricingService,
+    PythonRpcService,
+    SSHKeyService,
+    SettingsService,
+    SubscriptionService,
+    ThemeService,
+    VmSizeService,
 } from "app/services";
 import { filter, first } from "rxjs/operators";
 
@@ -35,7 +48,7 @@ export class AppComponent implements OnInit {
         private githubDataService: GithubDataService,
         private poolOsService: PoolOsService,
         private sshKeyService: SSHKeyService,
-        batchExplorerService: BatchExplorerService,
+        remote: ElectronRemote,
         pythonRpcService: PythonRpcService,
         private vmSizeService: VmSizeService,
         themeService: ThemeService,
@@ -43,11 +56,13 @@ export class AppComponent implements OnInit {
         permissionService: PermissionService,
         authHttpService: AuthorizationHttpService,
         ipc: IpcService,
+        private telemetryService: TelemetryService,
         private pricingService: PricingService,
         private ncjTemplateService: NcjTemplateService,
         private predefinedFormulaService: PredefinedFormulaService,
         private workspaceService: WorkspaceService,
     ) {
+        this.telemetryService.init(remote.getCurrentWindow().TELEMETRY_ENABLED);
         this.autoscaleFormulaService.init();
         this.settingsService.init();
         this._initWorkspaces();

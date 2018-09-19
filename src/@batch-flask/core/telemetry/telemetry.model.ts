@@ -1,3 +1,11 @@
+export enum TelemetryType {
+    Event = 0,
+    Exception = 1,
+    Trace = 2,
+    Metric = 3,
+    Request = 4,
+    Dependency = 5,
+}
 
 export interface Telemetry {
     time?: Date;

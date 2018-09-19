@@ -1,12 +1,11 @@
 import { Inject, Injectable, InjectionToken } from "@angular/core";
-import { EventTelemetry, ExceptionTelemetry, MetricTelemetry } from "./telemetry.model";
+import { Telemetry } from "applicationinsights/out/Declarations/Contracts";
+import { EventTelemetry, ExceptionTelemetry, MetricTelemetry, TelemetryType } from "./telemetry.model";
 
 export interface TelemetryUploader {
     init(enabled: boolean);
 
-    trackException(exception: ExceptionTelemetry);
-    trackEvent(event: EventTelemetry);
-    trackMetric(event: MetricTelemetry);
+    track(telemetry: Telemetry, type: TelemetryType);
 
     flush(isAppCrashing?: boolean): Promise<void>;
 }
@@ -26,23 +25,24 @@ export class TelemetryService {
     }
 
     public trackError(error: Error) {
-        if (!this._enable) { return; }
-        this._uploader.trackException({ exception: error });
+        this.trackException({ exception: error });
     }
 
     public trackException(exception: ExceptionTelemetry) {
-        if (!this._enable) { return; }
-        this._uploader.trackException(exception);
+        this.track(exception, TelemetryType.Exception);
     }
 
     public trackEvent(event: EventTelemetry) {
-        if (!this._enable) { return; }
-        this._uploader.trackEvent(event);
+        this.track(event, TelemetryType.Event);
     }
 
-    public trackMetric(event: MetricTelemetry) {
+    public trackMetric(metric: MetricTelemetry) {
+        this.track(metric, TelemetryType.Metric);
+    }
+
+    public track(telemetry: Telemetry, type: TelemetryType) {
         if (!this._enable) { return; }
-        this._uploader.trackMetric(event);
+        this._uploader.track(telemetry, type);
     }
 
     /**

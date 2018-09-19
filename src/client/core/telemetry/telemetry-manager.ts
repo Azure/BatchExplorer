@@ -1,17 +1,20 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { TelemetryService } from "@batch-flask/core";
 import { exists } from "@batch-flask/utils";
 import { ClientConstants } from "client/client-constants";
 import { BatchExplorerProcess } from "client/core/batch-explorer-process";
+import { BlIpcMain } from "client/core/bl-ipc-main";
 import { LocalDataStore } from "client/core/local-data-store";
 import { Constants } from "common";
+import { Subscription } from "rxjs";
 
 @Injectable()
-export class TelemetryManager {
+export class TelemetryManager implements OnDestroy {
     /**
      * Value for the user setting
      */
     public userTelemetryEnabled: boolean;
+    public _subs: Subscription[] = [];
 
     /**
      * Event if the user has telemetry enabled, we disable telemtry in the dev version.
@@ -25,8 +28,22 @@ export class TelemetryManager {
     constructor(
         private telemetryService: TelemetryService,
         private dataStore: LocalDataStore,
-        private batchExplorerProcess: BatchExplorerProcess) {
+        private batchExplorerProcess: BatchExplorerProcess,
+        ipcMain: BlIpcMain) {
 
+        this._subs.push(ipcMain.on(Constants.IpcEvent.sendTelemetry, ({ telemetry, type }) => {
+            this.telemetryService.track(telemetry, type);
+            return Promise.resolve();
+        }));
+
+        this._subs.push(ipcMain.on(Constants.IpcEvent.sendTelemetry, ({ telemetry, type }) => {
+            this.telemetryService.track(telemetry, type);
+            return Promise.resolve();
+        }));
+    }
+
+    public ngOnDestroy() {
+        this._subs.forEach(x => x.unsubscribe());
     }
 
     public async init() {
