@@ -12,7 +12,7 @@ import { FileSystem } from "client/core/fs";
 import { ClientTranslationsLoaderService } from "client/core/i18n";
 import { LocalDataStore } from "client/core/local-data-store";
 import { LocalFileStorage } from "client/core/local-file-storage";
-import { ApplicationInsightsModule } from "client/core/telemetry/application-insights.module";
+import { ClientTelemetryModule } from "client/core/telemetry";
 import { TerminalService } from "client/core/terminal";
 import { ProxySettingsManager } from "client/proxy";
 import { autoUpdater } from "electron-updater";
@@ -41,7 +41,7 @@ export function initializeServices(injector) {
     imports: [
         ServerModule,
         I18nModule,
-        ApplicationInsightsModule,
+        ClientTelemetryModule,
     ],
     providers: [
         { provide: AUTO_UPDATER, useValue: autoUpdater },

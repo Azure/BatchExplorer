@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { ExceptionTelemetry, Telemetry, TelemetryType, TelemetryUploader } from "@batch-flask/core";
-import { log } from "@batch-flask/utils";
+import { SecureUtils, log } from "@batch-flask/utils";
 import * as appinsights from "applicationinsights";
 import { ClientConstants } from "client/client-constants";
+import { MachineIdService } from "client/core/telemetry/machine-id.service";
 
 const APPLICATION_INSIGHTS_KEY = "a7a73aa4-a7b0-4681-9612-f7191189d5b8";
 
@@ -10,10 +11,13 @@ const APPLICATION_INSIGHTS_KEY = "a7a73aa4-a7b0-4681-9612-f7191189d5b8";
 export class ApplicationInsightsUploader implements TelemetryUploader {
     private _client: appinsights.TelemetryClient;
 
+    constructor(private machineIdService: MachineIdService) {
+
+    }
     /**
      * Connect the client. Application will not upload until
      */
-    public init(enabled: boolean) {
+    public async init(enabled: boolean) {
         if (!enabled) {
             log.info("Telemetry is disabled. Telemetry service will not start");
             return;
@@ -31,7 +35,16 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
         this._client = appinsights.defaultClient;
 
         // Prevent application insights from recording the device name
-        this._client.context.tags[this._client.context.keys.cloudRoleInstance] = null;
+        const context = this._client.context;
+        context.tags[context.keys.cloudRoleInstance] = null;
+
+        // Add a session Id
+        context.tags[context.keys.sessionId] = SecureUtils.uuid() + Date.now();
+
+        // Add a anoymous user Id to count users
+        const machineId = await this.machineIdService.get();
+        context.tags[context.keys.userId] = machineId;
+
     }
 
     public track(telemetry: Telemetry, type: TelemetryType) {

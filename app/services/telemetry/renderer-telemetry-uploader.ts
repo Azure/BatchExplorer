@@ -12,7 +12,7 @@ export class RendererTelemetryUploader implements TelemetryUploader {
     constructor(private remote: ElectronRemote) {
 
     }
-    public init(enabled: boolean) {
+    public async init(enabled: boolean) {
         this._enabled = enabled;
         this._initialized = true;
     }

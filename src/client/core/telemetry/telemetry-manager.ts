@@ -55,7 +55,7 @@ export class TelemetryManager implements OnDestroy {
 
     public async init() {
         await this._loadUserSettings();
-        this.telemetryService.init(this.telemetryEnabled);
+        await this.telemetryService.init(this.telemetryEnabled);
     }
 
     public async enableTelemetry() {

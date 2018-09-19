@@ -19,9 +19,9 @@ export class TelemetryService {
 
     constructor(@Inject(TELEMETRY_UPLOADER) private _uploader: TelemetryUploader) { }
 
-    public init(enabled: boolean) {
+    public async init(enabled: boolean) {
         this._enable = enabled;
-        this._uploader.init(enabled);
+        await this._uploader.init(enabled);
     }
 
     public trackError(error: Error) {
