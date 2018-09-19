@@ -74,7 +74,6 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     }
 
     public ngOnInit() {
-        throw new Error("Some renderer error");
         this.data.fetchNext();
     }
 
