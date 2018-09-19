@@ -67,6 +67,13 @@ npm run electron
 ## Developers
 [Dev docs](docs/readme.md)
 
+## Data/Telemetry.
+
+Batch Explorer collects usage data and sends it to Microsoft to help improve our products and services. Read Microsoft's [privacy statement to learn more.](https://privacy.microsoft.com/en-us/privacystatement)
+
+Please go see [How to disable crash reporting and telemetry](https://github.com/Azure/BatchExplorer/wiki/Crash-reporting-and-telemetry#how-to-disable-crash-reporting-and-telemetry) to disable it
+
+
 ## License
 Copyright (c) Microsoft Corporation. All rights reserved.
 

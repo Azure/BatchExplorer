@@ -77,6 +77,11 @@ export const localStorageKey = {
      * Last selected storage account
      */
     lastStorageAccount: "last_storage_account",
+
+    /**
+     * Telemetry enabled
+     */
+    telemetryEnabled: "telemetry_enabled",
 };
 
 export const ApiVersion = {
@@ -162,6 +167,7 @@ export const IpcEvent = {
     },
     launchApplication: "LAUNCH_APPLICATION",
     logoutAndLogin: "LOGOUT_AND_LOGIN",
+    sendTelemetry: "SEND_TELEMETRY",
 };
 
 export const ExternalApplication = {
@@ -199,4 +205,13 @@ export const AutoUpdateUrls = {
     stable: `${cdn}/stable`,
     insider: `${cdn}/insider`,
     testing: `${cdn}/test`,
+};
+
+/**
+ * All telemetry event should be here to keep track of it
+ */
+export const TelemetryEvents = {
+    applicationStart: "Application start",
+    disableTelemetry: "Disable telemetry",
+    navigate: "Navigate",
 };

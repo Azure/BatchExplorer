@@ -13,3 +13,4 @@ export * from "./http-base";
 export * from "./filter-builder";
 export * from "./i18n";
 export * from "./server-error";
+export * from "./telemetry";

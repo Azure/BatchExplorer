@@ -96,6 +96,7 @@ import {
     VersionService,
     VmSizeService,
 } from "./services";
+import { RendererTelemetryModule } from "./services/telemetry";
 
 const modules = [
     AccountModule, ApplicationModule, CertificateModule,
@@ -123,6 +124,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         MaterialModule,
         ReactiveFormsModule,
         HttpModule,
+        RendererTelemetryModule,
         RouterModule.forRoot(routes, { useHash: true, paramsInheritanceStrategy: "always" }),
         BaseModule,
         HttpClientModule,

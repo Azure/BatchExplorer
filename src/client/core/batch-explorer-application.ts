@@ -1,21 +1,21 @@
-import * as commander from "commander";
-import { app, dialog, ipcMain, session } from "electron";
-import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
-import * as os from "os";
-
 import { Inject, Injectable, InjectionToken, Injector } from "@angular/core";
-import { LocaleService, TranslationsLoaderService } from "@batch-flask/core";
+import { LocaleService, TelemetryService, TranslationsLoaderService } from "@batch-flask/core";
 import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { LocalDataStore } from "client/core/local-data-store";
+import { TelemetryManager } from "client/core/telemetry/telemetry-manager";
 import { setMenu } from "client/menu";
 import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-configuration-window";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { ProxySettingsManager } from "client/proxy/proxy-settings";
+import * as commander from "commander";
 import { BatchExplorerLink, Constants, Deferred } from "common";
 import { IpcEvent } from "common/constants";
+import { app, dialog, ipcMain, session } from "electron";
+import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import { ProxyCredentials, ProxySettings } from "get-proxy-settings";
+import * as os from "os";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants as ClientConstants } from "../client-constants";
 import { MainWindow, WindowState } from "../main-window";
@@ -40,7 +40,7 @@ export const AUTO_UPDATER = new InjectionToken("AUTO_UPDATER");
 export class BatchExplorerApplication {
     public authenticationWindow = new AuthenticationWindow(this);
     public recoverWindow = new RecoverWindow(this);
-    public windows = new MainWindowManager(this);
+    public windows: MainWindowManager;
     public pythonServer = new PythonRpcServerProcess();
     public aadService: AADService;
     public state: Observable<BatchExplorerState>;
@@ -60,7 +60,11 @@ export class BatchExplorerApplication {
         public localeService: LocaleService,
         private localStorage: LocalDataStore,
         private injector: Injector,
+        private telemetryService: TelemetryService,
+        private telemetryManager: TelemetryManager,
         private ipcMain: BlIpcMain) {
+
+        this.windows = new MainWindowManager(this, this.telemetryManager);
         this.state = this._state.asObservable();
 
         ipcMain.on(IpcEvent.logoutAndLogin, () => {
@@ -71,6 +75,10 @@ export class BatchExplorerApplication {
     }
 
     public async init() {
+        await this.telemetryManager.init();
+
+        this.telemetryService.trackEvent({ name: Constants.TelemetryEvents.applicationStart });
+
         this._initializer = this.injector.get(BatchExplorerInitializer);
         this.aadService = this.injector.get(AADService);
         this.proxySettings = this.injector.get(ProxySettingsManager);
@@ -86,7 +94,7 @@ export class BatchExplorerApplication {
      * Start the app by showing the splash screen
      */
     public async start() {
-        setMenu(this);
+        setMenu(this, this.telemetryManager);
         const appReady = new Deferred();
         const loggedIn = new Deferred();
         this.pythonServer.start();
@@ -212,11 +220,6 @@ export class BatchExplorerApplication {
         return autoUpdater.checkForUpdates();
     }
 
-    public restart() {
-        app.relaunch();
-        app.exit();
-    }
-
     public askUserForProxyCredentials(): Promise<ProxyCredentials> {
         log.warn("Asking for proxy credentials");
         if (this._currentlyAskingForCredentials) { return this._currentlyAskingForCredentials; }
@@ -275,10 +278,14 @@ export class BatchExplorerApplication {
         process.on("uncaughtException" as any, (error: Error) => {
             log.error("There was a uncaught exception", error);
             this.recoverWindow.createWithError(error.message);
+            this.telemetryService.trackError(error);
+            this.telemetryService.flush(true);
         });
 
         process.on("unhandledRejection", r => {
             log.error("Unhandled promise error:", r);
+            this.telemetryService.trackError(r);
+            this.telemetryService.flush(true);
         });
         app.on("window-all-closed", () => {
             // Required or electron will close when closing last open window before next one open

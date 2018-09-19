@@ -3,6 +3,7 @@ import { autobind } from "@batch-flask/core";
 import { IpcPromiseEvent } from "@batch-flask/ui/electron";
 import { ipcMain } from "electron";
 import { EventEmitter } from "events";
+import { Subscription } from "rxjs";
 
 const eventEmitter = new EventEmitter();
 
@@ -15,11 +16,12 @@ export class BlIpcMain implements OnDestroy {
      * @param {String} event event name.
      * @param {Function} listener listener function.
      */
-    public on(event: string, listener: (...args) => Promise<any>) {
+    public on(event: string, listener: (...args) => Promise<any>): Subscription {
         // call from main process always.
 
         // add listener to common event emitter for main process.
-        eventEmitter.on(event, (id, data, ipcEvent) => {
+
+        const func = (id, data, ipcEvent) => {
             listener(data, ipcEvent)
                 .then((result) => {
                     eventEmitter.emit(this._getSuccessEventName(event, id), result);
@@ -27,6 +29,10 @@ export class BlIpcMain implements OnDestroy {
                 .catch((error) => {
                     eventEmitter.emit(this._getFailureEventName(event, id), { ...error });
                 });
+        };
+        eventEmitter.on(event, func);
+        return new Subscription(() => {
+            eventEmitter.removeListener(event, func);
         });
     }
 

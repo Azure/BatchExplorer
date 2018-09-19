@@ -153,7 +153,9 @@ export class ScrollableComponent implements OnDestroy, AfterViewInit {
     }
 
     public ngOnDestroy() {
-        this.erd.uninstall(this.elementRef.nativeElement);
+        if (this.erd) {
+            this.erd.uninstall(this.elementRef.nativeElement);
+        }
         this.scrollableService.unregisterScrollable(this);
     }
 
