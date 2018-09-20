@@ -9,12 +9,12 @@ import { TaskDetailsModule } from "app/components/task/details";
 import { TaskHomeComponent } from "app/components/task/home";
 
 import {
+    AddTaskFormComponent,
     RerunTaskFormComponent,
-    TaskCreateBasicDialogComponent,
 } from "app/components/task/action";
 
 const components = [
-    TaskHomeComponent, RerunTaskFormComponent, TaskCreateBasicDialogComponent,
+    TaskHomeComponent, RerunTaskFormComponent, AddTaskFormComponent,
 ];
 
 const modules = [
@@ -27,7 +27,7 @@ const modules = [
     imports: [...modules],
     entryComponents: [
         RerunTaskFormComponent,
-        TaskCreateBasicDialogComponent,
+        AddTaskFormComponent,
     ],
 })
 export class TaskModule {

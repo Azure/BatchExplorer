@@ -1,0 +1,4 @@
+add-task-form:
+  title: Add task
+  subtitle: Add a task to the selected job
+  action: Add

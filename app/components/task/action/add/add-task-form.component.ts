@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Observable } from "rxjs";
 
 import { OnInit } from "@angular/core/src/metadata/lifecycle_hooks";
-import { DynamicForm, autobind } from "@batch-flask/core";
+import { DynamicForm, I18nService, autobind } from "@batch-flask/core";
 import { ComplexFormConfig } from "@batch-flask/ui/form";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
@@ -16,32 +16,38 @@ import { JobService, PoolService, TaskService } from "app/services";
 import { Constants } from "app/utils";
 
 @Component({
-    selector: "bl-task-create-basic-dialog",
-    templateUrl: "task-create-basic-dialog.html",
+    selector: "bl-add-task-form",
+    templateUrl: "add-task-form.html",
 })
-export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreateDto> implements OnInit {
+export class AddTaskFormComponent extends DynamicForm<Task, TaskCreateDto> implements OnInit {
+    public title: string;
+    public subtitle: string;
+    public actionName: string;
+
     public jobId: string;
     public complexFormConfig: ComplexFormConfig;
     public constraintsGroup: FormGroup;
     public resourceFiles: FormArray;
     public hasLinkedStorage: boolean = true;
-    public title = "Add task";
-    public subtitle = "Adds a task to the selected job";
     public multiUse = true;
-    public actionName = "Add";
     public fileUri = "create.task.batch.json";
     public virtualMachineConfiguration: VirtualMachineConfiguration = null;
     public userAccounts: any[] = [];
 
     constructor(
+        i18n: I18nService,
         private formBuilder: FormBuilder,
-        public sidebarRef: SidebarRef<TaskCreateBasicDialogComponent>,
+        public sidebarRef: SidebarRef<AddTaskFormComponent>,
         protected taskService: TaskService,
         private notificationService: NotificationService,
         protected jobService: JobService,
         protected poolService: PoolService) {
         super(TaskCreateDto);
         this._setComplexFormConfig();
+
+        this.title = i18n.t("add-task-form.title");
+        this.subtitle = i18n.t("add-task-form.subtitle");
+        this.actionName = i18n.t("add-task-form.action");
 
         this.hasLinkedStorage = true;
         const validation = Constants.forms.validation;

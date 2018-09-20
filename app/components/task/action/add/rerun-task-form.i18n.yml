@@ -1,0 +1,4 @@
+rerun-task-form:
+  title: Rerun task
+  subtitle: This will delete the task and create a new one with the same id.
+  action: Rerun

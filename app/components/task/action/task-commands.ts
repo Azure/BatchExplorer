@@ -7,7 +7,7 @@ import {
 import { Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
 import { from } from "rxjs";
-import { TaskCreateBasicDialogComponent } from "../action";
+import { AddTaskFormComponent } from "../action";
 
 export interface TaskParams {
     jobId: string;
@@ -89,7 +89,7 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
     }
 
     private _cloneTask(task: Task) {
-        const ref = this.sidebarManager.open(`add-task-${task.id}`, TaskCreateBasicDialogComponent);
+        const ref = this.sidebarManager.open(`add-task-${task.id}`, AddTaskFormComponent);
         ref.component.jobId = this.params.jobId;
         ref.component.setValueFromEntity(task);
     }
