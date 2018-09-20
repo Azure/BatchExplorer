@@ -12,9 +12,7 @@ export interface UserAccountAttributes {
 
 @Model()
 export class UserAccount extends Record<UserAccountAttributes> {
-    @Prop()
-    public name: string;
+    @Prop() public name: string;
 
-    @Prop()
-    public elevationLevel: UserAccountElevationLevel = UserAccountElevationLevel.nonadmin;
+    @Prop() public elevationLevel: UserAccountElevationLevel = UserAccountElevationLevel.nonadmin;
 }

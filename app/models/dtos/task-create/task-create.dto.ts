@@ -1,11 +1,11 @@
 import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
-import { ExitOptions } from "../task-exit-conditions";
-import { AppPackageReferenceDto } from "./application-package-reference.dto";
-import { EnvironmentSetting } from "./metadata.dto";
-import { ResourceFileDto } from "./resource-file.dto";
-import { TaskConstraintsDto } from "./task-constraints.dto";
-import { TaskContainerSettingsDto } from "./task-container-settings.dto";
-import { UserIdentityDto } from "./user-identity.dto";
+import { ExitOptions } from "../../task-exit-conditions";
+import { AppPackageReferenceDto } from "../application-package-reference.dto";
+import { EnvironmentSetting } from "../metadata.dto";
+import { ResourceFileDto } from "../resource-file.dto";
+import { TaskConstraintsDto } from "../task-constraints.dto";
+import { TaskContainerSettingsDto } from "../task-container-settings.dto";
+import { UserIdentityDto } from "../user-identity.dto";
 
 export class AffinityInfoDto extends Dto<AffinityInfoDto> {
     @DtoAttr() public affinityId: string;

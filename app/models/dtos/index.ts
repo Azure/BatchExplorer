@@ -26,7 +26,7 @@ export * from "./pool-patch.dto";
 export * from "./pool-resize.dto";
 export * from "./resource-file.dto";
 export * from "./schedule.dto";
-export * from "./task-create.dto";
+export * from "./task-create";
 export * from "./task-constraints.dto";
 export * from "./user-account.dto";
 export * from "./user-identity.dto";

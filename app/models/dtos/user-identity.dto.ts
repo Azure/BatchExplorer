@@ -1,11 +1,12 @@
+import { Dto, DtoAttr } from "@batch-flask/core";
 import { UserAccountElevationLevel } from "app/models";
 
-export interface UserIdentityDto {
-    username?: string;
-    autoUser?: AutoUserDto;
+export class AutoUserDto extends Dto<AutoUserDto> {
+    @DtoAttr() public scope?: string;
+    @DtoAttr() public elevationLevel?: UserAccountElevationLevel;
 }
 
-export interface AutoUserDto {
-    scope?: string;
-    elevationLevel?: UserAccountElevationLevel;
+export class UserIdentityDto extends Dto<UserIdentityDto> {
+    @DtoAttr() public username?: string;
+    @DtoAttr() public autoUser?: AutoUserDto;
 }
