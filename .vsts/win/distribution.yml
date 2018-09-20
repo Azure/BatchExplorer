@@ -1,5 +1,7 @@
 steps:
   - template: ./win-dependencies.yml
+  - powershell: ./scripts/azpipelines/update-build-name.ps1
+    displayName: Resolve version
   - powershell: |
       npm run build:prod
       npm run build-python

@@ -13,12 +13,12 @@ export class I18nPipe implements PipeTransform {
 
     }
 
-    public transform(key: string) {
+    public transform(key: string, params?: any) {
         if (this.namespace) {
             const namespacedKey = this.i18n.resolveKey(this.namespace, key);
-            return this.i18n.translate(namespacedKey);
+            return this.i18n.translate(namespacedKey, params);
         } else {
-            return this.i18n.translate(key);
+            return this.i18n.translate(key, params);
         }
     }
 }

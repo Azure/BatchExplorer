@@ -10,7 +10,7 @@ import { Job, JobSchedule, JobState } from "app/models";
 import { JobService, PinnedEntityService } from "app/services";
 
 import { JobScheduleCreateBasicDialogComponent } from "../../job-schedule/action";
-import { TaskCreateBasicDialogComponent } from "../../task/action";
+import { AddTaskFormComponent } from "../../task/action";
 import { JobCreateBasicDialogComponent, PatchJobComponent } from "./add";
 import { DisableJobCommand } from "./disable";
 import { TerminateJobCommand } from "./terminate";
@@ -167,7 +167,7 @@ export class JobCommands extends EntityCommands<Job> {
     }
 
     private _addTask(job: Job) {
-        const createRef = this.sidebarManager.open("add-task", TaskCreateBasicDialogComponent);
+        const createRef = this.sidebarManager.open("add-task", AddTaskFormComponent);
         createRef.component.jobId = job.id;
     }
 

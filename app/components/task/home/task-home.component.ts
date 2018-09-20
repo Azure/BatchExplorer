@@ -5,7 +5,7 @@ import { autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs";
 
 import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { TaskCreateBasicDialogComponent } from "../action";
+import { AddTaskFormComponent } from "../action";
 
 @Component({
     selector: "bl-task-home",
@@ -39,7 +39,7 @@ export class TaskHomeComponent implements OnInit, OnDestroy {
 
     @autobind()
     public addTask() {
-        const createRef = this.sidebarManager.open("add-task", TaskCreateBasicDialogComponent);
+        const createRef = this.sidebarManager.open("add-task", AddTaskFormComponent);
         createRef.component.jobId = this.jobId;
     }
 }

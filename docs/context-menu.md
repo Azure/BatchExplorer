@@ -192,7 +192,7 @@ In `job-commands.ts`
     }
 
     private _addTask(job: Job) {
-        const createRef = this.sidebarManager.open("add-task", TaskCreateBasicDialogComponent);
+        const createRef = this.sidebarManager.open("add-task", AddTaskFormComponent);
         createRef.component.jobId = job.id;
     }
 

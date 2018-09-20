@@ -75,5 +75,17 @@
                 [containerConfiguration]="virtualMachineConfiguration.containerConfiguration">
             </bl-container-settings-picker>
         </bl-form-section>
+
+        <bl-form-section title="Multi instance settings" subtitle="Settings which specify how to run a multi-instance task.">
+            <bl-form-picker formControlName="multiInstanceSettings" #mpiPicker>
+                <div no-value-title>Configure</div>
+                <div value-title>{{mpiPicker?.nestedValue.value?.coordinationCommandLine}}</div>
+                <div nested-form>
+                    <bl-multi-instance-settings-picker
+                        [formControl]="mpiPicker.nestedValue">
+                    </bl-multi-instance-settings-picker>
+                </div>
+            </bl-form-picker>
+        </bl-form-section>
     </bl-form-page>
 </bl-complex-form>

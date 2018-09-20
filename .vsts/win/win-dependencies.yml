@@ -9,5 +9,3 @@ steps:
       npm ci
       pip install -r python/requirements.txt
     displayName: Install dependencies
-  - powershell: ./scripts/azpipelines/update-build-name.ps1
-    displayName: Resolve version
