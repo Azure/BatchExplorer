@@ -115,7 +115,7 @@
             <div collapsed-preview>
                 {{task.multiInstanceSettings.numberOfInstances}} subtasks. Running: <i>{{task.multiInstanceSettings.coordinationCommandLine}}</i>
             </div>
-            <bl-text-property [label]="'multiInstanceSettings.coordinationCommandLine.label' | i18n" [value]="task.multiInstanceSettings.coordinationCommandLine"></bl-text-property>
+            <bl-text-property [label]="'multiInstanceSettings.coordinationCommandLine.label' | i18n" [value]="task.multiInstanceSettings.coordinationCommandLine" [wrap]="true"></bl-text-property>
             <bl-text-property [label]="'multiInstanceSettings.numberOfInstances.label' | i18n" [value]="task.multiInstanceSettings.numberOfInstances"></bl-text-property>
         </bl-property-group>
     </bl-property-list>
