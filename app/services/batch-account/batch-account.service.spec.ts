@@ -1,3 +1,4 @@
+import { ServerError } from "@batch-flask/core";
 import {
     ArmBatchAccount,
     BatchAccount,
@@ -6,7 +7,7 @@ import {
     Subscription as ArmSubscription,
 } from "app/models";
 import { List } from "immutable";
-import { BehaviorSubject, Subscription, of } from "rxjs";
+import { BehaviorSubject, Subscription, of, throwError } from "rxjs";
 import { BatchAccountService } from "./batch-account.service";
 
 const sub = new ArmSubscription({
@@ -53,30 +54,59 @@ const localAccount2 = new LocalBatchAccount({
     url: "https://testaccount2.westus2.batch.azure.com",
 });
 
+const armAccounts = {
+    [armAccount1.id]: armAccount1,
+    [armAccount2.id]: armAccount2,
+};
+
+const localAccounts = {
+    [localAccount1.id]: localAccount1,
+    [localAccount2.id]: localAccount2,
+};
+
 describe("BatchAccountService", () => {
     let service: BatchAccountService;
     let armAccountSpy;
     let localAccountSpy;
     let subscriptionServiceSpy;
+    let storageSpy;
     let accounts: BatchAccount[];
     let subs: Subscription[];
+    let favoritesIds: any[];
 
     beforeEach(() => {
         subs = [];
+        favoritesIds = [];
         armAccountSpy = {
             accounts: new BehaviorSubject(List([armAccount1, armAccount2])),
-            get: jasmine.createSpy("armGet").and.returnValue(of(armAccount2)),
+            get: jasmine.createSpy("armGet").and.callFake((id) => {
+                if (id in armAccounts) {
+                    return of(armAccounts[id]);
+                } else {
+                    return throwError(new ServerError({ status: 404 } as any));
+                }
+            }),
         };
         localAccountSpy = {
             accounts: new BehaviorSubject(List([localAccount1, localAccount2])),
-            get: jasmine.createSpy("localGet").and.returnValue(of(localAccount1)),
+            get: jasmine.createSpy("localGet").and.callFake((id) => {
+                if (id in localAccounts) {
+                    return of(localAccounts[id]);
+                } else {
+                    return throwError(new ServerError({ status: 404 } as any));
+                }
+            }),
         };
 
         subscriptionServiceSpy = {
             subscriptions: of(List([sub])),
             get: () => of(sub),
         };
-        service = new BatchAccountService(armAccountSpy, localAccountSpy, null, null, subscriptionServiceSpy);
+
+        storageSpy = {
+            get: () => of(favoritesIds),
+        };
+        service = new BatchAccountService(armAccountSpy, localAccountSpy, storageSpy, null, subscriptionServiceSpy);
         subs.push(service.accounts.subscribe(x => accounts = x.toArray()));
     });
 
@@ -114,5 +144,55 @@ describe("BatchAccountService", () => {
         expect(armAccountSpy.get).toHaveBeenCalledOnce();
         expect(armAccountSpy.get).toHaveBeenCalledWith("/subscriptions/sub1/resources/batch-accounts/arm-account-2");
         expect(account).toEqual(armAccount2);
+    });
+
+    describe("favorites", () => {
+        let favorites;
+
+        beforeEach(() => {
+            favorites = null;
+            service.accountFavorites.subscribe(x => favorites = x);
+        });
+
+        it("get the accounts from the cache", (done) => {
+            expect(favorites).toBe(null, "should be null before data is loaded");
+
+            favoritesIds = [
+                { id: "/subscriptions/sub1/resources/batch-accounts/arm-account-1" },
+                { id: "local/https://testaccount2.westus2.batch.azure.com" },
+            ];
+
+            service.loadInitialData().subscribe(() => {
+                expect(favorites.toArray()).toEqual([
+                    armAccount1,
+                    localAccount2,
+                ]);
+                done();
+            });
+        });
+
+        it("ignores invalid ids", (done) => {
+            expect(favorites).toBe(null, "should be null before data is loaded");
+
+            favoritesIds = [
+                { id: "/subscriptions/sub1/resources/batch-accounts/arm-account-1" },
+                { id: "/subscriptions/invalid/resoruce/batch-accounts/invalid" },
+                { id: "local/https://testaccount2.westus2.batch.azure.com" },
+                { id: "local/invalid" },
+            ];
+            service.loadInitialData().subscribe(() => {
+                expect(favorites.toArray()).toEqual([
+                    armAccount1,
+                    new ArmBatchAccount({
+                        id: "/subscriptions/invalid/resoruce/batch-accounts/invalid",
+                    } as any),
+                    localAccount2,
+                    new ArmBatchAccount({
+                        id: "local/invalid",
+                    } as any),
+                ]);
+                done();
+            });
+        });
     });
 });
