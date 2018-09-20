@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, forwardRef } from "@angular/core";
 import {
     AbstractControl, ControlValueAccessor, FormBuilder, FormGroup,
     NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator, Validators,
@@ -22,9 +22,7 @@ export class MultiInstanceSettingsPickerComponent implements ControlValueAccesso
 
     private _propagateChangeFn: (value: MultiInstanceSettingsAttributes) => void;
 
-    constructor(private changeDetector: ChangeDetectorRef, formBuilder: FormBuilder) {
-        this.changeDetector.markForCheck();
-
+    constructor(formBuilder: FormBuilder) {
         this.form = formBuilder.group({
             numberOfInstances: [1, [Validators.min(0), Validators.required]],
             coordinationCommandLine: ["", Validators.required],

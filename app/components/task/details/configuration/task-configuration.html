@@ -1,24 +1,24 @@
 <bl-entity-configuration [value]="task">
     <bl-property-list>
-        <bl-property-group label="General" class="wide">
-            <bl-text-property label="ID" [value]="decorator.id"></bl-text-property>
-            <bl-text-property label="Display name" [value]="decorator.displayName"></bl-text-property>
-            <bl-text-property label="Command line" [value]="decorator.commandLine" [wrap]="true"></bl-text-property>
-            <bl-text-property label="State" [value]="decorator.state"></bl-text-property>
-            <bl-text-property label="Previous State" [value]="decorator.previousState"></bl-text-property>
-            <bl-text-property label="Creation Time" [value]="decorator.creationTime"></bl-text-property>
-            <bl-text-property label="Last modified" [value]="decorator.lastModified"></bl-text-property>
-            <bl-text-property label="User identity" [value]="decorator.userIdentitySummary"></bl-text-property>
-            <bl-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bl-text-property>
-            <bl-text-property label="Previous state transition time" [value]="decorator.previousStateTransitionTime"></bl-text-property>
-            <bl-text-property label="Exit conditions" *ngIf="!task.exitConditions" value="None"></bl-text-property>
-            <bl-text-property label="Affinity id" *ngIf="task.affinityInfo" [value]="task.affinityInfo?.affinityId"></bl-text-property>
+        <bl-property-group [label]="'general' | i18n" class="wide">
+            <bl-text-property [label]="'id.label' | i18n" [value]="decorator.id"></bl-text-property>
+            <bl-text-property [label]="'displayName.label' | i18n" [value]="decorator.displayName"></bl-text-property>
+            <bl-text-property [label]="'commandLine.label' | i18n" [value]="decorator.commandLine" [wrap]="true"></bl-text-property>
+            <bl-text-property [label]="'state.label' | i18n" [value]="decorator.state"></bl-text-property>
+            <bl-text-property [label]="'previousState.label' | i18n" [value]="decorator.previousState"></bl-text-property>
+            <bl-text-property [label]="'creationTime.label' | i18n" [value]="decorator.creationTime"></bl-text-property>
+            <bl-text-property [label]="'lastModified.label' | i18n" [value]="decorator.lastModified"></bl-text-property>
+            <bl-text-property [label]="'userIdentity.label' | i18n" [value]="decorator.userIdentitySummary"></bl-text-property>
+            <bl-text-property [label]="'stateTransitionTime.label' | i18n" [value]="decorator.stateTransitionTime"></bl-text-property>
+            <bl-text-property [label]="'previousStateTransitionTime.label' | i18n" [value]="decorator.previousStateTransitionTime"></bl-text-property>
+            <bl-text-property [label]="'exitConditions.label' | i18n" *ngIf="!task.exitConditions" value="None"></bl-text-property>
+            <bl-text-property [label]="'affinityId.label' | i18n" *ngIf="task.affinityInfo" [value]="task.affinityInfo?.affinityId"></bl-text-property>
 
-            <bl-table-property *ngIf="task.outputFiles.size > 0" label="Output files">
+            <bl-table-property *ngIf="task.outputFiles.size > 0" [label]="'outputFiles.label' | i18n">
                 <bl-table-property-header>
-                    <div tp-column>Pattern</div>
-                    <div tp-column>Destination</div>
-                    <div tp-column>Upload when</div>
+                    <div tp-column>{{'outputFiles.pattern' | i18n}}</div>
+                    <div tp-column>{{'outputFiles.destination' | i18n}}</div>
+                    <div tp-column>{{'outputFiles.uploadWhen' | i18n}}</div>
                 </bl-table-property-header>
                 <bl-table-property-row *ngFor="let file of task.outputFiles">
                     <bl-tp-cell [value]="file.filePattern"></bl-tp-cell>
@@ -28,14 +28,14 @@
             </bl-table-property>
         </bl-property-group>
 
-        <bl-property-group label="Application packages" class="wide" [collapsed]="true">
+        <bl-property-group [label]="'applicationPackages.label' | i18n" class="wide" [collapsed]="true">
             <div collapsed-preview>
-                <span>{{appPackages?.length}} application package reference</span>
+                <span>{{'applicationPackages.summary' | i18n: {count: appPackages?.length} }}</span>
             </div>
             <bl-table-property *ngIf="appPackages.length > 0" label="Package references">
                 <bl-table-property-header>
-                    <div tp-column>Application</div>
-                    <div tp-column>Version</div>
+                    <div tp-column>{{'applicationPackages.application' | i18n}}</div>
+                    <div tp-column>{{'applicationPackages.version' | i18n}}</div>
                 </bl-table-property-header>
                 <bl-table-property-row *ngFor="let package of appPackages">
                     <bl-tp-cell [value]="package.applicationId"></bl-tp-cell>
@@ -43,17 +43,17 @@
                 </bl-table-property-row>
             </bl-table-property>
             <bl-no-item [itemCount]="appPackages.length" [slimline]="true">
-                <span no-filter>This task contains no application package references</span>
+                <span no-filter>{{'applicationPackages.none' | i18n}}</span>
             </bl-no-item>
         </bl-property-group>
 
-        <bl-property-group label="Compute node" class="wide" [collapsed]="true">
-            <bl-link-property label="Pool" [value]="nodeInfo.poolId" [link]="['/pools/', nodeInfo.poolId]"></bl-link-property>
-            <bl-link-property label="Compute node ID" [value]="nodeInfo.nodeId" [link]="['/pools/', nodeInfo.poolId, 'nodes', nodeInfo.nodeId]"></bl-link-property>
-            <bl-text-property label="Node URL" [value]="nodeInfo.nodeUrl"></bl-text-property>
-            <bl-text-property label="Affinity ID" [value]="nodeInfo.affinityId"></bl-text-property>
-            <bl-text-property label="Task root directory" [value]="nodeInfo.taskRootDirectory"></bl-text-property>
-            <bl-text-property label="Task root directory URL" [value]="nodeInfo.taskRootDirectoryUrl"></bl-text-property>
+        <bl-property-group [label]="'computeNode' | i18n" class="wide" [collapsed]="true">
+            <bl-link-property [label]="'pool.label' | i18n" [value]="nodeInfo.poolId" [link]="['/pools/', nodeInfo.poolId]"></bl-link-property>
+            <bl-link-property [label]="'nodeId.label' | i18n" [value]="nodeInfo.nodeId" [link]="['/pools/', nodeInfo.poolId, 'nodes', nodeInfo.nodeId]"></bl-link-property>
+            <bl-text-property [label]="'nodeUrl.label' | i18n" [value]="nodeInfo.nodeUrl"></bl-text-property>
+            <bl-text-property [label]="'affinityId.label' | i18n" [value]="nodeInfo.affinityId"></bl-text-property>
+            <bl-text-property [label]="'taskRootDir.label' | i18n" [value]="nodeInfo.taskRootDirectory"></bl-text-property>
+            <bl-text-property [label]="'taskRootDirUrl.label' | i18n" [value]="nodeInfo.taskRootDirectoryUrl"></bl-text-property>
         </bl-property-group>
 
         <bl-property-group label="Container settings" class="wide" [collapsed]="true">
@@ -104,18 +104,19 @@
             <bl-text-property label="Container error" [value]="executionInfo.containerInfo.error" *ngIf="executionInfo.containerInfo?.error"></bl-text-property>
         </bl-property-group>
 
-        <bl-property-group label="Exit conditions" [warningMessage]="exitConditionWarningMessage" [collapsed]="true">
-            <bl-text-property label="Exit codes that do nothing" [value]="exitConditionData.noAction.join(', ')"></bl-text-property>
-            <bl-text-property label="Exit codes that terminate the job" [value]="exitConditionData.terminateJob.join(', ')"></bl-text-property>
-            <bl-text-property label="On scheduling error" [value]="exitConditionData.failureInfo"></bl-text-property>
-            <bl-text-property *ngIf="exitConditionData.default" label="default" [value]="exitConditionData.default"></bl-text-property>
+        <bl-property-group [label]="'exitConditions.label' | i18n" [warningMessage]="exitConditionWarningMessage" [collapsed]="true">
+            <bl-text-property [label]="'exitConditions.noOpExitCodes' | i18n" [value]="exitConditionData.noAction.join(', ')"></bl-text-property>
+            <bl-text-property [label]="'exitConditions.terminateJobExitCodes' | i18n" [value]="exitConditionData.terminateJob.join(', ')"></bl-text-property>
+            <bl-text-property [label]="'exitConditions.onSchedulingError' | i18n" [value]="exitConditionData.failureInfo"></bl-text-property>
+            <bl-text-property *ngIf="exitConditionData.default" [label]="'exitConditions.default' | i18n" [value]="exitConditionData.default"></bl-text-property>
         </bl-property-group>
-        <bl-property-group label="Multi instance settings" *ngIf="task.multiInstanceSettings" [collapsed]="true">
+
+        <bl-property-group [label]="'multiInstanceSettings.label' | i18n" *ngIf="task.multiInstanceSettings" [collapsed]="true">
             <div collapsed-preview>
                 {{task.multiInstanceSettings.numberOfInstances}} subtasks. Running: <i>{{task.multiInstanceSettings.coordinationCommandLine}}</i>
             </div>
-            <bl-text-property label="Coordination command line" [value]="task.multiInstanceSettings.coordinationCommandLine"></bl-text-property>
-            <bl-text-property label="Number of instances" [value]="task.multiInstanceSettings.numberOfInstances"></bl-text-property>
+            <bl-text-property [label]="'multiInstanceSettings.coordinationCommandLine.label' | i18n" [value]="task.multiInstanceSettings.coordinationCommandLine"></bl-text-property>
+            <bl-text-property [label]="'multiInstanceSettings.numberOfInstances.label' | i18n" [value]="task.multiInstanceSettings.numberOfInstances"></bl-text-property>
         </bl-property-group>
     </bl-property-list>
 </bl-entity-configuration>

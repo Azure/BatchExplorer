@@ -1,0 +1,61 @@
+task-configuration:
+  general: General
+  id:
+    label: ID
+  displayName:
+    label: Display name
+  commandLine:
+    label: Command line
+  state:
+    label: State
+  previousState:
+    label: Previous state
+  creationTime:
+    label: Creation time
+  lastModified:
+    label: Last modified
+  userIdentity:
+    label: User identity
+  stateTransitionTime:
+    label: State transition time
+  previousStateTransitionTime:
+    label: Previous state transition time
+  affinityId:
+    label: Affinity id
+  outputFiles:
+    label: Output files
+    pattern: Pattern
+    destination: Destination
+    uploadWhen: Upload when
+  applicationPackages:
+    label: Application packages
+    summary: "{count} application package reference"
+    application: Application
+    version: Version
+    none: This task contains no application package references
+
+  computeNode: Compute node
+  pool:
+    label: Pool
+  nodeId:
+    label: Node ID
+  nodeUrl:
+    label: Node URL
+  taskRootDir:
+    label: Task root directory
+  taskRootDirUrl:
+    label: Task root directory URL
+
+  exitConditions:
+    label: Exit conditions
+    noOpExitCodes: Exit codes that do nothing
+    terminateJobExitCodes: Exit codes that terminate the job
+    onSchedulingError: On scheduling error
+    default: Default
+
+  multiInstanceSettings:
+    label: Multi instance settings
+    coordinationCommandLine:
+      label: Coordination command line
+    numberOfInstances:
+      label: Number of instances

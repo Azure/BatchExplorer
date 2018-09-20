@@ -1,15 +1,18 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { List } from "immutable";
-
+import { I18N_NAMESPACE } from "@batch-flask/ui";
 import { ExitOptions, Job, NameValuePair, Task } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
 import { JobAction, TaskFailureAction } from "app/models/job-action";
+import { List } from "immutable";
 
 // tslint:disable:trackBy-function
 @Component({
     selector: "bl-task-configuration",
     templateUrl: "task-configuration.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        { provide: I18N_NAMESPACE, useValue: "task-configuration" },
+    ],
 })
 export class TaskConfigurationComponent {
     @Input()
