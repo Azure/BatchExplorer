@@ -110,5 +110,12 @@
             <bl-text-property label="On scheduling error" [value]="exitConditionData.failureInfo"></bl-text-property>
             <bl-text-property *ngIf="exitConditionData.default" label="default" [value]="exitConditionData.default"></bl-text-property>
         </bl-property-group>
+        <bl-property-group label="Multi instance settings" *ngIf="task.multiInstanceSettings" [collapsed]="true">
+            <div collapsed-preview>
+                {{task.multiInstanceSettings.numberOfInstances}} subtasks. Running: <i>{{task.multiInstanceSettings.coordinationCommandLine}}</i>
+            </div>
+            <bl-text-property label="Coordination command line" [value]="task.multiInstanceSettings.coordinationCommandLine"></bl-text-property>
+            <bl-text-property label="Number of instances" [value]="task.multiInstanceSettings.numberOfInstances"></bl-text-property>
+        </bl-property-group>
     </bl-property-list>
 </bl-entity-configuration>
