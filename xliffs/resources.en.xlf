@@ -1,23 +1,23 @@
 <xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="Batch" datatype="plaintext" source-language="en">
     <body>
-      <trans-unit id="duration-picker.unit.unlimited">
-        <source>Unlimited</source>
+      <trans-unit id="job-progress-status.inaccurate">
+        <source>Task count might not be accurate in real time</source>
       </trans-unit>
-      <trans-unit id="duration-picker.unit.days">
-        <source>Days</source>
+      <trans-unit id="job-progress-status">
+        <source/>
       </trans-unit>
-      <trans-unit id="duration-picker.unit.minutes">
-        <source>Minutes</source>
+      <trans-unit id="add-task-form.title">
+        <source>Add task</source>
       </trans-unit>
-      <trans-unit id="duration-picker.unit.hours">
-        <source>Hours</source>
+      <trans-unit id="add-task-form.subtitle">
+        <source>Add a task to the selected job</source>
       </trans-unit>
-      <trans-unit id="duration-picker.unit.seconds">
-        <source>Seconds</source>
+      <trans-unit id="add-task-form.action">
+        <source>Add</source>
       </trans-unit>
-      <trans-unit id="duration-picker.unit.custom">
-        <source>Custom (ISO format)</source>
+      <trans-unit id="add-task-form">
+        <source/>
       </trans-unit>
       <trans-unit id="main-navigation.dashboard">
         <source>Dash</source>
@@ -45,6 +45,381 @@
       </trans-unit>
       <trans-unit id="main-navigation.profile">
         <source>Profile</source>
+      </trans-unit>
+      <trans-unit id="main-navigation">
+        <source/>
+      </trans-unit>
+      <trans-unit id="profile-button.profile">
+        <source>Profile</source>
+      </trans-unit>
+      <trans-unit id="profile-button.settings">
+        <source>Settings</source>
+      </trans-unit>
+      <trans-unit id="profile-button.about">
+        <source>About</source>
+      </trans-unit>
+      <trans-unit id="profile-button.thirdPartyNotices">
+        <source>Third party notices</source>
+      </trans-unit>
+      <trans-unit id="profile-button.viewLogs">
+        <source>View logs</source>
+      </trans-unit>
+      <trans-unit id="profile-button.report">
+        <source>Report a bug or feature request</source>
+      </trans-unit>
+      <trans-unit id="profile-button.viewTheme">
+        <source>View theme colors</source>
+      </trans-unit>
+      <trans-unit id="profile-button.logout">
+        <source>Logout</source>
+      </trans-unit>
+      <trans-unit id="profile-button">
+        <source/>
+      </trans-unit>
+      <trans-unit id="node-configuration.id">
+        <source>ID</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.url">
+        <source>URL</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.state">
+        <source>State</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.state-transition-time">
+        <source>State transition time</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.scheduling-state">
+        <source>Scheduling state</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.node-agent-version">
+        <source>Node agent version</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.node-size">
+        <source>Node size</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.last-boot-time">
+        <source>Last boot time</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.allocation-time">
+        <source>Allocation time</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.running-tasks-count">
+        <source>Running tasks</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.total-tasks-run">
+        <source>Total task run</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.total-tasks-succeeded">
+        <source>Total succeessful tasks</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.internal-ip">
+        <source>Internal ip</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.external-ip">
+        <source>External ip</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.is-dedicated">
+        <source>Is dedicated</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.start-task-execution">
+        <source>Start task execution</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.start-task-not-started">
+        <source>Start task execution</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.start-task-running">
+        <source>Running for</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.start-task-completed">
+        <source>Completed in</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.start-time">
+        <source>Start time</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.end-time">
+        <source>End time</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.run-time">
+        <source>Execution time</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.exit-code">
+        <source>Exit code</source>
+      </trans-unit>
+      <trans-unit id="node-configuration.retry-count">
+        <source>Retry count</source>
+      </trans-unit>
+      <trans-unit id="node-configuration">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.general">
+        <source>General</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.id.label">
+        <source>ID</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.id">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.displayName.label">
+        <source>Display name</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.displayName">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.commandLine.label">
+        <source>Command line</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.commandLine">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.state.label">
+        <source>State</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.state">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.previousState.label">
+        <source>Previous state</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.previousState">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.creationTime.label">
+        <source>Creation time</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.creationTime">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.lastModified.label">
+        <source>Last modified</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.lastModified">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.userIdentity.label">
+        <source>User identity</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.userIdentity">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.stateTransitionTime.label">
+        <source>State transition time</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.stateTransitionTime">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.previousStateTransitionTime.label">
+        <source>Previous state transition time</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.previousStateTransitionTime">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.affinityId.label">
+        <source>Affinity id</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.affinityId">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.outputFiles.label">
+        <source>Output files</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.outputFiles.pattern">
+        <source>Pattern</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.outputFiles.destination">
+        <source>Destination</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.outputFiles.uploadWhen">
+        <source>Upload when</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.outputFiles">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.applicationPackages.label">
+        <source>Application packages</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.applicationPackages.summary">
+        <source>{count} application package reference</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.applicationPackages.application">
+        <source>Application</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.applicationPackages.version">
+        <source>Version</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.applicationPackages.none">
+        <source>This task contains no application package references</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.applicationPackages">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.computeNode">
+        <source>Compute node</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.pool.label">
+        <source>Pool</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.pool">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.nodeId.label">
+        <source>Node ID</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.nodeId">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.nodeUrl.label">
+        <source>Node URL</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.nodeUrl">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.taskRootDir.label">
+        <source>Task root directory</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.taskRootDir">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.taskRootDirUrl.label">
+        <source>Task root directory URL</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.taskRootDirUrl">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.exitConditions.label">
+        <source>Exit conditions</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.exitConditions.noOpExitCodes">
+        <source>Exit codes that do nothing</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.exitConditions.terminateJobExitCodes">
+        <source>Exit codes that terminate the job</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.exitConditions.onSchedulingError">
+        <source>On scheduling error</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.exitConditions.default">
+        <source>Default</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.exitConditions">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.multiInstanceSettings.label">
+        <source>Multi instance settings</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.multiInstanceSettings.coordinationCommandLine.label">
+        <source>Coordination command line</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.multiInstanceSettings.coordinationCommandLine">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.multiInstanceSettings.numberOfInstances.label">
+        <source>Number of instances</source>
+      </trans-unit>
+      <trans-unit id="task-configuration.multiInstanceSettings.numberOfInstances">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration.multiInstanceSettings">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-configuration">
+        <source/>
+      </trans-unit>
+      <trans-unit id="rerun-task-form.title">
+        <source>Rerun task</source>
+      </trans-unit>
+      <trans-unit id="rerun-task-form.subtitle">
+        <source>This will delete the task and create a new one with the same id.</source>
+      </trans-unit>
+      <trans-unit id="rerun-task-form.action">
+        <source>Rerun</source>
+      </trans-unit>
+      <trans-unit id="rerun-task-form">
+        <source/>
+      </trans-unit>
+      <trans-unit id="entity-command.confirm.single.title">
+        <source>Are you sure you want to {action} this {type}</source>
+      </trans-unit>
+      <trans-unit id="entity-command.confirm.single.description">
+        <source>You are about to {action} {entityId}</source>
+      </trans-unit>
+      <trans-unit id="entity-command.confirm.single">
+        <source/>
+      </trans-unit>
+      <trans-unit id="entity-command.confirm.multiple.title">
+        <source>Are you sure you want to {action} these {count} {type}</source>
+      </trans-unit>
+      <trans-unit id="entity-command.confirm.multiple">
+        <source/>
+      </trans-unit>
+      <trans-unit id="entity-command.confirm">
+        <source/>
+      </trans-unit>
+      <trans-unit id="entity-command">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-dependency-browser.no-dependency">
+        <source>This task doesn't depend on any other tasks</source>
+      </trans-unit>
+      <trans-unit id="task-dependency-browser">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-resource-files.blobSource">
+        <source>Blob source</source>
+      </trans-unit>
+      <trans-unit id="task-resource-files.filePath">
+        <source>Node file path</source>
+      </trans-unit>
+      <trans-unit id="task-resource-files.fileMode">
+        <source>File mode</source>
+      </trans-unit>
+      <trans-unit id="task-resource-files.none">
+        <source>This task contains no resource files</source>
+      </trans-unit>
+      <trans-unit id="task-resource-files">
+        <source/>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.unlimited">
+        <source>Unlimited</source>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.days">
+        <source>Days</source>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.minutes">
+        <source>Minutes</source>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.hours">
+        <source>Hours</source>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.seconds">
+        <source>Seconds</source>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit.custom">
+        <source>Custom (ISO format)</source>
+      </trans-unit>
+      <trans-unit id="duration-picker.unit">
+        <source/>
+      </trans-unit>
+      <trans-unit id="duration-picker">
+        <source/>
+      </trans-unit>
+      <trans-unit id="partial-sort-warning.message">
+        <source>All entities have not been loaded, this is showing a partial sorting.</source>
+      </trans-unit>
+      <trans-unit id="partial-sort-warning.load-all">
+        <source>Load all (This might take a long time)</source>
+      </trans-unit>
+      <trans-unit id="partial-sort-warning.loading-all">
+        <source>Loading all entities. Please wait.</source>
+      </trans-unit>
+      <trans-unit id="partial-sort-warning.manual-update">
+        <source>List won't be update automatically while sorting(Performance reason)</source>
+      </trans-unit>
+      <trans-unit id="partial-sort-warning.update">
+        <source>Update</source>
+      </trans-unit>
+      <trans-unit id="partial-sort-warning">
+        <source/>
       </trans-unit>
     </body>
   </file>
