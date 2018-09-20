@@ -34,11 +34,7 @@ export class MultiInstanceSettingsPickerComponent implements ControlValueAccesso
         this.form.valueChanges.subscribe(() => {
             if (this._propagateChangeFn) {
                 const value = this.form.value;
-                if (value.coordinationCommandLine) {
-                    this._propagateChangeFn(this.form.value);
-                } else {
-                    this._propagateChangeFn(null);
-                }
+                this._propagateChangeFn(value);
             }
         });
     }
