@@ -75,6 +75,7 @@ export class AddTaskFormComponent extends DynamicForm<Task, TaskCreateDto> imple
             environmentSettings: [[]],
             appPackages: [[]],
             containerSettings: [null],
+            multiInstanceSettings: [null],
         });
     }
 

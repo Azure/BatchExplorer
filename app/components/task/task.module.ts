@@ -10,11 +10,12 @@ import { TaskHomeComponent } from "app/components/task/home";
 
 import {
     AddTaskFormComponent,
+    MultiInstanceSettingsPickerComponent,
     RerunTaskFormComponent,
 } from "app/components/task/action";
 
 const components = [
-    TaskHomeComponent, RerunTaskFormComponent, AddTaskFormComponent,
+    TaskHomeComponent, RerunTaskFormComponent, AddTaskFormComponent, MultiInstanceSettingsPickerComponent,
 ];
 
 const modules = [

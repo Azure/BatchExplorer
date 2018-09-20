@@ -39,8 +39,8 @@ export function createTaskFormToJsonData(formData: CreateTaskModel): TaskCreateD
             retentionTime: formData.constraints && formData.constraints.retentionTime,
         },
         userIdentity: formData.userIdentity,
-        multiInstanceSettings: null,
-        applicationPackageReferences: null,
+        multiInstanceSettings: formData.multiInstanceSettings,
+        applicationPackageReferences: formData.appPackages,
         containerSettings: formData.containerSettings,
     };
 
