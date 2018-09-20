@@ -19,4 +19,18 @@ export class TestTranslatationsLoaderService extends TranslationsLoaderService {
     ],
 })
 export class I18nTestingModule {
+
+    public static withTranslations(translations: StringMap<string>) {
+        const service = new TestTranslatationsLoaderService();
+
+        for (const [key, translation] of Object.entries(translations)) {
+            service.translations.set(key, translation);
+        }
+        return {
+            ngModule: I18nTestingModule,
+            providers: [
+                { provide: TranslationsLoaderService, useValue: service },
+            ],
+        };
+    }
 }
