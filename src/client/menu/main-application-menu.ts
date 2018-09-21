@@ -4,6 +4,7 @@ import { log } from "@batch-flask/utils";
 import { BatchExplorerApplication } from "client/core";
 import { BatchExplorerProperties } from "client/core/properties";
 import { TelemetryManager } from "client/core/telemetry/telemetry-manager";
+import { HelpMenu } from "client/menu/help-menu";
 import { ProxySettingsManager } from "client/proxy";
 import { BrowserWindow, Menu, MenuItemConstructorOptions, app } from "electron";
 
@@ -49,6 +50,7 @@ function setupOSXSpecificMenu(template) {
 @Injectable()
 export class MainApplicationMenu {
     constructor(
+        private helpMenu: HelpMenu,
         private telemetryManager: TelemetryManager,
         private proxySettings: ProxySettingsManager,
         @Inject(forwardRef(() => BatchExplorerApplication)) private app: BatchExplorerApplication,
@@ -61,6 +63,7 @@ export class MainApplicationMenu {
             this._buildViewMenu(),
             this._buildWindowMenu(),
             this._buildEnvironmentMenu(),
+            this.helpMenu.getElectronMenu(),
         ];
 
         setupOSXSpecificMenu(template);

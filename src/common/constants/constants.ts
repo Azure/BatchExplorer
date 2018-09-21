@@ -107,6 +107,8 @@ export const ApiVersion = {
 export const ExternalLinks = {
     supportRequest: "https://portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/newsupportrequest",
     setupStorageAccount: "https://portal.azure.com/#resource{0}/storageAccount",
+    license: "https://azure.github.io/BatchExplorer/EULA.html",
+    privacyStatement: "https://privacy.microsoft.com/en-us/privacystatement",
 };
 
 export const ODataFields = {
