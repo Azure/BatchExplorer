@@ -1,6 +1,7 @@
 import { Injector } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { I18nTestingModule } from "@batch-flask/core/testing";
+import { TelemetryService } from "@batch-flask/core";
+import { I18nTestingModule, TelemetryTestingModule, TestTelemetryService } from "@batch-flask/core/testing";
 import { ActionableEntity, ActivityService, WorkspaceService } from "@batch-flask/ui";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { of } from "rxjs";
@@ -27,6 +28,7 @@ describe("EntityCommand", () => {
     let dialogServiceSpy;
     let notificationServiceSpy: NotificationServiceMock;
     let injector;
+    let telemetryServiceSpy: TestTelemetryService;
 
     beforeEach(() => {
         dialogServiceSpy = {
@@ -34,7 +36,7 @@ describe("EntityCommand", () => {
         };
         notificationServiceSpy = new NotificationServiceMock();
         TestBed.configureTestingModule({
-            imports: [I18nTestingModule],
+            imports: [I18nTestingModule, TelemetryTestingModule],
             providers: [
                 { provide: DialogService, useValue: dialogServiceSpy },
                 { provide: ActivityService, useValue: null },
@@ -44,6 +46,7 @@ describe("EntityCommand", () => {
         });
 
         injector = TestBed.get(Injector);
+        telemetryServiceSpy = TestBed.get(TelemetryService);
     });
 
     function newCommand<TEntity extends ActionableEntity>(options: EntityCommandAttributes<TEntity>) {
@@ -200,6 +203,15 @@ describe("EntityCommand", () => {
                 "entity-command.confirm.multiple.title(action:my-label, count:2, type:jobs)",
                 jasmine.anything(),
             );
+
+            expect(telemetryServiceSpy.trackEvent).toHaveBeenCalledOnce();
+            expect(telemetryServiceSpy.trackEvent).toHaveBeenCalledWith({
+                name: "Execute action",
+                properties: {
+                    name: "my-label",
+                    count: 2,
+                },
+            });
         });
     });
 

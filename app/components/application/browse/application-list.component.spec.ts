@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { FilterBuilder } from "@batch-flask/core";
-import { I18nTestingModule } from "@batch-flask/core/testing";
+import { I18nTestingModule, TelemetryTestingModule } from "@batch-flask/core/testing";
 import { ActivityService } from "@batch-flask/ui/activity";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -44,7 +44,7 @@ describe("ApplicationListComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, I18nTestingModule],
+            imports: [RouterTestingModule, I18nTestingModule, TelemetryTestingModule],
             declarations: [ApplicationListComponent, NoItemMockComponent],
             providers: [
                 { provide: DialogService, useValue: null },
