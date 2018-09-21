@@ -1,5 +1,5 @@
 import { Injector } from "@angular/core";
-import { I18nService, ServerError } from "@batch-flask/core";
+import { I18nService, ServerError, TelemetryService } from "@batch-flask/core";
 import { ListSelection } from "@batch-flask/core/list";
 import { Activity, ActivityService, ActivityStatus } from "@batch-flask/ui/activity";
 import { DialogService } from "@batch-flask/ui/dialogs";
@@ -7,6 +7,7 @@ import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
 import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { exists, log, nil } from "@batch-flask/utils";
+import { Constants } from "common";
 import * as inflection from "inflection";
 import { Observable, forkJoin, of } from "rxjs";
 import { map, share } from "rxjs/operators";
@@ -58,6 +59,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     private activityService: ActivityService;
     private workspaceService: WorkspaceService;
     private i18n: I18nService;
+    private telemetryService: TelemetryService;
 
     constructor(injector: Injector, attributes: EntityCommandAttributes<TEntity, TOptions>) {
         this.notificationService = injector.get(NotificationService);
@@ -65,6 +67,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         this.activityService = injector.get(ActivityService);
         this.workspaceService = injector.get(WorkspaceService);
         this.i18n = injector.get(I18nService);
+        this.telemetryService = injector.get(TelemetryService);
 
         this.name = attributes.name;
         this._label = attributes.label;
@@ -130,6 +133,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
      * This will ask for confirmation unless command explicity configured not to
      */
     public execute(entity: TEntity) {
+        this._trackAction(1);
         if (this.confirm) {
             if (this.confirm instanceof Function) {
                 this.confirm([entity]).subscribe((options) => {
@@ -163,6 +167,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
      * This will ask for confirmation unless command explicity configured not to
      */
     public executeMultiple(entities: TEntity[]) {
+        this._trackAction(entities.length);
         if (this.confirm) {
             if (this.confirm instanceof Function) {
                 this.confirm(entities).subscribe((options) => {
@@ -258,5 +263,15 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         const feature = this.definition.config.feature;
         if (!feature) { return true; }
         return this.workspaceService.isFeatureEnabled(`${feature}.${this.name}`);
+    }
+
+    private _trackAction(count: number) {
+        this.telemetryService.trackEvent({
+            name: Constants.TelemetryEvents.executeAction,
+            properties: {
+                name: this.name,
+                count,
+            },
+        });
     }
 }

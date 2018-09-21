@@ -222,4 +222,5 @@ export const TelemetryEvents = {
     applicationStart: "Application start",
     disableTelemetry: "Disable telemetry",
     navigate: "Navigate",
+    executeAction: "Execute action",
 };
