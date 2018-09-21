@@ -14,6 +14,7 @@ import * as path from "path";
 import { Subscription } from "rxjs";
 
 import "./profile-button.scss";
+import { Constants } from "common";
 
 @Component({
     selector: "bl-profile-button",
@@ -118,7 +119,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     }
 
     private _openGithubIssues() {
-        this.shell.openExternal("https://github.com/Azure/BatchExplorer/issues");
+        this.shell.openExternal(Constants.ExternalLinks.submitIssue);
     }
 
     private _showAboutPage() {

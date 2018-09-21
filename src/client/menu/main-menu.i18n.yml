@@ -1,0 +1,6 @@
+main-menu:
+  help:
+    label: Help
+    viewLicense: View license
+    privacyStatement: Privacy statement
+    reportIssue: Report issue

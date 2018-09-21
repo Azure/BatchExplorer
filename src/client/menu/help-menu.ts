@@ -1,22 +1,29 @@
 import { Injectable } from "@angular/core";
+import { I18nService } from "@batch-flask/core";
 import { Constants } from "common";
 import { MenuItemConstructorOptions, shell } from "electron";
 
 @Injectable()
 export class HelpMenu {
-    public label = "Help";
+    constructor(private i18n: I18nService) {
 
+    }
     public getElectronMenu(): MenuItemConstructorOptions {
         return {
-            label: this.label,
+            label: this.i18n.translate("main-menu.help.label"),
             submenu: [
                 {
-                    label: "View license",
+                    label: this.i18n.translate("main-menu.help.viewLicense"),
                     click: () => this.openLicense(),
                 },
                 {
-                    label: "Privacy statement",
+                    label: this.i18n.translate("main-menu.help.privacyStatement"),
                     click: () => this.openPrivacyStatement(),
+                },
+                { type: "separator" },
+                {
+                    label: this.i18n.translate("main-menu.help.reportIssue"),
+                    click: () => this.submitIssue(),
                 },
             ],
         };
@@ -28,5 +35,9 @@ export class HelpMenu {
 
     public openPrivacyStatement() {
         shell.openExternal(Constants.ExternalLinks.privacyStatement);
+    }
+
+    public submitIssue() {
+        shell.openExternal(Constants.ExternalLinks.submitIssue);
     }
 }
