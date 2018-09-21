@@ -71,7 +71,3 @@ export class BatchExplorerClientModule {
         // Nothing to do
     }
 }
-
-console.log("ABc", [
-    MainApplicationMenu,
-]);
