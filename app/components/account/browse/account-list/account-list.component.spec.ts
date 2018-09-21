@@ -4,6 +4,7 @@ import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { FilterBuilder } from "@batch-flask/core";
+import { TelemetryTestingModule } from "@batch-flask/core/testing";
 import { ActivityService } from "@batch-flask/ui/activity";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { DialogService } from "@batch-flask/ui/dialogs";
@@ -61,7 +62,7 @@ describe("AccountListComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, QuickListTestingModule, ElectronTestingModule],
+            imports: [RouterTestingModule, QuickListTestingModule, ElectronTestingModule, TelemetryTestingModule],
             declarations: [AccountListComponent, NoItemMockComponent],
             providers: [
                 { provide: BatchAccountService, useValue: accountService },
