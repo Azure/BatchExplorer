@@ -10,6 +10,7 @@ import { OS } from "@batch-flask/utils";
 import {
     AdalService, BatchExplorerService,
 } from "app/services";
+import { Constants } from "common";
 import * as path from "path";
 import { Subscription } from "rxjs";
 
@@ -118,7 +119,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     }
 
     private _openGithubIssues() {
-        this.shell.openExternal("https://github.com/Azure/BatchExplorer/issues");
+        this.shell.openExternal(Constants.ExternalLinks.submitIssue);
     }
 
     private _showAboutPage() {

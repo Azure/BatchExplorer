@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
+import { DataStore } from "@batch-flask/core";
 import { SecureUtils } from "@batch-flask/utils";
-import { LocalDataStore } from "client/core/local-data-store";
 import { Constants } from "common";
 
 @Injectable()
 export class MachineIdService {
     private _id: string;
 
-    constructor(private dataStore: LocalDataStore) {
+    constructor(private dataStore: DataStore) {
 
     }
 

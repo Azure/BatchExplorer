@@ -1,22 +1,24 @@
 import { NgModule } from "@angular/core";
 import { ServerModule } from "@angular/platform-server";
 import { DevTranslationsLoader } from "@batch-flask/compiler";
-import { I18nModule, LocaleService, TranslationsLoaderService } from "@batch-flask/core";
+import { DataStore, I18nModule, LocaleService, TranslationsLoaderService } from "@batch-flask/core";
 import { OSService } from "@batch-flask/ui/electron/os.service";
-import { ClientLocaleService } from "client/core";
-import { AADService } from "client/core/aad";
-import { BatchExplorerInitializer } from "client/core/batch-explorer-initializer";
-import { BatchExplorerProcess } from "client/core/batch-explorer-process";
-import { BlIpcMain } from "client/core/bl-ipc-main";
-import { FileSystem } from "client/core/fs";
 import { ClientTranslationsLoaderService } from "client/core/i18n";
-import { LocalDataStore } from "client/core/local-data-store";
-import { LocalFileStorage } from "client/core/local-file-storage";
-import { ClientTelemetryModule } from "client/core/telemetry";
-import { TerminalService } from "client/core/terminal";
-import { ProxySettingsManager } from "client/proxy";
 import { autoUpdater } from "electron-updater";
+import { ClientLocaleService } from "./core";
+import { AADService } from "./core/aad";
 import { AUTO_UPDATER, BatchExplorerApplication } from "./core/batch-explorer-application";
+import { BatchExplorerInitializer } from "./core/batch-explorer-initializer";
+import { BatchExplorerProcess } from "./core/batch-explorer-process";
+import { BlIpcMain } from "./core/bl-ipc-main";
+import { FileSystem } from "./core/fs";
+import { LocalDataStore } from "./core/local-data-store";
+import { LocalFileStorage } from "./core/local-file-storage";
+import { BatchExplorerProperties } from "./core/properties";
+import { ClientTelemetryModule } from "./core/telemetry";
+import { TerminalService } from "./core/terminal";
+import { MenuModule } from "./menu/menu.module";
+import { ProxySettingsManager } from "./proxy";
 
 /**
  * List services here that needs to be create even if they are not injected anywhere
@@ -42,17 +44,19 @@ export function initializeServices(injector) {
         ServerModule,
         I18nModule,
         ClientTelemetryModule,
+        MenuModule,
     ],
     providers: [
         { provide: AUTO_UPDATER, useValue: autoUpdater },
         { provide: LocaleService, useClass: ClientLocaleService },
         { provide: TranslationsLoaderService, useClass: ClientTranslationsLoaderService },
+        { provide: DataStore, useClass: LocalDataStore },
         DevTranslationsLoader,
         BatchExplorerApplication,
         BatchExplorerProcess,
         BatchExplorerInitializer,
         ProxySettingsManager,
-        LocalDataStore,
+        BatchExplorerProperties,
         LocalFileStorage,
         AADService,
         BlIpcMain,

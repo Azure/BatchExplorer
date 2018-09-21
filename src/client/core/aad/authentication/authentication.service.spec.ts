@@ -14,7 +14,9 @@ describe("AuthenticationService", () => {
         appSpy = {
             splashScreen: new MockSplashScreen(),
             authenticationWindow: new MockAuthenticationWindow(),
-            azureEnvironment: AzureEnvironment.Azure,
+            properties: {
+                azureEnvironment: AzureEnvironment.Azure,
+            },
         };
         const config = {
             tenant: "common",

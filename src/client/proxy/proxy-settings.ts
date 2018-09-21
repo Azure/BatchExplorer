@@ -1,13 +1,12 @@
-import {
-    ProxyCredentials, ProxySetting, ProxySettings,
-} from "get-proxy-settings";
-
 import { Inject, Injectable, forwardRef } from "@angular/core";
+import { DataStore } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { BatchExplorerApplication } from "client/core/batch-explorer-application";
 import { BatchExplorerProcess } from "client/core/batch-explorer-process";
-import { LocalDataStore } from "client/core/local-data-store";
 import { Constants } from "common";
+import {
+    ProxyCredentials, ProxySetting, ProxySettings,
+} from "get-proxy-settings";
 import { BehaviorSubject } from "rxjs";
 import { filter, map, take } from "rxjs/operators";
 
@@ -27,7 +26,7 @@ export class ProxySettingsManager {
     constructor(
         @Inject(forwardRef(() => BatchExplorerApplication)) private batchExplorerApp: BatchExplorerApplication,
         private batchExplorerProcess: BatchExplorerProcess,
-        private storage: LocalDataStore) {
+        private storage: DataStore) {
     }
 
     public async init() {
