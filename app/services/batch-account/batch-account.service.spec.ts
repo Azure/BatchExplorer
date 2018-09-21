@@ -105,6 +105,7 @@ describe("BatchAccountService", () => {
 
         storageSpy = {
             get: () => of(favoritesIds),
+            set: jasmine.createSpy("storage.set").and.returnValue(of(null)),
         };
         service = new BatchAccountService(armAccountSpy, localAccountSpy, storageSpy, null, subscriptionServiceSpy);
         subs.push(service.accounts.subscribe(x => accounts = x.toArray()));
@@ -193,6 +194,48 @@ describe("BatchAccountService", () => {
                 ]);
                 done();
             });
+        });
+
+        it("favorite an account", async () => {
+            favoritesIds = [
+                { id: "/subscriptions/sub1/resources/batch-accounts/arm-account-1" },
+                { id: "local/https://testaccount2.westus2.batch.azure.com" },
+            ];
+
+            await service.loadInitialData().toPromise();
+
+            await service.favoriteAccount("/subscriptions/sub1/resources/batch-accounts/arm-account-2").toPromise();
+
+            expect(favorites.toArray()).toEqual([
+                armAccount1,
+                localAccount2,
+                armAccount2,
+            ]);
+
+            expect(storageSpy.set).toHaveBeenCalledWith("account-favorites", [
+                { id: "/subscriptions/sub1/resources/batch-accounts/arm-account-1" },
+                { id: "local/https://testaccount2.westus2.batch.azure.com" },
+                { id: "/subscriptions/sub1/resources/batch-accounts/arm-account-2" },
+            ]);
+        });
+
+        it("unfavorite an account", async () => {
+            favoritesIds = [
+                { id: "/subscriptions/sub1/resources/batch-accounts/arm-account-1" },
+                { id: "local/https://testaccount2.westus2.batch.azure.com" },
+            ];
+
+            await service.loadInitialData().toPromise();
+
+            await service.unFavoriteAccount("local/https://testaccount2.westus2.batch.azure.com").toPromise();
+
+            expect(favorites.toArray()).toEqual([
+                armAccount1,
+            ]);
+
+            expect(storageSpy.set).toHaveBeenCalledWith("account-favorites", [
+                { id: "/subscriptions/sub1/resources/batch-accounts/arm-account-1" },
+            ]);
         });
     });
 });
