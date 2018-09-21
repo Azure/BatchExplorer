@@ -7,7 +7,7 @@ import { ArmResourceUtils } from "app/utils";
 import { Constants } from "common";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, combineLatest, forkJoin, of } from "rxjs";
-import { filter, flatMap, map, share, shareReplay } from "rxjs/operators";
+import { catchError, filter, flatMap, map, share, shareReplay } from "rxjs/operators";
 import { AzureHttpService } from "../azure-http.service";
 import { LocalFileStorage } from "../local-file-storage.service";
 import { SubscriptionService } from "../subscription.service";
@@ -18,6 +18,10 @@ export enum AccountStatus {
     Valid,
     Invalid,
     Loading,
+}
+
+interface AccountFavorite {
+    id: string;
 }
 
 @Injectable()
@@ -40,7 +44,7 @@ export class BatchAccountService implements OnDestroy {
     public currentAccountId: Observable<string>;
 
     private _accountJsonFileName: string = "account-favorites";
-    private _accountFavorites: BehaviorSubject<List<{ id: string }>> = new BehaviorSubject(List([]));
+    private _favoriteAccountIds: BehaviorSubject<List<AccountFavorite>> = new BehaviorSubject(List([]));
     private _currentAccountId = new BehaviorSubject<string>(null);
     private _cache = new DataCache<BatchAccount>();
     private _getter: BasicEntityGetter<BatchAccount, { id: string }>;
@@ -72,9 +76,17 @@ export class BatchAccountService implements OnDestroy {
             shareReplay(1),
         );
 
-        this.accountFavorites = this._accountFavorites.pipe(
+        this.accountFavorites = this._favoriteAccountIds.pipe(
             flatMap((favourites) => {
-                return forkJoin(...favourites.map(x => this.getFromCache(x.id)).toArray());
+                const obs = favourites.map(x => this.getFromCache(x.id).pipe(
+                    catchError(() => {
+                        return of(new ArmBatchAccount({
+                            id: x.id,
+                        } as any));
+                    }),
+                )).toArray();
+
+                return forkJoin(...obs);
             }),
             map((items: BatchAccount[]) => List(items.filter(x => Boolean(x)))),
             shareReplay(1),
@@ -83,6 +95,7 @@ export class BatchAccountService implements OnDestroy {
 
     public ngOnDestroy() {
         this._currentAccountId.complete();
+        this._favoriteAccountIds.complete();
     }
 
     public get currentAccountValid(): Observable<AccountStatus> {
@@ -130,12 +143,12 @@ export class BatchAccountService implements OnDestroy {
 
     public get(id: string): Observable<BatchAccount | null> {
         if (!id) { return of(null); }
-        return this._getter.fetch({id});
+        return this._getter.fetch({ id });
     }
 
     public getFromCache(id: string): Observable<BatchAccount | null> {
         if (!id) { return of(null); }
-        return this._getter.fetch({id}, {cached: true});
+        return this._getter.fetch({ id }, { cached: true });
     }
 
     public getAccountKeys(accountId: string): Observable<AccountKeys> {
@@ -151,7 +164,7 @@ export class BatchAccountService implements OnDestroy {
         if (this.isAccountFavorite(accountId)) {
             return of(true);
         }
-        this._accountFavorites.next(this._accountFavorites.value.push({
+        this._favoriteAccountIds.next(this._favoriteAccountIds.value.push({
             id: accountId,
         }));
         return this._saveAccountFavorites();
@@ -163,14 +176,14 @@ export class BatchAccountService implements OnDestroy {
             return;
         }
 
-        const newAccounts = this._accountFavorites.value.filter(account => account.id.toLowerCase() !== accountId);
-        this._accountFavorites.next(List<BatchAccount>(newAccounts));
+        const newAccounts = this._favoriteAccountIds.value.filter(account => account.id.toLowerCase() !== accountId);
+        this._favoriteAccountIds.next(List<AccountFavorite>(newAccounts));
         return this._saveAccountFavorites();
     }
 
     public isAccountFavorite(accountId: string): boolean {
         accountId = accountId.toLowerCase();
-        const favorites = this._accountFavorites.value;
+        const favorites = this._favoriteAccountIds.value;
         const account = favorites.filter(x => x.id === accountId).first();
 
         return Boolean(account);
@@ -182,9 +195,11 @@ export class BatchAccountService implements OnDestroy {
             this.selectAccount(selectedAccountId);
         }
 
-        this._loadFavoriteAccounts().subscribe((accounts) => {
-            this._accountFavorites.next(accounts);
+        const obs = this._loadFavoriteAccounts();
+        obs.subscribe((accounts) => {
+            this._favoriteAccountIds.next(accounts);
         });
+        return obs;
     }
 
     public delete(accountId: string) {
@@ -203,11 +218,11 @@ export class BatchAccountService implements OnDestroy {
         }
     }
 
-    private _loadFavoriteAccounts(): Observable<List<BatchAccount>> {
+    private _loadFavoriteAccounts(): Observable<List<AccountFavorite>> {
         return this.storage.get(this._accountJsonFileName).pipe(
             map((data) => {
                 if (Array.isArray(data)) {
-                    return List(data.map(x => new ArmBatchAccount(x)));
+                    return List(data);
                 } else {
                     return List([]);
                 }
@@ -216,8 +231,8 @@ export class BatchAccountService implements OnDestroy {
         );
     }
 
-    private _saveAccountFavorites(accounts: List<{ id: string }> = null): Observable<any> {
-        accounts = accounts === null ? this._accountFavorites.value : accounts;
+    private _saveAccountFavorites(): Observable<any> {
+        const accounts = this._favoriteAccountIds.value;
         return this.storage.set(this._accountJsonFileName, accounts.toJS());
     }
 
