@@ -10,11 +10,11 @@ import { OS } from "@batch-flask/utils";
 import {
     AdalService, BatchExplorerService,
 } from "app/services";
+import { Constants } from "common";
 import * as path from "path";
 import { Subscription } from "rxjs";
 
 import "./profile-button.scss";
-import { Constants } from "common";
 
 @Component({
     selector: "bl-profile-button",
