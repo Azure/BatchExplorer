@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { TelemetryService } from "@batch-flask/core";
+import { TelemetryService } from "@batch-flask/core/telemetry";
 
 export class TestTelemetryService {
     public trackEvent: jasmine.Spy;

@@ -4,7 +4,6 @@ import { TelemetryService } from "@batch-flask/core";
 import { I18nTestingModule, TelemetryTestingModule, TestTelemetryService } from "@batch-flask/core/testing";
 import { ActionableEntity, ActivityService, WorkspaceService } from "@batch-flask/ui";
 import { DialogService } from "@batch-flask/ui/dialogs";
-import { Constants } from "common";
 import { of } from "rxjs";
 import { NotificationServiceMock } from "test/utils/mocks";
 import { EntityCommand, EntityCommandAttributes, EntityCommandNotify } from "./entity-command";
@@ -207,7 +206,7 @@ describe("EntityCommand", () => {
 
             expect(telemetryServiceSpy.trackEvent).toHaveBeenCalledOnce();
             expect(telemetryServiceSpy.trackEvent).toHaveBeenCalledWith({
-                name: Constants.TelemetryEvents.executeAction,
+                name: "Execute action",
                 properties: {
                     name: "my-label",
                     count: 2,

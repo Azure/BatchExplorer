@@ -7,7 +7,6 @@ import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
 import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { exists, log, nil } from "@batch-flask/utils";
-import { Constants } from "common";
 import * as inflection from "inflection";
 import { Observable, forkJoin, of } from "rxjs";
 import { map, share } from "rxjs/operators";
@@ -267,7 +266,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
 
     private _trackAction(count: number) {
         this.telemetryService.trackEvent({
-            name: Constants.TelemetryEvents.executeAction,
+            name: "Execute action",
             properties: {
                 name: this.name,
                 count,
