@@ -1,11 +1,10 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { TelemetryService } from "@batch-flask/core";
+import { DataStore, TelemetryService } from "@batch-flask/core";
 import { exists } from "@batch-flask/utils";
 import { TelemetryType } from "applicationinsights/out/Declarations/Contracts";
 import { ClientConstants } from "client/client-constants";
 import { BatchExplorerProcess } from "client/core/batch-explorer-process";
 import { BlIpcMain } from "client/core/bl-ipc-main";
-import { LocalDataStore } from "client/core/local-data-store";
 import { Constants } from "common";
 import { Subscription } from "rxjs";
 
@@ -28,7 +27,7 @@ export class TelemetryManager implements OnDestroy {
 
     constructor(
         private telemetryService: TelemetryService,
-        private dataStore: LocalDataStore,
+        private dataStore: DataStore,
         private batchExplorerProcess: BatchExplorerProcess,
         ipcMain: BlIpcMain) {
 

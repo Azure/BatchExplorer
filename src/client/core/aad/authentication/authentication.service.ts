@@ -94,7 +94,7 @@ export class AuthenticationService {
             return this._logoutDeferred.promise;
         }
 
-        const url = AdalConstants.logoutUrl(this.app.azureEnvironment.aadUrl, this.config.tenant);
+        const url = AdalConstants.logoutUrl(this.app.properties.azureEnvironment.aadUrl, this.config.tenant);
         const authWindow = this.app.authenticationWindow;
         authWindow.create();
         this._setupEvents();
@@ -139,13 +139,13 @@ export class AuthenticationService {
             scope: "user_impersonation+openid",
             nonce: SecureUtils.uuid(),
             state: SecureUtils.uuid(),
-            resource: this.app.azureEnvironment.armUrl,
+            resource: this.app.properties.azureEnvironment.armUrl,
         };
 
         if (silent) {
             params.prompt = AuthorizePromptType.none;
         }
-        return AdalConstants.authorizeUrl(this.app.azureEnvironment.aadUrl, tenantId, params);
+        return AdalConstants.authorizeUrl(this.app.properties.azureEnvironment.aadUrl, tenantId, params);
     }
 
     /**

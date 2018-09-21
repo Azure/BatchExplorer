@@ -1,11 +1,10 @@
 import { Inject, Injectable, InjectionToken, Injector } from "@angular/core";
 import { LocaleService, TelemetryService, TranslationsLoaderService } from "@batch-flask/core";
-import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
+import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
-import { LocalDataStore } from "client/core/local-data-store";
+import { BatchExplorerProperties } from "client/core/properties";
 import { TelemetryManager } from "client/core/telemetry/telemetry-manager";
-import { setMenu } from "client/menu";
 import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-configuration-window";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { ProxySettingsManager } from "client/proxy/proxy-settings";
@@ -46,10 +45,6 @@ export class BatchExplorerApplication {
     public state: Observable<BatchExplorerState>;
     public proxySettings: ProxySettingsManager;
 
-    public get azureEnvironment(): AzureEnvironment { return this._azureEnvironment.value; }
-    public azureEnvironmentObs: Observable<AzureEnvironment>;
-
-    private _azureEnvironment = new BehaviorSubject(AzureEnvironment.Azure);
     private _state = new BehaviorSubject<BatchExplorerState>(BatchExplorerState.Loading);
     private _initializer: BatchExplorerInitializer;
     private _currentlyAskingForCredentials: Promise<any>;
@@ -58,8 +53,8 @@ export class BatchExplorerApplication {
         @Inject(AUTO_UPDATER) public autoUpdater: AppUpdater,
         public translationLoader: TranslationsLoaderService,
         public localeService: LocaleService,
-        private localStorage: LocalDataStore,
         private injector: Injector,
+        public properties: BatchExplorerProperties,
         private telemetryService: TelemetryService,
         private telemetryManager: TelemetryManager,
         private ipcMain: BlIpcMain) {
@@ -70,11 +65,10 @@ export class BatchExplorerApplication {
         ipcMain.on(IpcEvent.logoutAndLogin, () => {
             return this.logoutAndLogin();
         });
-        this.azureEnvironmentObs = this._azureEnvironment.asObservable();
-        this._loadAzureEnviornment();
     }
 
     public async init() {
+
         await this.telemetryManager.init();
 
         this.telemetryService.trackEvent({ name: Constants.TelemetryEvents.applicationStart });
@@ -94,7 +88,6 @@ export class BatchExplorerApplication {
      * Start the app by showing the splash screen
      */
     public async start() {
-        setMenu(this, this.telemetryManager);
         const appReady = new Deferred();
         const loggedIn = new Deferred();
         this.pythonServer.start();
@@ -149,8 +142,7 @@ export class BatchExplorerApplication {
     public async updateAzureEnvironment(env: AzureEnvironment) {
         await this.aadService.logout();
         this.windows.closeAll();
-        await this.localStorage.setItem(Constants.localStorageKey.azureEnvironment, env.id);
-        this._azureEnvironment.next(env);
+        this.properties.updateAzureEnvironment(env);
         await this.aadService.login();
         this.windows.openNewWindow();
     }
@@ -337,12 +329,5 @@ export class BatchExplorerApplication {
             details.requestHeaders["User-Agent"] = userAgent;
             callback({ cancel: false, requestHeaders: details.requestHeaders });
         });
-    }
-
-    private async _loadAzureEnviornment() {
-        const initialEnv = await this.localStorage.getItem(Constants.localStorageKey.azureEnvironment);
-        if (initialEnv in SupportedEnvironments) {
-            this._azureEnvironment.next(SupportedEnvironments[initialEnv]);
-        }
     }
 }

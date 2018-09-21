@@ -1,14 +1,14 @@
 /**
  * Data store is a generic interface for saving key values
  */
-export interface DataStore {
-    size: number;
+export abstract class DataStore {
+    public abstract size: number;
 
-    setItem<T= string>(key: string, value: T): Promise<void>;
+    public abstract setItem<T= string>(key: string, value: T): Promise<void>;
 
-    getItem<T= string>(key: string): Promise<T>;
+    public abstract getItem<T= string>(key: string): Promise<T>;
 
-    removeItem(key: string): Promise<void>;
+    public abstract removeItem(key: string): Promise<void>;
 
-    clear(): Promise<void>;
+    public abstract clear(): Promise<void>;
 }

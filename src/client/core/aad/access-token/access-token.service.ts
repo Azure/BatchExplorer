@@ -1,7 +1,7 @@
 import { AccessToken } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
-import { BatchExplorerApplication } from "client/core//batch-explorer-application";
 import { RequestInit, fetch } from "client/core/fetch";
+import { BatchExplorerProperties } from "client/core/properties";
 import { AADConfig } from "../aad-config";
 import { objectToParams } from "../adal-constants";
 
@@ -24,7 +24,7 @@ export interface AccessTokenErrorResult {
  * This service handle the retrival of the access token to auth AAD queries
  */
 export class AccessTokenService {
-    constructor(private app: BatchExplorerApplication, private config: AADConfig) {
+    constructor(private properties: BatchExplorerProperties, private config: AADConfig) {
 
     }
 
@@ -63,7 +63,7 @@ export class AccessTokenService {
     }
 
     private _buildUrl(tenantId: string) {
-        return `${this.app.azureEnvironment.aadUrl}/${tenantId}/oauth2/token`;
+        return `${this.properties.azureEnvironment.aadUrl}/${tenantId}/oauth2/token`;
     }
 
     private _redeemBody(resource: string, authorizationCode: string) {
