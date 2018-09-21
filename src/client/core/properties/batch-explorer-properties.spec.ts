@@ -6,10 +6,13 @@ import { Constants } from "common";
 describe("BatchExplorerProperties", () => {
     let store: InMemoryDataStore;
     let properties: BatchExplorerProperties;
+    let envFromObs: AzureEnvironment;
 
     beforeEach(() => {
+        envFromObs = null;
         store = new InMemoryDataStore();
         properties = new BatchExplorerProperties(store);
+        properties.azureEnvironmentObs.subscribe(x => envFromObs = x);
     });
 
     describe("azureEnvironment", () => {
@@ -17,8 +20,7 @@ describe("BatchExplorerProperties", () => {
             await properties.init();
             expect(properties.azureEnvironment).toBe(AzureEnvironment.Azure);
 
-            const env = await properties.azureEnvironmentObs.toPromise();
-            expect(env).toBe(AzureEnvironment.Azure);
+            expect(envFromObs).toBe(AzureEnvironment.Azure);
         });
 
         it("loads the environment from the store", async () => {
@@ -26,18 +28,18 @@ describe("BatchExplorerProperties", () => {
             await properties.init();
             expect(properties.azureEnvironment).toBe(AzureEnvironment.AzureChina);
 
-            const env = await properties.azureEnvironmentObs.toPromise();
-            expect(env).toBe(AzureEnvironment.AzureChina);
+            expect(envFromObs).toBe(AzureEnvironment.AzureChina);
         });
 
         it("updates the enviromnent in the store", async () => {
             await properties.init();
-            properties.updateAzureEnvironment(AzureEnvironment.AzureGermany);
+            await properties.updateAzureEnvironment(AzureEnvironment.AzureGermany);
             expect(properties.azureEnvironment).toBe(AzureEnvironment.AzureGermany);
 
-            const env = await properties.azureEnvironmentObs.toPromise();
-            expect(env).toBe(AzureEnvironment.AzureGermany);
-            expect(await store.getItem(Constants.localStorageKey.azureEnvironment)).toBe(AzureEnvironment.AzureGermany);
+            expect(envFromObs).toBe(AzureEnvironment.AzureGermany);
+
+            const id = await store.getItem(Constants.localStorageKey.azureEnvironment);
+            expect(id).toBe(AzureEnvironment.AzureGermany.id);
         });
     });
 });
