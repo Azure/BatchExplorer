@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { Filter, FilterMatcher, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
 import { LoadingStatus } from "@batch-flask/ui/loading";
@@ -33,7 +33,6 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
     private _onCertificateAddedSub: Subscription;
 
     constructor(
-        router: Router,
         activatedRoute: ActivatedRoute,
         changeDetector: ChangeDetectorRef,
         public commands: CertificateCommands,
