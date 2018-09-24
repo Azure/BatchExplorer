@@ -15,7 +15,7 @@
     }
 
     [bl-dropdown-content] {
-        width: $account-dropdown-width;
+        min-width: $account-dropdown-width;
 
         .url {
             font-size: 10px;
@@ -24,6 +24,10 @@
 
         i.fa {
             margin-right: 5px;
+        }
+
+        .fa-check {
+            margin-left: 5px;
         }
 
         .selected {
