@@ -5,8 +5,8 @@ import { Observable, Subscription } from "rxjs";
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import {
-    InsightsMetricsService, MonitorChartMetrics,
-    MonitorChartTimeFrame, MonitorChartType, ThemeService,
+    BatchAccountService, InsightsMetricsService,
+    MonitorChartMetrics, MonitorChartTimeFrame, MonitorChartType, ThemeService,
 } from "app/services";
 
 import { log } from "@batch-flask/utils";
@@ -33,12 +33,14 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     public options: Chart.ChartOptions = {};
 
     private _themeSub: Subscription;
+    private _accountSub: Subscription;
     private _sub: Subscription;
     private _theme: StringMap<string>;
     private _metricList: MonitoringMetricList;
 
     constructor(
         themeService: ThemeService,
+        private accountService: BatchAccountService,
         private changeDetector: ChangeDetectorRef,
         private monitor: InsightsMetricsService,
         private contextMenuService: ContextMenuService) {
@@ -58,6 +60,9 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                 [MonitorChartMetrics.TaskStartEvent]: theme.monitorChart.taskStartEvent,
             };
         });
+        this._accountSub = this.accountService.currentAccountId.subscribe(() => {
+            this.refreshMetrics();
+        });
     }
 
     public ngOnChanges(changes): void {
@@ -73,6 +78,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     public ngOnDestroy(): void {
         this._destroySub();
         this._themeSub.unsubscribe();
+        this._accountSub.unsubscribe();
     }
 
     public refreshMetrics() {
