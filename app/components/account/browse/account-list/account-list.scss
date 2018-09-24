@@ -2,7 +2,7 @@
 
 bl-account-list {
     bl-quick-list-row-render:hover {
-        .fa-star {
+        .fa-star:not(.favorite) {
             color: $main-background;
         }
     }
@@ -12,11 +12,11 @@ bl-account-list {
         color: $alto;
 
         &:hover {
-            color: map-get($primary, 100) !important;
+            color: $selection-color;
         }
 
         &.favorite {
-            color: map-get($primary, 400) !important;
+            color: $warn-color;
         }
     }
 
@@ -24,5 +24,13 @@ bl-account-list {
         background: $primary-color;
         color: $primary-contrast-color;
         padding: 2px 5px;
+    }
+
+    .account-location {
+        display: flex;
+
+        .fa-globe {
+            margin-right: 3px;
+        }
     }
 }
