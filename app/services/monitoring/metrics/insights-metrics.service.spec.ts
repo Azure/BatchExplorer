@@ -8,19 +8,12 @@ import { MonitorChartTimeFrame } from "./monitor-metrics-base";
 describe("InsightsMetricsService", () => {
     let monitorService: InsightsMetricsService;
     let requestUrl;
-    let themeServiceSpy;
     let accountServiceSpy;
     let armServiceSpy;
     let mockeResponse;
     const subs: Subscription[] = [];
 
     beforeEach(() => {
-        themeServiceSpy = {
-            currentTheme: of({
-                monitorChart: {},
-            }),
-        };
-
         accountServiceSpy = {
             currentAccount: of(Fixtures.account.create({
                 id: "myaccount",
@@ -33,7 +26,7 @@ describe("InsightsMetricsService", () => {
                 return of(new Response(new ResponseOptions(mockeResponse)));
             }),
         };
-        monitorService = new InsightsMetricsService(themeServiceSpy, accountServiceSpy, armServiceSpy);
+        monitorService = new InsightsMetricsService(accountServiceSpy, armServiceSpy);
     });
 
     afterEach(() => {
