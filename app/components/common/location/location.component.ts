@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/core";
 
 import "./location.scss";
 
@@ -46,10 +46,6 @@ export class LocationComponent implements OnChanges {
     @Input() public location: string;
 
     public iconCls: string;
-
-    constructor(private changeDetector: ChangeDetectorRef) {
-
-    }
 
     public ngOnChanges(changes) {
         if (changes.location) {
