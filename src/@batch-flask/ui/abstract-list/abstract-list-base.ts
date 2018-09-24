@@ -372,9 +372,9 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
      * Update the items to mark which ones are selected
      */
     private _updateSelectedItems() {
-        this.items.forEach((item) => {
-            item.selected = Boolean(this.selection.has(item.id));
-        });
+        // this.items.forEach((item) => {
+        //     item.selected = Boolean(this.selection.has(item.id));
+        // });
         this.changeDetector.markForCheck();
     }
 
