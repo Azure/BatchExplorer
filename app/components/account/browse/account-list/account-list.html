@@ -17,7 +17,7 @@
         </ng-container>
         <ng-container *blQuickListRowState="let account">
             <div *ngIf="account.armEnabled" class="account-location">
-                <i class="fa fa-globe"></i>{{account.location}}
+                <bl-location [location]="account.location"></bl-location>
             </div>
             <ng-container *ngIf="!account.armEnabled">
                 <span class="account-type">Local</span>
