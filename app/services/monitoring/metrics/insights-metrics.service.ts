@@ -5,7 +5,6 @@ import { Observable, of } from "rxjs";
 import { Metric, MetricValue, MonitoringMetricList } from "app/models/monitoring";
 import { ArmHttpService } from "app/services/arm-http.service";
 import { BatchAccountService } from "app/services/batch-account";
-import { ThemeService } from "app/services/themes";
 import { flatMap, map, share } from "rxjs/operators";
 import { CoreCountMetrics } from "./core-count-metrics";
 import { FailedTaskMetrics } from "./failed-task-metrics";
@@ -20,7 +19,6 @@ import { TaskStatesMetrics } from "./task-states-metrics";
 export class InsightsMetricsService {
 
     constructor(
-        themeService: ThemeService,
         private accountService: BatchAccountService,
         private armService: ArmHttpService) {
     }

@@ -155,6 +155,7 @@
     "electron-updater": "^3.1.1",
     "element-resize-detector": "^1.1.14",
     "extract-zip": "^1.6.6",
+    "flag-icon-css": "^3.2.0",
     "font-awesome": "^4.7.0",
     "get-proxy-settings": "^0.1.11",
     "glob": "^7.1.2",
