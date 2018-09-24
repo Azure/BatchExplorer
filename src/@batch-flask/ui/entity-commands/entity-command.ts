@@ -268,6 +268,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         this.telemetryService.trackEvent({
             name: "Execute action",
             properties: {
+                type: this.definition.typeName,
                 name: this.name,
                 count,
             },
