@@ -25,9 +25,9 @@
         </ng-container>
 
         <ng-container *blQuickListRowExtra="let account">
-            <!-- <div class="flex-center"> -->
-                <i class="fa fa-star" [class.favorite]="isAccountFavorite(account.id)" (click)="toggleFavorite(account.id)"></i>
-            <!-- </div> -->
+            <bl-clickable (do)="toggleFavorite(account.id)">
+                <i class="fa fa-star" [class.favorite]="isAccountFavorite(account.id)"></i>
+            </bl-clickable>
         </ng-container>
     </bl-quick-list>
 </bl-focus-section>

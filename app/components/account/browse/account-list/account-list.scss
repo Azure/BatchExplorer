@@ -2,17 +2,18 @@
 
 bl-account-list {
     bl-quick-list-row-render:hover {
-        .fa-star:not(.favorite) {
+        .fa-star:not(.favorite):not(:hover) {
             color: $main-background;
         }
     }
 
     .fa-star {
         font-size: 2em;
-        color: $alto;
+        color: $selection-color;
+        margin-top: 5px;
 
         &:hover {
-            color: $selection-color;
+            color: $warn-color-light;
         }
 
         &.favorite {
