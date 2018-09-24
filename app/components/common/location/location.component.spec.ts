@@ -63,7 +63,7 @@ describe("LocationComponent", () => {
     });
 
     it("show globefor unkown location", () => {
-        testComponent.location = "southeastasia";
+        testComponent.location = "somenewloc";
         fixture.detectChanges();
         expect(de.query(By.css(".fa-globe"))).not.toBeFalsy();
         expect(de.query(By.css(".flag-icon"))).toBeFalsy();

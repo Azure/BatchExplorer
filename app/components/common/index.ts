@@ -7,4 +7,5 @@
  *
  * Common module -> Batch/BatchExplorer specific components
  */
+export * from "./location";
 export * from "./common.module";

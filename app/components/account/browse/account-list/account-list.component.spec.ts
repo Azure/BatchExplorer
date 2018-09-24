@@ -13,6 +13,7 @@ import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { QuickListTestingModule } from "@batch-flask/ui/testing";
 import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { AccountListComponent } from "app/components/account/browse";
+import { LocationModule } from "app/components/common";
 import { BatchAccountService, SubscriptionService } from "app/services";
 import { List } from "immutable";
 import { of } from "rxjs";
@@ -62,7 +63,10 @@ describe("AccountListComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, QuickListTestingModule, ElectronTestingModule, TelemetryTestingModule],
+            imports: [
+                RouterTestingModule, QuickListTestingModule,
+                ElectronTestingModule, TelemetryTestingModule, LocationModule,
+            ],
             declarations: [AccountListComponent, NoItemMockComponent],
             providers: [
                 { provide: BatchAccountService, useValue: accountService },
