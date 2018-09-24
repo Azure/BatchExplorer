@@ -208,6 +208,7 @@ describe("EntityCommand", () => {
             expect(telemetryServiceSpy.trackEvent).toHaveBeenCalledWith({
                 name: "Execute action",
                 properties: {
+                    type: "Job",
                     name: "my-label",
                     count: 2,
                 },
