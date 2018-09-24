@@ -39,7 +39,7 @@ export class Node extends Record<NodeAttributes> {
     @Prop() public poolId: string;
     @Prop() public url: string;
     @Prop() public state: NodeState;
-    @Prop() public schedulingState: string;
+    @Prop() public schedulingState: NodeSchedulingState;
     @Prop() public stateTransitionTime: Date;
     @Prop() public lastBootTime: Date;
     @Prop() public allocationTime: Date;
@@ -76,4 +76,10 @@ export enum NodeState {
     unknown = "unknown",
     unusable = "unusable",
     preempted = "preempted",
+}
+
+
+export enum NodeSchedulingState {
+    Disabled = "disabled",
+    Enabled = "enabled",
 }

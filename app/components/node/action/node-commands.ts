@@ -14,6 +14,8 @@ export class NodeCommands extends EntityCommands<Node> {
     public reboot: EntityCommand<Node, void>;
     public editStartTask: EntityCommand<Node, void>;
     public uploadLog: EntityCommand<Node, void>;
+    public disableScheduling: EntityCommand<Node, void>;
+    public enableScheduling: EntityCommand<Node, void>;
 
     constructor(
         injector: Injector,
@@ -60,7 +62,24 @@ export class NodeCommands extends EntityCommands<Node> {
             permission: Permission.Write,
         });
 
-        this.editStartTask = this.simpleCommand({
+        this.disableScheduling = this.simpleCommand({
+            name: "disableScheduling",
+            label: "Re-enable scheduling",
+            icon: "fa-stop",
+            visible: (node: Node) => node.schedulingState === NodeSchedulingState.
+            action: (node: Node) => this._disableScheduling(node),
+            permission: Permission.Write;
+        })
+
+this.enableScheduling = this.simpleCommand({
+            name: "enableScheduling",
+            label: "Re-enable scheduling",
+            icon: "fa-play",
+            action: (node: Node) => this._enableScheduling(node),
+            permission: Permission.Write,
+        });
+
+this.editStartTask = this.simpleCommand({
             name: "editStartTask",
             ...COMMAND_LABEL_ICON.EditStartTask,
             action: (node) => this._editStartTask(node),
@@ -70,7 +89,7 @@ export class NodeCommands extends EntityCommands<Node> {
             permission: Permission.Write,
         });
 
-        this.commands = [
+this.commands = [
             this.connect,
             this.delete,
             this.reboot,
@@ -78,7 +97,7 @@ export class NodeCommands extends EntityCommands<Node> {
         ];
     }
 
-    private _connect(node: Node) {
+    private _connect(node: Node); {
         this.poolService.getFromCache(this.params["poolId"]).subscribe((pool) => {
             const ref = this.sidebarManager.open(`connect-node-${node.id}`, NodeConnectComponent);
             ref.component.node = node;
@@ -86,19 +105,31 @@ export class NodeCommands extends EntityCommands<Node> {
         });
     }
 
-    private _reboot(node: Node) {
+    private _reboot(node: Node); {
         return this.nodeService.reboot(this.params["poolId"], node.id).pipe(
             flatMap(() => this.nodeService.get(this.params["poolId"], node.id)),
         );
     }
 
-    private _delete(node: Node) {
+    private _delete(node: Node); {
         return this.nodeService.delete(this.params["poolId"], node.id).pipe(
             flatMap(() => this.nodeService.get(this.params["poolId"], node.id)),
         );
     }
 
-    private _editStartTask(node: Node) {
+    private _disableScheduling(node: Node); {
+        return this.nodeService.disableScheduling(this.params["poolId"], node.id).pipe(
+            flatMap(() => this.nodeService.get(this.params["poolId"], node.id)),
+        );
+    }
+
+    private _enableScheduling(node: Node); {
+        return this.nodeService.enableScheduling(this.params["poolId"], node.id).pipe(
+            flatMap(() => this.nodeService.get(this.params["poolId"], node.id)),
+        );
+    }
+
+    private _editStartTask(node: Node); {
         this.poolService.getFromCache(this.params["poolId"]).subscribe((pool) => {
             const ref = this.sidebarManager.open(`edit-start-task-${this.params["poolId"]}`,
                 StartTaskEditFormComponent);
