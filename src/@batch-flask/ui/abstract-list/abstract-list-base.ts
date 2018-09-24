@@ -77,7 +77,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public set items(items: any[]) {
         this._items = items;
         this._keyNavigator.items = this.items;
-        this._updateSelectedItems();
+        this.changeDetector.markForCheck();
     }
     public get items() { return this._items; }
 
@@ -102,7 +102,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     public set selection(selection: ListSelection) {
         super.selection = selection;
-        this._updateSelectedItems();
+        this.changeDetector.markForCheck();
     }
     public get selection() { return super.selection; }
 
@@ -207,7 +207,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         const selection = new ListSelection(this.selection);
         selection.select(key, selected);
         this.selection = selection;
-        this._updateSelectedItems();
+        this.changeDetector.markForCheck();
     }
 
     public handleScrollChange(event) {
@@ -229,7 +229,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
      */
     public clearSelection() {
         this.selection = new ListSelection();
-        this._updateSelectedItems();
+        this.changeDetector.markForCheck();
     }
 
     /**
@@ -366,16 +366,6 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
             this.contextmenuService.openMenu(menu);
         });
-    }
-
-    /**
-     * Update the items to mark which ones are selected
-     */
-    private _updateSelectedItems() {
-        this.items.forEach((item) => {
-            item.selected = Boolean(this.selection.has(item.id));
-        });
-        this.changeDetector.markForCheck();
     }
 
     /** Sets up a key manager to listen to keyboard events on the overlay panel. */

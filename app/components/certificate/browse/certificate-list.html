@@ -1,5 +1,6 @@
 <bl-focus-section>
     <bl-quick-list *ngIf="quicklist"
+        [data]="displayedCertificates"
         [status]="status"
         [(activeItem)]="activeItem"
         [(selection)]="selection"
