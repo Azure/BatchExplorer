@@ -19,6 +19,10 @@ bl-job-state {
             .fa-play-circle {
                 color: $primary-color;
             }
+
+            .fa-trash {
+                color: $warn-color;
+            }
         }
     }
 }
