@@ -1,4 +1,4 @@
-import { Model, Record } from "@batch-flask/core";
+import { Model, Prop, Record } from "@batch-flask/core";
 
 export interface WindowsConfigurationAttributes {
     enableAutomaticUpdates: boolean;
@@ -9,5 +9,5 @@ export interface WindowsConfigurationAttributes {
  */
 @Model()
 export class WindowsConfiguration extends Record<WindowsConfigurationAttributes> {
-    public enableAutomaticUpdates: boolean;
+    @Prop() public enableAutomaticUpdates: boolean;
 }

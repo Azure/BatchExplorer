@@ -1,5 +1,9 @@
 {
   "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+  },
   // This is not actually used for building but to let the editor know what files use this config
   "include": [
     "./scripts/**/*.ts",

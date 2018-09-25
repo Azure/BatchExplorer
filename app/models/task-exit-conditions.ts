@@ -1,14 +1,21 @@
-import { Model, Prop, Record } from "@batch-flask/core";
+import { ListProp, Model, Prop, Record } from "@batch-flask/core";
 import { List } from "immutable";
 import { JobAction } from "./job-action";
 
+export enum DependencyAction {
+    Block = "block",
+    Satisfy = "satisfy",
+}
+
 export interface ExitOptionsAttributes {
     jobAction: JobAction;
+    dependencyAction: DependencyAction;
 }
 
 @Model()
 export class ExitOptions extends Record<ExitOptionsAttributes> {
-    public jobAction: JobAction;
+    @Prop() public jobAction: JobAction;
+    @Prop() public dependencyAction: DependencyAction;
 }
 
 export interface ExitCodeMappingAttributes {
@@ -18,8 +25,8 @@ export interface ExitCodeMappingAttributes {
 
 @Model()
 export class ExitCodeMapping extends Record<ExitCodeMappingAttributes> {
-    public code: number;
-    public exitOptions: ExitOptions;
+    @Prop() public code: number;
+    @Prop() public exitOptions: ExitOptions;
 }
 
 export interface ExitCodeRangeMappingAttributes {
@@ -45,7 +52,7 @@ export interface TaskExitConditionsAttributes {
 @Model()
 export class TaskExitConditions extends Record<TaskExitConditionsAttributes> {
     @Prop() public exitCodes: List<ExitCodeMapping>;
-    @Prop() public exitCodeRanges: List<ExitCodeRangeMapping>;
+    @ListProp(ExitCodeRangeMapping) public exitCodeRanges: List<ExitCodeRangeMapping> = List([]);
     @Prop() public failureInfo: ExitOptions;
     @Prop() public default: ExitOptions;
 }

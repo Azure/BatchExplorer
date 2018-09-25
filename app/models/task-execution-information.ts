@@ -34,6 +34,7 @@ export class TaskExecutionInformation extends Record<TaskExecutionInformationAtt
     @Prop() public requeueCount: number;
     @Prop() public lastRequeueTime: Date;
     @Prop() public containerInfo: TaskContainerExecutionInfo;
+    @Prop() public result: TaskExecutionResult;
 
     public get runningTime() {
         return moment.duration(moment(this.endTime).diff(this.startTime));

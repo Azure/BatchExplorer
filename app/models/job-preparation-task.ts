@@ -3,6 +3,7 @@ import { TaskContainerSettings, TaskContainerSettingsAttributes } from "./contai
 import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";
 import { TaskConstraints } from "./task-constraints";
+import { UserIdentity, UserIdentityAttributes } from "./user-identity";
 
 export interface JobPreparationTaskAttributes {
     id: string;
@@ -14,6 +15,7 @@ export interface JobPreparationTaskAttributes {
     runElevated: boolean;
     rerunOnNodeRebootAfterSuccess: boolean;
     containerSettings: TaskContainerSettingsAttributes;
+    userIdentity: UserIdentityAttributes;
 }
 
 /**
@@ -30,4 +32,5 @@ export class JobPreparationTask extends Record<JobPreparationTaskAttributes> {
     @Prop() public runElevated: boolean;
     @Prop() public rerunOnNodeRebootAfterSuccess: boolean;
     @Prop() public containerSettings: TaskContainerSettings;
+    @Prop() public userIdentity: UserIdentity;
 }

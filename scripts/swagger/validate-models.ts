@@ -95,7 +95,6 @@ class SwaggerModelValidator {
     private checkMissingProperties(properties: Set<string>, swaggerProperties: SwaggerProperties) {
         for (const name of Object.keys(swaggerProperties)) {
             if (!properties.has(name)) {
-                console.log("Missing property", name);
                 this.addError(`Missing property ${name}`);
             }
         }
@@ -106,7 +105,7 @@ class SwaggerModelValidator {
         const swaggerValues = this.definition.enum;
         for (const value of swaggerValues) {
             if (!values.includes(value)) {
-                this.addError("Enum is missing property");
+                this.addError(`Enum is missing value ${value}. Only has ${values}`);
             }
         }
     }

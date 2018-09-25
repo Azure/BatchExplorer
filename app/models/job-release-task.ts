@@ -4,6 +4,7 @@ import { Duration } from "moment";
 import { TaskContainerSettings, TaskContainerSettingsAttributes } from "./container-setup";
 import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";
+import { UserIdentity, UserIdentityAttributes } from "./user-identity";
 
 export interface JobReleaseTaskAttributes {
     id: string;
@@ -14,6 +15,7 @@ export interface JobReleaseTaskAttributes {
     retentionTime: Duration;
     runElevated: boolean;
     containerSettings: TaskContainerSettingsAttributes;
+    userIdentity: UserIdentityAttributes;
 }
 
 /**
@@ -29,4 +31,5 @@ export class JobReleaseTask extends Record<JobReleaseTaskAttributes> {
     @Prop() public retentionTime: Duration;
     @Prop() public runElevated: boolean;
     @Prop() public containerSettings: TaskContainerSettings;
+    @Prop() public userIdentity: UserIdentity;
 }

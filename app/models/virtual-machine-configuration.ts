@@ -1,4 +1,6 @@
 import { Model, Prop, Record } from "@batch-flask/core";
+import { List } from "immutable";
+import { DataDisk } from "./azure-batch/data-disk";
 import { ContainerConfiguration, ContainerConfigurationAttributes } from "./container-setup";
 import { ImageReference, ImageReferenceAttributes } from "./image-reference";
 import { PoolOSDisk, PoolOSDiskAttributes } from "./pool-os-disk";
@@ -22,4 +24,6 @@ export class VirtualMachineConfiguration extends Record<VirtualMachineConfigurat
     @Prop() public windowsConfiguration: WindowsConfiguration;
     @Prop() public osDisk: PoolOSDisk;
     @Prop() public containerConfiguration: ContainerConfiguration;
+    @Prop() public licenseType: string;
+    @Prop() public dataDisks: List<DataDisk>;
 }
