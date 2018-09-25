@@ -3,7 +3,7 @@
         <bl-summary-card>
             <div summaryTitle>{{decorator.id}}</div>
             <div summarySubtitle>
-                <i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}
+                <bl-job-state [job]="job"></bl-job-state>
             </div>
             <div summaryDetails>Pool: <a [routerLink]="['/pools', job.poolId]">{{job.poolId}}</a></div>
             <bl-tags *blFeatureOn="'job.tags'" summaryTags [tags]="job.tags" [editable]="job.editable" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
