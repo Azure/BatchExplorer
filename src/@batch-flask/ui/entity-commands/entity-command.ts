@@ -10,7 +10,7 @@ import { exists, log, nil } from "@batch-flask/utils";
 import * as inflection from "inflection";
 import { Observable, forkJoin, of } from "rxjs";
 import { map, share } from "rxjs/operators";
-import { ActionableEntity, EntityCommands } from "./entity-commands";
+import { ActionableEntity, EntityCommands, ExecuteOptions } from "./entity-commands";
 
 export enum EntityCommandNotify {
     Always,
@@ -131,9 +131,9 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
      * Try to execute the command for the given entity.
      * This will ask for confirmation unless command explicity configured not to
      */
-    public execute(entity: TEntity) {
+    public execute(entity: TEntity, options: ExecuteOptions = {}) {
         this._trackAction(1);
-        if (this.confirm) {
+        if (this.confirm && !options.skipConfirm) {
             if (this.confirm instanceof Function) {
                 this.confirm([entity]).subscribe((options) => {
                     this._executeCommand(entity, options);
@@ -165,9 +165,9 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
      * Try to execute the command for the given entities.
      * This will ask for confirmation unless command explicity configured not to
      */
-    public executeMultiple(entities: TEntity[]) {
+    public executeMultiple(entities: TEntity[], options: ExecuteOptions = {}) {
         this._trackAction(entities.length);
-        if (this.confirm) {
+        if (this.confirm && !options.skipConfirm) {
             if (this.confirm instanceof Function) {
                 this.confirm(entities).subscribe((options) => {
                     this._executeMultiple(entities, options);
@@ -206,6 +206,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     }
 
     private _executeCommand(entity: TEntity, options?: any) {
+        this._trackConfirm(1);
         const label = this.label(entity);
         this.performActionAndRefresh(entity, options).subscribe({
             next: () => {
@@ -219,6 +220,8 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     }
 
     private _executeMultiple(entities: TEntity[], options?: any) {
+        this._trackConfirm(entities.length);
+
         const label = this.label(entities[0]);
         const enabledEntities = entities.filter(x => this.enabled(x));
         const type = inflection.pluralize(this.definition.typeName.toLowerCase());
@@ -267,6 +270,17 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     private _trackAction(count: number) {
         this.telemetryService.trackEvent({
             name: "Execute action",
+            properties: {
+                type: this.definition.typeName,
+                name: this.name,
+                count,
+            },
+        });
+    }
+
+    private _trackConfirm(count: number) {
+        this.telemetryService.trackEvent({
+            name: "Execute action confirmed",
             properties: {
                 type: this.definition.typeName,
                 name: this.name,

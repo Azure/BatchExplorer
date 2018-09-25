@@ -31,6 +31,11 @@ export class ContextMenu {
         this.items.push(item);
         return this;
     }
+
+    public prepend(item: ContextMenuEntry): ContextMenu {
+        this.items.unshift(item);
+        return this;
+    }
 }
 
 export interface ContextMenuItemConfig {

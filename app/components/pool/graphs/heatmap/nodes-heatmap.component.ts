@@ -3,22 +3,18 @@ import {
     HostBinding, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild,
 } from "@angular/core";
 import { Router } from "@angular/router";
+import { ContextMenuItem, ContextMenuSeparator, ContextMenuService } from "@batch-flask/ui/context-menu";
+import { NodeCommands } from "app/components/node/action";
+import { Node, NodeState, Pool } from "app/models";
+import { ComponentUtils, log } from "app/utils";
 import * as d3 from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
-
-import { ServerError } from "@batch-flask/core";
-import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
-import { NotificationService } from "@batch-flask/ui/notifications";
-import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { NodeConnectComponent } from "app/components/node/connect";
-import { Node, NodeState, Pool } from "app/models";
-import { NodeService } from "app/services";
-import { ComponentUtils, log } from "app/utils";
+import { BehaviorSubject } from "rxjs";
 import { HeatmapColor } from "./heatmap-color";
-import "./nodes-heatmap.scss";
 import { StateTree } from "./state-tree";
+
+import "./nodes-heatmap.scss";
 
 interface HeatmapTile {
     index: number;
@@ -66,6 +62,7 @@ const maxTileSize = 100;
     viewProviders: [
         { provide: "StateTree", useValue: stateTree },
     ],
+    providers: [NodeCommands],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestroy {
@@ -105,10 +102,8 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     private _nodeMap: { [id: string]: Node } = {};
 
     constructor(
+        private commands: NodeCommands,
         private contextMenuService: ContextMenuService,
-        private nodeService: NodeService,
-        private sidebarManager: SidebarManager,
-        private notificationService: NotificationService,
         private router: Router,
     ) {
         this.colors = new HeatmapColor(stateTree);
@@ -120,6 +115,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.pool) {
             if (ComponentUtils.recordChangedId(changes.pool)) {
+                this.commands.params = { poolId: this.pool && this.pool.id };
                 this.selectedNodeId.next(null);
                 if (this._svg) {
                     this._svg.selectAll("g.node-group").remove();
@@ -142,7 +138,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             strategy: "scroll",
         });
 
-        this._erd.listenTo(this.heatmapEl.nativeElement, (element) => {
+        this._erd.listenTo(this.heatmapEl.nativeElement, () => {
             this.containerSizeChanged();
         });
 
@@ -444,53 +440,15 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     private _buildContextMenu(node: Node) {
-        const actions = [
-            new ContextMenuItem({ label: "Go to", click: () => this._gotoNode(node) }),
-            new ContextMenuItem({ label: "Connect", click: () => this._connectTo(node) }),
-            new ContextMenuItem({ label: "Monitor", click: () => this._monitor(node) }),
-            new ContextMenuItem({ label: "Reboot", click: () => this._reboot(node) }),
-            new ContextMenuItem({
-                label: "Reimage",
-                click: () => this._reimage(node),
-                enabled: Boolean(this.pool.cloudServiceConfiguration),
-            }),
-            new ContextMenuItem({ label: "Delete", click: () => this._delete(node) }),
-        ];
+        const menu = this.commands.contextMenuFromEntity(node, { skipConfirm: true });
+        menu.prepend(new ContextMenuSeparator());
+        menu.prepend(new ContextMenuItem({ label: "Monitor", click: () => this._monitor(node) }));
+        menu.prepend(new ContextMenuItem({ label: "Go to", click: () => this._gotoNode(node) }));
 
         if (node.state === NodeState.startTaskFailed) {
-            actions.push(new ContextMenuItem({ label: "View start task output", click: () => this._gotoNode(node) }));
+            menu.addItem(new ContextMenuItem({ label: "View start task output", click: () => this._gotoNode(node) }));
         }
-        return new ContextMenu(actions);
-    }
-
-    private _reboot(node: Node) {
-        this._nodeAction(node, this.nodeService.reboot(this.pool.id, node.id)).subscribe(() => {
-            this.notificationService.success("Node rebooting!", `Node ${node.id} started rebooting`);
-        });
-    }
-
-    private _reimage(node: Node) {
-        this._nodeAction(node, this.nodeService.reimage(this.pool.id, node.id)).subscribe(() => {
-            this.notificationService.success("Node reimaging!", `Node ${node.id} started reimaging`);
-        });
-    }
-
-    private _delete(node: Node) {
-        this._nodeAction(node, this.nodeService.delete(this.pool.id, node.id)).subscribe(() => {
-            this.notificationService.success("Node deleting!", `Node ${node.id} is being removed from the pool.`);
-        });
-    }
-
-    private _nodeAction(node: Node, action: Observable<any>): Observable<any> {
-        action.subscribe({
-            next: () => {
-                this.nodeService.get(this.pool.id, node.id);
-            },
-            error: (error: ServerError) => {
-                this.notificationService.error(error.code, error.message);
-            },
-        });
-        return action;
+        return menu;
     }
 
     private _gotoNode(node: Node) {
@@ -503,11 +461,5 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 tab: "monitoring",
             },
         });
-    }
-
-    private _connectTo(node: Node) {
-        const ref = this.sidebarManager.open(`connect-node`, NodeConnectComponent, true);
-        ref.component.node = node;
-        ref.component.pool = this.pool;
     }
 }
