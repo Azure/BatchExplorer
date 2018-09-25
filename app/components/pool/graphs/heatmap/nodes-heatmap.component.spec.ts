@@ -5,9 +5,11 @@ import { Router } from "@angular/router";
 import * as d3 from "d3";
 import { List } from "immutable";
 
+import { I18nTestingModule, TelemetryTestingModule } from "@batch-flask/core/testing";
+import { ActivityService, DialogService, WorkspaceService } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Node, NodeState, Pool } from "app/models";
-import { NodeService } from "app/services";
+import { NodeService, PoolService } from "app/services";
 import * as Fixture from "test/fixture";
 import { click, dblclick, rightClick } from "test/utils/helpers";
 import { ContextMenuServiceMock, NotificationServiceMock } from "test/utils/mocks";
@@ -59,13 +61,18 @@ describe("NodesHeatmapComponent", () => {
             navigate: jasmine.createSpy("router.navigate"),
         };
         TestBed.configureTestingModule({
+            imports: [I18nTestingModule, TelemetryTestingModule],
             declarations: [
                 HeatmapMockComponent, NodesHeatmapComponent, NodesHeatmapLegendComponent, NodePreviewCardMockComponent,
             ],
             providers: [
                 { provide: NodeService, useValue: {} },
+                { provide: PoolService, useValue: null },
                 { provide: SidebarManager, useValue: {} },
                 { provide: Router, useValue: routerSpy },
+                { provide: DialogService, useValue: null },
+                { provide: WorkspaceService, useValue: null },
+                { provide: ActivityService, useValue: null },
                 contextMenuService.asProvider(),
                 notificationService.asProvider(),
             ],
