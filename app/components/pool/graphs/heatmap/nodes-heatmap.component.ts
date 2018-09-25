@@ -3,23 +3,18 @@ import {
     HostBinding, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild,
 } from "@angular/core";
 import { Router } from "@angular/router";
+import { ContextMenuItem, ContextMenuSeparator, ContextMenuService } from "@batch-flask/ui/context-menu";
+import { NodeCommands } from "app/components/node/action";
+import { Node, NodeState, Pool } from "app/models";
+import { ComponentUtils, log } from "app/utils";
 import * as d3 from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
-
-import { ServerError } from "@batch-flask/core";
-import { ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService } from "@batch-flask/ui/context-menu";
-import { NotificationService } from "@batch-flask/ui/notifications";
-import { SidebarManager } from "@batch-flask/ui/sidebar";
-import { NodeCommands } from "app/components/node/action";
-import { NodeConnectComponent } from "app/components/node/connect";
-import { Node, NodeState, Pool } from "app/models";
-import { NodeService } from "app/services";
-import { ComponentUtils, log } from "app/utils";
+import { BehaviorSubject } from "rxjs";
 import { HeatmapColor } from "./heatmap-color";
-import "./nodes-heatmap.scss";
 import { StateTree } from "./state-tree";
+
+import "./nodes-heatmap.scss";
 
 interface HeatmapTile {
     index: number;
@@ -109,9 +104,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     constructor(
         private commands: NodeCommands,
         private contextMenuService: ContextMenuService,
-        private nodeService: NodeService,
-        private sidebarManager: SidebarManager,
-        private notificationService: NotificationService,
         private router: Router,
     ) {
         this.colors = new HeatmapColor(stateTree);
@@ -146,7 +138,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             strategy: "scroll",
         });
 
-        this._erd.listenTo(this.heatmapEl.nativeElement, (element) => {
+        this._erd.listenTo(this.heatmapEl.nativeElement, () => {
             this.containerSizeChanged();
         });
 
