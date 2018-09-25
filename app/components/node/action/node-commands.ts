@@ -65,7 +65,7 @@ export class NodeCommands extends EntityCommands<Node> {
 
         this.reimage = this.simpleCommand({
             name: "reboot",
-            icon: "fa fa-hdd",
+            icon: "fa fa-hdd-o",
             label: "Reimage",
             action: (node: Node) => this._reboot(node),
             permission: Permission.Write,
