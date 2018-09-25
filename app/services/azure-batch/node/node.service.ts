@@ -169,6 +169,14 @@ export class NodeService {
 
     }
 
+    public disableScheduling(poolId: string, nodeId: string): Observable<any> {
+        return this.http.post(`/pools/${poolId}/nodes/${nodeId}/disablescheduling`, null);
+    }
+
+    public enableScheduling(poolId: string, nodeId: string): Observable<any> {
+        return this.http.post(`/pools/${poolId}/nodes/${nodeId}/enablescheduling`, null);
+    }
+
     public delete(poolId: string, nodeId: string): Observable<any> {
         return this.http.post(`/pools/${poolId}/removenodes`, {
             nodeList: [nodeId],

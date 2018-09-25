@@ -16,6 +16,10 @@ export interface EntityCommandsConfig {
     feature?: string;
 }
 
+export interface ExecuteOptions {
+    skipConfirm?: boolean;
+}
+
 /**
  * Entity commands is a wrapper for all actions/commands available to an entity
  */
@@ -63,12 +67,12 @@ export abstract class EntityCommands<TEntity extends ActionableEntity, TParams =
         );
     }
 
-    public contextMenuFromEntity(entity: TEntity): ContextMenu {
+    public contextMenuFromEntity(entity: TEntity, options: ExecuteOptions = {}): ContextMenu {
         return new ContextMenu(this.commands.filter(x => x.visible(entity)).map((command) => {
             return new ContextMenuItem({
                 label: command.label(entity),
                 click: () => {
-                    command.execute(entity);
+                    command.execute(entity, options);
                 },
                 enabled: command.enabled(entity),
             });

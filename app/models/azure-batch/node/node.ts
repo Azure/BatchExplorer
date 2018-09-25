@@ -78,7 +78,6 @@ export enum NodeState {
     preempted = "preempted",
 }
 
-
 export enum NodeSchedulingState {
     Disabled = "disabled",
     Enabled = "enabled",
