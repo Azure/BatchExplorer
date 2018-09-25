@@ -112,7 +112,7 @@ describe("JobErrorDisplayComponent", () => {
                     maxWallClockTime: moment.duration("PT2M"),
                 },
                 executionInfo: {
-                    failureInfo: {
+                    schedulingError: {
                         code: "InvalidAutoPoolSettings",
                         category: "UserError",
                         message: "Auto pool has invalid settings",

@@ -12,7 +12,7 @@
         </ng-container>
         <ng-container *blQuickListRowTitle="let job">{{job.id}}</ng-container>
         <ng-container *blQuickListRowState="let job">
-            {{job.state}}
+            <bl-job-state [job]="job"></bl-job-state>
             <bl-tags [tags]="job.tags" [maxTags]="3"></bl-tags>
         </ng-container>
     </bl-quick-list>
@@ -32,7 +32,7 @@
 
         <bl-column name="state">
             <div *blHeadCellDef>State</div>
-            <div *blCellDef="let job">{{job.state}}</div>
+            <div *blCellDef="let job"><bl-job-state [job]="job"></bl-job-state></div>
         </bl-column>
 
         <bl-column name="pool">

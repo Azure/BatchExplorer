@@ -5,6 +5,7 @@ import { commonModules } from "app/common";
 import { FileBrowseModule } from "app/components/file/browse";
 import { TaskBrowseModule } from "app/components/task/browse";
 import { JobActionModule } from "../action";
+import { JobBaseModule } from "../base";
 import { JobGraphsModule } from "../graphs";
 import { JobHookTaskModule } from "../job-hook-task";
 import { JobErrorDisplayComponent } from "./error-display";
@@ -30,6 +31,7 @@ const modules = [
     declarations: components,
     exports: components,
     imports: [
+        JobBaseModule,
         ...commonModules,
         ...modules,
     ],

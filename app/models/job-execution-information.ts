@@ -9,7 +9,7 @@ export enum JobTerminateReason {
     JMComplete = "JMComplete",
     MaxWallClockTimeExpiry = "MaxWallClockTimeExpiry",
     TerminateJobSchedule = "TerminateJobSchedule",
-    AllTasksComplete = "AllTasksComplete",
+    AllTasksCompleted = "AllTasksCompleted",
     TaskFailed = "TaskFailed",
     /**
      * Default user terminated value
@@ -21,7 +21,7 @@ export interface JobExecutionInformationAttributes {
     startTime: Date;
     endTime: Date;
     poolId: string;
-    failureInfo: FailureInfoAttributes;
+    schedulingError: FailureInfoAttributes;
     terminateReason: JobTerminateReason;
 }
 
@@ -33,6 +33,6 @@ export class JobExecutionInformation extends Record<JobExecutionInformationAttri
     @Prop() public startTime: Date;
     @Prop() public endTime: Date;
     @Prop() public poolId: string;
-    @Prop() public failureInfo: FailureInfo;
+    @Prop() public schedulingError: FailureInfo;
     @Prop() public terminateReason: JobTerminateReason;
 }

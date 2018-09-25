@@ -25,7 +25,7 @@ export class JobErrorDisplayComponent {
 
     public get failureInfo() {
         const info = this.executionInfo;
-        return info && info.failureInfo;
+        return info && info.schedulingError;
     }
 
     public get jobFailed() {

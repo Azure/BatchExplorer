@@ -1,0 +1,25 @@
+job-state:
+  active:
+    message: Job is currently running. Task can be scheduled.
+  disabling:
+    message: Job is in the process of being disabled
+  disabled:
+    message: Job is disabled. No task will run.
+  enabling:
+    message: Job is returning from disabled stated
+  terminating:
+    message: Job is terminating
+  deleting:
+    message: Job is in the process of being deleted
+  completed:
+    message: Job is completed. No more task will be accepted.
+    userTerminated:
+      message: Job was completed by the user
+    allTasksCompleted:
+      message: Job completed successfully when all task completed
+    jmcomplete:
+      message: Job completed successfully when the job manager task completed
+    taskfailed:
+      message: Job completed with a failure as one of the task failed.
+    timeout:
+      message: Job timed out. Job has been running for longer than the provided limit.
