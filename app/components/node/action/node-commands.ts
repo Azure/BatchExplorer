@@ -12,6 +12,7 @@ export class NodeCommands extends EntityCommands<Node> {
     public connect: EntityCommand<Node, void>;
     public delete: EntityCommand<Node, void>;
     public reboot: EntityCommand<Node, void>;
+    public reimage: EntityCommand<Node, void>;
     public editStartTask: EntityCommand<Node, void>;
     public uploadLog: EntityCommand<Node, void>;
     public disableScheduling: EntityCommand<Node, void>;
@@ -62,6 +63,14 @@ export class NodeCommands extends EntityCommands<Node> {
             permission: Permission.Write,
         });
 
+        this.reimage = this.simpleCommand({
+            name: "reboot",
+            icon: "fa fa-hdd",
+            label: "Reimage",
+            action: (node: Node) => this._reboot(node),
+            permission: Permission.Write,
+        });
+
         this.disableScheduling = this.simpleCommand({
             name: "disableScheduling",
             label: "Disable scheduling",
@@ -96,6 +105,7 @@ export class NodeCommands extends EntityCommands<Node> {
             this.connect,
             this.delete,
             this.reboot,
+            this.reimage,
             this.disableScheduling,
             this.enableScheduling,
             this.editStartTask,
