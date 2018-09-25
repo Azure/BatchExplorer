@@ -1,0 +1,24 @@
+@import "app/styles/variables";
+
+bl-job-state {
+    &.success {
+        color: $success-color;
+    }
+
+    &.error {
+        color: $danger-color;
+    }
+
+    .state-container {
+        display: flex;
+        align-items: center;
+
+        > .state-icon {
+            width: 18px;
+
+            .fa-play-circle {
+                color: $primary-color;
+            }
+        }
+    }
+}

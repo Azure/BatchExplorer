@@ -95,7 +95,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     }
 
     public jobStatus(job: Job): QuickListItemStatus {
-        if (job.executionInfo && job.executionInfo.failureInfo) {
+        if (job.executionInfo && job.executionInfo.schedulingError) {
             return QuickListItemStatus.warning;
         } else {
             switch (job.state) {

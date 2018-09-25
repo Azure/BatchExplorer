@@ -1,0 +1,14 @@
+<div class="state-container" [matTooltip]="message">
+    <div class="state-icon" [ngSwitch]="job.state">
+            <i  *ngSwitchCase="JobState.active" class="fa fa-play-circle"></i>
+            <i  *ngSwitchCase="JobState.deleting" class="fa fa-trash"></i>
+            <i  *ngSwitchCase="JobState.terminating" class="fa fa-stop-circle"></i>
+            <i  *ngSwitchCase="JobState.disabled" class="fa fa-pause-circle"></i>
+            <i  *ngSwitchCase="JobState.disabling" class="fa fa-pause-circle"></i>
+            <i class="fa" *ngSwitchCase="JobState.completed"
+                [class.fa-warning]="!isSuccess"
+                [class.fa-check-circle]="isSuccess"></i>
+        </div>
+        <span class="state">{{job.state}}</span>
+        <span class="error-code" *ngIf="job.executionInfo?.terminateReason">&nbsp;({{job.executionInfo.terminateReason}})</span>
+</div>
