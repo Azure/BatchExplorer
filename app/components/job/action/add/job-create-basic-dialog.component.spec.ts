@@ -1,13 +1,14 @@
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
+import { Subject, of, throwError } from "rxjs";
+
 import { ServerError } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";
 import { JobService, PoolService } from "app/services";
-import { Subject, of, throwError } from "rxjs";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
@@ -191,7 +192,7 @@ describe("JobCreateBasicDialogComponent ", () => {
         expect(baseForm.controls.displayName.value).toEqual("display name");
         expect(baseForm.controls.priority.value).toEqual(1);
         expect(constraintsForm.controls.maxTaskRetryCount.value).toEqual(3);
-        expect(baseForm.controls.poolInfo.value).toEqual({ poolId: "pool-002", autoPoolSpecification: null });
+        expect(baseForm.controls.poolInfo.value).toEqual({ poolId: "pool-002" });
     });
 
     it("Clicking add creates job and doesnt close form", (done) => {

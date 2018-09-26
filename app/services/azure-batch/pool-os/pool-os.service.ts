@@ -48,6 +48,7 @@ export class PoolOsService {
             reduce((resourceGroups, response: BatchListResponse<NodeAgentSkuAttributes>) => {
                 return [...resourceGroups, ...response.value];
             }, []),
+            map(x => x.map(v => new NodeAgentSku(v))),
             share(),
         );
     }
