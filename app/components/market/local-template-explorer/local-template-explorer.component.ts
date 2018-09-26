@@ -2,7 +2,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from
 import { LocalTemplate, LocalTemplateService } from "app/services";
 import { Subscription } from "rxjs";
 
+import { DialogService } from "@batch-flask/ui";
 import "./local-template-explorer.scss";
+import { LocalTemplateSourceFormComponent } from "./local-template-source-form";
 
 @Component({
     selector: "bl-local-template-explorer",
@@ -14,7 +16,11 @@ export class LocalTemplateExplorerComponent implements OnDestroy {
 
     private _subs: Subscription[] = [];
 
-    constructor(private changeDetector: ChangeDetectorRef, private localTemplateService: LocalTemplateService) {
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private localTemplateService: LocalTemplateService,
+        private dialogService: DialogService) {
+
         this._subs.push(localTemplateService.templates.subscribe((templates) => {
             this.templates = templates;
             this.changeDetector.markForCheck();
@@ -23,5 +29,9 @@ export class LocalTemplateExplorerComponent implements OnDestroy {
 
     public ngOnDestroy() {
         this._subs.forEach(x => x.unsubscribe());
+    }
+
+    public manageSources() {
+        this.dialogService.open(LocalTemplateSourceFormComponent);
     }
 }

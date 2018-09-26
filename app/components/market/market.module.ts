@@ -11,9 +11,9 @@ import {
 import { TaskBaseModule } from "app/components/task/base";
 import { RecentTemplateListComponent } from "./home/recent-template-list";
 import { LocalTemplateBrowserComponent } from "./local-template-browser";
-import { LocalTemplateExplorerComponent } from "./local-template-explorer";
 import { SubmitLocalTemplateComponent } from "./submit-local-template";
 import { SubmitRecentTemplateComponent } from "./submit-recent-template";
+import { LocalTemplateExplorerModule } from "./local-template-explorer";
 
 const components = [
     ChooseActionComponent,
@@ -23,7 +23,6 @@ const components = [
     SubmitNcjTemplateComponent,
     ParameterInputComponent,
     LocalTemplateBrowserComponent,
-    LocalTemplateExplorerComponent,
     SubmitLocalTemplateComponent,
     RecentTemplateListComponent,
 ];
@@ -35,7 +34,7 @@ const modules = [
 @NgModule({
     declarations: components,
     exports: [...modules, ...components],
-    imports: [...modules],
+    imports: [...modules, LocalTemplateExplorerModule],
     entryComponents: [
     ],
 })

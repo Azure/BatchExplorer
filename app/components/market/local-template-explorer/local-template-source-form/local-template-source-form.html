@@ -1,0 +1,8 @@
+<bl-simple-form [submit]="save" [containerRef]="dialogRef" [formGroup]="sources" title="Set local folders containing your templates" [multiUse]="false">
+    <div class="source-editable-table">
+        <bl-editable-table [formControl]="sources">
+            <bl-editable-table-column name="name">Friendly name</bl-editable-table-column>
+            <bl-editable-table-column name="path">Path</bl-editable-table-column>
+        </bl-editable-table>
+    </div>
+</bl-simple-form>

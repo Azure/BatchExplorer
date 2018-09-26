@@ -54,6 +54,11 @@ export class LocalTemplateService implements OnDestroy {
         return this._saveSources();
     }
 
+    public setSources(sources: LocalTemplateFolder[]) {
+        this._sources.next(sources);
+        return this._saveSources();
+    }
+
     private _saveSources(): Observable<any> {
         return this.localFileStorage.set<LocalTemplateSettings>(Constants.SavedDataFilename.localTemplates, {
             sources: this._sources.value,

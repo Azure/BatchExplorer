@@ -11,4 +11,10 @@ bl-local-template-explorer {
         height: 100%;
         background-color: $card-background;
     }
+
+    .manage-sources {
+        .fa-cog {
+            color: $primary-text;
+        }
+    }
 }
