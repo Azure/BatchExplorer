@@ -38,6 +38,7 @@ const nameMapping = [
     { swagger: "OSDisk", app: "PoolOSDisk" },
     { swagger: "CloudTask", app: "Task" },
     { swagger: "CloudJob", app: "Job" },
+    { swagger: "CloudPool", app: "Pool" },
     { swagger: "ComputeNode", app: "Node" },
     { swagger: "ExitConditions", app: "TaskExitConditions" },
     { swagger: "StartTaskInformation", app: "StartTaskInfo" },
