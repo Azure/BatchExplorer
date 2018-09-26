@@ -69,4 +69,8 @@ export class FileSystemService {
     public watch(path: string): FSWatcher {
         return this._fs.watch(path);
     }
+
+    public glob(pattern: string): Promise<string[]> {
+        return this._fs.glob(pattern);
+    }
 }
