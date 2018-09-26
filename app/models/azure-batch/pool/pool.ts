@@ -15,7 +15,7 @@ import {
 } from "app/models/virtual-machine-configuration";
 import { ModelUtils, PoolUtils } from "app/utils";
 import { AutoScaleRun, AutoScaleRunAttributes } from "./auto-scale-run";
-import { PoolStatisticsAttributes } from "./pool-statistics";
+import { PoolStatistics, PoolStatisticsAttributes } from "./pool-statistics";
 
 export enum OSType {
     Windows = "windows",
@@ -134,7 +134,7 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
 
     @Prop() public autoScaleRun: AutoScaleRun;
 
-    @Prop() public stats: PoolStatisticsAttributes;
+    @Prop() public stats: PoolStatistics;
 
     /**
      * Computed field sum of dedicated and low pri nodes

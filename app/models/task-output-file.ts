@@ -33,7 +33,7 @@ export class TaskOutputFileContainer extends Record<TaskOutputFileContainerAttri
 
 @Model()
 export class TaskOutputFileDestination extends Record<TaskOutputFileDestinationAttributes> {
-    @Prop() public container: string;
+    @Prop() public container: TaskOutputFileContainer;
 }
 
 @Model()
@@ -45,5 +45,5 @@ export class TaskOutputFileUploadOptions extends Record<TaskOutputFileUploadOpti
 export class TaskOutputFile extends Record<TaskOutputFileAttributes> {
     @Prop() public filePattern: string;
     @Prop() public destination: TaskOutputFileDestination;
-    @Prop() public uploadOptions: string;
+    @Prop() public uploadOptions: TaskOutputFileUploadOptions;
 }

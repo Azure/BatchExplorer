@@ -13,6 +13,7 @@ export interface ResourceStatisticsAttributes {
     networkReadGiB: number;
     networkWriteGiB: number;
     peakDiskGiB: number;
+    peakMemoryGiB: number;
     startTime: Date;
 }
 
@@ -29,6 +30,7 @@ export class ResourceStatistics extends Record<UsageStatisticsAttributes> {
     @Prop() public networkReadGiB: number;
     @Prop() public networkWriteGiB: number;
     @Prop() public peakDiskGiB: number;
+    @Prop() public peakMemoryGiB: number;
     @Prop() public startTime: Date;
 }
 
@@ -59,5 +61,5 @@ export class PoolStatistics extends Record<PoolStatisticsAttributes> {
     @Prop() public startTime: Date;
     @Prop() public url: string;
     @Prop() public resourceStats: ResourceStatistics;
-    @Prop() public usageState: UsageStatistics;
+    @Prop() public usageStats: UsageStatistics;
 }

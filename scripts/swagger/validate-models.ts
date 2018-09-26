@@ -40,8 +40,13 @@ const nameMapping = [
     { swagger: "CloudJob", app: "Job" },
     { swagger: "CloudPool", app: "Pool" },
     { swagger: "ComputeNode", app: "Node" },
+    { swagger: "TaskCounts", app: "JobTaskCounts" },
     { swagger: "ExitConditions", app: "TaskExitConditions" },
     { swagger: "StartTaskInformation", app: "StartTaskInfo" },
+    { swagger: "OutputFile", app: "TaskOutputFile" },
+    { swagger: "OutputFileDestination", app: "TaskOutputFileDestination" },
+    { swagger: "OutputFileBlobContainerDestination", app: "TaskOutputFileContainer" },
+    { swagger: "OutputFileUploadOptions", app: "TaskOutputFileUploadOptions" },
 ];
 
 const swaggerMappings = {};
