@@ -80,7 +80,7 @@ async function getMapping() {
             });
         } else {
             if (!name.endsWith("Result") && !name.endsWith("Parameter")) {
-                console.log(name);
+                console.log("\t" + name);
             }
         }
     }
@@ -140,7 +140,7 @@ class SwaggerModelValidator {
         for (const name of Object.keys(metadata)) {
             const swaggerProperty = this.definition.properties[name];
             if (!swaggerProperty) {
-                this.addPropertyError(name, `Swagger is missing property`);
+                // this.addPropertyError(name, `Swagger is missing property`);
                 continue;
             }
             const swaggerType = swaggerProperty.type;
@@ -243,9 +243,11 @@ async function run() {
         errors = errors.concat(validator.errors);
     }
 
-    if (errors) {
+    if (errors.length > 0) {
         console.warn(`\nValidation completed with ${errors.length} errors`);
         process.exit(2);
+    } else {
+        console.log("All models are valid.");
     }
 }
 

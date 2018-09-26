@@ -107,7 +107,8 @@
         <bl-property-group [label]="'exitConditions.label' | i18n" [warningMessage]="exitConditionWarningMessage" [collapsed]="true">
             <bl-text-property [label]="'exitConditions.noOpExitCodes' | i18n" [value]="exitConditionData.noAction.join(', ')"></bl-text-property>
             <bl-text-property [label]="'exitConditions.terminateJobExitCodes' | i18n" [value]="exitConditionData.terminateJob.join(', ')"></bl-text-property>
-            <bl-text-property [label]="'exitConditions.onSchedulingError' | i18n" [value]="exitConditionData.failureInfo"></bl-text-property>
+            <bl-text-property [label]="'exitConditions.onSchedulingError' | i18n" [value]="exitConditionData.preProcessingError"></bl-text-property>
+            <bl-text-property [label]="'exitConditions.fileUploadError' | i18n" [value]="exitConditionData.fileUploadError"></bl-text-property>
             <bl-text-property *ngIf="exitConditionData.default" [label]="'exitConditions.default' | i18n" [value]="exitConditionData.default"></bl-text-property>
         </bl-property-group>
 

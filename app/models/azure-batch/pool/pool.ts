@@ -7,7 +7,7 @@ import { Metadata, MetadataAttributes } from "app/models/metadata";
 import { NetworkConfiguration } from "app/models/network-configuration";
 import { ResizeError } from "app/models/resize-error";
 import { StartTask, StartTaskAttributes } from "app/models/start-task";
-import { TaskSchedulingPolicy } from "app/models/task-scheduling-policy";
+import { TaskSchedulingPolicy, TaskSchedulingPolicyAttributes } from "app/models/task-scheduling-policy";
 import { UserAccount, UserAccountAttributes } from "app/models/user-account";
 import {
     VirtualMachineConfiguration,
@@ -42,7 +42,7 @@ export interface PoolAttributes {
     stateTransitionTime: Date;
     targetDedicatedNodes: number;
     targetLowPriorityNodes: number;
-    taskSchedulingPolicy: TaskSchedulingPolicy;
+    taskSchedulingPolicy: TaskSchedulingPolicyAttributes;
     url: string;
     virtualMachineConfiguration: Partial<VirtualMachineConfigurationAttributes>;
     vmSize: string;
@@ -102,7 +102,7 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
 
     @Prop(duration) public autoScaleEvaluationInterval: Duration;
 
-    @Prop() public taskSchedulingPolicy: any;
+    @Prop() public taskSchedulingPolicy: TaskSchedulingPolicy;
 
     @Prop() public url: string;
 

@@ -18,6 +18,9 @@ steps:
   - script: codecov -t $(codecov.uploadToken)
     displayName: Upload code coverage to codecov
 
+  - script: npm run test-models
+    displayName: Test models against swagger
+
   - script: npm run build-and-pack
     displayName: Build and pack
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { BaseButton } from "@batch-flask/ui/buttons";
-import { Job, JobState } from "app/models/job";
+import { Job, JobState } from "../../../../models/azure-batch/job/job";
 
 @Component({
     selector: "bl-disable-button",

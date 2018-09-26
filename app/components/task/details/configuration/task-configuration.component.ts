@@ -78,7 +78,8 @@ export class TaskConfigurationComponent {
         this.exitConditionData = {
             noAction,
             terminateJob,
-            failureInfo: this._jobActionString(this._task.exitConditions.failureInfo),
+            preProcessingError: this._jobActionString(this._task.exitConditions.preProcessingError),
+            fileUploadError: this._jobActionString(this._task.exitConditions.fileUploadError),
             default: this._jobActionString(this._task.exitConditions.default),
         };
     }
