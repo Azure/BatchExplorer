@@ -42,7 +42,7 @@
                     <bl-tp-cell [value]="package.version"></bl-tp-cell>
                 </bl-table-property-row>
             </bl-table-property>
-            <bl-no-item [itemCount]="appPackages.length" [slimline]="true">
+            <bl-no-item [itemCount]="appPackages.size" [slimline]="true">
                 <span no-filter>{{'applicationPackages.none' | i18n}}</span>
             </bl-no-item>
         </bl-property-group>
