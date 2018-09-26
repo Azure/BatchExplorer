@@ -8,8 +8,38 @@ bl-local-template-explorer {
     .local-templates-content {
         flex: 1;
         min-height: 0;
-        height: 100%;
         background-color: $card-background;
+        overflow: auto;
+
+        .local-template {
+            display: flex;
+            overflow: hidden;
+            cursor: pointer;
+            height: 20px;
+
+            > * {
+                margin: 0 5px;
+            }
+
+            > .name {
+                flex: 1;
+                min-width: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                color: $primary-color;
+            }
+
+            > .type {
+                flex-basis: 40px;
+                flex: 0;
+                color: $secondary-text;
+            }
+
+            &:hover {
+                background: $selection-color;
+            }
+        }
     }
 
     .manage-sources {
@@ -18,3 +48,4 @@ bl-local-template-explorer {
         }
     }
 }
+

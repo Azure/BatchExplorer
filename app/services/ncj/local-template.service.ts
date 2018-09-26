@@ -1,6 +1,8 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { FileSystemService } from "@batch-flask/ui";
+import { NcjTemplateType } from "app/models";
 import { Constants } from "common";
+import * as loadJsonFile from "load-json-file";
 import * as path from "path";
 import { BehaviorSubject, Observable, from } from "rxjs";
 import { flatMap, shareReplay, tap } from "rxjs/operators";
@@ -12,8 +14,11 @@ export interface LocalTemplateFolder {
 }
 
 export interface LocalTemplate {
+    filename: string;
+    description: string;
     path: string;
     source: LocalTemplateFolder;
+    type: NcjTemplateType;
 }
 
 export interface LocalTemplateSettings {
@@ -59,6 +64,25 @@ export class LocalTemplateService implements OnDestroy {
         return this._saveSources();
     }
 
+    public async loadLocalTemplateFile(path: string) {
+        const json = await loadJsonFile(path).then((content) => {
+            return content;
+        }).catch((error) => {
+            return Promise.reject(`File is not valid json: ${error.message}`);
+        });
+
+        let templateType: NcjTemplateType;
+        if (json.job) {
+            templateType = NcjTemplateType.Job;
+        } else if (json.pool) {
+            templateType = NcjTemplateType.Pool;
+        } else {
+            templateType = NcjTemplateType.Unknown;
+        }
+
+        return { type: templateType, template: json };
+    }
+
     private _saveSources(): Observable<any> {
         return this.localFileStorage.set<LocalTemplateSettings>(Constants.SavedDataFilename.localTemplates, {
             sources: this._sources.value,
@@ -78,21 +102,36 @@ export class LocalTemplateService implements OnDestroy {
     }
 
     private async _findTemplates(sources: LocalTemplateFolder[]): Promise<LocalTemplate[]> {
-        const array = await Promise.all(sources.map(x => this._findTemplatesInSource(x.path)));
+        const array = await Promise.all(sources.map(x => this._findTemplatesInSource(x)));
         return array.flatten();
     }
 
-    private async _findTemplatesInSource(folder: string): Promise<LocalTemplate[]> {
-        const files = await this.fs.glob(path.join(folder, "**/*.{pool|job}.json"));
+    private async _findTemplatesInSource(source: LocalTemplateFolder): Promise<LocalTemplate[]> {
+        const files = await this.fs.glob(path.join(source.path, "**/*.template.json"));
 
-        const valid = [];
+        const localTemplates = [];
+
         console.log("File co", files.length);
         for (const file of files) {
             console.log("File", file);
-            const template = this.fs.readFile(file);
-            console.log("Template", template);
+            try {
+                const {template, type} = await this.loadLocalTemplateFile(file);
+                const localTemplate: LocalTemplate = {
+                    path: path.relative(source.path, file),
+                    filename: path.basename(file),
+                    description: null,
+                    source,
+                    type,
+                };
+                if (template.templateMetadata) {
+                    localTemplate.description = template.templateMetadata.description;
+                }
+                localTemplates.push(localTemplate);
+            } catch (e) {
+                // Ignore
+            }
         }
 
-        return valid;
+        return localTemplates;
     }
 }

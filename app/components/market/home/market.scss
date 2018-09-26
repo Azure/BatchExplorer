@@ -30,7 +30,7 @@ bl-market {
     .gallery-content {
         height: calc(#{$contentview-height} - #{$header-height});
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: 2fr 3fr;
         grid-template-rows: repeat(2, 1fr);
         grid-row-gap: 10px;
         grid-column-gap: 10px;
@@ -44,6 +44,7 @@ bl-market {
         .local-templates {
             grid-row: 2 / 3;
             grid-column: 1 / 2;
+            overflow: hidden;
         }
 
         .supported-applications {

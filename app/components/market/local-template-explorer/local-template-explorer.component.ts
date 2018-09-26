@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
+import { DialogService } from "@batch-flask/ui";
+import { NcjTemplateType } from "app/models";
 import { LocalTemplate, LocalTemplateService } from "app/services";
 import { Subscription } from "rxjs";
-
-import { DialogService } from "@batch-flask/ui";
-import "./local-template-explorer.scss";
 import { LocalTemplateSourceFormComponent } from "./local-template-source-form";
+
+import "./local-template-explorer.scss";
 
 @Component({
     selector: "bl-local-template-explorer",
@@ -12,6 +13,7 @@ import { LocalTemplateSourceFormComponent } from "./local-template-source-form";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LocalTemplateExplorerComponent implements OnDestroy {
+    public NcjTemplateType = NcjTemplateType;
     public templates: LocalTemplate[];
 
     private _subs: Subscription[] = [];
@@ -33,5 +35,9 @@ export class LocalTemplateExplorerComponent implements OnDestroy {
 
     public manageSources() {
         this.dialogService.open(LocalTemplateSourceFormComponent);
+    }
+
+    public trackTemplate(index) {
+        return index;
     }
 }
