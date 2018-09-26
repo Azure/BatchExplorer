@@ -66,8 +66,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
         linuxAppimage: document.getElementById("download-linux-appimage"),
     }
 
-    
-
     getLinks(versionEl, downloadLinks);
 });
 
