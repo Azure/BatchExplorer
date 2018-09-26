@@ -68,11 +68,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     
 
-    if(buildType === "stable") {
-        getLinksOld(versionEl, downloadLinks);
-    } else {
-        getLinks(versionEl, downloadLinks);
-    }
+    getLinks(versionEl, downloadLinks);
 });
 
 function getLinks(versionEl, downloadLinks) {
@@ -95,30 +91,6 @@ function getLinks(versionEl, downloadLinks) {
         versionEl.textContent = version;
         downloadLinks["osxDmg"] = `${feedUrl}/${version}/BatchExplorer-${version}.dmg`;
         downloadLinks["osxZip"] = `${feedUrl}/${version}/BatchExplorer-${version}-mac.zip`;
-        updateDownloadLinks()
-    });
-}
-
-function getLinksOld(versionEl, downloadLinks) {
-    getWindowsLatest().then((version) => {
-        versionEl.textContent = version;
-        downloadLinks["windowsInstaller"] = `${feedUrl}/${version}/BatchExplorer Setup.exe`
-        downloadLinks["windowsZip"] = `${feedUrl}/${version}/BatchExplorer-win.zip`
-        updateDownloadLinks()
-    });
-
-    getLinuxLatest().then((version) => {
-        versionEl.textContent = version;
-        downloadLinks["linuxDeb"] = `${feedUrl}/${version}/BatchExplorer.deb`;
-        downloadLinks["linuxRpm"] = `${feedUrl}/${version}/BatchExplorer.rpm`;
-        downloadLinks["linuxAppimage"] = `${feedUrl}/${version}/BatchExplorer.AppImage`;
-        updateDownloadLinks()
-    });
-
-    getMacLatest().then((version) => {
-        versionEl.textContent = version;
-        downloadLinks["osxDmg"] = `${feedUrl}/${version}/BatchExplorer.dmg`;
-        downloadLinks["osxZip"] = `${feedUrl}/${version}/BatchExplorer-osx.zip`;
         updateDownloadLinks()
     });
 }
