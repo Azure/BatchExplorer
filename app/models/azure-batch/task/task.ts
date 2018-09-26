@@ -16,9 +16,9 @@ import { TaskExecutionInformation } from "app/models/task-execution-information"
 import { TaskExitConditions } from "app/models/task-exit-conditions";
 import { TaskOutputFile } from "app/models/task-output-file";
 import { UserIdentity } from "app/models/user-identity";
+import { AuthenticationTokenSettings, AuthenticationTokenSettingsAttributes } from "../authentication-token-settings";
 import { AffinityInformation } from "./affinity-information";
 import { TaskStatistics, TaskStatisticsAttributes } from "./task-statistics";
-import { AuthenticationTokenSettings, AuthenticationTokenSettingsAttributes } from "../authentication-token-settings";
 
 export interface TaskAttributes {
     id: string;
