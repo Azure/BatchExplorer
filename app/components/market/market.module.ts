@@ -11,6 +11,7 @@ import {
 import { TaskBaseModule } from "app/components/task/base";
 import { RecentTemplateListComponent } from "./home/recent-template-list";
 import { LocalTemplateBrowserComponent } from "./local-template-browser";
+import { LocalTemplateExplorerComponent } from "./local-template-explorer";
 import { SubmitLocalTemplateComponent } from "./submit-local-template";
 import { SubmitRecentTemplateComponent } from "./submit-recent-template";
 
@@ -22,6 +23,7 @@ const components = [
     SubmitNcjTemplateComponent,
     ParameterInputComponent,
     LocalTemplateBrowserComponent,
+    LocalTemplateExplorerComponent,
     SubmitLocalTemplateComponent,
     RecentTemplateListComponent,
 ];
