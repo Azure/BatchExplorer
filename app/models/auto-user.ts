@@ -1,7 +1,7 @@
 import { Model, Prop, Record } from "@batch-flask/core";
 import { UserAccountElevationLevel } from "./user-account";
 
-export interface AutoUserAttributes {
+export interface AutoUserSpecificationAttributes {
     scope: AutoUserScope;
     elevationLevel: UserAccountElevationLevel;
 }
@@ -10,12 +10,10 @@ export interface AutoUserAttributes {
  * Class for displaying Batch pool information.
  */
 @Model()
-export class AutoUser extends Record<AutoUserAttributes> {
-    @Prop()
-    public scope: AutoUserScope;
+export class AutoUserSpecification extends Record<AutoUserSpecificationAttributes> {
+    @Prop() public scope: AutoUserScope;
 
-    @Prop()
-    public elevationLevel: UserAccountElevationLevel;
+    @Prop() public elevationLevel: UserAccountElevationLevel;
 }
 
 export enum AutoUserScope {

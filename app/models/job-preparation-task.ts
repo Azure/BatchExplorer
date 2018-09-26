@@ -1,4 +1,5 @@
-import { Model, Prop, Record } from "@batch-flask/core";
+import { ListProp, Model, Prop, Record } from "@batch-flask/core";
+import { List } from "immutable";
 import { TaskContainerSettings, TaskContainerSettingsAttributes } from "./container-setup";
 import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";
@@ -12,7 +13,6 @@ export interface JobPreparationTaskAttributes {
     environmentSettings: NameValuePair[];
     constraints: TaskConstraints;
     waitForSuccess: boolean;
-    runElevated: boolean;
     rerunOnNodeRebootAfterSuccess: boolean;
     containerSettings: TaskContainerSettingsAttributes;
     userIdentity: UserIdentityAttributes;
@@ -25,11 +25,10 @@ export interface JobPreparationTaskAttributes {
 export class JobPreparationTask extends Record<JobPreparationTaskAttributes> {
     @Prop() public id: string;
     @Prop() public commandLine: string;
-    @Prop() public resourceFiles: ResourceFile[];
-    @Prop() public environmentSettings: NameValuePair[];
+    @ListProp(ResourceFile) public resourceFiles: List<ResourceFile> = List([]);
+    @ListProp(NameValuePair) public environmentSettings: List<NameValuePair> = List([]);
     @Prop() public constraints: TaskConstraints;
     @Prop() public waitForSuccess: boolean;
-    @Prop() public runElevated: boolean;
     @Prop() public rerunOnNodeRebootAfterSuccess: boolean;
     @Prop() public containerSettings: TaskContainerSettings;
     @Prop() public userIdentity: UserIdentity;

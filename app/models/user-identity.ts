@@ -1,16 +1,14 @@
 import { Model, Prop, Record } from "@batch-flask/core";
-import { AutoUser } from "./auto-user";
+import { AutoUserSpecification, AutoUserSpecificationAttributes } from "./auto-user";
 
 export interface UserIdentityAttributes {
     username: string;
-    autoUser: AutoUser;
+    autoUser: AutoUserSpecificationAttributes;
 }
 
 @Model()
 export class UserIdentity extends Record<UserIdentityAttributes> {
-    @Prop()
-    public username: string;
+    @Prop() public username: string;
 
-    @Prop()
-    public autoUser: AutoUser;
+    @Prop() public autoUser: AutoUserSpecification;
 }

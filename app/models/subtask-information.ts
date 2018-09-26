@@ -27,7 +27,7 @@ export interface SubtaskInformationAttributes {
  */
 @Model()
 export class SubtaskInformation extends Record<SubtaskInformationAttributes> {
-    @Prop() public id: string;
+    @Prop() public id: number;
     @Prop() public startTime: Date;
     @Prop() public endTime: Date;
     @Prop() public exitCode: number;

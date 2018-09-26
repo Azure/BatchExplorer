@@ -26,7 +26,6 @@ export interface JobManagerTaskAttributes {
     environmentSettings: NameValuePair[];
     constraints: TaskConstraints;
     killJobOnCompletion: boolean;
-    runElevated: boolean;
     allowLowPriorityNode: boolean;
     runExclusive: boolean;
     containerSettings: TaskContainerSettingsAttributes;
@@ -42,12 +41,14 @@ export class JobManagerTask extends Record<JobManagerTaskAttributes> {
     @Prop() public id: string;
     @Prop() public displayName: string;
     @Prop() public commandLine: string;
-    @Prop() public resourceFiles: ResourceFile[];
-    @Prop() public applicationPackageReferences: ApplicationPackageReference[];
-    @Prop() public environmentSettings: NameValuePair[];
+    @ListProp(ResourceFile) public resourceFiles: List<ResourceFile> = List([]);
+
+    @ListProp(ApplicationPackageReference)
+    public applicationPackageReferences: List<ApplicationPackageReference> = List([]);
+
+    @ListProp(NameValuePair) public environmentSettings: List<NameValuePair> = List([]);
     @Prop() public constraints: TaskConstraints;
     @Prop() public killJobOnCompletion: boolean;
-    @Prop() public runElevated: boolean;
     @Prop() public runExclusive: boolean;
     @Prop() public allowLowPriorityNode: boolean;
     @Prop() public containerSettings: TaskContainerSettings;

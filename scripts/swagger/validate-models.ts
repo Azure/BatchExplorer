@@ -32,6 +32,22 @@ interface SwaggerDefinition {
     enum?: string[];
 }
 
+const nameMapping = [
+    { swagger: "TaskContainerExecutionInformation", app: "TaskContainerExecutionInfo" },
+    { swagger: "TaskFailureInformation", app: "FailureInfo" },
+    { swagger: "OSDisk", app: "PoolOSDisk"},
+];
+
+const swaggerMappings = {};
+for (const mapping of nameMapping) {
+    swaggerMappings[mapping.swagger] = mapping.app;
+}
+
+const appMappings = {};
+for (const mapping of nameMapping) {
+    appMappings[mapping.app] = mapping.swagger;
+}
+
 async function getSpecs() {
     const baseUrl = `https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/specification/batch`;
     const url = `${baseUrl}/data-plane/Microsoft.Batch/stable/${dataPlaneVersion}/BatchService.json`;
@@ -110,6 +126,10 @@ class SwaggerModelValidator {
     private checkPropertyTypes(metadata) {
         for (const name of Object.keys(metadata)) {
             const swaggerProperty = this.definition.properties[name];
+            if (!swaggerProperty) {
+                this.addPropertyError(name, `Swagger is missing property`);
+                continue;
+            }
             const swaggerType = swaggerProperty.type;
             const property = metadata[name];
             const type = property.type;
@@ -191,6 +211,8 @@ class SwaggerSpecs {
 function getModel(name: string) {
     if (name in models) {
         return models[name];
+    } else if (name in swaggerMappings) {
+        return models[swaggerMappings[name]];
     } else {
         throw new Error(`Unknown model ${name}. Need to add an mapping?`);
     }
