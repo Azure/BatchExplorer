@@ -9,18 +9,17 @@ require("module").Module._initPaths();
 import "reflect-metadata";
 import "zone.js";
 
+import * as moment from "moment";
 import fetch from "node-fetch";
 import * as models from "../../app/models";
 import { metadataForCtr } from "../../src/@batch-flask/core/record/helpers";
 
 const dataPlaneVersion = "2018-08-01.7.0";
 
-interface SwaggerRef {
-    $ref: string;
-}
-
 interface SwaggerProperty {
-    type: string | SwaggerRef;
+    type: "string" | "integer" | "boolean" | "array" | undefined;
+    format: "date-time" | "duration" | undefined;
+    $ref: string | undefined;
     title: string;
 }
 
@@ -42,7 +41,6 @@ async function getSpecs() {
 
 async function getMapping() {
     const specs = await getSpecs();
-    console.log("Specs");
 
     const mappings = [];
 
@@ -57,7 +55,8 @@ async function getMapping() {
             // console.log(name);
         }
     }
-    return mappings;
+
+    return { mappings, specs: new SwaggerSpecs(specs) };
 }
 
 interface ValidationError {
@@ -68,18 +67,26 @@ interface ValidationError {
 class SwaggerModelValidator {
     public errors: ValidationError[] = [];
 
-    constructor(public name: string, private model, private definition: SwaggerDefinition) {
+    constructor(
+        private specs: SwaggerSpecs,
+        public modelName: string,
+        private model,
+        private definition: SwaggerDefinition) {
 
     }
 
     public validate() {
 
         if (this.model.prototype) {
+            let metadata;
             try {
-                const metadata = metadataForCtr(this.model);
-                this.checkMissingProperties(new Set(Object.keys(metadata)), this.definition.properties);
+                metadata = metadataForCtr(this.model);
             } catch (e) {
                 this.addError("Invalid model. Make sure extends Record and has @Model decorator");
+            }
+            if (metadata) {
+                this.checkMissingProperties(new Set(Object.keys(metadata)), this.definition.properties);
+                this.checkPropertyTypes(metadata);
             }
         } else {
             // Enum
@@ -88,8 +95,8 @@ class SwaggerModelValidator {
     }
 
     private addError(message: string) {
-        this.errors.push({ name: this.name, message });
-        console.warn(`Error: ${this.name} > ${message}`);
+        this.errors.push({ name: this.modelName, message });
+        console.warn(`Error: ${this.modelName} > ${message}`);
     }
 
     private checkMissingProperties(properties: Set<string>, swaggerProperties: SwaggerProperties) {
@@ -98,6 +105,68 @@ class SwaggerModelValidator {
                 this.addError(`Missing property ${name}`);
             }
         }
+    }
+
+    private checkPropertyTypes(metadata) {
+        for (const name of Object.keys(metadata)) {
+            const swaggerProperty = this.definition.properties[name];
+            const swaggerType = swaggerProperty.type;
+            const property = metadata[name];
+            const type = property.type;
+
+            if (swaggerType === "string" && swaggerProperty.format === "date-time") {
+                if (type !== Date) {
+                    this.addPropertyError(name, `Expected type to be a date but was ${type}`);
+                }
+            } else if (swaggerType === "string" && swaggerProperty.format === "duration") {
+                if (type !== moment.duration) {
+                    this.addPropertyError(name, `Expected type to be a duration but was ${type}`);
+                }
+            } else if (swaggerType === "string") {
+                if (type !== String) {
+                    this.addPropertyError(name, `Expected type to be a string but was ${type}`);
+                }
+            } else if (swaggerType === "integer") {
+                if (type !== Number) {
+                    this.addPropertyError(name, `Expected type to be a integer but was ${type}`);
+                }
+            } else if (swaggerType === "boolean") {
+                if (type !== Boolean) {
+                    this.addPropertyError(name, `Expected type to be a boolean but was ${type}`);
+                }
+            } else if (swaggerType === "array") {
+                if (!property.list) {
+                    this.addPropertyError(name, `Expected type to be a array but wasn't defined as a list. ${property}`
+                        + `Check it has the @ListProp property not @Prop`);
+                }
+                // TODO-TIM check array type
+            } else if (swaggerProperty.$ref) {
+                const refTypeName = swaggerProperty.$ref.replace("#/definitions/", "");
+                const nestedType = this.specs.getDefinition(refTypeName);
+                if (nestedType.enum) {
+                    if (type !== String) {
+                        this.addPropertyError(name, `Expected type to be a enum ${refTypeName} but was ${type}`);
+                    }
+                } else {
+                    try {
+                        const modelCls = getModel(refTypeName);
+                        if (modelCls !== property.type) {
+                            this.addPropertyError(name, `Expected type to be pf type ${refTypeName} but wasn't`);
+                        }
+                    } catch (e) {
+                        this.addPropertyError(name, e.message);
+                    }
+                }
+
+            } else {
+                console.log("Property", this.modelName, name, swaggerProperty, metadata[name]);
+                process.exit(1);
+            }
+        }
+    }
+
+    private addPropertyError(name: string, message: string) {
+        this.addError(`${name} : ${message}`);
     }
 
     private validateEnum() {
@@ -111,15 +180,31 @@ class SwaggerModelValidator {
     }
 }
 
+class SwaggerSpecs {
+    constructor(private specs) { }
+
+    public getDefinition(name: string): SwaggerDefinition {
+        return this.specs.definitions[name];
+    }
+}
+
+function getModel(name: string) {
+    if (name in models) {
+        return models[name];
+    } else {
+        throw new Error(`Unknown model ${name}. Need to add an mapping?`);
+    }
+}
+
 async function run() {
-    const mappings = await getMapping();
+    console.log("Validating models...");
+    const { mappings, specs } = await getMapping();
 
     let errors = [];
     for (const mapping of mappings) {
-        const validator = new SwaggerModelValidator(mapping.name, mapping.model, mapping.definition);
+        const validator = new SwaggerModelValidator(specs, mapping.name, mapping.model, mapping.definition);
         validator.validate();
         errors = errors.concat(validator.errors);
-        // return;
     }
 
     if (errors) {
