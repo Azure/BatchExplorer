@@ -14,6 +14,8 @@ import {
     VirtualMachineConfigurationAttributes,
 } from "app/models/virtual-machine-configuration";
 import { ModelUtils, PoolUtils } from "app/utils";
+import { AutoScaleRun, AutoScaleRunAttributes } from "./auto-scale-run";
+import { PoolStatisticsAttributes } from "./pool-statistics";
 
 export enum OSType {
     Windows = "windows",
@@ -34,6 +36,7 @@ export interface PoolAttributes {
     autoScaleFormula: string;
     enableInterNodeCommunication: boolean;
     id: string;
+    eTag: string;
     lastModified: Date;
     maxTasksPerNode: number;
     resizeErrors: Array<Partial<ResizeError>>;
@@ -50,6 +53,8 @@ export interface PoolAttributes {
     metadata: MetadataAttributes[];
     userAccounts: UserAccountAttributes[];
     applicationLicenses: string[];
+    autoScaleRun: AutoScaleRunAttributes;
+    stats: PoolStatisticsAttributes;
 }
 
 /**
@@ -81,6 +86,8 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
     @Prop() public enableInterNodeCommunication: boolean;
 
     @Prop() public id: string;
+
+    @Prop() public eTag: string;
 
     @Prop() public lastModified: Date;
 
@@ -124,6 +131,10 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
      * Tags are computed from the metadata using an internal key
      */
     @Prop() public tags: List<string> = List([]);
+
+    @Prop() public autoScaleRun: AutoScaleRun;
+
+    @Prop() public stats: PoolStatisticsAttributes;
 
     /**
      * Computed field sum of dedicated and low pri nodes
