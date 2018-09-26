@@ -30,9 +30,9 @@
 
         <bl-property-group [label]="'applicationPackages.label' | i18n" class="wide" [collapsed]="true">
             <div collapsed-preview>
-                <span>{{'applicationPackages.summary' | i18n: {count: appPackages?.length} }}</span>
+                <span>{{'applicationPackages.summary' | i18n: {count: appPackages?.size} }}</span>
             </div>
-            <bl-table-property *ngIf="appPackages.length > 0" label="Package references">
+            <bl-table-property *ngIf="appPackages.size > 0" label="Package references">
                 <bl-table-property-header>
                     <div tp-column>{{'applicationPackages.application' | i18n}}</div>
                     <div tp-column>{{'applicationPackages.version' | i18n}}</div>

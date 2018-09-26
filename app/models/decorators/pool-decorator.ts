@@ -8,7 +8,6 @@ import { PoolEndpointConfigurationDecorator, StartTaskDecorator } from "app/mode
 import { PoolUtils } from "app/utils";
 import { DecoratorBase } from "app/utils/decorators";
 import { CloudServiceConfigurationDecorator } from "./cloud-service-configuration-decorator";
-import { TaskSchedulingPolicyDecorator } from "./task-scheduling-policy-decorator";
 import { VirtualMachineConfigurationDecorator } from "./virtual-machine-configuration-decorator";
 
 export class PoolDecorator extends DecoratorBase<Pool> {
@@ -33,7 +32,6 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public targetLowPriorityNodes: string;
     public autoScaleFormula: string;
     public autoScaleEvaluationInterval: string;
-    public taskSchedulingPolicy: TaskSchedulingPolicyDecorator;
     public url: string;
     public virtualMachineConfiguration: VirtualMachineConfigurationDecorator;
     public vmSize: string;
@@ -87,9 +85,6 @@ export class PoolDecorator extends DecoratorBase<Pool> {
 
         this.virtualMachineConfiguration =
             new VirtualMachineConfigurationDecorator(pool.virtualMachineConfiguration || {} as any, this.poolOs);
-
-        this.taskSchedulingPolicy =
-            new TaskSchedulingPolicyDecorator(pool.taskSchedulingPolicy || {});
 
         this.applicationPackageReferences = List(pool.applicationPackageReferences);
         this.certificateReferences = List(pool.certificateReferences);

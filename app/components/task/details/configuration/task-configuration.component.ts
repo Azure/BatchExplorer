@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { I18N_NAMESPACE } from "@batch-flask/ui";
-import { ExitOptions, Job, NameValuePair, Task } from "app/models";
+import { ApplicationPackageReference, ExitOptions, Job, NameValuePair, Task } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
 import { JobAction, TaskFailureAction } from "app/models/job-action";
 import { List } from "immutable";
@@ -27,7 +27,7 @@ export class TaskConfigurationComponent {
     public get task() { return this._task; }
 
     public decorator: TaskDecorator;
-    public appPackages: any[];
+    public appPackages: List<ApplicationPackageReference>;
     public constraints: any;
     public containerSettings: any;
     public executionInfo: any;
@@ -89,7 +89,7 @@ export class TaskConfigurationComponent {
             this.environmentSettings = task.environmentSettings;
 
             this.decorator = new TaskDecorator(task);
-            this.appPackages = this.decorator.applicationPackageReferences || [];
+            this.appPackages = this.task.applicationPackageReferences;
             this.constraints = this.decorator.constraints || {};
             this.executionInfo = this.decorator.executionInfo || {};
             this.nodeInfo = this.decorator.nodeInfo || {};
