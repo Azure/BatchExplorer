@@ -1,4 +1,4 @@
-import { AutoUserScope, Task, TaskState, UserAccountElevationLevel } from "app/models";
+import { AutoUserScope, Task, UserAccountElevationLevel } from "app/models";
 import { TaskContainerSettingsDecorator } from "app/models/decorators";
 import { DecoratorBase } from "app/utils/decorators";
 import { ComputeNodeInfoDecorator } from "./compute-node-info-decorator";
