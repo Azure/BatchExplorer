@@ -8,7 +8,7 @@ import { JobExecutionInformation, JobExecutionInformationAttributes } from "./jo
 import { JobManagerTask } from "./job-manager-task";
 import { JobPreparationTask } from "./job-preparation-task";
 import { JobReleaseTask } from "./job-release-task";
-import { JobStats } from "./job-stats";
+import { JobStatistics, JobStatisticsAttributes } from "./job-stats";
 import { Metadata, MetadataAttributes } from "./metadata";
 import { NameValuePair, NameValuePairAttributes } from "./name-value-pair";
 
@@ -36,7 +36,7 @@ export interface JobAttributes {
     poolInfo: any;
     metadata: MetadataAttributes[];
     executionInfo: Partial<JobExecutionInformationAttributes>;
-    stats: JobStats;
+    stats: JobStatisticsAttributes;
 }
 /**
  * Class for displaying Batch job information.
@@ -66,7 +66,7 @@ export class Job extends Record<JobAttributes> implements NavigableRecord {
     @Prop() public poolInfo: any;
     @ListProp(Metadata) public metadata: List<Metadata> = List([]);
     @Prop() public executionInfo: JobExecutionInformation;
-    @Prop() public stats: JobStats;
+    @Prop() public stats: JobStatistics;
 
     /**
      * Tags are computed from the metadata using an internal key

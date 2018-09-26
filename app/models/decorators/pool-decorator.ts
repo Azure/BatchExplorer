@@ -95,8 +95,6 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.certificateReferences = List(pool.certificateReferences);
         this.networkSubnetId = pool.networkConfiguration && pool.networkConfiguration.subnetId;
         this.applicationLicenses = pool.applicationLicenses.join(", ");
-        this.poolEndpointConfiguration = new PoolEndpointConfigurationDecorator(
-            (pool.networkConfiguration && pool.networkConfiguration.endpointConfiguration) || {});
     }
 
     private _computePoolOs(): string {

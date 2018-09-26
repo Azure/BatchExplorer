@@ -1,6 +1,6 @@
 import { FormControl, FormGroup } from "@angular/forms";
 
-import { InboundNATPool } from "app/models";
+import { InboundNATPoolAttributes } from "app/models";
 
 export const MININUM_PORT = 1;
 export const MAXIMUM_BACKEND_PORT = 65535;
@@ -22,7 +22,7 @@ export const ENDPOINTNAME_LENGTH = 77;
  * 2, Backend port must not be reserved ports
  * 3, Backend port must be unique within Batch pool
  */
-export function backendPortValidator(inboundNATPools: InboundNATPool[]) {
+export function backendPortValidator(inboundNATPools: InboundNATPoolAttributes[]) {
     return (control: FormControl): {[key: string]: any} => {
         if (control.value === null) {
             return null;
@@ -101,7 +101,7 @@ export function frontendPortValidator() {
  */
 export function frontendPortRangeValidator(frontendPortRangeStart: string,
                                            frontendPortRangeEnd: string,
-                                           inboundNATPools: InboundNATPool[]) {
+                                           inboundNATPools: InboundNATPoolAttributes[]) {
     return (group: FormGroup): {[key: string]: any} => {
         const start = group.controls[frontendPortRangeStart];
         const end = group.controls[frontendPortRangeEnd];
@@ -157,7 +157,7 @@ export function frontendPortRangeValidator(frontendPortRangeStart: string,
  *    and cannot exceed 77 characters.
  * 2, Endponit name must be unique within a Batch pool
  */
-export function nameValidator(inboundNATPools: InboundNATPool[]) {
+export function nameValidator(inboundNATPools: InboundNATPoolAttributes[]) {
     return (control: FormControl): {[key: string]: any} => {
         if (control.value === null) {
             return null;
@@ -195,7 +195,7 @@ export function nameValidator(inboundNATPools: InboundNATPool[]) {
  * 1, networkSecurityGroupRules priority must be unique across different inbound NAT pools
  */
 export function networkSecurityGroupRuleValidator(networkSecurityGroupRules: string,
-                                                  inboundNATPools: InboundNATPool[]) {
+                                                  inboundNATPools: InboundNATPoolAttributes[]) {
     return (group: FormGroup): {[key: string]: any} => {
         const control = group.controls[networkSecurityGroupRules];
         if (control.value === null) {

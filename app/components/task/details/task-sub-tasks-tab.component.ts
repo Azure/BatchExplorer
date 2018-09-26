@@ -31,7 +31,7 @@ export class TaskSubTasksTabComponent extends ListBaseComponent implements OnCha
     public data: ListView<SubtaskInformation, SubtaskListParams>;
 
     public selectedTask: SubtaskInformation;
-    public selectedTaskId: string;
+    public selectedTaskId: number;
     public subTasks: List<SubtaskInformation>;
 
     private _jobId: string;
@@ -70,7 +70,7 @@ export class TaskSubTasksTabComponent extends ListBaseComponent implements OnCha
         return this.data.fetchNext();
     }
 
-    public selectedTaskChanged(id: string) {
+    public selectedTaskChanged(id: number) {
         this.selectedTaskId = id;
         this._updateSelectedTask();
         this.changeDetector.markForCheck();

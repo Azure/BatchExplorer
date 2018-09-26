@@ -2,20 +2,15 @@
 import { ListProp, Model, Prop, Record } from "@batch-flask/core";
 import { List } from "immutable";
 import { ApplicationPackageReference } from "./application-package-reference";
+import {
+    AuthenticationTokenSettings, AuthenticationTokenSettingsAttributes,
+} from "./azure-batch/authentication-token-settings";
 import { TaskContainerSettings, TaskContainerSettingsAttributes } from "./container-setup";
 import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";
 import { TaskConstraints } from "./task-constraints";
 import { TaskOutputFile, TaskOutputFileAttributes } from "./task-output-file";
 import { UserIdentity, UserIdentityAttributes } from "./user-identity";
-
-export interface AuthenticationTokenSettingsAttributes {
-    access: string[];
-}
-
-export class AuthenticationTokenSettings extends Record<AuthenticationTokenSettingsAttributes> {
-    @ListProp(String) public access: List<string> = List([]);
-}
 
 export interface JobManagerTaskAttributes {
     id: string;

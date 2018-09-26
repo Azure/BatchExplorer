@@ -53,6 +53,7 @@ export interface TaskExitConditionsAttributes {
 export class TaskExitConditions extends Record<TaskExitConditionsAttributes> {
     @Prop() public exitCodes: List<ExitCodeMapping>;
     @ListProp(ExitCodeRangeMapping) public exitCodeRanges: List<ExitCodeRangeMapping> = List([]);
-    @Prop() public failureInfo: ExitOptions;
+    @Prop() public fileUploadError: ExitOptions;
+    @Prop() public preProcessingError: ExitOptions;
     @Prop() public default: ExitOptions;
 }

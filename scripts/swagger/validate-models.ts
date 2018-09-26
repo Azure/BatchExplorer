@@ -17,8 +17,8 @@ import { metadataForCtr } from "../../src/@batch-flask/core/record/helpers";
 const dataPlaneVersion = "2018-08-01.7.0";
 
 interface SwaggerProperty {
-    type: "string" | "integer" | "boolean" | "array" | undefined;
-    format: "date-time" | "duration" | undefined;
+    type: "string" | "integer" | "boolean" | "array" | "number" | undefined;
+    format: "date-time" | "duration" | "double" | undefined;
     $ref: string | undefined;
     title: string;
 }
@@ -35,7 +35,12 @@ interface SwaggerDefinition {
 const nameMapping = [
     { swagger: "TaskContainerExecutionInformation", app: "TaskContainerExecutionInfo" },
     { swagger: "TaskFailureInformation", app: "FailureInfo" },
-    { swagger: "OSDisk", app: "PoolOSDisk"},
+    { swagger: "OSDisk", app: "PoolOSDisk" },
+    { swagger: "CloudTask", app: "Task" },
+    { swagger: "CloudJob", app: "Job" },
+    { swagger: "ComputeNode", app: "Node" },
+    { swagger: "ExitConditions", app: "TaskExitConditions" },
+    { swagger: "StartTaskInformation", app: "StartTaskInfo" },
 ];
 
 const swaggerMappings = {};
@@ -60,15 +65,23 @@ async function getMapping() {
 
     const mappings = [];
 
-    for (const name of Object.keys(models)) {
-        if (name in specs.definitions) {
+    for (const name of Object.keys(specs.definitions)) {
+        if (name in models) {
             mappings.push({
                 name,
                 model: models[name],
                 definition: specs.definitions[name],
             });
+        } else if (name in swaggerMappings && models[swaggerMappings[name]]) {
+            mappings.push({
+                name,
+                model: models[swaggerMappings[name]],
+                definition: specs.definitions[name],
+            });
         } else {
-            // console.log(name);
+            if (!name.endsWith("Result") && !name.endsWith("Parameter")) {
+                console.log(name);
+            }
         }
     }
 
@@ -146,9 +159,9 @@ class SwaggerModelValidator {
                 if (type !== String) {
                     this.addPropertyError(name, `Expected type to be a string but was ${type}`);
                 }
-            } else if (swaggerType === "integer") {
+            } else if (swaggerType === "integer" || swaggerType === "number") {
                 if (type !== Number) {
-                    this.addPropertyError(name, `Expected type to be a integer but was ${type}`);
+                    this.addPropertyError(name, `Expected type to be a number but was ${type}`);
                 }
             } else if (swaggerType === "boolean") {
                 if (type !== Boolean) {
@@ -171,7 +184,8 @@ class SwaggerModelValidator {
                     try {
                         const modelCls = getModel(refTypeName);
                         if (modelCls !== property.type) {
-                            this.addPropertyError(name, `Expected type to be pf type ${refTypeName} but wasn't`);
+                            this.addPropertyError(name,
+                                `Expected type to be of type ${refTypeName} but was ${property.cls}`);
                         }
                     } catch (e) {
                         this.addPropertyError(name, e.message);

@@ -1,12 +1,9 @@
 import { Model } from "@batch-flask/core";
-import { JobStats } from "./job-stats";
+import { JobStatistics } from "./job-stats";
 
 /**
  * Statistics about an executed job schedule
  */
 @Model()
-export class JobScheduleStats extends JobStats {
-    constructor(data: any) {
-        super(data);
-    }
+export class JobScheduleStats extends JobStatistics {
 }
