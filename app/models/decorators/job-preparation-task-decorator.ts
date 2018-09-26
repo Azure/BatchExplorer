@@ -6,7 +6,6 @@ import { TaskContainerSettingsDecorator } from "./task-container-settings-decora
 export class JobPreparationTaskDecorator extends DecoratorBase<JobPreparationTask> {
     public commandLine: string;
     public waitForSuccess: boolean;
-    public runElevated: boolean;
     public rerunOnNodeRebootAfterSuccess: boolean;
 
     public resourceFiles: {};
@@ -19,7 +18,6 @@ export class JobPreparationTaskDecorator extends DecoratorBase<JobPreparationTas
 
         this.commandLine = this.stringField(task.commandLine);
         this.waitForSuccess = task.waitForSuccess;
-        this.runElevated = task.runElevated;
         this.rerunOnNodeRebootAfterSuccess = task.rerunOnNodeRebootAfterSuccess;
 
         this.resourceFiles = task.resourceFiles || {};

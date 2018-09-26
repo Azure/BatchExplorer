@@ -3,7 +3,7 @@ import * as crypto from "crypto";
 import * as fs from "fs";
 import * as yaml from "js-yaml";
 import * as util from "util";
-import { artifactsNames, buildType, getLocalPath, getRemotePath, version } from "./package-utils";
+import { artifactsNames, getLocalPath, getRemotePath, version } from "./package-utils";
 
 const readFile = util.promisify(fs.readFile);
 const stat = util.promisify(fs.stat);

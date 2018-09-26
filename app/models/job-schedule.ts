@@ -2,7 +2,7 @@ import { List } from "immutable";
 
 import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
 import { ModelUtils } from "app/utils";
-import { Job, JobAttributes } from "./job";
+import { Job, JobAttributes } from "./azure-batch/job/job";
 import {
     JobScheduleExecutionInformation, JobScheduleExecutionInformationAttributes,
 } from "./job-schedule-execution-information";

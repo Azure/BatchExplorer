@@ -8,7 +8,7 @@ import { TerminateJobScheduleDialogComponent } from "app/components/job-schedule
 import { JobScheduleService } from "app/services";
 import { ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 
-describe("TerminateJobScheduleDialogComponent ", () => {
+describe("TerminateJobScheduleDialogComponent", () => {
     let fixture: ComponentFixture<TerminateJobScheduleDialogComponent>;
     let component: TerminateJobScheduleDialogComponent;
     let dialogRefSpy: any;

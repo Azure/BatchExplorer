@@ -7,13 +7,15 @@ import { Metadata, MetadataAttributes } from "app/models/metadata";
 import { NetworkConfiguration } from "app/models/network-configuration";
 import { ResizeError } from "app/models/resize-error";
 import { StartTask, StartTaskAttributes } from "app/models/start-task";
-import { TaskSchedulingPolicy } from "app/models/task-scheduling-policy";
+import { TaskSchedulingPolicy, TaskSchedulingPolicyAttributes } from "app/models/task-scheduling-policy";
 import { UserAccount, UserAccountAttributes } from "app/models/user-account";
 import {
     VirtualMachineConfiguration,
     VirtualMachineConfigurationAttributes,
 } from "app/models/virtual-machine-configuration";
 import { ModelUtils, PoolUtils } from "app/utils";
+import { AutoScaleRun, AutoScaleRunAttributes } from "./auto-scale-run";
+import { PoolStatistics, PoolStatisticsAttributes } from "./pool-statistics";
 
 export enum OSType {
     Windows = "windows",
@@ -34,6 +36,7 @@ export interface PoolAttributes {
     autoScaleFormula: string;
     enableInterNodeCommunication: boolean;
     id: string;
+    eTag: string;
     lastModified: Date;
     maxTasksPerNode: number;
     resizeErrors: Array<Partial<ResizeError>>;
@@ -42,7 +45,7 @@ export interface PoolAttributes {
     stateTransitionTime: Date;
     targetDedicatedNodes: number;
     targetLowPriorityNodes: number;
-    taskSchedulingPolicy: TaskSchedulingPolicy;
+    taskSchedulingPolicy: TaskSchedulingPolicyAttributes;
     url: string;
     virtualMachineConfiguration: Partial<VirtualMachineConfigurationAttributes>;
     vmSize: string;
@@ -50,6 +53,8 @@ export interface PoolAttributes {
     metadata: MetadataAttributes[];
     userAccounts: UserAccountAttributes[];
     applicationLicenses: string[];
+    autoScaleRun: AutoScaleRunAttributes;
+    stats: PoolStatisticsAttributes;
 }
 
 /**
@@ -82,6 +87,8 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
 
     @Prop() public id: string;
 
+    @Prop() public eTag: string;
+
     @Prop() public lastModified: Date;
 
     @Prop() public maxTasksPerNode: number = 1;
@@ -102,7 +109,7 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
 
     @Prop(duration) public autoScaleEvaluationInterval: Duration;
 
-    @Prop() public taskSchedulingPolicy: any;
+    @Prop() public taskSchedulingPolicy: TaskSchedulingPolicy;
 
     @Prop() public url: string;
 
@@ -124,6 +131,10 @@ export class Pool extends Record<PoolAttributes> implements NavigableRecord {
      * Tags are computed from the metadata using an internal key
      */
     @Prop() public tags: List<string> = List([]);
+
+    @Prop() public autoScaleRun: AutoScaleRun;
+
+    @Prop() public stats: PoolStatistics;
 
     /**
      * Computed field sum of dedicated and low pri nodes

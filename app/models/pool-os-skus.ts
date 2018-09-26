@@ -47,7 +47,7 @@ export class PoolOsSkus {
          */
         let targetOffers = null;
         skus.forEach((sku) => {
-            for (const imageReference of sku.verifiedImageReferences) {
+            for (const imageReference of sku.verifiedImageReferences.toArray()) {
                 targetOffers = offers;
                 if (dockerContainer[imageReference.offer] &&
                     dockerContainer[imageReference.offer].includes(imageReference.sku)) {

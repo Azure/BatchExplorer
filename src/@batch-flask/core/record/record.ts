@@ -17,6 +17,7 @@ export class Record<TInput> {
     private _initialized = false;
     // @ts-ignore
     private _keys: Set<string>;
+
     constructor(data: Partial<TInput> = {}) {
         this._original = data;
         this._originalStr = JSON.stringify(data);

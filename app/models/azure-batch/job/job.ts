@@ -2,15 +2,16 @@ import { List } from "immutable";
 
 import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
 import { ModelUtils } from "app/utils";
-import { AllTasksCompleteAction, TaskFailureAction } from "./job-action";
-import { JobConstraints } from "./job-constraints";
-import { JobExecutionInformation, JobExecutionInformationAttributes } from "./job-execution-information";
-import { JobManagerTask } from "./job-manager-task";
-import { JobPreparationTask } from "./job-preparation-task";
-import { JobReleaseTask } from "./job-release-task";
-import { JobStats } from "./job-stats";
-import { Metadata, MetadataAttributes } from "./metadata";
-import { NameValuePair, NameValuePairAttributes } from "./name-value-pair";
+import { AllTasksCompleteAction, TaskFailureAction } from "../../job-action";
+import { JobConstraints } from "../../job-constraints";
+import { JobExecutionInformation, JobExecutionInformationAttributes } from "../../job-execution-information";
+import { JobManagerTask } from "../../job-manager-task";
+import { JobPreparationTask } from "../../job-preparation-task";
+import { JobReleaseTask } from "../../job-release-task";
+import { JobStatistics, JobStatisticsAttributes } from "../../job-stats";
+import { Metadata, MetadataAttributes } from "../../metadata";
+import { NameValuePair, NameValuePairAttributes } from "../../name-value-pair";
+import { PoolInformation, PoolInformationAttributes } from "./pool-information";
 
 export interface JobAttributes {
     id: string;
@@ -33,10 +34,10 @@ export interface JobAttributes {
     jobPreparationTask: Partial<JobPreparationTask>;
     jobReleaseTask: Partial<JobReleaseTask>;
     commonEnvironmentSettings: NameValuePairAttributes[];
-    poolInfo: any;
+    poolInfo: PoolInformationAttributes;
     metadata: MetadataAttributes[];
     executionInfo: Partial<JobExecutionInformationAttributes>;
-    stats: JobStats;
+    stats: JobStatisticsAttributes;
 }
 /**
  * Class for displaying Batch job information.
@@ -63,10 +64,10 @@ export class Job extends Record<JobAttributes> implements NavigableRecord {
     @Prop() public jobPreparationTask: JobPreparationTask;
     @Prop() public jobReleaseTask: JobReleaseTask;
     @ListProp(NameValuePair) public commonEnvironmentSettings: List<NameValuePair> = List([]);
-    @Prop() public poolInfo: any;
+    @Prop() public poolInfo: PoolInformation;
     @ListProp(Metadata) public metadata: List<Metadata> = List([]);
     @Prop() public executionInfo: JobExecutionInformation;
-    @Prop() public stats: JobStats;
+    @Prop() public stats: JobStatistics;
 
     /**
      * Tags are computed from the metadata using an internal key

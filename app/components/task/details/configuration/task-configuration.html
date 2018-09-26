@@ -30,9 +30,9 @@
 
         <bl-property-group [label]="'applicationPackages.label' | i18n" class="wide" [collapsed]="true">
             <div collapsed-preview>
-                <span>{{'applicationPackages.summary' | i18n: {count: appPackages?.length} }}</span>
+                <span>{{'applicationPackages.summary' | i18n: {count: appPackages?.size} }}</span>
             </div>
-            <bl-table-property *ngIf="appPackages.length > 0" label="Package references">
+            <bl-table-property *ngIf="appPackages.size > 0" label="Package references">
                 <bl-table-property-header>
                     <div tp-column>{{'applicationPackages.application' | i18n}}</div>
                     <div tp-column>{{'applicationPackages.version' | i18n}}</div>
@@ -42,7 +42,7 @@
                     <bl-tp-cell [value]="package.version"></bl-tp-cell>
                 </bl-table-property-row>
             </bl-table-property>
-            <bl-no-item [itemCount]="appPackages.length" [slimline]="true">
+            <bl-no-item [itemCount]="appPackages.size" [slimline]="true">
                 <span no-filter>{{'applicationPackages.none' | i18n}}</span>
             </bl-no-item>
         </bl-property-group>
@@ -107,7 +107,8 @@
         <bl-property-group [label]="'exitConditions.label' | i18n" [warningMessage]="exitConditionWarningMessage" [collapsed]="true">
             <bl-text-property [label]="'exitConditions.noOpExitCodes' | i18n" [value]="exitConditionData.noAction.join(', ')"></bl-text-property>
             <bl-text-property [label]="'exitConditions.terminateJobExitCodes' | i18n" [value]="exitConditionData.terminateJob.join(', ')"></bl-text-property>
-            <bl-text-property [label]="'exitConditions.onSchedulingError' | i18n" [value]="exitConditionData.failureInfo"></bl-text-property>
+            <bl-text-property [label]="'exitConditions.onSchedulingError' | i18n" [value]="exitConditionData.preProcessingError"></bl-text-property>
+            <bl-text-property [label]="'exitConditions.fileUploadError' | i18n" [value]="exitConditionData.fileUploadError"></bl-text-property>
             <bl-text-property *ngIf="exitConditionData.default" [label]="'exitConditions.default' | i18n" [value]="exitConditionData.default"></bl-text-property>
         </bl-property-group>
 

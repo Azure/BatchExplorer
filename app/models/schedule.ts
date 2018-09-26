@@ -1,5 +1,5 @@
 import { Model, Prop, Record } from "@batch-flask/core";
-import { Duration } from "moment";
+import { Duration, duration } from "moment";
 
 export interface ScheduleAttributes {
     doNotRunAfter: Date;
@@ -15,6 +15,6 @@ export interface ScheduleAttributes {
 export class Schedule extends Record<ScheduleAttributes> {
     @Prop() public doNotRunAfter: Date;
     @Prop() public doNotRunUntil: Date;
-    @Prop() public recurrenceInterval: Duration;
-    @Prop() public startWindow: Duration;
+    @Prop(duration) public recurrenceInterval: Duration;
+    @Prop(duration) public startWindow: Duration;
 }

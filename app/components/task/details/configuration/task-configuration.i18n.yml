@@ -51,6 +51,7 @@ task-configuration:
     noOpExitCodes: Exit codes that do nothing
     terminateJobExitCodes: Exit codes that terminate the job
     onSchedulingError: On scheduling error
+    fileUploadError: On file upload error
     default: Default
 
   multiInstanceSettings:

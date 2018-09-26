@@ -16,7 +16,9 @@ import { TaskExecutionInformation } from "app/models/task-execution-information"
 import { TaskExitConditions } from "app/models/task-exit-conditions";
 import { TaskOutputFile } from "app/models/task-output-file";
 import { UserIdentity } from "app/models/user-identity";
+import { AuthenticationTokenSettings, AuthenticationTokenSettingsAttributes } from "../authentication-token-settings";
 import { AffinityInformation } from "./affinity-information";
+import { TaskStatistics, TaskStatisticsAttributes } from "./task-statistics";
 
 export interface TaskAttributes {
     id: string;
@@ -41,9 +43,10 @@ export interface TaskAttributes {
     executionInfo: TaskExecutionInformation;
     nodeInfo: ComputeNodeInformation;
     multiInstanceSettings: MultiInstanceSettings;
-    stats: any; // TaskStatistics
+    stats: TaskStatisticsAttributes;
     dependsOn: TaskDependencies;
     applicationPackageReferences: ApplicationPackageReferenceAttributes[];
+    authenticationTokenSettings: AuthenticationTokenSettingsAttributes;
 }
 /**
  * Class for displaying Batch task information.
@@ -73,9 +76,12 @@ export class Task extends Record<TaskAttributes> {
     @Prop() public executionInfo: TaskExecutionInformation;
     @Prop() public nodeInfo: ComputeNodeInformation;
     @Prop() public multiInstanceSettings: MultiInstanceSettings;
-    @Prop() public stats: any; // TaskStatistics
+    @Prop() public stats: TaskStatistics;
     @Prop() public dependsOn: TaskDependencies;
-    @Prop() public applicationPackageReferences: ApplicationPackageReference[];
+    @Prop() public authenticationTokenSettings: AuthenticationTokenSettings;
+
+    @ListProp(ApplicationPackageReference)
+    public applicationPackageReferences: List<ApplicationPackageReference> = List([]);
 
     /**
      * @returns true if the task timeout.

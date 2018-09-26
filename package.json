@@ -14,6 +14,7 @@
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json --files",
+    "ts:fast": "npm run ts -T",
     "start": "npm run -s electron:prod",
     "clean": "rimraf build/* dll/* python/dist/* python/build/*",
     "karma": "node --max_old_space_size=4096 node_modules/karma/bin/karma",
@@ -27,6 +28,7 @@
     "test-client": "cross-env  NODE_ENV=test node test/client/run-jasmine.js",
     "test-client:coverage": "nyc -e .ts -x \"*.spec.ts\" npm run test-client && nyc report --reporter=text-lcov > coverage.lcov",
     "test-client-watch": "npm run -s test-client -- --watch",
+    "test-models": "npm run -s ts scripts/swagger/validate-models.ts",
     "build-client": " tsc -p tsconfig.node.json",
     "build-app": "npm run webpack -- --profile --colors --display-error-details --display-cached",
     "build-python": "pyinstaller python/main.spec -y --distpath=python/dist --workpath=python/build",

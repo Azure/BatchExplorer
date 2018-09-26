@@ -101,6 +101,6 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
         if (!this.autoPoolSpecification) {
             return null;
         }
-        return new Pool(this.autoPoolSpecification.pool);
+        return new Pool(this.autoPoolSpecification.pool as any);
     }
 }
