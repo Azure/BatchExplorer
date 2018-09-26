@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
 import { Response, ResponseOptions } from "@angular/http";
 import { By } from "@angular/platform-browser";
-import { Observable } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
@@ -28,14 +28,14 @@ describe("ApplicationEditDialogComponent ", () => {
         appServiceSpy = {
             patch: jasmine.createSpy("patch").and.callFake((applicationId: string, jsonData: any) => {
                 if (applicationId === "throw-me") {
-                    return Observable.throw(ServerError.fromARM(new Response(new ResponseOptions({
+                    return throwError(ServerError.fromARM(new Response(new ResponseOptions({
                         status: 400,
                         body: JSON.stringify({ error: { message: "blast, we failed" } }),
                         statusText: "Bad request",
                     }))));
                 }
 
-                return Observable.of({});
+                return of({});
             }),
         };
 

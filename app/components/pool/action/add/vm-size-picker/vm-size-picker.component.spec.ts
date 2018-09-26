@@ -4,17 +4,17 @@ import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { List } from "immutable";
-import { Observable } from "rxjs";
 
 import { RouterTestingModule } from "@angular/router/testing";
 import { ElectronModule } from "@batch-flask/ui";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
+import { TableTestingModule } from "@batch-flask/ui/testing";
 import { VmSizePickerComponent } from "app/components/pool/action/add";
-import { AccountResource, VmSize } from "app/models";
+import { ArmBatchAccount, VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
-import { AccountService, PricingService, VmSizeService } from "app/services";
+import { BatchAccountService, PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
-import { TableTestingModule } from "test/utils/mocks/components";
+import { of } from "rxjs";
 
 @Component({
     template: `<bl-vm-size-picker [(ngModel)]="vmSize" [osSource]="osSource"></bl-vm-size-picker>`,
@@ -35,12 +35,12 @@ describe("VmSizePickerComponent", () => {
 
     beforeEach(() => {
         vmSizeServiceSpy = {
-            vmSizeCategories: Observable.of({
+            vmSizeCategories: of({
                 standard: ["Standard_A*"],
                 compute: ["Standard_C*"],
                 memory: ["Standard_M*"],
             }),
-            virtualMachineSizes: Observable.of(List([
+            virtualMachineSizes: of(List([
                 new VmSize({ name: "Standard_A1" } as any),
                 new VmSize({ name: "Standard_A2" } as any),
                 new VmSize({ name: "Standard_A3" } as any),
@@ -48,7 +48,7 @@ describe("VmSizePickerComponent", () => {
                 new VmSize({ name: "Standard_C2" } as any),
                 new VmSize({ name: "Standard_O1" } as any),
             ])),
-            cloudServiceSizes: Observable.of(List([
+            cloudServiceSizes: of(List([
                 new VmSize({ name: "Standard_A1" } as any),
                 new VmSize({ name: "Standard_A2" } as any),
                 new VmSize({ name: "Standard_A3" } as any),
@@ -58,12 +58,12 @@ describe("VmSizePickerComponent", () => {
         };
 
         accountServiceSpy = {
-            currentAccount: Observable.of(new AccountResource({ location: "westus" } as any)),
+            currentAccount: of(new ArmBatchAccount({ location: "westus" } as any)),
         };
 
         pricingServiceSpy = {
-            getPrice: () => Observable.of(0),
-            getPrices: () => Observable.of(new OSPricing("westus", "linux")),
+            getPrice: () => of(0),
+            getPrices: () => of(new OSPricing("westus", "linux")),
         };
 
         TestBed.configureTestingModule({
@@ -71,7 +71,7 @@ describe("VmSizePickerComponent", () => {
             declarations: [VmSizePickerComponent, TestComponent],
             providers: [
                 { provide: VmSizeService, useValue: vmSizeServiceSpy },
-                { provide: AccountService, useValue: accountServiceSpy },
+                { provide: BatchAccountService, useValue: accountServiceSpy },
                 { provide: PricingService, useValue: pricingServiceSpy },
                 { provide: BreadcrumbService, useValue: null },
             ],

@@ -1,4 +1,5 @@
 import { SecureUtils, log } from "@batch-flask/utils";
+import { TelemetryManager } from "client/core/telemetry";
 import { MainWindow } from "client/main-window";
 import { BatchExplorerLink, BatchExplorerLinkAttributes, Constants } from "common";
 import { BatchExplorerApplication } from "./batch-explorer-application";
@@ -12,7 +13,7 @@ export class MainWindowManager {
      */
     public windows = new Map<string, MainWindow>();
 
-    constructor(private batchExplorerApp: BatchExplorerApplication) {
+    constructor(private batchExplorerApp: BatchExplorerApplication, private telemetryManager: TelemetryManager) {
     }
 
     /**
@@ -94,7 +95,7 @@ export class MainWindowManager {
 
     private _createNewWindow(windowId?: string, showWhenReady = true) {
         windowId = windowId || SecureUtils.uuid();
-        const window = new MainWindow(this.batchExplorerApp);
+        const window = new MainWindow(this.batchExplorerApp, this.telemetryManager);
         window.create();
         this.windows.set(windowId, window);
         if (showWhenReady) {

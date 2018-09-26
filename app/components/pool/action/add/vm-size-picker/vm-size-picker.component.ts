@@ -84,7 +84,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     public prices: OSPricing = null;
 
     public tableConfig: TableConfig = {
-        values: {
+        sorting: {
             title: (size: VmSizeDecorator) => size.vmSize.name,
             cores: (size: VmSizeDecorator) => size.vmSize.numberOfCores,
             ram: (size: VmSizeDecorator) => size.vmSize.memoryInMB,

@@ -3,6 +3,7 @@ import { platformDynamicServer } from "@angular/platform-server";
 import { LocaleService, TranslationsLoaderService } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { ClientTranslationsLoaderService } from "client/core/i18n";
+import { MainApplicationMenu } from "client/menu";
 import { app, protocol } from "electron";
 import { autoUpdater } from "electron-updater";
 import { Constants } from "./client-constants";
@@ -13,8 +14,8 @@ import { BatchExplorerApplication } from "./core/batch-explorer-application";
 function initAutoUpdate() {
     autoUpdater.allowPrerelease = true;
     autoUpdater.autoDownload = true;
+    autoUpdater.allowDowngrade = true;
     autoUpdater.logger = log;
-    autoUpdater.setFeedURL("https://batchlabsdist.blob.core.windows.net/releases");
 }
 
 function setupSingleInstance(batchExplorerApp: BatchExplorerApplication) {
@@ -39,12 +40,13 @@ function registerAuthProtocol() {
     });
 }
 
-async function startApplication(batchExplorerApp: BatchExplorerApplication) {
+async function startApplication(batchExplorerApp: BatchExplorerApplication, menu: MainApplicationMenu) {
     initAutoUpdate();
     registerAuthProtocol();
 
     // Uncomment to view why windows don't show up.
     batchExplorerApp.init().then(() => {
+        menu.applyMenu();
         batchExplorerApp.start();
         // batchExplorerApp.debugCrash();
     });
@@ -61,15 +63,16 @@ export async function startBatchExplorer() {
     const translationLoader = module.injector.get(TranslationsLoaderService) as ClientTranslationsLoaderService;
     await translationLoader.load();
     const batchExplorerApp = module.injector.get(BatchExplorerApplication);
+    const menu = module.injector.get(MainApplicationMenu);
     initializeServices(module.injector);
 
     setupSingleInstance(batchExplorerApp);
 
     if (app.isReady()) {
-        startApplication(batchExplorerApp);
+        startApplication(batchExplorerApp, menu);
     } else {
         app.on("ready", async () => {
-            startApplication(batchExplorerApp);
+            startApplication(batchExplorerApp, menu);
         });
     }
 

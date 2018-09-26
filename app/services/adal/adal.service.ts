@@ -1,14 +1,13 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone, OnDestroy } from "@angular/core";
 import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
 import { ElectronRemote, NotificationService } from "@batch-flask/ui";
-import { BehaviorSubject, Observable } from "rxjs";
-
-import { BatchExplorerService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { AADService } from "client/core/aad";
 import { Constants } from "common";
+import { BehaviorSubject, Observable, from } from "rxjs";
 
 @Injectable()
-export class AdalService {
+export class AdalService implements OnDestroy {
     public tenantsIds: Observable<string[]>;
 
     private aadService: AADService;
@@ -17,6 +16,7 @@ export class AdalService {
     private _tenantsIds = new BehaviorSubject<string[]>([]);
 
     constructor(
+        private zone: NgZone,
         private remote: ElectronRemote,
         batchExplorer: BatchExplorerService,
         private notificationService: NotificationService) {
@@ -24,7 +24,9 @@ export class AdalService {
         // Need to do this as aadService.tenantIds is in the node processs and electron lose information in the transfer
         this.aadService.tenantsIds.subscribe({
             next: (val) => {
-                this._tenantsIds.next(val);
+                this.zone.run(() => {
+                    this._tenantsIds.next(val);
+                });
             },
             error: (error) => {
                 const serverError = new ServerError(error);
@@ -37,6 +39,10 @@ export class AdalService {
         this.tenantsIds = this._tenantsIds.asObservable();
     }
 
+    public ngOnDestroy() {
+        this._tenantsIds.complete();
+    }
+
     public logout() {
         this.aadService.logout();
         this._waitingPromises = {};
@@ -47,7 +53,7 @@ export class AdalService {
     }
 
     public accessTokenFor(tenantId: string, resource: string = null) {
-        return Observable.fromPromise(this.accessTokenDataAsync(tenantId, resource).then(x => x.access_token));
+        return from(this.accessTokenDataAsync(tenantId, resource).then(x => x.access_token));
     }
 
     /**
@@ -56,7 +62,7 @@ export class AdalService {
      * @param resource
      */
     public accessTokenData(tenantId: string, resource: string = null): Observable<AccessToken> {
-        return Observable.fromPromise(this.accessTokenDataAsync(tenantId, resource));
+        return from(this.accessTokenDataAsync(tenantId, resource));
     }
 
     /**

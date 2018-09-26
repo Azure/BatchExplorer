@@ -1,0 +1,17 @@
+{
+  "duration-picker.unit.unlimited": "Sınırsız",
+  "duration-picker.unit.days": "Gün",
+  "duration-picker.unit.minutes": "Dakika",
+  "duration-picker.unit.hours": "Saat",
+  "duration-picker.unit.seconds": "Saniye",
+  "duration-picker.unit.custom": "Custom (ISO biçimi)",
+  "main-navigation.dashboard": "Çizgi",
+  "main-navigation.jobs": "Toplu İşlem işleri",
+  "main-navigation.jobschedules": "İş zamanlamaları",
+  "main-navigation.pools": "Havuzlar",
+  "main-navigation.packages": "Paketler",
+  "main-navigation.certificates": "Sertifikalar",
+  "main-navigation.data": "Veri",
+  "main-navigation.gallery": "Galeri",
+  "main-navigation.profile": "Profil"
+}

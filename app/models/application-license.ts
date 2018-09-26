@@ -28,8 +28,4 @@ export class ApplicationLicense extends Record<ApplicationLicenseAttributes> {
      * Cost of the license, this will change to a resource ID.
      */
     @Prop() public cost: string;
-
-    constructor(data: Partial<ApplicationLicenseAttributes>) {
-        super(data);
-    }
 }

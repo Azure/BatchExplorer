@@ -2,22 +2,17 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
-
-import { Filter, FilterMatcher, autobind } from "@batch-flask/core";
+import { ActivatedRoute } from "@angular/router";
+import { Filter, FilterMatcher, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { Certificate, CertificateState } from "app/models";
 import { CertificateListParams, CertificateService } from "app/services";
-import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
-import {
-    CertificateCommands, DeleteCertificateAction,
-} from "../action";
+import { List } from "immutable";
+import { Observable, Subscription } from "rxjs";
+import { CertificateCommands } from "../action";
 
 @Component({
     selector: "bl-certificate-list",
@@ -38,12 +33,10 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
     private _onCertificateAddedSub: Subscription;
 
     constructor(
-        router: Router,
         activatedRoute: ActivatedRoute,
         changeDetector: ChangeDetectorRef,
         public commands: CertificateCommands,
         private certificateService: CertificateService,
-        private taskManager: BackgroundTaskService,
     ) {
         super(changeDetector);
 
@@ -109,11 +102,7 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
     }
 
     public deleteSelection(selection: ListSelection) {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteCertificateAction(this.certificateService, [...selection.keys]);
-            task.start(backgroundTask);
-            return task.waitingDone;
-        });
+        this.commands.delete.executeFromSelection(selection).subscribe();
     }
 
     public trackByFn(index: number, certificate: Certificate) {

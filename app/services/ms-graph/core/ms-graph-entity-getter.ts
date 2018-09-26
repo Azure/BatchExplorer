@@ -1,16 +1,16 @@
 import { Type } from "@angular/core";
+import { EntityGetter, EntityGetterConfig, Record } from "@batch-flask/core";
 import { Observable } from "rxjs";
-
-import { EntityGetter, EntityGetterConfig } from "app/services/core/data/entity-getter";
 import { MsGraphHttpService } from "./ms-graph-http.service";
 
-export interface MsGraphEntityGetterConfig<TEntity, TParams> extends EntityGetterConfig<TEntity, TParams> {
+export interface MsGraphEntityGetterConfig<TEntity extends Record<any>, TParams>
+    extends EntityGetterConfig<TEntity, TParams> {
     /**
      * Get function(usually call the client proxy)
      */
     uri: string | ((params: TParams) => string);
 }
-export class MsGraphEntityGetter<TEntity, TParams> extends EntityGetter<TEntity, TParams> {
+export class MsGraphEntityGetter<TEntity extends Record<any>, TParams> extends EntityGetter<TEntity, TParams> {
     private _provideUri: string | ((params: TParams) => string);
 
     constructor(
@@ -24,8 +24,7 @@ export class MsGraphEntityGetter<TEntity, TParams> extends EntityGetter<TEntity,
     }
 
     protected getData(params: TParams): Observable<any> {
-        return this.msGraph.get<TEntity>(this._computeURI(params))
-            .share();
+        return this.msGraph.get<TEntity>(this._computeURI(params));
     }
 
     private _computeURI(params: TParams): string {

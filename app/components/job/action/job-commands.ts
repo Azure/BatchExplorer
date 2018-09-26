@@ -3,14 +3,14 @@ import { from } from "rxjs";
 
 import {
     COMMAND_LABEL_ICON, ElectronRemote, EntityCommand,
-    EntityCommands, Permission,
+    EntityCommands, FileSystemService, Permission,
 } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, JobSchedule, JobState } from "app/models";
-import { FileSystemService, JobService, PinnedEntityService } from "app/services";
+import { JobService, PinnedEntityService } from "app/services";
 
 import { JobScheduleCreateBasicDialogComponent } from "../../job-schedule/action";
-import { TaskCreateBasicDialogComponent } from "../../task/action";
+import { AddTaskFormComponent } from "../../task/action";
 import { JobCreateBasicDialogComponent, PatchJobComponent } from "./add";
 import { DisableJobCommand } from "./disable";
 import { TerminateJobCommand } from "./terminate";
@@ -144,7 +144,6 @@ export class JobCommands extends EntityCommands<Job> {
             confirm: false,
             multiple: false,
         });
-
         this.commands = [
             this.edit,
             this.addTask,
@@ -168,7 +167,7 @@ export class JobCommands extends EntityCommands<Job> {
     }
 
     private _addTask(job: Job) {
-        const createRef = this.sidebarManager.open("add-task", TaskCreateBasicDialogComponent);
+        const createRef = this.sidebarManager.open("add-task", AddTaskFormComponent);
         createRef.component.jobId = job.id;
     }
 

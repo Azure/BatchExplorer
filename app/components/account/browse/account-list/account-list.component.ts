@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, forwardRef } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
@@ -7,10 +6,12 @@ import { Filter, FilterMatcher, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/core/list";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
-import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { BatchAccountCommands } from "app/components/account/action";
-import { AccountResource } from "app/models";
-import { AccountService, SubscriptionService } from "app/services";
+import { BatchAccount } from "app/models";
+import { BatchAccountService, SubscriptionService } from "app/services";
+import { flatMap, shareReplay } from "rxjs/operators";
+
+import "./account-list.scss";
 
 @Component({
     selector: "bl-account-list",
@@ -26,29 +27,23 @@ import { AccountService, SubscriptionService } from "app/services";
 })
 export class AccountListComponent extends ListBaseComponent implements OnDestroy {
 
-    public accounts: List<AccountResource> = List([]);
-    public displayedAccounts: List<AccountResource> = List([]);
+    public accounts: List<BatchAccount> = List([]);
+    public displayedAccounts: List<BatchAccount> = List([]);
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
 
     private _accountSub: Subscription;
 
     constructor(
         public commands: BatchAccountCommands,
-        private accountService: AccountService,
-        activatedRoute: ActivatedRoute,
-        sidebarManager: SidebarManager,
+        private accountService: BatchAccountService,
         changeDetector: ChangeDetectorRef,
         private subscriptionService: SubscriptionService) {
         super(changeDetector);
         this._updateDisplayedAccounts();
 
-        this.accountService.accountsLoaded.subscribe(() => {
-            this.loadingStatus = LoadingStatus.Ready;
-            changeDetector.markForCheck();
-        });
-
         this._accountSub = this.accountService.accounts.subscribe((accounts) => {
             this.accounts = accounts;
+            this.loadingStatus = LoadingStatus.Ready;
             this._updateDisplayedAccounts();
         });
     }
@@ -59,9 +54,10 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
 
     @autobind()
     public refresh(): Observable<any> {
-        return this.subscriptionService.load().flatMap(() => {
-            return this.accountService.load();
-        }).shareReplay(1);
+        return this.subscriptionService.load().pipe(
+            flatMap(() => this.accountService.load()),
+            shareReplay(1),
+        );
     }
 
     public handleFilter(filter: Filter) {
@@ -90,14 +86,10 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
             : QuickListItemStatus.normal;
     }
 
-    public trackByFn(index, account: AccountResource) {
-        return account.id;
-    }
-
     private _updateDisplayedAccounts() {
-        const matcher = new FilterMatcher<AccountResource>();
+        const matcher = new FilterMatcher<BatchAccount>();
 
-        this.displayedAccounts = List<AccountResource>(this.accounts.filter((x) => {
+        this.displayedAccounts = List<BatchAccount>(this.accounts.filter((x) => {
             return matcher.test(this.filter, x);
         }).sortBy(x => x.name));
 

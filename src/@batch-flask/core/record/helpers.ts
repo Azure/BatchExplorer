@@ -11,7 +11,7 @@ export function metadataForRecord(record: Record<any>) {
     return metadataForCtr(record.constructor);
 }
 
-function metadataForCtr(ctr: any) {
+export function metadataForCtr(ctr: any) {
     const data = Reflect.getMetadata(attrMetadataKey + ctr.name, ctr) || {};
     const parent = Object.getPrototypeOf(ctr.prototype);
     const parentCtr = parent.constructor;

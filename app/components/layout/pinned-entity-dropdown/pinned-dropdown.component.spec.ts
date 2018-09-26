@@ -3,12 +3,12 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, of } from "rxjs";
 
 import { NavigableRecord, PinnableEntity, PinnedEntityType } from "@batch-flask/core";
 import { ContextMenuService } from "@batch-flask/ui";
 import { DropdownModule } from "@batch-flask/ui/dropdown";
-import { AccountService, PinnedEntityService } from "app/services";
+import { BatchAccountService, PinnedEntityService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { PinnedDropDownComponent } from "./pinned-dropdown.component";
 
@@ -45,7 +45,7 @@ describe("PinnedDropDownComponent", () => {
         };
 
         accountServiceSpy = {
-            currentAccount: Observable.of(Fixtures.account.create({
+            currentAccount: of(Fixtures.account.create({
                 id: "myaccount",
                 properties: {
                     accountEndpoint: "myaccount.westus.batch.com",
@@ -57,7 +57,7 @@ describe("PinnedDropDownComponent", () => {
             imports: [DropdownModule, RouterTestingModule],
             declarations: [PinnedDropDownComponent, TestComponent],
             providers: [
-                { provide: AccountService, useValue: accountServiceSpy },
+                { provide: BatchAccountService, useValue: accountServiceSpy },
                 { provide: PinnedEntityService, useValue: pinServiceSpy },
                 { provide: ContextMenuService, useValue: null },
             ],
@@ -96,7 +96,6 @@ describe("PinnedDropDownComponent", () => {
     describe("when there are no favorites", () => {
         it("should show no favorites title", () => {
             expect(component.title).toBe("No favorite items pinned");
-            expect((component as any)._accountEndpoint).toBe("myaccount.westus.batch.com");
             expect(dropDownButton.nativeElement.textContent).toContain("No favorite items pinned");
         });
 

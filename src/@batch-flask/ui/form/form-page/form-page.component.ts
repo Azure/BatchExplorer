@@ -1,8 +1,8 @@
 import {
-    Component, ContentChildren, EventEmitter, Inject, Input, Output, QueryList,
-    TemplateRef, ViewChild, forwardRef,
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
+    Component, ContentChildren, EventEmitter, Inject,
+    Input, Output, QueryList, TemplateRef, ViewChild, forwardRef,
 } from "@angular/core";
-
 import { AbstractControl } from "@angular/forms";
 import { ComplexFormComponent } from "../complex-form";
 import { FormSectionComponent } from "../form-section";
@@ -16,8 +16,9 @@ export interface FocusableElement {
 @Component({
     selector: "bl-form-page",
     templateUrl: "form-page.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormPageComponent {
+export class FormPageComponent implements AfterViewInit {
     /**
      * Title of the page. It will be shown when this page is the current page of a form.
      */
@@ -52,8 +53,16 @@ export class FormPageComponent {
     public openedWith: FocusableElement;
 
     // tslint:disable-next-line:no-forward-ref
-    constructor( @Inject(forwardRef(() => ComplexFormComponent)) private form: ComplexFormComponent) { }
+    constructor(
+        @Inject(forwardRef(() => ComplexFormComponent)) private form: ComplexFormComponent,
+        private changeDetector: ChangeDetectorRef) {
+    }
 
+    public ngAfterViewInit() {
+        this.sections.changes.subscribe(() => {
+            this.changeDetector.markForCheck();
+        });
+    }
     /**
      * Open the given page. It will push on top of the page stack.
      * @param picker If opening from a picker
@@ -70,7 +79,7 @@ export class FormPageComponent {
         return !this.formGroup || this.formGroup.valid;
     }
 
-    public trackByFn(index, section: FormSectionComponent) {
-        return index;
+    public trackByFn(_, section: FormSectionComponent) {
+        return section.title;
     }
 }

@@ -1,10 +1,17 @@
-import { Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
+import { ListProp, Model, NavigableRecord, Prop, Record } from "@batch-flask/core";
 import { NameValuePair } from ".";
 
-export interface DeleteCertificateError {
+export interface DeleteCertificateErrorAttributes {
     code: string;
     message: string;
     values: NameValuePair[];
+}
+
+@Model()
+export class DeleteCertificateError extends Record<DeleteCertificateErrorAttributes> {
+    @Prop() public code: string;
+    @Prop()  public message: string;
+    @ListProp(NameValuePair) public values: NameValuePair[];
 }
 
 export interface CertificateAttributes {
@@ -16,7 +23,7 @@ export interface CertificateAttributes {
     stateTransitionTime: Date;
     previousState: CertificateState;
     previousStateTransitionTime: Date;
-    deleteCertificateError: DeleteCertificateError;
+    deleteCertificateError: DeleteCertificateErrorAttributes;
 }
 /**
  * Class for displaying Batch certificate information.

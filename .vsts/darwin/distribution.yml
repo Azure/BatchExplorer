@@ -1,0 +1,25 @@
+steps:
+  - template: ./darwin-dependencies.yml
+  - script: |
+      npm run -s build:prod
+      npm run -s build-python
+      npm run -s package darwin-app
+      rm -rf ./release/mac/*.app
+      mkdir ./release/keep
+      cp ./release/*.zip ./release/keep/before-code-sign.zip
+    displayName: Build .app
+
+  - template: ./sign.yml
+  - script: |
+      unzip ./release/BatchExplorer*.zip -d ./release/mac
+      rm -f ./release/mac/*.pkg
+      # rm -rf ./release/*.zip
+      mv ./release/*.zip ./release/code-sign-results.zip
+      npm run -s package darwin-dmg
+      rm -rf ./release/mac/*
+    displayName: Build dmg
+  - script: npm run package darwin-manifest
+    displayName: Create manifest
+  - template: ../common/publish-artifacts.yml
+    parameters:
+      folder: darwin

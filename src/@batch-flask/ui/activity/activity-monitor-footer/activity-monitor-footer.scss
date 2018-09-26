@@ -1,0 +1,47 @@
+@import "app/styles/variables";
+
+@keyframes flash {
+    0%, 50%, 100% {
+    }
+
+    25%, 75% {
+        background: map-get($warn, 300);
+    }
+}
+
+bl-activity-monitor-footer {
+    [bl-dropdown-btn] {
+        width: 340px;
+        padding: 0 5px;
+    }
+
+    [bl-dropdown-content] {
+        min-width: 330px;
+    }
+
+    .current-task {
+        width: 100%;
+        display: flex;
+        align-items: center;
+
+        > bl-activity-monitor-footer-item  {
+            flex: 1;
+            min-width: 0;
+        };
+
+        > .other-task-count {
+            width: 21px;
+            height: 21px;
+            margin: 0 10px;
+            background: $whiteSmoke;
+            border-radius: 10px;
+            color: $primary-color;
+            font-weight: bold;
+            line-height: 21px;
+        }
+    }
+
+    .flash {
+        animation: flash 1s infinite;
+    }
+}

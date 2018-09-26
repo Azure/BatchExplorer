@@ -4,15 +4,29 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { combineLatest } from "rxjs";
 
 import { ActivatedRoute } from "@angular/router";
-import { IpcService, Workspace, WorkspaceService } from "@batch-flask/ui";
+import { TelemetryService } from "@batch-flask/core";
+import { ElectronRemote, IpcService, Workspace, WorkspaceService } from "@batch-flask/ui";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { registerIcons } from "app/config";
 import {
-    AccountService, AuthorizationHttpService, AutoscaleFormulaService,
-    BatchExplorerService, CommandService, GithubDataService, NavigatorService,
-    NcjTemplateService, PoolOsService, PredefinedFormulaService, PricingService,
-    PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
+    AuthorizationHttpService,
+    AutoscaleFormulaService,
+    BatchAccountService,
+    CommandService,
+    GithubDataService,
+    NavigatorService,
+    NcjTemplateService,
+    PoolOsService,
+    PredefinedFormulaService,
+    PricingService,
+    PythonRpcService,
+    SSHKeyService,
+    SettingsService,
+    SubscriptionService,
+    ThemeService,
+    VmSizeService,
 } from "app/services";
+import { filter, first } from "rxjs/operators";
 
 @Component({
     selector: "bl-app",
@@ -28,13 +42,13 @@ export class AppComponent implements OnInit {
         private autoscaleFormulaService: AutoscaleFormulaService,
         private settingsService: SettingsService,
         private commandService: CommandService,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
         private githubDataService: GithubDataService,
         private poolOsService: PoolOsService,
         private sshKeyService: SSHKeyService,
-        batchExplorerService: BatchExplorerService,
+        remote: ElectronRemote,
         pythonRpcService: PythonRpcService,
         private vmSizeService: VmSizeService,
         themeService: ThemeService,
@@ -42,11 +56,13 @@ export class AppComponent implements OnInit {
         permissionService: PermissionService,
         authHttpService: AuthorizationHttpService,
         ipc: IpcService,
+        private telemetryService: TelemetryService,
         private pricingService: PricingService,
         private ncjTemplateService: NcjTemplateService,
         private predefinedFormulaService: PredefinedFormulaService,
         private workspaceService: WorkspaceService,
     ) {
+        this.telemetryService.init(remote.getCurrentWindow().TELEMETRY_ENABLED);
         this.autoscaleFormulaService.init();
         this.settingsService.init();
         this._initWorkspaces();
@@ -63,16 +79,17 @@ export class AppComponent implements OnInit {
         themeService.init();
 
         combineLatest(
-            accountService.accountLoaded,
             settingsService.hasSettingsLoaded,
             workspaceService.haveWorkspacesLoaded,
-        )
-        .subscribe((loadedArray) => {
+        ).subscribe((loadedArray) => {
             this.isAppReady = loadedArray[0] && loadedArray[1];
         });
 
         // Wait for the first account to be loaded.
-        accountService.currentAccount.filter(x => Boolean(x)).first().subscribe((x) => {
+        accountService.currentAccount.pipe(
+            filter(x => Boolean(x)),
+            first(),
+        ).subscribe((x) => {
             this._preloadData();
         });
 
@@ -91,7 +108,7 @@ export class AppComponent implements OnInit {
 
     public ngOnInit() {
         this.subscriptionService.load();
-        this.accountService.load();
+        this.accountService.load().subscribe();
     }
 
     /**

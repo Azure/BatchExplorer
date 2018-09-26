@@ -10,8 +10,8 @@ import { handleCoreError } from "./error-handler";
 // Setup extension methods
 import "chart.js";
 import "hammerjs";
-import "rxjs-compat";
 
+import "flag-icon-css/css/flag-icon.min.css";
 import "font-awesome/css/font-awesome.min.css";
 import "./environment";
 import "./styles/main.scss";

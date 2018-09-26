@@ -1,15 +1,16 @@
 import { Location } from "@angular/common";
-import { HttpHandler, HttpParams } from "@angular/common/http";
+import { HttpHandler, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { HttpRequestOptions, HttpService, ServerError } from "@batch-flask/core";
 import { UrlUtils } from "@batch-flask/utils";
-import { AccountResource } from "app/models";
-import { AccountService } from "app/services/account.service";
+import { ArmBatchAccount, BatchAccount, LocalBatchAccount } from "app/models";
 import { AdalService } from "app/services/adal";
-import { BatchExplorerService } from "app/services/batch-labs.service";
+import { BatchAccountService } from "app/services/batch-account";
+import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { Constants } from "common";
-import { Observable } from "rxjs";
-import { flatMap, shareReplay, take } from "rxjs/operators";
+import { Observable, from, throwError } from "rxjs";
+import { catchError, flatMap, map, retryWhen, shareReplay, take } from "rxjs/operators";
+import { BatchSharedKeyAuthenticator } from "./batch-shared-key-authenticator";
 
 @Injectable()
 export class AzureBatchHttpService extends HttpService {
@@ -20,34 +21,62 @@ export class AzureBatchHttpService extends HttpService {
     constructor(
         httpHandler: HttpHandler,
         private adal: AdalService,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private batchExplorer: BatchExplorerService) {
         super(httpHandler);
     }
 
     public request(method: any, uri?: any, options?: any): Observable<any> {
+        options = this._addApiVersion(uri, options);
         return this.accountService.currentAccount.pipe(
             take(1),
             flatMap((account) => {
-                const tenantId = account.subscription.tenantId;
-                return this.adal.accessTokenData(tenantId, this.serviceUrl).pipe(
-                    flatMap((accessToken) => {
-                        options = this.addAuthorizationHeader(options, accessToken);
-                        options = this._addApiVersion(uri, options);
+                const url = this._computeUrl(uri, account);
+                let obs;
+                if (account instanceof ArmBatchAccount) {
+                    obs = this._setupRequestForArm(account, options);
+                } else if (account instanceof LocalBatchAccount) {
+                    obs = this._setupRequestForSharedKey(account, method, url, options);
+                } else {
+                    throw new Error(`Invalid account type ${account}`);
+                }
+                return obs.pipe(
+                    flatMap((options) => {
                         return super.request(
                             method,
-                            this._computeUrl(uri, account),
-                            options)
-                            .retryWhen(attempts => this.retryWhen(attempts))
-                            .catch((error) => {
-                                const err = ServerError.fromBatchHttp(error);
-                                return Observable.throw(err);
-                            });
+                            url,
+                            options).pipe(
+                                retryWhen(attempts => this.retryWhen(attempts)),
+                                catchError((error) => {
+                                    if (error.status === 0) {
+                                        return throwError(new ServerError({
+                                            status: error.status,
+                                            statusText: error.statusText,
+                                            message: error.message,
+                                            code: error.name,
+                                        }));
+                                    }
+                                    const err = ServerError.fromBatchHttp(error);
+                                    return throwError(err);
+                                }),
+                            );
                     }),
                 );
             }),
             shareReplay(1),
         );
+    }
+
+    private _setupRequestForArm(account: ArmBatchAccount, options) {
+        const tenantId = account.subscription.tenantId;
+        return this.adal.accessTokenData(tenantId, this.serviceUrl).pipe(
+            map((accessToken) => this.addAuthorizationHeader(options, accessToken)),
+        );
+    }
+
+    private _setupRequestForSharedKey(account: LocalBatchAccount, method: string, uri: string, options) {
+        const sharedKey = new BatchSharedKeyAuthenticator(account.name, account.key);
+        return from(sharedKey.signRequest(method, uri, options)).pipe(map(() => options));
     }
 
     private _addApiVersion(uri: string, options: HttpRequestOptions): HttpRequestOptions {
@@ -58,19 +87,21 @@ export class AzureBatchHttpService extends HttpService {
         if (!options.params.has("api-version") && !uri.contains("api-version")) {
             options.params = options.params.set("api-version", Constants.ApiVersion.batchService);
         }
-
+        if (!options.headers) {
+            options.headers = new HttpHeaders();
+        }
         options.headers = (options.headers as any)
-            .set("Content-Type", "application/json; odata=minimalmetadata; charset=utf-8")
+            .set("Content-Type", "application/json; odata=minimalmetadata; charset=UTF-8")
             .set("Cache-Control", "no-cache");
 
         return options;
     }
 
-    private _computeUrl(uri: string, account: AccountResource) {
+    private _computeUrl(uri: string, account: BatchAccount) {
         if (UrlUtils.isHttpUrl(uri)) {
             return uri;
         } else {
-            return Location.joinWithSlash(`https://${account.properties.accountEndpoint}`, uri);
+            return Location.joinWithSlash(account.url, uri);
         }
     }
 }

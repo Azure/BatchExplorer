@@ -5,10 +5,10 @@ import { BehaviorSubject, Observable, Subscription } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
-import { NotificationService } from "@batch-flask/ui/notifications";
-import { FileSystemService } from "app/services/fs.service";
+import { FileSystemService, NotificationService } from "@batch-flask/ui";
+import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { log } from "app/utils";
-import { BatchExplorerService } from "../batch-labs.service";
+import { filter } from "rxjs/operators";
 import { SettingsService } from "../settings.service";
 import { Theme } from "./theme.model";
 
@@ -38,7 +38,7 @@ export class ThemeService implements OnDestroy {
             this.setTheme(val);
         };
 
-        this.currentTheme = this._currentTheme.filter(x => x !== null);
+        this.currentTheme = this._currentTheme.pipe(filter(x => x !== null));
         this._subs.push(this.currentTheme.subscribe((theme) => {
             this._applyTheme(theme);
         }));

@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import { Subscription } from "rxjs";
-
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
-import { AccountResource } from "app/models";
-import { AccountService } from "app/services";
+import { ArmBatchAccount, BatchAccount } from "app/models";
+import { BatchAccountService } from "app/services";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: "bl-storage-error-display",
@@ -18,12 +17,12 @@ export class StorageErrorDisplayComponent implements OnInit, OnDestroy {
     public hasAutoStorage: boolean;
     public isClassic: boolean;
 
-    private _batchAccount: AccountResource;
+    private _batchAccount: BatchAccount;
     private _currentAccountSub: Subscription;
 
     // TODO: make this the default auto storage error display.
     constructor(
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private changeDetector: ChangeDetectorRef,
         private sidebarManager: SidebarManager) {
 
@@ -46,7 +45,9 @@ export class StorageErrorDisplayComponent implements OnInit, OnDestroy {
 
     @autobind()
     public setupLinkedStorage() {
-        const sidebarRef = this.sidebarManager.open("edit-storage-account", EditStorageAccountFormComponent);
-        sidebarRef.component.account = this._batchAccount;
+        if (this._batchAccount instanceof ArmBatchAccount) {
+            const sidebarRef = this.sidebarManager.open("edit-storage-account", EditStorageAccountFormComponent);
+            sidebarRef.component.account = this._batchAccount;
+        }
     }
 }

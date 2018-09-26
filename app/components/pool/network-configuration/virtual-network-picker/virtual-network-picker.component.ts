@@ -5,11 +5,11 @@ import {
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
-import { Subscription } from "rxjs";
-
 import { autobind } from "@batch-flask/core";
-import { AccountService, NetworkConfigurationService, Subnet, VirtualNetwork } from "app/services";
+import { ArmBatchAccount } from "app/models";
+import { BatchAccountService, NetworkConfigurationService, Subnet, VirtualNetwork } from "app/services";
 import { ArmResourceUtils } from "app/utils";
+import { Subscription } from "rxjs";
 
 import "./virtual-network-picker.scss";
 
@@ -40,7 +40,7 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
 
     constructor(
         private changeDetector: ChangeDetectorRef,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private networkService: NetworkConfigurationService) {
 
         this._subs.push(this.subnetControl.valueChanges.subscribe((subnetId: string) => {
@@ -51,6 +51,7 @@ export class VirtualNetworkPickerComponent implements ControlValueAccessor, Vali
         }));
 
         this._subs.push(this.accountService.currentAccount.subscribe(account => {
+            if (!(account instanceof ArmBatchAccount)) { return; }
             this.subscriptionId = account && account.subscription && account.subscription.subscriptionId;
             this.location = account.location;
             if (!this.subscriptionId || !this.location) {

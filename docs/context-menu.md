@@ -30,8 +30,11 @@ Table and quicklist support the context menu you just have to pass the menu as i
 In the template
 ```html
     <bl-quick-list [commands]="commands">
-        <bl-quick-list-item *ngFor="let item of items"></bl-quick-list-item>
+        ...
     </bl-quick-list>
+    <bl-table [commands]="commands">
+        ...
+    </bl-table>
 ```
 
 In the model
@@ -189,7 +192,7 @@ In `job-commands.ts`
     }
 
     private _addTask(job: Job) {
-        const createRef = this.sidebarManager.open("add-task", TaskCreateBasicDialogComponent);
+        const createRef = this.sidebarManager.open("add-task", AddTaskFormComponent);
         createRef.component.jobId = job.id;
     }
 
@@ -215,7 +218,7 @@ In `job-commands.ts`
 
         if (localPath) {
             const content = JSON.stringify(job._original, null, 2);
-            return Observable.fromPromise(this.fs.saveFile(localPath, content));
+            return from(this.fs.saveFile(localPath, content));
         }
     }
 }

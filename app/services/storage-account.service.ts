@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { RequestOptions, URLSearchParams } from "@angular/http";
+import { StorageAccount } from "app/models";
 import { List } from "immutable";
 import { Observable } from "rxjs";
-
-import { StorageAccount } from "app/models";
+import { flatMap, map, share } from "rxjs/operators";
 import { AzureHttpService } from "./azure-http.service";
 import { SubscriptionService } from "./subscription.service";
 
@@ -23,15 +23,17 @@ export class StorageAccountService {
     constructor(private azure: AzureHttpService, private subscriptionService: SubscriptionService) { }
 
     public get(accountId: string): Observable<StorageAccount> {
-        return this.subscriptionService.get(getSubscriptionIdFromAccountId(accountId))
-            .flatMap((subscription) => {
-                return this.azure.get(subscription, accountId)
-                    .map(response => {
+        return this.subscriptionService.get(getSubscriptionIdFromAccountId(accountId)).pipe(
+            flatMap((subscription) => {
+                return this.azure.get(subscription, accountId).pipe(
+                    map(response => {
                         const data = response.json();
                         return new StorageAccount(data);
-                    });
-            })
-            .share();
+                    }),
+                );
+            }),
+            share(),
+        );
     }
 
     public list(subscriptionId: string): Observable<List<StorageAccount>> {
@@ -41,15 +43,17 @@ export class StorageAccountService {
             "or resourceType eq 'Microsoft.ClassicStorage/storageAccounts'");
         const options = new RequestOptions({ search });
 
-        return this.subscriptionService.get(subscriptionId)
-            .flatMap((subscription) => {
-                return this.azure.get(subscription, `/subscriptions/${subscriptionId}/resources`, options)
-                    .map(response => {
+        return this.subscriptionService.get(subscriptionId).pipe(
+            flatMap((subscription) => {
+                return this.azure.get(subscription, `/subscriptions/${subscriptionId}/resources`, options).pipe(
+                    map(response => {
                         return List(response.json().value.map((data) => {
                             return new StorageAccount(data);
                         })) as any;
-                    });
-            })
-            .share();
+                    }),
+                );
+            }),
+            share(),
+        );
     }
 }

@@ -3,14 +3,13 @@ import {
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
-
-import { MatDialog } from "@angular/material";
 import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
 import { ListSelection } from "@batch-flask/core/list";
-import { DeleteSelectedItemsDialogComponent } from "@batch-flask/ui/list-and-show-layout";
 import { Subscription } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-filter";
 import { BrowseLayoutListDirective } from "./browse-layout-list";
+
 import "./browse-layout.scss";
 
 export interface BrowseLayoutConfig {
@@ -69,7 +68,7 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
     private _config: BrowseLayoutConfig = defaultConfig;
     private _selectionChangeSub: Subscription;
 
-    constructor(activeRoute: ActivatedRoute, private changeDetector: ChangeDetectorRef, private dialog: MatDialog) {
+    constructor(activeRoute: ActivatedRoute, private changeDetector: ChangeDetectorRef) {
 
         activeRoute.queryParams.subscribe((params: any) => {
             if (params.filter) {
@@ -92,7 +91,10 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
     }
 
     public ngOnInit() {
-        this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
+        this.quickSearchQuery.valueChanges.pipe(
+            debounceTime(400),
+            distinctUntilChanged(),
+        ).subscribe((query: string) => {
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
             } else {
@@ -183,14 +185,8 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
      */
     @autobind()
     public deleteSelection() {
-        const dialogRef = this.dialog.open(DeleteSelectedItemsDialogComponent);
-        dialogRef.componentInstance.items = [...this.selection.keys];
-        dialogRef.afterClosed().subscribe((proceed) => {
-            if (proceed) {
-                this.listDirective.component.deleteSelection(this.selection);
-                this.listDirective.component.selection = new ListSelection();
-            }
-        });
+        this.listDirective.component.deleteSelection(this.selection);
+        this.listDirective.component.selection = new ListSelection();
     }
 
     private _updateFilter() {

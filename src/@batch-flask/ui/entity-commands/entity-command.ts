@@ -1,15 +1,16 @@
 import { Injector } from "@angular/core";
-import { ServerError } from "@batch-flask/core";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { I18nService, ServerError, TelemetryService } from "@batch-flask/core";
+import { ListSelection } from "@batch-flask/core/list";
+import { Activity, ActivityService, ActivityStatus } from "@batch-flask/ui/activity";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
 import { WorkspaceService } from "@batch-flask/ui/workspace";
 import { exists, log, nil } from "@batch-flask/utils";
 import * as inflection from "inflection";
-import { Observable } from "rxjs";
-
-import { ActionableEntity, EntityCommands } from "./entity-commands";
+import { Observable, forkJoin, of } from "rxjs";
+import { map, share } from "rxjs/operators";
+import { ActionableEntity, EntityCommands, ExecuteOptions } from "./entity-commands";
 
 export enum EntityCommandNotify {
     Always,
@@ -54,14 +55,18 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     // Services
     private dialogService: DialogService;
     private notificationService: NotificationService;
-    private backgroundTaskService: BackgroundTaskService;
+    private activityService: ActivityService;
     private workspaceService: WorkspaceService;
+    private i18n: I18nService;
+    private telemetryService: TelemetryService;
 
     constructor(injector: Injector, attributes: EntityCommandAttributes<TEntity, TOptions>) {
         this.notificationService = injector.get(NotificationService);
         this.dialogService = injector.get(DialogService);
-        this.backgroundTaskService = injector.get(BackgroundTaskService);
+        this.activityService = injector.get(ActivityService);
         this.workspaceService = injector.get(WorkspaceService);
+        this.i18n = injector.get(I18nService);
+        this.telemetryService = injector.get(TelemetryService);
 
         this.name = attributes.name;
         this._label = attributes.label;
@@ -100,7 +105,7 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     public performAction(entity: TEntity, option: TOptions): Observable<any> {
         const obs = this._action(entity, option);
         if (!obs) {
-            return Observable.of(null);
+            return of(null);
         }
         return obs;
     }
@@ -122,8 +127,13 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         return obs;
     }
 
-    public execute(entity: TEntity) {
-        if (this.confirm) {
+    /**
+     * Try to execute the command for the given entity.
+     * This will ask for confirmation unless command explicity configured not to
+     */
+    public execute(entity: TEntity, options: ExecuteOptions = {}) {
+        this._trackAction(1);
+        if (this.confirm && !options.skipConfirm) {
             if (this.confirm instanceof Function) {
                 this.confirm([entity]).subscribe((options) => {
                     this._executeCommand(entity, options);
@@ -131,8 +141,16 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
             } else {
                 const label = this.label(entity);
                 const type = this.definition.typeName.toLowerCase();
-                this.dialogService.confirm(`Are you sure you want to ${label.toLowerCase()} this ${type}`, {
-                    description: `You are about to ${label.toLowerCase()} ${entity.id}`,
+                const message = this.i18n.t("entity-command.confirm.single.title", {
+                    action: label.toLowerCase(),
+                    type,
+                });
+                const description = this.i18n.t("entity-command.confirm.single.description", {
+                    action: label.toLowerCase(),
+                    entityId: entity.id,
+                });
+                this.dialogService.confirm(message, {
+                    description,
                     yes: () => {
                         this._executeCommand(entity);
                     },
@@ -143,8 +161,13 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         }
     }
 
-    public executeMultiple(entities: TEntity[]) {
-        if (this.confirm) {
+    /**
+     * Try to execute the command for the given entities.
+     * This will ask for confirmation unless command explicity configured not to
+     */
+    public executeMultiple(entities: TEntity[], options: ExecuteOptions = {}) {
+        this._trackAction(entities.length);
+        if (this.confirm && !options.skipConfirm) {
             if (this.confirm instanceof Function) {
                 this.confirm(entities).subscribe((options) => {
                     this._executeMultiple(entities, options);
@@ -152,8 +175,13 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
             } else {
                 const type = inflection.pluralize(this.definition.typeName.toLowerCase());
                 const label = this.label(entities.first());
+                const message = this.i18n.t("entity-command.confirm.multiple.title", {
+                    action: label.toLowerCase(),
+                    count: entities.length,
+                    type,
+                });
                 this.dialogService.confirm(
-                    `Are you sure you want to ${label.toLowerCase()} these ${entities.length} ${type}s`,
+                    message,
                     {
                         yes: () => {
                             this._executeMultiple(entities);
@@ -165,7 +193,20 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
         }
     }
 
+    public executeMultipleByIds(ids: string[]) {
+        const obs = ids.map(id => this.definition.getFromCache(id));
+        return forkJoin(obs).pipe(
+            map(entities => this.executeMultiple(entities)),
+            share(),
+        );
+    }
+
+    public executeFromSelection(selection: ListSelection) {
+        return this.executeMultipleByIds([...selection.keys]);
+    }
+
     private _executeCommand(entity: TEntity, options?: any) {
+        this._trackConfirm(1);
         const label = this.label(entity);
         this.performActionAndRefresh(entity, options).subscribe({
             next: () => {
@@ -179,18 +220,33 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
     }
 
     private _executeMultiple(entities: TEntity[], options?: any) {
+        this._trackConfirm(entities.length);
+
         const label = this.label(entities[0]);
         const enabledEntities = entities.filter(x => this.enabled(x));
         const type = inflection.pluralize(this.definition.typeName.toLowerCase());
-        this.backgroundTaskService.startTasks(`${label} ${type}`, enabledEntities.map((entity) => {
-            return {
-                name: `${label} ${entity.id}`,
-                func: () => this.performActionAndRefresh(entity, options),
-            };
-        })).subscribe((result) => {
-            this._notifySuccess(`${label} was successful.`,
-                `${result.succeeded}/${entities.length}`);
+
+        // create an activity that creates a list of subactivities
+        const activity = new Activity(`${label} ${type}`, () => {
+            // create a subactivity for each enabled entity
+            const subActivities = enabledEntities.map((entity) => {
+                return new Activity(`${label} ${entity.id}`, () => {
+                    // each subactivity should perform an action and refresh
+                    return this.performActionAndRefresh(entity, options);
+                });
+            });
+            return of(subActivities);
         });
+
+        // notify success after the parent activity completes
+        activity.done.subscribe((status) => {
+            if (status === ActivityStatus.Completed) {
+                this._notifySuccess(`${label} was successful.`, "");
+            }
+        });
+
+        // run the parent activity
+        this.activityService.exec(activity);
     }
 
     private _notifySuccess(message: string, description: string) {
@@ -207,7 +263,29 @@ export class EntityCommand<TEntity extends ActionableEntity, TOptions = void> {
 
     private _isFeatureEnabled(): boolean {
         const feature = this.definition.config.feature;
-        if (!feature) {return true; }
+        if (!feature) { return true; }
         return this.workspaceService.isFeatureEnabled(`${feature}.${this.name}`);
+    }
+
+    private _trackAction(count: number) {
+        this.telemetryService.trackEvent({
+            name: "Execute action",
+            properties: {
+                type: this.definition.typeName,
+                name: this.name,
+                count,
+            },
+        });
+    }
+
+    private _trackConfirm(count: number) {
+        this.telemetryService.trackEvent({
+            name: "Execute action confirmed",
+            properties: {
+                type: this.definition.typeName,
+                name: this.name,
+                count,
+            },
+        });
     }
 }

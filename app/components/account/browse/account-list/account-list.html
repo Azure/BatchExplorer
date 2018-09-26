@@ -1,21 +1,33 @@
 <bl-focus-section>
     <bl-quick-list
+        [data]="displayedAccounts"
         [status]="loadingStatus"
         [(activeItem)]="activeItem"
         [(selection)]="selection"
         [commands]="commands">
-        <bl-quick-list-item *ngFor="let account of displayedAccounts;trackBy: trackByFn" [link]="['/accounts', account.id]"
-            [key]="account.id">
-            <bl-quick-list-item-status [status]="accountStatus(account.id)">
-            </bl-quick-list-item-status>
 
-            <div bl-quick-list-item-title>{{account.name}}</div>
-            <p bl-quick-list-item-field>{{account.location}}</p>
-            <div bl-quick-list-item-preview>
-                <div class="flex-center">
-                    <i class="fa fa-star" [class.favorite]="isAccountFavorite(account.id)" (click)="toggleFavorite(account.id)"></i>
-                </div>
+        <ng-container *blQuickListRowStatus="let account">
+            <bl-quick-list-item-status [status]="accountStatus(account.id)"></bl-quick-list-item-status>
+        </ng-container>
+        <ng-container *blQuickListRowTitle="let account">
+            {{account.displayName}}
+            <ng-container *ngIf="account.name !== account.displayName">
+                ({{account.name}})
+            </ng-container>
+        </ng-container>
+        <ng-container *blQuickListRowState="let account">
+            <div *ngIf="account.armEnabled" class="account-location">
+                <bl-location [location]="account.location"></bl-location>
             </div>
-        </bl-quick-list-item>
+            <ng-container *ngIf="!account.armEnabled">
+                <span class="account-type">Local</span>
+            </ng-container>
+        </ng-container>
+
+        <ng-container *blQuickListRowExtra="let account">
+            <bl-clickable (do)="toggleFavorite(account.id)">
+                <i class="fa fa-star" [class.favorite]="isAccountFavorite(account.id)"></i>
+            </bl-clickable>
+        </ng-container>
     </bl-quick-list>
 </bl-focus-section>

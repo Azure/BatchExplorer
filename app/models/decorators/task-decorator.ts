@@ -1,4 +1,4 @@
-import { AutoUserScope, Task, TaskState, UserAccountElevationLevel } from "app/models";
+import { AutoUserScope, Task, UserAccountElevationLevel } from "app/models";
 import { TaskContainerSettingsDecorator } from "app/models/decorators";
 import { DecoratorBase } from "app/utils/decorators";
 import { ComputeNodeInfoDecorator } from "./compute-node-info-decorator";
@@ -30,7 +30,6 @@ export class TaskDecorator extends DecoratorBase<Task> {
     public multiInstanceSettings: {};
     public stats: {};
     public dependsOn: {};
-    public applicationPackageReferences: any[];
     public userIdentitySummary: string;
 
     constructor(task: Task) {
@@ -43,7 +42,6 @@ export class TaskDecorator extends DecoratorBase<Task> {
         this.creationTime = this.dateField(task.creationTime);
         this.state = this.stateField(task.state);
         this.stateTransitionTime = this.dateField(task.stateTransitionTime);
-        this.stateIcon = this._getStateIcon(task.state);
         this.previousState = this.stateField(task.previousState);
         this.previousStateTransitionTime = this.dateField(task.previousStateTransitionTime);
         this.commandLine = this.stringField(task.commandLine);
@@ -59,23 +57,8 @@ export class TaskDecorator extends DecoratorBase<Task> {
         this.multiInstanceSettings = task.multiInstanceSettings || {};
         this.stats = task.stats || {};
         this.dependsOn = task.dependsOn || {};
-        this.applicationPackageReferences = task.applicationPackageReferences || [];
 
         this._initUserIdentity();
-    }
-
-    private _getStateIcon(state: TaskState): string {
-        switch (state) {
-            case TaskState.preparing:
-                return "fa-spinner";
-            case TaskState.active:
-            case TaskState.running:
-                return "fa-cog";
-            case TaskState.completed:
-                return "fa-check-circle-o";
-            default:
-                return "fa-question-circle-o";
-        }
     }
 
     private _initUserIdentity() {

@@ -1,14 +1,25 @@
 import {
-    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, Optional, QueryList,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    Optional,
+    TemplateRef,
 } from "@angular/core";
 
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { AbstractListBase } from "../abstract-list";
 import { FocusSectionComponent } from "../focus-section";
-import { QuickListItemComponent } from "./quick-list-item";
+import {
+    QuickListRowExtraDirective,
+    QuickListRowStateDirective,
+    QuickListRowStatusDirective,
+    QuickListRowTitleDirective,
+} from "./quick-list-row-def";
 
 import { Router } from "@angular/router";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
+
 import "./quick-list.scss";
 
 @Component({
@@ -16,9 +27,11 @@ import "./quick-list.scss";
     templateUrl: "quick-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class QuickListComponent extends AbstractListBase implements AfterContentInit {
-    @ContentChildren(QuickListItemComponent)
-    public quickListItems: QueryList<QuickListItemComponent>;
+export class QuickListComponent extends AbstractListBase {
+    @ContentChild(QuickListRowStatusDirective, { read: TemplateRef }) public statusDef: TemplateRef<any>;
+    @ContentChild(QuickListRowTitleDirective, { read: TemplateRef }) public titleDef: TemplateRef<any>;
+    @ContentChild(QuickListRowStateDirective, { read: TemplateRef }) public stateDef: TemplateRef<any>;
+    @ContentChild(QuickListRowExtraDirective, { read: TemplateRef }) public extraDef: TemplateRef<any>;
 
     constructor(
         contextMenuService: ContextMenuService,
@@ -29,10 +42,4 @@ export class QuickListComponent extends AbstractListBase implements AfterContent
         super(contextMenuService, router, breadcrumbService, changeDetector, focusSection);
     }
 
-    public ngAfterContentInit() {
-        this.quickListItems.changes.subscribe(() => {
-            this.items = this.quickListItems.toArray();
-        });
-        this.items = this.quickListItems.toArray();
-    }
 }

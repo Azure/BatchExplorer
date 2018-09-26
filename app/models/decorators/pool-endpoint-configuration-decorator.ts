@@ -15,7 +15,7 @@ export class PoolEndpointConfigurationDecorator extends DecoratorBase<PoolEndpoi
                     protocol: this.stringField(pool.protocol),
                     networkSecurityRules: pool.networkSecurityGroupRules,
                 };
-            });
+            }).toArray();
         }
     }
 }

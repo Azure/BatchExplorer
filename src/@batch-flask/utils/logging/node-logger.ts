@@ -9,7 +9,7 @@ stream.pipe(process.stderr);
 
 export interface NodeLoggerConfig {
     name: string;
-    path: string;
+    path?: string;
 }
 
 /**
@@ -23,7 +23,9 @@ export class NodeLogger implements Logger {
 
     public static get mainLogger() {
         if (!this._mainLogger) {
-            throw new Error("Main logger has not been set yet. Call NodeLogger.mainLogger = myLogger");
+            this._mainLogger = new NodeLogger({
+                name: "BatchExplorer TMP",
+            });
         }
         return this._mainLogger;
     }
@@ -35,21 +37,25 @@ export class NodeLogger implements Logger {
             throw new Error("Missing configuration for Logger");
         }
 
+        const streams: any[] = [
+            {
+                stream: stream as any,
+            },
+        ];
+
+        if (config.path) {
+            streams.push({
+                type: "rotating-file",
+                path: config.path,
+                period: "1d",       // daily rotation
+                count: 3,           // keep 3 back copies
+            });
+        }
         this._logger = bunyan.createLogger({
             name: config.name,
             level: "debug",
             serializers: bunyan.stdSerializers,
-            streams: [
-                {
-                    stream: stream as any,
-                },
-                {
-                    type: "rotating-file",
-                    path: config.path,
-                    period: "1d",       // daily rotation
-                    count: 3,           // keep 3 back copies
-                },
-            ],
+            streams,
         });
     }
 

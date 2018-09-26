@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
-import { List } from "immutable";
-
+import { FileSystemService } from "@batch-flask/ui";
 import { SSHPublicKey } from "app/models";
 import { Constants } from "app/utils";
+import { List } from "immutable";
 import { BehaviorSubject, Observable, from } from "rxjs";
-import { FileSystemService } from "./fs.service";
+import { map } from "rxjs/operators";
 import { LocalFileStorage } from "./local-file-storage.service";
 
 const filename = Constants.SavedDataFilename.sshPublicKeys;
@@ -39,13 +39,13 @@ export class SSHKeyService {
     }
 
     public loadInitialData(): Observable<List<SSHPublicKey>> {
-        return this.storage.get(filename).map((data) => {
+        return this.storage.get(filename).pipe(map((data) => {
             if (Array.isArray(data)) {
                 return List(data);
             } else {
                 return List([]);
             }
-        });
+        }));
     }
 
     public hasLocalPublicKey(path: string): Observable<boolean> {

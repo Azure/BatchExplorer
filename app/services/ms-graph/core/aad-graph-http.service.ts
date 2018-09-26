@@ -1,16 +1,16 @@
 import { Location } from "@angular/common";
 import { HttpHandler, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-
 import { HttpRequestOptions, HttpService, ServerError } from "@batch-flask/core";
 import { UrlUtils } from "@batch-flask/utils";
-import { AccountService } from "app/services/account.service";
+import { ArmBatchAccount } from "app/models";
 import { AdalService } from "app/services/adal";
-import { BatchExplorerService } from "app/services/batch-labs.service";
+import { BatchAccountService } from "app/services/batch-account";
+import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { AADUser } from "client/core/aad/adal/aad-user";
 import { Constants } from "common";
-import { flatMap, shareReplay, take } from "rxjs/operators";
+import { Observable, throwError } from "rxjs";
+import { catchError, flatMap, retryWhen, shareReplay, take, tap } from "rxjs/operators";
 
 @Injectable()
 export class AADGraphHttpService extends HttpService {
@@ -22,7 +22,7 @@ export class AADGraphHttpService extends HttpService {
     constructor(
         httpHandler: HttpHandler,
         private adal: AdalService,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private batchExplorer: BatchExplorerService) {
         super(httpHandler);
         this.adal.currentUser.subscribe(x => this._currentUser = x);
@@ -31,7 +31,16 @@ export class AADGraphHttpService extends HttpService {
     public request(method: any, uri?: any, options?: any): Observable<any> {
         return this.accountService.currentAccount.pipe(
             take(1),
-            flatMap((account) => {
+            tap((account) => {
+                if (!(account instanceof ArmBatchAccount)) {
+                    throw new ServerError({
+                        code: "LocalBatchAccount",
+                        message: "Cannot use AAD with a local batch account",
+                        status: 406,
+                    });
+                }
+            }),
+            flatMap((account: ArmBatchAccount) => {
                 const tenantId = account.subscription.tenantId;
                 return this.adal.accessTokenData(tenantId, this.serviceUrl).pipe(
                     flatMap((accessToken) => {
@@ -40,12 +49,13 @@ export class AADGraphHttpService extends HttpService {
                         return super.request(
                             method,
                             this._computeUrl(uri, tenantId),
-                            options)
-                            .retryWhen(attempts => this.retryWhen(attempts))
-                            .catch((error) => {
-                                const err = ServerError.fromAADGraph(error);
-                                return Observable.throw(err);
-                            });
+                            options).pipe(
+                                retryWhen(attempts => this.retryWhen(attempts)),
+                                catchError((error) => {
+                                    const err = ServerError.fromAADGraph(error);
+                                    return throwError(err);
+                                }),
+                            );
                     }));
             }),
             shareReplay(1),

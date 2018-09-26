@@ -1,11 +1,11 @@
 import { Injectable, NgZone } from "@angular/core";
 import { Router } from "@angular/router";
 import { IpcService } from "@batch-flask/ui";
-
 import { Constants } from "app/utils";
 import { BatchExplorerLink, BatchExplorerLinkAction } from "common";
 import * as decodeUriComponent from "decode-uri-component";
-import { AccountService } from "./account.service";
+import { URLSearchParams } from "url";
+import { BatchAccountService } from "./batch-account";
 
 export interface GotoOptions {
     /**
@@ -18,7 +18,7 @@ export interface GotoOptions {
 @Injectable()
 export class NavigatorService {
     constructor(
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private router: Router,
         private zone: NgZone,
         private ipc: IpcService) {

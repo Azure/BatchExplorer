@@ -1,16 +1,13 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, ViewChild,
 } from "@angular/core";
-import { autobind } from "@batch-flask/core";
-import { Observable } from "rxjs";
-
-import { SubTaskDisplayListComponent } from "./sub-tasks";
-
+import { ListView,  autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/core/list";
 import { SubtaskInformation } from "app/models";
 import { SubtaskListParams, TaskService } from "app/services";
-import { ListView } from "app/services/core";
 import { List } from "immutable";
+import { Observable } from "rxjs";
+import { SubTaskDisplayListComponent } from "./sub-tasks";
 
 @Component({
     selector: "bl-task-sub-tasks-tab",
@@ -34,7 +31,7 @@ export class TaskSubTasksTabComponent extends ListBaseComponent implements OnCha
     public data: ListView<SubtaskInformation, SubtaskListParams>;
 
     public selectedTask: SubtaskInformation;
-    public selectedTaskId: string;
+    public selectedTaskId: number;
     public subTasks: List<SubtaskInformation>;
 
     private _jobId: string;
@@ -73,7 +70,7 @@ export class TaskSubTasksTabComponent extends ListBaseComponent implements OnCha
         return this.data.fetchNext();
     }
 
-    public selectedTaskChanged(id: string) {
+    public selectedTaskChanged(id: number) {
         this.selectedTaskId = id;
         this._updateSelectedTask();
         this.changeDetector.markForCheck();

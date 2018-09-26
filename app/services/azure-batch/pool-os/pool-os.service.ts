@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { exists } from "@batch-flask/utils";
 import { NodeAgentSku, NodeAgentSkuAttributes, PoolOsSkus } from "app/models";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, empty } from "rxjs";
 import { expand, filter, map, reduce, share, shareReplay } from "rxjs/operators";
 import { AzureBatchHttpService, BatchListResponse } from "../core";
 
@@ -15,6 +15,7 @@ export class PoolOsService {
     constructor(private http: AzureBatchHttpService) {
         this.nodeAgentSkus = this._nodeAgentSkus.pipe(
             filter(x => exists(x)),
+            shareReplay(1),
         );
 
         this.offers = this.nodeAgentSkus.pipe(
@@ -43,11 +44,12 @@ export class PoolOsService {
     private _loadNodeAgentSkus() {
         return this.http.get<BatchListResponse<NodeAgentSkuAttributes>>("/nodeagentskus").pipe(
             expand(response => {
-                return response["odata.nextLink"] ? this.http.get(response["odata.nextLink"]) : Observable.empty();
+                return response["odata.nextLink"] ? this.http.get(response["odata.nextLink"]) : empty();
             }),
             reduce((resourceGroups, response: BatchListResponse<NodeAgentSkuAttributes>) => {
                 return [...resourceGroups, ...response.value];
             }, []),
+            map(x => x.map(v => new NodeAgentSku(v))),
             share(),
         );
     }

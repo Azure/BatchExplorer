@@ -2,13 +2,12 @@ import { Type } from "@angular/core";
 import * as moment from "moment";
 
 import { PinnedEntityType } from "@batch-flask/core";
-import { Workspace } from "@batch-flask/ui";
+import { File, Workspace } from "@batch-flask/ui";
 import {
-    AccountResource,
     ApplicationPackage,
+    ArmBatchAccount,
     BatchApplication,
     BlobContainer,
-    File,
     Job,
     Node,
     PackageState,
@@ -221,7 +220,7 @@ export const subscription = new FixtureFactory<Subscription>(Subscription, {
     state: "ready",
 });
 
-export const account = new FixtureFactory<AccountResource>(AccountResource, {
+export const account = new FixtureFactory<ArmBatchAccount>(ArmBatchAccount, {
     id: "account-1",
     name: "account-test",
     location: "westus",

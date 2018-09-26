@@ -2,9 +2,10 @@ import { TestBed } from "@angular/core/testing";
 import * as path from "path";
 import { BehaviorSubject, of } from "rxjs";
 
+import { FileSystemService } from "@batch-flask/ui";
 import { ConnectionType, IaasNodeConnectionSettings, NodeConnectionSettings, Pool } from "app/models";
 import { OS, Platform } from "app/utils";
-import { AddNodeUserAttributes, FileSystemService, SSHKeyService, SettingsService } from "..";
+import { AddNodeUserAttributes, SSHKeyService, SettingsService } from "..";
 import { AzureBatchHttpService } from "../azure-batch/core";
 import { NodeConnectService } from "./node-connect.service";
 

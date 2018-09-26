@@ -35,8 +35,9 @@ describe("AADService", () => {
     let service: AADService;
     let currentUser: AADUser;
     let appSpy;
-    let localStorage;
+    let localStorage: InMemoryDataStore;
     let ipcMainMock;
+    let propertiesSpy;
 
     beforeEach(() => {
         localStorage = new InMemoryDataStore();
@@ -49,14 +50,17 @@ describe("AADService", () => {
             on: () => null,
         };
 
-        service = new AADService(appSpy, localStorage, ipcMainMock);
+        propertiesSpy = {
+
+        };
+        service = new AADService(appSpy, localStorage, propertiesSpy, ipcMainMock);
         service.currentUser.subscribe(x => currentUser = x);
         service.init();
     });
 
     it("when there is no item in the localstorage it should not set the id_token", () => {
         localStorage.removeItem(Constants.localStorageKey.currentUser);
-        const tmpService = new AADService(appSpy, localStorage, ipcMainMock);
+        const tmpService = new AADService(appSpy, localStorage, propertiesSpy,  ipcMainMock);
         tmpService.init();
         let user: AADUser = null;
         tmpService.currentUser.subscribe(x => user = x);
@@ -65,7 +69,7 @@ describe("AADService", () => {
 
     it("when localstorage has currentUser it should load it", async (done) => {
         await localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(sampleUser));
-        const tmpService = new AADService(appSpy, localStorage, ipcMainMock);
+        const tmpService = new AADService(appSpy, localStorage, propertiesSpy, ipcMainMock);
         await tmpService.init();
         let user: AADUser = null;
         tmpService.currentUser.subscribe(x => user = x);

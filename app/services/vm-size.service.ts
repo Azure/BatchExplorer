@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
-import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
-
-import { AccountResource, VmSize } from "app/models";
+import { ArmBatchAccount, BatchAccount, VmSize } from "app/models";
 import { StringUtils, log } from "app/utils";
-import { AccountService } from "./account.service";
+import { List } from "immutable";
+import { BehaviorSubject, Observable, combineLatest } from "rxjs";
+import { filter, map, share, shareReplay, take } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
+import { BatchAccountService } from "./batch-account";
 import { computeUrl } from "./compute.service";
 import { GithubDataService } from "./github-data";
 
@@ -51,34 +51,40 @@ export class VmSizeService {
     private _excludedSizes = new BehaviorSubject<ExcludedSizes>(null);
     private _vmSizeCategories = new BehaviorSubject<StringMap<string[]>>(null);
 
-    private _currentAccount: AccountResource;
+    private _currentAccount: BatchAccount;
 
     constructor(
         private arm: ArmHttpService,
-        private githubData: GithubDataService, private accountService: AccountService) {
+        private githubData: GithubDataService, private accountService: BatchAccountService) {
 
-        const obs = Observable.combineLatest(this._sizes, this._excludedSizes);
-        this.sizes = this._sizes.filter(x => x !== null);
+        const obs = combineLatest(this._sizes, this._excludedSizes);
+        this.sizes = this._sizes.pipe(filter(x => x !== null));
 
-        this.cloudServiceSizes = obs.map(([sizes, excluded]) => {
-            if (!excluded) {
-                return sizes;
-            }
-            return this._filterSizes(sizes, excluded.all.concat(excluded.paas));
-        }).shareReplay(1);
+        this.cloudServiceSizes = obs.pipe(
+            map(([sizes, excluded]) => {
+                if (!excluded) {
+                    return sizes;
+                }
+                return this._filterSizes(sizes, excluded.all.concat(excluded.paas));
+            }),
+            shareReplay(1),
+        );
 
-        this.virtualMachineSizes = obs.map(([sizes, excluded]) => {
-            if (!excluded) {
-                return sizes;
-            }
-            return this._filterSizes(sizes, excluded.all.concat(excluded.iaas));
-        }).shareReplay(1);
+        this.virtualMachineSizes = obs.pipe(
+            map(([sizes, excluded]) => {
+                if (!excluded) {
+                    return sizes;
+                }
+                return this._filterSizes(sizes, excluded.all.concat(excluded.iaas));
+            }),
+            shareReplay(1),
+        );
 
         this.vmSizeCategories = this._vmSizeCategories.asObservable();
     }
 
     public init() {
-        this.accountService.currentAccount.subscribe((account: AccountResource) => {
+        this.accountService.currentAccount.subscribe((account: BatchAccount) => {
             this._currentAccount = account;
             this.load();
         });
@@ -86,6 +92,7 @@ export class VmSizeService {
     }
 
     public load() {
+        if (!(this._currentAccount instanceof ArmBatchAccount)) { return; }
         const { subscription, location } = this._currentAccount;
         const url = `${computeUrl(subscription.subscriptionId)}/locations/${location}/vmSizes`;
         this.arm.get(url).subscribe({
@@ -114,9 +121,13 @@ export class VmSizeService {
     }
 
     public get(vmSize: string): Observable<VmSize> {
-        return this.sizes.map(sizes => {
-            return sizes.filter(x => x.name.toLowerCase() === vmSize.toLowerCase()).first();
-        }).take(1).share();
+        return this.sizes.pipe(
+            map(sizes => {
+                return sizes.filter(x => x.name.toLowerCase() === vmSize.toLowerCase()).first();
+            }),
+            take(1),
+            share(),
+        );
     }
     /**
      * Filter the given list of vm sizes by excluding any patching the given patterns.

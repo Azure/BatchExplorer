@@ -8,7 +8,11 @@ release/
 .awcache
 coverage/
 *.stackdump
+.nyc_output/
+coverage.lcov
+documentation/
 
 # Ignore the english compiled file
 i18n/resources.en.json
 i18n/xliff/
+i18n/xliffs/

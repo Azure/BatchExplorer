@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-
+import { DataCache, ListOptionsAttributes, ListView } from "@batch-flask/core";
 import { ServicePrincipal } from "app/models/ms-graph";
-import { DataCache, ListOptionsAttributes, ListView } from "app/services/core";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { AADGraphEntityGetter, AADGraphHttpService, AADGraphListGetter } from "./core";
 
 export interface ServicePrincipalListParams {
@@ -78,6 +78,6 @@ export class ServicePrincipalService {
         return this.aadGraph.post("/servicePrincipals", {
             appId: params.appId,
             accountEnabled: true,
-        }).map(x => new ServicePrincipal(x));
+        }).pipe(map(x => new ServicePrincipal(x)));
     }
 }

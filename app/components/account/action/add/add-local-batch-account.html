@@ -1,0 +1,26 @@
+<bl-simple-form [title]="title" [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef">
+    <div class="form-element">
+        <bl-form-field>
+            <input blInput formControlName="displayName" placeholder="Friendly name">
+        </bl-form-field>
+    </div>
+    <div class="form-element">
+        <bl-form-field>
+            <input blInput formControlName="name" placeholder="Name">
+        </bl-form-field>
+        <bl-error controlName="name" code="required">ID is a required field</bl-error>
+    </div>
+    <div class="form-element">
+        <bl-form-field>
+            <input blInput formControlName="url" placeholder="Url">
+        </bl-form-field>
+        <bl-error controlName="url" code="required">Url is a required field</bl-error>
+        <bl-error controlName="url" code="pattern">This is not a valid url.</bl-error>
+    </div>
+    <div class="form-element">
+        <bl-form-field>
+            <input blInput formControlName="key" placeholder="Key">
+        </bl-form-field>
+        <bl-error controlName="key" code="required">Key is a required field</bl-error>
+    </div>
+</bl-simple-form>

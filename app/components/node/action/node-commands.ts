@@ -1,11 +1,10 @@
 import { Injectable, Injector } from "@angular/core";
 import { COMMAND_LABEL_ICON, EntityCommand, EntityCommands, Permission } from "@batch-flask/ui";
-
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
-import { Node, Pool } from "app/models";
-import { NodeService, PoolParams } from "app/services";
-import { EntityView } from "app/services/core";
+import { Node, NodeSchedulingState } from "app/models";
+import { NodeService, PoolService } from "app/services";
+import { flatMap } from "rxjs/operators";
 import { NodeConnectComponent } from "../connect";
 
 @Injectable()
@@ -13,14 +12,15 @@ export class NodeCommands extends EntityCommands<Node> {
     public connect: EntityCommand<Node, void>;
     public delete: EntityCommand<Node, void>;
     public reboot: EntityCommand<Node, void>;
+    public reimage: EntityCommand<Node, void>;
     public editStartTask: EntityCommand<Node, void>;
     public uploadLog: EntityCommand<Node, void>;
-
-    public pool: Pool;
-    public poolData: EntityView<Pool, PoolParams>;
+    public disableScheduling: EntityCommand<Node, void>;
+    public enableScheduling: EntityCommand<Node, void>;
 
     constructor(
         injector: Injector,
+        private poolService: PoolService,
         private nodeService: NodeService,
         private sidebarManager: SidebarManager) {
         super(
@@ -63,6 +63,34 @@ export class NodeCommands extends EntityCommands<Node> {
             permission: Permission.Write,
         });
 
+        this.reimage = this.simpleCommand({
+            name: "reboot",
+            icon: "fa fa-hdd-o",
+            label: "Reimage",
+            action: (node: Node) => this._reboot(node),
+            permission: Permission.Write,
+        });
+
+        this.disableScheduling = this.simpleCommand({
+            name: "disableScheduling",
+            label: "Disable scheduling",
+            icon: "fa fa-stop",
+            visible: (node: Node) => node.schedulingState === NodeSchedulingState.Enabled,
+            enabled: (node: Node) => node.schedulingState === NodeSchedulingState.Enabled,
+            action: (node: Node) => this._disableScheduling(node),
+            permission: Permission.Write,
+        });
+
+        this.enableScheduling = this.simpleCommand({
+            name: "enableScheduling",
+            label: "Re-enable scheduling",
+            icon: "fa fa-play",
+            visible: (node: Node) => node.schedulingState === NodeSchedulingState.Disabled,
+            enabled: (node: Node) => node.schedulingState === NodeSchedulingState.Disabled,
+            action: (node: Node) => this._enableScheduling(node),
+            permission: Permission.Write,
+        });
+
         this.editStartTask = this.simpleCommand({
             name: "editStartTask",
             ...COMMAND_LABEL_ICON.EditStartTask,
@@ -77,29 +105,51 @@ export class NodeCommands extends EntityCommands<Node> {
             this.connect,
             this.delete,
             this.reboot,
+            this.reimage,
+            this.disableScheduling,
+            this.enableScheduling,
             this.editStartTask,
         ];
     }
 
     private _connect(node: Node) {
-        const ref = this.sidebarManager.open(`connect-node-${node.id}`, NodeConnectComponent);
-        ref.component.node = node;
-        ref.component.pool = this.pool;
+        this.poolService.getFromCache(this.params["poolId"]).subscribe((pool) => {
+            const ref = this.sidebarManager.open(`connect-node-${node.id}`, NodeConnectComponent);
+            ref.component.node = node;
+            ref.component.pool = pool;
+        });
     }
 
     private _reboot(node: Node) {
-        return this.nodeService.reboot(this.pool.id, node.id)
-            .flatMap(() => this.nodeService.get(this.pool.id, node.id));
+        return this.nodeService.reboot(this.params["poolId"], node.id).pipe(
+            flatMap(() => this.nodeService.get(this.params["poolId"], node.id)),
+        );
     }
 
     private _delete(node: Node) {
-        return this.nodeService.delete(this.pool.id, node.id)
-            .flatMap(() => this.nodeService.get(this.pool.id, node.id));
+        return this.nodeService.delete(this.params["poolId"], node.id).pipe(
+            flatMap(() => this.nodeService.get(this.params["poolId"], node.id)),
+        );
+    }
+
+    private _disableScheduling(node: Node) {
+        return this.nodeService.disableScheduling(this.params["poolId"], node.id).pipe(
+            flatMap(() => this.nodeService.get(this.params["poolId"], node.id)),
+        );
+    }
+
+    private _enableScheduling(node: Node) {
+        return this.nodeService.enableScheduling(this.params["poolId"], node.id).pipe(
+            flatMap(() => this.nodeService.get(this.params["poolId"], node.id)),
+        );
     }
 
     private _editStartTask(node: Node) {
-        const ref = this.sidebarManager.open(`edit-start-task-${this.pool.id}`, StartTaskEditFormComponent);
-        ref.component.pool = this.pool;
-        ref.component.fromNode = node.id;
+        this.poolService.getFromCache(this.params["poolId"]).subscribe((pool) => {
+            const ref = this.sidebarManager.open(`edit-start-task-${this.params["poolId"]}`,
+                StartTaskEditFormComponent);
+            ref.component.pool = pool;
+            ref.component.fromNode = node.id;
+        });
     }
 }

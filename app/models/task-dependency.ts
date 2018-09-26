@@ -1,4 +1,4 @@
-import { Task } from "./task";
+import { Task } from "./azure-batch/task";
 
 /**
  * A single dependent task in a list of task dependencies.

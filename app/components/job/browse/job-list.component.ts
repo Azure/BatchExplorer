@@ -1,22 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Observable, Subscription } from "rxjs";
-
-import { Filter, autobind } from "@batch-flask/core";
+import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { AbstractListBaseConfig } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Job, JobState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
 import { JobListParams, JobService } from "app/services";
-import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
+import { Observable, Subscription } from "rxjs";
 import {
-    DeleteJobAction,
     JobCommands,
     PatchJobComponent,
 } from "../action";
@@ -37,6 +34,14 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     public data: ListView<Job, JobListParams>;
     public searchQuery = new FormControl();
 
+    public listConfig: AbstractListBaseConfig<Job> = {
+        sorting: {
+            id: true,
+            state: true,
+            pool: job => job.executionInfo && job.executionInfo.poolId,
+        },
+    };
+
     // todo: ask tim about setting difference select options for list and details.
     private _baseOptions = { };
     private _onJobAddedSub: Subscription;
@@ -46,8 +51,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
         changeDetector: ChangeDetectorRef,
         public commands: JobCommands,
         private sidebarManager: SidebarManager,
-        private jobService: JobService,
-        private taskManager: BackgroundTaskService) {
+        private jobService: JobService) {
         super(changeDetector);
         this.data = this.jobService.listView(this._baseOptions);
         ComponentUtils.setActiveItem(activatedRoute, this.data);
@@ -91,7 +95,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     }
 
     public jobStatus(job: Job): QuickListItemStatus {
-        if (job.executionInfo && job.executionInfo.failureInfo) {
+        if (job.executionInfo && job.executionInfo.schedulingError) {
             return QuickListItemStatus.warning;
         } else {
             switch (job.state) {
@@ -112,8 +116,8 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     }
 
     public jobStatusText(job: Job): string {
-        if (job.executionInfo && job.executionInfo.failureInfo) {
-            return new FailureInfoDecorator(job.executionInfo.failureInfo).summary;
+        if (job.executionInfo && job.executionInfo.schedulingError) {
+            return new FailureInfoDecorator(job.executionInfo.schedulingError).summary;
         } else {
             switch (job.state) {
                 case JobState.completed:
@@ -137,14 +141,6 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     }
 
     public deleteSelection(selection: ListSelection) {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteJobAction(this.jobService, [...this.selection.keys]);
-            task.start(backgroundTask);
-            return task.waitingDone;
-        });
-    }
-
-    public trackByFn(index: number, job: Job) {
-        return job.id;
+        this.commands.delete.executeFromSelection(selection).subscribe();
     }
 }

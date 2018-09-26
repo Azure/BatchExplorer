@@ -1,15 +1,15 @@
 import { Injectable, NgZone } from "@angular/core";
-import { AsyncSubject, BehaviorSubject, Observable, Subject } from "rxjs";
-
 import { ServerError } from "@batch-flask/core";
 import { ElectronRemote } from "@batch-flask/ui";
-import { AccountResource } from "app/models";
+import { ArmBatchAccount } from "app/models";
 import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";
-import { BatchExplorerService } from "app/services/batch-labs.service";
+import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { SecureUtils, log } from "app/utils";
 import { PythonRpcServerProcess } from "client/python-process";
-import { AccountService } from "../account.service";
+import { AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
+import { catchError, first, flatMap, share, tap } from "rxjs/operators";
 import { AdalService } from "../adal";
+import { BatchAccountService } from "../batch-account";
 
 @Injectable()
 export class PythonRpcService {
@@ -23,7 +23,7 @@ export class PythonRpcService {
 
     constructor(
         remote: ElectronRemote,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private adalService: AdalService,
         private _zone: NgZone,
         private batchExplorer: BatchExplorerService,
@@ -109,9 +109,11 @@ export class PythonRpcService {
         const request = this._buildRequest(method, params, options);
         const container = this._registerRequest(request);
 
-        this._ready.catch(() => {
-            return this.resetConnection(); // Tries once to reset the connection right away.
-        }).subscribe({
+        this._ready.pipe(
+            catchError(() => {
+                return this.resetConnection(); // Tries once to reset the connection right away.
+            }),
+        ).subscribe({
             next: () => {
                 this._socket.send(JSON.stringify(request));
             },
@@ -125,22 +127,38 @@ export class PythonRpcService {
 
     public callWithAuth(method: string, params: any[]): Observable<any> {
         const resourceUrl = this.batchExplorer.azureEnvironment;
-        return this.accountService.currentAccount.first().flatMap((account: AccountResource) => {
-            const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.batchUrl);
-            const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.armUrl);
-            return Observable.combineLatest(batchToken, armToken).first().flatMap(([batchToken, armToken]) => {
-                const authParam = {
-                    batchToken,
-                    armToken,
-                    armUrl: resourceUrl.armUrl,
-                    storageEndpoint: resourceUrl.storageEndpoint,
-                    account: account.toJS(),
-                };
-                return this.call(method, params, {
-                    authentication: authParam,
-                });
-            });
-        }).share();
+        return this.accountService.currentAccount.pipe(
+            first(),
+            tap((account) => {
+                if (!(account instanceof ArmBatchAccount)) {
+                    throw new ServerError({
+                        code: "LocalBatchAccount",
+                        message: "Cannot use NCJ with a local batch account",
+                        status: 406,
+                    });
+                }
+            }),
+            flatMap((account: ArmBatchAccount) => {
+                const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.batchUrl);
+                const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, resourceUrl.armUrl);
+                return combineLatest(batchToken, armToken).pipe(
+                    first(),
+                    flatMap(([batchToken, armToken]) => {
+                        const authParam = {
+                            batchToken,
+                            armToken,
+                            armUrl: resourceUrl.armUrl,
+                            storageEndpoint: resourceUrl.storageEndpoint,
+                            account: account.toJS(),
+                        };
+                        return this.call(method, params, {
+                            authentication: authParam,
+                        });
+                    }),
+                );
+            }),
+            share(),
+        );
     }
 
     /**

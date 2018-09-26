@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "@batch-flask/core";
-import { List } from "immutable";
-import { Subscription } from "rxjs";
-
+import { EntityView, autobind } from "@batch-flask/core";
 import { Job, JobSchedule, JobScheduleState, Pool } from "app/models";
 import { JobScheduleDecorator } from "app/models/decorators";
-import {  JobScheduleParams, JobScheduleService } from "app/services";
-import { EntityView } from "app/services/core";
-
+import { JobScheduleParams, JobScheduleService } from "app/services";
+import { List } from "immutable";
+import { Subscription } from "rxjs";
+import { flatMap } from "rxjs/operators";
 import { JobScheduleCommands } from "../action";
+
 import "./job-schedule-details.scss";
 
 @Component({
@@ -76,9 +75,9 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public updateTags(tags: List<string>) {
-        return this.jobScheduleService.updateTags(this.jobSchedule, tags).flatMap(() => {
-            return this.refresh();
-        });
+        return this.jobScheduleService.updateTags(this.jobSchedule, tags).pipe(
+            flatMap(() => this.refresh()),
+        );
     }
 
     public get jobSpecification(): Job {
@@ -102,6 +101,6 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
         if (!this.autoPoolSpecification) {
             return null;
         }
-        return new Pool(this.autoPoolSpecification.pool);
+        return new Pool(this.autoPoolSpecification.pool as any);
     }
 }

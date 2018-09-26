@@ -11,6 +11,7 @@ export enum HttpCode {
     Accepted = 201,
     NotFound = 404,
     BadRequest = 400,
+    Forbidden = 403,
     RequestTimeout = 408,
     Conflict = 409,
     InteralServerError = 500,

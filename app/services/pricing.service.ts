@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
-import * as moment from "moment";
-import { BehaviorSubject, Observable } from "rxjs";
-
-import { AccountResource, BatchSoftwareLicense, Pool, RateCardMeter } from "app/models";
+import { ArmBatchAccount, BatchSoftwareLicense, Pool, RateCardMeter } from "app/models";
 import { BatchPricing, OSPricing, OsType, SoftwarePricing, VMPrices } from "app/services/pricing";
 import { PoolPrice, PoolPriceOptions, PoolUtils, log } from "app/utils";
-import { AccountService } from "./account.service";
+import * as moment from "moment";
+import { BehaviorSubject, Observable, forkJoin, of } from "rxjs";
+import { catchError, filter, flatMap, map, share, take } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
+import { BatchAccountService } from "./batch-account";
 import { LocalFileStorage } from "./local-file-storage.service";
 import { VmSizeService } from "./vm-size.service";
 
@@ -69,9 +69,9 @@ export class PricingService {
         private arm: ArmHttpService,
         private vmSizeService: VmSizeService,
         private localFileStorage: LocalFileStorage,
-        private accountService: AccountService) {
+        private accountService: BatchAccountService) {
 
-        this.pricing = this._pricingMap.filter(x => x !== null);
+        this.pricing = this._pricingMap.pipe(filter(x => x !== null));
     }
 
     public init() {
@@ -115,14 +115,14 @@ export class PricingService {
         const os = PoolUtils.isWindows(pool) ? "windows" : "linux";
         const vmSizeObs = this.vmSizeService.get(pool.vmSize);
         const priceObs = this.getVmPrices(os, pool.vmSize);
-        return Observable.forkJoin(vmSizeObs, priceObs).map(([vmSpec, cost]) => {
+        return forkJoin(vmSizeObs, priceObs).pipe(map(([vmSpec, cost]) => {
             const softwarePricing = this._pricingMap.value.softwares;
             return PoolUtils.computePoolPrice(pool, vmSpec, cost, softwarePricing, options);
-        });
+        }));
     }
 
     private _loadPricingFromApi() {
-        const obs = this._loadRateCardMeters().map((x) => this._processMeters(x));
+        const obs = this._loadRateCardMeters().pipe(map(x => this._processMeters(x)));
         obs.subscribe((map) => {
             this._savePricing(map);
             this._pricingMap.next(map);
@@ -131,12 +131,19 @@ export class PricingService {
     }
 
     private _loadRateCardMeters(): Observable<RateCardMeter[]> {
-        return this.accountService.currentAccount.flatMap((account) => {
-            const { subscription } = account;
+        return this.accountService.currentAccount.pipe(
+            flatMap((account) => {
+                if (account instanceof ArmBatchAccount) {
+                    const { subscription } = account;
 
-            const url = `${commerceUrl(subscription.subscriptionId)}/RateCard?$filter=${rateCardFilter()}`;
-            return this.arm.get(url).map((response) => response.json().Meters);
-        }).share();
+                    const url = `${commerceUrl(subscription.subscriptionId)}/RateCard?$filter=${rateCardFilter()}`;
+                    return this.arm.get(url).pipe(map((response) => response.json().Meters));
+                } else {
+                    return of([]);
+                }
+            }),
+            share(),
+        );
     }
 
     private _processMeters(meters: RateCardMeter[]): BatchPricing {
@@ -185,22 +192,25 @@ export class PricingService {
     }
 
     private _loadPricingFromStorage(): Observable<BatchPricing> {
-        return this.localFileStorage.get(pricingFilename).map((data: { lastSync: string, map: any }) => {
-            // If wrong format
-            if (!data.lastSync || !data.map) {
-                return null;
-            }
+        return this.localFileStorage.get(pricingFilename).pipe(
+            map((data: { lastSync: string, map: any }) => {
+                // If wrong format
+                if (!data.lastSync || !data.map) {
+                    return null;
+                }
 
-            const lastSync = moment(data.lastSync);
-            const weekOld = moment().subtract(7, "days");
-            if (lastSync.isBefore(weekOld)) {
-                return null;
-            }
-            return BatchPricing.fromJS(data.map);
-        }).catch((error) => {
-            log.error("Error retrieving pricing locally", error);
-            return Observable.of(null);
-        });
+                const lastSync = moment(data.lastSync);
+                const weekOld = moment().subtract(7, "days");
+                if (lastSync.isBefore(weekOld)) {
+                    return null;
+                }
+                return BatchPricing.fromJS(data.map);
+            }),
+            catchError((error) => {
+                log.error("Error retrieving pricing locally", error);
+                return of(null);
+            }),
+        );
     }
 
     private _savePricing(map: BatchPricing) {
@@ -219,11 +229,20 @@ export class PricingService {
      * Wait for the prices and account to be loaded and returns callback
      * @param callback Callback when account and prices are loaded
      */
-    private _getPrice<T>(callback: (account: AccountResource, pricing: BatchPricing) => T) {
-        return this.accountService.currentAccount.take(1).flatMap((account) => {
-            return this.pricing.take(1).map((map) => {
-                return callback(account, map);
-            });
-        }).share();
+    private _getPrice<T>(callback: (account: ArmBatchAccount, pricing: BatchPricing) => T) {
+        return this.accountService.currentAccount.pipe(
+            take(1),
+            flatMap((account) => {
+                if (account instanceof ArmBatchAccount) {
+                    return this.pricing.pipe(
+                        take(1),
+                        map(map => callback(account, map)),
+                    );
+                } else {
+                    return of(null);
+                }
+            }),
+            share(),
+        );
     }
 }

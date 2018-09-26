@@ -1,16 +1,16 @@
 <bl-focus-section *ngIf="storageAccountId">
-    <bl-quick-list *ngIf="quicklist" [status]="status" [(activeItem)]="activeItem" [(selection)]="selection" (scrollBottom)="onScrollToBottom()" [commands]="commands">
-        <bl-quick-list-item *ngFor="let container of containers;trackBy: trackFileGroup" [link]="['/data/', dataSource, 'containers', container.id]"
-            [key]="container.id">
-            <bl-quick-list-item-status [status]="containerStatus(container)">
-            </bl-quick-list-item-status>
-
-            <div bl-quick-list-item-title>{{container.name}}</div>
-            <div bl-quick-list-item-field>{{container.lease?.state}}</div>
-            <div bl-quick-list-item-preview>
-                <bl-file-group-preview></bl-file-group-preview>
-            </div>
-        </bl-quick-list-item>
+    <bl-quick-list *ngIf="quicklist"
+        [data]="containers"
+        [status]="status"
+        [(activeItem)]="activeItem"
+        [(selection)]="selection"
+        [commands]="commands"
+        (scrollBottom)="onScrollToBottom()">
+        <ng-container *blQuickListRowStatus="let container">
+            <bl-quick-list-item-status [status]="containerStatus(container)"></bl-quick-list-item-status>
+        </ng-container>
+        <ng-container *blQuickListRowTitle="let container">{{container.id}}</ng-container>
+        <ng-container *blQuickListRowState="let container">{{container.lease?.state}}</ng-container>
     </bl-quick-list>
 
     <bl-table *ngIf="!quicklist"

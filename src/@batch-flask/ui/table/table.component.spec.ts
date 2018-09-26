@@ -16,8 +16,8 @@ import {
     TableHeadComponent,
 } from "@batch-flask/ui/table";
 import { TableRowRenderComponent } from "@batch-flask/ui/table/table-row-render";
+import { VirtualScrollTestingModule } from "@batch-flask/ui/testing";
 import { click, dblclick, mousedown } from "test/utils/helpers";
-import { virtualScrollMockComponents } from "test/utils/mocks/components";
 
 const sizeA = { id: "size_a", name: "Size A", numberOfCores: 1, resourceDiskSizeInMB: 1000 };
 const sizeB = { id: "size_b", name: "Size B", numberOfCores: 8, resourceDiskSizeInMB: 2000 };
@@ -39,11 +39,11 @@ class BaseTestComponent {
                 <div *blHeadCellDef>Name</div>
                 <div *blCellDef="let size">{{size.name}}</div>
             </bl-column>
-            <bl-column name="cores" [sortable]="true">
+            <bl-column name="cores">
                 <div *blHeadCellDef>Cores</div>
                 <div *blCellDef="let size">{{size.numberOfCores}}</div>
             </bl-column>
-            <bl-column name="resourceDiskSizeInMB" [sortable]="true">
+            <bl-column name="resourceDiskSizeInMB">
                 <div *blHeadCellDef>Disk</div>
                 <div *blCellDef="let size">{{size.resourceDiskSizeInMB}}MB</div>
             </bl-column>
@@ -52,8 +52,9 @@ class BaseTestComponent {
 })
 class TestComponent extends BaseTestComponent {
     public tableConfig = {
-        values: {
+        sorting: {
             cores: (size) => size.numberOfCores,
+            resourceDiskSizeInMB: true,
         },
     };
 }
@@ -70,7 +71,7 @@ describe("TableComponent", () => {
 
     function setup(component) {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, BrowserModule, MaterialModule],
+            imports: [RouterTestingModule, BrowserModule, MaterialModule, VirtualScrollTestingModule],
             declarations: [
                 TableColumnComponent,
                 TableComponent,
@@ -79,7 +80,6 @@ describe("TableComponent", () => {
                 TableRowRenderComponent,
                 TableHeadCellComponent,
                 TableHeadComponent,
-                ...virtualScrollMockComponents,
                 component,
             ],
             providers: [

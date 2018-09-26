@@ -1,46 +1,10 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "target": "ES6",
     "module": "commonjs",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "es6",
-      "es2015",
-      "es2016",
-      "es2017"
-    ],
-    "removeComments": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "noImplicitThis": true,
-    "noImplicitAny": false,
-    "moduleResolution": "node",
-    "listEmittedFiles": false, // debug option
-    "listFiles": false, // debug option
     "outDir": "build",
-    "baseUrl": ".",
-    "paths": {
-      "*": [
-        "src/*"
-      ]
-    },
-    "types": [
-      "node",
-      "electron",
-      "jasmine",
-      "hammerjs",
-      "moment-duration-format"
-    ],
-    "typeRoots": [
-      "./node_modules/@types"
-    ]
   },
-  "files": [
-    "./definitions/index.d.ts"
-  ],
   // This is not actually used for building but to let the editor know what files use this config
   "include": [
     "./src/client/**/*.ts",

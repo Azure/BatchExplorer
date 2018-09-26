@@ -28,6 +28,5 @@ export * from "./task-container-execution-info-decorator";
 export * from "./task-container-settings-decorator";
 export * from "./task-decorator";
 export * from "./task-execution-info-decorator";
-export * from "./task-scheduling-policy-decorator";
 export * from "./virtual-machine-configuration-decorator";
 export * from "./windows-configuration-decorator";

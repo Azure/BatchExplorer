@@ -1,7 +1,6 @@
 <bl-dropdown class="account-dropdown" [footer]="true" align="left">
     <div bl-dropdown-btn
-        [class.invalid]="currentAccountValid === status.Invalid"
-        [attr.title]="currentAccountInvalidError">
+        [class.invalid]="currentAccountValid === status.Invalid">
         {{selectedAccountAlias}}
 
         <i *ngIf="currentAccountValid === status.Invalid" class="fa fa-warning"></i>
@@ -17,8 +16,13 @@
              [class.selected]="account.id === selectedId"
              [title]="account.id">
             <div class="main">
-                <div class="alias">{{account.name}}</div>
-                <div class="url">{{account.properties.accountEndpoint}}</div>
+                <div class="alias">
+                    {{account.displayName}}
+                    <ng-container *ngIf="account.name !== account.displayName">
+                        ({{account.name}})
+                    </ng-container>
+                </div>
+                <div class="url">{{account.url}}</div>
             </div>
             <div *ngIf="account.id === selectedId" class="extra">
                 <i class="fa fa-check"></i>

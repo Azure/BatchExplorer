@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/
 import { MatDialogRef } from "@angular/material";
 
 import { autobind } from "@batch-flask/core";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
-import { DeleteJobScheduleAction } from "app/components/job-schedule/action";
+import { Activity, ActivityService } from "@batch-flask/ui";
 import { JobScheduleService } from "app/services";
 
 @Component({
@@ -23,14 +22,18 @@ export class DeleteJobScheduleDialogComponent {
     constructor(
         public dialogRef: MatDialogRef<DeleteJobScheduleDialogComponent>,
         private jobScheduleService: JobScheduleService,
-        private taskManager: BackgroundTaskService,
+        private activityService: ActivityService,
         private changeDetector: ChangeDetectorRef) {
     }
 
     @autobind()
     public destroyJobSchedule() {
-        const task = new DeleteJobScheduleAction(this.jobScheduleService, [this.jobScheduleId]);
-        task.startAndWaitAsync(this.taskManager);
-        return task.actionDone;
+        const initializer = () => {
+            return this.jobScheduleService.delete(this.jobScheduleId);
+        };
+
+        const activity = new Activity(`Deleting Job Schedule: '${this.jobScheduleId}'`, initializer);
+        this.activityService.exec(activity);
+        return activity.done;
     }
 }

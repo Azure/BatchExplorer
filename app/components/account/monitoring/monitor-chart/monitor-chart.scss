@@ -6,6 +6,7 @@ bl-monitor-chart {
     width: 100%;
 
     display: flex;
+    position: relative;
     flex-direction: column;
 
     > .header {

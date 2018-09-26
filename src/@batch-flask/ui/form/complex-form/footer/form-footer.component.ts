@@ -2,12 +2,12 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output,
 } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
-
+import { AsyncTask, ServerError } from "@batch-flask/core";
 import { FormPageComponent } from "@batch-flask/ui/form/form-page";
+import { Subscription } from "rxjs";
+import { distinctUntilChanged } from "rxjs/operators";
 import { ComplexFormComponent, ComplexFormConfig } from "../complex-form.component";
 
-import { AsyncTask, ServerError } from "@batch-flask/core";
-import { Subscription } from "rxjs";
 import "./form-footer.scss";
 
 export interface FormActionConfig {
@@ -77,7 +77,7 @@ export class FormFooterComponent implements OnChanges, OnDestroy {
                 this._statusSub.unsubscribe();
             }
             if (this.currentPage && this.currentPage.formGroup) {
-                this._statusSub = this.currentPage.formGroup.statusChanges.distinctUntilChanged()
+                this._statusSub = this.currentPage.formGroup.statusChanges.pipe(distinctUntilChanged())
                     .subscribe((status) => {
                         this.changeDetector.markForCheck();
                     });

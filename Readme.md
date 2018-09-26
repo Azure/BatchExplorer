@@ -1,5 +1,5 @@
 # BatchExplorer
-[![VSTS Build Status](https://azurebatch.visualstudio.com/3426cbfe-4c9a-4da4-88df-70f025a77017/_apis/build/status/8)](https://azurebatch.visualstudio.com/BatchExplorer/_build?definitionId=8)
+[![VSTS Build Status](https://dev.azure.com/azurebatch/BatchExplorer/_apis/build/status/BatchExplorer%20-%20CI)](https://dev.azure.com/azurebatch/BatchExplorer/_build/latest?definitionId=8)
 [![Build Status](https://travis-ci.org/Azure/BatchExplorer.svg?branch=master)](https://travis-ci.org/Azure/BatchExplorer)
 [![codecov](https://codecov.io/gh/Azure/BatchExplorer/branch/master/graph/badge.svg)](https://codecov.io/gh/Azure/BatchExplorer)
 
@@ -66,6 +66,13 @@ npm run electron
 
 ## Developers
 [Dev docs](docs/readme.md)
+
+## Data/Telemetry.
+
+Batch Explorer collects usage data and sends it to Microsoft to help improve our products and services. Read Microsoft's [privacy statement to learn more.](https://privacy.microsoft.com/en-us/privacystatement)
+
+Please go see [How to disable crash reporting and telemetry](https://github.com/Azure/BatchExplorer/wiki/Crash-reporting-and-telemetry#how-to-disable-crash-reporting-and-telemetry) to disable it
+
 
 ## License
 Copyright (c) Microsoft Corporation. All rights reserved.

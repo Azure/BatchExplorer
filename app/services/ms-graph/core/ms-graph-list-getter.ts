@@ -1,17 +1,17 @@
 import { HttpParams } from "@angular/common/http";
 import { Type } from "@angular/core";
+import {
+    ContinuationToken, HttpRequestOptions, ListGetter, ListGetterConfig, ListOptions, Record,
+} from "@batch-flask/core";
 import { Observable } from "rxjs";
-
-import { HttpRequestOptions } from "@batch-flask/core";
-import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
-import { ContinuationToken, ListOptions } from "app/services/core/data/list-options";
+import { map, share } from "rxjs/operators";
 import { MsGraphHttpService } from "./ms-graph-http.service";
 
-export interface MsGraphListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
+export interface MsGraphListConfig<TEntity extends Record<any>, TParams> extends ListGetterConfig<TEntity, TParams> {
     uri: (params: TParams, options: any) => string;
 }
 
-export class MsGraphListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams> {
+export class MsGraphListGetter<TEntity extends Record<any>, TParams> extends ListGetter<TEntity, TParams> {
     private _provideUri: (params: TParams, options: any) => string;
 
     constructor(
@@ -26,11 +26,17 @@ export class MsGraphListGetter<TEntity, TParams> extends ListGetter<TEntity, TPa
     protected list(params: TParams, options: ListOptions): Observable<any> {
         return this.msGraph.get<any>(
             this._provideUri(params, options),
-            this._requestOptions(options)).map(x => this._processMsGraphResponse(x)).share();
+            this._requestOptions(options)).pipe(
+                map(x => this._processMsGraphResponse(x)),
+                share(),
+            );
     }
 
     protected listNext(token: ContinuationToken): Observable<any> {
-        return this.msGraph.get<any>(token.nextLink).map(x => this._processMsGraphResponse(x)).share();
+        return this.msGraph.get<any>(token.nextLink).pipe(
+            map(x => this._processMsGraphResponse(x)),
+            share(),
+        );
     }
 
     private _processMsGraphResponse(response: { value: TEntity[], "@odata.nextLink": string }) {

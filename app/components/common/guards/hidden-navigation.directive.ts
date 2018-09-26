@@ -1,7 +1,7 @@
 import { Directive, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { AccountService } from "app/services";
+import { BatchAccountService } from "app/services";
 
 @Directive({
     selector: "[blHiddenIfNoAccount]",
@@ -12,7 +12,7 @@ export class HiddenIfNoAccountDirective implements OnInit, OnDestroy  {
     constructor(
         private templateRef: TemplateRef<any>,
         private viewContainer: ViewContainerRef,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
     ) {
     }
 

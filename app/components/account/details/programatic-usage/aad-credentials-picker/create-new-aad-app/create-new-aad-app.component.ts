@@ -1,13 +1,22 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
-import { HttpCode, ServerError,  autobind } from "@batch-flask/core";
+import { HttpCode, ServerError, autobind } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
-import { AccountResource, RoleDefinition } from "app/models";
+import { BatchAccount, RoleDefinition } from "app/models";
 import { AADApplication, PasswordCredential, ServicePrincipal } from "app/models/ms-graph";
 import { ResourceAccessService } from "app/services";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
-import { Observable } from "rxjs";
+import { Observable, forkJoin, from, of, throwError, timer } from "rxjs";
+import {
+    catchError,
+    concatMap, delay,
+    flatMap,
+    last,
+    map,
+    shareReplay,
+    tap,
+} from "rxjs/operators";
 import "./create-new-aad-app.scss";
 
 export interface AppCreatedEvent {
@@ -22,7 +31,7 @@ const maxRetry = 36;
     templateUrl: "create-new-aad-app.html",
 })
 export class CreateNewAadAppComponent {
-    @Input() public account: AccountResource;
+    @Input() public account: BatchAccount;
     @Output() public appCreated = new EventEmitter<AppCreatedEvent>();
     @Output() public cancel = new EventEmitter<void>();
 
@@ -53,9 +62,12 @@ export class CreateNewAadAppComponent {
         const obs = this.aadApplicationService.create({
             name: value.name,
             secret: value.secretValue,
-        }).flatMap((application) => {
-            return this._givePermission(application).map(() => application);
-        }).shareReplay(1);
+        }).pipe(
+            flatMap((application) => {
+                return this._givePermission(application).pipe(map(() => application));
+            }),
+            shareReplay(1),
+        );
         obs.subscribe((application) => {
             const secret = application.passwordCredentials.first();
             this.appCreated.emit({ application, secret });
@@ -71,11 +83,15 @@ export class CreateNewAadAppComponent {
     private _givePermission(application: AADApplication) {
         this.createStatus = "Creating Service Principal";
 
-        const servicePrincipalObs = this.servicePrincipalService.create({ appId: application.id }).delay(1000);
+        const servicePrincipalObs = this.servicePrincipalService.create({ appId: application.id }).pipe(delay(1000));
         const roleObs = this.resourceAccessService.getRoleByName(this.account.id, "Contributor");
-        return Observable.forkJoin(servicePrincipalObs, roleObs).flatMap(([servicePrincipal, roleDefinition]) => {
-            return this._assignRoles(servicePrincipal, roleDefinition);
-        }).do(() => this.createStatus = "AAD Application created successfully.").shareReplay(1);
+        return forkJoin(servicePrincipalObs, roleObs).pipe(
+            flatMap(([servicePrincipal, roleDefinition]) => {
+                return this._assignRoles(servicePrincipal, roleDefinition);
+            }),
+            tap(() => this.createStatus = "AAD Application created successfully."),
+            shareReplay(1),
+        );
     }
 
     private _assignRoles(servicePrincipal: ServicePrincipal, roleDefinition: RoleDefinition) {
@@ -84,31 +100,37 @@ export class CreateNewAadAppComponent {
             resources.push(this.storageAccountId);
         }
 
-        return Observable.from(resources).concatMap((resourceId) => {
-            this.createStatus = "Giving permissions";
-            return this._try("Giving permissions", () => {
-                return this.resourceAccessService.createAssignment(resourceId, servicePrincipal.id, roleDefinition.id);
-            });
-        }).last().shareReplay(1);
+        return from(resources).pipe(
+            concatMap((resourceId) => {
+                this.createStatus = "Giving permissions";
+                return this._try("Giving permissions", () => {
+                    return this.resourceAccessService.createAssignment(resourceId,
+                        servicePrincipal.id, roleDefinition.id);
+                });
+            }),
+            last(),
+            shareReplay(1),
+        );
     }
 
     private _try(name: string, callback: () => Observable<any>, retryCount = 0) {
-        return callback().catch((error: ServerError) => {
+        return callback().pipe(catchError((error: ServerError) => {
             if (!(error.status === HttpCode.BadRequest && error.code === "PrincipalNotFound")) {
-                return Observable.throw(error);
+                return throwError(error);
             }
             if (retryCount < maxRetry) {
                 retryCount++;
                 this.createStatus = `${name}: Service Principal is not replicated yet trying again in 5s`
                     + ` (Try ${retryCount + 1}/${maxRetry})`;
                 log.info(this.createStatus);
-                return Observable.timer(5000)
-                    .flatMap(() => this._try(name, callback, retryCount))
-                    .shareReplay(1);
+                return timer(5000).pipe(
+                    flatMap(() => this._try(name, callback, retryCount)),
+                    shareReplay(1),
+                );
             } else {
                 // Make it like it succeeded. User can add permissions later
-                return Observable.of(null);
+                return of(null);
             }
-        });
+        }));
     }
 }

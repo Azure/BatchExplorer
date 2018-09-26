@@ -1,24 +1,6 @@
 // tslint:disable:variable-name
 
-export const caching = {
-    /**
-     * Max number of filtered query that it should remember.
-     * It will always keep the query for no query and that last n queries with a filter
-     */
-    maxQuery: 1,
-    /**
-     * Max number of cache a targeted cache would keep at the same time
-     */
-    maxTargetedCache: 2,
-};
-
 export const badHttpCodeMaxRetryCount = 5;
-
-export const FileUrlStrings = {
-    Job: "jobs",
-    Pool: "pools",
-    Separator: "/",
-};
 
 export const FileSourceTypes = {
     Job: "job",
@@ -95,6 +77,16 @@ export const localStorageKey = {
      * Last selected storage account
      */
     lastStorageAccount: "last_storage_account",
+
+    /**
+     * Telemetry enabled
+     */
+    telemetryEnabled: "telemetry_enabled",
+
+    /**
+     * Save a randomly generated machine id
+     */
+    machineId: "machine_id",
 };
 
 export const ApiVersion = {
@@ -109,12 +101,15 @@ export const ApiVersion = {
     monitor: "2017-05-01-preview",
     network: "2017-10-01",
     classicNetwork: "2015-12-01",
-    batchService: "2018-03-01.6.1",
+    batchService: "2018-08-01.7.0",
 };
 
 export const ExternalLinks = {
     supportRequest: "https://portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/newsupportrequest",
     setupStorageAccount: "https://portal.azure.com/#resource{0}/storageAccount",
+    license: "https://azure.github.io/BatchExplorer/EULA.html",
+    privacyStatement: "https://privacy.microsoft.com/en-us/privacystatement",
+    submitIssue: "https://privacy.microsoft.com/en-us/privacystatement",
 };
 
 export const ODataFields = {
@@ -180,6 +175,7 @@ export const IpcEvent = {
     },
     launchApplication: "LAUNCH_APPLICATION",
     logoutAndLogin: "LOGOUT_AND_LOGIN",
+    sendTelemetry: "SEND_TELEMETRY",
 };
 
 export const ExternalApplication = {
@@ -209,4 +205,21 @@ export const KnownQueryParameters = {
     inputParameter: "input-parameter",
     assetContainer: "asset-container",
     assetPaths: "asset-paths",
+};
+
+const cdn = "https://batchexplorer.azureedge.net";
+
+export const AutoUpdateUrls = {
+    stable: `${cdn}/stable`,
+    insider: `${cdn}/insider`,
+    testing: `${cdn}/test`,
+};
+
+/**
+ * All telemetry event should be here to keep track of it
+ */
+export const TelemetryEvents = {
+    applicationStart: "Application start",
+    disableTelemetry: "Disable telemetry",
+    navigate: "Navigate",
 };

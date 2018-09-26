@@ -1,4 +1,5 @@
-import { Model, Prop, Record } from "@batch-flask/core";
+import { ListProp, Model, Prop, Record } from "@batch-flask/core";
+import { List } from "immutable";
 
 export enum InboundEndpointProtocol {
     TCP = "tcp",
@@ -25,10 +26,6 @@ export interface InboundNATPoolAttributes {
     protocol: InboundEndpointProtocol;
 }
 
-export interface PoolEndpointConfigurationAttributes {
-    inboundNATPools: InboundNATPoolAttributes[];
-}
-
 @Model()
 export class NetworkSecurityGroupRule extends Record<NetworkSecurityGroupRuleAttributes> {
     @Prop() public access: NetworkSecurityGroupRuleAccess;
@@ -42,11 +39,18 @@ export class InboundNATPool extends Record<InboundNATPoolAttributes> {
     @Prop() public frontendPortRangeEnd: number;
     @Prop() public frontendPortRangeStart: number;
     @Prop() public name: string;
-    @Prop() public networkSecurityGroupRules: NetworkSecurityGroupRule[];
+    @ListProp(NetworkSecurityGroupRule) public networkSecurityGroupRules: List<NetworkSecurityGroupRule> = List([]);
     @Prop() public protocol: InboundEndpointProtocol;
 }
 
+export interface PoolEndpointConfigurationAttributes {
+    inboundNATPools: InboundNATPoolAttributes[];
+}
+
+/**
+ * Class for displaying The network configuration for the pool.
+ */
 @Model()
 export class PoolEndpointConfiguration extends Record<PoolEndpointConfigurationAttributes> {
-    @Prop() public inboundNATPools: InboundNATPool[];
+    @ListProp(InboundNATPool) public inboundNATPools: List<InboundNATPool> = List([]);
 }

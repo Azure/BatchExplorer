@@ -1,0 +1,123 @@
+<bl-entity-configuration [value]="task">
+    <bl-property-list>
+        <bl-property-group [label]="'general' | i18n" class="wide">
+            <bl-text-property [label]="'id.label' | i18n" [value]="decorator.id"></bl-text-property>
+            <bl-text-property [label]="'displayName.label' | i18n" [value]="decorator.displayName"></bl-text-property>
+            <bl-text-property [label]="'commandLine.label' | i18n" [value]="decorator.commandLine" [wrap]="true"></bl-text-property>
+            <bl-text-property [label]="'state.label' | i18n" [value]="decorator.state"></bl-text-property>
+            <bl-text-property [label]="'previousState.label' | i18n" [value]="decorator.previousState"></bl-text-property>
+            <bl-text-property [label]="'creationTime.label' | i18n" [value]="decorator.creationTime"></bl-text-property>
+            <bl-text-property [label]="'lastModified.label' | i18n" [value]="decorator.lastModified"></bl-text-property>
+            <bl-text-property [label]="'userIdentity.label' | i18n" [value]="decorator.userIdentitySummary"></bl-text-property>
+            <bl-text-property [label]="'stateTransitionTime.label' | i18n" [value]="decorator.stateTransitionTime"></bl-text-property>
+            <bl-text-property [label]="'previousStateTransitionTime.label' | i18n" [value]="decorator.previousStateTransitionTime"></bl-text-property>
+            <bl-text-property [label]="'exitConditions.label' | i18n" *ngIf="!task.exitConditions" value="None"></bl-text-property>
+            <bl-text-property [label]="'affinityId.label' | i18n" *ngIf="task.affinityInfo" [value]="task.affinityInfo?.affinityId"></bl-text-property>
+
+            <bl-table-property *ngIf="task.outputFiles.size > 0" [label]="'outputFiles.label' | i18n">
+                <bl-table-property-header>
+                    <div tp-column>{{'outputFiles.pattern' | i18n}}</div>
+                    <div tp-column>{{'outputFiles.destination' | i18n}}</div>
+                    <div tp-column>{{'outputFiles.uploadWhen' | i18n}}</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let file of task.outputFiles">
+                    <bl-tp-cell [value]="file.filePattern"></bl-tp-cell>
+                    <bl-tp-cell [value]="file.destination.container.containerUrl"></bl-tp-cell>
+                    <bl-tp-cell [value]="file.uploadOptions.uploadCondition"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+        </bl-property-group>
+
+        <bl-property-group [label]="'applicationPackages.label' | i18n" class="wide" [collapsed]="true">
+            <div collapsed-preview>
+                <span>{{'applicationPackages.summary' | i18n: {count: appPackages?.size} }}</span>
+            </div>
+            <bl-table-property *ngIf="appPackages.size > 0" label="Package references">
+                <bl-table-property-header>
+                    <div tp-column>{{'applicationPackages.application' | i18n}}</div>
+                    <div tp-column>{{'applicationPackages.version' | i18n}}</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let package of appPackages">
+                    <bl-tp-cell [value]="package.applicationId"></bl-tp-cell>
+                    <bl-tp-cell [value]="package.version"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+            <bl-no-item [itemCount]="appPackages.size" [slimline]="true">
+                <span no-filter>{{'applicationPackages.none' | i18n}}</span>
+            </bl-no-item>
+        </bl-property-group>
+
+        <bl-property-group [label]="'computeNode' | i18n" class="wide" [collapsed]="true">
+            <bl-link-property [label]="'pool.label' | i18n" [value]="nodeInfo.poolId" [link]="['/pools/', nodeInfo.poolId]"></bl-link-property>
+            <bl-link-property [label]="'nodeId.label' | i18n" [value]="nodeInfo.nodeId" [link]="['/pools/', nodeInfo.poolId, 'nodes', nodeInfo.nodeId]"></bl-link-property>
+            <bl-text-property [label]="'nodeUrl.label' | i18n" [value]="nodeInfo.nodeUrl"></bl-text-property>
+            <bl-text-property [label]="'affinityId.label' | i18n" [value]="nodeInfo.affinityId"></bl-text-property>
+            <bl-text-property [label]="'taskRootDir.label' | i18n" [value]="nodeInfo.taskRootDirectory"></bl-text-property>
+            <bl-text-property [label]="'taskRootDirUrl.label' | i18n" [value]="nodeInfo.taskRootDirectoryUrl"></bl-text-property>
+        </bl-property-group>
+
+        <bl-property-group label="Container settings" class="wide" [collapsed]="true">
+            <ng-container *ngIf="containerSettings.propertyCount">
+                <bl-text-property label="Image name" [value]="containerSettings.imageName"></bl-text-property>
+                <bl-text-property label="Container run option" [value]="containerSettings.containerRunOptions"></bl-text-property>
+                <bl-text-property label="Registry server" [value]="containerSettings.registryServer"></bl-text-property>
+                <bl-text-property label="Registry username" [value]="containerSettings.registryUsername"></bl-text-property>
+            </ng-container>
+            <bl-no-item [itemCount]="containerSettings.propertyCount" [slimline]="true">
+                <span no-filter>This task contains no container settings</span>
+            </bl-no-item>
+        </bl-property-group>
+
+        <bl-property-group label="Constraints" class="wide" [collapsed]="true">
+            <bl-text-property label="Max task retry count" [value]="constraints.maxTaskRetryCount"></bl-text-property>
+            <bl-text-property label="Max wall-clock time" [value]="constraints.maxWallClockTime"></bl-text-property>
+            <bl-text-property label="Retention time" [value]="constraints.retentionTime"></bl-text-property>
+        </bl-property-group>
+
+        <bl-property-group label="Environment settings" class="wide" [collapsed]="true">
+            <div collapsed-preview>
+                <span>{{environmentSettings?.size}} environment settings</span>
+            </div>
+            <bl-text-property *ngFor="let setting of environmentSettings" label="{{setting.name}}" [value]="setting.value"></bl-text-property>
+            <bl-no-item [itemCount]="environmentSettings.size" [slimline]="true">
+                <span no-filter>This task contains no environment settings</span>
+            </bl-no-item>
+        </bl-property-group>
+
+        <bl-property-group label="Execution information" class="wide" [collapsed]="true">
+            <div collapsed-preview>
+                <span *ngIf="!executionInfo.runtime">Task not started</span>
+                <span *ngIf="executionInfo.runtime && !task?.executionInfo?.endTime">Currently running for: {{ executionInfo.runtime }}</span>
+                <span *ngIf="task?.executionInfo?.endTime">Completed in: {{ executionInfo.runtime }}</span>
+            </div>
+
+            <bl-text-property label="Start time" [value]="executionInfo.startTime"></bl-text-property>
+            <bl-text-property label="End time" [value]="executionInfo.endTime"></bl-text-property>
+            <bl-text-property label="Execution time" [value]="executionInfo.runtime"></bl-text-property>
+            <bl-text-property label="Exit code" [value]="executionInfo.exitCode"></bl-text-property>
+            <bl-text-property label="Retry count" [value]="executionInfo.retryCount"></bl-text-property>
+            <bl-text-property label="Last retry time" [value]="executionInfo.lastRetryTime" *ngIf="executionInfo.retryCount > 0"></bl-text-property>
+            <bl-text-property label="Requeue count" [value]="executionInfo.requeueCount"></bl-text-property>
+            <bl-text-property label="Last requeue time" [value]="executionInfo.lastRequeueTime" *ngIf="executionInfo.requeueCount > 0"></bl-text-property>
+            <bl-text-property label="Container ID" [value]="executionInfo.containerInfo.containerId" *ngIf="executionInfo.containerInfo?.containerId"></bl-text-property>
+            <bl-text-property label="Container state" [value]="executionInfo.containerInfo.state" *ngIf="executionInfo.containerInfo?.state"></bl-text-property>
+            <bl-text-property label="Container error" [value]="executionInfo.containerInfo.error" *ngIf="executionInfo.containerInfo?.error"></bl-text-property>
+        </bl-property-group>
+
+        <bl-property-group [label]="'exitConditions.label' | i18n" [warningMessage]="exitConditionWarningMessage" [collapsed]="true">
+            <bl-text-property [label]="'exitConditions.noOpExitCodes' | i18n" [value]="exitConditionData.noAction.join(', ')"></bl-text-property>
+            <bl-text-property [label]="'exitConditions.terminateJobExitCodes' | i18n" [value]="exitConditionData.terminateJob.join(', ')"></bl-text-property>
+            <bl-text-property [label]="'exitConditions.onSchedulingError' | i18n" [value]="exitConditionData.preProcessingError"></bl-text-property>
+            <bl-text-property [label]="'exitConditions.fileUploadError' | i18n" [value]="exitConditionData.fileUploadError"></bl-text-property>
+            <bl-text-property *ngIf="exitConditionData.default" [label]="'exitConditions.default' | i18n" [value]="exitConditionData.default"></bl-text-property>
+        </bl-property-group>
+
+        <bl-property-group [label]="'multiInstanceSettings.label' | i18n" *ngIf="task.multiInstanceSettings" [collapsed]="true">
+            <div collapsed-preview>
+                {{task.multiInstanceSettings.numberOfInstances}} subtasks. Running: <i>{{task.multiInstanceSettings.coordinationCommandLine}}</i>
+            </div>
+            <bl-text-property [label]="'multiInstanceSettings.coordinationCommandLine.label' | i18n" [value]="task.multiInstanceSettings.coordinationCommandLine" [wrap]="true"></bl-text-property>
+            <bl-text-property [label]="'multiInstanceSettings.numberOfInstances.label' | i18n" [value]="task.multiInstanceSettings.numberOfInstances"></bl-text-property>
+        </bl-property-group>
+    </bl-property-list>
+</bl-entity-configuration>

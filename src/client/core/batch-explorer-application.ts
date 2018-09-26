@@ -1,21 +1,20 @@
-import * as commander from "commander";
-import { app, dialog, ipcMain, session } from "electron";
-import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
-import * as os from "os";
-
 import { Inject, Injectable, InjectionToken, Injector } from "@angular/core";
-import { TranslationsLoaderService } from "@batch-flask/core";
-import { AzureEnvironment, SupportedEnvironments } from "@batch-flask/core/azure-environment";
+import { LocaleService, TelemetryService, TranslationsLoaderService } from "@batch-flask/core";
+import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
-import { LocalDataStore } from "client/core/local-data-store";
-import { setMenu } from "client/menu";
+import { BatchExplorerProperties } from "client/core/properties";
+import { TelemetryManager } from "client/core/telemetry/telemetry-manager";
 import { ManualProxyConfigurationWindow } from "client/proxy/manual-proxy-configuration-window";
 import { ProxyCredentialsWindow } from "client/proxy/proxy-credentials-window";
 import { ProxySettingsManager } from "client/proxy/proxy-settings";
+import * as commander from "commander";
 import { BatchExplorerLink, Constants, Deferred } from "common";
-import {  IpcEvent } from "common/constants";
+import { IpcEvent } from "common/constants";
+import { app, dialog, ipcMain, session } from "electron";
+import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import { ProxyCredentials, ProxySettings } from "get-proxy-settings";
+import * as os from "os";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants as ClientConstants } from "../client-constants";
 import { MainWindow, WindowState } from "../main-window";
@@ -40,16 +39,12 @@ export const AUTO_UPDATER = new InjectionToken("AUTO_UPDATER");
 export class BatchExplorerApplication {
     public authenticationWindow = new AuthenticationWindow(this);
     public recoverWindow = new RecoverWindow(this);
-    public windows = new MainWindowManager(this);
+    public windows: MainWindowManager;
     public pythonServer = new PythonRpcServerProcess();
     public aadService: AADService;
     public state: Observable<BatchExplorerState>;
     public proxySettings: ProxySettingsManager;
 
-    public get azureEnvironment(): AzureEnvironment { return this._azureEnvironment.value; }
-    public azureEnvironmentObs: Observable<AzureEnvironment>;
-
-    private _azureEnvironment = new BehaviorSubject(AzureEnvironment.Azure);
     private _state = new BehaviorSubject<BatchExplorerState>(BatchExplorerState.Loading);
     private _initializer: BatchExplorerInitializer;
     private _currentlyAskingForCredentials: Promise<any>;
@@ -57,19 +52,27 @@ export class BatchExplorerApplication {
     constructor(
         @Inject(AUTO_UPDATER) public autoUpdater: AppUpdater,
         public translationLoader: TranslationsLoaderService,
-        private localStorage: LocalDataStore,
+        public localeService: LocaleService,
         private injector: Injector,
+        public properties: BatchExplorerProperties,
+        private telemetryService: TelemetryService,
+        private telemetryManager: TelemetryManager,
         private ipcMain: BlIpcMain) {
+
+        this.windows = new MainWindowManager(this, this.telemetryManager);
         this.state = this._state.asObservable();
 
         ipcMain.on(IpcEvent.logoutAndLogin, () => {
             return this.logoutAndLogin();
         });
-        this.azureEnvironmentObs = this._azureEnvironment.asObservable();
-        this._loadAzureEnviornment();
     }
 
     public async init() {
+
+        await this.telemetryManager.init();
+
+        this.telemetryService.trackEvent({ name: Constants.TelemetryEvents.applicationStart });
+
         this._initializer = this.injector.get(BatchExplorerInitializer);
         this.aadService = this.injector.get(AADService);
         this.proxySettings = this.injector.get(ProxySettingsManager);
@@ -85,7 +88,6 @@ export class BatchExplorerApplication {
      * Start the app by showing the splash screen
      */
     public async start() {
-        setMenu(this);
         const appReady = new Deferred();
         const loggedIn = new Deferred();
         this.pythonServer.start();
@@ -140,8 +142,7 @@ export class BatchExplorerApplication {
     public async updateAzureEnvironment(env: AzureEnvironment) {
         await this.aadService.logout();
         this.windows.closeAll();
-        await this.localStorage.setItem(Constants.localStorageKey.azureEnvironment, env.id);
-        this._azureEnvironment.next(env);
+        this.properties.updateAzureEnvironment(env);
         await this.aadService.login();
         this.windows.openNewWindow();
     }
@@ -211,11 +212,6 @@ export class BatchExplorerApplication {
         return autoUpdater.checkForUpdates();
     }
 
-    public restart() {
-        app.relaunch();
-        app.exit();
-    }
-
     public askUserForProxyCredentials(): Promise<ProxyCredentials> {
         log.warn("Asking for proxy credentials");
         if (this._currentlyAskingForCredentials) { return this._currentlyAskingForCredentials; }
@@ -274,10 +270,14 @@ export class BatchExplorerApplication {
         process.on("uncaughtException" as any, (error: Error) => {
             log.error("There was a uncaught exception", error);
             this.recoverWindow.createWithError(error.message);
+            this.telemetryService.trackError(error);
+            this.telemetryService.flush(true);
         });
 
         process.on("unhandledRejection", r => {
             log.error("Unhandled promise error:", r);
+            this.telemetryService.trackError(r);
+            this.telemetryService.flush(true);
         });
         app.on("window-all-closed", () => {
             // Required or electron will close when closing last open window before next one open
@@ -329,12 +329,5 @@ export class BatchExplorerApplication {
             details.requestHeaders["User-Agent"] = userAgent;
             callback({ cancel: false, requestHeaders: details.requestHeaders });
         });
-    }
-
-    private async _loadAzureEnviornment() {
-        const initialEnv = await this.localStorage.getItem(Constants.localStorageKey.azureEnvironment);
-        if (initialEnv in SupportedEnvironments) {
-            this._azureEnvironment.next(SupportedEnvironments[initialEnv]);
-        }
     }
 }

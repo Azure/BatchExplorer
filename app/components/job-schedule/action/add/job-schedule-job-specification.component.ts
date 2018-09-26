@@ -8,18 +8,18 @@ import {
     NG_VALUE_ACCESSOR,
     Validators,
 } from "@angular/forms";
-import { Observable, Subscription } from "rxjs";
+import { Subscription, of } from "rxjs";
 
 import { RangeValidator } from "@batch-flask/ui/validation";
 import { AllTasksCompleteAction, TaskFailureAction, VirtualMachineConfiguration } from "app/models";
 import { PoolService } from "app/services";
 import { Constants } from "app/utils";
+import { debounceTime, distinctUntilChanged, flatMap } from "rxjs/operators";
 
 @Component({
     selector: "bl-job-schedule-job-specification",
     templateUrl: "job-schedule-job-specification.html",
     providers: [
-        // tslint:disable:no-forward-ref
         {
             provide: NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => JobScheduleJobSpecificationComponent),
@@ -39,15 +39,15 @@ export class JobScheduleJobSpecificationComponent implements ControlValueAccesso
     public form: FormGroup;
     public constraintsGroup: FormGroup;
     public virtualMachineConfiguration: VirtualMachineConfiguration = null;
-    public containerSettingsRequired: boolean = true;
     public showJobReleaseTask: boolean;
 
     private _propagateChange: (value: any) => void = null;
     private _subs: Subscription[] = [];
 
-    constructor(private changeDetector: ChangeDetectorRef,
-                private poolService: PoolService,
-                private formBuilder: FormBuilder) {
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private poolService: PoolService,
+        private formBuilder: FormBuilder) {
         const validation = Constants.forms.validation;
         this.constraintsGroup = this.formBuilder.group({
             maxWallClockTime: null,
@@ -86,34 +86,31 @@ export class JobScheduleJobSpecificationComponent implements ControlValueAccesso
 
         // Load current pool container configuration to indicate whether job manager, preparation and release task
         // displays task container setting accordingly
-        this._subs.push(this.form.controls.poolInfo.valueChanges
-            .debounceTime(400)
-            .distinctUntilChanged()
-            .flatMap(pool => pool ? this.poolService.get(pool.poolId) : Observable.of(null))
-            .subscribe(pool => {
-                this.virtualMachineConfiguration = pool && pool.virtualMachineConfiguration;
-                if (!this.virtualMachineConfiguration || !this.virtualMachineConfiguration.containerConfiguration) {
-                    // Reset job manager, preperation and release task container settings because pool id is changed
-                    // because user might change a container-pool to a non-container pool or vice versa
-                    const jobManagerTask = this.form.controls.jobManagerTask.value;
-                    const jobPreparationTask = this.form.controls.jobPreparationTask.value;
-                    const jobReleaseTask = this.form.controls.jobReleaseTask.value;
-                    if (jobManagerTask) {
-                        jobManagerTask.containerSettings = null;
-                        this.form.controls.jobManagerTask.patchValue(jobManagerTask);
-                    }
-                    if (jobPreparationTask) {
-                        jobPreparationTask.containerSettings = null;
-                    }
-                    if (jobReleaseTask) {
-                        jobReleaseTask.containerSettings = null;
-                    }
-                    this.containerSettingsRequired = false;
-                } else {
-                    this.containerSettingsRequired = true;
+        this._subs.push(this.form.controls.poolInfo.valueChanges.pipe(
+            debounceTime(400),
+            distinctUntilChanged(),
+            flatMap(pool => pool ? this.poolService.get(pool.poolId) : of(null)),
+        ).subscribe(pool => {
+            this.virtualMachineConfiguration = pool && pool.virtualMachineConfiguration;
+            if (!this.virtualMachineConfiguration || !this.virtualMachineConfiguration.containerConfiguration) {
+                // Reset job manager, preperation and release task container settings because pool id is changed
+                // because user might change a container-pool to a non-container pool or vice versa
+                const jobManagerTask = this.form.controls.jobManagerTask.value;
+                const jobPreparationTask = this.form.controls.jobPreparationTask.value;
+                const jobReleaseTask = this.form.controls.jobReleaseTask.value;
+                if (jobManagerTask) {
+                    jobManagerTask.containerSettings = null;
+                    this.form.controls.jobManagerTask.patchValue(jobManagerTask);
                 }
-                this.changeDetector.markForCheck();
-            }));
+                if (jobPreparationTask) {
+                    jobPreparationTask.containerSettings = null;
+                }
+                if (jobReleaseTask) {
+                    jobReleaseTask.containerSettings = null;
+                }
+            }
+            this.changeDetector.markForCheck();
+        }));
     }
 
     public writeValue(value: any) {

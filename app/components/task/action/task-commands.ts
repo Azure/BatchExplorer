@@ -2,12 +2,12 @@ import { Injectable, Injector } from "@angular/core";
 
 import {
     COMMAND_LABEL_ICON, ElectronRemote, EntityCommand,
-    EntityCommands, Permission, SidebarManager,
+    EntityCommands, FileSystemService, Permission, SidebarManager,
 } from "@batch-flask/ui";
 import { Task, TaskState } from "app/models";
-import { FileSystemService, TaskService } from "app/services";
-import { Observable } from "rxjs";
-import { TaskCreateBasicDialogComponent } from "../action";
+import { TaskService } from "app/services";
+import { from } from "rxjs";
+import { AddTaskFormComponent } from "../action";
 
 export interface TaskParams {
     jobId: string;
@@ -89,7 +89,7 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
     }
 
     private _cloneTask(task: Task) {
-        const ref = this.sidebarManager.open(`add-task-${task.id}`, TaskCreateBasicDialogComponent);
+        const ref = this.sidebarManager.open(`add-task-${task.id}`, AddTaskFormComponent);
         ref.component.jobId = this.params.jobId;
         ref.component.setValueFromEntity(task);
     }
@@ -103,7 +103,7 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
 
         if (localPath) {
             const content = JSON.stringify(task._original, null, 2);
-            return Observable.fromPromise(this.fs.saveFile(localPath, content));
+            return from(this.fs.saveFile(localPath, content));
         }
     }
 }

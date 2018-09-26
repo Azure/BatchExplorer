@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { Router } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { Observable } from "rxjs";
 
 import { ListFilterType } from "@batch-flask/ui/advanced-filter";
 import { Job, JobTerminateReason, NameValuePair, TaskState } from "app/models";
 import { DateUtils } from "app/utils";
 import { ODataFields } from "common/constants";
+import { of } from "rxjs";
 
 @Component({
     selector: "bl-job-error-display",
@@ -25,7 +25,7 @@ export class JobErrorDisplayComponent {
 
     public get failureInfo() {
         const info = this.executionInfo;
-        return info && info.failureInfo;
+        return info && info.schedulingError;
     }
 
     public get jobFailed() {
@@ -57,7 +57,7 @@ export class JobErrorDisplayComponent {
         this.router.navigate(["/jobs", this.job.id, "tasks"], {
             queryParams: { filter: JSON.stringify(filter) },
         });
-        return Observable.of(0);
+        return of(0);
     }
 
     public trackDetail(index, detail: NameValuePair) {

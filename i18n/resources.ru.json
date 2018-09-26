@@ -1,0 +1,13 @@
+{
+  "duration-picker.unit.unlimited": "Неограниченно",
+  "duration-picker.unit.days": "Дни",
+  "duration-picker.unit.minutes": "Минуты",
+  "duration-picker.unit.hours": "Часы",
+  "duration-picker.unit.seconds": "Секунды",
+  "main-navigation.jobs": "Задания",
+  "main-navigation.jobschedules": "Расписания заданий",
+  "main-navigation.pools": "Пулы",
+  "main-navigation.packages": "Пакеты",
+  "main-navigation.certificates": "Сертификаты",
+  "main-navigation.data": "Данные"
+}

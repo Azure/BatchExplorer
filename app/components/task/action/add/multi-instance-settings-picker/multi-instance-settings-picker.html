@@ -1,0 +1,15 @@
+<div [formGroup]="form">
+    <div class="form-element">
+        <bl-form-field>
+            <input blInput type="number" formControlName="numberOfInstances">
+        </bl-form-field>
+        <bl-error controlName="numberOfInstances" code="required">You must provide a number of instance</bl-error>
+    </div>
+    <div class="form-element">
+        <bl-form-field>
+            <textarea blInput matTextareaAutosize matAutosizeMinRows="1" blSingleLineTextarea formControlName="coordinationCommandLine" placeholder="Command line"></textarea>
+        </bl-form-field>
+        <bl-error controlName="coordinationCommandLine" code="required">Command line is a required field</bl-error>
+    </div>
+    <bl-resourcefile-picker formControlName="commonResourceFiles"></bl-resourcefile-picker>
+</div>

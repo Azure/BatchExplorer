@@ -1,25 +1,25 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { Observable } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { ServerError } from "@batch-flask/core";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StorageAccountCardComponent } from "app/components/account/details";
-import { AccountResource, StorageAccount } from "app/models";
+import { ArmBatchAccount, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
 
-const accountNoStorage = new AccountResource({ id: "acc-1", location: "westus", properties: {} } as any);
-const accountWithStorage = new AccountResource({
+const accountNoStorage = new ArmBatchAccount({ id: "acc-1", location: "westus", properties: {} } as any);
+const accountWithStorage = new ArmBatchAccount({
     id: "acc-1",
     location: "westus",
     properties: {
         autoStorage: { storageAccountId: "sub-1/storage-1" },
     },
 } as any);
-const accountWithInvalidStorage = new AccountResource({
+const accountWithInvalidStorage = new ArmBatchAccount({
     id: "acc-1",
     location: "westus",
     properties: {
@@ -45,9 +45,9 @@ describe("StorageAccountCardComponent", () => {
         storageAccountServiceSpy = {
             get: (storageAccountId: string) => {
                 if (storageAccountId === "sub-1/storage-1") {
-                    return Observable.of(storage1);
+                    return of(storage1);
                 } else {
-                    return Observable.throw(new ServerError({
+                    return throwError(new ServerError({
                         status: 404,
                         statusText: "Not found",
                         code: "StorageAccountNotFound",

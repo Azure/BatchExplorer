@@ -1,10 +1,10 @@
-import { Type } from "@angular/core";
-import { Observable } from "rxjs";
-
 import { HttpParams } from "@angular/common/http";
-import { HttpRequestOptions } from "@batch-flask/core";
-import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
-import { ContinuationToken, ListOptions } from "app/services/core/data/list-options";
+import { Type } from "@angular/core";
+import {
+    ContinuationToken, HttpRequestOptions, ListGetter, ListGetterConfig, ListOptions, Record,
+} from "@batch-flask/core";
+import { Observable } from "rxjs";
+import { map, share } from "rxjs/operators";
 import { AzureBatchHttpService } from "./batch-http.service";
 
 export interface BatchListResponse<TEntity> {
@@ -12,11 +12,11 @@ export interface BatchListResponse<TEntity> {
     "odata.nextLink": string;
 }
 
-export interface BatchListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
+export interface BatchListConfig<TEntity extends Record<any>, TParams> extends ListGetterConfig<TEntity, TParams> {
     uri: (params: TParams, options: any) => string;
 }
 
-export class BatchListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams> {
+export class BatchListGetter<TEntity extends Record<any>, TParams> extends ListGetter<TEntity, TParams> {
     private _provideUri: (params: TParams, options: any) => string;
 
     constructor(
@@ -31,11 +31,17 @@ export class BatchListGetter<TEntity, TParams> extends ListGetter<TEntity, TPara
     protected list(params: TParams, options: ListOptions): Observable<any> {
         return this.http.get<any>(
             this._provideUri(params, options),
-            this._requestOptions(options)).map(x => this._processResponse(x)).share();
+            this._requestOptions(options)).pipe(
+                map(x => this._processResponse(x)),
+                share(),
+            );
     }
 
     protected listNext(token: ContinuationToken): Observable<any> {
-        return this.http.get<any>(token.nextLink).map(x => this._processResponse(x)).share();
+        return this.http.get<any>(token.nextLink).pipe(
+            map(x => this._processResponse(x)),
+            share(),
+        );
     }
 
     private _processResponse(response: BatchListResponse<TEntity>) {

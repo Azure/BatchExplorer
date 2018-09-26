@@ -1,14 +1,14 @@
 import { Type } from "@angular/core";
-import { ServerError } from "@batch-flask/core";
-import { Observable } from "rxjs";
+import { ListGetter,  ListGetterConfig, Record, ServerError } from "@batch-flask/core";
+import { Observable, from, of, throwError } from "rxjs";
+import { catchError, map, share } from "rxjs/operators";
 
-import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
-
-export interface MockStorageListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
+export interface MockStorageListConfig<TEntity extends Record<any>, TParams>
+    extends ListGetterConfig<TEntity, TParams> {
     getData: (params: TParams, options: any) => any;
 }
 
-export class MockStorageListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams> {
+export class MockStorageListGetter<TEntity  extends Record<any>, TParams> extends ListGetter<TEntity, TParams> {
     private _getData: (params: TParams, options: any) => any;
 
     constructor(
@@ -20,15 +20,16 @@ export class MockStorageListGetter<TEntity, TParams> extends ListGetter<TEntity,
     }
 
     protected list(params: TParams, options: any): Observable<any> {
-        return Observable
-            .fromPromise(this._getData(params, options))
-            .map((response: any) => ({ data: response.data }))
-            .catch((error) => {
-                return Observable.throw(ServerError.fromStorage(error));
-            }).share();
+        return from(this._getData(params, options)).pipe(
+            map((response: any) => ({ data: response.data })),
+            catchError((error) => {
+                return throwError(ServerError.fromStorage(error));
+            }),
+            share(),
+        );
     }
 
     protected listNext(token: any): Observable<any> {
-        return Observable.of(null);
+        return of(null);
     }
 }

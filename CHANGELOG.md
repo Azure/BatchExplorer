@@ -1,3 +1,50 @@
+# 0.18.0
+[All items](https://github.com/Azure/BatchExplorer/milestone/24?closed=1)
+
+### Fetures:
+* Disable/reenable scheduling on nodes [\#1629](https://github.com/Azure/BatchExplorer/issues/1629)
+* Show flags of the country where the account is located [\#1626](https://github.com/Azure/BatchExplorer/pull/1627)
+* Add link to privacy statement in application [\#1618](https://github.com/Azure/BatchExplorer/issues/1618)
+* Integrate telemetry for crash reporting and user actions [\#1610](https://github.com/Azure/BatchExplorer/issues/1610)
+* Mac application signing [\#1600](https://github.com/Azure/BatchExplorer/issues/1600)
+* Upgrade to the new Azure Batch api version 2018-08-01.7.0 [\#1581](https://github.com/Azure/BatchExplorer/issues/1581)
+* Background task manager v2 [\#1371](https://github.com/Azure/BatchExplorer/issues/1371)
+* Support multi instance tasks [\#1329](https://github.com/Azure/BatchExplorer/issues/1329)
+* Support sorting tasks [\#1328](https://github.com/Azure/BatchExplorer/issues/1328)
+* Support additional Gallery repositories [\#955](https://github.com/Azure/BatchExplorer/issues/955)
+* BatchExplorer should display what environment it is connected to [\#1555](https://github.com/Azure/BatchExplorer/issues/1555)
+* Need to display license picker for custom image [\#1575](https://github.com/Azure/BatchExplorer/issues/1575)
+* Support client side sorting for tables and quick list [\#1573](https://github.com/Azure/BatchExplorer/issues/1573)
+* Pull application license data from BatchPricing.softwares [\#1563](https://github.com/Azure/BatchExplorer/issues/1563)
+
+### Bug fixes:
+* Certificate list blank [\#1624](https://github.com/Azure/BatchExplorer/issues/1624)
+* Account favourites not showing up when one is invalid [\#1619](https://github.com/Azure/BatchExplorer/issues/1619)
+* Cloning tasks having issue with user identity [\#1616](https://github.com/Azure/BatchExplorer/issues/1616)
+* Using an invalid URL for a Batch Account causes Add Pool sidebar to behave oddly [\#1613](https://github.com/Azure/BatchExplorer/issues/1613)
+* Issue with any POST request on local batch accounts [\#1607](https://github.com/Azure/BatchExplorer/issues/1607)
+* Don't let add duplicate local accounts [\#1605](https://github.com/Azure/BatchExplorer/issues/1605)
+* Container settings are required when editing start task but should be optional [\#1603](https://github.com/Azure/BatchExplorer/issues/1603)
+* Memory leak around pool node counts [\#1592](https://github.com/Azure/BatchExplorer/issues/1592)
+* Typo on the job action confirmation [\#1587](https://github.com/Azure/BatchExplorer/issues/1587)
+* File explorer view files with \ in name on linux [\#808](https://github.com/Azure/BatchExplorer/issues/808)
+* GOVT cloud metrics charts are failing [\#1550](https://github.com/Azure/BatchExplorer/issues/1550)
+* Account dashboard resources cards too large when no items [\#1541](https://github.com/Azure/BatchExplorer/issues/1541)
+* NcjTemplateService issues when templates not loaded [\#1390](https://github.com/Azure/BatchExplorer/issues/1390)
+* quick-list account loading appears after you click on the screen. [\#1560](https://github.com/Azure/BatchExplorer/issues/1560)
+* Investigate why upload progress is no longer being reported when uploading filegroup data [\#1567](https://github.com/Azure/BatchExplorer/issues/1567)
+* Node configuration don't call getRemoteLoginSettings every 5 seconds [\#1580](https://github.com/Azure/BatchExplorer/issues/1580)
+* Form components disappear after selecting a rendering image then another one. [\#1576](https://github.com/Azure/BatchExplorer/issues/1576)
+* In progress forms CSS busted [\#1566](https://github.com/Azure/BatchExplorer/issues/1566)
+
+### Accessiblity
+* Account list favorite not accessible [\#1626](https://github.com/Azure/BatchExplorer/issues/1626)
+
+### Other:
+* Setup a new swagger validator to validate models [\#1632](https://github.com/Azure/BatchExplorer/issues/1632)
+* Switch to node 10 [\#1377](https://github.com/Azure/BatchExplorer/issues/1377)
+
+
 # 0.17.3
 
 ### Minor feature:

@@ -4,7 +4,7 @@
 import { Model, Prop, Record } from "@batch-flask/core";
 import { Duration, duration } from "moment";
 
-export interface JobStatsAttributes {
+export interface JobStatisticsAttributes {
     kernelCPUTime: Duration;
     lastUpdateTime: Date;
     numFailedTasks: string;
@@ -22,7 +22,7 @@ export interface JobStatsAttributes {
 }
 
 @Model()
-export class JobStats extends Record<JobStatsAttributes> {
+export class JobStatistics extends Record<JobStatisticsAttributes> {
     @Prop(duration) public kernelCPUTime: Duration;
     @Prop() public lastUpdateTime: Date;
     @Prop() public numFailedTasks: number = 0;

@@ -1,31 +1,25 @@
 <bl-focus-section>
     <bl-quick-list *ngIf="quicklist"
-        [status]="status"
+        [data]="data"
+        [config]="listConfig"
         [(activeItem)]="activeItem"
         [(selection)]="selection"
         [commands]="commands"
         (scrollBottom)="onScrollToBottom()">
 
-        <bl-quick-list-item *ngFor="let job of jobs; trackBy: trackByFn"
-            [link]="['/jobs/', job.id]"
-            [key]="job.id">
-            <bl-quick-list-item-status [status]="jobStatus(job)" [tooltip]="jobStatusText(job)">
-            </bl-quick-list-item-status>
-
-            <div bl-quick-list-item-title>{{job.id}}</div>
-            <div bl-quick-list-item-field>
-                {{job.state}}
-                <bl-tags [tags]="job.tags" [maxTags]="3"></bl-tags>
-            </div>
-            <div bl-quick-list-item-preview>
-                <bl-job-stats-preview [job]="job"></bl-job-stats-preview>
-            </div>
-        </bl-quick-list-item>
+        <ng-container *blQuickListRowStatus="let job">
+            <bl-quick-list-item-status [status]="jobStatus(job)" [tooltip]="jobStatusText(job)"></bl-quick-list-item-status>
+        </ng-container>
+        <ng-container *blQuickListRowTitle="let job">{{job.id}}</ng-container>
+        <ng-container *blQuickListRowState="let job">
+            <bl-job-state [job]="job"></bl-job-state>
+            <bl-tags [tags]="job.tags" [maxTags]="3"></bl-tags>
+        </ng-container>
     </bl-quick-list>
 
     <bl-table *ngIf="!quicklist"
-        [data]="jobs"
-        [status]="status"
+        [data]="data"
+        [config]="listConfig"
         [(activeItem)]="activeItem"
         [(selection)]="selection"
         [commands]="commands"
@@ -38,7 +32,7 @@
 
         <bl-column name="state">
             <div *blHeadCellDef>State</div>
-            <div *blCellDef="let job">{{job.state}}</div>
+            <div *blCellDef="let job"><bl-job-state [job]="job"></bl-job-state></div>
         </bl-column>
 
         <bl-column name="pool">

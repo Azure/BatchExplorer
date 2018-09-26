@@ -1,5 +1,5 @@
 import { Response, ResponseOptions } from "@angular/http";
-import { Observable, Subscription } from "rxjs";
+import { Subscription, of } from "rxjs";
 import * as Fixtures from "test/fixture";
 
 import { InsightsMetricsService } from "./insights-metrics.service";
@@ -8,21 +8,14 @@ import { MonitorChartTimeFrame } from "./monitor-metrics-base";
 describe("InsightsMetricsService", () => {
     let monitorService: InsightsMetricsService;
     let requestUrl;
-    let themeServiceSpy;
     let accountServiceSpy;
     let armServiceSpy;
     let mockeResponse;
     const subs: Subscription[] = [];
 
     beforeEach(() => {
-        themeServiceSpy = {
-            currentTheme: Observable.of({
-                monitorChart: {},
-            }),
-        };
-
         accountServiceSpy = {
-            currentAccount: Observable.of(Fixtures.account.create({
+            currentAccount: of(Fixtures.account.create({
                 id: "myaccount",
             })),
         };
@@ -30,10 +23,10 @@ describe("InsightsMetricsService", () => {
         armServiceSpy = {
             get: jasmine.createSpy("get").and.callFake((url, options) => {
                 requestUrl = url;
-                return Observable.of(new Response(new ResponseOptions(mockeResponse)));
+                return of(new Response(new ResponseOptions(mockeResponse)));
             }),
         };
-        monitorService = new InsightsMetricsService(themeServiceSpy, accountServiceSpy, armServiceSpy);
+        monitorService = new InsightsMetricsService(accountServiceSpy, armServiceSpy);
     });
 
     afterEach(() => {

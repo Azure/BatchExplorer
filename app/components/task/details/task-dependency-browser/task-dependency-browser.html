@@ -1,5 +1,4 @@
-<bl-table *ngIf="dependencies.size > 0" [forceBreadcrumb]="true" [data]="dependencies">
-
+<bl-table *ngIf="dependencies.size > 0" [config]="{forceBreadcrumb: true}" [data]="dependencies">
     <bl-column name="id">
         <div *blHeadCellDef>Task ID</div>
         <div *blCellDef="let dependency">{{dependency.id}}</div>

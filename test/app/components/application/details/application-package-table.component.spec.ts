@@ -3,19 +3,18 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
-import { Observable } from "rxjs";
-
 import { Property } from "@batch-flask/core";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { ActivityService } from "@batch-flask/ui/activity";
+import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
+import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { TableTestingModule } from "@batch-flask/ui/testing";
 import { ApplicationPackageTableComponent } from "app/components/application/details";
 import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
+import { of } from "rxjs";
 import * as Fixtures from "test/fixture";
-import { NoItemMockComponent, TableTestingModule } from "test/utils/mocks/components";
-
-import { ContextMenuService } from "@batch-flask/ui";
-import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
+import { NoItemMockComponent } from "test/utils/mocks/components";
 
 const appWithPackagesId: string = "app-2";
 const appWithoutPackagesId: string = "app-1";
@@ -61,7 +60,7 @@ describe("ApplicationPackageTableComponent", () => {
                 .createSpy("get").and
                 .callFake((applicationId: string) => {
 
-                    return Observable.of(
+                    return of(
                         applicationMap.get(applicationId) || Fixtures.application.create({ id: applicationId }),
                     );
                 }),
@@ -75,7 +74,7 @@ describe("ApplicationPackageTableComponent", () => {
             providers: [
                 { provide: MatDialog, useValue: null },
                 { provide: ApplicationService, useValue: applicationServiceSpy },
-                { provide: BackgroundTaskService, useValue: null },
+                { provide: ActivityService, useValue: null },
                 { provide: ContextMenuService, useValue: null },
                 { provide: SidebarManager, useValue: null },
                 { provide: BreadcrumbService, useValue: null },

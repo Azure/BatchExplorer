@@ -2,14 +2,13 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
 import * as path from "path";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, from, of } from "rxjs";
 
-import { FilterBuilder, autobind } from "@batch-flask/core";
-import { ElectronShell } from "@batch-flask/ui";
+import { EntityView, FilterBuilder, autobind } from "@batch-flask/core";
+import { ElectronShell, FileSystemService } from "@batch-flask/ui";
 import { tasksToCsv } from "app/components/job/graphs/job-graphs-home/helpers";
 import { Job, Task, TaskState } from "app/models";
-import { CacheDataService, FileSystemService, JobParams, JobService, TaskService } from "app/services";
-import { EntityView } from "app/services/core";
+import { CacheDataService, JobParams, JobService, TaskService } from "app/services";
 import { flatMap, share, tap } from "rxjs/operators";
 import "./job-graphs-home.scss";
 
@@ -83,13 +82,13 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
         this.loading = true;
         this.changeDetector.markForCheck();
 
-        const obs = Observable.fromPromise(this._tryLoadTasksFromCache(force)).pipe(
+        const obs = from(this._tryLoadTasksFromCache(force)).pipe(
             flatMap((success) => {
                 if (success) {
                     this.loading = false;
                     this.changeDetector.markForCheck();
 
-                    return Observable.of(null);
+                    return of(null);
                 }
                 this.taskLoadedProgress = 0;
                 this.changeDetector.markForCheck();
@@ -119,7 +118,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
         const csv = tasksToCsv(this.tasks);
 
         const dest = path.join(this.fs.commonFolders.downloads, `${this.jobId}.csv`);
-        return Observable.fromPromise(this.fs.saveFile(dest, csv).then(() => {
+        return from(this.fs.saveFile(dest, csv).then(() => {
             this.shell.showItemInFolder(dest);
         }));
     }

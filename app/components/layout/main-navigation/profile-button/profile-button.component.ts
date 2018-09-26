@@ -1,17 +1,18 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { AutoUpdateService, ElectronRemote, ElectronShell, UpdateStatus } from "@batch-flask/ui";
-import { OS } from "@batch-flask/utils";
-import * as path from "path";
-import { Subscription } from "rxjs";
-
+import { I18nService, Locale, LocaleService, TranslatedLocales } from "@batch-flask/core";
+import { AutoUpdateService, ElectronRemote, ElectronShell, FileSystemService, UpdateStatus } from "@batch-flask/ui";
 import {
-    ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService,
+    ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService, MultiContextMenuItem,
 } from "@batch-flask/ui/context-menu";
 import { NotificationService } from "@batch-flask/ui/notifications";
+import { OS } from "@batch-flask/utils";
 import {
-    AdalService, BatchExplorerService, FileSystemService,
+    AdalService, BatchExplorerService,
 } from "app/services";
+import { Constants } from "common";
+import * as path from "path";
+import { Subscription } from "rxjs";
 
 import "./profile-button.scss";
 
@@ -31,6 +32,8 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
 
     constructor(
         adalService: AdalService,
+        private i18n: I18nService,
+        private localeService: LocaleService,
         private changeDetector: ChangeDetectorRef,
         private autoUpdateService: AutoUpdateService,
         private batchExplorer: BatchExplorerService,
@@ -69,15 +72,26 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     public openSettingsContextMenu() {
         const items = [
             new ContextMenuSeparator(),
-            new ContextMenuItem({ label: "Settings", click: () => this._goToSettings() }),
-            new ContextMenuItem({ label: "Third party notices", click: () => this._openThirdPartyNotices() }),
-            new ContextMenuItem({ label: "View logs", click: () => this._openLogFolder() }),
-            new ContextMenuItem({ label: "Report a bug or feature request", click: () => this._openGithubIssues() }),
-            new ContextMenuItem({ label: "About", click: () => this._showAboutPage() }),
+            new ContextMenuItem({ label: this.i18n.t("profile-button.settings"), click: () => this._goToSettings() }),
+            new MultiContextMenuItem({
+                label: "Language (Preview)", subitems: Object.entries(TranslatedLocales).map(([key, value]) => {
+                    return new ContextMenuItem({ label: value, click: () => this._changeLanguage(key as Locale) });
+                }),
+            }),
+            new ContextMenuItem({
+                label: this.i18n.t("profile-button.thirdPartyNotices"),
+                click: () => this._openThirdPartyNotices(),
+            }),
+            new ContextMenuItem({ label: this.i18n.t("profile-button.viewLogs"), click: () => this._openLogFolder() }),
+            new ContextMenuItem({ label: this.i18n.t("profile-button.report"), click: () => this._openGithubIssues() }),
+            new ContextMenuItem({ label: this.i18n.t("profile-button.about"), click: () => this._showAboutPage() }),
             new ContextMenuSeparator(),
-            new ContextMenuItem({ label: "View theme colors", click: () => this._gotoThemeColors() }),
+            new ContextMenuItem({
+                label: this.i18n.t("profile-button.viewTheme"),
+                click: () => this._gotoThemeColors(),
+            }),
             new ContextMenuSeparator(),
-            new ContextMenuItem({ label: "Logout", click: () => this._logout() }),
+            new ContextMenuItem({ label: this.i18n.t("profile-button.logout"), click: () => this._logout() }),
         ];
 
         items.unshift(this._getAutoUpdateMenuItem());
@@ -86,6 +100,10 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
 
     private _goToSettings() {
         this.router.navigate(["/settings"]);
+    }
+
+    private _changeLanguage(locale: Locale) {
+        this.localeService.setLocale(locale);
     }
 
     private _gotoThemeColors() {
@@ -101,7 +119,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     }
 
     private _openGithubIssues() {
-        this.shell.openExternal("https://github.com/Azure/BatchExplorer/issues");
+        this.shell.openExternal(Constants.ExternalLinks.submitIssue);
     }
 
     private _showAboutPage() {
@@ -134,7 +152,7 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     }
 
     private _update() {
-        if (OS.isWindows()) {
+        if (!OS.isLinux()) {
             setImmediate(() => {
                 this.remote.electronApp.removeAllListeners("window-all-closed");
                 this.autoUpdateService.quitAndInstall();

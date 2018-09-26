@@ -69,12 +69,6 @@ module.exports = merge(config, {
 
     },
     plugins: [
-        /**
-         * Plugin: ExtractTextPlugin
-         * Description: Extracts imported CSS files into external stylesheet
-         *
-         * @see https://github.com/webpack/extract-text-webpack-plugin
-         */
         new MiniCssExtractPlugin({ filename: "[name]-[hash].css", chunkFilename: "[name]-[chunkhash].css" }),
         defineEnv(ENV),
 

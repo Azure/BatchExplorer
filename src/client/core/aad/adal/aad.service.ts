@@ -1,11 +1,11 @@
 
 import { Inject, Injectable, forwardRef } from "@angular/core";
-import { AccessToken, AccessTokenCache, ServerError } from "@batch-flask/core";
+import { AccessToken, AccessTokenCache, DataStore, ServerError } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { BatchExplorerApplication } from "client/core/batch-explorer-application";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { fetch } from "client/core/fetch";
-import { LocalDataStore } from "client/core/local-data-store";
+import { BatchExplorerProperties } from "client/core/properties";
 import { Constants } from "common";
 import { IpcEvent } from "common/constants";
 import { Deferred } from "common/deferred";
@@ -45,14 +45,15 @@ export class AADService {
 
     constructor(
         @Inject(forwardRef(() => BatchExplorerApplication)) private app: BatchExplorerApplication,
-        private localStorage: LocalDataStore,
+        private localStorage: DataStore,
+        private properties: BatchExplorerProperties,
         ipcMain: BlIpcMain) {
         this._tokenCache = new AccessTokenCache(localStorage);
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
         this.tenantsIds = this._tenantsIds.asObservable();
         this.userAuthorization = new AuthenticationService(this.app, adalConfig);
-        this._accessTokenService = new AccessTokenService(app, adalConfig);
+        this._accessTokenService = new AccessTokenService(properties, adalConfig);
         this.authenticationState = this._authenticationState.asObservable();
 
         ipcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {
@@ -132,7 +133,7 @@ export class AADService {
     }
 
     private _getDefaultResource() {
-        return this.app.azureEnvironment.armUrl;
+        return this.properties.azureEnvironment.armUrl;
     }
 
     /**
@@ -262,7 +263,7 @@ export class AADService {
             Authorization: `${token.token_type} ${token.access_token}`,
         };
         const options = { headers };
-        const url = `${this.app.azureEnvironment.armUrl}tenants?api-version=${Constants.ApiVersion.arm}`;
+        const url = `${this.properties.azureEnvironment.armUrl}tenants?api-version=${Constants.ApiVersion.arm}`;
         const response = await fetch(url, options);
         log.info("Listing tenants response", response.status, response.statusText);
         const { value } = await response.json();
@@ -285,7 +286,7 @@ export class AADService {
     }
 
     private _resources() {
-        const env = this.app.azureEnvironment;
+        const env = this.properties.azureEnvironment;
         return [
             env.armUrl,
             env.batchUrl,

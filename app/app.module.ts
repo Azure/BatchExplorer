@@ -32,41 +32,42 @@ import { BatchExplorerErrorHandler } from "app/error-handler";
 
 // services
 import { HttpModule } from "@angular/http";
-import { MaterialModule, TranslationsLoaderService } from "@batch-flask/core";
+import { LocaleService, MaterialModule, PollService, TranslationsLoaderService } from "@batch-flask/core";
 import { CommonModule } from "app/components/common";
 import { LayoutModule } from "app/components/layout";
 import { MiscModule } from "app/components/misc";
 import { AzureBatchHttpService } from "app/services/azure-batch/core";
-import { PollService } from "app/services/core";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 import { AADGraphHttpService, MsGraphHttpService } from "app/services/ms-graph/core";
 import {
     AutoStorageService, StorageAccountKeysService, StorageBlobService, StorageClientService, StorageContainerService,
 } from "app/services/storage";
 import {
-    AccountService,
     AdalService,
     AppInsightsApiService,
     AppInsightsQueryService,
+    AppLocaleService,
     AppTranslationsLoaderService,
     ApplicationService,
+    ArmBatchAccountService,
     ArmHttpService,
     AuthorizationHttpService,
     AutoscaleFormulaService,
     AzureHttpService,
+    BatchAccountService,
     BatchExplorerService,
     CacheDataService,
     CertificateService,
     CommandService,
     ComputeService,
     FileService,
-    FileSystemService,
     GithubDataService,
     HttpUploadService,
     InsightsMetricsService,
     JobHookTaskService,
     JobScheduleService,
     JobService,
+    LocalBatchAccountService,
     LocalFileStorage,
     NavigatorService,
     NcjFileGroupService,
@@ -92,12 +93,14 @@ import {
     TaskService,
     TenantDetailsService,
     ThemeService,
+    VersionService,
     VmSizeService,
 } from "./services";
+import { RendererTelemetryModule } from "./services/telemetry";
 
 const modules = [
-    AccountModule, ApplicationModule, CertificateModule, DataModule,
-    FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
+    AccountModule, ApplicationModule, CertificateModule,
+    DataModule, FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
     SettingsModule, TaskModule, MarketModule, LayoutModule,
     MiscModule,
 ];
@@ -121,6 +124,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         MaterialModule,
         ReactiveFormsModule,
         HttpModule,
+        RendererTelemetryModule,
         RouterModule.forRoot(routes, { useHash: true, paramsInheritanceStrategy: "always" }),
         BaseModule,
         HttpClientModule,
@@ -129,7 +133,10 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         { provide: TranslationsLoaderService, useClass: AppTranslationsLoaderService },
-        AccountService,
+        { provide: LocaleService, useClass: AppLocaleService },
+        ArmBatchAccountService,
+        BatchAccountService,
+        LocalBatchAccountService,
         AdalService,
         AppInsightsApiService,
         AppInsightsQueryService,
@@ -147,7 +154,6 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         ComputeService,
         NodeConnectService,
         FileService,
-        FileSystemService,
         GithubDataService,
         HttpUploadService,
         InsightsMetricsService,
@@ -183,6 +189,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         TaskService,
         TenantDetailsService,
         ThemeService,
+        VersionService,
         VmSizeService,
         PredefinedFormulaService,
         ...graphApiServices,

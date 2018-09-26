@@ -1,7 +1,7 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { ClipboardService, ElectronShell } from "@batch-flask/ui";
+import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/ui";
 import { of } from "rxjs";
 
 import { ButtonComponent } from "@batch-flask/ui/buttons";
@@ -14,7 +14,6 @@ import { ConnectionType, Node, Pool } from "app/models";
 import {
     AddNodeUserAttributes,
     BatchExplorerService,
-    FileSystemService,
     NodeConnectService,
     NodeUserService,
     SettingsService,

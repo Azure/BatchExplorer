@@ -1,0 +1,25 @@
+node-configuration:
+  id: ID
+  url: URL
+  state: State
+  state-transition-time: State transition time
+  scheduling-state: Scheduling state
+  node-agent-version: Node agent version
+  node-size: Node size
+  last-boot-time: Last boot time
+  allocation-time: Allocation time
+  running-tasks-count: Running tasks
+  total-tasks-run: Total task run
+  total-tasks-succeeded: Total succeessful tasks
+  internal-ip: Internal ip
+  external-ip: External ip
+  is-dedicated: Is dedicated
+  start-task-execution: Start task execution
+  start-task-not-started: Start task execution
+  start-task-running: Running for
+  start-task-completed: Completed in
+  start-time: Start time
+  end-time: End time
+  run-time: Execution time
+  exit-code: Exit code
+  retry-count: Retry count

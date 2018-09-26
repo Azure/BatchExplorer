@@ -4,7 +4,7 @@ import { By } from "@angular/platform-browser";
 
 import { MatDialog } from "@angular/material";
 import { ListSelection } from "@batch-flask/core/list";
-import { BackgroundTaskService } from "@batch-flask/ui/background-task";
+import { ActivityService } from "@batch-flask/ui/activity";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationPackageTableComponent, ApplicationPackagesComponent } from "app/components/application/details";
 import { BatchApplication, PackageState } from "app/models";
@@ -53,7 +53,7 @@ describe("ApplicationPackagesComponent", () => {
             providers: [
                 { provide: MatDialog, useValue: null },
                 { provide: ApplicationService, useValue: null },
-                { provide: BackgroundTaskService, useValue: null },
+                { provide: ActivityService, useValue: null },
                 { provide: SidebarManager, useValue: null },
             ],
         });

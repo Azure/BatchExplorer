@@ -7,6 +7,7 @@ import {
     BatchPerformanceMetrics,
 } from "app/models/app-insights";
 import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { AppInsightsApiService } from "./app-insights-api.service";
 import { MetricDefinition } from "./metric-definition";
 import { AppInsightQueryResultProcessor } from "./query-result-processor";
@@ -47,16 +48,16 @@ export class AppInsightsQueryService {
 
     public getPoolPerformance(appId: string, poolId: string, lastNMinutes: number):
         Observable<BatchPerformanceMetrics> {
-        return this.metrics(appId, this._buildQuery(poolId, null, lastNMinutes)).map((data) => {
+        return this.metrics(appId, this._buildQuery(poolId, null, lastNMinutes)).pipe(map((data) => {
             return this._processMetrics(data.json());
-        });
+        }));
     }
 
     public getNodePerformance(appId: string, poolId: string, nodeId: string, lastNMinutes: number):
         Observable<BatchPerformanceMetrics> {
-        return this.metrics(appId, this._buildQuery(poolId, nodeId, lastNMinutes)).map((data) => {
+        return this.metrics(appId, this._buildQuery(poolId, nodeId, lastNMinutes)).pipe(map((data) => {
             return this._processMetrics(data.json());
-        });
+        }));
     }
 
     private _buildQuery(poolId: string, nodeId: string, timespanInMinutes: number) {

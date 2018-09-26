@@ -1,5 +1,6 @@
 import { Model, Prop, Record } from "@batch-flask/core";
 import * as moment from "moment";
+import { TaskExecutionResult } from "./azure-batch";
 import { FailureInfo, FailureInfoAttributes } from "./failure-info";
 import {
     TaskContainerExecutionInfo, TaskContainerExecutionInfoAttributes,
@@ -15,7 +16,7 @@ export interface TaskExecutionInformationAttributes {
     failureInfo?: FailureInfoAttributes;
     retryCount: number;
     lastRetryTime?: Date;
-    result?: string;
+    result?: TaskExecutionResult;
     containerInfo?: TaskContainerExecutionInfoAttributes;
 }
 
@@ -33,6 +34,7 @@ export class TaskExecutionInformation extends Record<TaskExecutionInformationAtt
     @Prop() public requeueCount: number;
     @Prop() public lastRequeueTime: Date;
     @Prop() public containerInfo: TaskContainerExecutionInfo;
+    @Prop() public result: TaskExecutionResult;
 
     public get runningTime() {
         return moment.duration(moment(this.endTime).diff(this.startTime));

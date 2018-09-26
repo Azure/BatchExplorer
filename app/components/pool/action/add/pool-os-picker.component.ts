@@ -3,11 +3,10 @@ import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { autobind } from "@batch-flask/core";
-import { Subscription } from "rxjs";
-
-import { NodeAgentSku, Offer, PoolOsSkus, Resource, Sku } from "app/models";
+import { ArmBatchAccount, NodeAgentSku, Offer, PoolOsSkus, Resource, Sku } from "app/models";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
-import { AccountService, ComputeService, PoolOsService } from "app/services";
+import { BatchAccountService, ComputeService, PoolOsService } from "app/services";
+import { Subscription } from "rxjs";
 
 import "./pool-os-picker.scss";
 
@@ -73,7 +72,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
     private _subs: Subscription[] = [];
 
     constructor(
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private computeService: ComputeService,
         private poolOsService: PoolOsService) {
         this._subs.push(this.poolOsService.nodeAgentSkus.subscribe((result) => {
@@ -284,6 +283,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
 
     private _loadCustomImages() {
         this._subs.push(this.accountService.currentAccount.subscribe(account => {
+            if (!(account instanceof ArmBatchAccount)) { return; }
             const subscriptionId = account && account.subscription && account.subscription.subscriptionId;
             const location = account.location;
             if (!subscriptionId || !location) {

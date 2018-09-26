@@ -1,7 +1,8 @@
 import { Type } from "@angular/core";
+import { Record } from "@batch-flask/core/record";
 import { of } from "rxjs";
 
-import { BasicEntityGetter, DataCache, EntityView } from "app/services/core";
+import { BasicEntityGetter, DataCache, EntityView } from "@batch-flask/core";
 
 export interface MockEntityViewConfig<TEntity> {
     cacheKey?: string;
@@ -11,7 +12,7 @@ export interface MockEntityViewConfig<TEntity> {
 /**
  * Mock entity proxy where you pass in the entity you want to return
  */
-export class MockEntityView<TEntity, TParams> extends EntityView<TEntity, TParams> {
+export class MockEntityView<TEntity extends Record<any>, TParams> extends EntityView<TEntity, TParams> {
     private _item: TEntity;
 
     constructor(type: Type<TEntity>, config: MockEntityViewConfig<TEntity>) {

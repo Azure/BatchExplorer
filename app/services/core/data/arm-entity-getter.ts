@@ -1,16 +1,17 @@
 import { Type } from "@angular/core";
-
+import { EntityGetter, EntityGetterConfig, Record } from "@batch-flask/core";
 import { ArmHttpService } from "app/services/arm-http.service";
-import { EntityGetter, EntityGetterConfig } from "app/services/core/data/entity-getter";
 import { Observable } from "rxjs";
+import { map, share } from "rxjs/operators";
 
-export interface ArmEntityGetterConfig<TEntity, TParams> extends EntityGetterConfig<TEntity, TParams> {
+export interface ArmEntityGetterConfig<TEntity extends Record<any>, TParams>
+    extends EntityGetterConfig<TEntity, TParams> {
     /**
      * Get function(usually call the client proxy)
      */
     uri: string | ((params: TParams) => string);
 }
-export class ArmEntityGetter<TEntity, TParams> extends EntityGetter<TEntity, TParams> {
+export class ArmEntityGetter<TEntity extends Record<any>, TParams> extends EntityGetter<TEntity, TParams> {
     private _provideUri: string | ((params: TParams) => string);
 
     constructor(
@@ -24,9 +25,10 @@ export class ArmEntityGetter<TEntity, TParams> extends EntityGetter<TEntity, TPa
     }
 
     protected getData(params: TParams): Observable<any> {
-        return this.arm.get(this._computeURI(params))
-            .map(x => x.json())
-            .share();
+        return this.arm.get(this._computeURI(params)).pipe(
+            map(x => x.json()),
+            share(),
+        );
     }
 
     private _computeURI(params: TParams): string {

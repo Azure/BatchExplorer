@@ -26,12 +26,30 @@ export class ContextMenu {
             }
         }));
     }
+
+    public addItem(item: ContextMenuEntry): ContextMenu {
+        this.items.push(item);
+        return this;
+    }
+
+    public prepend(item: ContextMenuEntry): ContextMenu {
+        this.items.unshift(item);
+        return this;
+    }
 }
 
 export interface ContextMenuItemConfig {
     label: string;
     click: (...args) => void;
     enabled?: boolean;
+    checked?: boolean;
+    type?: "radio" | "checkbox";
+}
+
+export interface MultiContextMenuItemConfig {
+    label: string;
+    enabled?: boolean;
+    subitems: ContextMenuEntry[];
 }
 
 export interface ContextMenuEntry {
@@ -43,6 +61,9 @@ export class ContextMenuItem implements ContextMenuEntry {
     public label: string;
     public callbackArgs: any[] = [];
     public enabled: boolean = true;
+    public type?: "radio" | "checkbox";
+    public checked?: boolean;
+
     private _click: (...args) => void;
 
     constructor(config: ContextMenuItemConfig);
@@ -54,6 +75,8 @@ export class ContextMenuItem implements ContextMenuEntry {
             this._click = click;
         } else {
             this.label = labelOrConfig.label;
+            this.type = labelOrConfig.type;
+            this.checked = labelOrConfig.checked;
             this._click = labelOrConfig.click;
             if (exists(labelOrConfig.enabled)) {
                 this.enabled = labelOrConfig.enabled;
@@ -72,6 +95,19 @@ export class ContextMenuItem implements ContextMenuEntry {
         });
         clone.callbackArgs = args;
         return clone;
+    }
+}
+
+export class MultiContextMenuItem implements ContextMenuEntry {
+    public id: string;
+    public label: string;
+    public enabled: boolean = true;
+    public subitems: ContextMenuEntry[];
+
+    constructor(config: MultiContextMenuItemConfig) {
+        this.id = SecureUtils.uuid();
+        this.label = config.label;
+        this.subitems = config.subitems;
     }
 }
 

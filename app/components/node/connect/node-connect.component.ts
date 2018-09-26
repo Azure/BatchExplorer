@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
 import { ServerError, autobind } from "@batch-flask/core";
-import { ClipboardService, ElectronShell } from "@batch-flask/ui";
+import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/ui";
 import * as moment from "moment";
 import * as path from "path";
 
@@ -9,7 +9,6 @@ import { Node, NodeConnectionSettings, Pool } from "app/models";
 import {
     AddNodeUserAttributes,
     BatchExplorerService,
-    FileSystemService,
     NodeConnectService,
     NodeUserService,
     SettingsService,

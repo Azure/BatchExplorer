@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
 import { Response } from "@angular/http";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 import { Metric, MetricValue, MonitoringMetricList } from "app/models/monitoring";
-import { AccountService } from "app/services/account.service";
 import { ArmHttpService } from "app/services/arm-http.service";
-import { ThemeService } from "app/services/themes";
+import { BatchAccountService } from "app/services/batch-account";
+import { flatMap, map, share } from "rxjs/operators";
 import { CoreCountMetrics } from "./core-count-metrics";
 import { FailedTaskMetrics } from "./failed-task-metrics";
 import { MonitorChartTimeFrame, MonitoringMetricDefinition } from "./monitor-metrics-base";
@@ -19,8 +19,7 @@ import { TaskStatesMetrics } from "./task-states-metrics";
 export class InsightsMetricsService {
 
     constructor(
-        themeService: ThemeService,
-        private accountService: AccountService,
+        private accountService: BatchAccountService,
         private armService: ArmHttpService) {
     }
 
@@ -55,9 +54,12 @@ export class InsightsMetricsService {
      * Get account observable for rendering selected account metrics
      */
     private _getCurrentAccount() {
-        return this.accountService.currentAccount.flatMap(account => {
-            return Observable.of(account && account.id);
-        }).share();
+        return this.accountService.currentAccount.pipe(
+            flatMap(account => {
+                return of(account && account.id);
+            }),
+            share(),
+        );
     }
 
     /**
@@ -66,10 +68,11 @@ export class InsightsMetricsService {
      */
     private _fetchMetrics(metric: MonitoringMetricDefinition) {
         const options = metric.getRequestOptions();
-        return this._getCurrentAccount()
-            .flatMap((resourceId) => this.armService.get(metric.getRequestUrl(resourceId), options))
-            .map(response => this._processResponse(metric, response))
-            .share();
+        return this._getCurrentAccount().pipe(
+            flatMap((resourceId) => this.armService.get(metric.getRequestUrl(resourceId), options)),
+            map(response => this._processResponse(metric, response)),
+            share(),
+        );
     }
 
     private _processResponse(request: MonitoringMetricDefinition, response: Response) {
