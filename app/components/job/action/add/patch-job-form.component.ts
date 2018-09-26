@@ -5,8 +5,8 @@ import { Observable } from "rxjs";
 import { autobind } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
+import { JobState } from "app/models/azure-batch/job/job";
 import { JobCreateDto, JobPatchDto } from "app/models/dtos";
-import { JobState } from "app/models/job";
 import { JobService, PoolService } from "app/services";
 import { JobCreateBasicDialogComponent } from "./job-create-basic-dialog.component";
 

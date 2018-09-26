@@ -6,7 +6,6 @@ export class JobReleaseTaskDecorator extends DecoratorBase<JobReleaseTask> {
     public commandLine: string;
     public maxWallClockTime: string;
     public retentionTime: string;
-    public runElevated: boolean;
 
     public resourceFiles: {};
     public environmentSettings: {};
@@ -18,7 +17,6 @@ export class JobReleaseTaskDecorator extends DecoratorBase<JobReleaseTask> {
         this.commandLine = this.stringField(task.commandLine);
         this.maxWallClockTime = this.timespanField(task.maxWallClockTime);
         this.retentionTime = this.timespanField(task.retentionTime);
-        this.runElevated = task.runElevated;
 
         this.resourceFiles = task.resourceFiles || {};
         this.environmentSettings = task.environmentSettings || {};

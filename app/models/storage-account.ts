@@ -42,10 +42,10 @@ export interface StorageAccountAttributes extends ArmRecordAttributes {
     name: string;
     kind: string;
     properties: Partial<StorageAccountPropertiesAttributes>;
-    type: StorageAccountType;
+    type: ArmStorageAccountType;
 }
 
-export type StorageAccountType = "Microsoft.Storage/storageAccounts" | "Microsoft.ClassicStorage/storageAccounts";
+export type ArmStorageAccountType = "Microsoft.Storage/storageAccounts" | "Microsoft.ClassicStorage/storageAccounts";
 
 @Model()
 export class StorageAccount extends ArmRecord<StorageAccountAttributes> {
@@ -59,7 +59,7 @@ export class StorageAccount extends ArmRecord<StorageAccountAttributes> {
 
     @Prop() public properties: StorageAccountProperties;
 
-    public type: StorageAccountType;
+    public type: ArmStorageAccountType;
     public isClassic: boolean;
 
     constructor(data: StorageAccountAttributes) {

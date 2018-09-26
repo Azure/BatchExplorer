@@ -1,8 +1,11 @@
 import { Model, Prop, Record } from "@batch-flask/core";
-
 import { ComputeNodeInformation } from "./azure-batch/compute-node-information";
 import { TaskState } from "./azure-batch/task";
+import { TaskExecutionResult } from "./azure-batch/task-execution-result";
 import { FailureInfo } from "./failure-info";
+import {
+    TaskContainerExecutionInfo, TaskContainerExecutionInfoAttributes,
+} from "./task-container-execution-information";
 
 export interface SubtaskInformationAttributes {
     id?: number;
@@ -15,7 +18,8 @@ export interface SubtaskInformationAttributes {
     stateTransitionTime?: Date;
     previousState?: string;
     previousStateTransitionTime?: Date;
-    result?: string;
+    result?: TaskExecutionResult;
+    containerInfo?: TaskContainerExecutionInfoAttributes;
 }
 
 /**
@@ -23,7 +27,7 @@ export interface SubtaskInformationAttributes {
  */
 @Model()
 export class SubtaskInformation extends Record<SubtaskInformationAttributes> {
-    @Prop() public id: string;
+    @Prop() public id: number;
     @Prop() public startTime: Date;
     @Prop() public endTime: Date;
     @Prop() public exitCode: number;
@@ -34,4 +38,6 @@ export class SubtaskInformation extends Record<SubtaskInformationAttributes> {
 
     @Prop() public nodeInfo: ComputeNodeInformation;
     @Prop() public failureInfo: FailureInfo;
+    @Prop() public result: TaskExecutionResult;
+    @Prop() public containerInfo: TaskContainerExecutionInfo;
 }

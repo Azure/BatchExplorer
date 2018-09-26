@@ -4,3 +4,6 @@ export * from "./node";
 export * from "./task-execution-result";
 export * from "./pool";
 export * from "./task";
+export * from "./data-disk";
+export * from "./job";
+export * from "./authentication-token-settings";

@@ -192,7 +192,7 @@ describe("JobCreateBasicDialogComponent ", () => {
         expect(baseForm.controls.displayName.value).toEqual("display name");
         expect(baseForm.controls.priority.value).toEqual(1);
         expect(constraintsForm.controls.maxTaskRetryCount.value).toEqual(3);
-        expect(baseForm.controls.poolInfo.value).toEqual({ poolId: "pool-002" });
+        expect(baseForm.controls.poolInfo.value).toEqual({ poolId: "pool-002", autoPoolSpecification: null });
     });
 
     it("Clicking add creates job and doesnt close form", (done) => {

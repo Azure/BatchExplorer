@@ -1,5 +1,9 @@
 steps:
   - template: ./linux-dependencies.yml
+
+  - script: npm run test-models
+    displayName: Test models against swagger
+
   - script: |
       export DISPLAY=:99
       xvfb-run npm run test

@@ -7,7 +7,6 @@ export class JobManagerTaskDecorator extends DecoratorBase<JobManagerTask> {
     public displayName: string;
     public commandLine: string;
     public killJobOnCompletion: boolean;
-    public runElevated: boolean;
     public runExclusive: boolean;
 
     public resourceFiles: {};
@@ -22,7 +21,6 @@ export class JobManagerTaskDecorator extends DecoratorBase<JobManagerTask> {
         this.displayName = this.stringField(task.displayName);
         this.commandLine = this.stringField(task.commandLine);
         this.killJobOnCompletion = task.killJobOnCompletion;
-        this.runElevated = task.runElevated;
         this.runExclusive = task.runExclusive;
 
         this.resourceFiles = task.resourceFiles || {};

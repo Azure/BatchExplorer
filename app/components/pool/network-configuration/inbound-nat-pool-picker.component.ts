@@ -4,7 +4,7 @@ import {
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
-import { InboundEndpointProtocol, InboundNATPool } from "app/models";
+import { InboundEndpointProtocol, InboundNATPoolAttributes } from "app/models";
 import "./inbound-nat-pool-picker.scss";
 import * as EndpointHelper from "./pool-endpoint-helper";
 
@@ -18,13 +18,13 @@ import * as EndpointHelper from "./pool-endpoint-helper";
     ],
 })
 export class InboundNATPoolPickerComponent implements ControlValueAccessor, Validator, OnDestroy {
-    @Input() public inboundNATPools: InboundNATPool[];
+    @Input() public inboundNATPools: InboundNATPoolAttributes[];
 
     public InboundEndpointProtocol = InboundEndpointProtocol;
     public EndpointHelper = EndpointHelper;
     public form: FormGroup;
 
-    private _propagateChange: (value: InboundNATPool) => void = null;
+    private _propagateChange: (value: InboundNATPoolAttributes) => void = null;
     private _sub: Subscription;
 
     constructor(public formBuilder: FormBuilder) {
@@ -54,7 +54,7 @@ export class InboundNATPoolPickerComponent implements ControlValueAccessor, Vali
         this._sub.unsubscribe();
     }
 
-    public writeValue(value: InboundNATPool) {
+    public writeValue(value: InboundNATPoolAttributes) {
         this._setDynamicValidators(value);
         if (value) {
             this.form.patchValue(value);
@@ -87,7 +87,7 @@ export class InboundNATPoolPickerComponent implements ControlValueAccessor, Vali
         return this.form.controls.networkSecurityGroupRules;
     }
 
-    private _setDynamicValidators(value: InboundNATPool) {
+    private _setDynamicValidators(value: InboundNATPoolAttributes) {
         const otherInboundNATPools = value ? this.inboundNATPools.filter(pool => {
             return  pool.frontendPortRangeStart !== value.frontendPortRangeStart &&
                     pool.frontendPortRangeEnd !== value.frontendPortRangeEnd &&

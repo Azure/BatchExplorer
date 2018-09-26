@@ -15,6 +15,7 @@ export class PoolOsService {
     constructor(private http: AzureBatchHttpService) {
         this.nodeAgentSkus = this._nodeAgentSkus.pipe(
             filter(x => exists(x)),
+            shareReplay(1),
         );
 
         this.offers = this.nodeAgentSkus.pipe(
@@ -48,6 +49,7 @@ export class PoolOsService {
             reduce((resourceGroups, response: BatchListResponse<NodeAgentSkuAttributes>) => {
                 return [...resourceGroups, ...response.value];
             }, []),
+            map(x => x.map(v => new NodeAgentSku(v))),
             share(),
         );
     }

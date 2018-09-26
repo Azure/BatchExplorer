@@ -1,13 +1,13 @@
-import { Record } from "immutable";
+import { Model, Prop, Record } from "@batch-flask/core";
 
-// tslint:disable:variable-name object-literal-sort-keys
-const WindowsConfigurationRecord = Record({
-    enableAutomaticUpdates: false,
-});
+export interface WindowsConfigurationAttributes {
+    enableAutomaticUpdates: boolean;
+}
 
 /**
  * Class for displaying Batch WindowsConfiguration information.
  */
-export class WindowsConfiguration extends WindowsConfigurationRecord {
-    public enableAutomaticUpdates: boolean;
+@Model()
+export class WindowsConfiguration extends Record<WindowsConfigurationAttributes> {
+    @Prop() public enableAutomaticUpdates: boolean;
 }
