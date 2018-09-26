@@ -20,48 +20,50 @@ Microsoft reserves all other rights not expressly granted under this agreement, 
 10. @angular/platform-browser-dynamic(https://github.com/angular/angular#readme) - MIT
 11. @angular/platform-server(https://github.com/angular/angular#readme) - MIT
 12. @angular/router(https://github.com/angular/angular/tree/master/packages/router) - MIT
-13. @tweenjs/tween.js(https://github.com/tweenjs/tween.js) - MIT
-14. azure-storage(http://github.com/Azure/azure-storage-node) - Apache-2.0
-15. bunyan(https://github.com/trentm/node-bunyan#readme) - MIT
-16. chart.js(http://www.chartjs.org) - MIT
-17. chokidar(https://github.com/paulmillr/chokidar) - MIT
-18. commander(https://github.com/tj/commander.js#readme) - MIT
-19. d3(https://d3js.org) - BSD-3-Clause
-20. decode-uri-component(https://github.com/SamVerschueren/decode-uri-component#readme) - MIT
-21. download(https://github.com/kevva/download#readme) - MIT
-22. electron-updater(https://github.com/electron-userland/electron-builder) - MIT
-23. element-resize-detector(https://github.com/wnr/element-resize-detector) - MIT
-24. extract-zip(https://github.com/maxogden/extract-zip#readme) - BSD-2-Clause
-25. font-awesome(http://fontawesome.io/) - (OFL-1.1 AND MIT)
-26. get-proxy-settings(https://github.com/Azure/get-proxy-settings) - MIT
-27. glob(https://github.com/isaacs/node-glob#readme) - ISC
-28. hammerjs(http://hammerjs.github.io/) - MIT
-29. https-proxy-agent(https://github.com/TooTallNate/node-https-proxy-agent#readme) - MIT
-30. immutable(https://facebook.github.com/immutable-js) - MIT
-31. inflection(https://github.com/dreamerslab/node.inflection#readme) - MIT
-32. js-yaml(https://github.com/nodeca/js-yaml) - MIT
-33. jschardet(https://github.com/aadsm/jschardet#readme) - LGPL-2.1+
-34. load-json-file(https://github.com/sindresorhus/load-json-file#readme) - MIT
-35. mkdirp(https://github.com/substack/node-mkdirp#readme) - MIT
-36. moment(http://momentjs.com) - MIT
-37. moment-duration-format(https://github.com/jsmreese/moment-duration-format) - MIT
-38. monaco-editor(https://github.com/Microsoft/monaco-editor#readme) - MIT
-39. mousetrap(https://github.com/ccampbell/mousetrap#readme) - Apache-2.0 WITH LLVM-exception
-40. node-forge(https://github.com/digitalbazaar/forge) - (BSD-3-Clause OR GPL-2.0)
-41. patternomaly(https://github.com/ashiguruma/patternomaly#readme) - MIT
-42. reflect-metadata(http://rbuckton.github.io/reflect-metadata) - Apache-2.0
-43. rxjs(https://github.com/ReactiveX/RxJS) - Apache-2.0
-44. rxjs-compat(null) - undefined
-45. strip-json-comments(https://github.com/sindresorhus/strip-json-comments#readme) - MIT
-46. tinycolor2(https://github.com/TinyColor) - MIT
-47. write-file-webpack-plugin(https://github.com/gajus/write-file-webpack-plugin#readme) - BSD-3-Clause
-48. xml2js(https://github.com/Leonidas-from-XIV/node-xml2js) - MIT
-49. zone.js(https://github.com/angular/zone.js#readme) - MIT
-50. websockets(https://github.com/aaugustin/websockets) - BSD-3-Clause
-51. azure-batch-cli-extensions(https://github.com/Azure/azure-batch-cli-extensions) - MIT
-52. node.js(https://nodejs.org/en/) - MIT
-53. python(https://www.python.org/) - PSF
-54. Electron(https://electronjs.org/) - electron
+13. @azure/storage-blob(https://github.com/Azure/azure-storage-js#readme) - MIT
+14. @tweenjs/tween.js(https://github.com/tweenjs/tween.js) - MIT
+15. applicationinsights(https://github.com/Microsoft/ApplicationInsights-node.js#readme) - MIT
+16. azure-storage(http://github.com/Azure/azure-storage-node) - Apache-2.0
+17. bunyan(https://github.com/trentm/node-bunyan#readme) - MIT
+18. chart.js(http://www.chartjs.org) - MIT
+19. chokidar(https://github.com/paulmillr/chokidar) - MIT
+20. commander(https://github.com/tj/commander.js#readme) - MIT
+21. d3(https://d3js.org) - BSD-3-Clause
+22. decode-uri-component(https://github.com/SamVerschueren/decode-uri-component#readme) - MIT
+23. download(https://github.com/kevva/download#readme) - MIT
+24. electron-updater(https://github.com/electron-userland/electron-builder) - MIT
+25. element-resize-detector(https://github.com/wnr/element-resize-detector) - MIT
+26. extract-zip(https://github.com/maxogden/extract-zip#readme) - BSD-2-Clause
+27. flag-icon-css(https://github.com/lipis/flag-icon-css#readme) - undefined
+28. font-awesome(http://fontawesome.io/) - (OFL-1.1 AND MIT)
+29. get-proxy-settings(https://github.com/Azure/get-proxy-settings) - MIT
+30. glob(https://github.com/isaacs/node-glob#readme) - ISC
+31. hammerjs(http://hammerjs.github.io/) - MIT
+32. https-proxy-agent(https://github.com/TooTallNate/node-https-proxy-agent#readme) - MIT
+33. immutable(https://facebook.github.com/immutable-js) - MIT
+34. inflection(https://github.com/dreamerslab/node.inflection#readme) - MIT
+35. js-yaml(https://github.com/nodeca/js-yaml) - MIT
+36. jschardet(https://github.com/aadsm/jschardet#readme) - LGPL-2.1+
+37. load-json-file(https://github.com/sindresorhus/load-json-file#readme) - MIT
+38. mkdirp(https://github.com/substack/node-mkdirp#readme) - MIT
+39. moment(http://momentjs.com) - MIT
+40. moment-duration-format(https://github.com/jsmreese/moment-duration-format) - MIT
+41. monaco-editor(https://github.com/Microsoft/monaco-editor#readme) - MIT
+42. mousetrap(https://github.com/ccampbell/mousetrap#readme) - Apache-2.0 WITH LLVM-exception
+43. node-forge(https://github.com/digitalbazaar/forge) - (BSD-3-Clause OR GPL-2.0)
+44. patternomaly(https://github.com/ashiguruma/patternomaly#readme) - MIT
+45. reflect-metadata(http://rbuckton.github.io/reflect-metadata) - Apache-2.0
+46. rxjs(https://github.com/ReactiveX/RxJS) - Apache-2.0
+47. strip-json-comments(https://github.com/sindresorhus/strip-json-comments#readme) - MIT
+48. tinycolor2(https://github.com/TinyColor) - MIT
+49. write-file-webpack-plugin(https://github.com/gajus/write-file-webpack-plugin#readme) - BSD-3-Clause
+50. xml2js(https://github.com/Leonidas-from-XIV/node-xml2js) - MIT
+51. zone.js(https://github.com/angular/zone.js#readme) - MIT
+52. websockets(https://github.com/aaugustin/websockets) - BSD-3-Clause
+53. azure-batch-cli-extensions(https://github.com/Azure/azure-batch-cli-extensions) - MIT
+54. node.js(https://nodejs.org/en/) - MIT
+55. python(https://www.python.org/) - PSF
+56. Electron(https://electronjs.org/) - electron
 
 ============================================================
     Start license for @angular/animations
@@ -441,6 +443,35 @@ THE SOFTWARE.
 ============================================================
 
 ============================================================
+    Start license for @azure/storage-blob
+------------------------------------------------------------
+    MIT License
+
+    Copyright (c) Microsoft Corporation. All rights reserved.
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE
+
+------------------------------------------------------------
+    End license for @azure/storage-blob
+============================================================
+
+============================================================
     Start license for @tweenjs/tween.js
 ------------------------------------------------------------
 The MIT License
@@ -469,6 +500,22 @@ THE SOFTWARE.
 
 ------------------------------------------------------------
     End license for @tweenjs/tween.js
+============================================================
+
+============================================================
+    Start license for applicationinsights
+------------------------------------------------------------
+﻿The MIT License (MIT) 
+Copyright © Microsoft Corporation
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+------------------------------------------------------------
+    End license for applicationinsights
 ============================================================
 
 ============================================================
@@ -934,6 +981,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ============================================================
 
 ============================================================
+    Start license for flag-icon-css
+------------------------------------------------------------
+============================================================
     Start license for font-awesome
 ------------------------------------------------------------
 Font Awesome Free License
@@ -941,7 +991,7 @@ Font Awesome Free License
 
 Font Awesome Free is free, open source, and GPL friendly. You can use it for
 commercial projects, open source projects, or really almost whatever you want.
-Full Font Awesome Free license: https://fontawesome.com/license.
+Full Font Awesome Free license: https://fontawesome.com/license/free.
 
 # Icons: CC BY 4.0 License (https://creativecommons.org/licenses/by/4.0/)
 In the Font Awesome Free download, the CC BY 4.0 license applies to all icons
@@ -962,7 +1012,7 @@ attribution, so you shouldn't need to do anything additional when using these
 files normally.
 
 We've kept attribution comments terse, so we ask that you do not actively work
-to remove them from files, especially code. They're a great way for folks to 
+to remove them from files, especially code. They're a great way for folks to
 learn about Font Awesome.
 
 # Brand Icons
@@ -2607,9 +2657,6 @@ END OF TERMS AND CONDITIONS
 ============================================================
 
 ============================================================
-    Start license for rxjs-compat
-------------------------------------------------------------
-============================================================
     Start license for strip-json-comments
 ------------------------------------------------------------
 MIT License
@@ -2829,7 +2876,7 @@ The externally maintained libraries used by Node.js are:
 
 - Acorn, located at deps/acorn, is licensed as follows:
   """
-    Copyright (C) 2012-2017 by various contributors (see AUTHORS)
+    Copyright (C) 2012-2018 by various contributors (see AUTHORS)
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -3811,6 +3858,109 @@ The externally maintained libraries used by Node.js are:
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   """
 
+- inspector_protocol, located at tools/inspector_protocol, is licensed as follows:
+  """
+    // Copyright 2016 The Chromium Authors. All rights reserved.
+    //
+    // Redistribution and use in source and binary forms, with or without
+    // modification, are permitted provided that the following conditions are
+    // met:
+    //
+    //    * Redistributions of source code must retain the above copyright
+    // notice, this list of conditions and the following disclaimer.
+    //    * Redistributions in binary form must reproduce the above
+    // copyright notice, this list of conditions and the following disclaimer
+    // in the documentation and/or other materials provided with the
+    // distribution.
+    //    * Neither the name of Google Inc. nor the names of its
+    // contributors may be used to endorse or promote products derived from
+    // this software without specific prior written permission.
+    //
+    // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+    // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+    // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+    // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+    // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+    // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+    // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+    // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  """
+
+- jinja2, located at tools/jinja2, is licensed as follows:
+  """
+    Copyright (c) 2009 by the Jinja Team, see AUTHORS for more details.
+
+    Some rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are
+    met:
+
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+
+        * Redistributions in binary form must reproduce the above
+          copyright notice, this list of conditions and the following
+          disclaimer in the documentation and/or other materials provided
+          with the distribution.
+
+        * The names of the contributors may not be used to endorse or
+          promote products derived from this software without specific
+          prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+    A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+    OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+    LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+    DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+    THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  """
+
+- markupsafe, located at tools/markupsafe, is licensed as follows:
+  """
+    Copyright (c) 2010 by Armin Ronacher and contributors.  See AUTHORS
+    for more details.
+
+    Some rights reserved.
+
+    Redistribution and use in source and binary forms of the software as well
+    as documentation, with or without modification, are permitted provided
+    that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+
+    * Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
+
+    * The names of the contributors may not be used to endorse or
+      promote products derived from this software without specific
+      prior written permission.
+
+    THIS SOFTWARE AND DOCUMENTATION IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+    CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+    NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+    A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+    OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+    EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+    PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+    PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+    LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+    NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE AND DOCUMENTATION, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+    DAMAGE.
+  """
+
 - cpplint.py, located at tools/cpplint.py, is licensed as follows:
   """
     Copyright (c) 2009 Google Inc. All rights reserved.
@@ -3948,32 +4098,6 @@ The externally maintained libraries used by Node.js are:
     LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
     OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-  """
-
-- remark-cli, located at tools/remark-cli, is licensed as follows:
-  """
-    (The MIT License)
-
-    Copyright (c) 2014-2016 Titus Wormer <tituswormer@gmail.com>
-    Copyright (c) 2011-2014, Christopher Jeffrey (https://github.com/chjj/)
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in
-    all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-    THE SOFTWARE.
   """
 
 - node-inspect, located at deps/node-inspect, is licensed as follows:
