@@ -9,6 +9,7 @@ require("module").Module._initPaths();
 import "reflect-metadata";
 import "zone.js";
 
+console.log("Nodepath", process.env.NODE_PATH);
 import * as moment from "moment";
 import fetch from "node-fetch";
 import * as models from "../../app/models";
