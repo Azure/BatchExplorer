@@ -3,7 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import * as path from "path";
 
 import { NcjJobTemplate, NcjPoolTemplate, NcjTemplateType } from "app/models";
-import { NcjTemplateService } from "app/services";
+import { LocalTemplateService } from "app/services";
 import "./submit-local-template.scss";
 
 @Component({
@@ -24,7 +24,7 @@ export class SubmitLocalTemplateComponent implements OnInit {
     public poolTemplate: NcjPoolTemplate;
 
     constructor(
-        private templateService: NcjTemplateService,
+        private localTemplateService: LocalTemplateService,
         private route: ActivatedRoute) {
     }
 
@@ -38,13 +38,13 @@ export class SubmitLocalTemplateComponent implements OnInit {
 
     private async _updateTemplate() {
         try {
-            const { type, template } = await this.templateService.loadLocalTemplateFile(this.templateFile);
+            const { type, template } = await this.localTemplateService.loadLocalTemplateFile(this.templateFile);
             this.jobTemplate = null;
             this.poolTemplate = null;
-            if (type === NcjTemplateType.job) {
+            if (type === NcjTemplateType.Job) {
                 this.jobTemplate = template;
                 this.loaded = true;
-            } else if (type === NcjTemplateType.pool) {
+            } else if (type === NcjTemplateType.Pool) {
                 this.poolTemplate = template;
                 this.loaded = true;
             } else {

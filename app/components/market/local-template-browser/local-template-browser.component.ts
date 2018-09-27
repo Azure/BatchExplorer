@@ -1,8 +1,7 @@
 import { Component, HostListener } from "@angular/core";
 import { Router } from "@angular/router";
-
 import { NcjTemplateType } from "app/models";
-import { NcjTemplateService } from "app/services";
+import { LocalTemplateService } from "app/services";
 import { DragUtils } from "app/utils";
 
 import "./local-template-browser.scss";
@@ -23,7 +22,7 @@ export class LocalTemplateBrowserComponent {
     public error: string;
     public templateType: NcjTemplateType = null;
 
-    constructor(private router: Router, private templateService: NcjTemplateService) { }
+    constructor(private router: Router, private localTemplateService: LocalTemplateService) { }
 
     public pickTemplateFile(template: any) {
         this.pickedTemplateFile = template.target.files[0];
@@ -91,10 +90,10 @@ export class LocalTemplateBrowserComponent {
     private async _loadTemplateFile() {
         const path = this.pickedTemplateFile.path;
         try {
-            const { type } = await this.templateService.loadLocalTemplateFile(path);
+            const { type } = await this.localTemplateService.loadLocalTemplateFile(path);
             this.templateType = type;
 
-            if (type === NcjTemplateType.unknown) {
+            if (type === NcjTemplateType.Unknown) {
                 this.valid = false;
             } else {
                 this.valid = true;

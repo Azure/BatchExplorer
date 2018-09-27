@@ -20,7 +20,7 @@ export class LocalTemplateExplorerComponent implements OnDestroy {
 
     constructor(
         private changeDetector: ChangeDetectorRef,
-        private localTemplateService: LocalTemplateService,
+        localTemplateService: LocalTemplateService,
         private dialogService: DialogService) {
 
         this._subs.push(localTemplateService.templates.subscribe((templates) => {
