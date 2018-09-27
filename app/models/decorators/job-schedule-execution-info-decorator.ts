@@ -1,5 +1,5 @@
-import { JobScheduleExecutionInformation, RecentJob } from "app/models";
 import { DateUtils } from "@batch-flask/utils";
+import { JobScheduleExecutionInformation, RecentJob } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
 
 export class JobScheduleExecutionInfoDecorator extends DecoratorBase<JobScheduleExecutionInformation> {
