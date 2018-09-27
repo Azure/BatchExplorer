@@ -1,5 +1,5 @@
+import { ObjectUtils, log } from "@batch-flask/utils";
 import { NcjParameter } from "app/models";
-import { ObjectUtils, log } from "app/utils";
 import * as inflection from "inflection";
 
 export enum NcjParameterExtendedType {

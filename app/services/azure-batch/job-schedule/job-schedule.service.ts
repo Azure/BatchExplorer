@@ -8,7 +8,8 @@ import {
 } from "@batch-flask/core";
 import { JobSchedule } from "app/models";
 import { JobScheduleCreateDto, JobSchedulePatchDto } from "app/models/dtos";
-import { Constants, ModelUtils } from "app/utils";
+import { ModelUtils } from "app/utils";
+import { Constants } from "common";
 import { List } from "immutable";
 import { Observable, Subject } from "rxjs";
 import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "../core";

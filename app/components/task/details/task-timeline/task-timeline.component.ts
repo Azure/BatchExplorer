@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import * as moment from "moment";
 
 import { Job, Task, TaskState } from "app/models";
-import { DateUtils } from "app/utils";
+import { DateUtils } from "@batch-flask/utils";
 
 import "./task-timeline.scss";
 

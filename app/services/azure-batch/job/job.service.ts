@@ -11,7 +11,8 @@ import {
 } from "@batch-flask/core";
 import { Job, JobTaskCounts } from "app/models";
 import { JobCreateDto, JobPatchDto } from "app/models/dtos";
-import { Constants, ModelUtils } from "app/utils";
+import { ModelUtils } from "app/utils";
+import { Constants } from "common";
 import { List } from "immutable";
 import { map, share } from "rxjs/operators";
 import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "../core";

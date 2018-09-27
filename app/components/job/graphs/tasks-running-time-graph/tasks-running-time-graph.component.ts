@@ -7,7 +7,7 @@ import { Subscription } from "rxjs";
 
 import { Job, Task } from "app/models";
 import { Theme, ThemeService } from "app/services";
-import { DateUtils } from "app/utils";
+import { DateUtils } from "@batch-flask/utils";
 import "./tasks-running-time-graph.scss";
 
 interface TaskPoint {

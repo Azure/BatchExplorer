@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 
 import { NcjTemplateType } from "app/models";
 import { NcjTemplateService } from "app/services";
-import { DragUtils } from "app/utils";
+import { DragUtils  } from "@batch-flask/utils";
 
 import "./local-template-browser.scss";
 

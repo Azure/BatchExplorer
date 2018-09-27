@@ -8,7 +8,7 @@ import { ListBaseComponent } from "@batch-flask/core/list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationPackage, BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
-import { DateUtils } from "app/utils";
+import { DateUtils } from "@batch-flask/utils";
 import { flatMap } from "rxjs/operators";
 import { ActivatePackageDialogComponent, ApplicationCreateDialogComponent } from "../action";
 

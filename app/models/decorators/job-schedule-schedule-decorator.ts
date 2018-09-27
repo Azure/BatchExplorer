@@ -1,7 +1,7 @@
 import { duration } from "moment";
 
 import { Schedule } from "app/models";
-import { DateUtils } from "app/utils";
+import { DateUtils } from "@batch-flask/utils";
 import { DecoratorBase } from "app/utils/decorators";
 
 export class JobScheduleScheduleDecorator extends DecoratorBase<Schedule> {

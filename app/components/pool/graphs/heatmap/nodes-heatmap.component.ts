@@ -4,9 +4,10 @@ import {
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { ContextMenuItem, ContextMenuSeparator, ContextMenuService } from "@batch-flask/ui/context-menu";
+import { log } from "@batch-flask/utils";
 import { NodeCommands } from "app/components/node/action";
 import { Node, NodeState, Pool } from "app/models";
-import { ComponentUtils, log } from "app/utils";
+import { ComponentUtils } from "app/utils";
 import * as d3 from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";

@@ -3,7 +3,7 @@ import { List } from "immutable";
 import * as moment from "moment";
 
 import { Job } from "app/models";
-import { DateUtils } from "app/utils";
+import { DateUtils } from "@batch-flask/utils";
 
 import { autobind } from "@batch-flask/core";
 import "./jobs-running-time-graph.scss";

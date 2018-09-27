@@ -1,13 +1,12 @@
 import { Component, Input, OnDestroy, ViewChild } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import * as path from "path";
-import { Observable, Subscription, from } from "rxjs";
-
 import { Activity, ActivityService, FileDropEvent, FileSystemService } from "@batch-flask/ui";
+import { CloudPathUtils } from "@batch-flask/utils";
 import { BlobFilesBrowserComponent } from "app/components/file/browse";
 import { BlobContainer } from "app/models";
 import { StorageBlobService, StorageContainerService } from "app/services/storage";
-import { CloudPathUtils } from "app/utils";
+import * as path from "path";
+import { Observable, Subscription, from } from "rxjs";
 import { map } from "rxjs/operators";
 
 @Component({

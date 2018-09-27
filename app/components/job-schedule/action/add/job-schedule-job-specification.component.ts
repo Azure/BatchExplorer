@@ -13,7 +13,7 @@ import { Subscription, of } from "rxjs";
 import { RangeValidator } from "@batch-flask/ui/validation";
 import { AllTasksCompleteAction, TaskFailureAction, VirtualMachineConfiguration } from "app/models";
 import { PoolService } from "app/services";
-import { Constants } from "app/utils";
+import { Constants } from "common";
 import { debounceTime, distinctUntilChanged, flatMap } from "rxjs/operators";
 
 @Component({

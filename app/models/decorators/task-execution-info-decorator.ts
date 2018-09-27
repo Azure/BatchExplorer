@@ -1,5 +1,5 @@
 import { TaskExecutionInformation } from "app/models";
-import { DateUtils } from "app/utils";
+import { DateUtils } from "@batch-flask/utils";
 import { DecoratorBase } from "app/utils/decorators";
 import { FailureInfoDecorator } from "./failure-info-decorator";
 import { TaskContainerExecutionInfoDecorator } from "./task-container-execution-info-decorator";

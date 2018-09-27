@@ -5,6 +5,7 @@ import * as moment from "moment";
 import * as path from "path";
 
 import { SidebarRef } from "@batch-flask/ui/sidebar";
+import { SecureUtils } from "@batch-flask/utils";
 import { Node, NodeConnectionSettings, Pool } from "app/models";
 import {
     AddNodeUserAttributes,
@@ -13,7 +14,7 @@ import {
     NodeUserService,
     SettingsService,
 } from "app/services";
-import { PoolUtils, SecureUtils } from "app/utils";
+import { PoolUtils } from "app/utils";
 import { ExternalApplication } from "common/constants";
 import { Observable, from } from "rxjs";
 import { flatMap, share } from "rxjs/operators";

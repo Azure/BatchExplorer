@@ -1,6 +1,5 @@
+import { DateUtils, exists } from "@batch-flask/utils";
 import { Duration } from "moment";
-
-import { DateUtils, exists } from "app/utils";
 
 export class DecoratorBase<TEntity> {
     public original: TEntity;

@@ -4,7 +4,7 @@ import { ElectronRemote } from "@batch-flask/ui";
 import { ArmBatchAccount } from "app/models";
 import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
-import { SecureUtils, log } from "app/utils";
+import { SecureUtils, log } from "@batch-flask/utils";
 import { PythonRpcServerProcess } from "client/python-process";
 import { AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
 import { catchError, first, flatMap, share, tap } from "rxjs/operators";
