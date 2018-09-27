@@ -1,4 +1,4 @@
-import { OS } from "app/utils";
+import { OS } from "@batch-flask/utils";
 
 let bindings: KeyBindings[];
 

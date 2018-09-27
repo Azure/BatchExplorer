@@ -13,7 +13,7 @@ import { Task, VirtualMachineConfiguration } from "app/models";
 import { TaskCreateDto } from "app/models/dtos";
 import { createTaskFormToJsonData, taskToFormModel } from "app/models/forms";
 import { JobService, PoolService, TaskService } from "app/services";
-import { Constants } from "app/utils";
+import { Constants } from "common";
 
 @Component({
     selector: "bl-add-task-form",

@@ -1,6 +1,5 @@
+import { ObjectUtils } from "@batch-flask/utils";
 import { List } from "immutable";
-
-import { ObjectUtils } from "app/utils";
 import { NodeAgentSku } from "./node-agent-sku";
 
 const dataScienceVms = {

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
+import { StringUtils, log } from "@batch-flask/utils";
 import { ArmBatchAccount, BatchAccount, VmSize } from "app/models";
-import { StringUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, combineLatest } from "rxjs";
 import { filter, map, share, shareReplay, take } from "rxjs/operators";

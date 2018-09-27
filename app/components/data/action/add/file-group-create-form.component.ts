@@ -11,12 +11,13 @@ import {
     NotificationService,
     SidebarRef,
 } from "@batch-flask/ui";
+import { log } from "@batch-flask/utils";
 import { BlobContainer } from "app/models";
 import { FileGroupCreateDto, FileOrDirectoryDto } from "app/models/dtos";
 import { CreateFileGroupModel, createFileGroupFormToJsonData, fileGroupToFormModel } from "app/models/forms";
 import { NcjFileGroupService } from "app/services";
 import { StorageContainerService } from "app/services/storage";
-import { Constants, log } from "app/utils";
+import { Constants } from "common";
 import { BehaviorSubject, Observable, Subscription, from } from "rxjs";
 import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
 

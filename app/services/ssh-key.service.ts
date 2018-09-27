@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { FileSystemService } from "@batch-flask/ui";
 import { SSHPublicKey } from "app/models";
-import { Constants } from "app/utils";
+import { Constants } from "common";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, from } from "rxjs";
 import { map } from "rxjs/operators";

@@ -1,4 +1,5 @@
-import { ColorUtils, log } from "app/utils";
+import { log } from "@batch-flask/utils";
+import { ColorUtils } from "app/utils";
 import { StateTree } from "./state-tree";
 
 interface ColorMap { [key: string]: string; }

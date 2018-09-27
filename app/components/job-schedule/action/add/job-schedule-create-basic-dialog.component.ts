@@ -10,7 +10,7 @@ import { JobSchedule } from "app/models";
 import { JobScheduleCreateDto } from "app/models/dtos";
 import { createJobScheduleFormToJsonData, jobScheduleToFormModel } from "app/models/forms";
 import { JobScheduleService } from "app/services";
-import { Constants } from "app/utils";
+import { Constants } from "common";
 
 import "./job-schedule-create-basic-dialog.scss";
 

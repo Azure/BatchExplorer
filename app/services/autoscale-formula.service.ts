@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
+import { log } from "@batch-flask/utils";
 import { AutoscaleFormula } from "app/models";
-import { Constants, log } from "app/utils";
+import { Constants } from "common";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 import { catchError, map } from "rxjs/operators";
