@@ -71,7 +71,9 @@ export class DataHomeComponent implements OnInit {
 
             if (!this.dataSource) {
                 this.autoStorageService.get().subscribe((storageAccountId) => {
-                    this._navigateToStorageAccount(storageAccountId);
+                    if (storageAccountId) {
+                        this._navigateToStorageAccount(storageAccountId);
+                    }
                 });
             } else {
                 localStorage.setItem(Constants.localStorageKey.lastStorageAccount, this.dataSource);
