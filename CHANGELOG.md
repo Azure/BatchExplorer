@@ -1,3 +1,8 @@
+# 0.18.1
+
+### Bug fixes
+* Crash on pool configuration [\#1638](https://github.com/Azure/BatchExplorer/issues/1638)
+
 # 0.18.0
 [All items](https://github.com/Azure/BatchExplorer/milestone/24?closed=1)
 
