@@ -57,10 +57,6 @@ export class BatchAccountCreateComponent implements OnDestroy {
         this._disposeSubscription(this._locationSub);
     }
 
-    public trackByLocation(index, location: Location) {
-        return location.id;
-    }
-
     public get selectedSubscription() {
         return this.form.controls.subscription.value;
     }
@@ -196,13 +192,6 @@ export class BatchAccountCreateComponent implements OnDestroy {
             this._resourceGroupSub = this.subscriptionService.listResourceGroups(subscription)
                 .subscribe((resourceGroups: ResourceGroup[]) => {
                     this.resourceGroups = resourceGroups;
-                    // List all locations
-                    this._disposeSubscription(this._locationSub);
-                    this._locationSub = this.subscriptionService.listLocations(subscription)
-                        .subscribe((locations: Location[]) => {
-                            this.locations = locations;
-                            this.changeDetector.markForCheck();
-                        });
                     this.changeDetector.markForCheck();
                 });
             this.form.controls.name.updateValueAndValidity();
