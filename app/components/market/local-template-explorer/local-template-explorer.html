@@ -6,17 +6,17 @@
 </div>
 <div class="local-templates-content">
     <div class="local-template" *ngFor="let template of templates; trackBy: trackTemplate" [title]="template.description">
-        <div class="name reverse-ellipsis">{{template.path}}</div>
         <div class="type" [ngSwitch]="template.type">
             <span *ngSwitchCase="NcjTemplateType.Pool">
-                Pool
+                <i class="fa fa-database" title="Pool"></i>
             </span>
             <span *ngSwitchCase="NcjTemplateType.Job">
-                Job
+                <i class="fa fa-tasks" title="Pool"></i>
             </span>
             <span *ngSwitchDefault>
-                Unkown
+                <i class="fa fa-question-circle"></i>
             </span>
         </div>
+        <div class="name reverse-ellipsis">{{template.path}}</div>
     </div>
 </div>
