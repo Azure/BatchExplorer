@@ -7,7 +7,6 @@
                     {{selected.size}} selected
                 </ng-container>
                 <ng-container *ngIf="!hasMultipleSelected && firstSelection">
-                    <!-- {{firstSelection ? firstSelection.label : ""}} -->
                     <ng-template [ngTemplateOutlet]="firstSelection.content"></ng-template>
                 </ng-container>
             </ng-container>

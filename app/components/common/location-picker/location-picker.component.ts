@@ -3,13 +3,13 @@ import {
     Input, OnChanges, OnDestroy, forwardRef,
 } from "@angular/core";
 import {
-    AbstractControl, ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
+    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
 } from "@angular/forms";
+import { LoadingStatus } from "@batch-flask/ui";
 import { Location, Subscription } from "app/models";
+import { SubscriptionService } from "app/services";
 import { Subscription as RxjsSubscription } from "rxjs";
 
-import { LoadingStatus } from "@batch-flask/ui";
-import { SubscriptionService } from "../../../services";
 import "./location-picker.scss";
 
 @Component({
@@ -34,7 +34,6 @@ export class LocationPickerComponent implements OnChanges, OnDestroy, ControlVal
 
     constructor(private changeDetector: ChangeDetectorRef, private subscriptionService: SubscriptionService) {
         this.location.valueChanges.subscribe((value) => {
-            console.log("new value");
             if (this._propagateChange) {
                 this._propagateChange(value);
             }
@@ -48,14 +47,18 @@ export class LocationPickerComponent implements OnChanges, OnDestroy, ControlVal
     }
 
     public ngOnDestroy() {
-
+        this._disposeSubscription();
     }
 
-    public validate(c: AbstractControl): ValidationErrors {
-        return null;
+    public validate(): ValidationErrors {
+        if (this.location.valid) {
+            return null;
+        }
+        return this.location.errors;
     }
 
     public writeValue(location: string): void {
+        console.log("Set value", location);
         this.location.setValue(location);
     }
 

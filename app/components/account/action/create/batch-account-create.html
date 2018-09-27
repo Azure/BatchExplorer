@@ -2,18 +2,6 @@
     <bl-form-page main-form-page [title]="title" [formGroup]="form">
         <bl-form-section title="General info" subtitle="Basic information about the batch account">
             <div class="form-element">
-                <bl-form-field>
-                    <input blInput formControlName="name" placeholder="Account name" />
-                    <div blFormFieldSuffix *ngIf="selectedLocation">{{accountUrlSuffix}}</div>
-                </bl-form-field>
-                <bl-error controlName="name" code="required">Account name is a required field</bl-error>
-                <bl-error controlName="name" code="minLength">Account name has a minimum length of 3 characters</bl-error>
-                <bl-error controlName="name" code="maxlength">Account name has a maximum length of 64 characters</bl-error>
-                <bl-error controlName="name" code="pattern">Account name can contain lower case letters and numbers</bl-error>
-                <bl-error controlName="name" code="accountExists">{{ form.controls.name.errors?.accountExists?.message }}</bl-error>
-                <bl-error controlName="name" code="serverError">{{ form.controls.name.errors?.serverError }}</bl-error>
-            </div>
-            <div class="form-element">
                 <bl-subscription-picker formControlName="subscription"></bl-subscription-picker>
                 <bl-error controlName="subscription" code="required">Subscription is a required field</bl-error>
             </div>
@@ -41,6 +29,18 @@
                     You can request a an account quota increase, create the account in another location, or create the
                     account in another subscription.
                 </bl-error>
+            </div>
+            <div class="form-element">
+                <bl-form-field>
+                    <input blInput formControlName="name" placeholder="Account name" />
+                    <div blFormFieldSuffix *ngIf="selectedLocation">{{accountUrlSuffix}}</div>
+                </bl-form-field>
+                <bl-error controlName="name" code="required">Account name is a required field</bl-error>
+                <bl-error controlName="name" code="minLength">Account name has a minimum length of 3 characters</bl-error>
+                <bl-error controlName="name" code="maxlength">Account name has a maximum length of 64 characters</bl-error>
+                <bl-error controlName="name" code="pattern">Account name can contain lower case letters and numbers</bl-error>
+                <bl-error controlName="name" code="accountExists">{{ form.controls.name.errors?.accountExists?.message }}</bl-error>
+                <bl-error controlName="name" code="serverError">{{ form.controls.name.errors?.serverError }}</bl-error>
             </div>
         </bl-form-section>
         <bl-form-section title="Storage account" subtitle="Pick a storage account that will be assigned with this batch account.">

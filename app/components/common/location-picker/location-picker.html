@@ -1,7 +1,7 @@
 <bl-form-field *ngIf="locations.length">
     <bl-select [formControl]="location" placeholder="Location" [filterable]="true">
         <bl-option *ngFor="let location of locations;trackBy: trackLocation"
-            [value]="location"
+            [value]="location.name"
             [label]="location.displayName"
             [useTemplate]="true">
 
