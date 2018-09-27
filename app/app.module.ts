@@ -96,16 +96,15 @@ import {
     VersionService,
     VmSizeService,
 } from "./services";
-import { RendererTelemetryModule } from "./services/telemetry";
 import { NcjModule } from "./services";
-
+import { RendererTelemetryModule } from "./services/telemetry";
 
 const modules = [
     AccountModule, ApplicationModule, CertificateModule,
     DataModule, FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
     SettingsModule, TaskModule, MarketModule, LayoutModule,
     MiscModule,
-    NcjModule
+    NcjModule,
 ];
 
 const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHttpService, ServicePrincipalService];

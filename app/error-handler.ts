@@ -13,7 +13,7 @@ export class BatchExplorerErrorHandler extends ErrorHandler {
     }
 
     public handleError(error) {
-        // super.handleError(error);
+        super.handleError(error);
         handleCoreError(error, this.telemetryService);
     }
 
