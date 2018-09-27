@@ -1,8 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, OnDestroy } from "@angular/core";
 import { FileSystemService, LoadingStatus } from "@batch-flask/ui";
-import { log } from "@batch-flask/utils";
-import { DateUtils } from "@batch-flask/utils";
+import { DateUtils, log } from "@batch-flask/utils";
 import { Constants } from "common";
 import * as path from "path";
 import { BehaviorSubject, Observable, Subscription, from } from "rxjs";

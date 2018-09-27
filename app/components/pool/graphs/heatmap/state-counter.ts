@@ -1,8 +1,7 @@
+import { ObjectUtils, log } from "@batch-flask/utils";
+import { Node, NodeState } from "app/models";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
-
-import { Node, NodeState } from "app/models";
-import { ObjectUtils, log } from "@batch-flask/utils";
 
 interface CountMap { [key: string]: number; }
 interface CounObsMap { [key: string]: BehaviorSubject<number>; }

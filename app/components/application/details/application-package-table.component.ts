@@ -1,14 +1,13 @@
 import { ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { autobind } from "@batch-flask/core";
-import { List } from "immutable";
-import { Observable, forkJoin } from "rxjs";
-
 import { ListBaseComponent } from "@batch-flask/core/list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { DateUtils } from "@batch-flask/utils";
 import { ApplicationPackage, BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
-import { DateUtils } from "@batch-flask/utils";
+import { List } from "immutable";
+import { Observable, forkJoin } from "rxjs";
 import { flatMap } from "rxjs/operators";
 import { ActivatePackageDialogComponent, ApplicationCreateDialogComponent } from "../action";
 

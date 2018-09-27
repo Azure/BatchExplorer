@@ -1,8 +1,7 @@
 import { Injectable, NgZone } from "@angular/core";
 import { Router } from "@angular/router";
 import { IpcService } from "@batch-flask/ui";
-import { Constants } from "common";
-import { BatchExplorerLink, BatchExplorerLinkAction } from "common";
+import { BatchExplorerLink, BatchExplorerLinkAction, Constants } from "common";
 import * as decodeUriComponent from "decode-uri-component";
 import { URLSearchParams } from "url";
 import { BatchAccountService } from "./batch-account";

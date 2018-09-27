@@ -1,13 +1,13 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
+import { DateUtils } from "@batch-flask/utils";
+import { Job, Task } from "app/models";
+import { Theme, ThemeService } from "app/services";
 import { List } from "immutable";
 import * as moment from "moment";
 import { Subscription } from "rxjs";
 
-import { Job, Task } from "app/models";
-import { Theme, ThemeService } from "app/services";
-import { DateUtils } from "@batch-flask/utils";
 import "./tasks-running-time-graph.scss";
 
 interface TaskPoint {

@@ -1,9 +1,8 @@
 import { Component, HostListener } from "@angular/core";
 import { Router } from "@angular/router";
-
+import { DragUtils } from "@batch-flask/utils";
 import { NcjTemplateType } from "app/models";
 import { NcjTemplateService } from "app/services";
-import { DragUtils  } from "@batch-flask/utils";
 
 import "./local-template-browser.scss";
 

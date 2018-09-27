@@ -6,10 +6,10 @@ import {
     ServerError,
     TargetedDataCache,
 } from "@batch-flask/core";
+import { log } from "@batch-flask/utils";
 import { BlobContainer } from "app/models";
 import { StorageEntityGetter, StorageListGetter } from "app/services/core";
 import { SharedAccessPolicy } from "app/services/storage/models";
-import { log } from "@batch-flask/utils";
 import { Constants } from "common";
 import { Observable, Subject, from, throwError } from "rxjs";
 import { catchError, flatMap, map, share } from "rxjs/operators";

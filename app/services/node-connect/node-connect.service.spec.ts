@@ -3,8 +3,8 @@ import * as path from "path";
 import { BehaviorSubject, of } from "rxjs";
 
 import { FileSystemService } from "@batch-flask/ui";
+import { OS, Platform } from "@batch-flask/utils";
 import { ConnectionType, IaasNodeConnectionSettings, NodeConnectionSettings, Pool } from "app/models";
-import { OS, Platform } from "app/utils";
 import { AddNodeUserAttributes, SSHKeyService, SettingsService } from "..";
 import { AzureBatchHttpService } from "../azure-batch/core";
 import { NodeConnectService } from "./node-connect.service";

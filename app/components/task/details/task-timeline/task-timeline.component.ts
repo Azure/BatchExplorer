@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { Router } from "@angular/router";
-import * as moment from "moment";
-
-import { Job, Task, TaskState } from "app/models";
 import { DateUtils } from "@batch-flask/utils";
+import { Job, Task, TaskState } from "app/models";
+import * as moment from "moment";
 
 import "./task-timeline.scss";
 
