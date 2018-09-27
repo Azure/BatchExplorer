@@ -1,6 +1,6 @@
 <ng-template>
-    <ng-container *ngIf="label">
+    <ng-container *ngIf="!useTemplate">
         {{label}}
     </ng-container>
-    <ng-content *ngIf="!label"></ng-content>
+    <ng-content *ngIf="useTemplate"></ng-content>
 </ng-template>

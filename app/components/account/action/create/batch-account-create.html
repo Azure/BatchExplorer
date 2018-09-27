@@ -33,7 +33,7 @@
                 <span *ngIf="!resourceGroups.length">No resources groups available in subscription '{{selectedSubscription.displayName}}'</span>
             </div>
             <div class="form-element" *ngIf="selectedSubscription">
-                <bl-location-picker [subscription]="selectedSubscription"></bl-location-picker>
+                <bl-location-picker formControlName="location" [subscription]="selectedSubscription"></bl-location-picker>
                 <bl-error controlName="location" code="quotaReached">
                     You've already reached your quota {{form.controls.location.errors?.quotaReached?.used}} out of
                     {{form.controls.location.errors?.quotaReached?.quota}}

@@ -16,6 +16,8 @@ export class SelectOptionComponent implements KeyNavigableListItem {
      */
     @Input() public label: string;
 
+    @Input() public useTemplate: boolean;
+
     @Input() public disabled: boolean;
 
     @ViewChild(TemplateRef) public content: TemplateRef<any>;

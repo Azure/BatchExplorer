@@ -34,6 +34,7 @@ export class LocationPickerComponent implements OnChanges, OnDestroy, ControlVal
 
     constructor(private changeDetector: ChangeDetectorRef, private subscriptionService: SubscriptionService) {
         this.location.valueChanges.subscribe((value) => {
+            console.log("new value");
             if (this._propagateChange) {
                 this._propagateChange(value);
             }

@@ -1,10 +1,14 @@
-<ng-container *ngIf="locations.length">
+<bl-form-field *ngIf="locations.length">
     <bl-select [formControl]="location" placeholder="Location" [filterable]="true">
-        <bl-option *ngFor="let location of locations;trackBy: trackLocation" [value]="location">
+        <bl-option *ngFor="let location of locations;trackBy: trackLocation"
+            [value]="location"
+            [label]="location.displayName"
+            [useTemplate]="true">
+
             <bl-location [location]="location.name"></bl-location> ({{location.displayName}})
         </bl-option>
     </bl-select>
     <bl-error [control]="location" code="required">Location is a required field</bl-error>
     <bl-error [control]="location" code="serverError">{{ location.errors?.serverError }}</bl-error>
-</ng-container>
+</bl-form-field>
 <span *ngIf="!locations.length">No locations available in subscription '{{subscription.displayName}}'</span>
