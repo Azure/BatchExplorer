@@ -26,7 +26,7 @@ const baseOptions = [
     template: `
         <bl-select placeholder="Myselect" [formControl]="value" [filterable]="filterable" [multiple]="multiple">
             <bl-option
-                *ngFor="let option of options"
+                *ngFor="let option of options; trackBy: trackValue"
                 [value]="option.value"
                 [label]="option.label"
                 [disabled]="option.disabled">
@@ -40,6 +40,10 @@ class TestComponent {
     public value = new FormControl(null);
     public filterable = false;
     public multiple = false;
+
+    public trackValue(_, value) {
+        return value;
+    }
 }
 
 @Component({
@@ -130,6 +134,54 @@ describe("SelectComponent", () => {
             expect(options[3].textContent).toContain("Pasta");
             expect(options[4].textContent).toContain("Rice");
         }));
+
+        describe("When using object as values", () => {
+            const myVal1 = { id: "foo-1" };
+            const myVal2 = { id: "foo-2" };
+
+            beforeEach(() => {
+                testComponent.options = [
+                    { value: myVal1, label: "Value 1" },
+                    { value: myVal2, label: "Value 2" },
+                ];
+                fixture.detectChanges();
+            });
+
+            it("returns the value when selecting", async () => {
+                click(selectButtonEl);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                const options = overlayContainerElement.querySelectorAll(".option");
+                click(options[1]);
+                fixture.detectChanges();
+
+                expect(testComponent.value.value).toBe(myVal2);
+
+                const label = de.query(By.css(".label"));
+                expect(label.nativeElement.textContent).toContain("Value 2");
+            });
+
+            it("returns the value when selecting after it was updated", async () => {
+
+                const val2Clone = { ...myVal2, other: 1 };
+                testComponent.options[1].value = val2Clone;
+                fixture.detectChanges();
+                click(selectButtonEl);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                const options = overlayContainerElement.querySelectorAll(".option");
+                click(options[1]);
+                fixture.detectChanges();
+
+                expect(testComponent.value.value).toBe(val2Clone);
+
+                const map = de.componentInstance._optionsMap;
+                const label = de.query(By.css(".label"));
+                expect(label.nativeElement.textContent).toContain("Value 2");
+            });
+        });
 
         it("disabled options should have the disabled class", F(async () => {
             click(selectButtonEl);

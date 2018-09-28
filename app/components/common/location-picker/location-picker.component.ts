@@ -58,7 +58,6 @@ export class LocationPickerComponent implements OnChanges, OnDestroy, ControlVal
     }
 
     public writeValue(location: string): void {
-        console.log("Set value", location);
         this.location.setValue(location);
     }
 
