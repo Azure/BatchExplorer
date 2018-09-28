@@ -175,7 +175,6 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
     public ngAfterContentInit() {
         this._computeOptions();
         this.options.changes.subscribe((value) => {
-            console.log("new options", value.toArray().map(x => x.value));
             this._computeOptions();
         });
     }
