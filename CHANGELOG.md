@@ -1,6 +1,11 @@
 # 0.18.1
 
 ### Bug fixes
+*  Unique windows show() nul pointer exception [\#1644](https://github.com/Azure/BatchExplorer/issues/1644)
+
+# 0.18.1
+
+### Bug fixes
 * Crash on pool configuration [\#1638](https://github.com/Azure/BatchExplorer/issues/1638)
 
 # 0.18.0
