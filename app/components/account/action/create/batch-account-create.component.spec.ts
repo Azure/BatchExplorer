@@ -14,6 +14,7 @@ import { ArmBatchAccountService, AuthorizationHttpService, SubscriptionService }
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
 import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
+import { LocationPickerModule } from "../../../common/location-picker";
 import { BatchAccountCreateComponent } from "./batch-account-create.component";
 
 describe("BatchAccountCreateComponent ", () => {
@@ -159,7 +160,7 @@ describe("BatchAccountCreateComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, NoopAnimationsModule],
+            imports: [MaterialModule, NoopAnimationsModule, LocationPickerModule],
             declarations: [...complexFormMockComponents, BatchAccountCreateComponent, ServerErrorMockComponent],
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },

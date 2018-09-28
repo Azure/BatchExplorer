@@ -22,6 +22,7 @@
             </div>
             <div class="form-element" *ngIf="selectedSubscription">
                 <bl-location-picker formControlName="location" [subscription]="selectedSubscription"></bl-location-picker>
+                <bl-error controlName="location" code="required">Location is a required field</bl-error>
                 <bl-error controlName="location" code="quotaReached">
                     You've already reached your quota {{form.controls.location.errors?.quotaReached?.used}} out of
                     {{form.controls.location.errors?.quotaReached?.quota}}

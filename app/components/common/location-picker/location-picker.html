@@ -8,7 +8,5 @@
             <bl-location [location]="location.name"></bl-location> ({{location.displayName}})
         </bl-option>
     </bl-select>
-    <bl-error [control]="location" code="required">Location is a required field</bl-error>
-    <bl-error [control]="location" code="serverError">{{ location.errors?.serverError }}</bl-error>
 </bl-form-field>
-<span *ngIf="!locations.length">No locations available in subscription '{{subscription.displayName}}'</span>
+<span *ngIf="!locations.length">{{'noLocationInSubscription' | i18n:{name: subscription.displayName} }}</span>

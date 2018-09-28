@@ -5,7 +5,7 @@ import {
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
 } from "@angular/forms";
-import { LoadingStatus } from "@batch-flask/ui";
+import { I18N_NAMESPACE, LoadingStatus } from "@batch-flask/ui";
 import { Location, Subscription } from "app/models";
 import { SubscriptionService } from "app/services";
 import { Subscription as RxjsSubscription } from "rxjs";
@@ -17,6 +17,7 @@ import "./location-picker.scss";
     templateUrl: "location-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
+        { provide: I18N_NAMESPACE, useValue: "location-picker"},
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => LocationPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => LocationPickerComponent), multi: true },
     ],
