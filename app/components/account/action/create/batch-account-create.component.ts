@@ -7,7 +7,7 @@ import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { log } from "@batch-flask/utils";
-import { ArmBatchAccount, BatchAccount, Location, ResourceGroup, Subscription as ArmSubscription } from "app/models";
+import { ArmBatchAccount, BatchAccount, ResourceGroup, Subscription as ArmSubscription } from "app/models";
 import { createAccountFormToJsonData } from "app/models/forms/create-account-model";
 import {
     ArmBatchAccountService,
@@ -30,7 +30,6 @@ const accountIdSuffix = ".batch.azure.com";
 export class BatchAccountCreateComponent implements OnDestroy {
     public form: FormGroup;
     public resourceGroups: ResourceGroup[] = [];
-    public locations: Location[] = [];
     public title = "Create batch account";
 
     private _subs: Subscription[] = [];
@@ -57,10 +56,6 @@ export class BatchAccountCreateComponent implements OnDestroy {
         this._disposeSubscription(this._locationSub);
     }
 
-    public trackByLocation(index, location: Location) {
-        return location.id;
-    }
-
     public get selectedSubscription() {
         return this.form.controls.subscription.value;
     }
@@ -70,14 +65,14 @@ export class BatchAccountCreateComponent implements OnDestroy {
     }
 
     public get accountUrlSuffix() {
-        return `.${this.selectedLocation.name}${accountIdSuffix}`;
+        return `.${this.selectedLocation}${accountIdSuffix}`;
     }
 
     public get account(): BatchAccount {
         if (this.selectedSubscription && this.selectedLocation) {
             const account = new ArmBatchAccount({
                 subscription: this.selectedSubscription,
-                location: this.selectedLocation.name,
+                location: this.selectedLocation,
             } as any);
             return account;
         }
@@ -116,7 +111,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
         let observable: Observable<any> = null;
         if (this.isNewResourceGroup) {
             observable = this.accountService.putResourcGroup(subscription, resourceGroup, {
-                location: formData.location.name,
+                location: formData.location,
             }).pipe(
                 flatMap(() => this.accountService.create(subscription, resourceGroup, accountName, body)),
             );
@@ -196,13 +191,6 @@ export class BatchAccountCreateComponent implements OnDestroy {
             this._resourceGroupSub = this.subscriptionService.listResourceGroups(subscription)
                 .subscribe((resourceGroups: ResourceGroup[]) => {
                     this.resourceGroups = resourceGroups;
-                    // List all locations
-                    this._disposeSubscription(this._locationSub);
-                    this._locationSub = this.subscriptionService.listLocations(subscription)
-                        .subscribe((locations: Location[]) => {
-                            this.locations = locations;
-                            this.changeDetector.markForCheck();
-                        });
                     this.changeDetector.markForCheck();
                 });
             this.form.controls.name.updateValueAndValidity();
@@ -212,9 +200,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
 
     private _resourceGroupOnChangeSub(): Subscription {
         return this.form.controls.resourceGroup.valueChanges.subscribe((resourceGroup: ResourceGroup | string) => {
-            if (!resourceGroup || !this.locations || this.locations.length === 0) {
-                return;
-            }
+            if (!resourceGroup) { return; }
             if (typeof resourceGroup === "string") {
                 return;
             }
@@ -222,16 +208,13 @@ export class BatchAccountCreateComponent implements OnDestroy {
             // if location is in the list, set to this location when resource group value changed,
             // otherwise set first item as default location
             if (!this.form.controls.location.value) {
-                let locationIndex = this.locations.findIndex(location => location.name === resourceGroup.location);
-                locationIndex = locationIndex !== -1 ? locationIndex : 0;
-                this._setFormValue(this.form.controls.location, this.locations[locationIndex]);
-                this.changeDetector.markForCheck();
+                this.form.patchValue({ location: resourceGroup.location });
             }
         });
     }
 
     private _locationOnChangeSub(): Subscription {
-        return this.form.controls.location.valueChanges.subscribe((location: Location) => {
+        return this.form.controls.location.valueChanges.subscribe(() => {
             this.form.controls.name.updateValueAndValidity();
             this.changeDetector.markForCheck();
         });
@@ -244,7 +227,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
             const subscription = this.form.controls.subscription.value;
             const location = this.form.controls.location.value;
             return this.accountService
-                .nameAvailable(accountName, subscription, location && location.name).pipe(
+                .nameAvailable(accountName, subscription, location).pipe(
                     map((response: AvailabilityResult) => {
                         if (!response || response.nameAvailable) {
                             return null;
@@ -303,7 +286,7 @@ export class BatchAccountCreateComponent implements OnDestroy {
         return (control: FormControl): Observable<{ [key: string]: any }> => {
             const location = control.value;
             const subscription = this.form.controls.subscription.value;
-            return this.accountService.accountQuota(subscription, location && location.name).pipe(
+            return this.accountService.accountQuota(subscription, location).pipe(
                 map((response: QuotaResult) => {
                     if (!response || !response.quota) {
                         return null;

@@ -19,6 +19,7 @@ import {
     Output,
     QueryList,
     Self,
+    SimpleChange,
     ViewChild,
 } from "@angular/core";
 import { ControlValueAccessor, NgControl } from "@angular/forms";
@@ -26,7 +27,7 @@ import { FlagInput, ListKeyNavigator, coerceBooleanProperty } from "@batch-flask
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import { SelectDropdownComponent } from "@batch-flask/ui/select/select-dropdown";
 import { Subject, Subscription } from "rxjs";
-import { SelectOptionComponent } from "./option";
+import { BL_OPTION_PARENT, OptionParent, SelectOptionComponent } from "./option/option.component";
 
 import "./select.scss";
 
@@ -49,9 +50,14 @@ let nextUniqueId = 0;
     selector: "bl-select",
     templateUrl: "select.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [{ provide: FormFieldControl, useExisting: SelectComponent }],
+    providers: [
+        { provide: FormFieldControl, useExisting: SelectComponent },
+        { provide: BL_OPTION_PARENT, useExisting: SelectComponent },
+    ],
 })
-export class SelectComponent implements FormFieldControl<any>, ControlValueAccessor, AfterContentInit, OnDestroy {
+export class SelectComponent implements FormFieldControl<any>, OptionParent,
+    ControlValueAccessor, AfterContentInit, OnDestroy {
+
     @Input() public placeholder = "";
 
     /**
@@ -87,7 +93,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
     @HostBinding("attr.aria-describedby")
     public ariaDescribedby: string;
 
-    @ContentChildren(SelectOptionComponent)
+    @ContentChildren(SelectOptionComponent, { descendants: true })
     public options: QueryList<SelectOptionComponent>;
 
     public filter: string = "";
@@ -168,7 +174,7 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
 
     public ngAfterContentInit() {
         this._computeOptions();
-        this.options.changes.subscribe(() => {
+        this.options.changes.subscribe((value) => {
             this._computeOptions();
         });
     }
@@ -360,6 +366,13 @@ export class SelectComponent implements FormFieldControl<any>, ControlValueAcces
         this.clickSelectButton(event);
     }
 
+    public optionValueChanged(value: SimpleChange) {
+        if (this._optionsMap.has(value.previousValue)) {
+            const previous = this._optionsMap.get(value.previousValue);
+            this._optionsMap.set(value.currentValue, previous);
+        }
+        this.changeDetector.markForCheck();
+    }
     private _computeOptions() {
         const optionsMap = new Map();
         this.options.forEach((option) => {

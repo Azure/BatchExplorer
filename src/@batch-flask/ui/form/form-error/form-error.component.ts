@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
-import { AbstractControl, ControlContainer, FormGroupDirective } from "@angular/forms";
+import { AbstractControl, ControlContainer, FormControl, FormGroupDirective } from "@angular/forms";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -8,6 +8,12 @@ import { Subscription } from "rxjs";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormErrorComponent implements OnChanges, OnDestroy {
+
+    /**
+     * Form control.
+     * Exclusive with controlName
+     */
+    @Input() public control: FormControl;
 
     /**
      * Name of the control.
@@ -31,7 +37,7 @@ export class FormErrorComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnChanges(inputs) {
-        if (inputs.controlName) {
+        if (inputs.controlName || inputs.control) {
             this._control = this.retrieveControl();
         }
         this._listenForChanges();
@@ -46,6 +52,7 @@ export class FormErrorComponent implements OnChanges, OnDestroy {
     public get path(): string[] { return [...this.parent.path, this.controlName]; }
 
     public retrieveControl(): AbstractControl {
+        if (this.control) { return this.control; }
         let current: AbstractControl = this.formGroup.control;
         for (const segment of this.path) {
             current = current.get(segment);

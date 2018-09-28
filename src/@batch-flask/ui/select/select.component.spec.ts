@@ -22,11 +22,22 @@ const baseOptions = [
 ];
 
 // tslint:disable:trackBy-function
+class TestComponent {
+    public options: any[] = baseOptions;
+    public value = new FormControl(null);
+    public filterable = false;
+    public multiple = false;
+
+    public trackValue(_, value) {
+        return value;
+    }
+}
+
 @Component({
     template: `
         <bl-select placeholder="Myselect" [formControl]="value" [filterable]="filterable" [multiple]="multiple">
             <bl-option
-                *ngFor="let option of options"
+                *ngFor="let option of options; trackBy: trackValue"
                 [value]="option.value"
                 [label]="option.label"
                 [disabled]="option.disabled">
@@ -35,11 +46,24 @@ const baseOptions = [
         </bl-select>
     `,
 })
-class TestComponent {
-    public options: any[] = baseOptions;
-    public value = new FormControl(null);
-    public filterable = false;
-    public multiple = false;
+class SelectWithLabelComponent extends TestComponent {
+}
+
+@Component({
+    template: `
+        <bl-select placeholder="Myselect" [formControl]="value" [filterable]="filterable" [multiple]="multiple">
+            <bl-option
+                *ngFor="let option of options"
+                [value]="option.value"
+                [label]="option.label"
+                [useTemplate]="true"
+                [disabled]="option.disabled">
+                    My:{{option.label}}
+            </bl-option>
+        </bl-select>
+    `,
+})
+class SelectWithTemplateComponent extends TestComponent {
 }
 
 describe("SelectComponent", () => {
@@ -47,15 +71,16 @@ describe("SelectComponent", () => {
     let testComponent: TestComponent;
     let de: DebugElement;
     let selectButtonEl: DebugElement;
+    let labelEl: DebugElement;
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
 
-    beforeEach(() => {
+    function setup(component) {
         TestBed.configureTestingModule({
             imports: [FormsModule, ReactiveFormsModule, OverlayModule],
             declarations: [SelectComponent,
                 SelectOptionComponent, SelectDropdownComponent,
-                ClickableComponent, TestComponent],
+                ClickableComponent, component],
             providers: [
                 { provide: PermissionService, useValue: null },
             ],
@@ -65,132 +90,124 @@ describe("SelectComponent", () => {
                 entryComponents: [SelectDropdownComponent],
             },
         });
-        fixture = TestBed.createComponent(TestComponent);
+        fixture = TestBed.createComponent(component);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-select"));
         selectButtonEl = de.query(By.css(".select-button"));
         fixture.detectChanges();
+        labelEl = de.query(By.css(".label"));
 
         inject([OverlayContainer], (oc: OverlayContainer) => {
             overlayContainer = oc;
             overlayContainerElement = oc.getContainerElement();
         })();
-    });
+    }
 
     afterEach(() => {
-        overlayContainer.ngOnDestroy();
+        if (overlayContainer) {
+            overlayContainer.ngOnDestroy();
+        }
     });
 
-    it("Should show placeholder when no value", () => {
-        expect(de.nativeElement.textContent).toContain("Myselect");
-    });
-
-    it("Should show value when picked", () => {
-        testComponent.value.setValue("opt-3");
-        fixture.detectChanges();
-        expect(de.nativeElement.textContent).toContain("Carrot");
-    });
-
-    it("list all options when clicking on button", F(async () => {
-        click(selectButtonEl);
-        fixture.detectChanges();
-        await fixture.whenStable();
-        expect(overlayContainerElement.querySelector("bl-select-dropdown")).not.toBeFalsy();
-        const options = overlayContainerElement.querySelectorAll(".option");
-        expect(options.length).toBe(5);
-        expect(options[0].textContent).toContain("Potato");
-        expect(options[1].textContent).toContain("Banana");
-        expect(options[2].textContent).toContain("Carrot");
-        expect(options[3].textContent).toContain("Pasta");
-        expect(options[4].textContent).toContain("Rice");
-    }));
-
-    it("disabled options should have the disabled class", F(async () => {
-        click(selectButtonEl);
-        fixture.detectChanges();
-        await fixture.whenStable();
-        const options = overlayContainerElement.querySelectorAll(".option.disabled");
-        expect(options.length).toBe(1);
-        expect(options[0].textContent).toContain("Pasta");
-    }));
-
-    it("clicking on an options should select it and close dropdown", F(async () => {
-        click(selectButtonEl);
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        const options = overlayContainerElement.querySelectorAll(".option");
-        click(options[2]);
-        fixture.detectChanges();
-
-        expect(testComponent.value.value).toBe("opt-3");
-
-        expect(overlayContainerElement.querySelector("bl-select-dropdown")).toBeFalsy();
-    }));
-
-    it("clicking on disabled options should not do anything", F(async () => {
-        click(selectButtonEl);
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        const options = overlayContainerElement.querySelectorAll(".option");
-        click(options[3]);
-        fixture.detectChanges();
-
-        expect(testComponent.value.value).toBe(null);
-
-        expect(overlayContainerElement.querySelector("bl-select-dropdown")).not.toBeFalsy();
-    }));
-
-    it("should show selected option when it is set with delay", async () => {
-        fixture = TestBed.createComponent(TestComponent);
-        testComponent = fixture.componentInstance;
-        de = fixture.debugElement.query(By.css("bl-select"));
-
-        // Remove options
-        testComponent.options = [];
-        // Set value
-        testComponent.value.setValue("opt-2");
-        fixture.detectChanges();
-        await fixture.whenStable();
-        fixture.detectChanges();
-        expect(de.nativeElement.textContent).not.toContain("Myselect");
-
-        testComponent.options = baseOptions;
-        fixture.detectChanges();
-
-        expect(de.nativeElement.textContent).not.toContain("Myselect");
-        expect(de.nativeElement.textContent).toContain("Banana");
-    });
-
-    describe("when select allows multiple values", () => {
+    describe("when using label options", () => {
         beforeEach(() => {
-            testComponent.value.setValue([]);
-            testComponent.multiple = true;
-            fixture.detectChanges();
+            setup(SelectWithLabelComponent);
         });
 
-        it("shows checkbox on each option", F(async () => {
+        it("Should show placeholder when no value", () => {
+            expect(labelEl.nativeElement.textContent).toContain("Myselect");
+        });
+
+        it("Should show value when picked", () => {
+            testComponent.value.setValue("opt-3");
+            fixture.detectChanges();
+            expect(labelEl.nativeElement.textContent).toContain("Carrot");
+        });
+
+        it("list all options when clicking on button", F(async () => {
             click(selectButtonEl);
             fixture.detectChanges();
-            fixture.detectChanges();
             await fixture.whenStable();
-            const checkbox = overlayContainerElement.querySelectorAll(".option .checkbox");
-            expect(checkbox.length).toBe(6);
+            expect(overlayContainerElement.querySelector("bl-select-dropdown")).not.toBeFalsy();
+            const options = overlayContainerElement.querySelectorAll(".option");
+            expect(options.length).toBe(5);
+            expect(options[0].textContent).toContain("Potato");
+            expect(options[1].textContent).toContain("Banana");
+            expect(options[2].textContent).toContain("Carrot");
+            expect(options[3].textContent).toContain("Pasta");
+            expect(options[4].textContent).toContain("Rice");
         }));
 
-        it("checkbox should be ticked if selected", F(async () => {
-            testComponent.value.setValue(["opt-2", "opt-5"]);
-            fixture.detectChanges();
-            await fixture.whenStable();
+        describe("When using object as values", () => {
+            const myVal1 = { id: "foo-1" };
+            const myVal2 = { id: "foo-2" };
 
+            beforeEach(() => {
+                testComponent.options = [
+                    { value: myVal1, label: "Value 1" },
+                    { value: myVal2, label: "Value 2" },
+                ];
+                fixture.detectChanges();
+            });
+
+            it("returns the value when selecting", async () => {
+                click(selectButtonEl);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                const options = overlayContainerElement.querySelectorAll(".option");
+                click(options[1]);
+                fixture.detectChanges();
+
+                expect(testComponent.value.value).toBe(myVal2);
+
+                const label = de.query(By.css(".label"));
+                expect(label.nativeElement.textContent).toContain("Value 2");
+            });
+
+            it("returns the value when selecting after it was updated", async () => {
+
+                const val2Clone = { ...myVal2, other: 1 };
+                testComponent.options[1].value = val2Clone;
+                fixture.detectChanges();
+                click(selectButtonEl);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                const options = overlayContainerElement.querySelectorAll(".option");
+                click(options[1]);
+                fixture.detectChanges();
+
+                expect(testComponent.value.value).toBe(val2Clone);
+
+                expect(labelEl.nativeElement.textContent).toContain("Value 2");
+            });
+        });
+
+        it("disabled options should have the disabled class", F(async () => {
             click(selectButtonEl);
             fixture.detectChanges();
-            const checkbox = overlayContainerElement.querySelectorAll(".option .checkbox .fa-check");
-            expect(checkbox.length).toBe(2);
+            await fixture.whenStable();
+            const options = overlayContainerElement.querySelectorAll(".option.disabled");
+            expect(options.length).toBe(1);
+            expect(options[0].textContent).toContain("Pasta");
         }));
 
-        it("clicking on an options should select it and keep the dropdown open", F(async () => {
+        it("clicking on an options should select it and close dropdown", F(async () => {
+            click(selectButtonEl);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const options = overlayContainerElement.querySelectorAll(".option");
+            click(options[2]);
+            fixture.detectChanges();
+
+            expect(testComponent.value.value).toBe("opt-3");
+
+            expect(overlayContainerElement.querySelector("bl-select-dropdown")).toBeFalsy();
+        }));
+
+        it("clicking on disabled options should not do anything", F(async () => {
             click(selectButtonEl);
             fixture.detectChanges();
             await fixture.whenStable();
@@ -198,42 +215,135 @@ describe("SelectComponent", () => {
             const options = overlayContainerElement.querySelectorAll(".option");
             click(options[3]);
             fixture.detectChanges();
-            expect(testComponent.value.value).toEqual(["opt-3"]);
+
+            expect(testComponent.value.value).toBe(null);
 
             expect(overlayContainerElement.querySelector("bl-select-dropdown")).not.toBeFalsy();
-
-            click(options[5]);
-            fixture.detectChanges();
-            expect(testComponent.value.value).toEqual(["opt-3", "opt-5"]);
         }));
+
+        it("should show selected option when it is set with delay", async () => {
+            fixture = TestBed.createComponent(SelectWithLabelComponent);
+            testComponent = fixture.componentInstance;
+            de = fixture.debugElement.query(By.css("bl-select"));
+
+            // Remove options
+            testComponent.options = [];
+            // Set value
+            testComponent.value.setValue("opt-2");
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(de.nativeElement.textContent).not.toContain("Myselect");
+
+            testComponent.options = baseOptions;
+            fixture.detectChanges();
+
+            expect(de.nativeElement.textContent).not.toContain("Myselect");
+            expect(de.nativeElement.textContent).toContain("Banana");
+        });
+
+        describe("when select allows multiple values", () => {
+            beforeEach(() => {
+                testComponent.value.setValue([]);
+                testComponent.multiple = true;
+                fixture.detectChanges();
+            });
+
+            it("shows checkbox on each option", F(async () => {
+                click(selectButtonEl);
+                fixture.detectChanges();
+                fixture.detectChanges();
+                await fixture.whenStable();
+                const checkbox = overlayContainerElement.querySelectorAll(".option .checkbox");
+                expect(checkbox.length).toBe(6);
+            }));
+
+            it("checkbox should be ticked if selected", F(async () => {
+                testComponent.value.setValue(["opt-2", "opt-5"]);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                click(selectButtonEl);
+                fixture.detectChanges();
+                const checkbox = overlayContainerElement.querySelectorAll(".option .checkbox .fa-check");
+                expect(checkbox.length).toBe(2);
+            }));
+
+            it("clicking on an options should select it and keep the dropdown open", F(async () => {
+                click(selectButtonEl);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                const options = overlayContainerElement.querySelectorAll(".option");
+                click(options[3]);
+                fixture.detectChanges();
+                expect(testComponent.value.value).toEqual(["opt-3"]);
+
+                expect(overlayContainerElement.querySelector("bl-select-dropdown")).not.toBeFalsy();
+
+                click(options[5]);
+                fixture.detectChanges();
+                expect(testComponent.value.value).toEqual(["opt-3", "opt-5"]);
+            }));
+        });
+
+        describe("when select allows filtering", () => {
+            beforeEach(() => {
+                testComponent.filterable = true;
+                fixture.detectChanges();
+            });
+
+            it("Shoudl show the filter input", () => {
+                click(selectButtonEl);
+                fixture.detectChanges();
+                const inputEl = de.query(By.css("input.select-filter"));
+                expect(inputEl).not.toBeFalsy();
+            });
+
+            it("Typing in the filter input should filter options", F(async () => {
+                click(selectButtonEl);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                const inputEl = de.query(By.css("input.select-filter"));
+                updateInput(inputEl, "ta");
+                fixture.detectChanges();
+
+                const options = overlayContainerElement.querySelectorAll(".option");
+                expect(options.length).toBe(2);
+                expect(options[0].textContent).toContain("Potato");
+                expect(options[1].textContent).toContain("Pasta");
+            }));
+        });
     });
 
-    describe("when select allows filtering", () => {
+    describe("when using template options", () => {
         beforeEach(() => {
-            testComponent.filterable = true;
-            fixture.detectChanges();
+            setup(SelectWithTemplateComponent);
         });
 
-        it("Shoudl show the filter input", () => {
-            click(selectButtonEl);
-            fixture.detectChanges();
-            const inputEl = de.query(By.css("input.select-filter"));
-            expect(inputEl).not.toBeFalsy();
+        it("Should show placeholder when no value", () => {
+            expect(labelEl.nativeElement.textContent).toContain("Myselect");
         });
 
-        it("Typing in the filter input should filter options", F(async () => {
+        it("Should show value when picked", () => {
+            testComponent.value.setValue("opt-3");
+            fixture.detectChanges();
+            expect(labelEl.nativeElement.textContent).toContain("My:Carrot");
+        });
+
+        it("list all options when clicking on button", F(async () => {
             click(selectButtonEl);
             fixture.detectChanges();
             await fixture.whenStable();
-
-            const inputEl = de.query(By.css("input.select-filter"));
-            updateInput(inputEl, "ta");
-            fixture.detectChanges();
-
+            expect(overlayContainerElement.querySelector("bl-select-dropdown")).not.toBeFalsy();
             const options = overlayContainerElement.querySelectorAll(".option");
-            expect(options.length).toBe(2);
-            expect(options[0].textContent).toContain("Potato");
-            expect(options[1].textContent).toContain("Pasta");
+            expect(options.length).toBe(5);
+            expect(options[0].textContent).toContain("My:Potato");
+            expect(options[1].textContent).toContain("My:Banana");
+            expect(options[2].textContent).toContain("My:Carrot");
+            expect(options[3].textContent).toContain("My:Pasta");
+            expect(options[4].textContent).toContain("My:Rice");
         }));
     });
 });
