@@ -22,19 +22,6 @@ const baseOptions = [
 ];
 
 // tslint:disable:trackBy-function
-@Component({
-    template: `
-        <bl-select placeholder="Myselect" [formControl]="value" [filterable]="filterable" [multiple]="multiple">
-            <bl-option
-                *ngFor="let option of options; trackBy: trackValue"
-                [value]="option.value"
-                [label]="option.label"
-                [disabled]="option.disabled">
-
-            </bl-option>
-        </bl-select>
-    `,
-})
 class TestComponent {
     public options: any[] = baseOptions;
     public value = new FormControl(null);
@@ -50,8 +37,26 @@ class TestComponent {
     template: `
         <bl-select placeholder="Myselect" [formControl]="value" [filterable]="filterable" [multiple]="multiple">
             <bl-option
+                *ngFor="let option of options; trackBy: trackValue"
+                [value]="option.value"
+                [label]="option.label"
+                [disabled]="option.disabled">
+
+            </bl-option>
+        </bl-select>
+    `,
+})
+class SelectWithLabelComponent extends TestComponent {
+}
+
+@Component({
+    template: `
+        <bl-select placeholder="Myselect" [formControl]="value" [filterable]="filterable" [multiple]="multiple">
+            <bl-option
                 *ngFor="let option of options"
                 [value]="option.value"
+                [label]="option.label"
+                [useTemplate]="true"
                 [disabled]="option.disabled">
                     My:{{option.label}}
             </bl-option>
@@ -59,10 +64,6 @@ class TestComponent {
     `,
 })
 class SelectWithTemplateComponent extends TestComponent {
-    public options: any[] = baseOptions;
-    public value = new FormControl(null);
-    public filterable = false;
-    public multiple = false;
 }
 
 describe("SelectComponent", () => {
@@ -70,6 +71,7 @@ describe("SelectComponent", () => {
     let testComponent: TestComponent;
     let de: DebugElement;
     let selectButtonEl: DebugElement;
+    let labelEl: DebugElement;
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
 
@@ -88,11 +90,12 @@ describe("SelectComponent", () => {
                 entryComponents: [SelectDropdownComponent],
             },
         });
-        fixture = TestBed.createComponent(TestComponent);
+        fixture = TestBed.createComponent(component);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-select"));
         selectButtonEl = de.query(By.css(".select-button"));
         fixture.detectChanges();
+        labelEl = de.query(By.css(".label"));
 
         inject([OverlayContainer], (oc: OverlayContainer) => {
             overlayContainer = oc;
@@ -108,17 +111,17 @@ describe("SelectComponent", () => {
 
     describe("when using label options", () => {
         beforeEach(() => {
-            setup(TestComponent);
+            setup(SelectWithLabelComponent);
         });
 
         it("Should show placeholder when no value", () => {
-            expect(de.nativeElement.textContent).toContain("Myselect");
+            expect(labelEl.nativeElement.textContent).toContain("Myselect");
         });
 
         it("Should show value when picked", () => {
             testComponent.value.setValue("opt-3");
             fixture.detectChanges();
-            expect(de.nativeElement.textContent).toContain("Carrot");
+            expect(labelEl.nativeElement.textContent).toContain("Carrot");
         });
 
         it("list all options when clicking on button", F(async () => {
@@ -177,9 +180,7 @@ describe("SelectComponent", () => {
 
                 expect(testComponent.value.value).toBe(val2Clone);
 
-                const map = de.componentInstance._optionsMap;
-                const label = de.query(By.css(".label"));
-                expect(label.nativeElement.textContent).toContain("Value 2");
+                expect(labelEl.nativeElement.textContent).toContain("Value 2");
             });
         });
 
@@ -321,8 +322,28 @@ describe("SelectComponent", () => {
             setup(SelectWithTemplateComponent);
         });
 
-        it("show the labels from template", () => {
-
+        it("Should show placeholder when no value", () => {
+            expect(labelEl.nativeElement.textContent).toContain("Myselect");
         });
+
+        it("Should show value when picked", () => {
+            testComponent.value.setValue("opt-3");
+            fixture.detectChanges();
+            expect(labelEl.nativeElement.textContent).toContain("My:Carrot");
+        });
+
+        it("list all options when clicking on button", F(async () => {
+            click(selectButtonEl);
+            fixture.detectChanges();
+            await fixture.whenStable();
+            expect(overlayContainerElement.querySelector("bl-select-dropdown")).not.toBeFalsy();
+            const options = overlayContainerElement.querySelectorAll(".option");
+            expect(options.length).toBe(5);
+            expect(options[0].textContent).toContain("My:Potato");
+            expect(options[1].textContent).toContain("My:Banana");
+            expect(options[2].textContent).toContain("My:Carrot");
+            expect(options[3].textContent).toContain("My:Pasta");
+            expect(options[4].textContent).toContain("My:Rice");
+        }));
     });
 });
