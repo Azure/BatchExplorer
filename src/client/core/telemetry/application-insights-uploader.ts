@@ -94,7 +94,7 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
     }
 
     private _sanitizeStack(stack: string) {
-        const root = ClientConstants.root;
+        const root = ClientConstants.resourcesFolder;
         return stack.replace(new RegExp(this._escapeRegExp(root), "gi"), "[install]");
     }
 
