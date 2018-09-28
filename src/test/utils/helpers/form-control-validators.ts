@@ -30,7 +30,9 @@ class With {
     public with(value: any) {
         const control = this.formGroup.controls[this.controlName];
         control.setValue(value);
-
-        expect(this.formGroup.hasError(this.validator, [this.controlName])).toBe(this.hasError);
+        const not = this.hasError ? "" : "NOT";
+        const errorMessage =
+            `Expected ${this.controlName} ${not} to have error ${this.validator} when using value ${value}`;
+        expect(this.formGroup.hasError(this.validator, [this.controlName])).toBe(this.hasError, errorMessage);
     }
 }

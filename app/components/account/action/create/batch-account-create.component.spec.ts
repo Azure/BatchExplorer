@@ -7,6 +7,8 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { of, throwError } from "rxjs";
 
 import { MaterialModule, ServerError } from "@batch-flask/core";
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { I18nUIModule } from "@batch-flask/ui";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
@@ -160,7 +162,7 @@ describe("BatchAccountCreateComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule, NoopAnimationsModule, LocationPickerModule],
+            imports: [MaterialModule, NoopAnimationsModule, LocationPickerModule, I18nTestingModule, I18nUIModule],
             declarations: [...complexFormMockComponents, BatchAccountCreateComponent, ServerErrorMockComponent],
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
@@ -219,7 +221,7 @@ describe("BatchAccountCreateComponent ", () => {
     describe("Subscription and resource group", () => {
         it("should initialized subscription list with subscriptions", () => {
             const rg = debugElement.query(By.css("bl-select[formControlName=resourceGroup]"));
-            const loc = debugElement.query(By.css("bl-select[formControlName=location]"));
+            const loc = debugElement.query(By.css("bl-location-picker"));
             expect(rg).toBeNull();
             expect(loc).toBeNull();
         });
@@ -233,7 +235,7 @@ describe("BatchAccountCreateComponent ", () => {
             component.form.controls.subscription.setValue({ subscriptionId: "dummy-1", displayName: "sub-1" });
             fixture.detectChanges();
             const rgm = debugElement.query(By.css("input[formControlName=resourceGroup]"));
-            const loc = debugElement.query(By.css("bl-select[formControlName=location]"));
+            const loc = debugElement.query(By.css("bl-location-picker"));
             expect(rgm).not.toBeNull();
             expect(loc).not.toBeNull();
         }));
@@ -248,24 +250,21 @@ describe("BatchAccountCreateComponent ", () => {
 
     describe("location", () => {
         it("should initialize location after selected subscription", () => {
-            component.form.controls.subscription.setValue({ subscriptionId: "dummy-2", displayName: "sub-2" });
+            const sub2 = { subscriptionId: "dummy-2", displayName: "sub-2" };
+            component.form.controls.subscription.setValue(sub2);
             fixture.detectChanges();
-            let loc = debugElement.query(By.css("bl-select[formControlName=location]"));
-            expect(loc).not.toBeNull();
-
-            component.form.controls.subscription.setValue({ subscriptionId: "dummy-3", displayName: "sub-3" });
-            fixture.detectChanges();
-            loc = debugElement.query(By.css("bl-select[formControlName=location]"));
-            expect(loc).toBeNull();
+            const loc = debugElement.query(By.css("bl-location-picker"));
+            expect(loc).not.toBeFalsy();
+            expect(loc.componentInstance.subscription).toEqual(sub2);
         });
 
         it("should have required and account quota validation", () => {
             component.form.controls.subscription.setValue({ subscriptionId: "dummy-2", displayName: "sub-2" });
             validateControl(component.form, "location").fails(validators.required).with(null);
-            validateControl(component.form, "location").passes(validators.required).with({ name: "sub-1" });
-            validateControl(component.form, "location").passes("quotaReached").with({ name: "validquota" });
-            validateControl(component.form, "location").fails("quotaReached").with({ name: "invalidquota" });
-            validateControl(component.form, "location").fails("serverError").with({ name: "servererror" });
+            validateControl(component.form, "location").passes(validators.required).with("sub-1");
+            validateControl(component.form, "location").passes("quotaReached").with("validquota");
+            validateControl(component.form, "location").fails("quotaReached").with("invalidquota" );
+            validateControl(component.form, "location").fails("serverError").with( "servererror" );
         });
     });
 });

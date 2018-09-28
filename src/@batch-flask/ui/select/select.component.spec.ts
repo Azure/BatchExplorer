@@ -222,7 +222,7 @@ describe("SelectComponent", () => {
         }));
 
         it("should show selected option when it is set with delay", async () => {
-            fixture = TestBed.createComponent(TestComponent);
+            fixture = TestBed.createComponent(SelectWithLabelComponent);
             testComponent = fixture.componentInstance;
             de = fixture.debugElement.query(By.css("bl-select"));
 
