@@ -2,6 +2,7 @@
 
 ### Bug fixes
 *  Unique windows show() nul pointer exception [\#1644](https://github.com/Azure/BatchExplorer/issues/1644)
+*  Reimage node is calling reboot [\#1646](https://github.com/Azure/BatchExplorer/issues/1646)
 
 # 0.18.1
 
