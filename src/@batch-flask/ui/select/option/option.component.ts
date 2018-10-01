@@ -6,6 +6,7 @@ import {
     InjectionToken,
     Input,
     OnChanges,
+    Optional,
     SimpleChange,
     SimpleChanges,
     TemplateRef,
@@ -42,7 +43,7 @@ export class SelectOptionComponent implements OnChanges, KeyNavigableListItem {
 
     constructor(
         private _element: ElementRef,
-        @Inject(BL_OPTION_PARENT) private parent: OptionParent) {
+        @Optional() @Inject(BL_OPTION_PARENT) private parent: OptionParent) {
     }
 
     public getLabel(): string {
@@ -55,7 +56,7 @@ export class SelectOptionComponent implements OnChanges, KeyNavigableListItem {
 
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.value) {
-            if (!changes.value.isFirstChange()) {
+            if (this.parent && !changes.value.isFirstChange()) {
                 this.parent.optionValueChanged(changes.value);
             }
         }
