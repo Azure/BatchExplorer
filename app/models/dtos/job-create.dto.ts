@@ -5,7 +5,7 @@ import { EnvironmentSettingDto } from "./environment-setting.dto";
 import { JobConstraintDto } from "./job-constraints.dto";
 import { EnvironmentSetting, MetaDataDto } from "./metadata.dto";
 import { OutputFileDto } from "./output-file.dto";
-import { PoolCreateDto } from "./pool-create.dto";
+import { PoolCreateDto } from "./pool-create";
 import { ResourceFileDto } from "./resource-file.dto";
 import { TaskConstraintsDto } from "./task-constraints.dto";
 import { TaskContainerSettingsDto } from "./task-container-settings.dto";
