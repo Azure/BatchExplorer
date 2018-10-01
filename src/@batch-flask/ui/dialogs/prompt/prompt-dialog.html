@@ -1,5 +1,8 @@
 <bl-simple-form [submit]="submit" [containerRef]="dialogRef" actionColor="warn" actionName="Confirm" [multiUse]="false" size="small"
-    [title]="title" [formGroup]="promptControl">
+    [stickyFooter]="false"
+    [title]="title"
+    [formGroup]="promptControl">
+
     <ng-container [formGroup]="form">
         <div class="message" *ngIf="description">
             <p>{{description}}</p>
