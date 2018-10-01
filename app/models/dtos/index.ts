@@ -19,7 +19,7 @@ export * from "./job-patch.dto";
 export * from "./metadata.dto";
 export * from "./network-configuration.dto";
 export * from "./output-file.dto";
-export * from "./pool-create.dto";
+export * from "./pool-create";
 export * from "./pool-enable-autoscale.dto";
 export * from "./pool-endpoint-configuration.dto";
 export * from "./pool-patch.dto";

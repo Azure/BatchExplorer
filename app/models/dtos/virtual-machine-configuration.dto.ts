@@ -1,23 +1,25 @@
 import { Dto, DtoAttr } from "@batch-flask/core";
 import { ContainerConfigurationDto } from "./container-setup.dto";
 
-export class VirtualMachineConfiguration extends Dto<VirtualMachineConfiguration> {
-    @DtoAttr()
-    public nodeAgentSKUId: string;
+export class ImageReferenceDto extends Dto<ImageReferenceDto> {
+    @DtoAttr() public publisher: string;
+    @DtoAttr() public offer: string;
+    @DtoAttr() public sku: string;
+    @DtoAttr() public version: string;
+}
 
-    @DtoAttr()
-    public imageReference: {
-        publisher: string;
-        offer: string;
-        sku: string;
-        version?: string;
-    };
+export class WindowsConfigurationDto extends Dto<WindowsConfigurationDto>  {
+    @DtoAttr() public enableAutomaticUpdates?: boolean;
+}
 
-    @DtoAttr()
-    public containerConfiguration: ContainerConfigurationDto;
+export class VirtualMachineConfigurationDto extends Dto<VirtualMachineConfigurationDto> {
+    @DtoAttr() public nodeAgentSKUId: string;
 
-    @DtoAttr()
-    public windowsConfiguration?: {
+    @DtoAttr() public imageReference: ImageReferenceDto;
+
+    @DtoAttr() public containerConfiguration: ContainerConfigurationDto;
+
+    @DtoAttr() public windowsConfiguration?: {
         enableAutomaticUpdates?: boolean;
     };
 }
