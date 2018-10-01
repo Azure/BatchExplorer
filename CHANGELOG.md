@@ -4,6 +4,7 @@
 *  Unique windows show() nul pointer exception [\#1644](https://github.com/Azure/BatchExplorer/issues/1644)
 *  Reimage node is calling reboot [\#1646](https://github.com/Azure/BatchExplorer/issues/1646)
 *  Error loading metrics create null pointer exception [\#1648](https://github.com/Azure/BatchExplorer/issues/1648)
+*  View readme of NCJ application not working [\#1652](https://github.com/Azure/BatchExplorer/issues/1652)
 
 # 0.18.1
 
