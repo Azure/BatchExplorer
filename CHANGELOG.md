@@ -4,6 +4,7 @@
 *  Unique windows show() nul pointer exception [\#1644](https://github.com/Azure/BatchExplorer/issues/1644)
 *  Reimage node is calling reboot [\#1646](https://github.com/Azure/BatchExplorer/issues/1646)
 *  Error loading metrics create null pointer exception [\#1648](https://github.com/Azure/BatchExplorer/issues/1648)
+*  Cloning of Batch Pools does not work [\#1650](https://github.com/Azure/BatchExplorer/issues/1650)
 
 # 0.18.1
 
