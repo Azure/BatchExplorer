@@ -198,13 +198,24 @@ describe("TableComponent", () => {
             }
         });
 
+        it("check the selected rows", () => {
+            const rows = getRows();
+            click(rows[1]);
+            fixture.detectChanges();
+
+            expect(rows[1].className).toContain("selected", "2nd row should have been selected");
+            expect(rows[1].querySelector(".checkbox-cell .fa-check")).not.toBeFalsy("Check box should be checked");
+        });
+
         it("click on checkbox toggle selection", () => {
             let rows = getRows();
             click(rows[1].querySelector(".checkbox-cell"));
             fixture.detectChanges();
             rows = getRows();
             expect(rows[1].className).toContain("selected", "2nd row should be selected now");
+            expect(rows[1].querySelector(".checkbox-cell .fa-check")).not.toBeFalsy("Check box should be checked");
             expect(rows[2].className).not.toContain("selected", "Should not have selected another row");
+            expect(rows[2].querySelector(".checkbox-cell .fa-check")).toBeFalsy("Shouldn't check another box");
 
             click(rows[2].querySelector(".checkbox-cell"));
             fixture.detectChanges();
