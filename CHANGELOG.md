@@ -6,6 +6,7 @@
 *  Error loading metrics create null pointer exception [\#1648](https://github.com/Azure/BatchExplorer/issues/1648)
 *  View readme of NCJ application not working [\#1652](https://github.com/Azure/BatchExplorer/issues/1652)
 *  Cloning of Batch Pools does not work [\#1650](https://github.com/Azure/BatchExplorer/issues/1650)
+*  Error when button component doesn't return an observable [\#1654](https://github.com/Azure/BatchExplorer/issues/1654)
 
 # 0.18.1
 
