@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from "@angular/router";
 import { TelemetryService } from "@batch-flask/core";
-import { Constants } from "common";
 import { filter } from "rxjs/operators";
 
 /**

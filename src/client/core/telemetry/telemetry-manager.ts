@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { DataStore, TelemetryService } from "@batch-flask/core";
 import { exists } from "@batch-flask/utils";
 import { TelemetryType } from "applicationinsights/out/Declarations/Contracts";
+import { ClientConstants } from "client/client-constants";
 import { BatchExplorerProcess } from "client/core/batch-explorer-process";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { Constants } from "common";
@@ -19,8 +20,8 @@ export class TelemetryManager implements OnDestroy {
      * Event if the user has telemetry enabled, we disable telemtry in the dev version.
      */
     public get telemetryEnabled() {
-        // const dev = ClientConstants.isDev;
-        const dev = false;
+        const dev = ClientConstants.isDev;
+        // const dev = false;
         return this.userTelemetryEnabled && !dev;
     }
 
