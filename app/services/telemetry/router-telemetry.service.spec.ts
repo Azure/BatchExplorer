@@ -3,7 +3,6 @@ import { TestBed } from "@angular/core/testing";
 import { Router } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
 import { TelemetryService } from "@batch-flask/core";
-import { Constants } from "common";
 import { RouterTelemetryService } from "./router-telemetry.service";
 
 @Component({
@@ -38,7 +37,7 @@ describe("RouterTelemetryService", () => {
     let router: Router;
     beforeEach(() => {
         telemetryServiceSpy = {
-            trackEvent: jasmine.createSpy("trackEvent"),
+            trackPageView: jasmine.createSpy("trackPageView"),
         };
         TestBed.configureTestingModule({
             imports: [RouterTestingModule.withRoutes(routes)],
@@ -56,16 +55,13 @@ describe("RouterTelemetryService", () => {
     });
 
     it("send event when router navigate", async () => {
-        expect(telemetryServiceSpy.trackEvent).not.toHaveBeenCalled();
+        expect(telemetryServiceSpy.trackPageView).not.toHaveBeenCalled();
         await TestBed.get(NgZone).run(() => {
             return router.navigateByUrl("/pools");
         });
-        expect(telemetryServiceSpy.trackEvent).toHaveBeenCalledOnce();
-        expect(telemetryServiceSpy.trackEvent).toHaveBeenCalledWith({
-            name: Constants.TelemetryEvents.navigate,
-            properties: {
-                componentName: "PoolsComponent",
-            },
+        expect(telemetryServiceSpy.trackPageView).toHaveBeenCalledOnce();
+        expect(telemetryServiceSpy.trackPageView).toHaveBeenCalledWith({
+            name: "PoolsComponent",
         });
     });
 });

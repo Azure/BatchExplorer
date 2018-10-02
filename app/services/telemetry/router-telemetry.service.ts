@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from "@angular/router";
 import { TelemetryService } from "@batch-flask/core";
-import { Constants } from "common";
 import { filter } from "rxjs/operators";
 
 /**
@@ -20,11 +19,8 @@ export class RouterTelemetryService {
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd),
         ).subscribe(() => {
-            this.telemetryService.trackEvent({
-                name: Constants.TelemetryEvents.navigate,
-                properties: {
-                    componentName: this._getComponent(),
-                },
+            this.telemetryService.trackPageView({
+                name: this._getComponent(),
             });
         });
     }
