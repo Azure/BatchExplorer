@@ -1,6 +1,8 @@
 import { Inject, Injectable, InjectionToken } from "@angular/core";
 import { Telemetry } from "applicationinsights/out/Declarations/Contracts";
-import { EventTelemetry, ExceptionTelemetry, MetricTelemetry, PageViewTelemetry, TelemetryType } from "./telemetry.model";
+import {
+    EventTelemetry, ExceptionTelemetry, MetricTelemetry, PageViewTelemetry, TelemetryType,
+} from "./telemetry.model";
 
 export interface TelemetryUploader {
     init(enabled: boolean);
