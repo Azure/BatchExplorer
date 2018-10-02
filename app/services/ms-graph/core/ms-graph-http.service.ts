@@ -5,7 +5,6 @@ import { ArmBatchAccount } from "app/models";
 import { AdalService } from "app/services/adal";
 import { BatchAccountService } from "app/services/batch-account";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
-import { AADUser } from "client/core/aad/adal/aad-user";
 import { Observable, throwError } from "rxjs";
 import { catchError, flatMap, retryWhen, shareReplay, take, tap } from "rxjs/operators";
 
@@ -18,7 +17,6 @@ export class MsGraphHttpService extends HttpService {
         return this.batchExplorer.azureEnvironment.msGraph;
     }
 
-    private _currentUser: AADUser;
     constructor(
         httpHandler: HttpHandler,
         private adal: AdalService,
@@ -26,7 +24,6 @@ export class MsGraphHttpService extends HttpService {
         private batchExplorer: BatchExplorerService) {
 
         super(httpHandler);
-        this.adal.currentUser.subscribe(x => this._currentUser = x);
     }
 
     public request(method: any, uri?: any, options?: any): Observable<any> {

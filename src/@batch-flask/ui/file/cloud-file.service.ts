@@ -34,7 +34,7 @@ export class CloudFileService {
 
     private _getFileProperties(url: string, filename: string): Observable<File> {
         return this.http.head(url, { observe: "response" }).pipe(
-            map((response: HttpResponse<void>) => {
+            map((response: HttpResponse<any>) => {
                 return new File({
                     name: filename,
                     url: url,
