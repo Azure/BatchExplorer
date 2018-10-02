@@ -103,7 +103,8 @@ export class DataHomeComponent implements OnInit {
             prompt: (name) => this._createEmptyContainer(name, fileGroup),
             validator: [
                 Validators.required,
-                Validators.maxLength(validation.maxLength.fileGroup),
+                Validators.minLength(validation.minLength.container),
+                Validators.maxLength(validation.maxLength.container),
                 Validators.pattern(validation.regex.fileGroup),
             ],
             asyncValidator: [
@@ -111,7 +112,8 @@ export class DataHomeComponent implements OnInit {
             ],
             validatorMessages: [
                 { code: "required", message: `The ${type} name is a required field` },
-                { code: "maxlength", message: `The ${type} name has a maximum length of 64 characters` },
+                { code: "minLength", message: `The ${type} name has a minimum length of 3 characters` },
+                { code: "maxlength", message: `The ${type} name has a maximum length of 63 characters` },
                 { code: "duplicateContainer", message: `A ${type} with this name already exist.` },
                 // tslint:disable-next-line:max-line-length
                 { code: "pattern", message: `The ${type} can contain any combination of lowercase alphanumeric characters including single hyphens` },
