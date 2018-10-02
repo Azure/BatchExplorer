@@ -24,7 +24,7 @@ jobs:
     pool:
       vmImage: vs2017-win2016
     condition: ne(variables['Build.Reason'], 'PullRequest')
-    continue_on_error: true
+    continueOnError: true
     steps:
       - template: ./dependencies.yml
       - script: npm ci
