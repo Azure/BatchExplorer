@@ -30,6 +30,7 @@
     "test-client-watch": "npm run -s test-client -- --watch",
     "test-models": "npm run -s ts scripts/swagger/validate-models.ts",
     "build-client": " tsc -p tsconfig.node.json",
+    "build-client:dev": " tsc -p tsconfig.node.json --noUnusedLocals false",
     "build-app": "npm run webpack -- --profile --colors --display-error-details --display-cached",
     "build-python": "pyinstaller python/main.spec -y --distpath=python/dist --workpath=python/build",
     "build-i18n": "npm run -s ts -- scripts/i18n/generate.ts",

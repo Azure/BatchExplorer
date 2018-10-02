@@ -143,7 +143,7 @@ export class AuthenticationService {
         };
 
         if (silent) {
-            params.prompt = AuthorizePromptType.none;
+            // params.prompt = AuthorizePromptType.none;
         }
         return AdalConstants.authorizeUrl(this.app.properties.azureEnvironment.aadUrl, tenantId, params);
     }
