@@ -20,11 +20,8 @@ export class RouterTelemetryService {
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd),
         ).subscribe(() => {
-            this.telemetryService.trackEvent({
-                name: Constants.TelemetryEvents.navigate,
-                properties: {
-                    componentName: this._getComponent(),
-                },
+            this.telemetryService.trackPageView({
+                name: this._getComponent(),
             });
         });
     }

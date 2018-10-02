@@ -1,11 +1,13 @@
 import { Injectable } from "@angular/core";
-import { ExceptionTelemetry, Telemetry, TelemetryType, TelemetryUploader } from "@batch-flask/core";
+import { ExceptionTelemetry, PageViewTelemetry, Telemetry, TelemetryType, TelemetryUploader } from "@batch-flask/core";
 import { SecureUtils, log } from "@batch-flask/utils";
 import * as appinsights from "applicationinsights";
 import { ClientConstants } from "client/client-constants";
 import { MachineIdService } from "client/core/telemetry/machine-id.service";
 
 const APPLICATION_INSIGHTS_KEY = "a7a73aa4-a7b0-4681-9612-f7191189d5b8";
+
+const APPLICATION_INSIGHTS_TEST_KEY = "0de98d88-0a4e-414a-b08a-de88a2ded108";
 
 @Injectable()
 export class ApplicationInsightsUploader implements TelemetryUploader {
@@ -23,8 +25,10 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
             return;
         }
 
+        const key = ClientConstants.isDev ? APPLICATION_INSIGHTS_TEST_KEY : APPLICATION_INSIGHTS_KEY;
+
         // Init app insights and disable all auto reporting
-        appinsights.setup(APPLICATION_INSIGHTS_KEY)
+        appinsights.setup(key)
             .setAutoCollectConsole(false)
             .setAutoCollectExceptions(false)
             .setAutoCollectPerformance(false)
@@ -59,8 +63,30 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
                 exception.exception = this._sanitizeError(exception.exception);
             }
             this._client.trackException(exception);
+        } else if (type === TelemetryType.PageView) {
+            this.trackPageView(telemetry as PageViewTelemetry);
+        } else {
+            this._client.track(telemetry, type as any);
         }
-        this._client.track(telemetry, type);
+    }
+
+    public trackPageView(pageView: PageViewTelemetry) {
+        const pageViewData = new appinsights.Contracts.PageViewData();
+        pageViewData.name = pageView.name;
+        pageViewData.ver = 1;
+
+        const data = new appinsights.Contracts.Data();
+        data.baseData = pageView;
+        data.baseType = "PageViewData";
+
+        const envelope = new appinsights.Contracts.Envelope();
+        envelope.data = data;
+        envelope.time = new Date().toISOString();
+        envelope.ver = 1;
+        envelope.iKey = this._client.config.instrumentationKey;
+        envelope.name = "Microsoft.ApplicationInsights.PageView";
+
+        this._client.channel.send(envelope);
     }
 
     public flush(isAppCrashing?: boolean): Promise<void> {
