@@ -85,7 +85,7 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
         envelope.ver = 1;
         envelope.iKey = this._client.config.instrumentationKey;
         envelope.name = "Microsoft.ApplicationInsights.PageView";
-
+        envelope.tags = this._client.context.tags;
         this._client.channel.send(envelope);
     }
 
