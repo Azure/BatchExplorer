@@ -51,7 +51,7 @@ export abstract class GenericWindow {
      * @param focus If we should focus on the window if it is already visible. @default false
      */
     public show(focus: boolean = false) {
-        if (focus || !this._window.isVisible()) {
+        if (focus || (this._window && !this._window.isVisible())) {
             this._window.show();
         }
     }

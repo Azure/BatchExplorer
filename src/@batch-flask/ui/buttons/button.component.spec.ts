@@ -63,7 +63,22 @@ describe("ButtonComponent", () => {
         testComponent.color = "warn";
         fixture.detectChanges();
         expect(de.attributes["color"]).toBe("warn");
+    });
 
+    it("works when action returns null", () => {
+        testComponent.onAction.and.returnValue(null);
+        click(de);
+        fixture.detectChanges();
+        expect(testComponent.onAction).toHaveBeenCalledOnce();
+        expect(de.query(By.css(".fa-check"))).not.toBeFalsy();
+    });
+
+    it("works when action returns a non observable", () => {
+        testComponent.onAction.and.returnValue("some-string");
+        click(de);
+        fixture.detectChanges();
+        expect(testComponent.onAction).toHaveBeenCalledOnce();
+        expect(de.query(By.css(".fa-check"))).not.toBeFalsy();
     });
 
     describe("when disabled", () => {

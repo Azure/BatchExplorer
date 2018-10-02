@@ -2,14 +2,14 @@ import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
 import { NodeFillType } from "app/models";
 import * as moment from "moment";
 
-import { AppPackageReferenceDto } from "./application-package-reference.dto";
-import { CertificateReferenceDto } from "./certificate-reference.dto";
-import { CloudServiceConfiguration } from "./cloud-service-configuration.dto";
-import { MetaDataDto } from "./metadata.dto";
-import { NetworkConfigurationDto } from "./network-configuration.dto";
-import { StartTaskDto } from "./start-task.dto";
-import { UserAccountDto } from "./user-account.dto";
-import { VirtualMachineConfiguration } from "./virtual-machine-configuration.dto";
+import { AppPackageReferenceDto } from "../application-package-reference.dto";
+import { CertificateReferenceDto } from "../certificate-reference.dto";
+import { CloudServiceConfiguration } from "../cloud-service-configuration.dto";
+import { MetaDataDto } from "../metadata.dto";
+import { NetworkConfigurationDto } from "../network-configuration.dto";
+import { StartTaskDto } from "../start-task.dto";
+import { UserAccountDto } from "../user-account.dto";
+import { VirtualMachineConfigurationDto } from "../virtual-machine-configuration.dto";
 
 export class PoolCreateDto extends Dto<PoolCreateDto> {
     @DtoAttr() public id: string;
@@ -20,7 +20,7 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
 
     @DtoAttr() public cloudServiceConfiguration?: CloudServiceConfiguration;
 
-    @DtoAttr() public virtualMachineConfiguration?: VirtualMachineConfiguration;
+    @DtoAttr() public virtualMachineConfiguration?: VirtualMachineConfigurationDto;
 
     @DtoAttr() public networkConfiguration?: NetworkConfigurationDto;
 
