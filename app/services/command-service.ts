@@ -47,6 +47,7 @@ export class CommandService {
         }
         this._setOnce = true;
         for (const shortcut of keybindings) {
+            if (!shortcut.key) { continue; }
             MouseTrap.bind(shortcut.key, () => {
                 this.zone.run(() => {
                     this.perform(shortcut.command);
