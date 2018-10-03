@@ -1,3 +1,8 @@
+# 0.18.2
+
+### Bug fixes
+*  Increase pool quota quick fix not working [\#1667](https://github.com/Azure/BatchExplorer/issues/1667)
+
 # 0.18.1
 
 ### Bug fixes

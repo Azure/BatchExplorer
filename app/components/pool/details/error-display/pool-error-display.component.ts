@@ -49,6 +49,7 @@ export class PoolErrorDisplayComponent {
         return obs;
     }
 
+    @autobind()
     public increaseQuota() {
         this.shell.openExternal(ExternalLinks.supportRequest);
     }

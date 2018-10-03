@@ -72,6 +72,7 @@ export class BannerComponent implements OnChanges {
     private _fixingSub: Subscription;
 
     constructor(private changeDetector: ChangeDetectorRef) { }
+
     public ngOnChanges(inputs) {
         this.state = ErrorState.Error;
         if (this._fixingSub) {

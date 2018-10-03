@@ -165,6 +165,8 @@ bl-banner > bl-card.notice {
     border-bottom-right-radius: 3px;
 
     > .other-fix {
+        display: block;
+        width: 100%;
         cursor: pointer;
         padding: 2px 10px;
     }
