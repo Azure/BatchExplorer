@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { I18nService, Locale, LocaleService, TranslatedLocales } from "@batch-flask/core";
-import { AutoUpdateService, ElectronRemote, ElectronShell, FileSystemService, UpdateStatus } from "@batch-flask/ui";
+import {  ElectronRemote, ElectronShell, FileSystemService } from "@batch-flask/ui";
+import { AutoUpdateService, UpdateStatus } from "@batch-flask/electron";
 import {
     ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService, MultiContextMenuItem,
 } from "@batch-flask/ui/context-menu";

@@ -1,13 +1,17 @@
 import { NgModule } from "@angular/core";
-import { AutoUpdateRendererService } from "./auto-update";
+import { AutoUpdateService, AutoUpdateRendererService } from "./auto-update";
+import { SharedServiceInjector } from "./shared-services-injector/shared-service-injector";
 
-const services = [
-    AutoUpdateRendererService,
-];
 
+/**
+ * Module that contains electron service to be used in the renderer(Or browser)
+ */
 @NgModule({
     imports: [],
-    providers: services,
+    providers: [
+        { provide: AutoUpdateService, useClass: AutoUpdateRendererService },
+        SharedServiceInjector,
+    ],
 })
 export class ElectronRendererModule {
 

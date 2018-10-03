@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { Constants } from "../client-constants";
 import { BatchExplorerApplication, FileSystem, GenericWindow, LocalFileStorage } from "../core";
 import { renderLogger } from "../logger";
+import { AUTO_UPDATE_MAIN_SERVICE_TOKEN, AutoUpdateService } from "@batch-flask/electron";
 
 // Webpack dev server url when using HOT=1
 const devServerUrl = Constants.urls.main.dev;
@@ -85,7 +86,10 @@ export class MainWindow extends GenericWindow {
         anyWindow.windowHandler = this;
         anyWindow.logger = renderLogger;
         anyWindow.batchExplorerApp = this.batchExplorerApp;
-        anyWindow.autoUpdater = this.batchExplorerApp.autoUpdater;
+        anyWindow._sharedServices = {
+            [AUTO_UPDATE_MAIN_SERVICE_TOKEN]: this.batchExplorerApp.autoUpdater,
+        };
+        anyWindow._injector = this.batchExplorerApp.injector;
         anyWindow.authenticationWindow = this.batchExplorerApp.authenticationWindow;
         anyWindow.translationsLoader = this.batchExplorerApp.translationLoader;
         anyWindow.localeService = this.batchExplorerApp.localeService;

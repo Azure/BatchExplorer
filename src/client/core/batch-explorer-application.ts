@@ -1,4 +1,4 @@
-import { Inject, Injectable, InjectionToken, Injector } from "@angular/core";
+import { Injectable, InjectionToken, Injector } from "@angular/core";
 import { LocaleService, TelemetryService, TranslationsLoaderService } from "@batch-flask/core";
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { log } from "@batch-flask/utils";
@@ -12,7 +12,7 @@ import * as commander from "commander";
 import { BatchExplorerLink, Constants, Deferred } from "common";
 import { IpcEvent } from "common/constants";
 import { app, dialog, ipcMain, session } from "electron";
-import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
+import { UpdateCheckResult, autoUpdater } from "electron-updater";
 import { ProxyCredentials, ProxySettings } from "get-proxy-settings";
 import * as os from "os";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -23,6 +23,7 @@ import { RecoverWindow } from "../recover-window";
 import { AADService, AuthenticationState, AuthenticationWindow } from "./aad";
 import { BatchExplorerInitializer } from "./batch-explorer-initializer";
 import { MainWindowManager } from "./main-window-manager";
+import { AutoUpdateService } from "@batch-flask/electron";
 
 const osName = `${os.platform()}-${os.arch()}/${os.release()}`;
 const isDev = ClientConstants.isDev ? "-dev" : "";
@@ -50,15 +51,14 @@ export class BatchExplorerApplication {
     private _currentlyAskingForCredentials: Promise<any>;
 
     constructor(
-        @Inject(AUTO_UPDATER) public autoUpdater: AppUpdater,
+        public autoUpdater: AutoUpdateService,
         public translationLoader: TranslationsLoaderService,
         public localeService: LocaleService,
-        private injector: Injector,
+        public injector: Injector,
         public properties: BatchExplorerProperties,
         private telemetryService: TelemetryService,
         private telemetryManager: TelemetryManager,
         private ipcMain: BlIpcMain) {
-
         this.windows = new MainWindowManager(this, this.telemetryManager);
         this.state = this._state.asObservable();
 
@@ -72,6 +72,7 @@ export class BatchExplorerApplication {
         await this.telemetryManager.init();
 
         this.telemetryService.trackEvent({ name: Constants.TelemetryEvents.applicationStart });
+
 
         this._initializer = this.injector.get(BatchExplorerInitializer);
         this.aadService = this.injector.get(AADService);

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
-import { ElectronRemote } from "@batch-flask/ui";
+import { ElectronRemote } from "@batch-flask/electron";
 import { BatchExplorerApplication, LocalFileStorage } from "client/core";
 import { AADService, AuthenticationWindow } from "client/core/aad";
 import { PythonRpcServerProcess } from "client/python-process";

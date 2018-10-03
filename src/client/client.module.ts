@@ -19,6 +19,7 @@ import { ClientTelemetryModule } from "./core/telemetry";
 import { TerminalService } from "./core/terminal";
 import { MenuModule } from "./menu/menu.module";
 import { ProxySettingsManager } from "./proxy";
+import { ElectronMainModule } from "@batch-flask/electron";
 
 /**
  * List services here that needs to be create even if they are not injected anywhere
@@ -45,6 +46,7 @@ export function initializeServices(injector) {
         I18nModule,
         ClientTelemetryModule,
         MenuModule,
+        ElectronMainModule,
     ],
     providers: [
         { provide: AUTO_UPDATER, useValue: autoUpdater },
@@ -71,3 +73,5 @@ export class BatchExplorerClientModule {
         // Nothing to do
     }
 }
+
+
