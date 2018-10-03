@@ -15,7 +15,7 @@ export class AutoUpdateRendererService extends AutoUpdateService implements OnDe
     constructor(injector: SharedServiceInjector) {
         super();
         this._main = injector.get(AUTO_UPDATE_MAIN_SERVICE_TOKEN);
-        console.log("Main is", this._main);
+
         this._sub = this._main.status.subscribe((status) => {
             this._status.next(status);
         })
