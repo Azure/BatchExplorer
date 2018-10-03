@@ -1,5 +1,5 @@
-import { Observable } from "rxjs";
 import { UpdateInfo } from "electron-updater";
+import { Observable } from "rxjs";
 
 export enum UpdateStatus {
     Checking,

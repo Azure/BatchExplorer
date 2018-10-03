@@ -5,13 +5,13 @@ async function loadFile(file: string): Promise<Buffer> {
     const reader = response.body.getReader();
     const result = await reader.read();
     if (result.value) {
-        return Buffer.from(result.value.buffer);
+        return new Buffer(result.value.buffer);
     } else {
-        return Buffer.from("");
+        return new Buffer("");
     }
 }
 
-describe("Encoding", () => {
+fdescribe("Encoding", () => {
     describe("detectEncodingByBOMFromBuffer", () => {
         it("detectBOM UTF-8", async () => {
             const buffer = await loadFile("some_utf8.css");
@@ -64,7 +64,7 @@ describe("Encoding", () => {
             expect(mimes.seemsBinary).toEqual(true);
         });
 
-        it("detectEncodingFromBuffer (XML saved as PNG) as non binary", async () => {
+        fit("detectEncodingFromBuffer (XML saved as PNG) as non binary", async () => {
             const buffer = await loadFile("some.xml.png");
 
             const mimes = await EncodingUtils.detectEncodingFromBuffer({ buffer, bytesRead: buffer.length });
