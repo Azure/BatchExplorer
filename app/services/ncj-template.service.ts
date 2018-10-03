@@ -11,7 +11,7 @@ import {
 } from "app/models";
 import { LocalFileStorage } from "app/services/local-file-storage.service";
 import { List } from "immutable";
-import * as loadJsonFile from "load-json-file";
+import loadJsonFile from "load-json-file";
 import { BehaviorSubject, Observable, from } from "rxjs";
 import { flatMap, map, share, shareReplay } from "rxjs/operators";
 import { GithubDataService } from "./github-data";
@@ -132,7 +132,7 @@ export class NcjTemplateService {
     }
 
     public async loadLocalTemplateFile(path: string) {
-        const json = await loadJsonFile(path).then((content) => {
+        const json = await loadJsonFile<any>(path).then((content) => {
             return content;
         }).catch((error) => {
             return Promise.reject(`File is not valid json: ${error.message}`);

@@ -34,7 +34,7 @@ export class CloudFileService {
 
     private _getFileProperties(url: string, filename: string): Observable<File> {
         return this.http.head(url, { observe: "response" }).pipe(
-            map((response: HttpResponse<void>) => {
+            map((response: HttpResponse<any>) => {
                 return new File({
                     name: filename,
                     url: url,
@@ -59,7 +59,7 @@ export class CloudFileService {
         const buffer = response.body;
 
         const { encoding } = await EncodingUtils.detectEncodingFromBuffer({
-            buffer: new Buffer(buffer),
+            buffer: Buffer.from(buffer),
             bytesRead: buffer.byteLength,
         });
         return { content: new TextDecoder(encoding || "utf-8").decode(buffer) };

@@ -6,7 +6,7 @@
     {
       "identifier": "build-client",
       "type": "npm",
-      "script": "build-client",
+      "script": "build-client:dev",
       "problemMatcher": [
         "$tsc"
       ],

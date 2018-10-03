@@ -33,7 +33,6 @@ const sampleUser: AADUser = {
 
 describe("AADService", () => {
     let service: AADService;
-    let currentUser: AADUser;
     let appSpy;
     let localStorage: InMemoryDataStore;
     let ipcMainMock;
@@ -54,7 +53,6 @@ describe("AADService", () => {
 
         };
         service = new AADService(appSpy, localStorage, propertiesSpy, ipcMainMock);
-        service.currentUser.subscribe(x => currentUser = x);
         service.init();
     });
 

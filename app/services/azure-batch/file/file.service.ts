@@ -280,7 +280,7 @@ export class FileService {
             const output = fs.createWriteStream(destination);
 
             reader.onload = () => {
-                const buffer = new Buffer(reader.result as any);
+                const buffer = Buffer.from(reader.result as any);
                 output.write(buffer);
                 output.close();
                 resolve(true);
@@ -304,7 +304,7 @@ export class FileService {
         const buffer = response.body;
 
         const { encoding } = await EncodingUtils.detectEncodingFromBuffer({
-            buffer: new Buffer(buffer),
+            buffer: Buffer.from(buffer),
             bytesRead: buffer.byteLength,
         });
         return { content: new TextDecoder(encoding || "utf-8").decode(buffer) };

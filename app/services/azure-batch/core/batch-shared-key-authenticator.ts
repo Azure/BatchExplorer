@@ -11,7 +11,7 @@ class HmacSha256Sign {
 
     public async sign(stringToSign: any) {
         const key = await this._importKeyPromise;
-        return crypto.subtle.sign(({ name: "hmac", hash: { name: "sha-256" } }), key, new Buffer(stringToSign));
+        return crypto.subtle.sign(({ name: "hmac", hash: { name: "sha-256" } }), key, Buffer.from(stringToSign));
     }
 
     private async _importKey(): Promise<CryptoKey> {

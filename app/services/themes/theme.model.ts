@@ -42,10 +42,10 @@ export class ColorPalette extends ThemeElement<string> {
             700: tinycolor.mix(baseDark, base, 70).toHexString(),
             800: tinycolor.mix(baseDark, base, 54).toHexString(),
             900: tinycolor.mix(baseDark, base, 25).toHexString(),
-            A100: tinycolor.mix(baseDark, baseTriad[4], 15).saturate(80).lighten(65).toHexString(),
-            A200: tinycolor.mix(baseDark, baseTriad[4], 15).saturate(80).lighten(55).toHexString(),
-            A400: tinycolor.mix(baseDark, baseTriad[4], 15).saturate(100).lighten(45).toHexString(),
-            A700: tinycolor.mix(baseDark, baseTriad[4], 15).saturate(100).lighten(40).toHexString(),
+            A100: tinycolor.mix(baseDark, baseTriad[3], 15).saturate(80).lighten(65).toHexString(),
+            A200: tinycolor.mix(baseDark, baseTriad[3], 15).saturate(80).lighten(55).toHexString(),
+            A400: tinycolor.mix(baseDark, baseTriad[3], 15).saturate(100).lighten(45).toHexString(),
+            A700: tinycolor.mix(baseDark, baseTriad[3], 15).saturate(100).lighten(40).toHexString(),
         });
         this.main = this[500];
         this.light = this[300];
