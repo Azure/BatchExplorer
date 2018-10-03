@@ -5,6 +5,10 @@ import { Component, Input } from "@angular/core";
     template: `<div>{{fixMessage}}<ng-content></ng-content></div>`,
 })
 export class BannerMockComponent {
-    @Input()
-    public fixMessage: string;
+    @Input() public fixMessage: string;
+    @Input() public fix;
+
+    public triggerFix() {
+        this.fix();
+    }
 }

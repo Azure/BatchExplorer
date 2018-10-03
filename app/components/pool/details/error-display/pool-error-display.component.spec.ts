@@ -2,12 +2,13 @@ import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { ElectronShell } from "@batch-flask/ui";
-import { of } from "rxjs";
-
 import { PoolErrorDisplayComponent } from "app/components/pool/details";
 import { Pool, ResizeErrorCode } from "app/models";
 import { BatchAccountService, PoolService } from "app/services";
+import { Constants } from "common";
+import { of } from "rxjs";
 import * as Fixtures from "test/fixture";
+import { ElectronTestingModule, MockElectronShell } from "test/utils/mocks";
 import { BannerMockComponent } from "test/utils/mocks/components";
 
 @Component({
@@ -21,6 +22,7 @@ describe("PoolErrorDisplayComponent", () => {
     let fixture: ComponentFixture<TestPoolErrorDisplayComponent>;
     let testComponent: TestPoolErrorDisplayComponent;
     let accountServiceSpy: any;
+    let shellSpy: MockElectronShell;
 
     beforeEach(() => {
         accountServiceSpy = {
@@ -28,19 +30,20 @@ describe("PoolErrorDisplayComponent", () => {
         };
 
         TestBed.configureTestingModule({
+            imports: [ElectronTestingModule],
             declarations: [
                 BannerMockComponent, PoolErrorDisplayComponent, TestPoolErrorDisplayComponent,
             ],
             providers: [
                 { provide: BatchAccountService, useValue: accountServiceSpy },
                 { provide: PoolService, useValue: null },
-                { provide: ElectronShell, useValue: {} },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
 
         fixture = TestBed.createComponent(TestPoolErrorDisplayComponent);
         testComponent = fixture.componentInstance;
+        shellSpy = TestBed.get(ElectronShell);
         fixture.detectChanges();
     });
 
@@ -74,6 +77,13 @@ describe("PoolErrorDisplayComponent", () => {
         it("should propose increase quota as a first fix", () => {
             const banner = fixture.debugElement.query(By.css("bl-banner")).componentInstance;
             expect(banner.fixMessage).toContain("Increase quota");
+        });
+
+        it("should go to azure portal to increase quota", () => {
+            const banner: BannerMockComponent = fixture.debugElement.query(By.css("bl-banner")).componentInstance;
+            banner.triggerFix();
+            expect(shellSpy.openExternal).toHaveBeenCalledOnce();
+            expect(shellSpy.openExternal).toHaveBeenCalledWith(Constants.ExternalLinks.supportRequest);
         });
     });
 
