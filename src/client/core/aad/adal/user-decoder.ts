@@ -47,6 +47,6 @@ export class UserDecoder {
 
     private base64DecodeStringUrlSafe(base64IdToken: string) {
         base64IdToken = base64IdToken.replace(/-/g, "+").replace(/_/g, "/");
-        return (new Buffer(base64IdToken, "base64")).toString("utf8");
+        return (Buffer.from(base64IdToken, "base64")).toString("utf8");
     }
 }
