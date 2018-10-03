@@ -1,10 +1,12 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { UpdateCheckResult, autoUpdater } from "electron-updater";
-import { BehaviorSubject, Observable, Subscription } from "rxjs";
+import { BehaviorSubject, Observable, interval, Subscription } from "rxjs";
 import { map } from "rxjs/operators";
 import { AutoUpdateService, UpdateStatus } from "./base";
 
 export const AUTO_UPDATE_MAIN_SERVICE_TOKEN = "AUTO_UPDATE_SERVICE";
+
+export const AUTO_UPDATE_CHECK_INTERVAL = 3600_000; // Every hour
 
 @Injectable()
 export class AutoUpdateMainService extends AutoUpdateService implements OnDestroy {
@@ -19,7 +21,7 @@ export class AutoUpdateMainService extends AutoUpdateService implements OnDestro
     public updateReady: Observable<boolean>;
     public disabled: boolean = false;
     private _status = new BehaviorSubject(UpdateStatus.Checking);
-    private _settingsSub: Subscription;
+    private _autoCheckSub: Subscription;
 
     constructor() {
         super();
@@ -32,6 +34,11 @@ export class AutoUpdateMainService extends AutoUpdateService implements OnDestro
                 }
             }),
         );
+
+        this._autoCheckSub = interval(3600_000).subscribe(() => {
+            this.checkForUpdates();
+        })
+
         this.updateReady = this._status.pipe(map(x => x === UpdateStatus.Ready));
 
         autoUpdater.on("checking-for-update", (info) => {
@@ -54,14 +61,11 @@ export class AutoUpdateMainService extends AutoUpdateService implements OnDestro
         autoUpdater.on("update-not-available", (info) => {
             this._status.next(UpdateStatus.NotAvailable);
         });
-
-        // this._settingsSub = batchFlaskSettings.settingsObs.subscribe((settings) => {
-        //     autoUpdater.autoInstallOnAppQuit = Boolean(settings.autoUpdateOnQuit);
-        // });
     }
 
     public ngOnDestroy() {
-        // this._settingsSub.unsubscribe();
+        this._autoCheckSub.unsubscribe();
+        this._status.complete();
     }
 
     public async checkForUpdates(): Promise<UpdateCheckResult | null> {
