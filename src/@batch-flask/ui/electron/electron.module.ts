@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 
+import { ElectronRendererModule } from "@batch-flask/electron/electron-renderer.module";
 import { AutoUpdateService } from "./auto-update.service";
 import { ClipboardService } from "./clipboard.service";
 import { CurrentBrowserWindow } from "./current-browser-window";
@@ -23,7 +24,7 @@ const services = [
 ];
 
 @NgModule({
-    imports: [],
+    imports: [ElectronRendererModule],
     declarations: [...privateComponents, publicComponents],
     exports: [...publicComponents],
     providers: services,

@@ -1,5 +1,9 @@
 {
   "name": "batch-explorer",
+  "sideEffects": [
+    "src/@batch-flask/extensions/*",
+    "*.scss"
+  ],
   "productName": "Batch Explorer",
   "description": "Batch Explorer is a tool to manage your Azure Batch accounts",
   "repository": {

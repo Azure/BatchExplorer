@@ -62,10 +62,10 @@ module.exports = merge(config, {
         ],
     },
     plugins: [
-        new EvalSourceMapDevToolPlugin({
-            moduleFilenameTemplate: "[resource-path]",
-            sourceRoot: "webpack:///"
-        }),
+        // new EvalSourceMapDevToolPlugin({
+        //     moduleFilenameTemplate: "[resource-path]",
+        //     sourceRoot: "webpack:///"
+        // }),
         defineEnv(ENV),
         new WriteFilePlugin({
             test: /vendor\/vs.*/

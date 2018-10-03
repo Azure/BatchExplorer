@@ -53,7 +53,7 @@ export class TableHeadCellComponent implements OnInit, OnDestroy {
     private _subs: Subscription[] = [];
 
     constructor(
-        @Inject(forwardRef(() => TableComponent)) public table: TableComponent,
+        @Inject(forwardRef(() => TableComponent)) public table: any,
         public elementRef: ElementRef,
         private changeDetector: ChangeDetectorRef) {
 
