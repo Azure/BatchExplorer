@@ -43,6 +43,9 @@ describe("ListGetter", () => {
     it("It retrieve the first batch of items", (done) => {
         getter.fetch({}).subscribe(({ items, nextLink }) => {
             expect(items.toJS()).toEqual(firstPage);
+            expect(items.get(0) instanceof FakeModel).toBe(true);
+            expect(items.get(1) instanceof FakeModel).toBe(true);
+            expect(items.get(2) instanceof FakeModel).toBe(true);
             expect(dataSpy).toHaveBeenCalledTimes(1);
             expect(nextLink).toBeTruthy();
             done();
@@ -63,6 +66,11 @@ describe("ListGetter", () => {
     it("#fetchAll() should get all the items", (done) => {
         getter.fetchAll({}).subscribe((items) => {
             expect(items.toJS()).toEqual(firstPage.concat(secondPage));
+            expect(items.get(0) instanceof FakeModel).toBe(true);
+            expect(items.get(1) instanceof FakeModel).toBe(true);
+            expect(items.get(2) instanceof FakeModel).toBe(true);
+            expect(items.get(3) instanceof FakeModel).toBe(true);
+            expect(items.get(4) instanceof FakeModel).toBe(true);
             expect(dataSpy).toHaveBeenCalledTimes(2);
             done();
         });

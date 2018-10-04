@@ -44,7 +44,7 @@ export abstract class ListGetter<TEntity extends Record<any>, TParams> extends G
                 return nextLink ? this._fetchNext(nextLink) : empty();
             }),
             reduce((items: TEntity[], response: ListResponse<TEntity>) => {
-                const array = [...items, ...response.items.toJS()];
+                const array = [...items, ...response.items.toArray()];
                 if (progress) { progress(array.length); }
                 return array;
             }, []),
