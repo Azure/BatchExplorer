@@ -1,7 +1,9 @@
 import { NgModule } from "@angular/core";
-import { ElectronRemote, ElectronShell } from "../ui";
 import { AutoUpdateRendererService, AutoUpdateService } from "./auto-update";
+import { IpcService } from "./ipc.service";
+import { ElectronRemote } from "./remote.service";
 import { SharedServiceInjector } from "./shared-service-injector";
+import { ElectronShell } from "./shell.service";
 
 /**
  * Module that contains electron service to be used in the renderer(Or browser)
@@ -13,6 +15,7 @@ import { SharedServiceInjector } from "./shared-service-injector";
         SharedServiceInjector,
         ElectronShell,
         ElectronRemote,
+        IpcService,
     ],
 })
 export class ElectronRendererModule {

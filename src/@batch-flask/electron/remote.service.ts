@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { IpcService } from "../ui/electron/ipc.service";
+import { IpcService } from "./ipc.service";
 
 // Uncomment bellow to check sendSync performance issues
 // let total = 0;
