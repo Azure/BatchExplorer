@@ -2,6 +2,7 @@
 
 ### Bug fixes
 *  Increase pool quota quick fix not working [\#1667](https://github.com/Azure/BatchExplorer/issues/1667)
+*  Error on toggle filter button [\#1671](https://github.com/Azure/BatchExplorer/issues/1671)
 
 # 0.18.1
 
