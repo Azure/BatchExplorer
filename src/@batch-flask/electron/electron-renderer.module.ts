@@ -1,4 +1,5 @@
 import { NgModule } from "@angular/core";
+import { ElectronRemote, ElectronShell } from "../ui";
 import { AutoUpdateRendererService, AutoUpdateService } from "./auto-update";
 import { SharedServiceInjector } from "./shared-service-injector";
 
@@ -10,6 +11,8 @@ import { SharedServiceInjector } from "./shared-service-injector";
     providers: [
         { provide: AutoUpdateService, useClass: AutoUpdateRendererService },
         SharedServiceInjector,
+        ElectronShell,
+        ElectronRemote,
     ],
 })
 export class ElectronRendererModule {

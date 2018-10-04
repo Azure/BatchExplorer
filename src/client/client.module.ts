@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { ServerModule } from "@angular/platform-server";
 import { DevTranslationsLoader } from "@batch-flask/compiler";
 import { DataStore, I18nModule, LocaleService, TranslationsLoaderService } from "@batch-flask/core";
+import { ElectronMainModule } from "@batch-flask/electron";
 import { OSService } from "@batch-flask/ui/electron/os.service";
 import { ClientTranslationsLoaderService } from "client/core/i18n";
 import { autoUpdater } from "electron-updater";
@@ -19,7 +20,6 @@ import { ClientTelemetryModule } from "./core/telemetry";
 import { TerminalService } from "./core/terminal";
 import { MenuModule } from "./menu/menu.module";
 import { ProxySettingsManager } from "./proxy";
-import { ElectronMainModule } from "@batch-flask/electron";
 
 /**
  * List services here that needs to be create even if they are not injected anywhere
@@ -73,5 +73,3 @@ export class BatchExplorerClientModule {
         // Nothing to do
     }
 }
-
-

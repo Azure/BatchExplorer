@@ -48,7 +48,7 @@
     "dev": "concurrently --kill-others \"npm run -s dev-server\" \"npm run -s dev-electron\"",
     "dev-electron": "cross-env HOT=1 electron build/client/main.js",
     "dev-server": "npm run webpack-dev-server -- --hot --inline --colors --content-base app/",
-    "tslint": "node -r ts-node/register node_modules/tslint/bin/tslint -p tsconfig.json -c tslint.json \"app/**/*.ts\" \"src/**/*.ts\" \"test/**/*.ts\" \"./*.js\" \"config/**/*.js\" -t verbose",
+    "tslint": "cross-env TS_NODE_COMPILER_OPTIONS={\\\"module\\\":\\\"commonjs\\\"} node -r ts-node/register node_modules/tslint/bin/tslint -p tsconfig.json -c tslint.json \"app/**/*.ts\" \"src/**/*.ts\" \"test/**/*.ts\" \"./*.js\" \"config/**/*.js\" --format verbose",
     "stylelint": "stylelint --syntax scss \"app/**/*.scss\"",
     "lint": "npm run -s tslint && npm run -s stylelint",
     "package": "npm run -s ts scripts/package/package.ts",

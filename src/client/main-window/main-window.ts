@@ -1,12 +1,11 @@
-import { BrowserWindow, app, ipcMain } from "electron";
-
+import { AUTO_UPDATE_MAIN_SERVICE_TOKEN } from "@batch-flask/electron";
 import { log } from "@batch-flask/utils";
 import { TelemetryManager } from "client/core/telemetry";
+import { BrowserWindow, app, ipcMain } from "electron";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Constants } from "../client-constants";
 import { BatchExplorerApplication, FileSystem, GenericWindow, LocalFileStorage } from "../core";
 import { renderLogger } from "../logger";
-import { AUTO_UPDATE_MAIN_SERVICE_TOKEN } from "@batch-flask/electron";
 
 // Webpack dev server url when using HOT=1
 const devServerUrl = Constants.urls.main.dev;

@@ -24,7 +24,7 @@
       "script": "tslint",
       "problemMatcher": {
         "base": "$tslint5",
-        "fileLocation": "absolute"
+        "fileLocation": "relative"
       }
     }
   ]

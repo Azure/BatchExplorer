@@ -1,6 +1,7 @@
 import { Injectable, InjectionToken, Injector } from "@angular/core";
 import { LocaleService, TelemetryService, TranslationsLoaderService } from "@batch-flask/core";
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
+import { AutoUpdateService } from "@batch-flask/electron";
 import { log } from "@batch-flask/utils";
 import { BlIpcMain } from "client/core/bl-ipc-main";
 import { BatchExplorerProperties } from "client/core/properties";
@@ -23,7 +24,6 @@ import { RecoverWindow } from "../recover-window";
 import { AADService, AuthenticationState, AuthenticationWindow } from "./aad";
 import { BatchExplorerInitializer } from "./batch-explorer-initializer";
 import { MainWindowManager } from "./main-window-manager";
-import { AutoUpdateService } from "@batch-flask/electron";
 
 const osName = `${os.platform()}-${os.arch()}/${os.release()}`;
 const isDev = ClientConstants.isDev ? "-dev" : "";
@@ -72,7 +72,6 @@ export class BatchExplorerApplication {
         await this.telemetryManager.init();
 
         this.telemetryService.trackEvent({ name: Constants.TelemetryEvents.applicationStart });
-
 
         this._initializer = this.injector.get(BatchExplorerInitializer);
         this.aadService = this.injector.get(AADService);

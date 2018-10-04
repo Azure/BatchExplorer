@@ -6,14 +6,10 @@ import { CurrentBrowserWindow } from "./current-browser-window";
 import { FileSystemService } from "./fs.service";
 import { IpcService } from "./ipc.service";
 import { OSService } from "./os.service";
-import { ElectronRemote } from "../../electron/remote.service";
-import { ElectronShell } from "../../electron/shell.service";
 
 const privateComponents = [];
 const publicComponents = [];
 const services = [
-    ElectronShell,
-    ElectronRemote,
     FileSystemService,
     IpcService,
     ClipboardService,
