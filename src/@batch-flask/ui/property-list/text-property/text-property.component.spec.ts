@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
 import { ClipboardService } from "@batch-flask/ui/electron";
-import { mouseenter, mouseleave } from "test/utils/helpers";
+import { click, mouseenter, mouseleave } from "test/utils/helpers";
 import { TextPropertyComponent } from "./text-property.component";
 
 @Component({
@@ -23,13 +23,17 @@ describe("TextPropertyComponent", () => {
     let de: DebugElement;
     let testComponent: TestComponent;
     let section: DebugElement;
+    let clipboardSpy;
 
     beforeEach(() => {
+        clipboardSpy = {
+            writeText: jasmine.createSpy("writeText"),
+        };
         TestBed.configureTestingModule({
             declarations: [TestComponent, TextPropertyComponent],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
-                { provide: ClipboardService, useValue: {} },
+                { provide: ClipboardService, useValue: clipboardSpy },
             ],
         });
         fixture = TestBed.createComponent(TestComponent);
@@ -68,6 +72,35 @@ describe("TextPropertyComponent", () => {
         mouseleave(section);
         fixture.detectChanges();
         expect(clipboard).toBeHidden();
+    });
+
+    it("copy the value to clipboard", () => {
+        testComponent.value = "some-text";
+        fixture.detectChanges();
+
+        mouseenter(section);
+        fixture.detectChanges();
+        const clipboard = de.query(By.css(".clipboard"));
+        expect(clipboard).toBeVisible();
+
+        click(clipboard.query(By.css(".fa-clipboard")));
+        expect(clipboardSpy.writeText).toHaveBeenCalledOnce();
+        expect(clipboardSpy.writeText).toHaveBeenCalledWith("some-text");
+    });
+
+    it("copy the value as a string to clipboard when a number", () => {
+        testComponent.value = 6 as any;
+        fixture.detectChanges();
+
+        mouseenter(section);
+        fixture.detectChanges();
+        const clipboard = de.query(By.css(".clipboard"));
+        expect(clipboard).toBeVisible();
+
+        click(clipboard.query(By.css(".fa-clipboard")));
+        expect(clipboardSpy.writeText).toHaveBeenCalledOnce();
+        expect(clipboardSpy.writeText).toHaveBeenCalledWith("6");
+
     });
 
     describe("when clipboard is disabled", () => {
