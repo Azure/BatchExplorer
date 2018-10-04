@@ -1,4 +1,5 @@
 import { Injectable, OnDestroy } from "@angular/core";
+import { ProgressInfo } from "builder-util-runtime";
 import { UpdateCheckResult, autoUpdater } from "electron-updater";
 import { BehaviorSubject, Observable, Subscription, interval } from "rxjs";
 import { map } from "rxjs/operators";
@@ -19,9 +20,16 @@ export class AutoUpdateMainService extends AutoUpdateService implements OnDestro
      * Will be set to true when there is an update available and it is ready to be installed(Downloaded)
      */
     public updateReady: Observable<boolean>;
+
+    /**
+     * Progress of the download if applicable
+     */
+    public downloadProgress: Observable<ProgressInfo | null>;
+
     public disabled: boolean = false;
     private _status = new BehaviorSubject(UpdateStatus.Checking);
     private _autoCheckSub: Subscription;
+    private _downloadProgress = new BehaviorSubject<ProgressInfo>(null);
 
     constructor() {
         super();
@@ -34,10 +42,11 @@ export class AutoUpdateMainService extends AutoUpdateService implements OnDestro
                 }
             }),
         );
+        this.downloadProgress = this._downloadProgress.asObservable();
 
         this._autoCheckSub = interval(3600_000).subscribe(() => {
             this.checkForUpdates();
-        })
+        });
 
         this.updateReady = this._status.pipe(map(x => x === UpdateStatus.Ready));
 
@@ -51,7 +60,8 @@ export class AutoUpdateMainService extends AutoUpdateService implements OnDestro
         });
 
         autoUpdater.on("download-progress", (progress) => {
-            this._status.next(UpdateStatus.Ready);
+            this._downloadProgress.next(progress);
+            this._status.next(UpdateStatus.Downloading);
         });
 
         autoUpdater.on("update-downloaded", (info) => {
@@ -59,6 +69,7 @@ export class AutoUpdateMainService extends AutoUpdateService implements OnDestro
         });
 
         autoUpdater.on("update-not-available", (info) => {
+            this._downloadProgress.next(null);
             this._status.next(UpdateStatus.NotAvailable);
         });
     }
@@ -66,6 +77,7 @@ export class AutoUpdateMainService extends AutoUpdateService implements OnDestro
     public ngOnDestroy() {
         this._autoCheckSub.unsubscribe();
         this._status.complete();
+        this._downloadProgress.complete();
     }
 
     public async checkForUpdates(): Promise<UpdateCheckResult | null> {
