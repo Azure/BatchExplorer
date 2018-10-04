@@ -2,6 +2,7 @@
 
 ### Bug fixes
 *  Increase pool quota quick fix not working [\#1667](https://github.com/Azure/BatchExplorer/issues/1667)
+*  Error when copying property which value is not a string(int) [\#1675](https://github.com/Azure/BatchExplorer/issues/1675)
 
 # 0.18.1
 
