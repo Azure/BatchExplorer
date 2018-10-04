@@ -123,8 +123,13 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnIni
     }
 
     private _checkValid(value: string) {
-        const valid = this.loading || !value || this.containers.map(x => x.name).includes(value);
+        const valid = this.loading || !value || this.containers.map(x => x.name).includes(this._getContainerFromSasUrl(value));
         this.warning = !valid;
+        this.changeDetector.markForCheck();
+    }
+
+    private _getContainerFromSasUrl(value) {
+        return value;
     }
 
     private _isSasUrl() {

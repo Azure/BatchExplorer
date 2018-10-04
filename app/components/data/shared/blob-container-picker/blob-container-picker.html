@@ -1,10 +1,10 @@
 <bl-form-field>
     <input type="text" blInput [matAutocomplete]="auto" [formControl]="container" [placeholder]="label">
     <bl-hint class="danger" *ngIf="warning">
-        This container doesn't exists.
+        {{'blob-container-picker.notFound' | i18n}}
     </bl-hint>
     <bl-hint *ngIf="loading">
-        Loading containers.
+        {{'blob-container-picker.loading' | i18n}}
     </bl-hint>
     <bl-hint *ngIf="hint" align="end">
         {{hint}}
@@ -13,7 +13,7 @@
 
 <mat-autocomplete #auto="matAutocomplete">
     <mat-option [disabled]="true" *ngIf="loading">
-        <i class="fa fa-spinner fa-spin"></i> Loading
+        <i class="fa fa-spinner fa-spin"></i> {{'blob-container-picker.loading' | i18n}}
     </mat-option>
     <mat-option *ngFor="let container of containers;trackBy: trackContainer" [value]="container.name">
         {{ container.name }}
