@@ -1,3 +1,4 @@
+import { ProgressInfo } from "builder-util-runtime";
 import { UpdateInfo } from "electron-updater";
 import { Observable } from "rxjs";
 
@@ -8,8 +9,13 @@ export enum UpdateStatus {
     NotAvailable,
 }
 
-export abstract class AutoUpdateService  {
+export abstract class AutoUpdateService {
     public status: Observable<UpdateStatus>;
+    /**
+     * Progress of the download if applicable
+     */
+    public downloadProgress: Observable<ProgressInfo | null>;
+
     public updateInfo: UpdateInfo = null;
 
     public abstract disable();

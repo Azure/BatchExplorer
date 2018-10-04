@@ -21,11 +21,6 @@ export class AutoUpdateMainService extends AutoUpdateService implements OnDestro
      */
     public updateReady: Observable<boolean>;
 
-    /**
-     * Progress of the download if applicable
-     */
-    public downloadProgress: Observable<ProgressInfo | null>;
-
     public disabled: boolean = false;
     private _status = new BehaviorSubject(UpdateStatus.Checking);
     private _autoCheckSub: Subscription;

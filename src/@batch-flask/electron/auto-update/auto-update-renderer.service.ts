@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { AutoUpdateService, UpdateStatus } from "./base";
-import { SharedServiceInjector } from "../shared-services-injector/shared-service-injector";
 import { BehaviorSubject, Subscription } from "rxjs";
+import { SharedServiceInjector } from "../shared-service-injector";
 import { AUTO_UPDATE_MAIN_SERVICE_TOKEN } from "./auto-update-main.service";
+import { AutoUpdateService, UpdateStatus } from "./base";
 
 @Injectable()
 export class AutoUpdateRendererService extends AutoUpdateService implements OnDestroy {
@@ -10,21 +10,28 @@ export class AutoUpdateRendererService extends AutoUpdateService implements OnDe
     private _main: AutoUpdateService;
 
     private _status = new BehaviorSubject(UpdateStatus.Checking);
-    _sub: Subscription;
+    private _downloadProgress = new BehaviorSubject(null);
+    private _statusSub: Subscription;
+    private _downloadProgressSub: Subscription;
 
     constructor(injector: SharedServiceInjector) {
         super();
         this._main = injector.get(AUTO_UPDATE_MAIN_SERVICE_TOKEN);
 
-        this._sub = this._main.status.subscribe((status) => {
+        this._statusSub = this._main.status.subscribe((status) => {
             this._status.next(status);
-        })
+        });
+        this._downloadProgressSub = this._main.downloadProgress.subscribe((progress) => {
+            this._downloadProgress.next(progress);
+        });
         this.status = this._status.asObservable();
+        this.downloadProgress = this._downloadProgress.asObservable();
     }
 
     public ngOnDestroy() {
         this._status.complete();
-        this._sub.unsubscribe();
+        this._statusSub.unsubscribe();
+        this._downloadProgressSub.unsubscribe();
     }
 
     public disable() {

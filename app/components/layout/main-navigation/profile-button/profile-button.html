@@ -4,7 +4,7 @@
         <div *ngSwitchCase="UpdateStatus.Checking" class="notification-overlay checking" >
             <i class="fa fa-circle-o-notch fa-spin"></i>
         </div>
-        <div *ngSwitchCase="UpdateStatus.Downloading" class="notification-overlay downloading" >
+        <div *ngSwitchCase="UpdateStatus.Downloading" class="notification-overlay downloading" [title]="downloadProgressTitle">
             <i class="fa fa-arrow-circle-o-down"></i>
         </div>
         <div *ngSwitchCase="UpdateStatus.Ready" class="notification-overlay ready">1</div>
