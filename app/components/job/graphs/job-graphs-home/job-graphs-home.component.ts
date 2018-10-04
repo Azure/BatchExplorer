@@ -141,6 +141,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
         }).pipe(
             tap((tasks) => {
                 this.loading = false;
+                console.log("Tasks", tasks.toArray());
                 this.tasks = tasks;
                 this.cacheDataService.cache(this._cacheKey, tasks.toJS());
                 this.changeDetector.markForCheck();
