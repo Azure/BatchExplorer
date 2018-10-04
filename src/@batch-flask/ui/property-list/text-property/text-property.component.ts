@@ -29,6 +29,8 @@ export class TextPropertyComponent {
     }
 
     public copyToClipBoard() {
-        this.clipboard.writeText(this.value);
+        if (exists(this.value)) {
+            this.clipboard.writeText(this.value.toString());
+        }
     }
 }
