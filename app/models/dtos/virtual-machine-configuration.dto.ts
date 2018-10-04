@@ -6,6 +6,7 @@ export class ImageReferenceDto extends Dto<ImageReferenceDto> {
     @DtoAttr() public offer: string;
     @DtoAttr() public sku: string;
     @DtoAttr() public version: string;
+    @DtoAttr() public virtualMachineImageId: string;
 }
 
 export class WindowsConfigurationDto extends Dto<WindowsConfigurationDto>  {
