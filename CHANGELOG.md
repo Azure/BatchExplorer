@@ -2,6 +2,7 @@
 
 ### Bug fixes
 *  Increase pool quota quick fix not working [\#1667](https://github.com/Azure/BatchExplorer/issues/1667)
+*  Can't export task to csv first time opening the statistics blade [\#1673](https://github.com/Azure/BatchExplorer/issues/1673)
 
 # 0.18.1
 
