@@ -1,8 +1,5 @@
 <bl-form-field>
     <input type="text" blInput [matAutocomplete]="auto" [formControl]="container" [placeholder]="label">
-    <bl-hint class="danger" *ngIf="warning">
-        {{'blob-container-picker.notFound' | i18n}}
-    </bl-hint>
     <bl-hint *ngIf="loading">
         {{'blob-container-picker.loading' | i18n}}
     </bl-hint>
