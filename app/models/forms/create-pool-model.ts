@@ -124,6 +124,7 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
     if (output.certificateReferences) {
         data.certificateReferences = output.certificateReferences;
     }
+
     return new PoolCreateDto(data);
 }
 

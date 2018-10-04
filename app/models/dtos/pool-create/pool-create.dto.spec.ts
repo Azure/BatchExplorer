@@ -30,4 +30,26 @@ describe("PoolCreateDto", () => {
             },
         } as any);
     });
+
+    it("set virtualMachineImageId correctly", () => {
+        const dto = new PoolCreateDto({
+            id: "centos-73-test",
+            virtualMachineConfiguration: {
+                nodeAgentSKUId: "batch.node.centos 7",
+                imageReference: {
+                    virtualMachineImageId: "/custom-image/001",
+                },
+            },
+        } as any);
+
+        expect(dto.toJS()).toEqual({
+            id: "centos-73-test",
+            virtualMachineConfiguration: {
+                nodeAgentSKUId: "batch.node.centos 7",
+                imageReference: {
+                    virtualMachineImageId: "/custom-image/001",
+                },
+            },
+        } as any);
+    });
 });
