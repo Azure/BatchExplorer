@@ -16,7 +16,7 @@ export abstract class AutoUpdateService {
      */
     public downloadProgress: Observable<ProgressInfo | null>;
 
-    public updateInfo: UpdateInfo = null;
+    public updateInfo: UpdateInfo;
 
     public abstract disable();
     public abstract set autoInstallOnAppQuit(value: boolean);

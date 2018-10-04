@@ -42,6 +42,10 @@ export class AutoUpdateRendererService extends AutoUpdateService implements OnDe
         this._main.autoInstallOnAppQuit = value;
     }
 
+    public get updateInfo() {
+        return this._main.updateInfo;
+    }
+
     public setFeedUrl(value: string) {
         return this._main.setFeedUrl(value);
     }

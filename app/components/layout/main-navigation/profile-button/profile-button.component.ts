@@ -15,7 +15,6 @@ import { Constants } from "common";
 import * as path from "path";
 import { Subscription } from "rxjs";
 
-import { ProgressInfo } from "builder-util-runtime";
 import "./profile-button.scss";
 
 @Component({
@@ -31,8 +30,6 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
 
     private _currentUserSub: Subscription;
     private _updateSub: Subscription;
-    private _progressSub: Subscription;
-    private _downloadProgress: ProgressInfo;
 
     constructor(
         adalService: AdalService,
@@ -62,19 +59,6 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
             this.updateStatus = status;
             this.changeDetector.markForCheck();
         });
-
-        this._progressSub = this.autoUpdateService.downloadProgress.subscribe((downloadProgress) => {
-            this._downloadProgress = downloadProgress;
-            this.changeDetector.markForCheck();
-        });
-    }
-
-    public get downloadProgressTitle() {
-        if (this._downloadProgress) {
-            return `${this._downloadProgress.percent}%  ${this._downloadProgress.bytesPerSecond}bps`;
-        } else {
-            return null;
-        }
     }
 
     public ngOnInit() {
@@ -84,7 +68,6 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     public ngOnDestroy() {
         this._currentUserSub.unsubscribe();
         this._updateSub.unsubscribe();
-        this._progressSub.unsubscribe();
     }
 
     public openSettingsContextMenu() {
