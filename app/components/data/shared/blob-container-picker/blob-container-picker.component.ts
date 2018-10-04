@@ -72,7 +72,6 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnIni
             debounceTime(400),
             distinctUntilChanged(),
         ).subscribe((value) => {
-            this._checkValid(value);
             if (value
                 && this.output === BlobContainerPickerOutput.SasUrl
                 && !this._isSasUrl()
@@ -93,7 +92,6 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnIni
         this.containersData.fetchAll().subscribe(() => {
             this.loading = false;
             this.changeDetector.markForCheck();
-            this._checkValid(this.container.value);
         });
     }
 
@@ -120,11 +118,6 @@ export class BlobContainerPickerComponent implements ControlValueAccessor, OnIni
 
     public trackContainer(index, container: BlobContainer) {
         return container.id;
-    }
-
-    private _checkValid(value: string) {
-        const valid = this.loading || !value || this.containers.map(x => x.name).includes(value);
-        this.warning = !valid;
     }
 
     private _isSasUrl() {
