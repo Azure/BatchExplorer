@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
-import { ElectronRemote } from "@batch-flask/ui";
+import { ElectronRemote } from "@batch-flask/electron";
 import { SecureUtils, log } from "@batch-flask/utils";
 import { ArmBatchAccount } from "app/models";
 import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";

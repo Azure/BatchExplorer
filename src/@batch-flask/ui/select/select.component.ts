@@ -25,7 +25,7 @@ import {
 import { ControlValueAccessor, NgControl } from "@angular/forms";
 import { FlagInput, ListKeyNavigator, coerceBooleanProperty } from "@batch-flask/core";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
-import { SelectDropdownComponent } from "@batch-flask/ui/select/select-dropdown";
+import { SelectDropdownComponent } from "@batch-flask/ui/select/select-dropdown/select-dropdown.component";
 import { Subject, Subscription } from "rxjs";
 import { BL_OPTION_PARENT, OptionParent, SelectOptionComponent } from "./option/option.component";
 

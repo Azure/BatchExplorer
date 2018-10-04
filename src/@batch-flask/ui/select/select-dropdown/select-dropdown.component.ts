@@ -62,7 +62,7 @@ export class SelectDropdownComponent {
     private _selected: Set<string> = new Set();
 
     constructor(
-        @Inject(forwardRef(() => SelectComponent)) public select: SelectComponent,
+        @Inject(forwardRef(() => SelectComponent)) public select: any,
         private elementRef: ElementRef,
         private changeDetector: ChangeDetectorRef) {
     }

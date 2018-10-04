@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from "@angular/core";
-import { ElectronRemote } from "@batch-flask/ui/electron";
+import { ElectronRemote } from "@batch-flask/electron";
 import {
     ContextMenu,
     ContextMenuEntry,

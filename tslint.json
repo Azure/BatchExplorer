@@ -19,7 +19,7 @@
     "no-bitwise": false,
     "object-literal-shorthand": false,
     "adjacent-overload-signatures": false,
-    "max-classes-per-file": [false],
+    "max-classes-per-file": false,
     "arrow-parens": false,
     "no-inferrable-types": [false],
     "interface-name": [ true,  "never-prefix" ],

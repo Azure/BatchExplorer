@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { List } from "immutable";
-import * as path from "path";
-import { Observable, Subscription, from, of } from "rxjs";
-
 import { EntityView, FilterBuilder, autobind } from "@batch-flask/core";
-import { ElectronShell, FileSystemService } from "@batch-flask/ui";
+import { ElectronShell } from "@batch-flask/electron";
+import { FileSystemService } from "@batch-flask/ui";
 import { tasksToCsv } from "app/components/job/graphs/job-graphs-home/helpers";
 import { Job, Task, TaskState } from "app/models";
 import { CacheDataService, JobParams, JobService, TaskService } from "app/services";
+import { List } from "immutable";
+import * as path from "path";
+import { Observable, Subscription, from, of } from "rxjs";
 import { flatMap, share, tap } from "rxjs/operators";
 import "./job-graphs-home.scss";
 

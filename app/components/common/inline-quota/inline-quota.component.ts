@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input, OnChanges, OnDestroy,
 } from "@angular/core";
-import { ElectronShell } from "@batch-flask/ui";
+import { ElectronShell } from "@batch-flask/electron";
 import { Subscription } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";

@@ -1,8 +1,9 @@
 import { Injectable, Injector } from "@angular/core";
 import { from } from "rxjs";
 
+import { ElectronRemote } from "@batch-flask/electron";
 import {
-    COMMAND_LABEL_ICON, ElectronRemote, EntityCommand,
+    COMMAND_LABEL_ICON,  EntityCommand,
     EntityCommands, FileSystemService, Permission,
 } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
