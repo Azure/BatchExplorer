@@ -7,6 +7,7 @@
 *  Error when copying property which value is not a string(int) [\#1675](https://github.com/Azure/BatchExplorer/issues/1675)
 *  Can't create a pool with custom images [\#1677](https://github.com/Azure/BatchExplorer/issues/1677)
 *  Upload node logs not tracking upload on national clouds [\#1680](https://github.com/Azure/BatchExplorer/issues/1680)
+*  Quota usages not showing up [\#1683](https://github.com/Azure/BatchExplorer/issues/v)
 
 
 # 0.18.2
