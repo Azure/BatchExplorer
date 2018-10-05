@@ -2,6 +2,7 @@
 export * from "./cloud-path-utils";
 export * from "./logging";
 export * from "./date-utils";
+export * from "./error";
 export * from "./encoding";
 export * from "./file-url-utils";
 export * from "./form-utils";

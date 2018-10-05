@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ExceptionTelemetry, PageViewTelemetry, Telemetry, TelemetryType, TelemetryUploader } from "@batch-flask/core";
-import { SecureUtils, log } from "@batch-flask/utils";
+import { SanitizedError, SecureUtils, log } from "@batch-flask/utils";
 import * as appinsights from "applicationinsights";
 import { ClientConstants } from "client/client-constants";
 import { MachineIdService } from "client/core/telemetry/machine-id.service";
@@ -112,7 +112,9 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
 
     private _sanitizeError(error: Error): any {
         // Message could contain user information
-        error.message = "[sanitized]";
+        if (!(error instanceof SanitizedError)) {
+            error.message = "[sanitized]";
+        }
         if (error.stack) {
             error.stack = this._sanitizeStack(error.stack);
         }
@@ -121,7 +123,9 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
 
     private _sanitizeStack(stack: string) {
         const root = ClientConstants.resourcesFolder;
-        return stack.replace(new RegExp(this._escapeRegExp(root), "gi"), "[install]");
+        return stack
+            .replace(new RegExp(/file:\/\/.*?\.asar/, "gi"), "[asar]")
+            .replace(new RegExp(this._escapeRegExp(root), "gi"), "[install]");
     }
 
     private _escapeRegExp(str) {

@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { DataStore, TelemetryService } from "@batch-flask/core";
-import { exists } from "@batch-flask/utils";
+import { SanitizedError, exists } from "@batch-flask/utils";
 import { TelemetryType } from "applicationinsights/out/Declarations/Contracts";
 import { ClientConstants } from "client/client-constants";
 import { BatchExplorerProcess } from "client/core/batch-explorer-process";
@@ -35,10 +35,15 @@ export class TelemetryManager implements OnDestroy {
             // We need to deserialize the error otherwise appinsights will do it and will lose the stacktrace
             if (type === TelemetryType.Exception) {
                 if (telemetry.exception) {
-                    const error = new Error();
+                    let error;
+                    if (telemetry.exception.sanitizedMessage) {
+                        error = new SanitizedError(telemetry.exception.sanitizedMessage);
+                    } else {
+                        error = new Error();
+                        error.message = telemetry.exception.message;
+                    }
                     error.name = telemetry.exception.name;
                     error.stack = telemetry.exception.stack;
-                    error.message = telemetry.exception.message;
                     telemetry.exception = error;
                 }
             }
