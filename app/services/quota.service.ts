@@ -84,8 +84,6 @@ export class QuotaService implements OnDestroy {
     }
 
     public updatePoolUsage() {
-        console.log("update pool usages");
-
         const obs = this.poolService.listAll({
             select: "id,vmSize,currentDedicatedNodes,currentLowPriorityNodes",
         });
