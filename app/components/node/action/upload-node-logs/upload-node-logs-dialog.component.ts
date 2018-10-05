@@ -98,7 +98,9 @@ export class UploadNodeLogsDialogComponent {
         });
 
         obs.subscribe((result) => {
-            const { container, account } = StorageUtils.getContainerFromUrl(value.container);
+            const parsed = StorageUtils.getContainerFromUrl(value.container);
+            if (!parsed) { return; }
+            const { container, account } = parsed;
             this.accountService.currentAccount.pipe(first()).subscribe((batchAccount) => {
                 if (batchAccount.autoStorage && batchAccount.autoStorage.storageAccountId.contains(account)) {
                     this._watchUpload(container, result.virtualDirectoryName, result.numberOfFilesUploaded);
