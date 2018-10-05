@@ -14,7 +14,7 @@
     "name": "Microsoft Corporation",
     "email": "tiguerin@microsoft.com"
   },
-  "version": "0.18.2",
+  "version": "0.18.3",
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json --files",

@@ -11,7 +11,8 @@ export class HintComponent {
     @Input() public align: "start" | "end" = "start";
 
     @HostBinding("attr.align") public alignRemove = null;
-    @HostBinding("class.bl-align-right") public get() {
+
+    @HostBinding("class.bl-align-right") public get alignRight() {
         return this.align === "end";
     }
 }
