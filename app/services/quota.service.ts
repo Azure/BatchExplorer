@@ -64,7 +64,6 @@ export class QuotaService implements OnDestroy {
     }
 
     public updateUsages() {
-        console.log("update usages");
         const obs = this.accountService.currentAccount.pipe(
             take(1),
             flatMap((account) => {
