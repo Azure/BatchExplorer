@@ -40,7 +40,7 @@ export class QuotaService implements OnDestroy {
             }
         }));
         this._subs.push(accountService.currentAccount.subscribe(account => {
-            this.updateUsages();
+            this.updateUsages().subscribe();
         }));
 
         this.quotas = this.accountService.currentAccount.pipe(
@@ -52,7 +52,7 @@ export class QuotaService implements OnDestroy {
         );
         this.usage = this._usage.asObservable();
 
-        this.updateUsages();
+        this.updateUsages().subscribe();
     }
 
     public ngOnDestroy() {
@@ -64,7 +64,8 @@ export class QuotaService implements OnDestroy {
     }
 
     public updateUsages() {
-        return this.accountService.currentAccount.pipe(
+        console.log("update usages");
+        const obs = this.accountService.currentAccount.pipe(
             take(1),
             flatMap((account) => {
                 if (account instanceof ArmBatchAccount) {
@@ -79,15 +80,19 @@ export class QuotaService implements OnDestroy {
             }),
             share(),
         );
+        obs.subscribe();
+        return obs;
     }
 
     public updatePoolUsage() {
+        console.log("update pool usages");
+
         const obs = this.poolService.listAll({
             select: "id,vmSize,currentDedicatedNodes,currentLowPriorityNodes",
         });
         obs.subscribe((pools) => {
             const { dedicatedCores, lowpriCores } = this._getCoreUsages(pools);
-
+            console.log("GOt new pool usage", dedicatedCores, lowpriCores);
             this._usage.next(new BatchQuotas({
                 ...this._getExistingQuota().toJS(),
                 pools: pools.size,
