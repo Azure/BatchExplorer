@@ -5,5 +5,6 @@
 export class SanitizedError extends Error {
     constructor(public sanitizedMessage: string) {
         super(sanitizedMessage);
+        this.name = "SanitizedError";
     }
 }

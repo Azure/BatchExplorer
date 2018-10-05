@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { ExceptionTelemetry, Telemetry, TelemetryType, TelemetryUploader } from "@batch-flask/core";
 import { ElectronRemote } from "@batch-flask/ui";
-import { log } from "@batch-flask/utils";
+import { SanitizedError, log } from "@batch-flask/utils";
 import { Constants } from "common";
 
 @Injectable()
@@ -26,12 +26,16 @@ export class RendererTelemetryUploader implements TelemetryUploader {
 
         if (type === TelemetryType.Exception) {
             const exception = telemetry as ExceptionTelemetry;
+            const error = exception.exception;
             if (exception.exception) {
                 exception.exception = {
-                    message: exception.exception.message,
-                    name: exception.exception.name,
-                    stack: exception.exception.stack,
+                    message: error.message,
+                    name: error.name,
+                    stack: error.stack,
                 };
+                if (error instanceof SanitizedError) {
+                    (exception.exception as any).sanitizedMessage = error.sanitizedMessage;
+                }
             }
         }
         this.remote.send(Constants.IpcEvent.sendTelemetry, { telemetry, type });
