@@ -89,7 +89,7 @@ export class QuotaService implements OnDestroy {
         });
         obs.subscribe((pools) => {
             const { dedicatedCores, lowpriCores } = this._getCoreUsages(pools);
-            console.log("GOt new pool usage", dedicatedCores, lowpriCores);
+            
             this._usage.next(new BatchQuotas({
                 ...this._getExistingQuota().toJS(),
                 pools: pools.size,
