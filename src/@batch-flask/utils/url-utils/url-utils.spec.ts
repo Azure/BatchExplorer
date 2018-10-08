@@ -9,8 +9,8 @@ describe("UrlUtils", () => {
         expect(UrlUtils.isHttpUrl("ftp://example.com")).toBe(false);
         expect(UrlUtils.isHttpUrl("data://abcdefghi")).toBe(false);
     });
+
     it("#isUrl()", () => {
-        expect(UrlUtils.isUrl("https://banana")).toBe(true);
         expect(UrlUtils.isUrl("https://example.com")).toBe(true);
         expect(UrlUtils.isUrl("https://example.com/long/path/to/file.txt")).toBe(true);
         expect(UrlUtils.isUrl("http://example.com")).toBe(true);
