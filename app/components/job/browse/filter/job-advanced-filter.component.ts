@@ -11,7 +11,7 @@ import { JobState } from "app/models";
 export class JobAdvancedFilterComponent {
 
     @Output()
-    public change = new EventEmitter<Filter>();
+    public filterChange = new EventEmitter<Filter>();
 
     public advancedFilter: AdvancedFilter;
 
@@ -24,7 +24,7 @@ export class JobAdvancedFilterComponent {
         });
 
         this.advancedFilter.filterChange.subscribe((filter: Filter) => {
-            this.change.emit(filter);
+            this.filterChange.emit(filter);
         });
     }
 }

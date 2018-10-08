@@ -7,6 +7,6 @@
         </bl-button>
     </div>
     <bl-task-list blBrowseLayoutList [jobId]="jobId"></bl-task-list>
-    <bl-task-advanced-filter blBrowseLayoutAdvancedFilter (change)="layout.advancedFilterChanged($event)">
+    <bl-task-advanced-filter blBrowseLayoutAdvancedFilter (filterChange)="layout.advancedFilterChanged($event)">
     </bl-task-advanced-filter>
 </bl-browse-layout>
