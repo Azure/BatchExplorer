@@ -10,7 +10,7 @@ import { JobScheduleState } from "app/models";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JobScheduleAdvancedFilterComponent {
-    @Output() public change = new EventEmitter<Filter>();
+    @Output() public filterChange = new EventEmitter<Filter>();
 
     public advancedFilter: AdvancedFilter;
 
@@ -26,7 +26,7 @@ export class JobScheduleAdvancedFilterComponent {
         });
 
         this.advancedFilter.filterChange.subscribe((filter: Filter) => {
-            this.change.emit(filter);
+            this.filterChange.emit(filter);
         });
     }
 }

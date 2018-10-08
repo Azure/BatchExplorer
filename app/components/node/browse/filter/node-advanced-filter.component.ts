@@ -11,7 +11,7 @@ import { NodeState } from "app/models";
 export class NodeAdvancedFilterComponent {
 
     @Output()
-    public change = new EventEmitter<Filter>();
+    public filterChange = new EventEmitter<Filter>();
 
     public advancedFilter: AdvancedFilter;
 
@@ -25,7 +25,7 @@ export class NodeAdvancedFilterComponent {
         });
 
         this.advancedFilter.filterChange.subscribe((filter: Filter) => {
-            this.change.emit(filter);
+            this.filterChange.emit(filter);
         });
     }
 }
