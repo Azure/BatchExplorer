@@ -21,16 +21,16 @@ function initAutoUpdate() {
 function setupSingleInstance(batchExplorerApp: BatchExplorerApplication) {
     if (Constants.isDev) { return; }
 
-    const gotTheLock = app.requestSingleInstanceLock();
-    if (!gotTheLock) {
-        log.info("There is already an instance of BatchExplorer open. Closing this one.");
-        batchExplorerApp.quit();
-    } else {
-        app.on("second-instance", (event, commandLine, workingDirectory) => {
-            log.info("Try to open labs again", commandLine);
-            batchExplorerApp.openFromArguments(commandLine);
-        });
-    }
+    // const gotTheLock = app.requestSingleInstanceLock();
+    // if (!gotTheLock) {
+    //     log.info("There is already an instance of BatchExplorer open. Closing this one.");
+    //     batchExplorerApp.quit();
+    // } else {
+    //     app.on("second-instance", (event, commandLine, workingDirectory) => {
+    //         log.info("Try to open labs again", commandLine);
+    //         batchExplorerApp.openFromArguments(commandLine);
+    //     });
+    // }
 }
 
 // Create the browser window.

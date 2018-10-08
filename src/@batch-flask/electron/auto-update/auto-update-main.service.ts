@@ -37,6 +37,7 @@ export class AutoUpdateMainService extends AutoUpdateService implements OnDestro
                 }
             }),
         );
+        this.updateInfo = null;
         this.downloadProgress = this._downloadProgress.asObservable();
 
         this._autoCheckSub = interval(3600_000).subscribe(() => {
