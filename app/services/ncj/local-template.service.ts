@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { FileSystemService } from "@batch-flask/ui";
 import { NcjTemplateType } from "app/models";
 import { Constants } from "common";
-import * as loadJsonFile from "load-json-file";
+import loadJsonFile from "load-json-file";
 import * as path from "path";
 import { BehaviorSubject, Observable, from } from "rxjs";
 import { flatMap, shareReplay, tap } from "rxjs/operators";
@@ -65,7 +65,7 @@ export class LocalTemplateService implements OnDestroy {
     }
 
     public async loadLocalTemplateFile(path: string) {
-        const json = await loadJsonFile(path).then((content) => {
+        const json = await loadJsonFile<any>(path).then((content) => {
             return content;
         }).catch((error) => {
             return Promise.reject(`File is not valid json: ${error.message}`);
