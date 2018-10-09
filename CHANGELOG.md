@@ -3,6 +3,7 @@
 ### Bug fixes
 *  Task exit code filter switch between include and exclude error [\#1687](https://github.com/Azure/BatchExplorer/issues/1687)
 *  Error in pool container picker with null registries [\#1690](https://github.com/Azure/BatchExplorer/issues/1690)
+*  Can't view content of prep/release task files [\#1692](https://github.com/Azure/BatchExplorer/issues/1692)
 
 # 0.18.3
 
