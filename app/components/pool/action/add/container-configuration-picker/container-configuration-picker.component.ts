@@ -44,7 +44,6 @@ export class ContainerConfigurationPickerComponent implements ControlValueAccess
                 containerRegistries: value.containerRegistries,
                 containerImageNames: value.containerImageNames && value.containerImageNames.map(x => x.imageName),
             };
-            console.log("Value changed", value, attributes);
 
             if (this._propagateChange) {
                 this._propagateChange(attributes);
@@ -54,7 +53,11 @@ export class ContainerConfigurationPickerComponent implements ControlValueAccess
 
     public writeValue(value: ContainerConfigurationAttributes) {
         if (value) {
-            this.form.patchValue(value);
+            this.form.patchValue({
+                type: value.type,
+                containerImageNames: value.containerImageNames.map(x => ({imageName: x})),
+                containerRegistries: value.containerRegistries,
+            });
         } else {
             this.form.patchValue({
                 type: ContainerType.DockerCompatible,
