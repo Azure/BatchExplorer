@@ -181,7 +181,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
         this.showContainerConfiguration = false;
     }
 
-    public clearContaienrConfiguration() {
+    public clearContainerConfiguration() {
         this.containerConfiguration.patchValue(null);
     }
 
@@ -248,15 +248,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
         this.selectedFamilyName = item && item.name;
 
         // Map values to container configuration form
-        const containerConfiguration = vmConfig && vmConfig.containerConfiguration;
-        const mappedContainerConfiguration = containerConfiguration ? {
-            type: containerConfiguration.type,
-            containerImageNames: containerConfiguration.containerImageNames.map(x => {
-                return { imageName: x };
-            }),
-            containerRegistries: containerConfiguration.containerRegistries || [],
-        } : null;
-        this.containerConfiguration.patchValue(mappedContainerConfiguration);
+        this.containerConfiguration.patchValue(vmConfig && vmConfig.containerConfiguration);
 
         // Reset custom image dropdown list if other categories are selected
         const customImage = ref && ref.virtualMachineImageId;
@@ -273,18 +265,11 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
     @autobind()
     private _updateContainerConfiguration(value) {
         const vmConfig = this.value && this.value.virtualMachineConfiguration;
-        if (vmConfig) {
-            if (value) {
-                const containerRegistries = value.containerRegistries.length > 0 ?
-                    value.containerRegistries : undefined;
-                vmConfig.containerConfiguration = {
-                    type: value.type,
-                    containerImageNames: value.containerImageNames.map(x => x.imageName),
-                    containerRegistries: containerRegistries,
-                };
-            } else {
-                vmConfig.containerConfiguration = null;
-            }
+        if (!vmConfig) { return; }
+        if (value) {
+            vmConfig.containerConfiguration = value;
+        } else {
+            vmConfig.containerConfiguration = null;
         }
     }
 

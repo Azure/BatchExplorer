@@ -1,3 +1,9 @@
+# 0.18.4
+
+### Bug fixes
+*  Task exit code filter switch between include and exclude error [\#1687](https://github.com/Azure/BatchExplorer/issues/1687)
+*  Error in pool container picker with null registries [\#1690](https://github.com/Azure/BatchExplorer/issues/1690)
+
 # 0.18.3
 
 ### Bug fixes
