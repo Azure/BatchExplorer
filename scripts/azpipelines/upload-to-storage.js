@@ -22,7 +22,7 @@ const blobService = azureStorage.createBlobService(storageAccountName, storageAc
 
 function computeFileMd5(filename) {
     const data = fs.readFileSync(filename);
-    return crypto.createHash("md5").update(data).digest("hex");
+    return crypto.createHash("md5").update(data).digest("base64");
 }
 
 async function getBlob(container, blobName) {
@@ -69,6 +69,7 @@ async function uploadToBlob(container, filename, blobName, override = false) {
             const blob = await getBlob(container, blobName);
             const md5 = computeFileMd5(filename);
             const blobMd5 = blob.contentSettings && blob.contentSettings.contentMD5;
+            console.log("Md5", md5, blobMd5);
             if (md5 === blobMd5) {
                 console.log(`Already uploaded ${filename} skipping`);
             } else {
