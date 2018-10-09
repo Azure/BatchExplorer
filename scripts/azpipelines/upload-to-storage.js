@@ -62,7 +62,7 @@ async function createBlobFromLocalFile(container, filename, blobName, override =
 async function uploadToBlob(container, filename, blobName, override = false) {
     console.log(`Uploading ${filename} ====> Container=${container}, Blobname=${blobName}`);
     try {
-        return createBlobFromLocalFile(container, filename, blobName, override);
+        return await createBlobFromLocalFile(container, filename, blobName, override);
     } catch (error) {
         console.log("Error code is", error.code);
         if (error.code === "BlobAlreadyExists") {
