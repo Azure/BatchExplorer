@@ -58,7 +58,6 @@ export class LocalTemplateExplorerComponent implements OnDestroy {
             return;
         }
         this.workspace = new FileExplorerWorkspace(this._sources.map(x => {
-            console.log("Alias is", x);
             return {
                 name: x.name,
                 navigator: this.localTemplateService.navigate(x),

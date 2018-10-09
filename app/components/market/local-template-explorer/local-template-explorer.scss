@@ -7,10 +7,16 @@ bl-local-template-explorer {
     .local-template-explorer-header {
         height: 50px;
         display: flex;
+        margin: 0 10px;
+
+        h1 {
+            flex: 1;
+        }
     }
 
-    bl-file-navigator {
+    .file-explorer-container {
         height: calc(#{$contentview-height} - 50px);
+        border-top: 1px solid $border-color;
     }
 
 }
