@@ -31,11 +31,11 @@
             <p style="padding-top: 10px;">
                 Please specify the container configuration for the pool.
             </p>
-            <bl-form-picker [formControl]="containerConfiguration" (clear)="clearContaienrConfiguration()" #containerConfigurationPicker>
+            <bl-form-picker [formControl]="containerConfiguration" (clear)="clearContainerConfiguration()" #containerConfigurationPicker>
                 <div no-value-title>Container configuration</div>
                 <div value-title>{{containerConfiguration?.value?.type}}</div>
                 <div nested-form>
-                    <bl-container-configuration [formControl]="containerConfigurationPicker.nestedValue"></bl-container-configuration>
+                    <bl-container-configuration-picker [formControl]="containerConfigurationPicker.nestedValue"></bl-container-configuration-picker>
                 </div>
             </bl-form-picker>
         </div>
@@ -77,11 +77,11 @@
             <p style="padding-top: 10px;">
                 Please specify the container configuration for the pool.
             </p>
-            <bl-form-picker [formControl]="containerConfiguration" (clear)="clearContaienrConfiguration()" #containerConfigurationPicker>
+            <bl-form-picker [formControl]="containerConfiguration" (clear)="clearContainerConfiguration()" #containerConfigurationPicker>
                 <div no-value-title>Container configuration</div>
                 <div value-title>{{containerConfiguration?.value?.type}}</div>
                 <div nested-form>
-                    <bl-container-configuration [formControl]="containerConfigurationPicker.nestedValue"></bl-container-configuration>
+                    <bl-container-configuration-picker [formControl]="containerConfigurationPicker.nestedValue"></bl-container-configuration-picker>
                 </div>
             </bl-form-picker>
         </div>
