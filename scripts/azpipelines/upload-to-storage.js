@@ -32,7 +32,6 @@ async function getBlob(container, blobName) {
                 return reject(error);
             }
 
-            console.log("Uploaded", result, response);
             resolve(result);
         });
     });
@@ -64,16 +63,14 @@ async function uploadToBlob(container, filename, blobName, override = false) {
     try {
         return await createBlobFromLocalFile(container, filename, blobName, override);
     } catch (error) {
-        console.log("Error code is", error.code);
         if (error.code === "BlobAlreadyExists") {
             const blob = await getBlob(container, blobName);
             const md5 = computeFileMd5(filename);
             const blobMd5 = blob.contentSettings && blob.contentSettings.contentMD5;
-            console.log("Md5", md5, blobMd5);
             if (md5 === blobMd5) {
-                console.log(`Already uploaded ${filename} skipping`);
+                console.log(`Already uploaded ${filename} skipping(Md5 hash matched)`);
             } else {
-                throw new Error("Error blob already exists but doesn't match the local file.");
+                throw new Error(`Error blob already exists but doesn't match the local file. ${md5} != ${blobMd5}`);
             }
         } else {
             throw error;
