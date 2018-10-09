@@ -7,6 +7,9 @@ const { getManifest, getContainerName } = require("./utils");
 
 const storageAccountName = process.env.AZURE_STORAGE_ACCOUNT;
 const storageAccountKey = process.argv[2];
+const attemptNumber = Number(process.env.Release_AttemptNumber);
+
+console.log(`This is the ${attemptNumber} try to release`);
 
 if (!storageAccountKey) {
     console.error("No storage account key passed");
@@ -27,8 +30,15 @@ async function uploadToBlob(container, filename, blobName, override = false) {
     return new Promise((resolve, reject) => {
         blobService.createBlockBlobFromLocalFile(container, blobName, filename, options,
             (error, result, response) => {
+
                 if (error) {
-                    reject(error);
+                    // @ts-ignore
+                    if (error.code === "BlobAlreadyExists" && attemptNumber > 1) {
+                        console.log("Already uploaded skipping", result, response);
+                        resolve(result);
+                    } else {
+                        reject(error);
+                    }
                 }
 
                 console.log("Uploaded", result, response);
