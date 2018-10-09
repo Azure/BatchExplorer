@@ -356,5 +356,23 @@ describe("FileTreeStructure", () => {
             | - root.txt
             `));
         });
+
+        it("removes all nested indexes", () => {
+            const files = List([
+                makeFile("folder/subfolder/file2.txt"),
+                makeFile("folder/subfolder/file3.txt"),
+            ]);
+            tree.setFilesAt("folder", files);
+            expect(reprTree(tree)).toEqual(cleanupRepr(`
+            | + folder
+            |   + subfolder
+            |     - file2.txt
+            |     - file3.txt
+            | + other
+            |   - file1.txt
+            |   - file2.txt
+            | - root.txt
+            `));
+        });
     });
 });

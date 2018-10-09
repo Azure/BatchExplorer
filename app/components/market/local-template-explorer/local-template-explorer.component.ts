@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
-import { DialogService } from "@batch-flask/ui";
+import { DialogService, FileExplorerWorkspace, FileNavigator } from "@batch-flask/ui";
 import { NcjTemplateType } from "app/models";
-import { LocalTemplate, LocalTemplateService } from "app/services";
+import { LocalTemplate, LocalTemplateFolder, LocalTemplateService } from "app/services";
 import { Subscription } from "rxjs";
 import { LocalTemplateSourceFormComponent } from "./local-template-source-form";
 
@@ -15,18 +15,26 @@ import "./local-template-explorer.scss";
 export class LocalTemplateExplorerComponent implements OnDestroy {
     public NcjTemplateType = NcjTemplateType;
     public templates: LocalTemplate[];
+    public fileNavigator: FileNavigator;
+    public workspace: FileExplorerWorkspace;
 
     private _subs: Subscription[] = [];
+    private _sources: LocalTemplateFolder[];
 
     constructor(
         private changeDetector: ChangeDetectorRef,
-        localTemplateService: LocalTemplateService,
+        private localTemplateService: LocalTemplateService,
         private dialogService: DialogService) {
 
         this._subs.push(localTemplateService.templates.subscribe((templates) => {
             this.templates = templates;
             this.changeDetector.markForCheck();
         }));
+        localTemplateService.sources.subscribe((sources) => {
+            this._sources = sources;
+            this._updateWorkspace();
+        });
+
     }
 
     public ngOnDestroy() {
@@ -39,5 +47,27 @@ export class LocalTemplateExplorerComponent implements OnDestroy {
 
     public trackTemplate(index) {
         return index;
+    }
+
+    private _updateWorkspace() {
+        if (this.workspace) {
+            this.workspace.dispose();
+            this.workspace = null;
+        }
+        if (this._sources.length === 0) {
+            return;
+        }
+        this.workspace = new FileExplorerWorkspace(this._sources.map(x => {
+            console.log("Alias is", x);
+            return {
+                name: x.name,
+                navigator: this.localTemplateService.navigate(x),
+            };
+        }));
+
+        for (const source of this.workspace.sources) {
+            source.navigator.init();
+        }
+
     }
 }

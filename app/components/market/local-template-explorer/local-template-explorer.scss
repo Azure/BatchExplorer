@@ -1,51 +1,17 @@
 @import "app/styles/variables";
 
 bl-local-template-explorer {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+    display: block;
+    height: $contentview-height;
 
-    .local-templates-content {
-        flex: 1;
-        min-height: 0;
-        background-color: $card-background;
-        overflow: auto;
-
-        .local-template {
-            display: flex;
-            overflow: hidden;
-            cursor: pointer;
-            height: 20px;
-
-            > * {
-                margin: 0 5px;
-            }
-
-            > .name {
-                flex: 1;
-                min-width: 0;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                color: $primary-color;
-            }
-
-            > .type {
-                flex-basis: 40px;
-                flex: 0;
-                color: $secondary-text;
-            }
-
-            &:hover {
-                background: $selection-color;
-            }
-        }
+    .local-template-explorer-header {
+        height: 50px;
+        display: flex;
     }
 
-    .manage-sources {
-        .fa-cog {
-            color: $primary-text;
-        }
+    bl-file-navigator {
+        height: calc(#{$contentview-height} - 50px);
     }
+
 }
 

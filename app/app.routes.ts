@@ -25,6 +25,7 @@ import { JobScheduleHomeComponent } from "./components/job-schedule/home/job-sch
 import { JobDefaultComponent, JobDetailsComponent } from "./components/job/details";
 import { JobHomeComponent } from "./components/job/home/job-home.component";
 import { MarketComponent } from "./components/market/home";
+import { LocalTemplateExplorerComponent } from "./components/market/local-template-explorer";
 import { SubmitMarketApplicationComponent } from "./components/market/submit";
 import { NodeDefaultComponent, NodeDetailsComponent } from "./components/node/details";
 import { NodeHomeComponent } from "./components/node/home";
@@ -100,7 +101,7 @@ export const routes: Routes = [
     },
     {
         path: "market/local",
-        component: LocalTemplateBrowserComponent,
+        component: LocalTemplateExplorerComponent,
     },
     {
         path: "market/local/submit",
