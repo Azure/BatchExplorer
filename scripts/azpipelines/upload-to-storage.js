@@ -64,7 +64,8 @@ async function uploadToBlob(container, filename, blobName, override = false) {
     try {
         return createBlobFromLocalFile(container, filename, blobName, override);
     } catch (error) {
-        if (error.code === "BlobAlreadyExists" && attemptNumber > 1) {
+        console.log("Error code is", error.code);
+        if (error.code === "BlobAlreadyExists") {
             const blob = await getBlob(container, blobName);
             const md5 = computeFileMd5(filename);
             const blobMd5 = blob.contentSettings && blob.contentSettings.contentMD5;
