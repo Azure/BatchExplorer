@@ -1,5 +1,5 @@
 import { FileGroupCreateDto } from "app/models/dtos";
-import { Constants } from "app/utils";
+import { Constants } from "common";
 
 export interface FileOrDirectoryModel {
     path: string;

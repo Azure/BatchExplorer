@@ -9,7 +9,7 @@ import {
     Output,
 } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import { ElectronShell } from "@batch-flask/ui";
+import { ElectronShell } from "@batch-flask/electron";
 import { ConnectionType, Node, NodeConnectionSettings } from "app/models";
 import { AddNodeUserAttributes, NodeConnectService, SettingsService } from "app/services";
 

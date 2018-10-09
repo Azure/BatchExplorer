@@ -3,7 +3,7 @@ const config = require("./webpack.config.base");
 const webpack = require("webpack");
 const helpers = require("./helpers");
 const { commonRules, defineEnv } = require("./webpack.common");
-const  ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const ENV = "test";
 
 // We need to remove the app entry from the default config as this is defined in karma
@@ -28,7 +28,7 @@ config.module.rules = config.module.rules = [
             },
             "angular2-template-loader",
         ],
-        exclude: [/node_modules/],
+        exclude: [/node_modules/, /\.node\.spec\.ts/],  // node.spec.ts are to be run in node environment
     },
     ...commonRules,
 ].concat(
@@ -50,6 +50,9 @@ config.module.rules = config.module.rules = [
         enforce: "post",
         test: /\.(js|ts)$/,
         loader: "istanbul-instrumenter-loader",
+        query: {
+            esModules: true
+        },
         include: [
             helpers.root("app"),
             helpers.root("src"),

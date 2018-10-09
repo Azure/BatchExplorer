@@ -16,11 +16,12 @@ import "./subscription-picker.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubscriptionPickerComponent implements ControlValueAccessor, OnDestroy {
-    public subscription = new FormControl<ArmSubscription>();
+    public subscriptionId = new FormControl<string>();
     public subscriptionList: ArmSubscription[];
 
     private _propagateChange: (value: ArmSubscription) => void = null;
     private _subs: Subscription[] = [];
+    private _subscriptionMap: Map<string, ArmSubscription>;
 
     constructor(
         public subscriptionService: SubscriptionService,
@@ -28,19 +29,24 @@ export class SubscriptionPickerComponent implements ControlValueAccessor, OnDest
 
         this._subs.push(this.subscriptionService.subscriptions.subscribe((subscriptions) => {
             this.subscriptionList = subscriptions.toArray();
+            const map = new Map();
+            for (const subscription of this.subscriptionList) {
+                map[subscription.id] = subscription;
+            }
+            this._subscriptionMap = map;
             this.changeDetector.markForCheck();
         }));
 
-        this._subs.push(this.subscription.valueChanges.subscribe((subscription: ArmSubscription) => {
+        this._subs.push(this.subscriptionId.valueChanges.subscribe((id: string) => {
             if (this._propagateChange) {
-                this._propagateChange(subscription);
+                this._propagateChange(this._subscriptionMap[id]);
             }
         }));
     }
 
     public writeValue(value: ArmSubscription): void {
         if (value) {
-            this.subscription.setValue(value);
+            this.subscriptionId.setValue(value.id);
         }
     }
 

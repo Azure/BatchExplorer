@@ -10,12 +10,16 @@ export const FileSourceTypes = {
 
 export const forms = {
     validation: {
+        minLength:  {
+            container: 3,
+        },
         maxLength: {
             id: 64,
             displayName: 1024,
             applicationName: 64,
             version: 64,
             fileGroup: 55,
+            container: 63,
         },
         regex: {
             id: /^[\w\_-]+$/i,
@@ -222,5 +226,4 @@ export const AutoUpdateUrls = {
 export const TelemetryEvents = {
     applicationStart: "Application start",
     disableTelemetry: "Disable telemetry",
-    navigate: "Navigate",
 };

@@ -38,7 +38,7 @@ export class TableHeadComponent {
     private _dimensions = new BehaviorSubject([]);
 
     constructor(
-        @Inject(forwardRef(() => TableComponent)) public table: TableComponent) {
+        @Inject(forwardRef(() => TableComponent)) public table: any) {
         this.dimensions = this._dimensions.asObservable();
     }
 

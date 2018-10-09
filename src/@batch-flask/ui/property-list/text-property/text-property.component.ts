@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
 import { ClipboardService } from "@batch-flask/ui/electron";
+import { exists } from "@batch-flask/utils";
 
 import "./text-property.scss";
 
@@ -29,6 +30,8 @@ export class TextPropertyComponent {
     }
 
     public copyToClipBoard() {
-        this.clipboard.writeText(this.value);
+        if (exists(this.value)) {
+            this.clipboard.writeText(this.value.toString());
+        }
     }
 }

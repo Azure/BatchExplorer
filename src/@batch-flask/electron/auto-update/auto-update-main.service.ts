@@ -1,40 +1,33 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
-import { AppUpdater, UpdateCheckResult, UpdateInfo } from "electron-updater";
-import { BehaviorSubject, Observable, Subscription } from "rxjs";
+import { ProgressInfo } from "builder-util-runtime";
+import { UpdateCheckResult, autoUpdater } from "electron-updater";
+import { BehaviorSubject, Observable, Subscription, interval } from "rxjs";
 import { map } from "rxjs/operators";
-import { ElectronRemote } from "./remote.service";
+import { AutoUpdateService, UpdateStatus } from "./base";
 
-export enum UpdateStatus {
-    Checking,
-    Downloading,
-    Ready,
-    NotAvailable,
-}
+export const AUTO_UPDATE_MAIN_SERVICE_TOKEN = "AUTO_UPDATE_SERVICE";
+
+export const AUTO_UPDATE_CHECK_INTERVAL = 3600_000; // Every hour
 
 @Injectable()
-export class AutoUpdateService implements OnDestroy {
+export class AutoUpdateMainService extends AutoUpdateService implements OnDestroy {
 
     public set autoInstallOnAppQuit(value: boolean) {
-        this._autoUpdater.autoInstallOnAppQuit = value;
+        autoUpdater.autoInstallOnAppQuit = value;
     }
-    /**
-     * Will be set to true if there is an update available
-     */
-    public status: Observable<UpdateStatus>;
 
     /**
      * Will be set to true when there is an update available and it is ready to be installed(Downloaded)
      */
     public updateReady: Observable<boolean>;
-    public updateInfo: UpdateInfo = null;
+
     public disabled: boolean = false;
     private _status = new BehaviorSubject(UpdateStatus.Checking);
-    private _autoUpdater: AppUpdater;
-    private _settingsSub: Subscription;
+    private _autoCheckSub: Subscription;
+    private _downloadProgress = new BehaviorSubject<ProgressInfo>(null);
 
-    constructor(batchFlaskSettings: BatchFlaskSettingsService, remote: ElectronRemote) {
-        this._autoUpdater = remote.getCurrentWindow().autoUpdater;
+    constructor() {
+        super();
         this.status = this._status.pipe(
             map((status) => {
                 if (this.disabled) {
@@ -44,41 +37,47 @@ export class AutoUpdateService implements OnDestroy {
                 }
             }),
         );
+        this.downloadProgress = this._downloadProgress.asObservable();
+
+        this._autoCheckSub = interval(3600_000).subscribe(() => {
+            this.checkForUpdates();
+        });
+
         this.updateReady = this._status.pipe(map(x => x === UpdateStatus.Ready));
 
-        this._autoUpdater.on("checking-for-update", (info) => {
+        autoUpdater.on("checking-for-update", (info) => {
             this._status.next(UpdateStatus.Checking);
         });
 
-        this._autoUpdater.on("update-available", (info) => {
+        autoUpdater.on("update-available", (info) => {
             this._status.next(UpdateStatus.Downloading);
             this.updateInfo = info;
         });
 
-        this._autoUpdater.on("download-progress", (progress) => {
+        autoUpdater.on("download-progress", (progress) => {
+            this._downloadProgress.next(progress);
+            this._status.next(UpdateStatus.Downloading);
+        });
+
+        autoUpdater.on("update-downloaded", (info) => {
             this._status.next(UpdateStatus.Ready);
         });
 
-        this._autoUpdater.on("update-downloaded", (info) => {
-            this._status.next(UpdateStatus.Ready);
-        });
-
-        this._autoUpdater.on("update-not-available", (info) => {
+        autoUpdater.on("update-not-available", (info) => {
+            this._downloadProgress.next(null);
             this._status.next(UpdateStatus.NotAvailable);
-        });
-
-        this._settingsSub = batchFlaskSettings.settingsObs.subscribe((settings) => {
-            this._autoUpdater.autoInstallOnAppQuit = Boolean(settings.autoUpdateOnQuit);
         });
     }
 
     public ngOnDestroy() {
-        this._settingsSub.unsubscribe();
+        this._autoCheckSub.unsubscribe();
+        this._status.complete();
+        this._downloadProgress.complete();
     }
 
     public async checkForUpdates(): Promise<UpdateCheckResult | null> {
         if (this.disabled) { return; }
-        const info = await this._autoUpdater.checkForUpdates();
+        const info = await autoUpdater.checkForUpdates();
         return this._status.value === UpdateStatus.Ready ? info : null;
     }
 
@@ -88,7 +87,7 @@ export class AutoUpdateService implements OnDestroy {
     }
 
     public quitAndInstall() {
-        return this._autoUpdater.quitAndInstall();
+        return autoUpdater.quitAndInstall();
     }
 
     /**
@@ -96,9 +95,9 @@ export class AutoUpdateService implements OnDestroy {
      * @param url Url
      */
     public async setFeedUrl(url: string) {
-        const current = this._autoUpdater.getFeedURL();
+        const current = autoUpdater.getFeedURL();
         if (current === url) { return; }
-        this._autoUpdater.setFeedURL(url);
+        autoUpdater.setFeedURL(url);
         return this.checkForUpdates();
     }
 }

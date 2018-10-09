@@ -62,6 +62,6 @@ describe("SubscriptionPickerComponent", () => {
         testComponent.subscription.setValue(sub3);
         fixture.detectChanges();
         expect(select.selected.size).toBe(1);
-        expect([...select.selected].first()).toEqual(sub3);
+        expect([...select.selected].first()).toEqual(sub3.id);
     });
 });

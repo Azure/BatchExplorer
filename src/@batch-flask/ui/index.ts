@@ -7,6 +7,7 @@ export * from "./date";
 export * from "./dialogs";
 export * from "./dropdown";
 export * from "./file";
+export * from "./form";
 export * from "./i18n";
 export * from "./metrics-monitor";
 export * from "./notifications";

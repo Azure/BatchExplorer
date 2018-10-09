@@ -31,8 +31,8 @@ export class AuthenticationWindow extends UniqueWindow {
     }
 
     public onRedirect(callback: (newUrl: string) => void) {
-        this._window.webContents.on("did-get-redirect-request", (event, oldUrl, newUrl) => {
-            callback(newUrl);
+        this._window.webContents.session.webRequest.onBeforeRedirect((details) => {
+            callback(details.redirectURL);
         });
     }
 

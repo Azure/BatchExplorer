@@ -18,12 +18,15 @@ export function taskCsvHeader() {
 }
 
 export function taskToCsvRow(task: Task) {
+    const info = task.executionInfo;
+    const runtime = info && info.runningTime;
+    const nodeInfo = task.nodeInfo;
     return [
         task.id,
-        task.executionInfo.exitCode,
-        task.executionInfo.startTime,
-        task.executionInfo.endTime,
-        task.nodeInfo.nodeId,
-        task.executionInfo.runningTime.asMilliseconds(),
+        info && info.exitCode,
+        info && info.startTime && info.startTime.toISOString(),
+        info && info.endTime && info.endTime.toISOString(),
+        nodeInfo && nodeInfo.nodeId,
+        runtime && runtime.asMilliseconds(),
     ].join(",");
 }

@@ -5,6 +5,7 @@ export enum TelemetryType {
     Metric = 3,
     Request = 4,
     Dependency = 5,
+    PageView = 6,
 }
 
 export interface Telemetry {
@@ -51,4 +52,8 @@ export interface MetricTelemetry extends Telemetry {
      * The standard deviation of the set
      */
     stdDev?: number;
+}
+
+export interface PageViewTelemetry extends Telemetry {
+    name: string;
 }

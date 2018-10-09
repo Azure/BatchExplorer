@@ -10,7 +10,7 @@ import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { ApplicationPackage, BatchApplication } from "app/models";
 import { applicationToEditFormModel, editApplicationFormToJsonData } from "app/models/forms";
 import { ApplicationService } from "app/services";
-import { Constants } from "app/utils";
+import { Constants } from "common";
 
 @Component({
     selector: "bl-application-edit-dialog",

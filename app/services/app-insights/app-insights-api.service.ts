@@ -5,7 +5,7 @@ import { AccessToken, RetryableHttpCode, ServerError } from "@batch-flask/core";
 import { ArmBatchAccount } from "app/models";
 import { AdalService } from "app/services/adal";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
-import { Constants } from "app/utils";
+import { Constants } from "common";
 import { Observable, throwError, timer } from "rxjs";
 import { catchError, flatMap, mergeMap, retryWhen, share, take, tap } from "rxjs/operators";
 import { BatchAccountService } from "../batch-account";

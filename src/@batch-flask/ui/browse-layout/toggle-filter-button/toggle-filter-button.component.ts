@@ -25,7 +25,9 @@ export class ToggleFilterButtonComponent implements OnChanges {
 
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.advancedFilter) {
-            this.hasAdvancedFilter = !this.advancedFilter.isEmpty();
+            if (this.advancedFilter) {
+                this.hasAdvancedFilter = !this.advancedFilter.isEmpty();
+            }
             this._updateTitle();
         }
     }

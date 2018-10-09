@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ExceptionTelemetry, Telemetry, TelemetryType, TelemetryUploader } from "@batch-flask/core";
-import { ElectronRemote } from "@batch-flask/ui";
+import { ElectronRemote } from "@batch-flask/electron";
 import { log } from "@batch-flask/utils";
 import { Constants } from "common";
 

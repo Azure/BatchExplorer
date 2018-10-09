@@ -15,6 +15,7 @@ import {
     UpdateStatus,
 } from "@batch-flask/ui";
 import { AdalService, BatchExplorerService } from "app/services";
+import { ProgressInfo } from "builder-util-runtime";
 import { BehaviorSubject } from "rxjs";
 import { click } from "test/utils/helpers";
 import { ContextMenuServiceMock, NotificationServiceMock } from "test/utils/mocks";
@@ -45,6 +46,7 @@ describe("ProfileButtonComponent", () => {
 
         autoUpdateServiceSpy = {
             status: new BehaviorSubject<UpdateStatus>(null),
+            downloadProgress: new BehaviorSubject<ProgressInfo>(null),
         };
 
         batchExplorerServiceSpy = {};

@@ -1,19 +1,17 @@
 import { Injectable } from "@angular/core";
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
-import { ElectronRemote } from "@batch-flask/ui";
+import { ElectronRemote } from "@batch-flask/electron";
 import { BatchExplorerApplication, LocalFileStorage } from "client/core";
 import { AADService, AuthenticationWindow } from "client/core/aad";
 import { PythonRpcServerProcess } from "client/python-process";
 import { SplashScreen } from "client/splash-screen";
 import { BatchExplorerLink } from "common";
 import { IpcEvent } from "common/constants";
-import { AppUpdater } from "electron-updater";
 
 @Injectable()
 export class BatchExplorerService {
     public pythonServer: PythonRpcServerProcess;
     public aadService: AADService;
-    public autoUpdater: AppUpdater;
     /**
      * Root path of where BatchExplorer is running.
      */
@@ -38,7 +36,6 @@ export class BatchExplorerService {
             // Clone the environement to prevent calling the electron ipc sync for every key
             this._azureEnvironment = new AzureEnvironment(x);
         });
-        this.autoUpdater = this._app.autoUpdater;
         this.aadService = this._app.aadService;
         this.pythonServer = this._app.pythonServer;
         this.rootPath = this._app.rootPath;

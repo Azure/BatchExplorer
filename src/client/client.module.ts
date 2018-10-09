@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { ServerModule } from "@angular/platform-server";
 import { DevTranslationsLoader } from "@batch-flask/compiler";
 import { DataStore, I18nModule, LocaleService, TranslationsLoaderService } from "@batch-flask/core";
+import { ElectronMainModule } from "@batch-flask/electron";
 import { OSService } from "@batch-flask/ui/electron/os.service";
 import { ClientTranslationsLoaderService } from "client/core/i18n";
 import { autoUpdater } from "electron-updater";
@@ -45,6 +46,7 @@ export function initializeServices(injector) {
         I18nModule,
         ClientTelemetryModule,
         MenuModule,
+        ElectronMainModule,
     ],
     providers: [
         { provide: AUTO_UPDATER, useValue: autoUpdater },

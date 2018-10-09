@@ -9,7 +9,7 @@ import { AllTasksCompleteAction, Job, TaskFailureAction, UserAccount, VirtualMac
 import { JobCreateDto } from "app/models/dtos";
 import { createJobFormToJsonData, jobToFormModel } from "app/models/forms";
 import { JobService, PoolService } from "app/services";
-import { Constants } from "app/utils";
+import { Constants } from "common";
 import { List } from "immutable";
 import { Observable, of } from "rxjs";
 import { debounceTime, distinctUntilChanged, flatMap } from "rxjs/operators";

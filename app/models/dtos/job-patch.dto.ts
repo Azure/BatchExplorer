@@ -1,6 +1,6 @@
 import { Dto, DtoAttr } from "@batch-flask/core";
 import { MetaDataDto } from "./metadata.dto";
-import { PoolCreateDto } from "./pool-create.dto";
+import { PoolCreateDto } from "./pool-create";
 import { TaskConstraintsDto } from "./task-constraints.dto";
 
 export class JobPatchDto extends Dto<JobPatchDto> {

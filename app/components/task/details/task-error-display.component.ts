@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-
 import { SidebarManager } from "@batch-flask/ui/sidebar";
+import { DateUtils } from "@batch-flask/utils";
 import { RerunTaskFormComponent } from "app/components/task/action";
 import { FailureInfo, NameValuePairAttributes, Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
-import { DateUtils, ObservableUtils } from "app/utils";
+import { ObservableUtils } from "app/utils";
 
 @Component({
     selector: "bl-task-error-display",

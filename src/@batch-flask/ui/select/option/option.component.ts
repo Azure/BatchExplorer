@@ -1,14 +1,33 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, TemplateRef, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    Inject,
+    InjectionToken,
+    Input,
+    OnChanges,
+    Optional,
+    SimpleChange,
+    SimpleChanges,
+    TemplateRef,
+    ViewChild,
+} from "@angular/core";
 
 import { KeyNavigableListItem } from "@batch-flask/core";
 import "./option.scss";
+
+export const BL_OPTION_PARENT = new InjectionToken("BL_OPTION_PARENT");
+
+export interface OptionParent {
+    optionValueChanged(change: SimpleChange);
+}
 
 @Component({
     selector: "bl-option",
     templateUrl: "option.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectOptionComponent implements KeyNavigableListItem {
+export class SelectOptionComponent implements OnChanges, KeyNavigableListItem {
     @Input() public value: string;
 
     /**
@@ -16,11 +35,15 @@ export class SelectOptionComponent implements KeyNavigableListItem {
      */
     @Input() public label: string;
 
+    @Input() public useTemplate: boolean;
+
     @Input() public disabled: boolean;
 
     @ViewChild(TemplateRef) public content: TemplateRef<any>;
 
-    constructor(private _element: ElementRef) {
+    constructor(
+        private _element: ElementRef,
+        @Optional() @Inject(BL_OPTION_PARENT) private parent: OptionParent) {
     }
 
     public getLabel(): string {
@@ -31,6 +54,13 @@ export class SelectOptionComponent implements KeyNavigableListItem {
         }
     }
 
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes.value) {
+            if (this.parent && !changes.value.isFirstChange()) {
+                this.parent.optionValueChanged(changes.value);
+            }
+        }
+    }
     private _readContent() {
         return (this._getHostElement().textContent || "").trim();
     }

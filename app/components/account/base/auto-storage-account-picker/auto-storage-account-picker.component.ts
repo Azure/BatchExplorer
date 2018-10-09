@@ -11,7 +11,6 @@ import "./auto-storage-account-picker.scss";
     selector: "bl-auto-storage-account-picker",
     templateUrl: "auto-storage-account-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AutoStorageAccountPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => AutoStorageAccountPickerComponent), multi: true },
     ],

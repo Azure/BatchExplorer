@@ -1,9 +1,10 @@
 import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { DateUtils } from "@batch-flask/utils";
+import { Job, Task } from "app/models";
+import { NumberUtils } from "app/utils";
 import { List } from "immutable";
 import * as moment from "moment";
 
-import { Job, Task } from "app/models";
-import { DateUtils, NumberUtils } from "app/utils";
 import "./job-progress-graph.scss";
 
 @Component({

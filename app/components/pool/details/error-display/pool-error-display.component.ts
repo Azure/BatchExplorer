@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import { ElectronShell } from "@batch-flask/ui";
+import { ElectronShell } from "@batch-flask/electron";
 import { ArmBatchAccount, NameValuePair, Pool, ResizeError, ResizeErrorCode } from "app/models";
 import { NodeDeallocationOption, PoolResizeDto } from "app/models/dtos";
 import { BatchAccountService, PoolService } from "app/services";
@@ -49,6 +49,7 @@ export class PoolErrorDisplayComponent {
         return obs;
     }
 
+    @autobind()
     public increaseQuota() {
         this.shell.openExternal(ExternalLinks.supportRequest);
     }

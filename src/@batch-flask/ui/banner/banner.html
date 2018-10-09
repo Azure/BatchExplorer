@@ -5,7 +5,7 @@
             <ng-content select="[message]"></ng-content>
         </div>
         <div class="quick-fix-btn-container noselect" *ngIf="fixMessage" (mouseleave)="showOtherFixes = false">
-            <div class="btn" (click)="triggerFix()" [ngSwitch]="state" [class.disabled]="state !== errorStates.Error">
+            <bl-clickable class="btn" (do)="triggerFix()" [ngSwitch]="state" [class.disabled]="state !== errorStates.Error">
                 <span *ngSwitchCase="errorStates.Error">Fix: {{ fixMessage }}</span>
                 <span *ngSwitchCase="errorStates.Fixing">
                     <i class="fa fa-spinner fa-spin"></i> Fixing
@@ -13,14 +13,14 @@
                 <span *ngSwitchCase="errorStates.Fixed">
                     <i class="fa fa-check"></i>Fixed
                 </span>
-            </div>
+            </bl-clickable>
             <div class="other-fixes-btn" *ngIf="otherFixes.length !== 0" (mouseenter)="state === errorStates.Error && showOtherFixes = true"  [class.disabled]="state !== errorStates.Error">
                 <i class="fa fa-plus"></i>
             </div>
             <div *ngIf="showOtherFixes" class="other-fixes">
-                <div *ngFor="let otherFix of otherFixes;trackBy: trackByFn" class="other-fix" (click)="triggerFix(otherFix)">
+                <bl-clickable *ngFor="let otherFix of otherFixes;trackBy: trackByFn" class="other-fix" (do)="triggerFix(otherFix)">
                     {{otherFix.fixMessage}}
-                </div>
+                </bl-clickable>
             </div>
         </div>
         <i class="caret fa" [class.fa-caret-left]="!showDetails" [class.fa-caret-down]="showDetails" *ngIf="details.children.length !== 0"></i>

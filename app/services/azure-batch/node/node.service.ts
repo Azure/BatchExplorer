@@ -11,7 +11,7 @@ import {
 } from "@batch-flask/core";
 import { Activity, ActivityService } from "@batch-flask/ui/activity";
 import { Node, NodeState } from "app/models";
-import { Constants } from "app/utils";
+import { Constants } from "common";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";

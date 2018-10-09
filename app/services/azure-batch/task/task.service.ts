@@ -11,7 +11,7 @@ import {
 } from "@batch-flask/core";
 import { SubtaskInformation, Task, TaskState } from "app/models";
 import { TaskCreateDto } from "app/models/dtos";
-import { Constants } from "app/utils";
+import { Constants } from "common";
 import { List } from "immutable";
 import { Observable, Subject } from "rxjs";
 import { map, share } from "rxjs/operators";

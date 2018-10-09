@@ -20,7 +20,7 @@ import { NcjParameterExtendedType, NcjParameterWrapper, ParameterInputComponent 
 import { BlobContainer, NcjParameterRawType } from "app/models";
 import { JobService, NcjFileGroupService } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
-import { Constants } from "app/utils";
+import { Constants } from "common";
 
 import * as Fixtures from "test/fixture";
 import { updateInput } from "test/utils/helpers";

@@ -7,7 +7,7 @@ import {
     Injector,
     Input,
 } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, isObservable } from "rxjs";
 
 import { log } from "@batch-flask/utils";
 
@@ -89,7 +89,7 @@ export class ButtonComponent extends ClickableComponent {
         this.status = SubmitStatus.Submitting;
 
         const obs = this.action(event);
-        if (!obs) {
+        if (!isObservable(obs)) {
             if (this.skipSuccess) {
                 this.status = SubmitStatus.Idle;
             } else {

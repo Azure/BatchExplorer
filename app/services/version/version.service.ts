@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { AutoUpdateService, ElectronRemote } from "@batch-flask/ui";
+import { AutoUpdateService, ElectronRemote } from "@batch-flask/electron";
 import { SettingsService } from "app/services/settings.service";
 import { Constants } from "common";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";

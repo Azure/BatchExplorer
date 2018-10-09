@@ -8,7 +8,7 @@ import {
     ServerError,
 } from "@batch-flask/core";
 import { ApplicationPackage, BatchApplication } from "app/models";
-import { Constants } from "app/utils";
+import { Constants } from "common";
 import { Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";

@@ -25,7 +25,8 @@ const testContext = webpackRequire.context(".", true, /\.spec\.ts/);
 const testAppContext = webpackRequire.context("../../app", true, /\.spec\.ts/);
 const testCommonContext = webpackRequire.context("../../src/common", true, /\.spec\.ts/);
 // Exclude the @batch-flask/compiler folder
-const testBlCommonContext = webpackRequire.context("../../src/@batch-flask", true, /^\.\/(?!compiler).*\.spec\.ts$/);
+const testBlCommonContext = webpackRequire.context("../../src/@batch-flask", true,
+    /^\.\/(?!compiler)(?!.*node\.spec\.ts).*\.spec\.ts$/);
 
 /*
  * get all the files, for each file, call the context function

@@ -10,7 +10,8 @@ import { Certificate, NodeFillType, Pool } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
 import { CreatePoolModel, PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
 import { BatchAccountService, CertificateService, PoolService, PricingService } from "app/services";
-import { Constants, NumberUtils } from "app/utils";
+import { NumberUtils } from "app/utils";
+import { Constants } from "common";
 
 @Component({
     selector: "bl-pool-create-basic-dialog",

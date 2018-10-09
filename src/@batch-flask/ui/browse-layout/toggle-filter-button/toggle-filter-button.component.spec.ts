@@ -32,7 +32,24 @@ describe("ToggleFilterButtonComponent", () => {
         de = fixture.debugElement.query(By.css("bl-toggle-filter-button"));
         fixture.detectChanges();
     });
-    describe("when no filter", () => {
+
+    describe("when filter is null", () => {
+        beforeEach(() => {
+            testComponent.filter = null;
+            fixture.detectChanges();
+        });
+
+        it("should not show marker", () => {
+            expect(de.query(By.css(".filtering"))).toBeFalsy();
+        });
+
+        it("should show basic title", () => {
+            const clickable = de.query(By.css("bl-clickable")).nativeElement;
+            expect(clickable.getAttribute("title")).toEqual("Toggle advanced filter");
+        });
+    });
+
+    describe("when fitler is empty", () => {
         it("should not show marker", () => {
             expect(de.query(By.css(".filtering"))).toBeFalsy();
         });

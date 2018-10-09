@@ -1,10 +1,10 @@
 import { Injectable, NgZone } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
-import { ElectronRemote } from "@batch-flask/ui";
+import { ElectronRemote } from "@batch-flask/electron";
+import { SecureUtils, log } from "@batch-flask/utils";
 import { ArmBatchAccount } from "app/models";
 import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
-import { SecureUtils, log } from "app/utils";
 import { PythonRpcServerProcess } from "client/python-process";
 import { AsyncSubject, BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
 import { catchError, first, flatMap, share, tap } from "rxjs/operators";

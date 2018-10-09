@@ -13,13 +13,11 @@ describe("AzureHttpService", () => {
     let adalSpy: any;
     let injector: Injector;
     let backend: MockBackend;
-    let lastResponse: Response = null;
     let lastError: ServerError = null;
     let appServiceSpy;
 
     function subscribeResponse(obs: Observable<Response>) {
         obs.subscribe({
-            next: (x) => lastResponse = x,
             error: (x) => lastError = x,
         });
     }

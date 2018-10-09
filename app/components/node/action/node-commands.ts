@@ -64,10 +64,10 @@ export class NodeCommands extends EntityCommands<Node> {
         });
 
         this.reimage = this.simpleCommand({
-            name: "reboot",
+            name: "reimage",
             icon: "fa fa-hdd-o",
             label: "Reimage",
-            action: (node: Node) => this._reboot(node),
+            action: (node: Node) => this._reimage(node),
             permission: Permission.Write,
         });
 
@@ -124,6 +124,10 @@ export class NodeCommands extends EntityCommands<Node> {
         return this.nodeService.reboot(this.params["poolId"], node.id).pipe(
             flatMap(() => this.nodeService.get(this.params["poolId"], node.id)),
         );
+    }
+
+    private _reimage(node: Node) {
+        return this.nodeService.reimage(this.params["poolId"], node.id);
     }
 
     private _delete(node: Node) {

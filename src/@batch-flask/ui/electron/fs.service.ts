@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { FSWatcher } from "chokidar";
-import { ElectronRemote } from "./remote.service";
+import { ElectronRemote } from "../../electron/remote.service";
 
 /**
  * Service to handle saving files to the client FileSystem

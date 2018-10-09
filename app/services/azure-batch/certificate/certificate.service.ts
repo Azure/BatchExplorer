@@ -11,8 +11,9 @@ import {
     ListResponse,
     ListView,
 } from "@batch-flask/core";
+import { FileUrlUtils } from "@batch-flask/utils";
 import { Certificate } from "app/models";
-import { Constants, FileUrlUtils } from "app/utils";
+import { Constants } from "common";
 import { AzureBatchHttpService, BatchEntityGetter, BatchListGetter } from "../core";
 
 export interface CertificateListParams {

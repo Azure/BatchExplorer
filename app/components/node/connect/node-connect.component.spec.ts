@@ -2,15 +2,13 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { ClipboardService, ElectronShell, FileSystemService } from "@batch-flask/ui";
-import { of } from "rxjs";
-
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { PropertyGroupComponent, TextPropertyComponent } from "@batch-flask/ui/property-list";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
+import { SecureUtils } from "@batch-flask/utils";
 import { NodeConnectComponent } from "app/components/node/connect";
 import { ConnectionType, Node, Pool } from "app/models";
-
 import {
     AddNodeUserAttributes,
     BatchExplorerService,
@@ -18,7 +16,8 @@ import {
     NodeUserService,
     SettingsService,
 } from "app/services";
-import { PoolUtils, SecureUtils } from "app/utils";
+import { PoolUtils } from "app/utils";
+import { of } from "rxjs";
 import * as Fixtures from "test/fixture";
 
 @Component({

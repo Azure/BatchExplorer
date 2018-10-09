@@ -1,16 +1,17 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import * as moment from "moment";
-import { Observable, Subscription } from "rxjs";
+import { BehaviorSubject, Observable, Subscription, combineLatest } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "@batch-flask/ui/context-menu";
 import { LoadingStatus } from "@batch-flask/ui/loading";
+import { log } from "@batch-flask/utils";
+import { Metric, MonitoringMetricList } from "app/models/monitoring";
 import {
     BatchAccountService, InsightsMetricsService,
     MonitorChartMetrics, MonitorChartTimeFrame, MonitorChartType, ThemeService,
 } from "app/services";
+import { map } from "rxjs/operators";
 
-import { log } from "@batch-flask/utils";
-import { Metric, MonitoringMetricList } from "app/models/monitoring";
 import "./monitor-chart.scss";
 
 @Component({
@@ -32,11 +33,10 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
     public options: Chart.ChartOptions = {};
 
-    private _themeSub: Subscription;
     private _accountSub: Subscription;
     private _sub: Subscription;
-    private _theme: StringMap<string>;
     private _metricList: MonitoringMetricList;
+    private _metrics = new BehaviorSubject<Metric[]>(null);
 
     constructor(
         themeService: ThemeService,
@@ -46,20 +46,54 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         private contextMenuService: ContextMenuService) {
         this._setChartOptions();
 
-        this._themeSub = themeService.currentTheme.subscribe((theme) => {
-            this._theme = {
-                [MonitorChartMetrics.CoreCount]: theme.monitorChart.coreCount,
-                [MonitorChartMetrics.IdleNodeCount]: theme.monitorChart.idleNodeCount,
-                [MonitorChartMetrics.LowPriorityCoreCount]: theme.monitorChart.lowPriorityCoreCount,
-                [MonitorChartMetrics.RebootingNodeCount]: theme.monitorChart.rebootingNodeCount,
-                [MonitorChartMetrics.RunningNodeCount]: theme.monitorChart.runningNodeCount,
-                [MonitorChartMetrics.StartingNodeCount]: theme.monitorChart.startingNodeCount,
-                [MonitorChartMetrics.StartTaskFailedNodeCount]: theme.monitorChart.startTaskFailedNodeCount,
-                [MonitorChartMetrics.TaskCompleteEvent]: theme.monitorChart.taskCompleteEvent,
-                [MonitorChartMetrics.TaskFailEvent]: theme.monitorChart.taskFailEvent,
-                [MonitorChartMetrics.TaskStartEvent]: theme.monitorChart.taskStartEvent,
-            };
+        const chartTheme = themeService.currentTheme.pipe(
+            map((theme) => {
+                return {
+                    [MonitorChartMetrics.CoreCount]: theme.monitorChart.coreCount,
+                    [MonitorChartMetrics.IdleNodeCount]: theme.monitorChart.idleNodeCount,
+                    [MonitorChartMetrics.LowPriorityCoreCount]: theme.monitorChart.lowPriorityCoreCount,
+                    [MonitorChartMetrics.RebootingNodeCount]: theme.monitorChart.rebootingNodeCount,
+                    [MonitorChartMetrics.RunningNodeCount]: theme.monitorChart.runningNodeCount,
+                    [MonitorChartMetrics.StartingNodeCount]: theme.monitorChart.startingNodeCount,
+                    [MonitorChartMetrics.StartTaskFailedNodeCount]: theme.monitorChart.startTaskFailedNodeCount,
+                    [MonitorChartMetrics.TaskCompleteEvent]: theme.monitorChart.taskCompleteEvent,
+                    [MonitorChartMetrics.TaskFailEvent]: theme.monitorChart.taskFailEvent,
+                    [MonitorChartMetrics.TaskStartEvent]: theme.monitorChart.taskStartEvent,
+                };
+            }),
+        );
+
+        combineLatest(this._metrics, chartTheme).subscribe(([metrics, theme]) => {
+            this.colors = [];
+            this.total = [];
+
+            if (!metrics) {
+                this.datasets = [];
+                return;
+            }
+            this.colors = this._computeColors(metrics, theme);
+            this.datasets = metrics.map((metric: Metric): Chart.ChartDataSets => {
+
+                const total = metric.data.map(x => x.total || 0).reduce((a, b) => {
+                    return a + b;
+                }, 0);
+                this.total.push(total);
+
+                return {
+                    label: metric.label,
+                    data: metric.data.map(data => {
+                        return {
+                            x: data.timeStamp,
+                            y: data.total || 0,
+                        } as Chart.ChartPoint;
+                    }),
+                    borderWidth: 1,
+                    fill: false,
+                } as Chart.ChartDataSets;
+            });
+            this.changeDetector.markForCheck();
         });
+
         this._accountSub = this.accountService.currentAccountId.subscribe(() => {
             this.refreshMetrics();
         });
@@ -77,7 +111,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
 
     public ngOnDestroy(): void {
         this._destroySub();
-        this._themeSub.unsubscribe();
+        this._metrics.complete();
         this._accountSub.unsubscribe();
     }
 
@@ -89,31 +123,8 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         this._updateLoadingStatus(LoadingStatus.Loading);
         this._sub = obs.subscribe(response => {
             this._metricList = response;
-            this.colors = [];
-            this.total = [];
             this.interval = response.interval;
-            this.datasets = response.metrics.map((metric: Metric): Chart.ChartDataSets => {
-                const color = this._theme[metric.name];
-                this.colors.push({
-                    borderColor: color,
-                    backgroundColor: color,
-                });
-                const total = metric.data.map(x => x.total || 0).reduce((a, b) => {
-                    return a + b;
-                }, 0);
-                this.total.push(total);
-                return {
-                    label: metric.label,
-                    data: metric.data.map(data => {
-                        return {
-                            x: data.timeStamp,
-                            y: data.total || 0,
-                        } as Chart.ChartPoint;
-                    }),
-                    borderWidth: 1,
-                    fill: false,
-                } as Chart.ChartDataSets;
-            });
+            this._metrics.next(response.metrics);
             this._updateLoadingStatus(LoadingStatus.Ready);
         }, (error) => {
             log.error(`Error loading metrics for account metrics type: ${this.chartType}`, error);
@@ -265,5 +276,23 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         const start = moment(item.xLabel);
         const end = moment(start).add(interval);
         return `Data between ${start.format("hh:mm A")} and ${end.format("hh:mm A")} on ${start.format("LL")}`;
+    }
+
+    /**
+     * Get the colors for the coresponding metrics
+     */
+    private _computeColors(metrics: Metric[], theme: StringMap<string>) {
+        if (!theme || !metrics) {
+            return [];
+        } else {
+            return metrics.map((metric) => {
+                const color = theme[metric.name];
+
+                return {
+                    borderColor: color,
+                    backgroundColor: color,
+                };
+            });
+        }
     }
 }

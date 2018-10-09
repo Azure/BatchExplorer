@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
+import { log } from "@batch-flask/utils";
 import { ArmBatchAccount, BatchSoftwareLicense, Pool, RateCardMeter } from "app/models";
 import { BatchPricing, OSPricing, OsType, SoftwarePricing, VMPrices } from "app/services/pricing";
-import { PoolPrice, PoolPriceOptions, PoolUtils, log } from "app/utils";
+import { PoolPrice, PoolPriceOptions, PoolUtils } from "app/utils";
 import * as moment from "moment";
 import { BehaviorSubject, Observable, forkJoin, of } from "rxjs";
 import { catchError, filter, flatMap, map, share, take } from "rxjs/operators";

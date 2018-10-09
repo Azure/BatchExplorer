@@ -10,7 +10,8 @@ import {
 } from "@batch-flask/core";
 import { AutoScaleFormulaEvaluation, NameValuePair, Pool } from "app/models";
 import { PoolCreateDto, PoolEnableAutoScaleDto, PoolPatchDto, PoolResizeDto } from "app/models/dtos";
-import { Constants, ModelUtils } from "app/utils";
+import { ModelUtils } from "app/utils";
+import { Constants } from "common";
 import { List } from "immutable";
 import { Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";

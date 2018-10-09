@@ -25,7 +25,7 @@ import {
     VmSizeService,
 } from "app/services";
 import { AutoStorageService, StorageBlobService, StorageContainerService } from "app/services/storage";
-import { Constants } from "app/utils";
+import { Constants } from "common";
 
 import { SelectModule } from "@batch-flask/ui";
 import * as Fixtures from "test/fixture";

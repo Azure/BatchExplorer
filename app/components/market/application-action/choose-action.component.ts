@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { autobind } from "@batch-flask/core";
-import { ElectronShell } from "@batch-flask/ui";
+import { ElectronShell } from "@batch-flask/electron";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
@@ -41,7 +41,8 @@ export class ChooseActionComponent implements OnInit, OnDestroy {
     }
 
     @autobind()
-    public openLink(link: string) {
+    public openReadme() {
+        const link = `https://github.com/Azure/BatchExplorer-data/tree/master/ncj/${this.application.id}`;
         this.electronShell.openExternal(link, { activate: true });
     }
 

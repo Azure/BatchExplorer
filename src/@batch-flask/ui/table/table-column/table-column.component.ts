@@ -33,7 +33,7 @@ export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges
     public sortable: boolean = false;
 
     constructor(
-        @Inject(forwardRef(() => TableComponent)) private _table: TableComponent,
+        @Inject(forwardRef(() => TableComponent)) private _table: any,
         private changeDetector: ChangeDetectorRef) {
     }
 

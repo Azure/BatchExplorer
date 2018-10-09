@@ -1,6 +1,8 @@
 import { Inject, Injectable, InjectionToken } from "@angular/core";
 import { Telemetry } from "applicationinsights/out/Declarations/Contracts";
-import { EventTelemetry, ExceptionTelemetry, MetricTelemetry, TelemetryType } from "./telemetry.model";
+import {
+    EventTelemetry, ExceptionTelemetry, MetricTelemetry, PageViewTelemetry, TelemetryType,
+} from "./telemetry.model";
 
 export interface TelemetryUploader {
     init(enabled: boolean);
@@ -38,6 +40,10 @@ export class TelemetryService {
 
     public trackMetric(metric: MetricTelemetry) {
         this.track(metric, TelemetryType.Metric);
+    }
+
+    public trackPageView(pageView: PageViewTelemetry) {
+        this.track(pageView, TelemetryType.PageView);
     }
 
     public track(telemetry: Telemetry, type: TelemetryType) {

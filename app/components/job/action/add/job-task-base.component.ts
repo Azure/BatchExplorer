@@ -9,7 +9,7 @@ import {
 
 import { RangeValidator } from "@batch-flask/ui/validation";
 import { UserAccount, VirtualMachineConfiguration } from "app/models";
-import { Constants } from "app/utils";
+import { Constants } from "common";
 import { List } from "immutable";
 
 export class JobTaskBaseComponent implements ControlValueAccessor {

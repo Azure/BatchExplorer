@@ -3,7 +3,7 @@ import {
     AbstractControl, ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS,
     NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
-import { Constants } from "app/utils";
+import { Constants } from "common";
 import { Subscription } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
 

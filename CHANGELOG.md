@@ -1,3 +1,24 @@
+# 0.18.2
+
+### Bug fixes
+*  Increase pool quota quick fix not working [\#1667](https://github.com/Azure/BatchExplorer/issues/1667)
+*  Can't export task to csv first time opening the statistics blade [\#1673](https://github.com/Azure/BatchExplorer/issues/1673)
+*  Error on toggle filter button [\#1671](https://github.com/Azure/BatchExplorer/issues/1671)
+*  Error when copying property which value is not a string(int) [\#1675](https://github.com/Azure/BatchExplorer/issues/1675)
+*  Can't create a pool with custom images [\#1677](https://github.com/Azure/BatchExplorer/issues/1677)
+
+
+# 0.18.1
+
+### Bug fixes
+*  Unique windows show() nul pointer exception [\#1644](https://github.com/Azure/BatchExplorer/issues/1644)
+*  Reimage node is calling reboot [\#1646](https://github.com/Azure/BatchExplorer/issues/1646)
+*  Error loading metrics create null pointer exception [\#1648](https://github.com/Azure/BatchExplorer/issues/1648)
+*  View readme of NCJ application not working [\#1652](https://github.com/Azure/BatchExplorer/issues/1652)
+*  Cloning of Batch Pools does not work [\#1650](https://github.com/Azure/BatchExplorer/issues/1650)
+*  Error when button component doesn't return an observable [\#1654](https://github.com/Azure/BatchExplorer/issues/1654)
+*  Selecting checkbox doesn't add a tick to the checkbox [\#1658](https://github.com/Azure/BatchExplorer/issues/1658)
+
 # 0.18.1
 
 ### Bug fixes
