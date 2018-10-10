@@ -1,9 +1,9 @@
 {
   // Mapping file extension to what they should be displayed at
   "file.associations": {
-    // "*.customLog": "log",
-    // "*.customCode": "code",
-    // "*.customImage": "image",
+    // ".customLog": "log",
+    // ".customCode": "code",
+    // ".customImage": "image",
   },
 
   // Default view for the configuration tab of pool, job, task, etc. Can be [pretty,json]

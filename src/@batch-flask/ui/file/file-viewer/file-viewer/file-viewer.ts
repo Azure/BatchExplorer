@@ -2,6 +2,12 @@ import { ChangeDetectorRef, Input } from "@angular/core";
 
 import { FileLoader } from "../../file-loader";
 
+export interface FileViewerCommand {
+    label: string;
+    icon: string;
+    color: string;
+}
+
 /**
  * Generic file viewer
  */
@@ -10,6 +16,8 @@ export abstract class FileViewer {
      * Max file size this viewer support
      */
     public static readonly MAX_FILE_SIZE: number;
+
+    public readonly commands?: FileViewerCommand[];
 
     @Input() public set fileLoader(fileLoader: FileLoader) {
         this._fileLoader = fileLoader;

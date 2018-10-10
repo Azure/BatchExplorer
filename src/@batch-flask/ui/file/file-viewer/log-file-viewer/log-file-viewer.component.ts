@@ -25,7 +25,9 @@ import "./log-file-viewer.scss";
 })
 export class LogFileViewerComponent extends FileViewer implements OnDestroy, AfterViewInit {
     public static readonly MAX_FILE_SIZE = 10000000; // 10MB
-
+    public commands = [
+        { color: "light", label: "Some thing", icon: "fa fa-eye", execute: () => console.log("Do dis") },
+    ];
     @Input() public tailable: boolean = false;
 
     public get tail() {

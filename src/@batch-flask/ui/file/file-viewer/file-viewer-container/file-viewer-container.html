@@ -15,14 +15,17 @@
             <bl-button color="light" [disabled]="!downloadEnabled" [action]="openDefaultEditor" title="Open in default application" tooltipPosition="above">
                 <i class="fa fa-external-link"></i>
             </bl-button>
+            <ng-container *ngIf="viewRef?.instance.commands">
+                <bl-button *ngFor="let command of viewRef.instance.commands" [color]="command.color" [action]="command.execute" [title]="command.label">
+                    <i class="{{command.icon}}"></i>
+                </bl-button>
+            </ng-container>
         </div>
     </div>
     <div class="details" *ngIf="!fileNotFound && !forbidden">
-        <bl-file-content  *ngIf="fileLoader && componentType"
-            [fileLoader]="fileLoader"
-            [tailable]="tailable"
-            [componentType]="componentType">
-        </bl-file-content>
+        <template #viewerContainer></template>
+        <bl-file-too-large [file]="file" [fileLoader]="fileLoader" *ngIf="fileTooLarge"></bl-file-too-large>
+
         <bl-card *ngIf="unkownFileType" class="unknown-file-type">
             <h2 class="title">This file is not a known extension. Do you still want to open it?</h2>
             <div class="options">

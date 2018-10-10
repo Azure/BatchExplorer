@@ -2,9 +2,13 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ComponentFactoryResolver,
+    ComponentRef,
     Input,
     OnChanges,
     OnDestroy,
+    ViewChild,
+    ViewContainerRef,
 } from "@angular/core";
 import { HttpCode, ServerError, autobind } from "@batch-flask/core";
 import { ElectronRemote, ElectronShell } from "@batch-flask/ui/electron";
@@ -15,6 +19,7 @@ import { DateUtils, prettyBytes } from "@batch-flask/utils";
 import { Observable, Subscription } from "rxjs";
 import { FileTypeAssociationService, FileViewerType } from "../file-type-association";
 
+import { FileViewer } from "../file-viewer";
 import "./file-viewer-container.scss";
 
 @Component({
@@ -35,13 +40,19 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     public contentSize: string = "-";
     public lastModified: string = "-";
     public downloadEnabled: boolean;
+    public fileTooLarge: boolean;
     public componentType: FileViewerType;
+    public viewRef: ComponentRef<FileViewer>;
+
     private _propertiesSub: Subscription;
     private _fileType: string;
+
+    @ViewChild("viewerContainer", { read: ViewContainerRef }) private _viewerContainer: ViewContainerRef;
 
     constructor(
         private shell: ElectronShell,
         private remote: ElectronRemote,
+        private resolver: ComponentFactoryResolver,
         private fileAssociationService: FileTypeAssociationService,
         private changeDetector: ChangeDetectorRef,
         private notificationService: NotificationService) {
@@ -58,6 +69,15 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
                 this.file = file;
                 this.contentSize = prettyBytes(file.properties.contentLength);
                 this.lastModified = DateUtils.prettyDate(file.properties.lastModified);
+
+                if (this.componentType.MAX_FILE_SIZE
+                    && file.properties.contentLength > this.componentType.MAX_FILE_SIZE) {
+                    this.fileTooLarge = true;
+                    this._clearViewer();
+                } else {
+                    this.fileTooLarge = false;
+                    this._computeViewer();
+                }
                 this.changeDetector.markForCheck();
             });
         }
@@ -126,8 +146,6 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     }
 
     private _updateFileProperties(forceNew = false): Observable<any> {
-        this.contentSize = "-";
-        this.lastModified = "-";
         this.fileNotFound = false;
         this.forbidden = false;
         const obs = this.fileLoader.getProperties(forceNew);
@@ -164,5 +182,20 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
         this.componentType = componentType;
         this.unknownFileType = !componentType;
         this.changeDetector.markForCheck();
+    }
+
+    private _clearViewer() {
+        this._viewerContainer.clear();
+        this.viewRef = null;
+    }
+
+    private _computeViewer() {
+        if (this.viewRef && this.viewRef.componentType === this.componentType) {
+            return; // Don't recreate if the component is already there
+        }
+        const componentFactory = this.resolver.resolveComponentFactory<FileViewer>(this.componentType);
+        this._clearViewer();
+        const ref = this.viewRef = this._viewerContainer.createComponent(componentFactory);
+        ref.instance.fileLoader = this.fileLoader;
     }
 }
