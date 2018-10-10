@@ -11,7 +11,7 @@ import "./code-file-viewer.scss";
     templateUrl: "code-file-viewer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CodeFileViewerComponent extends FileViewer implements OnChanges {
+export class CodeFileViewerComponent extends FileViewer {
     public static readonly MAX_FILE_SIZE = 100000; // 100KB
 
     public value: string = "";
@@ -31,12 +31,12 @@ export class CodeFileViewerComponent extends FileViewer implements OnChanges {
         super(changeDetector);
     }
 
-    public ngOnChanges(changes) {
-        this._loadImage();
+    public onFileLoaderChanges() {
+        this._loadContent();
     }
 
-    private _loadImage() {
-        this.fileTooLarge = false;
+    private _loadContent() {
+        console.log("Load content");
         this.loadingStatus = LoadingStatus.Loading;
         this.fileNotFound = false;
         this.changeDetector.markForCheck();

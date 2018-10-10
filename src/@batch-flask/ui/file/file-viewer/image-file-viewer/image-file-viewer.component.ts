@@ -10,7 +10,7 @@ import "./image-file-viewer.scss";
     templateUrl: "image-file-viewer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ImageFileViewerComponent extends FileViewer implements OnChanges, OnDestroy {
+export class ImageFileViewerComponent extends FileViewer implements OnDestroy {
     public src: string;
     public imageDescription: string;
     public loadingStatus = LoadingStatus.Loading;
@@ -21,15 +21,13 @@ export class ImageFileViewerComponent extends FileViewer implements OnChanges, O
         super(changeDetector);
     }
 
-    public ngOnChanges(changes) {
+    public onFileLoaderChanges() {
+        this._cleanup();
         this._loadImage();
-        if (changes.fileLoader) {
-            this._cleanup();
-            this._updateImageDescription();
-            this._sub = this.fileLoader.fileChanged.subscribe(() => {
-                this._loadImage();
-            });
-        }
+        this._updateImageDescription();
+        this._sub = this.fileLoader.fileChanged.subscribe(() => {
+            this._loadImage();
+        });
     }
 
     public ngOnDestroy() {

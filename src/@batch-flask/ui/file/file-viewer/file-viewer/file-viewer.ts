@@ -13,6 +13,7 @@ export abstract class FileViewer {
 
     @Input() public set fileLoader(fileLoader: FileLoader) {
         this._fileLoader = fileLoader;
+        this.onFileLoaderChanges();
         this.changeDetector.markForCheck();
     }
     public get fileLoader() { return this._fileLoader; }
@@ -20,4 +21,6 @@ export abstract class FileViewer {
     private _fileLoader: FileLoader;
 
     constructor(protected changeDetector: ChangeDetectorRef) { }
+
+    public abstract onFileLoaderChanges();
 }

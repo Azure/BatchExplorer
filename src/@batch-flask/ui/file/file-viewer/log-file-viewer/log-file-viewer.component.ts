@@ -5,7 +5,6 @@ import {
     Component,
     ElementRef,
     Input,
-    OnChanges,
     OnDestroy,
     ViewChild,
 } from "@angular/core";
@@ -24,7 +23,7 @@ import "./log-file-viewer.scss";
     templateUrl: "log-file-viewer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LogFileViewerComponent extends FileViewer implements OnChanges, OnDestroy, AfterViewInit {
+export class LogFileViewerComponent extends FileViewer implements OnDestroy, AfterViewInit {
     public static readonly MAX_FILE_SIZE = 10000000; // 10MB
 
     @Input() public tailable: boolean = false;
@@ -33,8 +32,7 @@ export class LogFileViewerComponent extends FileViewer implements OnChanges, OnD
         return this.tailable;
     }
 
-    @ViewChild("editor")
-    public editor: EditorComponent;
+    @ViewChild("editor") public editor: EditorComponent;
 
     public file: File;
     public fileTooLarge = false;
@@ -75,7 +73,7 @@ export class LogFileViewerComponent extends FileViewer implements OnChanges, OnD
         });
     }
 
-    public ngOnChanges(changes) {
+    public onFileLoaderChanges() {
         if (this._refreshInterval) {
             clearInterval(this._refreshInterval);
         }
@@ -87,17 +85,15 @@ export class LogFileViewerComponent extends FileViewer implements OnChanges, OnD
         if (this._fileChangedSub) {
             this._fileChangedSub.unsubscribe();
         }
-        if (changes.fileLoader) {
-            this.nodeNotFound = false;
-            this.fileCleanupOperation = false;
-            this.fileContentFailure = false;
-            this.loadingStatus = LoadingStatus.Loading;
-            this.content = "";
-            this.lastContentLength = 0;
-            this._fileChangedSub = this.fileLoader.fileChanged.subscribe((file) => {
-                this._processProperties(file);
-            });
-        }
+        this.nodeNotFound = false;
+        this.fileCleanupOperation = false;
+        this.fileContentFailure = false;
+        this.loadingStatus = LoadingStatus.Loading;
+        this.content = "";
+        this.lastContentLength = 0;
+        this._fileChangedSub = this.fileLoader.fileChanged.subscribe((file) => {
+            this._processProperties(file);
+        });
 
         this._updateFileContent();
         this._setRefreshInterval();
