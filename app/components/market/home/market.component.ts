@@ -70,6 +70,10 @@ export class MarketComponent implements OnInit, OnDestroy {
      * It will set the displayedApplication.
      */
     private _filterApplications() {
+        if (!this.applications) {
+            this.displayedApplications = List([]);
+            return;
+        }
         this.displayedApplications = List(this.applications.filter((application) => {
             const query = this.query.clearWhitespace().toLowerCase();
             return query === ""
