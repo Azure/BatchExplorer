@@ -2,11 +2,9 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    EventEmitter,
     Input,
     OnChanges,
     OnDestroy,
-    Output,
 } from "@angular/core";
 import { HttpCode, ServerError, autobind } from "@batch-flask/core";
 import { ElectronRemote, ElectronShell } from "@batch-flask/ui/electron";
@@ -26,10 +24,11 @@ import "./file-viewer-container.scss";
 export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     @Input() public fileLoader: FileLoader;
     @Input() public tailable: boolean = false;
-    @Output() public back = new EventEmitter();
 
     public filename: string;
     public file: File;
+
+    public unknownFileType = false;
     public fileNotFound = false;
     public forbidden = false;
     public contentSize: string = "-";
@@ -87,10 +86,6 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
         });
     }
 
-    public goBack() {
-        this.back.emit();
-    }
-
     private _clearPropertiesSub() {
         if (this._propertiesSub) {
             this._propertiesSub.unsubscribe();
@@ -137,5 +132,27 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
         });
 
         return obs;
+    }
+
+    private _findFileType() {
+        const filename = this.fileLoader.filename;
+        if (!filename) {
+            throw new Error(`Expect filename to be a valid string but was "${filename}"`);
+        }
+
+        const name = filename.toLowerCase();
+        for (const type of Object.keys(this.fileTypes)) {
+            const extensions = this.fileTypes[type];
+            for (const ext of extensions) {
+                if (name.endsWith(`.${ext}`)) {
+                    this._fileType = type as any;
+                    this.changeDetector.markForCheck();
+                    return;
+                }
+            }
+        }
+
+        this._fileType = null;
+        this.changeDetector.markForCheck();
     }
 }

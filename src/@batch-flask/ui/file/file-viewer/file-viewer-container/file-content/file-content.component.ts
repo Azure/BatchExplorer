@@ -9,7 +9,6 @@ import { log } from "@batch-flask/utils";
 
 import { Subscription } from "rxjs";
 import { FileViewer } from "../../file-viewer/file-viewer";
-import { FILE_VIEWER_DEFINITIONS } from "../file-viewer-definitions";
 import "./file-content.scss";
 
 enum FileType {
@@ -29,7 +28,6 @@ export class FileContentComponent implements OnChanges, OnDestroy {
     @Input() public tailable: boolean = false;
 
     public file: File;
-    public unkownFile: boolean;
     public fileTooLarge: boolean = false;
 
     public FileType = FileType;
@@ -41,7 +39,6 @@ export class FileContentComponent implements OnChanges, OnDestroy {
     private _viewerRef: ComponentRef<FileViewer>;
 
     constructor(
-        private settingsService: BatchFlaskSettingsService,
         private resolver: ComponentFactoryResolver,
         private changeDetector: ChangeDetectorRef) { }
 
@@ -50,14 +47,11 @@ export class FileContentComponent implements OnChanges, OnDestroy {
             if (!this.fileLoader) {
                 log.error("FileContentComponent fileLoader input is required but is", this.fileLoader);
             }
-            this._findFileType();
-            this.unkownFile = false;
 
             this._clearPropertySub();
 
             const componentType = this._getComponentType();
             if (!componentType) {
-                this.unkownFile = true;
                 this._container.clear();
                 return;
             }
@@ -86,39 +80,15 @@ export class FileContentComponent implements OnChanges, OnDestroy {
         this.changeDetector.markForCheck();
     }
 
-    public get fileTypes() {
-        return this.settingsService.settings.fileTypes || {};
-    }
-
     private _clearPropertySub() {
         if (this._propertySub) {
             this._propertySub.unsubscribe();
         }
     }
 
-    private _findFileType() {
-        const filename = this.fileLoader.filename;
-        if (!filename) {
-            throw new Error(`Expect filename to be a valid string but was "${filename}"`);
-        }
 
-        const name = filename.toLowerCase();
-        for (const type of Object.keys(this.fileTypes)) {
-            const extensions = this.fileTypes[type];
-            for (const ext of extensions) {
-                if (name.endsWith(`.${ext}`)) {
-                    this._fileType = type as any;
-                    this.changeDetector.markForCheck();
-                    return;
-                }
-            }
-        }
 
-        this._fileType = null;
-        this.changeDetector.markForCheck();
-    }
-
-    private _getComponentType(): typeof FileViewer & Type<FileViewer> {
+    private _getComponentType() {
         return FILE_VIEWER_DEFINITIONS[this._fileType] as any;
     }
 

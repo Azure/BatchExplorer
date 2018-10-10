@@ -11,5 +11,5 @@ export interface BatchFlaskSettings {
      * If the app should auto udpate on quit
      */
     autoUpdateOnQuit?: boolean;
-    fileTypes: StringMap<string[]>;
+    fileAssociations: StringMap<string>;
 }

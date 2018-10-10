@@ -1,9 +1,9 @@
 {
   // Mapping file extension to what they should be displayed at
-  "fileTypes": {
-    "log": ["txt", "log"],
-    "image":  ["png", "jpg", "gif", "svg"],
-    "code": ["json", "ts2", "js", "java", "cs", "cpp", "h", "hpp", "py", "xml", "sh", "cmd", "bat", "yaml", "yml", "ts", "ps1", "html", "css", "scss"]
+  "file.associations": {
+    // "*.customLog": "log",
+    // "*.customCode": "code",
+    // "*.customImage": "image",
   },
 
   // Default view for the configuration tab of pool, job, task, etc. Can be [pretty,json]
