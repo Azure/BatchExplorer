@@ -13,7 +13,7 @@ import "./code-file-viewer.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CodeFileViewerComponent extends FileViewer {
-    public static readonly MAX_FILE_SIZE = 100000; // 100KB
+    public static readonly MAX_FILE_SIZE = 1000000; // 1MB
 
     public value: string = "";
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;

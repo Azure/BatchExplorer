@@ -1,8 +1,10 @@
 import { FileSystemService } from "@batch-flask/ui/electron";
 import { CloudPathUtils, exists, log } from "@batch-flask/utils";
 import * as path from "path";
-import { Observable, Subject, from, of } from "rxjs";
-import { concatMap, flatMap, map, share } from "rxjs/operators";
+import { BehaviorSubject, Observable, Subject, from, of } from "rxjs";
+import {
+    concatMap, distinctUntilChanged, flatMap, map, publishReplay, refCount, share, tap,
+} from "rxjs/operators";
 import { File } from "../file.model";
 
 export type PropertiesFunc = () => Observable<File>;
@@ -38,6 +40,8 @@ export interface FileLoadResult {
 }
 
 export class FileLoader {
+    public properties: Observable<File>;
+
     public readonly filename: string;
     public readonly source: string;
     /**
@@ -56,16 +60,16 @@ export class FileLoader {
     public basePath: string;
 
     private _fs: FileSystemService;
-    private _properties: PropertiesFunc;
+    private _properties = new BehaviorSubject<File>(null);
+    private _propertiesGetter: PropertiesFunc;
     private _content: ContentFunc;
     private _download: DownloadFunc;
-    private _cachedProperties: File;
     private _fileChanged = new Subject<File>();
     private _logIgnoreError: number[];
 
     constructor(config: FileLoaderConfig) {
         this.filename = config.filename;
-        this._properties = config.properties;
+        this._propertiesGetter = config.properties;
         this._content = config.content;
         this.groupId = config.groupId || "";
         this.source = config.source;
@@ -74,6 +78,14 @@ export class FileLoader {
         this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [];
 
         this.fileChanged = this._fileChanged.asObservable();
+
+        this.properties = of(null).pipe(
+            flatMap(() => this.getProperties()),
+            flatMap(() => this._properties),
+            distinctUntilChanged((a, b) => a === b || a.equals(b)),
+            publishReplay(1),
+            refCount(),
+        );
     }
 
     /**
@@ -81,15 +93,15 @@ export class FileLoader {
      * @param forceNew If set to false it will use the last value loaded
      */
     public getProperties(forceNew = false): Observable<File> {
-        if (!forceNew && this._cachedProperties) {
-            return of(this._cachedProperties);
+        if (!forceNew && this._properties.value) {
+            return of(this._properties.value);
         }
 
-        const obs = this._properties();
+        const obs = this._propertiesGetter().pipe(
+            tap((file) => this._updateProperties(file)),
+            share(),
+        );
         obs.subscribe({
-            next: (file) => {
-                this._updateProperties(file);
-            },
             error: (error) => {
                 if (error && error.status && !this._logIgnoreError.includes(error.status)) {
                     log.error("Error getting the file properties!", Object.assign({}, error));
@@ -167,8 +179,8 @@ export class FileLoader {
     }
 
     private _updateProperties(file: File) {
-        const last = this._cachedProperties;
-        this._cachedProperties = file;
+        const last = this._properties.value;
+        this._properties.next(file);
         if (last && !last.equals(file)) {
             this._fileChanged.next(file);
         }

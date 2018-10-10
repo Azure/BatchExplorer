@@ -5,6 +5,7 @@ import {
     EventEmitter,
     Input,
     OnChanges,
+    OnDestroy,
     Output,
 } from "@angular/core";
 import { HttpCode, ServerError, autobind } from "@batch-flask/core";
@@ -13,7 +14,7 @@ import { FileLoader } from "@batch-flask/ui/file/file-loader";
 import { File } from "@batch-flask/ui/file/file.model";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { DateUtils, prettyBytes } from "@batch-flask/utils";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import "./file-viewer-container.scss";
 
@@ -22,7 +23,7 @@ import "./file-viewer-container.scss";
     templateUrl: "file-viewer-container.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileViewerContainerComponent implements OnChanges {
+export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     @Input() public fileLoader: FileLoader;
     @Input() public tailable: boolean = false;
     @Output() public back = new EventEmitter();
@@ -34,6 +35,7 @@ export class FileViewerContainerComponent implements OnChanges {
     public contentSize: string = "-";
     public lastModified: string = "-";
     public downloadEnabled: boolean;
+    private _propertiesSub: Subscription;
 
     constructor(
         private shell: ElectronShell,
@@ -47,9 +49,19 @@ export class FileViewerContainerComponent implements OnChanges {
         if (inputs.fileLoader) {
             this.filename = this.fileLoader && this.fileLoader.displayName;
             this._updateFileProperties();
+            this._clearPropertiesSub();
+            this._propertiesSub = this.fileLoader.properties.subscribe((file) => {
+                this.file = file;
+                this.contentSize = prettyBytes(file.properties.contentLength);
+                this.lastModified = DateUtils.prettyDate(file.properties.lastModified);
+                this.changeDetector.markForCheck();
+            });
         }
     }
 
+    public ngOnDestroy() {
+        this._clearPropertiesSub();
+    }
     @autobind()
     public refresh() {
         return this._updateFileProperties(true);
@@ -77,6 +89,12 @@ export class FileViewerContainerComponent implements OnChanges {
 
     public goBack() {
         this.back.emit();
+    }
+
+    private _clearPropertiesSub() {
+        if (this._propertiesSub) {
+            this._propertiesSub.unsubscribe();
+        }
     }
 
     private _saveFile(pathToFile) {
@@ -107,12 +125,6 @@ export class FileViewerContainerComponent implements OnChanges {
         this.forbidden = false;
         const obs = this.fileLoader.getProperties(forceNew);
         obs.subscribe({
-            next: (file: File) => {
-                this.file = file;
-                this.contentSize = prettyBytes(file.properties.contentLength);
-                this.lastModified = DateUtils.prettyDate(file.properties.lastModified);
-                this.changeDetector.markForCheck();
-            },
             error: (error: ServerError) => {
                 if (error.status === HttpCode.NotFound) {
                     this.fileNotFound = true;
