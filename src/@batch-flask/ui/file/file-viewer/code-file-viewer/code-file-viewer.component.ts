@@ -36,7 +36,6 @@ export class CodeFileViewerComponent extends FileViewer {
     }
 
     private _loadContent() {
-        console.log("Load content");
         this.loadingStatus = LoadingStatus.Loading;
         this.fileNotFound = false;
         this.changeDetector.markForCheck();

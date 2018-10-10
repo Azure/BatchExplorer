@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Subscription } from "rxjs";
 import { FileViewer } from "../file-viewer";
