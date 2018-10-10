@@ -90,7 +90,9 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
 
     private _updateFileExplorerConfig() {
         this.fileExplorerConfig = {
-            tailable: this.task.state === TaskState.running,
+            viewer: {
+                tailable: this.task.state === TaskState.running,
+            },
         };
     }
 

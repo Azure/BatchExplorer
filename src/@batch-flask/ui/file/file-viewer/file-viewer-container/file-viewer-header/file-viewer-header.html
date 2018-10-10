@@ -14,8 +14,8 @@
         tooltipPosition="above">
         <i class="fa fa-external-link"></i>
     </bl-button>
-    <ng-container *ngIf="viewRef?.instance.commands">
-        <bl-button *ngFor="let command of viewRef.instance.commands" [color]="command.color" [action]="command.execute"
+    <ng-container *ngIf="fileViewer?.commands">
+        <bl-button *ngFor="let command of fileViewer?.commands" [color]="command.color" [action]="command.execute"
             [title]="command.label">
             <i class="{{command.icon}}"></i>
         </bl-button>

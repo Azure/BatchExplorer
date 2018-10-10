@@ -4,7 +4,6 @@ import {
     ChangeDetectorRef,
     Component,
     ElementRef,
-    Input,
     OnDestroy,
     ViewChild,
 } from "@angular/core";
@@ -25,10 +24,8 @@ import "./log-file-viewer.scss";
 })
 export class LogFileViewerComponent extends FileViewer implements OnDestroy, AfterViewInit {
     public static readonly MAX_FILE_SIZE = 10000000; // 10MB
-    public commands = [
-        { color: "light", label: "Some thing", icon: "fa fa-eye", execute: () => console.log("Do dis") },
-    ];
-    @Input() public tailable: boolean = false;
+
+    public tailable: boolean = false;
 
     public get tail() {
         return this.tailable;
@@ -99,6 +96,10 @@ export class LogFileViewerComponent extends FileViewer implements OnDestroy, Aft
 
         this._updateFileContent();
         this._setRefreshInterval();
+    }
+
+    public onConfigChanges() {
+        this.tailable = this.config && this.config.tailable;
     }
 
     public ngOnDestroy() {

@@ -28,7 +28,7 @@
 
             <bl-file-viewer-container *ngFor="let file of workspace.openedFiles | async;trackBy: trackOpenedFile"
                 [fileLoader]="file.loader"
-                [tailable]="config.tailable"
+                [config]="config.viewer"
                 [hidden]="file.path !== currentNode.path"
                 (back)="goBack()">
             </bl-file-viewer-container>

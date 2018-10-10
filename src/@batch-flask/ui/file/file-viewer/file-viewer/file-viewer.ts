@@ -1,11 +1,14 @@
 import { ChangeDetectorRef, Input } from "@angular/core";
-
 import { FileLoader } from "../../file-loader";
 
 export interface FileViewerCommand {
     label: string;
     icon: string;
     color: string;
+}
+
+export interface FileViewerConfig {
+    tailable?: boolean;
 }
 
 /**
@@ -26,9 +29,21 @@ export abstract class FileViewer {
     }
     public get fileLoader() { return this._fileLoader; }
 
+    @Input() public set config(config: FileViewerConfig) {
+        const old = this._config;
+        this._config = config;
+        if (this.onConfigChanges) {
+            this.onConfigChanges(config, old);
+        }
+        this.changeDetector.markForCheck();
+    }
+    public get config() { return this._config; }
+
     private _fileLoader: FileLoader;
+    private _config: FileViewerConfig;
 
     constructor(protected changeDetector: ChangeDetectorRef) { }
 
     public abstract onFileLoaderChanges();
+    public onConfigChanges?(newConfig: FileViewerConfig, oldConfig: FileViewerConfig);
 }

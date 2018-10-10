@@ -1,5 +1,5 @@
 <div class="file-details-container">
-    <bl-file-viewer-header [fileViewer]="viewRef?.instance" [fileLoader]="fileLoader"></bl-file-viewer-header>
+    <bl-file-viewer-header [fileViewer]="viewRef?.instance" [fileLoader]="fileLoader" [refresh]="refresh"></bl-file-viewer-header>
     <div class="details">
         <template #viewerContainer></template>
         <bl-file-too-large [file]="file" [fileLoader]="fileLoader" *ngIf="fileTooLarge"></bl-file-too-large>

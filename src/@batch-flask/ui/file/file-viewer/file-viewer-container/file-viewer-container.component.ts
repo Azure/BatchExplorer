@@ -11,14 +11,12 @@ import {
     ViewContainerRef,
 } from "@angular/core";
 import { HttpCode, ServerError, autobind } from "@batch-flask/core";
-import { ElectronRemote, ElectronShell } from "@batch-flask/ui/electron";
 import { FileLoader } from "@batch-flask/ui/file/file-loader";
 import { File } from "@batch-flask/ui/file/file.model";
-import { NotificationService } from "@batch-flask/ui/notifications";
 import { Observable, Subscription } from "rxjs";
 import { FileTypeAssociationService, FileViewerType } from "../file-type-association";
+import { FileViewer, FileViewerConfig } from "../file-viewer";
 
-import { FileViewer } from "../file-viewer";
 import "./file-viewer-container.scss";
 
 @Component({
@@ -28,9 +26,10 @@ import "./file-viewer-container.scss";
 })
 export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     @Input() public fileLoader: FileLoader;
-    @Input() public tailable: boolean = false;
+    @Input() public config: FileViewerConfig;
 
     public file: File;
+    public filename: string;
 
     public unknownFileType = false;
     public fileNotFound = false;
@@ -46,17 +45,16 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     @ViewChild("viewerContainer", { read: ViewContainerRef }) private _viewerContainer: ViewContainerRef;
 
     constructor(
-        private shell: ElectronShell,
-        private remote: ElectronRemote,
         private resolver: ComponentFactoryResolver,
         private fileAssociationService: FileTypeAssociationService,
-        private changeDetector: ChangeDetectorRef,
-        private notificationService: NotificationService) {
+        private changeDetector: ChangeDetectorRef) {
         this.downloadEnabled = true;
     }
 
     public ngOnChanges(inputs) {
         if (inputs.fileLoader) {
+            this.filename = this.fileLoader && this.fileLoader.displayName;
+
             this._findFileType();
             this._updateFileProperties();
             this._clearPropertiesSub();
@@ -85,26 +83,6 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
         return this._updateFileProperties(true);
     }
 
-    @autobind()
-    public downloadFile() {
-        const dialog = this.remote.dialog;
-        const localPath = dialog.showSaveDialog({
-            buttonLabel: "Download",
-            defaultPath: this.fileLoader.filename,
-        });
-
-        if (localPath) {
-            return this._saveFile(localPath);
-        }
-    }
-
-    @autobind()
-    public openDefaultEditor() {
-        return this.fileLoader.cache().subscribe((pathToFile) => {
-            this.shell.openItem(pathToFile);
-        });
-    }
-
     public openAs(type: string) {
         this._fileType = type;
         this._findComponentType();
@@ -115,27 +93,6 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
         if (this._propertiesSub) {
             this._propertiesSub.unsubscribe();
         }
-    }
-
-    private _saveFile(pathToFile) {
-        if (pathToFile === undefined) {
-            return;
-        }
-        const obs = this.fileLoader.download(pathToFile);
-
-        obs.subscribe({
-            next: () => {
-                this.shell.showItemInFolder(pathToFile);
-                this.notificationService.success("Download complete!", `File was saved locally at ${pathToFile}`);
-            },
-            error: (error: ServerError) => {
-                this.notificationService.error(
-                    "Download failed",
-                    `${this.fileLoader.filename} failed to download. ${error.message}`,
-                );
-            },
-        });
-        return obs;
     }
 
     private _updateFileProperties(forceNew = false): Observable<any> {
@@ -190,5 +147,6 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
         this._clearViewer();
         const ref = this.viewRef = this._viewerContainer.createComponent(componentFactory);
         ref.instance.fileLoader = this.fileLoader;
+        ref.instance.config = this.config;
     }
 }
