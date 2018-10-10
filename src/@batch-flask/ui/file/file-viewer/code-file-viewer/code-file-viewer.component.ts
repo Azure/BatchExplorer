@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { EditorConfig } from "@batch-flask/ui/editor";
-import { File } from "@batch-flask/ui/file/file.model";
 import { LoadingStatus } from "@batch-flask/ui/loading";
+import { Uri } from "monaco-editor";
 import { FileViewer } from "../file-viewer";
 
 import { Subscription } from "rxjs";
@@ -16,9 +16,7 @@ export class CodeFileViewerComponent extends FileViewer {
     public static readonly MAX_FILE_SIZE = 100000; // 100KB
 
     public value: string = "";
-    public file: File;
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
-    public fileNotFound = false;
     public editorConfig: EditorConfig;
 
     private _contentSub: Subscription;
@@ -34,7 +32,6 @@ export class CodeFileViewerComponent extends FileViewer {
 
     private _loadContent() {
         this.loadingStatus = LoadingStatus.Loading;
-        this.fileNotFound = false;
         this.changeDetector.markForCheck();
         this._cleanupSub();
         this._contentSub = this.fileLoader.content().subscribe((result) => {
@@ -50,7 +47,7 @@ export class CodeFileViewerComponent extends FileViewer {
             minimap: {
                 enabled: false,
             },
-            uri: this.fileLoader.filename,
+            uri: Uri.file(this.fileLoader.filename),
         };
     }
 
