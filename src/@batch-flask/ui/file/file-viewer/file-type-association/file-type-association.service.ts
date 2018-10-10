@@ -1,13 +1,25 @@
-import { Injectable, OnDestroy } from "@angular/core";
+import { Injectable, OnDestroy, Type } from "@angular/core";
 import { log } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
 import { BatchFlaskSettingsService } from "src/@batch-flask/ui/batch-flask-settings";
+import { CodeFileViewerComponent } from "../code-file-viewer";
+import { FileViewer } from "../file-viewer";
+import { ImageFileViewerComponent } from "../image-file-viewer";
+import { LogFileViewerComponent } from "../log-file-viewer";
 import { DEFAULT_FILE_ASSOCIATIONS } from "./default-associations";
 
 interface FileAssociation {
     extension?: string;
     type: string;
 }
+
+export type FileViewerType = typeof FileViewer & Type<FileViewer>;
+
+export const FILE_TYPE_COMPONENTS = {
+    log: LogFileViewerComponent,
+    code: CodeFileViewerComponent,
+    image: ImageFileViewerComponent,
+};
 
 @Injectable()
 export class FileTypeAssociationService implements OnDestroy {
@@ -26,7 +38,10 @@ export class FileTypeAssociationService implements OnDestroy {
         this._settingsSub.unsubscribe();
     }
 
-    public getType(filename: string) {
+    public getComponentType(fileType: string): FileViewerType {
+        return FILE_TYPE_COMPONENTS[fileType] as any;
+    }
+    public getType(filename: string): string {
         let extensionMatch: FileAssociation;
 
         for (let i = this._associations.length - 1; i >= 0; i--) {
@@ -41,6 +56,7 @@ export class FileTypeAssociationService implements OnDestroy {
                 }
             }
         }
+        return extensionMatch && extensionMatch.type;
     }
 
     private _registerAssociations(fileAssociations: StringMap<string>) {

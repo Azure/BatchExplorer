@@ -18,7 +18,19 @@
         </div>
     </div>
     <div class="details" *ngIf="!fileNotFound && !forbidden">
-        <bl-file-content [fileLoader]="fileLoader" [tailable]="tailable" *ngIf="fileLoader"></bl-file-content>
+        <bl-file-content  *ngIf="fileLoader && componentType"
+            [fileLoader]="fileLoader"
+            [tailable]="tailable"
+            [componentType]="componentType">
+        </bl-file-content>
+        <bl-card *ngIf="unkownFileType" class="unknown-file-type">
+            <h2 class="title">This file is not a known extension. Do you still want to open it?</h2>
+            <div class="options">
+                <button class="log" (click)="openAs(FileType.log)">Log</button>
+                <button class="code" (click)="openAs(FileType.code)">Code</button>
+                <button class="image" (click)="openAs(FileType.image)">Image</button>
+            </div>
+        </bl-card>
     </div>
     <div *ngIf="fileNotFound" class="info-overlay file-not-found">
         File <span class="highlight">&nbsp;{{filename}}&nbsp;</span> doesn't exist.

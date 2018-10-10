@@ -13,6 +13,7 @@ import { File } from "@batch-flask/ui/file/file.model";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { DateUtils, prettyBytes } from "@batch-flask/utils";
 import { Observable, Subscription } from "rxjs";
+import { FileTypeAssociationService, FileViewerType } from "../file-type-association";
 
 import "./file-viewer-container.scss";
 
@@ -34,11 +35,14 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     public contentSize: string = "-";
     public lastModified: string = "-";
     public downloadEnabled: boolean;
+    public componentType: FileViewerType;
     private _propertiesSub: Subscription;
+    private _fileType: string;
 
     constructor(
         private shell: ElectronShell,
         private remote: ElectronRemote,
+        private fileAssociationService: FileTypeAssociationService,
         private changeDetector: ChangeDetectorRef,
         private notificationService: NotificationService) {
         this.downloadEnabled = true;
@@ -47,6 +51,7 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     public ngOnChanges(inputs) {
         if (inputs.fileLoader) {
             this.filename = this.fileLoader && this.fileLoader.displayName;
+            this._findFileType();
             this._updateFileProperties();
             this._clearPropertiesSub();
             this._propertiesSub = this.fileLoader.properties.subscribe((file) => {
@@ -61,6 +66,7 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     public ngOnDestroy() {
         this._clearPropertiesSub();
     }
+
     @autobind()
     public refresh() {
         return this._updateFileProperties(true);
@@ -84,6 +90,12 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
         return this.fileLoader.cache().subscribe((pathToFile) => {
             this.shell.openItem(pathToFile);
         });
+    }
+
+    public openAs(type: string) {
+        this._fileType = type;
+        this._findComponentType();
+        this.changeDetector.markForCheck();
     }
 
     private _clearPropertiesSub() {
@@ -140,19 +152,17 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
             throw new Error(`Expect filename to be a valid string but was "${filename}"`);
         }
 
-        const name = filename.toLowerCase();
-        for (const type of Object.keys(this.fileTypes)) {
-            const extensions = this.fileTypes[type];
-            for (const ext of extensions) {
-                if (name.endsWith(`.${ext}`)) {
-                    this._fileType = type as any;
-                    this.changeDetector.markForCheck();
-                    return;
-                }
-            }
-        }
+        this._fileType = this.fileAssociationService.getType(this.fileLoader.filename);
+        this._findComponentType();
+    }
 
-        this._fileType = null;
+    private _findComponentType() {
+        let componentType = null;
+        if (this._fileType) {
+            componentType = this.fileAssociationService.getComponentType(this._fileType);
+        }
+        this.componentType = componentType;
+        this.unknownFileType = !componentType;
         this.changeDetector.markForCheck();
     }
 }

@@ -1,10 +1,2 @@
 <template #viewerContainer></template>
-<bl-card *ngIf="unkownType" class="unknown-file-type">
-    <h2 class="title">This file is not a known extension. Do you still want to open it?</h2>
-    <div class="options">
-        <button class="log" (click)="openAs(FileType.log)">Log</button>
-        <button class="code" (click)="openAs(FileType.code)">Code</button>
-        <button class="image" (click)="openAs(FileType.image)">Image</button>
-    </div>
-</bl-card>
 <bl-file-too-large [file]="file" [fileLoader]="fileLoader" *ngIf="fileTooLarge"></bl-file-too-large>
