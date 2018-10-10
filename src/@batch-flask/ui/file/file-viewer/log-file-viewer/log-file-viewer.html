@@ -1,24 +1,12 @@
-<div class="log-console" *ngIf="!nodeNotFound && !fileContentFailure && !fileCleanupOperation && !fileTooLarge">
-    <div class="follow-log-btn" [class.following]="followingLog" (click)="toggleFollowLog()">
-        <i class="fa fa-circle"></i>
-        <span>Follow log</span>
+<bl-loading [status]="loadingStatus">
+    <div class="log-console" *ngIf="!nodeNotFound && !fileContentFailure && !fileCleanupOperation && !fileTooLarge">
+        <div class="follow-log-btn" [class.following]="followingLog" (click)="toggleFollowLog()">
+            <i class="fa fa-circle"></i>
+            <span>Follow log</span>
+        </div>
+        <div class="log-container">
+            <bl-editor #editor [ngModel]="content" [config]="editorConfig"> </bl-editor>
+        </div>
     </div>
-    <div class="log-container">
-        <bl-simple-loading *ngIf="loading"></bl-simple-loading>
-
-        <bl-editor #editor [ngModel]="content" [config]="editorConfig"> </bl-editor>
-    </div>
-</div>
-
-<div *ngIf="nodeNotFound" class="notfound-message">
-    The node this task ran on, or the file was not found.
-</div>
-
-<div *ngIf="fileCleanupOperation" class="notfound-message">
-    The files for the specified task have been cleaned from the node.
-</div>
-
-<div *ngIf="fileContentFailure" class="notfound-message">
-    The contents of the file was unable to be read. Try downloading the file.
-</div>
-<bl-file-too-large [file]="file" [fileLoader]="fileLoader" *ngIf="fileTooLarge"></bl-file-too-large>
+    <bl-file-too-large [file]="file" [fileLoader]="fileLoader" *ngIf="fileTooLarge"></bl-file-too-large>
+</bl-loading>

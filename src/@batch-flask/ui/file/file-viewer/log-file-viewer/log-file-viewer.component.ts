@@ -9,25 +9,23 @@ import {
     OnDestroy,
     ViewChild,
 } from "@angular/core";
-import { HttpCode, ServerError } from "@batch-flask/core";
-import { FileLoader } from "@batch-flask/ui/file/file-loader";
+import { HttpCode, LoadingStatus, ServerError } from "@batch-flask/core";
+import { EditorComponent, EditorConfig } from "@batch-flask/ui/editor";
 import { File } from "@batch-flask/ui/file/file.model";
 import { ScrollableComponent, ScrollableService } from "@batch-flask/ui/scrollable";
 import { log } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
+import { FileViewer } from "../file-viewer";
 
-import { EditorComponent, EditorConfig } from "@batch-flask/ui/editor";
 import "./log-file-viewer.scss";
-
-const maxSize = 10000000; // 10MB
 
 @Component({
     selector: "bl-log-file-viewer",
     templateUrl: "log-file-viewer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewInit {
-    @Input() public fileLoader: FileLoader;
+export class LogFileViewerComponent extends FileViewer implements OnChanges, OnDestroy, AfterViewInit {
+    public static readonly MAX_FILE_SIZE = 10000000; // 10MB
 
     @Input() public tailable: boolean = false;
 
@@ -43,7 +41,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
     public followingLog = false;
     public lastContentLength = 0;
     public content = "";
-    public loading = true;
+    public loadingStatus = LoadingStatus.Loading;
     public scrollable: ScrollableComponent;
     public currentSubscription: Subscription;
 
@@ -65,9 +63,10 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
     private _lastScroll: number = 0;
 
     constructor(
-        private changeDetector: ChangeDetectorRef,
+        changeDetector: ChangeDetectorRef,
         private scrollableService: ScrollableService,
         private element: ElementRef) {
+        super(changeDetector);
     }
 
     public ngAfterViewInit() {
@@ -92,7 +91,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
             this.nodeNotFound = false;
             this.fileCleanupOperation = false;
             this.fileContentFailure = false;
-            this.loading = true;
+            this.loadingStatus = LoadingStatus.Loading;
             this.content = "";
             this.lastContentLength = 0;
             this._fileChangedSub = this.fileLoader.fileChanged.subscribe((file) => {
@@ -184,14 +183,8 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
         this.file = file;
 
         const contentLength = file.properties.contentLength;
-        if (contentLength > maxSize) {
-            this.loading = false;
-            this.fileTooLarge = true;
-            return;
-        }
-
         if (contentLength === 0) {
-            this.loading = false;
+            this.loadingStatus = LoadingStatus.Ready;
         } else if (contentLength !== this.lastContentLength && !this._loadingNext) {
             this._loadUpTo(contentLength);
         }
@@ -208,7 +201,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
             });
         }
 
-        this.loading = false;
+        this.loadingStatus = LoadingStatus.Ready;
         this._loadingNext = false;
         this.currentSubscription = null;
         this.changeDetector.markForCheck();
@@ -216,7 +209,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
 
     private _processError(e: ServerError) {
         this.currentSubscription = null;
-        this.loading = false;
+        this.loadingStatus = LoadingStatus.Ready;
 
         clearInterval(this._refreshInterval);
         if (e.status === HttpCode.NotFound) {

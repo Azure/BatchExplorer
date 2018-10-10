@@ -1,8 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, Input,
+    OnChanges, SimpleChanges, ViewChild, ViewContainerRef,
+} from "@angular/core";
 import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
 import { FileLoader } from "@batch-flask/ui/file/file-loader";
 import { log } from "@batch-flask/utils";
 
+import { FileViewer } from "../../file-viewer/file-viewer";
+import { FILE_VIEWER_DEFINITIONS } from "../file-viewer-definitions";
 import "./file-content.scss";
 
 enum FileType {
@@ -17,6 +22,11 @@ enum FileType {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileContentComponent implements OnChanges {
+    public unkownFile: boolean;
+
+    public get fileTypes() {
+        return this.settingsService.settings.fileTypes || {};
+    }
     public FileType = FileType;
 
     @Input() public fileLoader: FileLoader;
@@ -24,7 +34,12 @@ export class FileContentComponent implements OnChanges {
 
     public fileType: FileType;
 
-    constructor(private settingsService: BatchFlaskSettingsService, private changeDetector: ChangeDetectorRef) { }
+    @ViewChild("viewerContainer", { read: ViewContainerRef }) private _container: ViewContainerRef;
+
+    constructor(
+        private settingsService: BatchFlaskSettingsService,
+        private resolver: ComponentFactoryResolver,
+        private changeDetector: ChangeDetectorRef) { }
 
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.fileLoader) {
@@ -32,6 +47,7 @@ export class FileContentComponent implements OnChanges {
                 log.error("FileContentComponent fileLoader input is required but is", this.fileLoader);
             }
             this._findFileType();
+            this._computeComponent();
         }
     }
 
@@ -62,7 +78,17 @@ export class FileContentComponent implements OnChanges {
         this.changeDetector.markForCheck();
     }
 
-    public get fileTypes() {
-        return this.settingsService.settings.fileTypes || {};
+    private _computeComponent() {
+        const component = FILE_VIEWER_DEFINITIONS[this.fileType];
+        this.unkownFile = false;
+        if (!component) {
+            this.unkownFile = true;
+            this._container.clear();
+            return;
+        }
+        const componentFactory = this.resolver.resolveComponentFactory<FileViewer>(component);
+        this._container.clear();
+        const ref = this._container.createComponent(componentFactory);
+        ref.instance.fileLoader = this.fileLoader;
     }
 }

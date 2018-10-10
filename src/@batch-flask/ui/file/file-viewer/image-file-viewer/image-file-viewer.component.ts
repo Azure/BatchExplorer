@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
-import { FileLoader } from "@batch-flask/ui/file/file-loader";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges, OnDestroy } from "@angular/core";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Subscription } from "rxjs";
+import { FileViewer } from "../file-viewer";
 
 import "./image-file-viewer.scss";
 
@@ -10,17 +10,16 @@ import "./image-file-viewer.scss";
     templateUrl: "image-file-viewer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ImageFileViewerComponent implements OnChanges, OnDestroy {
-
-    @Input() public fileLoader: FileLoader;
-
+export class ImageFileViewerComponent extends FileViewer implements OnChanges, OnDestroy {
     public src: string;
     public imageDescription: string;
     public loadingStatus = LoadingStatus.Loading;
 
     private _sub: Subscription;
 
-    constructor(private changeDetector: ChangeDetectorRef) {}
+    constructor(changeDetector: ChangeDetectorRef) {
+        super(changeDetector);
+    }
 
     public ngOnChanges(changes) {
         this._loadImage();

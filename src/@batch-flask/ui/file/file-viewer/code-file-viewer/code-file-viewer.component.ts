@@ -1,20 +1,18 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges } from "@angular/core";
 import { EditorConfig } from "@batch-flask/ui/editor";
-import { FileLoader } from "@batch-flask/ui/file/file-loader";
 import { File } from "@batch-flask/ui/file/file.model";
 import { LoadingStatus } from "@batch-flask/ui/loading";
+import { FileViewer } from "../file-viewer";
 
 import "./code-file-viewer.scss";
-
-const maxSize = 100000; // 100KB
 
 @Component({
     selector: "bl-code-file-viewer",
     templateUrl: "code-file-viewer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CodeFileViewerComponent implements OnChanges {
-    @Input() public fileLoader: FileLoader;
+export class CodeFileViewerComponent extends FileViewer implements OnChanges {
+    public static readonly MAX_FILE_SIZE = 100000; // 100KB
 
     public value: string = "";
     public file: File;
@@ -29,7 +27,9 @@ export class CodeFileViewerComponent implements OnChanges {
         },
     };
 
-    constructor(private changeDetector: ChangeDetectorRef) {}
+    constructor(changeDetector: ChangeDetectorRef) {
+        super(changeDetector);
+    }
 
     public ngOnChanges(changes) {
         this._loadImage();
@@ -45,7 +45,7 @@ export class CodeFileViewerComponent implements OnChanges {
             next: (file: File) => {
                 this.file = file;
                 const contentLength = file.properties.contentLength;
-                if (contentLength > maxSize) {
+                if (contentLength > CodeFileViewerComponent.MAX_FILE_SIZE) {
                     this.fileTooLarge = true;
                     this.loadingStatus = LoadingStatus.Ready;
                     return;

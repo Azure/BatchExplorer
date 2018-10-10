@@ -1,46 +1,48 @@
 @import "app/styles/variables";
 
-.log-console {
+
+bl-log-file-viewer {
+    display: block;
     position: relative;
-    background: $mineshaft-grey;
-    color: $whiteSmoke;
-    height: 100%;
 
-    .log-container {
+    bl-loading {
         height: 100%;
-    }
 
-    .follow-log-btn {
-        position: absolute;
-        z-index: 100;
-        cursor: pointer;
-        right: 20px;
-        top: 40px;
-        background: $mercuryGray;
-        color: $mineshaft-grey;
-        border-radius: 3px;
-        padding: 2px 4px;
-
-        &.bottom {
-            top: auto;
-            bottom: 0;
-        }
-
-        &.following {
-            background: map-get($success, 500);
-            color: $whiteSmoke-darker;
+        .loading-content {
+            height: 100%;
         }
     }
-}
 
-.notfound-message {
-    background: $mineshaft-grey;
-    color: $whiteSmoke;
-    padding: 20px;
-    font-size: 16px;
-    text-align: center;
+    .log-console {
+        position: relative;
+        background: $mineshaft-grey;
+        color: $whiteSmoke;
+        height: 100%;
 
-    &.top-margin {
-        margin-top: 30px;
+        .log-container {
+            height: 100%;
+        }
+
+        .follow-log-btn {
+            position: absolute;
+            z-index: 100;
+            cursor: pointer;
+            right: 20px;
+            top: 40px;
+            background: $mercuryGray;
+            color: $mineshaft-grey;
+            border-radius: 3px;
+            padding: 2px 4px;
+
+            &.bottom {
+                top: auto;
+                bottom: 0;
+            }
+
+            &.following {
+                background: map-get($success, 500);
+                color: $whiteSmoke-darker;
+            }
+        }
     }
 }

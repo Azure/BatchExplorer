@@ -9,13 +9,13 @@ import { CodeFileViewerComponent } from "./code-file-viewer";
 import { FileContentComponent } from "./file-content";
 import { FileDialogViewerComponent } from "./file-dialog-viewer/file-dialog-viewer.component";
 import { FileTooLargeComponent } from "./file-too-large";
-import { FileViewerComponent } from "./file-viewer";
+import { FileViewerContainerComponent } from "./file-viewer-container";
 import { ImageFileViewerComponent } from "./image-file-viewer";
 import { LogFileViewerComponent } from "./log-file-viewer";
 
 const publicComponents = [
     FileContentComponent,
-    FileViewerComponent,
+    FileViewerContainerComponent,
     FileTooLargeComponent,
     LogFileViewerComponent,
     ImageFileViewerComponent,
@@ -29,6 +29,9 @@ const publicComponents = [
     imports: [BrowserModule, FormsModule, ReactiveFormsModule, CardModule, ButtonsModule, LoadingModule, EditorModule],
     entryComponents: [
         FileDialogViewerComponent,
+        LogFileViewerComponent,
+        ImageFileViewerComponent,
+        CodeFileViewerComponent,
     ],
 })
 export class FileViewerModule {

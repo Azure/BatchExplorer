@@ -1,8 +1,5 @@
 <div *ngIf="filename" class="file-details-container">
     <div class="file-header">
-        <bl-clickable (do)="goBack()" title="Go back" class="go-back">
-            <i class="fa fa-arrow-circle-left"></i>
-        </bl-clickable>
         <div class="filename" [title]="filename">{{filename}}</div>
         <div class="content-length">
             <div class="label">File size</div>
