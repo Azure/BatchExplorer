@@ -4,6 +4,7 @@ import { File } from "@batch-flask/ui/file/file.model";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { FileViewer } from "../file-viewer";
 
+import { Subscription } from "rxjs";
 import "./code-file-viewer.scss";
 
 @Component({
@@ -17,15 +18,10 @@ export class CodeFileViewerComponent extends FileViewer {
     public value: string = "";
     public file: File;
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
-    public fileTooLarge: boolean;
     public fileNotFound = false;
+    public editorConfig: EditorConfig;
 
-    public config: EditorConfig = {
-        readOnly: true,
-        minimap: {
-            enabled: false,
-        },
-    };
+    private _contentSub: Subscription;
 
     constructor(changeDetector: ChangeDetectorRef) {
         super(changeDetector);
@@ -33,32 +29,34 @@ export class CodeFileViewerComponent extends FileViewer {
 
     public onFileLoaderChanges() {
         this._loadContent();
+        this._computeEditorOptions();
     }
 
     private _loadContent() {
         this.loadingStatus = LoadingStatus.Loading;
         this.fileNotFound = false;
         this.changeDetector.markForCheck();
-
-        this.fileLoader.getProperties().subscribe({
-            next: (file: File) => {
-                this.file = file;
-                const contentLength = file.properties.contentLength;
-                if (contentLength > CodeFileViewerComponent.MAX_FILE_SIZE) {
-                    this.fileTooLarge = true;
-                    this.loadingStatus = LoadingStatus.Ready;
-                    return;
-                }
-
-                this.fileLoader.content().subscribe((result) => {
-                    this.value = result.content.toString();
-                    this.loadingStatus = LoadingStatus.Ready;
-                    this.changeDetector.markForCheck();
-                });
-                this.changeDetector.markForCheck();
-            },
-            error: (error) => null,
+        this._cleanupSub();
+        this._contentSub = this.fileLoader.content().subscribe((result) => {
+            this.value = result.content.toString();
+            this.loadingStatus = LoadingStatus.Ready;
+            this.changeDetector.markForCheck();
         });
+    }
 
+    private _computeEditorOptions() {
+        this.editorConfig = {
+            readOnly: true,
+            minimap: {
+                enabled: false,
+            },
+            uri: this.fileLoader.filename,
+        };
+    }
+
+    private _cleanupSub() {
+        if (this._contentSub) {
+            this._contentSub.unsubscribe();
+        }
     }
 }

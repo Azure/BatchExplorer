@@ -1,4 +1,3 @@
 <bl-loading [status]="loadingStatus">
-    <bl-editor [value]="value" [config]="config" *ngIf="!fileTooLarge"></bl-editor>
-    <bl-file-too-large [file]="file" [fileLoader]="fileLoader" *ngIf="fileTooLarge"></bl-file-too-large>
+    <bl-editor [value]="value" [config]="editorConfig"></bl-editor>
 </bl-loading>
