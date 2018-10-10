@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { File } from "@batch-flask/ui/file/file.model";
 import { LoadingStatus } from "@batch-flask/ui/loading";
