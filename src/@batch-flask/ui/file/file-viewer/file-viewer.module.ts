@@ -9,11 +9,12 @@ import { CodeFileViewerComponent } from "./code-file-viewer";
 import { FileDialogViewerComponent } from "./file-dialog-viewer/file-dialog-viewer.component";
 import { FileTooLargeComponent } from "./file-too-large";
 import { FileTypeAssociationService } from "./file-type-association";
-import { FileViewerContainerComponent } from "./file-viewer-container";
+import { FileViewerContainerComponent, FileViewerHeaderComponent } from "./file-viewer-container";
 import { ImageFileViewerComponent } from "./image-file-viewer";
 import { LogFileViewerComponent } from "./log-file-viewer";
 
 const publicComponents = [
+    FileViewerHeaderComponent,
     FileViewerContainerComponent,
     FileTooLargeComponent,
     LogFileViewerComponent,

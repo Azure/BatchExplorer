@@ -15,7 +15,6 @@ import { ElectronRemote, ElectronShell } from "@batch-flask/ui/electron";
 import { FileLoader } from "@batch-flask/ui/file/file-loader";
 import { File } from "@batch-flask/ui/file/file.model";
 import { NotificationService } from "@batch-flask/ui/notifications";
-import { DateUtils, prettyBytes } from "@batch-flask/utils";
 import { Observable, Subscription } from "rxjs";
 import { FileTypeAssociationService, FileViewerType } from "../file-type-association";
 
@@ -31,14 +30,11 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     @Input() public fileLoader: FileLoader;
     @Input() public tailable: boolean = false;
 
-    public filename: string;
     public file: File;
 
     public unknownFileType = false;
     public fileNotFound = false;
     public forbidden = false;
-    public contentSize: string = "-";
-    public lastModified: string = "-";
     public downloadEnabled: boolean;
     public fileTooLarge: boolean;
     public componentType: FileViewerType;
@@ -61,14 +57,11 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
 
     public ngOnChanges(inputs) {
         if (inputs.fileLoader) {
-            this.filename = this.fileLoader && this.fileLoader.displayName;
             this._findFileType();
             this._updateFileProperties();
             this._clearPropertiesSub();
             this._propertiesSub = this.fileLoader.properties.subscribe((file) => {
                 this.file = file;
-                this.contentSize = prettyBytes(file.properties.contentLength);
-                this.lastModified = DateUtils.prettyDate(file.properties.lastModified);
 
                 if (this.componentType.MAX_FILE_SIZE
                     && file.properties.contentLength > this.componentType.MAX_FILE_SIZE) {
@@ -97,7 +90,7 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
         const dialog = this.remote.dialog;
         const localPath = dialog.showSaveDialog({
             buttonLabel: "Download",
-            defaultPath: this.filename,
+            defaultPath: this.fileLoader.filename,
         });
 
         if (localPath) {
@@ -138,7 +131,7 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
             error: (error: ServerError) => {
                 this.notificationService.error(
                     "Download failed",
-                    `${this.filename} failed to download. ${error.message}`,
+                    `${this.fileLoader.filename} failed to download. ${error.message}`,
                 );
             },
         });

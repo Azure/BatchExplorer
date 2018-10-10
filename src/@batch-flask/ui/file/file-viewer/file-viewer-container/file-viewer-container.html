@@ -1,28 +1,6 @@
-<div *ngIf="filename" class="file-details-container">
-    <div class="file-header">
-        <div class="filename" [title]="filename">{{filename}}</div>
-        <div class="content-length">
-            <div class="label">File size</div>
-            <div class="value"> {{contentSize}}</div>
-        </div>
-        <div class="last-modified" [title]="file?.properties?.lastModified">
-            <div class="label">Last modified</div>
-            <div class="value">{{lastModified}}</div>
-        </div>
-        <div class="actions">
-            <bl-refresh-btn [refresh]="refresh" tooltipPosition="above"></bl-refresh-btn>
-            <bl-download-button [enabled]="downloadEnabled" [action]="downloadFile" tooltipPosition="above"></bl-download-button>
-            <bl-button color="light" [disabled]="!downloadEnabled" [action]="openDefaultEditor" title="Open in default application" tooltipPosition="above">
-                <i class="fa fa-external-link"></i>
-            </bl-button>
-            <ng-container *ngIf="viewRef?.instance.commands">
-                <bl-button *ngFor="let command of viewRef.instance.commands" [color]="command.color" [action]="command.execute" [title]="command.label">
-                    <i class="{{command.icon}}"></i>
-                </bl-button>
-            </ng-container>
-        </div>
-    </div>
-    <div class="details" *ngIf="!fileNotFound && !forbidden">
+<div class="file-details-container">
+    <bl-file-viewer-header [fileViewer]="viewRef?.instance" [fileLoader]="fileLoader"></bl-file-viewer-header>
+    <div class="details">
         <template #viewerContainer></template>
         <bl-file-too-large [file]="file" [fileLoader]="fileLoader" *ngIf="fileTooLarge"></bl-file-too-large>
 

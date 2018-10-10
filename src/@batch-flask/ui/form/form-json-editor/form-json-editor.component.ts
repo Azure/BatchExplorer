@@ -1,9 +1,10 @@
 import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { Subscription } from "rxjs";
-
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { validJsonConfig } from "@batch-flask/utils/validators";
+import { Uri } from "monaco-editor";
+import { Subscription } from "rxjs";
+
 import "./form-json-editor.scss";
 
 const emptyJson = "{\n\n}";
@@ -28,7 +29,7 @@ export class FormJsonEditorComponent implements ControlValueAccessor, OnDestroy 
 
     @Input()
     public set fileUri(uri: string) {
-        this.editorConfig.uri = uri;
+        this.editorConfig.uri = Uri.file(uri);
     }
 
     private _propagateChange: any;
