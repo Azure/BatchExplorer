@@ -100,6 +100,10 @@ export class LogFileViewerComponent extends FileViewer implements OnDestroy, Aft
 
     public onConfigChanges() {
         this.tailable = this.config && this.config.tailable;
+        if (this._refreshInterval) {
+            clearInterval(this._refreshInterval);
+        }
+        this._setRefreshInterval();
     }
 
     public ngOnDestroy() {
