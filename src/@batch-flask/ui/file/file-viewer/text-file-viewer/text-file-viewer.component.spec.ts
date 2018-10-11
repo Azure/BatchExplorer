@@ -37,7 +37,7 @@ describe("TextFileViewer", () => {
         testComponent.fileLoader = {
             filename: "foo.ts",
             content: () => of({ content: "export const FOO=1" }),
-            fileChanged: new Subject(),
+            properties: new Subject(),
         };
         fixture.detectChanges();
 

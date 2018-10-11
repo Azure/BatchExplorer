@@ -28,7 +28,7 @@ describe("ImageFileViewerComponent", () => {
         testComponent = fixture.componentInstance;
         testComponent.fileLoader = {
             filename: "foo.png",
-            fileChanged: new Subject(),
+            properties: new Subject(),
             cache: jasmine.createSpy().and.returnValue(of("/local/path/to/file.txt")),
         };
         de = fixture.debugElement.query(By.css("bl-image-file-viewer"));
