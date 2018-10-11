@@ -15,7 +15,7 @@ class TestComponent {
     public fileLoader;
 }
 
-fdescribe("TextFileViewer", () => {
+describe("TextFileViewer", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
