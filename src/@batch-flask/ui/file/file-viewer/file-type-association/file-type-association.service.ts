@@ -2,10 +2,10 @@ import { Injectable, OnDestroy, Type } from "@angular/core";
 import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
 import { log } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
-import { TextFileViewerComponent } from "../text-file-viewer";
 import { FileViewer } from "../file-viewer";
 import { ImageFileViewerComponent } from "../image-file-viewer";
 import { LogFileViewerComponent } from "../log-file-viewer";
+import { TextFileViewerComponent } from "../text-file-viewer";
 import { DEFAULT_FILE_ASSOCIATIONS } from "./default-associations";
 
 interface FileAssociation {

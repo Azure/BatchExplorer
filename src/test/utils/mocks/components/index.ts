@@ -1,7 +1,6 @@
 export * from "./simple-form.component.mock";
 export * from "./banner.component.mock";
 export * from "./complex-form.component.mock";
-export * from "./editor.component.mock";
 export * from "./entity-details-list.component.mock";
 export * from "./info-box.component.mock";
 export * from "./loading.component.mock";

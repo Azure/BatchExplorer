@@ -1,5 +1,8 @@
-import { ChangeDetectorRef, Input } from "@angular/core";
+import { ChangeDetectorRef, Input, OnDestroy } from "@angular/core";
+import { Subscription } from "rxjs";
+import { skip } from "rxjs/operators";
 import { FileLoader } from "../../file-loader";
+import { File } from "../../file.model";
 
 export interface FileViewerCommand {
     label: string;
@@ -14,7 +17,7 @@ export interface FileViewerConfig {
 /**
  * Generic file viewer
  */
-export abstract class FileViewer {
+export abstract class FileViewer implements OnDestroy {
     /**
      * Max file size this viewer support
      */
@@ -24,6 +27,7 @@ export abstract class FileViewer {
 
     @Input() public set fileLoader(fileLoader: FileLoader) {
         this._fileLoader = fileLoader;
+        this._listenForFileChanges();
         this.onFileLoaderChanges();
         this.changeDetector.markForCheck();
     }
@@ -39,11 +43,37 @@ export abstract class FileViewer {
     }
     public get config() { return this._config; }
 
+    public file: File;
+
     private _fileLoader: FileLoader;
     private _config: FileViewerConfig;
+    private _fileChangeSub: Subscription;
 
     constructor(protected changeDetector: ChangeDetectorRef) { }
 
     public abstract onFileLoaderChanges();
-    public onConfigChanges?(newConfig: FileViewerConfig, oldConfig: FileViewerConfig);
+    public onConfigChanges?(currentConfig: FileViewerConfig, oldConfig: FileViewerConfig);
+    public onFileChanges?(currentFile: File, oldFile: File);
+
+    public ngOnDestroy() {
+        this._clearFileChangesSub();
+    }
+
+    private _listenForFileChanges() {
+        this._clearFileChangesSub();
+        if (!this.fileLoader) { return; }
+        this._fileChangeSub = this.fileLoader.fileChanged.subscribe((file) => {
+            if (this.onFileChanges) {
+                const oldFile = this.file;
+                this.file = file;
+                this.onFileChanges(file, oldFile);
+            }
+        });
+    }
+
+    private _clearFileChangesSub() {
+        if (this._fileChangeSub) {
+            this._fileChangeSub.unsubscribe();
+        }
+    }
 }

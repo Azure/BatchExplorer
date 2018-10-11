@@ -31,6 +31,7 @@ export class TextFileViewerComponent extends FileViewer {
     }
 
     private _loadContent() {
+        if (!this.fileLoader) { return; }
         this.loadingStatus = LoadingStatus.Loading;
         this.changeDetector.markForCheck();
         this._cleanupSub();
@@ -47,7 +48,7 @@ export class TextFileViewerComponent extends FileViewer {
             minimap: {
                 enabled: false,
             },
-            uri: Uri.file(this.fileLoader.filename),
+            uri: this.fileLoader && Uri.file(this.fileLoader.filename),
         };
     }
 

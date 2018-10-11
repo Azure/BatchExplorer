@@ -5,13 +5,13 @@ import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { CardModule } from "@batch-flask/ui/card";
 import { EditorModule } from "@batch-flask/ui/editor";
 import { LoadingModule } from "@batch-flask/ui/loading";
-import { TextFileViewerComponent } from "./text-file-viewer";
-import { FileDialogViewerComponent } from "./file-dialog-viewer/file-dialog-viewer.component";
+import { FileDialogViewerComponent } from "./file-dialog-viewer";
 import { FileTooLargeComponent } from "./file-too-large";
 import { FileTypeAssociationService } from "./file-type-association";
 import { FileViewerContainerComponent, FileViewerHeaderComponent } from "./file-viewer-container";
 import { ImageFileViewerComponent } from "./image-file-viewer";
 import { LogFileViewerComponent } from "./log-file-viewer";
+import { TextFileViewerComponent } from "./text-file-viewer";
 
 const publicComponents = [
     FileViewerHeaderComponent,
