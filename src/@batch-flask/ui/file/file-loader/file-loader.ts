@@ -111,6 +111,10 @@ export class FileLoader {
         return obs;
     }
 
+    public refreshProperties() {
+        return this.getProperties(true);
+    }
+
     public content(options: FileLoadOptions = {}): Observable<FileLoadResult> {
         return this._content(options);
     }

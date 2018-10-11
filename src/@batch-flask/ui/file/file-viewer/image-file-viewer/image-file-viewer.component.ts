@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { Subscription } from "rxjs";
 import { FileViewer } from "../file-viewer";
 
 import "./image-file-viewer.scss";
@@ -15,23 +14,17 @@ export class ImageFileViewerComponent extends FileViewer implements OnDestroy {
     public imageDescription: string;
     public loadingStatus = LoadingStatus.Loading;
 
-    private _sub: Subscription;
-
     constructor(changeDetector: ChangeDetectorRef) {
         super(changeDetector);
     }
 
     public onFileLoaderChanges() {
-        this._cleanup();
         this._loadImage();
         this._updateImageDescription();
-        this._sub = this.fileLoader.fileChanged.subscribe(() => {
-            this._loadImage();
-        });
     }
 
-    public ngOnDestroy() {
-        this._cleanup();
+    public onFileChanges() {
+        this._loadImage();
     }
 
     private _loadImage() {
@@ -48,9 +41,4 @@ export class ImageFileViewerComponent extends FileViewer implements OnDestroy {
         this.imageDescription = `Displaying image ${this.fileLoader.filename}`;
     }
 
-    private _cleanup() {
-        if (this._sub) {
-            this._sub.unsubscribe();
-        }
-    }
 }

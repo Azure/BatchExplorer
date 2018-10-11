@@ -25,9 +25,10 @@ export abstract class FileViewer implements OnDestroy {
     public readonly commands?: FileViewerCommand[];
 
     @Input() public set fileLoader(fileLoader: FileLoader) {
+        if (this._fileLoader === fileLoader) { return; }
         this._fileLoader = fileLoader;
-        this._listenForFileChanges();
         this.onFileLoaderChanges();
+        this._listenForFileChanges();
         this.changeDetector.markForCheck();
     }
     public get fileLoader() { return this._fileLoader; }
@@ -61,7 +62,7 @@ export abstract class FileViewer implements OnDestroy {
     private _listenForFileChanges() {
         this._clearFileChangesSub();
         if (!this.fileLoader) { return; }
-        this._fileChangeSub = this.fileLoader.fileChanged.subscribe((file) => {
+        this._fileChangeSub = this.fileLoader.properties.subscribe((file) => {
             if (this.onFileChanges) {
                 const oldFile = this.file;
                 this.file = file;
