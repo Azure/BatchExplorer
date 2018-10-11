@@ -63,9 +63,10 @@ export abstract class FileViewer implements OnDestroy {
         this._clearFileChangesSub();
         if (!this.fileLoader) { return; }
         this._fileChangeSub = this.fileLoader.properties.subscribe((file) => {
+            if (!(file instanceof File)) { return; }
+            const oldFile = this.file;
+            this.file = file;
             if (this.onFileChanges) {
-                const oldFile = this.file;
-                this.file = file;
                 this.onFileChanges(file, oldFile);
             }
         });

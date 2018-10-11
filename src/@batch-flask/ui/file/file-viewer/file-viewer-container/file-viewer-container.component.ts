@@ -10,10 +10,10 @@ import {
     ViewChild,
     ViewContainerRef,
 } from "@angular/core";
-import { HttpCode, ServerError, autobind } from "@batch-flask/core";
+import { HttpCode, ServerError } from "@batch-flask/core";
 import { FileLoader } from "@batch-flask/ui/file/file-loader";
 import { File } from "@batch-flask/ui/file/file.model";
-import { Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 import { FileTypeAssociationService, FileViewerType } from "../file-type-association";
 import { FileViewer, FileViewerConfig } from "../file-viewer";
 
@@ -56,34 +56,37 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
             this.filename = this.fileLoader && this.fileLoader.displayName;
 
             this._findFileType();
-            this._updateFileProperties();
             this._clearPropertiesSub();
             this._propertiesSub = this.fileLoader.properties.subscribe({
-                next: (file) => {
-                    this.file = file;
+                next: (file: File | ServerError) => {
+                    if (file instanceof File) {
+                        console.log("Next", file);
 
-                    if (this.componentType.MAX_FILE_SIZE
-                        && file.properties.contentLength > this.componentType.MAX_FILE_SIZE) {
-                        this.fileTooLarge = true;
-                        this._clearViewer();
+                        this.fileNotFound = false;
+                        this.forbidden = false;
+
+                        this.file = file;
+
+                        if (this.componentType.MAX_FILE_SIZE
+                            && file.properties.contentLength > this.componentType.MAX_FILE_SIZE) {
+                            this.fileTooLarge = true;
+                            this._clearViewer();
+                        } else {
+                            this.fileTooLarge = false;
+                            this._computeViewer();
+                        }
+                        this.changeDetector.markForCheck();
                     } else {
-                        this.fileTooLarge = false;
-                        this._computeViewer();
+                        console.log("Error", file);
+                        this._handleError(file);
                     }
-                    this.changeDetector.markForCheck();
                 },
-                error: () => null,
             });
         }
     }
 
     public ngOnDestroy() {
         this._clearPropertiesSub();
-    }
-
-    @autobind()
-    public refresh() {
-        return this._updateFileProperties(true);
     }
 
     public openAs(type: string) {
@@ -96,25 +99,6 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
         if (this._propertiesSub) {
             this._propertiesSub.unsubscribe();
         }
-    }
-
-    private _updateFileProperties(forceNew = false): Observable<any> {
-        this.fileNotFound = false;
-        this.forbidden = false;
-        const obs = this.fileLoader.getProperties(forceNew);
-        obs.subscribe({
-            error: (error: ServerError) => {
-                if (error.status === HttpCode.NotFound) {
-                    this.fileNotFound = true;
-                }
-                if (error.status === HttpCode.Forbidden) {
-                    this.forbidden = true;
-                }
-                this.changeDetector.markForCheck();
-            },
-        });
-
-        return obs;
     }
 
     private _findFileType() {
@@ -151,5 +135,16 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
         const ref = this.viewRef = this._viewerContainer.createComponent(componentFactory);
         ref.instance.fileLoader = this.fileLoader;
         ref.instance.config = this.config;
+    }
+
+    private _handleError(error: ServerError) {
+        this._clearViewer();
+        if (error.status === HttpCode.NotFound) {
+            this.fileNotFound = true;
+        }
+        if (error.status === HttpCode.Forbidden) {
+            this.forbidden = true;
+        }
+        this.changeDetector.markForCheck();
     }
 }

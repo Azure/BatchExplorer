@@ -19,7 +19,6 @@ import "./file-viewer-header.scss";
 export class FileViewerHeaderComponent implements OnChanges {
     @Input() public fileLoader: FileLoader;
     @Input() public fileViewer: FileViewer | null;
-    @Input() public refresh: () => any;
 
     public filename: string;
     public contentSize: string = "-";
@@ -42,14 +41,21 @@ export class FileViewerHeaderComponent implements OnChanges {
             this._clearPropertiesSub();
             this._propertiesSub = this.fileLoader.properties.subscribe({
                 next: (file) => {
-                    this.file = file;
-                    this.contentSize = prettyBytes(file.properties.contentLength);
-                    this.lastModified = DateUtils.prettyDate(file.properties.lastModified);
-                    this.changeDetector.markForCheck();
+                    if (file instanceof File) {
+                        this.file = file;
+                        this.contentSize = prettyBytes(file.properties.contentLength);
+                        this.lastModified = DateUtils.prettyDate(file.properties.lastModified);
+                        this.changeDetector.markForCheck();
+                    }
                 },
                 error: () => null,
             });
         }
+    }
+
+    @autobind()
+    public refresh() {
+        return this.fileLoader.refreshProperties();
     }
 
     @autobind()

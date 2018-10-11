@@ -1,9 +1,10 @@
+import { ServerError } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/ui/electron";
 import { CloudPathUtils, exists, log } from "@batch-flask/utils";
 import * as path from "path";
-import { BehaviorSubject, Observable, from, of } from "rxjs";
+import { BehaviorSubject, Observable, Subject, from, of } from "rxjs";
 import {
-    concatMap, distinctUntilChanged, flatMap, map, publishReplay, refCount, share, skip, tap,
+    catchError, concatMap, distinctUntilChanged, flatMap, map, publishReplay, refCount, share, skip, take, tap,
 } from "rxjs/operators";
 import { File } from "../file.model";
 
@@ -40,7 +41,7 @@ export interface FileLoadResult {
 }
 
 export class FileLoader {
-    public properties: Observable<File>;
+    public properties: Observable<File | ServerError>;
 
     public readonly filename: string;
     public readonly source: string;
@@ -55,11 +56,12 @@ export class FileLoader {
     public basePath: string;
 
     private _fs: FileSystemService;
-    private _properties = new BehaviorSubject<File>(null);
+    private _properties: Observable<File | ServerError>;
     private _propertiesGetter: PropertiesFunc;
     private _content: ContentFunc;
     private _download: DownloadFunc;
     private _logIgnoreError: number[];
+    private _updates = new BehaviorSubject<void>(null);
 
     constructor(config: FileLoaderConfig) {
         this.filename = config.filename;
@@ -71,10 +73,26 @@ export class FileLoader {
         this._download = config.download;
         this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [];
 
-        this.properties = of(null).pipe(
-            flatMap(() => this.getProperties()),
-            flatMap(() => this._properties),
-            distinctUntilChanged((a, b) => a === b || a.equals(b)),
+        this._properties = this._updates.pipe(
+            flatMap(() => {
+                console.log("Flat map dis");
+                return this.getProperties().pipe(
+                    catchError(error => {
+                        if (error && error.status && !this._logIgnoreError.includes(error.status)) {
+                            log.error("Error getting the file properties!", Object.assign({}, error));
+                        }
+                        return of(error);
+                    }),
+                );
+            }),
+            publishReplay(1),
+            refCount(),
+        );
+
+        this.properties = this._properties.pipe(
+            distinctUntilChanged((a, b) => {
+                return a === b || a instanceof ServerError || b instanceof ServerError || a.equals(b);
+            }),
             publishReplay(1),
             refCount(),
         );
@@ -91,28 +109,13 @@ export class FileLoader {
      * Returns the properties once. This doesn't need any cleanup(i.e. no need to call dispose)
      * @param forceNew If set to false it will use the last value loaded
      */
-    public getProperties(forceNew = false): Observable<File> {
-        if (!forceNew && this._properties.value) {
-            return of(this._properties.value);
-        }
-
-        const obs = this._propertiesGetter().pipe(
-            tap((file) => this._updateProperties(file)),
-            share(),
-        );
-        obs.subscribe({
-            error: (error) => {
-                if (error && error.status && !this._logIgnoreError.includes(error.status)) {
-                    log.error("Error getting the file properties!", Object.assign({}, error));
-                }
-            },
-        });
-
-        return obs;
+    public getProperties(): Observable<File> {
+        return this._propertiesGetter();
     }
 
     public refreshProperties() {
-        return this.getProperties(true);
+        this._updates.next(null);
+        return this._properties.pipe(take(1));
     }
 
     public content(options: FileLoadOptions = {}): Observable<FileLoadResult> {
@@ -179,10 +182,6 @@ export class FileLoader {
         segements.push(`${hash}.${filename}`);
 
         return path.join(...segements);
-    }
-
-    private _updateProperties(file: File) {
-        this._properties.next(file);
     }
 
     /**
