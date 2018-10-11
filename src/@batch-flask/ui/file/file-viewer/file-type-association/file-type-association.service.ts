@@ -2,7 +2,7 @@ import { Injectable, OnDestroy, Type } from "@angular/core";
 import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
 import { log } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
-import { CodeFileViewerComponent } from "../code-file-viewer";
+import { TextFileViewerComponent } from "../text-file-viewer";
 import { FileViewer } from "../file-viewer";
 import { ImageFileViewerComponent } from "../image-file-viewer";
 import { LogFileViewerComponent } from "../log-file-viewer";
@@ -17,7 +17,7 @@ export type FileViewerType = typeof FileViewer & Type<FileViewer>;
 
 export const FILE_TYPE_COMPONENTS = {
     log: LogFileViewerComponent,
-    code: CodeFileViewerComponent,
+    code: TextFileViewerComponent,
     image: ImageFileViewerComponent,
 };
 

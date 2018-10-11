@@ -5,7 +5,7 @@ import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { CardModule } from "@batch-flask/ui/card";
 import { EditorModule } from "@batch-flask/ui/editor";
 import { LoadingModule } from "@batch-flask/ui/loading";
-import { CodeFileViewerComponent } from "./code-file-viewer";
+import { TextFileViewerComponent } from "./text-file-viewer";
 import { FileDialogViewerComponent } from "./file-dialog-viewer/file-dialog-viewer.component";
 import { FileTooLargeComponent } from "./file-too-large";
 import { FileTypeAssociationService } from "./file-type-association";
@@ -19,7 +19,7 @@ const publicComponents = [
     FileTooLargeComponent,
     LogFileViewerComponent,
     ImageFileViewerComponent,
-    CodeFileViewerComponent,
+    TextFileViewerComponent,
     FileDialogViewerComponent,
 ];
 
@@ -31,7 +31,7 @@ const publicComponents = [
         FileDialogViewerComponent,
         LogFileViewerComponent,
         ImageFileViewerComponent,
-        CodeFileViewerComponent,
+        TextFileViewerComponent,
     ],
     providers: [
         FileTypeAssociationService,

@@ -5,14 +5,14 @@ import { Uri } from "monaco-editor";
 import { FileViewer } from "../file-viewer";
 
 import { Subscription } from "rxjs";
-import "./code-file-viewer.scss";
+import "./text-file-viewer.scss";
 
 @Component({
-    selector: "bl-code-file-viewer",
-    templateUrl: "code-file-viewer.html",
+    selector: "bl-text-file-viewer",
+    templateUrl: "text-file-viewer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CodeFileViewerComponent extends FileViewer {
+export class TextFileViewerComponent extends FileViewer {
     public static readonly MAX_FILE_SIZE = 1000000; // 1MB
 
     public value: string = "";
