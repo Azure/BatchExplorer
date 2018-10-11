@@ -48,7 +48,7 @@ describe("TextFileViewer", () => {
         testComponent.fileLoader = {
             filename: "foo.ts",
             content: () => of({ content: "export const FOO=1" }),
-            fileChanged: new Subject(),
+            properties: new Subject(),
         };
         fixture.detectChanges();
 
@@ -66,13 +66,13 @@ describe("TextFileViewer", () => {
         testComponent.fileLoader = {
             filename: "foo.ts",
             content: contentSpy,
-            fileChanged: new Subject(),
+            properties: new Subject(),
         };
         fixture.detectChanges();
 
         expect(contentSpy).toHaveBeenCalledTimes(1);
 
-        testComponent.fileLoader.fileChanged.next(new File({ name: "foo.ts", properties: { contentLength: 24 } }));
+        testComponent.fileLoader.properties.next(new File({ name: "foo.ts", properties: { contentLength: 24 } }));
         expect(contentSpy).toHaveBeenCalledTimes(2);
     });
 });

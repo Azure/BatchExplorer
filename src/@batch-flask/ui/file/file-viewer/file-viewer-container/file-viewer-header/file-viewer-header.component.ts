@@ -40,11 +40,14 @@ export class FileViewerHeaderComponent implements OnChanges {
             this.filename = this.fileLoader && this.fileLoader.displayName;
 
             this._clearPropertiesSub();
-            this._propertiesSub = this.fileLoader.properties.subscribe((file) => {
-                this.file = file;
-                this.contentSize = prettyBytes(file.properties.contentLength);
-                this.lastModified = DateUtils.prettyDate(file.properties.lastModified);
-                this.changeDetector.markForCheck();
+            this._propertiesSub = this.fileLoader.properties.subscribe({
+                next: (file) => {
+                    this.file = file;
+                    this.contentSize = prettyBytes(file.properties.contentLength);
+                    this.lastModified = DateUtils.prettyDate(file.properties.lastModified);
+                    this.changeDetector.markForCheck();
+                },
+                error: () => null,
             });
         }
     }

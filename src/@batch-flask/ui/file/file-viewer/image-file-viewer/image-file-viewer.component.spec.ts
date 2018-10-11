@@ -51,7 +51,7 @@ describe("ImageFileViewerComponent", () => {
     });
 
     it("refresh again when file has changed", () => {
-        testComponent.fileLoader.fileChanged.next(true);
+        testComponent.fileLoader.properties.next(null);
         expect(testComponent.fileLoader.cache).toHaveBeenCalledTimes(2);
     });
 });

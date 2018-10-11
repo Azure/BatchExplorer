@@ -58,18 +58,21 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
             this._findFileType();
             this._updateFileProperties();
             this._clearPropertiesSub();
-            this._propertiesSub = this.fileLoader.properties.subscribe((file) => {
-                this.file = file;
+            this._propertiesSub = this.fileLoader.properties.subscribe({
+                next: (file) => {
+                    this.file = file;
 
-                if (this.componentType.MAX_FILE_SIZE
-                    && file.properties.contentLength > this.componentType.MAX_FILE_SIZE) {
-                    this.fileTooLarge = true;
-                    this._clearViewer();
-                } else {
-                    this.fileTooLarge = false;
-                    this._computeViewer();
-                }
-                this.changeDetector.markForCheck();
+                    if (this.componentType.MAX_FILE_SIZE
+                        && file.properties.contentLength > this.componentType.MAX_FILE_SIZE) {
+                        this.fileTooLarge = true;
+                        this._clearViewer();
+                    } else {
+                        this.fileTooLarge = false;
+                        this._computeViewer();
+                    }
+                    this.changeDetector.markForCheck();
+                },
+                error: () => null,
             });
         }
     }
