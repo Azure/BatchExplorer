@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Input, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
-import { skip } from "rxjs/operators";
 import { FileLoader } from "../../file-loader";
 import { File } from "../../file.model";
 

@@ -56,7 +56,6 @@ export class LogFileViewerComponent extends FileViewer implements OnDestroy, Aft
 
     private _refreshInterval;
     private _loadingNext = false;
-    private _fileChangedSub: Subscription;
     private _lastScroll: number = 0;
 
     constructor(
@@ -81,21 +80,21 @@ export class LogFileViewerComponent extends FileViewer implements OnDestroy, Aft
             this.currentSubscription.unsubscribe();
         }
 
-        if (this._fileChangedSub) {
-            this._fileChangedSub.unsubscribe();
-        }
         this.nodeNotFound = false;
         this.fileCleanupOperation = false;
         this.fileContentFailure = false;
         this.loadingStatus = LoadingStatus.Loading;
         this.content = "";
         this.lastContentLength = 0;
-        this._fileChangedSub = this.fileLoader.fileChanged.subscribe((file) => {
-            this._processProperties(file);
-        });
 
         this._updateFileContent();
         this._setRefreshInterval();
+    }
+
+    public ngOnDestroy() {
+        super.ngOnDestroy();
+        // clear the refresh when the user navigates away
+        clearInterval(this._refreshInterval);
     }
 
     public onConfigChanges() {
@@ -106,10 +105,8 @@ export class LogFileViewerComponent extends FileViewer implements OnDestroy, Aft
         this._setRefreshInterval();
     }
 
-    public ngOnDestroy() {
-        // clear the refresh when the user navigates away
-        clearInterval(this._refreshInterval);
-        this._fileChangedSub.unsubscribe();
+    public onFileChanges(currentFile: File) {
+        this._processProperties(currentFile);
     }
 
     public toggleFollowLog() {

@@ -1,9 +1,9 @@
 import { FileSystemService } from "@batch-flask/ui/electron";
 import { CloudPathUtils, exists, log } from "@batch-flask/utils";
 import * as path from "path";
-import { BehaviorSubject, Observable, Subject, from, of } from "rxjs";
+import { BehaviorSubject, Observable, from, of } from "rxjs";
 import {
-    concatMap, distinctUntilChanged, flatMap, map, publishReplay, refCount, share, tap,
+    concatMap, distinctUntilChanged, flatMap, map, publishReplay, refCount, share, skip, tap,
 } from "rxjs/operators";
 import { File } from "../file.model";
 
@@ -50,11 +50,6 @@ export class FileLoader {
     public readonly groupId: string;
 
     /**
-     * Event that notify when the file is different
-     */
-    public readonly fileChanged: Observable<File>;
-
-    /**
      * Base path to show the file as relative to this.
      */
     public basePath: string;
@@ -64,7 +59,6 @@ export class FileLoader {
     private _propertiesGetter: PropertiesFunc;
     private _content: ContentFunc;
     private _download: DownloadFunc;
-    private _fileChanged = new Subject<File>();
     private _logIgnoreError: number[];
 
     constructor(config: FileLoaderConfig) {
@@ -77,8 +71,6 @@ export class FileLoader {
         this._download = config.download;
         this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [];
 
-        this.fileChanged = this._fileChanged.asObservable();
-
         this.properties = of(null).pipe(
             flatMap(() => this.getProperties()),
             flatMap(() => this._properties),
@@ -86,6 +78,13 @@ export class FileLoader {
             publishReplay(1),
             refCount(),
         );
+    }
+
+    /**
+     * Event that notify when the file is different
+     */
+    public get fileChanged() {
+        return this.properties.pipe(skip(1));
     }
 
     /**
@@ -179,11 +178,7 @@ export class FileLoader {
     }
 
     private _updateProperties(file: File) {
-        const last = this._properties.value;
         this._properties.next(file);
-        if (last && !last.equals(file)) {
-            this._fileChanged.next(file);
-        }
     }
 
     /**

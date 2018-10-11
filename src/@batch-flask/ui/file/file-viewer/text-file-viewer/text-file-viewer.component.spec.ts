@@ -1,10 +1,11 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { File } from "@batch-flask/ui/file/file.model";
 import { LoadingModule } from "@batch-flask/ui/loading";
 import { EditorMockComponent, EditorTestingModule } from "@batch-flask/ui/testing";
 import { Uri } from "monaco-editor";
-import { of } from "rxjs";
+import { Subject, of } from "rxjs";
 import { TextFileViewerComponent } from "./text-file-viewer.component";
 
 @Component({
@@ -17,7 +18,6 @@ class TestComponent {
 fdescribe("TextFileViewer", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: TextFileViewerComponent;
     let de: DebugElement;
     let editorComponent: EditorMockComponent;
 
@@ -29,7 +29,6 @@ fdescribe("TextFileViewer", () => {
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-text-file-viewer"));
-        component = de.componentInstance;
         fixture.detectChanges();
         editorComponent = de.query(By.css("bl-editor")).componentInstance;
     });
@@ -38,6 +37,7 @@ fdescribe("TextFileViewer", () => {
         testComponent.fileLoader = {
             filename: "foo.ts",
             content: () => of({ content: "export const FOO=1" }),
+            fileChanged: new Subject(),
         };
         fixture.detectChanges();
 
@@ -48,6 +48,7 @@ fdescribe("TextFileViewer", () => {
         testComponent.fileLoader = {
             filename: "foo.ts",
             content: () => of({ content: "export const FOO=1" }),
+            fileChanged: new Subject(),
         };
         fixture.detectChanges();
 
@@ -58,5 +59,20 @@ fdescribe("TextFileViewer", () => {
             },
             uri: Uri.file("foo.ts"),
         });
+    });
+
+    it("reload the content when the file changes", () => {
+        const contentSpy = jasmine.createSpy().and.callFake(() => of({ content: "export const FOO=1" }));
+        testComponent.fileLoader = {
+            filename: "foo.ts",
+            content: contentSpy,
+            fileChanged: new Subject(),
+        };
+        fixture.detectChanges();
+
+        expect(contentSpy).toHaveBeenCalledTimes(1);
+
+        testComponent.fileLoader.fileChanged.next(new File({ name: "foo.ts", properties: { contentLength: 24 } }));
+        expect(contentSpy).toHaveBeenCalledTimes(2);
     });
 });

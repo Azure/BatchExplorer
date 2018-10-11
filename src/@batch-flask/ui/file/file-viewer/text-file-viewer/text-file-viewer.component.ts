@@ -26,14 +26,17 @@ export class TextFileViewerComponent extends FileViewer {
     }
 
     public onFileLoaderChanges() {
+        this.loadingStatus = LoadingStatus.Loading;
         this._loadContent();
         this._computeEditorOptions();
     }
 
+    public onFileChanges() {
+        this._loadContent();
+    }
+
     private _loadContent() {
         if (!this.fileLoader) { return; }
-        this.loadingStatus = LoadingStatus.Loading;
-        this.changeDetector.markForCheck();
         this._cleanupSub();
         this._contentSub = this.fileLoader.content().subscribe((result) => {
             this.value = result.content.toString();
