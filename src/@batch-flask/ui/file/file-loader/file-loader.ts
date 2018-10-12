@@ -2,7 +2,7 @@ import { ServerError } from "@batch-flask/core";
 import { FileSystemService } from "@batch-flask/ui/electron";
 import { CloudPathUtils, exists, log } from "@batch-flask/utils";
 import * as path from "path";
-import { BehaviorSubject, Observable, Subject, from, of } from "rxjs";
+import { BehaviorSubject, Observable, from, of } from "rxjs";
 import {
     catchError, concatMap, distinctUntilChanged, flatMap, map, publishReplay, refCount, share, skip, take, tap,
 } from "rxjs/operators";
@@ -56,12 +56,11 @@ export class FileLoader {
     public basePath: string;
 
     private _fs: FileSystemService;
-    private _properties: Observable<File | ServerError>;
+    private _properties = new BehaviorSubject<File | ServerError | null>(null);
     private _propertiesGetter: PropertiesFunc;
     private _content: ContentFunc;
     private _download: DownloadFunc;
     private _logIgnoreError: number[];
-    private _updates = new BehaviorSubject<void>(null);
 
     constructor(config: FileLoaderConfig) {
         this.filename = config.filename;
@@ -73,25 +72,17 @@ export class FileLoader {
         this._download = config.download;
         this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [];
 
-        this._properties = this._updates.pipe(
-            flatMap(() => {
-                console.log("Flat map dis");
-                return this.getProperties().pipe(
-                    catchError(error => {
-                        if (error && error.status && !this._logIgnoreError.includes(error.status)) {
-                            log.error("Error getting the file properties!", Object.assign({}, error));
-                        }
-                        return of(error);
-                    }),
-                );
-            }),
-            publishReplay(1),
-            refCount(),
-        );
-
-        this.properties = this._properties.pipe(
+        this.properties = of(null).pipe(
+            flatMap(() => this.refreshProperties()),
+            flatMap(() => this._properties),
             distinctUntilChanged((a, b) => {
-                return a === b || a instanceof ServerError || b instanceof ServerError || a.equals(b);
+                if (a === b) {
+                    return true;
+                } else if (a instanceof ServerError || b instanceof ServerError) {
+                    return false;
+                } else {
+                    return a.equals(b);
+                }
             }),
             publishReplay(1),
             refCount(),
@@ -105,17 +96,20 @@ export class FileLoader {
         return this.properties.pipe(skip(1));
     }
 
-    /**
-     * Returns the properties once. This doesn't need any cleanup(i.e. no need to call dispose)
-     * @param forceNew If set to false it will use the last value loaded
-     */
-    public getProperties(): Observable<File> {
-        return this._propertiesGetter();
+    public getProperties() {
+        return this.properties.pipe(take(1));
     }
 
     public refreshProperties() {
-        this._updates.next(null);
-        return this._properties.pipe(take(1));
+        return this._propertiesGetter().pipe(
+            catchError(error => {
+                if (error && error.status && !this._logIgnoreError.includes(error.status)) {
+                    log.error("Error getting the file properties!", Object.assign({}, error));
+                }
+                return of(error);
+            }),
+            tap(value => this._properties.next(value)),
+        );
     }
 
     public content(options: FileLoadOptions = {}): Observable<FileLoadResult> {

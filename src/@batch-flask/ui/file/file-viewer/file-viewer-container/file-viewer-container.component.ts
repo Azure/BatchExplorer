@@ -60,8 +60,6 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
             this._propertiesSub = this.fileLoader.properties.subscribe({
                 next: (file: File | ServerError) => {
                     if (file instanceof File) {
-                        console.log("Next", file);
-
                         this.fileNotFound = false;
                         this.forbidden = false;
 
@@ -77,7 +75,6 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
                         }
                         this.changeDetector.markForCheck();
                     } else {
-                        console.log("Error", file);
                         this._handleError(file);
                     }
                 },
