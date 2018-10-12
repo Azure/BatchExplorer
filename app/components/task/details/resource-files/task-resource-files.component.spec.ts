@@ -7,7 +7,7 @@ import { ButtonsModule, CloudFileService, I18nUIModule, NoItemComponent } from "
 import { TableTestingModule } from "@batch-flask/ui/testing";
 import { Task } from "app/models";
 import { click } from "test/utils/helpers";
-import { ElectronTestingModule } from "test/utils/mocks";
+import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import { TaskResourceFilesComponent } from "./task-resource-files.component";
 
 @Component({

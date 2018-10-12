@@ -10,7 +10,7 @@ import { TableTestingModule } from "@batch-flask/ui/testing";
 import { ArmBatchAccount, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
 import { of } from "rxjs";
-import { ElectronTestingModule } from "test/utils/mocks";
+import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import { LoadingMockComponent } from "test/utils/mocks/components";
 import { AutoStorageAccountPickerComponent } from "./auto-storage-account-picker.component";
 

@@ -9,8 +9,8 @@
 </div>
 <div class="actions">
     <bl-refresh-btn [refresh]="refresh" tooltipPosition="above"></bl-refresh-btn>
-    <bl-download-button [enabled]="downloadEnabled" [action]="downloadFile" tooltipPosition="above"></bl-download-button>
-    <bl-button color="light" [disabled]="!downloadEnabled" [action]="openDefaultEditor" title="Open in default application"
+    <bl-download-button *ngIf="config?.downloadEnabled" [action]="downloadFile" tooltipPosition="above"></bl-download-button>
+    <bl-button class="open-in-default-app" color="light" [action]="openDefaultEditor" title="Open in default application"
         tooltipPosition="above">
         <i class="fa fa-external-link"></i>
     </bl-button>

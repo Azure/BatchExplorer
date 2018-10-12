@@ -12,7 +12,7 @@ import { AppLicensePickerComponent } from "app/components/pool/action/add";
 import { PricingService } from "app/services";
 import { SoftwarePricing } from "app/services/pricing";
 import { of } from "rxjs";
-import { ElectronTestingModule } from "test/utils/mocks";
+import { ElectronTestingModule } from "@batch-flask/electron/testing";
 
 @Component({
     template: `<bl-app-license-picker [(ngModel)]="appLicenses"></bl-app-license-picker>`,

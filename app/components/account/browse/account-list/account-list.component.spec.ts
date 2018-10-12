@@ -5,6 +5,7 @@ import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { FilterBuilder } from "@batch-flask/core";
 import { TelemetryTestingModule } from "@batch-flask/core/testing";
+import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import { ActivityService } from "@batch-flask/ui/activity";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { DialogService } from "@batch-flask/ui/dialogs";
@@ -18,7 +19,6 @@ import { BatchAccountService, SubscriptionService } from "app/services";
 import { List } from "immutable";
 import { of } from "rxjs";
 import * as Fixtures from "test/fixture";
-import { ElectronTestingModule } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 
 const sub1 = Fixtures.subscription.create({

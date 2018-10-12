@@ -19,6 +19,12 @@ import { FileViewer, FileViewerConfig } from "../file-viewer";
 
 import "./file-viewer-container.scss";
 
+
+const defaultConfig =  Object.freeze({
+    tailable: false,
+    downloadEnabled: true,
+});
+
 @Component({
     selector: "bl-file-viewer-container",
     templateUrl: "file-viewer-container.html",
@@ -26,7 +32,10 @@ import "./file-viewer-container.scss";
 })
 export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     @Input() public fileLoader: FileLoader;
-    @Input() public config: FileViewerConfig;
+    @Input() public set config(config: FileViewerConfig) {
+        this._config = { ...defaultConfig, ...config };
+    }
+    public get config() { return this._config; }
 
     public file: File;
     public filename: string;
@@ -34,12 +43,12 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     public unknownFileType = false;
     public fileNotFound = false;
     public forbidden = false;
-    public downloadEnabled: boolean;
     public fileTooLarge: boolean;
     public componentType: FileViewerType;
     public viewRef: ComponentRef<FileViewer>;
 
     private _propertiesSub: Subscription;
+    private _config = defaultConfig;
     private _fileType: string;
 
     @ViewChild("viewerContainer", { read: ViewContainerRef }) private _viewerContainer: ViewContainerRef;
@@ -48,7 +57,6 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
         private resolver: ComponentFactoryResolver,
         private fileAssociationService: FileTypeAssociationService,
         private changeDetector: ChangeDetectorRef) {
-        this.downloadEnabled = true;
     }
 
     public ngOnChanges(inputs) {

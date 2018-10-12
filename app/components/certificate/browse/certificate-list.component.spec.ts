@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { TelemetryService } from "@batch-flask/core";
+import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import {
     ActivityService, DialogService, FileSystemService, NotificationService, WorkspaceService,
 } from "@batch-flask/ui";
@@ -12,7 +13,7 @@ import { QuickListTestingModule, TableTestingModule } from "@batch-flask/ui/test
 import { Certificate } from "app/models";
 import { CertificateService, PinnedEntityService } from "app/services";
 import { of } from "rxjs";
-import { ElectronTestingModule, MockListView } from "test/utils/mocks";
+import { MockListView } from "test/utils/mocks";
 import { CertificateListComponent } from "./certificate-list.component";
 
 @Component({

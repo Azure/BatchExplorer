@@ -5,13 +5,22 @@ import { AuthenticationWindow } from "client/core/aad/authentication";
 import { SplashScreen } from "client/splash-screen";
 import { MockAuthenticationWindow, MockBrowserWindow, MockSplashScreen } from "test/utils/mocks/windows";
 
-export class MockElectronRemote extends ElectronRemote {
+export class MockElectronDialog {
+    public showSaveDialog: jasmine.Spy;
+
+    constructor() {
+        this.showSaveDialog = jasmine.createSpy("dialog.showSaveDialog").and.returnValue("/some/local/path/foo.ts");
+    }
+}
+
+export class MockElectronRemote {
     public authenticationWindow: MockAuthenticationWindow;
     public currentWindow: MockBrowserWindow;
     public splashScreen: MockSplashScreen;
+    public dialog: MockElectronDialog;
 
     constructor() {
-        super(null);
+        this.dialog = new MockElectronDialog();
         this.currentWindow = new MockBrowserWindow();
         this.splashScreen = new MockSplashScreen();
         this.authenticationWindow = new MockAuthenticationWindow();

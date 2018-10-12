@@ -11,6 +11,11 @@ export interface FileViewerCommand {
 
 export interface FileViewerConfig {
     tailable?: boolean;
+
+    /**
+     * If files can be downloaded(Default: true)
+     */
+    downloadEnabled?: boolean;
 }
 
 /**

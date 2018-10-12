@@ -36,9 +36,6 @@ export class LogFileViewerComponent extends FileViewer implements OnDestroy {
     public loadingStatus = LoadingStatus.Loading;
     public currentSubscription: Subscription;
 
-    public fileCleanupOperation = false;
-    public fileContentFailure = false;
-
     public editorConfig: EditorConfig = {
         readOnly: true,
         minimap: {
@@ -68,12 +65,9 @@ export class LogFileViewerComponent extends FileViewer implements OnDestroy {
             this.currentSubscription.unsubscribe();
         }
 
-        this.fileCleanupOperation = false;
-        this.fileContentFailure = false;
         this.loadingStatus = LoadingStatus.Loading;
         this.content = "";
         this.lastContentLength = 0;
-        this._checkForFileChanges();
         this._setRefreshInterval();
     }
 

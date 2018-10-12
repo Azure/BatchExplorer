@@ -34,7 +34,7 @@ describe("LogFileViewer", () => {
         contentSpy = jasmine.createSpy("content").and.callFake(({ rangeStart, rangeEnd }) => {
             return of({ content: sampleFile.slice(rangeStart, rangeEnd) });
         });
-        propertiesSpy = jasmine.createSpy("getPropreties").and.callFake(() => of(file));
+        propertiesSpy = jasmine.createSpy("propertyGetter").and.callFake(() => of(file));
 
         fileLoader = new FileLoader({
             filename: "foo.ts",
@@ -67,7 +67,7 @@ describe("LogFileViewer", () => {
         expect(editorComponent.value).toEqual("Lorem ipsum");
 
         file = new File({ name: "foo.ts", properties: { contentLength: 45 } });
-        fileLoader.refreshProperties();
+        fileLoader.refreshProperties().subscribe();
         expect(contentSpy).toHaveBeenCalledTimes(2);
         expect(contentSpy).toHaveBeenCalledWith({
             rangeStart: 12, rangeEnd: 44,
@@ -92,7 +92,6 @@ describe("LogFileViewer", () => {
         expect(editorComponent.value).toEqual("Lorem ipsum");
 
         file = new File({ name: "foo.ts", properties: { contentLength: 45 } });
-
         tick(5000);
         expect(propertiesSpy).toHaveBeenCalledTimes(2);
         expect(contentSpy).toHaveBeenCalledTimes(2);

@@ -7,9 +7,10 @@ import { File } from "@batch-flask/ui/file/file.model";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { DateUtils, prettyBytes } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
-import { FileViewer } from "../../file-viewer";
+import { FileViewer, FileViewerConfig } from "../../file-viewer";
 
 import "./file-viewer-header.scss";
+import { path } from "d3";
 
 @Component({
     selector: "bl-file-viewer-header",
@@ -18,6 +19,7 @@ import "./file-viewer-header.scss";
 })
 export class FileViewerHeaderComponent implements OnChanges {
     @Input() public fileLoader: FileLoader;
+    @Input() public config: FileViewerConfig;
     @Input() public fileViewer: FileViewer | null;
 
     public filename: string;
@@ -74,6 +76,7 @@ export class FileViewerHeaderComponent implements OnChanges {
     @autobind()
     public openDefaultEditor() {
         return this.fileLoader.cache().subscribe((pathToFile) => {
+            console.log("PATH to file", pathToFile)
             this.shell.openItem(pathToFile);
         });
     }
