@@ -17,7 +17,7 @@ export type FileViewerType = typeof FileViewer & Type<FileViewer>;
 
 export const FILE_TYPE_COMPONENTS = {
     log: LogFileViewerComponent,
-    code: TextFileViewerComponent,
+    text: TextFileViewerComponent,
     image: ImageFileViewerComponent,
 };
 
@@ -38,12 +38,13 @@ export class FileTypeAssociationService implements OnDestroy {
         this._settingsSub.unsubscribe();
     }
 
-    public getComponentType(fileType: string): FileViewerType {
-        return FILE_TYPE_COMPONENTS[fileType] as any;
+    public getComponentType(fileType: string): FileViewerType | null {
+        return FILE_TYPE_COMPONENTS[fileType] as any || null;
     }
-    public getType(filename: string): string {
-        let extensionMatch: FileAssociation;
 
+    public getType(filename: string): string | null {
+        let extensionMatch: FileAssociation;
+        filename = filename.toLowerCase();
         for (let i = this._associations.length - 1; i >= 0; i--) {
             const association = this._associations[i];
 
@@ -56,16 +57,19 @@ export class FileTypeAssociationService implements OnDestroy {
                 }
             }
         }
-        return extensionMatch && extensionMatch.type;
+        return extensionMatch && extensionMatch.type || null;
     }
 
     private _registerAssociations(fileAssociations: StringMap<string>) {
+        if (!fileAssociations) { return; }
         for (const [extension, type] of Object.entries(fileAssociations)) {
             if (!type || !extension) {
                 log.error(`Trying to register an invalid file association ${extension}, ${type}`);
                 continue;
             }
-            this._associations.push({ extension: extension.toLowerCase(), type });
+            if (type in FILE_TYPE_COMPONENTS) {
+                this._associations.push({ extension: extension.toLowerCase(), type });
+            }
         }
     }
 }
