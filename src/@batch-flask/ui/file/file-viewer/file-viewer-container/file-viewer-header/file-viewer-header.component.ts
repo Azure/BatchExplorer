@@ -10,7 +10,6 @@ import { Subscription } from "rxjs";
 import { FileViewer, FileViewerConfig } from "../../file-viewer";
 
 import "./file-viewer-header.scss";
-import { path } from "d3";
 
 @Component({
     selector: "bl-file-viewer-header",
