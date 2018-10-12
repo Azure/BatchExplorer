@@ -3,14 +3,13 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
+import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
-import { List } from "immutable";
-
 import { TableTestingModule } from "@batch-flask/ui/testing";
 import { ArmBatchAccount, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
+import { List } from "immutable";
 import { of } from "rxjs";
-import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import { LoadingMockComponent } from "test/utils/mocks/components";
 import { AutoStorageAccountPickerComponent } from "./auto-storage-account-picker.component";
 

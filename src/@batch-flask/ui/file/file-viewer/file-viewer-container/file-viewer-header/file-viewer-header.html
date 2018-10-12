@@ -15,7 +15,7 @@
         <i class="fa fa-external-link"></i>
     </bl-button>
     <ng-container *ngIf="fileViewer?.commands">
-        <bl-button *ngFor="let command of fileViewer?.commands" [color]="command.color" [action]="command.execute"
+        <bl-button *ngFor="let command of fileViewer?.commands;trackBy: trackCommand" [color]="command.color" [action]="command.execute"
             [title]="command.label">
             <i class="{{command.icon}}"></i>
         </bl-button>

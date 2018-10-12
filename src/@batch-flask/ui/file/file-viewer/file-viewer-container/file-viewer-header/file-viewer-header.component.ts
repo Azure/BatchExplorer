@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 import { ServerError, autobind } from "@batch-flask/core";
-import { ElectronShell } from "@batch-flask/electron";
-import { ElectronRemote } from "@batch-flask/ui";
+import { ElectronRemote, ElectronShell } from "@batch-flask/electron";
 import { FileLoader } from "@batch-flask/ui/file/file-loader";
 import { File } from "@batch-flask/ui/file/file.model";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { DateUtils, prettyBytes } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
-import { FileViewer, FileViewerConfig } from "../../file-viewer";
+import { FileViewer, FileViewerCommand, FileViewerConfig } from "../../file-viewer";
 
 import "./file-viewer-header.scss";
 
@@ -77,6 +76,10 @@ export class FileViewerHeaderComponent implements OnChanges {
         return this.fileLoader.cache().subscribe((pathToFile) => {
             this.shell.openItem(pathToFile);
         });
+    }
+
+    public trackCommand(index, _: FileViewerCommand) {
+        return index;
     }
 
     private _clearPropertiesSub() {
