@@ -112,7 +112,7 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
     @HostBinding("attr.role") public readonly role = "combobox";
     @HostBinding("attr.aria-label") public get ariaLabel() { return this.placeholder; }
     @HostBinding("attr.aria-expanded") public get ariaExpanded() { return this.dropdownOpen; }
-    @HostBinding("attr.aria-owns") public get ariaOwns() { return this._dropdownId; }
+    @HostBinding("attr.aria-owns") public get ariaOwns() { return this.dropdownId; }
 
     // Options
     @ContentChildren(SelectOptionComponent, { descendants: true })
@@ -161,7 +161,7 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
 
     private _propagateChange: (value: any) => void;
     private _optionsMap: Map<any, SelectOptionComponent>;
-    private get _dropdownId() {
+    public get dropdownId() {
         return this.id + "-dropdown";
     }
     constructor(
@@ -278,7 +278,7 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
         const injector = new SelectInjector(this, this.injector);
         const portal = new ComponentPortal(SelectDropdownComponent, null, injector);
         const ref = this._dropdownRef = this._overlayRef.attach(portal);
-        ref.instance.id = this._dropdownId;
+        ref.instance.id = this.dropdownId;
         ref.instance.displayedOptions = this.displayedOptions;
         ref.instance.focusedOption = this.focusedOption;
         ref.instance.selected = this.selected;

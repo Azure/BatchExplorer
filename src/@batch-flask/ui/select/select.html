@@ -17,6 +17,6 @@
         </div>
    </div>
    <ng-container *ngIf="dropdownOpen && filterable">
-       <input class="select-filter" #filterInput [ngModel]="filter" (ngModelChange)="filterChanged($event)" placeholder="Filter items...">
+       <input class="select-filter" #filterInput [ngModel]="filter" (ngModelChange)="filterChanged($event)" placeholder="Filter items..." [attr.aria-controls]="dropdownId">
    </ng-container>
 </div>
