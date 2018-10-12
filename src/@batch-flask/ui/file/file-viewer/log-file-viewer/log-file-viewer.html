@@ -1,5 +1,5 @@
 <bl-loading [status]="loadingStatus">
-    <div class="log-console" *ngIf="!nodeNotFound && !fileContentFailure && !fileCleanupOperation && !fileTooLarge">
+    <div class="log-console">
         <div class="follow-log-btn" [class.following]="followingLog" (click)="toggleFollowLog()">
             <i class="fa fa-circle"></i>
             <span>Follow log</span>

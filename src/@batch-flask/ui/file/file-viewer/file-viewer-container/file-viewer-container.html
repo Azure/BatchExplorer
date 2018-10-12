@@ -4,7 +4,7 @@
         <template #viewerContainer></template>
         <bl-file-too-large [file]="file" [fileLoader]="fileLoader" *ngIf="fileTooLarge"></bl-file-too-large>
 
-        <bl-card *ngIf="unkownFileType" class="unknown-file-type">
+        <bl-card *ngIf="unknownFileType" class="unknown-file-type">
             <h2 class="title">{{'file-viewer-container.unkownFileType' | i18n }}</h2>
             <div class="options">
                 <button class="log" (click)="openAs('log')">Log</button>
