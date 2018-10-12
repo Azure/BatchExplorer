@@ -26,8 +26,10 @@
     "baseUrl": ".",
     "noUnusedLocals": true,
     "paths": {
+      "app/*": [
+        "app/*",
+      ],
       "*": [
-        "*",
         "src/*",
         "app/scripts/*"
       ],

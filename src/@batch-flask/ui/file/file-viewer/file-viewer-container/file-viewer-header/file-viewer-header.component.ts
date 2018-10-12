@@ -75,7 +75,6 @@ export class FileViewerHeaderComponent implements OnChanges {
     @autobind()
     public openDefaultEditor() {
         return this.fileLoader.cache().subscribe((pathToFile) => {
-            console.log("PATH to file", pathToFile)
             this.shell.openItem(pathToFile);
         });
     }
