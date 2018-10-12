@@ -1,17 +1,24 @@
 import { NgModule } from "@angular/core";
 import { ElectronRemote } from "@batch-flask/electron/remote.service";
 import { ElectronShell } from "@batch-flask/electron/shell.service";
-import { AuthenticationWindow } from "client/core/aad/authentication";
-import { SplashScreen } from "client/splash-screen";
 import { MockAuthenticationWindow, MockBrowserWindow, MockSplashScreen } from "test/utils/mocks/windows";
 
-export class MockElectronRemote extends ElectronRemote {
+export class MockElectronDialog {
+    public showSaveDialog: jasmine.Spy;
+
+    constructor() {
+        this.showSaveDialog = jasmine.createSpy("dialog.showSaveDialog").and.returnValue("/some/local/path/foo.ts");
+    }
+}
+
+export class MockElectronRemote {
     public authenticationWindow: MockAuthenticationWindow;
     public currentWindow: MockBrowserWindow;
     public splashScreen: MockSplashScreen;
+    public dialog: MockElectronDialog;
 
     constructor() {
-        super(null);
+        this.dialog = new MockElectronDialog();
         this.currentWindow = new MockBrowserWindow();
         this.splashScreen = new MockSplashScreen();
         this.authenticationWindow = new MockAuthenticationWindow();
@@ -21,12 +28,12 @@ export class MockElectronRemote extends ElectronRemote {
         return this.currentWindow as any;
     }
 
-    public getAuthenticationWindow(): AuthenticationWindow {
-        return this.authenticationWindow as any;
+    public getAuthenticationWindow() {
+        return this.authenticationWindow ;
     }
 
-    public getSplashScreen(): SplashScreen {
-        return this.splashScreen as any;
+    public getSplashScreen(): any {
+        return this.splashScreen;
     }
 }
 

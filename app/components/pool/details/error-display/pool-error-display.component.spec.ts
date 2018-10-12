@@ -2,13 +2,13 @@ import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { ElectronShell } from "@batch-flask/electron";
+import { ElectronTestingModule, MockElectronShell } from "@batch-flask/electron/testing";
 import { PoolErrorDisplayComponent } from "app/components/pool/details";
 import { Pool, ResizeErrorCode } from "app/models";
 import { BatchAccountService, PoolService } from "app/services";
 import { Constants } from "common";
 import { of } from "rxjs";
 import * as Fixtures from "test/fixture";
-import { ElectronTestingModule, MockElectronShell } from "test/utils/mocks";
 import { BannerMockComponent } from "test/utils/mocks/components";
 
 @Component({

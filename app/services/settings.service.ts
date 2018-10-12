@@ -42,7 +42,7 @@ export class SettingsService implements OnDestroy {
                     defaultView: settings["configuration.default-view"],
                 },
                 autoUpdateOnQuit: settings["auto-update-on-quit"],
-                fileTypes: settings.fileTypes,
+                fileAssociations: settings["file.associations"],
             });
         });
     }

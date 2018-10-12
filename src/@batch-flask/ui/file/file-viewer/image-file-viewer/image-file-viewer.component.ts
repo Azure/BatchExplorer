@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
-import { FileLoader } from "@batch-flask/ui/file/file-loader";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { LoadingStatus } from "@batch-flask/ui/loading";
-import { Subscription } from "rxjs";
+import { FileViewer } from "../file-viewer";
 
 import "./image-file-viewer.scss";
 
@@ -10,31 +9,22 @@ import "./image-file-viewer.scss";
     templateUrl: "image-file-viewer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ImageFileViewerComponent implements OnChanges, OnDestroy {
-
-    @Input() public fileLoader: FileLoader;
-
+export class ImageFileViewerComponent extends FileViewer implements OnDestroy {
     public src: string;
     public imageDescription: string;
     public loadingStatus = LoadingStatus.Loading;
 
-    private _sub: Subscription;
-
-    constructor(private changeDetector: ChangeDetectorRef) {}
-
-    public ngOnChanges(changes) {
-        this._loadImage();
-        if (changes.fileLoader) {
-            this._cleanup();
-            this._updateImageDescription();
-            this._sub = this.fileLoader.fileChanged.subscribe(() => {
-                this._loadImage();
-            });
-        }
+    constructor(changeDetector: ChangeDetectorRef) {
+        super(changeDetector);
     }
 
-    public ngOnDestroy() {
-        this._cleanup();
+    public onFileLoaderChanges() {
+        this._loadImage();
+        this._updateImageDescription();
+    }
+
+    public onFileChanges() {
+        this._loadImage();
     }
 
     private _loadImage() {
@@ -51,9 +41,4 @@ export class ImageFileViewerComponent implements OnChanges, OnDestroy {
         this.imageDescription = `Displaying image ${this.fileLoader.filename}`;
     }
 
-    private _cleanup() {
-        if (this._sub) {
-            this._sub.unsubscribe();
-        }
-    }
 }
