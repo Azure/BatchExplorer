@@ -1,8 +1,6 @@
 import { NgModule } from "@angular/core";
 import { ElectronRemote } from "@batch-flask/electron/remote.service";
 import { ElectronShell } from "@batch-flask/electron/shell.service";
-import { AuthenticationWindow } from "client/core/aad/authentication";
-import { SplashScreen } from "client/splash-screen";
 import { MockAuthenticationWindow, MockBrowserWindow, MockSplashScreen } from "test/utils/mocks/windows";
 
 export class MockElectronDialog {
@@ -30,12 +28,12 @@ export class MockElectronRemote {
         return this.currentWindow as any;
     }
 
-    public getAuthenticationWindow(): AuthenticationWindow {
-        return this.authenticationWindow as any;
+    public getAuthenticationWindow() {
+        return this.authenticationWindow ;
     }
 
-    public getSplashScreen(): SplashScreen {
-        return this.splashScreen as any;
+    public getSplashScreen(): any {
+        return this.splashScreen;
     }
 }
 
