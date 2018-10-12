@@ -15,8 +15,10 @@ const unselectAllOptionId = "_bl-select-option-unselect-all";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectDropdownComponent {
-    @HostBinding("class.pos-above")
-    public above = false;
+    @HostBinding("class.pos-above") public above = false;
+
+    @HostBinding("attr.id") public id: string;
+    @HostBinding("attr.role") public readonly role = "listbox";
 
     public set displayedOptions(options: SelectOptionComponent[]) {
         this._displayedOptions = options;

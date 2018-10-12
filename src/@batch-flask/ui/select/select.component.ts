@@ -72,7 +72,7 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
 
     @Input()
     get id(): string { return this._id; }
-    set id(value: string) { this._id = value || this._uid; }
+    set id(value: string) { this._id = value; }
 
     @Input() @FlagInput() public required = false;
 
@@ -88,11 +88,33 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
         this._disabled = coerceBooleanProperty(value);
     }
 
+    @Input()
+    public get value(): any | any[] {
+        if (this.multiple) {
+            return [...this.selected];
+        } else {
+            return [...this.selected].first();
+        }
+    }
+    public set value(value: any | any[]) {
+        if (value !== this.value) {
+            this.writeValue(value);
+            this.stateChanges.next();
+        }
+    }
+
     @Output() public change = new EventEmitter<any | any[]>();
 
-    @HostBinding("attr.aria-describedby")
-    public ariaDescribedby: string;
+    /**
+     * ARIA
+     */
+    @HostBinding("attr.aria-describedby") public ariaDescribedby: string;
+    @HostBinding("attr.role") public readonly role = "combobox";
+    @HostBinding("attr.aria-label") public get ariaLabel() { return this.placeholder; }
+    @HostBinding("attr.aria-expanded") public get ariaExpanded() { return this.dropdownOpen; }
+    @HostBinding("attr.aria-owns") public get ariaOwns() { return this._dropdownId; }
 
+    // Options
     @ContentChildren(SelectOptionComponent, { descendants: true })
     public options: QueryList<SelectOptionComponent>;
 
@@ -125,8 +147,7 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
     private _focusedOption: SelectOptionComponent = null;
     private _overlayRef: OverlayRef;
     private _backDropClickSub: Subscription;
-    private _id: string;
-    private _uid = `bl-select-${nextUniqueId++}`;
+    private _id = `bl-select-${nextUniqueId++}`;
     private _disabled = false;
     private _keyNavigator: ListKeyNavigator<SelectOptionComponent>;
     private _selected: Set<any> = new Set<any>();
@@ -138,24 +159,11 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
         return Boolean(this._dropdownRef);
     }
 
-    @Input()
-    public get value(): any | any[] {
-        if (this.multiple) {
-            return [...this.selected];
-        } else {
-            return [...this.selected].first();
-        }
-    }
-    public set value(value: any | any[]) {
-        if (value !== this.value) {
-            this.writeValue(value);
-            this.stateChanges.next();
-        }
-    }
-
     private _propagateChange: (value: any) => void;
     private _optionsMap: Map<any, SelectOptionComponent>;
-
+    private get _dropdownId() {
+        return this.id + "-dropdown";
+    }
     constructor(
         @Self() @Optional() public ngControl: NgControl,
         private changeDetector: ChangeDetectorRef,
@@ -270,6 +278,7 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
         const injector = new SelectInjector(this, this.injector);
         const portal = new ComponentPortal(SelectDropdownComponent, null, injector);
         const ref = this._dropdownRef = this._overlayRef.attach(portal);
+        ref.instance.id = this._dropdownId;
         ref.instance.displayedOptions = this.displayedOptions;
         ref.instance.focusedOption = this.focusedOption;
         ref.instance.selected = this.selected;

@@ -1,5 +1,12 @@
-<div class="option {{option.cssClass}}" *ngFor="let option of rows;trackBy: trackOption" (click)="handleClickOption($event, option)"
-    [class.focused]="focusedOption === option" [class.disabled]="option.disabled">
+<div class="option {{option.cssClass}}"
+    *ngFor="let option of rows;trackBy: trackOption"
+    [id]="option.id"
+    [class.focused]="focusedOption === option"
+    [class.disabled]="option.disabled"
+    (click)="handleClickOption($event, option)"
+    role="option"
+    [attr.aria-disabled]="option.disabled"
+    [attr.aria-selected]="selected.has(option.value)">
 
     <div class="checkbox" *ngIf="multiple">
         <i class="fa fa-check" *ngIf="selected.has(option.value)"></i>
