@@ -14,12 +14,11 @@
         </bl-card>
     </div>
     <div *ngIf="fileNotFound" class="info-overlay file-not-found">
-        <h2 class="title">{{'file-viewer-container.notFound' | i18n: {filename: filename} }}</h2>
+        {{'file-viewer-container.notFound' | i18n: {filename: filename} }}
         <!-- File <span class="highlight">&nbsp;{{filename}}&nbsp;</span> doesn't exist. -->
     </div>
     <div *ngIf="forbidden" class="info-overlay file-not-found">
-        <h2 class="title">{{'file-viewer-container.notAllowed' | i18n: {filename: filename} }}</h2>
+        {{'file-viewer-container.notAllowed' | i18n: {filename: filename} }}
         <!-- File <span class="highlight">&nbsp;{{filename}}&nbsp;</span> cannot be accessed. Server returned forbidden -->
-        error
     </div>
 </div>
