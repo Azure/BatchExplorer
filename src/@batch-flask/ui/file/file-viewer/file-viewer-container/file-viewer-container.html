@@ -5,18 +5,21 @@
         <bl-file-too-large [file]="file" [fileLoader]="fileLoader" *ngIf="fileTooLarge"></bl-file-too-large>
 
         <bl-card *ngIf="unkownFileType" class="unknown-file-type">
-            <h2 class="title">This file is not a known extension. Do you still want to open it?</h2>
+            <h2 class="title">{{'file-viewer-container.unkownFileType' | i18n }}</h2>
             <div class="options">
-                <button class="log" (click)="openAs(FileType.log)">Log</button>
-                <button class="code" (click)="openAs(FileType.code)">Code</button>
-                <button class="image" (click)="openAs(FileType.image)">Image</button>
+                <button class="log" (click)="openAs('log')">Log</button>
+                <button class="text" (click)="openAs('text')">Code</button>
+                <button class="image" (click)="openAs('image')">Image</button>
             </div>
         </bl-card>
     </div>
     <div *ngIf="fileNotFound" class="info-overlay file-not-found">
-        File <span class="highlight">&nbsp;{{filename}}&nbsp;</span> doesn't exist.
+        <h2 class="title">{{'file-viewer-container.notFound' | i18n: {filename: filename} }}</h2>
+        <!-- File <span class="highlight">&nbsp;{{filename}}&nbsp;</span> doesn't exist. -->
     </div>
     <div *ngIf="forbidden" class="info-overlay file-not-found">
-        File <span class="highlight">&nbsp;{{filename}}&nbsp;</span> cannot be accessed. Server returned forbidden error
+        <h2 class="title">{{'file-viewer-container.notAllowed' | i18n: {filename: filename} }}</h2>
+        <!-- File <span class="highlight">&nbsp;{{filename}}&nbsp;</span> cannot be accessed. Server returned forbidden -->
+        error
     </div>
 </div>

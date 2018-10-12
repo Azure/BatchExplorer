@@ -19,7 +19,6 @@ import { FileViewer, FileViewerConfig } from "../file-viewer";
 
 import "./file-viewer-container.scss";
 
-
 const defaultConfig =  Object.freeze({
     tailable: false,
     downloadEnabled: true,

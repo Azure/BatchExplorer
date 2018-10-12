@@ -1,9 +1,11 @@
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
+import { I18nModule } from "@batch-flask/core";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { CardModule } from "@batch-flask/ui/card";
 import { EditorModule } from "@batch-flask/ui/editor";
+import { I18nUIModule } from "@batch-flask/ui/i18n";
 import { LoadingModule } from "@batch-flask/ui/loading";
 import { FileDialogViewerComponent } from "./file-dialog-viewer";
 import { FileTooLargeComponent } from "./file-too-large";
@@ -26,7 +28,16 @@ const publicComponents = [
 @NgModule({
     declarations: [...publicComponents],
     exports: [...publicComponents],
-    imports: [BrowserModule, FormsModule, ReactiveFormsModule, CardModule, ButtonsModule, LoadingModule, EditorModule],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        ReactiveFormsModule,
+        CardModule,
+        ButtonsModule,
+        LoadingModule,
+        EditorModule,
+        I18nUIModule,
+    ],
     entryComponents: [
         FileDialogViewerComponent,
         LogFileViewerComponent,
