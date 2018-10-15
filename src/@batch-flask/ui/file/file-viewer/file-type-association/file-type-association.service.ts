@@ -17,7 +17,7 @@ export type FileViewerType = typeof FileViewer & Type<FileViewer>;
 
 export interface ViewerRegistration {
     name: string;
-    component: FileViewerType;
+    component: Type<FileViewer>;
     extensions?: string[];
 }
 
@@ -68,7 +68,7 @@ export class FileTypeAssociationService implements OnDestroy {
     }
 
     public registerViewer(registration: ViewerRegistration) {
-        this._viewers.set(registration.name, registration.component);
+        this._viewers.set(registration.name, registration.component as any);
         if (registration.extensions) {
             for (const extension of registration.extensions) {
                 this._viewersFileAssociations[extension] = registration.name;

@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
-import { FileViewer } from "@batch-flask/ui";
+import { DialogService, FileViewer } from "@batch-flask/ui";
 import { EditorConfig } from "@batch-flask/ui/editor";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Uri } from "monaco-editor";
 import { Subscription } from "rxjs";
+import { SubmitLocalTemplateComponent } from "../submit-local-template";
 
 import "./ncj-template-viewer.scss";
 
@@ -24,13 +25,13 @@ export class NcjTemplateViewerComponent extends FileViewer {
             label: "Run",
             icon: "fa fa-play",
             color: "success",
-            execute: () => console.log("Exec"),
+            execute: () => this._executeTemplate(),
         },
     ];
 
     private _contentSub: Subscription;
 
-    constructor(changeDetector: ChangeDetectorRef) {
+    constructor(private dialogService: DialogService, changeDetector: ChangeDetectorRef) {
         super(changeDetector);
     }
 
@@ -63,6 +64,11 @@ export class NcjTemplateViewerComponent extends FileViewer {
             language: "json",
             uri: this.fileLoader && Uri.file(this.fileLoader.filename),
         };
+    }
+
+    private _executeTemplate() {
+        const ref = this.dialogService.open(SubmitLocalTemplateComponent);
+        ref.componentInstance.template = this.value;
     }
 
     private _cleanupSub() {

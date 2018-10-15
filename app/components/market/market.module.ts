@@ -38,6 +38,7 @@ const modules = [
     imports: [...modules, LocalTemplateExplorerModule],
     entryComponents: [
         NcjTemplateViewerComponent,
+        SubmitLocalTemplateComponent,
     ],
 })
 export class MarketModule {

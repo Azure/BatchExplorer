@@ -112,6 +112,20 @@ export class LocalTemplateService implements OnDestroy {
         });
     }
 
+    public parseNcjTemplate(template: string) {
+        const json = JSON.parse(template);
+        let templateType: NcjTemplateType;
+        if (json.job) {
+            templateType = NcjTemplateType.Job;
+        } else if (json.pool) {
+            templateType = NcjTemplateType.Pool;
+        } else {
+            templateType = NcjTemplateType.Unknown;
+        }
+
+        return { type: templateType, template: json };
+    }
+
     public async loadLocalTemplateFile(path: string) {
         const json = await loadJsonFile<any>(path).then((content) => {
             return content;

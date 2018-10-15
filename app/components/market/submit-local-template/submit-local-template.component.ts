@@ -1,6 +1,4 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import * as path from "path";
+import { ChangeDetectionStrategy,  Component, Input } from "@angular/core";
 
 import { NcjJobTemplate, NcjPoolTemplate, NcjTemplateType } from "app/models";
 import { LocalTemplateService } from "app/services";
@@ -9,36 +7,29 @@ import "./submit-local-template.scss";
 @Component({
     selector: "bl-submit-local-template",
     templateUrl: "submit-local-template.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SubmitLocalTemplateComponent implements OnInit {
-    public static breadcrumb(_, queryParams) {
-        return { name: path.basename(queryParams.templateFile), label: "Local templates" };
+export class SubmitLocalTemplateComponent {
+    @Input() public set template(template: string) {
+        this._template = template;
+        this._updateTemplate();
     }
+    public get template() { return this._template; }
 
-    public templateFile: string;
     public error: string;
     public title: string;
     public loaded: boolean = false;
 
     public jobTemplate: NcjJobTemplate;
     public poolTemplate: NcjPoolTemplate;
+    private _template: string;
 
-    constructor(
-        private localTemplateService: LocalTemplateService,
-        private route: ActivatedRoute) {
-    }
-
-    public ngOnInit() {
-        this.route.queryParams.subscribe((params) => {
-            this.templateFile = params["templateFile"];
-            this.title = `Run template at ${path.basename(this.templateFile)}`;
-            this._updateTemplate();
-        });
+    constructor(private localTemplateService: LocalTemplateService) {
     }
 
     private async _updateTemplate() {
         try {
-            const { type, template } = await this.localTemplateService.loadLocalTemplateFile(this.templateFile);
+            const { type, template } = this.localTemplateService.parseNcjTemplate(this.template);
             this.jobTemplate = null;
             this.poolTemplate = null;
             if (type === NcjTemplateType.Job) {
