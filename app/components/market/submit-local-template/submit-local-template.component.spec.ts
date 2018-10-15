@@ -8,7 +8,7 @@ import { SubmitLocalTemplateComponent } from "app/components/market/submit-local
 import { NcjTemplateType } from "app/models";
 import { LocalTemplateService } from "app/services";
 
-fdescribe("SubmitLocalTemplateComponent", () => {
+describe("SubmitLocalTemplateComponent", () => {
     let fixture: ComponentFixture<SubmitLocalTemplateComponent>;
     let component: SubmitLocalTemplateComponent;
     let templateServiceSpy: any;

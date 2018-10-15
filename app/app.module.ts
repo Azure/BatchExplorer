@@ -71,6 +71,7 @@ import {
     LocalFileStorage,
     NavigatorService,
     NcjFileGroupService,
+    NcjModule,
     NcjSubmitService,
     NcjTemplateService,
     NetworkConfigurationService,
@@ -96,7 +97,6 @@ import {
     VersionService,
     VmSizeService,
 } from "./services";
-import { NcjModule } from "./services";
 import { RendererTelemetryModule } from "./services/telemetry";
 
 const modules = [

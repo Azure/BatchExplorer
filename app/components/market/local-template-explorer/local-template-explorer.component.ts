@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, ChangeDetectorRef } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { DialogService, FileExplorerWorkspace, FileNavigator } from "@batch-flask/ui";
 import { NcjTemplateType } from "app/models";
 import { LocalTemplateFolder, LocalTemplateService } from "app/services";
