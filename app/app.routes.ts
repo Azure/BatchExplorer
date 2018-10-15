@@ -5,7 +5,6 @@ import { ActivityMonitorComponent } from "@batch-flask/ui/activity/activity-moni
 import { NavigationGuard } from "app/components/common/guards";
 import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
 import { ChooseActionComponent } from "app/components/market/application-action";
-import { LocalTemplateBrowserComponent } from "app/components/market/local-template-browser";
 import { SubmitLocalTemplateComponent } from "app/components/market/submit-local-template";
 import { SubmitRecentTemplateComponent } from "app/components/market/submit-recent-template";
 import { ThemeColorsComponent } from "app/components/misc";

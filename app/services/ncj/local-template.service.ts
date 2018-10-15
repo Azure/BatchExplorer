@@ -47,12 +47,10 @@ export class LocalTemplateService implements OnDestroy {
         this._localTemplatesGetter = new BasicListGetter<File, any>(File, {
             cache: () => this._cache,
             supplyData: (params, options) => {
-                console.log("Here", params, options);
                 const folder = options.original.folder
                     ? path.join(params.source.path, options.original.folder)
                     : params.source.path;
                 return from(this._findTemplatesInFolder(folder).then((templates) => {
-                    console.log("Templates", templates);
                     return {
                         data: templates.map((file) =>  {
                             const name = path.relative(params.source.path, file);

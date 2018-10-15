@@ -19,5 +19,12 @@ bl-local-template-explorer {
         border-top: 1px solid $border-color;
     }
 
+
+    .no-sources {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 100px;
+    }
 }
 

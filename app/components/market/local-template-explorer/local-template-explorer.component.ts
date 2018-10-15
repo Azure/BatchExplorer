@@ -13,13 +13,18 @@ import "./local-template-explorer.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LocalTemplateExplorerComponent implements OnDestroy {
+
+    public static breadcrumb(params, queryParams) {
+        return { name: "User library"};
+    }
+
     public NcjTemplateType = NcjTemplateType;
     public templates: LocalTemplate[];
     public fileNavigator: FileNavigator;
     public workspace: FileExplorerWorkspace;
+    public sources: LocalTemplateFolder[] = [];
 
     private _subs: Subscription[] = [];
-    private _sources: LocalTemplateFolder[];
 
     constructor(
         private changeDetector: ChangeDetectorRef,
@@ -31,7 +36,7 @@ export class LocalTemplateExplorerComponent implements OnDestroy {
             this.changeDetector.markForCheck();
         }));
         localTemplateService.sources.subscribe((sources) => {
-            this._sources = sources;
+            this.sources = sources;
             this._updateWorkspace();
         });
 
@@ -54,10 +59,10 @@ export class LocalTemplateExplorerComponent implements OnDestroy {
             this.workspace.dispose();
             this.workspace = null;
         }
-        if (this._sources.length === 0) {
+        if (this.sources.length === 0) {
             return;
         }
-        this.workspace = new FileExplorerWorkspace(this._sources.map(x => {
+        this.workspace = new FileExplorerWorkspace(this.sources.map(x => {
             return {
                 name: x.name,
                 navigator: this.localTemplateService.navigate(x),

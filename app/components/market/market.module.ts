@@ -8,9 +8,11 @@ import {
     ParameterInputComponent, SubmitMarketApplicationComponent, SubmitNcjTemplateComponent,
 } from "app/components/market/submit";
 
+import { FileTypeAssociationService } from "@batch-flask/ui/file/file-viewer/file-type-association";
 import { TaskBaseModule } from "app/components/task/base";
 import { RecentTemplateListComponent } from "./home/recent-template-list";
 import { LocalTemplateExplorerModule } from "./local-template-explorer";
+import { NcjTemplateViewerComponent } from "./ncj-template-viewer";
 import { SubmitLocalTemplateComponent } from "./submit-local-template";
 import { SubmitRecentTemplateComponent } from "./submit-recent-template";
 
@@ -23,6 +25,7 @@ const components = [
     ParameterInputComponent,
     SubmitLocalTemplateComponent,
     RecentTemplateListComponent,
+    NcjTemplateViewerComponent,
 ];
 
 const modules = [
@@ -34,7 +37,17 @@ const modules = [
     exports: [...modules, ...components],
     imports: [...modules, LocalTemplateExplorerModule],
     entryComponents: [
+        NcjTemplateViewerComponent,
     ],
 })
 export class MarketModule {
+    public constructor(fileAssociationService: FileTypeAssociationService) {
+        fileAssociationService.registerViewer({
+            name: "ncj-template",
+            component: NcjTemplateViewerComponent,
+            extensions: [
+                ".template.json",
+            ],
+        });
+    }
 }

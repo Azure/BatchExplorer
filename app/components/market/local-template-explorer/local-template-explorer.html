@@ -9,4 +9,8 @@
 <div class="file-explorer-container">
     <bl-file-explorer *ngIf="workspace" [data]="workspace" [config]="fileExplorerConfig">
     </bl-file-explorer>
+    <div class="no-sources" *ngIf="sources.length === 0">
+        <div>You don't have any local folders to your library</div>
+        <bl-button type="wide" (do)="manageSources()">Add one</bl-button>
+    </div>
 </div>
