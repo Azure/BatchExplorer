@@ -2,11 +2,11 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { File, FileLoader, FileNavigator, FileSystemService } from "@batch-flask/ui";
 import { NcjTemplateType } from "app/models";
 import { Constants } from "common";
-import loadJsonFile from "load-json-file";
 import * as path from "path";
 import { BehaviorSubject, Observable, from } from "rxjs";
 import { filter, tap } from "rxjs/operators";
 import { BasicListGetter, DataCache } from "src/@batch-flask/core";
+import stripBom from "strip-bom";
 import { LocalFileStorage } from "../local-file-storage.service";
 
 export interface LocalTemplateFolder {
@@ -109,7 +109,7 @@ export class LocalTemplateService implements OnDestroy {
     }
 
     public parseNcjTemplate(template: string) {
-        const json = JSON.parse(template);
+        const json = JSON.parse(stripBom(template));
         let templateType: NcjTemplateType;
         if (json.job) {
             templateType = NcjTemplateType.Job;
@@ -123,22 +123,7 @@ export class LocalTemplateService implements OnDestroy {
     }
 
     public async loadLocalTemplateFile(path: string) {
-        const json = await loadJsonFile<any>(path).then((content) => {
-            return content;
-        }).catch((error) => {
-            return Promise.reject(`File is not valid json: ${error.message}`);
-        });
-
-        let templateType: NcjTemplateType;
-        if (json.job) {
-            templateType = NcjTemplateType.Job;
-        } else if (json.pool) {
-            templateType = NcjTemplateType.Pool;
-        } else {
-            templateType = NcjTemplateType.Unknown;
-        }
-
-        return { type: templateType, template: json };
+        return this.fs.readFile(path).then(content => this.parseNcjTemplate(content));
     }
 
     private async _getFileProperties(source: LocalTemplateFolder, filename: string): Promise<File> {
@@ -149,6 +134,7 @@ export class LocalTemplateService implements OnDestroy {
             properties: {
                 lastModified: stats.mtime,
                 contentLength: stats.size,
+                creationTime: stats.birthtime,
             },
         });
     }

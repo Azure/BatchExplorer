@@ -1,3 +1,4 @@
+import { NcjTemplateType } from "app/models";
 import { Constants } from "common";
 import * as path from "path";
 import { of } from "rxjs";
@@ -89,4 +90,45 @@ describe("LocalTemplateService", () => {
             },
         ]);
     });
+
+    describe("#parseNcjTemplate", () => {
+        it("parse a job template", () => {
+            const jobTemplate = {
+                parameters: {
+                    id: {
+                        type: "string",
+                    },
+                },
+                job: {
+                    id: "foo_1",
+                },
+                metadata: {
+                    description: "Fake template",
+                },
+            };
+            const { type, template } = service.parseNcjTemplate(JSON.stringify(jobTemplate));
+            expect(type).toEqual(NcjTemplateType.Job);
+            expect(template).toEqual(jobTemplate);
+        });
+
+        it("parse a pool template", () => {
+            const poolTemplate = {
+                parameters: {
+                    id: {
+                        type: "string",
+                    },
+                },
+                pool: {
+                    id: "foo_1",
+                },
+                metadata: {
+                    description: "Fake pool template",
+                },
+            };
+            const { type, template } = service.parseNcjTemplate(JSON.stringify(poolTemplate));
+            expect(type).toEqual(NcjTemplateType.Pool);
+            expect(template).toEqual(poolTemplate);
+        });
+    });
+
 });
