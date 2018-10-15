@@ -10,8 +10,8 @@ describe("FileTypeAssociationService", () => {
 
     beforeEach(() => {
         settingsSpy = {
+            settings: {},
             settingsObs: new BehaviorSubject({
-
             }),
         };
         service = new FileTypeAssociationService(settingsSpy);
@@ -26,7 +26,7 @@ describe("FileTypeAssociationService", () => {
     });
 
     it("includes user types", () => {
-        settingsSpy.settingsObs.next({
+        const settings = {
             fileAssociations: {
                 ".custTxt": "text",
                 ".custImage": "image",
@@ -34,7 +34,17 @@ describe("FileTypeAssociationService", () => {
                 ".custInvalid": "invalid",
                 ".custNull": null,
             },
-        });
+        };
+        settingsSpy.settings = {
+            fileAssociations: {
+                ".custTxt": "text",
+                ".custImage": "image",
+                ".custLog": "log",
+                ".custInvalid": "invalid",
+                ".custNull": null,
+            },
+        };
+        settingsSpy.settingsObs.next(settings);
 
         expect(service.getType("foo.custTxt")).toEqual("text");
         expect(service.getType("foo.custImage")).toEqual("image");

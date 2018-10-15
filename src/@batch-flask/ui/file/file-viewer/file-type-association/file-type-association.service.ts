@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy, Type } from "@angular/core";
 import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
 import { log } from "@batch-flask/utils";
-import { Subject, Subscription, combineLatest } from "rxjs";
+import { Subject, Subscription, merge } from "rxjs";
 import { FileViewer } from "../file-viewer";
 import { ImageFileViewerComponent } from "../image-file-viewer";
 import { LogFileViewerComponent } from "../log-file-viewer";
@@ -34,14 +34,14 @@ export class FileTypeAssociationService implements OnDestroy {
         this.registerViewer({ name: "log", component: LogFileViewerComponent });
         this.registerViewer({ name: "image", component: ImageFileViewerComponent });
 
-        this._settingsSub = combineLatest(
+        this._settingsSub = merge(
             settingsService.settingsObs,
             this._viewerChanges,
-        ).subscribe(([settings, _]) => {
+        ).subscribe(() => {
             this._associations = [];
             this._registerAssociations(DEFAULT_FILE_ASSOCIATIONS);
             this._registerAssociations(this._viewersFileAssociations);
-            this._registerAssociations(settings.fileAssociations);
+            this._registerAssociations(settingsService.settings.fileAssociations);
         });
     }
 

@@ -68,6 +68,7 @@ export class NcjTemplateViewerComponent extends FileViewer {
 
     private _executeTemplate() {
         const ref = this.dialogService.open(SubmitLocalTemplateComponent);
+        ref.componentInstance.filename = this.fileLoader.filename;
         ref.componentInstance.template = this.value;
     }
 

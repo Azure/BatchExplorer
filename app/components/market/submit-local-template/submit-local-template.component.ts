@@ -16,6 +16,7 @@ export class SubmitLocalTemplateComponent {
         this._updateTemplate();
     }
     public get template() { return this._template; }
+    @Input() public filename: string;
 
     public error: string;
     public title: string;
@@ -33,7 +34,7 @@ export class SubmitLocalTemplateComponent {
             const { type, template } = this.localTemplateService.parseNcjTemplate(this.template);
             this.jobTemplate = null;
             this.poolTemplate = null;
-            this.title = `Run template ${template.metadata && template.metadata.description}`;
+            this.title = `Run template ${this.filename}`;
             if (type === NcjTemplateType.Job) {
                 this.jobTemplate = template;
                 this.loaded = true;

@@ -46,11 +46,12 @@ describe("SubmitLocalTemplateComponent", () => {
     });
 
     it("page title should be correct", () => {
+        component.filename = "foo.template.json";
         component.template = `{"metadata": {"description": "foo desc"}, "job": {}}`;
         expect(component.jobTemplate).toEqual({
             metadata: {description: "foo desc"},
             job: {},
         } as any);
-        expect(component.title).toBe("Run template foo desc");
+        expect(component.title).toBe("Run template foo.template.json");
     });
 });
