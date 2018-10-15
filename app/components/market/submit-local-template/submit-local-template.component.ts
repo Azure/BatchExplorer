@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy,  Component, Input } from "@angular/core";
 
+import { MatDialogRef } from "@angular/material";
 import { NcjJobTemplate, NcjPoolTemplate, NcjTemplateType } from "app/models";
 import { LocalTemplateService } from "app/services";
 import "./submit-local-template.scss";
@@ -24,7 +25,7 @@ export class SubmitLocalTemplateComponent {
     public poolTemplate: NcjPoolTemplate;
     private _template: string;
 
-    constructor(private localTemplateService: LocalTemplateService) {
+    constructor(public dialogRef: MatDialogRef<any>, private localTemplateService: LocalTemplateService) {
     }
 
     private async _updateTemplate() {
