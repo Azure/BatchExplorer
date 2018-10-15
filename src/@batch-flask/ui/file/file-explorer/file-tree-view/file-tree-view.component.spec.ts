@@ -1,6 +1,7 @@
 import { Component, DebugElement, OnDestroy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import {
     ButtonsModule,
     DialogService,
@@ -10,7 +11,6 @@ import { FocusSectionModule } from "@batch-flask/ui/focus-section";
 import { click, rightClick } from "test/utils/helpers";
 import {
     ContextMenuServiceMock,
-    ElectronTestingModule,
     MockFileNavigator,
     NotificationServiceMock,
 } from "test/utils/mocks";

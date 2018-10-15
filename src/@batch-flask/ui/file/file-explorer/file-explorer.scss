@@ -37,7 +37,7 @@ bl-file-explorer {
         > bl-file-explorer-tabs {
             height: $tabs-height;
         }
-        > bl-file-viewer, bl-file-table-view {
+        > bl-file-viewer-container, bl-file-table-view {
             height: calc(100% - #{$tabs-height});
         }
     }

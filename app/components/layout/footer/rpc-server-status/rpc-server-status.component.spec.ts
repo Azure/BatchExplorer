@@ -2,11 +2,12 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatTooltip, MatTooltipModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
+import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import { ClickableComponent, FileSystemService } from "@batch-flask/ui";
 import { PythonRpcService } from "app/services";
 import { BehaviorSubject } from "rxjs";
 import { click } from "test/utils/helpers";
-import { ContextMenuServiceMock, ElectronTestingModule } from "test/utils/mocks";
+import { ContextMenuServiceMock } from "test/utils/mocks";
 import { RpcServerStatusComponent } from "./rpc-server-status.component";
 
 @Component({

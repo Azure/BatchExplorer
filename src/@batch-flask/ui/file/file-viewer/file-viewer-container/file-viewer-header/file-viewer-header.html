@@ -1,0 +1,23 @@
+<div class="filename" [title]="filename">{{filename}}</div>
+<div class="content-length">
+    <div class="label">File size</div>
+    <div class="value"> {{contentSize}}</div>
+</div>
+<div class="last-modified" [title]="file?.properties?.lastModified">
+    <div class="label">Last modified</div>
+    <div class="value">{{lastModified}}</div>
+</div>
+<div class="actions">
+    <bl-refresh-btn [refresh]="refresh" tooltipPosition="above"></bl-refresh-btn>
+    <bl-download-button *ngIf="config?.downloadEnabled" [action]="downloadFile" tooltipPosition="above"></bl-download-button>
+    <bl-button class="open-in-default-app" color="light" [action]="openDefaultEditor" title="Open in default application"
+        tooltipPosition="above">
+        <i class="fa fa-external-link"></i>
+    </bl-button>
+    <ng-container *ngIf="fileViewer?.commands">
+        <bl-button *ngFor="let command of fileViewer?.commands;trackBy: trackCommand" [color]="command.color" [action]="command.execute"
+            [title]="command.label">
+            <i class="{{command.icon}}"></i>
+        </bl-button>
+    </ng-container>
+</div>

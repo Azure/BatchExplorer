@@ -16,7 +16,7 @@ export interface EditorConfig extends monaco.editor.IEditorConstructionOptions {
     /**
      * Optional filename used for language specific schemas
      */
-    uri?: string;
+    uri?: monaco.Uri;
     language?: string;
     readOnly?: boolean;
     tabSize?: number;

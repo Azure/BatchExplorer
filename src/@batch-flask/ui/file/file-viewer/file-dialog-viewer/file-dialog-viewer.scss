@@ -3,7 +3,7 @@ bl-file-dialog-viewer {
     width: 800px;
     height: 80vh;
 
-    > bl-file-viewer {
+    > bl-file-viewer-container {
         height: 100%;
         width: 100%;
     }

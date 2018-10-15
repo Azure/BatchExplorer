@@ -5,7 +5,7 @@ import { EntityConfigurationView } from "@batch-flask/ui/batch-flask-settings";
  */
 export interface Settings {
     theme: string;
-    fileTypes: StringMap<string[]>;
+    "file.associations": StringMap<string>;
     "configuration.default-view": EntityConfigurationView;
     "subscription.ignore": string[];
     "storage.default-upload-container": string;

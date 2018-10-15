@@ -1,4 +1,4 @@
-import { Component, Input, forwardRef } from "@angular/core";
+import { Component, Input, NgModule, forwardRef } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { EditorConfig } from "@batch-flask/ui/editor";
 
@@ -6,11 +6,10 @@ import { EditorConfig } from "@batch-flask/ui/editor";
     selector: "bl-editor",
     template: `<textarea [value]="value"></textarea>`,
     providers: [
-        // tslint:disable-next-line:no-forward-ref
-        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => MockEditorComponent), multi: true },
+        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => EditorMockComponent), multi: true },
     ],
 })
-export class MockEditorComponent implements ControlValueAccessor {
+export class EditorMockComponent implements ControlValueAccessor {
     @Input() public config: EditorConfig;
     @Input() public set value(v) {
         if (v !== this._value) {
@@ -36,5 +35,17 @@ export class MockEditorComponent implements ControlValueAccessor {
     public onTouched() { }
     public registerOnChange(fn) { this.onChange = fn; }
     public registerOnTouched(fn) { this.onTouched = fn; }
+
+}
+
+@NgModule({
+    declarations: [
+        EditorMockComponent,
+    ],
+    exports: [
+        EditorMockComponent,
+    ],
+})
+export class EditorTestingModule {
 
 }

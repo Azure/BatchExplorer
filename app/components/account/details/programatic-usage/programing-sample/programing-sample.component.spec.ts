@@ -1,13 +1,13 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { By } from "@angular/platform-browser";
-
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { By } from "@angular/platform-browser";
 import { ClipboardService } from "@batch-flask/ui";
 import { PropertyListModule } from "@batch-flask/ui/property-list";
+import { EditorMockComponent, EditorTestingModule } from "@batch-flask/ui/testing";
 import { BatchExplorerService } from "app/services";
 import * as Fixtures from "test/fixture";
-import { MockEditorComponent } from "test/utils/mocks/components";
+
 import { ProgramingSampleComponent } from "./programing-sample.component";
 
 const account1 = Fixtures.account.create();
@@ -34,12 +34,12 @@ describe("ProgramingSampleComponent", () => {
     let component: ProgramingSampleComponent;
     let de: DebugElement;
     let codeEl: DebugElement;
-    let code: MockEditorComponent;
+    let code: EditorMockComponent;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [PropertyListModule, FormsModule, ReactiveFormsModule],
-            declarations: [ProgramingSampleComponent, TestComponent, MockEditorComponent],
+            imports: [PropertyListModule, FormsModule, ReactiveFormsModule, EditorTestingModule],
+            declarations: [ProgramingSampleComponent, TestComponent],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
                 { provide: ClipboardService, useValue: {} },

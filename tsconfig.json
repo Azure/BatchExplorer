@@ -26,12 +26,16 @@
     "baseUrl": ".",
     "noUnusedLocals": true,
     "paths": {
+      // "app/*": [
+      //   "app/*",
+      // ],
+      // "test/*": [
+      //   "test/*",
+      // ],
       "*": [
-        "*",
         "src/*",
-        "app/scripts/*"
+        "*",
       ],
-      // "@angular/*": ["../node_modules/@angular/*"]
     },
     "types": [
       "node",
