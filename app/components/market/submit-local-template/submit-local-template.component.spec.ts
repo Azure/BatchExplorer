@@ -12,7 +12,7 @@ import { SubmitLocalTemplateComponent } from "app/components/market/submit-local
 import { NcjTemplateType } from "app/models";
 import { NcjTemplateService } from "app/services";
 
-describe("SubmitLocalTemplateComponent", () => {
+fdescribe("SubmitLocalTemplateComponent", () => {
     let fixture: ComponentFixture<SubmitLocalTemplateComponent>;
     let component: SubmitLocalTemplateComponent;
     let templateServiceSpy: any;
@@ -30,11 +30,11 @@ describe("SubmitLocalTemplateComponent", () => {
         templateServiceSpy = {
             loadLocalTemplateFile: jasmine.createSpy("loadLocalTemplateFile").and.callFake((path: string) => {
                 if (path.contains("job")) {
-                    return Promise.resolve({ type: NcjTemplateType.job, template: { parameters: {}, job: {} } });
+                    return Promise.resolve({ type: NcjTemplateType.Job, template: { parameters: {}, job: {} } });
                 } else if (path.contains("pool")) {
-                    return Promise.resolve({ type: NcjTemplateType.pool, template: { pool: {} } });
+                    return Promise.resolve({ type: NcjTemplateType.Pool, template: { pool: {} } });
                 } else if (path.contains("other")) {
-                    return Promise.resolve({ type: NcjTemplateType.unknown, template: null });
+                    return Promise.resolve({ type: NcjTemplateType.Unknown, template: null });
                 } else {
                     return Promise.reject("couldn't parse template due to error");
                 }
@@ -56,14 +56,8 @@ describe("SubmitLocalTemplateComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should report correct breadcrumb text", () => {
-        const breadcrumb = SubmitLocalTemplateComponent.breadcrumb({}, { templateFile: "my-template.json" });
-        expect(breadcrumb.name).toBe("my-template.json");
-        expect(breadcrumb.label).toBe("Local templates");
-    });
-
     it("page title should be correct", () => {
-        expect(component.templateFile).toBe("job.json");
+        expect(component.template).toBe("job.json");
         expect(component.title).toBe("Run template at job.json");
     });
 });
