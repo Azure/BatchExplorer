@@ -4,6 +4,7 @@
 bl-submit-ncj-template {
     display: block;
     width: 100%;
+    position: relative;
 
     form {
         margin-left: 10px;
@@ -16,7 +17,6 @@ bl-submit-ncj-template {
         width: 700px;
         color: #ffffff;
         background-color: #3e81b0;
-
     }
 
     .title {
@@ -24,9 +24,9 @@ bl-submit-ncj-template {
     }
 
     .submit-box {
-        position: fixed;
-        right: 20px;
-        bottom: 50px;
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
         text-align: center;
 
         > bl-server-error {
