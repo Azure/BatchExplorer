@@ -24,9 +24,7 @@ bl-submit-ncj-template {
     }
 
     .submit-box {
-        position: absolute;
-        right: 10px;
-        bottom: 10px;
+        margin-bottom: 10px;
         text-align: center;
 
         > bl-server-error {
