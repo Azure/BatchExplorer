@@ -108,6 +108,17 @@ export class FileSystem {
         });
     }
 
+    public async stat(path: string): Promise<fs.Stats> {
+        return new Promise<fs.Stats>((resolve, reject) => {
+            fs.stat(path, (error, stats) => {
+                if (error) {
+                    return reject(error);
+                }
+                resolve(stats);
+            });
+        });
+    }
+
     public async readdir(dir: string, recursive = true): Promise<string[]> {
         const content = await this._readDir(dir);
         if (!recursive) { return content; }

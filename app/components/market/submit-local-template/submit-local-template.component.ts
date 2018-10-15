@@ -33,6 +33,7 @@ export class SubmitLocalTemplateComponent {
             const { type, template } = this.localTemplateService.parseNcjTemplate(this.template);
             this.jobTemplate = null;
             this.poolTemplate = null;
+            this.title = `Run template ${template.metadata && template.metadata.description}`;
             if (type === NcjTemplateType.Job) {
                 this.jobTemplate = template;
                 this.loaded = true;

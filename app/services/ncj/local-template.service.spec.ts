@@ -1,0 +1,92 @@
+import { Constants } from "common";
+import * as path from "path";
+import { of } from "rxjs";
+import { LocalTemplateFolder, LocalTemplateService } from "./local-template.service";
+
+const source0 = { name: "My library", path: "/some/local/path/library1" };
+const source1 = { name: "My lib 1", path: "/custom/path/lib1" };
+const source2 = { name: "My lib 2", path: "/custom/path/lib2" };
+
+describe("LocalTemplateService", () => {
+    let service: LocalTemplateService;
+    let fsSpy;
+    let localFileStorageSpy;
+    let sources: LocalTemplateFolder[] = null;
+
+    beforeEach(() => {
+        localFileStorageSpy = {
+            get: jasmine.createSpy("localFileStorage.get").and.returnValue(of({
+                sources: [source0, source1],
+            })),
+            set: jasmine.createSpy("localFileStorage.set").and.returnValue(of(null)),
+        };
+        fsSpy = {
+            glob: jasmine.createSpy("fs.glob").and.returnValue(Promise.resolve([
+                "/custom/path/lib1/job1.job.template.json",
+                "/custom/path/lib1/pool1.pool.template.json",
+            ])),
+        };
+
+        service = new LocalTemplateService(localFileStorageSpy, fsSpy);
+        service.sources.subscribe(x => sources = x);
+    });
+
+    it("Loaded the sources", () => {
+        service.init();
+        expect(sources).toEqual([source0, source1]);
+    });
+
+    it("add a source to the list", (done) => {
+        service.addSource(source2).subscribe(() => {
+            const newSources = [source0, source1, source2];
+            expect(localFileStorageSpy.set).toHaveBeenCalledOnce();
+            expect(localFileStorageSpy.set)
+                .toHaveBeenCalledWith(Constants.SavedDataFilename.localTemplates, { sources: newSources });
+            expect(sources).toEqual(newSources);
+            done();
+        });
+    });
+
+    it("remove a source to the list", (done) => {
+        service.removeSource(source0.path).subscribe(() => {
+            const newSources = [source1];
+            expect(localFileStorageSpy.set).toHaveBeenCalledOnce();
+            expect(localFileStorageSpy.set)
+                .toHaveBeenCalledWith(Constants.SavedDataFilename.localTemplates, { sources: newSources });
+            expect(sources).toEqual(newSources);
+            done();
+        });
+    });
+
+    it("set the sources", (done) => {
+        const newSources = [source2, source0];
+        service.setSources(newSources).subscribe(() => {
+            expect(localFileStorageSpy.set).toHaveBeenCalledOnce();
+            expect(localFileStorageSpy.set)
+                .toHaveBeenCalledWith(Constants.SavedDataFilename.localTemplates, { sources: newSources });
+            expect(sources).toEqual(newSources);
+            done();
+        });
+    });
+
+    it("navigate a source", async () => {
+        const navigator = service.navigate(source1);
+        const files = await navigator.listAllFiles().toPromise();
+        expect(fsSpy.glob).toHaveBeenCalledOnce();
+        expect(fsSpy.glob).toHaveBeenCalledWith(path.join(source1.path, "**/*.template.json"));
+        expect(files.toJS()).toEqual([
+            {
+                name: "job1.job.template.json",
+                url: "file:///custom/path/lib1/job1.job.template.json",
+                properties: { contentLength: null, lastModified: null, creationTime: null, contentType: null },
+                isDirectory: false,
+            },
+            {
+                name: "pool1.pool.template.json",
+                url: "file:///custom/path/lib1/pool1.pool.template.json",
+                properties: { contentLength: null, lastModified: null, creationTime: null, contentType: null },
+                isDirectory: false,
+            },
+        ]);
+    });
+});

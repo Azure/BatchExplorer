@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnDestroy, ChangeDetectorRef } from "@angular/core";
 import { DialogService, FileExplorerWorkspace, FileNavigator } from "@batch-flask/ui";
 import { NcjTemplateType } from "app/models";
-import { LocalTemplate, LocalTemplateFolder, LocalTemplateService } from "app/services";
+import { LocalTemplateFolder, LocalTemplateService } from "app/services";
 import { Subscription } from "rxjs";
 import { LocalTemplateSourceFormComponent } from "./local-template-source-form";
 
@@ -13,16 +13,14 @@ import "./local-template-explorer.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LocalTemplateExplorerComponent implements OnDestroy {
-
     public static breadcrumb(params, queryParams) {
-        return { name: "User library"};
+        return { name: "User template library"};
     }
 
     public NcjTemplateType = NcjTemplateType;
-    public templates: LocalTemplate[];
     public fileNavigator: FileNavigator;
     public workspace: FileExplorerWorkspace;
-    public sources: LocalTemplateFolder[] = [];
+    public sources: LocalTemplateFolder[] = null;
 
     private _subs: Subscription[] = [];
 
@@ -31,10 +29,6 @@ export class LocalTemplateExplorerComponent implements OnDestroy {
         private localTemplateService: LocalTemplateService,
         private dialogService: DialogService) {
 
-        this._subs.push(localTemplateService.templates.subscribe((templates) => {
-            this.templates = templates;
-            this.changeDetector.markForCheck();
-        }));
         localTemplateService.sources.subscribe((sources) => {
             this.sources = sources;
             this._updateWorkspace();
@@ -72,6 +66,7 @@ export class LocalTemplateExplorerComponent implements OnDestroy {
         for (const source of this.workspace.sources) {
             source.navigator.init();
         }
+        this.changeDetector.markForCheck();
 
     }
 }

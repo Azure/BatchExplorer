@@ -306,7 +306,6 @@ describe("FileTreeStructure", () => {
             | + folder
             |   + subfolder
             |     + subsubfolder
-            |       - file4.txt
             |     - file3.txt
             |   - file1.txt
             | + other

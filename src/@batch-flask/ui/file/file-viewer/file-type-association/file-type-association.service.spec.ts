@@ -49,4 +49,15 @@ describe("FileTypeAssociationService", () => {
         expect(service.getComponentType("image")).toEqual(ImageFileViewerComponent);
     });
 
+    it("includes types register later", () => {
+        service.registerViewer({
+            name: "fake-viewer",
+            component: "fake" as any,
+            extensions: [".fake1", ".fake2", ".json"],
+        });
+
+        expect(service.getType("foo.fake1")).toEqual("fake-viewer");
+        expect(service.getType("foo.fake2")).toEqual("fake-viewer");
+        expect(service.getType("foo.json")).toEqual("fake-viewer");
+    });
 });

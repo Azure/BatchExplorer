@@ -4,8 +4,8 @@ import { NcjTemplateType } from "app/models";
 import { Constants } from "common";
 import loadJsonFile from "load-json-file";
 import * as path from "path";
-import { BehaviorSubject, Observable, from, of } from "rxjs";
-import { flatMap, shareReplay, tap } from "rxjs/operators";
+import { BehaviorSubject, Observable, from } from "rxjs";
+import { filter, tap } from "rxjs/operators";
 import { BasicListGetter, DataCache } from "src/@batch-flask/core";
 import { LocalFileStorage } from "../local-file-storage.service";
 
@@ -28,22 +28,16 @@ export interface LocalTemplateSettings {
 
 @Injectable()
 export class LocalTemplateService implements OnDestroy {
-    public templates: Observable<LocalTemplate[]>;
     public sources: Observable<LocalTemplateFolder[]>;
 
-    private _sources = new BehaviorSubject<LocalTemplateFolder[]>([]);
+    private _sources = new BehaviorSubject<LocalTemplateFolder[]>(null);
     private _localTemplatesGetter: BasicListGetter<File, any>;
     private _cache = new DataCache<File>("url");
 
     constructor(private localFileStorage: LocalFileStorage, private fs: FileSystemService) {
-        this.sources = this._sources.asObservable();
-        this.templates = this._sources.pipe(
-            flatMap((sources) => from(this._findTemplates(sources))),
-            shareReplay(1),
-        );
+        this.sources = this._sources.pipe(filter(x => x !== null));
         this.init();
 
-        // TODO-TIM handle different sources
         this._localTemplatesGetter = new BasicListGetter<File, any>(File, {
             cache: () => this._cache,
             supplyData: (params, options) => {
@@ -52,7 +46,7 @@ export class LocalTemplateService implements OnDestroy {
                     : params.source.path;
                 return from(this._findTemplatesInFolder(folder).then((templates) => {
                     return {
-                        data: templates.map((file) =>  {
+                        data: templates.map((file) => {
                             const name = path.relative(params.source.path, file);
                             return { name, url: `file://${file}`, properties: {}, isDirectory: false };
                         }),
@@ -63,7 +57,9 @@ export class LocalTemplateService implements OnDestroy {
     }
 
     public init() {
-        this._loadSources().subscribe();
+        const obs = this._loadSources();
+        obs.subscribe();
+        return obs;
     }
 
     public ngOnDestroy() {
@@ -76,7 +72,7 @@ export class LocalTemplateService implements OnDestroy {
     }
 
     public removeSource(path: string): Observable<any> {
-        this._sources.next(this._sources.value.filter(x => x.path === path));
+        this._sources.next(this._sources.value.filter(x => x.path !== path));
         return this._saveSources();
     }
 
@@ -105,7 +101,7 @@ export class LocalTemplateService implements OnDestroy {
             filename,
             source: "local",
             fs: this.fs,
-            properties: () => of(new File({ name: filename, url: filename, properties: { contentLength: 0 } })),
+            properties: () => from(this._getFileProperties(source, filename)),
             content: () => {
                 return from(this.fs.readFile(path.join(source.path, filename)).then(x => ({ content: x })));
             },
@@ -145,6 +141,18 @@ export class LocalTemplateService implements OnDestroy {
         return { type: templateType, template: json };
     }
 
+    private async _getFileProperties(source: LocalTemplateFolder, filename: string): Promise<File> {
+        const stats = await this.fs.stat(path.join(source.path, filename));
+        return new File({
+            name: filename,
+            url: filename,
+            properties: {
+                lastModified: stats.mtime,
+                contentLength: stats.size,
+            },
+        });
+    }
+
     private _saveSources(): Observable<any> {
         return this.localFileStorage.set<LocalTemplateSettings>(Constants.SavedDataFilename.localTemplates, {
             sources: this._sources.value,
@@ -154,7 +162,7 @@ export class LocalTemplateService implements OnDestroy {
     private _loadSources(): Observable<any> {
         return this.localFileStorage.get<LocalTemplateSettings>(Constants.SavedDataFilename.localTemplates).pipe(
             tap((data) => {
-                if (data.sources) {
+                if (data && data.sources) {
                     this._sources.next(data.sources);
                 } else {
                     this._sources.next([]);
@@ -165,37 +173,5 @@ export class LocalTemplateService implements OnDestroy {
 
     private async _findTemplatesInFolder(folder: string): Promise<string[]> {
         return this.fs.glob(path.join(folder, "**/*.template.json"));
-    }
-
-    private async _findTemplates(sources: LocalTemplateFolder[]): Promise<LocalTemplate[]> {
-        const array = await Promise.all(sources.map(x => this._findTemplatesInSource(x)));
-        return array.flatten();
-    }
-
-    private async _findTemplatesInSource(source: LocalTemplateFolder): Promise<LocalTemplate[]> {
-        const files = await this.fs.glob(path.join(source.path, "**/*.template.json"));
-
-        const localTemplates = [];
-
-        for (const file of files) {
-            try {
-                const { template, type } = await this.loadLocalTemplateFile(file);
-                const localTemplate: LocalTemplate = {
-                    path: path.relative(source.path, file),
-                    filename: path.basename(file),
-                    description: null,
-                    source,
-                    type,
-                };
-                if (template.templateMetadata) {
-                    localTemplate.description = template.templateMetadata.description;
-                }
-                localTemplates.push(localTemplate);
-            } catch (e) {
-                // Ignore
-            }
-        }
-
-        return localTemplates;
     }
 }
