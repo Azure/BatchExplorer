@@ -8,7 +8,7 @@ import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/t
 import { ClickableComponent } from "@batch-flask/ui/buttons/clickable";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { F } from "test/utils";
-import { click, updateInput } from "test/utils/helpers";
+import { click, mousedown, updateInput } from "test/utils/helpers";
 import { SelectOptionComponent } from "./option";
 import { SelectDropdownComponent } from "./select-dropdown";
 import { SelectComponent } from "./select.component";
@@ -298,6 +298,21 @@ describe("SelectComponent", () => {
                 fixture.detectChanges();
                 expect(testComponent.value.value).toEqual(["opt-3", "opt-5"]);
             }));
+
+            it("clicking on an options shouldn't take focus away from button", async () => {
+                selectButtonEl.nativeElement.focus();
+                click(selectButtonEl);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                const options = overlayContainerElement.querySelectorAll(".option");
+                expect(document.activeElement).toEqual(selectButtonEl.nativeElement);
+                const event = mousedown(options[3]);
+                fixture.detectChanges();
+                expect(testComponent.value.value).toEqual(["opt-3"]);
+                expect(document.activeElement).toEqual(selectButtonEl.nativeElement);
+                expect(event.defaultPrevented);
+            });
         });
 
         describe("when select allows filtering", () => {
