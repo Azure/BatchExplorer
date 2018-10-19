@@ -6,7 +6,7 @@
         aria-readonly="true"
         [attr.aria-activedescendant]="focusedOption?.id"
         role="textbox"
-        (blur)="onButtonBlur($event)">
+        (blur)="onButtonBlur()">
         <div class="label">
             <ng-container *ngIf="!hasValueSelected">{{placeholder}}</ng-container>
             <ng-container *ngIf="hasValueSelected">
@@ -33,6 +33,6 @@
             [attr.aria-controls]="dropdownId"
             attr.aria-autocomplete="list"
             [attr.aria-activedescendant]="focusedOption?.id"
-            (blur)="onInputBlur($event)">
+            (blur)="onInputBlur()">
    </ng-container>
 </div>
