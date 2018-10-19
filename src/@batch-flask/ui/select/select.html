@@ -17,6 +17,13 @@
         </div>
    </div>
    <ng-container *ngIf="dropdownOpen && filterable">
-       <input class="select-filter" #filterInput [ngModel]="filter" (ngModelChange)="filterChanged($event)" placeholder="Filter items..." [attr.aria-controls]="dropdownId">
+       <input class="select-filter"
+            #filterInput
+            [ngModel]="filter"
+            (ngModelChange)="filterChanged($event)"
+            placeholder="Filter items..."
+            [attr.aria-controls]="dropdownId"
+            [attr.aria-autocomplete]="list"
+            [attr.aria-activedescendant]="focusedOption?.id">
    </ng-container>
 </div>

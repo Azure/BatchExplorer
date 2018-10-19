@@ -19,6 +19,12 @@ export class SelectDropdownComponent {
 
     @HostBinding("attr.id") public id: string;
     @HostBinding("attr.role") public readonly role = "listbox";
+    @HostBinding("attr.aria-activedescendant") public get ariaActiveDescendant() {
+        return this.focusedOption && this.focusedOption.id;
+    }
+    @HostBinding("attr.aria-multiselectable") public get ariaMultiselectable() {
+        return this.multiple;
+    }
 
     public set displayedOptions(options: SelectOptionComponent[]) {
         this._displayedOptions = options;

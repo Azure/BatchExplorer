@@ -110,6 +110,7 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
      */
     @HostBinding("attr.aria-describedby") public ariaDescribedby: string;
     @HostBinding("attr.role") public readonly role = "combobox";
+    @HostBinding("attr.aria-haspopup") public readonly ariaHasPopup = "listbox";
     @HostBinding("attr.aria-label") public get ariaLabel() { return this.placeholder; }
     @HostBinding("attr.aria-expanded") public get ariaExpanded() { return this.dropdownOpen; }
     @HostBinding("attr.aria-owns") public get ariaOwns() { return this.dropdownId; }

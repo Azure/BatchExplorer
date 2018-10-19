@@ -8,7 +8,7 @@
     [attr.aria-disabled]="option.disabled"
     [attr.aria-selected]="selected.has(option.value)">
 
-    <div class="checkbox" *ngIf="multiple">
+    <div class="checkbox" *ngIf="multiple" aria-hidden="true">
         <i class="fa fa-check" *ngIf="selected.has(option.value)"></i>
     </div>
     <div class="option-content">
