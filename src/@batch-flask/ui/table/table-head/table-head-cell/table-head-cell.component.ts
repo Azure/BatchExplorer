@@ -2,8 +2,8 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef,
     HostBinding, Inject, Injector, Input, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
-import { ClickableComponent } from "@batch-flask/ui";
 import { SortDirection } from "@batch-flask/ui/abstract-list";
+import { ClickableComponent } from "@batch-flask/ui/buttons";
 import { TableColumnRef } from "@batch-flask/ui/table/table-column-manager";
 import { TableComponent } from "@batch-flask/ui/table/table.component";
 import { Subscription } from "rxjs";
