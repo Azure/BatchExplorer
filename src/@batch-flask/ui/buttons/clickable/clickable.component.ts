@@ -43,6 +43,10 @@ export class ClickableComponent implements OnChanges, OnDestroy {
         return this.isDisabled ? "-1" : "0";
     }
     @HostBinding("class.focus-outline") public focusOutline = true;
+
+    // Aria
+    @HostBinding("attr.role") public role = "button";
+
     public subtitle = "";
 
     private permissionService?: PermissionService;
