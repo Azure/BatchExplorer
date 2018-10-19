@@ -12,7 +12,8 @@
         <i class="fa fa-check" *ngIf="selected.has(option.value)"></i>
     </div>
     <div class="option-content">
-        <ng-template [ngTemplateOutlet]="option.content"></ng-template>
+        <ng-template [ngTemplateOutlet]="option.content" *ngIf="option.content"></ng-template>
+        <ng-container *ngIf="!option.content">{{option.label}}</ng-container>
     </div>
 </div>
 <div class="no-option" *ngIf="displayedOptions.length === 0 && select.filter">
