@@ -305,7 +305,7 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
         this.changeDetector.markForCheck();
     }
 
-    public closeDropdown() {
+    public closeDropdown(focus = true) {
         if (!this.dropdownOpen) { return; }
         if (this.filterable) {
             this._keyNavigator.withTypeAhead(); // Reenable typeAhead as it was disabled when dropdown is open
@@ -315,9 +315,11 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
             this._overlayRef = null;
             this._dropdownRef = null;
         }
-        setTimeout(() => {
-            this._selectButtonEl.nativeElement.focus();
-        });
+        if (focus) {
+            setTimeout(() => {
+                this._selectButtonEl.nativeElement.focus();
+            });
+        }
 
         this.changeDetector.markForCheck();
     }
@@ -382,6 +384,18 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
             this._optionsMap.set(value.currentValue, previous);
         }
         this.changeDetector.markForCheck();
+    }
+
+    public onButtonBlur() {
+        if (this.dropdownOpen && !this.filterable) {
+            this.closeDropdown(false);
+        }
+    }
+
+    public onInputBlur() {
+        if (this.dropdownOpen) {
+            this.closeDropdown(false);
+        }
     }
     private _computeOptions() {
         const optionsMap = new Map();

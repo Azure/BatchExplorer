@@ -5,7 +5,8 @@
         [tabindex]="disabled ? -1 : 0"
         aria-readonly="true"
         [attr.aria-activedescendant]="focusedOption?.id"
-        role="textbox">
+        role="textbox"
+        (blur)="onButtonBlur($event)">
         <div class="label">
             <ng-container *ngIf="!hasValueSelected">{{placeholder}}</ng-container>
             <ng-container *ngIf="hasValueSelected">
@@ -31,6 +32,7 @@
             placeholder="Filter items..."
             [attr.aria-controls]="dropdownId"
             attr.aria-autocomplete="list"
-            [attr.aria-activedescendant]="focusedOption?.id">
+            [attr.aria-activedescendant]="focusedOption?.id"
+            (blur)="onInputBlur($event)">
    </ng-container>
 </div>
