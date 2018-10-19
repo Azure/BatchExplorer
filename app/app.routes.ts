@@ -5,8 +5,6 @@ import { ActivityMonitorComponent } from "@batch-flask/ui/activity/activity-moni
 import { NavigationGuard } from "app/components/common/guards";
 import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
 import { ChooseActionComponent } from "app/components/market/application-action";
-import { LocalTemplateBrowserComponent } from "app/components/market/local-template-browser";
-import { SubmitLocalTemplateComponent } from "app/components/market/submit-local-template";
 import { SubmitRecentTemplateComponent } from "app/components/market/submit-recent-template";
 import { ThemeColorsComponent } from "app/components/misc";
 import { PoolStandaloneGraphsComponent } from "app/components/pool/graphs/standalone";
@@ -25,6 +23,7 @@ import { JobScheduleHomeComponent } from "./components/job-schedule/home/job-sch
 import { JobDefaultComponent, JobDetailsComponent } from "./components/job/details";
 import { JobHomeComponent } from "./components/job/home/job-home.component";
 import { MarketComponent } from "./components/market/home";
+import { LocalTemplateExplorerComponent } from "./components/market/local-template-explorer";
 import { SubmitMarketApplicationComponent } from "./components/market/submit";
 import { NodeDefaultComponent, NodeDetailsComponent } from "./components/node/details";
 import { NodeHomeComponent } from "./components/node/home";
@@ -100,11 +99,7 @@ export const routes: Routes = [
     },
     {
         path: "market/local",
-        component: LocalTemplateBrowserComponent,
-    },
-    {
-        path: "market/local/submit",
-        component: SubmitLocalTemplateComponent,
+        component: LocalTemplateExplorerComponent,
     },
     {
         path: "market/recent/:id",

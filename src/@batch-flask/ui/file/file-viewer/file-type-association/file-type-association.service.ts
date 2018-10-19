@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy, Type } from "@angular/core";
 import { BatchFlaskSettingsService } from "@batch-flask/ui/batch-flask-settings";
 import { log } from "@batch-flask/utils";
-import { Subscription } from "rxjs";
+import { Subject, Subscription, merge } from "rxjs";
 import { FileViewer } from "../file-viewer";
 import { ImageFileViewerComponent } from "../image-file-viewer";
 import { LogFileViewerComponent } from "../log-file-viewer";
@@ -15,22 +15,33 @@ interface FileAssociation {
 
 export type FileViewerType = typeof FileViewer & Type<FileViewer>;
 
-export const FILE_TYPE_COMPONENTS = {
-    log: LogFileViewerComponent,
-    text: TextFileViewerComponent,
-    image: ImageFileViewerComponent,
-};
+export interface ViewerRegistration {
+    name: string;
+    component: Type<FileViewer>;
+    extensions?: string[];
+}
 
 @Injectable()
 export class FileTypeAssociationService implements OnDestroy {
     private _associations: FileAssociation[] = [];
     private _settingsSub: Subscription;
+    private _viewers = new Map<string, FileViewerType>();
+    private _viewersFileAssociations: StringMap<string> = {};
+    private _viewerChanges = new Subject();
 
     constructor(settingsService: BatchFlaskSettingsService) {
-        this._settingsSub = settingsService.settingsObs.subscribe((settings) => {
+        this.registerViewer({ name: "text", component: TextFileViewerComponent });
+        this.registerViewer({ name: "log", component: LogFileViewerComponent });
+        this.registerViewer({ name: "image", component: ImageFileViewerComponent });
+
+        this._settingsSub = merge(
+            settingsService.settingsObs,
+            this._viewerChanges,
+        ).subscribe(() => {
             this._associations = [];
             this._registerAssociations(DEFAULT_FILE_ASSOCIATIONS);
-            this._registerAssociations(settings.fileAssociations);
+            this._registerAssociations(this._viewersFileAssociations);
+            this._registerAssociations(settingsService.settings.fileAssociations);
         });
     }
 
@@ -39,7 +50,7 @@ export class FileTypeAssociationService implements OnDestroy {
     }
 
     public getComponentType(fileType: string): FileViewerType | null {
-        return FILE_TYPE_COMPONENTS[fileType] as any || null;
+        return this._viewers.get(fileType) as any || null;
     }
 
     public getType(filename: string): string | null {
@@ -60,6 +71,16 @@ export class FileTypeAssociationService implements OnDestroy {
         return extensionMatch && extensionMatch.type || null;
     }
 
+    public registerViewer(registration: ViewerRegistration) {
+        this._viewers.set(registration.name, registration.component as any);
+        if (registration.extensions) {
+            for (const extension of registration.extensions) {
+                this._viewersFileAssociations[extension] = registration.name;
+            }
+        }
+        this._viewerChanges.next();
+    }
+
     private _registerAssociations(fileAssociations: StringMap<string>) {
         if (!fileAssociations) { return; }
         for (const [extension, type] of Object.entries(fileAssociations)) {
@@ -67,7 +88,7 @@ export class FileTypeAssociationService implements OnDestroy {
                 log.error(`Trying to register an invalid file association ${extension}, ${type}`);
                 continue;
             }
-            if (type in FILE_TYPE_COMPONENTS) {
+            if (this._viewers.has(type)) {
                 this._associations.push({ extension: extension.toLowerCase(), type });
             }
         }

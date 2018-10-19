@@ -7,6 +7,7 @@ export interface FileViewerCommand {
     label: string;
     icon: string;
     color: string;
+    execute: () => any;
 }
 
 export interface FileViewerConfig {

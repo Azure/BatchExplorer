@@ -1,50 +1,44 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import * as path from "path";
+import { ChangeDetectionStrategy,  Component, Input } from "@angular/core";
 
+import { MatDialogRef } from "@angular/material";
 import { NcjJobTemplate, NcjPoolTemplate, NcjTemplateType } from "app/models";
-import { NcjTemplateService } from "app/services";
+import { LocalTemplateService } from "app/services";
 import "./submit-local-template.scss";
 
 @Component({
     selector: "bl-submit-local-template",
     templateUrl: "submit-local-template.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SubmitLocalTemplateComponent implements OnInit {
-    public static breadcrumb(_, queryParams) {
-        return { name: path.basename(queryParams.templateFile), label: "Local templates" };
+export class SubmitLocalTemplateComponent {
+    @Input() public set template(template: string) {
+        this._template = template;
+        this._updateTemplate();
     }
+    public get template() { return this._template; }
+    @Input() public filename: string;
 
-    public templateFile: string;
     public error: string;
     public title: string;
     public loaded: boolean = false;
 
     public jobTemplate: NcjJobTemplate;
     public poolTemplate: NcjPoolTemplate;
+    private _template: string;
 
-    constructor(
-        private templateService: NcjTemplateService,
-        private route: ActivatedRoute) {
-    }
-
-    public ngOnInit() {
-        this.route.queryParams.subscribe((params) => {
-            this.templateFile = params["templateFile"];
-            this.title = `Run template at ${path.basename(this.templateFile)}`;
-            this._updateTemplate();
-        });
+    constructor(public dialogRef: MatDialogRef<any>, private localTemplateService: LocalTemplateService) {
     }
 
     private async _updateTemplate() {
         try {
-            const { type, template } = await this.templateService.loadLocalTemplateFile(this.templateFile);
+            const { type, template } = this.localTemplateService.parseNcjTemplate(this.template);
             this.jobTemplate = null;
             this.poolTemplate = null;
-            if (type === NcjTemplateType.job) {
+            this.title = `Run template ${this.filename}`;
+            if (type === NcjTemplateType.Job) {
                 this.jobTemplate = template;
                 this.loaded = true;
-            } else if (type === NcjTemplateType.pool) {
+            } else if (type === NcjTemplateType.Pool) {
                 this.poolTemplate = template;
                 this.loaded = true;
             } else {

@@ -31,9 +31,9 @@ export interface NcjPoolTemplate {
 }
 
 export enum NcjTemplateType {
-    pool = 1,
-    job = 2,
-    unknown = 3,
+    Pool = 1,
+    Job = 2,
+    Unknown = 3,
 }
 
 export enum NcjTemplateMode {
