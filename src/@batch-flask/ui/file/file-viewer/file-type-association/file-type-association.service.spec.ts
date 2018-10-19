@@ -10,8 +10,8 @@ describe("FileTypeAssociationService", () => {
 
     beforeEach(() => {
         settingsSpy = {
+            settings: {},
             settingsObs: new BehaviorSubject({
-
             }),
         };
         service = new FileTypeAssociationService(settingsSpy);
@@ -26,7 +26,7 @@ describe("FileTypeAssociationService", () => {
     });
 
     it("includes user types", () => {
-        settingsSpy.settingsObs.next({
+        const settings = {
             fileAssociations: {
                 ".custTxt": "text",
                 ".custImage": "image",
@@ -34,7 +34,17 @@ describe("FileTypeAssociationService", () => {
                 ".custInvalid": "invalid",
                 ".custNull": null,
             },
-        });
+        };
+        settingsSpy.settings = {
+            fileAssociations: {
+                ".custTxt": "text",
+                ".custImage": "image",
+                ".custLog": "log",
+                ".custInvalid": "invalid",
+                ".custNull": null,
+            },
+        };
+        settingsSpy.settingsObs.next(settings);
 
         expect(service.getType("foo.custTxt")).toEqual("text");
         expect(service.getType("foo.custImage")).toEqual("image");
@@ -49,4 +59,15 @@ describe("FileTypeAssociationService", () => {
         expect(service.getComponentType("image")).toEqual(ImageFileViewerComponent);
     });
 
+    it("includes types register later", () => {
+        service.registerViewer({
+            name: "fake-viewer",
+            component: "fake" as any,
+            extensions: [".fake1", ".fake2", ".json"],
+        });
+
+        expect(service.getType("foo.fake1")).toEqual("fake-viewer");
+        expect(service.getType("foo.fake2")).toEqual("fake-viewer");
+        expect(service.getType("foo.json")).toEqual("fake-viewer");
+    });
 });

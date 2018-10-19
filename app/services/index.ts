@@ -17,6 +17,7 @@ export * from "./local-file-storage.service";
 export * from "./monitoring";
 export * from "./navigator.service";
 export * from "./pinned-entity";
+export * from "./ncj";
 export * from "./ncj-file-group.service";
 export * from "./ncj-submit.service";
 export * from "./ncj-template.service";
