@@ -41,6 +41,7 @@ export function sendEvent(el: DebugElement | HTMLElement | Node, event: Event) {
     }
 
     htmlEl.dispatchEvent(event);
+    return event;
 }
 
 /**
@@ -48,7 +49,10 @@ export function sendEvent(el: DebugElement | HTMLElement | Node, event: Event) {
  */
 export function click(el: DebugElement | HTMLElement | Node, button?: MouseButton) {
     const event =  new MouseEvent("click", { button });
+    mousedown(el);
     sendEvent(el, event);
+    mouseup(el);
+    return event;
 }
 
 /**
@@ -97,17 +101,17 @@ export function keydown(el: DebugElement | HTMLElement, key: string) {
 /**
  * Simulate a mousedown event
  */
-export function mousedown(el: DebugElement | HTMLElement, button?: MouseButton) {
+export function mousedown(el: DebugElement | HTMLElement | Node, button?: MouseButton) {
     const event = new MouseEvent("mousedown", { cancelable: true, button });
-    sendEvent(el, event);
+    return sendEvent(el, event);
 }
 
 /**
  * Simulate a mouseup event
  */
-export function mouseup(el: DebugElement | HTMLElement, button?: MouseButton) {
+export function mouseup(el: DebugElement | HTMLElement | Node, button?: MouseButton) {
     const event = new MouseEvent("mouseup", { cancelable: true, button });
-    sendEvent(el, event);
+    return sendEvent(el, event);
 }
 
 export function updateInput(el: DebugElement | HTMLInputElement, value: any) {
