@@ -8,7 +8,7 @@ import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/t
 import { ClickableComponent } from "@batch-flask/ui/buttons/clickable";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { F } from "test/utils";
-import { click, updateInput } from "test/utils/helpers";
+import { click, mousedown, updateInput } from "test/utils/helpers";
 import { SelectOptionComponent } from "./option";
 import { SelectDropdownComponent } from "./select-dropdown";
 import { SelectComponent } from "./select.component";
@@ -44,6 +44,7 @@ class TestComponent {
 
             </bl-option>
         </bl-select>
+        <div class="other-nav"tabindex="0">Other nav</div>
     `,
 })
 class SelectWithLabelComponent extends TestComponent {
@@ -242,6 +243,18 @@ describe("SelectComponent", () => {
             expect(de.nativeElement.textContent).toContain("Banana");
         });
 
+        it("should close the dropdown when focusing out of the select", async () => {
+            selectButtonEl.nativeElement.focus();
+            click(selectButtonEl);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(overlayContainerElement.querySelector("bl-select-dropdown")).not.toBeFalsy();
+
+            fixture.debugElement.query(By.css(".other-nav")).nativeElement.focus();
+            expect(overlayContainerElement.querySelector("bl-select-dropdown")).toBeFalsy();
+        });
+
         describe("when select allows multiple values", () => {
             beforeEach(() => {
                 testComponent.value.setValue([]);
@@ -285,6 +298,21 @@ describe("SelectComponent", () => {
                 fixture.detectChanges();
                 expect(testComponent.value.value).toEqual(["opt-3", "opt-5"]);
             }));
+
+            it("clicking on an options shouldn't take focus away from button", async () => {
+                selectButtonEl.nativeElement.focus();
+                click(selectButtonEl);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                const options = overlayContainerElement.querySelectorAll(".option");
+                expect(document.activeElement).toEqual(selectButtonEl.nativeElement);
+                const event = mousedown(options[3]);
+                fixture.detectChanges();
+                expect(testComponent.value.value).toEqual(["opt-3"]);
+                expect(document.activeElement).toEqual(selectButtonEl.nativeElement);
+                expect(event.defaultPrevented);
+            });
         });
 
         describe("when select allows filtering", () => {
@@ -293,7 +321,7 @@ describe("SelectComponent", () => {
                 fixture.detectChanges();
             });
 
-            it("Shoudl show the filter input", () => {
+            it("Should show the filter input", () => {
                 click(selectButtonEl);
                 fixture.detectChanges();
                 const inputEl = de.query(By.css("input.select-filter"));
@@ -314,6 +342,21 @@ describe("SelectComponent", () => {
                 expect(options[0].textContent).toContain("Potato");
                 expect(options[1].textContent).toContain("Pasta");
             }));
+
+            it("should close the dropdown when focusing out of the select", async () => {
+                click(selectButtonEl);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                const inputEl = de.query(By.css("input.select-filter"));
+                expect(document.activeElement).toEqual(inputEl.nativeElement);
+                expect(overlayContainerElement.querySelector("bl-select-dropdown")).not.toBeFalsy();
+
+                fixture.debugElement.query(By.css(".other-nav")).nativeElement.focus();
+                expect(document.activeElement).not.toEqual(inputEl.nativeElement);
+
+                expect(overlayContainerElement.querySelector("bl-select-dropdown")).toBeFalsy();
+            });
         });
     });
 

@@ -90,7 +90,9 @@ export class SelectDropdownComponent {
     }
 
     public handleClickOption(event: Event, option: SelectOptionComponent) {
+        event.preventDefault();
         event.stopPropagation();
+        event.stopImmediatePropagation();
         if (option.disabled) {
             return;
         }
