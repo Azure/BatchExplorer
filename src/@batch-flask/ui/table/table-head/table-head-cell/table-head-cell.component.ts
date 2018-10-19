@@ -1,6 +1,6 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef,
-    HostBinding, HostListener, Inject, Injector, Input, OnDestroy, OnInit, forwardRef,
+    HostBinding, Inject, Injector, Input, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { ClickableComponent } from "@batch-flask/ui";
 import { SortDirection } from "@batch-flask/ui/abstract-list";
