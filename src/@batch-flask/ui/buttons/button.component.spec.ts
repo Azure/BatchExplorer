@@ -81,6 +81,10 @@ describe("ButtonComponent", () => {
         expect(de.query(By.css(".fa-check"))).not.toBeFalsy();
     });
 
+    it("set aria label with title", () => {
+        expect(de.attributes["aria-label"]).toEqual("Stop");
+    });
+
     describe("when disabled", () => {
         beforeEach(() => {
             testComponent.disabled = true;
