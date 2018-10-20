@@ -1,8 +1,9 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef,
-    HostBinding, HostListener, Inject, Input, OnDestroy, OnInit, forwardRef,
+    HostBinding, Inject, Injector, Input, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { SortDirection } from "@batch-flask/ui/abstract-list";
+import { ClickableComponent } from "@batch-flask/ui/buttons";
 import { TableColumnRef } from "@batch-flask/ui/table/table-column-manager";
 import { TableComponent } from "@batch-flask/ui/table/table.component";
 import { Subscription } from "rxjs";
@@ -14,7 +15,7 @@ import "./table-head-cell.scss";
     templateUrl: "table-head-cell.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeadCellComponent implements OnInit, OnDestroy {
+export class TableHeadCellComponent extends ClickableComponent implements OnInit, OnDestroy {
     public SortDirection = SortDirection;
 
     @Input() public column: TableColumnRef;
@@ -53,10 +54,11 @@ export class TableHeadCellComponent implements OnInit, OnDestroy {
     private _subs: Subscription[] = [];
 
     constructor(
+        injector: Injector,
         @Inject(forwardRef(() => TableComponent)) public table: any,
         public elementRef: ElementRef,
         private changeDetector: ChangeDetectorRef) {
-
+            super(injector, null);
     }
 
     public ngOnInit() {
@@ -82,8 +84,8 @@ export class TableHeadCellComponent implements OnInit, OnDestroy {
         this._subs.forEach(x => x.unsubscribe());
     }
 
-    @HostListener("click")
-    public onClick() {
+    public handleAction(event) {
+        super.handleAction(event);
         if (!this.sortable) {
             return;
         }
