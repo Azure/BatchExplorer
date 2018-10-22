@@ -23,7 +23,7 @@ describe("AutoUdpateMainService", () => {
         };
 
         const { AutoUpdateMainService } = mock("./auto-update-main.service", {
-            "electron-updater": {
+            "electron-updater-fix": {
                 autoUpdater: autoUpdaterSpy,
             },
         });
