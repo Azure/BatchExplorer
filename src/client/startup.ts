@@ -1,4 +1,3 @@
-
 import { platformDynamicServer } from "@angular/platform-server";
 import { LocaleService, TranslationsLoaderService } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
@@ -10,7 +9,6 @@ import { Constants } from "./client-constants";
 import { BatchExplorerClientModule, initializeServices } from "./client.module";
 import { ClientLocaleService, listenToSelectCertifcateEvent } from "./core";
 import { BatchExplorerApplication } from "./core/batch-explorer-application";
-
 
 function initAutoUpdate() {
     autoUpdater.allowPrerelease = true;
