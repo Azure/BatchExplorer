@@ -6,8 +6,9 @@
 </div>
 <div class="form-container" [formGroup]="form">
     <div class="form-element">
-        <h4>Application name</h4>
-        <input class="bl-input app-name" formControlName="name">
+        <bl-form-field>
+            <input blInput placeholder="Application name" class="app-name" formControlName="name">
+        </bl-form-field>
     </div>
     <div class="form-element">
         <h4>Secret</h4>

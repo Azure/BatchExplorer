@@ -16,7 +16,6 @@ enum Expire {
     selector: "bl-aad-app-secret-picker",
     templateUrl: "aad-app-secret-picker.html",
     providers: [
-        // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AADAppSecretPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => AADAppSecretPickerComponent), multi: true },
     ],

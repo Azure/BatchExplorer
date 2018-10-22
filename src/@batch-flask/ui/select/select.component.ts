@@ -186,6 +186,9 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
         this.options.changes.subscribe((value) => {
             this._computeOptions();
         });
+        setTimeout(() => {
+            this.changeDetector.markForCheck();
+        });
     }
 
     public ngOnDestroy() {
