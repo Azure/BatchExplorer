@@ -35,7 +35,7 @@ export class TableHeadComponent {
     @HostBinding("class.resizing") public resizing: ResizeRef;
 
     // Aria
-    @Input() @HostBinding("attr.role") public readonly role = "rowheader";
+    @Input() @HostBinding("attr.role") public readonly role = "row";
 
     public dimensions: Observable<number[]>;
 

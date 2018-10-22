@@ -29,6 +29,9 @@ export class TableRowRenderComponent implements OnInit, OnDestroy {
 
     // Aria
     @Input() @HostBinding("attr.role") public readonly role = "row";
+    @Input() @HostBinding("attr.aria-selected") public get ariaSelected() {
+        return this.selected;
+    }
 
     public dimensions: number[] = [];
     public columnWidths: StringMap<number> = {};
