@@ -27,6 +27,9 @@ export class TableRowRenderComponent implements OnInit, OnDestroy {
     @Input() @HostBinding("class.focused") public focused: boolean;
     @Input() @HostBinding("class.selected") public selected: boolean;
 
+    // Aria
+    @Input() @HostBinding("attr.role") public readonly role = "row";
+
     public dimensions: number[] = [];
     public columnWidths: StringMap<number> = {};
     private _sub: Subscription;

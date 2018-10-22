@@ -80,6 +80,18 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     @HostBinding("class.activable") public get activable() {
         return this.config.activable;
     }
+
+    // ----------------------------------------------------------------------
+    // Aria
+    // https://www.w3.org/TR/wai-aria-practices/examples/grid/dataGrids.html
+    @HostBinding("attr.role") public readonly role = "grid";
+    @HostBinding("attr.row-count") public get ariaRowCount() {
+        return this.items.length;
+    }
+    @HostBinding("attr.col-count") public get ariaColCount() {
+        return this.columnManager.columns.length;
+    }
+
     public dropTargetRowKey: string = null;
 
     public columnManager: TableColumnManager;
