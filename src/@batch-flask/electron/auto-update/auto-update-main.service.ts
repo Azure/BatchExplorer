@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { ProgressInfo } from "builder-util-runtime";
-import { UpdateCheckResult, autoUpdater } from "electron-updater";
+import { UpdateCheckResult, autoUpdater } from "electron-updater-fix";
 import { BehaviorSubject, Observable, Subscription, interval } from "rxjs";
 import { map } from "rxjs/operators";
 import { AutoUpdateService, UpdateStatus } from "./base";
