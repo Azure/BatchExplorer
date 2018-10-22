@@ -37,8 +37,7 @@ export class VersionService implements OnDestroy {
         this.updateChannel = this._updateChannel.asObservable();
 
         if (this.versionType === VersionType.Dev) {
-            // TODO-TIM renable
-            // this.autoUpdateService.disable();
+            this.autoUpdateService.disable();
         }
 
         this._sub = settingsService.settingsObs.subscribe((settings) => {
