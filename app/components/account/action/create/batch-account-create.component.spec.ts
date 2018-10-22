@@ -1,5 +1,5 @@
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
-import { ComponentFixture, TestBed, fakeAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync,  tick } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
 import { Response, ResponseOptions } from "@angular/http";
 import { By } from "@angular/platform-browser";
@@ -231,21 +231,21 @@ describe("BatchAccountCreateComponent ", () => {
             validateControl(component.form, "subscription").passes(validators.required).with("sub-1");
         });
 
-        it("should intialize resource groups and locations after subscription is selected", fakeAsync(() => {
+        it("should intialize resource groups and locations after subscription is selected", () => {
             component.form.controls.subscription.setValue({ subscriptionId: "dummy-1", displayName: "sub-1" });
             fixture.detectChanges();
             const rgm = debugElement.query(By.css("input[formControlName=resourceGroup]"));
             const loc = debugElement.query(By.css("bl-location-picker"));
             expect(rgm).not.toBeNull();
             expect(loc).not.toBeNull();
-        }));
+        });
 
-        it("should show permission validation for resource group dropdown list", fakeAsync(() => {
+        it("should show permission validation for resource group dropdown list", () => {
             component.form.controls.subscription.setValue({ subscriptionId: "dummy-2", displayName: "sub-2" });
             fixture.detectChanges();
             validateControl(component.form, "resourceGroup").fails("noPermission").with({ id: "dummy-1-rg-2" });
             validateControl(component.form, "resourceGroup").fails("serverError").with({ id: "servererror" });
-        }));
+        });
     });
 
     describe("location", () => {
