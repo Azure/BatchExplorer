@@ -1,0 +1,7 @@
+<ng-container *ngFor="let segment of segments;trackBy: trackSegment">
+    <ng-container *ngIf="segment.type === 'string'">
+        {{segment.content}}
+    </ng-container>
+    <ng-template *ngIf="segment.type !== 'string'" [ngTemplateOutlet]="segment.content.templateRef">
+    </ng-template>
+</ng-container>

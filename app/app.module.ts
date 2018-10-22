@@ -71,6 +71,7 @@ import {
     LocalFileStorage,
     NavigatorService,
     NcjFileGroupService,
+    NcjModule,
     NcjSubmitService,
     NcjTemplateService,
     NetworkConfigurationService,
@@ -103,6 +104,7 @@ const modules = [
     DataModule, FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
     SettingsModule, TaskModule, MarketModule, LayoutModule,
     MiscModule,
+    NcjModule,
 ];
 
 const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHttpService, ServicePrincipalService];

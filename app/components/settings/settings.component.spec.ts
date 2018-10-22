@@ -4,15 +4,14 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "@batch-flask/core";
-import { of } from "rxjs";
-
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { EditorComponent } from "@batch-flask/ui/editor";
 import { PermissionService } from "@batch-flask/ui/permission";
+import { EditorTestingModule } from "@batch-flask/ui/testing";
 import { SettingsComponent } from "app/components/settings";
 import { SettingsService } from "app/services";
+import { of } from "rxjs";
 import { click } from "test/utils/helpers";
-import { MockEditorComponent } from "test/utils/mocks/components";
 
 // tslint:disable-next-line:no-var-requires
 const defaultSettingsStr = require("app/components/settings/default-settings.json");
@@ -49,8 +48,8 @@ describe("SettingsComponent", () => {
             saveUserSettings: jasmine.createSpy("saveUserSettings"),
         };
         TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, MaterialModule, NoopAnimationsModule],
-            declarations: [SettingsComponent, TestComponent, ButtonComponent, MockEditorComponent],
+            imports: [ReactiveFormsModule, MaterialModule, NoopAnimationsModule, EditorTestingModule],
+            declarations: [SettingsComponent, TestComponent, ButtonComponent],
             providers: [
                 { provide: PermissionService, useValue: null },
                 { provide: SettingsService, useValue: settingsServiceSpy },

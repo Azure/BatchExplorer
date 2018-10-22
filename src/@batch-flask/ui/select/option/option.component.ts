@@ -22,12 +22,20 @@ export interface OptionParent {
     optionValueChanged(change: SimpleChange);
 }
 
+/**
+ * Option IDs need to be unique across components, so this counter exists outside of
+ * the component definition.
+ */
+let _uniqueIdCounter = 0;
+
 @Component({
     selector: "bl-option",
     templateUrl: "option.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectOptionComponent implements OnChanges, KeyNavigableListItem {
+    @Input() public readonly id: string = `bl-option-${_uniqueIdCounter++}`;
+
     @Input() public value: string;
 
     /**

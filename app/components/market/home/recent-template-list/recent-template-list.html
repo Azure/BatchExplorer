@@ -1,5 +1,8 @@
+<div class="basic-header">
+    <div class="name">Recent</div>
+</div>
+
 <div class="recent-submission">
-    <div class="title">Recent</div>
     <div *ngFor="let recent of recentSubmissions;trackBy: trackTemplate">
         <bl-clickable [routerLink]="['/market', 'recent', recent.id]" class="submission">
             <span class="label">{{recent.name}}</span>

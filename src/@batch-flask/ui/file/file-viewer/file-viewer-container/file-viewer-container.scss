@@ -1,0 +1,19 @@
+@import "app/styles/variables";
+
+bl-file-viewer-container {
+    $file-header-height: 40px;
+    &:not([hidden]) {display: block;}
+
+    .file-details-container {
+        height: 100%;
+
+        > .details {
+            height: calc(100% - #{$file-header-height});
+
+            > bl-file-content {
+                height: 100%;
+                display: block;
+            }
+        }
+    }
+}

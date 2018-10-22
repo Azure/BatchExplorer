@@ -33,6 +33,9 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
     @Input() public jobTemplate: NcjJobTemplate;
     @Input() public poolTemplate: NcjPoolTemplate;
     @Input() public title: string;
+    @Input() public autoRedirect = true;
+    @Input() public notify = false;
+    @Input() public containerRef: any;
 
     /**
      * initial data
@@ -193,7 +196,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         }
         this._saveTemplateAsRecent();
         const obs = this.ncjSubmitService.submitJob(jobTemplate, this.jobParams.value);
-        obs.subscribe((data) => this._redirectToJob(data.properties.id));
+        obs.subscribe((data) => this._onJobCreated(data.properties.id));
         return obs;
     }
 
@@ -209,7 +212,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
                 this.pickMode(NcjTemplateMode.ExistingPoolAndJob);
                 this.pickedPool.setValue({ poolId: data.id });
             } else {
-                this._redirectToPool(data.id);
+                this._onPoolCreated(data.id);
             }
         });
 
@@ -361,7 +364,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
             },
         };
         const obs = this.ncjSubmitService.submitJob(jobTemplate, this.jobParams.value);
-        obs.subscribe((data) => this._redirectToJob(data.properties.id));
+        obs.subscribe((data) => this._onJobCreated(data.properties.id));
 
         return obs;
     }
@@ -395,19 +398,43 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges, OnDestroy 
         }
     }
 
-    private _redirectToJob(id) {
+    private _onJobCreated(id) {
+        const url = ["/jobs"];
         if (id) {
-            this.router.navigate(["/jobs", id]);
-        } else {
-            this.router.navigate(["/jobs"]);
+            url.push(id);
+        }
+        if (this.autoRedirect) {
+            this.router.navigate(url);
+        }
+
+        if (this.notify) {
+            this.notificationService.success("Job created", `Job ${id} was successfully created`, {
+                action: () => this.router.navigate(url),
+            });
+        }
+
+        if (this.containerRef) {
+            this.containerRef.close();
         }
     }
 
-    private _redirectToPool(id) {
+    private _onPoolCreated(id) {
+        const url = ["/pools"];
         if (id) {
-            this.router.navigate(["/pools", id]);
-        } else {
-            this.router.navigate(["/pools"]);
+            url.push(id);
+        }
+        if (this.autoRedirect) {
+            this.router.navigate(url);
+        }
+
+        if (this.notify) {
+            this.notificationService.success("Pool created", `Pool ${id} was successfully created`, {
+                action: () => this.router.navigate(url),
+            });
+        }
+
+        if (this.containerRef) {
+            this.containerRef.close();
         }
     }
 }

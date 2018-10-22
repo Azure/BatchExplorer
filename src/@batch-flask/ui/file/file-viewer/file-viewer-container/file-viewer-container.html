@@ -1,0 +1,26 @@
+<div class="file-details-container">
+    <bl-file-viewer-header [fileViewer]="viewRef?.instance" [fileLoader]="fileLoader"></bl-file-viewer-header>
+    <div class="details">
+        <template #viewerContainer></template>
+        <bl-file-too-large [file]="file" [fileLoader]="fileLoader" *ngIf="fileTooLarge"></bl-file-too-large>
+
+        <bl-card *ngIf="unknownFileType" class="unknown-file-type">
+            <h2 class="title">{{'file-viewer-container.unkownFileType' | i18n }}</h2>
+            <div class="options">
+                <button class="log" (click)="openAs('log')">Log</button>
+                <button class="text" (click)="openAs('text')">Code</button>
+                <button class="image" (click)="openAs('image')">Image</button>
+            </div>
+        </bl-card>
+    </div>
+    <div *ngIf="fileNotFound" class="info-overlay file-not-found">
+        <bl-i18n key="file-viewer-container.notFound">
+            <span *i18nParam="'filename'" class="highlight">{{filename}}</span>
+        </bl-i18n>
+    </div>
+    <div *ngIf="forbidden" class="info-overlay file-not-found">
+        <bl-i18n key="file-viewer-container.notAllowed">
+            <span *i18nParam="'filename'" class="highlight">{{filename}}</span>
+        </bl-i18n>
+    </div>
+</div>

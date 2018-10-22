@@ -1,6 +1,7 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { File } from "@batch-flask/ui/file";
 import { Subject, of } from "rxjs";
 import { ImageFileViewerComponent } from "./image-file-viewer.component";
 
@@ -28,8 +29,8 @@ describe("ImageFileViewerComponent", () => {
         testComponent = fixture.componentInstance;
         testComponent.fileLoader = {
             filename: "foo.png",
-            fileChanged: new Subject(),
-            cache: jasmine.createSpy().and.returnValue(of("/local/path/to/file.txt")),
+            properties: new Subject(),
+            cache: jasmine.createSpy("fileLoader.cache").and.returnValue(of("/local/path/to/file.txt")),
         };
         de = fixture.debugElement.query(By.css("bl-image-file-viewer"));
         fixture.detectChanges();
@@ -51,7 +52,7 @@ describe("ImageFileViewerComponent", () => {
     });
 
     it("refresh again when file has changed", () => {
-        testComponent.fileLoader.fileChanged.next(true);
+        testComponent.fileLoader.properties.next(new File({ name: "foo.png", properties: {} }));
         expect(testComponent.fileLoader.cache).toHaveBeenCalledTimes(2);
     });
 });

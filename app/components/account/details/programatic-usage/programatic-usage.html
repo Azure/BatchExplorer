@@ -5,7 +5,7 @@
 
     <div class="credential-type-picker">
         Authentication type:
-        <bl-select [ngModel]="pickedCredentialType" (ngModelChange)="pickCredentialType($event)">
+        <bl-select placeholder="Authentication type" [ngModel]="pickedCredentialType" (ngModelChange)="pickCredentialType($event)">
             <bl-option [value]="CredentialType.SharedKey" label="Shared key"></bl-option>
             <bl-option [value]="CredentialType.AAD" label="Azure AD"></bl-option>
         </bl-select>

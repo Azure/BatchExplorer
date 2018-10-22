@@ -3,12 +3,12 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule, By } from "@angular/platform-browser";
 import { ClickableComponent, DialogService } from "@batch-flask/ui";
+import { EditorMockComponent, EditorTestingModule } from "@batch-flask/ui/testing";
 import { AutoscaleFormula } from "app/models";
 import { AutoscaleFormulaService, PredefinedFormulaService } from "app/services";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 import { click } from "test/utils/helpers";
-import { MockEditorComponent } from "test/utils/mocks/components";
 import { AutoscaleFormulaPickerComponent } from "./autoscale-formula-picker.component";
 
 const predefinedFormulas = [
@@ -29,7 +29,7 @@ describe("AutoscaleFormulaPickerComponent", () => {
     let testComponent: TestComponent;
     let component: AutoscaleFormulaPickerComponent;
     let de: DebugElement;
-    let editorComponent: MockEditorComponent;
+    let editorComponent: EditorMockComponent;
 
     let autoScaleForumlaServiceSpy;
     let predefinedForumlaServiceSpy;
@@ -53,8 +53,8 @@ describe("AutoscaleFormulaPickerComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [BrowserModule, FormsModule, ReactiveFormsModule],
-            declarations: [AutoscaleFormulaPickerComponent, TestComponent, ClickableComponent, MockEditorComponent],
+            imports: [BrowserModule, FormsModule, ReactiveFormsModule, EditorTestingModule],
+            declarations: [AutoscaleFormulaPickerComponent, TestComponent, ClickableComponent],
             providers: [
                 { provide: AutoscaleFormulaService, useValue: autoScaleForumlaServiceSpy },
                 { provide: PredefinedFormulaService, useValue: predefinedForumlaServiceSpy },

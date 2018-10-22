@@ -1,5 +1,12 @@
 <div class="select-button-container">
-   <div #selectButton class="select-button" (click)="clickSelectButton($event)" [title]="title" [tabindex]="disabled ? -1 : 0">
+   <div #selectButton class="select-button"
+        (click)="clickSelectButton($event)"
+        [title]="title"
+        [tabindex]="disabled ? -1 : 0"
+        aria-readonly="true"
+        [attr.aria-activedescendant]="focusedOption?.id"
+        role="textbox"
+        (blur)="onButtonBlur()">
         <div class="label">
             <ng-container *ngIf="!hasValueSelected">{{placeholder}}</ng-container>
             <ng-container *ngIf="hasValueSelected">
@@ -17,6 +24,15 @@
         </div>
    </div>
    <ng-container *ngIf="dropdownOpen && filterable">
-       <input class="select-filter" #filterInput [ngModel]="filter" (ngModelChange)="filterChanged($event)" placeholder="Filter items...">
+       <input class="select-filter"
+            #filterInput
+            role="textbox"
+            [ngModel]="filter"
+            (ngModelChange)="filterChanged($event)"
+            placeholder="Filter items..."
+            [attr.aria-controls]="dropdownId"
+            attr.aria-autocomplete="list"
+            [attr.aria-activedescendant]="focusedOption?.id"
+            (blur)="onInputBlur()">
    </ng-container>
 </div>

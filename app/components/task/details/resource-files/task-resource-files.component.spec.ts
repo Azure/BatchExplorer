@@ -3,11 +3,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { I18nTestingModule } from "@batch-flask/core/testing";
+import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import { ButtonsModule, CloudFileService, I18nUIModule, NoItemComponent } from "@batch-flask/ui";
 import { TableTestingModule } from "@batch-flask/ui/testing";
 import { Task } from "app/models";
 import { click } from "test/utils/helpers";
-import { ElectronTestingModule } from "test/utils/mocks";
 import { TaskResourceFilesComponent } from "./task-resource-files.component";
 
 @Component({

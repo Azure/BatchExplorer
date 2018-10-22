@@ -1,52 +1,41 @@
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
-import { RouterTestingModule } from "@angular/router/testing";
-import { BehaviorSubject } from "rxjs";
-
+import { MatDialogRef } from "@angular/material";
 import { MaterialModule } from "@batch-flask/core";
-
 import { SubmitNcjTemplateComponent } from "app/components/market/submit";
 import { SubmitLocalTemplateComponent } from "app/components/market/submit-local-template";
 import { NcjTemplateType } from "app/models";
-import { NcjTemplateService } from "app/services";
+import { LocalTemplateService } from "app/services";
 
 describe("SubmitLocalTemplateComponent", () => {
     let fixture: ComponentFixture<SubmitLocalTemplateComponent>;
     let component: SubmitLocalTemplateComponent;
     let templateServiceSpy: any;
-    let activatedRouteSpy: any;
-
-    const queryParameters = {
-        templateFile: "job.json",
-    };
 
     beforeEach(() => {
-        activatedRouteSpy = {
-            queryParams: new BehaviorSubject(queryParameters),
-        };
 
         templateServiceSpy = {
-            loadLocalTemplateFile: jasmine.createSpy("loadLocalTemplateFile").and.callFake((path: string) => {
-                if (path.contains("job")) {
-                    return Promise.resolve({ type: NcjTemplateType.job, template: { parameters: {}, job: {} } });
-                } else if (path.contains("pool")) {
-                    return Promise.resolve({ type: NcjTemplateType.pool, template: { pool: {} } });
-                } else if (path.contains("other")) {
-                    return Promise.resolve({ type: NcjTemplateType.unknown, template: null });
+            parseNcjTemplate: jasmine.createSpy("parseNcjTemplate").and.callFake((templateStr: string) => {
+                const template = JSON.parse(templateStr);
+                if (templateStr.contains("job")) {
+                    return { type: NcjTemplateType.Job, template};
+                } else if (templateStr.contains("pool")) {
+                    return { type: NcjTemplateType.Pool, template };
+                } else if (templateStr.contains("other")) {
+                    return { type: NcjTemplateType.Unknown, template: null };
                 } else {
-                    return Promise.reject("couldn't parse template due to error");
+                    throw new Error("couldn't parse template due to error");
                 }
             }),
         };
 
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, ReactiveFormsModule, FormsModule, MaterialModule],
+            imports: [ReactiveFormsModule, FormsModule, MaterialModule],
             declarations: [SubmitLocalTemplateComponent, SubmitNcjTemplateComponent],
             providers: [
-                { provide: ActivatedRoute, useValue: activatedRouteSpy },
-                { provide: NcjTemplateService, useValue: templateServiceSpy },
+                { provide: LocalTemplateService, useValue: templateServiceSpy },
+                { provide: MatDialogRef, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -56,14 +45,13 @@ describe("SubmitLocalTemplateComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should report correct breadcrumb text", () => {
-        const breadcrumb = SubmitLocalTemplateComponent.breadcrumb({}, { templateFile: "my-template.json" });
-        expect(breadcrumb.name).toBe("my-template.json");
-        expect(breadcrumb.label).toBe("Local templates");
-    });
-
     it("page title should be correct", () => {
-        expect(component.templateFile).toBe("job.json");
-        expect(component.title).toBe("Run template at job.json");
+        component.filename = "foo.template.json";
+        component.template = `{"metadata": {"description": "foo desc"}, "job": {}}`;
+        expect(component.jobTemplate).toEqual({
+            metadata: {description: "foo desc"},
+            job: {},
+        } as any);
+        expect(component.title).toBe("Run template foo.template.json");
     });
 });

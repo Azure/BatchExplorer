@@ -55,6 +55,8 @@ export class ButtonComponent extends ClickableComponent {
     @Input() @HostBinding("attr.color") public color: ButtonColor = "primary";
     @Input() public routerLink: string;
 
+    @HostBinding("attr.aria-label") public get ariaLabel() { return this.title; }
+
     public set status(value: SubmitStatus) {
         this._status = value;
         this.changeDetectionRef.markForCheck();

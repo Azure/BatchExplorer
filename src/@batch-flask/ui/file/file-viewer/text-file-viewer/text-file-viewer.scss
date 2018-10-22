@@ -1,0 +1,13 @@
+bl-text-file-viewer {
+    display: block;
+    height: 100%;
+    position: relative;
+
+    bl-loading {
+        height: 100%;
+
+        .loading-content {
+            height: 100%;
+        }
+    }
+}

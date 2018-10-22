@@ -1,0 +1,4 @@
+file-viewer-container:
+  unkownFileType: This file is not a known extension. Do you still want to open it?
+  notFound: File {filename} doesn't exist.
+  notAllowed: File {filename} cannot be accessed. Server returned forbidden error

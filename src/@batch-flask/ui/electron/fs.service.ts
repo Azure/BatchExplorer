@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { FSWatcher } from "chokidar";
+import * as fs from "fs";
 import { ElectronRemote } from "../../electron/remote.service";
 
 /**
@@ -62,11 +63,19 @@ export class FileSystemService {
         return this._fs.unzip(source, dest);
     }
 
-    public async lstat(path: string) {
+    public async lstat(path: string): Promise<fs.Stats> {
         return this._fs.lstat(path);
+    }
+
+    public async stat(path: string): Promise<fs.Stats> {
+        return this._fs.stat(path);
     }
 
     public watch(path: string): FSWatcher {
         return this._fs.watch(path);
+    }
+
+    public glob(pattern: string): Promise<string[]> {
+        return this._fs.glob(pattern);
     }
 }

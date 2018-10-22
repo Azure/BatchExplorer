@@ -10,18 +10,21 @@
                 </div>
             </div>
         </div>
-        <div class="market-first-section">
-            <bl-recent-template-list></bl-recent-template-list>
-        </div>
-        <div class="applications">
-            <bl-card class="application local-templates" title="All your local templates" routerLink="/market/local">
-                <i class="fa fa-desktop logo"></i>
-                <div class="name">Local templates</div>
-            </bl-card>
-            <bl-card *ngFor="let application of displayedApplications;trackBy: trackApplication" class="application" [title]="application.description" [routerLink]="['/market', application.id, 'actions']">
-                <img class="logo" [src]="application.icon" alt="Logo of {{application.name}}">
-                <div class="name">{{application.name}}</div>
-            </bl-card>
+        <div class="gallery-content">
+            <div class="recent-templates">
+                <bl-recent-template-list></bl-recent-template-list>
+            </div>
+            <div class="supported-applications">
+                <bl-card class="application local-templates" title="All your local templates" routerLink="/market/local">
+                    <i class="fa fa-desktop logo"></i>
+                    <div class="name">Local templates</div>
+                </bl-card>
+                <bl-card *ngFor="let application of displayedApplications;trackBy: trackApplication" class="application"
+                    [title]="application.description" [routerLink]="['/market', application.id, 'actions']">
+                    <img class="logo" [src]="application.icon" alt="Logo of {{application.name}}">
+                    <div class="name">{{application.name}}</div>
+                </bl-card>
+            </div>
         </div>
     </div>
 </bl-scrollable>

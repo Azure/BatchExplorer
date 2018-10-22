@@ -10,6 +10,7 @@ import { FileUrlUtils } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
 import { CurrentNode, FileExplorerWorkspace, FileSource, OpenedFile } from "./file-explorer-workspace";
 
+import { FileViewerConfig } from "../file-viewer";
 import "./file-explorer.scss";
 
 export interface FileNavigatorEntry {
@@ -54,17 +55,14 @@ export interface FileExplorerConfig {
      */
     canDropExternalFiles?: boolean;
 
-    /**
-     * If log file can be automatically refreshed(Tail)
-     */
-    tailable?: boolean;
+    viewer?: FileViewerConfig;
 }
 
 const fileExplorerDefaultConfig: FileExplorerConfig = {
     showTreeView: true,
     selectable: FileExplorerSelectable.none,
     canDropExternalFiles: false,
-    tailable: false,
+    viewer: null,
 };
 
 /**
