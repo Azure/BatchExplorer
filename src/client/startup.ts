@@ -11,6 +11,7 @@ import { BatchExplorerClientModule, initializeServices } from "./client.module";
 import { ClientLocaleService, listenToSelectCertifcateEvent } from "./core";
 import { BatchExplorerApplication } from "./core/batch-explorer-application";
 
+
 function initAutoUpdate() {
     autoUpdater.allowPrerelease = true;
     autoUpdater.autoDownload = true;
