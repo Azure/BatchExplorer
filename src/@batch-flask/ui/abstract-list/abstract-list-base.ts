@@ -175,11 +175,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     }
 
     public focus() {
-        this.listFocused = true;
         this.elementRef.nativeElement.focus();
-        this._pickFocusedItem();
-        this._virtualScroll.ensureItemVisible(this.focusedItem);
-        this.changeDetector.markForCheck();
     }
 
     public updateViewPortItems(items) {
@@ -277,7 +273,9 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     @HostListener("focus")
     public handleFocusAnchor(event: FocusEvent) {
-        this.focus();
+        this.listFocused = true;
+        this._pickFocusedItem();
+        this.changeDetector.markForCheck();
     }
 
     /**
