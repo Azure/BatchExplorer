@@ -113,7 +113,6 @@ export class BatchExplorerApplication {
                     appReady.resolve();
             }
         });
-        
         const authSub = this.aadService.authenticationState.subscribe((state) => {
             switch (state) {
                 case AuthenticationState.None:
