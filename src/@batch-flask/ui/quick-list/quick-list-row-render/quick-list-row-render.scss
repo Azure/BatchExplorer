@@ -20,7 +20,7 @@ bl-quick-list-row-render {
         }
     }
 
-    &:focus {
+    &.focused {
         outline: none;
         background-color: $primary-color;
     }

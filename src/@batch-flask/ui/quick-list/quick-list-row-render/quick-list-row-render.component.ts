@@ -66,16 +66,6 @@ export class QuickListRowRenderComponent implements OnChanges {
         this.list.handleClick(event, this.item, activate);
     }
 
-    @HostListener("focus", ["$event"])
-    public handleRowFocus(event: FocusEvent) {
-        this.list.handleRowFocus(event, this.item);
-    }
-
-    @HostListener("blur", ["$event"])
-    public handleRowBlur(event: FocusEvent) {
-        this.list.handleRowBlur(event, this.item);
-    }
-
     @HostListener("contextmenu")
     public openContextMenu() {
         this.list.openContextMenu(this);

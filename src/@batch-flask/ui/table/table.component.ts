@@ -3,6 +3,7 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChildren,
+    ElementRef,
     EventEmitter,
     HostBinding,
     HostListener,
@@ -58,12 +59,16 @@ export interface DropEvent {
     data: DataTransfer;
 }
 
+let idCounter = 0;
+
 @Component({
     selector: "bl-table",
     templateUrl: "table.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableComponent extends AbstractListBase implements AfterContentInit {
+    @Input() public id = `bl-table-${idCounter++}`;
+
     @Input() public set config(config: TableConfig) {
         this._config = { ...tableDefaultConfig, ...config };
         this.dataPresenter.config = this._config.sorting;
@@ -103,8 +108,9 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         contextmenuService: ContextMenuService,
         changeDetection: ChangeDetectorRef,
         router: Router,
+        elementRef: ElementRef,
         breadcrumbService: BreadcrumbService) {
-        super(contextmenuService, router, breadcrumbService, changeDetection);
+        super(contextmenuService, router, breadcrumbService, elementRef, changeDetection);
 
         this.columnManager = new TableColumnManager(this.dataPresenter);
     }

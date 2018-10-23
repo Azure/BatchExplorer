@@ -1,16 +1,16 @@
 <bl-partial-sort-warning [data]="dataProvider" [presenter]="dataPresenter"></bl-partial-sort-warning>
-<div aria-hidden [tabindex]="listFocused || focusedItem ? -1 : 0" (focus)="handleFocusAnchor($event)"></div>
+<!-- <div aria-hidden [tabindex]="listFocused || focusedItem ? -1 : 0" (focus)="handleFocusAnchor($event)"></div> -->
 <div class="list-body">
     <div class="scroll-shadow" *ngIf="showScrollShadow"></div>
     <bl-virtual-scroll [items]="items" [childHeight]="48" (update)="updateViewPortItems($event)" (scroll)="handleScrollChange($event)">
         <bl-quick-list-row-render *ngFor="let item of viewPortItems; trackBy: trackItem"
+            id="{{id}}-row-{{item.id}}"
             [item]="item"
             [statusDef]="statusDef"
             [titleDef]="titleDef"
             [stateDef]="stateDef"
             [extraDef]="extraDef"
             [selected]="selection.has(item.id)"
-            [attr.tabindex]="item === focusedItem ? 0 : -1"
             [focused]="listFocused && item === focusedItem">
         </bl-quick-list-row-render>
         <bl-virtual-scroll-tail [height]="120" *ngIf="status === LoadingStatus.Loading">

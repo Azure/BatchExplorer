@@ -123,6 +123,7 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
 
     @HostListener("scroll")
     public onScroll() {
+        console.log("Scroll dis");
         this.refresh();
     }
 
@@ -215,7 +216,7 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         const top = (Math.floor(index / d.itemsPerRow) * d.childHeight);
         const buffer = (d.childHeight * Math.min(index, this.bufferAmount));
         const maxScrollTop = top - buffer;
-        const minScrollTop = top - d.viewHeight + buffer;
+        const minScrollTop = top - d.viewHeight + d.childHeight + buffer;
 
         if (this.currentTween) {
             this.currentTween.stop();
@@ -313,7 +314,6 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
 
     private _computeRange(d: VirtualScrollDimensions) {
         const scrollTop = this._computeScrollTop(d);
-
         const indexByScrollTop = scrollTop / d.scrollHeight * d.itemCount / d.itemsPerRow;
         const end = Math.min(d.itemCount, d.itemsPerRow * (Math.ceil(indexByScrollTop) + d.itemsPerCol + 1));
         let maxStartEnd = end;

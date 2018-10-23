@@ -1,5 +1,6 @@
 import {
     ChangeDetectorRef,
+    ElementRef,
     EventEmitter,
     HostBinding,
     HostListener,
@@ -68,6 +69,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public LoadingStatus = LoadingStatus;
     public SortingStatus = SortingStatus;
 
+    @Input() public id: string;
     @Input() public commands: EntityCommands<any>;
 
     @Input() public set data(
@@ -75,6 +77,17 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         this.dataProvider.data = data;
     }
     @Input() public status: LoadingStatus;
+
+    // Aria
+    @HostBinding("attr.tabindex") public readonly tabindex = 0;
+    @HostBinding("attr.aria-activedescendant")
+    public get ariaActiveDescendent() {
+        if (this.focusedItem) {
+            return `${this.id}-row-${this.focusedItem.id}`;
+        } else {
+            return null;
+        }
+    }
 
     public set items(items: any[]) {
         this._items = items;
@@ -126,6 +139,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         private contextmenuService: ContextMenuService,
         private router: Router,
         private breadcrumbService: BreadcrumbService,
+        private elementRef: ElementRef,
         changeDetection: ChangeDetectorRef) {
         super(changeDetection);
         this._initKeyNavigator();
@@ -161,6 +175,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     public focus() {
         this.listFocused = true;
+        this.elementRef.nativeElement.focus();
         this._pickFocusedItem();
         this._virtualScroll.ensureItemVisible(this.focusedItem);
         this.changeDetector.markForCheck();
@@ -259,6 +274,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         this.selection = selection;
     }
 
+    @HostListener("focus")
     public handleFocusAnchor(event: FocusEvent) {
         this.focus();
     }
@@ -270,26 +286,10 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
      * @param event FocusEvent emitted
      * @param item Item displayed in the row
      */
-    public handleRowFocus(event: FocusEvent, item: AbstractListItem) {
-        this.listFocused = true;
-        if (item !== this.focusedItem) {
-            this._keyNavigator.focusItem(item);
-        }
+    @HostListener("blur", ["$event"])
+    public handleBlur(event: FocusEvent) {
+        this.listFocused = false;
         this.changeDetector.markForCheck();
-    }
-
-    /**
-     * When an item is being focused out, check if its because we are focusing another.
-     * - If so all good.
-     * - Otherwise means we focused out of the list
-     * @param event FocusEvent emitted
-     * @param item Item displayed in the row
-     */
-    public handleRowBlur(event: FocusEvent, item: AbstractListItem) {
-        if (item === this.focusedItem) {
-            this.listFocused = false;
-            this.changeDetector.markForCheck();
-        }
     }
 
     public setFocusedItem(item: AbstractListItem) {

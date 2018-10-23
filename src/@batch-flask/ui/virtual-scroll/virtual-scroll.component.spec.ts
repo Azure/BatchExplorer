@@ -118,14 +118,13 @@ describe("VirtualScrollComponent", () => {
                 fixture.detectChanges();
                 expect(de.nativeElement.scrollTop).toBe(400);
                 const items = de.queryAll(By.css(".item"));
-                expect(items.length).toBe(5);
                 expect(items[0].nativeElement.textContent).toContain("item-05");
                 expect(items[1].nativeElement.textContent).toContain("item-06");
                 expect(items[2].nativeElement.textContent).toContain("item-07");
                 expect(items[3].nativeElement.textContent).toContain("item-08");
                 expect(items[4].nativeElement.textContent).toContain("item-09");
                 done();
-            });
+            }, 2000)
         });
     });
 

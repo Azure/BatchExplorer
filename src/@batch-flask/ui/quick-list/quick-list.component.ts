@@ -3,7 +3,9 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
+    ElementRef,
     HostBinding,
+    Input,
     TemplateRef,
     forwardRef,
 } from "@angular/core";
@@ -22,6 +24,8 @@ import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 
 import "./quick-list.scss";
 
+let idCounter = 0;
+
 @Component({
     selector: "bl-quick-list",
     templateUrl: "quick-list.html",
@@ -31,6 +35,8 @@ import "./quick-list.scss";
     ],
 })
 export class QuickListComponent extends AbstractListBase {
+    @Input() public id = `bl-quick-list-${idCounter++}`;
+
     @ContentChild(QuickListRowStatusDirective, { read: TemplateRef }) public statusDef: TemplateRef<any>;
     @ContentChild(QuickListRowTitleDirective, { read: TemplateRef }) public titleDef: TemplateRef<any>;
     @ContentChild(QuickListRowStateDirective, { read: TemplateRef }) public stateDef: TemplateRef<any>;
@@ -42,9 +48,9 @@ export class QuickListComponent extends AbstractListBase {
     constructor(
         contextMenuService: ContextMenuService,
         router: Router,
+        elementRef: ElementRef,
         breadcrumbService: BreadcrumbService,
         changeDetector: ChangeDetectorRef) {
-        super(contextMenuService, router, breadcrumbService, changeDetector);
+        super(contextMenuService, router, breadcrumbService, elementRef, changeDetector);
     }
-
 }
