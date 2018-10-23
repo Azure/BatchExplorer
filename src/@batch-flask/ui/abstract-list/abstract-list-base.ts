@@ -6,6 +6,7 @@ import {
     Input,
     OnDestroy,
     Output,
+    ViewChild,
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { ListKeyNavigator, ListView } from "@batch-flask/core";
@@ -22,6 +23,7 @@ import { List } from "immutable";
 import * as inflection from "inflection";
 import { Subscription, of } from "rxjs";
 import { FocusSectionComponent } from "../focus-section";
+import { VirtualScrollComponent } from "../virtual-scroll";
 import { AbstractListItem } from "./abstract-list-item";
 import { ListDataProvider } from "./list-data-provider";
 import { ListSortConfig, SortDirection, SortingStatus } from "./list-data-sorter";
@@ -116,6 +118,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     protected _config: AbstractListBaseConfig = abstractListDefaultConfig;
 
+    @ViewChild(VirtualScrollComponent) private _virtualScroll: VirtualScrollComponent;
     private _subs: Subscription[] = [];
     private _items: any[] = [];
     private _keyNavigator: ListKeyNavigator<AbstractListItem>;
@@ -380,18 +383,13 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     }
 
     private _pickFocusedItem() {
-        console.log("Pick focused item", this._keyNavigator.focusedItem);
-        if (this._keyNavigator.focusedItem) {
-            console.log("aready have");
-        } else {
+        if (!this._keyNavigator.focusedItem) {
             if (this.activeItem) {
                 this._keyNavigator.focusItem(this.items.find(x => x.id === this.activeItem));
-                console.log("Focus dis", this.items.find(x => x.id === this.activeItem));
             } else {
                 this._keyNavigator.focusFirstItem();
             }
             this.changeDetector.markForCheck();
-            console.log("Focused item", this.focusedItem);
         }
     }
 
@@ -402,6 +400,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
         this._keyNavigator.change.subscribe(() => {
             this.focusedItem = this._keyNavigator.focusedItem;
+            this._virtualScroll.ensureItemVisible(this.focusedItem);
             this.changeDetector.markForCheck();
         });
     }
