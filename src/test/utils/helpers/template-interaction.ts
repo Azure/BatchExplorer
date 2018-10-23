@@ -129,7 +129,7 @@ export function updateInput(el: DebugElement | HTMLInputElement, value: any) {
 }
 
 /** Dispatches a keydown event from an element. */
-export function createKeyboardEvent(type: string, keyCode: number, target?: Element, key?: string) {
+export function createKeyboardEvent(type: string, code: KeyCode, keyCode?: number, target?: Element, key?: string) {
     const event = document.createEvent("KeyboardEvent") as any;
     // Firefox does not support `initKeyboardEvent`, but supports `initKeyEvent`.
     const initEventFn = (event.initKeyEvent || event.initKeyboardEvent).bind(event);
@@ -142,6 +142,7 @@ export function createKeyboardEvent(type: string, keyCode: number, target?: Elem
     Object.defineProperties(event, {
         keyCode: { get: () => keyCode },
         key: { get: () => key },
+        code: { get: () => code },
         target: { get: () => target },
     });
 

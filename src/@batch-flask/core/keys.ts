@@ -19,4 +19,5 @@ export enum KeyCode {
     ArrowUp = "ArrowUp",
     Space = "Space",
     Enter = "Enter",
+    Tab = "Tab",
 }
