@@ -3,6 +3,8 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
+    Host,
+    HostBinding,
     Optional,
     TemplateRef,
 } from "@angular/core";
@@ -33,6 +35,11 @@ export class QuickListComponent extends AbstractListBase {
     @ContentChild(QuickListRowStateDirective, { read: TemplateRef }) public stateDef: TemplateRef<any>;
     @ContentChild(QuickListRowExtraDirective, { read: TemplateRef }) public extraDef: TemplateRef<any>;
 
+    @HostBinding("attr.role") public readonly role = "listbox";
+    @HostBinding("attr.aria-multiselectable") public ariaMultiSelectable = true;
+    @HostBinding("attr.set-size") public get ariaSetSize() {
+        return this.items.length;
+    }
     constructor(
         contextMenuService: ContextMenuService,
         router: Router,

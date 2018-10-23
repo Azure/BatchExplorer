@@ -34,6 +34,7 @@ export class QuickListRowRenderComponent implements OnChanges {
     @Input() @HostBinding("class.selected") public selected: boolean;
 
     // Aria
+    @HostBinding("attr.role") public readonly role = "option";
     @HostBinding("attr.aria-selected") public get ariaSelected() {
         return this.selected;
     }
