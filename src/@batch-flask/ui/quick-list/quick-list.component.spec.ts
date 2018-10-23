@@ -1,4 +1,4 @@
-import { Component, DebugElement, NO_ERRORS_SCHEMA, ViewChild } from "@angular/core";
+import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -52,7 +52,7 @@ class TestComponent {
     ];
 }
 
-describe("QuickListComponent", () => {
+fdescribe("QuickListComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
@@ -90,6 +90,12 @@ describe("QuickListComponent", () => {
         quicklist.selectionChange.subscribe(x => selection = x);
         fixture.detectChanges();
         items = de.queryAll(By.css("bl-quick-list-row-render"));
+    });
+
+    it("sets aria-setsize on each of the items", () => {
+        for (const item of items) {
+            expect(item.attributes["aria-setsize"]).toEqual("5");
+        }
     });
 
     it("should display all the content", () => {

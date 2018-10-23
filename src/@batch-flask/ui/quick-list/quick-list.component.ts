@@ -38,9 +38,7 @@ export class QuickListComponent extends AbstractListBase {
 
     @HostBinding("attr.role") public readonly role = "listbox";
     @HostBinding("attr.aria-multiselectable") public ariaMultiSelectable = true;
-    @HostBinding("attr.set-size") public get ariaSetSize() {
-        return this.items.length;
-    }
+
     constructor(
         contextMenuService: ContextMenuService,
         router: Router,

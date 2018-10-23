@@ -38,6 +38,9 @@ export class QuickListRowRenderComponent implements OnChanges {
     @HostBinding("attr.aria-selected") public get ariaSelected() {
         return this.selected;
     }
+    @HostBinding("attr.aria-setsize") public get ariaSetSize() {
+        return this.list.items.length;
+    }
 
     constructor(
         @Inject(forwardRef(() => QuickListComponent)) private list: QuickListComponent,

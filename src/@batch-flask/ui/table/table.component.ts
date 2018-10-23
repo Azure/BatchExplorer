@@ -83,10 +83,10 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     // Aria
     // https://www.w3.org/TR/wai-aria-practices/examples/grid/dataGrids.html
     @HostBinding("attr.role") public readonly role = "grid";
-    @HostBinding("attr.row-count") public get ariaRowCount() {
+    @HostBinding("attr.aria-rowcount") public get ariaRowCount() {
         return this.items.length;
     }
-    @HostBinding("attr.col-count") public get ariaColCount() {
+    @HostBinding("attr.aria-colcount") public get ariaColCount() {
         return this.columnManager.columns.length;
     }
 
