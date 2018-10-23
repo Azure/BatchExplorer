@@ -52,7 +52,7 @@ class TestComponent {
     ];
 }
 
-fdescribe("QuickListComponent", () => {
+describe("QuickListComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
