@@ -1,8 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { Router } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
-import { ListBaseComponent } from "@batch-flask/ui";
-import { LoadingStatus } from "@batch-flask/ui";
+import { ListBaseComponent, LoadingStatus } from "@batch-flask/ui";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService } from "app/services";

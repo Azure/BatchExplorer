@@ -123,7 +123,6 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
 
     @HostListener("scroll")
     public onScroll() {
-        console.log("Scroll dis");
         this.refresh();
     }
 

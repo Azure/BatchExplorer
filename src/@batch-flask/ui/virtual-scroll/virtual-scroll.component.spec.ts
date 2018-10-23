@@ -124,7 +124,7 @@ describe("VirtualScrollComponent", () => {
                 expect(items[3].nativeElement.textContent).toContain("item-08");
                 expect(items[4].nativeElement.textContent).toContain("item-09");
                 done();
-            }, 2000)
+            }, 2000);
         });
     });
 
