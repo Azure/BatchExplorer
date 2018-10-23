@@ -139,7 +139,6 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
         this.dataPresenter.items.subscribe((items) => {
             this.items = items;
-            this._pickFocusedItem();
             this.changeDetector.markForCheck();
         });
 
@@ -250,6 +249,12 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
             }
         });
         this.selection = selection;
+    }
+
+    public handleFocusAnchor(event: FocusEvent) {
+        this.listFocused = true;
+        this._pickFocusedItem();
+        this.changeDetector.markForCheck();
     }
 
     /**

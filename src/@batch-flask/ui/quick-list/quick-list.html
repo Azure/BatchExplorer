@@ -1,4 +1,5 @@
 <bl-partial-sort-warning [data]="dataProvider" [presenter]="dataPresenter"></bl-partial-sort-warning>
+<div aria-hidden [tabindex]="listFocused || focusedItem ? -1 : 0" (focus)="handleFocusAnchor($event)"></div>
 <div class="list-body">
     <div class="scroll-shadow" *ngIf="showScrollShadow"></div>
     <bl-virtual-scroll [items]="items" [childHeight]="48" (update)="updateViewPortItems($event)" (scroll)="handleScrollChange($event)">
