@@ -43,7 +43,6 @@ export class QuickListComponent extends AbstractListBase {
     @ContentChild(QuickListRowExtraDirective, { read: TemplateRef }) public extraDef: TemplateRef<any>;
 
     @HostBinding("attr.role") public readonly role = "listbox";
-    @HostBinding("attr.aria-multiselectable") public ariaMultiSelectable = true;
 
     constructor(
         contextMenuService: ContextMenuService,

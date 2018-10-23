@@ -80,6 +80,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     // Aria
     @HostBinding("attr.tabindex") public readonly tabindex = 0;
+    @HostBinding("attr.aria-multiselectable") public ariaMultiSelectable = true;
     @HostBinding("attr.aria-activedescendant")
     public get ariaActiveDescendent() {
         if (this.focusedItem) {
