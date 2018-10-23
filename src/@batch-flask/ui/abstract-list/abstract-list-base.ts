@@ -8,7 +8,7 @@ import {
     Output,
 } from "@angular/core";
 import { Router } from "@angular/router";
-import { ListKeyNavigator, ListView, autobind } from "@batch-flask/core";
+import { ListKeyNavigator, ListView } from "@batch-flask/core";
 import { ENTER, SPACE } from "@batch-flask/core/keys";
 import { ListSelection, SelectableList } from "@batch-flask/core/list";
 import { ListDataPresenter } from "@batch-flask/ui/abstract-list/list-data-presenter";
@@ -159,13 +159,6 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         }
     }
 
-    @HostListener("focus", ["$event"])
-    public onFocus(event: FocusEvent) {
-        this.listFocused = true;
-        console.log("List focused", this.listFocused);
-        this.changeDetector.markForCheck();
-    }
-
     public updateViewPortItems(items) {
         this.viewPortItems = items;
         if (items.length === this.items.length) {
@@ -270,8 +263,8 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         this.listFocused = true;
         if (item !== this.focusedItem) {
             this._keyNavigator.focusItem(item);
-            this.changeDetector.markForCheck();
         }
+        this.changeDetector.markForCheck();
     }
 
     /**
@@ -382,13 +375,18 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     }
 
     private _pickFocusedItem() {
-        if (!this._keyNavigator.focusedItem) {
+        console.log("Pick focused item", this._keyNavigator.focusedItem);
+        if (this._keyNavigator.focusedItem) {
+            console.log("aready have");
+        } else {
             if (this.activeItem) {
-                this._keyNavigator.focusItem(this.items.find(x => x.id === this.activateItem));
+                this._keyNavigator.focusItem(this.items.find(x => x.id === this.activeItem));
+                console.log("Focus dis", this.items.find(x => x.id === this.activeItem));
             } else {
                 this._keyNavigator.focusFirstItem();
             }
             this.changeDetector.markForCheck();
+            console.log("Focused item", this.focusedItem);
         }
     }
 

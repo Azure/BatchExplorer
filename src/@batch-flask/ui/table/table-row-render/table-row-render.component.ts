@@ -73,14 +73,14 @@ export class TableRowRenderComponent implements OnInit, OnChanges, OnDestroy {
         this.table.handleClick(event, this.item, activate);
     }
 
-    @HostListener("blur", ["$event"])
-    public handleRowBlur(event: FocusEvent) {
-        this.table.handleRowBlur(event, this.item);
-    }
-
     @HostListener("focus", ["$event"])
     public handleRowFocus(event: FocusEvent) {
         this.table.handleRowFocus(event, this.item);
+    }
+
+    @HostListener("blur", ["$event"])
+    public handleRowBlur(event: FocusEvent) {
+        this.table.handleRowBlur(event, this.item);
     }
 
     @HostListener("contextmenu")

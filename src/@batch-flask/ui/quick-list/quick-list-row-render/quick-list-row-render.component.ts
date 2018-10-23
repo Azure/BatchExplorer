@@ -31,6 +31,11 @@ export class QuickListRowRenderComponent {
     @Input() @HostBinding("class.focused") public focused: boolean;
     @Input() @HostBinding("class.selected") public selected: boolean;
 
+    // Aria
+    @HostBinding("attr.aria-selected") public get ariaSelected() {
+        return this.selected;
+    }
+
     constructor(@Inject(forwardRef(() => QuickListComponent)) private list: QuickListComponent) {
 
     }
@@ -38,6 +43,16 @@ export class QuickListRowRenderComponent {
     @HostListener("click", ["$event"])
     public handleClick(event: MouseEvent, activate = true) {
         this.list.handleClick(event, this.item, activate);
+    }
+
+    @HostListener("focus", ["$event"])
+    public handleRowFocus(event: FocusEvent) {
+        this.list.handleRowFocus(event, this.item);
+    }
+
+    @HostListener("blur", ["$event"])
+    public handleRowBlur(event: FocusEvent) {
+        this.list.handleRowBlur(event, this.item);
     }
 
     @HostListener("contextmenu")
