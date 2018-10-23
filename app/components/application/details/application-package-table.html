@@ -1,4 +1,4 @@
-<bl-focus-section *ngIf="displayedPackages.size > 0">
+<ng-container *ngIf="displayedPackages.size > 0">
     <bl-table [(activeItem)]="activeItem" [(selection)]="selection" [data]="displayedPackages">
         <bl-column name="version">
             <div *blHeadCellDef>Version</div>
@@ -17,7 +17,7 @@
             <div *blCellDef="let package">{{formatDate(package.lastActivationTime)}}</div>
         </bl-column>
     </bl-table>
-</bl-focus-section>
+</ng-container>
 
 <bl-no-item [itemCount]="displayedPackages.size" [filter]="filter">
     <i icon class="fa fa-file-archive-o"></i>

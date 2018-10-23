@@ -32,17 +32,14 @@ interface TestItem {
 // tslint:disable:trackBy-function
 @Component({
     template: `
-        <bl-focus-section #focusSection style="height: 1000px">
+        <div style="height: 1000px">
             <bl-quick-list [data]="items" [config]="config">
                 <ng-container *blQuickListRowTitle="let item">{{item.name}}</ng-container>
             </bl-quick-list>
-        </bl-focus-section>
+        </div>
     `,
 })
 class TestComponent {
-    @ViewChild("focusSection")
-    public focusSection: FocusSectionComponent;
-
     public config: AbstractListBaseConfig = {
 
     };
@@ -116,7 +113,6 @@ describe("QuickListComponent", () => {
 
     it("click on an item should also focus it", () => {
         const item = items[1];
-        testComponent.focusSection.focus();
 
         click(item.nativeElement);
         fixture.detectChanges();

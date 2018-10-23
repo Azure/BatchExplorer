@@ -1,44 +1,42 @@
-<bl-focus-section>
-    <bl-quick-list *ngIf="quicklist"
-        [data]="nodes"
-        [status]="status"
-        [commands]="commands"
-        [(activeItem)]="activeItem"
-        [(selection)]="selection"
-        (scrollBottom)="scrollBottom.emit()">
+<bl-quick-list *ngIf="quicklist"
+    [data]="nodes"
+    [status]="status"
+    [commands]="commands"
+    [(activeItem)]="activeItem"
+    [(selection)]="selection"
+    (scrollBottom)="scrollBottom.emit()">
 
-        <ng-container *blQuickListRowTitle="let node">{{node.id}}</ng-container>
-        <ng-container *blQuickListRowState="let node">{{node.state}}</ng-container>
-    </bl-quick-list>
+    <ng-container *blQuickListRowTitle="let node">{{node.id}}</ng-container>
+    <ng-container *blQuickListRowState="let node">{{node.state}}</ng-container>
+</bl-quick-list>
 
-    <bl-table *ngIf="!quicklist"
-        [data]="nodes"
-        [status]="status"
-        [(activeItem)]="activeItem"
-        [(selection)]="selection"
-        (scrollBottom)="scrollBottom.emit()">
+<bl-table *ngIf="!quicklist"
+    [data]="nodes"
+    [status]="status"
+    [(activeItem)]="activeItem"
+    [(selection)]="selection"
+    (scrollBottom)="scrollBottom.emit()">
 
-        <bl-column name="id" [defaultWidth]="300">
-            <div *blHeadCellDef>ID</div>
-            <div *blCellDef="let node">{{node.id}}</div>
-        </bl-column>
+    <bl-column name="id" [defaultWidth]="300">
+        <div *blHeadCellDef>ID</div>
+        <div *blCellDef="let node">{{node.id}}</div>
+    </bl-column>
 
-        <bl-column name="state">
-            <div *blHeadCellDef>State</div>
-            <div *blCellDef="let node">{{node.state}}</div>
-        </bl-column>
+    <bl-column name="state">
+        <div *blHeadCellDef>State</div>
+        <div *blCellDef="let node">{{node.state}}</div>
+    </bl-column>
 
-        <bl-column name="schedulingState">
-            <div *blHeadCellDef>Scheduling state</div>
-            <div *blCellDef="let node">{{node.schedulingState}}</div>
-        </bl-column>
+    <bl-column name="schedulingState">
+        <div *blHeadCellDef>Scheduling state</div>
+        <div *blCellDef="let node">{{node.schedulingState}}</div>
+    </bl-column>
 
-        <bl-column name="totalTasksRun">
-            <div *blHeadCellDef>Total task run</div>
-            <div *blCellDef="let node">{{node.totalTasksRun}}</div>
-        </bl-column>
-    </bl-table>
-</bl-focus-section>
+    <bl-column name="totalTasksRun">
+        <div *blHeadCellDef>Total task run</div>
+        <div *blCellDef="let node">{{node.totalTasksRun}}</div>
+    </bl-column>
+</bl-table>
 
 <bl-no-item [itemCount]="nodes.size" [status]="status">
     <i icon class="fa fa-tv"></i>
