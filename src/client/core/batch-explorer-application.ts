@@ -1,4 +1,4 @@
-import { Injectable, InjectionToken, Injector } from "@angular/core";
+import { Injectable, Injector } from "@angular/core";
 import { LocaleService, TelemetryService, TranslationsLoaderService } from "@batch-flask/core";
 import { AzureEnvironment } from "@batch-flask/core/azure-environment";
 import { AutoUpdateService } from "@batch-flask/electron";
@@ -13,7 +13,7 @@ import * as commander from "commander";
 import { BatchExplorerLink, Constants, Deferred } from "common";
 import { IpcEvent } from "common/constants";
 import { app, dialog, ipcMain, session } from "electron";
-import { UpdateCheckResult, autoUpdater } from "electron-updater";
+import { UpdateCheckResult } from "electron-updater";
 import { ProxyCredentials, ProxySettings } from "get-proxy-settings";
 import * as os from "os";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -33,8 +33,6 @@ export enum BatchExplorerState {
     Loading,
     Ready,
 }
-
-export const AUTO_UPDATER = new InjectionToken("AUTO_UPDATER");
 
 @Injectable()
 export class BatchExplorerApplication {
@@ -209,7 +207,7 @@ export class BatchExplorerApplication {
     }
 
     public checkForUpdates(): Promise<UpdateCheckResult> {
-        return autoUpdater.checkForUpdates();
+        return this.autoUpdater.checkForUpdates();
     }
 
     public askUserForProxyCredentials(): Promise<ProxyCredentials> {

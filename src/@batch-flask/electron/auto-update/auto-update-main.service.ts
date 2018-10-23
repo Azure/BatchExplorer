@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { ProgressInfo } from "builder-util-runtime";
-import { UpdateCheckResult, autoUpdater } from "electron-updater";
+import { UpdateCheckResult, autoUpdater } from "electron-updater-fix";
 import { BehaviorSubject, Observable, Subscription, interval } from "rxjs";
 import { map } from "rxjs/operators";
 import { AutoUpdateService, UpdateStatus } from "./base";
@@ -37,6 +37,7 @@ export class AutoUpdateMainService extends AutoUpdateService implements OnDestro
                 }
             }),
         );
+        this.updateInfo = null;
         this.downloadProgress = this._downloadProgress.asObservable();
 
         this._autoCheckSub = interval(3600_000).subscribe(() => {
