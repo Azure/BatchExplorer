@@ -1,6 +1,5 @@
 import { Directive, Host, Optional, Self, ViewContainerRef } from "@angular/core";
-
-import { ListBaseComponent } from "@batch-flask/core/list";
+import { ListBaseComponent } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 
 @Directive({

@@ -10,6 +10,7 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-filter";
 import { BrowseLayoutListDirective } from "./browse-layout-list";
 
+import { KeyCode } from "@batch-flask/core/keys";
 import "./browse-layout.scss";
 
 export interface BrowseLayoutConfig {
@@ -138,11 +139,11 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
      * If it is arrow down it will move the focus down in the list so you can navigate elements there.
      */
     public handleKeyPressedInQuickSearch(event: KeyboardEvent) {
-        if (event.code === "ArrowDown") {
+        if (event.code === KeyCode.ArrowDown) {
             event.preventDefault();
             event.stopPropagation();
-            if (this.listDirective.component.focusSection) {
-                this.listDirective.component.focusSection.focus();
+            if (this.listDirective.component.list) {
+                this.listDirective.component.list.focus();
             }
         }
     }

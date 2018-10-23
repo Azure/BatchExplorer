@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, ViewChild,
 } from "@angular/core";
 import { ListView,  autobind } from "@batch-flask/core";
-import { ListBaseComponent } from "@batch-flask/core/list";
+import { ListBaseComponent } from "@batch-flask/ui";
 import { SubtaskInformation } from "app/models";
 import { SubtaskListParams, TaskService } from "app/services";
 import { List } from "immutable";
@@ -26,7 +26,7 @@ export class TaskSubTasksTabComponent extends ListBaseComponent implements OnCha
     public get taskId() { return this._jobId; }
 
     @ViewChild(SubTaskDisplayListComponent)
-    public list: SubTaskDisplayListComponent;
+    public list: any;
 
     public data: ListView<SubtaskInformation, SubtaskListParams>;
 

@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Filter, ListView, autobind } from "@batch-flask/core";
-import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { AbstractListBaseConfig } from "@batch-flask/ui";
+import { ActivatedRoute } from "@angular/router";
+import { Filter, ListSelection, ListView, autobind } from "@batch-flask/core";
+import { AbstractListBaseConfig, ListBaseComponent } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
@@ -46,7 +45,6 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     private _baseOptions = { };
     private _onJobAddedSub: Subscription;
     constructor(
-        router: Router,
         activatedRoute: ActivatedRoute,
         changeDetector: ChangeDetectorRef,
         public commands: JobCommands,

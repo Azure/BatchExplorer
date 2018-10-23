@@ -1,13 +1,12 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
-import { Observable } from "rxjs";
-
 import { ActivatedRoute } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
-import { ListBaseComponent } from "@batch-flask/core/list";
+import { ListBaseComponent } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Node } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
 import { ComponentUtils } from "app/utils";
+import { Observable } from "rxjs";
 import { NodeCommands } from "../action";
 
 @Component({

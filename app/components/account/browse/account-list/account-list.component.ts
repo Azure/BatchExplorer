@@ -3,7 +3,7 @@ import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { Filter, FilterMatcher, autobind } from "@batch-flask/core";
-import { ListBaseComponent } from "@batch-flask/core/list";
+import { ListBaseComponent } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { BatchAccountCommands } from "app/components/account/action";

@@ -1,12 +1,9 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
-import { List } from "immutable";
-
-import { ListBaseComponent } from "@batch-flask/core/list";
-import { EntityCommands } from "@batch-flask/ui/entity-commands/entity-commands";
-import { LoadingStatus } from "@batch-flask/ui/loading";
-import { QuickListComponent } from "@batch-flask/ui/quick-list";
-import { TableComponent } from "@batch-flask/ui/table";
+import {
+    EntityCommands, ListBaseComponent, LoadingStatus, QuickListComponent, TableComponent,
+} from "@batch-flask/ui";
 import { Node } from "app/models";
+import { List } from "immutable";
 
 import "./node-list-display.scss";
 

@@ -22,7 +22,6 @@ import { LoadingStatus } from "@batch-flask/ui/loading";
 import { List } from "immutable";
 import * as inflection from "inflection";
 import { Subscription, of } from "rxjs";
-import { FocusSectionComponent } from "../focus-section";
 import { VirtualScrollComponent } from "../virtual-scroll";
 import { AbstractListItem } from "./abstract-list-item";
 import { ListDataProvider } from "./list-data-provider";
@@ -127,8 +126,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         private contextmenuService: ContextMenuService,
         private router: Router,
         private breadcrumbService: BreadcrumbService,
-        changeDetection: ChangeDetectorRef,
-        focusSection: FocusSectionComponent) {
+        changeDetection: ChangeDetectorRef) {
         super(changeDetection);
         this._initKeyNavigator();
 
@@ -159,6 +157,13 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         if (this._keyNavigator) {
             this._keyNavigator.dispose();
         }
+    }
+
+    public focus() {
+        this.listFocused = true;
+        this._pickFocusedItem();
+        this._virtualScroll.ensureItemVisible(this.focusedItem);
+        this.changeDetector.markForCheck();
     }
 
     public updateViewPortItems(items) {
@@ -255,10 +260,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     }
 
     public handleFocusAnchor(event: FocusEvent) {
-        this.listFocused = true;
-        this._pickFocusedItem();
-        this._virtualScroll.ensureItemVisible(this.focusedItem);
-        this.changeDetector.markForCheck();
+        this.focus();
     }
 
     /**

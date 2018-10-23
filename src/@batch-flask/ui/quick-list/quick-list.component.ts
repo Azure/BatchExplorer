@@ -3,15 +3,13 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
-    Host,
     HostBinding,
-    Optional,
     TemplateRef,
+    forwardRef,
 } from "@angular/core";
 
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import { AbstractListBase } from "../abstract-list";
-import { FocusSectionComponent } from "../focus-section";
 import {
     QuickListRowExtraDirective,
     QuickListRowStateDirective,
@@ -28,6 +26,9 @@ import "./quick-list.scss";
     selector: "bl-quick-list",
     templateUrl: "quick-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        { provide: AbstractListBase, useExisting: forwardRef(() => QuickListComponent) },
+    ],
 })
 export class QuickListComponent extends AbstractListBase {
     @ContentChild(QuickListRowStatusDirective, { read: TemplateRef }) public statusDef: TemplateRef<any>;
@@ -44,9 +45,8 @@ export class QuickListComponent extends AbstractListBase {
         contextMenuService: ContextMenuService,
         router: Router,
         breadcrumbService: BreadcrumbService,
-        changeDetector: ChangeDetectorRef,
-        @Optional() focusSection?: FocusSectionComponent) {
-        super(contextMenuService, router, breadcrumbService, changeDetector, focusSection);
+        changeDetector: ChangeDetectorRef) {
+        super(contextMenuService, router, breadcrumbService, changeDetector);
     }
 
 }

@@ -7,7 +7,6 @@ import {
     HostBinding,
     HostListener,
     Input,
-    Optional,
     Output,
     QueryList,
     ViewChild,
@@ -15,7 +14,6 @@ import {
 import { Router } from "@angular/router";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
-import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import { DragUtils } from "@batch-flask/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
 import { TableColumnComponent } from "./table-column";
@@ -105,9 +103,8 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         contextmenuService: ContextMenuService,
         changeDetection: ChangeDetectorRef,
         router: Router,
-        breadcrumbService: BreadcrumbService,
-        @Optional() focusSection?: FocusSectionComponent) {
-        super(contextmenuService, router, breadcrumbService, changeDetection, focusSection);
+        breadcrumbService: BreadcrumbService) {
+        super(contextmenuService, router, breadcrumbService, changeDetection);
 
         this.columnManager = new TableColumnManager(this.dataPresenter);
     }

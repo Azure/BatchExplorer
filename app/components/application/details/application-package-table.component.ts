@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { autobind } from "@batch-flask/core";
-import { ListBaseComponent } from "@batch-flask/core/list";
+import { ListBaseComponent } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { DateUtils } from "@batch-flask/utils";
 import { ApplicationPackage, BatchApplication } from "app/models";
