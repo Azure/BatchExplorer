@@ -2,10 +2,12 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ElementRef,
     HostBinding,
     HostListener,
     Inject,
     Input,
+    OnChanges,
     OnDestroy,
     OnInit,
     forwardRef,
@@ -20,7 +22,7 @@ import { TableComponent, TableConfig } from "../table.component";
     templateUrl: "table-row-render.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableRowRenderComponent implements OnInit, OnDestroy {
+export class TableRowRenderComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public item: any;
     @Input() public columns: TableColumnRef[];
     @Input() public tableConfig: TableConfig;
@@ -28,9 +30,12 @@ export class TableRowRenderComponent implements OnInit, OnDestroy {
     @Input() @HostBinding("class.selected") public selected: boolean;
 
     // Aria
-    @Input() @HostBinding("attr.role") public readonly role = "row";
-    @Input() @HostBinding("attr.aria-selected") public get ariaSelected() {
+    @HostBinding("attr.role") public readonly role = "row";
+    @HostBinding("attr.aria-selected") public get ariaSelected() {
         return this.selected;
+    }
+    @HostBinding("attr.tabindex") public get tabindex() {
+        return this.focused ? 0 : -1;
     }
 
     public dimensions: number[] = [];
@@ -39,6 +44,7 @@ export class TableRowRenderComponent implements OnInit, OnDestroy {
 
     constructor(
         @Inject(forwardRef(() => TableComponent)) public table: TableComponent,
+        private elementRef: ElementRef,
         private changeDetector: ChangeDetectorRef) {
 
     }
@@ -51,6 +57,17 @@ export class TableRowRenderComponent implements OnInit, OnDestroy {
         });
     }
 
+    public ngOnChanges(changes) {
+        if (changes.focused) {
+            console.log("Change focus", this.id, this.focused);
+            if (this.focused) {
+                setTimeout(() => {
+                    this.elementRef.nativeElement.focus();
+                });
+            }
+        }
+    }
+
     public ngOnDestroy() {
         this._sub.unsubscribe();
     }
@@ -58,6 +75,11 @@ export class TableRowRenderComponent implements OnInit, OnDestroy {
     @HostListener("click", ["$event"])
     public handleClick(event: MouseEvent, activate = true) {
         this.table.handleClick(event, this.item, activate);
+    }
+
+    @HostListener("blur", ["$event"])
+    public handleRowBlur(event: FocusEvent) {
+        this.table.handleRowBlur(event, this.item);
     }
 
     @HostListener("contextmenu")

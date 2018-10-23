@@ -2,6 +2,7 @@ import {
     ChangeDetectorRef,
     EventEmitter,
     HostBinding,
+    HostListener,
     Input,
     OnDestroy,
     Output,
@@ -131,9 +132,9 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         this.dataProvider = new ListDataProvider();
         this.dataPresenter = new ListDataPresenter(this.dataProvider);
         if (focusSection) {
-            this._subs.push(focusSection.keypress.subscribe(this.keyPressed));
+            // this._subs.push(focusSection.keypress.subscribe(this.keyPressed));
             this._subs.push(focusSection.onFocus.subscribe(this.onFocus));
-            this._subs.push(focusSection.onBlur.subscribe(this.onBlur));
+            // this._subs.push(focusSection.onBlur.subscribe(this.onBlur));
         }
 
         this.dataProvider.status.subscribe((status) => {
@@ -268,11 +269,19 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         }
     }
 
-    @autobind()
-    public onBlur(event) {
-        this.listFocused = false;
-        this._keyNavigator.focusItem(null);
-        this.changeDetector.markForCheck();
+    /**
+     * When an item is being focused out, check if its because we are focusing another.
+     * - If so all good.
+     * - Otherwise means we focused out of the list
+     * @param event FocusEvent emitted
+     * @param item Item displayed in the row
+     */
+    public handleRowBlur(event: FocusEvent, item: AbstractListItem) {
+        if (item === this.focusedItem) {
+            this.listFocused = false;
+            this._keyNavigator.focusItem(null);
+            this.changeDetector.markForCheck();
+        }
     }
 
     public setFocusedItem(item: AbstractListItem) {
@@ -280,7 +289,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         this.changeDetector.markForCheck();
     }
 
-    @autobind()
+    @HostListener("keydown", ["$event"])
     public keyPressed(event: KeyboardEvent) {
         if (event.key === SPACE || event.key === ENTER) {
             this.activateItem(this.focusedItem);

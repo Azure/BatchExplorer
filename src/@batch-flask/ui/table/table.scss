@@ -95,7 +95,7 @@ bl-table {
             }
         }
 
-        &.focused {
+        &:focus {
             outline: 2px dashed $primary-color;
             outline-offset: -2px;
         }
