@@ -1,12 +1,15 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    ElementRef,
     HostBinding,
     HostListener,
     Inject,
     Input,
+    OnChanges,
     forwardRef,
 } from "@angular/core";
+import { QuickListComponent } from "@batch-flask/ui/quick-list/quick-list.component";
 import {
     QuickListRowExtraDirective,
     QuickListRowStateDirective,
@@ -14,7 +17,6 @@ import {
     QuickListRowTitleDirective,
 } from "../quick-list-row-def";
 
-import { QuickListComponent } from "@batch-flask/ui/quick-list/quick-list.component";
 import "./quick-list-row-render.scss";
 
 @Component({
@@ -22,7 +24,7 @@ import "./quick-list-row-render.scss";
     templateUrl: "quick-list-row-render.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class QuickListRowRenderComponent {
+export class QuickListRowRenderComponent implements OnChanges {
     @Input() public item: any;
     @Input() public titleDef: QuickListRowTitleDirective;
     @Input() public stateDef: QuickListRowStateDirective;
@@ -36,8 +38,23 @@ export class QuickListRowRenderComponent {
         return this.selected;
     }
 
-    constructor(@Inject(forwardRef(() => QuickListComponent)) private list: QuickListComponent) {
+    constructor(
+        @Inject(forwardRef(() => QuickListComponent)) private list: QuickListComponent,
+        private elementRef: ElementRef) {
 
+    }
+
+    public ngOnChanges(changes) {
+        if (changes.focused) {
+            if (this.focused) {
+                setTimeout(() => {
+                    // Check it is still focused. Might have focused out already
+                    if (this.focused) {
+                        this.elementRef.nativeElement.focus();
+                    }
+                });
+            }
+        }
     }
 
     @HostListener("click", ["$event"])

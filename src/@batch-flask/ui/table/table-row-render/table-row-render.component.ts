@@ -58,7 +58,10 @@ export class TableRowRenderComponent implements OnInit, OnChanges, OnDestroy {
         if (changes.focused) {
             if (this.focused) {
                 setTimeout(() => {
-                    this.elementRef.nativeElement.focus();
+                    // Check it is still focused. Might have focused out already
+                    if (this.focused) {
+                        this.elementRef.nativeElement.focus();
+                    }
                 });
             }
         }
