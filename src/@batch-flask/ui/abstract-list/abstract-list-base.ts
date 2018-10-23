@@ -257,6 +257,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public handleFocusAnchor(event: FocusEvent) {
         this.listFocused = true;
         this._pickFocusedItem();
+        this._virtualScroll.ensureItemVisible(this.focusedItem);
         this.changeDetector.markForCheck();
     }
 

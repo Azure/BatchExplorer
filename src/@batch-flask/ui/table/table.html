@@ -1,6 +1,7 @@
 <div *ngIf="!config.hideHeader" class="table-head" [class.no-scroll]="!showScrollShadow">
     <bl-thead [columns]="columnManager.columns"></bl-thead>
 </div>
+<div aria-hidden [tabindex]="listFocused ? -1 : 0" (focus)="handleFocusAnchor($event)"></div>
 <bl-partial-sort-warning [data]="dataProvider" [presenter]="dataPresenter"></bl-partial-sort-warning>
 <div class="table-body">
     <div class="scroll-shadow" *ngIf="showScrollShadow"></div>
@@ -10,7 +11,7 @@
             [columns]="columnManager.columns"
             [tableConfig]="config"
             [selected]="selection.has(item.id)"
-            [attr.tabindex]="item === focusedItem ? 0 : -1"
+            [attr.tabindex]="listFocused && item === focusedItem ? 0 : -1"
             [focused]="listFocused && item === focusedItem"
             [class.drop-target]="item.id === dropTargetRowKey"
             (dragenter)="dragEnter(item, $event)"
