@@ -34,9 +34,6 @@ export class TableRowRenderComponent implements OnInit, OnChanges, OnDestroy {
     @HostBinding("attr.aria-selected") public get ariaSelected() {
         return this.selected;
     }
-    @HostBinding("attr.tabindex") public get tabindex() {
-        return this.focused ? 0 : -1;
-    }
 
     public dimensions: number[] = [];
     public columnWidths: StringMap<number> = {};
@@ -59,7 +56,6 @@ export class TableRowRenderComponent implements OnInit, OnChanges, OnDestroy {
 
     public ngOnChanges(changes) {
         if (changes.focused) {
-            console.log("Change focus", this.id, this.focused);
             if (this.focused) {
                 setTimeout(() => {
                     this.elementRef.nativeElement.focus();
@@ -80,6 +76,11 @@ export class TableRowRenderComponent implements OnInit, OnChanges, OnDestroy {
     @HostListener("blur", ["$event"])
     public handleRowBlur(event: FocusEvent) {
         this.table.handleRowBlur(event, this.item);
+    }
+
+    @HostListener("focus", ["$event"])
+    public handleRowFocus(event: FocusEvent) {
+        this.table.handleRowFocus(event, this.item);
     }
 
     @HostListener("contextmenu")

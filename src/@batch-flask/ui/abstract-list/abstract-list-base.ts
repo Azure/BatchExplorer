@@ -131,11 +131,6 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
         this.dataProvider = new ListDataProvider();
         this.dataPresenter = new ListDataPresenter(this.dataProvider);
-        if (focusSection) {
-            // this._subs.push(focusSection.keypress.subscribe(this.keyPressed));
-            this._subs.push(focusSection.onFocus.subscribe(this.onFocus));
-            // this._subs.push(focusSection.onBlur.subscribe(this.onBlur));
-        }
 
         this.dataProvider.status.subscribe((status) => {
             this.status = status;
@@ -144,6 +139,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
         this.dataPresenter.items.subscribe((items) => {
             this.items = items;
+            this._pickFocusedItem();
             this.changeDetector.markForCheck();
         });
 
@@ -161,6 +157,13 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         if (this._keyNavigator) {
             this._keyNavigator.dispose();
         }
+    }
+
+    @HostListener("focus", ["$event"])
+    public onFocus(event: FocusEvent) {
+        this.listFocused = true;
+        console.log("List focused", this.listFocused);
+        this.changeDetector.markForCheck();
     }
 
     public updateViewPortItems(items) {
@@ -256,15 +259,17 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         this.selection = selection;
     }
 
-    @autobind()
-    public onFocus(event: FocusEvent) {
+    /**
+     * When an item is being focused out, check if its because we are focusing another.
+     * - If so all good.
+     * - Otherwise means we focused out of the list
+     * @param event FocusEvent emitted
+     * @param item Item displayed in the row
+     */
+    public handleRowFocus(event: FocusEvent, item: AbstractListItem) {
         this.listFocused = true;
-        if (!this._keyNavigator.focusedItem) {
-            if (this.activeItem) {
-                this._keyNavigator.focusItem(this.items.find(x => x.id === this.activateItem));
-            } else {
-                this._keyNavigator.focusFirstItem();
-            }
+        if (item !== this.focusedItem) {
+            this._keyNavigator.focusItem(item);
             this.changeDetector.markForCheck();
         }
     }
@@ -279,7 +284,6 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public handleRowBlur(event: FocusEvent, item: AbstractListItem) {
         if (item === this.focusedItem) {
             this.listFocused = false;
-            this._keyNavigator.focusItem(null);
             this.changeDetector.markForCheck();
         }
     }
@@ -375,6 +379,17 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
             this.contextmenuService.openMenu(menu);
         });
+    }
+
+    private _pickFocusedItem() {
+        if (!this._keyNavigator.focusedItem) {
+            if (this.activeItem) {
+                this._keyNavigator.focusItem(this.items.find(x => x.id === this.activateItem));
+            } else {
+                this._keyNavigator.focusFirstItem();
+            }
+            this.changeDetector.markForCheck();
+        }
     }
 
     /** Sets up a key manager to listen to keyboard events on the overlay panel. */

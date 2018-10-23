@@ -9,7 +9,8 @@
             [stateDef]="stateDef"
             [extraDef]="extraDef"
             [selected]="selection.has(item.id)"
-            [focused]="listFocused && item == focusedItem">
+            [attr.tabindex]="item === focusedItem ? 0 : -1"
+            [focused]="listFocused && item === focusedItem">
         </bl-quick-list-row-render>
         <bl-virtual-scroll-tail [height]="120" *ngIf="status === LoadingStatus.Loading">
             <bl-loading [status]="status"></bl-loading>
