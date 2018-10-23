@@ -11,7 +11,7 @@ import {
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { ListKeyNavigator, ListView } from "@batch-flask/core";
-import { ENTER, SPACE } from "@batch-flask/core/keys";
+import { KeyCode } from "@batch-flask/core/keys";
 import { ListSelection, SelectableList } from "@batch-flask/core/list";
 import { ListDataPresenter } from "@batch-flask/ui/abstract-list/list-data-presenter";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
@@ -298,7 +298,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     @HostListener("keydown", ["$event"])
     public keyPressed(event: KeyboardEvent) {
-        if (event.key === SPACE || event.key === ENTER) {
+        if (event.code === KeyCode.Space || event.code === KeyCode.Enter) {
             this.activateItem(this.focusedItem);
             event.preventDefault();
         } else {

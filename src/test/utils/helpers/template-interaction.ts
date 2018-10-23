@@ -1,5 +1,6 @@
 import { DebugElement } from "@angular/core";
 import { MouseButton } from "@batch-flask/core";
+import { KeyCode } from "@batch-flask/core/keys";
 
 export class FakeMouseEvent {
     public stopImmediatePropagation: jasmine.Spy;
@@ -91,9 +92,10 @@ export function mouseleave(el: DebugElement | HTMLElement) {
     sendEvent(el, event);
 }
 
-export function keydown(el: DebugElement | HTMLElement, key: string) {
+export function keydown(el: DebugElement | HTMLElement, key: string, code?: KeyCode) {
     const event = new KeyboardEvent("keydown", {
         key,
+        code,
     });
     sendEvent(el, event);
 }

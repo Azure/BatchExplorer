@@ -14,7 +14,9 @@ export const KeyCodes = {
  * Possible values for keyboardEvent.code
  * This corespond to phisical keys on the keyboard
  */
-export const KeyCode = {
-    ArrowDown: "ArrowDown",
-    ArrowUp: "ArrowUp",
-};
+export enum KeyCode {
+    ArrowDown = "ArrowDown",
+    ArrowUp = "ArrowUp",
+    Space = "Space",
+    Enter = "Enter",
+}

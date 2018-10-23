@@ -4,6 +4,7 @@ import { BrowserModule, By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 
 import { MaterialModule } from "@batch-flask/core";
+import { KeyCode } from "@batch-flask/core/keys";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
 import {
@@ -17,7 +18,7 @@ import {
 } from "@batch-flask/ui/table";
 import { TableRowRenderComponent } from "@batch-flask/ui/table/table-row-render";
 import { VirtualScrollMockComponent, VirtualScrollTestingModule } from "@batch-flask/ui/testing";
-import { click, dblclick, mousedown } from "test/utils/helpers";
+import { click, dblclick, keydown,  mousedown } from "test/utils/helpers";
 
 const sizeA = { id: "size_a", name: "Size A", numberOfCores: 1, resourceDiskSizeInMB: 1000 };
 const sizeB = { id: "size_b", name: "Size B", numberOfCores: 8, resourceDiskSizeInMB: 2000 };
@@ -93,7 +94,7 @@ describe("TableComponent", () => {
         fixture = TestBed.createComponent(component);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-table"));
-        virtualScrollComponent = de.query(By.css("bl-virtual-scroll")).componentInstance
+        virtualScrollComponent = de.query(By.css("bl-virtual-scroll")).componentInstance;
         testComponent.sizes = [sizeA, sizeB, sizeC, sizeD];
         fixture.detectChanges();
     }
@@ -152,6 +153,36 @@ describe("TableComponent", () => {
 
             expect(rows[0].classList).not.toContain("focused");
             expect(rows[2].classList).toContain("focused");
+        });
+
+        it("it navigate with the keyboard", () => {
+            de.componentInstance.focus();
+            fixture.detectChanges();
+            const rows = getRows();
+            expect(rows[0].classList).toContain("focused");
+
+            keydown(de, KeyCode.ArrowDown, KeyCode.ArrowDown);
+            fixture.detectChanges();
+            expect(rows[0].classList).not.toContain("focused");
+            expect(rows[1].classList).toContain("focused");
+
+            keydown(de, KeyCode.ArrowDown, KeyCode.ArrowDown);
+            fixture.detectChanges();
+            expect(rows[1].classList).not.toContain("focused");
+            expect(rows[2].classList).toContain("focused");
+
+            keydown(de, KeyCode.Space, KeyCode.Space);
+            fixture.detectChanges();
+            expect(testComponent.pickedSize).toEqual("size_c");
+
+            keydown(de, KeyCode.ArrowUp, KeyCode.ArrowUp);
+            fixture.detectChanges();
+            expect(rows[0].classList).not.toContain("focused");
+            expect(rows[1].classList).toContain("focused");
+
+            keydown(de, KeyCode.Enter, KeyCode.Enter);
+            fixture.detectChanges();
+            expect(testComponent.pickedSize).toEqual("size_b");
         });
     });
 
