@@ -17,9 +17,8 @@ import {
     SimpleChanges,
     ViewChild,
 } from "@angular/core";
-import * as elementResizeDetectorMaker from "element-resize-detector";
-
 import { autobind } from "@batch-flask/core";
+import * as elementResizeDetectorMaker from "element-resize-detector";
 import { VirtualScrollTailComponent } from "./virtual-scroll-tail";
 
 import "./virtual-scroll.scss";
@@ -197,10 +196,10 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
      * This will make sure the item is visible.
      * Difference with scroll to item is it will try to scroll the least possible.
      */
-    public ensureItemVisible(item: any) {
+    public ensureItemVisible(item: any, behavior: ScrollBehavior = "auto") {
         const index: number = (this.items || []).indexOf(item);
         if (index < 0 || index >= (this.items || []).length) { return; }
-        this.ensureItemAtVisible(index);
+        this.ensureItemAtVisible(index, behavior);
     }
 
     /**
