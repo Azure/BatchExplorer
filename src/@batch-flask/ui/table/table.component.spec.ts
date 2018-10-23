@@ -32,9 +32,10 @@ class BaseTestComponent {
     public picedSize: string;
     public tableConfig: TableConfig = {};
 }
+
 @Component({
     template: `
-        <bl-table [data]="sizes" [(activeItem)]="pickedSize" [config]="tableConfig" style="width: 600px">
+        <bl-table id="mytable-1" [data]="sizes" [(activeItem)]="pickedSize" [config]="tableConfig" style="width: 600px">
             <bl-column name="name">
                 <div *blHeadCellDef>Name</div>
                 <div *blCellDef="let size">{{size.name}}</div>
@@ -94,6 +95,40 @@ describe("TableComponent", () => {
         testComponent.sizes = [sizeA, sizeB, sizeC, sizeD];
         fixture.detectChanges();
     }
+
+    describe("General", () => {
+        beforeEach(() => {
+            setup(TestComponent);
+        });
+        it("has the gridbox role", () => {
+            expect(de.attributes["role"]).toEqual("grid");
+        });
+
+        it("has the multi selectable role", () => {
+            expect(de.attributes["aria-multiselectable"]).toEqual("true");
+        });
+
+        it("has tabindex", () => {
+            expect(de.attributes["tabindex"]).toEqual("0");
+        });
+
+        it("sets aria-rowcount with the number of items", () => {
+            expect(de.attributes["aria-rowcount"]).toEqual("4");
+        });
+
+        it("sets aria-colcount with the number of column", () => {
+            expect(de.attributes["aria-colcount"]).toEqual("3");
+        });
+
+        it("each row should have a unique id", () => {
+            const rows = getRows();
+            expect(rows.length).toBe(4);
+            expect(rows[0].id).toEqual("mytable-1-row-size_a");
+            expect(rows[1].id).toEqual("mytable-1-row-size_b");
+            expect(rows[2].id).toEqual("mytable-1-row-size_c");
+            expect(rows[3].id).toEqual("mytable-1-row-size_d");
+        });
+    });
 
     describe("Sort", () => {
         let columns: DebugElement[];
