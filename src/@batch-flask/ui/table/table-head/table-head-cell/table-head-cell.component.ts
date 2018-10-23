@@ -97,7 +97,8 @@ export class TableHeadCellComponent extends ClickableComponent implements OnInit
         this._subs.forEach(x => x.unsubscribe());
     }
 
-    public handleAction(event) {
+    public handleAction(event: Event) {
+        event.stopPropagation();
         super.handleAction(event);
         if (!this.sortable) {
             return;
