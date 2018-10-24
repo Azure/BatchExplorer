@@ -1,8 +1,8 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
-import { AutofocusDirective } from "./auto-focus.directive";
+import { AutoFocusDirective } from "./auto-focus.directive";
 
-const publicComponents = [AutofocusDirective];
+const publicComponents = [AutoFocusDirective];
 const privateComponents = [];
 
 @NgModule({
