@@ -5,6 +5,8 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { List } from "immutable";
 
 import { MaterialModule } from "@batch-flask/core";
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { I18nUIModule } from "@batch-flask/ui";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { RoleAssignment, RoleDefinition } from "app/models";
@@ -55,7 +57,7 @@ describe("ResourcePermissionButtonComponent", () => {
             listRoleDefinitions: () => of([contributorRole, readerRole, customRole]),
         };
         TestBed.configureTestingModule({
-            imports: [MaterialModule, NoopAnimationsModule],
+            imports: [MaterialModule, NoopAnimationsModule, I18nTestingModule, I18nUIModule],
             declarations: [ButtonComponent, ResourcePermissionButtonComponent, TestComponent],
             providers: [
                 { provide: PermissionService, useValue: null },
@@ -80,7 +82,7 @@ describe("ResourcePermissionButtonComponent", () => {
         });
 
         it("should show none", () => {
-            expect(buttonEl.nativeElement.textContent).toContain("None");
+            expect(buttonEl.nativeElement.textContent).toContain("resource-permission-button.none");
         });
 
         it("button color should be danger", () => {
