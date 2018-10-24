@@ -5,8 +5,13 @@ bl-choose-action {
     width: 100%;
     height: $contentview-height;
 
-    h1 {
+    .choose-action-header {
         margin: 10px;
+        display: flex;
+
+        h1 {
+            margin: 0 10px;
+        }
 
         a {
             &:hover {
