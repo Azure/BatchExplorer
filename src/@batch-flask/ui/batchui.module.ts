@@ -9,6 +9,7 @@ import { WorkspaceModule } from "@batch-flask/ui/workspace";
 import { AbstractListModule } from "./abstract-list";
 import { ActivityModule } from "./activity";
 import { AdvancedFilterModule } from "./advanced-filter";
+import { AutoFocusModule } from "./auto-focus";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
 import { BatchFlaskSettingsModule } from "./batch-flask-settings";
 import { BreadcrumbModule } from "./breadcrumbs";
@@ -59,6 +60,7 @@ const modules = [
     ActivityModule,
     AbstractListModule,
     AdvancedFilterModule,
+    AutoFocusModule,
     BatchFlaskSettingsModule,
     BreadcrumbModule,
     BrowseLayoutModule,
