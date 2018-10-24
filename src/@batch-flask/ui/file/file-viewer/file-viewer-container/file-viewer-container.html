@@ -7,9 +7,9 @@
         <bl-card *ngIf="unknownFileType" class="unknown-file-type">
             <h2 class="title">{{'file-viewer-container.unkownFileType' | i18n }}</h2>
             <div class="options">
-                <button class="log" (click)="openAs('log')">Log</button>
-                <button class="text" (click)="openAs('text')">Code</button>
-                <button class="image" (click)="openAs('image')">Image</button>
+                <bl-button type="wide" class="log" (do)="openAs('log')">Log</bl-button>
+                <bl-button type="wide" class="text" (do)="openAs('text')">Code</bl-button>
+                <bl-button type="wide" class="image" (do)="openAs('image')">Image</bl-button>
             </div>
         </bl-card>
     </div>

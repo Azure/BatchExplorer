@@ -71,6 +71,7 @@ bl-file-tree-view {
     }
 
     .tree-view-content {
+        outline: none;
         position: relative;
         height: calc(100% - #{$tree-view-header-height});
     }

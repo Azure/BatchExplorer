@@ -1,8 +1,8 @@
 <div class="tree-view-header">
-    <bl-clickable class="caret" (do)="toggleExpandTreeView()">
+    <bl-clickable class="caret" (do)="toggleExpandTreeView()" [attr.aria-expanded]="expanded" attr.aria-owns="{{id}}-content" attr.aria-labelledby="{{id}}_name">
         <i class="fa" [class.fa-caret-down]="expanded" [class.fa-caret-right]="!expanded"></i>
     </bl-clickable>
-    <bl-clickable class="name" (do)="handleClickTreeViewHeader()">{{name}}</bl-clickable>
+    <bl-clickable id="{{id}}_name" class="name" (do)="handleClickTreeViewHeader()">{{name}}</bl-clickable>
     <span class="error" *ngIf="fileNavigator.error" [title]="fileNavigator.error.code">
         <i class="fa fa-warning"></i>
     </span>
@@ -14,11 +14,16 @@
         <i class="fa fa-compress collapse-all action" title="Collapse all"></i>
     </bl-clickable>
 </div>
-<bl-focus-section *ngIf="expanded"
+<div *ngIf="expanded"
+    id="{{id}}-content"
+    role="tree"
+    tabindex="0"
     class="tree-view-content"
+    attr.aria-labelledby="{{id}}_name"
+    attr.aria-activedescendant="{{id}}-row-{{focusedIndex}}"
     (focus)="setFocus(true)"
     (blur)="setFocus(false)"
-    (keypress)="handleKeyboardNavigation($event)"
+    (keydown)="handleKeyboardNavigation($event)"
     (contextmenu)="showContextMenu($event)">
 
     <div *ngIf="fileNavigator.error" class="tree-view-error">{{fileNavigator.error.message}}</div>
@@ -30,6 +35,7 @@
         (drop)="handleDropOnRow($event)">
 
         <bl-file-tree-view-row *ngFor="let treeRow of treeRows; let  i = index; trackBy: treeRowTrackBy"
+            id="{{id}}-row-{{i}}"
             [treeRow]="treeRow"
             [active]="active && treeRow.path === currentPath"
             [dropHover]="treeRow.path.startsWith(dropTargetPath)"
@@ -42,4 +48,4 @@
             (drop)="handleDropOnRow($event, treeRow)">
         </bl-file-tree-view-row>
     </div>
-</bl-focus-section>
+</div>
