@@ -24,10 +24,18 @@
         </bl-summary-card>
         <h1 class="section-title">Monitoring</h1>
         <div class="monitor-charts">
-            <bl-monitor-chart class="monitor-chart" chartType="coreCount" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
-            <bl-monitor-chart class="monitor-chart" chartType="failedTask" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
-            <bl-monitor-chart class="monitor-chart" chartType="taskStates" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
-            <bl-monitor-chart class="monitor-chart node-states" chartType="nodeStates" [routerLink]="['/accounts', account.id, 'monitor']"></bl-monitor-chart>
+            <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']">
+                <bl-monitor-chart chartType="coreCount"></bl-monitor-chart>
+            </a>
+            <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']">
+                <bl-monitor-chart  chartType="failedTask" [routerLink]="['/accounts', account.id, 'monitor']" role="link"></bl-monitor-chart>
+            </a>
+            <a class="monitor-chart" [routerLink]="['/accounts', account.id, 'monitor']">
+                <bl-monitor-chart chartType="taskStates" [routerLink]="['/accounts', account.id, 'monitor']" role="link"></bl-monitor-chart>
+            </a>
+            <a class="monitor-chart node-states" [routerLink]="['/accounts', account.id, 'monitor']">
+                <bl-monitor-chart chartType="nodeStates" [routerLink]="['/accounts', account.id, 'monitor']" role="link"></bl-monitor-chart>
+            </a>
             <div class="monitor-chart current-node-counts">
                 <h2>Current node counts</h2>
                 <bl-pool-state-graph ></bl-pool-state-graph>
