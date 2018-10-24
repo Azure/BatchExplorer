@@ -1,21 +1,18 @@
-import { Directive, ElementRef, Input, OnInit } from "@angular/core";
+import { AfterViewInit, Directive, ElementRef, Input } from "@angular/core";
 
 @Directive({
     // tslint:disable-next-line:directive-selector
     selector: "[autofocus]",
 })
-export class AutoFocusDirective implements OnInit {
+export class AutoFocusDirective implements AfterViewInit {
     private focus = true;
 
     constructor(private el: ElementRef) {
     }
 
-    public ngOnInit() {
+    public ngAfterViewInit() {
         if (this.focus) {
-            // Otherwise Angular throws error: Expression has changed after it was checked.
-            window.setTimeout(() => {
-                this.el.nativeElement.focus();
-            });
+            this.el.nativeElement.focus();
         }
     }
 
