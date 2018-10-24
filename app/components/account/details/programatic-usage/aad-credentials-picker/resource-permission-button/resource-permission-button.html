@@ -1,4 +1,4 @@
-<bl-button type="wide" [color]="color" [matMenuTriggerFor]="pickRoleMenu" [disabled]="loading">
+<bl-button type="wide" [color]="color" [matMenuTriggerFor]="pickRoleMenu" [disabled]="loading" [attr.aria-describedby]="labelledBy">
     <ng-container *ngIf="loading">
         <i class="fa fa-spinner fa-spin"></i> Loading
     </ng-container>
