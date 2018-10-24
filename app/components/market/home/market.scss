@@ -80,8 +80,8 @@ bl-market {
     }
 
     .application.local-templates {
-        background: $primary-color
-        color: $whitesmoke;
+        background: $primary-color;
+        color: $primary-contrast-color;
 
         .fa.logo {
             // color: $primary-color
