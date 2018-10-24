@@ -3,7 +3,6 @@ import {
     EventEmitter,
     HostBinding,
     HostListener,
-    InjectFlags,
     Injector,
     Input,
     OnChanges,
@@ -61,7 +60,7 @@ export class ClickableComponent implements OnChanges, OnDestroy {
 
     constructor(injector: Injector, @Self() @Optional() routerLink: RouterLink) {
         this._routerLink = routerLink;
-        this._matMenuTrigger = injector.get(MatMenuTrigger, null, InjectFlags.Self);
+        this._matMenuTrigger = injector.get(MatMenuTrigger, null, 2);
         this.permissionService = injector.get(PermissionService, null);
     }
 
