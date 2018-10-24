@@ -4,7 +4,7 @@ import { Directive, ElementRef, Input, OnInit } from "@angular/core";
     // tslint:disable-next-line:directive-selector
     selector: "[autofocus]",
 })
-export class AutofocusDirective implements OnInit {
+export class AutoFocusDirective implements OnInit {
     private focus = true;
 
     constructor(private el: ElementRef) {
