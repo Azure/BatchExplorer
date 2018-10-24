@@ -47,7 +47,11 @@ textarea {
     resize: vertical;
 }
 
-.focus-outline:focus, a:focus {
+.focus-outline:focus:not(.focus-visible), a:focus:not(.focus-visible) {
+    outline: none;
+}
+
+.focus-outline.focus-visible, a.focus-visible {
     outline-color: $outline-color;
     outline-width: 1px;
     outline-style: solid;

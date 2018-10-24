@@ -9,6 +9,7 @@ import { handleCoreError } from "./error-handler";
 
 // Setup extension methods
 import "chart.js";
+import "focus-visible/dist/focus-visible.min.js";
 import "hammerjs";
 
 import "flag-icon-css/css/flag-icon.min.css";
