@@ -4,7 +4,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "identifier": "build-client",
+      "label": "build-client",
       "type": "npm",
       "script": "build-client:dev",
       "problemMatcher": [

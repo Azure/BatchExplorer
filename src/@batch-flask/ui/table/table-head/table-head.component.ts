@@ -29,9 +29,13 @@ interface ResizeRef {
 })
 export class TableHeadComponent {
     @Input() public columns: TableColumnRef[];
+
     @ViewChildren(TableHeadCellComponent) public cells: QueryList<TableHeadCellComponent>;
-    @HostBinding("class.resizing")
-    public resizing: ResizeRef;
+
+    @HostBinding("class.resizing") public resizing: ResizeRef;
+
+    // Aria
+    @Input() @HostBinding("attr.role") public readonly role = "row";
 
     public dimensions: Observable<number[]>;
 

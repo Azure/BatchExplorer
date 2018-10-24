@@ -3,11 +3,11 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChildren,
+    ElementRef,
     EventEmitter,
     HostBinding,
     HostListener,
     Input,
-    Optional,
     Output,
     QueryList,
     ViewChild,
@@ -15,7 +15,6 @@ import {
 import { Router } from "@angular/router";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { ContextMenuService } from "@batch-flask/ui/context-menu";
-import { FocusSectionComponent } from "@batch-flask/ui/focus-section";
 import { DragUtils } from "@batch-flask/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
 import { TableColumnComponent } from "./table-column";
@@ -60,12 +59,16 @@ export interface DropEvent {
     data: DataTransfer;
 }
 
+let idCounter = 0;
+
 @Component({
     selector: "bl-table",
     templateUrl: "table.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableComponent extends AbstractListBase implements AfterContentInit {
+    @Input() public id = `bl-table-${idCounter++}`;
+
     @Input() public set config(config: TableConfig) {
         this._config = { ...tableDefaultConfig, ...config };
         this.dataPresenter.config = this._config.sorting;
@@ -80,6 +83,18 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
     @HostBinding("class.activable") public get activable() {
         return this.config.activable;
     }
+
+    // ----------------------------------------------------------------------
+    // Aria
+    // https://www.w3.org/TR/wai-aria-practices/examples/grid/dataGrids.html
+    @HostBinding("attr.role") public readonly role = "grid";
+    @HostBinding("attr.aria-rowcount") public get ariaRowCount() {
+        return this.items.length;
+    }
+    @HostBinding("attr.aria-colcount") public get ariaColCount() {
+        return this.columnManager.columns.length;
+    }
+
     public dropTargetRowKey: string = null;
 
     public columnManager: TableColumnManager;
@@ -93,9 +108,9 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         contextmenuService: ContextMenuService,
         changeDetection: ChangeDetectorRef,
         router: Router,
-        breadcrumbService: BreadcrumbService,
-        @Optional() focusSection?: FocusSectionComponent) {
-        super(contextmenuService, router, breadcrumbService, changeDetection, focusSection);
+        elementRef: ElementRef,
+        breadcrumbService: BreadcrumbService) {
+        super(contextmenuService, router, breadcrumbService, elementRef, changeDetection);
 
         this.columnManager = new TableColumnManager(this.dataPresenter);
     }

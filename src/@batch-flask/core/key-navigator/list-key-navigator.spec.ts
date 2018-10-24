@@ -1,6 +1,7 @@
-import { DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, TAB, UP_ARROW } from "@angular/cdk/keycodes";
+import { TAB } from "@angular/cdk/keycodes";
 import { fakeAsync, tick } from "@angular/core/testing";
 import { createKeyboardEvent } from "test/utils/helpers";
+import { KeyCode } from "../keys";
 import { ListKeyNavigator } from "./list-key-navigator";
 
 class FakeFocusable {
@@ -16,8 +17,6 @@ describe("List key navigator", () => {
     let fakeKeyEvents: {
         downArrow: KeyboardEvent,
         upArrow: KeyboardEvent,
-        leftArrow: KeyboardEvent,
-        rightArrow: KeyboardEvent,
         tab: KeyboardEvent,
         unsupported: KeyboardEvent,
     };
@@ -29,12 +28,10 @@ describe("List key navigator", () => {
     }
     beforeEach(() => {
         fakeKeyEvents = {
-            downArrow: createKeyboardEvent("keydown", DOWN_ARROW),
-            upArrow: createKeyboardEvent("keydown", UP_ARROW),
-            leftArrow: createKeyboardEvent("keydown", LEFT_ARROW),
-            rightArrow: createKeyboardEvent("keydown", RIGHT_ARROW),
-            tab: createKeyboardEvent("keydown", TAB),
-            unsupported: createKeyboardEvent("keydown", 192), // corresponds to the tilde character (~)
+            downArrow: createKeyboardEvent("keydown", KeyCode.ArrowDown),
+            upArrow: createKeyboardEvent("keydown", KeyCode.ArrowUp),
+            tab: createKeyboardEvent("keydown", KeyCode.Tab, TAB),
+            unsupported: createKeyboardEvent("keydown", null, 192), // ~
         };
         keyNavigator = new ListKeyNavigator<FakeFocusable>();
         items = [
@@ -309,9 +306,9 @@ describe("List key navigator", () => {
         });
 
         it("should debounce the input key presses", fakeAsync(() => {
-            keyNavigator.onKeydown(createKeyboardEvent("keydown", 79, undefined, "o")); // types "o"
-            keyNavigator.onKeydown(createKeyboardEvent("keydown", 78, undefined, "n")); // types "n"
-            keyNavigator.onKeydown(createKeyboardEvent("keydown", 69, undefined, "e")); // types "e"
+            keyNavigator.onKeydown(createKeyboardEvent("keydown", null, 79, undefined, "o")); // types "o"
+            keyNavigator.onKeydown(createKeyboardEvent("keydown", null, 78, undefined, "n")); // types "n"
+            keyNavigator.onKeydown(createKeyboardEvent("keydown", null, 69, undefined, "e")); // types "e"
             expect(keyNavigator.focusedItem).not.toBe(items[0]);
 
             tick(debounceInterval);
@@ -320,23 +317,23 @@ describe("List key navigator", () => {
         }));
 
         it("should focus the first item that starts with a letter", fakeAsync(() => {
-            keyNavigator.onKeydown(createKeyboardEvent("keydown", 84, undefined, "t")); // types "t"
+            keyNavigator.onKeydown(createKeyboardEvent("keydown", null, 84, undefined, "t")); // types "t"
             tick(debounceInterval);
 
             expect(keyNavigator.focusedItem).toBe(items[1]);
         }));
 
         it("should focus the first item that starts with sequence of letters", fakeAsync(() => {
-            keyNavigator.onKeydown(createKeyboardEvent("keydown", 84, undefined, "t")); // types "t"
-            keyNavigator.onKeydown(createKeyboardEvent("keydown", 72, undefined, "h")); // types "h"
+            keyNavigator.onKeydown(createKeyboardEvent("keydown", null, 84, undefined, "t")); // types "t"
+            keyNavigator.onKeydown(createKeyboardEvent("keydown", null, 72, undefined, "h")); // types "h"
             tick(debounceInterval);
 
             expect(keyNavigator.focusedItem).toBe(items[2]);
         }));
 
         it("should cancel any pending timers if a navigation key is pressed", fakeAsync(() => {
-            keyNavigator.onKeydown(createKeyboardEvent("keydown", 84, undefined, "t")); // types "t"
-            keyNavigator.onKeydown(createKeyboardEvent("keydown", 72, undefined, "h")); // types "h"
+            keyNavigator.onKeydown(createKeyboardEvent("keydown", null, 84, undefined, "t")); // types "t"
+            keyNavigator.onKeydown(createKeyboardEvent("keydown", null, 72, undefined, "h")); // types "h"
             keyNavigator.onKeydown(fakeKeyEvents.downArrow);
 
             tick(debounceInterval);
@@ -352,7 +349,7 @@ describe("List key navigator", () => {
             ];
             updateNavigatorItems();
 
-            const keyboardEvent = createKeyboardEvent("keydown", 68, undefined, "д");
+            const keyboardEvent = createKeyboardEvent("keydown", null, 68, undefined, "д");
 
             keyNavigator.onKeydown(keyboardEvent); // types "д"
             tick(debounceInterval);
@@ -368,15 +365,15 @@ describe("List key navigator", () => {
             ];
             updateNavigatorItems();
 
-            keyNavigator.onKeydown(createKeyboardEvent("keydown", 192, undefined, "`")); // types "`"
+            keyNavigator.onKeydown(createKeyboardEvent("keydown", null, 192, undefined, "`")); // types "`"
             tick(debounceInterval);
             expect(keyNavigator.focusedItem).toBe(items[2]);
 
-            keyNavigator.onKeydown(createKeyboardEvent("keydown", 51, undefined, "3")); // types "3"
+            keyNavigator.onKeydown(createKeyboardEvent("keydown", null, 51, undefined, "3")); // types "3"
             tick(debounceInterval);
             expect(keyNavigator.focusedItem).toBe(items[1]);
 
-            keyNavigator.onKeydown(createKeyboardEvent("keydown", 219, undefined, "[")); // types "["
+            keyNavigator.onKeydown(createKeyboardEvent("keydown", null, 219, undefined, "[")); // types "["
             tick(debounceInterval);
             expect(keyNavigator.focusedItem).toBe(items[0]);
         }));
@@ -387,7 +384,7 @@ describe("List key navigator", () => {
             items[0].disabled = true;
             updateNavigatorItems();
 
-            keyNavigator.onKeydown(createKeyboardEvent("keydown", 79, undefined, "o")); // types "o"
+            keyNavigator.onKeydown(createKeyboardEvent("keydown", null, 79, undefined, "o")); // types "o"
             tick(debounceInterval);
 
             expect(keyNavigator.focusedItem).toBeFalsy();
@@ -404,7 +401,7 @@ describe("List key navigator", () => {
             updateNavigatorItems();
 
             keyNavigator.focusItem(1);
-            keyNavigator.onKeydown(createKeyboardEvent("keydown", 66, undefined, "b"));
+            keyNavigator.onKeydown(createKeyboardEvent("keydown", null, 66, undefined, "b"));
             tick(debounceInterval);
 
             expect(keyNavigator.focusedItem).toBe(items[3]);
@@ -421,7 +418,7 @@ describe("List key navigator", () => {
             updateNavigatorItems();
 
             keyNavigator.focusItem(3);
-            keyNavigator.onKeydown(createKeyboardEvent("keydown", 66, undefined, "b"));
+            keyNavigator.onKeydown(createKeyboardEvent("keydown", null, 66, undefined, "b"));
             tick(debounceInterval);
 
             expect(keyNavigator.focusedItem).toBe(items[0]);
@@ -429,7 +426,7 @@ describe("List key navigator", () => {
 
         it("should wrap back around if the last item is active", fakeAsync(() => {
             keyNavigator.focusItem(2);
-            keyNavigator.onKeydown(createKeyboardEvent("keydown", 79, undefined, "o"));
+            keyNavigator.onKeydown(createKeyboardEvent("keydown", null, 79, undefined, "o"));
             tick(debounceInterval);
 
             expect(keyNavigator.focusedItem).toBe(items[0]);
@@ -437,7 +434,7 @@ describe("List key navigator", () => {
 
         it("should be able to select the first item", fakeAsync(() => {
             keyNavigator.focusItem(-1);
-            keyNavigator.onKeydown(createKeyboardEvent("keydown", 79, undefined, "o"));
+            keyNavigator.onKeydown(createKeyboardEvent("keydown", null, 79, undefined, "o"));
             tick(debounceInterval);
 
             expect(keyNavigator.focusedItem).toBe(items[0]);
@@ -445,7 +442,7 @@ describe("List key navigator", () => {
 
         it("should not do anything if there is no match", fakeAsync(() => {
             keyNavigator.focusItem(1);
-            keyNavigator.onKeydown(createKeyboardEvent("keydown", 87, undefined, "w"));
+            keyNavigator.onKeydown(createKeyboardEvent("keydown", null, 87, undefined, "w"));
             tick(debounceInterval);
 
             expect(keyNavigator.focusedItem).toBe(items[1]);

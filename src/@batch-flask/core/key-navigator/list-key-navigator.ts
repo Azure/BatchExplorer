@@ -1,13 +1,12 @@
 import {
     A,
-    DOWN_ARROW,
     NINE,
-    UP_ARROW,
     Z,
     ZERO,
 } from "@angular/cdk/keycodes";
 import { Subject, Subscription } from "rxjs";
 import { debounceTime, filter, map, tap } from "rxjs/operators";
+import { KeyCode } from "../keys";
 
 export interface KeyNavigableListItem {
     disabled: boolean;
@@ -132,11 +131,11 @@ export class ListKeyNavigator<T extends KeyNavigableListItem> {
      */
     public onKeydown(event: KeyboardEvent): void {
         const keyCode = event.keyCode;
-        switch (keyCode) {
-            case DOWN_ARROW:
+        switch (event.code) {
+            case KeyCode.ArrowDown:
                 this.focusNextItem();
                 break;
-            case UP_ARROW:
+            case KeyCode.ArrowUp:
                 this.focusPreviousItem();
                 break;
             default:

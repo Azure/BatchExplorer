@@ -4,3 +4,4 @@ export * from "./abstract-list.module";
 export * from "./list-data-sorter";
 export * from "./list-data-presenter";
 export * from "./partial-sort-warning";
+export * from "./list-base.component";

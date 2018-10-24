@@ -1,4 +1,4 @@
-<bl-focus-section *ngIf="storageAccountId">
+<ng-container *ngIf="storageAccountId">
     <bl-quick-list *ngIf="quicklist"
         [data]="containers"
         [status]="status"
@@ -41,7 +41,7 @@
             <div *blCellDef="let container">{{container.lastModified}}</div>
         </bl-column>
     </bl-table>
-</bl-focus-section>
+</ng-container>
 <bl-no-item [itemCount]="containers.size" [filter]="filter" [status]="status">
     <i icon class="fa fa-cloud-upload small"></i>
     <span no-filter>No {{entityType}}</span>

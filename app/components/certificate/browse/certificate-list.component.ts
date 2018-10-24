@@ -3,8 +3,8 @@ import {
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
-import { Filter, FilterMatcher, ListView, autobind } from "@batch-flask/core";
-import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
+import { Filter, FilterMatcher, ListSelection, ListView, autobind } from "@batch-flask/core";
+import { ListBaseComponent } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { Certificate, CertificateState } from "app/models";

@@ -6,6 +6,7 @@
 
 <div *ngFor="let column of columns;trackBy: trackColumn"
     class="bl-table-cell"
+    role="gridcell"
     [class.fixed-size]="columnWidths[column.name]"
     [style.flex-basis.px]="columnWidths[column.name]"
     [style.min-width.px]="column.minWidth"

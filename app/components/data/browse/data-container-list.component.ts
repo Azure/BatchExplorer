@@ -3,9 +3,8 @@ import {
     OnChanges, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Filter, ListView, autobind } from "@batch-flask/core";
-import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { LoadingStatus, QuickListItemStatus } from "@batch-flask/ui";
+import { Filter, ListSelection, ListView, autobind } from "@batch-flask/core";
+import { ListBaseComponent, LoadingStatus, QuickListItemStatus } from "@batch-flask/ui";
 import { BlobContainer, LeaseStatus } from "app/models";
 import { ListContainerParams, StorageContainerService } from "app/services/storage";
 import { ComponentUtils } from "app/utils";

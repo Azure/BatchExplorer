@@ -17,10 +17,8 @@ import {
     SimpleChanges,
     ViewChild,
 } from "@angular/core";
-import * as tween from "@tweenjs/tween.js";
-import * as elementResizeDetectorMaker from "element-resize-detector";
-
 import { autobind } from "@batch-flask/core";
+import * as elementResizeDetectorMaker from "element-resize-detector";
 import { VirtualScrollTailComponent } from "./virtual-scroll-tail";
 
 import "./virtual-scroll.scss";
@@ -177,7 +175,7 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         this.scrollToItemAt(index);
     }
 
-    public scrollToItemAt(index: number) {
+    public scrollToItemAt(index: number, behavior: ScrollBehavior = "auto") {
         const el = this._getScrollElement();
         if (index < 0 || index >= (this.items || []).length) { return; }
 
@@ -188,35 +186,51 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         if (this.currentTween) {
             this.currentTween.stop();
         }
-        let animationRequest;
+        el.scrollTo({
+            top: scrollTop,
+            behavior,
+        });
+    }
 
-        this.currentTween = new tween.Tween({ scrollTop: el.scrollTop })
-            .to({ scrollTop }, 500)
-            .easing(tween.Easing.Quadratic.Out)
-            .onUpdate((data) => {
-                if (!isNaN(data.scrollTop)) {
-                    this.renderer.setProperty(el, "scrollTop", data.scrollTop);
-                }
-                this.refresh();
-            })
-            .onStop(() => {
-                cancelAnimationFrame(animationRequest);
-            })
-            .onComplete(() => {
-                cancelAnimationFrame(animationRequest);
-            })
-            .start();
+    /**
+     * This will make sure the item is visible.
+     * Difference with scroll to item is it will try to scroll the least possible.
+     */
+    public ensureItemVisible(item: any, behavior: ScrollBehavior = "auto") {
+        const index: number = (this.items || []).indexOf(item);
+        if (index < 0 || index >= (this.items || []).length) { return; }
+        this.ensureItemAtVisible(index, behavior);
+    }
 
-        const animate = (time?) => {
-            this.currentTween.update(time);
-            if (this.currentTween._object.scrollTop !== scrollTop) {
-                this.zone.runOutsideAngular(() => {
-                    animationRequest = requestAnimationFrame(animate);
-                });
-            }
-        };
+    /**
+     * This will make sure the item is visible.
+     * Difference with scroll to item is it will try to scroll the least possible.
+     */
+    public ensureItemAtVisible(index: number, behavior: ScrollBehavior = "auto") {
+        const el = this._getScrollElement();
+        if (index < 0 || index >= (this.items || []).length) { return; }
 
-        animate();
+        const d = this._calculateDimensions();
+        const top = (Math.floor(index / d.itemsPerRow) * d.childHeight);
+        const buffer = (d.childHeight * Math.min(index, this.bufferAmount));
+        const maxScrollTop = top - buffer;
+        const minScrollTop = top - d.viewHeight + d.childHeight + buffer;
+
+        if (this.currentTween) {
+            this.currentTween.stop();
+        }
+
+        if (el.scrollTop > maxScrollTop) {
+            el.scrollTo({
+                top: maxScrollTop,
+                behavior,
+            });
+        } else if (el.scrollTop < minScrollTop) {
+            el.scrollTo({
+                top: minScrollTop,
+                behavior,
+            });
+        }
     }
 
     private _getScrollElement(): Element {
@@ -298,7 +312,6 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
 
     private _computeRange(d: VirtualScrollDimensions) {
         const scrollTop = this._computeScrollTop(d);
-
         const indexByScrollTop = scrollTop / d.scrollHeight * d.itemCount / d.itemsPerRow;
         const end = Math.min(d.itemCount, d.itemsPerRow * (Math.ceil(indexByScrollTop) + d.itemsPerCol + 1));
         let maxStartEnd = end;

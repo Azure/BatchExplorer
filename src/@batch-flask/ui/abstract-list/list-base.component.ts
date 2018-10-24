@@ -1,11 +1,9 @@
 import { ChangeDetectorRef, Input, ViewChild } from "@angular/core";
-import { Observable } from "rxjs";
-
+import { ListSelection, SelectableList } from "@batch-flask/core";
 import { Filter, FilterBuilder } from "@batch-flask/core/filter-builder";
-import { FocusSectionComponent } from "@batch-flask/ui/focus-section/focus-section.component";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
-import { ListSelection } from "./list-selection";
-import { SelectableList } from "./selectable-list";
+import { Observable } from "rxjs";
+import { AbstractListBase } from "./abstract-list-base";
 
 export interface ListBaseComponent {
     // Optional methods
@@ -38,7 +36,7 @@ export abstract class ListBaseComponent extends SelectableList {
     }
     public get status() { return this._status; }
 
-    @ViewChild(FocusSectionComponent) public focusSection: FocusSectionComponent;
+    @ViewChild(AbstractListBase) public list: AbstractListBase;
 
     private _filter: Filter = FilterBuilder.none();
     private _status: LoadingStatus = LoadingStatus.Loading;

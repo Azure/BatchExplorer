@@ -3,11 +3,10 @@ import {
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
-import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
-import { AbstractListBaseConfig } from "@batch-flask/ui/abstract-list";
-import { LoadingStatus } from "@batch-flask/ui/loading";
-import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
-import { TableConfig } from "@batch-flask/ui/table";
+import { ListSelection } from "@batch-flask/core/list";
+import {
+    AbstractListBaseConfig, ListBaseComponent, LoadingStatus, QuickListItemStatus, TableConfig,
+} from "@batch-flask/ui";
 import { Pool } from "app/models";
 import { PoolListParams, PoolService } from "app/services";
 import { ComponentUtils } from "app/utils";

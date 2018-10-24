@@ -51,6 +51,19 @@ export class TableHeadCellComponent extends ClickableComponent implements OnInit
     @HostBinding("class.sorting")
     public isSorting: boolean = false;
 
+    // Aria
+    @HostBinding("attr.role") public readonly role = "columnheader";
+    @HostBinding("attr.aria-sort") public get ariaSort() {
+        if (this.sortable) {
+            if (this.isSorting) {
+                return this.sortDirection === SortDirection.Asc ? "ascending" : "descending";
+            } else {
+                return "none";
+            }
+        } else {
+            return null;
+        }
+    }
     private _subs: Subscription[] = [];
 
     constructor(
@@ -58,7 +71,7 @@ export class TableHeadCellComponent extends ClickableComponent implements OnInit
         @Inject(forwardRef(() => TableComponent)) public table: any,
         public elementRef: ElementRef,
         private changeDetector: ChangeDetectorRef) {
-            super(injector, null);
+        super(injector, null);
     }
 
     public ngOnInit() {
@@ -84,7 +97,8 @@ export class TableHeadCellComponent extends ClickableComponent implements OnInit
         this._subs.forEach(x => x.unsubscribe());
     }
 
-    public handleAction(event) {
+    public handleAction(event: Event) {
+        event.stopPropagation();
         super.handleAction(event);
         if (!this.sortable) {
             return;

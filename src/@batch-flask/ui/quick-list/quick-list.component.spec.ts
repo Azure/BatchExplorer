@@ -1,4 +1,4 @@
-import { Component, DebugElement, NO_ERRORS_SCHEMA, ViewChild } from "@angular/core";
+import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -32,17 +32,14 @@ interface TestItem {
 // tslint:disable:trackBy-function
 @Component({
     template: `
-        <bl-focus-section #focusSection style="height: 1000px">
-            <bl-quick-list [data]="items" [config]="config">
+        <div style="height: 1000px">
+            <bl-quick-list id="quick-1" [data]="items" [config]="config">
                 <ng-container *blQuickListRowTitle="let item">{{item.name}}</ng-container>
             </bl-quick-list>
-        </bl-focus-section>
+        </div>
     `,
 })
 class TestComponent {
-    @ViewChild("focusSection")
-    public focusSection: FocusSectionComponent;
-
     public config: AbstractListBaseConfig = {
 
     };
@@ -95,6 +92,33 @@ describe("QuickListComponent", () => {
         items = de.queryAll(By.css("bl-quick-list-row-render"));
     });
 
+    it("has the listbox role", () => {
+        expect(de.attributes["role"]).toEqual("listbox");
+    });
+
+    it("has the multi selectable role", () => {
+        expect(de.attributes["aria-multiselectable"]).toEqual("true");
+    });
+
+    it("has tabindex", () => {
+        expect(de.attributes["tabindex"]).toEqual("0");
+    });
+
+    it("sets aria-setsize on each of the items", () => {
+        for (const item of items) {
+            expect(item.attributes["aria-setsize"]).toEqual("5");
+        }
+    });
+
+    it("each row should have a unique id", () => {
+        expect(items.length).toBe(5);
+        expect(items[0].nativeElement.id).toEqual("quick-1-row-item-1");
+        expect(items[1].nativeElement.id).toEqual("quick-1-row-item-2");
+        expect(items[2].nativeElement.id).toEqual("quick-1-row-item-3");
+        expect(items[3].nativeElement.id).toEqual("quick-1-row-item-4");
+        expect(items[4].nativeElement.id).toEqual("quick-1-row-item-5");
+    });
+
     it("should display all the content", () => {
         expect(items.length).toBe(5);
         expect(items[0].nativeElement.textContent).toContain("Item 1");
@@ -116,11 +140,11 @@ describe("QuickListComponent", () => {
 
     it("click on an item should also focus it", () => {
         const item = items[1];
-        testComponent.focusSection.focus();
 
         click(item.nativeElement);
         fixture.detectChanges();
         expect(quicklist.focusedItem.id).toEqual("item-2");
+        expect(de.attributes["aria-activedescendant"]).toEqual(`quick-1-row-item-2`);
     });
 
     it("show no items when data is not set", async () => {

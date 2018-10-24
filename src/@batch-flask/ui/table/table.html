@@ -6,11 +6,12 @@
     <div class="scroll-shadow" *ngIf="showScrollShadow"></div>
     <bl-virtual-scroll [items]="items" [childHeight]="28" (update)="updateViewPortItems($event)" (scroll)="handleScrollChange($event)">
         <bl-row-render  *ngFor="let item of viewPortItems;trackBy: trackItem"
+            id="{{id}}-row-{{item.id}}"
             [item]="item"
             [columns]="columnManager.columns"
             [tableConfig]="config"
             [selected]="selection.has(item.id)"
-            [focused]="listFocused && item == focusedItem"
+            [focused]="listFocused && item === focusedItem"
             [class.drop-target]="item.id === dropTargetRowKey"
             (dragenter)="dragEnter(item, $event)"
             (dragleave)="dragLeave(item, $event)"

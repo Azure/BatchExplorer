@@ -21,6 +21,7 @@ bl-quick-list-row-render {
     }
 
     &.focused {
+        outline: none;
         background-color: $primary-color;
     }
 

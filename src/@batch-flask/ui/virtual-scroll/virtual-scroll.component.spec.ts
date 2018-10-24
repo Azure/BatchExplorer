@@ -2,7 +2,6 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { VirtualScrollTailComponent } from "@batch-flask/ui/virtual-scroll";
-import * as tween from "@tweenjs/tween.js";
 import { sendEvent } from "test/utils/helpers";
 import { VirtualScrollComponent } from "./virtual-scroll.component";
 
@@ -81,8 +80,7 @@ describe("VirtualScrollComponent", () => {
 
     it("when scrolling", async () => {
         de.nativeElement.scroll(0, 310);
-        sendEvent(de, new MouseEvent("scroll")); // Need to emit now or this event is async
-        fixture.detectChanges();
+        triggerScroll(de);
         await fixture.whenStable();
         fixture.detectChanges();
         const items = de.queryAll(By.css(".item"));
@@ -108,28 +106,62 @@ describe("VirtualScrollComponent", () => {
             window.requestAnimationFrame = requestAnimationFrameTmp;
         });
 
-        it("scroll to given item", async (done) => {
-            component.scrollToItemAt(4);
+        it("ensure item is visible", async () => {
+            component.ensureItemVisible("item-07", "instant");
+            triggerScroll(de);
+            expect(de.nativeElement.scrollTop).toBe(210);
+            await fixture.whenStable();
             fixture.detectChanges();
-            const date = new Date();
-            tween.update(date.setMilliseconds(date.getMilliseconds() + 500));
+            let items = de.queryAll(By.css(".item"));
+            expect(items[0].nativeElement.textContent).toContain("item-03");
+            expect(items[1].nativeElement.textContent).toContain("item-04");
+            expect(items[2].nativeElement.textContent).toContain("item-05");
+            expect(items[3].nativeElement.textContent).toContain("item-06");
+            expect(items[4].nativeElement.textContent).toContain("item-07");
+
+            component.ensureItemVisible("item-11", "instant");
+            triggerScroll(de);
+            expect(de.nativeElement.scrollTop).toBe(610);
+            await fixture.whenStable();
+            fixture.detectChanges();
+            items = de.queryAll(By.css(".item"));
+            expect(items[0].nativeElement.textContent).toContain("item-07");
+            expect(items[1].nativeElement.textContent).toContain("item-08");
+            expect(items[2].nativeElement.textContent).toContain("item-09");
+            expect(items[3].nativeElement.textContent).toContain("item-10");
+            expect(items[4].nativeElement.textContent).toContain("item-11");
+
+            // Ensure item up in the list should scroll up
+            component.ensureItemVisible("item-02", "instant");
+            triggerScroll(de);
+            expect(de.nativeElement.scrollTop).toBe(100);
+            await fixture.whenStable();
+            fixture.detectChanges();
+            items = de.queryAll(By.css(".item"));
+            expect(items[0].nativeElement.textContent).toContain("item-02");
+            expect(items[1].nativeElement.textContent).toContain("item-03");
+            expect(items[2].nativeElement.textContent).toContain("item-04");
+            expect(items[3].nativeElement.textContent).toContain("item-05");
+            expect(items[4].nativeElement.textContent).toContain("item-06");
+        });
+
+        it("scroll to given item", async () => {
+            component.scrollToItemAt(4, "instant");
+            triggerScroll(de);
             expect(de.nativeElement.scrollTop).toBe(400);
             await fixture.whenStable();
             fixture.detectChanges();
-            setTimeout(async () => {
-                await fixture.whenStable();
-                fixture.detectChanges();
-                expect(de.nativeElement.scrollTop).toBe(400);
-                const items = de.queryAll(By.css(".item"));
-                expect(items.length).toBe(5);
-                expect(items[0].nativeElement.textContent).toContain("item-05");
-                expect(items[1].nativeElement.textContent).toContain("item-06");
-                expect(items[2].nativeElement.textContent).toContain("item-07");
-                expect(items[3].nativeElement.textContent).toContain("item-08");
-                expect(items[4].nativeElement.textContent).toContain("item-09");
-                done();
-            });
+            const items = de.queryAll(By.css(".item"));
+            expect(items[0].nativeElement.textContent).toContain("item-05");
+            expect(items[1].nativeElement.textContent).toContain("item-06");
+            expect(items[2].nativeElement.textContent).toContain("item-07");
+            expect(items[3].nativeElement.textContent).toContain("item-08");
+            expect(items[4].nativeElement.textContent).toContain("item-09");
         });
     });
 
 });
+
+function triggerScroll(el: DebugElement) {
+    sendEvent(el, new Event("scroll"));
+}

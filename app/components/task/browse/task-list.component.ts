@@ -10,9 +10,9 @@ import {
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
-import { ListBaseComponent, ListSelection } from "@batch-flask/core/list";
+import { ListSelection } from "@batch-flask/core/list";
 import { QuickListItemStatus } from "@batch-flask/ui";
-import { AbstractListBaseConfig } from "@batch-flask/ui/abstract-list";
+import { AbstractListBaseConfig, ListBaseComponent } from "@batch-flask/ui/abstract-list";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Task, TaskState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
