@@ -17,6 +17,8 @@ const allowedRoleNames = new Set([
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourcePermissionButtonComponent implements OnChanges {
+    @Input() public labelledBy: string;
+
     /**
      * Id of the resource id to access
      */

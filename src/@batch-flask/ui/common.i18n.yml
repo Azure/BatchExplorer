@@ -1,0 +1,5 @@
+# To put here some common translations that are reused across the app
+common:
+  loading: Loading
+  yes: "Yes"
+  no: "No"

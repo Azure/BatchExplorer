@@ -4,7 +4,7 @@ import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { SelectModule } from "@batch-flask/ui/select";
 
-import { ENTER } from "@batch-flask/core/keys";
+import { ENTER, KeyCode } from "@batch-flask/core/keys";
 import { PermissionService } from "@batch-flask/ui";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { EditableTableColumnComponent, EditableTableComponent } from "@batch-flask/ui/form/editable-table";
@@ -154,7 +154,7 @@ describe("EditableTableComponent", () => {
         const input = inputs[0].nativeElement;
         input.focus();
 
-        const enterEvent = createKeyboardEvent("keypress", 13, input, ENTER);
+        const enterEvent = createKeyboardEvent("keypress", KeyCode.Enter, 13, input, ENTER);
         input.dispatchEvent(enterEvent);
 
         fixture.detectChanges();
