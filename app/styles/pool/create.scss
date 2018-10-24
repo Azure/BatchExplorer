@@ -26,16 +26,16 @@ bl-pool-os-picker {
         }
 
         &.active {
-            border-color: map-get($primary, 300);
+            border-color: $primary-color-light;
 
             > .main > .icon {
-                background: map-get($primary, 300);
-                border-color: map-get($primary, 300);
-                color: map-get($primary, 50);
+                background: $primary-color-light;
+                border-color: $primary-color-light;
+                color: $primary-contrast;
             }
 
             .select-version {
-                color: $primary-color
+                color: $primary-color;
                 font-weight: bold;
             }
 
@@ -50,7 +50,7 @@ bl-pool-os-picker {
                 padding: 10px 0;
                 height: 120px;
                 font-size: 60px;
-                color: map-get($primary, 300);
+                color: $primary-color-light;
                 display: flex;
                 align-items: center;
                 justify-content: center;

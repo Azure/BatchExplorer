@@ -37,7 +37,7 @@ bl-nodes-heatmap {
         g.node-group {
             cursor: pointer;
             rect {
-                stroke: $primary-color
+                stroke: $primary-color;
             }
 
             text {
@@ -50,7 +50,7 @@ bl-nodes-heatmap {
         &.interactive {
             g.node-group:hover {
                 rect {
-                    stroke: $primary-color
+                    stroke: $primary-color;
                     fill-opacity: 0.7;
                 }
             }

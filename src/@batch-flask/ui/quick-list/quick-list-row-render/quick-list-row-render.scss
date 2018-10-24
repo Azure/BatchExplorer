@@ -65,13 +65,13 @@ bl-quick-list-row-render {
         }
 
         .fa-hourglass-half {
-            color: $primary-color
+            color: $primary-color;
         }
     }
 
     bl-quick-list-item-status {
         position: relative;
-        color: $primary-color
+        color: $primary-color;
         flex: 0 0 8px;
         display: flex;
         align-items: stretch;

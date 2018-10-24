@@ -31,7 +31,7 @@ bl-job-progress-status {
         margin: 32px 10px 0;
 
         > .succeeded {
-            color: map-get($success, 500);
+            color: $success-color;
             margin-bottom: 20px;
         }
 
@@ -54,7 +54,7 @@ bl-job-progress-status {
             cursor: pointer;
 
             &.active {
-                color: $primary-color
+                color: $primary-color;
                 font-weight: bold;
             }
         }
