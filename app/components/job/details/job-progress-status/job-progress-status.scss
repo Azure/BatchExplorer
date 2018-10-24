@@ -54,7 +54,7 @@ bl-job-progress-status {
             cursor: pointer;
 
             &.active {
-                color: map-get($primary, 600);
+                color: $primary-color
                 font-weight: bold;
             }
         }

@@ -28,17 +28,5 @@ bl-storage-account-card > .storage-account-card {
     > .actions {
         margin-left: 10px;
         text-align: center;
-
-        button {
-            padding: 2px 10px;
-            cursor: pointer;
-            height: 28px;
-            color: $mineshaft-grey;
-
-            &:hover {
-                color: $whitesmoke;
-                background: map-get($primary, 300);
-            }
-        }
     }
 }

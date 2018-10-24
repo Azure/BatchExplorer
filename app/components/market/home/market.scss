@@ -80,11 +80,11 @@ bl-market {
     }
 
     .application.local-templates {
-        background: map-get($primary, 500);
+        background: $primary-color
         color: $whitesmoke;
 
         .fa.logo {
-            // color: map-get($primary, 500);
+            // color: $primary-color
             text-align: center;
             vertical-align: middle;
             font-size: 112px;

@@ -19,7 +19,7 @@ bl-summary-card {
             > .content {
                 > .title {
                     font-size: 16px;
-                    color: map-get($primary, 500);
+                    color: $primary-color
                 }
 
                 > .subtitle {

@@ -22,7 +22,7 @@ bl-ssh-key-picker {
                 outline: none;
 
                 &:focus {
-                    border-bottom: 1px solid map-get($primary, 400);
+                    border-bottom: 1px solid $primary-color
                 }
             }
         }
@@ -64,7 +64,7 @@ bl-ssh-key-picker {
                 .fa-file-code-o {
                     font-size: 30px;
                     margin-bottom: 10px;
-                    color: map-get($primary, 400);
+                    color: $primary-color
                 }
             }
         }
