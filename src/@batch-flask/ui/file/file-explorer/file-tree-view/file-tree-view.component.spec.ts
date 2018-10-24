@@ -142,6 +142,21 @@ describe("FileTreeViewComponent", () => {
         expect(rows[3].attributes.role).toEqual("treeitem");
     });
 
+    it("hide the tree view content when clicking the toolbar caret", () => {
+        const caret = de.query(By.css(".tree-view-header .caret"));
+        expect(caret.attributes["aria-expanded"]).toEqual("true");
+        expect(getContent()).not.toBeFalsy();
+        click(caret);
+        fixture.detectChanges();
+        expect(caret.attributes["aria-expanded"]).toEqual("false");
+        expect(getContent()).toBeFalsy();
+
+        click(caret);
+        fixture.detectChanges();
+        expect(caret.attributes["aria-expanded"]).toEqual("true");
+        expect(getContent()).not.toBeFalsy();
+    });
+
     it("list root files and folders alphabetically", () => {
         const rows = getRows();
         expect(rows.length).toBe(4);
