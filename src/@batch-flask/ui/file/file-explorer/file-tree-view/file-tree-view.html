@@ -1,8 +1,8 @@
 <div class="tree-view-header">
-    <bl-clickable class="caret" (do)="toggleExpandTreeView()">
+    <bl-clickable class="caret" (do)="toggleExpandTreeView()" [attr.aria-expanded]="expanded" attr.aria-owns="{{id}}-content" attr.aria-labelledby="{{id}}_name">
         <i class="fa" [class.fa-caret-down]="expanded" [class.fa-caret-right]="!expanded"></i>
     </bl-clickable>
-    <bl-clickable class="name" (do)="handleClickTreeViewHeader()">{{name}}</bl-clickable>
+    <bl-clickable id="{{id}}_name" class="name" (do)="handleClickTreeViewHeader()">{{name}}</bl-clickable>
     <span class="error" *ngIf="fileNavigator.error" [title]="fileNavigator.error.code">
         <i class="fa fa-warning"></i>
     </span>
@@ -15,9 +15,11 @@
     </bl-clickable>
 </div>
 <div *ngIf="expanded"
+    id="{{id}}-content"
     role="tree"
     tabindex="0"
     class="tree-view-content"
+    attr.aria-labelledby="{{id}}_name"
     attr.aria-activedescendant="{{id}}-row-{{focusedIndex}}"
     (focus)="setFocus(true)"
     (blur)="setFocus(false)"
