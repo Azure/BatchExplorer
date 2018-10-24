@@ -1,5 +1,12 @@
 <div class="graph">
-    <canvas blChart [datasets]="datasets" [options]="options" [chartType]="chartType" [labels]="labels" (elContextMenu)="showContextMenu($event)" [colors]="colors">
+    <canvas blChart
+        [datasets]="datasets"
+        [options]="options"
+        [chartType]="chartType"
+        [labels]="labels"
+        (elContextMenu)="showContextMenu($event)"
+        [attr.aria-label]="label"
+        [colors]="colors">
     </canvas>
 </div>
 <div class="footer">

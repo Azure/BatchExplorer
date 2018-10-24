@@ -12,6 +12,7 @@ import "./jobs-bar-chart.scss";
     templateUrl: "jobs-bar-chart.html",
 })
 export class JobsBarChartComponent implements OnInit, OnChanges {
+    @Input() public label: string;
     @Input() public jobs: List<Job> = List([]);
     @Input() public computeDataSets: (displayedJobs: List<Job>) => Chart.ChartDataSets[];
     @Input() public getTooltip: (job: Job) => string[];
