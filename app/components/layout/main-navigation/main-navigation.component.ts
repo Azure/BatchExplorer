@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, OnDestroy } from "@angular/core";
 import { I18nService } from "@batch-flask/core";
 import { BatchAccountService } from "app/services";
 import { Subscription } from "rxjs";
@@ -13,9 +13,18 @@ export class MainNavigationComponent implements OnDestroy {
     public selectedAccountAlias: string;
     public selectedId: string;
 
+    @HostBinding("attr.role") public readonly role = "navigation";
+    @HostBinding("attr.aria-label") public get ariaLabel() {
+        return this.i18n.translate("main-navigation.label");
+    }
+
     private _accountSub: Subscription;
 
-    constructor(accountService: BatchAccountService, private changeDetector: ChangeDetectorRef, i18n: I18nService) {
+    constructor(
+        accountService: BatchAccountService,
+        private changeDetector: ChangeDetectorRef,
+        private i18n: I18nService) {
+
         this._accountSub = accountService.currentAccountId.subscribe((accountId) => {
             this.selectedId = accountId;
             this.changeDetector.markForCheck();
