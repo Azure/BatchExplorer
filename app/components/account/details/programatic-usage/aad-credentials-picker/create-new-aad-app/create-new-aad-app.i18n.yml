@@ -1,0 +1,5 @@
+create-new-aad-app:
+  title: Create a new application
+  secret:
+    label: Secret
+  create: Create
