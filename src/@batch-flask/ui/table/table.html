@@ -5,7 +5,7 @@
 <div class="table-body">
     <div class="scroll-shadow" *ngIf="showScrollShadow"></div>
     <bl-virtual-scroll [items]="items" [childHeight]="28" (update)="updateViewPortItems($event)" (scroll)="handleScrollChange($event)">
-        <bl-row-render  *ngFor="let item of viewPortItems;trackBy: trackItem"
+        <bl-row-render  *blVirtualFor="let item;trackBy: trackItem"
             id="{{id}}-row-{{item.id}}"
             [item]="item"
             [columns]="columnManager.columns"
