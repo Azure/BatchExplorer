@@ -64,7 +64,7 @@
   "input": {
     "border": "#d5d5d5",
     "focus-border": "var(--color-primary)",
-    "placeholder": "#d5d5d5",
+    "placeholder": "var(--color-text-secondary)",
     "text": "var(--color-text-primary)",
     "background": "#fff",
     "disabled-background": "#e5e5e5"
