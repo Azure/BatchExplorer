@@ -4,7 +4,7 @@ import { log } from "@batch-flask/utils";
 import { ClientTranslationsLoaderService } from "client/core/i18n";
 import { MainApplicationMenu } from "client/menu";
 import { app, protocol } from "electron";
-import { autoUpdater } from "electron-updater-fix";
+import { autoUpdater } from "electron-updater";
 import { Constants } from "./client-constants";
 import { BatchExplorerClientModule, initializeServices } from "./client.module";
 import { ClientLocaleService, listenToSelectCertifcateEvent } from "./core";
