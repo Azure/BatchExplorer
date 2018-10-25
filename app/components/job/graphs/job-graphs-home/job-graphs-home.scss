@@ -24,7 +24,7 @@ bl-job-graphs-home {
             color: $mineshaft-grey;
 
             a {
-                color: map-get($primary, 400);
+                color: $primary-color;
             }
         }
 
@@ -38,7 +38,7 @@ bl-job-graphs-home {
             margin-right: 10px;
 
             bl-clickable {
-                color: map-get($primary, 400);
+                color: $primary-color;
             }
         }
 
@@ -51,7 +51,7 @@ bl-job-graphs-home {
             display: flex;
 
             .btn {
-                color: map-get($primary, 400);
+                color: $primary-color;
                 margin: 0 4px;
                 cursor: pointer;
 

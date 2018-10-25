@@ -2,7 +2,7 @@ bl-gauge {
     display: block;
 
     .chart-filled {
-        fill: map-get($primary, 400);
+        fill: $primary-color;
     }
 
     .chart-empty {

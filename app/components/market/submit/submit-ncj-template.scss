@@ -43,7 +43,7 @@ bl-submit-ncj-template {
             width: 200px;
             margin-right: 10px;
             &.selected {
-                background: map-get($primary, 600);
+                background: $primary-color;
             }
         }
     }

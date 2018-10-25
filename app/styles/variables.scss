@@ -32,10 +32,9 @@ $mineshaft-grey     :  #333333;
 
 // Text
 //---------------------------------------------
-$headings-color             : map-get($primary, 700);
-$link-color                 : map-get($primary, 700);
-$link-alt-color             : map-get($primary, 300);
-$link-color-hover           : map-get($primary, 800);
+$headings-color             : $primary-color;
+$link-color                 : $primary-color;
+$link-color-hover           : $primary-color-dark;
 $validation-error-color     : $danger-color;
 
 

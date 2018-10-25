@@ -18,7 +18,7 @@ bl-file-too-large {
         width: 100px; // both same size looks better
 
         &:hover {
-            background: map-get($primary, 500);
+            background: $primary-color
         }
 
         &[disabled] {
