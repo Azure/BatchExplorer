@@ -13,8 +13,8 @@
             </tr>
         </table>
         <div class="expand-container" *ngIf="canExpand || canCollapse">
-            <bl-button type="wide" color="light" class="expand" *ngIf="canExpand" (click)="expanded = true">Show {{rows.length - defaultDisplay}} more</bl-button>
-            <bl-button type="round" color="light" class="collapse" *ngIf="canCollapse" (click)="expanded = false"><i class="fa fa-caret-up"></i></bl-button>
+            <bl-button type="wide" color="light" class="expand" *ngIf="canExpand" (click)="expanded = true" aria-expanded="false">Show {{rows.length - defaultDisplay}} more</bl-button>
+            <bl-button type="round" color="light" class="collapse" *ngIf="canCollapse" (click)="expanded = false" aria-expanded="true"><i class="fa fa-caret-up"></i></bl-button>
         </div>
     </div>
 </bl-property-field>

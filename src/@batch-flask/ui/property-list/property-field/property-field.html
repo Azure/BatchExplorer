@@ -1,9 +1,15 @@
 <div class="property-label" [id]="labelId">
     <ng-content select="[propertyLabel]"></ng-content>
 </div>
-<div class="property-content focus-outline" tabindex="0" [attr.aria-labelledby]="labelId" role="textbox" aria-readonly="true" (focus)="focusContent($event)">
+<div class="property-content focus-outline" tabindex="0"
+    [attr.aria-labelledby]="labelId"
+    role="textbox"
+    aria-readonly="true"
+    [attr.aria-describedby]="ariaDescribedBy"
+    (focus)="focusContent($event)">
     <ng-content select="[propertyContent],bl-property-content"></ng-content>
 </div>
 <div class="clipboard-field">
     <ng-content select="[propertyClipboard]"></ng-content>
 </div>
+<div [id]="ariaDescribedBy" [hidden]="true" aria-hidden="true">Ctrl+C to copy</div>
