@@ -1,13 +1,18 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component,
+    HostBinding, Input, OnChanges, OnDestroy,
+} from "@angular/core";
 import { AbstractControl, ControlContainer, FormControl, FormGroupDirective } from "@angular/forms";
 import { Subscription } from "rxjs";
 
+let idCounter = 0;
 @Component({
     selector: "bl-error",
     template: `<div *ngIf="hasError"><ng-content></ng-content></div>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormErrorComponent implements OnChanges, OnDestroy {
+    @Input() @HostBinding("attr.id") public id = `bl-error-${idCounter++}`;
 
     /**
      * Form control.

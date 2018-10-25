@@ -44,13 +44,35 @@ export class FormFieldComponent implements AfterContentInit {
         }
         this.prefix.changes.subscribe(() => this.changeDetector.markForCheck());
         this.suffix.changes.subscribe(() => this.changeDetector.markForCheck());
-        this.hints.changes.subscribe(() => this.changeDetector.markForCheck());
-        this.errors.changes.subscribe(() => this.changeDetector.markForCheck());
+        this.hints.changes.subscribe(() => {
+            this._syncDescribedByIds();
+            this.changeDetector.markForCheck();
+        });
+        this.errors.changes.subscribe(() => {
+            this._syncDescribedByIds();
+            this.changeDetector.markForCheck();
+        });
+        this._syncDescribedByIds();
     }
 
     @HostListener("click", ["$event"])
     public notifyControlToFocus(event: MouseEvent) {
         if (this.control.disabled) { return; }
         this.control.onContainerClick(event);
+    }
+
+    /**
+     * Sets the list of element IDs that describe the child control. This allows the control to update
+     * its `aria-describedby` attribute accordingly.
+     */
+    private _syncDescribedByIds() {
+        if (!this.control) { return; }
+        let ids: string[] = [];
+        console.log("This hitns", this.hints);
+        if (this.errors && this.errors.length > 0) {
+            ids = ids.concat(this.errors.map(error => error.id));
+        }
+        ids = ids.concat(this.hints.map(hint => hint.id));
+        this.control.setDescribedByIds(ids);
     }
 }
