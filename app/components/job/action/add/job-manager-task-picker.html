@@ -17,18 +17,16 @@
         <bl-error controlName="commandLine" code="required">Command line is a required field</bl-error>
     </div>
     <div formGroupName="constraints">
-        <div class="form-element">
+        <bl-form-field>
             <bl-duration-picker formControlName="maxWallClockTime" label="Max wall-clock time"></bl-duration-picker>
-        </div>
-        <div class="form-element">
-            <bl-form-field>
-                <input blInput formControlName="maxTaskRetryCount" placeholder="Max retry count" type="number">
-            </bl-form-field>
+        </bl-form-field>
+        <bl-form-field>
+            <input blInput formControlName="maxTaskRetryCount" placeholder="Max retry count" type="number">
             <bl-error controlName="maxTaskRetryCount" code="validateRange">Retry count values can range from -1 to 100</bl-error>
-        </div>
-        <div class="form-element">
+        </bl-form-field>
+        <bl-form-field>
             <bl-duration-picker formControlName="retentionTime" label="Retention time"></bl-duration-picker>
-        </div>
+        </bl-form-field>
     </div>
     <div class="form-element pad-top">
         <bl-user-identity-picker formControlName="userIdentity" [userAccounts]="userAccounts">
