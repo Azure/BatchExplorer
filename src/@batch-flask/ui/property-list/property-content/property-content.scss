@@ -24,7 +24,7 @@ bl-property-content {
     }
 
     &.link {
-        color: map-get($primary, 400);
+        color: $primary-color
         i {
             padding-left: 4px;
         }

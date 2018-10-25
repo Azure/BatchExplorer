@@ -8,7 +8,7 @@
         .label {
             padding: 2px 5px;
             background: $alto;
-            color: map-get($primary, 400);
+            color: $primary-color;
         }
 
         .value {
