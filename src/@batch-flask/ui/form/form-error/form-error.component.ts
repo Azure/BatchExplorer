@@ -1,13 +1,18 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component,
+    HostBinding, Input, OnChanges, OnDestroy, Optional,
+} from "@angular/core";
 import { AbstractControl, ControlContainer, FormControl, FormGroupDirective } from "@angular/forms";
 import { Subscription } from "rxjs";
 
+let idCounter = 0;
 @Component({
     selector: "bl-error",
     template: `<div *ngIf="hasError"><ng-content></ng-content></div>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormErrorComponent implements OnChanges, OnDestroy {
+    @Input() @HostBinding("attr.id") public id = `bl-error-${idCounter++}`;
 
     /**
      * Form control.
@@ -31,9 +36,10 @@ export class FormErrorComponent implements OnChanges, OnDestroy {
     private _sub: Subscription;
 
     constructor(
-        private formGroup: FormGroupDirective,
-        private parent: ControlContainer,
-        private changeDetector: ChangeDetectorRef) {
+        private changeDetector: ChangeDetectorRef,
+        @Optional() private formGroup?: FormGroupDirective,
+        @Optional() private parent?: ControlContainer,
+    ) {
     }
 
     public ngOnChanges(inputs) {
@@ -73,6 +79,10 @@ export class FormErrorComponent implements OnChanges, OnDestroy {
      */
     private _computeHasError() {
         const control = this._control;
+        if (!control) {
+            throw new Error(`bl-error must have a form control.`
+                + `Either set the [control] input or use a form group and set the formControlName`);
+        }
         this._hasError = control.hasError(this.code);
         this.changeDetector.markForCheck();
     }
