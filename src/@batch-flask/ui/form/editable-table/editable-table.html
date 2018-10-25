@@ -1,5 +1,6 @@
-<div [formGroup]="form">
+<ng-container [formGroup]="form">
     <table class="noselect" cellspacing="0" cellpadding="0" formArrayName="items">
+        <caption [hidden]>{{label}}</caption>
         <thead>
             <tr>
                 <th *ngFor="let column of columns;trackBy: trackColumn">
@@ -28,4 +29,4 @@
             </tr>
         </tbody>
     </table>
-</div>
+</ng-container>

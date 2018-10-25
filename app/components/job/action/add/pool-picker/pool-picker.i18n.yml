@@ -1,0 +1,5 @@
+pool-picker:
+  filterByOS: Filter by OS
+  filterByID: Search by id
+  reset: Reset
+  noneMatching: You don't have any pools matching the current filters.

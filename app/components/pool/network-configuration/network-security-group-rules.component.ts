@@ -8,7 +8,6 @@ import { EditableTableColumnType } from "@batch-flask/ui/form/editable-table";
 import { NetworkSecurityGroupRule, NetworkSecurityGroupRuleAccess } from "app/models";
 import * as EndpointHelper from "./pool-endpoint-helper";
 
-// tslint:disable:no-forward-ref
 @Component({
     selector: "bl-network-security-group-rules",
     templateUrl: "network-security-group-rules.html",

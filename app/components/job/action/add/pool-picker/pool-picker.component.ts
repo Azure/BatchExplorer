@@ -137,7 +137,10 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
     }
 
     public resetFilters() {
-        this.filters.reset();
+        this.filters.setValue({
+            id: "",
+            offer: null,
+        });
     }
 
     private _updateDisplayedPools() {

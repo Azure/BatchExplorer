@@ -1,6 +1,6 @@
 import {
     AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef,
-    Component, ContentChildren, HostListener, OnDestroy, QueryList, forwardRef,
+    Component, ContentChildren, HostListener, Input, OnDestroy, QueryList, forwardRef,
 } from "@angular/core";
 import {
     ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
@@ -23,6 +23,8 @@ import "./editable-table.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditableTableComponent implements ControlValueAccessor, Validator, AfterContentInit, OnDestroy {
+    @Input() public label: string;
+
     @ContentChildren(EditableTableColumnComponent)
     public columns: QueryList<EditableTableColumnComponent>;
     public EditableTableColumnType = EditableTableColumnType;
