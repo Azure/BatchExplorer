@@ -108,7 +108,7 @@ bl-button {
             }
 
             &:active {
-                background: map-get($primary, 600);
+                background: $primary-color
             }
         }
 

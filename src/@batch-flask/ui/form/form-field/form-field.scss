@@ -25,7 +25,8 @@ bl-form-field {
     .bl-form-field-label {}
 
     &.bl-disabled {
-        opacity: 0.5;
+        // Having this opacity make contrast ratio too loos
+        // opacity: 0.5;
     }
 }
 

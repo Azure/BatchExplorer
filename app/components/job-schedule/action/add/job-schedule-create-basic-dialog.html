@@ -28,12 +28,12 @@
                 <div class="form-element">
                     <bl-datetime-picker label="Do not run until" formControlName="doNotRunUntil"></bl-datetime-picker>
                 </div>
-                <div class="form-element">
+                <bl-form-field>
                     <bl-duration-picker formControlName="recurrenceInterval" label="Recurrence interval" [allowUnlimited]="false"></bl-duration-picker>
-                </div>
-                <div class="form-element">
+                </bl-form-field>
+                <bl-form-field>
                     <bl-duration-picker formControlName="startWindow" label="Start window"></bl-duration-picker>
-                </div>
+                </bl-form-field>
             </div>
         </bl-form-section>
         <bl-form-section title="Job specification" subtitle="Specify details of the jobs to be created on a schedule.">

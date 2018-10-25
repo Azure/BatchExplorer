@@ -1,10 +1,10 @@
 {
   "$schema": "./theme.schema.json",
-  "primary": "#327ABB",
+  "primary": "#2F71C4",
   "primary-contrast": "#ffffff",
   "danger": "#aa3939",
   "danger-contrast": "#ffffff",
-  "warn": "#f4ad42",
+  "warn": "#aa671c",
   "warn-contrast": "#ffffff",
   "success": "#4caf50",
   "success-contrast": "#ffffff",

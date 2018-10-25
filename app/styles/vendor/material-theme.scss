@@ -94,11 +94,11 @@ mat-radio-button {
 
     &.mat-radio-checked {
         .mat-radio-outer-circle {
-            border-color: map-get($primary, 400);
+            border-color: $primary-color;
         }
 
         .mat-radio-inner-circle {
-            background: map-get($primary, 400);
+            background: $primary-color;
         }
     }
 }

@@ -35,7 +35,7 @@ bl-quota-display {
 
         > .details > .value {
             font-size: 15px;
-            color: map-get($primary, 500);
+            color: $primary-color;
             margin: 0 5px;
 
             > .statistic {
