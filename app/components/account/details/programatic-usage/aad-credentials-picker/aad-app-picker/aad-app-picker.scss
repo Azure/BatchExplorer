@@ -37,7 +37,7 @@ bl-aad-app-picker {
         > .app-list {
             grid-column: span 4;
             overflow: auto;
-            border: 1px solid $border-color
+            border: 1px solid $border-color;
         }
     }
 }
