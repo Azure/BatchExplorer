@@ -11,13 +11,13 @@
         </div>
         <div class="actions">
             <bl-card *ngFor="let action of actions;trackBy: trackAction" class="action">
-                <div class="action-link" [routerLink]="['/market', applicationId, 'actions', action.id, 'submit']">
+                <bl-clickable class="action-link" [routerLink]="['/market', applicationId, 'actions', action.id, 'submit']">
                     <div class="name">{{action.name}}</div>
                     <div class="description">{{action.description}}</div>
-                </div>
-                <div class="view-on-github" (click)="viewOnGithub(action)" matTooltip="View template on github">
+                </bl-clickable>
+                <bl-clickable class="view-on-github" (do)="viewOnGithub(action)" matTooltip="View template on github">
                     <i class="fa fa-external-link"></i>
-                </div>
+                </bl-clickable>
             </bl-card>
         </div>
 

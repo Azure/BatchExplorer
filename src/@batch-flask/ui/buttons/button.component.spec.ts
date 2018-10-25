@@ -81,8 +81,10 @@ describe("ButtonComponent", () => {
         expect(de.query(By.css(".fa-check"))).not.toBeFalsy();
     });
 
-    it("set aria label with title", () => {
-        expect(de.attributes["aria-label"]).toEqual("Stop");
+    it("set aria-describedby by with title", () => {
+        const describedbyId = de.attributes["aria-describedby"];
+        const describedby = de.query(By.css(`#${describedbyId}`));
+        expect(describedby.nativeElement.textContent).toContain("Stop");
     });
 
     describe("when disabled", () => {
