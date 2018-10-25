@@ -1,15 +1,14 @@
-import { Component, OnDestroy, forwardRef } from "@angular/core";
+import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
-// tslint:disable:no-forward-ref
-
 interface KeyValue {
     name: string;
     value: string;
 }
+
 @Component({
     selector: "bl-key-value-picker",
     templateUrl: "key-value-picker.html",
@@ -19,6 +18,8 @@ interface KeyValue {
     ],
 })
 export class KeyValuePickerComponent implements ControlValueAccessor, OnDestroy {
+    @Input() public label: string;
+
     public items: FormControl;
 
     private _propagateChange: (value: KeyValue[]) => void = null;

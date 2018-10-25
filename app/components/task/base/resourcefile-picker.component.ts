@@ -1,4 +1,6 @@
-import { ChangeDetectorRef, Component, EventEmitter, HostListener, OnDestroy, Output, forwardRef } from "@angular/core";
+import {
+    ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnDestroy, Output, forwardRef,
+} from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
@@ -29,6 +31,7 @@ export interface UploadResourceFileEvent {
     ],
 })
 export class ResourcefilePickerComponent implements ControlValueAccessor, OnDestroy {
+    @Input() public label = "Resource files";
     /**
      * Event emitted when a file is being uploaded, use this to add async task to the form
      */
