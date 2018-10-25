@@ -97,7 +97,6 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     }
     public get items() { return this._items; }
 
-
     @Input() public set config(config: AbstractListBaseConfig) {
         this._config = { ...abstractListDefaultConfig, ...config };
         this.dataPresenter.config = this._config.sorting;
