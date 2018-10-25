@@ -1,6 +1,6 @@
 import {
-    Component, ContentChild, ContentChildren, HostBinding,
-    Injector, Input, QueryList, TemplateRef, ViewChild,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild,
+    ContentChildren, HostBinding, HostListener, Injector, Input, QueryList, TemplateRef, ViewChild,
 } from "@angular/core";
 import { ClickableComponent } from "@batch-flask/ui/buttons";
 import { ClipboardService } from "@batch-flask/ui/electron";
@@ -34,39 +34,54 @@ export class TablePropertyRowComponent {
 
 }
 
+let idCounter = 0;
 @Component({
     selector: "bl-tp-cell",
     template: `
         <div class="cell-value">{{value}}</div>
-        <div class="copied-notification"
-            [class.hidden]="copyNotificationHidden"
-            [attr.aria-hidden]="copyNotificationHidden">
+        <div *ngIf="!copyNotificationHidden"
+            role="alert"
+            class="copied-notification"
+            [attr.aria-live]="assertive">
             Copied.
         </div>
+        <div [id]="ariaDescribedBy" [hidden]="true" aria-hidden="true">Click to copy</div>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TablePropertyCellComponent extends ClickableComponent {
-    @Input()
-    @HostBinding("attr.title")
+    @Input() public id = `bl-table-property-cell-${idCounter++}`;
+
+    @Input() @HostBinding("attr.title")
     public value;
     @HostBinding("class.property-content-box")
     public box = true;
 
     @HostBinding("attr.role") public role = "gridcell";
+    @HostBinding("attr.aria-describedby") public get ariaDescribedBy() {
+        return `${this.id}_describe`;
+    }
 
     public copyNotificationHidden = true;
 
-    constructor(private clipboard: ClipboardService, injector: Injector) {
+    constructor(private clipboard: ClipboardService, injector: Injector, private changeDetector: ChangeDetectorRef) {
         super(injector, null);
     }
 
     public handleAction(event) {
         super.handleAction(event);
+        this.changeDetector.markForCheck();
         this.copyNotificationHidden = false;
         this.clipboard.writeText(this.value);
         setTimeout(() => {
             this.copyNotificationHidden = true;
+            this.changeDetector.markForCheck();
         }, 1000);
+    }
+
+    @HostListener("(focus)")
+    public focusContent(event: FocusEvent) {
+        window.getSelection().selectAllChildren(event.target as any);
     }
 }
 

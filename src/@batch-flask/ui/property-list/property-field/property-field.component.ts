@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, HostBinding } from "@angular/core";
 
 import "./property-field.scss";
 
@@ -11,6 +11,10 @@ let idCounter = 0;
 })
 export class PropertyFieldComponent {
     @Input() public id = `bl-property-field-${idCounter++}`;
+
+    @HostBinding("attr.aria-describedby") public get ariaDescribedBy() {
+        return `${this.id}_describe`;
+    }
 
     public get labelId() { return `${this.id}_label`; }
 
