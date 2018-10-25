@@ -4,15 +4,17 @@ import {
     ChangeDetectorRef,
     Component,
     HostBinding,
+    HostListener,
     Injector,
     Input,
+    ViewChild,
 } from "@angular/core";
-import { Observable, isObservable } from "rxjs";
-
+import { MatTooltip } from "@angular/material";
 import { log } from "@batch-flask/utils";
+import { Observable, isObservable } from "rxjs";
+import { ClickableComponent } from "./clickable";
 
 import "./button.scss";
-import { ClickableComponent } from "./clickable";
 
 export type ButtonType = "square" | "round" | "wide" | "plain";
 export type ButtonColor = "primary" | "light" | "danger" | "warn" | "success";
@@ -24,6 +26,8 @@ export enum SubmitStatus {
     Succeeded,
     Failed,
 }
+
+let idCounter = 0;
 
 @Component({
     selector: "bl-button",
@@ -40,8 +44,17 @@ export enum SubmitStatus {
 
 })
 export class ButtonComponent extends ClickableComponent {
+
+    public set status(value: SubmitStatus) {
+        this._status = value;
+        this.changeDetectionRef.markForCheck();
+    }
+
+    public get status() { return this._status; }
+    public get tooltipTitle() { return `${this.title || ""}${this.subtitle || ""}`; }
     public SubmitStatus = SubmitStatus;
 
+    @Input() public id = `bl-button-${idCounter++}`;
     @Input() public action: ButtonAction;
     @Input() public icon: string;
     @Input() public title: string;
@@ -55,15 +68,7 @@ export class ButtonComponent extends ClickableComponent {
     @Input() @HostBinding("attr.color") public color: ButtonColor = "primary";
     @Input() public routerLink: string;
 
-    @HostBinding("attr.aria-label") public get ariaLabel() { return this.title; }
-
-    public set status(value: SubmitStatus) {
-        this._status = value;
-        this.changeDetectionRef.markForCheck();
-    }
-
-    public get status() { return this._status; }
-    public get tooltipTitle() { return `${this.title || ""}${this.subtitle || ""}`; }
+    @ViewChild(MatTooltip) private _tooltip: MatTooltip;
 
     private _status = SubmitStatus.Idle;
 
@@ -73,12 +78,28 @@ export class ButtonComponent extends ClickableComponent {
         super(injector, null);
     }
 
+    // Aria
+    // @HostBinding("attr.aria-label") public get ariaLabel() { return this.title; }
+    @HostBinding("attr.aria-describedby") public get ariaDescribedBy() {
+        return `${this.id}_described`;
+    }
+
     public handleAction(event: Event) {
         super.handleAction(event);
         if (this.isDisabled || !this.action) {
             return;
         }
         this._execute(event);
+    }
+
+    @HostListener("focus")
+    public showTooltip() {
+        this._tooltip.show();
+    }
+
+    @HostListener("blur")
+    public hideTooltip() {
+        this._tooltip.hide();
     }
 
     public done() {
