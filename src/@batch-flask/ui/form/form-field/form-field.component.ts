@@ -68,7 +68,6 @@ export class FormFieldComponent implements AfterContentInit {
     private _syncDescribedByIds() {
         if (!this.control) { return; }
         let ids: string[] = [];
-        console.log("This hitns", this.hints);
         if (this.errors && this.errors.length > 0) {
             ids = ids.concat(this.errors.map(error => error.id));
         }
