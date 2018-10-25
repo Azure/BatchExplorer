@@ -61,10 +61,6 @@ bl-table-property {
                 transition: 100ms ease-in-out;
                 overflow: hidden;
                 height: 100%;
-
-                &.hidden {
-                    transform: translateX(-100%);
-                }
             }
         }
     }

@@ -12,6 +12,10 @@ let idCounter = 0;
 export class PropertyFieldComponent {
     @Input() public id = `bl-property-field-${idCounter++}`;
 
+    public get ariaDescribedBy() {
+        return `${this.id}_describe`;
+    }
+
     public get labelId() { return `${this.id}_label`; }
 
     public focusContent(event: FocusEvent) {
