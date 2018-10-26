@@ -40,10 +40,6 @@ describe("InputDirective", () => {
         it("should update the input placeholder", () => {
             expect(de.nativeElement.getAttribute("placeholder")).toEqual("Enter stuff");
         });
-
-        it("set the aria-label", () => {
-            expect(de.nativeElement.getAttribute("aria-label")).toEqual("Enter stuff");
-        });
     });
 
     describe("when setting disabled", () => {

@@ -12,11 +12,11 @@
                 <bl-commands-list [commands]="commands" [entity]="job"></bl-commands-list>
             </bl-button-group>
             <div summaryTile *blFeatureOn="'job.statistics'">
-                <div class="job-graphs-link" [routerLink]="['/jobs', job.id, 'graphs']">
+                <a class="job-graphs-link" [routerLink]="['/jobs', job.id, 'graphs']">
                     <i class="fa fa-line-chart"></i>
                     <i class="fa fa-area-chart"></i>
                     <div>Job statistics</div>
-                </div>
+                </a>
             </div>
             <div summaryTile>
                 <bl-job-progress-status [job]="job" [poolId]="job.poolId"></bl-job-progress-status>

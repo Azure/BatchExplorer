@@ -37,16 +37,15 @@ mat-tab-group:not(.form-tabs) {
         color: $primary-text;
 
         &.mat-tab-label-active {
-            background-color: $primary-color-light;
-            color: $card-background;
         }
 
         &.mat-tab-disabled {
             color: $button-disabled-text-color;
         }
 
-        &:focus {
-            opacity: 0.8 !important;
+        &.cdk-keyboard-focused {
+            background-color: transparent !important;
+            border: 1px solid $outline-color;
         }
     }
 

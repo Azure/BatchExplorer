@@ -1,5 +1,7 @@
 import {
-    AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input, OnChanges, OnInit,
+    AfterContentInit, ChangeDetectionStrategy,
+    ChangeDetectorRef, Component, ContentChild,
+    ElementRef, Input, OnChanges, OnInit, ViewChild,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
@@ -49,6 +51,9 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
     public get config() { return this._config; }
     @Input() public keyField = "id";
 
+    @ViewChild("advancedFilterContainer")
+    public advancedFilterContainer: ElementRef;
+
     @ContentChild(BrowseLayoutListDirective)
     public listDirective: BrowseLayoutListDirective;
     @ContentChild(BrowseLayoutAdvancedFilterDirective)
@@ -69,7 +74,9 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
     private _config: BrowseLayoutConfig = defaultConfig;
     private _selectionChangeSub: Subscription;
 
-    constructor(activeRoute: ActivatedRoute, private changeDetector: ChangeDetectorRef) {
+    constructor(
+        activeRoute: ActivatedRoute,
+        private changeDetector: ChangeDetectorRef) {
 
         activeRoute.queryParams.subscribe((params: any) => {
             if (params.filter) {
@@ -154,6 +161,16 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
             this.listDirective.component.quicklist = !this.showAdvancedFilter;
         }
         this.changeDetector.markForCheck();
+
+        if (this.showAdvancedFilter) {
+            setTimeout(() => {
+                const el = this.advancedFilterContainer.nativeElement.querySelectorAll(
+                    `[tabindex]:not([tabindex="-1"])`, "input", "textarea", "button", "[href]")[0];
+                if (el) {
+                    el.focus();
+                }
+            });
+        }
     }
 
     public listScrolledToBottom() {

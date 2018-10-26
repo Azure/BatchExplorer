@@ -7,15 +7,15 @@
 
         .label {
             padding: 2px 5px;
-            background: $alto;
+            background-color: $primary-contrast-color;
             color: $primary-color;
+            border: 1px solid $border-color;
         }
 
         .value {
             flex: 1;
             font-size: 13px;
             background: $main-background;
-            color: $mineshaft-grey;
             padding: 2px 5px;
         }
     }
