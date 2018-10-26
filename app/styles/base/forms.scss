@@ -71,14 +71,14 @@ fieldset {
     flex-flow: row nowrap;
     padding: 0;
     border: 1px solid #aaa;
-    background-color: $athensGrey;
+    background-color: $secondary-text;
     margin-top: 16px;
 
     .infobox-image {
         width: 45px;
         height: 45px;
         padding: 10px;
-        background-color: $silver-grey;
+        background-color: $main-background;
 
         i {
             color: $primary-color;
