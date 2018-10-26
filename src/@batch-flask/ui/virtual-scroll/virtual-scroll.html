@@ -1,6 +1,5 @@
 <div #padding class="total-padding"></div>
 <div class="scrollable-content" #content>
-    Le: {{viewportItems.length}}
     <ng-template *ngFor="let item of viewportItems;trackBy: rowDef.trackBy"
         [ngTemplateOutlet]="rowDef.templateRef"
         [ngTemplateOutletContext]="{$implicit: item}"></ng-template>
