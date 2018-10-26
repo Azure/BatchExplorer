@@ -14,10 +14,9 @@ Virtual scroll is currently being used in the `bl-quick-list` and `bl-table` com
 ```html
 <bl-virtual-scroll
     [items]="items"
-    [childHeight]="48"
-    (update)="updateViewPortItems($event)">
+    [childHeight]="48">
 
-    <div *ngFor="let item of viewPortItems; trackBy: trackItem">
+    <div *ngVirtualRow="let item; trackBy: trackItem">
         <!-- Displpay item here -->
     </div>
 
@@ -28,20 +27,3 @@ Virtual scroll is currently being used in the `bl-quick-list` and `bl-table` com
 </bl-virtual-scroll>
 ```
 
-In your component
-
-```ts
-
-@Component( {
-  ...
-})
-export class MyComponent {
-    public viewPortItems: any[];
-
-    public updateViewPortItems(items: any) {
-        this.items = this.viewPortItems();
-        this.changeDetector.markForCheck();
-    }
-}
-
-```

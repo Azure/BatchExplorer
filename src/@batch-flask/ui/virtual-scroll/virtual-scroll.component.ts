@@ -1,6 +1,7 @@
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ContentChild,
     ElementRef,
@@ -82,7 +83,7 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
     @Output() public end = new EventEmitter<ChangeEvent>();
     @Output() public scroll = new EventEmitter<Event>();
 
-    public viewportItems: any[];
+    public viewportItems: any[] = [];
 
     @ViewChild("content", { read: ElementRef })
     public contentElementRef: ElementRef;
@@ -116,6 +117,7 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         private readonly element: ElementRef,
         private readonly zone: NgZone,
         private readonly renderer: Renderer2,
+        private changeDetector: ChangeDetectorRef,
     ) { }
 
     @HostBinding("style.overflow-y")
@@ -390,5 +392,6 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         } else {
             this.change.emit({ start, end });
         }
+        this.changeDetector.markForCheck();
     }
 }

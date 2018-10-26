@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { VirtualScrollTailComponent } from "@batch-flask/ui/virtual-scroll";
 import { sendEvent } from "test/utils/helpers";
+import { VirtualScrollRowDirective } from "./virtual-scroll-row.directive";
 import { VirtualScrollComponent } from "./virtual-scroll.component";
 
 // tslint:disable:trackBy-function
@@ -11,10 +12,11 @@ import { VirtualScrollComponent } from "./virtual-scroll.component";
     template: `
         <bl-virtual-scroll style="width: 400px;height: 500px"
             [childHeight]="100"
-            [items]="items"
-            (update)="viewPortItems = $event">
+            [items]="items">
 
-            <div class="item" *ngFor="let item of viewPortItems" style="width: 400px;height: 100px">{{item}}</div>
+            <div class="item"
+                *blVirtualRow="let item; trackBy: trackItem"
+                style="width: 400px;height: 100px">{{item}}</div>
 
             <bl-virtual-scroll-tail [height]="150" *ngIf="showTail">
                 This is a tail
@@ -38,33 +40,31 @@ class TestComponent {
         "item-12",
     ];
 
-    public viewPortItems = [];
-
     public showTail = false;
+
+    public trackItem(_, item) {
+        return item;
+    }
 }
 
 describe("VirtualScrollComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let component: VirtualScrollComponent;
-    let testComponent: TestComponent;
     let de: DebugElement;
 
     beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [],
-            declarations: [VirtualScrollComponent, VirtualScrollTailComponent, TestComponent],
+            declarations: [
+                VirtualScrollComponent, VirtualScrollTailComponent, TestComponent, VirtualScrollRowDirective,
+            ],
         });
         fixture = TestBed.createComponent(TestComponent);
-        testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-virtual-scroll"));
         component = de.componentInstance;
         fixture.detectChanges();
         await fixture.whenStable();
         fixture.detectChanges();
-    });
-
-    it("update the view port items", () => {
-        expect(testComponent.viewPortItems.length).toBe(6);
     });
 
     it("only shows a subset of the items", () => {

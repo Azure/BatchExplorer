@@ -4,8 +4,9 @@ import { Directive, Input, TemplateRef } from "@angular/core";
     selector: "[blVirtualRow]",
 })
 export class VirtualScrollRowDirective<T> {
-    // tslint:disable-next-line:no-input-rename
-    @Input("blVirtualRowTrackBy") public trackBy: (index: number, item: T) => any;
 
     constructor(public templateRef: TemplateRef<any>) {}
+
+    // tslint:disable-next-line:no-input-rename
+    @Input("blVirtualRowTrackBy") public trackBy: (index: number, item: T) => any = (_, i) => i;
 }

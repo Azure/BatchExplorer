@@ -1,8 +1,8 @@
+import { CommonModule } from "@angular/common";
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { BrowserModule, By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
-
 import { MaterialModule } from "@batch-flask/core";
 import { KeyCode } from "@batch-flask/core/keys";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
@@ -74,7 +74,7 @@ describe("TableComponent", () => {
 
     function setup(component) {
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule, BrowserModule, MaterialModule, VirtualScrollTestingModule],
+            imports: [RouterTestingModule, BrowserModule, CommonModule, MaterialModule, VirtualScrollTestingModule],
             declarations: [
                 TableColumnComponent,
                 TableComponent,
