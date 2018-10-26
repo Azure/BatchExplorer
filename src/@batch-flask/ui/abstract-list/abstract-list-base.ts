@@ -97,11 +97,6 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     }
     public get items() { return this._items; }
 
-    /**
-     * List of items that are currently being displayed with the virtual scroll
-     */
-    public viewPortItems: AbstractListItem[] = [];
-
     @Input() public set config(config: AbstractListBaseConfig) {
         this._config = { ...abstractListDefaultConfig, ...config };
         this.dataPresenter.config = this._config.sorting;
@@ -179,7 +174,6 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     }
 
     public updateViewPortItems(items) {
-        this.viewPortItems = items;
         if (items.length === this.items.length) {
             this.scrollBottom.emit();
         }

@@ -1,6 +1,7 @@
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ContentChild,
     ElementRef,
@@ -21,6 +22,7 @@ import { autobind } from "@batch-flask/core";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import { VirtualScrollTailComponent } from "./virtual-scroll-tail";
 
+import { VirtualScrollRowDirective } from "./virtual-scroll-row.directive";
 import "./virtual-scroll.scss";
 
 export interface ChangeEvent {
@@ -81,7 +83,7 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
     @Output() public end = new EventEmitter<ChangeEvent>();
     @Output() public scroll = new EventEmitter<Event>();
 
-    public viewPortItems: any[];
+    public viewportItems: any[] = [];
 
     @ViewChild("content", { read: ElementRef })
     public contentElementRef: ElementRef;
@@ -92,6 +94,8 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         this.refresh();
     }
     public get tail() { return this._tail; }
+
+    @ContentChild(VirtualScrollRowDirective) public rowDef: VirtualScrollRowDirective<any>;
 
     public topPadding: number;
     public previousStart: number;
@@ -113,6 +117,7 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         private readonly element: ElementRef,
         private readonly zone: NgZone,
         private readonly renderer: Renderer2,
+        private changeDetector: ChangeDetectorRef,
     ) { }
 
     @HostBinding("style.overflow-y")
@@ -366,8 +371,8 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         // To prevent from accidentally selecting the entire array with a negative 1 (-1) in the end position.
         const _end = end >= 0 ? end : 0;
         // update the scroll list
-        this.viewPortItems = items.slice(start, _end);
-        this.update.emit(this.viewPortItems);
+        this.viewportItems = items.slice(start, _end);
+        this.update.emit(this.viewportItems);
 
         // emit 'start' event
         if (start !== this.previousStart && this.startupLoop === false) {
@@ -387,5 +392,6 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         } else {
             this.change.emit({ start, end });
         }
+        this.changeDetector.markForCheck();
     }
 }

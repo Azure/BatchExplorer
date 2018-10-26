@@ -1,5 +1,7 @@
 <div #padding class="total-padding"></div>
 <div class="scrollable-content" #content>
-    <ng-content></ng-content>
+    <ng-template *ngFor="let item of viewportItems;trackBy: rowDef.trackBy"
+        [ngTemplateOutlet]="rowDef.templateRef"
+        [ngTemplateOutletContext]="{$implicit: item}"></ng-template>
     <ng-content select="bl-virtual-scroll-tail" *ngIf="tail"></ng-content>
 </div>
