@@ -65,7 +65,7 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     set id(value: string) { this._id = value || this._uid; }
 
     @Input()
-    @HostBinding("attr.aria-label")
+    // @HostBinding("attr.aria-label") // Shouldn't add aria label or it reads both placeholder and aria label
     @HostBinding("attr.placeholder")
     public placeholder: string;
 
