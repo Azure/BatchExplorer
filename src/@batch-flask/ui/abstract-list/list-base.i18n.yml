@@ -1,0 +1,3 @@
+list-base:
+  filterApplied: New filter applied, {count} results
+  filterCleared: Filter cleared, {count} results

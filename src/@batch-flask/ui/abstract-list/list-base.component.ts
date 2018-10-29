@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { ChangeDetectorRef, Injector, Input, OnDestroy, ViewChild } from "@angular/core";
-import { ListSelection, SelectableList } from "@batch-flask/core";
+import { I18nService, ListSelection, SelectableList } from "@batch-flask/core";
 import { Filter, FilterBuilder } from "@batch-flask/core/filter-builder";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { Observable, Subscription } from "rxjs";
@@ -18,7 +18,6 @@ export interface ListBaseComponent {
 }
 
 export abstract class ListBaseComponent extends SelectableList implements OnDestroy {
-    public _applyFilterSub: Subscription;
     @Input() public set quicklist(quicklist: boolean) {
         this._quicklist = quicklist;
         this.changeDetector.markForCheck();
@@ -29,7 +28,13 @@ export abstract class ListBaseComponent extends SelectableList implements OnDest
         this._filter = filter;
         if (this._applyFilterSub) { this._applyFilterSub.unsubscribe(); }
         this._applyFilterSub = this.handleFilter(filter).subscribe((count) => {
-            this.liveAnnouncer.announce(`New filter applied, ${count} results`);
+            let message: string;
+            if (filter.isEmpty()) {
+                message = this.i18n.t("list-base.filterCleared", { count });
+            } else {
+                message = this.i18n.t("list-base.filterApplied", { count });
+            }
+            this.liveAnnouncer.announce(message);
         });
         this.changeDetector.markForCheck();
     }
@@ -40,8 +45,10 @@ export abstract class ListBaseComponent extends SelectableList implements OnDest
         this.changeDetector.markForCheck();
     }
     public get status() { return this._status; }
+    public _applyFilterSub: Subscription;
 
     @ViewChild(AbstractListBase) public list: AbstractListBase;
+    private i18n: I18nService;
 
     private liveAnnouncer: LiveAnnouncer;
 
@@ -52,6 +59,7 @@ export abstract class ListBaseComponent extends SelectableList implements OnDest
     constructor(injector: Injector) {
         super(injector.get(ChangeDetectorRef));
         this.liveAnnouncer = injector.get(LiveAnnouncer);
+        this.i18n = injector.get(I18nService);
     }
 
     public ngOnDestroy() {
