@@ -24,6 +24,7 @@ import "./editable-table.scss";
 })
 export class EditableTableComponent implements ControlValueAccessor, Validator, AfterContentInit, OnDestroy {
     @Input() public label: string;
+    @Input() public hideCaption = false;
 
     @ContentChildren(EditableTableColumnComponent)
     public columns: QueryList<EditableTableColumnComponent>;
