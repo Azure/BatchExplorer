@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
+import { Component, Injector, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/ui";
@@ -6,7 +6,8 @@ import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Node } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
 import { ComponentUtils } from "app/utils";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
+import { map } from "rxjs/operators";
 import { NodeCommands } from "../action";
 
 @Component({
@@ -27,9 +28,9 @@ export class NodeListComponent extends ListBaseComponent implements OnChanges, O
     constructor(
         public commands: NodeCommands,
         private nodeService: NodeService,
-        activatedRoute: ActivatedRoute,
-        changeDetector: ChangeDetectorRef) {
-        super(changeDetector);
+        injector: Injector,
+        activatedRoute: ActivatedRoute) {
+        super(injector);
         this.data = this.nodeService.listView();
 
         this.data.status.subscribe((status) => {
@@ -63,7 +64,9 @@ export class NodeListComponent extends ListBaseComponent implements OnChanges, O
             this.data.setOptions({ filter });
         }
         if (this.poolId) {
-            this.data.fetchNext();
+            return this.data.fetchNext().pipe(map(x => x.items.size));
+        } else {
+            return of(0);
         }
     }
 

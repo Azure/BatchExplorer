@@ -7,10 +7,6 @@ bl-editable-table, .editable-table {
         width: 100%;
         table-layout: fixed;
 
-        caption {
-            text-align: left;
-        }
-
         thead {
             text-align: left;
             color: $primary-text;

@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
+    ChangeDetectionStrategy, Component, Injector, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
@@ -11,7 +11,7 @@ import { Certificate, CertificateState } from "app/models";
 import { CertificateListParams, CertificateService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, of } from "rxjs";
 import { CertificateCommands } from "../action";
 
 @Component({
@@ -34,11 +34,11 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
 
     constructor(
         activatedRoute: ActivatedRoute,
-        changeDetector: ChangeDetectorRef,
+        injector: Injector,
         public commands: CertificateCommands,
         private certificateService: CertificateService,
     ) {
-        super(changeDetector);
+        super(injector);
 
         this.data = this.certificateService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
@@ -73,6 +73,8 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
 
     public handleFilter(filter: Filter) {
         this._updateDisplayedCertificates();
+
+        return of(this.displayedCertificates.size);
     }
 
     public certificateStatus(certificate: Certificate): QuickListItemStatus {

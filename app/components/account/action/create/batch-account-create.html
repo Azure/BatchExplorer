@@ -3,7 +3,7 @@
         <bl-form-section title="General info" subtitle="Basic information about the batch account">
             <div class="form-element">
                 <bl-subscription-picker formControlName="subscription"></bl-subscription-picker>
-                <bl-error controlName="subscription" code="required">Subscription is a required field</bl-error>
+                <bl-error controlName="subscription" code="required">{{'batch-account-create.subscription.required' | i18n}}</bl-error>
             </div>
             <div class="form-element" *ngIf="selectedSubscription">
                 <bl-form-field>
@@ -13,39 +13,40 @@
                             {{resourceGroup.name}} ({{resourceGroup.location}})
                         </mat-option>
                     </mat-autocomplete>
+                    <bl-error controlName="resourceGroup" code="required">{{'batch-account-create.resourceGroup.required' | i18n}}</bl-error>
+                    <bl-error controlName="resourceGroup" code="noPermission">{{'batch-account-create.resourceGroup.notAllowed' | i18n}}</bl-error>
+                    <bl-error controlName="resourceGroup" code="serverError">{{ form.controls.resourceGroup.errors?.serverError }}</bl-error>
                 </bl-form-field>
-                <bl-error controlName="resourceGroup" code="required">Resource group is a required field</bl-error>
-                <bl-error controlName="resourceGroup" code="noPermission">You don't have permission to create a batch account under this resource group</bl-error>
-                <bl-error controlName="resourceGroup" code="serverError">{{ form.controls.resourceGroup.errors?.serverError }}</bl-error>
-                <span *ngIf="isNewResourceGroup">This resource group doesn't exist yet, and it will be created before batch account.</span>
-                <span *ngIf="!resourceGroups.length">No resources groups available in subscription '{{selectedSubscription.displayName}}'</span>
+
+                <span *ngIf="isNewResourceGroup">{{'batch-account-create.resourceGroup.notAllowed' | i18n}}</span>
+                <span *ngIf="!resourceGroups.length">{{'batch-account-create.resourceGroup.required' | i18n: {subscription: selectedSubscription.displayName} }}</span>
             </div>
             <div class="form-element" *ngIf="selectedSubscription">
                 <bl-location-picker formControlName="location" [subscription]="selectedSubscription"></bl-location-picker>
-                <bl-error controlName="location" code="required">Location is a required field</bl-error>
+                <bl-error controlName="location" code="required">{{'batch-account-create.location.required' | i18n}}</bl-error>
                 <bl-error controlName="location" code="quotaReached">
-                    You've already reached your quota {{form.controls.location.errors?.quotaReached?.used}} out of
-                    {{form.controls.location.errors?.quotaReached?.quota}}
-                    accounts for subscription '{{selectedSubscription.displayName}}' in this location.
-                    You can request a an account quota increase, create the account in another location, or create the
-                    account in another subscription.
+                    <bl-i18n key="batch-account-create.quota.reached">
+                        <ng-container *i18nParam="'used'">{{form.controls.location.errors?.quotaReached?.used}}</ng-container>
+                        <ng-container *i18nParam="'quota'">{{form.controls.location.errors?.quotaReached?.quota}}</ng-container>
+                        <ng-container *i18nParam="'subscription'">{{selectedSubscription.displayName}}</ng-container>
+                    </bl-i18n>
                 </bl-error>
             </div>
             <div class="form-element">
                 <bl-form-field>
                     <input blInput formControlName="name" placeholder="Account name" />
                     <div blFormFieldSuffix *ngIf="selectedLocation">{{accountUrlSuffix}}</div>
+                    <bl-error controlName="name" code="required">{{'batch-account-create.accountName.required' | i18n}}</bl-error>
+                    <bl-error controlName="name" code="minLength">{{'batch-account-create.accountName.minLength' | i18n}}</bl-error>
+                    <bl-error controlName="name" code="maxlength">{{'batch-account-create.accountName.maxlength' | i18n}}</bl-error>
+                    <bl-error controlName="name" code="pattern">{{'batch-account-create.accountName.pattern' | i18n}}</bl-error>
+                    <bl-error controlName="name" code="accountExists">{{ form.controls.name.errors?.accountExists?.message }}</bl-error>
+                    <bl-error controlName="name" code="serverError">{{ form.controls.name.errors?.serverError }}</bl-error>
                 </bl-form-field>
-                <bl-error controlName="name" code="required">Account name is a required field</bl-error>
-                <bl-error controlName="name" code="minLength">Account name has a minimum length of 3 characters</bl-error>
-                <bl-error controlName="name" code="maxlength">Account name has a maximum length of 64 characters</bl-error>
-                <bl-error controlName="name" code="pattern">Account name can contain lower case letters and numbers</bl-error>
-                <bl-error controlName="name" code="accountExists">{{ form.controls.name.errors?.accountExists?.message }}</bl-error>
-                <bl-error controlName="name" code="serverError">{{ form.controls.name.errors?.serverError }}</bl-error>
             </div>
         </bl-form-section>
         <bl-form-section title="Storage account" subtitle="Pick a storage account that will be assigned with this batch account.">
-            <span *ngIf="!account">Please specify subscription and location before picking a storage account.</span>
+            <span *ngIf="!account">{{'batch-account-create.storageAccount.missingSubscription' | i18n}}</span>
             <div class="form-element" *ngIf="account">
                 <bl-auto-storage-account-picker formControlName="storageAccountId" [account]="account"></bl-auto-storage-account-picker>
             </div>

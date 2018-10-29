@@ -1,12 +1,11 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
-import { Router } from "@angular/router";
+import { Component, Injector, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, LoadingStatus } from "@batch-flask/ui";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService } from "app/services";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, of } from "rxjs";
 import { BatchApplicationCommands } from "../action";
 
 import "./application-list.scss";
@@ -30,12 +29,11 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
     private _subs: Subscription[] = [];
 
     constructor(
-        router: Router,
-        changeDetector: ChangeDetectorRef,
+        injector: Injector,
         public commands: BatchApplicationCommands,
         private applicationService: ApplicationService,
     ) {
-        super(changeDetector);
+        super(injector);
 
         this.data = this.applicationService.listView(this._baseOptions);
         this._subs.push(this.data.items.subscribe((applications) => {
@@ -68,6 +66,7 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
 
     public handleFilter(filter: Filter) {
         this._filterApplications();
+        return of(this.displayedApplications.size);
     }
 
     public appStatus(application: BatchApplication): QuickListItemStatus {

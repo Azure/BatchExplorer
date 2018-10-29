@@ -5,6 +5,8 @@ import { Filter, and, none, or, prop } from "@batch-flask/core";
 import { AdvancedFilter } from "../advanced-filter";
 import { AdvancedFilterControlBase } from "../control-base";
 
+import "./list-filter-control.scss";
+
 export enum ListFilterType {
     Include,
     Exclude,

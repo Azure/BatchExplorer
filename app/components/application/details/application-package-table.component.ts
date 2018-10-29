@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
+import { Component, Injector, Input, OnChanges } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/ui";
@@ -7,7 +7,7 @@ import { DateUtils } from "@batch-flask/utils";
 import { ApplicationPackage, BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import { List } from "immutable";
-import { Observable, forkJoin } from "rxjs";
+import { Observable, forkJoin, of } from "rxjs";
 import { flatMap } from "rxjs/operators";
 import { ActivatePackageDialogComponent, ApplicationCreateDialogComponent } from "../action";
 
@@ -25,8 +25,8 @@ export class ApplicationPackageTableComponent extends ListBaseComponent implemen
         protected dialog: MatDialog,
         private applicationService: ApplicationService,
         private sidebarManager: SidebarManager,
-        changeDetector: ChangeDetectorRef) {
-        super(changeDetector);
+        injector: Injector) {
+        super(injector);
     }
 
     public ngOnChanges(inputs) {
@@ -39,6 +39,7 @@ export class ApplicationPackageTableComponent extends ListBaseComponent implemen
 
     public handleFilter(filter) {
         this._filterPackages();
+        return of(this.displayedPackages.size);
     }
 
     public formatDate(date: Date) {

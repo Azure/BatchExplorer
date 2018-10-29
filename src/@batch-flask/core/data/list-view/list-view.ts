@@ -112,9 +112,9 @@ export class ListView<TEntity extends Record<any>, TParams> extends GenericView<
      * @param forceNew when fetching the first batch of items this will force to load data from the server
      *                  instead of loading from cache
      */
-    public fetchNext(forceNew = false): Observable<any> {
+    public fetchNext(forceNew = false): Observable<ListResponse<TEntity>> {
         if (!this._hasMore.value) {
-            return of({ data: [] });
+            return of({ items: List([]), nextLink: null });
         }
         let fetchObs;
         if (this._nextLink === null) {

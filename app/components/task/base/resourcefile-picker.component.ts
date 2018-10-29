@@ -32,6 +32,7 @@ export interface UploadResourceFileEvent {
 })
 export class ResourcefilePickerComponent implements ControlValueAccessor, OnDestroy {
     @Input() public label = "Resource files";
+    @Input() public hideCaption = false;
     /**
      * Event emitted when a file is being uploaded, use this to add async task to the form
      */

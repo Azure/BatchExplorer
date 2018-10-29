@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Injector, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { Filter, ListSelection, ListView, autobind } from "@batch-flask/core";
@@ -12,6 +12,7 @@ import { JobListParams, JobService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
+import { map } from "rxjs/operators";
 import {
     JobCommands,
     PatchJobComponent,
@@ -42,15 +43,15 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
     };
 
     // todo: ask tim about setting difference select options for list and details.
-    private _baseOptions = { };
+    private _baseOptions = {};
     private _onJobAddedSub: Subscription;
     constructor(
         activatedRoute: ActivatedRoute,
-        changeDetector: ChangeDetectorRef,
+        injector: Injector,
         public commands: JobCommands,
         private sidebarManager: SidebarManager,
         private jobService: JobService) {
-        super(changeDetector);
+        super(injector);
         this.data = this.jobService.listView(this._baseOptions);
         ComponentUtils.setActiveItem(activatedRoute, this.data);
         this.data.items.subscribe((jobs) => {
@@ -89,7 +90,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
             this.data.setOptions({ ...this._baseOptions, filter });
         }
 
-        this.data.fetchNext();
+        return this.data.fetchNext().pipe(map(x => x.items.size));
     }
 
     public jobStatus(job: Job): QuickListItemStatus {

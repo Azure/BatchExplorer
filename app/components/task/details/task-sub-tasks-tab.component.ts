@@ -1,7 +1,7 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, ViewChild,
+    ChangeDetectionStrategy, Component, Injector, Input, OnChanges, OnDestroy, ViewChild,
 } from "@angular/core";
-import { ListView,  autobind } from "@batch-flask/core";
+import { ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/ui";
 import { SubtaskInformation } from "app/models";
 import { SubtaskListParams, TaskService } from "app/services";
@@ -37,8 +37,8 @@ export class TaskSubTasksTabComponent extends ListBaseComponent implements OnCha
     private _jobId: string;
     private _taskId: string;
 
-    constructor(private taskService: TaskService, changeDetector: ChangeDetectorRef) {
-        super(changeDetector);
+    constructor(private taskService: TaskService, injector: Injector) {
+        super(injector);
 
         this.data = this.taskService.listSubTasksView({});
         this.data.items.subscribe((subTasks) => {

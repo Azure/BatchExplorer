@@ -19,6 +19,7 @@ interface KeyValue {
 })
 export class KeyValuePickerComponent implements ControlValueAccessor, OnDestroy {
     @Input() public label: string;
+    @Input() public hideCaption = false;
 
     public items: FormControl;
 

@@ -1,8 +1,8 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input,
-    OnChanges, OnDestroy, OnInit, forwardRef,
+    ChangeDetectionStrategy, Component, Injector,
+    Input, OnChanges, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { Filter, ListSelection, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, LoadingStatus, QuickListItemStatus } from "@batch-flask/ui";
 import { BlobContainer, LeaseStatus } from "app/models";
@@ -13,6 +13,7 @@ import { List } from "immutable";
 import { Observable, Subscription, of } from "rxjs";
 import { BlobContainerCommands } from "../action";
 
+import { map } from "rxjs/operators";
 import "./data-container-list.scss";
 
 const defaultListOptions = {
@@ -39,13 +40,12 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
     private _onGroupAddedSub: Subscription;
 
     constructor(
-        router: Router,
-        changeDetector: ChangeDetectorRef,
+        injector: Injector,
         public commands: BlobContainerCommands,
         private activeRoute: ActivatedRoute,
         private storageContainerService: StorageContainerService) {
 
-        super(changeDetector);
+        super(injector);
         this.data = this.storageContainerService.listView();
         ComponentUtils.setActiveItem(activeRoute, this.data);
 
@@ -106,7 +106,9 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         }
 
         if (this.storageAccountId) {
-            this.data.fetchNext();
+            return this.data.fetchNext().pipe(map(x => x.items.size));
+        } else {
+            return of(0);
         }
     }
 

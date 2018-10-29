@@ -54,11 +54,11 @@
         </bl-form-section>
 
         <bl-form-section title="Resource files" subtitle="List of files to be used by this task">
-            <bl-resourcefile-picker formControlName="resourceFiles" (upload)="registerFileUpload($event)"></bl-resourcefile-picker>
+            <bl-resourcefile-picker formControlName="resourceFiles"  [hideCaption]="true" (upload)="registerFileUpload($event)"></bl-resourcefile-picker>
         </bl-form-section>
 
         <bl-form-section title="Environment variables" subtitle="A list of environment variable settings for the task">
-            <bl-key-value-picker formControlName="environmentSettings"></bl-key-value-picker>
+            <bl-key-value-picker label="Environment variables" [hideCaption]="true" formControlName="environmentSettings"></bl-key-value-picker>
         </bl-form-section>
 
         <bl-form-section *ngIf="hasLinkedStorage" title="Choose one or multiple application packages" subtitle="Select application packages to be downloaded onto the compute node for use with this task">
