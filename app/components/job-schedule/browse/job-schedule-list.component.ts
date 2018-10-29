@@ -13,6 +13,7 @@ import { JobScheduleListParams, JobScheduleService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
+import { map } from "rxjs/operators";
 import { JobScheduleCommands } from "../action";
 
 @Component({
@@ -81,7 +82,7 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
             this.data.setOptions({ ...this._baseOptions, filter: filter });
         }
 
-        this.data.fetchNext();
+        return this.data.fetchNext().pipe(map(x => x.items.size));
     }
 
     public jobScheduleStatus(jobSchedule: JobSchedule): QuickListItemStatus {

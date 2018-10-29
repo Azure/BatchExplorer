@@ -22,6 +22,7 @@ import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 import { TaskCommands } from "../action";
 
+import { map } from "rxjs/operators";
 import "./task-list.scss";
 
 @Component({
@@ -117,7 +118,7 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnCh
             this.data.setOptions({ ...this._baseOptions, filter: filter });
         }
 
-        this.data.fetchNext();
+        return this.data.fetchNext().pipe(map(x => x.items.size));
     }
 
     public onScrollToBottom(): Observable<any> {

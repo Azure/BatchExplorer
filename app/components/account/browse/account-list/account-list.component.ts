@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, forwardRef } from "@angular/core";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, of } from "rxjs";
 
 import { Filter, FilterMatcher, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/ui";
@@ -62,6 +62,7 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
 
     public handleFilter(filter: Filter) {
         this._updateDisplayedAccounts();
+        return of(this.displayedAccounts.size);
     }
 
     public isAccountFavorite(accountId: string) {

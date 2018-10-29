@@ -12,6 +12,7 @@ import { JobListParams, JobService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
+import { map } from "rxjs/operators";
 import {
     JobCommands,
     PatchJobComponent,
@@ -89,7 +90,7 @@ export class JobListComponent extends ListBaseComponent implements OnInit, OnDes
             this.data.setOptions({ ...this._baseOptions, filter });
         }
 
-        this.data.fetchNext();
+        return this.data.fetchNext().pipe(map(x => x.items.size));
     }
 
     public jobStatus(job: Job): QuickListItemStatus {

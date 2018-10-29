@@ -6,7 +6,8 @@ import { LoadingStatus } from "@batch-flask/ui/loading";
 import { Node } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
 import { ComponentUtils } from "app/utils";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
+import { map } from "rxjs/operators";
 import { NodeCommands } from "../action";
 
 @Component({
@@ -63,7 +64,9 @@ export class NodeListComponent extends ListBaseComponent implements OnChanges, O
             this.data.setOptions({ filter });
         }
         if (this.poolId) {
-            this.data.fetchNext();
+            return this.data.fetchNext().pipe(map(x => x.items.size));
+        } else {
+            return of(0);
         }
     }
 

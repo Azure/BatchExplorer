@@ -5,6 +5,7 @@ import { RouterModule } from "@angular/router";
 import { MaterialModule } from "@batch-flask/core";
 
 // components
+import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { WorkspaceModule } from "@batch-flask/ui/workspace";
 import { AbstractListModule } from "./abstract-list";
 import { ActivityModule } from "./activity";
@@ -128,6 +129,7 @@ const components = [
         ...modules,
     ],
     providers: [
+        LiveAnnouncer,
     ],
 })
 export class BaseModule {

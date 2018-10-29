@@ -1,3 +1,4 @@
+import { LiveAnnouncer } from "@angular/cdk/a11y";
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
@@ -12,6 +13,7 @@ import { PoolListParams, PoolService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
+import { map } from "rxjs/operators";
 import { PoolCommands } from "../action";
 
 import "./pool-list.scss";
@@ -20,10 +22,11 @@ import "./pool-list.scss";
     selector: "bl-pool-list",
     templateUrl: "pool-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [PoolCommands, {
-        provide: ListBaseComponent,
-        useExisting: forwardRef(() => PoolListComponent),
-    }],
+    providers: [
+        PoolCommands, {
+            provide: ListBaseComponent,
+            useExisting: forwardRef(() => PoolListComponent),
+        }],
 })
 export class PoolListComponent extends ListBaseComponent implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
@@ -53,9 +56,10 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     constructor(
         private poolService: PoolService,
         activatedRoute: ActivatedRoute,
+        liveAnnouncer: LiveAnnouncer,
         public commands: PoolCommands,
         changeDetector: ChangeDetectorRef) {
-        super(changeDetector);
+        super(changeDetector, liveAnnouncer);
         this.data = this.poolService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 
@@ -86,14 +90,14 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
         return this.data.refresh();
     }
 
-    public handleFilter(filter: Filter) {
+    public handleFilter(filter: Filter): Observable<number> {
         if (filter.isEmpty()) {
             this.data.setOptions({});
         } else {
             this.data.setOptions({ filter: filter });
         }
 
-        this.data.fetchNext();
+        return this.data.fetchNext().pipe(map(x => x.items.size));
     }
 
     public poolStatus(pool: Pool): QuickListItemStatus {

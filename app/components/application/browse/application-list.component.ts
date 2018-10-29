@@ -6,7 +6,7 @@ import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
 import { BatchApplication } from "app/models";
 import { ApplicationListParams, ApplicationService } from "app/services";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, of } from "rxjs";
 import { BatchApplicationCommands } from "../action";
 
 import "./application-list.scss";
@@ -68,6 +68,7 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
 
     public handleFilter(filter: Filter) {
         this._filterApplications();
+        return of(this.displayedApplications.size);
     }
 
     public appStatus(application: BatchApplication): QuickListItemStatus {

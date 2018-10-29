@@ -11,7 +11,7 @@ import { Certificate, CertificateState } from "app/models";
 import { CertificateListParams, CertificateService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, of } from "rxjs";
 import { CertificateCommands } from "../action";
 
 @Component({
@@ -73,6 +73,8 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
 
     public handleFilter(filter: Filter) {
         this._updateDisplayedCertificates();
+
+        return of(this.displayedCertificates.size);
     }
 
     public certificateStatus(certificate: Certificate): QuickListItemStatus {

@@ -69,7 +69,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public LoadingStatus = LoadingStatus;
     public SortingStatus = SortingStatus;
 
-    @Input() public id: string;
+    @Input() @HostBinding("attr.id") public id: string;
     @Input() public commands: EntityCommands<any>;
 
     @Input() public set data(

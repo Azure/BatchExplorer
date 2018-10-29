@@ -13,6 +13,7 @@ import { List } from "immutable";
 import { Observable, Subscription, of } from "rxjs";
 import { BlobContainerCommands } from "../action";
 
+import { map } from "rxjs/operators";
 import "./data-container-list.scss";
 
 const defaultListOptions = {
@@ -106,7 +107,9 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
         }
 
         if (this.storageAccountId) {
-            this.data.fetchNext();
+            return this.data.fetchNext().pipe(map(x => x.items.size));
+        } else {
+            return of(0);
         }
     }
 
