@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild,
+    ChangeDetectionStrategy, Component, EventEmitter, Injector, Input, Output, ViewChild,
 } from "@angular/core";
 import { ListBaseComponent } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
@@ -28,8 +28,8 @@ export class SubTaskDisplayListComponent extends ListBaseComponent {
 
     @Output() public scrollBottom = new EventEmitter();
 
-    constructor(changeDetector: ChangeDetectorRef) {
-        super(changeDetector);
+    constructor(injector: Injector) {
+        super(injector);
     }
 
     public taskStatus(task: SubtaskInformation): QuickListItemStatus {
