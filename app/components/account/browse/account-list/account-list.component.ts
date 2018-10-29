@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Injector, OnDestroy, forwardRef } from "@angular/core";
 import { List } from "immutable";
 import { Observable, Subscription, of } from "rxjs";
 
@@ -36,9 +36,9 @@ export class AccountListComponent extends ListBaseComponent implements OnDestroy
     constructor(
         public commands: BatchAccountCommands,
         private accountService: BatchAccountService,
-        changeDetector: ChangeDetectorRef,
+        injector: Injector,
         private subscriptionService: SubscriptionService) {
-        super(changeDetector);
+        super(injector);
         this._updateDisplayedAccounts();
 
         this._accountSub = this.accountService.accounts.subscribe((accounts) => {

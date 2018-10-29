@@ -1,6 +1,5 @@
-import { LiveAnnouncer } from "@angular/cdk/a11y";
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
+    ChangeDetectionStrategy, Component, Injector, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
@@ -56,10 +55,9 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
     constructor(
         private poolService: PoolService,
         activatedRoute: ActivatedRoute,
-        liveAnnouncer: LiveAnnouncer,
-        public commands: PoolCommands,
-        changeDetector: ChangeDetectorRef) {
-        super(changeDetector, liveAnnouncer);
+        injector: Injector,
+        public commands: PoolCommands) {
+        super(injector);
         this.data = this.poolService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnChanges } from "@angular/core";
+import { Component, Injector, Input, OnChanges } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/ui";
@@ -25,8 +25,8 @@ export class ApplicationPackageTableComponent extends ListBaseComponent implemen
         protected dialog: MatDialog,
         private applicationService: ApplicationService,
         private sidebarManager: SidebarManager,
-        changeDetector: ChangeDetectorRef) {
-        super(changeDetector);
+        injector: Injector) {
+        super(injector);
     }
 
     public ngOnChanges(inputs) {

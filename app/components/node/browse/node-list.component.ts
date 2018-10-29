@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
+import { Component, Injector, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent } from "@batch-flask/ui";
@@ -28,9 +28,9 @@ export class NodeListComponent extends ListBaseComponent implements OnChanges, O
     constructor(
         public commands: NodeCommands,
         private nodeService: NodeService,
-        activatedRoute: ActivatedRoute,
-        changeDetector: ChangeDetectorRef) {
-        super(changeDetector);
+        injector: Injector,
+        activatedRoute: ActivatedRoute) {
+        super(injector);
         this.data = this.nodeService.listView();
 
         this.data.status.subscribe((status) => {

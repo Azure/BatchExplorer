@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
+    ChangeDetectionStrategy, Component, Injector, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
@@ -34,11 +34,11 @@ export class CertificateListComponent extends ListBaseComponent implements OnIni
 
     constructor(
         activatedRoute: ActivatedRoute,
-        changeDetector: ChangeDetectorRef,
+        injector: Injector,
         public commands: CertificateCommands,
         private certificateService: CertificateService,
     ) {
-        super(changeDetector);
+        super(injector);
 
         this.data = this.certificateService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);

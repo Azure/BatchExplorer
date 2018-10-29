@@ -1,8 +1,8 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef,
+    ChangeDetectionStrategy,  Component, Injector, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListSelection } from "@batch-flask/core/list";
 import { ListBaseComponent } from "@batch-flask/ui";
@@ -36,12 +36,11 @@ export class JobScheduleListComponent extends ListBaseComponent implements OnIni
     private _onJobScheduleAddedSub: Subscription;
 
     constructor(
-        router: Router,
         activatedRoute: ActivatedRoute,
-        changeDetector: ChangeDetectorRef,
+        injector: Injector,
         public commands: JobScheduleCommands,
         private jobScheduleService: JobScheduleService) {
-        super(changeDetector);
+        super(injector);
 
         this.data = this.jobScheduleService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);

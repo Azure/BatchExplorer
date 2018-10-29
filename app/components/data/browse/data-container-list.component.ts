@@ -1,8 +1,8 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input,
-    OnChanges, OnDestroy, OnInit, forwardRef,
+    ChangeDetectionStrategy, Component, Injector,
+    Input, OnChanges, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { Filter, ListSelection, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, LoadingStatus, QuickListItemStatus } from "@batch-flask/ui";
 import { BlobContainer, LeaseStatus } from "app/models";
@@ -40,13 +40,12 @@ export class DataContainerListComponent extends ListBaseComponent implements OnI
     private _onGroupAddedSub: Subscription;
 
     constructor(
-        router: Router,
-        changeDetector: ChangeDetectorRef,
+        injector: Injector,
         public commands: BlobContainerCommands,
         private activeRoute: ActivatedRoute,
         private storageContainerService: StorageContainerService) {
 
-        super(changeDetector);
+        super(injector);
         this.data = this.storageContainerService.listView();
         ComponentUtils.setActiveItem(activeRoute, this.data);
 

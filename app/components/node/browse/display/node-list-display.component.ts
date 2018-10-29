@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Injector, Input, Output, ViewChild } from "@angular/core";
 import {
     EntityCommands, ListBaseComponent, LoadingStatus, QuickListComponent, TableComponent,
 } from "@batch-flask/ui";
@@ -31,8 +31,8 @@ export class NodeListDisplayComponent extends ListBaseComponent {
     @ViewChild(TableComponent)
     public table: TableComponent;
 
-    constructor(changeDetector: ChangeDetectorRef) {
-        super(changeDetector);
+    constructor(injector: Injector) {
+        super(injector);
     }
 
     public isErrorState(node: any) {

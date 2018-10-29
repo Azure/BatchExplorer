@@ -1,12 +1,12 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
-     Component,
+    Component,
+    Injector,
     Input,
-     OnChanges,
-     OnDestroy,
-      OnInit,
-      forwardRef,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    forwardRef,
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Filter, ListView, autobind } from "@batch-flask/core";
@@ -64,9 +64,9 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnCh
     constructor(
         public commands: TaskCommands,
         private taskService: TaskService,
-        activatedRoute: ActivatedRoute,
-        private changeDetectorRef: ChangeDetectorRef) {
-        super(changeDetectorRef);
+        injector: Injector,
+        activatedRoute: ActivatedRoute) {
+        super(injector);
         this.data = this.taskService.listView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 
@@ -106,7 +106,7 @@ export class TaskListComponent extends ListBaseComponent implements OnInit, OnCh
     public refresh(): Observable<any> {
         this.data.params = { jobId: this.jobId };
         this.data.setOptions(Object.assign({}, this._baseOptions));
-        this.changeDetectorRef.detectChanges();
+        this.changeDetector.detectChanges();
 
         return this.data.fetchNext(true);
     }

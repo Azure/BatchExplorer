@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
-import { Router } from "@angular/router";
+import { Component, Injector, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { Filter, ListView, autobind } from "@batch-flask/core";
 import { ListBaseComponent, LoadingStatus } from "@batch-flask/ui";
 import { QuickListItemStatus } from "@batch-flask/ui/quick-list";
@@ -30,12 +29,11 @@ export class ApplicationListComponent extends ListBaseComponent implements OnIni
     private _subs: Subscription[] = [];
 
     constructor(
-        router: Router,
-        changeDetector: ChangeDetectorRef,
+        injector: Injector,
         public commands: BatchApplicationCommands,
         private applicationService: ApplicationService,
     ) {
-        super(changeDetector);
+        super(injector);
 
         this.data = this.applicationService.listView(this._baseOptions);
         this._subs.push(this.data.items.subscribe((applications) => {

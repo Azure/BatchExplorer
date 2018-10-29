@@ -1,5 +1,5 @@
 import { LiveAnnouncer } from "@angular/cdk/a11y";
-import { ChangeDetectorRef, Input, OnDestroy, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Injector, Input, OnDestroy, ViewChild } from "@angular/core";
 import { ListSelection, SelectableList } from "@batch-flask/core";
 import { Filter, FilterBuilder } from "@batch-flask/core/filter-builder";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
@@ -43,12 +43,15 @@ export abstract class ListBaseComponent extends SelectableList implements OnDest
 
     @ViewChild(AbstractListBase) public list: AbstractListBase;
 
+    private liveAnnouncer: LiveAnnouncer;
+
     private _filter: Filter = FilterBuilder.none();
     private _status: LoadingStatus = LoadingStatus.Loading;
     private _quicklist: boolean = false;
 
-    constructor(changeDetector: ChangeDetectorRef, private liveAnnouncer?: LiveAnnouncer) {
-        super(changeDetector);
+    constructor(injector: Injector) {
+        super(injector.get(ChangeDetectorRef));
+        this.liveAnnouncer = injector.get(LiveAnnouncer);
     }
 
     public ngOnDestroy() {
