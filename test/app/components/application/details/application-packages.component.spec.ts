@@ -4,6 +4,7 @@ import { By } from "@angular/platform-browser";
 
 import { MatDialog } from "@angular/material";
 import { ListSelection } from "@batch-flask/core/list";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ActivityService } from "@batch-flask/ui/activity";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { ApplicationPackageTableComponent, ApplicationPackagesComponent } from "app/components/application/details";
@@ -47,6 +48,7 @@ describe("ApplicationPackagesComponent", () => {
     let listComponent: ApplicationPackageTableComponent;
     beforeEach(() => {
         TestBed.configureTestingModule({
+            imports: [I18nTestingModule],
             declarations: [TestComponent, ApplicationPackagesComponent,
                 ApplicationPackageTableComponent, EntityDetailsListMockComponent],
             schemas: [NO_ERRORS_SCHEMA],
