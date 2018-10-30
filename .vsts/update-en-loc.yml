@@ -5,6 +5,9 @@ steps:
     inputs:
       versionSpec: '10.8.x'
 
+  - script: npm ci
+    displayName: Install dependencies
+
   - script: npm run build-i18n-xliff
     displayName: Build english XLIFF file
 
