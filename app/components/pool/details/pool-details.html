@@ -17,7 +17,7 @@
             <div summaryRightContent>
                 <bl-pool-nodes-preview [pool]="pool" size="large"></bl-pool-nodes-preview>
 
-                <div class="estimated-cost" [title]="pool-details.estimatedCost">
+                <div class="estimated-cost" [title]="'pool-details.estimatedCost' | i18n">
                     {{estimatedCost}}/h
                 </div>
             </div>
