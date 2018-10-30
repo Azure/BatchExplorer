@@ -1,0 +1,16 @@
+pool:
+  vmImage: ubuntu-16.04
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.8.x'
+
+  - script: npm run build-i18n-xliff
+    displayName: Build english XLIFF file
+
+  - script: |
+      cd $(Build.ArtifactStagingDirectory)
+      git clone https://github.com/Azure/BatchExplorer -b loc
+      cd ./BatchExplorer
+      cp $(Build.SourcesDirectory)/i18n/xliffs/resources.en.xlf ./xliffs/resources/en.xlf
+      git status
