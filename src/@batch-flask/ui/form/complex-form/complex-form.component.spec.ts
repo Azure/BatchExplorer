@@ -5,6 +5,8 @@ import { By } from "@angular/platform-browser";
 import { ServerError, autobind } from "@batch-flask/core";
 import { AsyncSubject } from "rxjs";
 
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { I18nUIModule } from "@batch-flask/ui";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import {
     ComplexFormComponent, FormPageComponent, FormPickerComponent, FormSectionComponent,
@@ -13,8 +15,6 @@ import { FormFooterComponent } from "@batch-flask/ui/form/complex-form/footer";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { ServerErrorComponent } from "@batch-flask/ui/server-error";
 import { click } from "test/utils/helpers";
-import { I18nTestingModule } from "@batch-flask/core/testing";
-import { I18nUIModule } from "@batch-flask/ui";
 
 const date = new Date(2017, 9, 13, 23, 43, 38);
 
