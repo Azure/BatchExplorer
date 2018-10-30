@@ -173,3 +173,10 @@ mat-button-toggle-group {
     color: $primary-text;
     background-color: $main-background;
 }
+
+
+.mat-menu-item {
+    &.cdk-focused {
+        border: 1px solid $outline-color;
+    }
+}

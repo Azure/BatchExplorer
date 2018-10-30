@@ -23,6 +23,14 @@ bl-quick-list-row-render {
     &.focused {
         outline: none;
         background-color: $primary-color;
+
+        .quick-list-row-title {
+            color: $card-background;
+        }
+
+        .quick-list-row-state {
+            color: $card-background;
+        }
     }
 
     &:hover:not(.selected) {
@@ -98,7 +106,7 @@ bl-quick-list-row-render {
                     transparent 5px,
                     $concreteGray 5px,
                     $concreteGray 10px
-                ), $primary-color
+                ), $primary-color;
             }
         }
     }

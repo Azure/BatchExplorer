@@ -3,3 +3,4 @@ common:
   loading: Loading
   yes: "Yes"
   no: "No"
+  configuration: Configuration

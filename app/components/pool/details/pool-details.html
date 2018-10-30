@@ -17,7 +17,7 @@
             <div summaryRightContent>
                 <bl-pool-nodes-preview [pool]="pool" size="large"></bl-pool-nodes-preview>
 
-                <div class="estimated-cost" title="Estimated cost of this pool at this current state">
+                <div class="estimated-cost" [title]="'pool-details.estimatedCost' | i18n">
                     {{estimatedCost}}/h
                 </div>
             </div>
@@ -31,19 +31,19 @@
             <bl-tab-group>
                 <bl-tab key="graphs">
                     <bl-tab-label>
-                        Graphs
-                        <bl-button class="open-pool-graphs-new-window" matTooltip="Open in a new window" [action]="openInNewWindow" type="plain">
+                        {{'pool-details.graphs' | i18n}}
+                        <bl-button class="open-pool-graphs-new-window" [title]="'pool-details.openInNewWindow' | i18n" [action]="openInNewWindow" type="plain">
                             <i class="fa fa-window-restore"></i>
                         </bl-button>
                     </bl-tab-label>
                     <bl-pool-graphs [pool]="pool"></bl-pool-graphs>
                 </bl-tab>
                 <bl-tab key="configuration">
-                    <bl-tab-label>Configuration</bl-tab-label>
+                    <bl-tab-label>{{'common.configuration' | i18n }}</bl-tab-label>
                     <bl-pool-configuration [pool]="pool"></bl-pool-configuration>
                 </bl-tab>
                 <bl-tab key="nodes">
-                    <bl-tab-label>Nodes</bl-tab-label>
+                    <bl-tab-label>{{'models.nodes' | i18n }}</bl-tab-label>
                     <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']" [filterPlaceholder]="filterPlaceholderText">
                         <bl-node-list #list [poolId]="poolId" [filter]="listWrapper.filter" [quicklist]="false"></bl-node-list>
                     </bl-entity-details-list>

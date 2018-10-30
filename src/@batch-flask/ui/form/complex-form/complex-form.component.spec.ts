@@ -5,6 +5,8 @@ import { By } from "@angular/platform-browser";
 import { ServerError, autobind } from "@batch-flask/core";
 import { AsyncSubject } from "rxjs";
 
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { I18nUIModule } from "@batch-flask/ui";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import {
     ComplexFormComponent, FormPageComponent, FormPickerComponent, FormSectionComponent,
@@ -89,7 +91,7 @@ describe("ComplexFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule],
+            imports: [FormsModule, ReactiveFormsModule, I18nTestingModule, I18nUIModule],
             declarations: [
                 ButtonComponent,
                 FormTestComponent,
