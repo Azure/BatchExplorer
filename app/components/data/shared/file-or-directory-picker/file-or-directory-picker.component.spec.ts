@@ -2,7 +2,8 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule, By } from "@angular/platform-browser";
-import { FileSystemService } from "@batch-flask/ui";
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { FileSystemService, I18nUIModule } from "@batch-flask/ui";
 import { EditableTableColumnComponent, EditableTableComponent } from "@batch-flask/ui/form/editable-table";
 import { FileOrDirectoryPickerComponent } from "./file-or-directory-picker.component";
 
@@ -26,7 +27,7 @@ describe("FileOrDirectoryPickerComponent", () => {
             }),
         };
         TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, BrowserModule],
+            imports: [ReactiveFormsModule, BrowserModule, I18nTestingModule, I18nUIModule],
             declarations: [
                 FileOrDirectoryPickerComponent,
                 TestComponent,

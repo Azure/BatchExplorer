@@ -9,6 +9,8 @@ import { PermissionService } from "@batch-flask/ui";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { EditableTableColumnComponent, EditableTableComponent } from "@batch-flask/ui/form/editable-table";
 import { click, createKeyboardEvent, updateInput } from "test/utils/helpers";
+import { I18nUIModule } from "@batch-flask/ui/i18n";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 
 @Component({
     template: `
@@ -29,7 +31,7 @@ describe("EditableTableComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, SelectModule, ButtonsModule],
+            imports: [ReactiveFormsModule, SelectModule, ButtonsModule, I18nTestingModule, I18nUIModule],
             declarations: [EditableTableComponent, EditableTableColumnComponent, TestComponent],
             providers: [
                 { provide: PermissionService, useValue: null },

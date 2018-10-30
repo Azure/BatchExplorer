@@ -13,6 +13,8 @@ import { FormFooterComponent } from "@batch-flask/ui/form/complex-form/footer";
 import { PermissionService } from "@batch-flask/ui/permission";
 import { ServerErrorComponent } from "@batch-flask/ui/server-error";
 import { click } from "test/utils/helpers";
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { I18nUIModule } from "@batch-flask/ui";
 
 const date = new Date(2017, 9, 13, 23, 43, 38);
 
@@ -89,7 +91,7 @@ describe("ComplexFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule],
+            imports: [FormsModule, ReactiveFormsModule, I18nTestingModule, I18nUIModule],
             declarations: [
                 ButtonComponent,
                 FormTestComponent,
