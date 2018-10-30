@@ -82,7 +82,7 @@ export class SelectDropdownComponent {
         const el: HTMLElement = this.elementRef.nativeElement;
         const height = el.getBoundingClientRect().height;
         const current = el.scrollTop;
-        const scrollTopMin = (index + 1) * 24 - height;
+        const scrollTopMin = (index + 2) * 24 - height;
         const scrollTopMax = (index - 1) * 24;
 
         const scrollTop = Math.min(Math.max(scrollTopMin, current), scrollTopMax);
