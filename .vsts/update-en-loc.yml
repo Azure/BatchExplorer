@@ -24,13 +24,13 @@ steps:
 
   - script: |
       changed=`git status | grep 'modified:' | wc -l`
-      if ["$changed" -ne "1"] then
+      if ["$changed" -ne "1"]; then
         exit 1
       fi
 
       englishxliff=`git status -s | grep "xliffs/resources.en.xlf" | wc -l`
 
-      if ["$englishxliff" -ne "1"] then
+      if ["$englishxliff" -ne "1"]; then
         exit 1
       fi
 
