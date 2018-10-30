@@ -7,6 +7,7 @@ import {
     ChangeDetectorRef,
     Component,
     ComponentRef,
+    ContentChild,
     ContentChildren,
     ElementRef,
     EventEmitter,
@@ -20,6 +21,7 @@ import {
     QueryList,
     Self,
     SimpleChange,
+    TemplateRef,
     ViewChild,
 } from "@angular/core";
 import { ControlValueAccessor, NgControl } from "@angular/forms";
@@ -27,6 +29,7 @@ import { FlagInput, ListKeyNavigator, coerceBooleanProperty } from "@batch-flask
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import { SelectDropdownComponent } from "@batch-flask/ui/select/select-dropdown/select-dropdown.component";
 import { Subject, Subscription } from "rxjs";
+import { OptionTemplateDirective } from "./option-template.directive";
 import { BL_OPTION_PARENT, OptionParent, SelectOptionComponent } from "./option/option.component";
 
 import "./select.scss";
@@ -120,6 +123,8 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
     // Options
     @ContentChildren(SelectOptionComponent, { descendants: true })
     public options: QueryList<SelectOptionComponent>;
+
+    @ContentChild(OptionTemplateDirective, { read: TemplateRef }) public optionTemplate: TemplateRef<any>;
 
     public filter: string = "";
 
