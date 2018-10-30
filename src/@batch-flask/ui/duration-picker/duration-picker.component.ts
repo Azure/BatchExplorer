@@ -86,6 +86,7 @@ export class DurationPickerComponent implements FormFieldControl<any>,
         }
         return this._disabled;
     }
+
     public set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value);
     }
