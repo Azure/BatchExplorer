@@ -1,0 +1,5 @@
+models:
+  pool: Pool
+  pools: Pools
+  node: Node
+  nodes: Nodes
