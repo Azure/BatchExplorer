@@ -17,15 +17,13 @@
                     <bl-error controlName="resourceGroup" code="noPermission">{{'batch-account-create.resourceGroup.notAllowed' | i18n}}</bl-error>
                     <bl-error controlName="resourceGroup" code="serverError">{{ form.controls.resourceGroup.errors?.serverError }}</bl-error>
                 </bl-form-field>
-
                 <span *ngIf="isNewResourceGroup">{{'batch-account-create.resourceGroup.notAllowed' | i18n}}</span>
-                <span *ngIf="!resourceGroups.length">{{'batch-account-create.resourceGroup.required' | i18n: {subscription: selectedSubscription.displayName} }}</span>
             </div>
             <div class="form-element" *ngIf="selectedSubscription">
                 <bl-location-picker formControlName="location" [subscription]="selectedSubscription"></bl-location-picker>
                 <bl-error controlName="location" code="required">{{'batch-account-create.location.required' | i18n}}</bl-error>
                 <bl-error controlName="location" code="quotaReached">
-                    <bl-i18n key="batch-account-create.quota.reached">
+                    <bl-i18n key="batch-account-create.location.reachedQuota">
                         <ng-container *i18nParam="'used'">{{form.controls.location.errors?.quotaReached?.used}}</ng-container>
                         <ng-container *i18nParam="'quota'">{{form.controls.location.errors?.quotaReached?.quota}}</ng-container>
                         <ng-container *i18nParam="'subscription'">{{selectedSubscription.displayName}}</ng-container>

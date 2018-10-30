@@ -10,7 +10,7 @@ batch-account-create:
 
   location:
     required: Location is a required field
-    reachedQuota: You've already reached your quota {used} out of {quota} accounts for subscription '{subscription' in this location. You can request a an account quota increase, create the account in another location, or create the account in another subscription.
+    reachedQuota: You've already reached your quota {used} out of {quota} accounts for subscription '{subscription}' in this location. You can request a an account quota increase, create the account in another location, or create the account in another subscription.
 
   accountName:
     required: Account name is a required field
