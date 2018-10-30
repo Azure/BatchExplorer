@@ -38,9 +38,10 @@ steps:
     displayName: Validate only one file changed
 
   - script: |
+      set -e
       today=`date +%Y-%m-%d`
       git -c user.email=batch-ex@microsoft.com -c user.name='Batch Explorer Automated' commit -am "Updating english translations $today"
       git status -s
-      git push
+      git push https://timotheeguerin:$(GH_TOKEN)@github.com/Azure/BatchExplorer loc
     workingDirectory: $(locdir)
     displayName: Commit and push changes if any
