@@ -65,7 +65,7 @@
     <ng-container *ngIf="!appInsightsEnabled">
         <bl-metrics-monitor-metric *blFeatureOn="'pool.graphs.insights'" label="Application Insights">
             <bl-cpu-usage-graph blMonitorGraphPreview [data]="performanceData" [interactive]="false"></bl-cpu-usage-graph>
-            <div blMetricsStatus>{{'pool-graphs.notEnabled' | i18n"}}</div>
+            <div blMetricsStatus>{{'pool-graphs.notEnabled' | i18n}}</div>
 
             <bl-enable-app-insights-doc blMonitorGraphChart></bl-enable-app-insights-doc>
         </bl-metrics-monitor-metric>
