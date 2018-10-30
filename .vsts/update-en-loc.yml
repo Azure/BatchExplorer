@@ -1,3 +1,6 @@
+variables:
+  locdir: $(Build.ArtifactStagingDirectory)/BatchExplorer
+
 pool:
   vmImage: ubuntu-16.04
 steps:
@@ -14,6 +17,29 @@ steps:
   - script: |
       cd $(Build.ArtifactStagingDirectory)
       git clone https://github.com/Azure/BatchExplorer -b loc
-      cd ./BatchExplorer
-      cp $(Build.SourcesDirectory)/i18n/xliffs/resources.en.xlf ./xliffs/resources.en.xlf
-      git status
+    displayName: Clone loc branch
+
+  - script: cp $(Build.SourcesDirectory)/i18n/xliffs/resources.en.xlf $(locdir)/xliffs/resources.en.xlf
+    displayName: Copy xliffs to loc branch
+
+  - script: |
+      changed=`git status | grep 'modified:' | wc -l`
+      if ["$changed" -ne "1"] then
+        exit 1
+      fi
+
+      englishxliff=`git status -s | grep "xliffs/resources.en.xlf" | wc -l`
+
+      if ["$englishxliff" -ne "1"] then
+        exit 1
+      fi
+
+    workingDirectory: $(locdir)
+    displayName: Validate only one file changed
+
+  - script: |
+      today=`date +%Y-%m-%d`
+      git commit -am "Updating english translations $today"
+      git status -s
+      git push
+    displayName: Commit and push changes if any
