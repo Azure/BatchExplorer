@@ -46,6 +46,8 @@ steps:
 
       if [ "$changed" -eq "0" ]; then
         echo "No changes. Nothing to do"
+        $v="$BUILD_BUILDNUMBER-NOCHANGES"
+        echo  "##vso[build.updatebuildnumber]$v"
         exit 0
       fi
 
