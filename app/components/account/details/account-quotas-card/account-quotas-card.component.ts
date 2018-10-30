@@ -45,7 +45,7 @@ export class AccountQuotasCardComponent implements OnDestroy, OnInit {
         });
     }
     public ngOnInit() {
-        this.quotaService.updateUsages();
+        this.quotaService.updateUsages().subscribe();
     }
 
     public ngOnDestroy(): void {
@@ -56,7 +56,7 @@ export class AccountQuotasCardComponent implements OnDestroy, OnInit {
     @HostListener("contextmenu")
     public showContextMenu() {
         this.contextMenuService.openMenu(new ContextMenu([
-            new ContextMenuItem("Refresh", () => this.quotaService.refresh()),
+            new ContextMenuItem("Refresh", () => this.quotaService.refresh().subscribe()),
             new ContextMenuItem("Request quota increase", () => this._gotoQuotaRequest()),
         ]));
     }

@@ -52,7 +52,7 @@ export class QuotaService implements OnDestroy {
         );
         this.usage = this._usage.asObservable();
 
-        this.updateUsages();
+        this.updateUsages().subscribe();
     }
 
     public ngOnDestroy() {

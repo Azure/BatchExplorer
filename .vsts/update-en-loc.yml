@@ -1,0 +1,60 @@
+variables:
+  locdir: $(Build.ArtifactStagingDirectory)/BatchExplorer
+
+pool:
+  vmImage: ubuntu-16.04
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.8.x'
+
+  - script: npm ci
+    displayName: Install dependencies
+
+  - script: npm run build-i18n-xliff
+    displayName: Build english XLIFF file
+
+  - script: |
+      cd $(Build.ArtifactStagingDirectory)
+      git clone https://github.com/Azure/BatchExplorer -b loc
+    displayName: Clone loc branch
+
+  - script: cp $(Build.SourcesDirectory)/i18n/xliffs/resources.en.xlf $(locdir)/xliffs/resources.en.xlf
+    displayName: Copy xliffs to loc branch
+
+  - script: |
+      set -e
+      changed=`git status | grep 'modified:' | wc -l`
+      if [ "$changed" -eq "0" ]; then
+        echo "No changes. Nothing to do"
+        exit 0
+      elif [ "$changed" -ne "1" ]; then
+        exit 1
+      fi
+
+      englishxliff=`git status -s | grep "xliffs/resources.en.xlf" | wc -l`
+
+      if [ "$englishxliff" -ne "1" ]; then
+        exit 1
+      fi
+
+    workingDirectory: $(locdir)
+    displayName: Validate only one file changed
+
+  - script: |
+      set -e
+
+      changed=`git status | grep 'modified:' | wc -l`
+      if [ "$changed" -eq "0" ]; then
+        echo "No changes. Nothing to do"
+        v="$BUILD_BUILDNUMBER-NOCHANGES"
+        echo  "##vso[build.updatebuildnumber]$v"
+        exit 0
+      fi
+
+      today=`date +%Y-%m-%d`
+      git -c user.email=batch-ex@microsoft.com -c user.name='Batch Explorer Automated' commit -am "Updating english translations $today"
+      git status -s
+      git push https://timotheeguerin:$(GH_TOKEN)@github.com/Azure/BatchExplorer loc
+    workingDirectory: $(locdir)
+    displayName: Commit and push changes if any
