@@ -53,7 +53,8 @@
     </bl-vtab>
     <bl-vtab id="csharp">
         <div tabLabel aria-label="C Sharp">
-            C#
+            <!-- This is needed so it reads C Sharp and not C Number https://dev.azure.com/azurebatch/BatchExplorer/_workitems/edit/144 -->
+            <span aria-hidden="true">C#</span>
         </div>
         <bl-programing-sample target="csharp"
             [account]="account"
