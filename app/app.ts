@@ -24,9 +24,11 @@ ipcRenderer.send("initializing");
 
 Promise.resolve().then(() => {
     if (process.env.NODE_ENV !== "production") {
+        console.time("Translations");
         return (remote.getCurrentWindow() as any).translationsLoader.load();
     }
 }).then(() => {
+    console.timeEnd("Translations");
     return platformBrowserDynamic().bootstrapModule(AppModule);
 }).then(() => {
     // console.timeEnd("Bootstrap");

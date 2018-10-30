@@ -4,5 +4,5 @@ form-footer:
     normalForm: Switch to classic form
     cancel: Cancel
     save: Save
-    andClose: {action} and Close
+    andClose: "{action} and Close"
     select: Select
