@@ -24,7 +24,9 @@
                     </ng-container>
                 </td>
                 <td class="action-column">
-                    <bl-clickable *ngIf="!isLast" class="delete-item-btn" (do)="deleteItem(i)"><i class="fa fa-times" ></i></bl-clickable>
+                    <bl-clickable *ngIf="!isLast" class="delete-item-btn" [attr.aria-label]="'editable-table.deleteRow' | i18n" (do)="deleteItem(i)">
+                        <i class="fa fa-times" ></i>
+                    </bl-clickable>
                 </td>
             </tr>
         </tbody>
