@@ -47,7 +47,7 @@ steps:
       changed=`git status | grep 'modified:' | wc -l`
       if [ "$changed" -eq "0" ]; then
         echo "No changes. Nothing to do"
-        $v="$BUILD_BUILDNUMBER-NOCHANGES"
+        v="$BUILD_BUILDNUMBER-NOCHANGES"
         echo  "##vso[build.updatebuildnumber]$v"
         exit 0
       fi
