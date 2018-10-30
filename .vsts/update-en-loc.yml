@@ -15,5 +15,5 @@ steps:
       cd $(Build.ArtifactStagingDirectory)
       git clone https://github.com/Azure/BatchExplorer -b loc
       cd ./BatchExplorer
-      cp $(Build.SourcesDirectory)/i18n/xliffs/resources.en.xlf ./xliffs/resources/en.xlf
+      cp $(Build.SourcesDirectory)/i18n/xliffs/resources.en.xlf ./xliffs/resources.en.xlf
       git status
