@@ -23,14 +23,18 @@ steps:
     displayName: Copy xliffs to loc branch
 
   - script: |
+      set -e
       changed=`git status | grep 'modified:' | wc -l`
-      if ["$changed" -ne "1"]; then
+      if [ "$changed" -eq "0" ]; then
+        echo "No changes. Nothing to do"
+        exit 0
+      elif [ "$changed" -ne "1" ]; then
         exit 1
       fi
 
       englishxliff=`git status -s | grep "xliffs/resources.en.xlf" | wc -l`
 
-      if ["$englishxliff" -ne "1"]; then
+      if [ "$englishxliff" -ne "1" ]; then
         exit 1
       fi
 
@@ -39,6 +43,12 @@ steps:
 
   - script: |
       set -e
+
+      if [ "$changed" -eq "0" ]; then
+        echo "No changes. Nothing to do"
+        exit 0
+      fi
+
       today=`date +%Y-%m-%d`
       git -c user.email=batch-ex@microsoft.com -c user.name='Batch Explorer Automated' commit -am "Updating english translations $today"
       git status -s
