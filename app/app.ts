@@ -17,23 +17,40 @@ import "font-awesome/css/font-awesome.min.css";
 import "./environment";
 import "./styles/main.scss";
 
-// console.timeEnd("Load scripts");
-// console.time("Bootstrap");
+interface LoadingTimeResults {
+    loadTranslations: number;
+    bootstrap: number;
+}
+
+const starts = {};
+const durations: LoadingTimeResults = {} as any;
+
+function time(key: keyof (LoadingTimeResults)) {
+    starts[key] = new Date().getTime();
+}
+
+function timeEnd(key: keyof (LoadingTimeResults)) {
+    if (key in starts) {
+        const start = starts[key];
+        const end = new Date().getTime();
+        durations[key] = end - start;
+    }
+}
 
 ipcRenderer.send("initializing");
 
 Promise.resolve().then(() => {
     if (process.env.NODE_ENV !== "production") {
-        // console.time("Translations");
+        time("loadTranslations");
         return (remote.getCurrentWindow() as any).translationsLoader.load();
     }
 }).then(() => {
-    // console.timeEnd("Translations");
+    timeEnd("loadTranslations");
+    time("bootstrap");
     return platformBrowserDynamic().bootstrapModule(AppModule);
 }).then(() => {
-    // console.timeEnd("Bootstrap");
-    // console.time("Render");
-    // console.profile("Render profile");
+    timeEnd("bootstrap");
+    // console.log("Loading times", durations);
 }).catch(error => {
     log.error("Bootstrapping failed :: ", error);
     handleCoreError(error);
