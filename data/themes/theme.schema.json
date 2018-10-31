@@ -25,8 +25,10 @@
     "success": {"$ref": "#/definitions/color"},
     "success-contrast": {"$ref": "#/definitions/color"},
     "main-background": {"$ref": "#/definitions/color"},
-    "card-background": {"$ref": "#/definitions/color"},
     "secondary-background": {"$ref": "#/definitions/color"},
+    "card-background": {"$ref": "#/definitions/color"},
+    "selection": {"$ref": "#/definitions/color"},
+    "border": {"$ref": "#/definitions/color"},
     "outline": {"$ref": "#/definitions/color"},
     "editor": {"type": "string"},
     "text": {
