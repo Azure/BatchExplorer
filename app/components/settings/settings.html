@@ -13,15 +13,18 @@
 </div>
 <div class="settings-editor">
     <div class="default-settings">
-        <div class="editor-header"><div class="label">Default settings</div></div>
+        <bl-toolbar>
+            <div toolbarLabel>Default settings</div>
+        </bl-toolbar>
         <bl-editor [value]="defaultSettings" [config]="defaultSettingsEditorConfig"></bl-editor>
     </div>
 
     <div class="user-settings">
-        <div class="editor-header">
-            <div class="label">User settings</div>
-            <div class="error" *ngIf="!userSettings.valid">{{userSettings.errors?.validJson?.message}}</div>
-        </div>
+        <bl-toolbar>
+            <div toolbarLabel>User settings</div>
+            <div toolbarError *ngIf="!userSettings.valid">{{userSettings.errors?.validJson?.message}}</div>
+        </bl-toolbar>
+
 
         <bl-editor [formControl]="userSettings" [config]="userSettingsEditorConfig"></bl-editor>
     </div>
