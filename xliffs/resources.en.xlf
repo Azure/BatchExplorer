@@ -742,6 +742,18 @@
       <trans-unit id="entity-command">
         <source/>
       </trans-unit>
+      <trans-unit id="file-explorer.path">
+        <source>Path</source>
+      </trans-unit>
+      <trans-unit id="file-explorer.unknownFile">
+        <source>Cannot find this file. Check the path.</source>
+      </trans-unit>
+      <trans-unit id="file-explorer.noPathMatch">
+        <source>No files found for "{path}"</source>
+      </trans-unit>
+      <trans-unit id="file-explorer">
+        <source/>
+      </trans-unit>
       <trans-unit id="file-viewer-container.unkownFileType">
         <source>This file is not a known extension. Do you still want to open it?</source>
       </trans-unit>
