@@ -12,8 +12,12 @@
         <i class="fa fa-check" *ngIf="selected.has(option.value)"></i>
     </div>
     <div class="option-content">
-        <ng-template [ngTemplateOutlet]="option.content" *ngIf="option.content"></ng-template>
-        <ng-container *ngIf="!option.content">{{option.label}}</ng-container>
+        <ng-container *ngIf="select.optionTemplate">
+            <ng-template [ngTemplateOutlet]="select.optionTemplate" [ngTemplateOutletContext]="{$implicit: option.item}"></ng-template>
+        </ng-container>
+        <ng-container *ngIf="!select.optionTemplate">
+            {{option.label}}
+        </ng-container>
     </div>
 </div>
 <div class="no-option" *ngIf="displayedOptions.length === 0 && select.filter">

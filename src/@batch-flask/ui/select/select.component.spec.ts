@@ -10,6 +10,7 @@ import { PermissionService } from "@batch-flask/ui/permission";
 import { F } from "test/utils";
 import { click, mousedown, updateInput } from "test/utils/helpers";
 import { SelectOptionComponent } from "./option";
+import { OptionTemplateDirective } from "./option-template.directive";
 import { SelectDropdownComponent } from "./select-dropdown";
 import { SelectComponent } from "./select.component";
 
@@ -53,13 +54,13 @@ class SelectWithLabelComponent extends TestComponent {
 @Component({
     template: `
         <bl-select placeholder="Myselect" [formControl]="value" [filterable]="filterable" [multiple]="multiple">
+            <div *blOptionTemplate="let option">My:{{option.label}}</div>
             <bl-option
                 *ngFor="let option of options"
+                [item]="option"
                 [value]="option.value"
                 [label]="option.label"
-                [useTemplate]="true"
                 [disabled]="option.disabled">
-                    My:{{option.label}}
             </bl-option>
         </bl-select>
     `,
@@ -81,6 +82,7 @@ describe("SelectComponent", () => {
             imports: [FormsModule, ReactiveFormsModule, OverlayModule],
             declarations: [SelectComponent,
                 SelectOptionComponent, SelectDropdownComponent,
+                OptionTemplateDirective,
                 ClickableComponent, component],
             providers: [
                 { provide: PermissionService, useValue: null },
