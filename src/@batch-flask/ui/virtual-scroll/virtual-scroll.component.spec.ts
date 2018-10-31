@@ -134,15 +134,15 @@ describe("VirtualScrollComponent", () => {
             // Ensure item up in the list should scroll up
             component.ensureItemVisible("item-02", "instant");
             triggerScroll(de);
-            expect(de.nativeElement.scrollTop).toBe(100);
+            expect(de.nativeElement.scrollTop).toBe(0);
             await fixture.whenStable();
             fixture.detectChanges();
             items = de.queryAll(By.css(".item"));
-            expect(items[0].nativeElement.textContent).toContain("item-02");
-            expect(items[1].nativeElement.textContent).toContain("item-03");
-            expect(items[2].nativeElement.textContent).toContain("item-04");
-            expect(items[3].nativeElement.textContent).toContain("item-05");
-            expect(items[4].nativeElement.textContent).toContain("item-06");
+            expect(items[0].nativeElement.textContent).toContain("item-01");
+            expect(items[1].nativeElement.textContent).toContain("item-02");
+            expect(items[2].nativeElement.textContent).toContain("item-03");
+            expect(items[3].nativeElement.textContent).toContain("item-04");
+            expect(items[4].nativeElement.textContent).toContain("item-05");
         });
 
         it("scroll to given item", async () => {

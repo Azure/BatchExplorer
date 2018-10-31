@@ -30,7 +30,7 @@ let _uniqueIdCounter = 0;
 
 @Component({
     selector: "bl-option",
-    templateUrl: "option.html",
+    template: "",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectOptionComponent implements OnChanges, KeyNavigableListItem {
@@ -38,12 +38,12 @@ export class SelectOptionComponent implements OnChanges, KeyNavigableListItem {
 
     @Input() public value: string;
 
+    @Input() public item: any;
+
     /**
      * What is searchable
      */
     @Input() public label: string;
-
-    @Input() public useTemplate: boolean;
 
     @Input() public disabled: boolean;
 

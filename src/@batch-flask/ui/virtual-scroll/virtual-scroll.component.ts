@@ -218,7 +218,7 @@ export class VirtualScrollComponent implements OnInit, AfterViewInit, OnChanges,
         const d = this._calculateDimensions();
         const top = (Math.floor(index / d.itemsPerRow) * d.childHeight);
         const buffer = (d.childHeight * Math.min(index, this.bufferAmount));
-        const maxScrollTop = top - buffer;
+        const maxScrollTop = top - buffer - d.childHeight;
         const minScrollTop = top - d.viewHeight + d.childHeight + buffer;
 
         if (this.currentTween) {
