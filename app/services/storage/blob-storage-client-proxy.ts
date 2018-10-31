@@ -13,6 +13,8 @@ export interface ListBlobOptions {
      * If it should list all files or 1 directory deep.
      */
     recursive?: boolean;
+
+    limit?: number;
 }
 
 export interface ListBlobResponse {
@@ -52,8 +54,10 @@ export class BlobStorageClientProxy {
 
         // we want to keep the filter and prefix separate for mapping files in the response.
         const prefix = options.folder;
+        console.log("fulter folder", options.folder);
         const storageOptions: StorageRequestOptions = {
             delimiter: options.recursive ? null : "/",
+            maxResults: options.limit,
         };
         return new Promise((resolve, reject) => {
             this.client.listBlobsSegmentedWithPrefix(container, prefix, continuationToken, storageOptions,

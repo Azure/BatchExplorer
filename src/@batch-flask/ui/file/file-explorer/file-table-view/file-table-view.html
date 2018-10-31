@@ -4,8 +4,8 @@
     </bl-clickable>
 
     <div class="current-path">
-        <span *ngIf="name" class="file-navigator-name">{{name}}:</span>
-        <span>/{{treeNode.path}}</span>
+        <!-- <span *ngIf="name" class="file-navigator-name">{{name}}:</span>
+        <span>/{{treeNode.path}}</span> -->
         <bl-file-path-navigator [navigator]="navigator" [path]="treeNode.path"></bl-file-path-navigator>
     </div>
 </div>

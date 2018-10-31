@@ -1,5 +1,10 @@
 @import "app/styles/variables";
 
 bl-file-path-navigator {
+    display: block;
+    width: 100%;
 
+    input {
+        width: 100%;
+    }
 }

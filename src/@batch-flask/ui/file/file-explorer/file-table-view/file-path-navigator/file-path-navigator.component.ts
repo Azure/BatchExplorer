@@ -7,9 +7,11 @@ import { FileNavigator } from "@batch-flask/ui/file/file-navigator";
 import { File } from "@batch-flask/ui/file/file.model";
 import { List } from "immutable";
 import { Subject } from "rxjs";
-import { debounceTime, distinctUntilChanged, startWith, takeUntil } from "rxjs/operators";
+import { debounceTime, distinctUntilChanged, startWith, switchMap, takeUntil } from "rxjs/operators";
 
 import "./file-path-navigator.scss";
+
+const AUTOCOMPLETE_LIMIT = 5;
 
 @Component({
     selector: "bl-file-path-navigator",
@@ -30,10 +32,12 @@ export class FilePathNavigatorComponent implements OnChanges, OnDestroy {
         this.control.valueChanges.pipe(
             startWith(""),
             distinctUntilChanged(),
-            debounceTime(400),
+            debounceTime(50),
+            switchMap((search) => this._getAutocompleteOptions(search)),
             takeUntil(this._destroy),
-        ).subscribe((search: string) => {
-            this.updateAvailablePaths(search);
+        ).subscribe((result: List<File>) => {
+            this.availablePaths = result;
+            this.changeDetector.markForCheck();
         });
     }
 
@@ -48,15 +52,12 @@ export class FilePathNavigatorComponent implements OnChanges, OnDestroy {
         this._destroy.complete();
     }
 
-    public updateAvailablePaths(search: string) {
-        this.navigator.listAllFiles(search).subscribe((result) => {
-            console.log("Result", result);
-            this.availablePaths = result;
-        });
-    }
-
     @HostListener("select", ["$event"])
     public stopSelectPropagation(event: Event) {
         event.stopPropagation();
+    }
+
+    private _getAutocompleteOptions(search: string) {
+        return this.navigator.listFiles(search, AUTOCOMPLETE_LIMIT);
     }
 }

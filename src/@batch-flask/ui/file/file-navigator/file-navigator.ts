@@ -143,6 +143,10 @@ export class FileNavigator<TParams = any> {
         return this._loadPath(path, true);
     }
 
+    public listFiles(path: string = "", limit?: number): Observable<List<File>> {
+        return this._loadPath(path, true, limit);
+    }
+
     /**
      * Get the node at the path. If the node is not in the tree it will list
      * @param path Path of the node
@@ -286,12 +290,23 @@ export class FileNavigator<TParams = any> {
      * Given a path will return all the files underneath
      * @param path Path to the folder to load
      * @param recursive If it should list sub folders content too(Default: false)
+     * @param limit If it should limit the results
      */
-    private _loadPath(path: string, recursive = false): Observable<List<File>> {
-        return this._getter.fetchAll(this._params, {
-            recursive: recursive || this._fetchAll,
-            folder: path,
-        }).pipe(
+    private _loadPath(path: string, recursive = false, limit?: number): Observable<List<File>> {
+        let obs: Observable<List<File>>;
+        if (limit) {
+            obs = this._getter.fetch(this._params, {
+                recursive: recursive || this._fetchAll,
+                folder: path,
+                limit,
+            }, true).pipe(map(x => x.items));
+        } else {
+            obs = this._getter.fetchAll(this._params, {
+                recursive: recursive || this._fetchAll,
+                folder: path,
+            });
+        }
+        return obs.pipe(
             map((files) => {
                 if (!this._wildcards) {
                     return files;
