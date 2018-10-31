@@ -1,0 +1,43 @@
+@import "app/styles/variables";
+
+bl-toolbar {
+    $height: 24px;
+    background: $secondary-background;
+    height: $height;
+
+    display: flex;
+    align-items: stretch;
+    cursor: pointer;
+    padding-left: 10px;
+
+    > [toolbarLabel], [toolbarError], [toolbarAction] {
+        vertical-align: middle;
+        line-height: $height;
+    }
+
+    > [toolbarLabel] {
+        display: inline-block;
+        flex: 1;
+        font-size: 11px;
+        color: $secondary-text;
+        font-weight: 700;
+        user-select: none;
+        text-transform: uppercase;
+    }
+
+    > [toolbarError] {
+        color: $danger-color;
+        padding: 0 5px;
+    }
+
+    > [toolbarAction] {
+        padding: 4px 5px;
+        cursor: pointer;
+        color: $secondary-text;
+        font-size: 16px;
+
+        &:hover {
+            color: $selection-color;
+        }
+    }
+}

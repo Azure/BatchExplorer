@@ -1,12 +1,12 @@
 <div class="settings-header">
-    <h1>Settings</h1>
+    <h1>{{'settings.title' | i18n}}</h1>
 
     <div class="actions">
         <bl-button title="Save" [action]="save" tooltipPosition="below" [disabled]="!modified || !userSettings.valid">
             <i class="fa fa-floppy-o"></i>
             <span class="modified" *ngIf="modified">*</span>
         </bl-button>
-        <bl-button title="Reset" (click)="reset()" tooltipPosition="below" [disabled]="!modified">
+        <bl-button title="Reset" (do)="reset()" tooltipPosition="below" [disabled]="!modified">
             <i class="fa fa-undo"></i>
         </bl-button>
     </div>
@@ -14,14 +14,14 @@
 <div class="settings-editor">
     <div class="default-settings">
         <bl-toolbar>
-            <div toolbarLabel>Default settings</div>
+            <div toolbarLabel>{{'settings.defaultSettings' | i18n}}</div>
         </bl-toolbar>
         <bl-editor [value]="defaultSettings" [config]="defaultSettingsEditorConfig"></bl-editor>
     </div>
 
     <div class="user-settings">
         <bl-toolbar>
-            <div toolbarLabel>User settings</div>
+            <div toolbarLabel>{{'settings.userSettings' | i18n}}</div>
             <div toolbarError *ngIf="!userSettings.valid">{{userSettings.errors?.validJson?.message}}</div>
         </bl-toolbar>
 
