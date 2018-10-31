@@ -1,6 +1,6 @@
 <div class="input-container">
     <span class="prefix">{{name}}:/</span>
-    <input blInput [placeholder]="'file-explorer.unkownFile' | i18n" [matAutocomplete]="auto" [formControl]="control">
+    <input blInput [placeholder]="'file-explorer.path' | i18n" [matAutocomplete]="auto" [formControl]="control">
 </div>
 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="handleAutocompletePathSelection($event)">
     <mat-option *ngFor="let path of availablePaths;trackBy: trackPath" [value]="path.name">

@@ -37,7 +37,7 @@
         </ng-container>
 
         <div *ngIf="currentNode.treeNode.isUnknown && currentNode.treeNode.loadingStatus !== 0" class="info-overlay">
-            {{'file-explorer.unkownFile' | i18n}}
+            {{'file-explorer.unknownFile' | i18n}}
         </div>
 
         <div *ngIf="currentNode.treeNode.loadingStatus === 0" class="info-overlay">
