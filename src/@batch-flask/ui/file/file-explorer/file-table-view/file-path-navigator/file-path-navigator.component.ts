@@ -9,6 +9,8 @@ import { List } from "immutable";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged, startWith, switchMap, takeUntil } from "rxjs/operators";
 
+import { MatAutocompleteSelectedEvent } from "@angular/material";
+import { KeyCode } from "@batch-flask/core/keys";
 import "./file-path-navigator.scss";
 
 const AUTOCOMPLETE_LIMIT = 5;
@@ -21,7 +23,7 @@ const AUTOCOMPLETE_LIMIT = 5;
 export class FilePathNavigatorComponent implements OnChanges, OnDestroy {
     @Input() public navigator: FileNavigator;
     @Input() public path: string;
-    @Output() public pathChanges = new EventEmitter();
+    @Output() public navigate = new EventEmitter();
 
     public control = new FormControl();
     public availablePaths: List<File> = List([]);
@@ -52,9 +54,16 @@ export class FilePathNavigatorComponent implements OnChanges, OnDestroy {
         this._destroy.complete();
     }
 
-    @HostListener("select", ["$event"])
-    public stopSelectPropagation(event: Event) {
-        event.stopPropagation();
+    @HostListener("keydown", ["$event"])
+    public handleUserPathSelection(event: KeyboardEvent) {
+        if (event.code === KeyCode.Enter) {
+            this.navigate.emit(this.control.value);
+        }
+    }
+
+    public handleAutocompletePathSelection(event: MatAutocompleteSelectedEvent) {
+        const path = event.option.value;
+        this.navigate.emit(path);
     }
 
     private _getAutocompleteOptions(search: string) {

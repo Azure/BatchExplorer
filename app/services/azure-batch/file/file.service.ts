@@ -334,6 +334,9 @@ export class FileService {
             if (options.original.folder) {
                 query["$filter"] = `startswith(name, '${options.original.folder}')`;
             }
+            if (options.original.limit) {
+                query["maxresults"] = options.original.limit;
+            }
             query.recursive = Boolean(options.original.recursive);
             httpOptions = { params: new HttpParams({ fromObject: query }) };
         }

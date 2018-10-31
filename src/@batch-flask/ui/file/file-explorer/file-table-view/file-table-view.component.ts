@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
-import { FileTreeNode, FileNavigator } from "@batch-flask/ui/file/file-navigator";
+import { FileNavigator, FileTreeNode } from "@batch-flask/ui/file/file-navigator";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { DropEvent, TableConfig } from "@batch-flask/ui/table";
 import { DragUtils, prettyBytes } from "@batch-flask/utils";
@@ -21,7 +21,8 @@ export class FileTableViewComponent implements OnChanges {
     @Input() public error: ServerError;
     @Input() public name: string;
     @Input() public canDropExternalFiles: boolean;
-    @Output() public select = new EventEmitter<FileTreeNode>();
+    @Output() public nodeSelected = new EventEmitter<FileTreeNode>();
+    @Output() public navigate = new EventEmitter<string>();
     @Output() public back = new EventEmitter();
     @Output() public dropFiles = new EventEmitter<FileDropEvent>();
 
@@ -53,7 +54,7 @@ export class FileTableViewComponent implements OnChanges {
     }
 
     public selectNode(path: string) {
-        this.select.emit(this.treeNode.children.get(path));
+        this.nodeSelected.emit(this.treeNode.children.get(path));
     }
 
     public goBack() {

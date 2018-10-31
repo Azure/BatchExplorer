@@ -22,7 +22,8 @@
                 [canDropExternalFiles]="config.canDropExternalFiles"
                 [loadingStatus]="currentNode.treeNode.loadingStatus"
                 [error]="currentSource.navigator.error"
-                (select)="nodeSelected($event)"
+                (navigate)="navigateTo($event, source)"
+                (nodeSelected)="nodeSelected($event)"
                 (back)="goBack()"
                 (dropFiles)="handleDrop($event)">
             </bl-file-table-view>

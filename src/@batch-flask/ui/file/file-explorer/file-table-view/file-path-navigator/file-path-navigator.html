@@ -1,4 +1,11 @@
 <input blInput placeholder="Path" [matAutocomplete]="auto" [formControl]="control">
-<mat-autocomplete #auto="matAutocomplete">
-    <mat-option *ngFor="let path of availablePaths" [value]="path">{{path.name}}</mat-option>
+<mat-autocomplete #auto="matAutocomplete" (optionSelected)="handleAutocompletePathSelection($event)">
+    <mat-option *ngFor="let path of availablePaths" [value]="path.name">
+        <span class="file-icon">
+            <i class="fa"
+                [class.fa-folder]="path.isDirectory"
+                [class.fa-file]="!path.isDirectory"></i>
+        </span>
+        {{path.name}}
+    </mat-option>
 </mat-autocomplete>

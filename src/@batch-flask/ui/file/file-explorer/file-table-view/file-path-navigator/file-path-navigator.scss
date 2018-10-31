@@ -8,3 +8,13 @@ bl-file-path-navigator {
         width: 100%;
     }
 }
+
+.file-icon {
+    > .fa-folder {
+        color: $folder-icon-color;
+    }
+
+    > .fa-file {
+        color: $secondary-text;
+    }
+}
