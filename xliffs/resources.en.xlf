@@ -91,6 +91,18 @@
       <trans-unit id="create-new-aad-app">
         <source/>
       </trans-unit>
+      <trans-unit id="resource-permission-button.removeAccess">
+        <source>Remove access</source>
+      </trans-unit>
+      <trans-unit id="resource-permission-button.giveRole">
+        <source>Give {role} role</source>
+      </trans-unit>
+      <trans-unit id="resource-permission-button.none">
+        <source>None</source>
+      </trans-unit>
+      <trans-unit id="resource-permission-button">
+        <source/>
+      </trans-unit>
       <trans-unit id="programatic-usage.title">
         <source>Credentials and code samples for this Batch account</source>
       </trans-unit>
@@ -116,18 +128,6 @@
         <source>Loading containers</source>
       </trans-unit>
       <trans-unit id="blob-container-picker">
-        <source/>
-      </trans-unit>
-      <trans-unit id="resource-permission-button.removeAccess">
-        <source>Remove access</source>
-      </trans-unit>
-      <trans-unit id="resource-permission-button.giveRole">
-        <source>Give {role} role</source>
-      </trans-unit>
-      <trans-unit id="resource-permission-button.none">
-        <source>None</source>
-      </trans-unit>
-      <trans-unit id="resource-permission-button">
         <source/>
       </trans-unit>
       <trans-unit id="pool-picker.filterByOS">
