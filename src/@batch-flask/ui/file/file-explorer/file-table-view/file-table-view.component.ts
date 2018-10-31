@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import { ServerError } from "@batch-flask/core";
-import { FileTreeNode } from "@batch-flask/ui/file/file-navigator";
+import { FileTreeNode, FileNavigator } from "@batch-flask/ui/file/file-navigator";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { DropEvent, TableConfig } from "@batch-flask/ui/table";
 import { DragUtils, prettyBytes } from "@batch-flask/utils";
@@ -15,6 +15,7 @@ import "./file-table-view.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileTableViewComponent implements OnChanges {
+    @Input() public navigator: FileNavigator;
     @Input() public treeNode: FileTreeNode;
     @Input() public loadingStatus: LoadingStatus;
     @Input() public error: ServerError;

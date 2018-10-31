@@ -6,6 +6,7 @@
     <div class="current-path">
         <span *ngIf="name" class="file-navigator-name">{{name}}:</span>
         <span>/{{treeNode.path}}</span>
+        <bl-file-path-navigator [navigator]="navigator" [path]="treeNode.path"></bl-file-path-navigator>
     </div>
 </div>
 <div class="table-wrapper" (drop)="handleDrop($event)" (dragover)="handleDragHover($event)">

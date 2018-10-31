@@ -1,4 +1,6 @@
 import { NgModule } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatAutocompleteModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { FileViewerModule } from "@batch-flask/ui/file/file-viewer";
@@ -10,9 +12,10 @@ import { TableModule } from "@batch-flask/ui/table";
 import { FileExplorerTabsComponent } from "./file-explorer-tabs";
 import { FileExplorerComponent } from "./file-explorer.component";
 import { FileTableViewComponent } from "./file-table-view";
+import { FilePathNavigatorComponent } from "./file-table-view/file-path-navigator";
 import { FileTreeViewComponent, FileTreeViewRowComponent } from "./file-tree-view";
 
-const privateComponents = [FileTreeViewRowComponent];
+const privateComponents = [FileTreeViewRowComponent, FilePathNavigatorComponent];
 const publicComponents = [
     FileTreeViewComponent,
     FileExplorerComponent,
@@ -30,6 +33,9 @@ const publicComponents = [
         TableModule,
         QuickListModule,
         FileViewerModule,
+        MatAutocompleteModule,
+        ReactiveFormsModule,
+        FormsModule,
     ],
     declarations: [...privateComponents, publicComponents],
     exports: publicComponents,

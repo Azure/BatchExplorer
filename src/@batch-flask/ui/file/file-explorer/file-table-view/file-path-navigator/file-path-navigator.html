@@ -1,0 +1,4 @@
+<input blInput placeholder="Path" [matAutocomplete]="auto" [formControl]="control">
+<mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let path of availablePaths" [value]="path">{{path.name}}</mat-option>
+</mat-autocomplete>
