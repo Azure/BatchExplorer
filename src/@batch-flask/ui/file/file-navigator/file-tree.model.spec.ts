@@ -195,7 +195,20 @@ describe("FileTreeStructure", () => {
             expect(sub.name).toEqual("unknown");
             expect(sub.path).toEqual("wd/unknown");
             expect(sub.isDirectory).toBe(true);
+            expect(sub.isUnknown).toBe(true);
             expect(sub.loadingStatus).toEqual(LoadingStatus.Loading);
+        });
+
+        it("mark a file as unkown(Loaded)", () => {
+            let node = tree.getNode("foo/invalid");
+            expect(node.isUnknown).toBe(true);
+            expect(node.loadingStatus).toBe(LoadingStatus.Loading);
+
+            tree.markFileAsLoaded("foo/invalid");
+            node = tree.getNode("foo/invalid");
+            expect(node.isUnknown).toBe(true);
+            expect(node.loadingStatus).toBe(LoadingStatus.Ready);
+
         });
     });
 
@@ -262,6 +275,7 @@ describe("FileTreeStructure", () => {
             `));
         });
     });
+
     describe("#setFilesAt()", () => {
         beforeEach(() => {
             tree = new FileTreeStructure();

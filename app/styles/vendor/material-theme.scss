@@ -139,8 +139,13 @@ bl-form-field.bl-textarea {
     max-width : 30vw;
 
     .mat-option {
-        height: 32px;
+        height: 24px;
         line-height: 32px;
+
+        &.mat-active {
+            color: $primary-contrast-color;
+            background-color: $primary-color-light;
+        }
     }
 }
 
