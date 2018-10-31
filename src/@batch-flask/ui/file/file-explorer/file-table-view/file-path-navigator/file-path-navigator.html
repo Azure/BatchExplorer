@@ -1,6 +1,9 @@
-<input blInput placeholder="Path" [matAutocomplete]="auto" [formControl]="control">
+<div class="input-container">
+    <span class="prefix">{{name}}:/</span>
+    <input blInput placeholder="Path" [matAutocomplete]="auto" [formControl]="control">
+</div>
 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="handleAutocompletePathSelection($event)">
-    <mat-option *ngFor="let path of availablePaths;trackPath" [value]="path.name">
+    <mat-option *ngFor="let path of availablePaths;trackBy: trackPath" [value]="path.name">
         <span class="file-icon">
             <i class="fa"
                 [class.fa-folder]="path.isDirectory"

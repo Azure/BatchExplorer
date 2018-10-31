@@ -4,8 +4,14 @@ bl-file-path-navigator {
     display: block;
     width: 100%;
 
+    .input-container {
+        display: flex;
+        align-items: center;
+    }
+
     input {
-        width: 100%;
+        flex: 1;
+        margin-left: 3px;
     }
 }
 

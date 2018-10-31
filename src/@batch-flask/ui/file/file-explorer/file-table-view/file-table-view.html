@@ -4,7 +4,7 @@
     </bl-clickable>
 
     <div class="current-path">
-        <bl-file-path-navigator [navigator]="navigator" [path]="treeNode.path" (navigate)="navigate.emit($event)"></bl-file-path-navigator>
+        <bl-file-path-navigator [name]="name" [navigator]="navigator" [path]="treeNode.path" (navigate)="navigate.emit($event)"></bl-file-path-navigator>
     </div>
 </div>
 <div class="table-wrapper" (drop)="handleDrop($event)" (dragover)="handleDragHover($event)">

@@ -22,7 +22,20 @@ const AUTOCOMPLETE_LIMIT = 5;
 })
 export class FilePathNavigatorComponent implements OnChanges, OnDestroy {
     @Input() public navigator: FileNavigator;
+
+    /**
+     * Name of the file navigator
+     */
+    @Input() public name: string;
+
+    /**
+     * Current path
+     */
     @Input() public path: string;
+
+    /**
+     * Emit when the user should navigate somewhere
+     */
     @Output() public navigate = new EventEmitter();
 
     public control = new FormControl();
