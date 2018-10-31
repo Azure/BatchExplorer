@@ -1,0 +1,3 @@
+file-explorer:
+  path: Path
+  unknownFile: Cannot find this file. Check the path.
