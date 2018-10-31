@@ -105,6 +105,10 @@ export class FileTreeStructure {
         for (const file of files.toArray()) {
             const node = fileToTreeNode(file, this.basePath);
 
+            if (this._unkownFiles.has(node.path)) {
+                this._unkownFiles.delete(node.path);
+            }
+
             const folder = CloudPathUtils.dirname(node.path);
             this._checkDirInTree(folder);
 
