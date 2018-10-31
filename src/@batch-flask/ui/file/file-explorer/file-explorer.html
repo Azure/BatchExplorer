@@ -35,5 +35,13 @@
                 (back)="goBack()">
             </bl-file-viewer-container>
         </ng-container>
+
+        <div *ngIf="currentNode.treeNode.isUnknown && currentNode.treeNode.loadingStatus !== 0" class="info-overlay">
+            {{'file-explorer.unkownFile' | i18n}}
+        </div>
+
+        <div *ngIf="currentNode.treeNode.loadingStatus === 0" class="info-overlay">
+            {{'common.loading' | i18n}}
+        </div>
     </section>
 </bl-split-pane>

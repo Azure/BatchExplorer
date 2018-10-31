@@ -306,6 +306,7 @@ export class FileNavigator<TParams = any> {
                 folder: path,
             });
         }
+
         return obs.pipe(
             map((files) => {
                 if (!this._wildcards) {
@@ -328,20 +329,22 @@ export class FileNavigator<TParams = any> {
 
     private _checkIfDirectory(node: FileTreeNode): Observable<boolean> {
         if (!node.isUnknown) { return of(node.isDirectory); }
-        const subject = new AsyncSubject<boolean>();
-        this._loadPath(this._getFolderToLoad(node.path, false)).subscribe({
-            next: (files: List<File>) => {
-                if (files.size === 0) { return false; }
+
+        return this._loadPath(this._getFolderToLoad(node.path, false), false, 1).pipe(
+            map((files: List<File>) => {
+                const tree = this._tree.value;
+                if (files.size === 0) {
+                    tree.markFileAsLoaded(node.path);
+                    this._tree.next(tree);
+                    return false;
+                }
                 const file = files.first();
-                this._tree.value.addFiles(files);
-                subject.next(file.isDirectory);
-                subject.complete();
-            },
-            error: (e) => (error) => {
-                subject.error(error);
-            },
-        });
-        return subject.asObservable();
+                tree.addFiles(files);
+                this._tree.next(tree);
+                return file.isDirectory;
+            }),
+            share(),
+        );
     }
 
     private _loadFilesInPath(path: string): Observable<FileTreeNode> {

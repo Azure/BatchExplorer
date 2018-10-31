@@ -5,6 +5,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { FileViewerModule } from "@batch-flask/ui/file/file-viewer";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";
+import { I18nUIModule } from "@batch-flask/ui/i18n";
 import { LoadingModule } from "@batch-flask/ui/loading";
 import { QuickListModule } from "@batch-flask/ui/quick-list";
 import { SplitPaneModule } from "@batch-flask/ui/split-pane";
@@ -36,6 +37,7 @@ const publicComponents = [
         MatAutocompleteModule,
         ReactiveFormsModule,
         FormsModule,
+        I18nUIModule,
     ],
     declarations: [...privateComponents, publicComponents],
     exports: publicComponents,

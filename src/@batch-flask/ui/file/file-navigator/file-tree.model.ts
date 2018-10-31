@@ -83,6 +83,8 @@ export class FileTreeStructure {
     public directories: StringMap<FileTreeNode> = {};
     public readonly basePath: string;
 
+    private _unkownFiles = new Set<string>();
+
     constructor(basePath: string = "") {
         this.basePath = CloudPathUtils.asBaseDirectory(basePath);
         this.root = new FileTreeNode({
@@ -91,6 +93,11 @@ export class FileTreeStructure {
             loadingStatus: LoadingStatus.Ready,
         });
         this.directories[""] = this.root;
+    }
+
+    public markFileAsLoaded(path: string) {
+        const nodePath = CloudPathUtils.normalize(path);
+        this._unkownFiles.add(nodePath);
     }
 
     public addFiles(files: List<File>) {
@@ -147,7 +154,7 @@ export class FileTreeStructure {
 
             return new FileTreeNode({
                 path: nodePath,
-                loadingStatus: LoadingStatus.Loading,
+                loadingStatus: this._unkownFiles.has(nodePath) ? LoadingStatus.Ready : LoadingStatus.Loading,
                 isDirectory: true,
                 isUnknown: true,
                 virtual: true,
