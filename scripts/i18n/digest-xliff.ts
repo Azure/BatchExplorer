@@ -3,10 +3,8 @@ import "../../src/client/init";
 
 import * as fs from "fs";
 import * as globNode from "glob";
-import * as path from "path";
 import { promisify } from "util";
 import { XliffSerializer } from "../../src/@batch-flask/compiler";
-import { loadDevTranslations } from "./load-dev-translations";
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
