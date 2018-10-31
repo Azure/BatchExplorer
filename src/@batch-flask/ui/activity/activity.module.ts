@@ -6,6 +6,7 @@ import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { DropdownModule } from "@batch-flask/ui/dropdown";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";
 import { NotificationModule } from "@batch-flask/ui/notifications";
+import { ToolbarModule } from "@batch-flask/ui/toolbar";
 import { VirtualScrollModule } from "@batch-flask/ui/virtual-scroll";
 import {
     ActivityMonitorComponent,
@@ -27,6 +28,7 @@ import { ActivityService } from "./activity.service";
         DropdownModule,
         NotificationModule,
         VirtualScrollModule,
+        ToolbarModule,
     ],
     declarations: [
         ActivityMonitorFooterComponent,

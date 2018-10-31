@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding } from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostBinding } from "@angular/core";
 
 import "./toolbar.scss";
 
@@ -9,8 +9,4 @@ import "./toolbar.scss";
 })
 export class ToolbarComponent {
     @HostBinding("attr.role") public readonly role = "toolbar";
-
-    constructor(private changeDetector: ChangeDetectorRef) {
-
-    }
 }
