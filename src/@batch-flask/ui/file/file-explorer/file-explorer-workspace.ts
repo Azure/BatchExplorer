@@ -77,7 +77,9 @@ export class FileExplorerWorkspace {
         this._currentSource.next(source);
         source.navigator.getNode(path).subscribe((node) => {
             if (!node) { return; }
-            if (node.isDirectory) {
+            if (node.isUnknown) {
+                // Nothing to do
+            } else if (node.isDirectory) {
                 source.navigator.loadPath(path);
             } else {
                 this.openFile(node.path, source);

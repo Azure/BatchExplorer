@@ -143,6 +143,10 @@ export class FileNavigator<TParams = any> {
         return this._loadPath(path, true);
     }
 
+    public listFiles(path: string = "", limit?: number): Observable<List<File>> {
+        return this._loadPath(path, true, limit);
+    }
+
     /**
      * Get the node at the path. If the node is not in the tree it will list
      * @param path Path of the node
@@ -286,12 +290,24 @@ export class FileNavigator<TParams = any> {
      * Given a path will return all the files underneath
      * @param path Path to the folder to load
      * @param recursive If it should list sub folders content too(Default: false)
+     * @param limit If it should limit the results
      */
-    private _loadPath(path: string, recursive = false): Observable<List<File>> {
-        return this._getter.fetchAll(this._params, {
-            recursive: recursive || this._fetchAll,
-            folder: path,
-        }).pipe(
+    private _loadPath(path: string, recursive = false, limit?: number): Observable<List<File>> {
+        let obs: Observable<List<File>>;
+        if (limit) {
+            obs = this._getter.fetch(this._params, {
+                recursive: recursive || this._fetchAll,
+                folder: path,
+                limit,
+            }, true).pipe(map(x => x.items));
+        } else {
+            obs = this._getter.fetchAll(this._params, {
+                recursive: recursive || this._fetchAll,
+                folder: path,
+            });
+        }
+
+        return obs.pipe(
             map((files) => {
                 if (!this._wildcards) {
                     return files;
@@ -313,20 +329,22 @@ export class FileNavigator<TParams = any> {
 
     private _checkIfDirectory(node: FileTreeNode): Observable<boolean> {
         if (!node.isUnknown) { return of(node.isDirectory); }
-        const subject = new AsyncSubject<boolean>();
-        this._loadPath(this._getFolderToLoad(node.path, false)).subscribe({
-            next: (files: List<File>) => {
-                if (files.size === 0) { return false; }
+
+        return this._loadPath(this._getFolderToLoad(node.path, false), false, 1).pipe(
+            map((files: List<File>) => {
+                const tree = this._tree.value;
+                if (files.size === 0) {
+                    tree.markFileAsLoaded(node.path);
+                    this._tree.next(tree);
+                    return false;
+                }
                 const file = files.first();
-                this._tree.value.addFiles(files);
-                subject.next(file.isDirectory);
-                subject.complete();
-            },
-            error: (e) => (error) => {
-                subject.error(error);
-            },
-        });
-        return subject.asObservable();
+                tree.addFiles(files);
+                this._tree.next(tree);
+                return file.isDirectory;
+            }),
+            share(),
+        );
     }
 
     private _loadFilesInPath(path: string): Observable<FileTreeNode> {

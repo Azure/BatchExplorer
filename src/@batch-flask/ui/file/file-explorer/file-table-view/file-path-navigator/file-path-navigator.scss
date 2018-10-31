@@ -1,0 +1,26 @@
+@import "app/styles/variables";
+
+bl-file-path-navigator {
+    display: block;
+    width: 100%;
+
+    .input-container {
+        display: flex;
+        align-items: center;
+    }
+
+    input {
+        flex: 1;
+        margin-left: 3px;
+    }
+}
+
+.file-icon {
+    > .fa-folder {
+        color: $folder-icon-color;
+    }
+
+    > .fa-file {
+        color: $secondary-text;
+    }
+}

@@ -38,7 +38,7 @@ bl-select-dropdown {
         }
 
         &.focused {
-            color: white;
+            color: $primary-contrast-color;
             background: $primary-color-light;
         }
 
