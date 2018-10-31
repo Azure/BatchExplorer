@@ -1,9 +1,9 @@
-<div class="basic-header">
-    <div class="name"> Evaluate formula </div>
-    <bl-clickable (do)="evaluateFormula()" class="evaluate-btn action" [disabled]="!canEvaluateFormula" [class.flash-opacity]="evaluating">
+<bl-toolbar class="basic-header">
+    <div toolbarLabel> Evaluate formula </div>
+    <bl-clickable toolbarAction (do)="evaluateFormula()" class="evaluate-btn action" [disabled]="!canEvaluateFormula" [class.flash-opacity]="evaluating">
         <i class="fa fa-calculator" title="Evaluate autoscale formula"></i>
     </bl-clickable>
-</div>
+</bl-toolbar>
 <div>
     <div *ngIf="canEvaluateFormula" class="evaluate-formula-results">
         <div *ngIf="evaluationResults.size === 0">View your formula results</div>

@@ -3,12 +3,12 @@
         <textarea placeholder="SSH public key" [formControl]="sshKeyValue"></textarea>
     </div>
     <div blSecondPane class="saved-keys">
-        <div class="basic-header">
-            <div class="name"> Saved public keys </div>
-            <bl-clickable (do)="addKey()" class="action add-key-btn">
+        <bl-toolbar>
+            <div toolbarLabel> Saved public keys </div>
+            <bl-clickable toolbarAction (do)="addKey()" class="action add-key-btn">
                 <i class="fa fa-save" title="Save"></i>
             </bl-clickable>
-        </div>
+        </bl-toolbar>
         <div class="saved-key-list">
             <div class="saved-key" *ngFor="let key of savedSSHKeys;trackBy: trackSavedKey" (click)="selectKey(key)">
                 <span class="label">{{key.name}}</span>

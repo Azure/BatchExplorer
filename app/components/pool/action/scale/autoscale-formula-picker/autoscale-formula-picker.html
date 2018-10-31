@@ -11,12 +11,12 @@
     <div blSecondPane class="formula-managment">
         <bl-evaluate-autoscale-formula [formula]="autoscaleFormulaValue" [pool]="pool"></bl-evaluate-autoscale-formula>
         <div class="saved-formulas">
-            <div class="basic-header">
-                <div class="name"> Saved formulas </div>
-                <bl-clickable (do)="addFormula()" class="save-btn action">
+            <bl-toolbar>
+                <div toolbarLabel> Saved formulas </div>
+                <bl-clickable toolbarAction (do)="addFormula()" class="save-btn action">
                     <i class="fa fa-save" title="Save"></i>
                 </bl-clickable>
-            </div>
+            </bl-toolbar>
             <div class="formula-list">
                 <bl-clickable class="formula" *ngFor="let formula of savedAutoscaleFormulas;trackBy: trackFormula" (do)="selectFormula(formula)">
                     <span class="label">{{formula.name}}</span>
@@ -33,9 +33,9 @@
             </div>
         </div>
         <div class="predefined-formulas">
-            <div class="basic-header">
-                <div class="name"> Sample formulas </div>
-            </div>
+            <bl-toolbar>
+                <div toolbarLabel> Sample formulas </div>
+            </bl-toolbar>
             <div class="formula-list">
                 <bl-clickable class="formula" *ngFor="let formula of predefinedFormula;trackBy: trackFormula" (do)="selectFormula(formula)">
                     <span class="label">{{formula.name}}</span>
