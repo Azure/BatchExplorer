@@ -17,6 +17,8 @@ export const KeyCodes = {
 export enum KeyCode {
     ArrowDown = "ArrowDown",
     ArrowUp = "ArrowUp",
+    ArrowRight = "ArrowRight",
+    ArrowLeft = "ArrowLeft",
     Space = "Space",
     Enter = "Enter",
     Tab = "Tab",

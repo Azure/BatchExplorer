@@ -1,15 +1,15 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
-    HostListener, Input, OnChanges, OnDestroy, Output,
+    HostListener, Input, OnChanges, OnDestroy, Output, ViewChild,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { FileNavigator } from "@batch-flask/ui/file/file-navigator";
 import { File } from "@batch-flask/ui/file/file.model";
 import { List } from "immutable";
 import { Subject } from "rxjs";
-import { debounceTime, distinctUntilChanged, startWith, switchMap, takeUntil } from "rxjs/operators";
+import { debounceTime, distinctUntilChanged, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
 
-import { MatAutocompleteSelectedEvent } from "@angular/material";
+import { MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from "@angular/material";
 import { KeyCode } from "@batch-flask/core/keys";
 import "./file-path-navigator.scss";
 
@@ -38,17 +38,21 @@ export class FilePathNavigatorComponent implements OnChanges, OnDestroy {
      */
     @Output() public navigate = new EventEmitter();
 
-    public control = new FormControl();
+    public control = new FormControl("");
     public availablePaths: List<File> = List([]);
+
+    @ViewChild(MatAutocompleteTrigger) public _autocomplete: MatAutocompleteTrigger;
 
     private _destroy = new Subject();
 
     constructor(private changeDetector: ChangeDetectorRef) {
+        this.control.valueChanges.subscribe(x => console.log("Changed>", x));
         this.control.valueChanges.pipe(
             startWith(""),
+            // tap(x => console.log("new value", x)),
             distinctUntilChanged(),
             debounceTime(50),
-            switchMap((search) => this._getAutocompleteOptions(search)),
+            switchMap(search => this._getAutocompleteOptions(search)),
             takeUntil(this._destroy),
         ).subscribe((result: List<File>) => {
             this.availablePaths = result;
@@ -58,7 +62,7 @@ export class FilePathNavigatorComponent implements OnChanges, OnDestroy {
 
     public ngOnChanges(changes) {
         if (changes.path) {
-            this.control.setValue(this.path);
+            this.control.patchValue(this.path);
         }
     }
 
@@ -71,6 +75,12 @@ export class FilePathNavigatorComponent implements OnChanges, OnDestroy {
     public handleUserPathSelection(event: KeyboardEvent) {
         if (event.code === KeyCode.Enter) {
             this.navigate.emit(this.control.value);
+        } else if (event.code === KeyCode.ArrowRight && !event.shiftKey) {
+            // If pressing arrow right(but not using any modified key update the input with the current selected option)
+            const option = this._autocomplete.activeOption;
+            if (option) {
+                this.control.patchValue(option.value);
+            }
         }
     }
 
@@ -84,6 +94,7 @@ export class FilePathNavigatorComponent implements OnChanges, OnDestroy {
     }
 
     private _getAutocompleteOptions(search: string) {
+        console.log("Kiad oath", search);
         return this.navigator.listFiles(search, AUTOCOMPLETE_LIMIT);
     }
 }

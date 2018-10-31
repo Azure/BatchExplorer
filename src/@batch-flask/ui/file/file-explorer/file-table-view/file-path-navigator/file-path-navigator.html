@@ -11,4 +11,8 @@
         </span>
         {{path.name}}
     </mat-option>
+
+    <mat-option *ngIf="availablePaths.size === 0" [disabled]="true">
+        {{'file-explorer.noPathMatch' | i18n: {path: control.value} }}
+    </mat-option>
 </mat-autocomplete>
