@@ -1,7 +1,8 @@
+import { DOWN_ARROW } from "@angular/cdk/keycodes";
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { ReactiveFormsModule } from "@angular/forms";
-import { MatAutocompleteModule } from "@angular/material";
+import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteTrigger } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { KeyCode } from "@batch-flask/core/keys";
 import { I18nTestingModule } from "@batch-flask/core/testing";
@@ -41,6 +42,7 @@ describe("FilePathNavigatorComponent", () => {
     let component: FilePathNavigatorComponent;
     let de: DebugElement;
     let inputEl: DebugElement;
+    let autocomplete: MatAutocomplete;
 
     function setup() {
 
@@ -50,9 +52,10 @@ describe("FilePathNavigatorComponent", () => {
         component = de.componentInstance;
         fixture.detectChanges();
         inputEl = de.query(By.css("input"));
+        autocomplete = de.query(By.directive(MatAutocompleteTrigger)).injector.get(MatAutocompleteTrigger).autocomplete;
     }
 
-    beforeEach(() => {
+    beforeEach( () => {
         TestBed.configureTestingModule({
             imports: [MatAutocompleteModule, ReactiveFormsModule, I18nTestingModule, I18nUIModule],
             declarations: [FilePathNavigatorComponent, TestComponent],
@@ -70,6 +73,10 @@ describe("FilePathNavigatorComponent", () => {
 
     it("shows name before the input", async () => {
         expect(de.query(By.css(".prefix")).nativeElement.textContent).toContain("Custom");
+    });
+
+    it("map all the options", async () => {
+        expect(autocomplete.options.length).toEqual(files.length);
     });
 
     it("propose autocomplete paths when typeing paths ", fakeAsync(() => {
@@ -90,5 +97,16 @@ describe("FilePathNavigatorComponent", () => {
         keydown(de, null, KeyCode.Enter);
         expect(testComponent.navigate).toHaveBeenCalledOnce();
         expect(testComponent.navigate).toHaveBeenCalledWith("invalid/file");
+    });
+
+    it("update the input with the active autocomplete when pressing ArrowRight", async () => {
+        inputEl.nativeElement.focus();
+        fixture.detectChanges();
+        keydown(inputEl, null, KeyCode.ArrowDown, DOWN_ARROW);
+        keydown(inputEl, null, KeyCode.ArrowDown, DOWN_ARROW);
+        keydown(de, null, KeyCode.ArrowRight);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        expect(inputEl.nativeElement.value).toEqual("foo/bar2.txt");
     });
 });

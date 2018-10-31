@@ -1,15 +1,15 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
-    HostListener, Input, OnChanges, OnDestroy, Output, ViewChild,
+    HostListener, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { FileNavigator } from "@batch-flask/ui/file/file-navigator";
 import { File } from "@batch-flask/ui/file/file.model";
 import { List } from "immutable";
 import { Subject } from "rxjs";
-import { debounceTime, distinctUntilChanged, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
+import { debounceTime, distinctUntilChanged, startWith, switchMap, takeUntil } from "rxjs/operators";
 
-import { MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from "@angular/material";
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from "@angular/material";
 import { KeyCode } from "@batch-flask/core/keys";
 import "./file-path-navigator.scss";
 
@@ -20,7 +20,7 @@ const AUTOCOMPLETE_LIMIT = 5;
     templateUrl: "file-path-navigator.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FilePathNavigatorComponent implements OnChanges, OnDestroy {
+export class FilePathNavigatorComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public navigator: FileNavigator;
 
     /**
@@ -46,12 +46,14 @@ export class FilePathNavigatorComponent implements OnChanges, OnDestroy {
     private _destroy = new Subject();
 
     constructor(private changeDetector: ChangeDetectorRef) {
-        this.control.valueChanges.subscribe(x => console.log("Changed>", x));
+
+    }
+
+    public ngOnInit() {
         this.control.valueChanges.pipe(
-            startWith(""),
-            // tap(x => console.log("new value", x)),
             distinctUntilChanged(),
             debounceTime(50),
+            startWith(""),
             switchMap(search => this._getAutocompleteOptions(search)),
             takeUntil(this._destroy),
         ).subscribe((result: List<File>) => {
@@ -94,7 +96,6 @@ export class FilePathNavigatorComponent implements OnChanges, OnDestroy {
     }
 
     private _getAutocompleteOptions(search: string) {
-        console.log("Kiad oath", search);
         return this.navigator.listFiles(search, AUTOCOMPLETE_LIMIT);
     }
 }
