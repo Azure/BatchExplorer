@@ -81,7 +81,7 @@ bl-job-graphs-home {
         width: $loading-overlay-width;
         height: $loading-overlay-height;
         background: $mineshaft-grey;
-        color: white;
+        color: $main-background;
         opacity: 0.5;
     }
 }
