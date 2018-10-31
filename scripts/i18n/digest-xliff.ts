@@ -15,7 +15,7 @@ const glob = promisify(globNode);
 async function digestXliffTranslations(file: string) {
     const content = await readFile(file);
     const result = await XliffSerializer.decode(content.toString());
-    const json = JSON.stringify(result.translations, null, 2);
+    const json = JSON.stringify(result.translations, Object.keys(result.translations).sort(), 2);
     const dest = `./i18n/resources.${result.targetLanguage}.json`;
     await writeFile(dest, json);
     console.log(`Parsed xliff file ${file} and wrote json translations into ${dest}`);
