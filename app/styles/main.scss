@@ -30,11 +30,9 @@
 // Partial styles
 @import "./partials/grid";
 @import "./partials/loading-indicators";
-@import "./partials/refresh-btn";
 @import "./partials/icons";
 
 // Vendor styles
-@import "./vendor/angular-extras";
 @import "./vendor/material-theme.scss";
 
 select {
