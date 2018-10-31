@@ -54,7 +54,6 @@ export class BlobStorageClientProxy {
 
         // we want to keep the filter and prefix separate for mapping files in the response.
         const prefix = options.folder;
-        console.log("fulter folder", options.folder);
         const storageOptions: StorageRequestOptions = {
             delimiter: options.recursive ? null : "/",
             maxResults: options.limit,

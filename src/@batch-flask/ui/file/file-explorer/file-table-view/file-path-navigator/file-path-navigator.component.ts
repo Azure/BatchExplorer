@@ -66,6 +66,10 @@ export class FilePathNavigatorComponent implements OnChanges, OnDestroy {
         this.navigate.emit(path);
     }
 
+    public trackPath(_, path: File) {
+        return path.url;
+    }
+
     private _getAutocompleteOptions(search: string) {
         return this.navigator.listFiles(search, AUTOCOMPLETE_LIMIT);
     }
