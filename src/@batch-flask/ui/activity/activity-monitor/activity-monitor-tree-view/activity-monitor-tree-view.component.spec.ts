@@ -84,7 +84,7 @@ describe("ActivityMonitorTreeViewComponent", () => {
     });
 
     it("should display the tree view's name", () => {
-        const nameEl = de.query(By.css(".name"));
+        const nameEl = de.query(By.css("[toolbarLabel]"));
 
         expect(nameEl.nativeElement.textContent).toContain("Running Activities");
     });
