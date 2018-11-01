@@ -36,50 +36,7 @@
         </div>
     </mat-tab>
     <mat-tab label="Custom image">
-        <div class="editable-table" *ngIf="currentCustomImageState === CustomImagesState.Ready" style="padding: 10px;">
-            <table class="noselect" cellspacing="0" cellpadding="0">
-                <thead>
-                    <tr>
-                        <th>Custom image</th>
-                        <th>Node agent skus</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <bl-select [formControl]="customImage">
-                                <bl-option *ngFor="let image of customImages;trackBy: trackResource"
-                                    [value]="image.id" [label]="image.name"></bl-option>
-                            </bl-select>
-                        </td>
-                        <td>
-                            <bl-select [formControl]="nodeAgentSku">
-                                <bl-option *ngFor="let nodeAgent of nodeAgentSkus;trackBy: trackNodeAgentSku"
-                                    [value]="nodeAgent.id" [label]="nodeAgent.id"></bl-option>
-                            </bl-select>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div *ngIf="currentCustomImageState === CustomImagesState.Empty" style="padding: 10px;">
-            {{ customImagesEmptyMsg }}
-        </div>
-        <div *ngIf="currentCustomImageState === CustomImagesState.Error" style="padding: 10px;">
-            {{ customImagesErrorMsg }}
-        </div>
-        <div *ngIf="hasCustomImage">
-            <p style="padding-top: 10px;">
-                Please specify the container configuration for the pool.
-            </p>
-            <bl-form-picker [formControl]="containerConfiguration" (clear)="clearContaienrConfiguration()" #containerConfigurationPicker>
-                <div no-value-title>Container configuration</div>
-                <div value-title>{{containerConfiguration?.value?.type}}</div>
-                <div nested-form>
-                    <bl-container-configuration [formControl]="containerConfigurationPicker.nestedValue"></bl-container-configuration>
-                </div>
-            </bl-form-picker>
-        </div>
+        <bl-custom-image-picker></bl-custom-image-picker>
     </mat-tab>
 </mat-tab-group>
 <p *ngIf="selectedSku" style="padding-top: 10px;">Based on your selection, node agent <b>'{{selectedNodeAgentId}}'</b> will be used</p>

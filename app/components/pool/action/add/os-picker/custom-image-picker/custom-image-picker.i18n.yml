@@ -1,0 +1,4 @@
+custom-image-picker:
+  customImage: Custom image
+  nodeAgentSku: Node agent sku
+  errorLoading: Server encountered an error loading custom images, please try again later.

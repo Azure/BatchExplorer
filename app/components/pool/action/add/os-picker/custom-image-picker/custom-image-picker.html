@@ -1,0 +1,29 @@
+<div *ngIf="loadingStatus === LoadingStatus.Ready" style="padding: 10px;">
+    <bl-form-field>
+        <bl-select [formControl]="customImage" attr.aria-describedby="{{id}}-error-msg">
+            <bl-option *ngFor="let image of customImages;trackBy: trackResource" [value]="image.id" [label]="image.name"></bl-option>
+        </bl-select>
+    </bl-form-field>
+    <bl-form-field>
+        <bl-select [formControl]="nodeAgentSku">
+            <bl-option *ngFor="let nodeAgent of nodeAgentSkus;trackBy: trackNodeAgentSku" [value]="nodeAgent.id"
+                [label]="nodeAgent.id"></bl-option>
+        </bl-select>
+    </bl-form-field>
+</div>
+<!-- <div *ngIf="state === CustomImagesState.Empty" style="padding: 10px;">
+    {{ customImagesEmptyMsg }}
+</div> -->
+<div *ngIf="loadingStatus === LoadingStatus.Error" id="{{id}}-error-msg" style="padding: 10px;">
+    {{ customImagesErrorMsg }}
+</div>
+<div *ngIf="hasCustomImage">
+    <bl-form-picker [formControl]="containerConfiguration" (clear)="clearContaienrConfiguration()"
+        #containerConfigurationPicker>
+        <div no-value-title>Container configuration</div>
+        <div value-title>{{containerConfiguration?.value?.type}}</div>
+        <div nested-form>
+            <bl-container-configuration [formControl]="containerConfigurationPicker.nestedValue"></bl-container-configuration>
+        </div>
+    </bl-form-picker>
+</div>
