@@ -39,6 +39,10 @@ bl-file-tree-view {
         outline: none;
         position: relative;
         height: calc(100% - #{$tree-view-header-height});
+
+        &.no-rows:focus {
+            border: 1px solid $outline-color;
+        }
     }
 
     .tree-rows-container {
