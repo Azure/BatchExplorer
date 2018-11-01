@@ -21,6 +21,7 @@ export interface PoolPriceOptions {
 const iconMapping = {
     "UbuntuServer": Icons.ubuntu,
     "ubuntu-server-container": Icons.ubuntu,
+    "ubuntu-server-container-rdma": Icons.ubuntu,
     "CentOS": Icons.centos,
     "CentOS-HPC": Icons.centos,
     "WindowsServer": Icons.windows,
