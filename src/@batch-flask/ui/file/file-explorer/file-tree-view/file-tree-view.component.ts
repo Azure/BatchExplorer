@@ -127,6 +127,9 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     public setFocus(focus: boolean) {
         this.isFocused = focus;
+        if (this.focusedIndex > this.treeRows.length) {
+            this.focusedIndex = 0;
+        }
         this.changeDetector.markForCheck();
     }
 

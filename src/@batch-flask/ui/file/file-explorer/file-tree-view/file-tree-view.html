@@ -33,7 +33,6 @@
         (dragleave)="dragLeaveRow($event)"
         (dragover)="handleDragHover($event)"
         (drop)="handleDropOnRow($event)">
-
         <div *ngIf="treeRows.length === 0" class="tree-view-empty">{{'file-explorer.noFiles' | i18n }}</div>
         <div *ngIf="fileNavigator.error" class="tree-view-error">{{fileNavigator.error.message}}</div>
 
