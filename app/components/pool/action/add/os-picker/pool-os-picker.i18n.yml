@@ -1,0 +1,6 @@
+pool-os-picker:
+  category:
+    distributions: Distributions
+    rendering: Graphics and rendering
+    container: Container
+    dataScience: Data science
