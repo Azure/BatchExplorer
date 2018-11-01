@@ -1,5 +1,10 @@
 <bl-card [class]="type">
-    <div class="summary-container" [ngClass]="height" (click)="showDetails = !showDetails && details.children.length !== 0" [class.expandable]="details.children.length !== 0">
+    <bl-clickable class="summary-container"
+        [ngClass]="height"
+        [tabindex]="details.children.length !== 0 ? 0 : -1"
+        (do)="showDetails = !showDetails && details.children.length !== 0"
+        [class.expandable]="details.children.length !== 0"
+        [attr.aria-expanded]="showDetails">
         <ng-content select="[code]"></ng-content>
         <div class="message">
             <ng-content select="[message]"></ng-content>
@@ -14,9 +19,12 @@
                     <i class="fa fa-check"></i>Fixed
                 </span>
             </bl-clickable>
-            <div class="other-fixes-btn" *ngIf="otherFixes.length !== 0" (mouseenter)="state === errorStates.Error && showOtherFixes = true"  [class.disabled]="state !== errorStates.Error">
+            <bl-clickable class="other-fixes-btn" *ngIf="otherFixes.length !== 0"
+                (mouseenter)="state === errorStates.Error && showOtherFixes = true"
+                (do)="state === errorStates.Error && showOtherFixes = !showOtherFixes"
+                [class.disabled]="state !== errorStates.Error">
                 <i class="fa fa-plus"></i>
-            </div>
+            </bl-clickable>
             <div *ngIf="showOtherFixes" class="other-fixes">
                 <bl-clickable *ngFor="let otherFix of otherFixes;trackBy: trackByFn" class="other-fix" (do)="triggerFix(otherFix)">
                     {{otherFix.fixMessage}}
@@ -24,7 +32,7 @@
             </div>
         </div>
         <i class="caret fa" [class.fa-caret-left]="!showDetails" [class.fa-caret-down]="showDetails" *ngIf="details.children.length !== 0"></i>
-    </div>
+    </bl-clickable>
     <div class="details-container" [hidden]="!showDetails" #details>
         <ng-content select="[details]"></ng-content>
     </div>

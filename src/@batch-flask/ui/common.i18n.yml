@@ -4,3 +4,4 @@ common:
   yes: "Yes"
   no: "No"
   configuration: Configuration
+  confirm: Confirm
