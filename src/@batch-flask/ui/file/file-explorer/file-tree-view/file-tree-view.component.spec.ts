@@ -6,6 +6,7 @@ import {
     ButtonsModule,
     DialogService,
     File,
+    ToolbarModule,
 } from "@batch-flask/ui";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";
 import { click, rightClick } from "test/utils/helpers";
@@ -98,7 +99,7 @@ describe("FileTreeViewComponent", () => {
         contextMenuServiceSpy = new ContextMenuServiceMock();
         notificationServiceSpy = new NotificationServiceMock();
         TestBed.configureTestingModule({
-            imports: [ButtonsModule, FocusSectionModule, ElectronTestingModule],
+            imports: [ButtonsModule, FocusSectionModule, ElectronTestingModule, ToolbarModule],
             declarations: [FileTreeViewComponent, FileTreeViewRowComponent, TestComponent],
             providers: [
                 { provide: DialogService, useValue: null },

@@ -1,7 +1,8 @@
+@import "app/styles/variables";
+
 bl-refresh-btn {
     .fa-check {
-        color: map-get($success, 800);
-        // overflow: hidden;
+        color: $success-color;
     }
 
     .fa-warning {
@@ -15,6 +16,3 @@ bl-refresh-btn {
     }
 }
 
-.fa-ban {
-    color: $danger-color;
-}

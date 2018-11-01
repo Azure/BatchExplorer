@@ -20,12 +20,12 @@ bl-file-or-directory-picker {
         width: 100%;
         height: 100%;
         position: absolute;
-        background-color: white;
-        border: 2px dashed $alto;
+        background-color: $secondary-background;
+        border: 2px dashed $border-color;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: $alto;
+        color: $primary-text;
 
         > .fa-upload {
             font-size: 36px;

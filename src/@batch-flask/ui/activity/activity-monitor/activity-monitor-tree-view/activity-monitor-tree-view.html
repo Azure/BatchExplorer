@@ -1,9 +1,9 @@
-<div class="tree-view-header">
-    <div class="name">{{name}}</div>
-    <bl-clickable class="clear-all" [title]="xButtonTitle" (do)="xButtonClicked()">
+<bl-toolbar>
+    <div toolbarLabel>{{name}}</div>
+    <bl-clickable toolbarAction class="clear-all" [title]="xButtonTitle" (do)="xButtonClicked()">
         <i class="fa fa-times"></i>
     </bl-clickable>
-</div>
+</bl-toolbar>
 <bl-focus-section *ngIf="activities.length > 0"
     class="tree-view-content"
     (focus)="setFocus(true)"

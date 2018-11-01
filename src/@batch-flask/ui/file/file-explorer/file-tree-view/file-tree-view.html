@@ -1,19 +1,19 @@
-<div class="tree-view-header">
-    <bl-clickable class="caret" (do)="toggleExpandTreeView()" [attr.aria-expanded]="expanded" attr.aria-owns="{{id}}-content" attr.aria-labelledby="{{id}}_name">
-        <i class="fa" [class.fa-caret-down]="expanded" [class.fa-caret-right]="!expanded"></i>
-    </bl-clickable>
-    <bl-clickable id="{{id}}_name" class="name" (do)="handleClickTreeViewHeader()">{{name}}</bl-clickable>
-    <span class="error" *ngIf="fileNavigator.error" [title]="fileNavigator.error.code">
-        <i class="fa fa-warning"></i>
-    </span>
-    <bl-clickable (do)="refresh()" [disabled]="refreshing" class="refresh">
-        <i class="fa fa-refresh action" title="Refresh" *ngIf="!refreshing"></i>
-        <i class="fa fa-refresh fa-spin action" title="Refreshing" *ngIf="refreshing"></i>
-    </bl-clickable>
-    <bl-clickable (do)="collapseAll()" class="collapse-all">
-        <i class="fa fa-compress collapse-all action" title="Collapse all"></i>
-    </bl-clickable>
-</div>
+<bl-toolbar class="tree-view-header">
+        <bl-clickable toolbarAction class="caret" (do)="toggleExpandTreeView()" [attr.aria-expanded]="expanded" attr.aria-owns="{{id}}-content" attr.aria-labelledby="{{id}}_name">
+            <i class="fa" [class.fa-caret-down]="expanded" [class.fa-caret-right]="!expanded"></i>
+        </bl-clickable>
+        <bl-clickable toolbarLabel id="{{id}}_name" class="name" (do)="handleClickTreeViewHeader()">{{name}}</bl-clickable>
+        <span toolbarError *ngIf="fileNavigator.error" [title]="fileNavigator.error.code">
+            <i class="fa fa-warning"></i>
+        </span>
+        <bl-clickable toolbarAction (do)="refresh()" [disabled]="refreshing" class="refresh">
+            <i class="fa fa-refresh action" title="Refresh" *ngIf="!refreshing"></i>
+            <i class="fa fa-refresh fa-spin action" title="Refreshing" *ngIf="refreshing"></i>
+        </bl-clickable>
+        <bl-clickable toolbarAction (do)="collapseAll()" class="collapse-all">
+            <i class="fa fa-compress collapse-all action" title="Collapse all"></i>
+        </bl-clickable>
+    </bl-toolbar>
 <div *ngIf="expanded"
     id="{{id}}-content"
     role="tree"

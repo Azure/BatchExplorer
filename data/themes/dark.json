@@ -1,7 +1,7 @@
 {
   "$schema": "./theme.schema.json",
   "primary": "#61afef",
-  "danger": "#A63234",
+  "danger": "#e06c75",
   "warn": "#f4ad42",
   "success": "#4caf50",
   "main-background": "#21252B",
@@ -12,7 +12,7 @@
   "editor": "vs-dark",
   "text": {
     "primary": "#cccccc",
-    "secondary": "#A7A8A9"
+    "secondary": "#a7a8a9"
   },
   "breadcrumb": {
     "text": "white",
@@ -20,7 +20,7 @@
     "hover-background": "#666666"
   },
   "header": {
-    "text": "white",
+    "text": "#9da5b4",
     "background": "#333333",
     "hover-background": "#757575"
   },

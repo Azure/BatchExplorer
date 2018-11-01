@@ -10,6 +10,7 @@ import { LoadingModule } from "@batch-flask/ui/loading";
 import { QuickListModule } from "@batch-flask/ui/quick-list";
 import { SplitPaneModule } from "@batch-flask/ui/split-pane";
 import { TableModule } from "@batch-flask/ui/table";
+import { ToolbarModule } from "@batch-flask/ui/toolbar";
 import { FileExplorerTabsComponent } from "./file-explorer-tabs";
 import { FileExplorerComponent } from "./file-explorer.component";
 import { FileTableViewComponent } from "./file-table-view";
@@ -38,6 +39,7 @@ const publicComponents = [
         ReactiveFormsModule,
         FormsModule,
         I18nUIModule,
+        ToolbarModule,
     ],
     declarations: [...privateComponents, publicComponents],
     exports: publicComponents,

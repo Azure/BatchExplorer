@@ -5,6 +5,8 @@ import {
 import { autobind } from "@batch-flask/core";
 import { Observable, Subscription } from "rxjs";
 
+import "./refresh-btn.scss";
+
 export enum RefreshStatus {
     Idle,
     Refreshing,
