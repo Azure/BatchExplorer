@@ -32,7 +32,7 @@ bl-select {
             outline: none;
 
             &:focus {
-                border-bottom: 2px solid $input-focus-border-color;
+                border: 1px solid $input-focus-border-color;
             }
 
             > .label {
@@ -67,7 +67,7 @@ bl-select {
             color: $input-text-color;
 
             &:focus {
-                border-bottom: 2px solid $input-focus-border-color;
+                border: 1px solid $input-focus-border-color;
             }
 
             &::placeholder {
