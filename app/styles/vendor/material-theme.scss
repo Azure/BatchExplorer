@@ -30,11 +30,16 @@ $mat-theme: mat-light-theme($mat-primary, $mat-accent);
 
 mat-tab-group:not(.form-tabs) {
     .mat-tab-label {
+        color: $primary-text !important;
+    }
+}
+
+mat-tab-group:not(.form-tabs) {
+    .mat-tab-label {
         opacity: 0.8 !important;
         border-right: 1px solid #ddd;
         height: 32px;
         line-height: 32px;
-        color: $primary-text;
 
         &.mat-tab-label-active {
         }
