@@ -2,7 +2,7 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { ServerError } from "@batch-flask/core";
-import { ClickableComponent } from "@batch-flask/ui";
+import { ClickableComponent, ToolbarModule } from "@batch-flask/ui";
 import { AutoScaleFormulaEvaluation, Pool } from "app/models";
 import { PoolService } from "app/services";
 import { AsyncSubject } from "rxjs";
@@ -64,7 +64,7 @@ describe("EvaluateAutoScaleForumlaComponent", () => {
             evaluateAutoScale: jasmine.createSpy("evaluateAutoScaleFormula").and.returnValue(response),
         };
         TestBed.configureTestingModule({
-            imports: [],
+            imports: [ToolbarModule],
             declarations: [EvaluateAutoScaleForumlaComponent, TestComponent, ClickableComponent],
             providers: [
                 { provide: PoolService, useValue: poolServiceSpy },

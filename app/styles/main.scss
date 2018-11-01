@@ -23,19 +23,12 @@
 // Job styles
 @import "./job/base";
 
-//Task styles
-@import "./task/base";
-@import "./task/output";
-
 // Partial styles
 @import "./partials/grid";
-@import "./partials/heading";
 @import "./partials/loading-indicators";
-@import "./partials/refresh-btn";
 @import "./partials/icons";
 
 // Vendor styles
-@import "./vendor/angular-extras";
 @import "./vendor/material-theme.scss";
 
 select {

@@ -160,7 +160,7 @@ mat-button-toggle-group {
 
         &.mat-button-toggle-checked {
             background-color: $primary-color;
-            color: white;
+            color: $primary-contrast-color;
         }
 
         .mat-button-toggle-label-content {

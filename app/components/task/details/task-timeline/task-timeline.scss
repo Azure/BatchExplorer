@@ -28,7 +28,7 @@ bl-task-timeline {
                 border-radius: $tile-size / 2;
 
                 > .fa {
-                    color: white;
+                    color: $main-background;
                 }
                 > .subtitle {
                     font-size: 12px;

@@ -37,7 +37,6 @@ bl-sidebar-bookmarks {
 
         > i.fa {
             flex: 0 0 30px;
-            background-color: white;
             color: $primary-color-dark;
             display: flex;
             align-items: center;
@@ -46,7 +45,6 @@ bl-sidebar-bookmarks {
             cursor: pointer;
 
             &:hover {
-                color: white;
                 background-color: map-get($danger, 400);
             }
 
@@ -67,7 +65,7 @@ bl-sidebar-bookmarks {
 
         .count {
             font-size: 0.7em;
-            color: whitesmoke;
+            color: $danger-contrast-color;
             position: absolute;
             left: 0;
             top: 0;

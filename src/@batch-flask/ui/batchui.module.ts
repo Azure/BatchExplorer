@@ -53,6 +53,7 @@ import { TableModule } from "./table";
 import { TabsModule } from "./tabs";
 import { TagsModule } from "./tags";
 import { TimespanComponent } from "./timespan";
+import { ToolbarModule } from "./toolbar";
 import { VirtualScrollModule } from "./virtual-scroll";
 import { VTabsModule } from "./vtabs";
 
@@ -90,6 +91,7 @@ const modules = [
     TableModule,
     TabsModule,
     TagsModule,
+    ToolbarModule,
     FormModule,
     QuotasModule,
     ServerErrorModule,

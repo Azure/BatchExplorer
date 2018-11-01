@@ -45,22 +45,4 @@ bl-all-job-graphs-home {
             height: 50%;
         }
     }
-
-    .info-overlay {
-        $info-overlay-width: 400px;
-        $info-overlay-height: 70px;
-        position: absolute;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        top: calc(50% - #{$info-overlay-height/2});
-        left: calc(50% - #{$info-overlay-width/2});
-        margin: auto;
-        font-size: 16px;
-        width: $info-overlay-width;
-        height: $info-overlay-height;
-        background: $mineshaft-grey;
-        color: white;
-        opacity: 0.5;
-    }
 }
