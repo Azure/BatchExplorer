@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
 import { autobind } from "@batch-flask/core";
 import { AsyncSubject, Observable } from "rxjs";
@@ -8,6 +8,7 @@ import "./confirmation-dialog.scss";
 @Component({
     selector: "bl-confirmation-dialog",
     templateUrl: "confirmation-dialog.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmationDialogComponent {
     public title: string;

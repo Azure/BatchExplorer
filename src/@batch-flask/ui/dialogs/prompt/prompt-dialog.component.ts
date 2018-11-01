@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { AsyncValidatorFn, FormControl, FormGroup, ValidatorFn } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
 import { autobind } from "@batch-flask/core";
@@ -8,6 +8,7 @@ import { ValidatorMessage } from "../dialog.service";
 @Component({
     selector: "bl-prompt-dialog",
     templateUrl: "prompt-dialog.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PromptDialogComponent {
     public title: string;
@@ -42,7 +43,7 @@ export class PromptDialogComponent {
         this.response.complete();
     }
 
-    public trackByFn(index, entry: ValidatorMessage) {
+    public trackByFn(_, entry: ValidatorMessage) {
       return entry.code;
     }
 

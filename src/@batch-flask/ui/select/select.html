@@ -31,7 +31,7 @@
    <ng-container *ngIf="dropdownOpen && filterable">
        <input class="select-filter"
             #filterInput
-            role="textbox"
+            role="combobox"
             [ngModel]="filter"
             (ngModelChange)="filterChanged($event)"
             placeholder="Filter items..."
