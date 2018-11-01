@@ -100,6 +100,9 @@
       <trans-unit id="common.configuration">
         <source>Configuration</source>
       </trans-unit>
+      <trans-unit id="common.confirm">
+        <source>Confirm</source>
+      </trans-unit>
       <trans-unit id="common.loading">
         <source>Loading</source>
       </trans-unit>
@@ -180,6 +183,9 @@
       </trans-unit>
       <trans-unit id="file-explorer">
         <source/>
+      </trans-unit>
+      <trans-unit id="file-explorer.noFiles">
+        <source>No files</source>
       </trans-unit>
       <trans-unit id="file-explorer.noPathMatch">
         <source>No files found for "{path}"</source>
