@@ -26,13 +26,15 @@
     (keydown)="handleKeyboardNavigation($event)"
     (contextmenu)="showContextMenu($event)">
 
-    <div *ngIf="fileNavigator.error" class="tree-view-error">{{fileNavigator.error.message}}</div>
     <div class="tree-rows-container"
         [class.drop-target]="dropTargetPath === ''"
         (dragenter)="dragEnterRow($event)"
         (dragleave)="dragLeaveRow($event)"
         (dragover)="handleDragHover($event)"
         (drop)="handleDropOnRow($event)">
+
+        <div *ngIf="treeRows.length === 0" class="tree-view-empty">No files</div>
+        <div *ngIf="fileNavigator.error" class="tree-view-error">{{fileNavigator.error.message}}</div>
 
         <bl-file-tree-view-row *ngFor="let treeRow of treeRows; let  i = index; trackBy: treeRowTrackBy"
             id="{{id}}-row-{{i}}"
