@@ -2,7 +2,7 @@ import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { MaterialModule } from "@batch-flask/core";
-import { ActivityService, ActivityStatus, ButtonsModule } from "@batch-flask/ui";
+import { ActivityService, ActivityStatus, ButtonsModule, ToolbarModule } from "@batch-flask/ui";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";
 import { VirtualScrollModule } from "@batch-flask/ui/virtual-scroll";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
@@ -66,7 +66,7 @@ describe("ActivityMonitorTreeViewComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [ButtonsModule, MaterialModule, FocusSectionModule, VirtualScrollModule],
+            imports: [ButtonsModule, MaterialModule, FocusSectionModule, VirtualScrollModule, ToolbarModule],
             declarations: [
                 TestComponent, ActivityMonitorTreeViewComponent,
                 ActivityMonitorItemComponent, ActivityMonitorItemActionComponent,
