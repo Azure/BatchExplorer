@@ -19,7 +19,6 @@ bl-select {
     > .select-button-container {
         height: $button-height;
         background-color: $input-background-color;
-        border: 1px solid $input-border-color;
         color: $input-text-color;
 
         > .select-button {
@@ -30,6 +29,7 @@ bl-select {
             vertical-align: middle;
             width: 100%;
             outline: none;
+            border: 1px solid $input-border-color;
 
             &:focus {
                 border: 1px solid $input-focus-border-color;
