@@ -1,12 +1,13 @@
-<div *ngIf="loadingStatus === LoadingStatus.Ready" style="padding: 10px;">
+<div class="inputs" *ngIf="loadingStatus === LoadingStatus.Ready" style="padding: 10px;">
     <bl-form-field>
-        <bl-select [formControl]="customImage" attr.aria-describedby="{{id}}-error-msg">
+        <bl-select placeholder="{{'custom-image-picker.customImage.label' | i18n}}" [formControl]="customImage" attr.aria-describedby="{{id}}-error-msg">
             <bl-option *ngFor="let image of customImages;trackBy: trackResource" [value]="image.id" [label]="image.name"></bl-option>
         </bl-select>
     </bl-form-field>
     <bl-form-field>
-        <bl-select [formControl]="nodeAgentSku">
-            <bl-option *ngFor="let nodeAgent of nodeAgentSkus;trackBy: trackNodeAgentSku" [value]="nodeAgent.id"
+        <bl-select placeholder="{{'custom-image-picker.nodeAgentSku.label' | i18n}}" [formControl]="nodeAgentSku">
+            <bl-option *ngFor="let nodeAgent of nodeAgentSkus;trackBy: trackNodeAgentSku"
+                [value]="nodeAgent.id"
                 [label]="nodeAgent.id"></bl-option>
         </bl-select>
     </bl-form-field>

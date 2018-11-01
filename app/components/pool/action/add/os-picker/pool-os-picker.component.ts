@@ -57,7 +57,6 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
     public nodeAgentSku: FormControl<string> = new FormControl();
     public customImagesEmptyMsg: string;
     public customImagesErrorMsg: string;
-    public nodeAgentSkus: NodeAgentSku[] = [];
 
     private _propagateChange: (value: PoolOSPickerModel) => void = null;
     private _nodeAgentSkuMap: PoolOsSkus = new PoolOsSkus();
@@ -65,9 +64,6 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
 
     constructor(
         private poolOsService: PoolOsService) {
-        this._subs.push(this.poolOsService.nodeAgentSkus.subscribe((result) => {
-            this.nodeAgentSkus = result.toArray();
-        }));
         this._subs.push(this.poolOsService.offers.subscribe((offers) => {
             this._nodeAgentSkuMap = offers;
         }));

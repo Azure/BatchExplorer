@@ -1,11 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component,
+    Input, OnDestroy, OnInit, forwardRef,
+} from "@angular/core";
 import {
     AbstractControl, ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
 } from "@angular/forms";
 import { ServerError } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui";
-import { ArmBatchAccount, Resource } from "app/models";
-import { BatchAccountService, ComputeService } from "app/services";
+import { ArmBatchAccount, NodeAgentSku, Resource } from "app/models";
+import { BatchAccountService, ComputeService, PoolOsService } from "app/services";
 import { Subject, of } from "rxjs";
 import { switchMap, takeUntil } from "rxjs/operators";
 
@@ -26,6 +29,7 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
     @Input() public id = `bl-custom-image-picker-${idCounter++}`;
 
     public customImages: Resource[] = [];
+    public nodeAgentSkus: NodeAgentSku[];
 
     public customImage = new FormControl();
     public nodeAgentSku = new FormControl();
@@ -41,11 +45,19 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
     constructor(
         private accountService: BatchAccountService,
         private computeService: ComputeService,
+        private poolOsService: PoolOsService,
         private changeDetector: ChangeDetectorRef) {
 
     }
 
     public ngOnInit() {
+        this.poolOsService.nodeAgentSkus.pipe(
+            takeUntil(this._destroy),
+        ).subscribe((result) => {
+            this.nodeAgentSkus = result.toArray();
+            this.changeDetector.markForCheck();
+        });
+
         this.accountService.currentAccount.pipe(
             takeUntil(this._destroy),
             switchMap((account) => {
