@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, O
 import { Sku } from "app/models";
 import { PoolUtils } from "app/utils";
 
+import "./os-offer-tile.scss";
+
 @Component({
     selector: "bl-os-offer-tile",
     templateUrl: "os-offer-tile.html",

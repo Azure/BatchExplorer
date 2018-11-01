@@ -2,13 +2,17 @@
     <div class="icon">
         <bl-icon [icon]="icon"></bl-icon>
     </div>
-    <div class="title">
-        <ng-content></ng-content>
+    <div class="details">
+        <div class="title">
+            <ng-content></ng-content>
+        </div>
+        <div class="selected-version">
+            <ng-container *ngIf="active">{{selectedSku}}</ng-container>
+        </div>
     </div>
 </div>
-<button class="select-version" [matMenuTriggerFor]="menu">
-    <span *ngIf="!active">Select Version<i class="fa fa-caret-down"></i></span>
-    <span *ngIf="active">{{selectedSku}}</span>
+<button class="select-version" [matMenuTriggerFor]="menu" title="Select version">
+    <i class="fa fa-cog"></i>
 </button>
 <mat-menu #menu="matMenu">
     <button mat-menu-item *ngFor="let sku of skus;trackBy: trackSku" (click)="onClickSku(sku)">{{sku.name}}</button>
