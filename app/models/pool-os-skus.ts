@@ -12,6 +12,9 @@ const dataScienceVms = {
     "standard-data-science-vm": {
         osType: "windows",
     },
+    "dsvm-windows": {
+        osType: "windows",
+    },
 };
 
 const renderingPublisher = "batch";
