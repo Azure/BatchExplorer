@@ -616,6 +616,18 @@
       <trans-unit id="resource-permission-button.removeAccess">
         <source>Remove access</source>
       </trans-unit>
+      <trans-unit id="settings">
+        <source/>
+      </trans-unit>
+      <trans-unit id="settings.defaultSettings">
+        <source>Default settings</source>
+      </trans-unit>
+      <trans-unit id="settings.title">
+        <source>Settings</source>
+      </trans-unit>
+      <trans-unit id="settings.userSettings">
+        <source>User settings</source>
+      </trans-unit>
       <trans-unit id="task-configuration">
         <source/>
       </trans-unit>
