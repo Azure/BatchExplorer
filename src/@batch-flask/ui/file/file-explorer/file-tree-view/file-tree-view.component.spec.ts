@@ -1,6 +1,7 @@
 import { Component, DebugElement, OnDestroy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import {
     ButtonsModule,
@@ -9,6 +10,7 @@ import {
     ToolbarModule,
 } from "@batch-flask/ui";
 import { FocusSectionModule } from "@batch-flask/ui/focus-section";
+import { I18nUIModule } from "@batch-flask/ui/i18n";
 import { click, rightClick } from "test/utils/helpers";
 import {
     ContextMenuServiceMock,
@@ -99,7 +101,10 @@ describe("FileTreeViewComponent", () => {
         contextMenuServiceSpy = new ContextMenuServiceMock();
         notificationServiceSpy = new NotificationServiceMock();
         TestBed.configureTestingModule({
-            imports: [ButtonsModule, FocusSectionModule, ElectronTestingModule, ToolbarModule],
+            imports: [
+                ButtonsModule, FocusSectionModule, ElectronTestingModule,
+                ToolbarModule, I18nTestingModule, I18nUIModule,
+            ],
             declarations: [FileTreeViewComponent, FileTreeViewRowComponent, TestComponent],
             providers: [
                 { provide: DialogService, useValue: null },
