@@ -5,6 +5,6 @@ export * from "./container-images-picker.component";
 export * from "./container-registry-picker.component";
 export * from "./license-eula-dialog";
 export * from "./pool-create-basic-dialog.component";
-export * from "./pool-os-picker.component";
-export * from "./os-offer-tile.component";
+export * from "./os-picker";
+export * from "./os-picker/os-offer-tile/os-offer-tile.component";
 export * from "./vm-size-picker";

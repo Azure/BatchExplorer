@@ -1,6 +1,6 @@
 <ng-container [formGroup]="form">
+    <div class="caption" [hidden]="hideCaption">{{label}}</div>
     <table class="noselect" cellspacing="0" cellpadding="0" formArrayName="items" [attr.aria-label]="label">
-        <div class="caption" [hidden]="hideCaption">{{label}}</div>
         <thead>
             <tr>
                 <th *ngFor="let column of columns;trackBy: trackColumn">

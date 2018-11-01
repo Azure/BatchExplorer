@@ -181,7 +181,9 @@ mat-button-toggle-group {
 
 
 .mat-menu-item {
-    &.cdk-focused {
+    height: 30px !important;
+    line-height: 30px !important;
+    &.cdk-program-focused, &.cdk-keyboard-focused {
         border: 1px solid $outline-color;
     }
 }

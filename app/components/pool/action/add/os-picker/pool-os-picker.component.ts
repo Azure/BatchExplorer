@@ -1,4 +1,4 @@
-import { Component, OnDestroy, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
@@ -37,6 +37,7 @@ export enum CustomImagesState {
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => PoolOsPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => PoolOsPickerComponent), multi: true },
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
     public value: PoolOSPickerModel;
