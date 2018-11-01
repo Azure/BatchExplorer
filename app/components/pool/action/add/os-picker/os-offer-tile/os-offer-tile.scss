@@ -46,6 +46,7 @@ bl-os-offer-tile {
         > .icon {
             padding: 10px 5px;
             height: 100%;
+            width: 50px;
             font-size: 40px;
             color: $primary-color;
             display: flex;
@@ -63,6 +64,10 @@ bl-os-offer-tile {
 
             > .title {
                 color: $primary-text;
+
+                > .name {
+                    text-transform: capitalize;
+                }
             }
 
             > .selected-version {

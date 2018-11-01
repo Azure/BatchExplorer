@@ -2,30 +2,25 @@
     <mat-tab label="Distributions" title="selectedSource === PoolOsSources.IaaS" class="banana">
         <bl-os-offer-tile *ngFor="let offer of vmOffers;trackBy: trackOffer" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
             [active]="isOsActive(offer)" [selectedSku]="selectedSku">
-            {{offer.name}}
         </bl-os-offer-tile>
         <bl-os-offer-tile name="WindowsServer" [skus]="cloudServiceOsFamilies" (pickOffer)="pickCloudService()" (pickSku)="pickCloudService($event.id)"
             [active]="value?.source === PoolOsSources.PaaS" [selectedSku]="selectedFamilyName">
-            <div>Windows Server</div>
             <div>(Cloud Service)</div>
         </bl-os-offer-tile>
     </mat-tab>
     <mat-tab label="Data science VM">
         <bl-os-offer-tile *ngFor="let offer of dataScienceOffers;trackBy: trackOffer" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
             [active]="isOsActive(offer)" [selectedSku]="selectedSku">
-            {{offer.name}}
         </bl-os-offer-tile>
     </mat-tab>
     <mat-tab label="Graphics and rendering">
         <bl-os-offer-tile *ngFor="let offer of renderingOffers;trackBy: trackOffer" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
             [active]="isOsActive(offer)" [selectedSku]="selectedSku">
-            {{offer.name}}
         </bl-os-offer-tile>
     </mat-tab>
     <mat-tab label="Container">
         <bl-os-offer-tile *ngFor="let offer of dockerOffers;trackBy: trackOffer" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickContainerOffer(offer)" (pickSku)="pickContainerSku(offer, $event)"
             [active]="isOsActive(offer)" [selectedSku]="selectedSku">
-            {{offer.name}}
         </bl-os-offer-tile>
         <div *ngIf="displayContainerConfiguration">
             <p style="padding-top: 10px;">

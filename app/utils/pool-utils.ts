@@ -20,12 +20,14 @@ export interface PoolPriceOptions {
 
 const iconMapping = {
     "UbuntuServer": Icons.ubuntu,
+    "ubuntu-server-container": Icons.ubuntu,
     "CentOS": Icons.centos,
     "CentOS-HPC": Icons.centos,
     "WindowsServer": Icons.windows,
     "Debian": Icons.debian,
     "Oracle-Linux": Icons.oracle,
     "linux-data-science-vm": Icons.linux,
+    "linux-data-science-vm-ubuntu": Icons.ubuntu,
     "openSUSE-Leap": Icons.openSUSE,
     "SLES": Icons.openSUSE,
     "SLES-HPC": Icons.openSUSE,

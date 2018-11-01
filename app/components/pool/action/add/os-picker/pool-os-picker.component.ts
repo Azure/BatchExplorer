@@ -128,7 +128,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
     }
 
     public pickOffer(offer: Offer) {
-        this.pickSku(offer, offer.skus.first());
+        this.pickSku(offer, offer.skus.last());
     }
 
     public pickSku(offer: Offer, sku: Sku) {

@@ -13,7 +13,7 @@ export class OsOfferTileComponent implements OnChanges {
 
     @Input() @HostBinding("class.active") public active: boolean;
 
-    @Input() public name: string;
+    @Input() @HostBinding("attr.title") public name: string;
 
     @Input() public selectedSku: string;
 
@@ -23,11 +23,13 @@ export class OsOfferTileComponent implements OnChanges {
 
     @Output() public pickSku = new EventEmitter();
 
+    public prettyName: string;
     public icon: any;
 
     public ngOnChanges(inputs) {
         if (inputs.name) {
             this.icon = PoolUtils.iconForOffer(this.name);
+            this.prettyName = this._computePrettyName(this.name);
         }
     }
 
@@ -39,7 +41,11 @@ export class OsOfferTileComponent implements OnChanges {
         this.pickSku.emit(sku);
     }
 
-    public trackSku(index, sku: Sku) {
+    public trackSku(_, sku: Sku) {
         return sku.name;
+    }
+
+    private _computePrettyName(name: string) {
+        return name.replace(/-/g, " ");
     }
 }

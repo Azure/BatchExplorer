@@ -28,9 +28,9 @@ $mat-theme: mat-light-theme($mat-primary, $mat-accent);
     margin-top: -25px;
 }
 
-mat-tab-group:not(.form-tabs) {
+mat-tab-group {
     .mat-tab-label {
-        color: $primary-text !important;
+        color: $primary-text;
     }
 }
 
