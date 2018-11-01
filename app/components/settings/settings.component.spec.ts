@@ -113,7 +113,7 @@ describe("SettingsComponent", () => {
         it("should validate invalid user settings", () => {
             expect(component.userSettings.valid).toBe(false);
 
-            const errorEl = de.query(By.css(".user-settings .editor-header .error"));
+            const errorEl = de.query(By.css(".user-settings .editor-header [toolbarError]"));
             expect(errorEl).not.toBeFalsy();
 
             expect(errorEl.nativeElement.textContent).toContain("Unexpected token } in JSON at position 12");
