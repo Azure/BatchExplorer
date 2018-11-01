@@ -1,5 +1,5 @@
 <mat-tab-group class="form-tabs" [@.disabled]="true">
-    <mat-tab label="Distributions" title="selectedSource === PoolOsSources.IaaS" class="banana">
+    <mat-tab [label]="'pool-os-picker.category.distributions' | i18n" title="selectedSource === PoolOsSources.IaaS" class="banana">
         <bl-os-offer-tile *ngFor="let offer of vmOffers;trackBy: trackOffer" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
             [active]="isOsActive(offer)" [selectedSku]="selectedSku">
         </bl-os-offer-tile>
@@ -8,17 +8,17 @@
             <div>(Cloud Service)</div>
         </bl-os-offer-tile>
     </mat-tab>
-    <mat-tab label="Data science VM">
+    <mat-tab [label]="'pool-os-picker.category.dataScience' | i18n">
         <bl-os-offer-tile *ngFor="let offer of dataScienceOffers;trackBy: trackOffer" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
             [active]="isOsActive(offer)" [selectedSku]="selectedSku">
         </bl-os-offer-tile>
     </mat-tab>
-    <mat-tab label="Graphics and rendering">
+    <mat-tab [label]="'pool-os-picker.category.rendering' | i18n">
         <bl-os-offer-tile *ngFor="let offer of renderingOffers;trackBy: trackOffer" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
             [active]="isOsActive(offer)" [selectedSku]="selectedSku">
         </bl-os-offer-tile>
     </mat-tab>
-    <mat-tab label="Container">
+    <mat-tab [label]="'pool-os-picker.category.container' | i18n">
         <bl-os-offer-tile *ngFor="let offer of dockerOffers;trackBy: trackOffer" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickContainerOffer(offer)" (pickSku)="pickContainerSku(offer, $event)"
             [active]="isOsActive(offer)" [selectedSku]="selectedSku">
         </bl-os-offer-tile>
