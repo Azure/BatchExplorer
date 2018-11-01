@@ -40,7 +40,9 @@ export class XliffSerializer {
             },
         };
 
-        for (const key of Object.keys(translations)) {
+        const keys = Object.keys(translations).sort();
+
+        for (const key of keys) {
             units.push({
                 $: { id: key },
                 source: translations[key],
