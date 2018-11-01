@@ -4,6 +4,8 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "@batch-flask/core";
+import { I18nTestingModule } from "@batch-flask/core/testing";
+import { I18nUIModule } from "@batch-flask/ui";
 import { ButtonComponent } from "@batch-flask/ui/buttons";
 import { EditorComponent } from "@batch-flask/ui/editor";
 import { PermissionService } from "@batch-flask/ui/permission";
@@ -48,7 +50,10 @@ describe("SettingsComponent", () => {
             saveUserSettings: jasmine.createSpy("saveUserSettings"),
         };
         TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, MaterialModule, NoopAnimationsModule, EditorTestingModule],
+            imports: [
+                ReactiveFormsModule, MaterialModule, NoopAnimationsModule,
+                EditorTestingModule, I18nTestingModule, I18nUIModule,
+            ],
             declarations: [SettingsComponent, TestComponent, ButtonComponent],
             providers: [
                 { provide: PermissionService, useValue: null },
