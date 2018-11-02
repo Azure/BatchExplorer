@@ -11,4 +11,4 @@
         </span>
     </div>
 </div>
-<div [hidden]="true" [id]="ariaDescribedBy">{{title}}</div>
+<div *ngIf="type !== 'square' && type !== 'plain'"[hidden]="true" [id]="ariaDescribedBy">{{title}}</div>
