@@ -28,5 +28,5 @@ jobs:
       - template: ./dependencies.yml
       - script: npm ci
         displayName: Install node modules
-      - task: ms.vss-governance-buildtask.governance-build-task-component-detection.ComponentGovernanceComponentDetection@0
+      - task: ComponentGovernanceComponentDetection@0
         displayName: 'Component Detection'
