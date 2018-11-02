@@ -66,12 +66,6 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
         }
     }
 
-    public get displayContainerConfiguration(): boolean {
-        return this.showContainerConfiguration
-            && this.value.virtualMachineConfiguration
-            && this.value.virtualMachineConfiguration.imageReference
-            && !this.value.virtualMachineConfiguration.imageReference.virtualMachineImageId;
-    }
     public value: PoolOSPickerModel;
 
     // Shared to the view
