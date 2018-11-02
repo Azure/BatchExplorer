@@ -74,11 +74,11 @@ bl-scrollable {
         width: $hover-srollbar-width;
         opacity: 0;
         transition: opacity 0.2s linear;
-        background: #6c6e71;
+        background: $secondary-text;
         background-clip: padding-box;
 
         &:active {
-            background-color: $secondary-text;
+            background-color: $primary-text;
         }
     }
 
