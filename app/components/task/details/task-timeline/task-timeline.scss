@@ -70,7 +70,7 @@ bl-task-timeline {
 
             &.locked > .tile {
                 color: $secondary-text;
-                background: $alto;
+                background: $secondary-text;
             }
 
             &.warn > .tile {
@@ -90,7 +90,7 @@ bl-task-timeline {
             margin-top: ($tile-size - $separator-height )/ 2;
 
             &.locked {
-                background: $alto;
+                background: $secondary-text;
             }
         }
     }

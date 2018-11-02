@@ -18,12 +18,11 @@ bl-file-too-large {
         width: 100px; // both same size looks better
 
         &:hover {
-            background: $primary-color
+            background: $primary-color;
         }
 
         &[disabled] {
             cursor: not-allowed;
-            background: $alto;
         }
     }
 
