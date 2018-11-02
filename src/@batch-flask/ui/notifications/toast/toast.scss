@@ -14,7 +14,7 @@ bl-toast {
 
     animation-name: animScale;
     animation-duration: 0.25s;
-    box-shadow: 1px 1px 5px 0 $alto;
+    box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.3);
     pointer-events: all;
 
     > .separator {
@@ -22,20 +22,23 @@ bl-toast {
     }
 
     &.success {
-        background-color: map-get($success, 500);
+        color: $success-contrast-color;
+        background-color: $success-color;
     }
 
     &.error {
-        background-color: map-get($danger, 300);
+        color: $danger-contrast-color;
+        background-color: $danger-color;
     }
 
     &.info {
-        color: $whitesmoke;
-        background-color: map-get($primary, 200);
+        color: $primary-contrast-color;
+        background-color: $primary-color;
     }
 
     &.warn {
-        background-color: map-get($warn, 400);
+        color: $warn-contrast-color;
+        background-color: $warn-color;
     }
 
     &.notification-hidden {
