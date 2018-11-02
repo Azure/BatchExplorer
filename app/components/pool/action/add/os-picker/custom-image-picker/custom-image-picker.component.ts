@@ -3,18 +3,24 @@ import {
     Input, OnDestroy, OnInit, forwardRef,
 } from "@angular/core";
 import {
-    AbstractControl, ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
+    AbstractControl, ControlValueAccessor, FormControl, FormGroup,
+    NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator,
 } from "@angular/forms";
 import { ServerError } from "@batch-flask/core";
 import { LoadingStatus } from "@batch-flask/ui";
 import { ArmBatchAccount, NodeAgentSku, Resource } from "app/models";
 import { BatchAccountService, ComputeService, PoolOsService } from "app/services";
 import { Subject, of } from "rxjs";
-import { switchMap, takeUntil } from "rxjs/operators";
+import { distinctUntilChanged, switchMap, takeUntil } from "rxjs/operators";
 
 import "./custom-image-picker.scss";
 
-let idCounter;
+export interface CustomImageSelection {
+    imageId: string;
+    nodeAgentSku: string;
+}
+
+let idCounter = 0;
 
 @Component({
     selector: "bl-custom-image-picker",
@@ -39,14 +45,33 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
 
     public errorMessage: string;
 
-    private _propagateChange: (imageId: string) => void;
     private _destroy = new Subject();
+    private _form: FormGroup;
 
     constructor(
         private accountService: BatchAccountService,
         private computeService: ComputeService,
         private poolOsService: PoolOsService,
         private changeDetector: ChangeDetectorRef) {
+
+        this._form = new FormGroup({
+            customImage: this.customImage,
+            nodeAgentSku: this.nodeAgentSku,
+        });
+        this._form.valueChanges.pipe(
+            takeUntil(this._destroy),
+            distinctUntilChanged(),
+        ).subscribe(({ customImage, nodeAgentSku }) => {
+            if (customImage || nodeAgentSku) {
+                this._propagateChange({
+                    imageId: customImage,
+                    nodeAgentSku,
+                });
+            } else {
+                this._propagateChange(null);
+            }
+            this.changeDetector.markForCheck();
+        });
 
     }
 
@@ -93,18 +118,35 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
         return null;
     }
 
-    public writeValue(imageId: string): void {
+    public writeValue(value: CustomImageSelection | null): void {
         // Write
-        this._propagateChange(imageId);
+        if (value) {
+            const formValue = this._form.value;
+
+            if (formValue.customImage === value.imageId && formValue.nodeAgentSku === value.nodeAgentSku) {
+                return;
+            }
+            this._form.patchValue({
+                customImage: value.imageId,
+                nodeAgentSKU: value.nodeAgentSku,
+            });
+        } else {
+            this._form.patchValue({
+                customImage: null,
+                nodeAgentSKU: null,
+            });
+        }
     }
 
-    public registerOnChange(fn: (imageId: string) => void): void {
+    public registerOnChange(fn: (result: CustomImageSelection | null) => void): void {
         this._propagateChange = fn;
     }
 
     public registerOnTouched(fn: any): void {
         //    nothing
     }
+
+    private _propagateChange: (result: CustomImageSelection | null) => void = () => null;
 
     // if (!this.hasCustomImage) {
     //     return;

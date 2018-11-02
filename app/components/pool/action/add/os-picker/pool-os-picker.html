@@ -22,21 +22,21 @@
         <bl-os-offer-tile *ngFor="let offer of dockerOffers;trackBy: trackOffer" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickContainerOffer(offer)" (pickSku)="pickContainerSku(offer, $event)"
             [active]="isOsActive(offer)" [selectedSku]="selectedSku">
         </bl-os-offer-tile>
-        <div *ngIf="displayContainerConfiguration">
-            <p style="padding-top: 10px;">
-                Please specify the container configuration for the pool.
-            </p>
-            <bl-form-picker [formControl]="containerConfiguration" (clear)="clearContaienrConfiguration()" #containerConfigurationPicker>
-                <div no-value-title>Container configuration</div>
-                <div value-title>{{containerConfiguration?.value?.type}}</div>
-                <div nested-form>
-                    <bl-container-configuration [formControl]="containerConfigurationPicker.nestedValue"></bl-container-configuration>
-                </div>
-            </bl-form-picker>
-        </div>
     </mat-tab>
     <mat-tab label="Custom image">
-        <bl-custom-image-picker></bl-custom-image-picker>
+        <bl-custom-image-picker [ngModel]="customImage" (ngModelChange)="pickCustomImage($event)"></bl-custom-image-picker>
     </mat-tab>
 </mat-tab-group>
 <p *ngIf="selectedSku" style="padding-top: 10px;">Based on your selection, node agent <b>'{{selectedNodeAgentId}}'</b> will be used</p>
+<div *ngIf="displayContainerConfiguration">
+    <p style="padding-top: 10px;">
+        Please specify the container configuration for the pool.
+    </p>
+    <bl-form-picker [formControl]="containerConfiguration" (clear)="clearContaienrConfiguration()" #containerConfigurationPicker>
+        <div no-value-title>Container configuration</div>
+        <div value-title>{{containerConfiguration?.value?.type}}</div>
+        <div nested-form>
+            <bl-container-configuration [formControl]="containerConfigurationPicker.nestedValue"></bl-container-configuration>
+        </div>
+    </bl-form-picker>
+</div>

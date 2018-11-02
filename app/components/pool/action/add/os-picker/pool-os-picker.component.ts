@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, forwardRef } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
@@ -7,6 +7,7 @@ import { NodeAgentSku, Offer, PoolOsSkus, Resource, Sku } from "app/models";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
 import { PoolOsService } from "app/services";
 import { Subscription } from "rxjs";
+import { CustomImageSelection } from "./custom-image-picker";
 
 import "./pool-os-picker.scss";
 
@@ -34,6 +35,43 @@ const cloudServiceOsFamilies = [{
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
+
+    public get vmOffers() {
+        return this._nodeAgentSkuMap.vmOffers;
+    }
+
+    public get dataScienceOffers() {
+        return this._nodeAgentSkuMap.dataScienceOffers;
+    }
+
+    public get renderingOffers() {
+        return this._nodeAgentSkuMap.renderingOffers;
+    }
+
+    public get dockerOffers() {
+        return this._nodeAgentSkuMap.dockerOffers;
+    }
+
+    public get customImage(): CustomImageSelection {
+        if (this.value.source === PoolOsSources.PaaS) {
+            return null;
+        }
+        const config = this.value.virtualMachineConfiguration;
+        const ref = config && config.imageReference;
+        if (ref && ref.virtualMachineImageId) {
+            return {
+                imageId: ref.virtualMachineImageId,
+                nodeAgentSku: config.nodeAgentSKUId,
+            };
+        }
+    }
+
+    public get displayContainerConfiguration(): boolean {
+        return this.showContainerConfiguration
+            && this.value.virtualMachineConfiguration
+            && this.value.virtualMachineConfiguration.imageReference
+            && !this.value.virtualMachineConfiguration.imageReference.virtualMachineImageId;
+    }
     public value: PoolOSPickerModel;
 
     // Shared to the view
@@ -51,18 +89,11 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
     // Container configuration
     public containerConfiguration: FormControl = new FormControl();
     public showContainerConfiguration: boolean = false;
-
-    // Custom images
-    public customImage: FormControl<string> = new FormControl();
-    public nodeAgentSku: FormControl<string> = new FormControl();
-    public customImagesEmptyMsg: string;
-    public customImagesErrorMsg: string;
-
-    private _propagateChange: (value: PoolOSPickerModel) => void = null;
     private _nodeAgentSkuMap: PoolOsSkus = new PoolOsSkus();
     private _subs: Subscription[] = [];
 
     constructor(
+        private changeDetector: ChangeDetectorRef,
         private poolOsService: PoolOsService) {
         this._subs.push(this.poolOsService.offers.subscribe((offers) => {
             this._nodeAgentSkuMap = offers;
@@ -136,10 +167,9 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
         };
 
         this._updateSelection();
-        if (this._propagateChange) {
-            this._propagateChange(this.value);
-        }
+        this._propagateChange(this.value);
         this.showContainerConfiguration = false;
+        this.changeDetector.markForCheck();
     }
 
     public pickCloudService(version = null) {
@@ -153,41 +183,33 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
         };
 
         this._updateSelection();
-        if (this._propagateChange) {
-            this._propagateChange(this.value);
-        }
+        this._propagateChange(this.value);
         this.showContainerConfiguration = false;
+        this.changeDetector.markForCheck();
+    }
+
+    public pickCustomImage(result: CustomImageSelection | null) {
+        if (!result) {
+            return;
+        }
+        this.value = {
+            source: PoolOsSources.IaaS,
+            cloudServiceConfiguration: null,
+            virtualMachineConfiguration: {
+                imageReference: {
+                    virtualMachineImageId: result.imageId,
+                },
+                nodeAgentSKUId: result.nodeAgentSku,
+            },
+        };
+        this.showContainerConfiguration = true;
+        this._updateSelection();
+        this._propagateChange(this.value);
+        this.changeDetector.markForCheck();
     }
 
     public clearContaienrConfiguration() {
         this.containerConfiguration.patchValue(null);
-    }
-
-    public get vmOffers() {
-        return this._nodeAgentSkuMap.vmOffers;
-    }
-
-    public get dataScienceOffers() {
-        return this._nodeAgentSkuMap.dataScienceOffers;
-    }
-
-    public get renderingOffers() {
-        return this._nodeAgentSkuMap.renderingOffers;
-    }
-
-    public get dockerOffers() {
-        return this._nodeAgentSkuMap.dockerOffers;
-    }
-
-    public get hasCustomImage(): boolean {
-        return Boolean(this.nodeAgentSku.value && this.customImage.value);
-    }
-
-    public get displayContainerConfiguration(): boolean {
-        return this.showContainerConfiguration
-            && this.value.virtualMachineConfiguration
-            && this.value.virtualMachineConfiguration.imageReference
-            && !this.value.virtualMachineConfiguration.imageReference.virtualMachineImageId;
     }
 
     /**
@@ -201,17 +223,19 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
         return offer.name === this.selectedOffer && hasSku;
     }
 
-    public trackOffer(index, offer: Offer) {
+    public trackOffer(_, offer: Offer) {
         return offer.name;
     }
 
-    public trackResource(index, image: Resource) {
+    public trackResource(_, image: Resource) {
         return image.id;
     }
 
-    public trackNodeAgentSku(index, nodeAgent: NodeAgentSku) {
+    public trackNodeAgentSku(_, nodeAgent: NodeAgentSku) {
         return nodeAgent.id;
     }
+
+    private _propagateChange: (value: PoolOSPickerModel) => void = () => null;
 
     private _updateSelection() {
         const vmConfig = this.value && this.value.virtualMachineConfiguration;
@@ -235,13 +259,6 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
             containerRegistries: containerConfiguration.containerRegistries || [],
         } : null;
         this.containerConfiguration.patchValue(mappedContainerConfiguration);
-
-        // Reset custom image dropdown list if other categories are selected
-        const customImage = ref && ref.virtualMachineImageId;
-        if (!customImage) {
-            this.customImage.patchValue(null);
-            this.nodeAgentSku.patchValue(null);
-        }
     }
 
     /**

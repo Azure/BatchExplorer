@@ -2,6 +2,7 @@
     <bl-form-field>
         <bl-select placeholder="{{'custom-image-picker.customImage.label' | i18n}}" [formControl]="customImage" attr.aria-describedby="{{id}}-error-msg">
             <bl-option *ngFor="let image of customImages;trackBy: trackResource" [value]="image.id" [label]="image.name"></bl-option>
+            <bl-option [disabled]="true" *ngIf="customImages.length === 0">{{'custom-image-picker.noCustomImageAvailable' | i18n}}</bl-option>
         </bl-select>
     </bl-form-field>
     <bl-form-field>
@@ -12,19 +13,6 @@
         </bl-select>
     </bl-form-field>
 </div>
-<!-- <div *ngIf="state === CustomImagesState.Empty" style="padding: 10px;">
-    {{ customImagesEmptyMsg }}
-</div> -->
 <div *ngIf="loadingStatus === LoadingStatus.Error" id="{{id}}-error-msg" style="padding: 10px;">
     {{ customImagesErrorMsg }}
-</div>
-<div *ngIf="hasCustomImage">
-    <bl-form-picker [formControl]="containerConfiguration" (clear)="clearContaienrConfiguration()"
-        #containerConfigurationPicker>
-        <div no-value-title>Container configuration</div>
-        <div value-title>{{containerConfiguration?.value?.type}}</div>
-        <div nested-form>
-            <bl-container-configuration [formControl]="containerConfigurationPicker.nestedValue"></bl-container-configuration>
-        </div>
-    </bl-form-picker>
 </div>
