@@ -47,10 +47,10 @@ bl-task-timeline {
                 }
 
                 > .info {
-                    color: $dusty-grey;
+                    color: $secondary-text;
 
                     .warn {
-                        color: map-get($warn, 500);
+                        color: $warn-color;
                     }
 
                     .error {
@@ -69,12 +69,12 @@ bl-task-timeline {
             }
 
             &.locked > .tile {
-                color: $dusty-grey;
+                color: $secondary-text;
                 background: $alto;
             }
 
             &.warn > .tile {
-                background: map-get($warn, 500);
+                background: $warn-color;
             }
 
             &.error > .tile {
