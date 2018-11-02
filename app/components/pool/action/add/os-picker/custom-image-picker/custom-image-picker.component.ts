@@ -119,6 +119,7 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
     }
 
     public writeValue(value: CustomImageSelection | null): void {
+        console.log("Writing value", value);
         // Write
         if (value) {
             const formValue = this._form.value;
@@ -133,7 +134,7 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
         } else {
             this._form.patchValue({
                 customImage: null,
-                nodeAgentSKU: null,
+                nodeAgentSku: null,
             });
         }
     }
