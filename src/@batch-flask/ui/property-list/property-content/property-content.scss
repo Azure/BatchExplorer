@@ -35,9 +35,5 @@ bl-property-content {
             background-color: $selection-color;
             cursor: pointer;
         }
-
-        &:active {
-            background-color: $athensGrey;
-        }
     }
 }
