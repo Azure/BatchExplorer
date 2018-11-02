@@ -6,7 +6,7 @@ import * as d3 from "d3";
 import { List } from "immutable";
 
 import { I18nTestingModule, TelemetryTestingModule } from "@batch-flask/core/testing";
-import { ActivityService, DialogService, WorkspaceService } from "@batch-flask/ui";
+import { ActivityService, ClickableComponent, DialogService, WorkspaceService } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Node, NodeState, Pool } from "app/models";
 import { NodeService, PoolService } from "app/services";
@@ -63,7 +63,8 @@ describe("NodesHeatmapComponent", () => {
         TestBed.configureTestingModule({
             imports: [I18nTestingModule, TelemetryTestingModule],
             declarations: [
-                HeatmapMockComponent, NodesHeatmapComponent, NodesHeatmapLegendComponent, NodePreviewCardMockComponent,
+                HeatmapMockComponent, NodesHeatmapComponent, NodesHeatmapLegendComponent,
+                NodePreviewCardMockComponent, ClickableComponent,
             ],
             providers: [
                 { provide: NodeService, useValue: {} },
