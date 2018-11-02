@@ -11,11 +11,13 @@ import { click } from "test/utils/helpers";
 
 @Component({
     template: `
-        <bl-button [disabled]="disabled" icon="fa fa-stop" [action]="onAction" title="Stop" [color]="color">
+        <bl-button [disabled]="disabled" icon="fa fa-stop" [action]="onAction" title="Stop" [color]="color"
+            [type]="type">
         </bl-button>
     `,
 })
 class TestComponent {
+    public type = "square";
     public disabled: boolean = false;
 
     public onAction: jasmine.Spy;
@@ -81,10 +83,22 @@ describe("ButtonComponent", () => {
         expect(de.query(By.css(".fa-check"))).not.toBeFalsy();
     });
 
-    it("set aria-describedby by with title", () => {
+    it("set aria-describedby by with title only if not using an icon button", () => {
+        testComponent.type = "wide";
+        fixture.detectChanges();
         const describedbyId = de.attributes["aria-describedby"];
         const describedby = de.query(By.css(`#${describedbyId}`));
+        expect(describedby).not.toBeFalsy();
         expect(describedby.nativeElement.textContent).toContain("Stop");
+    });
+
+    it("doesn't set aria-describedby by with title if using an icon button", () => {
+        testComponent.type = "square";
+        fixture.detectChanges();
+
+        const describedbyId = de.attributes["aria-describedby"];
+        const describedby = de.query(By.css(`#${describedbyId}`));
+        expect(describedby).toBeFalsy();
     });
 
     describe("when disabled", () => {
