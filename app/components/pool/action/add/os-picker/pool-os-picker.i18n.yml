@@ -4,3 +4,4 @@ pool-os-picker:
     rendering: Graphics and rendering
     container: Container
     dataScience: Data science
+  containerConfiguration: Container configuration
