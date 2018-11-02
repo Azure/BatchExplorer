@@ -12,8 +12,6 @@ bl-file-too-large {
     bl-button {
         padding: 10px;
         cursor: pointer;
-        background: map-get($primary, 300);
-        color: $whitesmoke;
         margin-right: 10px;
         width: 100px; // both same size looks better
 

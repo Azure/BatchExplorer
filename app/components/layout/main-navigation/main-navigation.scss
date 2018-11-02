@@ -22,7 +22,7 @@ bl-app-nav {
             i.fa {
                 display: block;
                 margin: 0 auto;
-                color: $whitesmoke;
+                color: map-get($navigation-color, text);
             }
 
             .label {

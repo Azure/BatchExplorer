@@ -57,18 +57,6 @@ bl-node-connect {
                 text-align: center;
                 cursor: pointer;
                 position: relative;
-                color: $whitesmoke;
-                background-color: $primary-color;
-
-                &:hover {
-                    color: $whitesmoke;
-                    background-color: $primary-color-light;
-                }
-
-                &:active {
-                    color: $whitesmoke;
-                    background-color: $primary-color-dark;
-                }
 
                 .button-icon-frame {
                     position: absolute;

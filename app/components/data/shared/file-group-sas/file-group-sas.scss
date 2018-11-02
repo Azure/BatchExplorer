@@ -15,16 +15,16 @@ bl-file-group-sas {
         &.disabled[color] {
             cursor: not-allowed;
             background: map-get($primary, 50);
-            color: $whitesmoke;
+            color: $primary-contrast-color;
 
             &:hover, &:focus, &:active {
                 background: map-get($primary, 50);
-                color: $whitesmoke;
+                color: $primary-contrast-color;
             }
         }
 
         .fa-refresh {
-            color: $whitesmoke;
+            color: $main-background;
         }
     }
 }

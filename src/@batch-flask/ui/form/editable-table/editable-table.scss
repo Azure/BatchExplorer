@@ -94,14 +94,14 @@ bl-editable-table, .editable-table {
                 outline: none;
                 background: $danger-color;
                 > .fa {
-                    color: $whitesmoke;
+                    color: $danger-contrast-color;
                 }
             }
 
             &:active {
                 background: $danger-color;
                 > .fa {
-                    color: $whitesmoke;
+                    color: $danger-contrast-color;
                 }
             }
         }

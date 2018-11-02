@@ -10,13 +10,6 @@ bl-rpc-server-status {
         padding: 0 5px;
     }
 
-    .connected {
-        &:hover, &.active {
-            color: $primary-text;
-            background-color: $whitesmoke;
-        }
-    }
-
     &:not(.connected) {
         background-color: $primary-color;
 

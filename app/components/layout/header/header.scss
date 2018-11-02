@@ -44,7 +44,7 @@ bl-header {
     .logo {
         padding: 5px 10px 0;
         height: 100%;
-        color: $whitesmoke;
+        color: map-get($header-color, text);
         font-size: 16px;
 
         &:hover, &:focus {
