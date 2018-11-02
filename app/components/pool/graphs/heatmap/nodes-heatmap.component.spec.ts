@@ -33,18 +33,6 @@ export class HeatmapMockComponent {
     public interactive = true;
 }
 
-@Component({
-    selector: "bl-node-preview-card",
-    template: "",
-})
-export class NodePreviewCardMockComponent {
-    @Input()
-    public node: Node;
-
-    @Input()
-    public poolId: string;
-}
-
 describe("NodesHeatmapComponent", () => {
     let fixture: ComponentFixture<HeatmapMockComponent>;
     let testComponent: HeatmapMockComponent;
@@ -64,7 +52,7 @@ describe("NodesHeatmapComponent", () => {
             imports: [I18nTestingModule, TelemetryTestingModule],
             declarations: [
                 HeatmapMockComponent, NodesHeatmapComponent, NodesHeatmapLegendComponent,
-                NodePreviewCardMockComponent, ClickableComponent,
+                ClickableComponent,
             ],
             providers: [
                 { provide: NodeService, useValue: {} },

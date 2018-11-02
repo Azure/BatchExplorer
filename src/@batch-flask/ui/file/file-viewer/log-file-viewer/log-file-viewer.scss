@@ -41,8 +41,8 @@ bl-log-file-viewer {
             }
 
             &.following {
-                background: map-get($success, 500);
-                color: $whiteSmoke-darker;
+                background: $success-color;
+                color:$success-contrast-color;
             }
         }
     }
