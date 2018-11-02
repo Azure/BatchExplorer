@@ -35,7 +35,7 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
     @Input() public id = `bl-custom-image-picker-${idCounter++}`;
 
     public customImages: Resource[] = [];
-    public nodeAgentSkus: NodeAgentSku[];
+    public nodeAgentSkus: NodeAgentSku[] = [];
 
     public customImage = new FormControl();
     public nodeAgentSku = new FormControl();
@@ -86,11 +86,11 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
         this.accountService.currentAccount.pipe(
             takeUntil(this._destroy),
             switchMap((account) => {
-                if (!(account instanceof ArmBatchAccount)) { return of(null); }
+                if (!(account instanceof ArmBatchAccount)) { return of([]); }
                 const subscriptionId = account && account.subscription && account.subscription.subscriptionId;
                 const location = account.location;
                 if (!subscriptionId || !location) {
-                    return of(null);
+                    return of([]);
                 }
 
                 return this.computeService.listCustomImages(subscriptionId, location);
@@ -128,7 +128,7 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
             }
             this._form.patchValue({
                 customImage: value.imageId,
-                nodeAgentSKU: value.nodeAgentSku,
+                nodeAgentSku: value.nodeAgentSku,
             });
         } else {
             this._form.patchValue({
@@ -147,22 +147,4 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
     }
 
     private _propagateChange: (result: CustomImageSelection | null) => void = () => null;
-
-    // if (!this.hasCustomImage) {
-    //     return;
-    // }
-    // this.value = {
-    //     source: PoolOsSources.IaaS,
-    //     virtualMachineConfiguration: {
-    //         nodeAgentSKUId: this.nodeAgentSku.value,
-    //         imageReference: {
-    //             virtualMachineImageId: this.customImage.value,
-    //         },
-    //     },
-    //     cloudServiceConfiguration: null,
-    // };
-    // this._updateSelection();
-    // if (this._propagateChange) {
-    //     this._propagateChange(this.value);
-    // }
 }
