@@ -1,3 +1,5 @@
+@import "app/styles/variables";
+
 bl-container-configuration {
     .form-element {
         .form-left {
@@ -11,6 +13,6 @@ bl-container-configuration {
         }
     }
     span.required {
-        color: #f44336;
+        color: $danger-color;
     }
 }
