@@ -63,6 +63,8 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
                 imageId: ref.virtualMachineImageId,
                 nodeAgentSku: config.nodeAgentSKUId,
             };
+        } else {
+            return null;
         }
     }
 
@@ -176,9 +178,9 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
             virtualMachineConfiguration: null,
         };
 
+        this.showContainerConfiguration = false;
         this._updateSelection();
         this._propagateChange(this.value);
-        this.showContainerConfiguration = false;
         this.changeDetector.markForCheck();
     }
 
