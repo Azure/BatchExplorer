@@ -12,7 +12,7 @@ bl-rpc-server-status {
 
     .connected {
         &:hover, &.active {
-            color: $mineshaft-grey;
+            color: $primary-text;
             background-color: $whitesmoke;
         }
     }

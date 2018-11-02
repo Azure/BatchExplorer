@@ -22,7 +22,7 @@ bl-nodes-heatmap-legend {
     .legend-item, .legend-subitem {
         display: flex;
         align-items: center;
-        color: $mineshaft-grey;
+        color: $primary-text;
         &:hover {
             background: $selection-color;
         }

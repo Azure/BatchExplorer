@@ -38,11 +38,11 @@ bl-app-license-picker {
     .title {
         font-weight: bold;
         margin-right: 5px;
-        border-bottom: 1px solid $mineshaft-grey;
+        border-bottom: 1px solid $primary-text;
     }
 
     p {
-        color: $mineshaft-grey;
+        color: $primary-text;
     }
 
     a {
@@ -58,6 +58,6 @@ bl-app-license-picker {
     ol li span {
         font-weight:bold;
         margin-right:5px;
-        border-bottom: 1px solid $mineshaft-grey;
+        border-bottom: 1px solid $primary-text;
     }
 }

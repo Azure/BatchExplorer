@@ -7,7 +7,7 @@
             attr.aria-describedby="{{id}}-error-msg">
 
             <bl-option *ngFor="let image of customImages;trackBy: trackResource" [value]="image.id" [label]="image.name"></bl-option>
-            <bl-option [disabled]="true" *ngIf="customImages.length === 0">{{'custom-image-picker.noCustomImageAvailable' | i18n}}</bl-option>
+            <bl-option  *ngIf="customImages.length === 0" [disabled]="true" [label]="'custom-image-picker.noCustomImageAvailable' | i18n"></bl-option>
         </bl-select>
     </bl-form-field>
     <bl-form-field>
