@@ -17,13 +17,13 @@
 
     &.has-value {
         border-style: solid;
-        color: $dove-grey;
-        border-color: $dove-grey;
+        color: $secondary-background;
+        border-color: $secondary-background;
     }
 
     &:hover, &:focus {
-        border-color: map-get($primary, 300);
-        color: map-get($primary, 300);
+        border-color: $primary-color;
+        color: $primary-color;
     }
 
 
