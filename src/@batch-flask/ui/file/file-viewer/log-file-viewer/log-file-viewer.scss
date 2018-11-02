@@ -16,9 +16,6 @@ bl-log-file-viewer {
 
     .log-console {
         position: relative;
-        background: $mineshaft-grey;
-        color: $whiteSmoke;
-        height: 100%;
 
         .log-container {
             height: 100%;
@@ -30,8 +27,8 @@ bl-log-file-viewer {
             cursor: pointer;
             right: 20px;
             top: 40px;
-            background: $mercuryGray;
-            color: $mineshaft-grey;
+            background: $secondary-background;
+            color: $primary-text;
             border-radius: 3px;
             padding: 2px 4px;
 
@@ -42,7 +39,7 @@ bl-log-file-viewer {
 
             &.following {
                 background: $success-color;
-                color:$success-contrast-color;
+                color: $success-contrast-color;
             }
         }
     }

@@ -24,13 +24,15 @@ bl-property-content {
     }
 
     &.link {
-        color: $primary-color
+        color: $primary-color;
+
         i {
             padding-left: 4px;
         }
+
         &:hover {
             font-weight: 400;
-            background-color: $mercuryGray;
+            background-color: $selection-color;
             cursor: pointer;
         }
 

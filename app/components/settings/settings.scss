@@ -37,27 +37,6 @@ bl-settings {
             position: relative;
             width: 50%;
 
-            .editor-header {
-                height: $settings-label-height;
-                line-height: $settings-label-height;
-                padding-left: 10px;
-                background: $mercury-grey;
-                vertical-align: middle;
-
-                > .label {
-                    font-size: 11px;
-                    color: $mineshaft-grey;
-                    text-transform: uppercase;
-                    font-weight: 700;
-                    display: inline-block;
-                }
-
-                > .error {
-                    margin-left: 30px;
-                    display: inline-block;
-                }
-            }
-
             .error {
                 color: $danger-color;
             }
