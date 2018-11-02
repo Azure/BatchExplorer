@@ -15,7 +15,6 @@ body {
 p {
     font-size: $font-size-base;
     margin: 0 0 $baseLineHeight / 2;
-    color: $genericGray;
 }
 
 // Links
@@ -38,12 +37,6 @@ h1, h2, h3, h4, h5, h6 {
     display: block;
     color: $headings-color;
     font-weight: 300;
-
-    small {
-        font-weight: normal;
-        line-height: 1;
-        color: $dusty-grey;
-    }
 }
 
 h1, h2, h3, h4, h5 {
@@ -58,11 +51,4 @@ h5 { font-size: $h5FontSize; }
 h6 {
     font-size: $h6FontSize;
     line-height: 19px;
-}
-
-hr {
-    margin: $baseLineHeight 0;
-    border: 0;
-    border-top: 1px solid $border-color;
-    border-bottom: 1px solid $white;
 }

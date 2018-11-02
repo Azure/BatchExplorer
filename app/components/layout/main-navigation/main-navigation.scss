@@ -39,7 +39,7 @@ bl-app-nav {
 
             &.active {
                 background-color: $primary-color;
-                color: $white;
+                color: $primary-contrast-color;
             }
         }
     }
