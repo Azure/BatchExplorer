@@ -127,6 +127,27 @@
       <trans-unit id="create-new-aad-app.title">
         <source>Create a new application</source>
       </trans-unit>
+      <trans-unit id="custom-image-picker">
+        <source/>
+      </trans-unit>
+      <trans-unit id="custom-image-picker.customImage">
+        <source/>
+      </trans-unit>
+      <trans-unit id="custom-image-picker.customImage.label">
+        <source>Image</source>
+      </trans-unit>
+      <trans-unit id="custom-image-picker.errorLoading">
+        <source>Server encountered an error loading custom images, please try again later.</source>
+      </trans-unit>
+      <trans-unit id="custom-image-picker.noCustomImageAvailable">
+        <source>No custom images in the region for this account</source>
+      </trans-unit>
+      <trans-unit id="custom-image-picker.nodeAgentSku">
+        <source/>
+      </trans-unit>
+      <trans-unit id="custom-image-picker.nodeAgentSku.label">
+        <source>Node agent</source>
+      </trans-unit>
       <trans-unit id="duration-picker">
         <source/>
       </trans-unit>
@@ -540,6 +561,30 @@
       </trans-unit>
       <trans-unit id="pool-graphs.timespan.label">
         <source>Graphs timespan</source>
+      </trans-unit>
+      <trans-unit id="pool-os-picker">
+        <source/>
+      </trans-unit>
+      <trans-unit id="pool-os-picker.category">
+        <source/>
+      </trans-unit>
+      <trans-unit id="pool-os-picker.category.container">
+        <source>Container</source>
+      </trans-unit>
+      <trans-unit id="pool-os-picker.category.dataScience">
+        <source>Data science</source>
+      </trans-unit>
+      <trans-unit id="pool-os-picker.category.distributions">
+        <source>Distributions</source>
+      </trans-unit>
+      <trans-unit id="pool-os-picker.category.rendering">
+        <source>Graphics and rendering</source>
+      </trans-unit>
+      <trans-unit id="pool-os-picker.containerConfiguration">
+        <source>Container configuration</source>
+      </trans-unit>
+      <trans-unit id="pool-os-picker.nodeAgentSelection">
+        <source>Based on your selection, node agent '{sku}' will be used</source>
       </trans-unit>
       <trans-unit id="pool-picker">
         <source/>
