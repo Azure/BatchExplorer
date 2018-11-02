@@ -42,7 +42,7 @@ bl-select-dropdown {
         }
 
         &.disabled {
-            color: $altoGray;
+            color: $button-disabled-text-color;
             cursor: default;
         }
 

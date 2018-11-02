@@ -6,10 +6,10 @@ bl-gauge {
     }
 
     .chart-empty {
-        fill: $altoGray;
+        fill: $secondary-background;
     }
 
     text.val-legend {
-        fill: $alto;
+        fill: $secondary-text;
     }
 }

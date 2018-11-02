@@ -43,7 +43,7 @@ bl-nodes-heatmap {
             text {
                 font-size: 16px;
                 user-select: none;
-                color: $mineshaft-grey;
+                color: $primary-text;
             }
         }
 
@@ -71,11 +71,11 @@ bl-nodes-heatmap {
         display: flex;
         justify-content: center;
         font-size: 16px;
-        color: $whitesmoke;
+        color: $main-background;
 
         > div {
             padding: 10px 20px;
-            background: $dusty-grey;
+            background: $secondary-text;
             height: 36px;
         }
     }
@@ -92,43 +92,6 @@ bl-nodes-heatmap {
                 height: 100%;
                 padding: 5px;
             }
-        }
-    }
-}
-
-bl-node-preview-card {
-    display: block;
-    margin: 10px 0;
-    padding: 5px;
-
-    background: $concreteGray;
-    border:  1px solid $mercuryGray;
-    .id {
-        font-size: 14px;
-    }
-
-    .state {
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-    .title {
-        display: flex;
-
-        .fa-times {
-            color: $genericGray;
-            cursor: pointer;
-
-            &:hover {
-                color: $mineshaft-grey;
-            }
-        }
-    }
-
-    .actions {
-        button {
-            display: block;
-            margin: 5px auto;
         }
     }
 }

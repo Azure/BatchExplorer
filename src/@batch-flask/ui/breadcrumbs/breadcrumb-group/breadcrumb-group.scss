@@ -28,7 +28,7 @@ bl-breadcrumb-group {
         min-width: 40px;
         max-width: 140px;
         cursor: pointer;
-        color: $whitesmoke;
+        color: map-get($breadcrumb-color, text);
 
         &:after {
             content: "";

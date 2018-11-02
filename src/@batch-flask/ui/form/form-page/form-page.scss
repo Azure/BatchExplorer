@@ -15,15 +15,19 @@
             flex: 0 0 $step-index-size;
             line-height: $step-index-size;
             text-align: center;
-            background: map-get($primary, 300);
+            background: $primary-color;
             border-radius: 99%;
             font-size: 14px;
-            color: $whitesmoke;
+            color: $primary-contrast-color;
             margin-right: 10px;
         }
 
         > .step-header {
             padding-top: 8px;
+        }
+
+        .subtitle {
+            color: $secondary-text;
         }
 
         margin-bottom: 5px;

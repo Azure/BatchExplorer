@@ -1,4 +1,4 @@
-import { Component, DebugElement, Input } from "@angular/core";
+import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Router } from "@angular/router";
@@ -6,7 +6,7 @@ import * as d3 from "d3";
 import { List } from "immutable";
 
 import { I18nTestingModule, TelemetryTestingModule } from "@batch-flask/core/testing";
-import { ActivityService, DialogService, WorkspaceService } from "@batch-flask/ui";
+import { ActivityService, ClickableComponent, DialogService, WorkspaceService } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { Node, NodeState, Pool } from "app/models";
 import { NodeService, PoolService } from "app/services";
@@ -33,18 +33,6 @@ export class HeatmapMockComponent {
     public interactive = true;
 }
 
-@Component({
-    selector: "bl-node-preview-card",
-    template: "",
-})
-export class NodePreviewCardMockComponent {
-    @Input()
-    public node: Node;
-
-    @Input()
-    public poolId: string;
-}
-
 describe("NodesHeatmapComponent", () => {
     let fixture: ComponentFixture<HeatmapMockComponent>;
     let testComponent: HeatmapMockComponent;
@@ -63,7 +51,8 @@ describe("NodesHeatmapComponent", () => {
         TestBed.configureTestingModule({
             imports: [I18nTestingModule, TelemetryTestingModule],
             declarations: [
-                HeatmapMockComponent, NodesHeatmapComponent, NodesHeatmapLegendComponent, NodePreviewCardMockComponent,
+                HeatmapMockComponent, NodesHeatmapComponent, NodesHeatmapLegendComponent,
+                ClickableComponent,
             ],
             providers: [
                 { provide: NodeService, useValue: {} },

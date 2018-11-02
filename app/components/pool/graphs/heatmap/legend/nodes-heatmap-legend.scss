@@ -22,13 +22,13 @@ bl-nodes-heatmap-legend {
     .legend-item, .legend-subitem {
         display: flex;
         align-items: center;
-        color: $mineshaft-grey;
+        color: $primary-text;
         &:hover {
-            background: $concreteGray;
+            background: $selection-color;
         }
 
         &.highlighted {
-            color: $concreteGray;
+            color: $primary-contrast-color;
             background: $primary-color;
         }
     }

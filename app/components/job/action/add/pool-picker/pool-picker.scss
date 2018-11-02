@@ -49,19 +49,19 @@ bl-pool-picker {
             background:  $primary-color;
 
             > .icon {
-                color: $whitesmoke;
+                color: $primary-contrast-color;
             }
             > .info > .details {
-                color: $whitesmoke;
+                color: $primary-contrast-color;
             }
 
             > .info > .title {
-                color: $whitesmoke;
+                color: $primary-contrast-color;
             }
 
             .pool-tags .tag {
                 color: $primary-color;
-                background-color: $whitesmoke;
+                background-color: $primary-contrast-color;
             }
         }
 

@@ -49,7 +49,7 @@ bl-submit-ncj-template {
     }
 
     bl-button.submit-job {
-        color: $whitesmoke;
+        color: $success-contrast-color;
         width: 100px;
         height: 100px;
         border-radius: 50%;
@@ -64,7 +64,7 @@ bl-submit-ncj-template {
         }
 
         i.fa-check {
-            color: $whitesmoke;
+            color: $success-contrast-color;
         }
     }
 }

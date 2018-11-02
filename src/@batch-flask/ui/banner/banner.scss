@@ -142,17 +142,17 @@ bl-banner > bl-card {
 
 bl-banner > bl-card.error {
     @include banner-scheme($danger-color, map-get($danger, 800));
-    color: $whiteSmoke-darker;
+    color: $danger-contrast-color;
 }
 
 bl-banner > bl-card.warning {
-    @include banner-scheme(map-get($warn, 500), map-get($warn, 800));
-    color: $whiteSmoke-darker;
+    @include banner-scheme($warn-color, map-get($warn, 800));
+    color: $warn-contrast-color;
 }
 
 bl-banner > bl-card.notice {
-    @include banner-scheme($concreteGray, $dusty-grey );
-    color: $genericGray;
+    @include banner-scheme($secondary-background, $selection-color);
+    color: $primary-color;
 }
 
 .other-fixes {
