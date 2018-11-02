@@ -28,13 +28,18 @@ $mat-theme: mat-light-theme($mat-primary, $mat-accent);
     margin-top: -25px;
 }
 
+mat-tab-group {
+    .mat-tab-label {
+        color: $primary-text;
+    }
+}
+
 mat-tab-group:not(.form-tabs) {
     .mat-tab-label {
         opacity: 0.8 !important;
         border-right: 1px solid #ddd;
         height: 32px;
         line-height: 32px;
-        color: $primary-text;
 
         &.mat-tab-label-active {
         }
@@ -181,7 +186,9 @@ mat-button-toggle-group {
 
 
 .mat-menu-item {
-    &.cdk-focused {
+    height: 30px !important;
+    line-height: 30px !important;
+    &.cdk-program-focused, &.cdk-keyboard-focused {
         border: 1px solid $outline-color;
     }
 }

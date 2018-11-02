@@ -1,0 +1,96 @@
+@import "app/styles/variables";
+
+
+bl-os-offer-tile {
+    padding: 0;
+    display: inline-flex;
+    width: 230px;
+    height: 60px;
+    border: 1px solid $border-color;
+    background: $card-background;
+    outline: none;
+    user-select: none;
+    vertical-align: top;
+    margin: 5px;
+    cursor: pointer;
+
+    &:focus {
+        background-color: $whitesmoke-darker;
+    }
+
+    &.active {
+        border-color: $primary-color;
+
+        > .main > .icon {
+            background: $primary-color;
+            // border-color: $primary-color-light;
+            color: $primary-contrast-color;
+        }
+
+        .select-version {
+            color: $primary-color;
+            font-weight: bold;
+        }
+
+    }
+
+
+    > .main {
+        display: flex;
+        flex: 1;
+
+        &:hover {
+            background-color: $selection-color;
+        }
+
+        > .icon {
+            padding: 10px 5px;
+            height: 100%;
+            width: 50px;
+            font-size: 40px;
+            color: $primary-color;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            svg {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        > .details {
+            padding: 5px;
+
+            > .title {
+                color: $primary-text;
+
+                > .name {
+                    text-transform: capitalize;
+                }
+            }
+
+            > .selected-version {
+                color: $primary-color;
+            }
+        }
+    }
+
+    > .select-version {
+        flex-shrink: 1;
+        width: 40px;
+        background: $card-background;
+        outline: none;
+        margin: 0;
+        cursor: pointer;
+
+        &:hover, &:focus {
+            background-color: $selection-color;
+        }
+
+        .fa {
+            font-size: 16px;
+            color: $secondary-text;
+        }
+    }
+}

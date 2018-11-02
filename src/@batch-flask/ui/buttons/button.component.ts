@@ -66,6 +66,11 @@ export class ButtonComponent extends ClickableComponent {
     @Input() public skipSuccess: boolean = false;
     @Input() @HostBinding("attr.type") public type: ButtonType = "square";
     @Input() @HostBinding("attr.color") public color: ButtonColor = "primary";
+    @Input() @HostBinding("attr.aria-label") public get ariaLabel() {
+        if (this.type === "square" || this.type === "plain") {
+            return this.title;
+        }
+    }
     @Input() public routerLink: string;
 
     @ViewChild(MatTooltip) private _tooltip: MatTooltip;

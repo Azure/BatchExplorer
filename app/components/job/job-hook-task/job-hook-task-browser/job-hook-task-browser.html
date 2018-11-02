@@ -1,6 +1,6 @@
 <div class="filters">
     <div style="padding: 10px; flex: 1">
-        <mat-checkbox [formControl]="onlyFailedControl">Only failed</mat-checkbox>
+        <mat-checkbox [formControl]="onlyFailedControl" color="primary">Only failed</mat-checkbox>
     </div>
     <div class="type-toggle">
         <div class="option" (click)="updateType(HookTaskType.preparationTask)" [class.active]="type === HookTaskType.preparationTask">

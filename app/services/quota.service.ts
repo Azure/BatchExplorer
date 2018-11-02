@@ -3,7 +3,7 @@ import { FilterBuilder } from "@batch-flask/core";
 import { ArmBatchAccount, BatchQuotas, JobState, Pool } from "app/models";
 import { List } from "immutable";
 import { BehaviorSubject, Observable, Subscription, forkJoin, merge, of } from "rxjs";
-import { filter, flatMap, map, share, shareReplay, take } from "rxjs/operators";
+import { filter, flatMap, map, share, shareReplay, switchMap, take } from "rxjs/operators";
 import { ApplicationService } from "./application.service";
 import { JobService } from "./azure-batch/job";
 import { PoolService } from "./azure-batch/pool";
@@ -39,9 +39,9 @@ export class QuotaService implements OnDestroy {
                 vmSizes.forEach(vmSize => this.vmSizeCores[vmSize.id] = vmSize.numberOfCores);
             }
         }));
-        this._subs.push(accountService.currentAccount.subscribe(account => {
-            this.updateUsages();
-        }));
+        this._subs.push(accountService.currentAccount.pipe(
+            switchMap(() => this.updateUsages()),
+        ).subscribe());
 
         this.quotas = this.accountService.currentAccount.pipe(
             filter(x => x instanceof ArmBatchAccount),
@@ -66,7 +66,7 @@ export class QuotaService implements OnDestroy {
     public updateUsages() {
         return this.accountService.currentAccount.pipe(
             take(1),
-            flatMap((account) => {
+            switchMap((account) => {
                 if (account instanceof ArmBatchAccount) {
                     return forkJoin(
                         this.updatePoolUsage(),
@@ -87,7 +87,6 @@ export class QuotaService implements OnDestroy {
         });
         obs.subscribe((pools) => {
             const { dedicatedCores, lowpriCores } = this._getCoreUsages(pools);
-
             this._usage.next(new BatchQuotas({
                 ...this._getExistingQuota().toJS(),
                 pools: pools.size,

@@ -6,7 +6,13 @@ const dataScienceVms = {
     "linux-data-science-vm": {
         osType: "linux",
     },
+    "linux-data-science-vm-ubuntu": {
+        osType: "linux",
+    },
     "standard-data-science-vm": {
+        osType: "windows",
+    },
+    "dsvm-windows": {
         osType: "windows",
     },
 };
