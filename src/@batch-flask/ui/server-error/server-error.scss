@@ -5,7 +5,7 @@ bl-server-error {
 
     .error-banner {
         background: $danger-color;
-        color: $whiteSmoke;
+        color: $danger-contrast-color;
         > .content {
             padding: 10px;
         }
@@ -15,7 +15,7 @@ bl-server-error {
             position: relative;
 
             h4, p, table {
-                color: $whiteSmoke;
+                color: $danger-contrast-color;
                 font-size: 12px;
             }
 
@@ -51,7 +51,7 @@ bl-server-error {
 
             table {
                 font-size: 1em;
-                color: $whiteSmoke;
+                color: $danger-contrast-color;
             }
             td {
                 padding-right: 10px;

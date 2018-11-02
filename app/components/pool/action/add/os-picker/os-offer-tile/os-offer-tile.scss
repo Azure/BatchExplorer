@@ -14,10 +14,6 @@ bl-os-offer-tile {
     margin: 5px;
     cursor: pointer;
 
-    &:focus {
-        background-color: $whitesmoke-darker;
-    }
-
     &.active {
         border-color: $primary-color;
 
