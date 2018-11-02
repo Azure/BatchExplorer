@@ -120,8 +120,8 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
 
     public writeValue(value: CustomImageSelection | null): void {
         // Write
+        const formValue = this._form.value;
         if (value) {
-            const formValue = this._form.value;
 
             if (formValue.customImage === value.imageId && formValue.nodeAgentSku === value.nodeAgentSku) {
                 return;
@@ -131,10 +131,12 @@ export class CustomImagePickerComponent implements OnInit, OnDestroy, ControlVal
                 nodeAgentSku: value.nodeAgentSku,
             });
         } else {
-            this._form.patchValue({
-                customImage: null,
-                nodeAgentSku: null,
-            });
+            if (formValue.customImage || formValue.nodeAgentSkus) {
+                this._form.patchValue({
+                    customImage: null,
+                    nodeAgentSku: null,
+                });
+            }
         }
     }
 

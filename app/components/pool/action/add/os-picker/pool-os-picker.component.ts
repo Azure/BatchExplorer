@@ -188,7 +188,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
         if (!result) {
             return;
         }
-        console.log("VAl", result);
+
         this.value = {
             source: PoolOsSources.IaaS,
             cloudServiceConfiguration: null,
@@ -199,6 +199,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
                 nodeAgentSKUId: result.nodeAgentSku,
             },
         };
+
         this.showContainerConfiguration = true;
         this._updateSelection();
         this._propagateChange(this.value);
