@@ -5,3 +5,4 @@ pool-os-picker:
     container: Container
     dataScience: Data science
   containerConfiguration: Container configuration
+  nodeAgentSelection: Based on your selection, node agent '{sku}' will be used
