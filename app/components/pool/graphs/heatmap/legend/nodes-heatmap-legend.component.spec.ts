@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
+import { ClickableComponent } from "@batch-flask/ui";
 import { NodeService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { click, rightClick } from "test/utils/helpers";
@@ -35,7 +36,7 @@ describe("NodesHeatmapLegendComponent", () => {
     beforeEach(() => {
         contextMenuService = new ContextMenuServiceMock();
         TestBed.configureTestingModule({
-            declarations: [NodesHeatmapLegendComponent],
+            declarations: [NodesHeatmapLegendComponent, ClickableComponent],
             providers: [
                 { provide: "StateTree", useValue: stateTree },
                 { provide: NodeService, useValue: null },
