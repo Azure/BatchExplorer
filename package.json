@@ -91,7 +91,7 @@
     "css-loader": "^1.0.1",
     "devtron": "^1.4.0",
     "electron": "^3.0.7",
-    "electron-builder": "^20.28.2",
+    "electron-builder": "20.28.2",
     "file-loader": "^2.0.0",
     "fork-ts-checker-webpack-plugin": "^0.4.14",
     "html-webpack-plugin": "^3.2.0",
