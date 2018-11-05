@@ -88,7 +88,7 @@ export class ButtonComponent extends ClickableComponent {
     // Aria
     // @HostBinding("attr.aria-label") public get ariaLabel() { return this.title; }
     @HostBinding("attr.aria-describedby") public get ariaDescribedBy() {
-        const tooltipDescribe = this.type === "plain" || this.type === "square" ? "" : `${this.id}_described`;
+        const tooltipDescribe = this.type === "plain" || this.type === "square" ? "" : `${this.id}-described`;
         const userDescribe = this.userAriaDescribedBy || "";
 
         return `${tooltipDescribe} ${userDescribe}`;
