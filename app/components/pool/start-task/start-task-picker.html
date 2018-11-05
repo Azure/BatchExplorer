@@ -12,9 +12,9 @@
         <bl-error controlName="maxTaskRetryCount" code="validateRange">Retry count values can range from -1 to 100</bl-error>
     </div>
     <div class="form-element">
-        <mat-slide-toggle formControlName="waitForSuccess" color="primary">
+        <mat-checkbox formControlName="waitForSuccess" color="primary">
             Wait for success
-        </mat-slide-toggle>
+        </mat-checkbox>
     </div>
     <div class="form-element pad-top">
         <bl-user-identity-picker formControlName="userIdentity" [userAccounts]="userAccounts">

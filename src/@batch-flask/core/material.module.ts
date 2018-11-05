@@ -14,7 +14,6 @@ import {
     MatProgressSpinnerModule,
     MatRadioModule,
     MatSidenavModule,
-    MatSlideToggleModule,
     MatTabsModule,
     MatTooltipModule,
 } from "@angular/material";
@@ -31,7 +30,6 @@ const modules = [
     MatTooltipModule,
     MatIconModule,
     MatMenuModule,
-    MatSlideToggleModule,
     MatDatepickerModule,
     MatDialogModule,
     MatSidenavModule,
