@@ -59,6 +59,8 @@ export class ButtonComponent extends ClickableComponent {
     @Input() public icon: string;
     @Input() public title: string;
     @Input() public tooltipPosition: string = "above";
+    // tslint:disable-next-line:no-input-rename
+    @Input("attr.aria-describedby") public userAriaDescribedBy: string;
 
     /**
      * If set to true the check mark animation will not be shown
@@ -86,7 +88,10 @@ export class ButtonComponent extends ClickableComponent {
     // Aria
     // @HostBinding("attr.aria-label") public get ariaLabel() { return this.title; }
     @HostBinding("attr.aria-describedby") public get ariaDescribedBy() {
-        return `${this.id}_described`;
+        const tooltipDescribe = this.type === "plain" || this.type === "square" ? "" : `${this.id}_described`;
+        const userDescribe = this.userAriaDescribedBy || "";
+
+        return `${tooltipDescribe} ${userDescribe}`;
     }
 
     public handleAction(event: Event) {

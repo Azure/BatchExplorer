@@ -1,1 +1,1 @@
-export * from "./certificate-create-dialog.component";
+export * from "./add-certificate-form.component";
