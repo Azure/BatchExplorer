@@ -186,6 +186,7 @@ describe("NodeUserCredentialsForm", () => {
                 name: "myusername",
                 sshPublicKey: "my-ssh-key",
                 isAdmin: false,
+                expiryTime: jasmine.anything(),
             });
         });
     });
