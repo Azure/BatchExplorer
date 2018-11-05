@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { Observable } from "rxjs";
 
@@ -9,20 +9,24 @@ import { FileUrlUtils } from "@batch-flask/utils";
 import { CertificateFormat, CertificateService } from "app/services";
 import { Constants } from "common";
 
-import "./certificate-create-dialog.scss";
+import "./add-certificate-form.scss";
+
+let idCounter = 0;
 
 @Component({
-    selector: "bl-certificate-create-dialog",
-    templateUrl: "certificate-create-dialog.html",
+    selector: "bl-add-certificate-form",
+    templateUrl: "add-certificate-form.html",
 })
-export class CertificateCreateDialogComponent {
+export class AddCertificateFormComponent {
+    @Input() public id = `bl-add-certificate-form-${idCounter++}`;
+
     public file: File;
     public form: FormGroup;
     public title = "Add certificate";
 
     constructor(
         private formBuilder: FormBuilder,
-        public sidebarRef: SidebarRef<CertificateCreateDialogComponent>,
+        public sidebarRef: SidebarRef<AddCertificateFormComponent>,
         private certificateService: CertificateService,
         private notificationService: NotificationService) {
         const validation = Constants.forms.validation;
@@ -81,7 +85,7 @@ export class CertificateCreateDialogComponent {
     }
 
     private _passwordValidator() {
-        return (control: FormControl): {[key: string]: any} => {
+        return (control: FormControl): { [key: string]: any } => {
             if (this.showPassword) {
                 if (!control.value) {
                     return {

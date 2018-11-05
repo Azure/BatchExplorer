@@ -5,14 +5,13 @@ bl-enable-app-insights-doc {
     padding: 10px;
 
     bl-clickable {
-        color: map-get($primary, 300);
+        color: $primary-color;
     }
 
     .warning {
-        color: map-get($warn, 300);
+        color: $warn-color;
         text-align: center;
         position: absolute;
         bottom: 10px;
-        width: 100%;
     }
 }

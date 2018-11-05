@@ -4,7 +4,7 @@ import { FormBuilder, FormControl } from "@angular/forms";
 import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
-import { CertificateCreateDialogComponent } from "../action/add";
+import { AddCertificateFormComponent } from "../action/add";
 
 @Component({
     selector: "bl-certificate-home",
@@ -41,7 +41,7 @@ export class CertificateHomeComponent {
 
     @autobind()
     public addCertificate() {
-        this.sidebarManager.open("add-certificate", CertificateCreateDialogComponent);
+        this.sidebarManager.open("add-certificate", AddCertificateFormComponent);
     }
 
     public advancedFilterChanged(filter: Filter) {
