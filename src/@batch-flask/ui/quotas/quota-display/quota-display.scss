@@ -5,6 +5,7 @@ bl-quota-display {
     padding: 0;
     vertical-align: top;
     display: block;
+    overflow: auto;
 
     > .details > .label {
         color: $secondary-text;
@@ -45,7 +46,7 @@ bl-quota-display {
 
         > .progress mat-progress-bar {
             height: 4px;
-            margin-top: 13px;
+            margin-top: 15px;
 
             .mat-progress-bar-buffer {
                 background-color: transparent;
