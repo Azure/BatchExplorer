@@ -22,6 +22,39 @@
       <trans-unit id="aad-app-secret-picker.secret.label">
         <source>Secret. One will be generated automatically if not provided</source>
       </trans-unit>
+      <trans-unit id="add-certificate-form">
+        <source/>
+      </trans-unit>
+      <trans-unit id="add-certificate-form.certificate">
+        <source/>
+      </trans-unit>
+      <trans-unit id="add-certificate-form.certificate.description">
+        <source>Select a certificate (pfx or cer) to upload</source>
+      </trans-unit>
+      <trans-unit id="add-certificate-form.certificate.invalid">
+        <source>Certificate need to be valid CER or PFX files only</source>
+      </trans-unit>
+      <trans-unit id="add-certificate-form.certificate.label">
+        <source>Certificate</source>
+      </trans-unit>
+      <trans-unit id="add-certificate-form.certificate.required">
+        <source>Please select a valid certificate file</source>
+      </trans-unit>
+      <trans-unit id="add-certificate-form.certificate.select">
+        <source>Select a certificate</source>
+      </trans-unit>
+      <trans-unit id="add-certificate-form.password">
+        <source/>
+      </trans-unit>
+      <trans-unit id="add-certificate-form.password.label">
+        <source>Certificate password</source>
+      </trans-unit>
+      <trans-unit id="add-certificate-form.password.required">
+        <source>Password is required if the certificate format is '.pfx'</source>
+      </trans-unit>
+      <trans-unit id="add-certificate-form.title">
+        <source>Create certificate</source>
+      </trans-unit>
       <trans-unit id="add-task-form">
         <source/>
       </trans-unit>
