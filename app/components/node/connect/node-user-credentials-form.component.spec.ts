@@ -2,20 +2,19 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { MaterialModule } from "@batch-flask/core";
-import { I18nUIModule, SelectModule } from "@batch-flask/ui";
-import { PermissionService } from "@batch-flask/ui/permission";
-import * as moment from "moment";
-import { of } from "rxjs";
-
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { MaterialModule } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
+import { I18nUIModule, SelectModule } from "@batch-flask/ui";
 import { DialogService } from "@batch-flask/ui/dialogs";
 import { DurationPickerComponent } from "@batch-flask/ui/duration-picker";
+import { PermissionService } from "@batch-flask/ui/permission";
 import { NodeUserCredentialsFormComponent } from "app/components/node/connect";
 import { SSHKeyPickerComponent } from "app/components/node/connect/ssh-key-picker";
 import { SSHKeyService } from "app/services";
-import { updateInput } from "test/utils/helpers";
+import * as moment from "moment";
+import { of } from "rxjs";
+import { click, updateInput } from "test/utils/helpers";
 import { SimpleFormMockComponent } from "test/utils/mocks/components";
 
 @Component({
@@ -95,11 +94,10 @@ describe("NodeUserCredentialsForm", () => {
             expect(isAdminInput.componentInstance.checked).toBe(true);
         });
 
-        // BUG: https://github.com/angular/material2/issues/7074
-        xit("Update inputs should update the form", () => {
+        it("Update inputs should update the form", () => {
             updateInput(usernameInput, "myusername");
             updateInput(passwordInput, "mypassword123");
-            isAdminInput.componentInstance.toggle();
+            click(isAdminInput.query(By.css("input")));
 
             fixture.detectChanges();
 
@@ -158,12 +156,10 @@ describe("NodeUserCredentialsForm", () => {
             expect(isAdminInput.componentInstance.checked).toBe(true);
         });
 
-        // BUG: https://github.com/angular/material2/issues/7074
-        it("Update inputs should update the form", () => {
+        it("Update inputs should update the form", async () => {
             updateInput(usernameInput, "myusername");
             sshKeyPicker.writeValue("my-ssh-key");
-            isAdminInput.componentInstance.toggle();
-
+            click(isAdminInput.query(By.css("input")));
             fixture.detectChanges();
 
             expect(component.form.value).toEqual({
@@ -172,6 +168,7 @@ describe("NodeUserCredentialsForm", () => {
                 password: "",
                 sshPublicKey: "my-ssh-key",
                 isAdmin: false,
+                expireIn: jasmine.anything(),
             });
         });
 

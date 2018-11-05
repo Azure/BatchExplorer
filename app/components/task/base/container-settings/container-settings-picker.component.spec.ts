@@ -1,7 +1,7 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatAutocompleteModule, MatSlideToggleModule } from "@angular/material";
+import { MatAutocompleteModule, MatCheckboxModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { FormModule } from "@batch-flask/ui/form";
 import { updateInput } from "test/utils/helpers";
@@ -24,7 +24,7 @@ describe("ContainerSettingsPickerComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, FormsModule, FormModule, MatAutocompleteModule, MatSlideToggleModule],
+            imports: [ReactiveFormsModule, FormsModule, FormModule, MatAutocompleteModule, MatCheckboxModule],
             declarations: [ContainerSettingsPickerComponent, TestComponent, RegistryPickerComponent],
         });
         fixture = TestBed.createComponent(TestComponent);
