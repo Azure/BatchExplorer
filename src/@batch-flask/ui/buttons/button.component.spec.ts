@@ -86,7 +86,7 @@ describe("ButtonComponent", () => {
     it("set aria-describedby by with title only if not using an icon button", () => {
         testComponent.type = "wide";
         fixture.detectChanges();
-        const describedbyId = de.attributes["aria-describedby"];
+        const describedbyId = de.attributes["aria-describedby"].split(" ")[0];
         const describedby = de.query(By.css(`#${describedbyId}`));
         expect(describedby).not.toBeFalsy();
         expect(describedby.nativeElement.textContent).toContain("Stop");
@@ -97,8 +97,7 @@ describe("ButtonComponent", () => {
         fixture.detectChanges();
 
         const describedbyId = de.attributes["aria-describedby"];
-        const describedby = de.query(By.css(`#${describedbyId}`));
-        expect(describedby).toBeFalsy();
+        expect(describedbyId).toBeBlank();
     });
 
     describe("when disabled", () => {

@@ -3,11 +3,11 @@ import { NgModule } from "@angular/core";
 import { BaseModule } from "@batch-flask/ui";
 import { commonModules } from "app/common";
 import { JobActionModule } from "app/components/job/action";
-import { CertificateCreateDialogComponent } from "./add/certificate-create-dialog.component";
+import { AddCertificateFormComponent } from "./add/add-certificate-form.component";
 import { ReactivateCertificateDialogComponent } from "./reactivate/reactivate-certificate-dialog.component";
 
 const components = [
-    ReactivateCertificateDialogComponent, CertificateCreateDialogComponent,
+    ReactivateCertificateDialogComponent, AddCertificateFormComponent,
 ];
 
 @NgModule({

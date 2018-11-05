@@ -35,12 +35,16 @@ const defaultConfig: BrowseLayoutConfig = {
     quickSearchField: "id",
     keyField: "id",
 };
+
+let idCounter = 0;
+
 @Component({
     selector: "bl-browse-layout",
     templateUrl: "browse-layout.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChanges {
+    @Input() public id = `bl-browse-layout-${idCounter++}`;
     /**
      * Field for the quicksearch.
      * @default id.
