@@ -3,7 +3,7 @@ import { LocaleService, TranslationsLoaderService } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 import { ClientTranslationsLoaderService } from "client/core/i18n";
 import { MainApplicationMenu } from "client/menu";
-import { app, protocol } from "electron";
+import { app, protocol, session, shell } from "electron";
 import { autoUpdater } from "electron-updater";
 import { Constants } from "./client-constants";
 import { BatchExplorerClientModule, initializeServices } from "./client.module";
@@ -42,6 +42,7 @@ function registerAuthProtocol() {
 }
 
 async function startApplication(batchExplorerApp: BatchExplorerApplication, menu: MainApplicationMenu) {
+    secureRemoteContentLoading();
     initAutoUpdate();
     registerAuthProtocol();
 
@@ -89,5 +90,23 @@ export async function startBatchExplorer() {
 
     process.on("SIGINT", () => {
         process.exit(-2);
+    });
+}
+
+function secureRemoteContentLoading() {
+    app.on("web-contents-created", (event, contents) => {
+        contents.on("new-window", (event, navigationUrl) => {
+            // In this example, we'll ask the operating system
+            // to open this event's url in the default browser.
+            event.preventDefault();
+
+            shell.openExternal(navigationUrl);
+        });
+    });
+
+    // This reject any permissions requested by remove websites(Like asking for location).
+    // This should never get called as the above call shouldn't open any remote links
+    session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
+        return callback(false);
     });
 }

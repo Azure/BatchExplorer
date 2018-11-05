@@ -7,12 +7,12 @@
     </div>
     <div class="form-element">
         <h4>Flatten</h4>
-        <mat-slide-toggle formControlName="flatten" color="primary"></mat-slide-toggle>
+        <mat-checkbox formControlName="flatten" color="primary"></mat-checkbox>
         <bl-error controlName="flatten" code="invalid">If 'Full path' is selected, you cannot also select 'Flatten'</bl-error>
     </div>
     <div class="form-element">
         <h4>Full path</h4>
-        <mat-slide-toggle formControlName="fullPath" color="primary"></mat-slide-toggle>
+        <mat-checkbox formControlName="fullPath" color="primary"></mat-checkbox>
         <bl-error controlName="fullPath" code="invalid">If 'Flatten' is selected, you cannot also select 'Full path'</bl-error>
     </div>
 </div>

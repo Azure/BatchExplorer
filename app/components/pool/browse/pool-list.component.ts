@@ -8,10 +8,10 @@ import {
     AbstractListBaseConfig, ListBaseComponent, LoadingStatus, QuickListItemStatus, TableConfig,
 } from "@batch-flask/ui";
 import { Pool } from "app/models";
-import { PoolListParams, PoolService } from "app/services";
+import { PoolListParams, PoolNodeCountService, PoolService } from "app/services";
 import { ComponentUtils } from "app/utils";
 import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, forkJoin } from "rxjs";
 import { map } from "rxjs/operators";
 import { PoolCommands } from "../action";
 
@@ -54,6 +54,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
 
     constructor(
         private poolService: PoolService,
+        private nodeCountsService: PoolNodeCountService,
         activatedRoute: ActivatedRoute,
         injector: Injector,
         public commands: PoolCommands) {
@@ -85,7 +86,7 @@ export class PoolListComponent extends ListBaseComponent implements OnInit, OnDe
 
     @autobind()
     public refresh(): Observable<any> {
-        return this.data.refresh();
+        return forkJoin(this.data.refresh(), this.nodeCountsService.refresh());
     }
 
     public handleFilter(filter: Filter): Observable<number> {

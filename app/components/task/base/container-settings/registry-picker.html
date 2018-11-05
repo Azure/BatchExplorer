@@ -1,8 +1,8 @@
 <div [formGroup]="form">
     <div class="form-element">
-        <mat-slide-toggle (change)="onSlideToggle($event)" color="primary" [checked]="customValue">
-            Container registry
-        </mat-slide-toggle>
+        <mat-checkbox (change)="onSlideToggle($event)" color="primary" [checked]="customValue">
+            Sepcify container registry
+        </mat-checkbox>
     </div>
     <div *ngIf="customValue" class="form-element">
         <bl-form-field>

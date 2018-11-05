@@ -19,17 +19,13 @@
                     </bl-form-field>
                 </div>
             </div>
-            <div class="grow">
-                <div class="gcol">
-                    <bl-form-field>
-                        <input blInput type="number" formControlName="maxTasksPerNode" placeholder="Max task per node">
-                    </bl-form-field>
-                </div>
-                <div class="gcol">
-                    <mat-slide-toggle formControlName="enableInterNodeCommunication" color="primary">
-                        Enable MPI
-                    </mat-slide-toggle>
-                </div>
+            <bl-form-field>
+                <input blInput type="number" formControlName="maxTasksPerNode" placeholder="Max task per node">
+            </bl-form-field>
+            <div class="form-element">
+                <mat-checkbox formControlName="enableInterNodeCommunication" color="primary">
+                    Enable MPI
+                </mat-checkbox>
             </div>
             <div class="form-element">
                 <bl-form-field>
