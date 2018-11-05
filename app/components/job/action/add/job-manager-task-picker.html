@@ -46,8 +46,7 @@
         <bl-resourcefile-picker formControlName="resourceFiles"></bl-resourcefile-picker>
     </div>
     <div class="form-element pad-top">
-        <h4>Environment variables</h4>
-        <bl-key-value-picker formControlName="environmentSettings"></bl-key-value-picker>
+        <bl-key-value-picker formControlName="environmentSettings" label="Environment variables"></bl-key-value-picker>
     </div>
     <div *ngIf="virtualMachineConfiguration?.containerConfiguration" class="form-element pad-top">
         <h4>Container settings</h4>

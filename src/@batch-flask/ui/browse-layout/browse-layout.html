@@ -3,7 +3,7 @@
         <div class="left-pane">
             <div class="quick-filter-content">
                 <div class="layout-list-header">
-                    <div class="title">
+                    <div class="title" id="{{id}}-title">
                         <ng-content select="[blBrowseLayoutTitle]"></ng-content>
                     </div>
                     <div class="flex-separator"></div>
@@ -19,7 +19,14 @@
                     <div class="pre-quicksearch">
                         <ng-content select="[pre-quicksearch]"></ng-content>
                     </div>
-                    <input blInput autofocus type="search" [formControl]="quickSearchQuery" placeholder="Search (Startwith)" #quickSearchInput (keydown)="handleKeyPressedInQuickSearch($event)"/>
+                    <input blInput autofocus
+                        type="search"
+                        [formControl]="quickSearchQuery"
+                        placeholder="Search (Startwith)"
+                        #quickSearchInput
+                        attr.aria-labelledby="{{id}}-title"
+                        (keydown)="handleKeyPressedInQuickSearch($event)"
+                    />
                     <bl-toggle-filter-button *ngIf="advancedFilterDirective" (do)="toggleFilter()" [advancedFilter]="advancedFilter" >
                     </bl-toggle-filter-button>
                 </div>
