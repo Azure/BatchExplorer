@@ -172,11 +172,10 @@ describe("NodeUserCredentialsForm", () => {
             });
         });
 
-        // BUG: https://github.com/angular/material2/issues/7074
-        xit("should submit with the right values", () => {
+        it("should submit with the right values", () => {
             updateInput(usernameInput, "myusername");
             sshKeyPicker.writeValue("my-ssh-key");
-            isAdminInput.componentInstance.toggle();
+            click(isAdminInput.query(By.css("input")));
 
             fixture.detectChanges();
 
