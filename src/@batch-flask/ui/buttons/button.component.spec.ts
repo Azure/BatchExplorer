@@ -97,8 +97,7 @@ describe("ButtonComponent", () => {
         fixture.detectChanges();
 
         const describedbyId = de.attributes["aria-describedby"];
-        const describedby = de.query(By.css(`#${describedbyId}`));
-        expect(describedby).toBeFalsy();
+        expect(describedbyId).toBeBlank();
     });
 
     describe("when disabled", () => {
