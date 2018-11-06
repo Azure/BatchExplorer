@@ -160,7 +160,6 @@ export class FileNavigator<TParams = any> {
                     return this._tree.value.getNode(path);
                 }),
                 catchError((e) => {
-                    console.log("Catch error here", e);
                     return of(null);
                 }),
             );
