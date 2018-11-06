@@ -29,7 +29,7 @@ describe("ApplicationEditDialogComponent ", () => {
                 if (applicationId === "throw-me") {
                     return throwError(ServerError.fromARM(new HttpErrorResponse({
                         status: 400,
-                        error: JSON.stringify({ error: { message: "blast, we failed" } }),
+                        error: { error: { message: "blast, we failed" } },
                         statusText: "Bad request",
                     })));
                 }

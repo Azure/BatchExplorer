@@ -9,12 +9,10 @@ describe("AuthorizationHttpService", () => {
     let mockAuthResponse;
     let requestUrl;
     const mockNextLinkResponse = {
-        body: JSON.stringify({
-            value: [{
-                actions: [BatchAccountPermission.Read],
-                noactions: [],
-            }],
-        }),
+        value: [{
+            actions: [BatchAccountPermission.Read],
+            noactions: [],
+        }],
     };
     let accountServiceSpy;
     let armServiceSpy;
@@ -46,12 +44,10 @@ describe("AuthorizationHttpService", () => {
 
     it("should only have read permission for this resource", () => {
         mockAuthResponse = {
-            body: JSON.stringify({
-                value: [{
-                    actions: [BatchAccountPermission.Read],
-                    noactions: [],
-                }],
-            }),
+            value: [{
+                actions: [BatchAccountPermission.Read],
+                noactions: [],
+            }],
         };
         subs.push(authService.getResourcePermission().subscribe(response => {
             expect(requestUrl).toEqual("myaccount/providers/Microsoft.Authorization/permissions");
@@ -61,12 +57,10 @@ describe("AuthorizationHttpService", () => {
 
     it("should have all permission for this resource", () => {
         mockAuthResponse = {
-            body: JSON.stringify({
-                value: [{
-                    actions: [BatchAccountPermission.Read, BatchAccountPermission.ReadWrite],
-                    noactions: [],
-                }],
-            }),
+            value: [{
+                actions: [BatchAccountPermission.Read, BatchAccountPermission.ReadWrite],
+                noactions: [],
+            }],
         };
         subs.push(authService.getResourcePermission().subscribe(response => {
             expect(requestUrl).toEqual("myaccount/providers/Microsoft.Authorization/permissions");
@@ -76,13 +70,11 @@ describe("AuthorizationHttpService", () => {
 
     it("should recisively request authorization permissions if there is nextLink token in response body", () => {
         mockAuthResponse = {
-            body: JSON.stringify({
                 value: [{
                     actions: [BatchAccountPermission.ReadWrite],
                     noactions: [],
                 }],
                 nextLink: "fakeNextLink",
-            }),
         };
         subs.push(authService.getResourcePermission().subscribe(response => {
             expect(requestUrl).toEqual("fakeNextLink");

@@ -7,7 +7,7 @@ bl-account-list {
         }
     }
 
-    bl-quick-list-row-render.selected {
+    bl-quick-list-row-render.selected, bl-quick-list-row-render.focused {
         .fa-star.favorite {
             text-shadow: -1px 0 $main-background, 0 1px $main-background, 1px 0 $main-background, 0 -1px $main-background;
         }
