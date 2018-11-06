@@ -2,12 +2,14 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { FileSystemService } from "@batch-flask/ui";
 import { OS } from "@batch-flask/utils";
 import { ConnectionType, IaasNodeConnectionSettings, Node, NodeConnectionSettings, Pool } from "app/models";
-import { AddNodeUserAttributes, SSHKeyService, SettingsService } from "app/services";
 import { AzureBatchHttpService } from "app/services/azure-batch/core";
 import { PoolUtils } from "app/utils";
 import * as path from "path";
 import { Observable, Subscription, from, of } from "rxjs";
 import { flatMap, map, share } from "rxjs/operators";
+import { AddNodeUserAttributes } from "../azure-batch";
+import { SettingsService } from "../settings.service";
+import { SSHKeyService } from "../ssh-key.service";
 
 @Injectable()
 export class NodeConnectService implements OnDestroy {

@@ -1,5 +1,7 @@
-import { Location, ResourceGroup, Subscription } from "app/models";
 import { AccountCreateDto } from "app/models/dtos";
+import { Location } from "../location";
+import { ResourceGroup } from "../resource-group";
+import { Subscription } from "../subscription";
 
 export interface CreateAccountModel {
     name: string;

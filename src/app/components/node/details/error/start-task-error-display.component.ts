@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
-import { FailureInfo, NameValuePair, Pool, StartTaskInfo } from "app/models";
 import { FailureInfoDecorator } from "app/decorators";
+import { FailureInfo, NameValuePair, Pool, StartTaskInfo } from "app/models";
 import { NodeService } from "app/services";
 
 @Component({

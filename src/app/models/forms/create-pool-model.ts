@@ -1,8 +1,8 @@
 import * as moment from "moment";
 
-import { NodeFillType } from "app/models";
 import { ContainerRegistryDto, InboundNATPoolDto, MetaDataDto, PoolCreateDto, UserAccountDto } from "app/models/dtos";
 import { CertificateReferenceDto } from "../dtos/certificate-reference.dto";
+import { NodeFillType } from "../task-scheduling-policy";
 
 export enum PoolOsSources {
     PaaS,

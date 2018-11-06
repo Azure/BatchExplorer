@@ -1,4 +1,4 @@
-import { BatchApplication } from "app/models";
+import { BatchApplication } from "../batch-application";
 
 export interface CreateApplicationModel {
     id: string;

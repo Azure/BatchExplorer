@@ -1,6 +1,6 @@
-import { DeleteCertificateErrorDecorator } from "app/decorators";
 import { Certificate, CertificateState } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
+import { DeleteCertificateErrorDecorator } from "./delete-certificate-error-decorator";
 
 export class CertificateDecorator extends DecoratorBase<Certificate> {
     public state: string;
