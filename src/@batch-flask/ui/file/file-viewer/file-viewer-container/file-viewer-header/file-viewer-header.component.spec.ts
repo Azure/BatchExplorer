@@ -1,13 +1,13 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { ServerError } from "@batch-flask/core";
 import { ElectronRemote, ElectronShell } from "@batch-flask/electron";
 import { ElectronTestingModule } from "@batch-flask/electron/testing";
 import { ButtonsModule } from "@batch-flask/ui/buttons";
 import { File, FileLoader } from "@batch-flask/ui/file";
 import { DateUtils } from "@batch-flask/utils";
 import { of, throwError } from "rxjs";
-import { ServerError } from "src/@batch-flask/core";
 import { click } from "test/utils/helpers";
 import { NotificationServiceMock } from "test/utils/mocks";
 import { FileViewerConfig } from "../../file-viewer";
