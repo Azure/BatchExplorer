@@ -1,4 +1,3 @@
-import { Response, ResponseOptions } from "@angular/http";
 import { Permission } from "@batch-flask/ui/permission";
 import { Subscription, of } from "rxjs";
 import { take } from "rxjs/operators";
@@ -32,9 +31,9 @@ describe("AuthorizationHttpService", () => {
             get: jasmine.createSpy("get").and.callFake((url, options) => {
                 requestUrl = url;
                 if (url === "fakeNextLink") {
-                    return of(new Response(new ResponseOptions(mockNextLinkResponse)));
+                    return of(mockNextLinkResponse);
                 }
-                return of(new Response(new ResponseOptions(mockAuthResponse)));
+                return of(mockAuthResponse);
             }),
         };
         authService = new AuthorizationHttpService(accountServiceSpy, armServiceSpy);

@@ -1,4 +1,3 @@
-import { Response } from "@angular/http";
 import { ArmBatchAccount, Subscription } from "app/models";
 import { List } from "immutable";
 import { of } from "rxjs";
@@ -27,15 +26,12 @@ describe("ArmBatchAccountService", () => {
     beforeEach((done) => {
         httpSpy = {
             get: jasmine.createSpy("any").and.callFake((subscription, url) => {
-                return of(new Response({
-                    status: 200,
-                    body: JSON.stringify({
-                        value: [{
-                            id: `${subscription.id}/some-account-1`,
-                            name: "some-account-1",
-                        }],
-                    }),
-                } as any));
+                return of({
+                    value: [{
+                        id: `${subscription.id}/some-account-1`,
+                        name: "some-account-1",
+                    }],
+                });
             }),
         };
 

@@ -1,11 +1,9 @@
+import { HttpErrorResponse } from "@angular/common/http";
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
-import { Response, ResponseOptions } from "@angular/http";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { of, throwError } from "rxjs";
-
 import { MaterialModule, ServerError } from "@batch-flask/core";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { I18nUIModule } from "@batch-flask/ui";
@@ -13,6 +11,7 @@ import { NotificationService } from "@batch-flask/ui/notifications";
 import { Permission } from "@batch-flask/ui/permission";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { ArmBatchAccountService, AuthorizationHttpService, SubscriptionService } from "app/services";
+import { of, throwError } from "rxjs";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
 import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
@@ -35,37 +34,34 @@ describe("BatchAccountCreateComponent ", () => {
         accountServiceSpy = {
             putResourcGroup: jasmine.createSpy("putResourcGroup").and.callFake((sub, rg, body) => {
                 if (sub.subscriptionId === "mock-bad-subscription") {
-                    const options = new ResponseOptions({
+                    const options = {
                         status: 400,
-                        body: JSON.stringify({ error: { message: "invalid subscription" } }),
-                    });
-                    return throwError(ServerError.fromARM(new Response(options)));
+                        error: { error: { message: "invalid subscription" } },
+                    };
+                    return throwError(ServerError.fromARM(new HttpErrorResponse(options)));
                 }
-                const options = new ResponseOptions({
+                return of(ServerError.fromARM(new HttpErrorResponse({
                     status: [200, 201][Math.floor(Math.random() * 2)],
-                    body: JSON.stringify({
+                    error: JSON.stringify({
                         id: `${sub.subscriptionId}/${rg}`,
                         name: rg,
                     }),
-                });
-                return of(ServerError.fromARM(new Response(options)));
+                })));
             }),
             putBatchAccount: jasmine.createSpy("putBatchAccount").and.callFake((sub, rg, account, body) => {
                 if (sub.subscriptionId === "mock-bad-subscription") {
-                    const options = new ResponseOptions({
+                    return throwError(ServerError.fromARM(new HttpErrorResponse({
                         status: 400,
-                        body: JSON.stringify({ error: { message: "invalid subscription" } }),
-                    });
-                    return throwError(ServerError.fromARM(new Response(options)));
+                        error: JSON.stringify({ error: { message: "invalid subscription" } }),
+                    })));
                 }
-                const options = new ResponseOptions({
+                return of(ServerError.fromARM(new HttpErrorResponse({
                     status: [200, 201][Math.floor(Math.random() * 2)],
-                    body: JSON.stringify({
+                    error: JSON.stringify({
                         id: `${sub.subscriptionId}/${rg}/${account}`,
                         location: body.location,
                     }),
-                });
-                return of(ServerError.fromARM(new Response(options)));
+                })));
             }),
             nameAvailable: jasmine.createSpy("nameAvailable").and.callFake((name, sub, loc) => {
                 if (name === "badname") {
@@ -263,8 +259,8 @@ describe("BatchAccountCreateComponent ", () => {
             validateControl(component.form, "location").fails(validators.required).with(null);
             validateControl(component.form, "location").passes(validators.required).with("sub-1");
             validateControl(component.form, "location").passes("quotaReached").with("validquota");
-            validateControl(component.form, "location").fails("quotaReached").with("invalidquota" );
-            validateControl(component.form, "location").fails("serverError").with( "servererror" );
+            validateControl(component.form, "location").fails("quotaReached").with("invalidquota");
+            validateControl(component.form, "location").fails("serverError").with("servererror");
         });
     });
 });

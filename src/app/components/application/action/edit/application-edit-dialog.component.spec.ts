@@ -1,15 +1,14 @@
+import { HttpErrorResponse } from "@angular/common/http";
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
-import { Response, ResponseOptions } from "@angular/http";
 import { By } from "@angular/platform-browser";
-import { of, throwError } from "rxjs";
-
 import { ServerError } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { ApplicationEditDialogComponent } from "app/components/application/action";
 import { ApplicationService } from "app/services";
+import { of, throwError } from "rxjs";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
@@ -28,11 +27,11 @@ describe("ApplicationEditDialogComponent ", () => {
         appServiceSpy = {
             patch: jasmine.createSpy("patch").and.callFake((applicationId: string, jsonData: any) => {
                 if (applicationId === "throw-me") {
-                    return throwError(ServerError.fromARM(new Response(new ResponseOptions({
+                    return throwError(ServerError.fromARM(new HttpErrorResponse({
                         status: 400,
-                        body: JSON.stringify({ error: { message: "blast, we failed" } }),
+                        error: JSON.stringify({ error: { message: "blast, we failed" } }),
                         statusText: "Bad request",
-                    }))));
+                    })));
                 }
 
                 return of({});

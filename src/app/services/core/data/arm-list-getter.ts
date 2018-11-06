@@ -4,6 +4,7 @@ import {
     ContinuationToken, HttpRequestOptions, ListGetter, ListGetterConfig, ListOptions, Record,
 } from "@batch-flask/core";
 import { Observable } from "rxjs";
+import { map, share } from "rxjs/operators";
 import { ArmHttpService } from "../../arm-http.service";
 
 export interface ArmListResponse<TEntity = any> {
@@ -30,11 +31,17 @@ export class ArmListGetter<TEntity extends Record<any>, TParams> extends ListGet
     protected list(params: TParams, options: ListOptions): Observable<any> {
         return this.arm.get<ArmListResponse<TEntity>>(
             this._provideUri(params, options),
-            this._requestOptions(options));
+            this._requestOptions(options)).pipe(
+                map(x => ({ data: x.value, nextLink: x.nextLink })),
+                share(),
+            );
     }
 
     protected listNext(token: ContinuationToken): Observable<any> {
-        return this.arm.get<ArmListResponse<TEntity>>(token.nextLink);
+        return this.arm.get<ArmListResponse<TEntity>>(token.nextLink).pipe(
+            map(x => ({ data: x.value, nextLink: x.nextLink })),
+            share(),
+        );
     }
 
     private _requestOptions(options: ListOptions): HttpRequestOptions {

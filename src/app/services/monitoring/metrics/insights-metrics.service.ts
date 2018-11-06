@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { Response } from "@angular/http";
 import { Observable } from "rxjs";
 
 import { Metric, MetricValue, MonitoringMetricList } from "app/models/monitoring";
@@ -74,9 +73,8 @@ export class InsightsMetricsService {
         );
     }
 
-    private _processResponse(request: MonitoringMetricDefinition, response: Response) {
-        const data = response.json();
-        const metrics: Metric[] = data.value.map((object, index): Metric => {
+    private _processResponse(request: MonitoringMetricDefinition, response: any) {
+        const metrics: Metric[] = response.value.map((object, index): Metric => {
             const definition = request.metrics[index];
             const label = definition.label || this._convertToSentenceCase(object.name.localizedValue);
             let data = [];
@@ -93,7 +91,7 @@ export class InsightsMetricsService {
             } as Metric;
         });
         return new MonitoringMetricList({
-            interval: data.interval,
+            interval: response.interval,
             metrics: metrics,
         });
     }

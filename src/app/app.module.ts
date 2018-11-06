@@ -31,7 +31,6 @@ import { TaskModule } from "app/components/task/task.module";
 import { BatchExplorerErrorHandler } from "app/error-handler";
 
 // services
-import { HttpModule } from "@angular/http";
 import { LocaleService, MaterialModule, PollService, TranslationsLoaderService } from "@batch-flask/core";
 import { CommonModule } from "app/components/common";
 import { LayoutModule } from "app/components/layout";
@@ -125,7 +124,6 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         FormsModule,
         MaterialModule,
         ReactiveFormsModule,
-        HttpModule,
         RendererTelemetryModule,
         RouterModule.forRoot(routes, { useHash: true, paramsInheritanceStrategy: "always" }),
         BaseModule,

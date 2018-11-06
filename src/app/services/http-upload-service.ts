@@ -1,17 +1,18 @@
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Headers, Http, RequestOptions, RequestOptionsArgs, Response } from "@angular/http";
-import { AsyncSubject, Observable } from "rxjs";
+import { HttpRequestOptions } from "@batch-flask/core";
+import { Observable } from "rxjs";
 
 export interface CommitBlockListOptions {
     blockIds: string[];
     fileType: string;
-    options?: RequestOptionsArgs;
+    options?: HttpRequestOptions;
 }
 
 export interface UploadBlockOptions {
     blockId: string;
     blockContent: ArrayBuffer;
-    options?: RequestOptionsArgs;
+    options?: HttpRequestOptions;
 }
 
 /**
@@ -19,55 +20,35 @@ export interface UploadBlockOptions {
  */
 @Injectable()
 export class HttpUploadService {
-    constructor(private http: Http) {
+    constructor(private http: HttpClient) {
     }
 
-    public putBlock(sasUrl: string, uploadOptions: UploadBlockOptions): Observable<Response> {
+    public putBlock(sasUrl: string, uploadOptions: UploadBlockOptions): Observable<any> {
         const options = this._getRequestOptionsHeader(uploadOptions.options);
-        options.headers.append("x-ms-blob-type", "BlockBlob");
+        options.headers = (options.headers as any).set("x-ms-blob-type", "BlockBlob");
 
         // add the block id to the uri
         sasUrl = sasUrl + "&comp=block&blockid=" + uploadOptions.blockId;
 
-        const subject = new AsyncSubject<Response>();
-        this.http.put(sasUrl, uploadOptions.blockContent, options).subscribe({
-            next: (data) => {
-                subject.next(data);
-                subject.complete();
-            },
-            error: (e) => subject.error(e),
-        });
-
-        return subject.asObservable();
+        return this.http.put<any>(sasUrl, uploadOptions.blockContent, options);
     }
 
-    public commitBlockList(sasUrl: string, commitOptions: CommitBlockListOptions): Observable<Response> {
+    public commitBlockList(sasUrl: string, commitOptions: CommitBlockListOptions): Observable<any> {
         const options = this._getRequestOptionsHeader(commitOptions.options);
-        options.headers.append("x-ms-blob-content-type", commitOptions.fileType);
+        options.headers = (options.headers as any).set("x-ms-blob-content-type", commitOptions.fileType);
 
         // add the commit block list parameter
         sasUrl = sasUrl + "&comp=blocklist";
 
-        const subject = new AsyncSubject<Response>();
         const requestBody = this._generateBlockListXml(commitOptions.blockIds);
-        this.http.put(sasUrl, requestBody, options).subscribe({
-            next: (data) => {
-                subject.next(data);
-                subject.complete();
-            },
-            error: (e) => subject.error(e),
-        });
-
-        return subject.asObservable();
+        return this.http.put<any>(sasUrl, requestBody, options);
     }
 
-    private _getRequestOptionsHeader(originalOptions?: RequestOptionsArgs): RequestOptions {
-        const options = originalOptions
-            ? new RequestOptions(originalOptions)
-            : new RequestOptions();
+    private _getRequestOptionsHeader(originalOptions?: HttpRequestOptions): HttpRequestOptions {
+        const options = originalOptions || {};
 
         if (!options.headers) {
-            options.headers = new Headers();
+            options.headers = new HttpHeaders();
         }
 
         return options;

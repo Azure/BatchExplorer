@@ -1,4 +1,3 @@
-import { Response, ResponseOptions } from "@angular/http";
 import { Subscription, of } from "rxjs";
 import * as Fixtures from "test/fixture";
 
@@ -23,7 +22,7 @@ describe("InsightsMetricsService", () => {
         armServiceSpy = {
             get: jasmine.createSpy("get").and.callFake((url, options) => {
                 requestUrl = url;
-                return of(new Response(new ResponseOptions(mockeResponse)));
+                return of(mockeResponse);
             }),
         };
         monitorService = new InsightsMetricsService(accountServiceSpy, armServiceSpy);
