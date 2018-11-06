@@ -26,15 +26,8 @@
     "baseUrl": ".",
     "noUnusedLocals": true,
     "paths": {
-      // "app/*": [
-      //   "app/*",
-      // ],
-      // "test/*": [
-      //   "test/*",
-      // ],
       "*": [
         "src/*",
-        "*",
       ],
     },
     "types": [
