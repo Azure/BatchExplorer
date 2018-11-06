@@ -135,7 +135,7 @@ export class FileNavigator<TParams = any> {
             }),
             shareReplay(1),
         );
-        obs.subscribe(); // Make sure it trigger at least once
+        obs.subscribe({ error: () => null }); // Make sure it trigger at least once
         return obs;
     }
 
