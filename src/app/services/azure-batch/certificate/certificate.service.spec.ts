@@ -131,7 +131,7 @@ describe("CertificateService", () => {
 });
 
 async function loadCertificate(file: string): Promise<File> {
-    const response = await fetch(`base/test/fixtures/certificates/${file}`);
+    const response = await fetch(`base/src/test/fixtures/certificates/${file}`);
     const blob = await response.blob();
     return new File([blob], file);
 }
