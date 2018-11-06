@@ -21,6 +21,15 @@ export interface HttpRequestOptions<O extends HttpObserve = "body", R extends Ht
     withCredentials?: boolean;
 }
 
+export enum HttpMethod {
+    Get = "GET",
+    Post = "POST",
+    Patch = "PATCH",
+    Head = "HEAD",
+    Put = "PUT",
+    Delete = "DELETE",
+}
+
 /**
  * abstract class for a http warpper service
  * This use angular 5 HttpClient
@@ -68,4 +77,16 @@ export abstract class HttpService extends HttpClient {
         options.headers = options.headers.set("Authorization", `${accessToken.token_type} ${accessToken.access_token}`);
         return options;
     }
+}
+
+export interface HttpInterface {
+    get<T>(uri: string, options?: HttpRequestOptions): Observable<T>;
+
+    post<T>(uri: string, body?: any, options?: HttpRequestOptions): Observable<T>;
+
+    put<T>(uri: string, options?: HttpRequestOptions): Observable<T>;
+
+    patch<T>(uri: string, body: any, options?: HttpRequestOptions): Observable<T>;
+
+    delete<T>(uri: string, options?: HttpRequestOptions): Observable<T>;
 }

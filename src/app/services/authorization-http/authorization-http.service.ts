@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
-import { RequestOptionsArgs, Response } from "@angular/http";
-import { Observable, empty, of } from "rxjs";
-
+import { HttpRequestOptions } from "@batch-flask/core";
 import { Permission } from "@batch-flask/ui/permission";
+import { Observable, empty, of } from "rxjs";
 import { expand, flatMap, map, reduce, shareReplay, take } from "rxjs/operators";
 import { ArmBatchAccount } from "../../models";
 import { ArmHttpService } from "../arm-http.service";
 import { BatchAccountService } from "../batch-account";
+import { ArmListResponse } from "../core";
 
 export interface RoleDefinitionPermission {
     actions: string[];
@@ -106,13 +106,13 @@ export class AuthorizationHttpService {
         return Permission.None;
     }
 
-    private _recursiveRequest(uri: string, options?: RequestOptionsArgs): Observable<any> {
-        return this.armService.get(uri, options).pipe(
-            expand(obs => {
-                return obs.json().nextLink ? this.armService.get(obs.json().nextLink, options) : empty();
+    private _recursiveRequest<T = any>(uri: string, options?: HttpRequestOptions): Observable<T[]> {
+        return this.armService.get<ArmListResponse<T>>(uri, options).pipe(
+            expand(response => {
+                return response.nextLink ? this.armService.get(response.nextLink, options) : empty();
             }),
-            reduce((permission, response: Response) => {
-                return [...permission, ...response.json().value];
+            reduce((permission, response: ArmListResponse<T>) => {
+                return [...permission, ...response.value];
             }, []),
         );
     }

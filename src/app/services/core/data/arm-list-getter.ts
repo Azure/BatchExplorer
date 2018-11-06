@@ -1,9 +1,15 @@
+import { HttpParams } from "@angular/common/http";
 import { Type } from "@angular/core";
-import { RequestOptions, Response, URLSearchParams } from "@angular/http";
-import { ContinuationToken, ListGetter, ListGetterConfig, ListOptions, Record } from "@batch-flask/core";
+import {
+    ContinuationToken, HttpRequestOptions, ListGetter, ListGetterConfig, ListOptions, Record,
+} from "@batch-flask/core";
 import { Observable } from "rxjs";
-import { map, share } from "rxjs/operators";
 import { ArmHttpService } from "../../arm-http.service";
+
+export interface ArmListResponse<TEntity = any> {
+    value: TEntity[];
+    nextLink: string;
+}
 
 export interface ArmListConfig<TEntity extends Record<any>, TParams> extends ListGetterConfig<TEntity, TParams> {
     uri: (params: TParams, options: any) => string;
@@ -22,48 +28,32 @@ export class ArmListGetter<TEntity extends Record<any>, TParams> extends ListGet
     }
 
     protected list(params: TParams, options: ListOptions): Observable<any> {
-        return this.arm.get(
+        return this.arm.get<ArmListResponse<TEntity>>(
             this._provideUri(params, options),
-            this._requestOptions(options)).pipe(
-                map(x => this._processArmResponse(x)),
-                share(),
-            );
+            this._requestOptions(options));
     }
 
     protected listNext(token: ContinuationToken): Observable<any> {
-        return this.arm.get(token.nextLink).pipe(
-            map(x => this._processArmResponse(x)),
-            share(),
-        );
+        return this.arm.get<ArmListResponse<TEntity>>(token.nextLink);
     }
 
-    private _processArmResponse(response: Response) {
-        const body = response.json();
-        return {
-            data: body.value,
-            nextLink: body.nextLink,
-        };
-    }
-
-    private _requestOptions(options: ListOptions): RequestOptions {
-        const search = new URLSearchParams();
+    private _requestOptions(options: ListOptions): HttpRequestOptions {
+        let params = new HttpParams();
         if (options.filter) {
-            search.set("$filter", options.filter.toOData());
+            params = params.set("$filter", options.filter.toOData());
         }
 
         if (options.select) {
-            search.set("$select", options.select);
+            params = params.set("$select", options.select);
         }
 
         if (options.maxResults) {
-            search.set("$top", options.maxResults.toString());
+            params = params.set("$top", options.maxResults.toString());
         }
 
         for (const key of Object.keys(options.attributes)) {
-            search.set(key, options.attributes[key]);
+            params = params.set(key, options.attributes[key]);
         }
-        return new RequestOptions({
-            search,
-        });
+        return { params };
     }
 }

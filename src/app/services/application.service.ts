@@ -120,7 +120,7 @@ export class ApplicationService {
         return this.arm
             .put(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`)
             .pipe(
-                map(response => new ApplicationPackage(response.json())),
+                map(response => new ApplicationPackage(response)),
             );
     }
 
@@ -172,7 +172,7 @@ export class ApplicationService {
      */
     public getPackage(applicationId: string, version: string): Observable<ApplicationPackage> {
         return this.arm.get(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`).pipe(
-            map(response => new ApplicationPackage(response.json())),
+            map(response => new ApplicationPackage(response)),
         );
     }
 

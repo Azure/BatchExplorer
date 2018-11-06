@@ -138,7 +138,7 @@ export class PricingService {
                     const { subscription } = account;
 
                     const url = `${commerceUrl(subscription.subscriptionId)}/RateCard?$filter=${rateCardFilter()}`;
-                    return this.arm.get(url).pipe(map((response) => response.json().Meters));
+                    return this.arm.get<any>(url).pipe(map((response) => response.Meters));
                 } else {
                     return of([]);
                 }

@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
-import { Observable, of } from "rxjs";
-import { first, flatMap } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { first, map } from "rxjs/operators";
 import { ArmHttpService } from "../arm-http.service";
+import { ArmListResponse } from "../core";
 
 export enum ProviderType {
     Network = "Network",
@@ -39,13 +40,12 @@ export class NetworkConfigurationService {
     public listArmVirtualNetworks(subscriptionId: string, location: string): Observable<VirtualNetwork[]> {
         const type = ProviderType.Network;
         const url = this._getNetworkUrl(subscriptionId, type);
-        return this.armService.get(url).pipe(
-            flatMap(response => {
-                const virtualNetworks = response.json();
-                if (!virtualNetworks || !virtualNetworks.value) {
-                    return of(null);
+        return this.armService.get<ArmListResponse<VirtualNetwork>>(url).pipe(
+            map(response => {
+                if (!response || !response.value) {
+                    return [];
                 }
-                return of(this._filterByLocation(virtualNetworks.value, location, type));
+                return this._filterByLocation(response.value, location, type);
             }),
             first(),
         );
@@ -59,13 +59,12 @@ export class NetworkConfigurationService {
     public listClassicVirtualNetworks(subscriptionId: string, location: string): Observable<VirtualNetwork[]> {
         const type = ProviderType.ClassicNetwork;
         const url = this._getNetworkUrl(subscriptionId, type);
-        return this.armService.get(url).pipe(
-            flatMap(response => {
-                const virtualNetworks = response.json();
-                if (!virtualNetworks || !virtualNetworks.value) {
-                    return of(null);
+        return this.armService.get<ArmListResponse<VirtualNetwork>>(url).pipe(
+            map(response => {
+                if (!response || !response.value) {
+                    return [];
                 }
-                return of(this._filterByLocation(virtualNetworks.value, location, type));
+                return this._filterByLocation(response.value, location, type);
             }),
             first(),
         );
