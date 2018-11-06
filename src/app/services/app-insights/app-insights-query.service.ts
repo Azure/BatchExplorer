@@ -43,20 +43,20 @@ export class AppInsightsQueryService {
      * @param query
      */
     public metrics(appId: string, query: any) {
-        return this.appInsightsApi.post(`apps/${appId}/metrics`, query);
+        return this.appInsightsApi.post<any>(`apps/${appId}/metrics`, query);
     }
 
     public getPoolPerformance(appId: string, poolId: string, lastNMinutes: number):
         Observable<BatchPerformanceMetrics> {
         return this.metrics(appId, this._buildQuery(poolId, null, lastNMinutes)).pipe(map((data) => {
-            return this._processMetrics(data.json());
+            return this._processMetrics(data);
         }));
     }
 
     public getNodePerformance(appId: string, poolId: string, nodeId: string, lastNMinutes: number):
         Observable<BatchPerformanceMetrics> {
         return this.metrics(appId, this._buildQuery(poolId, nodeId, lastNMinutes)).pipe(map((data) => {
-            return this._processMetrics(data.json());
+            return this._processMetrics(data);
         }));
     }
 
