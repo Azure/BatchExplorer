@@ -95,7 +95,7 @@ export class FileTreeStructure {
         this.directories[""] = this.root;
     }
 
-    public markFileAsLoaded(path: string) {
+    public markFileAsLoadedAndUnkown(path: string) {
         const nodePath = CloudPathUtils.normalize(path);
         this._unkownFiles.add(nodePath);
     }
