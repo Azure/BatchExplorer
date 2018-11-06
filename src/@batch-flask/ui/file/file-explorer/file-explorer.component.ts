@@ -199,8 +199,7 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
         }));
 
         this._workspaceSubs.push(this.workspace.currentNode.subscribe((node) => {
-            const isOpenedFile = this.workspace.isFileOpen(node.path, node.source);
-            this.currentNode = { ...node, treeNode: new FileTreeNode(node.treeNode), isOpenedFile } as any;
+            this.currentNode = { ...node, treeNode: new FileTreeNode(node.treeNode) } as any;
             this.changeDetector.markForCheck();
         }));
     }

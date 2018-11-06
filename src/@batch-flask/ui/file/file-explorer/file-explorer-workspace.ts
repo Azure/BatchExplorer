@@ -32,6 +32,7 @@ export interface CurrentNode {
     source: FileSource;
     path: string;
     treeNode: FileTreeNode;
+    isOpenedFile: boolean;
 }
 
 export class FileExplorerWorkspace {
@@ -59,6 +60,7 @@ export class FileExplorerWorkspace {
                             source,
                             path: node.path,
                             treeNode: node,
+                            isOpenedFile: this.isFileOpen(path, source),
                         };
                     }),
                 );
