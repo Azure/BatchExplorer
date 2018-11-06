@@ -1,11 +1,11 @@
 import { Injectable, OnDestroy } from "@angular/core";
+import { BasicListGetter, DataCache } from "@batch-flask/core";
 import { File, FileLoader, FileNavigator, FileSystemService } from "@batch-flask/ui";
 import { NcjTemplateType } from "app/models";
 import { Constants } from "common";
 import * as path from "path";
 import { BehaviorSubject, Observable, from } from "rxjs";
 import { filter, tap } from "rxjs/operators";
-import { BasicListGetter, DataCache } from "src/@batch-flask/core";
 import stripBom from "strip-bom";
 import { LocalFileStorage } from "../local-file-storage.service";
 

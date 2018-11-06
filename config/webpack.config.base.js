@@ -17,8 +17,8 @@ const METADATA = {
 
 const baseConfig = {
     entry: {
-        "polyfills": "./app/polyfills.browser",
-        "app": "./app/app.ts",
+        "polyfills": "./src/app/polyfills.browser",
+        "app": "./src/app/app.ts",
     },
 
     resolve: {
@@ -42,17 +42,17 @@ const baseConfig = {
         new AngularCompilerPlugin({
             skipCodeGeneration: !AOT,
             tsConfigPath: "./tsconfig.browser.json",
-            mainPath: "./app/app.ts",              // will auto-detect the root NgModule.
+            mainPath: "./src/app/app.ts",              // will auto-detect the root NgModule.
             sourceMap: true,
             // forkTypeChecker: !AOT,
         }),
         new CopyWebpackPlugin([
             { context: "src/client/splash-screen", from: "**/*", to: "client/splash-screen" },
             { context: "src/client/proxy", from: "**/*", to: "client/proxy" },
-            { context: "app/assets", from: "**/*", to: "assets" },
+            { context: "src/app/assets", from: "**/*", to: "assets" },
         ]),
         new HtmlWebpackPlugin({
-            template: "app/index.html",
+            template: "src/app/index.html",
             chunksSortMode: "dependency",
             inject: "body",
             metadata: METADATA,
