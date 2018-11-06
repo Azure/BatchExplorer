@@ -1,3 +1,4 @@
+// tslint:disable:file-name-casing
 import * as path from "path";
 import * as Lint from "tslint";
 import { ImportKind, findImports } from "tsutils";

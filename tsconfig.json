@@ -26,15 +26,8 @@
     "baseUrl": ".",
     "noUnusedLocals": true,
     "paths": {
-      // "app/*": [
-      //   "app/*",
-      // ],
-      // "test/*": [
-      //   "test/*",
-      // ],
       "*": [
         "src/*",
-        "*",
       ],
     },
     "types": [
@@ -60,7 +53,6 @@
   ],
   // This is not actually used for building but to let the editor know what files use this config
   "include": [
-    "app/**/*.ts",
     "src/**/*.ts",
     "test/**/*.ts",
     "package.json",

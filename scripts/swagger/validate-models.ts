@@ -12,8 +12,8 @@ import "zone.js";
 console.log("Nodepath", process.env.NODE_PATH);
 import * as moment from "moment";
 import fetch from "node-fetch";
-import * as models from "../../app/models";
 import { metadataForCtr } from "../../src/@batch-flask/core/record/helpers";
+import * as models from "../../src/app/models";
 
 const dataPlaneVersion = "2018-08-01.7.0";
 

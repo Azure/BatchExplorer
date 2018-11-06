@@ -17,7 +17,7 @@ module.exports = function(config) {
                 watched: false
             },
             {
-                pattern: "./test/fixtures/**/*",
+                pattern: "./src/test/fixtures/**/*",
                 watched: false,
                 included: false,
                 served: true,

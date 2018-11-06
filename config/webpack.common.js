@@ -5,7 +5,7 @@ const rules = {
     html: {
         test: /\.html$/,
         loader: "raw-loader",
-        exclude: [/node_modules/, helpers.root("app/index.html")],
+        exclude: [/node_modules/, helpers.root("src/app/index.html")],
     },
     json: {
         type: "javascript/auto",

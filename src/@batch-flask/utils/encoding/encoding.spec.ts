@@ -1,7 +1,7 @@
 import { Encoding, EncodingUtils } from "@batch-flask/utils";
 
 async function loadFile(file: string): Promise<Buffer> {
-    const response = await fetch(`base/test/fixtures/encoding/${file}`);
+    const response = await fetch(`base/src/test/fixtures/encoding/${file}`);
     const reader = response.body.getReader();
     const result = await reader.read();
     if (result.value) {
