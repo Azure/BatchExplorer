@@ -1,18 +1,18 @@
 import { Location } from "@angular/common";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response } from "@angular/http";
-import { AccessToken, RetryableHttpCode, ServerError } from "@batch-flask/core";
+import { AccessToken, HttpInterface, HttpMethod, HttpRequestOptions, RetryableHttpCode, ServerError,
+ } from "@batch-flask/core";
 import { ArmBatchAccount } from "app/models";
 import { AdalService } from "app/services/adal";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
 import { Constants } from "common";
 import { Observable, throwError, timer } from "rxjs";
-import { catchError, flatMap, mergeMap, retryWhen, share, take, tap } from "rxjs/operators";
+import { catchError, mergeMap, retryWhen, share, switchMap, take, tap } from "rxjs/operators";
 import { BatchAccountService } from "../batch-account";
 
-function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
-    const options = original || new RequestOptions();
-    options.method = method;
+function mergeOptions(original: HttpRequestOptions, body?: any): HttpRequestOptions {
+    const options = original || {};
     if (body) {
         options.body = body;
     }
@@ -21,9 +21,9 @@ function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?
 }
 
 @Injectable()
-export class AppInsightsApiService {
+export class AppInsightsApiService implements HttpInterface {
     constructor(
-        private http: Http,
+        private http: HttpClient,
         private adal: AdalService,
         private accountService: BatchAccountService,
         private batchExplorer: BatchExplorerService) {
@@ -38,8 +38,9 @@ export class AppInsightsApiService {
     }
 
     public request(
+        method: HttpMethod,
         uri: string,
-        options: RequestOptionsArgs): Observable<Response> {
+        options: HttpRequestOptions): Observable<any> {
 
         return this.accountService.currentAccount.pipe(
             take(1),
@@ -52,12 +53,12 @@ export class AppInsightsApiService {
                     });
                 }
             }),
-            flatMap((account: ArmBatchAccount) => {
+            switchMap((account: ArmBatchAccount) => {
                 return this.adal.accessTokenData(account.subscription.tenantId, this.resourceUrl);
             }),
-            flatMap((accessToken) => {
+            switchMap((accessToken) => {
                 options = this._setupRequestOptions(options, accessToken);
-                return this.http.request(this._computeUrl(uri), options).pipe(
+                return this.http.request(method, this._computeUrl(uri), options).pipe(
                     retryWhen(attempts => this._retryWhen(attempts)),
                     catchError((error) => {
                         const err = ServerError.fromARM(error);
@@ -69,33 +70,34 @@ export class AppInsightsApiService {
         );
     }
 
-    public get(uri: string, options?: RequestOptionsArgs) {
-        return this.request(uri, mergeOptions(options, RequestMethod.Get));
+    public get<T>(uri: string, options?: HttpRequestOptions): Observable<T> {
+        return this.request(HttpMethod.Get, uri, options);
     }
 
-    public post(uri: string, body?: any, options?: RequestOptionsArgs) {
-        return this.request(uri, mergeOptions(options, RequestMethod.Post, body));
+    public post<T>(uri: string, body?: any, options?: HttpRequestOptions): Observable<T> {
+        return this.request(HttpMethod.Post, uri, mergeOptions(options, body));
     }
 
-    public put(uri: string, options?: RequestOptionsArgs) {
-        return this.request(uri, mergeOptions(options, RequestMethod.Put));
+    public put<T>(uri: string, options?: HttpRequestOptions): Observable<T> {
+        return this.request(HttpMethod.Put, uri, options);
     }
 
-    public patch(uri: string, body: any, options?: RequestOptionsArgs) {
-        return this.request(uri, mergeOptions(options, RequestMethod.Patch, body));
+    public patch<T>(uri: string, body: any, options?: HttpRequestOptions): Observable<T> {
+        return this.request(HttpMethod.Patch, uri, mergeOptions(options, body));
     }
 
-    public delete(uri: string, options?: RequestOptionsArgs) {
-        return this.request(uri, mergeOptions(options, RequestMethod.Delete));
+    public delete<T>(uri: string, options?: HttpRequestOptions): Observable<T> {
+        return this.request(HttpMethod.Delete, uri, options);
     }
 
     private _setupRequestOptions(
-        originalOptions: RequestOptionsArgs,
-        accessToken: AccessToken): RequestOptionsArgs {
+        options: HttpRequestOptions,
+        accessToken: AccessToken): HttpRequestOptions {
 
-        const options = new RequestOptions(originalOptions);
-        options.headers = new Headers(originalOptions.headers);
-        options.headers.append("Authorization", `${accessToken.token_type} ${accessToken.access_token}`);
+        if (!(options.headers instanceof HttpHeaders)) {
+            options.headers = new HttpHeaders(options.headers);
+        }
+        options.headers = options.headers.set("Authorization", `${accessToken.token_type} ${accessToken.access_token}`);
 
         return options;
     }

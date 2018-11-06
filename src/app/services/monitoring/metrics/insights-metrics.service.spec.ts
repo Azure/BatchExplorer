@@ -1,4 +1,3 @@
-import { Response, ResponseOptions } from "@angular/http";
 import { Subscription, of } from "rxjs";
 import * as Fixtures from "test/fixture";
 
@@ -23,7 +22,7 @@ describe("InsightsMetricsService", () => {
         armServiceSpy = {
             get: jasmine.createSpy("get").and.callFake((url, options) => {
                 requestUrl = url;
-                return of(new Response(new ResponseOptions(mockeResponse)));
+                return of(mockeResponse);
             }),
         };
         monitorService = new InsightsMetricsService(accountServiceSpy, armServiceSpy);
@@ -36,55 +35,53 @@ describe("InsightsMetricsService", () => {
 
     it("should have correct resposne format", () => {
         mockeResponse = {
-            body: JSON.stringify({
-                value: [{
-                    name: {
-                        value: "TaskCompleteEvent",
-                        localizedValue: "Task Complete Events",
-                    },
-                    timeseries: [{
-                        data: [{
-                            timeStamp: "2018-01-11T19:10:00Z",
-                        },
-                        {
-                            timeStamp: "2018-01-11T19:11:00Z",
-                        },
-                        {
-                            timeStamp: "2018-01-11T19:12:00Z",
-                        },
-                        {
-                            timeStamp: "2018-01-11T19:13:00Z",
-                        },
-                        {
-                            timeStamp: "2018-01-11T19:14:00Z",
-                        },
-                        {
-                            timeStamp: "2018-01-11T19:15:00Z",
-                        },
-                        {
-                            timeStamp: "2018-01-11T19:16:00Z",
-                        }],
-                    }],
+            value: [{
+                name: {
+                    value: "TaskCompleteEvent",
+                    localizedValue: "Task Complete Events",
                 },
-                {
-                    name: {
-                        value: "TaskStartEvent",
-                        localizedValue: "Task Start Events",
+                timeseries: [{
+                    data: [{
+                        timeStamp: "2018-01-11T19:10:00Z",
                     },
-                    unit: "Count",
-                    timeseries: [{
-                        data: [{
-                            timeStamp: "2018-01-11T19:10:00Z",
-                        },
-                        {
-                            timeStamp: "2018-01-11T19:11:00Z",
-                        },
-                        {
-                            timeStamp: "2018-01-11T19:12:00Z",
-                        }],
+                    {
+                        timeStamp: "2018-01-11T19:11:00Z",
+                    },
+                    {
+                        timeStamp: "2018-01-11T19:12:00Z",
+                    },
+                    {
+                        timeStamp: "2018-01-11T19:13:00Z",
+                    },
+                    {
+                        timeStamp: "2018-01-11T19:14:00Z",
+                    },
+                    {
+                        timeStamp: "2018-01-11T19:15:00Z",
+                    },
+                    {
+                        timeStamp: "2018-01-11T19:16:00Z",
                     }],
                 }],
-            }),
+            },
+            {
+                name: {
+                    value: "TaskStartEvent",
+                    localizedValue: "Task Start Events",
+                },
+                unit: "Count",
+                timeseries: [{
+                    data: [{
+                        timeStamp: "2018-01-11T19:10:00Z",
+                    },
+                    {
+                        timeStamp: "2018-01-11T19:11:00Z",
+                    },
+                    {
+                        timeStamp: "2018-01-11T19:12:00Z",
+                    }],
+                }],
+            }],
         };
 
         subs.push(monitorService.getTaskStates(MonitorChartTimeFrame.Hour).subscribe(response => {
@@ -101,17 +98,15 @@ describe("InsightsMetricsService", () => {
 
     it("node state should have a formatted name", () => {
         mockeResponse = {
-            body: JSON.stringify({
-                value: [{
-                    name: {
-                        value: "StartingNodeCount",
-                        localizedValue: "Starting Node Count",
-                    },
-                    timeseries: [{
-                        data: [],
-                    }],
+            value: [{
+                name: {
+                    value: "StartingNodeCount",
+                    localizedValue: "Starting Node Count",
+                },
+                timeseries: [{
+                    data: [],
                 }],
-            }),
+            }],
         };
 
         subs.push(monitorService.getNodeStates(MonitorChartTimeFrame.Hour).subscribe(response => {

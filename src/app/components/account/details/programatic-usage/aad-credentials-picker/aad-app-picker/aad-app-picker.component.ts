@@ -8,7 +8,7 @@ import { ArmHttpService, AuthorizationHttpService, ResourceAccessService } from 
 import { AADApplicationListParams, AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 import { List } from "immutable";
 import { forkJoin, of } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { catchError } from "rxjs/operators";
 
 import "./aad-app-picker.scss";
 
@@ -73,9 +73,7 @@ export class AADAppPickerComponent implements OnInit, OnDestroy {
     private _loadRoleDefinitions(roleDefs: string[]) {
         const unique = new Set<string>(roleDefs);
 
-        const obs = [...unique].map((x) => {
-            return this.arm.get(x).pipe(map(x => x.json()));
-        });
+        const obs = [...unique].map(x => this.arm.get<any>(x));
         forkJoin(obs).subscribe((roles) => {
             for (const role of roles) {
                 this._permissions.set(role.id, this.permissionService

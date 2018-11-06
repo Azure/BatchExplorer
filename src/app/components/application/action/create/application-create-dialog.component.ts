@@ -1,6 +1,5 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Response } from "@angular/http";
 import * as storage from "azure-storage";
 import { Observable, throwError } from "rxjs";
 import { flatMap, tap } from "rxjs/operators";
@@ -101,7 +100,7 @@ export class ApplicationCreateDialogComponent {
                             `Version ${formData.version} for application '${formData.id}' was successfully created!`,
                         );
                     },
-                    error: (response: Response) => {
+                    error: (response: any) => {
                         /**
                          * Possible errors
                          *  - trying to put a package that already exists and has allowUpdates = false

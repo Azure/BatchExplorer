@@ -1,4 +1,3 @@
-import { Response, ResponseOptions } from "@angular/http";
 import { Permission } from "@batch-flask/ui/permission";
 import { Subscription, of } from "rxjs";
 import { take } from "rxjs/operators";
@@ -10,12 +9,10 @@ describe("AuthorizationHttpService", () => {
     let mockAuthResponse;
     let requestUrl;
     const mockNextLinkResponse = {
-        body: JSON.stringify({
-            value: [{
-                actions: [BatchAccountPermission.Read],
-                noactions: [],
-            }],
-        }),
+        value: [{
+            actions: [BatchAccountPermission.Read],
+            noactions: [],
+        }],
     };
     let accountServiceSpy;
     let armServiceSpy;
@@ -32,9 +29,9 @@ describe("AuthorizationHttpService", () => {
             get: jasmine.createSpy("get").and.callFake((url, options) => {
                 requestUrl = url;
                 if (url === "fakeNextLink") {
-                    return of(new Response(new ResponseOptions(mockNextLinkResponse)));
+                    return of(mockNextLinkResponse);
                 }
-                return of(new Response(new ResponseOptions(mockAuthResponse)));
+                return of(mockAuthResponse);
             }),
         };
         authService = new AuthorizationHttpService(accountServiceSpy, armServiceSpy);
@@ -47,12 +44,10 @@ describe("AuthorizationHttpService", () => {
 
     it("should only have read permission for this resource", () => {
         mockAuthResponse = {
-            body: JSON.stringify({
-                value: [{
-                    actions: [BatchAccountPermission.Read],
-                    noactions: [],
-                }],
-            }),
+            value: [{
+                actions: [BatchAccountPermission.Read],
+                noactions: [],
+            }],
         };
         subs.push(authService.getResourcePermission().subscribe(response => {
             expect(requestUrl).toEqual("myaccount/providers/Microsoft.Authorization/permissions");
@@ -62,12 +57,10 @@ describe("AuthorizationHttpService", () => {
 
     it("should have all permission for this resource", () => {
         mockAuthResponse = {
-            body: JSON.stringify({
-                value: [{
-                    actions: [BatchAccountPermission.Read, BatchAccountPermission.ReadWrite],
-                    noactions: [],
-                }],
-            }),
+            value: [{
+                actions: [BatchAccountPermission.Read, BatchAccountPermission.ReadWrite],
+                noactions: [],
+            }],
         };
         subs.push(authService.getResourcePermission().subscribe(response => {
             expect(requestUrl).toEqual("myaccount/providers/Microsoft.Authorization/permissions");
@@ -77,13 +70,11 @@ describe("AuthorizationHttpService", () => {
 
     it("should recisively request authorization permissions if there is nextLink token in response body", () => {
         mockAuthResponse = {
-            body: JSON.stringify({
                 value: [{
                     actions: [BatchAccountPermission.ReadWrite],
                     noactions: [],
                 }],
                 nextLink: "fakeNextLink",
-            }),
         };
         subs.push(authService.getResourcePermission().subscribe(response => {
             expect(requestUrl).toEqual("fakeNextLink");

@@ -1,5 +1,3 @@
-import { Response } from "@angular/http";
-
 import { HttpErrorResponse } from "@angular/common/http";
 import { exists, log } from "@batch-flask/utils";
 import { BatchError } from "./batch-error";
@@ -125,8 +123,8 @@ export class ServerError {
         });
     }
 
-    public static fromARM(response: Response): ServerError {
-        const { error } = response.json();
+    public static fromARM(response: HttpErrorResponse): ServerError {
+        const error = response.error || {};
         let requestId = null;
         let timestamp = null;
         let code = null;
@@ -138,9 +136,9 @@ export class ServerError {
             timestamp = date && new Date(date);
         }
 
-        if (error) {
-            code = error.code;
-            message = error.message;
+        if (error.error) {
+            code = error.error.code;
+            message = error.error.message;
         }
         return new ServerError({
             status: response.status,

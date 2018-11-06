@@ -1,10 +1,10 @@
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
-import { Response, ResponseOptions } from "@angular/http";
 import { By } from "@angular/platform-browser";
 import { Subject, of, throwError } from "rxjs";
 
+import { HttpErrorResponse } from "@angular/common/http";
 import { ServerError } from "@batch-flask/core";
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
@@ -31,13 +31,12 @@ describe("ApplicationCreateDialogComponent ", () => {
         appServiceSpy = {
             put: jasmine.createSpy("put").and.callFake((applicationId, version) => {
                 if (applicationId === "throw-me") {
-                    const options = new ResponseOptions({
-                        status: 400,
-                        body: JSON.stringify({ error: { message: "blast, we failed" } }),
-                        statusText: "Bad request",
-                    });
 
-                    return throwError(ServerError.fromARM(new Response(options)));
+                    return throwError(ServerError.fromARM(new HttpErrorResponse({
+                        status: 400,
+                        error: { error: { message: "blast, we failed" } },
+                        statusText: "Bad request",
+                    })));
                 }
 
                 return of({ storageUrl: "https://some/url" });
@@ -45,13 +44,12 @@ describe("ApplicationCreateDialogComponent ", () => {
 
             activatePackage: jasmine.createSpy("activatePackage").and.callFake((applicationId, version) => {
                 if (applicationId === "activate-fail") {
-                    const options = new ResponseOptions({
-                        status: 400,
-                        body: JSON.stringify({ error: { message: "blast, we failed" } }),
-                        statusText: "error, error, error",
-                    });
 
-                    return throwError(ServerError.fromARM(new Response(options)));
+                    return throwError(ServerError.fromARM(new HttpErrorResponse({
+                        status: 400,
+                        error:  { error: { message: "blast, we failed" } },
+                        statusText: "error, error, error",
+                    })));
                 }
 
                 return of({});

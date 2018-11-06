@@ -1,9 +1,7 @@
 import { Location } from "@angular/common";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import {
-    Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response, URLSearchParams,
-} from "@angular/http";
-import { AccessToken, RetryableHttpCode, ServerError } from "@batch-flask/core";
+import { AccessToken, HttpRequestOptions, RetryableHttpCode, ServerError } from "@batch-flask/core";
 import { Subscription } from "app/models";
 import { Constants } from "common";
 import { Observable, throwError, timer } from "rxjs";
@@ -11,12 +9,10 @@ import { catchError, flatMap, mergeMap, retryWhen, share } from "rxjs/operators"
 import { AdalService } from "./adal";
 import { BatchExplorerService } from "./batch-explorer.service";
 
-const apiVersionParams = "api-version";
 const apiVersion = Constants.ApiVersion.arm;
 
-function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
-    const options = original || new RequestOptions();
-    options.method = method;
+function mergeOptions(original: HttpRequestOptions, body?: any): HttpRequestOptions {
+    const options = original || {};
     if (body) {
         options.body = body;
     }
@@ -44,18 +40,19 @@ type SubscriptionOrTenant = Subscription | string;
  */
 @Injectable()
 export class AzureHttpService {
-    constructor(private http: Http, private adal: AdalService, private batchExplorer: BatchExplorerService) {
+    constructor(private http: HttpClient, private adal: AdalService, private batchExplorer: BatchExplorerService) {
     }
 
     public request(
+        method: string,
         subscriptionOrTenant: SubscriptionOrTenant,
         uri: string,
-        options: RequestOptionsArgs): Observable<Response> {
+        options: HttpRequestOptions): Observable<any> {
 
         return this.adal.accessTokenData(this._getTenantId(subscriptionOrTenant, uri)).pipe(
             flatMap((accessToken) => {
                 options = this._setupRequestOptions(uri, options, accessToken);
-                return this.http.request(this._computeUrl(uri), options).pipe(
+                return this.http.request(method, this._computeUrl(uri), options).pipe(
                     retryWhen(attempts => this._retryWhen(attempts)),
                     catchError((error) => {
                         const err = ServerError.fromARM(error);
@@ -65,30 +62,34 @@ export class AzureHttpService {
             }),
             share(),
         );
+
     }
 
     public get baseUrl() {
         return this.batchExplorer.azureEnvironment.armUrl;
     }
 
-    public get(subscription: SubscriptionOrTenant, uri: string, options?: RequestOptionsArgs) {
-        return this.request(subscription, uri, mergeOptions(options, RequestMethod.Get));
+    public get<T>(subscription: SubscriptionOrTenant, uri: string, options?: HttpRequestOptions): Observable<T> {
+        return this.request("GET", subscription, uri, options);
     }
 
-    public post(subscription: SubscriptionOrTenant, uri: string, body?: any, options?: RequestOptionsArgs) {
-        return this.request(subscription, uri, mergeOptions(options, RequestMethod.Post, body));
+    public post<T>(subscription: SubscriptionOrTenant, uri: string, body?: any, options?: HttpRequestOptions)
+        : Observable<T> {
+
+        return this.request("POST", subscription, uri, mergeOptions(options, body));
     }
 
-    public put(subscription: SubscriptionOrTenant, uri: string, options?: RequestOptionsArgs) {
-        return this.request(subscription, uri, mergeOptions(options, RequestMethod.Put));
+    public put<T>(subscription: SubscriptionOrTenant, uri: string, options?: HttpRequestOptions): Observable<T> {
+        return this.request("PUT", subscription, uri, options);
     }
 
-    public patch(subscription: SubscriptionOrTenant, uri: string, body: any, options?: RequestOptionsArgs) {
-        return this.request(subscription, uri, mergeOptions(options, RequestMethod.Patch, body));
+    public patch<T>(subscription: SubscriptionOrTenant, uri: string, body: any, options?: HttpRequestOptions)
+        : Observable<T> {
+        return this.request("PATCH", subscription, uri, mergeOptions(options, body));
     }
 
-    public delete(subscription: Subscription, uri: string, options?: RequestOptionsArgs) {
-        return this.request(subscription, uri, mergeOptions(options, RequestMethod.Delete));
+    public delete<T>(subscription: Subscription, uri: string, options?: HttpRequestOptions): Observable<T> {
+        return this.request("DELETE", subscription, uri, options);
     }
 
     public apiVersion(uri: string) {
@@ -118,18 +119,21 @@ export class AzureHttpService {
 
     private _setupRequestOptions(
         uri: string,
-        originalOptions: RequestOptionsArgs,
-        accessToken: AccessToken): RequestOptionsArgs {
+        originalOptions: HttpRequestOptions,
+        accessToken: AccessToken): HttpRequestOptions {
 
-        const options = new RequestOptions(originalOptions);
-        options.headers = new Headers(originalOptions.headers);
-        options.headers.append("Authorization", `${accessToken.token_type} ${accessToken.access_token}`);
-        if (!options.search) {
-            options.search = new URLSearchParams();
+        const options = { ...originalOptions };
+        if (!(options.headers instanceof HttpHeaders)) {
+            options.headers = new HttpHeaders(options.headers);
+        }
+        options.headers = options.headers.set("Authorization", `${accessToken.token_type} ${accessToken.access_token}`);
+
+        if (!(options.params instanceof HttpParams)) {
+            options.params = new HttpParams({ fromObject: options.params });
         }
 
-        if (!uri.includes(apiVersionParams)) {
-            options.search.set(apiVersionParams, this.apiVersion(uri));
+        if (!options.params.has("api-version") && !uri.contains("api-version")) {
+            options.params = options.params.set("api-version", this.apiVersion(uri));
         }
         return options;
     }

@@ -1,11 +1,10 @@
 import { Injectable } from "@angular/core";
-import { Response } from "@angular/http";
-import { Observable, of } from "rxjs";
+import { Observable } from "rxjs";
 
 import { Metric, MetricValue, MonitoringMetricList } from "app/models/monitoring";
 import { ArmHttpService } from "app/services/arm-http.service";
 import { BatchAccountService } from "app/services/batch-account";
-import { flatMap, map, share } from "rxjs/operators";
+import { flatMap, map, share, take } from "rxjs/operators";
 import { CoreCountMetrics } from "./core-count-metrics";
 import { FailedTaskMetrics } from "./failed-task-metrics";
 import { MonitorChartTimeFrame, MonitoringMetricDefinition } from "./monitor-metrics-base";
@@ -55,9 +54,8 @@ export class InsightsMetricsService {
      */
     private _getCurrentAccount() {
         return this.accountService.currentAccount.pipe(
-            flatMap(account => {
-                return of(account && account.id);
-            }),
+            map(account => account && account.id),
+            take(1),
             share(),
         );
     }
@@ -75,9 +73,8 @@ export class InsightsMetricsService {
         );
     }
 
-    private _processResponse(request: MonitoringMetricDefinition, response: Response) {
-        const data = response.json();
-        const metrics: Metric[] = data.value.map((object, index): Metric => {
+    private _processResponse(request: MonitoringMetricDefinition, response: any) {
+        const metrics: Metric[] = response.value.map((object, index): Metric => {
             const definition = request.metrics[index];
             const label = definition.label || this._convertToSentenceCase(object.name.localizedValue);
             let data = [];
@@ -94,7 +91,7 @@ export class InsightsMetricsService {
             } as Metric;
         });
         return new MonitoringMetricList({
-            interval: data.interval,
+            interval: response.interval,
             metrics: metrics,
         });
     }

@@ -1,4 +1,4 @@
-import { Headers, Response, ResponseOptions } from "@angular/http";
+import { HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { ServerError } from "./server-error";
 
 const date = new Date(2017, 9, 13, 23, 43, 38);
@@ -31,19 +31,19 @@ describe("ServerError.model", () => {
 
     describe("when creating from a arm error", () => {
         it("assign all attributes", () => {
-            const error = ServerError.fromARM(new Response(new ResponseOptions({
+            const error = ServerError.fromARM(new HttpErrorResponse({
                 status: 409,
-                body: {
+                error: {
                     error: {
                         code: "AlreadyExists",
                         message: "This is an error message",
                     },
                 },
-                headers: new Headers({
+                headers: new HttpHeaders({
                     "x-ms-request-id": "abc-def",
                     "Date": date.toISOString(),
                 }),
-            })));
+            }));
             expect(error.status).toEqual(409);
             expect(error.code).toEqual("AlreadyExists");
             expect(error.message).toEqual("This is an error message");

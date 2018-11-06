@@ -1,5 +1,5 @@
+import { HttpParams } from "@angular/common/http";
 import { Injectable, OnDestroy } from "@angular/core";
-import { RequestOptions, Response, URLSearchParams } from "@angular/http";
 import { log } from "@batch-flask/utils";
 import { ArmBatchAccount, Subscription } from "app/models";
 import { AccountPatchDto } from "app/models/dtos";
@@ -9,6 +9,7 @@ import { List } from "immutable";
 import { BehaviorSubject, Observable, empty, forkJoin, of } from "rxjs";
 import { expand, filter, flatMap, map, reduce, share, shareReplay, take } from "rxjs/operators";
 import { AzureHttpService } from "../azure-http.service";
+import { ArmListResponse } from "../core";
 import { SubscriptionService } from "../subscription.service";
 
 const batchProvider = "Microsoft.Batch";
@@ -52,10 +53,7 @@ export class ArmBatchAccountService implements OnDestroy {
         return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(id)).pipe(
             flatMap((subscription) => {
                 return this.azure.get(subscription, id).pipe(
-                    map(response => {
-                        const data = response.json();
-                        return this._createAccount(subscription, data);
-                    }),
+                    map(response => this._createAccount(subscription, response)),
                 );
             }),
             share(),
@@ -110,11 +108,7 @@ export class ArmBatchAccountService implements OnDestroy {
         return this.azure.post(subscription, uri, {
             name: name,
             type: batchResourceProvider,
-        }).pipe(
-            map(response => {
-                return response.json();
-            }),
-        );
+        });
     }
 
     /**
@@ -130,22 +124,20 @@ export class ArmBatchAccountService implements OnDestroy {
         // get current subscription account quota
         const quotaUri = `subscriptions/${subscription.subscriptionId}/providers/${batchProvider}`
             + `/locations/${location}/quotas`;
-        const getQuotaObs = this.azure.get(subscription, quotaUri).pipe(map(response => {
-            return response.json();
-        }));
+        const getQuotaObs = this.azure.get<any>(subscription, quotaUri);
 
         // get current batch accounts number
         const resourceUri = `/subscriptions/${subscription.subscriptionId}/resources`;
-        const search = new URLSearchParams();
-        search.set("$filter", `resourceType eq '${batchResourceProvider}' and location eq '${location}'`);
-        const options = new RequestOptions({ search });
-        const batchAccountObs = this.azure.get(subscription, resourceUri, options).pipe(
+        const params = new HttpParams()
+            .set("$filter", `resourceType eq '${batchResourceProvider}' and location eq '${location}'`);
+
+        const options = { params };
+        const batchAccountObs = this.azure.get<ArmListResponse<any>>(subscription, resourceUri, options).pipe(
             expand(obs => {
-                return obs.json().nextLink ?
-                    this.azure.get(subscription, obs.json().nextLink, options) : empty();
+                return obs.nextLink ? this.azure.get(subscription, obs.nextLink, options) : empty();
             }),
-            reduce((batchAccounts, response: Response) => {
-                return [...batchAccounts, ...response.json().value];
+            reduce((batchAccounts, response: ArmListResponse<any>) => {
+                return [...batchAccounts, ...response.value];
             }, []),
         );
 
@@ -163,19 +155,19 @@ export class ArmBatchAccountService implements OnDestroy {
     }
 
     public list(subscriptionId: string): Observable<List<ArmBatchAccount>> {
-        const search = new URLSearchParams();
-        search.set("$filter", `resourceType eq '${batchResourceProvider}'`);
-        const options = new RequestOptions({ search });
+        const params = new HttpParams().set("$filter", `resourceType eq '${batchResourceProvider}'`);
+        const options = { params };
 
         return this.subscriptionService.get(subscriptionId).pipe(
             flatMap((subscription) => {
-                return this.azure.get(subscription, `/subscriptions/${subscriptionId}/resources`, options).pipe(
-                    map(response => {
-                        return List<ArmBatchAccount>(response.json().value.map((data) => {
-                            return new ArmBatchAccount({ ...data, subscription });
-                        }));
-                    }),
-                );
+                return this.azure.get<ArmListResponse<any>>(
+                    subscription, `/subscriptions/${subscriptionId}/resources`, options).pipe(
+                        map(response => {
+                            return List<ArmBatchAccount>(response.value.map((data) => {
+                                return new ArmBatchAccount({ ...data, subscription });
+                            }));
+                        }),
+                    );
             }),
             share(),
         );

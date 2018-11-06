@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 
 import { FilterBuilder, TargetedDataCache } from "@batch-flask/core";
 import { SecureUtils } from "@batch-flask/utils";
-import { RoleAssignment, RoleDefinition } from "app/models";
+import { RoleAssignment, RoleDefinition, RoleDefinitionAttributes } from "app/models";
 import { ArmListGetter } from "app/services/core";
 import { List } from "immutable";
 import { Observable, of } from "rxjs";
@@ -95,10 +95,12 @@ export class ResourceAccessService {
         return this.getRoleAssignmentFor(resourceId, principalId).pipe(
             flatMap((roleAssignment) => {
                 if (!roleAssignment) { return of({ role: null, roleAssignment: null }); }
-                return this.arm.get(roleAssignment.properties.roleDefinitionId).pipe(map(x => {
-                    const role = new RoleDefinition(x.json());
-                    return { role, roleAssignment };
-                }));
+                return this.arm.get<RoleDefinitionAttributes>(roleAssignment.properties.roleDefinitionId).pipe(
+                    map(x => {
+                        const role = new RoleDefinition(x);
+                        return { role, roleAssignment };
+                    }),
+                );
             }),
             share(),
         );

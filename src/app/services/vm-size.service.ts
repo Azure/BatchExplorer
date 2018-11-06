@@ -7,6 +7,7 @@ import { filter, map, share, shareReplay, take } from "rxjs/operators";
 import { ArmHttpService } from "./arm-http.service";
 import { BatchAccountService } from "./batch-account";
 import { computeUrl } from "./compute.service";
+import { ArmListResponse } from "./core";
 import { GithubDataService } from "./github-data";
 
 const excludedVmsSizesPath = "data/vm-sizes.json";
@@ -95,10 +96,9 @@ export class VmSizeService {
         if (!(this._currentAccount instanceof ArmBatchAccount)) { return; }
         const { subscription, location } = this._currentAccount;
         const url = `${computeUrl(subscription.subscriptionId)}/locations/${location}/vmSizes`;
-        this.arm.get(url).subscribe({
+        this.arm.get<ArmListResponse<any>>(url).subscribe({
             next: (response) => {
-                const data = response.json();
-                const sizes = data.value.map(x => new VmSize(x));
+                const sizes = response.value.map(x => new VmSize(x));
                 this._sizes.next(List<VmSize>(sizes));
             },
             error: (error) => {

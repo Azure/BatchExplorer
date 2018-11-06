@@ -1,4 +1,5 @@
-import { RequestOptions, URLSearchParams } from "@angular/http";
+import { HttpParams } from "@angular/common/http";
+import { HttpRequestOptions } from "@batch-flask/core";
 import * as moment from "moment";
 
 /**
@@ -105,13 +106,13 @@ export class MonitoringMetricDefinition implements MonitoringMetricDefinitionAtt
     /**
      * Function that returns RequestOptions which are sent to armService
      */
-    public getRequestOptions(): RequestOptions {
-        const search = new URLSearchParams();
-        search.set(MonitorChartMetricsParams.Timespan, this._timeSpanParam);
-        search.set(MonitorChartMetricsParams.Interval, this._intervalParam);
-        search.set(MonitorChartMetricsParams.Metric, this._metricsParam);
-        search.set(MonitorChartMetricsParams.Aggregation, this._aggregationParam);
-        return new RequestOptions({ search });
+    public getRequestOptions(): HttpRequestOptions {
+        const params = new HttpParams()
+            .set(MonitorChartMetricsParams.Timespan, this._timeSpanParam)
+            .set(MonitorChartMetricsParams.Interval, this._intervalParam)
+            .set(MonitorChartMetricsParams.Metric, this._metricsParam)
+            .set(MonitorChartMetricsParams.Aggregation, this._aggregationParam);
+        return { params };
     }
 
     /**

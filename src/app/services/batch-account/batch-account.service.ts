@@ -155,7 +155,7 @@ export class BatchAccountService implements OnDestroy {
         const subId = ArmResourceUtils.getSubscriptionIdFromResourceId(accountId);
         return this.subscriptionService.get(subId).pipe(
             flatMap((sub) => this.azure.post(sub, `${accountId}/listKeys`)),
-            map(response => new AccountKeys(response.json())),
+            map(response => new AccountKeys(response)),
             share(),
         );
     }

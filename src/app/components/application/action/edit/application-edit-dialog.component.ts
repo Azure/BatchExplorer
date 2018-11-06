@@ -1,16 +1,15 @@
+import { HttpErrorResponse } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Response } from "@angular/http";
 import { autobind } from "@batch-flask/core";
-import { List } from "immutable";
-import { Observable } from "rxjs";
-
 import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarRef } from "@batch-flask/ui/sidebar";
 import { ApplicationPackage, BatchApplication } from "app/models";
 import { applicationToEditFormModel, editApplicationFormToJsonData } from "app/models/forms";
 import { ApplicationService } from "app/services";
 import { Constants } from "common";
+import { List } from "immutable";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "bl-application-edit-dialog",
@@ -63,7 +62,7 @@ export class ApplicationEditDialogComponent {
                     `Application ${this.application.id} was successfully updated!`,
                 );
             },
-            error: (response: Response) => {
+            error: (response: HttpErrorResponse) => {
                 this.notificationService.error("Update failed", "The application failed to update successfully");
             },
         });

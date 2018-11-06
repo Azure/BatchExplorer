@@ -26,7 +26,7 @@ export class StorageAccountKeysService {
     private _loadKeys(storageAccountId: string) {
         const url = `${storageAccountId}/listkeys`;
         return this.arm.post(url).pipe(
-            map(response => this._parseKeysReponse(response.json())),
+            map(response => this._parseKeysReponse(response)),
             map((keys: StorageKeys) => {
                 // bail out if we didn't get any keys
                 if (!keys.primaryKey && !keys.secondaryKey) {

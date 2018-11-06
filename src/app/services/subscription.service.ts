@@ -1,13 +1,15 @@
 import { Injectable } from "@angular/core";
-import { Response } from "@angular/http";
 import { StringUtils, log } from "@batch-flask/utils";
-import { Location, ResourceGroup, Subscription, TenantDetails } from "app/models";
+import {
+    Location, LocationAttributes, ResourceGroup, Subscription, SubscriptionAttributes, TenantDetails,
+} from "app/models";
 import { Constants } from "common";
 import { List, Set } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable, combineLatest, empty } from "rxjs";
 import { expand, filter, first, flatMap, map, reduce, shareReplay } from "rxjs/operators";
 import { AdalService } from "./adal";
 import { AzureHttpService } from "./azure-http.service";
+import { ArmListResponse } from "./core";
 import { SettingsService } from "./settings.service";
 import { TenantDetailsService } from "./tenant-details.service";
 
@@ -93,12 +95,12 @@ export class SubscriptionService {
      */
     public listResourceGroups(subscription: Subscription): Observable<ResourceGroup[]> {
         const uri = `subscriptions/${subscription.subscriptionId}/resourcegroups`;
-        return this.azure.get(subscription, uri).pipe(
+        return this.azure.get<ArmListResponse>(subscription, uri).pipe(
             expand(obs => {
-                return obs.json().nextLink ? this.azure.get(subscription, obs.json().nextLink) : empty();
+                return obs.nextLink ? this.azure.get(subscription, obs.nextLink) : empty();
             }),
-            reduce((resourceGroups, response: Response) => {
-                return [...resourceGroups, ...response.json().value];
+            reduce((resourceGroups, response: ArmListResponse<any>) => {
+                return [...resourceGroups, ...response.value];
             }, []),
         );
     }
@@ -109,27 +111,24 @@ export class SubscriptionService {
      */
     public listLocations(subscription: Subscription): Observable<Location[]> {
         const uri = `subscriptions/${subscription.subscriptionId}/locations`;
-        return this.azure.get(subscription, uri).pipe(
-            map(response => {
-                return response.json().value;
-            }),
+        return this.azure.get<ArmListResponse<LocationAttributes>>(subscription, uri).pipe(
+            map(response => response.value.map(x => new Location(x))),
         );
     }
 
     private _loadSubscriptionsForTenant(tenantId: string): Observable<Subscription[]> {
         return this.tenantDetailsService.get(tenantId).pipe(
             flatMap((tenantDetails) => {
-                return this.azure.get(tenantId, "subscriptions").pipe(
+                return this.azure.get<ArmListResponse<SubscriptionAttributes>>(tenantId, "subscriptions").pipe(
                     expand(response => {
-                        const data = response.json();
-                        if (data.nextLink) {
-                            this.azure.get(tenantId, data.nextLink);
+                        if (response.nextLink) {
+                            this.azure.get(tenantId, response.nextLink);
                         } else {
                             return empty();
                         }
                     }),
-                    reduce((subs, response: any) => {
-                        const newSubs = response.json().value.map(x => this._createSubscription(tenantDetails, x));
+                    reduce((subs, response: ArmListResponse<any>) => {
+                        const newSubs = response.value.map(x => this._createSubscription(tenantDetails, x));
                         return [...subs, ...newSubs];
                     }, []),
                 );
