@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { Response } from "@angular/http";
 import { StringUtils, log } from "@batch-flask/utils";
 import {
     Location, LocationAttributes, ResourceGroup, Subscription, SubscriptionAttributes, TenantDetails,
@@ -100,8 +99,8 @@ export class SubscriptionService {
             expand(obs => {
                 return obs.nextLink ? this.azure.get(subscription, obs.nextLink) : empty();
             }),
-            reduce((resourceGroups, response: Response) => {
-                return [...resourceGroups, ...response.json().value];
+            reduce((resourceGroups, response: ArmListResponse<any>) => {
+                return [...resourceGroups, ...response.value];
             }, []),
         );
     }
@@ -128,8 +127,8 @@ export class SubscriptionService {
                             return empty();
                         }
                     }),
-                    reduce((subs, response: any) => {
-                        const newSubs = response.json().value.map(x => this._createSubscription(tenantDetails, x));
+                    reduce((subs, response: ArmListResponse<any>) => {
+                        const newSubs = response.value.map(x => this._createSubscription(tenantDetails, x));
                         return [...subs, ...newSubs];
                     }, []),
                 );
