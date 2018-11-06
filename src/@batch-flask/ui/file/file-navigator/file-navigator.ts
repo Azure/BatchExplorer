@@ -3,7 +3,7 @@ import { Activity } from "@batch-flask/ui/activity";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
 import { CloudPathUtils, StringUtils, log } from "@batch-flask/utils";
 import { List } from "immutable";
-import { AsyncSubject, BehaviorSubject, Observable, Subscription, interval, of } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable, Subscription, interval, of, throwError } from "rxjs";
 import { catchError, flatMap, map, mergeMap, share, shareReplay, take, tap } from "rxjs/operators";
 import { FileLoader } from "../file-loader";
 import { File } from "../file.model";
@@ -135,7 +135,7 @@ export class FileNavigator<TParams = any> {
             }),
             shareReplay(1),
         );
-        obs.subscribe(); // Make sure it trigger at least once
+        obs.subscribe({ error: () => null }); // Make sure it trigger at least once
         return obs;
     }
 
@@ -159,7 +159,7 @@ export class FileNavigator<TParams = any> {
                 map(() => {
                     return this._tree.value.getNode(path);
                 }),
-                catchError(() => {
+                catchError((e) => {
                     return of(null);
                 }),
             );
@@ -334,7 +334,7 @@ export class FileNavigator<TParams = any> {
             map((files: List<File>) => {
                 const tree = this._tree.value;
                 if (files.size === 0) {
-                    tree.markFileAsLoaded(node.path);
+                    tree.markFileAsLoadedAndUnkown(node.path);
                     this._tree.next(tree);
                     return false;
                 }
@@ -342,6 +342,12 @@ export class FileNavigator<TParams = any> {
                 tree.addFiles(files);
                 this._tree.next(tree);
                 return file.isDirectory;
+            }),
+            catchError((e) => {
+                const tree = this._tree.value;
+                tree.markFileAsLoadedAndUnkown(node.path);
+                this._tree.next(tree);
+                return throwError(e);
             }),
             share(),
         );

@@ -204,7 +204,7 @@ describe("FileTreeStructure", () => {
             expect(node.isUnknown).toBe(true);
             expect(node.loadingStatus).toBe(LoadingStatus.Loading);
 
-            tree.markFileAsLoaded("foo/invalid");
+            tree.markFileAsLoadedAndUnkown("foo/invalid");
             node = tree.getNode("foo/invalid");
             expect(node.isUnknown).toBe(true);
             expect(node.loadingStatus).toBe(LoadingStatus.Ready);

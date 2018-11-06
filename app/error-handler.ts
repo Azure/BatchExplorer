@@ -2,10 +2,6 @@ import { ErrorHandler, Injectable } from "@angular/core";
 import { TelemetryService } from "@batch-flask/core";
 import { log } from "@batch-flask/utils";
 
-function extractMessage(error: any): string {
-    return error instanceof Error ? error.message : error.toString();
-}
-
 @Injectable()
 export class BatchExplorerErrorHandler extends ErrorHandler {
     constructor(private telemetryService: TelemetryService) {
@@ -23,7 +19,7 @@ export class BatchExplorerErrorHandler extends ErrorHandler {
  * This will make sure the window is being displayed in case of a bad error.
  */
 export function handleCoreError(error, telemetryService?: TelemetryService) {
-    log.error("[BL] Uncaught exception:", extractMessage(error));
+    log.error("[BL] Uncaught exception:", error);
 
     if (telemetryService) {
         telemetryService.trackError(error);

@@ -56,9 +56,12 @@ export class FilePathNavigatorComponent implements OnInit, OnChanges, OnDestroy 
             startWith(""),
             switchMap(search => this._getAutocompleteOptions(search)),
             takeUntil(this._destroy),
-        ).subscribe((result: List<File>) => {
-            this.availablePaths = result;
-            this.changeDetector.markForCheck();
+        ).subscribe({
+            next: (result: List<File>) => {
+                this.availablePaths = result;
+                this.changeDetector.markForCheck();
+            },
+            error: () => null,
         });
     }
 
