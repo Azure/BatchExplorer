@@ -5,7 +5,7 @@ import { NotificationService } from "@batch-flask/ui/notifications";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { FailureInfo, NameValuePair, Pool, StartTaskInfo } from "app/models";
-import { FailureInfoDecorator } from "app/models/decorators";
+import { FailureInfoDecorator } from "app/decorators";
 import { NodeService } from "app/services";
 
 @Component({

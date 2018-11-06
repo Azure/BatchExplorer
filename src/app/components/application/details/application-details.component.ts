@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { EntityView, autobind } from "@batch-flask/core";
+import { ApplicationDecorator } from "app/decorators";
 import { BatchApplication } from "app/models";
-import { ApplicationDecorator } from "app/models/decorators";
 import { ApplicationParams, ApplicationService } from "app/services";
 import { Subscription } from "rxjs";
 import { BatchApplicationCommands } from "../action";

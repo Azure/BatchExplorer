@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { EntityView, autobind } from "@batch-flask/core";
 import { Subscription } from "rxjs";
 
+import { TaskDecorator } from "app/decorators";
 import { Job, Task } from "app/models";
-import { TaskDecorator } from "app/models/decorators";
 import { JobParams, JobService, TaskParams, TaskService } from "app/services";
 import { TaskCommands } from "../action";
 

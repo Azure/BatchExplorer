@@ -1,5 +1,5 @@
 import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
-import { NodeFillType } from "app/models";
+import { NodeFillType } from "app/models/task-scheduling-policy";
 import * as moment from "moment";
 
 import { AppPackageReferenceDto } from "../application-package-reference.dto";

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { BlobContainer } from "app/models";
-import { ContainerDecorator } from "app/models/decorators";
+import { ContainerDecorator } from "app/decorators";
 
 // tslint:disable:trackBy-function
 @Component({

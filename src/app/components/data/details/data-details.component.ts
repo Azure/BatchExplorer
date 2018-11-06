@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { EntityView, autobind } from "@batch-flask/core";
+import { ApplicationDecorator } from "app/decorators";
 import { BlobContainer } from "app/models";
-import { ApplicationDecorator } from "app/models/decorators";
 import {
     AutoStorageService, GetContainerParams, StorageContainerService,
 } from "app/services/storage";

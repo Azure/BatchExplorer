@@ -1,7 +1,7 @@
 import { Component, Input } from "@angular/core";
 
+import { SubTaskDecorator } from "app/decorators";
 import { SubtaskInformation } from "app/models";
-import { SubTaskDecorator } from "app/models/decorators";
 
 @Component({
     selector: "bl-sub-task-properties",

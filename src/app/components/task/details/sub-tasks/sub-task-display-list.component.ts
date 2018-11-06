@@ -4,8 +4,8 @@ import {
 import { ListBaseComponent } from "@batch-flask/ui";
 import { LoadingStatus } from "@batch-flask/ui/loading";
 import { QuickListComponent, QuickListItemStatus } from "@batch-flask/ui/quick-list";
+import { FailureInfoDecorator } from "app/decorators";
 import { SubtaskInformation, TaskState } from "app/models";
-import { FailureInfoDecorator } from "app/models/decorators";
 import { List } from "immutable";
 
 @Component({

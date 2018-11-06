@@ -1,8 +1,8 @@
 import { AutoUserScope, Task, UserAccountElevationLevel } from "app/models";
-import { TaskContainerSettingsDecorator } from "app/models/decorators";
 import { DecoratorBase } from "app/utils/decorators";
 import { ComputeNodeInfoDecorator } from "./compute-node-info-decorator";
 import { TaskConstraintsDecorator } from "./task-constraints-decorator";
+import { TaskContainerSettingsDecorator } from "./task-container-settings-decorator";
 import { TaskExecutionInfoDecorator } from "./task-execution-info-decorator";
 
 export class TaskDecorator extends DecoratorBase<Task> {

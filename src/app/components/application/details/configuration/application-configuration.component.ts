@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-
+import { ApplicationDecorator } from "app/decorators";
 import { BatchApplication } from "app/models";
-import { ApplicationDecorator } from "app/models/decorators";
 
 @Component({
     selector: "bl-application-configuration",

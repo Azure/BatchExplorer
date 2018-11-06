@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/core";
-import { prerequisites, sampleTemplates } from "./samples";
-
 import { EditorConfig } from "@batch-flask/ui/editor";
-import { AADCredential, CredentialType } from "app/components/account/details/programatic-usage";
 import { BatchAccount } from "app/models";
 import { BatchExplorerService } from "app/services";
+import { AADCredential, CredentialType } from "../programatic-usage.component";
 import { SharedKeyCredentials } from "../shared-key-credentials.model";
+import { prerequisites, sampleTemplates } from "./samples";
+
 import "./programing-sample.scss";
 
 export enum SampleTarget {

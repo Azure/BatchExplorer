@@ -1,5 +1,5 @@
+import { DeleteCertificateErrorDecorator } from "app/decorators";
 import { Certificate, CertificateState } from "app/models";
-import { DeleteCertificateErrorDecorator } from "app/models/decorators";
 import { DecoratorBase } from "app/utils/decorators";
 
 export class CertificateDecorator extends DecoratorBase<Certificate> {

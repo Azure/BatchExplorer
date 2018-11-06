@@ -1,13 +1,13 @@
-import { List } from "immutable";
-import * as moment from "moment";
-
+import { StartTaskDecorator } from "app/decorators/start-task.decorator";
 import {
     ApplicationPackageReference, CertificateReference, Pool, UserAccount, UserAccountElevationLevel,
 } from "app/models";
-import { PoolEndpointConfigurationDecorator, StartTaskDecorator } from "app/models/decorators";
 import { PoolUtils } from "app/utils";
 import { DecoratorBase } from "app/utils/decorators";
+import { List } from "immutable";
+import * as moment from "moment";
 import { CloudServiceConfigurationDecorator } from "./cloud-service-configuration-decorator";
+import { PoolEndpointConfigurationDecorator } from "./pool-endpoint-configuration-decorator";
 import { VirtualMachineConfigurationDecorator } from "./virtual-machine-configuration-decorator";
 
 export class PoolDecorator extends DecoratorBase<Pool> {

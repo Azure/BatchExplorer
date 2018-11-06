@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-
+import { CertificateDecorator } from "app/decorators";
 import { Certificate } from "app/models";
-import { CertificateDecorator } from "app/models/decorators";
 
 // tslint:disable:trackBy-function
 @Component({

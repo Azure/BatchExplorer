@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { I18N_NAMESPACE } from "@batch-flask/ui";
+import { TaskDecorator } from "app/decorators";
 import { ApplicationPackageReference, ExitOptions, Job, NameValuePair, Task } from "app/models";
-import { TaskDecorator } from "app/models/decorators";
 import { JobAction, TaskFailureAction } from "app/models/job-action";
 import { List } from "immutable";
 

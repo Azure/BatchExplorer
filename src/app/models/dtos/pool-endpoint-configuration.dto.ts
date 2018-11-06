@@ -1,5 +1,5 @@
 import { Dto, DtoAttr, ListDtoAttr } from "@batch-flask/core";
-import { InboundEndpointProtocol, NetworkSecurityGroupRuleAccess } from "app/models";
+import { InboundEndpointProtocol, NetworkSecurityGroupRuleAccess } from "app/models/pool-endpoint-configuration";
 
 export class NetworkSecurityGroupRuleDto extends Dto<NetworkSecurityGroupRuleDto> {
     @DtoAttr() public access: NetworkSecurityGroupRuleAccess;

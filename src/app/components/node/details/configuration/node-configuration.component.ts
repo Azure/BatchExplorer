@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges } from "@angular/core";
 import { I18N_NAMESPACE } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
+import { NodeDecorator } from "app/decorators";
 import { Node, Pool } from "app/models";
-import { NodeDecorator } from "app/models/decorators";
 import { NodeConnectService } from "app/services";
 import { ComponentUtils, PoolUtils } from "app/utils";
 

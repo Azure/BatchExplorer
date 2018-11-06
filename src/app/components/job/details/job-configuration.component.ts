@@ -1,20 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from "@angular/core";
 import { autobind } from "@batch-flask/core";
-import { List } from "immutable";
-import { Subscription } from "rxjs";
-
 import { WorkspaceService } from "@batch-flask/ui";
 import { SidebarManager } from "@batch-flask/ui/sidebar";
 import { EditMetadataFormComponent } from "app/components/common/edit-metadata-form";
-import { Job, Metadata, NameValuePair } from "app/models";
 import {
     JobDecorator,
     JobManagerTaskDecorator,
     JobPreparationTaskDecorator,
     JobReleaseTaskDecorator,
-} from "app/models/decorators";
+} from "app/decorators";
+import { Job, Metadata, NameValuePair } from "app/models";
 import { JobPatchDto } from "app/models/dtos";
 import { JobService } from "app/services";
+import { List } from "immutable";
+import { Subscription } from "rxjs";
 import { flatMap } from "rxjs/operators";
 
 // tslint:disable:trackBy-function

@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
-
 import { ArmBatchAccount } from "app/models";
 import { AADApplication, PasswordCredential } from "app/models/ms-graph";
-
-import { AADCredential, AppCreatedEvent } from "app/components/account/details/programatic-usage";
 import { ServicePrincipalService } from "app/services/ms-graph";
+import { AADCredential } from "../programatic-usage.component";
+
 import "./aad-credentials-picker.scss";
+import { AppCreatedEvent } from "./create-new-aad-app";
 
 enum Step {
     pickApplication,

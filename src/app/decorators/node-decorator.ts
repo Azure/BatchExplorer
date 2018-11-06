@@ -1,5 +1,5 @@
+import { StartTaskInfoDecorator } from "app/decorators/start-task-info-decorator";
 import { Node } from "app/models";
-import { StartTaskInfoDecorator } from "app/models/decorators/start-task-info-decorator";
 import { DecoratorBase } from "app/utils/decorators";
 
 export class NodeDecorator extends DecoratorBase<Node> {

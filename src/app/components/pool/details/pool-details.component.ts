@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { EntityView, autobind } from "@batch-flask/core";
+import { PoolDecorator } from "app/decorators";
 import { Pool } from "app/models";
-import { PoolDecorator } from "app/models/decorators";
 import { BatchExplorerService, PoolParams, PoolService, PricingService } from "app/services";
 import { NumberUtils } from "app/utils";
 import { List } from "immutable";
