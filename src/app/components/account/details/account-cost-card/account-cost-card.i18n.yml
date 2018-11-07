@@ -3,3 +3,4 @@ account-cost-card:
   subtitle: This is showing the pre-tax cost reported. Please note that cost might be partial.
   usingLocalAccount: Cannot get cost with local batch account
   unsupportedSubscription: Cannot view cost for this subscription(Unsupported)
+  total: Total for billing period

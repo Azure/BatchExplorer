@@ -30,6 +30,7 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
     public currency: string;
     public isArmBatchAccount: boolean;
     public unsupportedSubscription: boolean;
+    public total: string;
 
     private _destroy = new Subject();
 
@@ -86,6 +87,8 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
             this.currency = usages.first().properties.currency;
         }
 
+        let total = 0;
+
         for (const usage of usages) {
             const meterId = usage.properties.meterId;
 
@@ -100,7 +103,9 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
                 x: usage.properties.usageStart,
                 y: usage.properties.pretaxCost,
             });
+            total += usage.properties.pretaxCost;
         }
+        this.total = total.toFixed(2);
         this.datasets = Object.values(groups).map((data, i) => {
             return {
                 label: data.meterDetails.meterName,
