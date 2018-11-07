@@ -97,6 +97,7 @@ import {
     VmSizeService,
 } from "./services";
 import { RendererTelemetryModule } from "./services/telemetry";
+import { UsageDetailsService } from "./services/azure-consumption";
 
 const modules = [
     AccountModule, ApplicationModule, CertificateModule,
@@ -192,6 +193,7 @@ const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHtt
         VersionService,
         VmSizeService,
         PredefinedFormulaService,
+        UsageDetailsService,
         ...graphApiServices,
         { provide: ErrorHandler, useClass: BatchExplorerErrorHandler },
     ],
