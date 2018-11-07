@@ -24,6 +24,7 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
     public datasets: Chart.ChartDataSets[] = [];
     // public labels: string[] = [];
     public options: Chart.ChartOptions = {};
+    public currency: string;
 
     private _destroy = new Subject();
 
@@ -56,6 +57,11 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
         const groups: StringMap<{ meterDetails: ConsumptionMeterDetails, usages: any }> = {
 
         };
+
+        if (usages.length > 0) {
+            this.currency = usages.first().properties.currency;
+        }
+
         for (const usage of usages) {
             const meterId = usage.properties.meterId;
 
@@ -79,6 +85,7 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
                 data: data.usages,
             };
         });
+        this._setChartOptions();
         this.changeDetector.markForCheck();
     }
 
@@ -99,6 +106,10 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
             },
             scales: {
                 yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: this.currency,
+                    },
                     stacked: true,
                     ticks: {
                         beginAtZero: true,
