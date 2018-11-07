@@ -1,0 +1,4 @@
+account-cost-card:
+  title: Daily cost
+  usingLocalAccount: Cannot get cost with local batch account
+  unsupportedSubscription: Cannot view cost for this subscription(Unsupported)

@@ -10,11 +10,15 @@ bl-account-cost-card {
         padding: 10px;
     }
 
-    // width: calc(100% - 20px);
     .graph {
         height: 300px;
         canvas {
             height: 100%;
         }
+    }
+
+    .unavailable-info {
+        text-align: center;
+        padding-bottom: 20px;
     }
 }

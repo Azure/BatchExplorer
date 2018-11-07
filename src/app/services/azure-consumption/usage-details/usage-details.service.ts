@@ -1,12 +1,12 @@
 import { HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { ServerError } from "@batch-flask/core";
+import { HttpCode, ServerError } from "@batch-flask/core";
 import { ArmBatchAccount, Subscription } from "app/models";
 import { AzureHttpService } from "app/services";
 import { BatchAccountService } from "app/services/batch-account";
 import { ArmListResponse } from "app/services/core";
-import { Observable, empty } from "rxjs";
-import { expand, reduce, switchMap, take, tap } from "rxjs/operators";
+import { Observable, empty, throwError } from "rxjs";
+import { catchError, expand, reduce, switchMap, take, tap } from "rxjs/operators";
 
 function consumptionUrl(subscriptionId: string) {
     return `subscriptions/${subscriptionId}/providers/Microsoft.Consumption`;
@@ -60,6 +60,12 @@ export interface UsageDetail {
     };
 }
 
+export class UsageDetailsUnsupportedSubscription extends Error {
+    constructor(subscriptionId: string) {
+        super(`${subscriptionId} is not supported`);
+    }
+}
+
 @Injectable()
 export class UsageDetailsService {
     constructor(private accountService: BatchAccountService, private azure: AzureHttpService) { }
@@ -80,6 +86,13 @@ export class UsageDetailsService {
         );
     }
 
+    /**
+     *
+     * @param subscription Subscription
+     * @param accountId Batch Account id
+     *
+     * @throws {UsageDetailsUnsupportedSubscription}
+     */
     public getUsageFor(subscription: Subscription, accountId: string): Observable<UsageDetail[]> {
         const url = `${consumptionUrl(subscription.subscriptionId)}/usageDetails`;
         const filter = `properties/instanceId eq '${accountId}'`;
@@ -96,6 +109,13 @@ export class UsageDetailsService {
             reduce((batchAccounts, response: ArmListResponse<any>) => {
                 return [...batchAccounts, ...response.value];
             }, []),
+            catchError((error: ServerError) => {
+                if (error.status === HttpCode.BadRequest) {
+                    return throwError(new UsageDetailsUnsupportedSubscription(subscription.subscriptionId));
+                } else {
+                    return throwError(error);
+                }
+            }),
         );
     }
 }

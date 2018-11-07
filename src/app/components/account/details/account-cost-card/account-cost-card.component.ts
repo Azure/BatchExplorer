@@ -1,9 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { BatchAccountService } from "app/services";
-import { ConsumptionMeterDetails, UsageDetail, UsageDetailsService } from "app/services/azure-consumption";
+import {
+    ConsumptionMeterDetails, UsageDetail, UsageDetailsService, UsageDetailsUnsupportedSubscription,
+} from "app/services/azure-consumption";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 
+import { log } from "@batch-flask/utils";
+import { ArmBatchAccount } from "app/models";
 import "./account-cost-card.scss";
 
 const colors = [
@@ -22,9 +26,10 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
 
     public chartType = "line";
     public datasets: Chart.ChartDataSets[] = [];
-    // public labels: string[] = [];
     public options: Chart.ChartOptions = {};
     public currency: string;
+    public isArmBatchAccount: boolean;
+    public unsupportedSubscription: boolean;
 
     private _destroy = new Subject();
 
@@ -36,8 +41,14 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this.accountService.currentAccount.pipe(takeUntil(this._destroy)).subscribe(() => {
-            this._updateUsages();
+        this.accountService.currentAccount.pipe(takeUntil(this._destroy)).subscribe((account) => {
+            this.isArmBatchAccount = account instanceof ArmBatchAccount;
+            if (this.isArmBatchAccount) {
+                this._updateUsages();
+            } else {
+                this.unsupportedSubscription = false;
+            }
+            this.changeDetector.markForCheck();
         });
         this._setChartOptions();
     }
@@ -48,8 +59,21 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
     }
 
     private _updateUsages() {
-        this.usageService.getUsage().subscribe((usages: UsageDetail[]) => {
-            this._computeDataSets(usages);
+        this.unsupportedSubscription = false;
+        this.changeDetector.markForCheck();
+
+        this.usageService.getUsage().subscribe({
+            next: (usages: UsageDetail[]) => {
+                this._computeDataSets(usages);
+            },
+            error: (error) => {
+                if (error instanceof UsageDetailsUnsupportedSubscription) {
+                    this.unsupportedSubscription = true;
+                    this.changeDetector.markForCheck();
+                } else {
+                    log.error("Error retrieving cost", error);
+                }
+            },
         });
     }
 
