@@ -100,6 +100,9 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
             scales: {
                 yAxes: [{
                     stacked: true,
+                    ticks: {
+                        beginAtZero: true,
+                    },
                 }],
                 xAxes: [{
                     stacked: true,
@@ -109,7 +112,7 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
                         unit: "day",
                         unitStepSize: 1,
                         displayFormats: {
-                           day: "MMM DD",
+                            day: "MMM DD",
                         },
                     },
                 }],
