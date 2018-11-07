@@ -1,4 +1,7 @@
-<h2>{{'account-cost-card.title' | i18n}}</h2>
+<header>
+    <h2>{{'account-cost-card.title' | i18n}}</h2>
+    <span class="subtitle">{{'account-cost-card.subtitle' | i18n}}</span>
+</header>
 <div class="graph" *ngIf="isArmBatchAccount && !unsupportedSubscription">
     <canvas blChart
         [datasets]="datasets"

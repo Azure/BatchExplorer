@@ -6,8 +6,20 @@ bl-account-cost-card {
     display: block;
     background: $card-background;
 
-    h2 {
+    header {
         padding: 10px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+
+        > h2 {
+            display: inline-block;
+            flex: 1;
+        }
+
+        .subtitle {
+            color: $secondary-text;
+        }
     }
 
     .graph {
