@@ -133,6 +133,7 @@ export class PricingService {
 
     private _loadRateCardMeters(): Observable<RateCardMeter[]> {
         return this.accountService.currentAccount.pipe(
+            take(1),
             flatMap((account) => {
                 if (account instanceof ArmBatchAccount) {
                     const { subscription } = account;

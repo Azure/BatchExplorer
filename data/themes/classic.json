@@ -68,5 +68,11 @@
     "text": "var(--color-text-primary)",
     "background": "#fff",
     "disabled-background": "#e5e5e5"
-  }
+  },
+  "chart-colors": [
+    "#003f5c",
+    "#aa3939",
+    "#4caf50",
+    "#ffa600"
+  ]
 }

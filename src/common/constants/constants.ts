@@ -106,6 +106,7 @@ export const ApiVersion = {
     monitor: "2017-05-01-preview",
     network: "2017-10-01",
     classicNetwork: "2015-12-01",
+    consumption: "2018-10-01",
     batchService: "2018-08-01.7.0",
 };
 

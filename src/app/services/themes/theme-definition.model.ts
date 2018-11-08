@@ -136,4 +136,5 @@ export interface ThemeDefinition {
         border: string;
         focusBorder: string;
     };
+    "chart-colors": string[];
 }

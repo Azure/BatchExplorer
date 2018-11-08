@@ -30,6 +30,7 @@ const providersApiVersion = {
     "microsoft.insights": Constants.ApiVersion.monitor,
     "microsoft.network": Constants.ApiVersion.network,
     "microsoft.classicnetwork": Constants.ApiVersion.classicNetwork,
+    "microsoft.consumption": Constants.ApiVersion.consumption,
 };
 
 type SubscriptionOrTenant = Subscription | string;

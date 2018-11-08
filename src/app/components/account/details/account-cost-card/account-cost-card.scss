@@ -1,0 +1,40 @@
+@import "app/styles/variables";
+
+bl-account-cost-card {
+    margin-top: 5px;
+    margin-right: 5px;
+    display: block;
+    background: $card-background;
+
+    header {
+        padding: 10px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+
+        > h2 {
+            display: inline-block;
+            flex: 1;
+        }
+
+        .subtitle {
+            color: $secondary-text;
+        }
+    }
+
+    .graph {
+        height: 300px;
+        canvas {
+            height: 100%;
+        }
+    }
+
+    .unavailable-info {
+        text-align: center;
+        padding-bottom: 20px;
+    }
+
+    .total {
+        text-align: center;
+    }
+}
