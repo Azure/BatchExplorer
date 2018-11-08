@@ -96,8 +96,8 @@ import {
     VersionService,
     VmSizeService,
 } from "./services";
-import { RendererTelemetryModule } from "./services/telemetry";
 import { UsageDetailsService } from "./services/azure-consumption";
+import { RendererTelemetryModule } from "./services/telemetry";
 
 const modules = [
     AccountModule, ApplicationModule, CertificateModule,

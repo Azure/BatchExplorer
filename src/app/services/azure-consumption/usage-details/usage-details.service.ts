@@ -2,7 +2,7 @@ import { HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { HttpCode, ServerError } from "@batch-flask/core";
 import { ArmBatchAccount, Subscription } from "app/models";
-import { AzureHttpService } from "app/services";
+import { AzureHttpService } from "app/services/azure-http.service";
 import { BatchAccountService } from "app/services/batch-account";
 import { ArmListResponse } from "app/services/core";
 import { Observable, empty, throwError } from "rxjs";
