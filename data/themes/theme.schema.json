@@ -68,6 +68,10 @@
         "focus-border": {"$ref": "#/definitions/color"},
         "disabled-background": {"$ref": "#/definitions/color"}
       }
+    },
+    "chart-colors": {
+      "type": "array",
+      "items": {"$ref": "#/definitions/color"}
     }
   }
 }

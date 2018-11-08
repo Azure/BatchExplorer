@@ -1,5 +1,6 @@
 import { CssColor, ThemeElement } from "app/services/themes/theme-core";
 import * as tinycolor from "tinycolor2";
+import { ChartColors } from "./chart-colors";
 import { EntityColorDefinition, ThemeDefinition } from "./theme-definition.model";
 
 export class ColorPalette extends ThemeElement<string> {
@@ -136,6 +137,8 @@ export class Theme extends ThemeElement<ThemeDefinition> {
     @CssColor() public monitorChart: MonitorChartColor;
     @CssColor() public input: InputColor;
     @CssColor() public editor: string;
+    @CssColor("chart-colors") public chartColors: ChartColors;
+
 }
 
 function multiply(rgb1, rgb2) {

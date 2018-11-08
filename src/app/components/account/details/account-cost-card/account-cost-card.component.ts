@@ -1,22 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
-import { BatchAccountService } from "app/services";
+import { BatchAccountService, Theme, ThemeService } from "app/services";
 import {
     ConsumptionMeterDetails, UsageDetail, UsageDetailsService, UsageDetailsUnsupportedSubscription,
 } from "app/services/azure-consumption";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { Subject, combineLatest } from "rxjs";
+import { filter, switchMap, takeUntil } from "rxjs/operators";
 
 import { log } from "@batch-flask/utils";
 import { ArmBatchAccount } from "app/models";
 import "./account-cost-card.scss";
-
-const colors = [
-    "#61afef",
-    "#aa3939",
-    "#4caf50",
-    "#f4ad42",
-    "#a569bd",
-];
 
 @Component({
     selector: "bl-account-cost-card",
@@ -38,19 +30,37 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
     constructor(
         private usageService: UsageDetailsService,
         private accountService: BatchAccountService,
+        private themeService: ThemeService,
         private changeDetector: ChangeDetectorRef) {
-
     }
 
     public ngOnInit() {
-        this.accountService.currentAccount.pipe(takeUntil(this._destroy)).subscribe((account) => {
-            this.isArmBatchAccount = account instanceof ArmBatchAccount;
-            if (this.isArmBatchAccount) {
-                this._updateUsages();
-            } else {
-                this.unsupportedSubscription = false;
-            }
-            this.changeDetector.markForCheck();
+        const obs = this.accountService.currentAccount.pipe(
+            filter((account) => {
+                this.isArmBatchAccount = account instanceof ArmBatchAccount;
+                if (this.isArmBatchAccount) {
+                    this._updateUsages();
+                } else {
+                    this.unsupportedSubscription = false;
+                }
+                this.changeDetector.markForCheck();
+                return this.isArmBatchAccount;
+            }),
+            switchMap(() => this.usageService.getUsage()),
+        );
+
+        combineLatest(obs, this.themeService.currentTheme).pipe(takeUntil(this._destroy)).subscribe({
+            next: ([usages, theme]) => {
+                this._computeDataSets(usages, theme);
+            },
+            error: (error) => {
+                if (error instanceof UsageDetailsUnsupportedSubscription) {
+                    this.unsupportedSubscription = true;
+                    this.changeDetector.markForCheck();
+                } else {
+                    log.error("Error retrieving cost", error);
+                }
+            },
         });
         this._setChartOptions();
     }
@@ -63,23 +73,9 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
     private _updateUsages() {
         this.unsupportedSubscription = false;
         this.changeDetector.markForCheck();
-
-        this.usageService.getUsage().subscribe({
-            next: (usages: UsageDetail[]) => {
-                this._computeDataSets(usages);
-            },
-            error: (error) => {
-                if (error instanceof UsageDetailsUnsupportedSubscription) {
-                    this.unsupportedSubscription = true;
-                    this.changeDetector.markForCheck();
-                } else {
-                    log.error("Error retrieving cost", error);
-                }
-            },
-        });
     }
 
-    private _computeDataSets(usages: UsageDetail[]) {
+    private _computeDataSets(usages: UsageDetail[], theme: Theme) {
         const groups: StringMap<{ meterDetails: ConsumptionMeterDetails, usages: any }> = {
 
         };
@@ -108,10 +104,11 @@ export class AccountCostCardComponent implements OnInit, OnDestroy {
         }
         this.total = total.toFixed(2);
         this.datasets = Object.values(groups).map((data, i) => {
+            const color = theme.chartColors.get(i);
             return {
                 label: data.meterDetails.meterName,
-                backgroundColor: colors[i],
-                borderColor: colors[i],
+                backgroundColor: color,
+                borderColor: color,
                 data: data.usages,
             };
         });

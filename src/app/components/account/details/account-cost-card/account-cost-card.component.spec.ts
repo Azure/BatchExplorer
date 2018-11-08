@@ -4,7 +4,7 @@ import { By } from "@angular/platform-browser";
 import { I18nTestingModule } from "@batch-flask/core/testing";
 import { ChartsModule, I18nUIModule } from "@batch-flask/ui";
 import { ArmBatchAccount, LocalBatchAccount, Subscription } from "app/models";
-import { BatchAccountService } from "app/services";
+import { BatchAccountService, Theme, ThemeService } from "app/services";
 import { UsageDetail, UsageDetailsService, UsageDetailsUnsupportedSubscription } from "app/services/azure-consumption";
 import { BehaviorSubject, of, throwError } from "rxjs";
 import { AccountCostCardComponent } from "./account-cost-card.component";
@@ -120,6 +120,7 @@ describe("AccountCostCardComponent", () => {
 
     let usageServiceSpy;
     let accountServiceSpy;
+    let themeServiceSpy;
 
     beforeEach(() => {
         usageServiceSpy = {
@@ -143,11 +144,23 @@ describe("AccountCostCardComponent", () => {
             })),
         };
 
+        themeServiceSpy = {
+            currentTheme: of(new Theme({
+                "chart-colors": [
+                    "#003f5c",
+                    "#aa3939",
+                    "#4caf50",
+                    "#ffa600",
+                ],
+            } as any)),
+        };
+
         TestBed.configureTestingModule({
             imports: [I18nTestingModule, I18nUIModule, ChartsModule],
             declarations: [AccountCostCardComponent, TestComponent],
             providers: [
                 { provide: UsageDetailsService, useValue: usageServiceSpy },
+                { provide: ThemeService, useValue: themeServiceSpy },
                 { provide: BatchAccountService, useValue: accountServiceSpy },
             ],
         });
@@ -184,8 +197,8 @@ describe("AccountCostCardComponent", () => {
     it("builds the datasets", () => {
         const dataset1 = {
             label: "VM",
-            backgroundColor: "#61afef",
-            borderColor: "#61afef",
+            backgroundColor: "#003f5c",
+            borderColor: "#003f5c",
             data: [
                 { x: day1, y: 0.5 },
                 { x: day2, y: 3.8 },

@@ -39,7 +39,7 @@ export class ThemeElement<ThemeInput> {
             if (exists(value)) {
                 if (type.name === "String" || nil(this[attr])) {
                     this[attr] = value;
-                } else {
+                } else  {
                     this[attr].merge(value);
                 }
             }
