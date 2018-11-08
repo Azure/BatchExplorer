@@ -7,6 +7,7 @@ const sub1 = new Subscription({
     id: "/subscriptions/sub1",
     subscriptionId: "sub1",
 });
+
 const internalSub = new Subscription({
     id: "/subscriptions/internal-1",
     subscriptionId: "internal-1",

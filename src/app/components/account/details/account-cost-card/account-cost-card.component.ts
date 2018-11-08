@@ -17,6 +17,7 @@ const colors = [
     "#f4ad42",
     "#a569bd",
 ];
+
 @Component({
     selector: "bl-account-cost-card",
     templateUrl: "account-cost-card.html",
