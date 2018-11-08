@@ -22,6 +22,24 @@
       <trans-unit id="aad-app-secret-picker.secret.label">
         <source>Secret. One will be generated automatically if not provided</source>
       </trans-unit>
+      <trans-unit id="account-cost-card">
+        <source/>
+      </trans-unit>
+      <trans-unit id="account-cost-card.subtitle">
+        <source>This is showing the pre-tax cost reported. Please note that cost might be partial.</source>
+      </trans-unit>
+      <trans-unit id="account-cost-card.title">
+        <source>Daily cost</source>
+      </trans-unit>
+      <trans-unit id="account-cost-card.total">
+        <source>Total for billing period</source>
+      </trans-unit>
+      <trans-unit id="account-cost-card.unsupportedSubscription">
+        <source>Cannot view cost for this subscription(Unsupported)</source>
+      </trans-unit>
+      <trans-unit id="account-cost-card.usingLocalAccount">
+        <source>Cannot get cost with local batch account</source>
+      </trans-unit>
       <trans-unit id="add-certificate-form">
         <source/>
       </trans-unit>
