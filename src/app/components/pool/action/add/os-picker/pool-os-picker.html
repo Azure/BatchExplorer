@@ -37,7 +37,7 @@
         <div no-value-title>{{'pool-os-picker.containerConfiguration' | i18n}}</div>
         <div value-title>{{containerConfiguration?.value?.type}}</div>
         <div nested-form>
-            <bl-container-configuration [formControl]="containerConfigurationPicker.nestedValue"></bl-container-configuration>
+            <bl-container-configuration-picker [formControl]="containerConfigurationPicker.nestedValue"></bl-container-configuration-picker>
         </div>
     </bl-form-picker>
 </div>
