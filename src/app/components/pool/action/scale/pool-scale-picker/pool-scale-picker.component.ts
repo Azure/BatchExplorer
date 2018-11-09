@@ -88,6 +88,7 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
         if (value) {
             this.form.patchValue(cleanSelection(value));
         } else {
+            console.log("Go herer");
             this.form.patchValue({
                 enableAutoScale: false,
                 targetDedicatedNodes: 0,
