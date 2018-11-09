@@ -5,6 +5,7 @@
         role="textbox"
         [attr.aria-controls]="dropdownId"
         [attr.aria-labelledby]="id"
+        [attr.aria-readonly]="true"
         [attr.aria-activedescendant]="focusedOption?.id"
         attr.aria-autocomplete="list"
         (blur)="onButtonBlur()">
