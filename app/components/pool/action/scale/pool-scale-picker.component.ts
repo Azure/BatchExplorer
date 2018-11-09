@@ -88,12 +88,12 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
         };
     }
 
-    public changeScaleModeTab(event) {
-        this.selectedModeTab = event.index;
+    public changeScaleModeTab(index: number) {
+        this.selectedModeTab = index;
 
-        if (event.index === 0) {
+        if (index === 0) {
             this.form.patchValue({ enableAutoScale: false });
-        } else if (event.index === 1) {
+        } else if (index === 1) {
             this.form.patchValue({ enableAutoScale: true });
         }
         this.form.controls.autoScaleFormula.updateValueAndValidity();
