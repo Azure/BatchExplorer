@@ -1,0 +1,17 @@
+pool-scale-picker:
+  type:
+    label: Scale type
+    fixed: Fixed size
+    autoscale: Autoscale
+
+  targetDedicatedNodes:
+    label: Dedicated nodes
+
+  targetLowPriorityNodes:
+    label:  Low priority nodes
+
+  resizeTimeout:
+    label: Resize timeout
+
+  evaluationInterval:
+    label: Formula evaluation interval

@@ -5,3 +5,4 @@ common:
   no: "No"
   configuration: Configuration
   confirm: Confirm
+  required: Required
