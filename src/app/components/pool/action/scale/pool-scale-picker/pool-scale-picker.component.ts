@@ -3,7 +3,7 @@ import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
 import { Pool } from "app/models";
-import { Duration } from "moment";
+import { Duration, duration } from "moment";
 import { Subscription } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
 
@@ -23,14 +23,14 @@ function cleanSelection(value: PoolScaleSelection): PoolScaleSelection {
         return {
             enableAutoScale: true,
             autoScaleFormula: value.autoScaleFormula,
-            autoScaleEvaluationInterval: value.autoScaleEvaluationInterval,
+            autoScaleEvaluationInterval: value.autoScaleEvaluationInterval || duration("PT15M"),
         };
     } else {
         return {
             enableAutoScale: false,
             targetDedicatedNodes: value.targetDedicatedNodes,
             targetLowPriorityNodes: value.targetLowPriorityNodes,
-            resizeTimeout: value.resizeTimeout,
+            resizeTimeout: value.resizeTimeout || duration("PT15M"),
         };
     }
 }
@@ -87,6 +87,13 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
     public writeValue(value: PoolScaleSelection) {
         if (value) {
             this.form.patchValue(cleanSelection(value));
+        } else {
+            this.form.patchValue({
+                enableAutoScale: false,
+                targetDedicatedNodes: 0,
+                targetLowPriorityNodes: 0,
+                resizeTimeout: duration("PT15M"),
+            });
         }
     }
 
