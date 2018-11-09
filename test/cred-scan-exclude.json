@@ -1,0 +1,9 @@
+{
+  "tool": "Credential Scanner",
+  "suppressions": [
+    {
+      "file": "batchtest.pfx",
+      "_justification": "Certificate used for tests"
+    }
+  ]
+}
