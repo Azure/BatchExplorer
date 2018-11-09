@@ -73,7 +73,7 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
      */
     @Input() @FlagInput() public filterable = false;
 
-    @Input()
+    @Input() @HostBinding("attr.id")
     get id(): string { return this._id; }
     set id(value: string) { this._id = value; }
 
@@ -119,6 +119,7 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
     public get ariaLabel() { return this._ariaLabel || this.placeholder; }
     @HostBinding("attr.aria-expanded") public get ariaExpanded() { return this.dropdownOpen; }
     @HostBinding("attr.aria-owns") public get ariaOwns() { return this.dropdownId; }
+    @HostBinding("attr.tabindex") public readonly tabindex = -1;
 
     // Options
     @ContentChildren(SelectOptionComponent, { descendants: true })

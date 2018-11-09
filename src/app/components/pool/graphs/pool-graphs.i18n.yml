@@ -10,5 +10,5 @@ pool-graphs:
     label: Graphs timespan
     10min: 10 minutes
     1h: 1 hour
-    24h: 24h hours
+    24h: 24 hours
     7d: 7 days
