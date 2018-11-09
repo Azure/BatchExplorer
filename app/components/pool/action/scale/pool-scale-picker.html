@@ -1,5 +1,5 @@
 <div [formGroup]="form">
-    <mat-tab-group class="form-tabs" [selectedIndex]="selectedModeTab" (selectChange)="changeScaleModeTab($event)" [@.disabled]="true">
+    <mat-tab-group class="form-tabs" [selectedIndex]="selectedModeTab" (selectedIndexChange)="changeScaleModeTab($event)" [@.disabled]="true">
         <mat-tab label="Fixed">
             <div class="grow">
                 <div class="gcol">

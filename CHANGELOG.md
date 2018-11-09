@@ -4,6 +4,7 @@
 *  Task exit code filter switch between include and exclude error [\#1687](https://github.com/Azure/BatchExplorer/issues/1687)
 *  Error in pool container picker with null registries [\#1690](https://github.com/Azure/BatchExplorer/issues/1690)
 *  Can't view content of prep/release task files [\#1692](https://github.com/Azure/BatchExplorer/issues/1692)
+*  Issue when rescaling a pool and toggling autoscale [\#1751](https://github.com/Azure/BatchExplorer/issues/1751)
 
 # 0.18.3
 
