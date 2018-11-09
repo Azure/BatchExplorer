@@ -605,7 +605,7 @@
         <source>1 hour</source>
       </trans-unit>
       <trans-unit id="pool-graphs.timespan.24h">
-        <source>24h hours</source>
+        <source>24 hours</source>
       </trans-unit>
       <trans-unit id="pool-graphs.timespan.7d">
         <source>7 days</source>
