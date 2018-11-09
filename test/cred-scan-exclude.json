@@ -1,0 +1,10 @@
+{
+  "tool": "Credential Scanner",
+  "suppressions": [
+    {
+      "file": [
+        "src/test/fixture/certificates/batchtest.pfx"
+      ]
+    }
+  ]
+}
