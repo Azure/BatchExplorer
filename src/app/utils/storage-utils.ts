@@ -1,7 +1,12 @@
-export class StorageUtils {
-    public static containerUrlRegex = /https?:\/\/(.*)\.blob\.core\.windows\.net\/(.*)\?.*/;
+export interface ContainerUrlParseResult {
+    account: string;
+    container: string;
+}
 
-    public static getContainerFromUrl(url: string) {
+export class StorageUtils {
+    public static containerUrlRegex = /https?:\/\/(.*)\.blob\.core\.[a-z]+\.[a-z]+\/([^?]+)(\?.*)?/;
+
+    public static getContainerFromUrl(url: string): ContainerUrlParseResult | null {
         const match = this.containerUrlRegex.exec(url);
 
         if (!match) { return null; }

@@ -1,6 +1,6 @@
 import { HttpParams } from "@angular/common/http";
 import { Injectable, OnDestroy } from "@angular/core";
-import { log } from "@batch-flask/utils";
+import { SanitizedError, log } from "@batch-flask/utils";
 import { ArmBatchAccount, Subscription } from "app/models";
 import { AccountPatchDto } from "app/models/dtos";
 import { ArmResourceUtils } from "app/utils";
@@ -34,6 +34,10 @@ export interface ArmBatchAccountParams {
     id: string;
 }
 
+export class ArmBatchAccountSubscriptionError extends SanitizedError {
+
+}
+
 @Injectable()
 export class ArmBatchAccountService implements OnDestroy {
     public accounts: Observable<List<ArmBatchAccount>>;
@@ -50,7 +54,11 @@ export class ArmBatchAccountService implements OnDestroy {
     }
 
     public get(id: string): Observable<ArmBatchAccount> {
-        return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(id)).pipe(
+        const subscriptionId = ArmResourceUtils.getSubscriptionIdFromResourceId(id);
+        if (!subscriptionId) {
+            throw new ArmBatchAccountSubscriptionError(`Couldn't parse subscription id from batch account id ${id}`);
+        }
+        return this.subscriptionService.get(subscriptionId).pipe(
             flatMap((subscription) => {
                 return this.azure.get(subscription, id).pipe(
                     map(response => this._createAccount(subscription, response)),

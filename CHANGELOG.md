@@ -1,4 +1,12 @@
-# 0.18.2
+# 0.18.4
+
+### Bug fixes
+*  Task exit code filter switch between include and exclude error [\#1687](https://github.com/Azure/BatchExplorer/issues/1687)
+*  Error in pool container picker with null registries [\#1690](https://github.com/Azure/BatchExplorer/issues/1690)
+*  Can't view content of prep/release task files [\#1692](https://github.com/Azure/BatchExplorer/issues/1692)
+*  Issue when rescaling a pool and toggling autoscale [\#1751](https://github.com/Azure/BatchExplorer/issues/1751)
+
+# 0.18.3
 
 ### Bug fixes
 *  Increase pool quota quick fix not working [\#1667](https://github.com/Azure/BatchExplorer/issues/1667)
@@ -6,9 +14,11 @@
 *  Error on toggle filter button [\#1671](https://github.com/Azure/BatchExplorer/issues/1671)
 *  Error when copying property which value is not a string(int) [\#1675](https://github.com/Azure/BatchExplorer/issues/1675)
 *  Can't create a pool with custom images [\#1677](https://github.com/Azure/BatchExplorer/issues/1677)
+*  Upload node logs not tracking upload on national clouds [\#1680](https://github.com/Azure/BatchExplorer/issues/1680)
+*  Quota usages not showing up [\#1683](https://github.com/Azure/BatchExplorer/issues/v)
 
 
-# 0.18.1
+# 0.18.2
 
 ### Bug fixes
 *  Unique windows show() nul pointer exception [\#1644](https://github.com/Azure/BatchExplorer/issues/1644)
@@ -18,6 +28,7 @@
 *  Cloning of Batch Pools does not work [\#1650](https://github.com/Azure/BatchExplorer/issues/1650)
 *  Error when button component doesn't return an observable [\#1654](https://github.com/Azure/BatchExplorer/issues/1654)
 *  Selecting checkbox doesn't add a tick to the checkbox [\#1658](https://github.com/Azure/BatchExplorer/issues/1658)
+
 
 # 0.18.1
 

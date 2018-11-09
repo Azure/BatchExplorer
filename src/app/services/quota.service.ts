@@ -64,7 +64,7 @@ export class QuotaService implements OnDestroy {
     }
 
     public updateUsages() {
-        return this.accountService.currentAccount.pipe(
+        const obs = this.accountService.currentAccount.pipe(
             take(1),
             switchMap((account) => {
                 if (account instanceof ArmBatchAccount) {
@@ -79,6 +79,8 @@ export class QuotaService implements OnDestroy {
             }),
             share(),
         );
+        obs.subscribe();
+        return obs;
     }
 
     public updatePoolUsage() {

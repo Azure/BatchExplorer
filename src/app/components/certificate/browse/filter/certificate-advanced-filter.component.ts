@@ -10,7 +10,7 @@ import { CertificateState } from "app/models";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CertificateAdvancedFilterComponent {
-    @Output() public change = new EventEmitter<Filter>();
+    @Output() public filterChange = new EventEmitter<Filter>();
 
     public advancedFilter: AdvancedFilter;
 
@@ -24,7 +24,7 @@ export class CertificateAdvancedFilterComponent {
         });
 
         this.advancedFilter.filterChange.subscribe((filter: Filter) => {
-            this.change.emit(filter);
+            this.filterChange.emit(filter);
         });
     }
 }

@@ -206,7 +206,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
         this.changeDetector.markForCheck();
     }
 
-    public clearContaienrConfiguration() {
+    public clearContainerConfiguration() {
         this.containerConfiguration.patchValue(null);
     }
 
@@ -266,18 +266,11 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnDestroy {
     @autobind()
     private _updateContainerConfiguration(value) {
         const vmConfig = this.value && this.value.virtualMachineConfiguration;
-        if (vmConfig) {
-            if (value) {
-                const containerRegistries = value.containerRegistries.length > 0 ?
-                    value.containerRegistries : undefined;
-                vmConfig.containerConfiguration = {
-                    type: value.type,
-                    containerImageNames: value.containerImageNames.map(x => x.imageName),
-                    containerRegistries: containerRegistries,
-                };
-            } else {
-                vmConfig.containerConfiguration = null;
-            }
+        if (!vmConfig) { return; }
+        if (value) {
+            vmConfig.containerConfiguration = value;
+        } else {
+            vmConfig.containerConfiguration = null;
         }
     }
 }

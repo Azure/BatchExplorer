@@ -17,7 +17,7 @@ import {
     AutoScaleFormulaPickerModule,
     CertificatePickerComponent,
     ContaienrImagesPickerComponent,
-    ContainerConfigurationComponent,
+    ContainerConfigurationPickerComponent,
     ContainerRegistryPickerComponent,
     CustomImagePickerComponent,
     DeallocationOptionPickerComponent,
@@ -33,7 +33,7 @@ import {
 
 const components = [
     AppLicensePickerComponent, CertificatePickerComponent,
-    ContainerConfigurationComponent, ContaienrImagesPickerComponent, ContainerRegistryPickerComponent,
+    ContainerConfigurationPickerComponent, ContaienrImagesPickerComponent, ContainerRegistryPickerComponent,
     DeallocationOptionPickerComponent, DeletePoolDialogComponent, LicenseEulaDialogComponent, OsOfferTileComponent,
     PoolAdvancedFilterComponent, PoolCreateBasicDialogComponent, PoolHomeComponent, PoolListComponent,
     PoolOsPickerComponent, PoolScalePickerComponent, VmSizePickerComponent, PoolResizeDialogComponent,

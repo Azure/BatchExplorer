@@ -1,6 +1,4 @@
-@import "app/styles/variables";
-
-bl-container-configuration {
+bl-container-configuration-picker {
     .form-element {
         .form-left {
             display: inline-block;
@@ -13,6 +11,6 @@ bl-container-configuration {
         }
     }
     span.required {
-        color: $danger-color;
+        color: #f44336;
     }
 }

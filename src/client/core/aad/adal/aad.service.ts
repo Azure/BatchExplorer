@@ -12,7 +12,7 @@ import { Deferred } from "common/deferred";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
 import {
-    AccessTokenError, AccessTokenErrorResult, AccessTokenService,
+   AccessTokenService,
 } from "../access-token";
 import { AuthenticationService, AuthenticationState, AuthorizeResult, LogoutError } from "../authentication";
 import { AADUser } from "./aad-user";
@@ -194,9 +194,6 @@ export class AADService {
 
         } catch (e) {
             log.error(`Error redeem auth code for a token for resource ${resource}`, e);
-            if (this._processAccessTokenError(tenantId, resource, e)) {
-                return;
-            }
             delete this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
             defer.reject(e);
         }
@@ -243,17 +240,6 @@ export class AADService {
 
     private _processAccessToken(tenantId: string, resource: string, token: AccessToken) {
         this._tokenCache.storeToken(tenantId, resource, token);
-    }
-
-    private async _processAccessTokenError(tenantId: string, resource: string, error: Response) {
-        if (error instanceof LogoutError) {
-            return;
-        }
-        const data: AccessTokenErrorResult = await error.json();
-        if (data.error === AccessTokenError.invalidGrant) {
-            // TODO redeem a new token once(need to track number of failure)
-            // this._redeemNewAccessToken(tenantId, resource, true);
-        }
     }
 
     private async _loadTenantIds(): Promise<string[]> {

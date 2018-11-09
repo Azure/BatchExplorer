@@ -11,7 +11,7 @@ import { PoolAllocationState, PoolState } from "app/models";
 export class PoolAdvancedFilterComponent {
 
     @Output()
-    public change = new EventEmitter<Filter>();
+    public filterChange = new EventEmitter<Filter>();
 
     public advancedFilter: AdvancedFilter;
 
@@ -26,7 +26,7 @@ export class PoolAdvancedFilterComponent {
         });
 
         this.advancedFilter.filterChange.subscribe((filter: Filter) => {
-            this.change.emit(filter);
+            this.filterChange.emit(filter);
         });
     }
 }
