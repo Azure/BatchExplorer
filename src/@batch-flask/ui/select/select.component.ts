@@ -73,7 +73,7 @@ export class SelectComponent implements FormFieldControl<any>, OptionParent,
      */
     @Input() @FlagInput() public filterable = false;
 
-    @Input()
+    @Input() @HostBinding("attr.id")
     get id(): string { return this._id; }
     set id(value: string) { this._id = value; }
 

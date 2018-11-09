@@ -16,6 +16,10 @@ bl-settings {
 
         > h1 {
             flex: 1;
+
+            &:not(.focus-visible) {
+                outline: none;
+            }
         }
 
         .modified {
