@@ -3,6 +3,7 @@ steps:
   - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
     displayName: 'Run CredScan'
     inputs:
+      suppressionsFile: test/cred-scan-exclude.json
       debugMode: false
 
   - task: securedevelopmentteam.vss-secure-development-tools.build-task-policheck.PoliCheck@1
@@ -20,18 +21,12 @@ steps:
     inputs:
       EnableServices: true
 
-  - task: securedevelopmentteam.vss-secure-development-tools.build-task-binskim.BinSkim@3
-    displayName: 'Run BinSkim '
-    inputs:
-      arguments: 'analyze release/*.dll --recurse'
-
   - task: securedevelopmentteam.vss-secure-development-tools.build-task-publishsecurityanalysislogs.PublishSecurityAnalysisLogs@2
     displayName: 'Publish Security Analysis Logs'
 
   - task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@1
     displayName: 'Post Analysis'
     inputs:
-      BinSkim: true
       CredScan: true
       PoliCheck: true
 
