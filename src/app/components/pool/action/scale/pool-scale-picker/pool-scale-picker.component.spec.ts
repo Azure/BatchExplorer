@@ -57,7 +57,7 @@ class MockAutoscaleFormulaPickerComponent implements ControlValueAccessor {
 
 }
 
-fdescribe("PoolScalePickerComponent", () => {
+describe("PoolScalePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let de: DebugElement;
