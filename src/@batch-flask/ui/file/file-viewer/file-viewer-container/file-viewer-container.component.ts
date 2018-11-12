@@ -122,7 +122,6 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
         if (this._fileType) {
             componentType = this.fileAssociationService.getComponentType(this._fileType);
         }
-        console.log("CMP", componentType);
         this.componentType = componentType;
         this.unknownFileType = !componentType;
         this.changeDetector.markForCheck();
