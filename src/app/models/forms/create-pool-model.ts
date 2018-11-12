@@ -1,5 +1,4 @@
-import * as moment from "moment";
-
+import { PoolScaleSelection } from "app/components/pool/action";
 import { ContainerRegistryDto, InboundNATPoolDto, MetaDataDto, PoolCreateDto, UserAccountDto } from "app/models/dtos";
 import { CertificateReferenceDto } from "../dtos/certificate-reference.dto";
 import { NodeFillType } from "../task-scheduling-policy";
@@ -30,15 +29,6 @@ export interface PoolOSPickerModel {
     };
 }
 
-export interface PoolScaleModel {
-    enableAutoScale: boolean;
-    autoScaleFormula: string;
-    autoScaleEvaluationInterval: number;
-    targetDedicatedNodes: number;
-    targetLowPriorityNodes: number;
-    resizeTimeout: number;
-}
-
 export interface PackageReferenceModel {
     applicationId: string;
     version: string;
@@ -47,7 +37,7 @@ export interface PackageReferenceModel {
 export interface CreatePoolModel {
     id: string;
     displayName: string;
-    scale: PoolScaleModel;
+    scale: PoolScaleSelection;
     vmSize: string;
     maxTasksPerNode: string;
     enableInterNodeCommunication: boolean;
@@ -64,7 +54,7 @@ export interface CreatePoolModel {
 }
 
 export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
-    const outputScale: PoolScaleModel = output.scale || {} as any;
+    const outputScale: PoolScaleSelection = output.scale || {} as any;
     const data: any = {
         id: output.id,
         displayName: output.displayName,
@@ -82,11 +72,11 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
 
     if (outputScale.enableAutoScale) {
         data.autoScaleFormula = outputScale.autoScaleFormula;
-        data.autoScaleEvaluationInterval = moment.duration({ minutes: outputScale.autoScaleEvaluationInterval });
+        data.autoScaleEvaluationInterval = outputScale.autoScaleEvaluationInterval;
     } else {
         data.targetDedicatedNodes = outputScale.targetDedicatedNodes;
         data.targetLowPriorityNodes = outputScale.targetLowPriorityNodes;
-        data.resizeTimeout = moment.duration({ minutes: outputScale.resizeTimeout });
+        data.resizeTimeout = outputScale.resizeTimeout;
     }
 
     if (output.os.source === PoolOsSources.PaaS) {
@@ -143,8 +133,8 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
             targetLowPriorityNodes: pool.targetLowPriorityNodes,
             enableAutoScale: pool.enableAutoScale,
             autoScaleFormula: pool.autoScaleFormula,
-            autoScaleEvaluationInterval: autoScaleInterval && autoScaleInterval.asMinutes(),
-            resizeTimeout: pool.resizeTimeout && pool.resizeTimeout.asMinutes(),
+            autoScaleEvaluationInterval: autoScaleInterval,
+            resizeTimeout: pool.resizeTimeout,
         },
         maxTasksPerNode: pool.maxTasksPerNode.toString(),
         enableInterNodeCommunication: pool.enableInterNodeCommunication,

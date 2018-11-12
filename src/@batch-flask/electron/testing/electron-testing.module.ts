@@ -29,11 +29,15 @@ export class MockElectronRemote {
     }
 
     public getAuthenticationWindow() {
-        return this.authenticationWindow ;
+        return this.authenticationWindow;
     }
 
     public getSplashScreen(): any {
         return this.splashScreen;
+    }
+
+    public asProvider() {
+        return { provide: ElectronRemote, useValue: this };
     }
 }
 
@@ -46,6 +50,10 @@ export class MockElectronShell {
         this.openItem = jasmine.createSpy("openItem");
         this.openExternal = jasmine.createSpy("openExternal");
         this.showItemInFolder = jasmine.createSpy("showItemInFolder");
+    }
+
+    public asProvider() {
+        return { provide: ElectronShell, useValue: this };
     }
 }
 

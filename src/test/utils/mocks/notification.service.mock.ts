@@ -1,11 +1,8 @@
 import { NotificationService } from "@batch-flask/ui/notifications";
 
 export class NotificationServiceMock {
-    public error: jasmine.Spy;
-
-    constructor() {
-        this.error = jasmine.createSpy("error");
-    }
+    public error = jasmine.createSpy("error");
+    public success = jasmine.createSpy("success");
 
     public asProvider() {
         return { provide: NotificationService, useValue: this };
