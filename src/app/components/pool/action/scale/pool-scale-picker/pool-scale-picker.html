@@ -1,0 +1,38 @@
+<div [formGroup]="form">
+    <fieldset>
+        <legend>{{'pool-scale-picker.type.label' | i18n }}</legend>
+        <mat-radio-group formControlName="enableAutoScale" class="scale-type">
+            <mat-radio-button [value]="false" color="primary">{{'pool-scale-picker.type.fixed' | i18n }}</mat-radio-button>
+            <mat-radio-button [value]="true" color="primary">{{'pool-scale-picker.type.autoscale' | i18n }}</mat-radio-button>
+        </mat-radio-group>
+    </fieldset>
+
+    <div class="grow" *ngIf="!enableAutoScale">
+        <div class="gcol">
+            <bl-form-field class="form-element">
+                <input blInput formControlName="targetDedicatedNodes" [placeholder]="'pool-scale-picker.targetDedicatedNodes.label' | i18n" type="number" min="0" />
+                <bl-error controlName="targetDedicatedNodes" code="required">{{'common.required' | i18n }}</bl-error>
+            </bl-form-field>
+        </div>
+        <div class="gcol">
+            <bl-form-field class="form-element">
+                <input blInput formControlName="targetLowPriorityNodes" [placeholder]="'pool-scale-picker.targetLowPriorityNodes.label' | i18n" type="number" min="0" />
+                <bl-error controlName="targetLowPriorityNodes" code="required">{{'common.required' | i18n }}</bl-error>
+            </bl-form-field>
+        </div>
+        <div class="gcol">
+            <bl-form-field class="form-element">
+                <bl-duration-picker formControlName="resizeTimeout"  [label]="'pool-scale-picker.resizeTimeout.label' | i18n" [allowUnlimited]="false">
+                </bl-duration-picker>
+            </bl-form-field>
+        </div>
+    </div>
+    <div *ngIf="enableAutoScale">
+        <bl-autoscale-formula-picker formControlName="autoScaleFormula" [pool]="pool"></bl-autoscale-formula-picker>
+        <bl-error controlName="autoScaleFormula" code="required">{{'common.required' | i18n }}</bl-error>
+        <bl-form-field>
+            <bl-duration-picker formControlName="autoScaleEvaluationInterval"  [label]="'pool-scale-picker.evaluationInterval.label' | i18n" [allowUnlimited]="false">
+            </bl-duration-picker>
+        </bl-form-field>
+    </div>
+</div>

@@ -5,6 +5,7 @@ export * from "./buttons";
 export * from "./charts";
 export * from "./date";
 export * from "./dialogs";
+export * from "./duration-picker";
 export * from "./dropdown";
 export * from "./file";
 export * from "./form";
