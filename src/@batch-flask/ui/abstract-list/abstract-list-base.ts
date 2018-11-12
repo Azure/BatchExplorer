@@ -66,7 +66,12 @@ export const abstractListDefaultConfig: AbstractListBaseConfig = {
  * 2. Refefine items with @ContentChildren and the class that inherit fSelectableListItemBase
  */
 export class AbstractListBase extends SelectableList implements OnDestroy {
+    public LoadingStatus = LoadingStatus;
+    public SortingStatus = SortingStatus;
 
+    @Input() @HostBinding("attr.id") public id: string;
+    @Input() public commands: EntityCommands<any>;
+    @Input() public status: LoadingStatus;
     @Input() public set data(
         data: ListView<any, any> | List<AbstractListItem> | Iterable<AbstractListItem>) {
         this.dataProvider.data = data;
@@ -104,12 +109,6 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         this.changeDetector.markForCheck();
     }
     public get selection() { return super.selection; }
-    public LoadingStatus = LoadingStatus;
-    public SortingStatus = SortingStatus;
-
-    @Input() @HostBinding("attr.id") public id: string;
-    @Input() public commands: EntityCommands<any>;
-    @Input() public status: LoadingStatus;
 
     // Aria
     @HostBinding("attr.tabindex") public readonly tabindex = 0;
