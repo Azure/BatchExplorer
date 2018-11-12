@@ -160,6 +160,9 @@
       <trans-unit id="common.no">
         <source>No</source>
       </trans-unit>
+      <trans-unit id="common.required">
+        <source>Required</source>
+      </trans-unit>
       <trans-unit id="common.yes">
         <source>Yes</source>
       </trans-unit>
@@ -651,6 +654,45 @@
       </trans-unit>
       <trans-unit id="pool-picker.reset">
         <source>Reset</source>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker">
+        <source/>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.evaluationInterval">
+        <source/>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.evaluationInterval.label">
+        <source>Formula evaluation interval</source>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.resizeTimeout">
+        <source/>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.resizeTimeout.label">
+        <source>Resize timeout</source>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.targetDedicatedNodes">
+        <source/>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.targetDedicatedNodes.label">
+        <source>Dedicated nodes</source>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.targetLowPriorityNodes">
+        <source/>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.targetLowPriorityNodes.label">
+        <source>Low priority nodes</source>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.type">
+        <source/>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.type.autoscale">
+        <source>Autoscale</source>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.type.fixed">
+        <source>Fixed size</source>
+      </trans-unit>
+      <trans-unit id="pool-scale-picker.type.label">
+        <source>Scale type</source>
       </trans-unit>
       <trans-unit id="profile-button">
         <source/>
