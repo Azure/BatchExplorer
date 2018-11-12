@@ -13,11 +13,11 @@ bl-file-tree-view-row {
     color: $primary-text;
 
     &:hover {
-        background: $selection-color;
+        background: $hover-bg-color;
     }
 
     &.active {
-        background: $selection-color;
+        background: $hover-bg-color;
     }
 
     &.focused {
@@ -26,7 +26,7 @@ bl-file-tree-view-row {
     }
 
     &.drop-target {
-        background: $selection-color;
+        background: $hover-bg-color;
     }
 
     &.virtual {

@@ -63,6 +63,11 @@ export interface ThemeDefinition {
     "card-background": string;
 
     /**
+     * Background color for items overed by the mouse
+     */
+    "hover-bg": string;
+
+    /**
      * Background color for selected items
      */
     "selection": string;
@@ -135,6 +140,9 @@ export interface ThemeDefinition {
         placehold: string;
         border: string;
         focusBorder: string;
+        "disabled-border": string;
+        "disabled-text": string;
+        "disabled-background": string;
     };
     "chart-colors": string[];
 }

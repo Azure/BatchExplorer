@@ -36,7 +36,7 @@ bl-os-offer-tile {
         flex: 1;
 
         &:hover {
-            background-color: $selection-color;
+            background-color: $hover-bg-color;
         }
 
         > .icon {
@@ -81,7 +81,7 @@ bl-os-offer-tile {
         cursor: pointer;
 
         &:hover, &:focus {
-            background-color: $selection-color;
+            background-color: $hover-bg-color;
         }
 
         .fa {

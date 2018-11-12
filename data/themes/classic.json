@@ -11,7 +11,7 @@
   "main-background": "#f5f5f5",
   "secondary-background": "#e5e5e5",
   "card-background": "white",
-  "selection": "#d5d5d5",
+  "hover": "#d5d5d5",
   "outline": "#528bff",
   "border": "#d5d5d5",
   "editor": "vs",
@@ -67,6 +67,8 @@
     "placeholder": "var(--color-text-secondary)",
     "text": "var(--color-text-primary)",
     "background": "#fff",
+    "disabled-border": "#d5d5d5",
+    "disabled-text": "var(--color-text-primary)",
     "disabled-background": "#e5e5e5"
   },
   "chart-colors": [

@@ -32,7 +32,7 @@ bl-property-content {
 
         &:hover {
             font-weight: 400;
-            background-color: $selection-color;
+            background-color: $hover-bg-color;
             cursor: pointer;
         }
     }
