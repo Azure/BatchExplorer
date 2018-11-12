@@ -1,9 +1,11 @@
-import { Component, DebugElement, Input, forwardRef } from "@angular/core";
+import { Component, DebugElement, Input } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ControlValueAccessor, FormControl, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatRadioGroup, MatRadioModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
-import { I18nTestingModule } from "@batch-flask/core/testing";
+import {
+    I18nTestingModule, MockControlValueAccessorComponent, controlValueAccessorProvider,
+} from "@batch-flask/core/testing";
 import { DurationPickerComponent, DurationPickerModule, FormModule, I18nUIModule } from "@batch-flask/ui";
 import { Pool } from "app/models";
 import { duration } from "moment";
@@ -26,34 +28,11 @@ export interface Inputs {
 }
 
 @Component({
-    selector: "bl-autoscale-formula-picker",
-    template: "",
-    providers: [
-        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => MockAutoscaleFormulaPickerComponent), multi: true },
-    ],
+    selector: "bl-autoscale-formula-picker", template: "",
+    providers: [controlValueAccessorProvider(() => MockAutoscaleFormulaPickerComponent)],
 })
-class MockAutoscaleFormulaPickerComponent implements ControlValueAccessor {
+class MockAutoscaleFormulaPickerComponent extends MockControlValueAccessorComponent<string> {
     @Input() public pool: Pool;
-
-    public value: any;
-    private _change: any;
-
-    public writeValue(value: any): void {
-        if (value !== this.value) {
-            this.value = value;
-            if (this._change) {
-                this._change(value);
-            }
-        }
-    }
-
-    public registerOnChange(fn: any): void {
-        this._change = fn;
-    }
-
-    public registerOnTouched(fn: any): void {
-        // nothing
-    }
 
 }
 
@@ -137,7 +116,7 @@ describe("PoolScalePickerComponent", () => {
 
         expect(typeSelection.value).toBe(true);
         const formEls = getFormElements();
-        formEls.autoScaleFormula.writeValue("$target = 3;");
+        formEls.autoScaleFormula.updateValue("$target = 3;");
 
         expect(testComponent.control.value).toEqual({
             enableAutoScale: true,
