@@ -97,6 +97,7 @@ export class FileViewerContainerComponent implements OnChanges, OnDestroy {
     public openAs(type: string) {
         this._fileType = type;
         this._findComponentType();
+        this._computeViewer();
         this.changeDetector.markForCheck();
     }
 
