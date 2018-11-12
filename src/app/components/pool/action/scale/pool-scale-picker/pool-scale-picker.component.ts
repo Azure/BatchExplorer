@@ -63,8 +63,8 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
             autoScaleFormula: this._autoScaleFormulaControl,
             targetDedicatedNodes: this._targetDedicatedNodes,
             targetLowPriorityNodes: this._targetLowPriorityNodes,
-            autoScaleEvaluationInterval: ["PT15M"],
-            resizeTimeout: ["PT15M"],
+            autoScaleEvaluationInterval: [duration("PT15M")],
+            resizeTimeout: [duration("PT15M")],
         });
 
         this._subs.push(this._enableAutoScaleControl.valueChanges.subscribe((enableAutoScale) => {
@@ -88,7 +88,6 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
         if (value) {
             this.form.patchValue(cleanSelection(value));
         } else {
-            console.log("Go herer");
             this.form.patchValue({
                 enableAutoScale: false,
                 targetDedicatedNodes: 0,

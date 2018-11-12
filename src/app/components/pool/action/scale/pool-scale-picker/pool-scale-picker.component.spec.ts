@@ -7,6 +7,7 @@ import { I18nTestingModule } from "@batch-flask/core/testing";
 import { DurationPickerComponent, DurationPickerModule, FormModule, I18nUIModule } from "@batch-flask/ui";
 import { Pool } from "app/models";
 import { duration } from "moment";
+import { click, updateInput } from "test/utils/helpers";
 import { PoolScalePickerComponent } from "./pool-scale-picker.component";
 
 @Component({
@@ -35,13 +36,21 @@ class MockAutoscaleFormulaPickerComponent implements ControlValueAccessor {
     @Input() public pool: Pool;
 
     public value: any;
+    private _change: any;
+
     public writeValue(value: any): void {
-        this.value = value;
-        // nothing
+        if (value !== this.value) {
+            this.value = value;
+            if (this._change) {
+                this._change(value);
+            }
+        }
     }
+
     public registerOnChange(fn: any): void {
-        // nothing
+        this._change = fn;
     }
+
     public registerOnTouched(fn: any): void {
         // nothing
     }
@@ -51,7 +60,6 @@ class MockAutoscaleFormulaPickerComponent implements ControlValueAccessor {
 fdescribe("PoolScalePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: PoolScalePickerComponent;
     let de: DebugElement;
     let typeSelection: MatRadioGroup;
 
@@ -66,10 +74,10 @@ fdescribe("PoolScalePickerComponent", () => {
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-pool-scale-picker"));
-        component = de.componentInstance;
         fixture.detectChanges();
 
-        typeSelection = de.query(By.css("mat-radio-group")).componentInstance;
+        typeSelection = de.query(By.css("mat-radio-group[formControlName=enableAutoScale]"))
+            .injector.get<MatRadioGroup>(MatRadioGroup);
     });
 
     function getFormElements(): Inputs {
@@ -85,7 +93,7 @@ fdescribe("PoolScalePickerComponent", () => {
         };
     }
 
-    fit("set defaults when value from parent is null", () => {
+    it("set defaults when value from parent is null", () => {
         expect(typeSelection.value).toBe(false);
         const formEls = getFormElements();
 
@@ -105,6 +113,7 @@ fdescribe("PoolScalePickerComponent", () => {
             enableAutoScale: true,
         });
         fixture.detectChanges();
+
         expect(typeSelection.value).toBe(true);
         const formEls = getFormElements();
 
@@ -114,5 +123,39 @@ fdescribe("PoolScalePickerComponent", () => {
         expect(formEls.targetDedicatedNodes).toBeFalsy();
         expect(formEls.targetLowPriorityNodes).toBeFalsy();
         expect(formEls.resizeTimeout).toBeFalsy();
+    });
+
+    it("updates the form when selecting radio button", () => {
+        click(de.queryAll(By.css("mat-radio-button label"))[1].nativeElement);
+        fixture.detectChanges();
+
+        expect(testComponent.control.value).toEqual({
+            enableAutoScale: true,
+            autoScaleFormula: "",
+            autoScaleEvaluationInterval: duration("PT15M"),
+        });
+
+        expect(typeSelection.value).toBe(true);
+        const formEls = getFormElements();
+        formEls.autoScaleFormula.writeValue("$target = 3;");
+
+        expect(testComponent.control.value).toEqual({
+            enableAutoScale: true,
+            autoScaleFormula: "$target = 3;",
+            autoScaleEvaluationInterval: duration("PT15M"),
+        });
+    });
+
+    it("updates the parent when selecting fixed mode settings", () => {
+        const els = getFormElements();
+        updateInput(els.targetDedicatedNodes, "7");
+        updateInput(els.targetLowPriorityNodes, "2");
+
+        expect(testComponent.control.value).toEqual({
+            enableAutoScale: false,
+            targetDedicatedNodes: 7,
+            targetLowPriorityNodes: 2,
+            resizeTimeout: duration("PT15M"),
+        });
     });
 });
