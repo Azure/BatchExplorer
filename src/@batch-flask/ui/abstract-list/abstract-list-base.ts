@@ -71,16 +71,11 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
 
     @Input() @HostBinding("attr.id") public id: string;
     @Input() public commands: EntityCommands<any>;
-
+    @Input() public status: LoadingStatus;
     @Input() public set data(
         data: ListView<any, any> | List<AbstractListItem> | Iterable<AbstractListItem>) {
         this.dataProvider.data = data;
     }
-    @Input() public status: LoadingStatus;
-
-    // Aria
-    @HostBinding("attr.tabindex") public readonly tabindex = 0;
-    @HostBinding("attr.aria-multiselectable") public ariaMultiSelectable = true;
     @HostBinding("attr.aria-activedescendant")
     public get ariaActiveDescendent() {
         if (this.focusedItem) {
@@ -103,8 +98,6 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     }
     public get config() { return this._config; }
 
-    @Output() public scrollBottom = new EventEmitter();
-
     @HostBinding("style.display")
     public get showComponent() {
         const hide = this.items.length === 0 && this.status === LoadingStatus.Ready;
@@ -116,6 +109,12 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         this.changeDetector.markForCheck();
     }
     public get selection() { return super.selection; }
+
+    // Aria
+    @HostBinding("attr.tabindex") public readonly tabindex = 0;
+    @HostBinding("attr.aria-multiselectable") public ariaMultiSelectable = true;
+
+    @Output() public scrollBottom = new EventEmitter();
 
     public listFocused: boolean = false;
     public focusedItem: AbstractListItem | null;
@@ -130,6 +129,8 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     private _subs: Subscription[] = [];
     private _items: any[] = [];
     private _keyNavigator: ListKeyNavigator<AbstractListItem>;
+
+    private _clicking = false;
 
     constructor(
         private contextmenuService: ContextMenuService,
@@ -265,10 +266,22 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         this.selection = selection;
     }
 
-    @HostListener("focus")
-    public handleFocusAnchor(event: FocusEvent) {
+    @HostListener("mousedown")
+    public handleMousedown() {
+       this._clicking = true;
+    }
+
+    @HostListener("mouseup")
+    public handleMouseup() {
+       this._clicking = false;
+    }
+
+    @HostListener("focus", ["$event"])
+    public handleFocusViaKeyboard(event: FocusEvent) {
         this.listFocused = true;
-        this._pickFocusedItem();
+        if (!this._clicking) {
+            this._pickFocusedItem();
+        }
         this.changeDetector.markForCheck();
     }
 
