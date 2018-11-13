@@ -1,5 +1,6 @@
 import { Injectable, Injector } from "@angular/core";
 
+import { I18nService } from "@batch-flask/core";
 import {
     COMMAND_LABEL_ICON, ElectronRemote, EntityCommand,
     EntityCommands, FileSystemService, Permission, SidebarManager,
@@ -23,6 +24,7 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
 
     constructor(
         injector: Injector,
+        private i18n: I18nService,
         private sidebarManager: SidebarManager,
         private fs: FileSystemService,
         private remote: ElectronRemote,
@@ -46,21 +48,23 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
     private _buildCommands() {
         this.delete = this.simpleCommand({
             name: "delete",
-            ...COMMAND_LABEL_ICON.Delete,
+            label: this.i18n.t("task-commands.delete"),
+            icon: "fa fa-trash-o",
             action: (task: Task) => this._deleteTask(task),
             permission: Permission.Write,
         });
 
         this.terminate = this.simpleCommand({
             name: "terminate",
-            ...COMMAND_LABEL_ICON.Terminate,
+            label: this.i18n.t("task-commands.terminate"),
+            icon: "fa fa-stop",
             action: (task) => this.taskService.terminate(this.params.jobId, task.id),
             enabled: (task) => task.state !== TaskState.completed,
         });
 
         this.rerun = this.simpleCommand({
             name: "rerun",
-            label: "Re-run",
+            label: this.i18n.t("task-commands.rerun"),
             icon: "fa fa-repeat",
             action: (task) => this.taskService.reactivate(this.params.jobId, task.id),
             visible: (task) => task.executionInfo.result === TaskExecutionResult.Failure,
