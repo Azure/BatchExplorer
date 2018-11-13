@@ -1,14 +1,14 @@
 import { Injectable, NgZone, OnDestroy } from "@angular/core";
 import { FSWatcher } from "chokidar";
 import * as path from "path";
-import { BehaviorSubject, Observable, Subscription } from "rxjs";
+import { BehaviorSubject, Observable, Subject, combineLatest } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
 import { FileSystemService, NotificationService } from "@batch-flask/ui";
 import { log } from "@batch-flask/utils";
 import { BatchExplorerService } from "app/services/batch-explorer.service";
-import { filter } from "rxjs/operators";
+import { filter, takeUntil } from "rxjs/operators";
 import { SettingsService } from "../settings.service";
 import { Theme } from "./theme.model";
 
@@ -25,7 +25,7 @@ export class ThemeService implements OnDestroy {
     private _watcher: FSWatcher;
     private _themesLoadPath: string[];
     private _baseThemeDefinition;
-    private _subs: Subscription[] = [];
+    private _destroy = new Subject();
 
     constructor(
         private fs: FileSystemService,
@@ -39,14 +39,20 @@ export class ThemeService implements OnDestroy {
         };
 
         this.currentTheme = this._currentTheme.pipe(filter(x => x !== null));
-        this._subs.push(this.currentTheme.subscribe((theme) => {
+        this.currentTheme.pipe(takeUntil(this._destroy)).subscribe((theme) => {
             this._applyTheme(theme);
-        }));
+        });
 
-        this._subs.push(this.settingsService.settingsObs.subscribe((settings) => {
-            const themeName = settings.theme || this.defaultTheme;
-            this.setTheme(themeName);
-        }));
+        combineLatest(this.settingsService.settingsObs, batchExplorer.isOSHighContrast)
+            .pipe(takeUntil(this._destroy))
+            .subscribe(([settings, isHighContrast]) => {
+                if (isHighContrast) {
+                    this.setTheme("high-contrast");
+                } else {
+                    const themeName = settings.theme || this.defaultTheme;
+                    this.setTheme(themeName);
+                }
+            });
 
         this._themesLoadPath = [
             path.join(batchExplorer.resourcesFolder, "data", "themes"),
@@ -59,7 +65,8 @@ export class ThemeService implements OnDestroy {
     }
 
     public ngOnDestroy() {
-        this._subs.forEach(x => x.unsubscribe());
+        this._destroy.next();
+        this._destroy.complete();
     }
 
     public async setTheme(name: string) {

@@ -22,7 +22,7 @@
   },
   "breadcrumb": {
     "text": "#ffffff",
-    "background": "#5b5b5b",
+    "background": "#000000",
     "hover-background": "#666666"
   },
   "header": {
