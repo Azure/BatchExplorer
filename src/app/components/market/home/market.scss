@@ -65,7 +65,7 @@ bl-market {
         background: $card-background;
 
         &:hover {
-            background: $selection-color;
+            background: $hover-bg-color;
         }
 
         img.logo {

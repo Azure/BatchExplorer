@@ -9,7 +9,7 @@ bl-job-details {
         cursor: pointer;
 
         &:hover {
-            background: $selection-color;
+            background: $hover-bg-color;
         }
 
         .fa {

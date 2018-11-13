@@ -59,7 +59,7 @@ describe("UsageDetailsService", () => {
         azureHttpSpy = {
             get: jasmine.createSpy("azure.get").and.callFake((sub, uri) => {
                 if (sub === internalSub) {
-                    return throwError(new ServerError({ status: 400, statusText: "Unsupported subscription" } as any));
+                    return throwError(new ServerError({ status: 422, statusText: "Unsupported subscription" } as any));
                 }
                 if (uri === "foo") {
                     return of({

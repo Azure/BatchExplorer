@@ -39,7 +39,7 @@ bl-file-table-view {
             vertical-align: middle;
 
             &:hover {
-                background: $selection-color;
+                background: $hover-bg-color;
             }
             .fa {
                 // color: $minshaft-grey;
