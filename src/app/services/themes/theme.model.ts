@@ -144,6 +144,12 @@ export class Theme extends ThemeElement<ThemeDefinition> {
     @CssColor() public editor: string;
     @CssColor("chart-colors") public chartColors: ChartColors;
 
+    public isHighContrast: boolean;
+
+    constructor(data: ThemeDefinition) {
+        super(data);
+        this.isHighContrast = data.type === "high-contrast";
+    }
 }
 
 function multiply(rgb1, rgb2) {

@@ -107,6 +107,7 @@ export class ThemeService implements OnDestroy {
 
     private _setTheme(theme: Theme) {
         const computedTheme = new Theme({} as any).merge(this._baseThemeDefinition).merge(theme);
+        computedTheme.isHighContrast = theme.isHighContrast;
         this._currentTheme.next(computedTheme);
     }
 

@@ -1,5 +1,6 @@
 {
   "$schema": "./theme.schema.json",
+  "type": "high-contrast",
   "primary": "#FFFF00",
   "primary-contrast": "#000000",
   "danger": "#FF0000",
