@@ -56,7 +56,7 @@ export class ClientTranslationsLoaderService extends TranslationsLoaderService {
         if (await this.fs.exists(localeTranslationFile)) {
             await this._loadProductionTranslationFile(localeTranslationFile);
         } else {
-            log.warn(`Missing translation file for ${locale}. "${localeTranslationFile}" doesn't exists.`);
+            log.warn(`Missing translation file for ${locale}. "${localeTranslationFile}" doesn't exist.`);
         }
 
     }

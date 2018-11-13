@@ -224,7 +224,7 @@ export class PythonRpcService {
         const request = this._currentRequests[requestId];
         if (!request) {
             if (!response.stream) {
-                log.error(`Request with id ${requestId} doesn't exists. Maybe it timed out!`, response);
+                log.error(`Request with id ${requestId} doesn't exist. Maybe it timed out!`, response);
             }
             return null;
         }

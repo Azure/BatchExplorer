@@ -7,8 +7,8 @@ export enum JobHookTaskState {
 }
 
 export enum JobHookTaskResult {
-    success = "Success",
-    failure = "Failure",
+    success = "success",
+    failure = "failure",
 }
 
 export interface JobHookTaskExecutionInfoAttributes {

@@ -29,7 +29,7 @@ describe("ComponentUtils", () => {
             ))).toBe(true);
         });
 
-        it("returns true when record didn't exists before", () => {
+        it("returns true when record didn't exist before", () => {
             expect(ComponentUtils.recordChangedId(new SimpleChange(
                 undefined, { id: "id-2" }, false,
             ))).toBe(true);
@@ -38,7 +38,7 @@ describe("ComponentUtils", () => {
             ))).toBe(true);
         });
 
-        it("returns true when record doesn't exists now", () => {
+        it("returns true when record doesn't exist now", () => {
             expect(ComponentUtils.recordChangedId(new SimpleChange(
                 { id: "id-2" }, null, false,
             ))).toBe(true);
