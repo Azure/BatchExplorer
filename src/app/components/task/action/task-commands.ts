@@ -4,7 +4,7 @@ import {
     COMMAND_LABEL_ICON, ElectronRemote, EntityCommand,
     EntityCommands, FileSystemService, Permission, SidebarManager,
 } from "@batch-flask/ui";
-import { Task, TaskState } from "app/models";
+import { Task, TaskExecutionResult, TaskState } from "app/models";
 import { TaskService } from "app/services";
 import { from } from "rxjs";
 import { AddTaskFormComponent } from "../action";
@@ -16,6 +16,7 @@ export interface TaskParams {
 @Injectable()
 export class TaskCommands extends EntityCommands<Task, TaskParams> {
     public delete: EntityCommand<Task, void>;
+    public rerun: EntityCommand<Task, void>;
     public terminate: EntityCommand<Task, void>;
     public clone: EntityCommand<Task, void>;
     public exportAsJSON: EntityCommand<Task, void>;
@@ -57,6 +58,14 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
             enabled: (task) => task.state !== TaskState.completed,
         });
 
+        this.rerun = this.simpleCommand({
+            name: "rerun",
+            label: "Re-run",
+            icon: "fa fa-repeat",
+            action: (task) => this.taskService.reactivate(this.params.jobId, task.id),
+            visible: (task) => task.executionInfo.result === TaskExecutionResult.Failure,
+        });
+
         this.clone = this.simpleCommand({
             name: "clone",
             ...COMMAND_LABEL_ICON.Clone,
@@ -79,6 +88,7 @@ export class TaskCommands extends EntityCommands<Task, TaskParams> {
         this.commands = [
             this.delete,
             this.terminate,
+            this.rerun,
             this.clone,
             this.exportAsJSON,
         ];
