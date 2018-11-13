@@ -34,7 +34,7 @@ bl-quick-list-row-render {
     }
 
     &:hover:not(.selected) {
-        background-color: $selection-color;
+        background-color: $hover-bg-color;
     }
 
     .quick-list-row-title {

@@ -139,6 +139,12 @@ bl-browse-layout {
 
 }
 
+.batch-explorer.high-contrast bl-browse-layout {
+    .list-view {
+        border-right: 1px solid $border-color;
+    }
+}
+
 .load-more-btn {
     display: flex;
     justify-content: center;

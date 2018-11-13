@@ -28,12 +28,12 @@ bl-select-dropdown {
                 background: $primary-color;
             }
             &:not(.focused) {
-                background: $selection-color;
+                background: $hover-bg-color;
             }
         }
 
         &.active {
-            background: $selection-color;
+            background: $hover-bg-color;
         }
 
         &.focused {

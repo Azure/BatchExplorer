@@ -7,6 +7,8 @@ export interface EntityColorDefinition {
 }
 
 export interface ThemeDefinition {
+    type: "high-contrast" | "standard";
+
     /**
      * Primary color
      */
@@ -61,6 +63,11 @@ export interface ThemeDefinition {
      * Background for any card on top the main background
      */
     "card-background": string;
+
+    /**
+     * Background color for items overed by the mouse
+     */
+    "hover-bg": string;
 
     /**
      * Background color for selected items
@@ -135,6 +142,9 @@ export interface ThemeDefinition {
         placehold: string;
         border: string;
         focusBorder: string;
+        "disabled-border": string;
+        "disabled-text": string;
+        "disabled-background": string;
     };
     "chart-colors": string[];
 }

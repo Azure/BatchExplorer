@@ -43,3 +43,8 @@ bl-summary-card {
         border-left: 1px solid $border-color;
     }
 }
+
+.batch-explorer.high-contrast bl-summary-card {
+    border-bottom: 1px solid $border-color;
+    border-left: 1px solid $border-color;
+}

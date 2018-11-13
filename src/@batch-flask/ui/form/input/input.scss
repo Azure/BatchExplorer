@@ -21,6 +21,8 @@ input[blInput], textarea[blInput] {
 
     &[disabled] {
         background-color: $input-disabled-background-color;
+        border-color: $input-disabled-border-color;
+        color: $input-disabled-text-color;
     }
 }
 

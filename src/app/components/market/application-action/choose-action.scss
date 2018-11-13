@@ -37,7 +37,7 @@ bl-choose-action {
             flex: 1;
 
             &:hover {
-                background: $selection-color;
+                background: $hover-bg-color;
             }
 
             > .name {
@@ -62,7 +62,7 @@ bl-choose-action {
             justify-content: center;
 
             &:hover {
-                background: $selection-color;
+                background: $hover-bg-color;
             }
         }
     }
