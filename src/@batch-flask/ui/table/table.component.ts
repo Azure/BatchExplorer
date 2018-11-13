@@ -1,3 +1,4 @@
+import { LiveAnnouncer } from "@angular/cdk/a11y";
 import {
     AfterContentInit, ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -109,10 +110,11 @@ export class TableComponent extends AbstractListBase implements AfterContentInit
         changeDetection: ChangeDetectorRef,
         router: Router,
         elementRef: ElementRef,
+        liveAnnouncer: LiveAnnouncer,
         breadcrumbService: BreadcrumbService) {
         super(contextmenuService, router, breadcrumbService, elementRef, changeDetection);
 
-        this.columnManager = new TableColumnManager(this.dataPresenter);
+        this.columnManager = new TableColumnManager(this.dataPresenter, liveAnnouncer);
     }
 
     public ngAfterContentInit() {
