@@ -1,14 +1,10 @@
 import { Model, Prop, Record } from "@batch-flask/core";
+import { TaskExecutionResult } from "./azure-batch";
 import { FailureInfoAttributes } from "./failure-info";
 
 export enum JobHookTaskState {
-    running = "running",
-    completed = "completed",
-}
-
-export enum JobHookTaskResult {
-    success = "success",
-    failure = "failure",
+    Running = "running",
+    Completed = "completed",
 }
 
 export interface JobHookTaskExecutionInfoAttributes {
@@ -21,7 +17,7 @@ export interface JobHookTaskExecutionInfoAttributes {
     failureInfo: FailureInfoAttributes;
     retryCount: number;
     lastRetryTime: Date;
-    result: JobHookTaskResult;
+    result: TaskExecutionResult;
 }
 
 @Model()
@@ -35,5 +31,5 @@ export class JobHookTaskExecutionInfo extends Record<JobHookTaskExecutionInfoAtt
     @Prop() public failureInfo: FailureInfoAttributes;
     @Prop() public retryCount: number;
     @Prop() public lastRetryTime: Date;
-    @Prop() public result: JobHookTaskResult;
+    @Prop() public result: TaskExecutionResult;
 }

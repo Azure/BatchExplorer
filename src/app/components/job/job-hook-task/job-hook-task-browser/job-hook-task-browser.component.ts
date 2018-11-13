@@ -2,7 +2,8 @@ import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from "@angular/
 import { FormControl } from "@angular/forms";
 import { FilterBuilder, ListView } from "@batch-flask/core";
 import { DateUtils } from "@batch-flask/utils";
-import { Job, JobHookTask, JobHookTaskResult, JobHookTaskState } from "app/models";
+import { Job, JobHookTask, JobHookTaskState } from "app/models";
+import { TaskExecutionResult } from "app/models/azure-batch";
 import { JobHookTaskListParams, JobHookTaskService } from "app/services";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
@@ -10,8 +11,8 @@ import { Subscription } from "rxjs";
 import "./job-hook-task-browser.scss";
 
 enum HookTaskType {
-    preparationTask = "preparationTask",
-    releaseTask = "releaseTask",
+    PreparationTask = "preparationTask",
+    ReleaseTask = "releaseTask",
 }
 
 @Component({
@@ -33,7 +34,7 @@ export class JobHookTaskBrowserComponent implements OnDestroy, OnChanges {
     public pickedTaskId: string;
     public pickedTask: JobHookTask;
 
-    public type: HookTaskType = HookTaskType.preparationTask;
+    public type: HookTaskType = HookTaskType.PreparationTask;
     private _sub: Subscription;
 
     constructor(jobHookTaskService: JobHookTaskService) {
@@ -73,7 +74,7 @@ export class JobHookTaskBrowserComponent implements OnDestroy, OnChanges {
     }
 
     public updateType(type) {
-        if (type === HookTaskType.releaseTask && !this.hasReleaseTask) {
+        if (type === HookTaskType.ReleaseTask && !this.hasReleaseTask) {
             return;
         }
         this.type = type;
@@ -88,9 +89,9 @@ export class JobHookTaskBrowserComponent implements OnDestroy, OnChanges {
         }
         const { state, result } = info;
 
-        if (state === JobHookTaskState.running) {
+        if (state === JobHookTaskState.Running) {
             return "runnning";
-        } else if (result === JobHookTaskResult.success) {
+        } else if (result === TaskExecutionResult.Success) {
             return "success";
         } else {
             return "failure";
