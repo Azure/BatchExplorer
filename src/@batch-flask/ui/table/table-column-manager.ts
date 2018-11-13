@@ -1,3 +1,4 @@
+import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { TemplateRef } from "@angular/core";
 import { ListDataPresenter, SortingInfo } from "@batch-flask/ui/abstract-list/list-data-presenter";
 import { SortDirection } from "@batch-flask/ui/abstract-list/list-data-sorter";
@@ -22,7 +23,7 @@ export class TableColumnManager {
     private _columns = [];
     private _dimensions = new Map<string, number>();
 
-    constructor(private dataPresenter: ListDataPresenter) {
+    constructor(private dataPresenter: ListDataPresenter, private liveAnnouncer: LiveAnnouncer) {
         this.sorting = dataPresenter.sortingByObs;
     }
 
@@ -90,6 +91,8 @@ export class TableColumnManager {
     }
 
     public sortBy(column: string, direction: SortDirection = SortDirection.Asc) {
+        const dirStr = direction === SortDirection.Asc ? "Ascending" : "Descending";
+        this.liveAnnouncer.announce(`Sorting by ${column} ${dirStr}`);
         this.dataPresenter.sortBy(column, direction);
     }
 

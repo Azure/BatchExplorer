@@ -3,11 +3,11 @@
         (click)="clickSelectButton($event)"
         [tabindex]="disabled ? -1 : 0"
         role="textbox"
-        [attr.aria-controls]="dropdownId"
         [attr.aria-labelledby]="id"
-        [attr.aria-readonly]="true"
+        [attr.aria-controls]="dropdownId"
         [attr.aria-activedescendant]="focusedOption?.id"
         attr.aria-autocomplete="list"
+        [attr.aria-readonly]="true"
         (blur)="onButtonBlur()">
         <div class="label">
             <ng-container *ngIf="!hasValueSelected">{{placeholder}}</ng-container>
@@ -26,8 +26,8 @@
             </ng-container>
         </div>
         <div class="caret">
-            <i class="fa fa-caret-down" *ngIf="!dropdownOpen"></i>
-            <i class="fa fa-caret-up" *ngIf="dropdownOpen"></i>
+            <i class="fa fa-caret-down" aria-hidden="true" *ngIf="!dropdownOpen"></i>
+            <i class="fa fa-caret-up" aria-hidden="true" *ngIf="dropdownOpen"></i>
         </div>
    </div>
    <ng-container *ngIf="dropdownOpen && filterable">
