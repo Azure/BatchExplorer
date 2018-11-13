@@ -8,7 +8,7 @@ bl-text-property {
         margin-left: 5px;
 
         &:hover {
-            color: $selection-color;
+            color: $hover-bg-color;
         }
 
         &:active {

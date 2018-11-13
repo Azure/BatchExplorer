@@ -14,3 +14,7 @@ bl-footer {
         margin: 0 5px;
     }
 }
+
+.batch-explorer.high-contrast bl-footer {
+    border-top: 1px solid $border-color;
+}

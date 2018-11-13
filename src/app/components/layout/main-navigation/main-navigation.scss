@@ -44,3 +44,7 @@ bl-app-nav {
         }
     }
 }
+
+.batch-explorer.high-contrast bl-app-nav {
+    border-right: 1px solid $border-color;
+}

@@ -40,7 +40,7 @@ bl-pool-picker {
         cursor: pointer;
 
         &:hover {
-            background-color: $selection-color;
+            background-color: $hover-bg-color;
         }
 
         &.active {

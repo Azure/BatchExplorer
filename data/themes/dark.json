@@ -47,6 +47,8 @@
     "placeholder": "#d5d5d5",
     "text": "var(--color-text-primary)",
     "background": "#21252B",
+    "disabled-text": "var(--color-text-primary)",
+    "disabled-border": "#3C4049",
     "disabled-background": "#2D2D30"
   }
 }
