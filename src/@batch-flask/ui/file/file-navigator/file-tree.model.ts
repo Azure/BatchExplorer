@@ -223,9 +223,9 @@ export class FileTreeStructure {
 
     /**
      *
-     * @param directory Ensure the given directory exist in the path
-     * @param virtual If the dictory doesn't exists it will be flagged as virtual if this is true.
-     *                If this is false and the directory exisist but is virtual it will be changed to non virtual
+     * @param directory Ensure the given directory exists in the path
+     * @param virtual If the dictory doesn't exist it will be flagged as virtual if this is true.
+     *                If this is false and the directory exists but is virtual, it will be changed to non virtual.
      */
     private _checkDirInTree(directory: string, virtual = false) {
         const directories = this.directories;

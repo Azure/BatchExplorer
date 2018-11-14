@@ -3,14 +3,14 @@
         <mat-checkbox [formControl]="onlyFailedControl" color="primary">Only failed</mat-checkbox>
     </div>
     <div class="type-toggle">
-        <bl-clickable class="option" (do)="updateType(HookTaskType.preparationTask)"
-            [attr.aria-selected]="type === HookTaskType.preparationTask"
-            [class.active]="type === HookTaskType.preparationTask">
+        <bl-clickable class="option" (do)="updateType(HookTaskType.PreparationTask)"
+            [attr.aria-selected]="type === HookTaskType.PreparationTask"
+            [class.active]="type === HookTaskType.PreparationTask">
             Preparation tasks
         </bl-clickable>
-        <bl-clickable class="option" (do)="updateType(HookTaskType.releaseTask)"
-            [attr.aria-selected]="type === HookTaskType.releaseTask"
-            [class.active]="type === HookTaskType.releaseTask"
+        <bl-clickable class="option" (do)="updateType(HookTaskType.ReleaseTask)"
+            [attr.aria-selected]="type === HookTaskType.ReleaseTask"
+            [class.active]="type === HookTaskType.ReleaseTask"
             [attr.aria-disabled]="!hasReleaseTask"
             [class.disabled]="!hasReleaseTask">
             Release tasks

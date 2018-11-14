@@ -51,7 +51,7 @@ describe("StorageAccountCardComponent", () => {
                         status: 404,
                         statusText: "Not found",
                         code: "StorageAccountNotFound",
-                        message: "Storage doesn't exists",
+                        message: "Storage doesn't exist",
                         original: null,
                     }));
                 }

@@ -190,7 +190,7 @@ describe("FileTreeStructure", () => {
             expect(sub.loadingStatus).toEqual(LoadingStatus.Ready);
         });
 
-        it("should a folder if doesn't exists", () => {
+        it("should a folder if doesn't exist", () => {
             const sub = tree.getNode("wd/unknown");
             expect(sub.name).toEqual("unknown");
             expect(sub.path).toEqual("wd/unknown");
