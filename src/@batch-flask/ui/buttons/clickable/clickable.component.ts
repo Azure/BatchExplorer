@@ -60,21 +60,23 @@ export class ClickableComponent implements OnChanges, OnDestroy {
 
     constructor(injector: Injector, @Self() @Optional() routerLink: RouterLink) {
         this._routerLink = routerLink;
-        this._matMenuTrigger = injector.get(MatMenuTrigger, null, 2);
-        this.permissionService = injector.get(PermissionService, null);
+        this._matMenuTrigger = injector.get(MatMenuTrigger, undefined, 2);
+        this.permissionService = injector.get(PermissionService, undefined);
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.permission) {
             this._clearSubscription();
-            this._sub = this.permissionService.hasPermission(this.permission).subscribe((hasPermission) => {
-                this._permissionDisabled = !hasPermission;
-                if (hasPermission) {
-                    this.subtitle = "";
-                } else {
-                    this.subtitle = " (You don't have permission to perform this action)";
-                }
-            });
+            if (this.permissionService && this.permission) {
+                this._sub = this.permissionService.hasPermission(this.permission).subscribe((hasPermission) => {
+                    this._permissionDisabled = !hasPermission;
+                    if (hasPermission) {
+                        this.subtitle = "";
+                    } else {
+                        this.subtitle = " (You don't have permission to perform this action)";
+                    }
+                });
+            }
         }
     }
 
