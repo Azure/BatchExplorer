@@ -85,9 +85,9 @@ export class PinnedEntityService implements OnDestroy {
         );
     }
 
-    public unPinFavorite(entity: NavigableRecord | PinnableEntity) {
+    public unPinFavorite(entity: NavigableRecord | PinnableEntity): Observable<any> {
         if (!this.isFavorite(entity)) {
-            return;
+            return of(null);
         }
 
         return this.accountService.currentAccount.pipe(
