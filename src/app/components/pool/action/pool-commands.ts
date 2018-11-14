@@ -153,11 +153,11 @@ export class PoolCommands extends EntityCommands<Pool> {
     }
 
     private _pinPool(pool: Pool) {
-        this.pinnedEntityService.pinFavorite(pool).subscribe((result) => {
-            if (result) {
-                this.pinnedEntityService.unPinFavorite(pool);
-            }
-        });
+        if (this.pinnedEntityService.isFavorite(pool)) {
+            return this.pinnedEntityService.unPinFavorite(pool);
+        } else {
+            return this.pinnedEntityService.pinFavorite(pool);
+        }
     }
 
     private _confirmDeletePool(entities: Pool[]) {

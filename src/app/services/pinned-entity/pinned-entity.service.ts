@@ -69,14 +69,15 @@ export class PinnedEntityService implements OnDestroy {
             name: entity.name,
             routerLink: entity.routerLink,
             pinnableType: this.getEntityType(entity),
-            url: entity.url,
+            uid: entity.uid,
         };
 
-        return this.accountService.currentAccount.pipe(take(1),
+        return this.accountService.currentAccount.pipe(
+            take(1),
             switchMap((account) => {
                 const map = this._favorites.value;
                 const perAccount = map.get(account.id) || new Map();
-                perAccount.set(favourite.url, favourite);
+                perAccount.set(favourite.uid, favourite);
                 map.set(account.id, perAccount);
                 this._favorites.next(map);
                 return this._saveAccountFavorites();
@@ -89,12 +90,13 @@ export class PinnedEntityService implements OnDestroy {
             return;
         }
 
-        return this.accountService.currentAccount.pipe(take(1),
+        return this.accountService.currentAccount.pipe(
+            take(1),
             switchMap((account) => {
                 const map = this._favorites.value;
                 if (map.has(account.id)) {
                     const perAccount = map.get(account.id);
-                    perAccount.delete(entity.url);
+                    perAccount.delete(entity.uid);
                     this._favorites.next(map);
                 }
                 return this._saveAccountFavorites();
@@ -117,8 +119,8 @@ export class PinnedEntityService implements OnDestroy {
     public isFavorite(entity: NavigableRecord | PinnableEntity): boolean {
         if (!this._currentAccount) { return false; }
         const favorites = this._favorites.value.get(this._currentAccount.id);
-        if (!favorites) {return false; }
-        return favorites.has(entity.url);
+        if (!favorites) { return false; }
+        return favorites.has(entity.uid);
     }
 
     private _loadInitialData() {
@@ -147,7 +149,7 @@ export class PinnedEntityService implements OnDestroy {
         const map = {};
         for (const [accountId, perAccountMap] of this._favorites.value.entries()) {
             const perAccountObj = [...perAccountMap.entries()];
-            map[accountId] =  perAccountObj;
+            map[accountId] = perAccountObj;
         }
         return this.localFileStorage.set(filename, map);
     }

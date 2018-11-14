@@ -93,11 +93,11 @@ export class CertificateCommands extends EntityCommands<Certificate> {
     }
 
     private _pinCertificate(certificate: Certificate) {
-        this.pinnedEntityService.pinFavorite(certificate).subscribe((result) => {
-            if (result) {
-                this.pinnedEntityService.unPinFavorite(certificate);
-            }
-        });
+        if (this.pinnedEntityService.isFavorite(certificate)) {
+            return this.pinnedEntityService.unPinFavorite(certificate);
+        } else {
+            return this.pinnedEntityService.pinFavorite(certificate);
+        }
     }
 
     private _exportAsJSON(certificate: Certificate) {

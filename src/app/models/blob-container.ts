@@ -26,7 +26,6 @@ export class BlobContainer extends Record<BlobContainerAttributes> implements Na
     @Prop() public metadata: any;
     @Prop() public lastModified: Date;
     @Prop() public lease: ContainerLease;
-    @Prop() public url: string;
     @Prop() public storageAccountId: string;
 
     public get routerLink(): string[] {
@@ -40,5 +39,9 @@ export class BlobContainer extends Record<BlobContainerAttributes> implements Na
 
     public get isFileGroup() {
         return this.id && this.id.startsWith(Constants.ncjFileGroupPrefix);
+    }
+
+    public get uid() {
+        return this.storageAccountId.toLowerCase() + "/" + this.id;
     }
 }

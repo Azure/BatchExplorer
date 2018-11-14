@@ -100,10 +100,10 @@ export class BatchApplicationCommands extends EntityCommands<BatchApplication> {
     }
 
     private _pinApplication(application: BatchApplication) {
-        this.pinnedEntityService.pinFavorite(application).subscribe((result) => {
-            if (result) {
-                this.pinnedEntityService.unPinFavorite(application);
-            }
-        });
+        if (this.pinnedEntityService.isFavorite(application)) {
+            return this.pinnedEntityService.unPinFavorite(application);
+        } else {
+            return this.pinnedEntityService.pinFavorite(application);
+        }
     }
 }

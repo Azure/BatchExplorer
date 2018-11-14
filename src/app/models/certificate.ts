@@ -64,6 +64,10 @@ export class Certificate extends Record<CertificateAttributes> implements Naviga
     public get routerLink(): string[] {
         return ["/certificates", this.thumbprint];
     }
+
+    public get uid() {
+        return this.url;
+    }
 }
 
 export enum CertificateState {
