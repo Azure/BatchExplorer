@@ -135,9 +135,11 @@ export class PinnedEntityService implements OnDestroy {
         return this.localFileStorage.get(filename).pipe(
             map((data) => {
                 const map = new Map<string, Map<string, PinnableEntity>>();
+                if (!data || typeof data !== "object") { return map; }
                 for (const [accountId, perAccountObj] of Object.entries(data)) {
                     const perAccountMap = new Map<string, PinnableEntity>(perAccountObj);
                     map.set(accountId, perAccountMap);
+
                 }
                 return map;
             }),
