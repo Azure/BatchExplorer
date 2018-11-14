@@ -1,4 +1,5 @@
 import { Injectable, Injector } from "@angular/core";
+import { I18nService } from "@batch-flask/core";
 import { ElectronRemote } from "@batch-flask/electron";
 import {
     COMMAND_LABEL_ICON, EntityCommand, EntityCommands, FileSystemService, Permission, SidebarManager,
@@ -23,6 +24,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         injector: Injector,
         private fs: FileSystemService,
         private remote: ElectronRemote,
+        private i18n: I18nService,
         private jobScheduleService: JobScheduleService,
         private pinnedEntityService: PinnedEntityService,
         private sidebarManager: SidebarManager) {
@@ -74,7 +76,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
 
         this.terminate = this.simpleCommand({
             name: "terminate",
-            ...COMMAND_LABEL_ICON.Terminate,
+            label: this.i18n.t("task-commands.terminate"),
             action: (jobSchedule) => this.jobScheduleService.terminate(jobSchedule.id),
             enabled: (jobSchedule) => jobSchedule.state !== JobScheduleState.completed,
             permission: Permission.Write,

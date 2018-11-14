@@ -1,6 +1,6 @@
-import { COMMAND_LABEL_ICON, EntityCommand, Permission } from "@batch-flask/ui";
-
 import { Injectable, Injector } from "@angular/core";
+import { I18nService } from "@batch-flask/core";
+import { EntityCommand, Permission } from "@batch-flask/ui";
 import { Job, JobState } from "app/models";
 import { JobService } from "app/services";
 
@@ -8,10 +8,10 @@ import { JobService } from "app/services";
 export class TerminateJobCommand extends EntityCommand<Job> {
     constructor(injector: Injector) {
         const jobService = injector.get(JobService);
-
+        const i18n = injector.get(I18nService);
         super(injector, {
             name: "terminate",
-            ...COMMAND_LABEL_ICON.Terminate,
+            label: i18n.t("task-commands.terminate"),
             action: (job: Job) => jobService.terminate(job.id),
             enabled: (job) => job.state !== JobState.completed,
             permission: Permission.Write,
