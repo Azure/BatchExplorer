@@ -77,6 +77,7 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         this.terminate = this.simpleCommand({
             name: "terminate",
             label: this.i18n.t("task-commands.terminate"),
+            icon: "fa fa-stop",
             action: (jobSchedule) => this.jobScheduleService.terminate(jobSchedule.id),
             enabled: (jobSchedule) => jobSchedule.state !== JobScheduleState.completed,
             permission: Permission.Write,

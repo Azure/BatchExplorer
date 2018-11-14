@@ -12,6 +12,7 @@ export class TerminateJobCommand extends EntityCommand<Job> {
         super(injector, {
             name: "terminate",
             label: i18n.t("task-commands.terminate"),
+            icon: "fa fa-stop",
             action: (job: Job) => jobService.terminate(job.id),
             enabled: (job) => job.state !== JobState.completed,
             permission: Permission.Write,
