@@ -48,7 +48,7 @@ export class FileSystem {
 
     /**
      * This make sure the given dir exists. Will recusrivelly create any missing directory.
-     * @param directory: Path that we expect to exists
+     * @param directory: Path that we expect to exist
      */
     public ensureDir(directory: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
