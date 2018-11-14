@@ -50,8 +50,8 @@ export class PoolOsSkus {
          * Split current offer to normal offer and docker offer because some docker container must be displayed
          * in a seperate container configuration tab
          */
-        let targetOffers = null;
-        skus.forEach((sku) => {
+        let targetOffers: StringMap<Offer> | null = null;
+        skus.forEach((sku: NodeAgentSku) => {
             for (const imageReference of sku.verifiedImageReferences.toArray()) {
                 targetOffers = offers;
                 if (dockerContainer[imageReference.offer] &&

@@ -18,7 +18,7 @@
     "sourceMap": true,
     "noImplicitAny": false,
     "moduleResolution": "node",
-    "strictNullChecks": true,
+    // "strictNullChecks": true,
     "listEmittedFiles": true, // debug option
     "listFiles": true, // debug option
     // Base Url only applies to typescript compilation so tsc knows where the modules are.
