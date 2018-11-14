@@ -6,7 +6,7 @@
                 <th *ngFor="let column of columns;trackBy: trackColumn">
                     <ng-template [ngTemplateOutlet]="column.content"></ng-template>
                 </th>
-                <th class="action-column" [id]="column.id"></th>
+                <th class="action-column"></th>
             </tr>
         </thead>
         <tbody>
@@ -14,12 +14,12 @@
                 <td *ngFor="let column of columns;trackBy: trackColumn">
                     <ng-container [ngSwitch]="column.type">
                         <ng-container *ngSwitchCase="EditableTableColumnType.Select">
-                            <bl-select [formControlName]="column.name" [attr.aria-labelledby]="column.id">
+                            <bl-select [formControlName]="column.name">
                                 <bl-option *ngFor="let item of column.options;trackBy: trackRows" [value]="item" [label]="item"></bl-option>
                             </bl-select>
                         </ng-container>
                         <ng-container *ngSwitchDefault>
-                            <input [formControlName]="column.name" [attr.type]="column.type" [attr.aria-labelledby]="column.id">
+                            <input [formControlName]="column.name" [attr.type]="column.type">
                         </ng-container>
                     </ng-container>
                 </td>
