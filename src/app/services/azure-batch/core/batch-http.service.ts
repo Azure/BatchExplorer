@@ -79,7 +79,10 @@ export class AzureBatchHttpService extends HttpService {
         return from(sharedKey.signRequest(method, uri, options)).pipe(map(() => options));
     }
 
-    private _addApiVersion(uri: string, options: HttpRequestOptions): HttpRequestOptions {
+    private _addApiVersion(uri: string, options: HttpRequestOptions | null): HttpRequestOptions {
+        if (!options) {
+            options = {};
+        }
         if (!(options.params instanceof HttpParams)) {
             options.params = new HttpParams({ fromObject: options.params });
         }
