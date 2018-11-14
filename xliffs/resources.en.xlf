@@ -772,6 +772,18 @@
       <trans-unit id="settings.userSettings">
         <source>User settings</source>
       </trans-unit>
+      <trans-unit id="task-commands">
+        <source/>
+      </trans-unit>
+      <trans-unit id="task-commands.delete">
+        <source>Delete</source>
+      </trans-unit>
+      <trans-unit id="task-commands.rerun">
+        <source>Re-run</source>
+      </trans-unit>
+      <trans-unit id="task-commands.terminate">
+        <source>Terminate</source>
+      </trans-unit>
       <trans-unit id="task-configuration">
         <source/>
       </trans-unit>
