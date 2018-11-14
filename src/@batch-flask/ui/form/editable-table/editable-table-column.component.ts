@@ -17,11 +17,14 @@ export enum EditableTableColumnType {
     Select = "select",
 }
 
+let idCounter = 0;
+
 @Component({
     selector: "bl-editable-table-column",
     template: `<ng-template><ng-content></ng-content></ng-template>`,
 })
 export class EditableTableColumnComponent {
+    @Input() public id = `bl-editable-table-column-${idCounter++}`;
     @Input() public name: string;
 
     @Input() public type: EditableTableColumnType = EditableTableColumnType.Text;

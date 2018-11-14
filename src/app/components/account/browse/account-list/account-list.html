@@ -24,8 +24,11 @@
     </ng-container>
 
     <ng-container *blQuickListRowExtra="let account">
-        <bl-clickable (do)="toggleFavorite(account.id)">
+        <bl-clickable *ngIf="!isAccountFavorite(account.id)" (do)="toggleFavorite(account.id)" aria-label="Favorite">
             <i class="fa fa-star" [class.favorite]="isAccountFavorite(account.id)"></i>
+        </bl-clickable>
+        <bl-clickable *ngIf="isAccountFavorite(account.id)" (do)="toggleFavorite(account.id)" aria-label="Unfavorite">
+            <i class="fa fa-star favorite"></i>
         </bl-clickable>
     </ng-container>
 </bl-quick-list>
