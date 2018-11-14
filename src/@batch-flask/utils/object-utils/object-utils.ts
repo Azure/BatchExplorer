@@ -66,7 +66,7 @@ export class ObjectUtils {
 /**
  * @returns true if obj is NOT null or undefined
  */
-export function exists(obj: any): boolean {
+export function exists<T>(obj: T | null | undefined): obj is T {
     return obj !== undefined && obj !== null;
 }
 

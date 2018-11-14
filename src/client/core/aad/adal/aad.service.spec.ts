@@ -60,7 +60,7 @@ describe("AADService", () => {
         localStorage.removeItem(Constants.localStorageKey.currentUser);
         const tmpService = new AADService(appSpy, localStorage, propertiesSpy,  ipcMainMock);
         tmpService.init();
-        let user: AADUser = null;
+        let user: AADUser | null = null;
         tmpService.currentUser.subscribe(x => user = x);
         expect(user).toBeNull();
     });
@@ -69,10 +69,10 @@ describe("AADService", () => {
         await localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(sampleUser));
         const tmpService = new AADService(appSpy, localStorage, propertiesSpy, ipcMainMock);
         await tmpService.init();
-        let user: AADUser = null;
+        let user: AADUser | null = null;
         tmpService.currentUser.subscribe(x => user = x);
         expect(user).not.toBeNull();
-        expect(user.upn).toEqual("frank.smith@example.com");
+        expect(user!.upn).toEqual("frank.smith@example.com");
         done();
     });
 

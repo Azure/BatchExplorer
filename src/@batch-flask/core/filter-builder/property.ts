@@ -1,5 +1,5 @@
 import { Filter } from "./filter";
-import { and, or, prop } from "./filter-builder";
+import { and, none, or, prop } from "./filter-builder";
 import { Operator } from "./operator";
 
 export class Property extends Filter {
@@ -10,7 +10,7 @@ export class Property extends Filter {
     constructor(name: string) {
         super();
         this.name = name;
-        this.operator = null;
+        this.operator = null as any;
     }
 
     public do(operator: Operator, value: any): Filter {
@@ -22,7 +22,7 @@ export class Property extends Filter {
     public eq(value: any, validOptions?: any[]): Filter {
         if (validOptions) {
             if (validOptions.indexOf(value) === -1) {
-                return null;
+                return none();
             }
         }
         return this.do(Operator.equal, value);
@@ -62,12 +62,12 @@ export class Property extends Filter {
         return this.do(Operator.lessThan, value);
     }
 
-    public operatorName(): string {
+    public operatorName(): string | null {
         return this.operator && this.operator.name;
     }
 
     public toOData(): string {
-        return this.operator.format.format(this.name, this._formattedValue());
+        return this.operator!.format.format(this.name, this._formattedValue());
     }
 
     public isEmpty() {

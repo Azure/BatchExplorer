@@ -85,7 +85,7 @@ export class PollService {
 
 class PollTracker {
     public id: string;
-    private _currentTimeout: Subscription;
+    private _currentTimeout: Subscription | null;
     private _running: boolean = false;
     private _obsSubscription: Subscription;
 

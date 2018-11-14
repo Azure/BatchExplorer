@@ -12,7 +12,7 @@ export interface BasicListGetterConfig<TEntity extends Record<any>, TParams>
 }
 
 export class BasicListGetter<TEntity extends Record<any>, TParams> extends ListGetter<TEntity, TParams> {
-    private _supplyData: (params: TParams, options: ListOptions, nextLink?: string)
+    private _supplyData: (params: TParams | null, options: ListOptions | null, nextLink?: string)
         => Observable<{ data: any[], nextLink?: string }>;
 
     constructor(

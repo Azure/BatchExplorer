@@ -9,7 +9,7 @@ export interface RequestInit {
 export class Request {
     public _opts: RequestInit;
     public headers: Headers;
-    public method: string;
+    public method: string | undefined;
 
     constructor(public url: string, opts: RequestInit = {}) {
         this._opts = opts;

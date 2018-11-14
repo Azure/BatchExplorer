@@ -44,7 +44,7 @@ export class I18nService {
         }
     }
 
-    private _noTranslation(key: string, params: StringMap<string> | null) {
+    private _noTranslation(key: string, params?: StringMap<string> | null) {
         if (params) {
             const prettyParams = Object.entries(params).map(([k, v]) => `${k}:${v}`).join(", ");
             return `${key}(${prettyParams})`;

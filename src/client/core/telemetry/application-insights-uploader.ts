@@ -40,6 +40,7 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
 
         // Prevent application insights from recording the device name
         const context = this._client.context;
+        // @ts-ignore
         context.tags[context.keys.cloudRoleInstance] = null;
 
         // Add a session Id

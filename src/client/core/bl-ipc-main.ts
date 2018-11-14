@@ -16,7 +16,7 @@ export class BlIpcMain implements OnDestroy {
      * @param {String} event event name.
      * @param {Function} listener listener function.
      */
-    public on(event: string, listener: (...args) => Promise<any>): Subscription {
+    public on(event: string, listener: (...args) => Promise<any | undefined | null>): Subscription {
         // call from main process always.
 
         // add listener to common event emitter for main process.

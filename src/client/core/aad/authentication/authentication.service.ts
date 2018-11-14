@@ -48,9 +48,9 @@ export class AuthenticationService {
     // @ts-ignore
     private _waitingForAuth = false;
     private _authorizeQueue: AuthorizeQueueItem[] = [];
-    private _currentAuthorization: AuthorizeQueueItem = null;
+    private _currentAuthorization: AuthorizeQueueItem | null = null;
     private _state = new BehaviorSubject(AuthenticationState.None);
-    private _logoutDeferred: Deferred<void>;
+    private _logoutDeferred: Deferred<void> | null;
 
     constructor(private app: BatchExplorerApplication, private config: AADConfig) {
         this.state = this._state.asObservable();
@@ -115,7 +115,7 @@ export class AuthenticationService {
             return;
         }
         this._waitingForAuth = true;
-        const { tenantId, silent } = this._currentAuthorization = this._authorizeQueue.shift();
+        const { tenantId, silent } = this._currentAuthorization = this._authorizeQueue.shift()!;
         const authWindow = this.app.authenticationWindow;
         authWindow.create();
         authWindow.loadURL(this._buildUrl(tenantId, silent));

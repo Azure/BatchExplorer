@@ -30,7 +30,7 @@ export abstract class GenericView<TEntity extends Record<any>, TParams, TOptions
     /**
      * Contains the current error if any.
      */
-    public error: Observable<ServerError>;
+    public error: Observable<ServerError | null>;
 
     /**
      * Push observable that send a notification if the item has been deleted.
@@ -58,13 +58,13 @@ export abstract class GenericView<TEntity extends Record<any>, TParams, TOptions
 
     protected _status = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
     protected _newDataStatus = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
-    protected _error = new BehaviorSubject<ServerError>(null);
+    protected _error = new BehaviorSubject<ServerError | null>(null);
     protected _cacheCleared = new Subject<void>();
     protected _params: TParams;
     protected _options: TOptions;
 
     private _pollObservable: PollObservable;
-    private _currentQuerySub: Subscription = null;
+    private _currentQuerySub: Subscription | null = null;
     private _currentObservable: Observable<TEntity>;
     private _deletedSub: Subscription;
     private _deleted = new Subject<string>();

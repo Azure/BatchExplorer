@@ -1,7 +1,7 @@
 import { log } from "@batch-flask/utils";
 import { execCommand } from "../core/subprocess";
 
-let computedPythonPath: string = null;
+let computedPythonPath: string | null = null;
 
 export class PythonExecutableError extends Error {
     constructor(public message) {
@@ -62,22 +62,28 @@ export function tryMultiplePythons(paths: string[]): Promise<string> {
  * Retrieve the python path that should be used for Batch Explorer.
  * It will only look for the python executable on the first run. It will then used the cached value
  */
-export function getPythonPath(): Promise<string> {
+export async function getPythonPath(): Promise<string | null> {
     if (computedPythonPath) {
         return Promise.resolve(computedPythonPath);
     }
     const envPython = process.env.BL_PYTHON_PATH;
-    return tryMultiplePythons([envPython, "python3", "python"].filter(x => Boolean(x))).then((path) => {
+    const options = ["python3", "python"];
+    if (envPython) {
+        options.unshift(envPython);
+    }
+
+    try {
+        const path = await tryMultiplePythons(options);
         computedPythonPath = path;
         return path;
-    }).catch((errors) => {
+    } catch (errors) {
         let msg = "Fail to find a valid python 3.6 installation:";
         for (const path of Object.keys(errors)) {
             msg += `\n  - ${path}: ${errors[path].message}`;
         }
         log.error(msg);
         return null;
-    });
+    }
 }
 
 const pythonVersionRegex = /Python\s*(\d+)\.(\d+)\.(\d+)/;
@@ -91,7 +97,7 @@ export interface SemVersion {
  * Parse the version from the stdout
  * @param str Stdout of running python --version
  */
-function parsePythonVersion(str: string): SemVersion {
+function parsePythonVersion(str: string): SemVersion | null {
     const out = pythonVersionRegex.exec(str);
 
     if (!out || out.length < 4) {
