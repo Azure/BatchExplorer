@@ -73,6 +73,6 @@ export function exists<T>(obj: T | null | undefined): obj is T {
 /**
  * @returns true if obj is null or undefined
  */
-export function nil(obj: any): boolean {
-    return obj === undefined || obj === null;
+export function nil<T>(obj: T | null | undefined): obj is (undefined | null) {
+    return !exists<T>(obj);
 }
