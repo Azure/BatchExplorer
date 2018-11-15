@@ -1,5 +1,10 @@
 import { Model, Prop, Record } from "@batch-flask/core";
 
+export interface VmSizeFilterValue {
+    category: string;
+    searchName?: string;
+}
+
 export interface VmSizeAttributes {
     name: string;
     numberOfCores: number;

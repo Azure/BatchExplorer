@@ -1,40 +1,40 @@
 <bl-loading [status]="loadingStatus">
-    <mat-tab-group class="form-tabs" [@.disabled]="true">
-        <mat-tab *ngFor="let category of categoryNames;trackBy: trackCategory" [label]="categoryLabelName(category)">
-            <div class="vm-size-list">
-                <bl-table [data]="categories[category]" [activeItem]="pickedSize" (activeItemChange)="pickSize($event)" [config]="tableConfig">
-                    <bl-column name="title" [sortable]="true">
-                        <div *blHeadCellDef>Name</div>
-                        <div *blCellDef="let size">{{size.title}}</div>
-                    </bl-column>
+    <bl-vm-size-picker-filter
+        [categoriesDisplayName]="categoriesDisplayName"
+        (filterChange)="onFilterChange($event)">
+    </bl-vm-size-picker-filter>
+    <div class="vm-size-list">
+        <bl-table [data]="filteredCategories" [activeItem]="pickedSize" (activeItemChange)="pickSize($event)" [config]="tableConfig">
+            <bl-column name="title" [sortable]="true">
+                <div *blHeadCellDef>Name</div>
+                <div *blCellDef="let size">{{size.title}}</div>
+            </bl-column>
 
-                    <bl-column name="price" [sortable]="true">
-                        <div *blHeadCellDef>Price per node (hourly)</div>
-                        <div *blCellDef="let size">{{size.prettyPrice}}</div>
-                    </bl-column>
+            <bl-column name="price" [sortable]="true">
+                <div *blHeadCellDef>Price per node (hourly)</div>
+                <div *blCellDef="let size">{{size.prettyPrice}}</div>
+            </bl-column>
 
-                    <bl-column name="cores" [sortable]="true" [defaultWidth]="60">
-                        <div *blHeadCellDef>Cores</div>
-                        <div *blCellDef="let size">{{size.vmSize.numberOfCores}}</div>
-                    </bl-column>
+            <bl-column name="cores" [sortable]="true" [defaultWidth]="60">
+                <div *blHeadCellDef>Cores</div>
+                <div *blCellDef="let size">{{size.vmSize.numberOfCores}}</div>
+            </bl-column>
 
-                    <bl-column name="ram" [sortable]="true" [defaultWidth]="60">
-                        <div *blHeadCellDef>Ram</div>
-                        <div *blCellDef="let size">{{size.prettyRAM}}</div>
-                    </bl-column>
+            <bl-column name="ram" [sortable]="true" [defaultWidth]="60">
+                <div *blHeadCellDef>Ram</div>
+                <div *blCellDef="let size">{{size.prettyRAM}}</div>
+            </bl-column>
 
-                    <bl-column name="osdisk" [sortable]="true" [defaultWidth]="70">
-                        <div *blHeadCellDef>OS Disk</div>
-                        <div *blCellDef="let size">{{size.prettyOSDiskSize}}</div>
-                    </bl-column>
+            <bl-column name="osdisk" [sortable]="true" [defaultWidth]="70">
+                <div *blHeadCellDef>OS Disk</div>
+                <div *blCellDef="let size">{{size.prettyOSDiskSize}}</div>
+            </bl-column>
 
-                    <bl-column name="resourcedisk" [sortable]="true">
-                        <div *blHeadCellDef>Resource/Temp disk</div>
-                        <div *blCellDef="let size">{{size.prettyResourceDiskSize}}</div>
-                    </bl-column>
-                </bl-table>
-            </div>
-        </mat-tab>
-    </mat-tab-group>
+            <bl-column name="resourcedisk" [sortable]="true">
+                <div *blHeadCellDef>Resource/Temp disk</div>
+                <div *blCellDef="let size">{{size.prettyResourceDiskSize}}</div>
+            </bl-column>
+        </bl-table>
+    </div>
 </bl-loading>
 <p>Note: Per-month pricing for listed nodes is an approximation only and based on estimated usage.</p>

@@ -12,6 +12,16 @@ export class StringUtils {
     }
 
     /**
+     * Check whether a given string match a given regex
+     * @param str string to test
+     * @param regex regular expression
+     * @returns Boolean if the string match the regex
+     */
+    public static regexExpTest(str: string, regex: string): boolean {
+        return new RegExp(regex).test(str);
+    }
+
+    /**
      * Remove the given prefix from the given string. Returns the output.
      * @param name Name containing the prefix
      * @param prefix Prefix to remove

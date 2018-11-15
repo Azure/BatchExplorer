@@ -6,7 +6,7 @@ import {
 } from "@angular/forms";
 import { LoadingStatus } from "@batch-flask/ui";
 import { StringUtils, exists, prettyBytes } from "@batch-flask/utils";
-import { VmSize } from "app/models";
+import { VmSize, VmSizeFilterValue } from "app/models";
 import { PoolOsSources } from "app/models/forms";
 import { PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
@@ -17,12 +17,22 @@ import { TableConfig } from "@batch-flask/ui/table";
 import "./vm-size-picker.scss";
 
 const categoriesDisplayName = {
+    all: "All",
     standard: "General purpose",
     compute: "Compute optimized",
     memory: "Memory optimized",
     storage: "Storage optimized",
     gpu: "GPU",
     hpc: "High performance compute",
+    a: "A series",
+    d: "D series",
+    ev3: "Ev3 series",
+    f: "F series",
+    g: "G series",
+    h: "H series",
+    nc: "NC series",
+    nv: "NV series",
+    m: "M series",
 };
 
 export class VmSizeDecorator {
@@ -76,11 +86,11 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     @Input() public osType: "linux" | "windows";
 
     public pickedSize: string;
-
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
     public categoryNames: string[];
-    public categories: StringMap<VmSizeDecorator[]>;
+    public filteredCategories: VmSizeDecorator[];
     public prices: OSPricing = null;
+    public categoriesDisplayName = categoriesDisplayName;
 
     public tableConfig: TableConfig = {
         sorting: {
@@ -93,10 +103,13 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     };
 
     private _propagateChange: (value: string) => void = null;
-    private _categories: StringMap<string[]> = {};
+    private _categoryRegex: StringMap<string[]>;
     private _vmSizes: List<VmSize> = List([]);
     private _sizeSub: Subscription;
     private _categorySub: Subscription;
+    private _currentFilter: VmSizeFilterValue = {
+        category: "standard",
+    };
 
     constructor(
         private changeDetector: ChangeDetectorRef,
@@ -106,7 +119,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
 
     public ngOnInit() {
         this._categorySub = this.vmSizeService.vmSizeCategories.subscribe((categories) => {
-            this._categories = categories;
+            this._categoryRegex = categories;
             this._categorizeSizes();
         });
         this._loadPrices();
@@ -158,28 +171,18 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
         return null;
     }
 
+    public onFilterChange(filter) {
+        console.log("onFilterChange", filter);
+        this._currentFilter = filter;
+        this._categorizeSizes();
+    }
+
     public pickSize(size: string) {
         if (size === this.pickedSize) { return; }
         this.pickedSize = size;
         if (this._propagateChange) {
             this._propagateChange(size);
         }
-    }
-
-    public categoryLabelName(categoryName: string) {
-        let count = 0;
-        let name = categoryName;
-        if (categoryName in this.categories) {
-            count = this.categories[categoryName].length;
-        }
-        if (categoryName in categoriesDisplayName) {
-            name = categoriesDisplayName[categoryName];
-        }
-        return `${name} (${count})`;
-    }
-
-    public trackCategory(index, category: string) {
-        return category;
     }
 
     public trackVmSize(index, size: VmSizeDecorator) {
@@ -189,39 +192,26 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     private _categorizeSizes() {
         if (!this._vmSizes) { return; }
         this.loadingStatus = LoadingStatus.Ready;
-        let remainingSizes = this._vmSizes.toArray();
-        const categories = {};
-        for (const category of Object.keys(this._categories)) {
-            const { match, remain } = this._getSizeForCategory(remainingSizes, this._categories[category]);
-            remainingSizes = remain;
-            categories[category] = match.map(x => new VmSizeDecorator(x, this.prices));
+        let vmSizes = this._vmSizes.toArray();
+        if (this._currentFilter && this._categoryRegex) {
+            if (this._currentFilter.category) {
+                vmSizes = vmSizes.filter(vmSize => {
+                    return this._categoryMatchPattern(vmSize, this._categoryRegex[this._currentFilter.category]);
+                });
+            }
+            if (this._currentFilter.searchName) {
+                vmSizes = vmSizes.filter(vmSize => {
+                    return vmSize.name.toLowerCase().includes(this._currentFilter.searchName.toLowerCase());
+                });
+            }
         }
-        categories["Other"] = remainingSizes.map(x => new VmSizeDecorator(x, this.prices));
-        this.categories = categories;
-
-        // Move standard to the first position
-        const names = ["standard"].concat(Object.keys(categories).filter(x => x !== "standard"));
-        this.categoryNames = names.filter(x => categories[x] && categories[x].length > 0);
+        this.filteredCategories = vmSizes.map(x => new VmSizeDecorator(x, this.prices));
         this.changeDetector.markForCheck();
     }
 
-    private _getSizeForCategory(sizes: VmSize[], patterns: string[]) {
-        const match = [];
-        const remain = [];
-
-        for (const size of sizes) {
-            if (this._sizeMatchPattern(size, patterns)) {
-                match.push(size);
-            } else {
-                remain.push(size);
-            }
-        }
-        return { match, remain };
-    }
-
-    private _sizeMatchPattern(size: VmSize, patterns: string[]) {
+    private _categoryMatchPattern(size: VmSize, patterns: string[]) {
         for (const pattern of patterns) {
-            if (StringUtils.matchWildcard(size.name, pattern)) {
+            if (StringUtils.regexExpTest(size.name.toLowerCase(), pattern)) {
                 return true;
             }
         }
