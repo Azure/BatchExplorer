@@ -32,7 +32,7 @@ export class MainWindow extends GenericWindow {
     public state: Observable<WindowState>;
 
     public get webContents() {
-        return this._window.webContents;
+        return this._window!.webContents;
     }
 
     private _state = new BehaviorSubject<WindowState>(WindowState.Closed);
@@ -58,7 +58,7 @@ export class MainWindow extends GenericWindow {
     }
 
     public once(event: any, callback: (...args) => void) {
-        return this._window.once(event, callback);
+        return this._window!.once(event, callback);
     }
 
     protected createWindow() {

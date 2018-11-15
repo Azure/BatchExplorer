@@ -22,7 +22,7 @@ export class XliffSerializer {
      * @param translations Key value object containing the translations
      */
     public static encode(translations: StringMap<string>): string {
-        const units = [];
+        const units: any[] = [];
 
         const fileAttributes = {
             "original": "Batch",

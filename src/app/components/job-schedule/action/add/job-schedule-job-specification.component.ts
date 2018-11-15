@@ -38,10 +38,10 @@ export class JobScheduleJobSpecificationComponent implements ControlValueAccesso
     public TaskFailureAction = TaskFailureAction;
     public form: FormGroup;
     public constraintsGroup: FormGroup;
-    public virtualMachineConfiguration: VirtualMachineConfiguration = null;
+    public virtualMachineConfiguration: VirtualMachineConfiguration | null = null;
     public showJobReleaseTask: boolean;
 
-    private _propagateChange: (value: any) => void = null;
+    private _propagateChange: ((value: any) => void) | null = null;
     private _subs: Subscription[] = [];
 
     constructor(

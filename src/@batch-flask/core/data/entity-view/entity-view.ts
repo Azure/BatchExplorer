@@ -2,7 +2,7 @@ import { HttpCode } from "@batch-flask/core/constants";
 import { Record } from "@batch-flask/core/record";
 import { ServerError } from "@batch-flask/core/server-error";
 import { LoadingStatus } from "@batch-flask/ui/loading/loading-status";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, of } from "rxjs";
 import { distinctUntilChanged, map, switchAll, takeUntil } from "rxjs/operators";
 import { EntityGetter } from "../entity-getter";
 import { GenericView, GenericViewConfig } from "../generic-view";
@@ -18,14 +18,14 @@ export interface EntityViewConfig<TEntity extends Record<any>, TParams> extends 
     getter: EntityGetter<TEntity, TParams>;
 }
 
-export class EntityView<TEntity  extends Record<any>, TParams> extends GenericView<TEntity, TParams, any> {
+export class EntityView<TEntity extends Record<any>, TParams> extends GenericView<TEntity, TParams, any> {
     /**
      * Contains the observable of the item you want to load.
      * Subscribe to this or use the async pipe on this attribute.
      */
-    public item: Observable<TEntity>;
+    public item: Observable<TEntity | null>;
 
-    private _itemKey = new BehaviorSubject<string>(null);
+    private _itemKey = new BehaviorSubject<string | null>(null);
     private _pollTracker: PollObservable;
     private _getter: EntityGetter<TEntity, TParams>;
 
@@ -36,6 +36,7 @@ export class EntityView<TEntity  extends Record<any>, TParams> extends GenericVi
         this.item = this._itemKey.pipe(
             distinctUntilChanged(),
             map((key) => {
+                if (!key) { return of(null); }
                 return this.cache.items.pipe(map((items) => {
                     return items.get(key);
                 }));

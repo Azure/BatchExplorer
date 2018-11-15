@@ -15,7 +15,7 @@ export class SecureUtils {
 
     public static username(length: number = 6): string {
         const charset = "abcdefghijklmnopqrstuvwxyz";
-        const stringBuffer = [];
+        const stringBuffer: string[] = [];
         // create an array and fill with random integer
         const randomArray = new Uint32Array(length);
         window.crypto.getRandomValues(randomArray);
@@ -27,7 +27,7 @@ export class SecureUtils {
 
     public static password(length: number = 15): string {
         const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]\:;?><,./-=";
-        const stringBuffer = [];
+        const stringBuffer: string[] = [];
         // create an array and fill with random integer
         const randomArray = new Uint32Array(length);
         window.crypto.getRandomValues(randomArray);
@@ -47,7 +47,7 @@ export class SecureUtils {
         const charsetJoined = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
             + "!@#$%^&*()_+~`|}{[]\\:;?><,./-=";
 
-        const stringBuffer = [];
+        const stringBuffer: string[] = [];
         // generate a random symbol from each charset
         const randomPrimary = new Uint32Array(4);
         window.crypto.getRandomValues(randomPrimary);

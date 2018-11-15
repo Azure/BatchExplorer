@@ -122,7 +122,7 @@ export class FileSystem {
     public async readdir(dir: string, recursive = true): Promise<string[]> {
         const content = await this._readDir(dir);
         if (!recursive) { return content; }
-        let result = [];
+        let result: string[] = [];
         for (const entry of content) {
             const stats = await this.lstat(path.join(dir, entry));
             if (stats.isFile()) {

@@ -26,7 +26,7 @@ export class MainWindowManager {
         const windowId = labsLink.session || SecureUtils.uuid();
         let window: MainWindow;
         if (this.windows.has(windowId)) {
-            window = this.windows.get(windowId);
+            window = this.windows.get(windowId)!;
             window.show();
         } else {
             window = this._createNewWindow(windowId, showWhenReady);
@@ -42,14 +42,14 @@ export class MainWindowManager {
     public openNewWindow(
         link?: string | BatchExplorerLink | BatchExplorerLinkAttributes,
         showWhenReady = true): MainWindow {
-        const window = this._createNewWindow(null, showWhenReady);
+        const window = this._createNewWindow(undefined, showWhenReady);
 
-        this.goTo(link, window);
+        this.goTo(link || null, window);
 
         return window;
     }
 
-    public goTo(link: string | BatchExplorerLink | BatchExplorerLinkAttributes, window: MainWindow) {
+    public goTo(link: null | string | BatchExplorerLink | BatchExplorerLinkAttributes, window: MainWindow) {
         if (!link) { return; }
         const labsLink = new BatchExplorerLink(link);
         window.send(Constants.rendererEvents.batchExplorerLink, labsLink.toString());
@@ -93,8 +93,8 @@ export class MainWindowManager {
         return this.windows[Symbol.iterator]();
     }
 
-    private _createNewWindow(windowId?: string, showWhenReady = true) {
-        windowId = windowId || SecureUtils.uuid();
+    private _createNewWindow(id?: string, showWhenReady = true) {
+        const windowId = id || SecureUtils.uuid();
         const window = new MainWindow(this.batchExplorerApp, this.telemetryManager);
         window.create();
         this.windows.set(windowId, window);

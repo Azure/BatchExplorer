@@ -46,7 +46,7 @@ export class BatchExplorerApplication {
 
     private _state = new BehaviorSubject<BatchExplorerState>(BatchExplorerState.Loading);
     private _initializer: BatchExplorerInitializer;
-    private _currentlyAskingForCredentials: Promise<any>;
+    private _currentlyAskingForCredentials: Promise<any> | null;
 
     constructor(
         public autoUpdater: AutoUpdateService,
@@ -95,6 +95,7 @@ export class BatchExplorerApplication {
         this.aadService.login();
         this._initializer.setTaskStatus("window", "Loading application");
         const window = this.openFromArguments(process.argv, false);
+        if (!window) { return; }
         const windowSub = window.state.subscribe((state) => {
             switch (state) {
                 case WindowState.Loading:
@@ -168,9 +169,9 @@ export class BatchExplorerApplication {
         return this.windows.openNewWindow(link);
     }
 
-    public openFromArguments(argv: string[], showWhenReady = true): MainWindow {
+    public openFromArguments(argv: string[], showWhenReady = true): MainWindow | null {
         if (ClientConstants.isDev) {
-            return this.windows.openNewWindow(null, showWhenReady);
+            return this.windows.openNewWindow(undefined, showWhenReady);
         }
         const program = commander
             .version(app.getVersion())
@@ -178,7 +179,7 @@ export class BatchExplorerApplication {
             .parse(["", ...argv]);
         const arg = program.args[0];
         if (!arg) {
-            return this.windows.openNewWindow(null, showWhenReady);
+            return this.windows.openNewWindow(undefined, showWhenReady);
         }
         try {
             const link = new BatchExplorerLink(arg);
@@ -194,6 +195,7 @@ export class BatchExplorerApplication {
                     this.quit();
                 }
             });
+            return null;
         }
     }
 
@@ -224,7 +226,7 @@ export class BatchExplorerApplication {
         return this._currentlyAskingForCredentials;
     }
 
-    public askUserForProxyConfiguration(current?: ProxySettings): Promise<ProxySettings> {
+    public askUserForProxyConfiguration(current?: ProxySettings | null): Promise<ProxySettings | null> {
         const proxyCredentials = new ManualProxyConfigurationWindow(this, current);
         proxyCredentials.create();
         return proxyCredentials.settings;
@@ -313,7 +315,7 @@ export class BatchExplorerApplication {
 
     private _setCommonHeaders() {
         const requestFilter = { urls: ["https://*", "http://*"] };
-        session.defaultSession.webRequest.onBeforeSendHeaders(requestFilter, (details, callback) => {
+        session!.defaultSession!.webRequest.onBeforeSendHeaders(requestFilter, (details, callback) => {
             if (details.url.includes("batch.azure.com")) {
                 details.requestHeaders["Origin"] = "http://localhost";
                 details.requestHeaders["Cache-Control"] = "no-cache";

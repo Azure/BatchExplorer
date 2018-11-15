@@ -109,7 +109,7 @@ export class FileService {
         this._taskFileListGetter = new BasicListGetter(File, {
             cache: (params) => this.getTaskFileCache(params),
             supplyData: (params, options, nextLink) => {
-                const uri = `/jobs/${params.jobId}/tasks/${params.taskId}/files`;
+                const uri = nextLink || `/jobs/${params.jobId}/tasks/${params.taskId}/files`;
                 return this._listFiles(uri, options, nextLink);
             },
             logIgnoreError: fileIgnoredErrors,
@@ -118,7 +118,7 @@ export class FileService {
         this._nodeFileListGetter = new BasicListGetter(File, {
             cache: (params) => this.getNodeFileCache(params),
             supplyData: (params, options, nextLink) => {
-                const uri = `/pools/${params.poolId}/nodes/${params.nodeId}/files`;
+                const uri = nextLink || `/pools/${params.poolId}/nodes/${params.nodeId}/files`;
                 return this._listFiles(uri, options, nextLink);
             },
             logIgnoreError: fileIgnoredErrors,
@@ -325,8 +325,8 @@ export class FileService {
         };
     }
 
-    private _listFiles(uri: string, options: ListOptions, nextLink) {
-        let httpOptions: HttpRequestOptions = null;
+    private _listFiles(uri: string, options: ListOptions | null, nextLink) {
+        let httpOptions: HttpRequestOptions | null = null;
         if (nextLink) {
             uri = nextLink;
         } else {

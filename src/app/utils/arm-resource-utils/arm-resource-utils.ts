@@ -29,7 +29,7 @@ export class ArmResourceUtils {
     /*
      * Returns the account name from a resource id
      */
-    public static getAccountNameFromResourceId(id: string): string {
+    public static getAccountNameFromResourceId(id: string): string | null {
         if (!id) { return null; }
         try {
             return this._resourceDescriptorParser(id).resource;
@@ -111,11 +111,10 @@ export class ArmResourceUtils {
 
         // extract the subscription id and resource group id, if available.
         let tokens = ArmResourceUtils.regExpSubscriptionAndResourceGroupExtractor.exec(id);
-        const tokensLength = tokens && tokens.length;
 
         const result = new ResourceDescriptor();
-        result.subscription = tokensLength > 1 && tokens[1] || undefined;
-        result.resourceGroup = tokensLength > 2 && tokens[2] || undefined;
+        result.subscription = tokens && tokens[1] || undefined;
+        result.resourceGroup = tokens && tokens[2] || undefined;
 
         // prefix all ids with '/providers/Microsoft.Resources'. This allows us to generically look
         // for the last '/providers' token and whatever follows (the resources) in any type of resource.
@@ -134,7 +133,7 @@ export class ArmResourceUtils {
         let partialType = result.provider;
         result.type = undefined;
         result.types = [];
-        result.resource = undefined;
+        result.resource = null;
         result.resources = [];
         result.resourceMap = {};
 

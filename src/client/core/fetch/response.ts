@@ -16,7 +16,7 @@ export class Response<T> {
 
     public async buffer(): Promise<Buffer> {
         return new Promise<Buffer>((resolve, reject) => {
-            const chunks = [];
+            const chunks: Buffer[] = [];
             this.body.on("data", (chunk) => {
                 chunks.push(chunk);
             });

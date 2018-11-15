@@ -67,7 +67,7 @@ export class Headers {
 
                 // sequence<sequence<ByteString>>
                 // Note: per spec we have to first exhaust the lists then process them
-                const pairs = [];
+                const pairs: any[] = [];
                 for (const pair of init) {
                     if (typeof pair !== "object" || typeof pair[Symbol.iterator] !== "function") {
                         throw new TypeError("Each header pair must be iterable");

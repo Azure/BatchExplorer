@@ -1,4 +1,5 @@
 import { Injectable, OnDestroy } from "@angular/core";
+import { ProgressInfo } from "builder-util-runtime";
 import { BehaviorSubject, Subscription } from "rxjs";
 import { SharedServiceInjector } from "../shared-service-injector";
 import { AUTO_UPDATE_MAIN_SERVICE_TOKEN } from "./auto-update-main.service";
@@ -10,7 +11,7 @@ export class AutoUpdateRendererService extends AutoUpdateService implements OnDe
     private _main: AutoUpdateService;
 
     private _status = new BehaviorSubject(UpdateStatus.Checking);
-    private _downloadProgress = new BehaviorSubject(null);
+    private _downloadProgress = new BehaviorSubject<ProgressInfo | null>(null);
     private _statusSub: Subscription;
     private _downloadProgressSub: Subscription;
 
