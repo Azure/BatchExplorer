@@ -9,6 +9,7 @@
             </bl-button-group>
             <div summaryRightContent>
                 <bl-task-timeline [job]="job" [task]="task"></bl-task-timeline>
+                <bl-task-node-info *ngIf="task.nodeInfo" [nodeInfo]="task.nodeInfo"></bl-task-node-info>
             </div>
         </bl-summary-card>
         <bl-task-error-display [jobId]="jobId" [task]="task"></bl-task-error-display>

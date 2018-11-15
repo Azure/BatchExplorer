@@ -1,0 +1,6 @@
+<bl-button type="wide" class="pool-link" [disabled]="poolStatus === EntityStatus.NotFound">
+    <i class="fa fa-database"></i> {{nodeInfo.poolId}}
+</bl-button>
+<bl-button type="wide" class="pool-link" [disabled]="nodeStatus === EntityStatus.NotFound">
+    <i class="fa fa-tv"></i> {{nodeInfo.nodeId}}
+</bl-button>
