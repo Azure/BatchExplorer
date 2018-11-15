@@ -1,5 +1,5 @@
 import { PinnableEntity, PinnedEntityType } from "@batch-flask/core";
-import { BatchApplication, Job } from "app/models";
+import { Job } from "app/models";
 import { List } from "immutable";
 import { Subscription, of } from "rxjs";
 import * as Fixtures from "test/fixture";
@@ -13,10 +13,11 @@ describe("PinnedEntityService", () => {
     let accountServiceSpy;
 
     let jsonFilename: string;
-    let jsonDataFromFileService: any;
-    function getSavedData(): PinnableEntity[] {
+    let jsonDataFromFileService: any = {};
+    function getSavedData(): StringMap<[string, PinnableEntity]> {
         return jsonDataFromFileService;
     }
+
     beforeEach(() => {
         subscriptions = [];
         favourites = List<PinnableEntity>();
@@ -46,7 +47,7 @@ describe("PinnedEntityService", () => {
     });
 
     afterEach(() => {
-        pinService = null;
+        pinService.ngOnDestroy();
         subscriptions.forEach(x => x.unsubscribe());
     });
 
@@ -56,48 +57,46 @@ describe("PinnedEntityService", () => {
     });
 
     describe("pinFavorite", () => {
-        beforeEach(() => {
-            pinService.pinFavorite(new Job({
+        beforeEach(async () => {
+            await pinService.pinFavorite(new Job({
                 id: "my-job-matt",
                 url: "https://myaccount.westus.batch.com/jobs/my-job-matt",
-            }));
+            })).toPromise();
         });
 
         it("saves to local storage", () => {
             expect(localFileStorageSpy.set).toHaveBeenCalledTimes(1);
-            expect(jsonFilename).toEqual("https://myaccount.westus.batch.com.pinned");
+            expect(jsonFilename).toEqual("data/pinned-entities");
             expect(favourites.size).toEqual(1);
         });
 
         it("saves correct data", () => {
             const savedData = getSavedData();
-            expect(savedData.length).toEqual(1);
-            expect(savedData[0].id).toEqual("my-job-matt");
-        });
-
-        it("fixes empty url", () => {
-            pinService.pinFavorite(new BatchApplication({
-                id: "new-one",
-                url: "",
-            }));
-
-            expect(favourites.size).toEqual(2);
-            expect(localFileStorageSpy.set).toHaveBeenCalledTimes(2);
-
-            const savedData = getSavedData();
-            expect(savedData.length).toEqual(2);
-            expect(savedData[1].url).toEqual("https://myaccount.westus.batch.com/applications/new-one");
+            expect(savedData as any).toEqual({
+                myaccount: [
+                    [
+                        "https://myaccount.westus.batch.com/jobs/my-job-matt",
+                        {
+                            id: "my-job-matt",
+                            name: undefined,
+                            routerLink: ["/jobs", "my-job-matt"],
+                            pinnableType: "Job",
+                            uid: "https://myaccount.westus.batch.com/jobs/my-job-matt",
+                        },
+                    ],
+                ],
+            });
         });
     });
 
     describe("isFavorite", () => {
         let favorite: Job;
-        beforeEach(() => {
+        beforeEach(async () => {
             favorite = new Job({
                 id: "my-pin",
             });
 
-            pinService.pinFavorite(favorite);
+            await pinService.pinFavorite(favorite).toPromise();
         });
 
         it("returns true if already saved", () => {
@@ -114,27 +113,27 @@ describe("PinnedEntityService", () => {
 
     describe("unPinFavorite", () => {
         let favorite: Job;
-        beforeEach(() => {
+        beforeEach(async () => {
             favorite = new Job({
                 id: "pin-2",
             });
 
-            pinService.pinFavorite(favorite);
+            await pinService.pinFavorite(favorite).toPromise();
         });
 
-        it("removes and saves if exists in list", () => {
+        it("removes and saves if exists in list", async () => {
             expect(favourites.size).toEqual(1);
             expect(localFileStorageSpy.set).toHaveBeenCalledTimes(1);
 
-            pinService.unPinFavorite(favorite);
+            await pinService.unPinFavorite(favorite).toPromise();
             expect(localFileStorageSpy.set).toHaveBeenCalledTimes(2);
             expect(favourites.size).toEqual(0);
         });
 
-        it("does nothing if not favorite", () => {
+        it("does nothing if not favorite", async () => {
             expect(localFileStorageSpy.set).toHaveBeenCalledTimes(1);
             const clone = Object.assign({ id: "pin-3", pinnableType: PinnedEntityType.Pool }, favorite);
-            pinService.unPinFavorite(clone);
+            await pinService.unPinFavorite(clone).toPromise();
 
             expect(localFileStorageSpy.set).toHaveBeenCalledTimes(1);
         });

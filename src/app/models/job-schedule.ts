@@ -68,6 +68,10 @@ export class JobSchedule extends Record<JobScheduleAttributes> implements Naviga
     public get routerLink(): string[] {
         return ["/jobschedules", this.id];
     }
+
+    public get uid() {
+        return this.url;
+    }
 }
 
 export enum JobScheduleState {

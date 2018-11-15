@@ -47,12 +47,12 @@ export class JobScheduleCommands extends EntityCommands<JobSchedule> {
         return this.jobScheduleService.getFromCache(jobScheduleId);
     }
 
-    private _pinJobSchedule(jobSchedule: JobSchedule) {
-        this.pinnedEntityService.pinFavorite(jobSchedule).subscribe((result) => {
-            if (result) {
-                this.pinnedEntityService.unPinFavorite(jobSchedule);
-            }
-        });
+    private _pinJobSchedule(job: JobSchedule) {
+        if (this.pinnedEntityService.isFavorite(job)) {
+            return this.pinnedEntityService.unPinFavorite(job);
+        } else {
+            return this.pinnedEntityService.pinFavorite(job);
+        }
     }
 
     private _buildCommands() {
