@@ -51,8 +51,8 @@ export class ClickableComponent implements OnChanges, OnDestroy {
 
     public subtitle = "";
 
-    private permissionService?: PermissionService;
-    private _matMenuTrigger?: MatMenuTrigger;
+    private permissionService: PermissionService | null;
+    private _matMenuTrigger: MatMenuTrigger | null;
     // Router link directive if any
     private _routerLink?: RouterLink;
     private _sub: Subscription;
