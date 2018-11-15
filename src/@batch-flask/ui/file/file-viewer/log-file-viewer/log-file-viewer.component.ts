@@ -34,7 +34,7 @@ export class LogFileViewerComponent extends FileViewer implements OnDestroy {
     public lastContentLength = 0;
     public content = "";
     public loadingStatus = LoadingStatus.Loading;
-    public currentSubscription: Subscription;
+    public currentSubscription: Subscription | null;
 
     public editorConfig: EditorConfig = {
         readOnly: true,
@@ -72,7 +72,7 @@ export class LogFileViewerComponent extends FileViewer implements OnDestroy {
     }
 
     public onConfigChanges() {
-        this.tailable = this.config && this.config.tailable;
+        this.tailable = this.config && this.config.tailable || false;
         this._clearRefreshInterval();
         this._setRefreshInterval();
     }
@@ -134,6 +134,7 @@ export class LogFileViewerComponent extends FileViewer implements OnDestroy {
             rangeStart: this.lastContentLength,
             rangeEnd: newContentLength - 1,
         };
+        console.log("OPtions", options.rangeStart, options.rangeEnd);
 
         this.currentSubscription = this.fileLoader.content(options).subscribe((result) => {
             this._processFileContent(result, newContentLength);

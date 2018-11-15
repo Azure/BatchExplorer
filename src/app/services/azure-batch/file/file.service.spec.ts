@@ -10,6 +10,7 @@ const lastModified = new Date(2018, 6, 24);
 describe("FileService", () => {
     let fileService: FileService;
     let httpMock: HttpTestingController;
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -19,7 +20,7 @@ describe("FileService", () => {
                 FileService,
             ],
         });
-        fileService = new FileService(TestBed.get(HttpClient), null);
+        fileService = new FileService(TestBed.get(HttpClient), null as any);
         httpMock = TestBed.get(HttpTestingController);
     });
 
@@ -53,6 +54,7 @@ describe("FileService", () => {
         });
         httpMock.verify();
     });
+
     describe("listFiles", () => {
         function expectList() {
             return httpMock.expectOne(req => req.method === "GET" && req.url === "/pools/pool-1/nodes/node-2/files");
@@ -79,7 +81,7 @@ describe("FileService", () => {
             });
 
             const req = expectList();
-            expect(req.request.params.get("recursive").toString()).toBe("false");
+            expect(req.request.params.get("recursive")!.toString()).toBe("false");
             expect(req.request.params.has("$filter")).toBe(false);
             expect(req.request.body).toBe(null);
             req.flush({
@@ -112,7 +114,7 @@ describe("FileService", () => {
             });
 
             const req = expectList();
-            expect(req.request.params.get("recursive").toString()).toBe("true");
+            expect(req.request.params.get("recursive")!.toString()).toBe("true");
             expect(req.request.params.has("$filter")).toBe(false);
             expect(req.request.body).toBe(null);
             req.flush({ value: []});
@@ -129,7 +131,7 @@ describe("FileService", () => {
             });
 
             const req = expectList();
-            expect(req.request.params.get("recursive").toString()).toBe("true");
+            expect(req.request.params.get("recursive")!.toString()).toBe("true");
             expect(req.request.params.get("$filter")).toBe("startswith(name, 'abc/')");
             expect(req.request.body).toBe(null);
             req.flush({ value: []});

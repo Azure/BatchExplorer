@@ -17,7 +17,7 @@ export interface PinnableEntity {
 
     name?: string;
     routerLink: string[];
-    pinnableType: PinnedEntityType;
+    pinnableType: PinnedEntityType | null;
 }
 
 export interface NavigableRecord {
