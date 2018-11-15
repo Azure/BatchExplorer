@@ -62,7 +62,7 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
     }
 
     public removeFavorite(favorite: PinnableEntity) {
-        this.pinnedEntityService.unPinFavorite(favorite);
+        this.pinnedEntityService.unPinFavorite(favorite).subscribe();
     }
 
     public handleMiddleMouseUp(event: MouseEvent, favorite: PinnableEntity) {
@@ -109,13 +109,13 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
         }
     }
 
-    public trackPinnned(index, entity: PinnableEntity) {
+    public trackPinnned(_, entity: PinnableEntity) {
         return `${entity.pinnableType}/${entity.id}`;
     }
 
     public onContextMenu(favorite: PinnableEntity) {
         this.contextMenuService.openMenu(new ContextMenu([
-            new ContextMenuItem("Remove favorite", () => this.pinnedEntityService.unPinFavorite(favorite)),
+            new ContextMenuItem("Remove favorite", () => this.pinnedEntityService.unPinFavorite(favorite).subscribe()),
         ]));
     }
 }

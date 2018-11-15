@@ -47,7 +47,7 @@ export class PinnedEntityService implements OnDestroy {
             takeUntil(this._destroy),
             map(([account, favorites]) => {
                 const map = favorites.get(account.id);
-                return List(map && map.values());
+                return List(map ? map.values() : []);
             }),
         );
     }
@@ -96,15 +96,16 @@ export class PinnedEntityService implements OnDestroy {
                 const map = this._favorites.value;
                 if (map.has(account.id)) {
                     const perAccount = map.get(account.id);
-                    perAccount.delete(entity.uid);
+                    perAccount!.delete(entity.uid);
                     this._favorites.next(map);
                 }
                 return this._saveAccountFavorites();
             }),
+            share(),
         );
     }
 
-    public getEntityType(entity: NavigableRecord | PinnableEntity): PinnedEntityType {
+    public getEntityType(entity: NavigableRecord | PinnableEntity): PinnedEntityType | null {
         for (const [type, cls] of pinnedTypeMap) {
             if (entity instanceof cls) {
                 return type as any;

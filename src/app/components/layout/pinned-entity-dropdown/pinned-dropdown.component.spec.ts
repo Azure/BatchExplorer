@@ -41,6 +41,7 @@ describe("PinnedDropDownComponent", () => {
                 const favArray = favorites.value.toArray();
                 favArray.splice(0, 1);
                 favorites.next(List(favArray));
+                return of(null);
             }),
         };
 
