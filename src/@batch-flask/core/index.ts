@@ -15,3 +15,4 @@ export * from "./filter-builder";
 export * from "./i18n";
 export * from "./server-error";
 export * from "./telemetry";
+export * from "./rxjs-operators";

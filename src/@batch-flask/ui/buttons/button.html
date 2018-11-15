@@ -1,5 +1,5 @@
 <div class="action-btn" [ngClass]="type" [matTooltip]="tooltipTitle" [matTooltipPosition]="tooltipPosition" [ngSwitch]="status">
-    <div [class.hide]="status !== SubmitStatus.Idle">
+    <div [class.hide]="status !== SubmitStatus.Idle" class="label">
         <i [class]="icon"></i>
         <ng-content></ng-content>
     </div>

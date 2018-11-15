@@ -46,6 +46,41 @@ describe("PoolService", () => {
         httpMock.verify();
     });
 
+    describe("exist()", () => {
+        it("check a pool exist", (done) => {
+            poolService.exist({ id: "pool-1" }).subscribe((exist) => {
+                expect(exist).toBe(true);
+                done();
+            });
+
+            const req = httpMock.expectOne({
+                url: "/pools/pool-1",
+                method: "HEAD",
+            });
+            expect(req.request.body).toBe(null);
+            req.flush(null);
+            httpMock.verify();
+        });
+
+        it("check a pool doesn't exist", (done) => {
+            poolService.exist({ id: "pool-deleted" }).subscribe((exist) => {
+                expect(exist).toBe(false);
+                done();
+            });
+
+            const req = httpMock.expectOne({
+                url: "/pools/pool-deleted",
+                method: "HEAD",
+            });
+            expect(req.request.body).toBe(null);
+            req.flush(null, {
+                status: 404,
+                statusText: "NotFound",
+            });
+            httpMock.verify();
+        });
+    });
+
     it("list pool", (done) => {
         poolService.list().subscribe((response) => {
             const pools = response.items;
