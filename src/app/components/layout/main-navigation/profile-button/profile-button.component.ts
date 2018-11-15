@@ -171,17 +171,18 @@ export class ProfileButtonComponent implements OnDestroy, OnInit {
     }
 
     private _getAutoUpdateMenuItem() {
+        const updateInfo = this.autoUpdateService.updateInfo;
         switch (this.updateStatus) {
             case UpdateStatus.Checking:
                 return new ContextMenuItem({ label: "Checking for updates", enabled: false, click: () => null });
             case UpdateStatus.Downloading:
                 return new ContextMenuItem({
-                    label: `Downloading update ${this.autoUpdateService.updateInfo.version}`,
+                    label: `Downloading update ${updateInfo && updateInfo.version}`,
                     enabled: false, click: () => null,
                 });
             case UpdateStatus.Ready:
                 return new ContextMenuItem({
-                    label: `Update to version ${this.autoUpdateService.updateInfo.version}`,
+                    label: `Update to version ${updateInfo && updateInfo.version}`,
                     click: () => this._update(),
                 });
             default:
