@@ -1,6 +1,18 @@
+@import "app/styles/variables";
+
 bl-task-list {
     display: flex;
     flex-direction: column;
     position: relative;
     height: 100%;
+
+    bl-quick-list-row-render.selected, bl-quick-list-row-render.focused {
+        bl-task-state {
+            color: $card-background !important;
+        }
+
+        .success, .failure {
+            color: $card-background !important;
+        }
+    }
 }
