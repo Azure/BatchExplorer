@@ -7,6 +7,8 @@ import {
     HostListener,
     Injector,
     Input,
+    Optional,
+    Self,
     ViewChild,
 } from "@angular/core";
 import { MatTooltip } from "@angular/material";
@@ -14,6 +16,7 @@ import { log } from "@batch-flask/utils";
 import { Observable, isObservable } from "rxjs";
 import { ClickableComponent } from "./clickable";
 
+import { RouterLink } from "@angular/router";
 import "./button.scss";
 
 export type ButtonType = "square" | "round" | "wide" | "plain";
@@ -80,8 +83,9 @@ export class ButtonComponent extends ClickableComponent {
 
     constructor(
         injector: Injector,
+        @Self() @Optional() routerLink: RouterLink,
         private changeDetectionRef: ChangeDetectorRef) {
-        super(injector, null);
+        super(injector, routerLink);
     }
 
     // Aria

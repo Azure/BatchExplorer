@@ -1,6 +1,10 @@
 @import "app/styles/variables";
 
 bl-task-node-info {
+    display: block;
+    padding-top: 10px;
+    text-align: right;
+
     bl-button {
         width: 150px;
         .label {
