@@ -1,6 +1,16 @@
-<bl-button type="wide" class="pool-link" [disabled]="poolStatus === EntityStatus.NotFound">
+<bl-button type="wide"
+    class="pool-link"
+    [disabled]="poolStatus === EntityStatus.NotFound"
+    role="link"
+    [title]="poolDescription"
+    [routerLink]="poolStatus === EntityStatus.NotFound ? null : ['/pools', nodeInfo.poolId]">
     <i class="fa fa-database"></i> {{nodeInfo.poolId}}
 </bl-button>
-<bl-button type="wide" class="pool-link" [disabled]="nodeStatus === EntityStatus.NotFound">
+<bl-button type="wide"
+    class="pool-link"
+    [disabled]="nodeStatus === EntityStatus.NotFound"
+    role="link"
+    [title]="nodeDescription"
+    [routerLink]="nodeStatus === EntityStatus.NotFound ? null : ['/pools', nodeInfo.poolId, 'nodes', nodeInfo.nodeId] ">
     <i class="fa fa-tv"></i> {{nodeInfo.nodeId}}
 </bl-button>

@@ -1,5 +1,12 @@
 @import "app/styles/variables";
 
 bl-task-node-info {
-
+    bl-button {
+        width: 150px;
+        .label {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
 }

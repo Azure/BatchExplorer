@@ -1,3 +1,4 @@
+import { HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import {
     ContinuationToken,
@@ -86,7 +87,8 @@ export class NodeService {
     }
 
     public exist(params: NodeParams): Observable<boolean> {
-        return this.http.head(`/pools/${params.poolId}/nodes/${params.id}`).pipe(
+        const httpParams = new HttpParams().set("$select", "id");
+        return this.http.get(`/pools/${params.poolId}/nodes/${params.id}`, {params: httpParams}).pipe(
             map(_ => true),
             catchError((error: ServerError) => {
                 if (error.status === HttpCode.NotFound) {

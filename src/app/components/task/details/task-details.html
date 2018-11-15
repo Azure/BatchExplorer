@@ -7,7 +7,7 @@
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
                 <bl-commands-list [commands]="commands" [entity]="task"></bl-commands-list>
             </bl-button-group>
-            <div summaryRightContent>
+            <div summaryTile style="padding: 5px;border-left: none">
                 <bl-task-timeline [job]="job" [task]="task"></bl-task-timeline>
                 <bl-task-node-info *ngIf="task.nodeInfo" [nodeInfo]="task.nodeInfo"></bl-task-node-info>
             </div>

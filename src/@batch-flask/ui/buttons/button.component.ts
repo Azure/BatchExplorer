@@ -73,7 +73,6 @@ export class ButtonComponent extends ClickableComponent {
             return this.title;
         }
     }
-    @Input() public routerLink: string;
 
     @ViewChild(MatTooltip) private _tooltip: MatTooltip;
 
