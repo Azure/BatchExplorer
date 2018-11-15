@@ -11,7 +11,7 @@ export type FetchAllProgressCallback = (count: number) => void;
 
 export interface ListResponse<TEntity> {
     items: List<TEntity>;
-    nextLink: ContinuationToken;
+    nextLink: ContinuationToken | null;
 }
 
 export interface ListGetterConfig<TEntity extends Record<any>, TParams> extends GenericGetterConfig<TEntity, TParams> {
@@ -53,7 +53,9 @@ export abstract class ListGetter<TEntity extends Record<any>, TParams> extends G
         );
     }
 
-    public fetchFromCache(params: TParams, options?: ListOptionsAttributes | ListOptions): ListResponse<TEntity> {
+    public fetchFromCache(params: TParams, options?: ListOptionsAttributes | ListOptions)
+        : ListResponse<TEntity> | null {
+
         const cache = this.getCache(params);
         return this._tryLoadFromCache(cache, new ListOptions(options), false);
     }
@@ -109,7 +111,7 @@ export abstract class ListGetter<TEntity extends Record<any>, TParams> extends G
     private _tryLoadFromCache(
         cache: DataCache<TEntity>,
         options: ListOptions,
-        forceNew: boolean): ListResponse<TEntity> {
+        forceNew: boolean): ListResponse<TEntity> | null {
         if (forceNew) {
             return null;
         }
@@ -120,7 +122,7 @@ export abstract class ListGetter<TEntity extends Record<any>, TParams> extends G
             return null;
         }
 
-        const items = List<TEntity>(cachedList.keys.map(key => cache.get(key)));
+        const items = List<TEntity>(cachedList.keys.map(key => cache.get(key!)));
         return {
             items,
             nextLink: cachedList.token,

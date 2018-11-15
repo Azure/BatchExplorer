@@ -75,7 +75,7 @@ export class BatchExplorerInitializer {
     }
 
     private _getMostImportantTask() {
-        let bestMessage = null;
+        let bestMessage: string | null = null;
         let bestImportance = -1;
         for (const { message, importance } of this._tasks.value.values()) {
             if (importance > bestImportance) {

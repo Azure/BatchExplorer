@@ -39,9 +39,9 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
     @Output() public upload = new EventEmitter();
     public files: FormControl<ResourceFileAttributes[]>;
     public isDraging = 0;
-    public uploadingFiles = [];
+    public uploadingFiles: string[] = [];
 
-    private _propagateChange: (value: ResourceFileAttributes[]) => void = null;
+    private _propagateChange: ((value: ResourceFileAttributes[]) => void) | null = null;
     private _sub: Subscription;
     private _containerId: string;
 
@@ -93,20 +93,20 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
 
     @HostListener("dragover", ["$event"])
     public handleDragHover(event: DragEvent) {
-        const allowDrop = this._canDrop(event.dataTransfer);
+        const allowDrop = this._canDrop(event.dataTransfer!);
         DragUtils.allowDrop(event, allowDrop);
     }
 
     @HostListener("dragenter", ["$event"])
     public dragEnter(event: DragEvent) {
-        if (!this._canDrop(event.dataTransfer)) { return; }
+        if (!this._canDrop(event.dataTransfer!)) { return; }
         event.stopPropagation();
         this.isDraging++;
     }
 
     @HostListener("dragleave", ["$event"])
     public dragLeave(event: DragEvent) {
-        if (!this._canDrop(event.dataTransfer)) { return; }
+        if (!this._canDrop(event.dataTransfer!)) { return; }
         this.isDraging--;
     }
 
@@ -115,13 +115,13 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
         event.preventDefault();
         event.stopPropagation();
         const dataTransfer = event.dataTransfer;
-        const files = [...event.dataTransfer.files as any];
-        if (this._hasLink(dataTransfer)) {
-            const link = dataTransfer.getData("text/uri-list");
+        const files = [...event.dataTransfer!.files as any];
+        if (this._hasLink(dataTransfer!)) {
+            const link = dataTransfer!.getData("text/uri-list");
             if (UrlUtils.isHttpUrl(link)) {
                 this._addResourceFileFromUrl(link);
             }
-        } else if (this._hasFile(dataTransfer)) {
+        } else if (this._hasFile(dataTransfer!)) {
             this.uploadFiles(files.map(x => x.path));
         }
         this.isDraging = 0;

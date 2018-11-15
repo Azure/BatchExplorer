@@ -5,7 +5,7 @@ import { exists } from "@batch-flask/utils/object-utils";
  * Validator that requires controls to have a value of a min value.
  */
 export function min(val: number): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } => {
+    return (control: AbstractControl): ValidationErrors | null => {
         if (exists(Validators.required(control))) { return null; }
 
         const v: number = control.value;
@@ -17,7 +17,7 @@ export function min(val: number): ValidatorFn {
  * Validator that requires controls to have a value of a max value.
  */
 export function max(val: number): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } => {
+    return (control: AbstractControl): ValidationErrors | null => {
         if (exists(Validators.required(control))) { return null; }
 
         const v: number = control.value;

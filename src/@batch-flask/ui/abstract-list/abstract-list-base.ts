@@ -52,10 +52,11 @@ export interface AbstractListBaseConfig<TEntity = any> {
     sorting?: ListSortConfig<TEntity> | null | false;
 }
 
-export const abstractListDefaultConfig: AbstractListBaseConfig = {
+export const abstractListDefaultConfig: Required<AbstractListBaseConfig> = {
     activable: true,
     scrollBottomBuffer: 0,
     forceBreadcrumb: false,
+    sorting: null,
 };
 
 /**
@@ -123,7 +124,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public dataProvider: ListDataProvider;
     public dataPresenter: ListDataPresenter;
 
-    protected _config: AbstractListBaseConfig = abstractListDefaultConfig;
+    protected _config: Required<AbstractListBaseConfig> = abstractListDefaultConfig;
 
     @ViewChild(VirtualScrollComponent) private _virtualScroll: VirtualScrollComponent;
     private _subs: Subscription[] = [];
@@ -192,7 +193,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
      * Test to check if the given key is the active item.
      */
     public isActive(key: string): boolean {
-        return this.config.activable && Boolean(this.activeItem === key);
+        return Boolean(this.config.activable && this.activeItem === key);
     }
 
     /**
@@ -224,7 +225,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     public handleScrollChange(event) {
         const show = event.target.scrollTop > 0;
         const bottom = event.target.scrollTop + event.target.offsetHeight;
-        const hitBottom = event.target.scrollHeight - bottom <= this.config.scrollBottomBuffer;
+        const hitBottom = event.target.scrollHeight - bottom <= this._config.scrollBottomBuffer;
         if (this.showScrollShadow !== show) {
             this.showScrollShadow = show;
             this.changeDetector.markForCheck();
@@ -250,7 +251,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         let foundStart = false;
         const activeKey = this.activeItem;
         const selection = new ListSelection(this.selection);
-        this.items.some((item) => {
+        this.items.some((item: any) => {
             const id = item.id || item.key;
             if (!foundStart && (id === activeKey || id === key)) {
                 foundStart = true;
@@ -262,6 +263,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
                     return true;
                 }
             }
+            return false;
         });
         this.selection = selection;
     }
@@ -348,7 +350,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
         return item.id;
     }
 
-    public activateItem(item: AbstractListItem) {
+    public activateItem(item: AbstractListItem | null) {
         this.activeItem = item && item.id;
         if (!item) { return; }
         const link = item.routerLink;
@@ -415,7 +417,7 @@ export class AbstractListBase extends SelectableList implements OnDestroy {
     }
 
     private _createSortByMenu() {
-        const sortOptions = Object.keys(this.config.sorting).map((key) => {
+        const sortOptions = Object.keys(this._config.sorting as any).map((key) => {
             return new ContextMenuItem({
                 label: inflection.humanize(inflection.underscore(key)),
                 click: () => {

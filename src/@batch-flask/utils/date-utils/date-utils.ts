@@ -85,7 +85,7 @@ export class DateUtils {
      * @param startTime - optional start time
      * @param endTime - optional end time
      */
-    public static computeRuntime(startTime?: Date, endTime?: Date): string {
+    public static computeRuntime(startTime?: Date, endTime?: Date): string | null {
         if (!startTime) {
             return null;
         }
@@ -99,7 +99,7 @@ export class DateUtils {
      * Display a moment in relation to a time other than now
      * @param timeToCompare - time to compare
      */
-    public static timeFromNow(timeToCompare: Date): string {
+    public static timeFromNow(timeToCompare: Date): string | null {
         if (!timeToCompare) {
             return null;
         }

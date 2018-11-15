@@ -12,7 +12,7 @@ function metadataForDto<T>(dto: Dto<T>) {
  * It will only assign defined attributes.
  */
 export class Dto<T> {
-    constructor(data: AttrOf<T>) {
+    constructor(data: Partial<AttrOf<T>>) {
         const attrs = metadataForDto(this);
         for (const key of Object.keys(attrs)) {
             const typeMetadata = attrs[key];
@@ -42,7 +42,7 @@ export class Dto<T> {
     }
 
     public merge?(other: this): this {
-        const data = { ...(this.toJS() as any), ...(other.toJS() as any) };
+        const data = { ...(this.toJS!() as any), ...(other.toJS!() as any) };
         return new (this.constructor as any)(data);
     }
 

@@ -8,7 +8,7 @@ import { BatchExplorerProperties } from "./batch-explorer-properties";
 describe("BatchExplorerProperties", () => {
     let store: InMemoryDataStore;
     let properties: BatchExplorerProperties;
-    let envFromObs: AzureEnvironment;
+    let envFromObs: AzureEnvironment | null;
     let isInvertedColorScheme;
     let invertedColorChangeCallback: () => void;
 

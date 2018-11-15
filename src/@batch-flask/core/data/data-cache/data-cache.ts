@@ -107,9 +107,9 @@ export class DataCache<T extends Record<any>> {
      * Add multiple items as addItem do.
      * @return the list of unique keys
      */
-    public addItems(items: T[], select?: string): string[] {
+    public addItems(items: T[], select?: string | null): string[] {
         const newItems: { [key: string]: T } = {};
-        const keys = [];
+        const keys: string[] = [];
         for (const item of items) {
             const key = this.getItemKey(item);
             keys.push(key);
@@ -168,7 +168,7 @@ export class DataCache<T extends Record<any>> {
         return select.split(",");
     }
 
-    private _computeNewItem(item: T, key: string, select?: string): T {
+    private _computeNewItem(item: T, key: string, select?: string | null): T {
         if (!select) { return item; }
         const oldItem = this._items.value.get(key);
         if (!oldItem) { return item; }

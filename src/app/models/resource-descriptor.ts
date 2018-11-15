@@ -5,7 +5,7 @@ export class SubscriptionDescriptor {
     /**
      * The subscription ID for the resource group.
      */
-    public subscription: string;
+    public subscription: string | undefined | null;
 }
 
 /**
@@ -15,7 +15,7 @@ export class ResourceGroupDescriptor extends SubscriptionDescriptor {
     /**
      * The resource group name for the resource group.
      */
-    public resourceGroup: string;
+    public resourceGroup: string | undefined | null;
 }
 
 /**
@@ -25,17 +25,17 @@ export class ResourceDescriptor extends ResourceGroupDescriptor {
     /**
      * The provider name for the resource.
      */
-    public provider: string;
+    public provider: string | null;
 
     /**
      * The type for the resource (this is the most nested type).
      */
-    public type: string;
+    public type: string | undefined | null;
 
     /**
      * The resource name for the resource.
      */
-    public resource: string;
+    public resource: string | null;
 
     /**
      * The collection of types for the resource (from left-to-right from the URI).

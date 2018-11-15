@@ -27,7 +27,7 @@ export class LocalFileStorage {
         return this.write(key, content);
     }
 
-    public async read(key: string): Promise<string> {
+    public async read(key: string): Promise<string | null> {
         return this.fs.readFile(this._getFile(key)).catch(() => null);
     }
 

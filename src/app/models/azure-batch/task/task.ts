@@ -101,7 +101,7 @@ export class Task extends Record<TaskAttributes> {
         return maxTime - runningTime < 0;
     }
 
-    public get runtime(): number {
+    public get runtime(): number | null {
         const info = this.executionInfo;
         if (!info || !info.endTime || !info.startTime) { return null; }
         return info.endTime.getTime() - info.startTime.getTime();

@@ -67,6 +67,8 @@ export class TerminalService {
         ipcMain.on(IpcEvent.launchApplication, ({name, args}) => {
             if (name === ExternalApplication.terminal) {
                 return this.runInTerminal(args.command);
+            } else {
+                return Promise.reject();
             }
         });
     }

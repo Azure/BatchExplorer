@@ -9,10 +9,10 @@ const urls = Constants.urls.manualProxyConfiguration;
 const url = process.env.HOT ? urls.dev : urls.prod;
 
 export class ManualProxyConfigurationWindow extends GenericWindow {
-    public settings: Promise<ProxySettings>;
-    private _deferred: Deferred<ProxySettings>;
+    public settings: Promise<ProxySettings | null>;
+    private _deferred: Deferred<ProxySettings | null>;
 
-    constructor(batchExplorerApplication: BatchExplorerApplication, private currentSettings: ProxySettings) {
+    constructor(batchExplorerApplication: BatchExplorerApplication, private currentSettings?: ProxySettings | null) {
         super(batchExplorerApplication);
         this._deferred = new Deferred();
         this.settings = this._deferred.promise;
@@ -29,14 +29,16 @@ export class ManualProxyConfigurationWindow extends GenericWindow {
             show: false,
             center: true,
         });
-        if (this.currentSettings && (this.currentSettings.http || this.currentSettings.https)) {
+        if (this.currentSettings) {
             const setting = this.currentSettings.https || this.currentSettings.http;
-            (window as any).currentSettings = {
-                url: `${setting.protocol}://${setting.host}`,
-                port: setting.port,
-                username: setting.credentials && setting.credentials.username,
-                password: setting.credentials && setting.credentials.password,
-            };
+            if (setting) {
+                (window as any).currentSettings = {
+                    url: `${setting.protocol}://${setting.host}`,
+                    port: setting.port,
+                    username: setting.credentials && setting.credentials.username,
+                    password: setting.credentials && setting.credentials.password,
+                };
+            }
         }
 
         window.loadURL(url);

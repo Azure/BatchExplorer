@@ -70,7 +70,7 @@ async function getSpecs() {
 async function getMapping() {
     const specs = await getSpecs();
 
-    const mappings = [];
+    const mappings: any[] = [];
 
     for (const name of Object.keys(specs.definitions)) {
         if (name in models) {
@@ -135,7 +135,8 @@ class SwaggerModelValidator {
         console.warn(`Error: ${this.modelName} > ${message}`);
     }
 
-    private checkMissingProperties(properties: Set<string>, swaggerProperties: SwaggerProperties) {
+    private checkMissingProperties(properties: Set<string>, swaggerProperties: SwaggerProperties | undefined) {
+        if (!swaggerProperties) { return; }
         for (const name of Object.keys(swaggerProperties)) {
             if (!properties.has(name)) {
                 this.addError(`Missing property ${name}`);
@@ -145,7 +146,7 @@ class SwaggerModelValidator {
 
     private checkPropertyTypes(metadata) {
         for (const name of Object.keys(metadata)) {
-            const swaggerProperty = this.definition.properties[name];
+            const swaggerProperty = this.definition.properties![name];
             if (!swaggerProperty) {
                 // this.addPropertyError(name, `Swagger is missing property`);
                 continue;
@@ -213,6 +214,7 @@ class SwaggerModelValidator {
     private validateEnum() {
         const values: string[] = (Object as any).values(this.model);
         const swaggerValues = this.definition.enum;
+        if (!swaggerValues) { return; }
         for (const value of swaggerValues) {
             if (!values.includes(value)) {
                 this.addError(`Enum is missing value ${value}. Only has ${values}`);
@@ -243,7 +245,7 @@ async function run() {
     console.log("Validating models...");
     const { mappings, specs } = await getMapping();
 
-    let errors = [];
+    let errors: ValidationError[] = [];
     for (const mapping of mappings) {
         const validator = new SwaggerModelValidator(specs, mapping.name, mapping.model, mapping.definition);
         validator.validate();

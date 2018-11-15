@@ -2,7 +2,7 @@ import { ChangeDetectorRef, EventEmitter, Input, Output } from "@angular/core";
 import { ListSelection } from "./list-selection";
 
 export class SelectableList {
-    @Input() public set activeItem(activeItem: string) {
+    @Input() public set activeItem(activeItem: string | null) {
         this.selection = new ListSelection({
             keys: activeItem ? [activeItem] : [],
         });
@@ -13,7 +13,7 @@ export class SelectableList {
     }
     public get activeItem() { return this._activeItem; }
 
-    @Output() public activeItemChange = new EventEmitter<string>();
+    @Output() public activeItemChange = new EventEmitter<string | null>();
 
     @Input() public set selection(selection: ListSelection) {
         if (selection === this._selection) { return; }
@@ -25,7 +25,7 @@ export class SelectableList {
 
     @Output() public selectionChange = new EventEmitter<ListSelection>();
 
-    private _activeItem: string;
+    private _activeItem: string | null;
     private _selection: ListSelection = new ListSelection();
 
     constructor(protected changeDetector: ChangeDetectorRef) {

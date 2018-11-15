@@ -53,7 +53,7 @@ const urls = {
     icon: __dirname + "/../assets/images/icon.ico",
 };
 
-const isAsar = process.mainModule.filename.indexOf("app.asar") !== -1;
+const isAsar = process!.mainModule!.filename.indexOf("app.asar") !== -1;
 const logsFolder = isAsar ? path.join(app.getPath("userData"), "logs") : path.join(root, "logs");
 
 const resourcesFolder = isAsar ? path.normalize(path.join(root, "..")) : root;

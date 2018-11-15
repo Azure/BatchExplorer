@@ -30,8 +30,8 @@ describe("AuthenticationService", () => {
     });
 
     describe("Authorize", () => {
-        let result: AuthorizeResult;
-        let error: AuthorizeError;
+        let result: AuthorizeResult | null;
+        let error: AuthorizeError | null;
         let promise;
         beforeEach(() => {
             result = null;
@@ -67,8 +67,8 @@ describe("AuthenticationService", () => {
             fakeAuthWindow.notifyRedirect(newUrl);
             await promise;
             expect(result).not.toBeNull();
-            expect(result.id_token).toEqual("sometoken");
-            expect(result.code).toEqual("somecode");
+            expect(result!.id_token).toEqual("sometoken");
+            expect(result!.code).toEqual("somecode");
             expect(error).toBeNull();
 
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
@@ -82,8 +82,8 @@ describe("AuthenticationService", () => {
 
             expect(result).toBeNull();
             expect(error).not.toBeNull();
-            expect(error.error).toEqual("someerror");
-            expect(error.error_description).toEqual("There was an error");
+            expect(error!.error).toEqual("someerror");
+            expect(error!.error_description).toEqual("There was an error");
 
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
         }));
@@ -105,8 +105,8 @@ describe("AuthenticationService", () => {
 
             // Should have set tenant-1
             expect(result).not.toBeNull();
-            expect(result.id_token).toEqual("sometoken");
-            expect(result.code).toEqual("somecode");
+            expect(result!.id_token).toEqual("sometoken");
+            expect(result!.code).toEqual("somecode");
 
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
             expect(tenant1Spy).toHaveBeenCalled();
@@ -146,8 +146,8 @@ describe("AuthenticationService", () => {
         const goodResult: AuthorizeResult = { id_token: "sometoken", code: "somecode" } as any;
         const badResult: AuthorizeError = { error: "someerror", error_description: "There was an error" };
 
-        let result: AuthorizeResult;
-        let error: AuthorizeError;
+        let result: AuthorizeResult | null;
+        let error: AuthorizeError | null;
         let callAuth: () => void;
         let authorizeOutput: jasmine.Spy;
         let promise;

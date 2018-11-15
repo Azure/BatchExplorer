@@ -21,32 +21,35 @@ export class PythonRpcServerProcess {
      */
     public async start(): Promise<void> {
         this._askForKill = false;
-        return this._getCommandLine().then((data) => {
-            log.info(`Python path is: '${data.cmd}', Args: ${data.args}`);
-            const child = this._spawedProcess = spawn(data.cmd, [...data.args]);
-            pythonLogger.info("========================= STARTING PYTHON RPC SERVER PROCESS =========================");
+        const data = await this._getCommandLine();
+        if (!data) {
+            log.info("Couldn't start the python server!");
+            return;
+        }
+        log.info(`Python path is: '${data.cmd}', Args: ${data.args}`);
+        const child = this._spawedProcess = spawn(data.cmd, [...data.args]);
+        pythonLogger.info("========================= STARTING PYTHON RPC SERVER PROCESS =========================");
 
-            child.stdout.on("data", (data) => {
-                pythonLogger.info(data.toString());
-            });
-
-            child.stderr.on("data", (data) => {
-                pythonLogger.error(data.toString());
-            });
-
-            child.on("exit", (code) => {
-                if (this._askForKill) {
-                    log.info("Python rpc server has stopped!");
-                } else {
-                    log.error("Python Rpc server has exited unexpectedly with code!", code);
-                }
-            });
-
-            child.on("error", (e) => {
-                log.error("Error with python server", e);
-            });
-            log.info("Python Rpc server started!");
+        child.stdout.on("data", (data) => {
+            pythonLogger.info(data.toString());
         });
+
+        child.stderr.on("data", (data) => {
+            pythonLogger.error(data.toString());
+        });
+
+        child.on("exit", (code) => {
+            if (this._askForKill) {
+                log.info("Python rpc server has stopped!");
+            } else {
+                log.error("Python Rpc server has exited unexpectedly with code!", code);
+            }
+        });
+
+        child.on("error", (e) => {
+            log.error("Error with python server", e);
+        });
+        log.info("Python Rpc server started!");
     }
 
     public stop() {
@@ -62,21 +65,20 @@ export class PythonRpcServerProcess {
         return this.start();
     }
 
-    private async _getCommandLine(): Promise<{ cmd: string, args: string[] }> {
+    private async _getCommandLine(): Promise<{ cmd: string, args: string[] } | null> {
+        const port = await portPromise;
+        const portStr = port.toString();
 
-        return portPromise.then((port) => {
-            const portStr = port.toString();
-            if (Constants.isAsar) {
-                return { cmd: asarPath, args: [portStr] };
-            } else {
-                return getPythonPath().then(pythonPath => {
-                    return {
-                        cmd: pythonPath,
-                        args: [localPath, portStr],
-                    };
-                });
-            }
-        });
+        if (Constants.isAsar) {
+            return { cmd: asarPath, args: [portStr] };
+        } else {
+            const pythonPath = await getPythonPath();
+            if (!pythonPath) { return null; }
+            return {
+                cmd: pythonPath,
+                args: [localPath, portStr],
+            };
+        }
 
     }
 }
