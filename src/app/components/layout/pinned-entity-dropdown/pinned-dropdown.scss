@@ -55,9 +55,9 @@ bl-pinned-dropdown {
             }
         }
 
-        > i.fa.fa-times {
+        > .delete {
             flex: 0 0 30px;
-            background-color: white;
+            background-color: $card-background;
             color: $primary-color-dark;
             display: flex;
             align-items: center;
@@ -65,12 +65,12 @@ bl-pinned-dropdown {
             cursor: pointer;
 
             &:hover {
-                color: white;
-                background-color: map-get($danger, 400);
+                color: $card-background;
+                background-color: $danger-color;
             }
 
             &:active {
-                background-color: map-get($danger, 600);
+                background-color:  $danger-color;
             }
         }
     }

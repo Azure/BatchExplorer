@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 import { File } from "@batch-flask/ui";
-import { FileService } from "./file.service";
+import { FileContentResult, FileService } from "./file.service";
 
 const creationTime = new Date(2018, 4, 20);
 const lastModified = new Date(2018, 6, 24);
@@ -10,6 +10,7 @@ const lastModified = new Date(2018, 6, 24);
 describe("FileService", () => {
     let fileService: FileService;
     let httpMock: HttpTestingController;
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -19,11 +20,11 @@ describe("FileService", () => {
                 FileService,
             ],
         });
-        fileService = new FileService(TestBed.get(HttpClient), null);
+        fileService = new FileService(TestBed.get(HttpClient), null as any);
         httpMock = TestBed.get(HttpTestingController);
     });
 
-    it("get a node file", (done) => {
+    it("get a node file properties", (done) => {
 
         fileService.getFilePropertiesFromComputeNode("pool-1", "node-2", "file-1.txt").subscribe((file: File) => {
             expect(file instanceof File).toBe(true);
@@ -53,6 +54,47 @@ describe("FileService", () => {
         });
         httpMock.verify();
     });
+
+    describe("Get file content", () => {
+        it("get a node file content", (done) => {
+            fileService.getComputeNodeFile(
+                "pool-1",
+                "node-2",
+                "file-1.txt").subscribe((result: FileContentResult) => {
+                    expect(result.content).toEqual("export const foo = 123;");
+                    done();
+                });
+
+            const req = httpMock.expectOne({
+                url: "/pools/pool-1/nodes/node-2/files/file-1.txt",
+                method: "GET",
+            });
+            expect(req.request.body).toBe(null);
+            req.flush(new TextEncoder().encode("export const foo = 123;").buffer);
+            httpMock.verify();
+        });
+
+        it("get a task file content with byte range", (done) => {
+            fileService.getTaskFile(
+                "job-1",
+                "task-2",
+                "stdout.txt",
+                { rangeStart: 78, rangeEnd: 94 }).subscribe((result: FileContentResult) => {
+                    expect(result.content).toEqual("Currently doing stuff...");
+                    done();
+                });
+
+            const req = httpMock.expectOne({
+                url: "/jobs/job-1/tasks/task-2/files/stdout.txt",
+                method: "GET",
+            });
+            expect(req.request.body).toBe(null);
+            expect(req.request.headers.get("ocp-range")).toEqual("bytes=78-94");
+            req.flush(new TextEncoder().encode("Currently doing stuff...").buffer);
+            httpMock.verify();
+        });
+
+    });
     describe("listFiles", () => {
         function expectList() {
             return httpMock.expectOne(req => req.method === "GET" && req.url === "/pools/pool-1/nodes/node-2/files");
@@ -79,7 +121,7 @@ describe("FileService", () => {
             });
 
             const req = expectList();
-            expect(req.request.params.get("recursive").toString()).toBe("false");
+            expect(req.request.params.get("recursive")!.toString()).toBe("false");
             expect(req.request.params.has("$filter")).toBe(false);
             expect(req.request.body).toBe(null);
             req.flush({
@@ -112,10 +154,10 @@ describe("FileService", () => {
             });
 
             const req = expectList();
-            expect(req.request.params.get("recursive").toString()).toBe("true");
+            expect(req.request.params.get("recursive")!.toString()).toBe("true");
             expect(req.request.params.has("$filter")).toBe(false);
             expect(req.request.body).toBe(null);
-            req.flush({ value: []});
+            req.flush({ value: [] });
             httpMock.verify();
         });
 
@@ -129,10 +171,10 @@ describe("FileService", () => {
             });
 
             const req = expectList();
-            expect(req.request.params.get("recursive").toString()).toBe("true");
+            expect(req.request.params.get("recursive")!.toString()).toBe("true");
             expect(req.request.params.get("$filter")).toBe("startswith(name, 'abc/')");
             expect(req.request.body).toBe(null);
-            req.flush({ value: []});
+            req.flush({ value: [] });
             httpMock.verify();
         });
     });
