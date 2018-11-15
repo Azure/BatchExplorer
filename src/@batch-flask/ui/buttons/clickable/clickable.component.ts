@@ -60,8 +60,8 @@ export class ClickableComponent implements OnChanges, OnDestroy {
 
     constructor(injector: Injector, @Self() @Optional() routerLink: RouterLink) {
         this._routerLink = routerLink;
-        this._matMenuTrigger = injector.get(MatMenuTrigger, undefined, 2);
-        this.permissionService = injector.get(PermissionService, undefined);
+        this._matMenuTrigger = injector.get<MatMenuTrigger | null>(MatMenuTrigger, null, 2);
+        this.permissionService = injector.get<PermissionService | null>(PermissionService, null);
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
