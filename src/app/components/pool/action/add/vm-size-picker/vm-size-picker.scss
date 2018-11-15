@@ -7,4 +7,17 @@ bl-vm-size-picker {
         border: 1px solid $border-color;
         border-top: none;
     }
+
+    .vmsize-filters {
+        display: flex;
+        align-items: center;
+        border: 1px solid $border-color;
+        border-bottom: none;
+        .search-input {
+            flex: 1;
+        }
+        > * {
+            margin: 5px;
+        }
+    }
 }

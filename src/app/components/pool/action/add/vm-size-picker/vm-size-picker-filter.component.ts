@@ -23,7 +23,7 @@ export class VmSizePickerFilterComponent implements ControlValueAccessor {
             return {
                 label: names[nameKey],
                 value: nameKey,
-            };
+            } as VmSizeFilterCategoryName;
         });
     }
 
@@ -39,7 +39,7 @@ export class VmSizePickerFilterComponent implements ControlValueAccessor {
 
     constructor(formBuilder: FormBuilder) {
         this.form = formBuilder.group({
-            category: ["standard"],
+            category: ["all"],
             searchName: [],
         });
 

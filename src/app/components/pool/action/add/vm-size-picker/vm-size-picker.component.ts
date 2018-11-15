@@ -108,7 +108,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     private _sizeSub: Subscription;
     private _categorySub: Subscription;
     private _currentFilter: VmSizeFilterValue = {
-        category: "standard",
+        category: "all",
     };
 
     constructor(
