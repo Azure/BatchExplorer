@@ -115,7 +115,7 @@ export const ExternalLinks = {
     setupStorageAccount: "https://portal.azure.com/#resource{0}/storageAccount",
     license: "https://azure.github.io/BatchExplorer/EULA.html",
     privacyStatement: "https://privacy.microsoft.com/en-us/privacystatement",
-    submitIssue: "https://privacy.microsoft.com/en-us/privacystatement",
+    submitIssue: "https://github.com/Azure/BatchExplorer/issues",
 };
 
 export const ODataFields = {
