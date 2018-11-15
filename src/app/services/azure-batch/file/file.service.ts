@@ -47,7 +47,6 @@ export interface FileContentOptions {
 
 export interface FileContentResult {
     content: string;
-    result: any;
 }
 
 export interface NaviagateNodeFileConfig {
@@ -253,12 +252,12 @@ export class FileService {
         return this._download(`/jobs/${jobId}/tasks/${taskId}/files/${filename}`, dest);
 
     }
-    public getComputeNodeFile(poolId: string, nodeId: string, filename: string, options) {
+    public getComputeNodeFile(poolId: string, nodeId: string, filename: string, options?: FileContentOptions) {
         filename = encodeURIComponent(filename);
         return this._getContent(`/pools/${poolId}/nodes/${nodeId}/files/${filename}`, options);
     }
 
-    public getTaskFile(jobId: string, taskId: string, filename: string, options: FileContentOptions) {
+    public getTaskFile(jobId: string, taskId: string, filename: string, options?: FileContentOptions) {
         filename = encodeURIComponent(filename);
         return this._getContent(`/jobs/${jobId}/tasks/${taskId}/files/${filename}`, options);
     }
@@ -289,8 +288,7 @@ export class FileService {
         });
     }
 
-    private _getContent(uri: string, options?: FileContentOptions): Observable<{ content: string }> {
-        console.log("Get ooptions", options);
+    private _getContent(uri: string, options?: FileContentOptions): Observable<FileContentResult> {
         const httpOptions: HttpRequestOptions<"response", "arraybuffer"> = {
             observe: "response",
             responseType: "arraybuffer",
@@ -309,7 +307,7 @@ export class FileService {
         );
     }
 
-    private async _readContent(response: HttpResponse<ArrayBuffer>): Promise<{ content: string }> {
+    private async _readContent(response: HttpResponse<ArrayBuffer>): Promise<FileContentResult> {
         const buffer = response.body;
         if (!buffer) {
             return { content: "" };

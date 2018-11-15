@@ -134,7 +134,6 @@ export class LogFileViewerComponent extends FileViewer implements OnDestroy {
             rangeStart: this.lastContentLength,
             rangeEnd: newContentLength - 1,
         };
-        console.log("OPtions", options.rangeStart, options.rangeEnd);
 
         this.currentSubscription = this.fileLoader.content(options).subscribe((result) => {
             this._processFileContent(result, newContentLength);
