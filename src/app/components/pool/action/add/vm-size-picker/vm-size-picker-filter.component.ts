@@ -36,4 +36,8 @@ export class VmSizePickerFilterComponent {
                 this.filterChange.emit(value);
             });
     }
+
+    public trackByCategory(_, category: {key: string, value: string}) {
+        return category.key;
+    }
 }
