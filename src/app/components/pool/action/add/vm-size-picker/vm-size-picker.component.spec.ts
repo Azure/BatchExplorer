@@ -10,12 +10,12 @@ import { ElectronModule } from "@batch-flask/ui";
 import { BreadcrumbService } from "@batch-flask/ui/breadcrumbs";
 import { TableTestingModule } from "@batch-flask/ui/testing";
 import { VmSizePickerComponent } from "app/components/pool/action/add";
-import { ArmBatchAccount, VmSize } from "app/models";
+import { ArmBatchAccount, VmSize, batchExplorerDataVms } from "app/models";
 import { PoolOsSources } from "app/models/forms";
 import { BatchAccountService, PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
 import { of } from "rxjs";
-import { allVmSizes, batchExplorerDataVms, supportedVms } from "./mock-vm-size";
+import { allVmSizes, supportedVms } from "./mock-vm-size";
 
 @Component({
     template: `<bl-vm-size-picker [(ngModel)]="vmSize" [osSource]="osSource"></bl-vm-size-picker>`,
@@ -25,7 +25,7 @@ class TestComponent {
     public osSource = PoolOsSources.IaaS;
 }
 
-fdescribe("VmSizePickerComponent", () => {
+describe("VmSizePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: VmSizePickerComponent;
@@ -64,7 +64,7 @@ fdescribe("VmSizePickerComponent", () => {
             getPrices: () => of(new OSPricing("westus", "linux")),
         };
 
-        vmSizeServiceSpy = new VmSizeService(null, accountServiceSpy);
+        vmSizeServiceSpy = new VmSizeService(null, null, accountServiceSpy);
         vmSizeServiceSpy.vmSizeCategories = of(batchExplorerDataVms.category);
         const paasRegex = batchExplorerDataVms.all.concat(batchExplorerDataVms.paas);
         const iaasRegex = batchExplorerDataVms.all.concat(batchExplorerDataVms.iaas);
