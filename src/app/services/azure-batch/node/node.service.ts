@@ -1,20 +1,23 @@
+import { HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import {
     ContinuationToken,
     DataCache,
     EntityView,
     FilterBuilder,
+    HttpCode,
     ListOptionsAttributes,
     ListResponse,
     ListView,
+    ServerError,
     TargetedDataCache,
 } from "@batch-flask/core";
 import { Activity, ActivityService } from "@batch-flask/ui/activity";
 import { Node, NodeState } from "app/models";
 import { Constants } from "common";
 import { List } from "immutable";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { Observable, of, throwError } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 import {
     AzureBatchHttpService, BatchEntityGetter, BatchListGetter,
 } from "../core";
@@ -81,6 +84,20 @@ export class NodeService {
 
     public listAll(poolId: string, options: PoolListOptions = {}): Observable<List<Node>> {
         return this._listGetter.fetchAll({ poolId }, options);
+    }
+
+    public exist(params: NodeParams): Observable<boolean> {
+        const httpParams = new HttpParams().set("$select", "id");
+        return this.http.get(`/pools/${params.poolId}/nodes/${params.id}`, {params: httpParams}).pipe(
+            map(_ => true),
+            catchError((error: ServerError) => {
+                if (error.status === HttpCode.NotFound) {
+                    return of(false);
+                } else {
+                    return throwError(error);
+                }
+            }),
+        );
     }
 
     /**
