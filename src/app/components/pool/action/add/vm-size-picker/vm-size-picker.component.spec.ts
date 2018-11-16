@@ -15,7 +15,6 @@ import { PoolOsSources } from "app/models/forms";
 import { BatchAccountService, PricingService, VmSizeService } from "app/services";
 import { OSPricing } from "app/services/pricing";
 import { of } from "rxjs";
-import { allVmSizes, batchExplorerDataVms, supportedVms } from "./mock-vm-size";
 
 @Component({
     template: `<bl-vm-size-picker [(ngModel)]="vmSize" [osSource]="osSource"></bl-vm-size-picker>`,
@@ -25,7 +24,7 @@ class TestComponent {
     public osSource = PoolOsSources.IaaS;
 }
 
-describe("VmSizePickerComponent", () => {
+fdescribe("VmSizePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: VmSizePickerComponent;
@@ -33,28 +32,7 @@ describe("VmSizePickerComponent", () => {
     let vmSizeServiceSpy;
     let accountServiceSpy;
     let pricingServiceSpy;
-    let passVms;
-    let iaasVms;
     beforeEach(() => {
-        passVms = [];
-        iaasVms = [];
-        const vmSizeStrings = supportedVms.split("\n").filter(value => !!value.trim());
-        for (const vmSize of vmSizeStrings) {
-            const starter = "TVMSize.";
-            const terminator = ",";
-            const vm = vmSize.substring(
-                vmSize.indexOf(starter) + starter.length,
-                vmSize.indexOf(terminator)).toLowerCase();
-            if (vmSize.includes("IAASOnly")) {
-                iaasVms.push(vm);
-            } else if (vmSize.includes("PAASOnly")) {
-                passVms.push(vm);
-            } else if (vmSize.includes("PAASAndIAAS")) {
-                passVms.push(vm);
-                iaasVms.push(vm);
-            }
-        }
-
         accountServiceSpy = {
             currentAccount: of(new ArmBatchAccount({ location: "westus" } as any)),
         };
@@ -64,21 +42,47 @@ describe("VmSizePickerComponent", () => {
             getPrices: () => of(new OSPricing("westus", "linux")),
         };
 
-        vmSizeServiceSpy = new VmSizeService(null, null, accountServiceSpy);
-        vmSizeServiceSpy.vmSizeCategories = of(batchExplorerDataVms.category);
-        const paasRegex = batchExplorerDataVms.all.concat(batchExplorerDataVms.paas);
-        const iaasRegex = batchExplorerDataVms.all.concat(batchExplorerDataVms.iaas);
-        const vmSizes = List(allVmSizes.map(vmSize => {
-            return {
-                name: vmSize.toLowerCase(),
-                numberOfCores: 1,
-                memoryInMB: 1,
-                osDiskSizeInMB: 1,
-                resourceDiskSizeInMB: 1,
-            } as VmSize;
-        }));
-        vmSizeServiceSpy.virtualMachineSizes = of(vmSizeServiceSpy.filterSizes(vmSizes, iaasRegex));
-        vmSizeServiceSpy.cloudServiceSizes = of(vmSizeServiceSpy.filterSizes(vmSizes, paasRegex));
+        vmSizeServiceSpy = {
+            vmSizeCategories: of({
+                all: [
+                    ".*",
+                ],
+                standard: [
+                    "^standard_a[0-9a-z]*$",
+                ],
+                compute: [
+                    "^standard_c[0-9a-z]*$",
+                ],
+                memory: [
+                    "^standard_m",
+                ],
+            }),
+            virtualMachineSizes: of(List([
+                new VmSize({ name: "Standard_A1" } as any),
+                new VmSize({ name: "Standard_A2" } as any),
+                new VmSize({ name: "Standard_A3" } as any),
+                new VmSize({ name: "Standard_A1_v2" } as any),
+                new VmSize({ name: "Standard_A2_v2" } as any),
+                new VmSize({ name: "Standard_A4_v2" } as any),
+                new VmSize({ name: "Standard_A8_v2" } as any),
+                new VmSize({ name: "Standard_A2m_v2" } as any),
+                new VmSize({ name: "Standard_A4m_v2" } as any),
+                new VmSize({ name: "Standard_A8m_v2" } as any),
+                new VmSize({ name: "Standard_C1" } as any),
+                new VmSize({ name: "Standard_C2" } as any),
+                new VmSize({ name: "Standard_O1" } as any),
+            ])),
+            cloudServiceSizes: of(List([
+                new VmSize({ name: "Standard_A1" } as any),
+                new VmSize({ name: "Standard_A2" } as any),
+                new VmSize({ name: "Standard_A3" } as any),
+                new VmSize({ name: "Standard_C1" } as any),
+                new VmSize({ name: "Standard_C2" } as any),
+                new VmSize({ name: "Standard_A8_v2" } as any),
+                new VmSize({ name: "Standard_A2m_v2" } as any),
+                new VmSize({ name: "Standard_A8m_v2" } as any),
+            ])),
+        };
 
         TestBed.configureTestingModule({
             imports: [FormsModule, TableTestingModule, NoopAnimationsModule, ElectronModule, RouterTestingModule],
@@ -98,22 +102,28 @@ describe("VmSizePickerComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should compare paas vms in current batch service whitelisted paas vms", () => {
-        const paasRegex = batchExplorerDataVms.all.concat(batchExplorerDataVms.paas);
-        const vmSizes = List(allVmSizes.map(vmSize => {
-            return { name: vmSize.toLowerCase() } as VmSize;
-        }));
-        const result = component.vmSizeService.filterSizes(vmSizes, paasRegex).map(n => n.name).toArray();
-        result.forEach(vm => expect(passVms).toContain(vm));
+    it("should select the size if click on it", () => {
+        component.pickSize("Standard_A2");
+        fixture.detectChanges();
+        expect(testComponent.vmSize).toEqual("Standard_A2");
     });
 
-    it("should compare iaas vms in current batch service whitelisted iaas vms", () => {
-        const iaasRegex = batchExplorerDataVms.all.concat(batchExplorerDataVms.iaas);
-        const vmSizes = List(allVmSizes.map(vmSize => {
-            return { name: vmSize.toLowerCase() } as VmSize;
-        }));
-        const result = component.vmSizeService.filterSizes(vmSizes, iaasRegex).map(n => n.name).toArray();
-        result.forEach(vm => expect(iaasVms).toContain(vm));
+    it("Should show all vm with no searchName presents", () => {
+        const searchResult = de.queryAll(By.css("bl-table bl-row-render"))
+            .map(t => t.nativeElement.textContent.toLowerCase());
+        expect(searchResult[0]).toContain("a1");
+        expect(searchResult[1]).toContain("a2");
+        expect(searchResult[2]).toContain("a3");
+        expect(searchResult[3]).toContain("a1_v2");
+        expect(searchResult[4]).toContain("a2_v2");
+        expect(searchResult[5]).toContain("a4_v2");
+        expect(searchResult[6]).toContain("a8_v2");
+        expect(searchResult[7]).toContain("a2m_v2");
+        expect(searchResult[8]).toContain("a4m_v2");
+        expect(searchResult[9]).toContain("a8m_v2");
+        expect(searchResult[10]).toContain("c1");
+        expect(searchResult[11]).toContain("c2");
+        expect(searchResult[12]).toContain("o1");
     });
 
     it("Should show av2 vm series by when user search in filter", () => {
@@ -122,14 +132,15 @@ describe("VmSizePickerComponent", () => {
             searchName: "_v2",
         });
         fixture.detectChanges();
-        const searchResult = de.queryAll(By.css("bl-table bl-row-render")).map(t => t.nativeElement.textContent);
-        expect(searchResult[0]).toContain("a1 v2");
-        expect(searchResult[1]).toContain("a2 v2");
-        expect(searchResult[2]).toContain("a4 v2");
-        expect(searchResult[3]).toContain("a8 v2");
-        expect(searchResult[4]).toContain("a2m v2");
-        expect(searchResult[5]).toContain("a4m v2");
-        expect(searchResult[6]).toContain("a8m v2");
+        const searchResult = de.queryAll(By.css("bl-table bl-row-render"))
+            .map(t => t.nativeElement.textContent.toLowerCase());
+        expect(searchResult[0]).toContain("a1_v2");
+        expect(searchResult[1]).toContain("a2_v2");
+        expect(searchResult[2]).toContain("a4_v2");
+        expect(searchResult[3]).toContain("a8_v2");
+        expect(searchResult[4]).toContain("a2m_v2");
+        expect(searchResult[5]).toContain("a4m_v2");
+        expect(searchResult[6]).toContain("a8m_v2");
     });
 
     it("Should show all vm with no searchName presents", () => {
@@ -139,12 +150,6 @@ describe("VmSizePickerComponent", () => {
         });
         fixture.detectChanges();
         const searchResult = de.queryAll(By.css("bl-table bl-row-render")).map(t => t.nativeElement.textContent);
-        expect(searchResult.length).toEqual(iaasVms.length);
-    });
-
-    it("should select the size if click on it", () => {
-        component.pickSize("Standard_A2");
-        fixture.detectChanges();
-        expect(testComponent.vmSize).toEqual("Standard_A2");
+        expect(searchResult.length).toEqual(13);
     });
 });
