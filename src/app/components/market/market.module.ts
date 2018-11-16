@@ -10,6 +10,7 @@ import {
 
 import { FileTypeAssociationService } from "@batch-flask/ui/file/file-viewer/file-type-association";
 import { TaskBaseModule } from "app/components/task/base";
+import { GalleryApplicationListComponent } from "./application-list";
 import { RecentTemplateListComponent } from "./home/recent-template-list";
 import { LocalTemplateExplorerModule } from "./local-template-explorer";
 import { NcjTemplateViewerComponent } from "./ncj-template-viewer";
@@ -26,6 +27,7 @@ const components = [
     SubmitLocalTemplateComponent,
     RecentTemplateListComponent,
     NcjTemplateViewerComponent,
+    GalleryApplicationListComponent,
 ];
 
 const modules = [
