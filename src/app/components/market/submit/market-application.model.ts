@@ -11,6 +11,7 @@ export enum NcjParameterExtendedType {
     fileGroupWriteSas = "file-group-write-sas",
     dropDown = "drop-down",
     jobId = "job-id",
+    batchContainerImage= "batch-container-image",
 }
 
 export class NcjParameterWrapper {
