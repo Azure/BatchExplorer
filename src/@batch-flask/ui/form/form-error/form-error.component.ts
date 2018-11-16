@@ -3,6 +3,7 @@ import {
     HostBinding, Input, OnChanges, OnDestroy, Optional,
 } from "@angular/core";
 import { AbstractControl, ControlContainer, FormControl, FormGroupDirective } from "@angular/forms";
+import { SanitizedError } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
 
 let idCounter = 0;
@@ -63,7 +64,7 @@ export class FormErrorComponent implements OnChanges, OnDestroy {
         for (const segment of this.path) {
             current = current.get(segment);
             if (!current) {
-                throw new Error(`Path ${this.path} for bl-error is invalid,`
+                throw new SanitizedError(`Path ${this.path} for bl-error is invalid,`
                     + ` there is no control with name '${segment}'`);
             }
         }
@@ -80,7 +81,7 @@ export class FormErrorComponent implements OnChanges, OnDestroy {
     private _computeHasError() {
         const control = this._control;
         if (!control) {
-            throw new Error(`bl-error must have a form control.`
+            throw new SanitizedError(`bl-error must have a form control.`
                 + `Either set the [control] input or use a form group and set the formControlName`);
         }
         this._hasError = control.hasError(this.code);

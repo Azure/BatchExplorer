@@ -6,14 +6,15 @@ import {
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { Filter, FilterBuilder, autobind } from "@batch-flask/core";
+import { KeyCode } from "@batch-flask/core/keys";
 import { ListSelection } from "@batch-flask/core/list";
+import { SanitizedError } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
+import { SplitPaneConfig } from "../split-pane";
 import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-filter";
 import { BrowseLayoutListDirective } from "./browse-layout-list";
 
-import { KeyCode } from "@batch-flask/core/keys";
-import { SplitPaneConfig } from "../split-pane";
 import "./browse-layout.scss";
 
 export interface BrowseLayoutConfig {
@@ -136,7 +137,7 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
 
     public ngAfterContentInit() {
         if (!this.listDirective) {
-            throw new Error("BrowseLayout expect an list component to have the directive blBrowseLayoutList");
+            throw new SanitizedError("BrowseLayout expect an list component to have the directive blBrowseLayoutList");
         }
         const component = this.listDirective.component;
         component.quicklist = !this.showAdvancedFilter;

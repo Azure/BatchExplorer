@@ -9,9 +9,9 @@ import {
     HostListener,
     QueryList,
 } from "@angular/core";
-
 import { FormErrorComponent } from "@batch-flask/ui/form/form-error";
 import { HintComponent } from "@batch-flask/ui/form/hint";
+import { SanitizedError } from "@batch-flask/utils";
 import { FormFieldControl } from "./form-field-control";
 import { FormFieldPrefixDirective, FormFieldSuffixDirective } from "./form-field.directive";
 
@@ -40,7 +40,7 @@ export class FormFieldComponent implements AfterContentInit {
 
     public ngAfterContentInit() {
         if (!this.control) {
-            throw new Error("bl-form-field is expecting an control under. This can either be a blInput, bl-select.");
+            throw new SanitizedError("bl-form-field is expecting a control. This can either be a blInput, bl-select.");
         }
         this.prefix.changes.subscribe(() => this.changeDetector.markForCheck());
         this.suffix.changes.subscribe(() => this.changeDetector.markForCheck());

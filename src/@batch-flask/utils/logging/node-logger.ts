@@ -1,6 +1,7 @@
 import * as bunyan from "bunyan";
 
 // import { Constants } from "../client-constants";
+import { SanitizedError } from "../error";
 import { Logger } from "./base-logger";
 import { PrettyStream } from "./pretty-stream";
 
@@ -34,7 +35,7 @@ export class NodeLogger implements Logger {
 
     constructor(config: NodeLoggerConfig) {
         if (!config) {
-            throw new Error("Missing configuration for Logger");
+            throw new SanitizedError("Missing configuration for Logger");
         }
 
         const streams: any[] = [

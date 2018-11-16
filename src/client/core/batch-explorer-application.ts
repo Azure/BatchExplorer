@@ -267,6 +267,7 @@ export class BatchExplorerApplication {
             process.exit(1);
         });
 
+        // tslint:disable-next-line:ban-types
         process.on("uncaughtException" as any, (error: Error) => {
             log.error("There was a uncaught exception", error);
             this.recoverWindow.createWithError(error.message);

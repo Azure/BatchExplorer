@@ -12,6 +12,10 @@ import { filter, takeUntil } from "rxjs/operators";
 import { SettingsService } from "../settings.service";
 import { Theme } from "./theme.model";
 
+export class ThemeNotFoundError extends Error {
+
+}
+
 /**
  * Service handling theme selection
  */
@@ -85,7 +89,7 @@ export class ThemeService implements OnDestroy {
                 return filePath;
             }
         }
-        throw new Error(`Cannot find theme ${name}. Tried ${triedLocations.join(", ")}`);
+        throw new ThemeNotFoundError(`Cannot find theme ${name}. Tried ${triedLocations.join(", ")}`);
     }
 
     private async _loadTheme(name: string): Promise<Theme> {
