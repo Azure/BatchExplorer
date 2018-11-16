@@ -2,6 +2,7 @@ import { Location } from "@angular/common";
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AccessToken, HttpRequestOptions, RetryableHttpCode, ServerError } from "@batch-flask/core";
+import { SanitizedError } from "@batch-flask/utils";
 import { Subscription } from "app/models";
 import { Constants } from "common";
 import { Observable, throwError, timer } from "rxjs";
@@ -34,6 +35,12 @@ const providersApiVersion = {
 };
 
 type SubscriptionOrTenant = Subscription | string;
+
+export class InvalidSubscriptionOrTenant extends Error {
+    constructor(message: string) {
+        super(message);
+    }
+}
 
 /**
  * Wrapper around the http service so call the azure ARM api.
@@ -101,7 +108,7 @@ export class AzureHttpService {
             if (provider in providersApiVersion) {
                 return providersApiVersion[provider];
             } else {
-                throw new Error(`Unkown provider '${provider}'`);
+                throw new SanitizedError(`Unkown provider '${provider}'`);
             }
         }
         return apiVersion;
@@ -113,7 +120,7 @@ export class AzureHttpService {
         } else if (typeof subscriptionOrTenant === "string") {
             return subscriptionOrTenant;
         } else {
-            throw new Error(`Invalid param in azure http service for uri "${uri}". `
+            throw new InvalidSubscriptionOrTenant(`Invalid param in azure http service for uri "${uri}". `
                 + `Expected Subscription or tenant id but got ${subscriptionOrTenant}`);
         }
     }

@@ -1,4 +1,4 @@
-import { nil } from "@batch-flask/utils";
+import { SanitizedError, nil } from "@batch-flask/utils";
 
 const primitives = new Set(["Array", "Number", "String", "Object", "Boolean"]);
 
@@ -74,7 +74,7 @@ export function DtoAttr<T>(type?: any) {
             type = Reflect.getMetadata("design:type", target, attr);
         }
         if (!type) {
-            throw new Error(`Cannot retrieve the type for DtoAttr ${target.constructor.name}#${attr}`
+            throw new SanitizedError(`Cannot retrieve the type for DtoAttr ${target.constructor.name}#${attr}`
                 + "Check your nested type is defined in another file or above this DtoAttr");
         }
         const metadata = Reflect.getMetadata(attrMetadataKey, ctr) || {};

@@ -3,7 +3,7 @@ import { ProxySetting, ProxySettings } from "get-proxy-settings";
 
 import { autobind } from "@batch-flask/core";
 import { Constants } from "client/client-constants";
-import { BatchExplorerApplication, GenericWindow } from "client/core";
+import { BatchExplorerApplication, ClosedWindowError, GenericWindow } from "client/core";
 import { Deferred } from "common";
 const urls = Constants.urls.manualProxyConfiguration;
 const url = process.env.HOT ? urls.dev : urls.prod;
@@ -54,7 +54,7 @@ export class ManualProxyConfigurationWindow extends GenericWindow {
         window.on("close", () => {
             ipcMain.removeListener("proxy-configuration-submitted", this._processNewSettings);
             if (!this._deferred.hasCompleted) {
-                this._deferred.reject(new Error("Window was closed"));
+                this._deferred.reject(new ClosedWindowError("Window was closed"));
             }
         });
     }

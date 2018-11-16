@@ -1,3 +1,5 @@
+import { SanitizedError } from "@batch-flask/utils";
+
 export interface ContainerUrlParseResult {
     account: string;
     container: string;
@@ -38,7 +40,7 @@ export class StorageUtils {
      */
     public static async getSafeContainerName(jobId: string): Promise<string> {
         if (!jobId) {
-            throw new Error("No jobId supplied to getSafeContainerName(jobId: string)");
+            throw new SanitizedError("No jobId supplied to getSafeContainerName(jobId: string)");
         }
 
         const containerName = await this._getUnprefixedSafeContainerName(jobId);
