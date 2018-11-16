@@ -27,7 +27,6 @@ export class StorageClientService {
     public hasAutoStorage: Observable<boolean>;
     public hasArmAutoStorage: Observable<boolean>;
 
-    private _currentAccountId: string;
     private _storageClientFactory: StorageClientProxyFactory;
     private _sharedKeyMap = new Map<string, any>();
 
@@ -38,7 +37,6 @@ export class StorageClientService {
 
         this._storageClientFactory = new StorageClientProxyFactory();
 
-        this.accountService.currentAccountId.subscribe(x => this._currentAccountId = x);
         this.hasAutoStorage = this.accountService.currentAccount.pipe(map((account) => {
             return Boolean(account.autoStorage);
         }));
