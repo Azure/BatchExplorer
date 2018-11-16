@@ -111,6 +111,7 @@ export class ApplicationInsightsUploader implements TelemetryUploader {
         log.error("Trying to trace telemetry before the telemetry service was initialized.");
     }
 
+    // tslint:disable-next-line:ban-types
     private _sanitizeError(error: Error): any {
         // Message could contain user information
         if (!(error instanceof SanitizedError)) {
