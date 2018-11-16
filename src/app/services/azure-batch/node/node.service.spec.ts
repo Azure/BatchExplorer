@@ -40,6 +40,40 @@ describe("NodeService", () => {
         httpMock.verify();
     });
 
+    describe("exist()", () => {
+        it("check a node exist", (done) => {
+            nodeService.exist({ id: "node-2", poolId: "pool-1" }).subscribe((exist) => {
+                expect(exist).toBe(true);
+                done();
+            });
+            const req = httpMock.expectOne({
+                url: "/pools/pool-1/nodes/node-2?$select=id",
+                method: "GET",
+            });
+            expect(req.request.body).toBe(null);
+            req.flush(null);
+            httpMock.verify();
+        });
+
+        it("check a node doesn't exist", (done) => {
+            nodeService.exist({ id: "node-deleted", poolId: "pool-1" }).subscribe((exist) => {
+                expect(exist).toBe(false);
+                done();
+            });
+
+            const req = httpMock.expectOne({
+                url: "/pools/pool-1/nodes/node-deleted?$select=id",
+                method: "GET",
+            });
+            expect(req.request.body).toBe(null);
+            req.flush({id: "node-deleted"}, {
+                status: 404,
+                statusText: "NotFound",
+            });
+            httpMock.verify();
+        });
+    });
+
     it("list pool", (done) => {
         nodeService.list("pool-1").subscribe((response) => {
             const nodes = response.items;
