@@ -31,7 +31,7 @@ bl-browse-layout {
     }
 
     .quicksearch {
-        margin: 0 10px 0 0;
+        margin: 0 10px;
     }
 
     .context-button-bar {
@@ -45,33 +45,20 @@ bl-browse-layout {
     }
     > .layout-container {
         display: flex;
+        height: $contentview-height;
 
-        &.filtering {
-            .list-view {
-                width: $listview-filtering-width;
-
-                > .left-pane {
-                    width: $listview-filtering-width;
-                }
-            }
-
-            .content-view {
-                width: calc(100vw - #{$listview-filtering-width} - #{$navigationbar-width});
-            }
-        }
-
-        > .list-view {
+        .list-view {
             transition:width 100ms;
-            width: $listview-width;
-            height: $contentview-height;
+            width: 100%;
+            height: 100%;
             background-color: $card-background;
             z-index: 1;
 
             > .left-pane {
                 display: flex;
                 flex-direction: column;
+                width: 100%;
                 height: 100%;
-                width: $listview-width;
 
                 .bl-list-content {
                     flex: 1;
@@ -109,9 +96,9 @@ bl-browse-layout {
             }
         }
 
-        > .content-view {
-            width: calc(100vw - #{$listview-width} - #{$navigationbar-width});
-            height: $contentview-height;
+        .content-view {
+            width: 100%;
+            height: 100%;
             overflow-y: auto;
             background-color: $main-background;
 
@@ -154,10 +141,12 @@ bl-browse-layout {
 .quicksearch {
     display: flex;
     align-items: center;
-    justify-content: center;
+    flex-wrap: wrap;
 
-    > .pre-quicksearch {
-        min-width: 10px;
+    > [pre-quicksearch] {
+        min-width: 80px;
+        flex: 1;
+        margin-right: 5px;
     }
 
     .bl-form-field-infix {
@@ -165,10 +154,11 @@ bl-browse-layout {
     }
 
     > input {
-        flex: 1 0 auto;
+        flex: 1;
         padding: 5px;
         font-size: 1.1em;
         height: 26px;
+        min-width: 80px;
 
         &:focus {
             outline: none;
@@ -176,7 +166,7 @@ bl-browse-layout {
     }
 
     bl-select {
-        margin-right: 10px;
+        min-width: 50px;
     }
 }
 
