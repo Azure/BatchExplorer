@@ -16,9 +16,7 @@
                     </div>
                 </div>
                 <div class="quicksearch">
-                    <div class="pre-quicksearch">
-                        <ng-content select="[pre-quicksearch]"></ng-content>
-                    </div>
+                    <ng-content select="[pre-quicksearch]"></ng-content>
                     <input blInput autofocus
                         type="search"
                         [formControl]="quickSearchQuery"

@@ -31,7 +31,7 @@ bl-browse-layout {
     }
 
     .quicksearch {
-        margin: 0 10px 0 0;
+        margin: 0 10px;
     }
 
     .context-button-bar {
@@ -158,10 +158,11 @@ bl-browse-layout {
 .quicksearch {
     display: flex;
     align-items: center;
-    justify-content: center;
+    flex-wrap: wrap;
 
-    > .pre-quicksearch {
-        min-width: 10px;
+    > [pre-quicksearch] {
+        min-width: 120px;
+        flex: 1;
     }
 
     .bl-form-field-infix {
@@ -169,19 +170,15 @@ bl-browse-layout {
     }
 
     > input {
-        flex: 1 auto;
+        flex: 1;
         padding: 5px;
         font-size: 1.1em;
         height: 26px;
-        min-width: 100px;
+        min-width: 120px;
 
         &:focus {
             outline: none;
         }
-    }
-
-    bl-select {
-        margin-right: 10px;
     }
 }
 
