@@ -4,7 +4,7 @@ import { CloudPathUtils, exists, log } from "@batch-flask/utils";
 import * as path from "path";
 import { BehaviorSubject, Observable, from, of } from "rxjs";
 import {
-    catchError, concatMap, distinctUntilChanged, filter, flatMap,
+    catchError, concatMap, distinctUntilChanged, filter,
     map, publishReplay, refCount, share, skip, switchMap, take, tap,
 } from "rxjs/operators";
 import { File } from "../file.model";
@@ -126,8 +126,8 @@ export class FileLoader {
         if (this._download) {
             const checkDirObs = from(this._fs.ensureDir(path.dirname(dest)));
             return checkDirObs.pipe(
-                flatMap(() => this._download!(dest)),
-                map(x => dest),
+                switchMap(() => this._download!(dest)),
+                map(_ => dest),
                 share(),
             );
         }
@@ -149,10 +149,10 @@ export class FileLoader {
      */
     public cache(): Observable<string> {
         return this.getProperties().pipe(
-            flatMap((file: File) => {
+            switchMap((file: File) => {
                 const destination = this._getCacheDestination(file);
                 return from(this._fs.exists(destination)).pipe(
-                    flatMap((exists) => {
+                    switchMap((exists) => {
                         if (exists) {
                             return of(destination);
                         } else {
