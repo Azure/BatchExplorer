@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, HostBinding, Input, Output } from "@angular/core";
 
 import "./split-separator.scss";
 
@@ -10,6 +10,10 @@ export class SplitSeparatorComponent {
     @Input() public thickness = 1;
     @Output() public willResize = new EventEmitter();
     @Output() public reset = new EventEmitter();
+
+    @HostBinding("style.width") public get width() {
+        return `${this.thickness}px`;
+    }
 
     public onDblClick(event) {
         this.reset.emit(true);

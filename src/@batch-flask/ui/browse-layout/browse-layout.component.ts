@@ -13,11 +13,7 @@ import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-fi
 import { BrowseLayoutListDirective } from "./browse-layout-list";
 
 import { KeyCode } from "@batch-flask/core/keys";
-<<<<<<< Updated upstream
-=======
-import { SanitizedError } from "@batch-flask/utils";
 import { SplitPaneConfig } from "../split-pane";
->>>>>>> Stashed changes
 import "./browse-layout.scss";
 
 export interface BrowseLayoutConfig {

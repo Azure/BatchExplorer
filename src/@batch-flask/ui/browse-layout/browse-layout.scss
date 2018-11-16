@@ -161,8 +161,9 @@ bl-browse-layout {
     flex-wrap: wrap;
 
     > [pre-quicksearch] {
-        min-width: 120px;
+        min-width: 80px;
         flex: 1;
+        margin-right: 5px;
     }
 
     .bl-form-field-infix {
@@ -174,11 +175,15 @@ bl-browse-layout {
         padding: 5px;
         font-size: 1.1em;
         height: 26px;
-        min-width: 120px;
+        min-width: 80px;
 
         &:focus {
             outline: none;
         }
+    }
+
+    bl-select {
+        min-width: 50px;
     }
 }
 
