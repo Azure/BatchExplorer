@@ -45,6 +45,7 @@ bl-browse-layout {
     }
     > .layout-container {
         display: flex;
+        height: $contentview-height;
 
         &.filtering {
             .list-view {
@@ -60,18 +61,19 @@ bl-browse-layout {
             }
         }
 
-        > .list-view {
+        .list-view {
             transition:width 100ms;
-            width: $listview-width;
-            height: $contentview-height;
+            width: 100%;
+            height: 100%;
+            // height: $contentview-height;
             background-color: $card-background;
             z-index: 1;
 
             > .left-pane {
                 display: flex;
                 flex-direction: column;
+                width: 100%;
                 height: 100%;
-                width: $listview-width;
 
                 .bl-list-content {
                     flex: 1;
@@ -109,9 +111,11 @@ bl-browse-layout {
             }
         }
 
-        > .content-view {
-            width: calc(100vw - #{$listview-width} - #{$navigationbar-width});
-            height: $contentview-height;
+        .content-view {
+            // width: calc(100vw - #{$listview-width} - #{$navigationbar-width});
+            // height: $contentview-height;
+            width: 100%;
+            height: 100%;
             overflow-y: auto;
             background-color: $main-background;
 
@@ -165,10 +169,11 @@ bl-browse-layout {
     }
 
     > input {
-        flex: 1 0 auto;
+        flex: 1 auto;
         padding: 5px;
         font-size: 1.1em;
         height: 26px;
+        min-width: 100px;
 
         &:focus {
             outline: none;

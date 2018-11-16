@@ -13,6 +13,11 @@ import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-fi
 import { BrowseLayoutListDirective } from "./browse-layout-list";
 
 import { KeyCode } from "@batch-flask/core/keys";
+<<<<<<< Updated upstream
+=======
+import { SanitizedError } from "@batch-flask/utils";
+import { SplitPaneConfig } from "../split-pane";
+>>>>>>> Stashed changes
 import "./browse-layout.scss";
 
 export interface BrowseLayoutConfig {
@@ -62,6 +67,17 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
     public listDirective: BrowseLayoutListDirective;
     @ContentChild(BrowseLayoutAdvancedFilterDirective)
     public advancedFilterDirective: BrowseLayoutAdvancedFilterDirective;
+
+    public splitPaneConfig: SplitPaneConfig = {
+        firstPane: {
+            minSize: 200,
+        },
+        secondPane: {
+            minSize: 600,
+        },
+        initialDividerPosition: 350,
+        separatorThickness: 0,
+    };
 
     public quickSearchQuery = new FormControl("");
     public filter: Filter = FilterBuilder.none();
