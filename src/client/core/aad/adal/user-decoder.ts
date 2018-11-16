@@ -17,8 +17,6 @@ export class UserDecoder {
 
         const user = JSON.parse(decodedPayLoad);
 
-        // if (!user || !user.ha    sOwnProperty('aud')) throw new Error('');
-
         return user as AADUser;
     }
 
@@ -38,7 +36,8 @@ export class UserDecoder {
 
         const matches = idTokenPartsRegex.exec(jwtToken);
         if (!matches || matches.length < 4) {
-            throw new InvalidJWTTokenError(`Failed to decode Jwt token. The token has invalid format. Actual token: '${jwtToken}'`);
+            throw new InvalidJWTTokenError(`
+                Failed to decode Jwt token. The token has invalid format. Actual token: '${jwtToken}'`);
         }
 
         const crackedToken = {
