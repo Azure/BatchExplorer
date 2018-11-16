@@ -24,7 +24,7 @@ class TestComponent {
     public osSource = PoolOsSources.IaaS;
 }
 
-fdescribe("VmSizePickerComponent", () => {
+describe("VmSizePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: VmSizePickerComponent;
