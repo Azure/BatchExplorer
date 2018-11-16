@@ -98,7 +98,7 @@ describe("VmSizePickerComponent", () => {
         fixture.detectChanges();
     });
 
-    it("should check all Paas vm sizes in current batch service whitelisted paas vms", () => {
+    it("should compare paas vms in current batch service whitelisted paas vms", () => {
         const paasRegex = batchExplorerDataVms.all.concat(batchExplorerDataVms.paas);
         const vmSizes = List(allVmSizes.map(vmSize => {
             return { name: vmSize.toLowerCase() } as VmSize;
@@ -107,7 +107,7 @@ describe("VmSizePickerComponent", () => {
         result.forEach(vm => expect(passVms).toContain(vm));
     });
 
-    it("should check all Iaas vm sizes in current batch service whitelisted iaas vms", () => {
+    it("should compare iaas vms in current batch service whitelisted iaas vms", () => {
         const iaasRegex = batchExplorerDataVms.all.concat(batchExplorerDataVms.iaas);
         const vmSizes = List(allVmSizes.map(vmSize => {
             return { name: vmSize.toLowerCase() } as VmSize;
@@ -132,7 +132,7 @@ describe("VmSizePickerComponent", () => {
         expect(searchResult[6]).toContain("a8m v2");
     });
 
-    it("Should show av2 vm series by when user search in filter", () => {
+    it("Should show all vm with no searchName presents", () => {
         component.onFilterChange({
             category: "all",
             searchName: "",
