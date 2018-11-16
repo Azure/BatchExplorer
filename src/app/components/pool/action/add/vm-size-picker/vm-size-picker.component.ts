@@ -107,13 +107,11 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     private _vmSizes: List<VmSize> = List([]);
     private _sizeSub: Subscription;
     private _categorySub: Subscription;
-    private _currentFilter: VmSizeFilterValue = {
-        category: "all",
-    };
+    private _currentFilter: VmSizeFilterValue = { category: "all" };
 
     constructor(
+        public vmSizeService: VmSizeService,
         private changeDetector: ChangeDetectorRef,
-        private vmSizeService: VmSizeService,
         private pricingService: PricingService) {
     }
 
@@ -171,8 +169,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
         return null;
     }
 
-    public onFilterChange(filter) {
-        console.log("onFilterChange", filter);
+    public onFilterChange(filter: VmSizeFilterValue) {
         this._currentFilter = filter;
         this._categorizeSizes();
     }
@@ -196,12 +193,12 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
         if (this._currentFilter && this._categoryRegex) {
             if (this._currentFilter.category) {
                 vmSizes = vmSizes.filter(vmSize => {
-                    return this._categoryMatchPattern(vmSize, this._categoryRegex[this._currentFilter.category]);
+                    return this._filterByCategory(vmSize, this._categoryRegex[this._currentFilter.category]);
                 });
             }
             if (this._currentFilter.searchName) {
                 vmSizes = vmSizes.filter(vmSize => {
-                    return vmSize.name.toLowerCase().includes(this._currentFilter.searchName.toLowerCase());
+                    return this._filterBySearchName(vmSize, this._currentFilter.searchName);
                 });
             }
         }
@@ -209,13 +206,17 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
         this.changeDetector.markForCheck();
     }
 
-    private _categoryMatchPattern(size: VmSize, patterns: string[]) {
+    private _filterByCategory(size: VmSize, patterns: string[]) {
         for (const pattern of patterns) {
             if (StringUtils.regexExpTest(size.name.toLowerCase(), pattern)) {
                 return true;
             }
         }
         return false;
+    }
+
+    private _filterBySearchName(size: VmSize, searchName: string) {
+        return size.name.toLowerCase().includes(searchName.toLowerCase());
     }
 
     private _loadPrices() {

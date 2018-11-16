@@ -206,7 +206,7 @@ export class VmSizeService {
                 if (!included) {
                     return sizes;
                 }
-                return this._filterSizes(sizes, included.all.concat(included.paas));
+                return this.filterSizes(sizes, included.all.concat(included.paas));
             }),
             shareReplay(1),
         );
@@ -216,7 +216,7 @@ export class VmSizeService {
                 if (!included) {
                     return sizes;
                 }
-                return this._filterSizes(sizes, included.all.concat(included.iaas));
+                return this.filterSizes(sizes, included.all.concat(included.iaas));
             }),
             shareReplay(1),
         );
@@ -261,7 +261,6 @@ export class VmSizeService {
 
         // this.githubData.get(includedVmsSizesPath).subscribe({
         //     next: (response: string) => {
-        //         console.log(2, response);
         //         const data: VmSizeData = JSON.parse(response);
         //         this._vmSizeCategories.next(data.category);
         //         this._includedSizes.next(data.included);
@@ -286,7 +285,7 @@ export class VmSizeService {
      * @param sizes Sizes to filter
      * @param includedPatterns List of regex patterns to include
      */
-    private _filterSizes(sizes: List<VmSize>, includedPatterns: string[]): List<VmSize> {
+    public filterSizes(sizes: List<VmSize>, includedPatterns: string[]): List<VmSize> {
         if (!sizes) {
             return null;
         }
