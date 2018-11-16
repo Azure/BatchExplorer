@@ -1,5 +1,7 @@
+import { SanitizedError } from "@batch-flask/utils/error";
+
 const evalBanned = () => {
-    throw new Error("Eval is disabled in BatchExplorer.");
+    throw new SanitizedError("Eval is disabled in BatchExplorer.");
 };
 
 // Webpack dev server sourcemap need to use eval

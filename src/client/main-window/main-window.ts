@@ -140,6 +140,7 @@ export class MainWindow extends GenericWindow {
             log.error("Fail to load", error);
         });
 
+        // tslint:disable-next-line:ban-types
         window.on("unresponsive", (error: Error) => {
             log.error("There was a crash", error);
             this.batchExplorerApp.recoverWindow.createWithError(error.message);

@@ -1,3 +1,4 @@
+import { SanitizedError } from "@batch-flask/utils";
 import { Duration } from "moment";
 import { RecordMissingExtendsError } from "./errors";
 import { setProp, updateTypeMetadata } from "./helpers";
@@ -24,7 +25,7 @@ export function Prop<T>(type?: any, transform?: (value: any) => any) {
             type = Reflect.getMetadata("design:type", target, attr);
         }
         if (!type) {
-            throw new Error(`Cannot retrieve the type for RecordAttribute ${target.constructor.name}#${attr}`
+            throw new SanitizedError(`Cannot retrieve the type for RecordAttribute ${target.constructor.name}#${attr}`
                 + ". Check your nested type is defined in another file or above this DtoAttr");
         }
         updateTypeMetadata(ctr, attr, { type, list: false, transform });
