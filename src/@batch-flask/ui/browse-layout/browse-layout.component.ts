@@ -11,7 +11,7 @@ import { ListSelection } from "@batch-flask/core/list";
 import { SanitizedError } from "@batch-flask/utils";
 import { Subscription } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
-import { SplitPaneConfig } from "../split-pane";
+import { SplitPaneComponent, SplitPaneConfig } from "../split-pane";
 import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-filter";
 import { BrowseLayoutListDirective } from "./browse-layout-list";
 
@@ -62,6 +62,7 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
 
     @ContentChild(BrowseLayoutListDirective)
     public listDirective: BrowseLayoutListDirective;
+
     @ContentChild(BrowseLayoutAdvancedFilterDirective)
     public advancedFilterDirective: BrowseLayoutAdvancedFilterDirective;
 
@@ -86,6 +87,9 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
     public refreshEnabled = false;
 
     public selection = new ListSelection();
+
+    @ViewChild(SplitPaneComponent)
+    private _splitPane: SplitPaneComponent;
 
     private _activeItemKey: string = null;
     private _config: BrowseLayoutConfig = defaultConfig;
@@ -173,13 +177,17 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
     }
 
     public toggleFilter(value?: boolean) {
-        this.showAdvancedFilter = (value === undefined ? !this.showAdvancedFilter : value);
+        const newValue = (value === undefined ? !this.showAdvancedFilter : value);
+        if (newValue === this.showAdvancedFilter) {return; }
+        this.showAdvancedFilter = newValue;
+
         if (this.listDirective) {
             this.listDirective.component.quicklist = !this.showAdvancedFilter;
         }
         this.changeDetector.markForCheck();
 
         if (this.showAdvancedFilter) {
+            this._splitPane.updateSize(700);
             setTimeout(() => {
                 const el = this.advancedFilterContainer.nativeElement.querySelectorAll(
                     `[tabindex]:not([tabindex="-1"])`, "input", "textarea", "button", "[href]")[0];
@@ -187,6 +195,8 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
                     el.focus();
                 }
             });
+        } else {
+            this._splitPane.resetDividerPosition();
         }
     }
 
