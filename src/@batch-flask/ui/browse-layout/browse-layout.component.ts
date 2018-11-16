@@ -13,6 +13,7 @@ import { BrowseLayoutAdvancedFilterDirective } from "./browse-layout-advanced-fi
 import { BrowseLayoutListDirective } from "./browse-layout-list";
 
 import { KeyCode } from "@batch-flask/core/keys";
+import { SanitizedError } from "@batch-flask/utils";
 import "./browse-layout.scss";
 
 export interface BrowseLayoutConfig {
@@ -124,7 +125,7 @@ export class BrowseLayoutComponent implements OnInit, AfterContentInit, OnChange
 
     public ngAfterContentInit() {
         if (!this.listDirective) {
-            throw new Error("BrowseLayout expect an list component to have the directive blBrowseLayoutList");
+            throw new SanitizedError("BrowseLayout expect an list component to have the directive blBrowseLayoutList");
         }
         const component = this.listDirective.component;
         component.quicklist = !this.showAdvancedFilter;

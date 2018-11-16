@@ -7,6 +7,7 @@ import {
     forwardRef,
 } from "@angular/core";
 
+import { SanitizedError } from "@batch-flask/utils";
 import { TableCellDefDirective } from "../table-cell-def";
 import { TableColumnRef } from "../table-column-manager";
 import { TableHeadCellDefDirective } from "../table-head-cell-def";
@@ -73,14 +74,14 @@ export class TableColumnComponent implements OnInit, AfterContentInit, OnChanges
 
     private _validateName() {
         if (!this.name) {
-            throw new Error("bl-column must have a unique name but not was provided.");
+            throw new SanitizedError("bl-column must have a unique name but not was provided.");
         }
     }
 
     private _validateCellDef() {
         if (!this.cell) {
             const example = `<div *blCellDef="let item">item.value</div>`;
-            throw new Error(`bl-column '${this.name}' must have a cell definition. Add '${example}'`);
+            throw new SanitizedError(`bl-column '${this.name}' must have a cell definition. Add '${example}'`);
         }
     }
 }

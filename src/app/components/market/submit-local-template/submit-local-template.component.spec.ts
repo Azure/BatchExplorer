@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
 import { MaterialModule } from "@batch-flask/core";
+import { SanitizedError } from "@batch-flask/utils";
 import { SubmitNcjTemplateComponent } from "app/components/market/submit";
 import { SubmitLocalTemplateComponent } from "app/components/market/submit-local-template";
 import { NcjTemplateType } from "app/models";
@@ -25,7 +26,7 @@ describe("SubmitLocalTemplateComponent", () => {
                 } else if (templateStr.contains("other")) {
                     return { type: NcjTemplateType.Unknown, template: null };
                 } else {
-                    throw new Error("couldn't parse template due to error");
+                    throw new SanitizedError("couldn't parse template due to error");
                 }
             }),
         };

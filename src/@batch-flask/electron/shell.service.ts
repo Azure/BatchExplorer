@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { SanitizedError } from "@batch-flask/utils";
 
 /**
  * Injectable service wrapping electron shell.
@@ -39,7 +40,7 @@ export class ElectronShell {
         activate: boolean;
     }): boolean {
         if (!url.startsWith("https://")) {
-            throw new Error("Do not use electron external with something else than urls."
+            throw new SanitizedError("Do not use electron external with something else than urls."
                 + " It could be used to run commands on osx for example.\n"
                 + " Use openItem for opening a local file instead");
         }

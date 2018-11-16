@@ -49,10 +49,6 @@ export class StorageClientService {
     }
 
     public getAutoStorage(): Observable<any> {
-        if (!this._currentAccountId) {
-            throw new Error("No account currently selected ...");
-        }
-
         return this.accountService.currentAccount.pipe(
             first(),
             flatMap((account) => {

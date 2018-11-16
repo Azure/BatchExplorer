@@ -1,4 +1,9 @@
+import { SanitizedError } from "@batch-flask/utils";
 import { AADUser } from "./aad-user";
+
+export class InvalidJWTTokenError extends Error {
+
+}
 
 export class UserDecoder {
     public decode(encoded: string): AADUser {
@@ -21,7 +26,7 @@ export class UserDecoder {
 
         const base64Decoded = this.base64DecodeStringUrlSafe(value);
         if (!base64Decoded) {
-            throw Error("Failed to base64 decode value. Value has invalid format.");
+            throw new SanitizedError("Failed to base64 decode value. Value has invalid format.");
         }
 
         return base64Decoded;
@@ -33,7 +38,7 @@ export class UserDecoder {
 
         const matches = idTokenPartsRegex.exec(jwtToken);
         if (!matches || matches.length < 4) {
-            throw new Error(`Failed to decode Jwt token. The token has invalid format. Actual token: '${jwtToken}'`);
+            throw new InvalidJWTTokenError(`Failed to decode Jwt token. The token has invalid format. Actual token: '${jwtToken}'`);
         }
 
         const crackedToken = {

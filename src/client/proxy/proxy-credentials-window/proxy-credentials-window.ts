@@ -2,7 +2,7 @@ import { BrowserWindow, app, ipcMain } from "electron";
 import { ProxyCredentials } from "get-proxy-settings";
 
 import { Constants } from "client/client-constants";
-import { BatchExplorerApplication, UniqueWindow } from "client/core";
+import { BatchExplorerApplication, ClosedWindowError, UniqueWindow } from "client/core";
 import { Deferred } from "common";
 const urls = Constants.urls.proxyCredentials;
 const url = process.env.HOT ? urls.dev : urls.prod;
@@ -46,7 +46,7 @@ export class ProxyCredentialsWindow extends UniqueWindow {
         });
         window.on("close", () => {
             if (!this._deferred.hasCompleted) {
-                this._deferred.reject(new Error("Window was closed"));
+                this._deferred.reject(new ClosedWindowError("Window was closed"));
             }
         });
     }

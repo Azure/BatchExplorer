@@ -16,6 +16,7 @@ import { FlagInput, coerceBooleanProperty } from "@batch-flask/core";
 import { FormFieldControl } from "@batch-flask/ui/form/form-field";
 import { Subject } from "rxjs";
 
+import { SanitizedError } from "@batch-flask/utils";
 import "./input.scss";
 
 // Invalid input type. You should use the corresponding component for those
@@ -186,7 +187,7 @@ export class InputDirective implements FormFieldControl<any>, OnChanges, OnDestr
     /** Make sure the input is a supported type. */
     protected _validateType() {
         if (INPUT_INVALID_TYPES.indexOf(this._type) > -1) {
-            throw new Error(`Invalid input type for input component: ${this._type}.`
+            throw new SanitizedError(`Invalid input type for input component: ${this._type}.`
                 + `Use the corresponding component for this one`);
         }
     }

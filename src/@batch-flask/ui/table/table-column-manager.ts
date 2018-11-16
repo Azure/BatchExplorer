@@ -2,7 +2,7 @@ import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { TemplateRef } from "@angular/core";
 import { ListDataPresenter, SortingInfo } from "@batch-flask/ui/abstract-list/list-data-presenter";
 import { SortDirection } from "@batch-flask/ui/abstract-list/list-data-sorter";
-import { exists } from "@batch-flask/utils";
+import { SanitizedError, exists } from "@batch-flask/utils";
 import { Observable, Subject } from "rxjs";
 
 export interface TableColumnRef {
@@ -37,7 +37,7 @@ export class TableColumnManager {
         this.columnMap.clear();
         for (const column of columns) {
             if (this.columnMap.has(column.name)) {
-                throw new Error(`bl-column name '${column.name}' must be unique`);
+                throw new SanitizedError(`bl-column name '${column.name}' must be unique`);
             }
             this.columnMap.set(column.name, column);
         }

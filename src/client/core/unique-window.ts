@@ -2,6 +2,10 @@ import { log } from "@batch-flask/utils";
 import { BatchExplorerProperties } from "client/core/properties";
 import { BatchExplorerApplication } from ".";
 
+export class ClosedWindowError extends Error {
+    constructor(message: string) { super(message); }
+}
+
 export abstract class GenericWindow {
     public expectedClose = false;
     public domReady: Promise<void>;

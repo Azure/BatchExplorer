@@ -1,3 +1,4 @@
+import { SanitizedError } from "@batch-flask/utils";
 import { UniqueWindow } from "client/core/unique-window";
 import { BrowserWindow } from "electron";
 
@@ -25,7 +26,7 @@ export class AuthenticationWindow extends UniqueWindow {
 
     public loadURL(url: string) {
         if (!this._window) {
-            throw new Error("AuthenticationWindow not created. Cannot call loadURL");
+            throw new SanitizedError("AuthenticationWindow not created. Cannot call loadURL");
         }
         this._window.loadURL(url);
     }
