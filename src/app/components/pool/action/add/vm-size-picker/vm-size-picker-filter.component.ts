@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, forwardRef } from "@angular/core";
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { FormBuilder, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { VmSizeFilterValue } from "app/models";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
@@ -17,7 +17,7 @@ export interface VmSizeFilterCategoryName {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VmSizePickerFilterComponent implements ControlValueAccessor {
+export class VmSizePickerFilterComponent {
     @Input() public set categoriesDisplayName(names: any) {
         this._categoriesDisplayName = Object.keys(names).map((nameKey) => {
             return {
@@ -51,17 +51,6 @@ export class VmSizePickerFilterComponent implements ControlValueAccessor {
             }
             this.filterChange.emit(value);
         });
-    }
-    public writeValue(obj: VmSizeFilterValue): void {
-        this.form.patchValue(obj);
-    }
-
-    public registerOnChange(fn: any): void {
-        this._propagateChange = fn;
-    }
-
-    public registerOnTouched(fn: any): void {
-        // Do nothing
     }
 
     public trackCategory(index, category: string) {
